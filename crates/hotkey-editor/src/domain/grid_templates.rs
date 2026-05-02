@@ -51,6 +51,11 @@ pub(crate) const TEMPLATES: &[BundledTemplate] = &[
         content: include_str!("../../templates/CustomKeys_Neo_QWERTZ.txt"),
     },
     BundledTemplate {
+        name: "NEO (AZERTY)",
+        description: "Neo's (Back2Warcraft) optimized layout converted for AZERTY keyboards",
+        content: include_str!("../../templates/CustomKeys_Neo_AZERTY.txt"),
+    },
+    BundledTemplate {
         name: "Default",
         description: "Stock Warcraft III hotkeys, exactly what the game ships with",
         content: include_str!("../../templates/CustomKeys.txt"),
