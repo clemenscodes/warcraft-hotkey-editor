@@ -97,12 +97,20 @@ jobs:
         uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
+        if: github.event_name != 'pull_request'
         uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           useDaemon: true
           pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Use Cachix read-only
+        if: github.event_name == 'pull_request'
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          skipPush: true
 
       - name: Build priority cache inputs
         run: >
@@ -133,7 +141,7 @@ jobs:
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./pages-out
 
