@@ -51,12 +51,11 @@ pub(crate) fn TemplatesDialog(
                                             let mut parsed_template = CustomKeysFile::from(template_content);
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
-                                            let derived_grid = GridLayout::derived_from(&parsed_template);
-                                            Positions::fill_positions_from_hotkeys(&mut parsed_template, derived_grid);
+                                            let import_layout = *grid_layout.read();
+                                            Positions::fill_positions_from_hotkeys(&mut parsed_template, import_layout);
                                             let mut baseline = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
                                             UploadOverlay::apply(&mut baseline, &parsed_template);
                                             loaded_keys.set(Some(baseline));
-                                            grid_layout.set(derived_grid);
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,
                                                 command_count,
