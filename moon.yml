@@ -1,0 +1,8 @@
+id: workspace
+stack: unknown
+layer: unknown
+tags:
+  - repo
+
+dependsOn:
+  - hotkey-editor

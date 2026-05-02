@@ -1,0 +1,155 @@
+@layer components {
+    .dx-toast-container {
+        position: fixed !important;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        top: auto;
+        left: auto;
+        width: max-content;
+        max-width: calc(100vw - 3rem);
+        z-index: 2000;
+        outline: none;
+        pointer-events: none;
+    }
+
+    .dx-toast-container > * {
+        pointer-events: auto;
+    }
+
+    /* Die `<ol>` selbst handelt die Reihenfolge: column-reverse heißt der
+       neueste Toast ist unten (= zuerst sichtbar). Ohne flex hier kein
+       collapse-Bug mehr. */
+    .dx-toast-list {
+        @apply m-0 p-0 list-none flex flex-col-reverse gap-4;
+        width: max-content;
+        max-width: 100%;
+        margin-left: auto;
+    }
+
+    /* Die Dioxus CLI injiziert für ihre Hot-Reload Notifications einen
+       eigenen <style> Block mit `.dx-toast { position: absolute; top: 10px;
+       right: 0; user-select: none; z-index: 2147483647 }`. Source-Order und
+       Spezifität schlagen unsere `.dx-toast-container .dx-toast` Rule, also
+       müssen wir diese Properties hier hart überschreiben. */
+    .dx-toast-container .dx-toast {
+        @apply relative flex items-start gap-5
+            px-8 py-6 rounded-xl border-2
+            font-friz-quadrata text-warcraft-text-primary
+            cursor-pointer outline-none;
+        position: static !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        bottom: auto !important;
+        padding-right: 2rem !important;
+        user-select: auto !important;
+        z-index: auto !important;
+        background: linear-gradient(135deg, rgba(12, 25, 50, 0.97) 0%, rgba(6, 12, 28, 0.97) 100%);
+        border-color: var(--color-warcraft-blue);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        animation: toast-slide-in 240ms cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    /* All toast styles below are scoped to `.dx-toast-container` because the
+       Dioxus CLI dev server injects its OWN unrelated `<div class="dx-toast">`
+       directly on `<body>` for hot-reload notifications. Without this scoping,
+       our toast styles bleed onto the dev-server toast and create an empty
+       bordered box in the top-right of the page. */
+
+    /* Status icon prepended via ::before. SVG-as-data-URL is more robust than
+       Unicode glyphs across font fallbacks. */
+    .dx-toast-container .dx-toast::before {
+        content: "";
+        flex: 0 0 3rem;
+        width: 3rem;
+        height: 3rem;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 2rem 2rem;
+        border-radius: 9999px;
+        align-self: center;
+    }
+
+    .dx-toast-container .dx-toast[data-type="success"] {
+        border-color: #6dd49a;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 24px rgba(109, 212, 154, 0.3);
+    }
+
+    .dx-toast-container .dx-toast[data-type="success"]::before {
+        background-color: rgba(109, 212, 154, 0.18);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236dd49a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='5 12 10 17 19 7'/></svg>");
+    }
+
+    .dx-toast-container .dx-toast[data-type="error"] {
+        border-color: #ff7a7a;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 24px rgba(255, 122, 122, 0.35);
+    }
+
+    .dx-toast-container .dx-toast[data-type="error"]::before {
+        background-color: rgba(255, 122, 122, 0.2);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff7a7a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><line x1='6' y1='6' x2='18' y2='18'/><line x1='18' y1='6' x2='6' y2='18'/></svg>");
+    }
+
+    .dx-toast-container .dx-toast[data-type="warning"] {
+        border-color: #ffb347;
+    }
+
+    .dx-toast-container .dx-toast[data-type="warning"]::before {
+        background-color: rgba(255, 179, 71, 0.2);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb347' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M12 9v4'/><path d='M12 17h.01'/><path d='M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/></svg>");
+    }
+
+    .dx-toast-container .dx-toast[data-type="info"] {
+        border-color: var(--color-race-human);
+    }
+
+    .dx-toast-container .dx-toast[data-type="info"]::before {
+        background-color: rgba(106, 161, 255, 0.18);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236aa1ff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><line x1='12' y1='16' x2='12' y2='12'/><line x1='12' y1='8' x2='12.01' y2='8'/></svg>");
+    }
+
+    body[data-kb-modality] .dx-toast-container .dx-toast:focus-visible,
+    body[data-kb-modality] .dx-toast-container .dx-toast:focus {
+        @apply outline-none;
+        box-shadow: 0 0 0 3px #fff, 0 12px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    .dx-toast-container .dx-toast-content {
+        @apply flex-1 flex flex-col gap-2 min-w-0;
+    }
+
+    .dx-toast-container .dx-toast-title {
+        @apply text-warcraft-gold uppercase tracking-[0.06em];
+        font-size: 1.9rem;
+        line-height: 1.2;
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    .dx-toast-container .dx-toast[data-type="success"] .dx-toast-title { color: #6dd49a; }
+    .dx-toast-container .dx-toast[data-type="error"] .dx-toast-title { color: #ff9090; }
+    .dx-toast-container .dx-toast[data-type="warning"] .dx-toast-title { color: #ffb347; }
+
+    .dx-toast-container .dx-toast-description {
+        @apply text-warcraft-text-secondary;
+        font-size: 1.5rem;
+        line-height: 1.45;
+    }
+
+    .dx-toast-container .dx-toast-close {
+        @apply flex items-center justify-center
+            w-9 h-9 rounded-md border-0 bg-transparent
+            text-warcraft-text-muted cursor-pointer
+            transition-colors duration-150;
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .dx-toast-container .dx-toast-close:hover {
+        @apply text-warcraft-gold;
+    }
+
+    @keyframes toast-slide-in {
+        from { opacity: 0; transform: translateX(2rem) scale(0.95); }
+        to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+}

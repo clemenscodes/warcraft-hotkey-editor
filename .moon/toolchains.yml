@@ -1,0 +1,4 @@
+$schema: "./cache/schemas/toolchain.json"
+
+rust:
+  syncToolchainConfig: true

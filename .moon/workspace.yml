@@ -1,0 +1,21 @@
+$schema: ./cache/schemas/workspace.json
+telemetry: false
+defaultProject: hotkey-editor
+versionConstraint: ">=2.0.3"
+
+pipeline:
+  inheritColorsForPipedTasks: true
+  syncWorkspace: true
+
+vcs:
+  defaultBranch: main
+  client: git
+  provider: github
+  remoteCandidates:
+    - origin
+  sync: true
+  hookFormat: native
+
+projects:
+  - moon.yml
+  - crates/*/moon.yml

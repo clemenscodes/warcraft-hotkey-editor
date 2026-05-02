@@ -1,0 +1,71 @@
+use warcraft_api::WarcraftObjectKind;
+use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_keybinds::CustomKeysFile;
+
+use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::upload_overlay::UploadOverlay;
+
+pub(crate) struct ExplicitExport;
+
+impl ExplicitExport {
+    pub(crate) fn serialize(loaded_file: &CustomKeysFile) -> String {
+        let mut export_file = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
+        UploadOverlay::apply(&mut export_file, loaded_file);
+        Self::materialize_default_positions(&mut export_file);
+        export_file.to_full_file_content()
+    }
+
+    fn materialize_default_positions(file: &mut CustomKeysFile) {
+        for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
+            let id_value = object_id.value();
+            let default_button = warcraft_object.default_button_position().map(|position| {
+                warcraft_keybinds::ButtonPosition::new(position.column(), position.row())
+            });
+            let default_research =
+                warcraft_object
+                    .default_research_button_position()
+                    .map(|position| {
+                        warcraft_keybinds::ButtonPosition::new(position.column(), position.row())
+                    });
+
+            match warcraft_object.kind() {
+                WarcraftObjectKind::Command => continue,
+                WarcraftObjectKind::Ability => {
+                    if default_button.is_none() && default_research.is_none() {
+                        continue;
+                    }
+                    let binding = file.binding_or_default_mut(id_value);
+                    if binding.button_position().is_none()
+                        && let Some(position_value) = default_button
+                    {
+                        binding.set_button_position(Some(position_value));
+                    }
+                    if binding.research_button_position().is_none()
+                        && let Some(position_value) = default_research
+                    {
+                        binding.set_research_button_position(Some(position_value));
+                    }
+                    if !Self::is_passive_icon_set(warcraft_object.icons())
+                        && binding.unbutton_position().is_none()
+                        && let Some(button_position) = binding.button_position()
+                    {
+                        binding.set_unbutton_position(Some(*button_position));
+                    }
+                }
+                _ => continue,
+            }
+        }
+    }
+
+    fn is_passive_icon_set(icons: &[&str]) -> bool {
+        icons
+            .first()
+            .map(|icon_path| {
+                icon_path
+                    .trim()
+                    .to_ascii_lowercase()
+                    .starts_with("passivebuttons/")
+            })
+            .unwrap_or(false)
+    }
+}

@@ -1,0 +1,18 @@
+/target
+**/target/
+**/.dioxus/
+Cargo.lock.bak
+*.swp
+.DS_Store
+
+# Nix build symlink
+/result
+.direnv
+
+# Moon cache & runtime state
+/.moon/cache
+/.moon/docker
+.claude/
+
+# Compiled Tailwind asset; edit tailwind.input.css and styles/* instead.
+/crates/hotkey-editor/assets/tailwind.css

@@ -1,0 +1,95 @@
+@layer components {
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: clamp(8.4px, 0.7vw, 12.6px);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #e0d8c8;
+    background-color: #050a1a;
+}
+
+:root {
+    --sidebar-column-width: 27rem;
+}
+
+@media (min-width: 1800px) {
+    :root { --sidebar-column-width: 34rem; }
+}
+
+@media (min-width: 2400px) {
+    :root { --sidebar-column-width: 46rem; }
+}
+
+@media (min-width: 3200px) {
+    :root { --sidebar-column-width: 62rem; }
+}
+
+body {
+    background-image:
+        radial-gradient(ellipse 90% 60% at 50% 0%, #18365b 0%, transparent 60%),
+        linear-gradient(180deg, #0a1a35 0%, #050a1a 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+/* Native button reset is handled by Tailwind v4's preflight
+   (`@layer base { button { font: inherit; color: inherit; background-color:
+   transparent; ... } }` plus the universal `* { border: 0 solid; ... }`
+   reset). We only need to add `cursor: pointer`, which Tailwind preflight
+   does not set. The selector is `:where(button)` so its specificity is 0
+   and any per-component button class trivially overrides it. */
+:where(button) {
+    cursor: pointer;
+}
+
+/* ───────────────────────── Universal anti-overflow safety net ─────────────────────────
+   Anything inside the app that tries to extend past the viewport edge gets clipped at the
+   container border. The .app already has overflow:hidden; this widens the rule so accidental
+   wide children (long labels, race tabs) cannot push the page sideways. */
+
+html, body {
+    /* clip instead of hidden: clip does not create a scroll container, so
+       position:sticky children (the app-header) work on iOS Safari. */
+    overflow-x: clip;
+    max-width: 100vw;
+}
+
+.race-tab-label,
+.unit-card-name,
+.unit-card-id {
+    min-width: 0;
+}
+
+/* Flex items inside the control-strip (mode strip, race tabs) cannot expand past their
+   parent. Their `flex-basis: auto` plus child content can otherwise push the parent wider
+   than the viewport because flex's intrinsic min-content sizing ignores `width: 100%` once
+   a descendant uses `overflow-x: auto` on a wider scroll content. Force them flush. */
+.mode-strip,
+.race-tabs,
+.mode-toggle {
+    max-width: 100%;
+    min-width: 0;
+}
+.race-tabs {
+    width: 100%;
+}
+
+/* ── 1440–2000 px: scale down to fit 1080p screens ──────────────────────────
+   Without this override the base clamp reaches 12.6 px at 1920 px — elements
+   render as if the user were on a 4 K display.  Capping at ≈ 8.4 px mirrors
+   the visual result of the user zooming the browser to ~67 %, which they
+   reported as the correct size.  All rem-based components (header, footer,
+   race badges, tiles, padding) shrink proportionally; vw-based preferred
+   values are unaffected but their rem max-caps also shrink, so portraits and
+   race tabs scale down too. */
+@media (min-width: 1440px) and (max-width: 2000px) {
+    html, body {
+        font-size: clamp(8.4px, 0.44vw, 8.8px);
+    }
+}
+}

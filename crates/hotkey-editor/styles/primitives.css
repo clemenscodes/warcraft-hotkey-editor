@@ -1,0 +1,558 @@
+@layer components {
+    .btn-warcraft-primary {
+        @apply inline-flex items-center justify-center px-14 py-6
+            border border-warcraft-gold rounded-lg
+            text-warcraft-gold font-friz-quadrata text-[2rem]
+            cursor-pointer select-none whitespace-nowrap
+            transition-all duration-[120ms];
+        background: linear-gradient(180deg, #2a5085 0%, #1a3a5c 100%);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+    }
+
+    .btn-warcraft-primary:hover {
+        background: linear-gradient(180deg, #356dac 0%, #1f4a72 100%);
+        box-shadow: 0 0 12px rgba(255, 206, 99, 0.4);
+    }
+
+    .btn-warcraft-secondary {
+        @apply inline-flex items-center justify-center px-14 py-6
+            rounded-lg border border-warcraft-blue
+            text-warcraft-text-secondary font-friz-quadrata text-[2rem]
+            transition-all duration-[120ms] whitespace-nowrap;
+        background: rgba(20, 40, 70, 0.7);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-warcraft-secondary:hover {
+        @apply border-warcraft-gold text-warcraft-gold;
+        box-shadow: 0 0 12px rgba(255, 206, 99, 0.25);
+    }
+
+    .dialog-overlay {
+        @apply fixed inset-0 z-[1000] flex items-center justify-center p-8;
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .dialog-shell {
+        @apply flex flex-col gap-6 p-10 px-12 rounded-xl border border-warcraft-gold;
+        width: 80vw;
+        height: 80vh;
+        background: linear-gradient(135deg, rgba(12, 25, 50, 0.98) 0%, rgba(6, 12, 28, 0.98) 100%);
+        box-shadow: 0 0 40px rgba(255, 206, 99, 0.25), 0 8px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .system-hotkeys-dialog {
+        width: 90vw;
+        height: 86vh;
+    }
+
+    .dialog-header {
+        @apply flex items-center justify-between gap-4;
+    }
+
+    .dialog-title {
+        @apply m-0 font-friz-quadrata text-warcraft-gold uppercase font-normal;
+        font-size: 2.5rem;
+        letter-spacing: 0.08em;
+    }
+
+    .system-key-cell {
+        @apply flex items-center justify-center
+            min-w-16 max-w-56 h-[2.6rem] px-3
+            border-2 border-warcraft-gold rounded-md
+            text-warcraft-gold font-friz-quadrata text-[1.05rem]
+            cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis uppercase
+            transition-[box-shadow,border-color,background] duration-150;
+        background: rgba(40, 30, 8, 0.75);
+        line-height: 1;
+        letter-spacing: 0.02em;
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    .system-key-cell:hover {
+        background: rgba(255, 206, 99, 0.12);
+        box-shadow: 0 0 8px rgba(255, 206, 99, 0.5);
+    }
+
+    .system-key-cell:focus {
+        @apply outline-none;
+        box-shadow: 0 0 8px rgba(255, 206, 99, 0.5);
+    }
+
+    body[data-kb-modality] .system-key-cell:focus-visible,
+    body[data-kb-modality] .system-key-cell:focus {
+        @apply outline-none border-white text-white;
+        box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+    }
+
+    .system-key-cell.editing {
+        @apply border-warcraft-gold;
+        background: linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 171, 1, 0.18) 100%);
+        box-shadow: 0 0 14px rgba(255, 206, 99, 0.65), inset 0 0 10px rgba(255, 206, 99, 0.2);
+        animation: pulse-editing 1s ease-in-out infinite alternate;
+    }
+
+    body[data-kb-modality] .close-button:focus-visible,
+    body[data-kb-modality] .close-button:focus {
+        @apply outline-none border-white text-white;
+        box-shadow: 0 0 0 3px #fff, 0 0 14px rgba(255, 255, 255, 0.55);
+    }
+
+    /* WC3 system-hotkeys design system. One token set, used everywhere:
+       - Type: Friz Quadrata, uppercase, gold (#ffce63) for primary, #d6dcec for secondary.
+       - Frame: list-item-focus-border.png 9-slice via border-image.
+       - Hover: gold drop-shadow + brightness bump. Active/editing: stronger gold glow. */
+
+    .wc3-dialog {
+        padding: 0;
+        gap: 0;
+        overflow: hidden;
+    }
+
+    .wc3-dialog-header {
+        @apply flex items-center justify-center gap-6;
+        position: relative;
+        padding: 1.6rem 4.5rem 1.4rem;
+        flex: none;
+        border-bottom: 1px solid rgba(255, 206, 99, 0.4);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 2px 0 rgba(255, 206, 99, 0.1);
+    }
+
+    .wc3-header-decoration {
+        height: 2.4rem;
+        width: auto;
+        flex: none;
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7));
+    }
+
+    .wc3-header-decoration-mirrored {
+        transform: scaleX(-1);
+    }
+
+    .wc3-dialog-title {
+        @apply m-0 font-friz-quadrata uppercase tracking-[0.08em] text-[2.5rem] leading-none;
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000, 0 0 18px rgba(255, 206, 99, 0.35);
+    }
+
+    /* Horizontal breadcrumb tab bar — every category visible, click to switch.
+       Wraps a hidden trigger button (used on mobile) and a list of tabs. */
+    .wc3-breadcrumbs {
+        @apply flex items-baseline gap-3 flex-wrap justify-center
+               px-8 py-5;
+        flex: none;
+        border-bottom: 1px solid rgba(255, 206, 99, 0.25);
+    }
+
+    .wc3-breadcrumbs-list {
+        @apply flex items-baseline gap-3 flex-wrap justify-center;
+        flex: 1 1 auto;
+    }
+
+    /* Trigger button collapses to nothing on desktop; mobile-foundation.css
+       reveals it under the 900 px breakpoint. */
+    .wc3-breadcrumbs-trigger {
+        display: none;
+    }
+
+    .wc3-breadcrumb-tab {
+        /* Gold-uppercase-serif treatment shared with `.wc3-dialog-title`
+           and `.templates-dialog-explainer` — every dialog headline-tier
+           string reads coherently as a result. Inactive tabs sit at
+           ~55% opacity so the active tab still stands out without
+           dropping back to blue-grey. */
+        @apply font-friz-quadrata uppercase tracking-[0.1em] text-[2rem] leading-none
+               px-3 py-1 m-0 bg-transparent border-0 cursor-pointer whitespace-nowrap;
+        color: rgba(255, 206, 99, 0.55);
+        text-shadow: 1px 1px 0 #000;
+        transition: color 0.15s ease, text-shadow 0.15s ease;
+    }
+
+    .wc3-breadcrumb-tab:hover {
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000, 0 0 12px rgba(255, 206, 99, 0.55);
+    }
+
+    body[data-kb-modality] .wc3-breadcrumb-tab:focus,
+    body[data-kb-modality] .wc3-breadcrumb-tab:focus-visible {
+        outline: none;
+        color: #ffffff;
+        text-shadow: 1px 1px 0 #000, 0 0 14px rgba(255, 255, 255, 0.65);
+    }
+
+    .wc3-breadcrumb-tab.active {
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000, 0 0 16px rgba(255, 206, 99, 0.45);
+    }
+
+    .wc3-breadcrumb-separator {
+        @apply font-friz-quadrata text-[2rem] leading-none select-none;
+        color: rgba(255, 206, 99, 0.45);
+    }
+
+    .wc3-close-button {
+        @apply absolute right-4 top-1/2 w-10 h-10 flex items-center justify-center
+               text-[1.5rem] font-friz-quadrata cursor-pointer
+               transition-[color,text-shadow] duration-150 bg-transparent border-0;
+        transform: translateY(-50%);
+        color: #d6dcec;
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    .wc3-close-button:hover {
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000, 0 0 12px rgba(255, 206, 99, 0.55);
+    }
+
+    body[data-kb-modality] .wc3-close-button:focus-visible,
+    body[data-kb-modality] .wc3-close-button:focus {
+        outline: none;
+        color: #ffffff;
+        text-shadow: 1px 1px 0 #000, 0 0 16px rgba(255, 255, 255, 0.7);
+    }
+
+    .wc3-dialog-body {
+        @apply flex-1 min-h-0 overflow-y-auto;
+        padding: 2.4rem 3rem 2.6rem;
+    }
+
+    .wc3-stage {
+        @apply flex flex-col items-center gap-8 w-full;
+    }
+
+    .wc3-stage-hint {
+        /* Same gold-uppercase-serif treatment as
+           `.templates-dialog-explainer` and `.preview-dialog-hint` so
+           every dialog-tier explanation reads as a sibling. */
+        @apply m-0 text-[2rem] max-w-[90rem] text-center leading-snug
+               font-friz-quadrata uppercase tracking-[0.1em];
+        color: rgba(255, 206, 99, 0.75);
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    /* Inventory + row layouts. Cells are large because the dialog is 90vw
+       on desktop and the previous tighter sizes left ~70% of the panel
+       empty. Sizes scaled together so labels at 2rem + keys at 2.6rem
+       (or 2.4rem in the row-10 strip) sit visually centered. */
+    .wc3-inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 28rem);
+        grid-auto-rows: 20rem;
+        gap: 1.5rem;
+    }
+
+    .wc3-row {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .wc3-row-3 {
+        grid-template-columns: repeat(3, 26rem);
+    }
+
+    .wc3-row-10 {
+        /* Control-group strip: 10 cells split the dialog gutter, so cells
+           are necessarily smaller than the inventory tier — but bumped
+           from the previous 8.5rem so the bumped 2.4rem key glyph and
+           the "CTRL+0" labels fit without wrapping. */
+        grid-template-columns: repeat(10, 11rem);
+        gap: 0.8rem;
+    }
+
+    .wc3-row-10 .wc3-slot {
+        border-width: 8px;
+        border-image-slice: 12;
+        padding: 0.8rem 0.4rem;
+        gap: 0.4rem;
+        min-height: 11rem;
+    }
+
+    .wc3-row-10 .wc3-slot-key {
+        /* Smaller than the default 2.6rem because 10 cells in the
+           control-group strip leaves limited horizontal slack — but
+           still bumped from the previous 2.2rem to match the wider cells. */
+        font-size: 2.4rem;
+    }
+
+    .wc3-row-cell {
+        @apply flex flex-col items-center justify-center gap-2;
+    }
+
+    .wc3-slot {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.85rem 0.6rem;
+        cursor: pointer;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(15, 22, 45, 0.85) 0%, rgba(8, 14, 30, 0.95) 100%);
+        border-style: solid;
+        border-width: 12px;
+        border-image-source: var(--wc3-slot-frame);
+        border-image-slice: 12 fill;
+        border-image-repeat: stretch;
+        user-select: none;
+        touch-action: none;
+        transition: filter 0.15s ease;
+    }
+
+    .wc3-slot.empty {
+        background: rgba(8, 14, 30, 0.5);
+        border: 2px dashed rgba(255, 206, 99, 0.18);
+        cursor: default;
+        color: rgba(255, 206, 99, 0.25);
+        font-family: inherit;
+        font-size: 2.4rem;
+    }
+
+    .wc3-slot:hover:not(.empty) {
+        filter: brightness(1.18) drop-shadow(0 0 8px rgba(255, 206, 99, 0.45));
+    }
+
+    body[data-kb-modality] .wc3-slot:focus,
+    body[data-kb-modality] .wc3-slot:focus-visible {
+        outline: none;
+        filter: brightness(1.25) drop-shadow(0 0 10px rgba(255, 255, 255, 0.55));
+    }
+
+    .wc3-slot.editing,
+    .wc3-slot.drag-over {
+        filter: brightness(1.32) drop-shadow(0 0 14px rgba(255, 206, 99, 0.75));
+    }
+
+    .wc3-slot.dragging-source > * {
+        visibility: hidden;
+    }
+
+    .wc3-slot-label {
+        /* Slot caption ("HERO 1", "Slot 1", etc.). Sized to read at
+           breadcrumb-tier weight; muted gold so the actual key binding
+           below still wins the eye. */
+        @apply font-friz-quadrata uppercase tracking-[0.18em] text-[2.4rem] leading-none;
+        color: rgba(255, 206, 99, 0.55);
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    .wc3-slot-key {
+        @apply font-friz-quadrata uppercase tracking-[0.04em] text-[3.4rem] leading-none;
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000, 0 0 14px rgba(255, 206, 99, 0.45);
+        white-space: nowrap;
+    }
+
+    .wc3-inventory-drag-follower {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, rgba(15, 22, 45, 0.95) 0%, rgba(8, 14, 30, 0.98) 100%);
+        border-style: solid;
+        border-width: 12px;
+        border-image-source: var(--wc3-slot-frame);
+        border-image-slice: 12 fill;
+        border-image-repeat: stretch;
+        filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 16px rgba(255, 206, 99, 0.6));
+        user-select: none;
+    }
+
+    /* Key chip for list-style views. Sized comparable to `.wc3-slot-key`
+       (the captured-binding text in slotted layouts) so the two view
+       modes read consistently. `min-width` is dimensioned for the
+       widest plausible system binding ("CTRL + SHIFT + X") so every
+       chip in the column is the same width and short bindings (`F9`,
+       a single key) sit centered inside their frame — uniform visual
+       rhythm down the list. `justify-center` centers the text. */
+    .wc3-key-chip {
+        @apply inline-flex items-center justify-center
+               font-friz-quadrata uppercase tracking-[0.04em] text-[2.4rem] leading-none
+               px-6 py-3.5 cursor-pointer whitespace-nowrap;
+        min-width: 18rem;
+        color: #ffce63;
+        text-shadow: 1px 1px 0 #000;
+        background: linear-gradient(180deg, rgba(15, 22, 45, 0.85) 0%, rgba(8, 14, 30, 0.95) 100%);
+        border: 1px solid rgba(255, 206, 99, 0.45);
+        border-radius: 2px;
+        transition: filter 0.15s ease, border-color 0.15s ease;
+    }
+
+    .wc3-key-chip:hover {
+        filter: brightness(1.18) drop-shadow(0 0 8px rgba(255, 206, 99, 0.4));
+        border-color: rgba(255, 206, 99, 0.85);
+    }
+
+    body[data-kb-modality] .wc3-key-chip:focus,
+    body[data-kb-modality] .wc3-key-chip:focus-visible {
+        outline: none;
+        border-color: #ffffff;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55));
+    }
+
+    .wc3-key-chip.editing {
+        border-color: #ffce63;
+        filter: brightness(1.3) drop-shadow(0 0 12px rgba(255, 206, 99, 0.75));
+    }
+
+    /* List view: rows separated by subtle gold dividers. The dialog runs
+       at 90vw on desktop, so the list breathes with a wide max-width
+       instead of clustering in a narrow center column. */
+    .wc3-binding-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        max-width: 110rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wc3-binding-row {
+        @apply flex items-center justify-between gap-8 px-8 py-5;
+        border-top: 1px solid rgba(255, 206, 99, 0.14);
+    }
+
+    .wc3-binding-row:last-child {
+        border-bottom: 1px solid rgba(255, 206, 99, 0.14);
+    }
+
+    .wc3-binding-name {
+        @apply font-friz-quadrata uppercase tracking-[0.08em] text-[2.8rem] leading-tight;
+        color: #d6dcec;
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    /* dioxus-primitives toast region — bottom-right. `position: fixed
+       !important` defends against an ancestor accidentally creating a
+       containing-block for fixed descendants. No max-height / overflow rules
+       — they collapsed the container to height 0 in some viewports. */
+    /* Container am Viewport bottom-right verankert. Wir vermeiden flex am
+       Container, weil die innere `<ol>` mit `flex-direction: column-reverse`
+       und auto-height in dieser Kombination weird collapsed; stattdessen
+       positioniert sich der Container hart bottom-right und die `<ol>` füllt
+       ihn natürlich. */
+
+    .has-tooltip {
+        position: relative;
+    }
+
+    .has-tooltip > .tooltip-popup {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: min(32rem, calc(100vw - 2rem));
+        padding: 0.85rem 1.35rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--color-warcraft-gold);
+        background: rgba(8, 18, 35, 0.97);
+        color: var(--color-warcraft-gold);
+        font-family: var(--font-friz-quadrata);
+        font-weight: 400;
+        font-size: 1.3rem;
+        line-height: 1.5;
+        letter-spacing: 0.06em;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 #000;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 10px rgba(255, 206, 99, 0.18);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: auto;
+        user-select: text;
+        cursor: text;
+        /* Hide path: fade out fast, then flip visibility once opacity has
+           finished. The delayed visibility step is what lets the popup
+           keep capturing mouseover during the fade-out so a quick
+           reentry cancels the hide. */
+        transition: opacity 150ms ease, visibility 0ms 150ms;
+        z-index: 2100;
+    }
+
+    /* Invisible hover-bridge over the 0.5rem gap between trigger and popup.
+       Without this the popup unhovers as soon as the mouse leaves the
+       trigger, so the user can never reach into it to select text. */
+    .has-tooltip > .tooltip-popup::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -0.5rem;
+        height: 0.5rem;
+    }
+
+    /* Connecting arrow that visually links the tooltip to the trigger. Placed
+       at the popup's top edge, pointing up toward the trigger. Position
+       defaults to horizontal center; the `data-tooltip-anchor` overrides
+       below shift it to align with the trigger when the popup is anchored
+       to a side. */
+    .has-tooltip > .tooltip-popup::after {
+        content: "";
+        position: absolute;
+        top: -0.45rem;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 0.65rem;
+        height: 0.65rem;
+        border-top: 1px solid var(--color-warcraft-gold);
+        border-left: 1px solid var(--color-warcraft-gold);
+        background: rgba(8, 18, 35, 0.97);
+    }
+
+    .has-tooltip:hover > .tooltip-popup,
+    .has-tooltip:focus-visible > .tooltip-popup,
+    body[data-kb-modality] .has-tooltip:focus > .tooltip-popup,
+    .has-tooltip > .tooltip-popup:hover,
+    .has-tooltip > .tooltip-popup:focus-within,
+    /* Keep visible while the user is click-and-dragging to select text inside
+       the popup. `:active` matches throughout mousedown→mouseup, so the popup
+       won't disappear mid-drag even if the mouse strays over its edge. */
+    .has-tooltip > .tooltip-popup:active,
+    .has-tooltip:active > .tooltip-popup {
+        opacity: 1;
+        visibility: visible;
+        /* Show path: 700ms dwell delay before fading in, so the tooltip
+           stays out of the way for users who already know the control. */
+        transition: opacity 150ms ease 700ms, visibility 0ms 700ms;
+    }
+
+    /* Anchor overrides for triggers near a viewport edge. The default is
+       centered; `data-tooltip-anchor="right"` keeps the popup's right edge
+       within the trigger so it grows leftward (and so does the bridge);
+       `"left"` mirrors that. The bridge spans the full width regardless.
+       The arrow is repositioned to sit roughly above the trigger (which,
+       for an edge-anchored popup, is on the corresponding side of the popup
+       rather than its center). */
+    .has-tooltip[data-tooltip-anchor="right"] > .tooltip-popup {
+        left: auto;
+        right: 0;
+        transform: none;
+    }
+
+    .has-tooltip[data-tooltip-anchor="right"] > .tooltip-popup::after {
+        left: auto;
+        right: 1.25rem;
+        transform: rotate(45deg);
+    }
+
+    .has-tooltip[data-tooltip-anchor="left"] > .tooltip-popup {
+        left: 0;
+        right: auto;
+        transform: none;
+    }
+
+    .has-tooltip[data-tooltip-anchor="left"] > .tooltip-popup::after {
+        left: 1.25rem;
+        right: auto;
+        transform: rotate(45deg);
+    }
+
+@keyframes pulse-editing {
+    from { box-shadow: 0 0 12px rgba(255, 206, 99, 0.45), inset 0 0 12px rgba(255, 206, 99, 0.2); }
+    to   { box-shadow: 0 0 18px rgba(255, 206, 99, 0.85), inset 0 0 14px rgba(255, 206, 99, 0.35); }
+}
+}

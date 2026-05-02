@@ -1,0 +1,2256 @@
+/*  ───────────────────────────────────────────────────────────────────────────
+    mobile-foundation.css  —  mobile overrides
+    ────────────────────────────────────────────────────────────────────────────
+    Imported into @layer mobile (tailwind.input.css), which is declared after
+    Tailwind's built-in layers. Layer priority wins over any specificity in
+    @layer components — no !important needed.
+
+    Master breakpoint: max-width: 1099px (covers phones, tablets, and compact
+    laptop widths up to 1099px). Desktop layout starts at 1100px and above.
+
+    Sections:
+      1. Foundation        — viewport hygiene, no horizontal scroll, dvh, safe-area
+      2. Drag & touch      — prevent page scroll while dragging tiles
+      3. Header & burger   — header sticky, drawer body scroll-lock, safe areas
+      4. Race tabs         — tame the carousel banner so it doesn't dominate
+      5. Mode tabs         — equal-width row, no wrap blowout
+      6. Unit list / cards — compact, finger-sized, scroll bounded
+      7. Stats panel       — single column readability
+      8. Command grid      — 4-up tiles, predictable size, no clamp jitter
+      9. Override panel    — full-width sticky bottom sheet
+     10. Dialogs/preview   — full-screen on phone
+     11. Tap targets       — 44px floor, hover-only-on-hover, tap-highlight
+     12. Footer            — compact, safe-area
+     13. Body scroll lock  — for drawers + dialogs (.body-scroll-locked helper)
+   */
+
+/* ─────────────────────── 1. FOUNDATION ─────────────────────── */
+
+html, body {
+    /* Prevent horizontal scroll at the document root no matter what a child
+       does. `overflow-x: clip` is preferred over `hidden` because it does
+       not establish a scroll container, so position:sticky descendants keep
+       working. Fallback to `hidden` for older browsers via the second decl. */
+    max-width: 100vw;
+    max-width: 100svw;
+    overflow-x: hidden;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    /* iOS Safari momentum scroll on the document — without this, internal
+       overflow:auto regions feel sluggish. */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+}
+
+@media (max-width: 1099px) {
+    /* Root container (`.app` from rsx in app.rs:65) — kill horizontal padding
+       collapsing and force-fit to viewport width. */
+    .app,
+    body > div,
+    [data-dioxus-app] {
+        max-width: 100vw;
+        max-width: 100svw;
+        min-width: 0;
+    }
+
+    /* Universal min-width:0 inside flex/grid descendants of .app. Without
+       this, flex children whose intrinsic min-content exceeds the viewport
+       (long words, fixed-width images, intrinsic-sized grids) push the
+       parent wider than 100vw and produce horizontal scroll. */
+    .app *,
+    .app *::before,
+    .app *::after {
+        min-width: 0;
+    }
+
+    /* iOS dynamic viewport: replace any leftover 100vh with 100dvh-ish
+       behaviour by capping the root height to dvh. */
+    .app {
+        min-height: 100dvh;
+        max-width: 100vw;
+        max-width: 100svw;
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-top: 0;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        gap: 24px;
+        overflow: visible;
+    }
+
+    /* Images: never push a parent wider than its content box. */
+    .app img,
+    .app svg {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Inputs: 16px floor on phone prevents iOS zoom-on-focus. */
+    .app input,
+    .app textarea,
+    .app select,
+    .app button {
+        font-size: max(1rem, 16px);
+    }
+
+    /* Hide outer pixel-perfect chrome that has no business on phone. */
+    .app .wc3-header-decoration {
+        display: none;
+    }
+}
+
+/* ─────────────────────── 2. DRAG & TOUCH ─────────────────────── */
+
+/* Command-grid touch drag uses long-press activation. Before the long-press
+   fires, vertical movement should remain a normal page scroll. Once the Rust
+   handler commits the drag it installs a non-passive touchmove lock, so the
+   active drag follower stays aligned with viewport coordinates. */
+
+.grid-tile,
+.grid-tile.has-ability,
+.grid-tile.is-command {
+    touch-action: pan-y;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.grid-tiles,
+.command-tile-wrapper,
+.unit-detail-grids,
+.command-section {
+    touch-action: pan-y;
+}
+
+
+/* Drag follower: promote to its own GPU layer so iOS doesn't jank under
+   the sticky header, and keep it pixel-snapped. The base rules in
+   drag-follower.css already give it position:fixed + pointer-events:none. */
+.drag-follower {
+    will-change: transform, left, top;
+    transform: translate3d(0, 0, 0);
+    /* iOS Safari renders position:fixed inside transformed ancestors
+       relative to the ancestor — but our follower is rendered at app
+       top-level, so this is fine. The translate3d above just promotes. */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* ─────────────────────── 3. HEADER & BURGER ─────────────────────── */
+
+@media (max-width: 1099px) {
+    /* Header sticky + safe-area padding for all non-desktop widths.
+       This layer (mobile) wins over @layer components, so it always applies. */
+    .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 60;
+        background: linear-gradient(180deg, rgba(8, 14, 30, 0.98) 0%, rgba(8, 14, 30, 0.96) 100%);
+        padding-top: max(0.5rem, env(safe-area-inset-top));
+        padding-bottom: 0.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-left: 0;
+        margin-right: 0;
+        border-bottom: 1px solid rgba(255, 206, 99, 0.3);
+        min-height: 3.5rem;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .app-header h1,
+    .app-header-title {
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+        line-height: 1.15;
+        margin: 0;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .app-header-brand {
+        gap: 0.5rem;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* Burger button must stay tappable: 44px minimum. */
+    .app-header-burger-btn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        flex-shrink: 0;
+    }
+    .app-header-burger-btn .toolbar-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+/* Burger drawer: full mobile-height, safe-area aware, body-scroll-locked
+   while open. The body lock is provided by the .body-scroll-locked helper
+   below — the burger toggle in app_header.rs needs to add/remove that
+   class on `body`, but as a CSS-only fallback we lock body via :has() on
+   the drawer's existence. */
+.burger-drawer {
+    height: 100dvh;
+    max-height: 100dvh;
+    width: min(85vw, 320px);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.burger-backdrop {
+    z-index: 70;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+/* Body scroll lock when burger is open. :has() is supported on iOS 16.4+
+   which covers iPhone 12 + every device that matters. Without this, the
+   underlying page scrolls behind the open drawer and the grid container
+   queries trigger a layout recalc — which is why "burger open blew up
+   the grid". */
+body:has(.burger-drawer) {
+    overflow: hidden;
+    position: relative;
+    overscroll-behavior: contain;
+}
+body:has(.burger-drawer) .app {
+    /* Container queries on .command-section read `inline-size` of the
+       section. When the drawer overlay forces a body reflow, the grid
+       can recompute its --tile-size to a different bucket and the icons
+       jump. Pin the section's inline size to prevent recalc. */
+    overflow: hidden;
+}
+
+/* Drawer body: bigger touch targets in the action row. */
+@media (max-width: 1099px) {
+    .burger-drawer-body {
+        padding: 1.25rem 1rem max(1.25rem, env(safe-area-inset-bottom));
+        gap: 1rem;
+    }
+    .burger-actions .toolbar-icon-button {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* The drawer is a sibling of `.app-header`, not a descendant — so the
+   `--hdr-scale` custom property defined on `.app-header` does not inherit.
+   Every `calc(... * var(--hdr-scale))` inside the drawer therefore evaluates
+   to an invalid value and falls back to `auto`. For SVG-bearing icon boxes
+   (`.layout-pill-icon`, `.toolbar-icon`) `width: auto` lets the SVG draw at
+   its intrinsic size — which is huge — so the GRID LAYOUT pill renders a
+   200px icon stack on top of the rest of the drawer. Re-define the variable
+   on the drawer and pin explicit sizes for any element whose calc relied on
+   it, so the math becomes deterministic regardless of inheritance. */
+.burger-drawer {
+    --hdr-scale: 1;
+}
+
+.burger-drawer .toolbar-icon-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+}
+.burger-drawer .toolbar-icon,
+.burger-drawer .toolbar-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* ─────────────────────── 4. RACE TABS ─────────────────────── */
+
+/* Mobile race tabs: chunky banner cards in a horizontal scroll-snap strip.
+   app-root.css:130-133 explicitly hides the banner pseudo-elements at
+   ≤700px and forces a pill aesthetic — we re-enable the banners here so
+   each race shows its dark-banner artwork. Cards are sized so 2-3 fit on
+   a 390px viewport, encouraging horizontal scroll. */
+@media (max-width: 1099px) {
+    .race-tabs {
+        gap: 0.6rem;
+        padding: 0.25rem 0.25rem 0.5rem;
+        scroll-snap-type: x mandatory;
+    }
+
+    .race-tab {
+        flex: 0 0 auto;
+        width: clamp(6.5rem, 26vw, 9rem);
+        min-width: 0;
+        height: clamp(8rem, 30vw, 11rem);
+        min-height: 0;
+        max-width: none;
+        padding: 0;
+        border-radius: 10px;
+        align-items: flex-end;
+        justify-content: center;
+        scroll-snap-align: center;
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    /* Bring the banner artwork back. app-root.css hides these on phone;
+       re-enable + size the image so it fills the card edge-to-edge. */
+    .race-tab::before {
+        display: block;
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--race-banner, none);
+        background-size: cover;
+        background-position: center 30%;
+        background-repeat: no-repeat;
+        filter: brightness(1.35) saturate(1.2) contrast(1.05);
+        opacity: 1;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .race-tab::after {
+        display: block;
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.0) 0%,
+            rgba(0, 0, 0, 0.0) 35%,
+            rgba(0, 0, 0, 0.55) 70%,
+            rgba(0, 0, 0, 0.95) 100%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .race-tab-label {
+        position: relative;
+        z-index: 2;
+        padding: 0.5rem 0.55rem 0.7rem;
+        line-height: 1.1;
+        white-space: nowrap;
+        text-align: center;
+        text-shadow:
+            1px 1px 0 #000,
+            -1px 1px 0 #000,
+            1px -1px 0 #000,
+            -1px -1px 0 #000,
+            0 0 6px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Active tab gets a brighter banner + race-color glow ring. */
+    .race-tab.active {
+        box-shadow:
+            0 0 0 2px var(--race-color, #ffce63),
+            0 0 18px var(--race-color-soft, rgba(255, 206, 99, 0.5));
+    }
+    .race-tab.active::before {
+        filter: brightness(1.55) saturate(1.35) contrast(1.05);
+    }
+}
+
+/* ─────────────────────── 5. MODE TABS ─────────────────────── */
+
+@media (max-width: 1099px) {
+    /* `.mode-strip` is the OUTER wrapper containing both the mode-toggle
+       (Melee / Campaign) AND the race-tabs nav. It must stay `column` so
+       the two children stack. Forcing it to `row` collapses race-tabs to
+       0 width because mode-toggle takes width:100% and shoves it off-screen. */
+    .mode-strip {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    /* `.mode-toggle` is the inner Melee/Campaign row — that one we want
+       horizontal so the two pills sit side-by-side. */
+    .mode-toggle {
+        width: 100%;
+        /* In column-flex .mode-strip, flex-basis sets HEIGHT. Component layer
+           leaves flex: 0 0 18rem here, which inflates buttons to ~151px.
+           Reset to auto so height = content (the button min-height). */
+        flex: 0 0 auto;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+    }
+    .mode-toggle-button {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        min-height: 52px;
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        padding: 0 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.04em;
+    }
+    .race-tabs {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* Override the very-narrow ≤500 stacking from app-root.css:651-673 — we
+   want the row layout from 320px up. */
+@media (max-width: 500px) {
+    .mode-toggle {
+        flex-direction: row;
+    }
+    .mode-toggle-button {
+        width: auto;
+        flex: 1 1 0;
+    }
+}
+
+/* ─────────────────────── 6. UNIT LIST / CARDS ───────────────────────
+   Mobile redesign: replace the cramped vertical-scroll list with a compact
+   three-row picker:
+     row 1 — search input (compact)
+     row 2 — 4 category tab pills (Heroes / Units / Workers / Buildings),
+              full-width slots, single-tap reachable
+     row 3 — horizontal scroll-snap row of unit tiles for the active category
+              (or all matching units when search is active)
+   Desktop's vertical category-heading collapsibles are hidden on mobile —
+   tabs replace them. CSS attribute selectors filter cards by data-unit-kind
+   against aside[data-active-category] when search is empty. */
+
+@media (max-width: 1099px) {
+    .unit-list {
+        max-height: none;
+        min-height: 0;
+        position: static;
+        width: 100%;
+        overflow: visible;
+        gap: 0.5rem;
+    }
+
+    .unit-list-search {
+        padding: 0.35rem 0.45rem;
+    }
+    .unit-list-search input {
+        font-size: 16px;
+        min-height: 2.25rem;
+        padding: 0.45rem 0.7rem;
+    }
+
+    /* Tab row: visible on mobile, full-width, equal slots, no wrap. */
+    .unit-list .unit-category-tabs {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .unit-list .unit-category-tab {
+        font-size: clamp(11px, 2.8vw, 14px);
+        padding: 0 0.35rem;
+        height: 44px;
+        line-height: 1;
+    }
+
+    /* Headings hidden — tabs replace them. */
+    .unit-list .unit-category-heading {
+        display: none;
+    }
+
+    /* Horizontal swipe row for unit cards. The scroll wrapper switches from
+       overflow-y to overflow-x; the inner track flips to row layout with
+       scroll-snap so flicks land cleanly on cards. */
+    .unit-list-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+        height: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        padding-right: 0;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+    .unit-list-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .unit-list-track {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+        width: max-content;
+        min-width: 100%;
+        padding: 0.15rem 0.05rem 0.15rem 0;
+    }
+
+    /* Filter cards by active-category when search is empty. When search is
+       active, all matches across categories show in one strip. */
+    .unit-list[data-search-active="false"][data-active-category="hero"] .unit-card:not([data-unit-kind="hero"]),
+    .unit-list[data-search-active="false"][data-active-category="soldier"] .unit-card:not([data-unit-kind="soldier"]),
+    .unit-list[data-search-active="false"][data-active-category="worker"] .unit-card:not([data-unit-kind="worker"]),
+    .unit-list[data-search-active="false"][data-active-category="building"] .unit-card:not([data-unit-kind="building"]) {
+        display: none;
+    }
+
+    /* Unit cards as carousel rows: icon left, name right. ~52vw width
+       gives 2 cards per viewport with a clear peek of the next card on
+       the right edge — the swipe affordance. Cards are pinned to a
+       fixed height so the picker's vertical footprint is constant
+       regardless of which unit is active, otherwise the page below
+       reflows on category switch. */
+    .unit-card {
+        flex: 1 0 auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: min(54vw, 260px);
+        height: clamp(96px, 25vw, 120px);
+        min-height: clamp(96px, 25vw, 120px);
+        max-height: clamp(96px, 25vw, 120px);
+        padding: 8px 10px;
+        gap: 10px;
+        scroll-snap-align: start;
+        text-align: left;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .unit-card-icon {
+        width: clamp(62px, 16vw, 78px);
+        height: clamp(62px, 16vw, 78px);
+        flex-shrink: 0;
+    }
+    .unit-card-text {
+        align-items: flex-start;
+        text-align: left;
+        gap: 4px;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+    }
+    .unit-card-name {
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        -webkit-line-clamp: initial;
+        height: auto;
+        max-height: none;
+        width: 100%;
+    }
+    .unit-card-id {
+        display: block;
+        font-size: 11px;
+        line-height: 1.2;
+        color: #7b818d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+
+    /* Track gets a small leading gutter so the first card has breathing
+       room from the viewport edge, matching the natural peek that appears
+       on the right of every other card. Height pinned to match cards. */
+    .unit-list-track {
+        height: clamp(96px, 25vw, 120px);
+        min-height: clamp(96px, 25vw, 120px);
+        max-height: clamp(96px, 25vw, 120px);
+        gap: 0.5rem;
+        padding: 0 0.4rem 0 0.4rem;
+        align-items: stretch;
+    }
+    .unit-list-scroll {
+        height: clamp(96px, 25vw, 120px);
+        min-height: clamp(96px, 25vw, 120px);
+        max-height: clamp(96px, 25vw, 120px);
+        flex: 0 0 auto;
+        scroll-padding-inline-start: 0.4rem;
+    }
+
+    /* Wall the aside's internal layout off from the rest of the page so any
+       internal change cannot reflow siblings. `contain: layout` is enough —
+       we don't want `size` because that forces an explicit height we don't
+       own here, which over-reserves space below the cards. */
+    .unit-list {
+        contain: layout;
+    }
+}
+
+/* ─────────────────────── 7. STATS PANEL ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .stats-panel,
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+    .stats-panel {
+        padding: 0.75rem 0.85rem;
+    }
+    .stat-row,
+    .stats-row {
+        font-size: 0.95rem;
+        padding: 0.3rem 0;
+    }
+    .stat-row .stat-label,
+    .stats-row .stat-label {
+        font-size: 0.85rem;
+    }
+}
+
+/* ─────────────────────── 8. COMMAND GRID ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: 0.5rem;
+        padding: 0;
+        max-width: 100%;
+        /* Prevent main-content from growing to fill the viewport (flex: 1 1 0
+           from base CSS only resets at ≤700px via app-root.css). Without this,
+           overflow:visible grids inside UnitDetailPanel extend past the flex
+           boundary and visually overlap the footer. */
+        flex: 0 0 auto;
+        min-height: auto;
+    }
+
+    .unit-detail {
+        padding: 1.25rem;
+        border-radius: 8px;
+        max-height: none;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    .unit-detail-header {
+        gap: 0.85rem;
+        flex-direction: row;
+        align-items: center;
+    }
+    .unit-detail-header h2 {
+        font-size: clamp(1.3rem, 5vw, 1.8rem);
+    }
+    .unit-portrait {
+        width: clamp(80px, 22vw, 120px);
+        height: clamp(80px, 22vw, 120px);
+    }
+    .unit-detail-row {
+        grid-template-columns: 1fr;
+        grid-template-areas: "grids" "override";
+        gap: 1.5rem;
+        margin-top: 1.25rem;
+        padding-inline: 0;
+    }
+    .unit-detail-row > .unit-detail-grids {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.75rem;
+        grid-area: grids;
+    }
+    .unit-detail-row > .tile-override-panel {
+        grid-area: override;
+        grid-column: auto;
+        width: 100%;
+    }
+
+    /* Command sections: full width, centered. Disable container queries
+       on phone — we use a viewport-derived tile size instead. The base
+       command-grid.css:103 sets container-type: inline-size which causes
+       jumpy reflows when the burger drawer overlays. */
+    .command-section {
+        container-type: normal;
+        flex: 1 1 100%;
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .command-section-heading {
+        font-size: 1.1rem;
+        margin: 0.5rem 0 0.6rem;
+        text-align: center;
+    }
+
+    /* Tiles: pure-px clamp because the project sets html font-size to a
+       clamp(9.33px, 0.365vw, 12.6px) (preflight.css:9), so 1rem ≈ 9.33px
+       on phone — rem-based clamps render way too small. We compute the
+       tile size from the viewport directly in px:
+         (100vw - 2 * 12px app-padding - 3 * 6px gap) / 4 = (100vw - 42) / 4
+       At 390px viewport: (390 - 42) / 4 = 87px. Floor 56 (touch target),
+       cap 96 so tiles stay reasonable on tablet-portrait widths. */
+    .grid-tiles {
+        --tile-size: clamp(56px, calc((100vw - 42px) / 4), 96px);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 6px;
+        justify-content: center;
+        max-width: 100%;
+        width: 100%;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+    .command-tile-caption {
+        display: none;
+    }
+    .grid-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .hotkey-overlay {
+        min-width: 18px;
+        height: 18px;
+        font-size: 11px;
+        padding: 0 4px;
+        top: 2px;
+        right: 2px;
+    }
+    .command-label {
+        font-size: 10px;
+        padding: 0 2px;
+    }
+}
+
+/* ─────────────────────── 8b. TABLET SIDE-BY-SIDE GRIDS (701–1099px) ─────────────────
+   Stats panel uses a 2×2 layout at ≥701px; command sections mirror that:
+   both shown side by side instead of stacked. Overrides the column stack from §8.
+   Tile size uses viewport width so two 4-wide sections comfortably fit at 701px. */
+@media (min-width: 701px) and (max-width: 1099px) {
+    /* CSS grid guarantees the Research Menu always starts at exactly 50%,
+       matching the stats panel's right column boundary. */
+    .unit-detail-row > .unit-detail-grids {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem 2rem;
+        align-items: start;
+    }
+    .command-section {
+        container-type: inline-size;
+        min-width: 0;
+        width: auto;
+        max-width: none;
+        align-items: flex-start;
+    }
+    .command-section-heading {
+        text-align: left;
+    }
+    /* 100cqi = column width; fills tiles to available space, capped at 9rem. */
+    .grid-tiles {
+        --tile-size: clamp(5rem, calc((100cqi - 1.5rem) / 4), 9rem);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 6px;
+        justify-content: start;
+        width: auto;
+        max-width: none;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+}
+
+/* ─────────────────────── 9. OVERRIDE PANEL ─────────────────────── */
+
+@media (max-width: 1099px) {
+    /* override-panel.css:407 sticks the panel to viewport bottom at ≤600 px,
+       which on a single-column phone layout means the panel hovers OVER the
+       command grid (z-index 100) and you can never reach the bottom rows of
+       tiles. Inline-flow it — the page is short enough that scrolling is fine. */
+    .tile-override-panel {
+        position: static;
+        bottom: auto;
+        z-index: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        align-items: stretch;
+    }
+    .tile-override-card,
+    .tile-override-empty {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        gap: 6px 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        height: 300px;
+        overflow: hidden;
+    }
+    .tile-override-card {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        justify-content: flex-start;
+        border-bottom: 1px solid #ffce63;
+    }
+    .tile-override-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-bottom: 1px dashed #4a7090;
+    }
+
+    /* Header row: name+id grow, key cell pinned right via grid. Fixed
+       height so the row geometry is stable regardless of name length. */
+    .tile-override-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 8px;
+        padding: 0 0 10px 0;
+        margin: 0;
+        flex: 0 0 auto;
+        overflow: hidden;
+        width: 100%;
+        text-align: left;
+    }
+    .tile-override-header-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+        min-height: 44px;
+        justify-content: center;
+        text-align: left;
+    }
+
+    .tile-override-focus-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+    .tile-override-name {
+        font-size: 15px;
+        line-height: 1.2;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: normal;
+    }
+    .tile-override-id {
+        font-size: 12px;
+        line-height: 1.2;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tile-override-description,
+    .tile-override-hint {
+        font-size: 13px;
+        line-height: 1.35;
+        margin: 0;
+        flex: 0 0 auto;
+        overflow: visible;
+        max-height: none;
+    }
+
+    .override-key-cell {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 18px;
+    }
+    .app .tile-override-tier-button {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+        padding: 0;
+        font-size: 0;
+    }
+    .app .tile-override-tier-button::before {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* ─────────────────────── 10. DIALOGS / PREVIEW ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .dialog-overlay,
+    .dialog-shell,
+    .wc3-dialog,
+    .preview-dialog,
+    .system-hotkeys-dialog,
+    .templates-dialog {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+        margin: 0;
+        inset: 0;
+        padding: max(0.85rem, env(safe-area-inset-top))
+                 max(0.85rem, env(safe-area-inset-right))
+                 max(0.85rem, env(safe-area-inset-bottom))
+                 max(0.85rem, env(safe-area-inset-left));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .dialog-shell {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* Body scroll lock while any dialog is open. Same :has() pattern as
+   the burger drawer. */
+body:has(.dialog-overlay),
+body:has(.preview-dialog),
+body:has(.system-hotkeys-dialog),
+body:has(.templates-dialog) {
+    overflow: hidden;
+    overscroll-behavior: contain;
+}
+
+/* ─────────────────────── 11. TAP TARGETS ─────────────────────── */
+
+@media (max-width: 1099px) {
+    /* Every interactive element: 44px floor, no tap highlight, no double-tap
+       zoom. */
+    .app button,
+    .app a,
+    .app [role="button"],
+    .app input[type="button"],
+    .app input[type="submit"],
+    .app .race-tab,
+    .app .unit-card {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+    .app .grid-tile {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: pan-y;
+    }
+
+    /* Hover styles only when device actually supports hover. iOS Safari
+       fakes :hover on tap which leaves stuck highlights; gate them all. */
+}
+
+@media (max-width: 1099px) and (hover: none) {
+    .app button:hover,
+    .app a:hover,
+    .app .race-tab:hover,
+    .app .unit-card:hover,
+    .app .grid-tile:hover,
+    .app .toolbar-icon-button:hover,
+    .app .layout-pill:hover,
+    .app .mode-toggle-button:hover {
+        /* Force inheritance — overrides component :hover declarations.
+           Active state still visible via :active in component CSS. */
+        background: inherit;
+        color: inherit;
+        border-color: inherit;
+        box-shadow: none;
+        text-shadow: none;
+        transform: none;
+    }
+    /* The close button uses transform for absolute centering (translateY(-50%));
+       don't wipe it out via the generic button:hover reset above. */
+    .app .wc3-close-button:hover {
+        transform: translateY(-50%);
+    }
+}
+
+/* On touch devices :focus-visible fires after a tap because the key-capture
+   input takes focus and then returns it to the tapped cell button. The white
+   keyboard-focus ring is visually correct for keyboard users but jarring on
+   mobile. Reset layout-cell focus-visible to the normal gold appearance. */
+@media (hover: none) {
+    body[data-kb-modality] .layout-cell:focus-visible {
+        border-color: #ffce63;
+        background: rgba(40, 30, 8, 0.75);
+        box-shadow: none;
+        color: #ffce63;
+    }
+}
+
+/* Touch browsers can keep focus on the tapped control after click. When that
+   happens, keep the actual active/selected state visible instead of showing
+   the desktop keyboard ring until the next blur. */
+@media (hover: none), (pointer: coarse) {
+    body[data-kb-modality] .mode-toggle-button:focus,
+    body[data-kb-modality] .mode-toggle-button:focus-visible {
+        border-color: #6c5a1f;
+        color: #c0c8da;
+        box-shadow: none;
+    }
+
+    body[data-kb-modality] .race-tab:focus,
+    body[data-kb-modality] .race-tab:focus-visible {
+        border-color: #3a4a6c;
+        color: #fff5d6;
+        box-shadow: none;
+    }
+
+    body[data-kb-modality] .unit-category-tab:focus,
+    body[data-kb-modality] .unit-category-tab:focus-visible {
+        border-color: #1f3d63;
+        box-shadow: none;
+    }
+
+    body[data-kb-modality] .unit-card:focus,
+    body[data-kb-modality] .unit-card:focus-visible {
+        background: linear-gradient(180deg, rgba(13, 31, 61, 0.55) 0%, rgba(8, 14, 30, 0.55) 100%);
+        border-color: rgba(42, 80, 133, 0.6);
+        color: #e0d8c8;
+        box-shadow: none;
+    }
+
+    body[data-kb-modality] .grid-tile.has-ability:focus,
+    body[data-kb-modality] .grid-tile.has-ability:focus-visible {
+        border-color: var(--race-color, #ffce63);
+        box-shadow: none;
+    }
+
+    body[data-kb-modality] .override-key-cell:focus,
+    body[data-kb-modality] .override-key-cell:focus-visible {
+        border-color: #ffce63;
+        color: #ffce63;
+        box-shadow: 0 0 10px rgba(255, 206, 99, 0.5);
+    }
+
+    .mode-toggle-button.active:focus,
+    .mode-toggle-button.active:focus-visible {
+        background: linear-gradient(180deg, rgba(255, 206, 99, 0.18) 0%, rgba(40, 30, 8, 0.55) 100%);
+        border-color: #ffce63;
+        color: #ffce63;
+        box-shadow: 0 0 12px rgba(255, 206, 99, 0.3);
+    }
+
+    .race-tab.active:focus,
+    .race-tab.active:focus-visible {
+        color: #fff;
+        border-color: var(--race-color, #ffce63);
+        background: linear-gradient(180deg, var(--race-color-strong, #4a3d14) 0%, #0a1432 100%);
+        box-shadow:
+            0 0 0 2px var(--race-color, #ffce63),
+            0 0 18px var(--race-color-soft, rgba(255, 206, 99, 0.5));
+    }
+
+    .unit-category-tab.active:focus,
+    .unit-category-tab.active:focus-visible {
+        background: linear-gradient(135deg, rgba(45, 80, 130, 0.95) 0%, rgba(20, 45, 80, 0.95) 100%);
+        border-color: var(--race-color, #ffce63);
+        color: var(--race-color, #ffce63);
+        box-shadow: 0 0 6px var(--race-color-soft, rgba(255, 206, 99, 0.3));
+    }
+
+    .unit-card.selected:focus,
+    .unit-card.selected:focus-visible {
+        background: linear-gradient(135deg, rgba(45, 80, 130, 0.85) 0%, rgba(20, 45, 80, 0.85) 100%);
+        border-color: var(--race-color, #ffce63);
+        color: var(--race-color, #ffce63);
+        box-shadow: 0 0 10px var(--race-color-soft, rgba(255, 206, 99, 0.3));
+    }
+
+    .grid-tile.selected:focus,
+    .grid-tile.selected:focus-visible {
+        border-color: var(--race-color, #ffce63);
+        box-shadow: 0 0 14px var(--race-color-soft, rgba(255, 206, 99, 0.6));
+    }
+}
+
+/* ─────────────────────── 12. FOOTER ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .app-footer,
+    footer.app-footer {
+        font-size: 0.75rem;
+        padding: 0.5rem max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-bottom));
+        text-align: center;
+        line-height: 1.3;
+    }
+}
+
+/* At 701–1099 px the .app is a flex column with min-height:100dvh.
+   .main-content is flex:0 0 auto so it doesn't fill the container.
+   Without this rule the footer floats somewhere in the middle of the
+   viewport with empty space below it. margin-top:auto absorbs all
+   free space between main-content and footer, pinning the footer to
+   the viewport bottom regardless of content height. */
+@media (min-width: 701px) and (max-width: 1099px) {
+    .app-footer,
+    footer.app-footer {
+        margin-top: auto;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1099px) and (max-height: 900px) {
+    .app-footer,
+    footer.app-footer {
+        margin-top: 0;
+    }
+}
+
+/* ─────────────────────── 13. BODY-SCROLL-LOCKED HELPER ───────────────────────
+   Hooks for JS / Rust to add/remove on `body` if the :has() fallback isn't
+   enough on a particular browser. The :has() rules above are the primary
+   mechanism; this class is the belt-and-suspenders override. */
+
+body.body-scroll-locked {
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overscroll-behavior: contain;
+}
+
+/* ─────────────────────── 14. CONTROL STRIP / TABS WRAPPER ─────────────────────── */
+
+@media (max-width: 1099px) {
+    /* The mode-and-race-tabs container in app.rs:149 is `flex items-stretch
+       gap-6` — on phone it should stack to a column. The `max-md:flex-col`
+       in the rsx already does this at md (768px), but Tailwind's `md` ≠ our
+       900 breakpoint, so re-state. */
+    .control-strip,
+    [class*="flex"][class*="items-stretch"][class*="gap-6"] {
+        flex-direction: column;
+        gap: 0.6rem;
+        min-height: 0;
+        width: 100%;
+    }
+}
+
+/* ─────────────────────── 15. PRIMITIVES BLEED-CONTROL ─────────────────────── */
+
+/* Some Tailwind utilities used in app.rs apply min-h-[clamp(18rem,14vh,32rem)]
+   to the mode/race container — that's 288px minimum, way too tall for a phone
+   where it competes with the viewport. Cap it. */
+@media (max-width: 1099px) {
+    .app > div[class*="min-h-"] {
+        min-height: 0;
+    }
+}
+
+/* ─────────────────────── 16. LAYOUT EDITOR / DIALOG COMPACTION ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .layout-editor,
+    .layout-editor-shell {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+    .layout-editor-grid {
+        grid-template-columns: repeat(4, clamp(2.5rem, 12vw, 3.5rem));
+        grid-auto-rows: clamp(2.5rem, 12vw, 3.5rem);
+        gap: 0.4rem;
+        justify-content: center;
+    }
+    .layout-cell {
+        width: clamp(2.5rem, 12vw, 3.5rem);
+        height: clamp(2.5rem, 12vw, 3.5rem);
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    }
+    .layout-editor-apply-button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* Dialog-context layout editor: px-based sizes to avoid the rem-scale issue
+       (html font-size ≈ 9.33px on phone, so rem-based values come out tiny).
+       These win over layout-editor.css and dialog-shared.css due to @layer mobile. */
+    .layout-editor-shell .wc3-dialog-title {
+        font-size: clamp(16px, 5vw, 22px);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .layout-editor-body {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .layout-editor-explainer-line {
+        font-size: clamp(13px, 3.5vw, 16px);
+        letter-spacing: 0.05em;
+        line-height: 1.35;
+    }
+    .layout-editor-body .layout-editor-grid {
+        grid-template-columns: repeat(4, clamp(52px, 18vw, 72px));
+        grid-auto-rows: clamp(52px, 18vw, 72px);
+        gap: 8px;
+    }
+    .layout-editor-body .layout-cell {
+        width: clamp(52px, 18vw, 72px);
+        height: clamp(52px, 18vw, 72px);
+        font-size: clamp(22px, 7vw, 34px);
+    }
+    .layout-editor-body .layout-editor-apply-button {
+        font-size: 16px;
+        padding: 12px 24px;
+        width: 100%;
+    }
+}
+
+/* ─────────────────────── 17. TOASTS ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .toast,
+    [data-toast],
+    [class*="toast-"] {
+        max-width: calc(100vw - 1.5rem);
+        font-size: 0.9rem;
+    }
+}
+
+/* ─────────────────────── 18. EXPORT / UPLOAD BUTTONS ─────────────────────── */
+
+@media (max-width: 1099px) {
+    .upload-button,
+    .download-button,
+    .secondary-button {
+        min-height: 44px;
+        font-size: 1rem;
+        padding: 0.55rem 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ─────────────────────── 19. RACE TABS — KILL THE 1-AT-A-TIME CAROUSEL ───────────────────────
+   The base race-tabs.css at ≤ 480 px sets every .race-tab to `flex: 0 0 100%`
+   with `flex-wrap: nowrap` on the parent. There is no pointer-drag handler in
+   race_tabs.rs, no overflow:auto on a parent, and `html { overflow-x: clip }`
+   from §1 hides the spillover — so users see ONLY the active tab and have
+   no way to navigate to the other 4 races on a phone. Catastrophic UX.
+
+   Fix: force a horizontal scroll-snap row at every mobile width. All 5 tabs
+   sized to a comfortable thumb-width pill (~22vw). Replaces the broken
+   carousel with a swipe-to-scan strip that is also fully reachable by tap. */
+
+@media (max-width: 1099px) {
+    /* All 5 race tabs share the row equally — no horizontal scroll, no
+       clumping. The strip is full-width; each tab takes 1/5 of it minus
+       gaps. Tab height is generous so the banner artwork has presence
+       (chunky banner-card aesthetic, not pill). */
+    .race-tabs {
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+        width: 100%;
+        overflow: visible;
+        padding: 0.15rem 0 0.4rem;
+        margin: 0;
+        cursor: default;
+        touch-action: manipulation;
+        transform: none;
+        transition: none;
+    }
+    .race-tabs::-webkit-scrollbar { display: none; }
+
+    .race-tab {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        max-width: none;
+        height: clamp(5.5rem, 22vw, 8.5rem);
+        min-height: 0;
+        font-size: clamp(0.75rem, 2.6vw, 1rem);
+        border-radius: 8px;
+        align-items: flex-end;
+        justify-content: center;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    /* Each race banner is 484×568 (tall) with the race icon at a different
+       vertical position within the source. With `cover` + a vertical anchor,
+       icons end up at visually different heights across the 5 tabs because
+       the cropping line cuts each source at a different relative position.
+       Use `contain` + `center` so every banner renders identically: the full
+       flag silhouette inside each tab, centered horizontally and vertically.
+       That makes the row look balanced regardless of source image variance. */
+    .race-tab::before {
+        display: block;
+        content: "";
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        opacity: 1;
+        filter: brightness(1.35) saturate(1.2);
+    }
+    .race-tab.active::before {
+        opacity: 1;
+        filter: brightness(1.55) saturate(1.35);
+    }
+
+    .race-tab::after {
+        display: block;
+        content: "";
+        background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.0) 0%,
+            rgba(0, 0, 0, 0.0) 35%,
+            rgba(0, 0, 0, 0.55) 70%,
+            rgba(0, 0, 0, 0.95) 100%);
+    }
+
+    .race-tab-label {
+        padding: 0.3rem 0.2rem 0.45rem;
+        font-size: clamp(0.7rem, 2.4vw, 0.95rem);
+        line-height: 1.05;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-shadow:
+            1px 1px 0 #000,
+            -1px 1px 0 #000,
+            1px -1px 0 #000,
+            -1px -1px 0 #000,
+            0 0 6px rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* ─────────────────────── 20. UNIT-DETAIL HEADER + HERO LEVEL BAR ─────────────────────── */
+/* Portrait left (fixed square), title column right (grows, unconstrained).
+   Key overrides:
+   - overflow: visible  → undo the desktop `overflow: hidden` that clips content
+   - text-align: left   → undo the ≤480px centering from unit-detail.css:273
+   - line-clamp removed → description wraps fully instead of being cut at 3 lines
+   - hero level bar below the name via column flex on .unit-name-row           */
+
+@media (max-width: 1099px) {
+    .unit-detail-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 12px;
+        height: auto;
+        min-height: 0;
+        padding-bottom: 16px;
+        overflow: visible;
+        text-align: left;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .unit-detail-header .unit-portrait {
+        flex-shrink: 0;
+        align-self: flex-start;
+        object-fit: cover;
+    }
+
+    .unit-detail-title {
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        align-items: flex-start;
+        text-align: left;
+        overflow: visible;
+    }
+
+    .unit-name-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .unit-name-row h2,
+    .unit-detail-header h2 {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        line-height: 1.2;
+        margin: 0;
+        text-align: left;
+    }
+
+    .unit-name-row .hero-level-picker {
+        flex-shrink: 0;
+        width: 95px;
+    }
+
+    /* Level picker dropdown: compact trigger button on mobile.
+       Use .app prefix to beat the .app button { font-size: max(1rem,16px) } rule
+       (specificity 0,1,1) that would otherwise override the 14px here. */
+    .app .hero-level-trigger {
+        font-size: 14px;
+        padding: 5px 10px;
+        width: 100%;
+        min-height: 32px;
+        letter-spacing: 0.04em;
+    }
+
+    .app .hero-level-option {
+        font-size: 13px;
+        padding: 3px 10px;
+        min-height: 24px;
+    }
+
+    /* Dropdown: all 10 levels fit (~10×24px + overhead ≈ 266px); hide scrollbar. */
+    .hero-level-menu {
+        width: 100%;
+        max-height: min(320px, 65dvh);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+    }
+    .hero-level-menu::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ─────────────────────── 22. PX-BASED TYPOGRAPHY OVERRIDES ───────────────────────
+   The project pins html font-size to clamp(9.33px, 0.365vw, 12.6px). At 390px
+   viewport that's 9.33px per rem. Many of our component heading + label rules
+   used rem assuming 16px/rem and end up too small (~9-13px). Force the
+   readability-critical text to absolute px on phone. */
+
+@media (max-width: 1099px) {
+    .app-header h1,
+    .app-header-title {
+        font-size: clamp(15px, 4.5vw, 22px);
+    }
+
+    .mode-toggle-button {
+        font-size: clamp(13px, 3vw, 16px);
+        min-height: 52px;
+        padding: 0 8px;
+    }
+
+    .race-tab-label {
+        font-size: clamp(9px, 2.4vw, 13px);
+        letter-spacing: 0.03em;
+        padding: 0.3rem 0.15rem 0.45rem;
+    }
+
+    /* unit-card sizing handled in §6 (mobile tile redesign) */
+
+    .unit-detail-header h2,
+    .unit-name-row h2 {
+        font-size: clamp(17px, 4.8vw, 22px);
+    }
+    .unit-portrait {
+        width: clamp(80px, 22vw, 120px);
+        height: clamp(80px, 22vw, 120px);
+    }
+    .unit-detail p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    .unit-description {
+        height: auto;
+        overflow: visible;
+        margin-top: 12px;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    .unit-detail code {
+        font-size: 13px;
+    }
+
+    .command-section-heading {
+        font-size: 16px;
+        margin: 8px 0 8px;
+    }
+
+    /* Stats panel typography */
+    .stat-row, .stats-row,
+    .stat-label, .stat-value,
+    .stat-pair, .stat-cell {
+        font-size: 13px;
+    }
+    .stat-row .stat-value, .stats-row .stat-value {
+        font-size: 16px;
+    }
+
+    /* Search input */
+    .unit-list-search input {
+        font-size: 16px;
+    }
+
+    /* Unit list section headers */
+    .unit-category-heading {
+        font-size: 13px;
+        padding: 8px 6px;
+    }
+
+    /* Override panel hint sizing handled in §9 (override panel section) so
+       it stays consistent with the line-clamp / fixed-height geometry. */
+
+    /* Footer */
+    .app-footer, footer.app-footer {
+        font-size: 11px;
+    }
+
+    /* Search input inside list */
+    input[type="text"], input[type="search"] {
+        font-size: 16px;
+    }
+}
+
+/* ─────────────────────── 29. UNIT-DETAIL SPACING BALANCE ───────────────────────
+   stats-panel.css uses rem-based margins (margin-top: 2.5rem, gap: 2.5rem) that
+   compute to ~23px at the mobile font-size (9.33px/rem). That's large relative to
+   the 12px description margin and 16px header padding, making the intra-detail
+   spacing feel jumpy. Pin everything to the same 12–16px budget. */
+
+@media (max-width: 1099px) {
+    .unit-stats-panel {
+        margin-top: 12px;
+        margin-bottom: 0;
+        gap: 1rem;
+        padding: 10px 12px;
+    }
+    .unit-stats-panel > .stat-column + .stat-column {
+        padding-top: 10px;
+    }
+    .unit-detail-row {
+        margin-top: 14px;
+    }
+    /* Outer container gaps: tighten from 24px to 16px so the space between the
+       control-strip, unit-list, and unit-detail matches the intra-component gaps. */
+    .app {
+        gap: 16px;
+    }
+    .main-content {
+        gap: 16px;
+    }
+}
+
+/* The max-width: 1099px block above sets gap: 1rem on .unit-stats-panel to
+   tighten spacing on compact viewports. But the 2×2 layout (min-width: 701px)
+   uses pseudo-element separators positioned at left: -1rem and top: -1.25rem —
+   the midpoint of the original 2rem column-gap and 2.5rem row-gap respectively.
+   With gap shrunk to 1rem, those midpoints shift and the content runs into the
+   separator lines with no breathing room.
+   Restore the separator-compatible gap and column padding for the 701–1099 range. */
+@media (min-width: 701px) and (max-width: 1099px) {
+    .unit-stats-panel {
+        gap: 2.5rem 2rem;
+    }
+    .unit-stats-panel > .stat-column + .stat-column {
+        padding-top: 1.25rem;
+    }
+}
+
+/* ─────────────────────── 21. SAFETY NET — body-level overflow guard ───────────────────────
+   Belt for the suspenders: even if a child still overflows, the body should
+   never produce horizontal scroll.
+   MUST use `clip`, not `hidden`: `hidden` creates a scroll container which
+   implicitly sets overflow-y:auto, breaking vertical page scroll on mobile. */
+html, body {
+    overflow-x: clip;
+}
+
+/* Stop any element from making the .app wider than the viewport via
+   intrinsic min-content. This is broader than §1 but harmless on desktop. */
+.app {
+    max-width: 100vw;
+    overflow-x: clip;
+}
+
+/* ─────────────────────── 23. RACE TAB HEIGHT BUMP ───────────────────────
+   Bump mobile race-tab height to feel like a proper banner card rather than
+   a stub. Width stays narrow so 5 fit at 390px; only height grows. */
+
+@media (max-width: 1099px) {
+    .race-tab {
+        height: clamp(112px, 36vw, 200px);
+        min-height: clamp(112px, 36vw, 200px);
+    }
+}
+
+/* ─────────────────────── 24. UNIT-LIST SEARCH BAR — polished mobile look ───────────────────────
+   The search bar at the top of the sidebar feels disconnected on phone.
+   Issues observed at 390px:
+     - Plain blue border, no leading search icon, generic input field aesthetic
+     - Doesn't read as part of the list it controls
+     - The themed amber chrome on the rest of the app stops here
+   Fix: gold-bordered pill with an inline magnifier glyph, bigger touch
+   surface (44+ px), focus ring that matches the rest of the keyboard-modality
+   styling. The icon is a CSS background-image data URI so it travels with
+   the rule and needs no asset wiring. */
+
+@media (max-width: 1099px) {
+    .unit-list-search {
+        position: relative;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 6px;
+    }
+
+    .unit-list-search input,
+    .unit-list-search input[type="search"],
+    .unit-list-search input[type="text"] {
+        width: 100%;
+        height: 44px;
+        padding: 0 14px 0 40px;
+        font-size: 16px;
+        border-radius: 10px;
+        background:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffce63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") 12px 50% / 18px no-repeat,
+            linear-gradient(180deg, rgba(8, 14, 30, 0.85) 0%, rgba(13, 31, 61, 0.85) 100%);
+        border: 1px solid rgba(255, 206, 99, 0.45);
+        color: #fff5d6;
+        font-family: 'Friz Quadrata', serif;
+        letter-spacing: 0.04em;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.04),
+            0 1px 0 rgba(0, 0, 0, 0.6);
+        outline: none;
+    }
+
+    .unit-list-search input::placeholder {
+        color: rgba(255, 245, 214, 0.5);
+        font-style: italic;
+    }
+
+    .unit-list-search input:focus,
+    .unit-list-search input:focus-visible {
+        border-color: #ffce63;
+        box-shadow:
+            0 0 0 2px rgba(255, 206, 99, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 0 14px rgba(255, 206, 99, 0.3);
+    }
+
+    /* Hide the native search-input clear button — it conflicts with our
+       custom styling and isn't necessary at this size. */
+    .unit-list-search input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+}
+
+/* ─────────────────────── 25. UNIT CARD — chrome polish ───────────────────────
+   Layout (size, flex direction, name visibility) lives in §6 with the rest
+   of the mobile-tile redesign. This section only carries cosmetic polish:
+   selected-state contrast and a subtle background gradient on cards. */
+
+@media (max-width: 1099px) {
+    .unit-card.selected .unit-card-name {
+        color: #fff;
+    }
+    .unit-card.selected .unit-card-id {
+        color: var(--race-color, #c0a67c);
+        opacity: 0.7;
+    }
+
+    .unit-card {
+        background: linear-gradient(180deg, rgba(13, 31, 61, 0.55) 0%, rgba(8, 14, 30, 0.55) 100%);
+        border: 1px solid rgba(42, 80, 133, 0.6);
+    }
+    .unit-card:hover {
+        border-color: rgba(255, 206, 99, 0.35);
+    }
+    .unit-card.selected {
+        background: linear-gradient(135deg, rgba(45, 80, 130, 0.85) 0%, rgba(20, 45, 80, 0.85) 100%);
+        border-color: var(--race-color, #ffce63);
+        box-shadow: 0 0 10px var(--race-color-soft, rgba(255, 206, 99, 0.3));
+    }
+}
+
+/* ─────────────────────── 26. UNIT LIST CONTAINER ───────────────────────
+   Tighten the wrapper so the search and list read as one unit. */
+
+@media (max-width: 1099px) {
+    .unit-list {
+        padding: 0;
+        background: transparent;
+        border: 0;
+        gap: 16px;
+    }
+}
+
+/* ─────────────────────── 27. SYSTEM HOTKEYS DIALOG — MOBILE ───────────────────────
+   The desktop sizing for every system-hotkeys view is fixed in rem and
+   completely overflows phone viewports:
+     - Inventory grid:  repeat(2, 28rem) × 20rem      → ~520 × 187 px
+     - Hero selection:  repeat(3, 26rem)              → ~728 px wide
+     - Control groups:  repeat(10, 11rem)             → ~1030 px wide
+     - List view:       binding-name 2.8rem + key-chip min-width 18rem
+   At html font-size ≈ 9.33 px on phone (preflight clamp), these blow out
+   the dialog horizontally and the slot border-image (12 px solid) eats
+   the rest of the row. Re-derive every size from the viewport so each
+   layout fits and the slots stay tappable.
+
+   Dialog chrome (header, breadcrumbs, body padding) is also re-tuned so
+   the title doesn't get truncated by the close button and the breadcrumb
+   row scrolls horizontally instead of stacking. */
+
+@media (max-width: 1099px) {
+    /* Dialog overlay containing the system-hotkeys dialog: §10 puts
+       padding ~14 px and `overflow-y: auto` on every dialog overlay. With
+       the inner shell sized to 100 vw × 100 dvh, that padding makes the
+       overlay 14 px shorter than the shell — so the overlay scrolls 14 px
+       and steals every touch that lands near the edge. The shell's inner
+       body never gets a chance to scroll. Zero the padding and disable the
+       overlay's own scroll for the wc3 variant — the inner body owns scroll. */
+    .dialog-overlay:has(.system-hotkeys-dialog),
+    .dialog-overlay:has(.wc3-dialog) {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .dialog-overlay:has(.key-picker-shell),
+    .dialog-overlay:has(.sys-key-picker-shell) {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        overflow: hidden;
+        overscroll-behavior: contain;
+        touch-action: none;
+    }
+
+    /* Templates dialog: overlay-scroll. The shell grows to content height
+       (height: auto) and the fixed overlay scrolls it. No sticky header
+       needed for the simple templates list, so this is simpler than the
+       bounded-body pattern used for system-hotkeys. These rules come after
+       the :has(.wc3-dialog) block so same-specificity source order wins. */
+    .dialog-overlay:has(.templates-dialog-shell) {
+        overflow-y: auto;
+        overflow-x: hidden;
+        align-items: flex-start;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+    }
+    .dialog-shell.wc3-dialog.templates-dialog-shell {
+        height: auto;
+        max-height: none;
+        min-height: 100dvh;
+        overflow: visible;
+    }
+    .templates-dialog-shell .wc3-dialog-body {
+        overflow: visible;
+        flex: 1 1 auto;
+    }
+
+    /* Dialog shell: undo the §10 padding-on-shell rule for the wc3 variant.
+       The wc3-dialog is `padding: 0; gap: 0` (primitives.css:106) and uses
+       its own header / breadcrumbs / body flex layout. Forcing container
+       padding pushes the header off-axis and the §10 `overflow-y: auto`
+       makes the whole shell (header + body) scroll as one piece, which
+       defeats the inner sticky header design. */
+    .dialog-shell.wc3-dialog,
+    .dialog-shell.system-hotkeys-dialog {
+        padding: 0;
+        gap: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dialog-shell.wc3-dialog.key-picker-shell {
+        overflow: hidden;
+        overscroll-behavior: contain;
+    }
+
+    .key-picker-shell .wc3-dialog-body {
+        flex: none;
+        min-height: 0;
+        overflow: hidden;
+        overscroll-behavior: contain;
+    }
+
+    /* Header: shrink padding so the title fits between the safe-area edges
+       and the close button at the right. Title font scales with viewport. */
+    .system-hotkeys-dialog .wc3-dialog-header {
+        padding: 0.85rem 3rem 0.7rem;
+        gap: 0.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: linear-gradient(135deg, rgba(12, 25, 50, 0.98) 0%, rgba(6, 12, 28, 0.98) 100%);
+        flex: none;
+    }
+    .system-hotkeys-dialog .wc3-dialog-title {
+        font-size: clamp(16px, 5vw, 22px);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .system-hotkeys-dialog .wc3-close-button {
+        right: 0.5rem;
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
+    }
+
+    /* Breadcrumbs: horizontal scrolling on mobile is fiddly with 8 categories,
+       so swap to a dropdown picker. A trigger button shows the active category;
+       tapping it reveals a vertical listbox overlaying the dialog body. The
+       dialog body keeps its own scroll, so the dropdown floats above it. */
+    .system-hotkeys-dialog .wc3-breadcrumbs {
+        position: relative;
+        flex-wrap: nowrap;
+        justify-content: stretch;
+        padding: 0.5rem 0.75rem;
+        gap: 0;
+        flex: none;
+        /* dialog-shared.css adds `overflow-x:auto; overflow-y:hidden` at
+           ≤480 px to enable horizontal-scroll breadcrumbs — that clips the
+           absolutely-positioned dropdown popover. Restore visible overflow. */
+        overflow: visible;
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 44px;
+        padding: 0.55rem 0.9rem;
+        background: linear-gradient(135deg, rgba(40, 30, 8, 0.85) 0%, rgba(15, 12, 4, 0.85) 100%);
+        border: 1px solid rgba(255, 206, 99, 0.55);
+        border-radius: 8px;
+        color: #ffce63;
+        font-family: 'Friz Quadrata', serif;
+        font-size: clamp(14px, 3.8vw, 17px);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+        box-shadow: 0 0 14px rgba(255, 206, 99, 0.18);
+        cursor: pointer;
+    }
+    body[data-kb-modality] .system-hotkeys-dialog .wc3-breadcrumbs-trigger:focus-visible {
+        outline: none;
+        border-color: #fff;
+        color: #fff;
+        box-shadow: 0 0 0 2px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-trigger-label {
+        flex: 1 1 auto;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-trigger-chevron {
+        flex: 0 0 auto;
+        margin-left: 0.6rem;
+        font-size: 0.9em;
+        line-height: 1;
+        transition: transform 0.18s ease;
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-trigger[aria-expanded="true"] .wc3-breadcrumbs-trigger-chevron {
+        transform: rotate(180deg);
+    }
+    /* Hide the inline tab list by default on mobile; the trigger is the only
+       visible chrome until the user opens it. */
+    .system-hotkeys-dialog .wc3-breadcrumbs-list {
+        display: none;
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-list[data-open="true"] {
+        display: flex;
+        position: absolute;
+        top: calc(100% - 0.25rem);
+        left: 0.75rem;
+        right: 0.75rem;
+        z-index: 6;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.15rem;
+        padding: 0.4rem;
+        background: linear-gradient(170deg, #0c1d30 0%, #070e1c 100%);
+        border: 1px solid rgba(255, 206, 99, 0.45);
+        border-radius: 10px;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7), 0 0 18px rgba(255, 206, 99, 0.12);
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-list[data-open="true"] .wc3-breadcrumb-tab {
+        flex: 0 0 auto;
+        width: 100%;
+        text-align: left;
+        padding: 0.7rem 0.85rem;
+        font-size: clamp(14px, 3.8vw, 17px);
+        letter-spacing: 0.05em;
+        min-height: 44px;
+        border-radius: 6px;
+        white-space: normal;
+    }
+    .system-hotkeys-dialog .wc3-breadcrumbs-list[data-open="true"] .wc3-breadcrumb-tab.active {
+        background: rgba(255, 206, 99, 0.14);
+        box-shadow: inset 0 0 0 1px rgba(255, 206, 99, 0.4);
+    }
+    /* Vertical list — separators are pure decoration for the horizontal bar. */
+    .system-hotkeys-dialog .wc3-breadcrumbs-list[data-open="true"] .wc3-breadcrumb-separator {
+        display: none;
+    }
+
+    /* Body: tighter padding, single scroll container.
+       `flex: 1 1 0` (NOT `1 1 auto`) is critical — `flex-basis: auto` lets
+       the body grow to its content's intrinsic height, which then exceeds
+       the shell and gets clipped by the shell's `overflow: hidden` instead
+       of becoming a scroll container. With `flex-basis: 0 + min-height: 0`
+       the body stays bounded to leftover shell height and `overflow-y: auto`
+       actually creates a scroll surface. */
+    .system-hotkeys-dialog .wc3-dialog-body {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        padding: 0.85rem 0.75rem 1.25rem;
+    }
+
+    /* `.wc3-slot` carries `touch-action: none` (primitives.css:286) so iOS
+       doesn't pan when the user touches a slot — required for inventory
+       drag-and-drop. But on non-inventory categories there is no drag, so
+       blocking pan also blocks vertical scrolling of the body whenever a
+       finger lands on a slot. Re-enable vertical pan on the read-only
+       categories (hero selection / control groups / list view chips) so
+       the body scrolls regardless of where the touch starts. The inventory
+       grid keeps `touch-action: none` from the base rule. */
+    .system-hotkeys-dialog .wc3-row-3 .wc3-slot,
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot {
+        touch-action: manipulation;
+    }
+    .system-hotkeys-dialog .wc3-binding-list,
+    .system-hotkeys-dialog .wc3-binding-row {
+        touch-action: pan-y;
+    }
+    .system-hotkeys-dialog .wc3-key-chip {
+        touch-action: manipulation;
+    }
+
+    /* Stage: reduce vertical gap between hint and grid; the rem-derived
+       gap-8 (≈75 px) is huge on phone. */
+    .system-hotkeys-dialog .wc3-stage {
+        gap: 0.85rem;
+    }
+    .system-hotkeys-dialog .wc3-stage-hint {
+        font-size: clamp(11px, 3vw, 14px);
+        letter-spacing: 0.04em;
+        line-height: 1.35;
+        padding: 0 0.25rem;
+        max-width: 100%;
+    }
+
+    /* Slot chrome: the 12 px solid border-image is too thick when the cell
+       only has ~150 px of width; reduce frame and inner padding so the
+       label and key glyph aren't squeezed out. */
+    .system-hotkeys-dialog .wc3-slot {
+        border-width: 8px;
+        border-image-slice: 12 fill;
+        padding: 0.45rem 0.3rem;
+        gap: 0.25rem;
+    }
+    .system-hotkeys-dialog .wc3-slot-label {
+        font-size: clamp(10px, 2.6vw, 12px);
+        letter-spacing: 0.08em;
+    }
+    .system-hotkeys-dialog .wc3-slot-key {
+        font-size: clamp(15px, 4.8vw, 22px);
+        letter-spacing: 0.02em;
+    }
+    .system-hotkeys-dialog .wc3-slot.empty {
+        font-size: 1.4rem;
+    }
+
+    /* Inventory: 2 columns sized to fill the available width, fixed aspect
+       ratio so every cell is square-ish regardless of viewport. */
+    .system-hotkeys-dialog .wc3-inventory-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: minmax(86px, auto);
+        gap: 0.6rem;
+        width: 100%;
+        max-width: 26rem;
+        margin: 0 auto;
+    }
+    .system-hotkeys-dialog .wc3-inventory-grid .wc3-slot {
+        aspect-ratio: 1 / 0.85;
+        min-height: 0;
+    }
+
+    /* Hero selection: 3 cells in a single row, equal fractions. */
+    .system-hotkeys-dialog .wc3-row-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 30rem;
+        margin: 0 auto;
+    }
+    .system-hotkeys-dialog .wc3-row-3 .wc3-slot {
+        aspect-ratio: 1 / 0.95;
+        min-height: 76px;
+    }
+
+    /* Control groups: 5 columns × 2 rows so 10 cells fit comfortably. The
+       desktop row-10 .wc3-slot rule (primitives.css:250) sets a 11 rem
+       min-height and 8 px border — override both so the cells are phone-
+       appropriate. */
+    .system-hotkeys-dialog .wc3-row-10 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-auto-rows: minmax(72px, auto);
+        gap: 0.4rem;
+        width: 100%;
+    }
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot {
+        border-width: 6px;
+        border-image-slice: 12 fill;
+        padding: 0.35rem 0.2rem;
+        gap: 0.2rem;
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+    }
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot-key {
+        font-size: clamp(14px, 4vw, 18px);
+    }
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot-label {
+        font-size: clamp(9px, 2.2vw, 11px);
+    }
+
+    /* List view (everything that isn't inventory / hero / control-groups —
+       the four other categories rendered by SystemHotkeysListView):
+       binding rows stack name above key-chip on phone, since "ROTATE
+       BUILDING COUNTERCLOCKWISE" + a key chip both at desktop sizes will
+       not fit horizontally on a 360 px viewport. */
+    .system-hotkeys-dialog .wc3-binding-list {
+        max-width: 100%;
+        width: 100%;
+    }
+    .system-hotkeys-dialog .wc3-binding-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.7rem 0.5rem;
+    }
+    .system-hotkeys-dialog .wc3-binding-name {
+        font-size: clamp(12px, 3.4vw, 15px);
+        letter-spacing: 0.04em;
+        line-height: 1.25;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+    }
+    .system-hotkeys-dialog .wc3-key-chip {
+        min-width: 5.5rem;
+        max-width: 14rem;
+        font-size: clamp(13px, 3.6vw, 16px);
+        padding: 0.5rem 0.7rem;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Inventory drag follower: the desktop frame width 12 px overshoots
+       the cell on phone — match the slot's reduced 8 px border. */
+    .system-hotkeys-dialog .wc3-inventory-drag-follower,
+    .wc3-inventory-drag-follower {
+        border-width: 8px;
+        border-image-slice: 12 fill;
+    }
+
+    /* Hidden key-capture input keeps the input invisible but keyboard-
+       reachable; ensure the iOS 16 px floor doesn't accidentally make it
+       visible by giving it a larger size when it sits next to a slot. */
+    .system-hotkeys-dialog .key-capture {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        width: 1px;
+        height: 1px;
+    }
+}
+
+/* Very narrow phones (≤ 360 px): drop slot borders one more notch and
+   tighten typography so 5 control-group cells in a row stay readable. */
+@media (max-width: 360px) {
+    .system-hotkeys-dialog .wc3-slot {
+        border-width: 6px;
+        padding: 0.35rem 0.2rem;
+    }
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot {
+        border-width: 5px;
+    }
+    .system-hotkeys-dialog .wc3-slot-key {
+        font-size: clamp(13px, 4.4vw, 18px);
+    }
+    .system-hotkeys-dialog .wc3-row-10 .wc3-slot-key {
+        font-size: clamp(12px, 3.6vw, 15px);
+    }
+    .system-hotkeys-dialog .wc3-binding-name {
+        font-size: 12px;
+    }
+    .system-hotkeys-dialog .wc3-key-chip {
+        min-width: 4.5rem;
+        font-size: 12px;
+        padding: 0.45rem 0.55rem;
+    }
+}
+
+/* ─────────────────────── 28. TEMPLATE CARDS — MOBILE ───────────────────────
+   Desktop: 2-column card grid, each card has two grids stacked vertically
+   (max-width: 26rem constrains each grid preview).
+   Mobile problems:
+     - Card padding 2.5rem/2.75rem ≈ 23px/26px burns horizontal space
+     - ≤700px rule stacks grids vertically + aligns center → tall card, small cells
+     - `max-width: 26rem` not fully removed at all breakpoints
+   Fix: side-by-side grids (each half the card width), compact padding,
+   cells expand to fill their column → icons are bigger and look great. */
+
+@media (max-width: 1099px) {
+    .templates-dialog-explainer {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+        text-transform: none;
+        text-align: left;
+        opacity: 0.85;
+    }
+
+    .templates-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .template-card {
+        padding: 12px 14px;
+        gap: 10px;
+        border-radius: 10px;
+    }
+
+    .template-card-info {
+        gap: 4px;
+    }
+
+    .template-card-name {
+        font-size: clamp(17px, 5vw, 24px);
+        letter-spacing: 0.06em;
+        color: #ffce63;
+    }
+
+    .template-card-description {
+        font-size: 13px;
+        line-height: 1.35;
+        color: #c0c8da;
+        opacity: 0.9;
+    }
+
+    /* Side-by-side grids: each gets half the card width, giving bigger cells
+       than the stacked+centered layout while keeping the card compact. */
+    .template-card-grids {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .template-card-grid {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        align-items: stretch;
+        gap: 5px;
+    }
+
+    .template-card-grid-label {
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-align: left;
+    }
+
+    /* Cells fill column: remove rem cap, shrink gap so cells are larger. */
+    .template-card-cells {
+        max-width: 100%;
+        width: 100%;
+        gap: 3px;
+    }
+
+    /* Hotkey badge: scale down to fit the smaller cells. */
+    .template-card-cell-hotkey {
+        font-size: 9px;
+        min-width: 12px;
+        height: 12px;
+        top: 1px;
+        right: 1px;
+        padding: 0 2px;
+        border-radius: 2px;
+        line-height: 1;
+    }
+}
+
+/* ─────────────────────── 30. SYS-KEY-PICKER — scale keys to viewport ───────────────────────
+   Mobile (≤480px): column layout, widest row = 13 keys → scale for 13 across 100vw.
+   Tablet (481–900px): two-column layout, 13 main + 4 numpad = 17 keys → scale for 17 across 90vw. */
+
+@media (max-width: 480px) {
+    .app .sys-key-picker-key {
+        min-width: 0;
+        width: min(5rem, calc((100vw - 6rem) / 13));
+        height: min(7rem, calc((100vw - 6rem) / 13));
+        font-size: min(1rem, calc((100vw - 6rem) / 13 * 0.33));
+        padding: 0 0.1rem;
+        overflow: hidden;
+    }
+    .sys-key-picker-key[data-wide="true"] {
+        width: min(10rem, calc((100vw - 6rem) / 13 * 2));
+    }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+    .app .sys-key-picker-key {
+        min-width: 0;
+        width: min(4.7vw, calc((90vw - 6rem) / 17));
+        height: min(5.5vw, calc((90vw - 6rem) / 17));
+        font-size: min(1.3vw, calc((90vw - 6rem) / 17 * 0.33));
+        padding: 0 0.1rem;
+        overflow: hidden;
+    }
+    .app .sys-key-picker-key[data-wide="true"] {
+        width: min(9.4vw, calc((90vw - 6rem) / 17 * 2));
+    }
+}

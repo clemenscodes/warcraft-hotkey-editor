@@ -1,0 +1,13 @@
+[application]
+name = "hotkey-editor"
+public_dir = "public"
+
+[web.app]
+title = "Warcraft III Hotkey Editor"
+# Deployed at https://clemenscodes.github.io/warcraft-hotkey-editor/, so every
+# asset URL the bundler generates needs the repo name as a base.
+base_path = "warcraft-hotkey-editor"
+
+[web.watcher]
+reload_html = true
+watch_path = ["src", "public"]

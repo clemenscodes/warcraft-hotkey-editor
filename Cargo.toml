@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/hotkey-editor",
+    "crates/warcraft-api",
+    "crates/warcraft-database",
+    "crates/warcraft-keybinds",
+]
+
+[workspace.package]
+authors = ["clemenscodes"]
+edition = "2024"
+license = "AGPL-3.0-only"
+version = "0.1.0"
+
+[workspace.dependencies]
+dioxus = { version = "=0.7.6" }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+num-traits = "0.2"
+thiserror = "2.0.17"
+
+[profile.release]
+codegen-units = 16
+opt-level = 3
+lto = false
+panic = 'unwind'
+strip = "symbols"

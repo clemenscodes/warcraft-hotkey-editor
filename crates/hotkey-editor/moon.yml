@@ -1,0 +1,16 @@
+id: hotkey-editor
+stack: frontend
+layer: application
+tags:
+  - rust
+  - app
+  - wasm
+language: rust
+
+tasks:
+  dev:
+    extends: dx/serve
+
+  bundle:
+    deps:
+      - dx/build

@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@import "./styles/primitives.css" layer(components);
+@import "./styles/preflight.css" layer(components);
+@import "./styles/app-root.css" layer(components);
+@import "./styles/app-header.css" layer(components);
+@import "./styles/mode-tabs.css" layer(components);
+@import "./styles/race-tabs.css" layer(components);
+@import "./styles/unit-list.css" layer(components);
+@import "./styles/unit-detail.css" layer(components);
+@import "./styles/stats-panel.css" layer(components);
+@import "./styles/matchups.css" layer(components);
+@import "./styles/command-grid.css" layer(components);
+@import "./styles/layout-editor.css" layer(components);
+@import "./styles/override-panel.css" layer(components);
+@import "./styles/drag-follower.css" layer(components);
+@import "./styles/dialog-shared.css" layer(components);
+@import "./styles/key-picker.css" layer(components);
+@import "./styles/system-hotkeys.css" layer(components);
+@import "./styles/templates.css" layer(components);
+@import "./styles/preview.css" layer(components);
+@import "./styles/toasts.css" layer(components);
+@import "./styles/mobile-foundation.css" layer(mobile);
+
+@source "./src/**/*.rs";
+
+@font-face {
+  font-family: "Friz Quadrata";
+  src: url("/warcraft-hotkey-editor/fonts/frizqt.ttf") format("truetype");
+  font-display: block;
+}
+
+@theme {
+  --color-warcraft-gold: #ffce63;
+  --color-warcraft-gold-dim: rgba(255, 206, 99, 0.18);
+  --color-warcraft-gold-soft: rgba(255, 206, 99, 0.4);
+
+  --color-warcraft-text-primary: #e0d8c8;
+  --color-warcraft-text-secondary: #c0c8da;
+  --color-warcraft-text-muted: #9ca8c5;
+
+  --color-warcraft-bg-base: #050a1a;
+  --color-warcraft-bg-mid: #0a1a35;
+  --color-warcraft-bg-panel: rgba(20, 40, 70, 0.7);
+
+  --color-warcraft-blue: #2a5085;
+  --color-warcraft-blue-deep: #1a3a5c;
+  --color-warcraft-blue-bright: #356dac;
+  --color-warcraft-blue-bright-deep: #1f4a72;
+  --color-warcraft-blue-glow: #18365b;
+
+  --color-race-human: #6aa1ff;
+  --color-race-human-soft: rgba(106, 161, 255, 0.45);
+  --color-race-human-strong: #173266;
+
+  --color-race-orc: #ff7a7a;
+  --color-race-orc-soft: rgba(255, 122, 122, 0.45);
+  --color-race-orc-strong: #5a1212;
+
+  --color-race-nightelf: #5fdada;
+  --color-race-nightelf-soft: rgba(95, 218, 218, 0.45);
+  --color-race-nightelf-strong: #0c4348;
+
+  --color-race-undead: #c79bff;
+  --color-race-undead-soft: rgba(199, 155, 255, 0.45);
+  --color-race-undead-strong: #321650;
+
+  --color-race-neutral: #ffce63;
+  --color-race-neutral-soft: rgba(255, 206, 99, 0.45);
+  --color-race-neutral-strong: #4a3d14;
+
+  --font-friz-quadrata: "Friz Quadrata", serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+}

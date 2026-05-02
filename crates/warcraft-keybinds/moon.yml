@@ -1,0 +1,7 @@
+id: warcraft-keybinds
+stack: backend
+layer: library
+tags:
+  - rust
+  - lib
+language: rust

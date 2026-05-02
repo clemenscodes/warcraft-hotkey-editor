@@ -1,0 +1,508 @@
+@layer components {
+.tile-override-panel {
+    align-self: start;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 481px) and (max-width: 1099px) {
+    .tile-override-panel {
+        padding-top: 0;
+    }
+    .tile-override-card {
+        height: auto;
+        min-height: 10rem;
+    }
+    .tile-override-empty {
+        height: 12rem;
+    }
+}
+
+/* ─── Tablet / narrow desktop (701–1099px): panel fills remaining height.
+   Override base `align-self: start` so the panel stretches to fill its 1fr
+   grid row in .unit-detail-row, then the card/empty div fills the panel. ─── */
+@media (min-width: 701px) and (max-width: 1099px) {
+    .tile-override-panel {
+        align-self: stretch;
+        flex: 1 1 0;
+        min-height: 0;
+    }
+    .tile-override-card,
+    .tile-override-empty {
+        flex: 1;
+        height: auto;
+        min-height: 0;
+    }
+}
+
+.tile-override-card {
+    flex: 0 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 2rem 2.25rem;
+    border: 1px solid #ffce63;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(40, 30, 8, 0.55) 0%, rgba(15, 12, 4, 0.55) 100%);
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.18);
+}
+
+.tile-override-empty {
+    flex: 0 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 2.25rem;
+    border: 1px dashed #4a7090;
+    border-radius: 10px;
+    background: rgba(13, 31, 61, 0.45);
+    color: #7b818d;
+    font-size: 1.8rem;
+    line-height: 1.45;
+    font-style: italic;
+}
+
+.tile-override-empty p {
+    margin: 0;
+}
+
+.tile-override-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5rem;
+    align-items: center;
+    column-gap: 1.5rem;
+    text-align: left;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #1f3d63;
+}
+
+.tile-override-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.tile-override-tier-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding-top: 1rem;
+}
+
+.tile-override-tier-button {
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    font-size: 0;
+    background: rgba(40, 30, 8, 0.55);
+    border: 1px solid #6c5a1f;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.tile-override-tier-button::before {
+    content: "";
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.tile-override-tier-footer button:first-child::before {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='14.7,6 6.7,12 14.7,18' fill='%23ffce63'/></svg>");
+}
+
+.tile-override-tier-footer button:last-child::before {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='9.3,6 17.3,12 9.3,18' fill='%23ffce63'/></svg>");
+}
+
+.tile-override-tier-button:hover:not(:disabled) {
+    border-color: #ffce63;
+    background: rgba(255, 206, 99, 0.12);
+}
+
+.tile-override-tier-button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.tile-override-tier-label {
+    font-family: 'Friz Quadrata', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 1.3rem;
+    color: #c0c8da;
+}
+
+.tile-override-name {
+    font-family: 'Friz Quadrata', serif;
+    color: #ffce63;
+    font-weight: 400;
+    margin: 0;
+    font-size: 2rem;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.tile-override-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    color: #7b818d;
+}
+
+.tile-override-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.tile-override-tip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 1rem;
+    background: rgba(8, 18, 35, 0.55);
+    border: 1px solid #1f3d63;
+    border-radius: 6px;
+    color: #c0c8da;
+    font-size: 1.6rem;
+    line-height: 1.45;
+}
+
+.tile-override-tip-label {
+    font-family: 'Friz Quadrata', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1.3rem;
+    color: #ffce63;
+}
+
+.tile-override-tip-line {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.tile-override-description {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.85rem 1rem;
+    background: rgba(8, 18, 35, 0.35);
+    border-left: 2px solid #ffce63;
+    border-radius: 4px;
+    color: #d6dcec;
+    font-size: 1.55rem;
+    line-height: 1.55;
+}
+
+.tile-override-conflict {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    background: rgba(80, 16, 18, 0.55);
+    border-left: 2px solid #ff5a5a;
+    border-radius: 4px;
+    color: #ffd6d6;
+}
+
+.tile-override-conflict-headline {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.4;
+}
+
+.tile-override-conflict-headline strong {
+    color: #ffce63;
+    font-weight: 600;
+}
+
+.tile-override-conflict-id {
+    font-family: var(--default-mono-font-family, monospace);
+    font-size: 1.3rem;
+    color: #f0a8a8;
+    opacity: 0.85;
+}
+
+.tile-override-description-line {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.tile-override-key-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.85rem;
+    flex: 0 0 auto;
+}
+
+.tile-override-key-label {
+    font-family: 'Friz Quadrata', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1.4rem;
+    color: #ffce63;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+}
+
+.tile-override-key-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.tile-override-hint {
+    margin: 0;
+    color: #9ca8c5;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.tile-override-body {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: auto;
+}
+
+.tile-override-fields-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+}
+
+.tile-override-field-hidden {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}
+
+.override-key-cell {
+    width: 5rem;
+    height: 5rem;
+    padding: 0;
+    background: rgba(40, 30, 8, 0.75);
+    border: 2px solid #ffce63;
+    border-radius: 6px;
+    color: #ffce63;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 2rem;
+    line-height: 1;
+    text-transform: uppercase;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-shadow:
+        1px 1px 0 #000,
+        -1px 1px 0 #000,
+        1px -1px 0 #000,
+        -1px -1px 0 #000;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.override-key-cell:hover {
+    border-color: #ffce63;
+    background: rgba(255, 206, 99, 0.12);
+    box-shadow: 0 0 8px rgba(255, 206, 99, 0.5);
+}
+
+.override-key-cell:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 206, 99, 0.5);
+}
+
+body[data-kb-modality] .override-key-cell:focus-visible,
+body[data-kb-modality] .override-key-cell:focus {
+    outline: none;
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+}
+
+.override-key-cell.editing {
+    background: linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 171, 1, 0.18) 100%);
+    border-color: #ffce63;
+    box-shadow: 0 0 16px rgba(255, 206, 99, 0.65), inset 0 0 12px rgba(255, 206, 99, 0.25);
+    color: #ffce63;
+    animation: pulse-editing 1s ease-in-out infinite alternate;
+}
+
+/* Desktop ≥ 1100 px: keep the base vertical column layout — header on top
+   (name/id + key cell), description in the middle, tier footer below.
+   The panel has a minimum readable height and stretches into available
+   bottom space while .unit-detail owns short-viewport scrolling. */
+@media (min-width: 1100px) {
+    .tile-override-panel {
+        flex: 1 0 auto;
+        min-height: clamp(13rem, 18vh, 22rem);
+    }
+
+    .tile-override-card {
+        flex: 1 0 auto;
+        height: auto;
+        min-height: clamp(10rem, 14vh, 18rem);
+        overflow: visible;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .tile-override-empty {
+        flex: 1 0 auto;
+        height: auto;
+        min-height: clamp(10rem, 14vh, 18rem);
+        overflow: visible;
+        font-size: 1.35rem;
+        line-height: 1.5;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .tile-override-header {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 1.25rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .tile-override-header-text {
+        gap: 0.25rem;
+    }
+
+    .tile-override-name {
+        font-size: clamp(1.5rem, 0.3vw + 1.15rem, 1.85rem);
+        line-height: 1.2;
+    }
+
+    .tile-override-id {
+        font-size: clamp(1.05rem, 0.16vw + 0.9rem, 1.25rem);
+    }
+
+    .tile-override-description {
+        flex: 0 0 auto;
+        overflow: visible;
+        font-size: clamp(1.15rem, 0.2vw + 0.95rem, 1.4rem);
+        line-height: 1.5;
+        padding: 0.9rem 1.1rem;
+    }
+
+    .tile-override-tier-footer {
+        gap: 0.9rem;
+        padding-top: 0.85rem;
+    }
+
+    .tile-override-tier-button {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .tile-override-tier-button::before {
+        width: 1.55rem;
+        height: 1.55rem;
+    }
+
+    .tile-override-tier-label {
+        font-size: 1.2rem;
+    }
+
+    .override-key-cell {
+        width: 3.6rem;
+        height: 3.6rem;
+        font-size: 1.6rem;
+    }
+}
+
+
+/* ───────────────────────── Hotkey override panel touch targets (A6) ─────────────────────────
+   Phone (≤ 480 px): bump the keyboard preview ("override-key-cell") and the
+   tier-stepper buttons to comfortable tap target sizes. The empty state also
+   gets a generous min-height so the placeholder is unambiguously a hint, not
+   ambient text. Auto-scroll into view on selection is handled in
+   `tile_override.rs` via a `use_effect` keyed on the detail's object id. */
+
+@media (max-width: 480px) {
+    .override-key-cell {
+        width: 4.6rem;
+        height: 4.6rem;
+        min-width: 4.6rem;
+        min-height: 4.6rem;
+        font-size: 2.2rem;
+    }
+    .tile-override-tier-button {
+        min-width: 3.6rem;
+        min-height: 3.6rem;
+        padding: 0.6rem 1rem;
+    }
+    .tile-override-empty {
+        min-height: 6rem;
+        padding: 1.25rem 1.25rem;
+    }
+}
+
+/* ── Mobile layout — must come after base rules above to win source order. ── */
+@media (max-width: 700px) {
+    .tile-override-card {
+        gap: 0.75rem;
+        padding: 1rem 1.25rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .tile-override-panel {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        margin: 0 -1.25rem;
+    }
+    .tile-override-card {
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+        box-shadow:
+            0 -4px 20px rgba(0, 0, 0, 0.5),
+            0 0 12px rgba(255, 206, 99, 0.18);
+        padding: 1rem 1.25rem;
+    }
+    .tile-override-description {
+        max-height: 30dvh;
+    }
+    .tile-override-empty {
+        height: auto;
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+        padding: 1rem 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Negative margin must match unit-detail's 0.85rem padding at this breakpoint. */
+    .tile-override-panel {
+        margin: 0 -0.85rem;
+    }
+}
+}

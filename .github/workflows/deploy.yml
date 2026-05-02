@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Restore Nix store cache
+        uses: DeterminateSystems/flakehub-cache-action@main
+
+      # `nix build .#warcraft-hotkey-editor` runs the full pipeline:
+      # stable Rust + wasm32 target → dx build → tailwind → wasm-bindgen
+      # → wasm-opt. The derivation's installPhase already adds
+      # `.nojekyll` and `404.html`, so the output at ./result is exactly
+      # what GH Pages expects — no post-processing here.
+      - name: Build the static bundle
+        run: nix build .#warcraft-hotkey-editor --print-build-logs
+
+      - name: Stage Pages artifact
+        run: |
+          # `cp -RL` dereferences the /nix/store symlink so the upload
+          # action gets a regular tree rather than a single symlink.
+          mkdir -p ./pages-out
+          cp -RL ./result/. ./pages-out/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages-out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

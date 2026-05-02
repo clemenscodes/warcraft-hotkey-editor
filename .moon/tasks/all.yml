@@ -1,0 +1,153 @@
+$schema: ./cache/schemas/tasks.json
+
+fileGroups:
+  configs:
+    - "*.toml"
+    - "*.lock"
+  sources:
+    - src/**/*
+  assets:
+    - assets/**/*
+    - public/**/*
+    - "**/*.css"
+  artifacts:
+    - target
+
+implicitDeps:
+  - ^:build
+
+implicitInputs:
+  - /moon.yml
+  - /Cargo.toml
+  - /Cargo.lock
+  - /flake.nix
+
+tasks:
+  rust/build:
+    toolchain: rust
+    command: cargo build --target wasm32-unknown-unknown
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/fmt:
+    toolchain: rust
+    command: cargo fmt --all -- --check
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+
+  rust/fmt/fix:
+    toolchain: rust
+    command: cargo fmt --all
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+
+  rust/lint:
+    toolchain: rust
+    command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/test:
+    toolchain: rust
+    command: cargo test
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  tailwind/build:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "tailwind.input.css"
+      - "styles/**/*.css"
+      - "src/**/*.rs"
+
+  tailwind/watch:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --watch
+    options:
+      outputStyle: stream
+      persistent: true
+      runFromWorkspaceRoot: false
+      cache: false
+
+  esbuild/build:
+    toolchain: system
+    command: esbuild scripts/keyboard-navigation.ts --bundle --format=esm --target=es2022 --outfile=assets/keyboard-navigation.js
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "scripts/**/*.ts"
+      - "tsconfig.json"
+
+  esbuild/build/minify:
+    toolchain: system
+    command: esbuild scripts/keyboard-navigation.ts --bundle --format=esm --target=es2022 --minify --outfile=assets/keyboard-navigation.js
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "scripts/**/*.ts"
+      - "tsconfig.json"
+
+  dx/serve:
+    toolchain: system
+    command: dx serve --platform web
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+      - esbuild/build
+
+  dx/build:
+    toolchain: system
+    command: dx build --release --platform web
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    deps:
+      - tailwind/build
+      - esbuild/build/minify
+    inputs:
+      - "@group(sources)"
+      - "@group(assets)"
+      - "@group(configs)"
+      - "Dioxus.toml"
+
+  nix/bundle:
+    toolchain: system
+    command: nix build .#warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  ci:
+    options:
+      outputStyle: stream
+      runInCI: true
+    deps:
+      - ^:ci
+      - rust/fmt
+      - rust/lint
+      - rust/test
+      - rust/build

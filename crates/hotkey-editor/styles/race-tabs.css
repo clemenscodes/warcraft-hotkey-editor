@@ -1,0 +1,126 @@
+@layer components {
+
+.race-tabs {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-self: stretch;
+}
+
+.race-tab {
+    --race-color: #ffce63;
+    --race-color-soft: rgba(255, 206, 99, 0.30);
+    --race-color-strong: #1c2540;
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+    background: linear-gradient(180deg, var(--race-color-strong) 0%, #050a1a 100%);
+    border: 1px solid #3a4a6c;
+    border-radius: 8px;
+    color: #fff5d6;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: clamp(4rem, 7vw, 7rem);
+    min-width: clamp(4.5rem, 8vw, 9rem);
+    text-shadow:
+        1px 1px 0 #000,
+        -1px 1px 0 #000,
+        1px -1px 0 #000,
+        -1px -1px 0 #000,
+        0 0 8px rgba(0, 0, 0, 0.85);
+}
+
+.race-tab::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--race-banner, none);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    filter: brightness(1.5) saturate(1.25);
+    opacity: 1;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+}
+
+.race-tab::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.0) 0%,
+        rgba(0, 0, 0, 0.0) 45%,
+        rgba(0, 0, 0, 0.55) 75%,
+        rgba(0, 0, 0, 0.85) 100%);
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
+.race-tab[data-race="human"]    { --race-color: #6aa1ff; --race-color-soft: rgba(106, 161, 255, 0.45); --race-color-strong: #173266; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png'); }
+.race-tab[data-race="orc"]      { --race-color: #ff7a7a; --race-color-soft: rgba(255, 122, 122, 0.45); --race-color-strong: #5a1212; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png'); }
+.race-tab[data-race="nightelf"] { --race-color: #5fdada; --race-color-soft: rgba(95, 218, 218, 0.45); --race-color-strong: #0c4348; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png'); }
+.race-tab[data-race="undead"]   { --race-color: #c79bff; --race-color-soft: rgba(199, 155, 255, 0.45); --race-color-strong: #321650; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png'); }
+.race-tab[data-race="neutral"]  { --race-color: #ffce63; --race-color-soft: rgba(255, 206, 99, 0.45); --race-color-strong: #4a3d14; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png'); }
+
+.race-tab:hover:not(.active) {
+    color: #fff;
+    border-color: var(--race-color);
+    box-shadow: 0 0 12px var(--race-color-soft);
+}
+
+.race-tab:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .race-tab:focus-visible,
+body[data-kb-modality] .race-tab:focus {
+    outline: none;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #fff, 0 0 18px rgba(255, 255, 255, 0.55);
+}
+
+.race-tab.active {
+    color: #fff;
+    border-color: var(--race-color);
+    background: linear-gradient(180deg, var(--race-color-strong) 0%, #0a1432 100%);
+    box-shadow: 0 0 22px var(--race-color-soft), inset 0 0 24px rgba(255, 255, 255, 0.04);
+}
+
+.race-tab-label {
+    position: relative;
+    z-index: 2;
+    padding: 0.4rem 0.6rem 0.5rem;
+    width: 100%;
+    color: #fff;
+    min-width: 0;
+}
+
+.race-tab.active .race-tab-label {
+    color: var(--race-color);
+}
+
+/* Compact race-tab height inside the compact-desktop range */
+@media (min-width: 481px) and (max-width: 2000px) {
+    .race-tab {
+        min-height: clamp(3rem, 6vh, 5rem);
+    }
+}
+
+}

@@ -1,0 +1,10 @@
+[package]
+name = "warcraft-keybinds"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "Parser and serializer for Warcraft III CustomKeys.txt files."
+
+[lib]
+path = "src/lib.rs"

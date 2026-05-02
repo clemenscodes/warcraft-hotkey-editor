@@ -1,0 +1,517 @@
+use dioxus::prelude::{ReadableExt, Signal, WritableExt};
+use warcraft_api::{ButtonPosition, WarcraftObjectKind, WarcraftObjectMeta};
+use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_keybinds::CustomKeysFile;
+
+use crate::domain::ability_cell::AbilityCell;
+use crate::domain::command_catalog::CommandCatalog;
+use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::domain::grid_slot::GridSlotId;
+use crate::domain::object_lookup::ObjectLookup;
+
+#[derive(Clone)]
+struct ResolvedSlot {
+    slot_id: GridSlotId,
+    position: Option<ButtonPosition>,
+}
+
+pub(crate) struct Positions;
+
+impl Positions {
+    pub(crate) fn current_for(
+        slot: &GridSlotId,
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> Option<ButtonPosition> {
+        match slot {
+            GridSlotId::Ability(ability_id) => {
+                Self::current_for_ability(ability_id, custom_keys, is_research_context)
+            }
+            GridSlotId::Command(command_name) => {
+                Self::current_for_command(command_name, custom_keys)
+            }
+        }
+    }
+
+    pub(crate) fn current_for_ability(
+        ability_id: &str,
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> Option<ButtonPosition> {
+        let custom_button = custom_keys
+            .and_then(|file| file.binding(ability_id))
+            .and_then(|binding| binding.button_position())
+            .map(|position| ButtonPosition::new(position.column(), position.row()));
+        let custom_research = custom_keys
+            .and_then(|file| file.binding(ability_id))
+            .and_then(|binding| binding.research_button_position())
+            .map(|position| ButtonPosition::new(position.column(), position.row()));
+
+        if is_research_context {
+            if custom_research.is_some() {
+                return custom_research;
+            }
+            return ObjectLookup::by_id(ability_id)
+                .and_then(|warcraft_object| warcraft_object.default_research_button_position());
+        }
+
+        if custom_button.is_some() {
+            return custom_button;
+        }
+        ObjectLookup::by_id(ability_id)
+            .and_then(|warcraft_object| warcraft_object.default_button_position())
+    }
+
+    pub(crate) fn current_for_command(
+        command_name: &str,
+        custom_keys: Option<&CustomKeysFile>,
+    ) -> Option<ButtonPosition> {
+        let custom_position = custom_keys
+            .and_then(|file| file.command(command_name))
+            .and_then(|binding| binding.button_position())
+            .map(|position| ButtonPosition::new(position.column(), position.row()));
+        if custom_position.is_some() {
+            return custom_position;
+        }
+        Self::default_command_position(command_name)
+    }
+
+    pub(crate) fn default_command_position(command_name: &str) -> Option<ButtonPosition> {
+        let warcraft_object = ObjectLookup::by_id(command_name)?;
+        let WarcraftObjectMeta::Command(command_meta) = warcraft_object.meta() else {
+            return None;
+        };
+        command_meta.default_button_position()
+    }
+
+    pub(crate) fn should_auto_position(slot: &GridSlotId) -> bool {
+        let GridSlotId::Ability(ability_id) = slot else {
+            return false;
+        };
+        let Some(warcraft_object) = ObjectLookup::by_id(ability_id) else {
+            return false;
+        };
+        !matches!(warcraft_object.meta(), WarcraftObjectMeta::Ability(_))
+    }
+
+    pub(crate) fn resolved_for(
+        slot: &GridSlotId,
+        candidate_slots: &[GridSlotId],
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> Option<ButtonPosition> {
+        let resolved_entries =
+            Self::resolve_container(candidate_slots, custom_keys, is_research_context);
+        let matching_entry = resolved_entries
+            .iter()
+            .find(|entry| entry.slot_id.as_str().eq_ignore_ascii_case(slot.as_str()))?;
+        matching_entry.position
+    }
+
+    fn resolve_container(
+        candidate_slots: &[GridSlotId],
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> Vec<ResolvedSlot> {
+        let mut entries: Vec<ResolvedSlot> = Vec::with_capacity(candidate_slots.len());
+        let mut occupied_positions: Vec<ButtonPosition> = Vec::new();
+
+        for candidate_slot in candidate_slots {
+            let placeholder_entry = ResolvedSlot {
+                slot_id: candidate_slot.clone(),
+                position: None,
+            };
+            entries.push(placeholder_entry);
+        }
+
+        for entry in entries.iter_mut() {
+            if !matches!(entry.slot_id, GridSlotId::Ability(_)) {
+                continue;
+            }
+            let assigned_position = Self::resolve_with_cascade(
+                &entry.slot_id,
+                &occupied_positions,
+                custom_keys,
+                is_research_context,
+            );
+            if let Some(position_value) = assigned_position {
+                occupied_positions.push(position_value);
+            }
+            entry.position = assigned_position;
+        }
+
+        for entry in entries.iter_mut() {
+            if !matches!(entry.slot_id, GridSlotId::Command(_)) {
+                continue;
+            }
+            if CommandCatalog::is_context_command(&entry.slot_id) {
+                continue;
+            }
+            let assigned_position = Self::resolve_with_cascade(
+                &entry.slot_id,
+                &occupied_positions,
+                custom_keys,
+                is_research_context,
+            );
+            if let Some(position_value) = assigned_position {
+                occupied_positions.push(position_value);
+            }
+            entry.position = assigned_position;
+        }
+
+        for entry in entries.iter_mut() {
+            if !CommandCatalog::is_context_command(&entry.slot_id) {
+                continue;
+            }
+            let explicit_position =
+                Self::current_for(&entry.slot_id, custom_keys, is_research_context);
+            let Some(position_value) = explicit_position else {
+                continue;
+            };
+            if Self::position_occupied(&occupied_positions, position_value) {
+                continue;
+            }
+            entry.position = Some(position_value);
+            occupied_positions.push(position_value);
+        }
+
+        entries
+    }
+
+    fn resolve_with_cascade(
+        slot: &GridSlotId,
+        occupied_positions: &[ButtonPosition],
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> Option<ButtonPosition> {
+        let explicit_position = Self::current_for(slot, custom_keys, is_research_context);
+        match explicit_position {
+            Some(position_value) => {
+                if Self::position_occupied(occupied_positions, position_value) {
+                    Self::next_free_cell(occupied_positions)
+                } else {
+                    Some(position_value)
+                }
+            }
+            None => {
+                if Self::should_auto_position(slot) {
+                    Self::next_free_cell(occupied_positions)
+                } else {
+                    None
+                }
+            }
+        }
+    }
+
+    fn position_occupied(occupied_positions: &[ButtonPosition], candidate: ButtonPosition) -> bool {
+        occupied_positions.iter().any(|existing| {
+            existing.column() == candidate.column() && existing.row() == candidate.row()
+        })
+    }
+
+    fn next_free_cell(occupied_positions: &[ButtonPosition]) -> Option<ButtonPosition> {
+        for row in 0..COMMAND_GRID_ROWS {
+            for column in 0..COMMAND_GRID_COLUMNS {
+                let candidate_position = ButtonPosition::new(column, row);
+                if !Self::position_occupied(occupied_positions, candidate_position) {
+                    return Some(candidate_position);
+                }
+            }
+        }
+        None
+    }
+
+    pub(crate) fn cell_for_position(
+        candidate_slots: &[GridSlotId],
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+        column: u8,
+        row: u8,
+    ) -> Option<AbilityCell> {
+        for slot in candidate_slots {
+            let Some(position) =
+                Self::resolved_for(slot, candidate_slots, custom_keys, is_research_context)
+            else {
+                continue;
+            };
+            if position.column() == column && position.row() == row {
+                return Some(match slot {
+                    GridSlotId::Ability(ability_id) => {
+                        let binding = custom_keys.and_then(|file| file.binding(ability_id));
+                        AbilityCell::for_ability(ability_id, binding)
+                    }
+                    GridSlotId::Command(command_name) => {
+                        let binding = custom_keys.and_then(|file| file.command(command_name));
+                        AbilityCell::for_command(command_name, binding)
+                    }
+                });
+            }
+        }
+        None
+    }
+
+    pub(crate) fn assign(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        layout: GridLayout,
+        slot: &GridSlotId,
+        column: u8,
+        row: u8,
+        is_research_context: bool,
+    ) {
+        let Some(letter) = layout.letter_at(column, row) else {
+            return;
+        };
+        let new_position = warcraft_keybinds::ButtonPosition::new(column, row);
+        let letter_string = letter.to_string();
+
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        match slot {
+            GridSlotId::Ability(ability_id) => {
+                let is_passive = ObjectLookup::is_passive_ability(ability_id);
+                let binding = file.binding_or_default_mut(ability_id);
+                if is_research_context {
+                    binding.set_research_button_position(Some(new_position));
+                    binding.set_research_hotkey(Some(letter_string));
+                } else {
+                    binding.set_button_position(Some(new_position));
+                    if !is_passive {
+                        binding.set_hotkey(Some(letter_string));
+                        binding.set_unbutton_position(Some(new_position));
+                    }
+                }
+            }
+            GridSlotId::Command(command_name) => {
+                let binding = file.command_or_default_mut(command_name);
+                binding.set_button_position(Some(new_position));
+                binding.set_hotkey(Some(letter_string));
+                binding.set_unbutton_position(Some(new_position));
+            }
+        }
+    }
+
+    pub(crate) fn move_or_swap(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        request: MoveRequest<'_>,
+    ) {
+        let read_guard = custom_keys_signal.read();
+        let custom_keys = read_guard.as_ref();
+        let moving_old_position = Self::resolved_for(
+            request.moving_slot,
+            request.slot_ids,
+            custom_keys,
+            request.is_research_context,
+        );
+        let displaced_cell = Self::cell_for_position(
+            request.slot_ids,
+            custom_keys,
+            request.is_research_context,
+            request.target_column,
+            request.target_row,
+        );
+        drop(read_guard);
+
+        let displaced_slot_option = displaced_cell.and_then(|cell| {
+            request
+                .slot_ids
+                .iter()
+                .find(|candidate| candidate.as_str().eq_ignore_ascii_case(cell.object_id()))
+                .cloned()
+        });
+        if let Some(ref displaced_slot) = displaced_slot_option
+            && displaced_slot
+                .as_str()
+                .eq_ignore_ascii_case(request.moving_slot.as_str())
+        {
+            return;
+        }
+
+        Self::assign(
+            custom_keys_signal,
+            request.layout,
+            request.moving_slot,
+            request.target_column,
+            request.target_row,
+            request.is_research_context,
+        );
+
+        if let (Some(displaced_slot), Some(old_position)) =
+            (displaced_slot_option, moving_old_position)
+        {
+            let old_column = old_position.column();
+            let old_row = old_position.row();
+            Self::assign(
+                custom_keys_signal,
+                request.layout,
+                &displaced_slot,
+                old_column,
+                old_row,
+                request.is_research_context,
+            );
+        }
+    }
+
+    pub(crate) fn fill_positions_from_hotkeys(file: &mut CustomKeysFile, layout: GridLayout) {
+        let ability_ids: Vec<String> = file
+            .bindings_in_order()
+            .map(|entry| entry.id().to_string())
+            .collect();
+        for id in &ability_ids {
+            let hotkey = file
+                .binding(id)
+                .and_then(|b| b.hotkey())
+                .map(|h| h.to_string());
+            let has_buttonpos = file.binding(id).and_then(|b| b.button_position()).is_some();
+            let is_passive = ObjectLookup::is_passive_ability(id);
+            if !has_buttonpos
+                && let Some(hotkey_str) = &hotkey
+                && let Some(letter) = hotkey_str.chars().next()
+                && let Some((col, row)) = layout.position_for_letter(letter)
+            {
+                let pos = warcraft_keybinds::ButtonPosition::new(col, row);
+                let binding = file.binding_or_default_mut(id);
+                binding.set_button_position(Some(pos));
+                if !is_passive && binding.unbutton_position().is_none() {
+                    binding.set_unbutton_position(Some(pos));
+                }
+            }
+            let research_hotkey = file
+                .binding(id)
+                .and_then(|b| b.research_hotkey())
+                .map(|h| h.to_string());
+            let has_research_buttonpos = file
+                .binding(id)
+                .and_then(|b| b.research_button_position())
+                .is_some();
+            if !has_research_buttonpos
+                && let Some(rk) = &research_hotkey
+                && let Some(letter) = rk.chars().next()
+                && let Some((col, row)) = layout.position_for_letter(letter)
+            {
+                let pos = warcraft_keybinds::ButtonPosition::new(col, row);
+                file.binding_or_default_mut(id)
+                    .set_research_button_position(Some(pos));
+            }
+        }
+        let command_names: Vec<String> = file
+            .commands_in_order()
+            .map(|entry| entry.name().to_string())
+            .collect();
+        for name in &command_names {
+            let hotkey = file
+                .command(name)
+                .and_then(|b| b.hotkey())
+                .map(|h| h.to_string());
+            let has_buttonpos = file
+                .command(name)
+                .and_then(|b| b.button_position())
+                .is_some();
+            if !has_buttonpos
+                && let Some(hotkey_str) = &hotkey
+                && let Some(letter) = hotkey_str.chars().next()
+                && let Some((col, row)) = layout.position_for_letter(letter)
+            {
+                let pos = warcraft_keybinds::ButtonPosition::new(col, row);
+                let command = file.command_or_default_mut(name);
+                command.set_button_position(Some(pos));
+                if command.unbutton_position().is_none() {
+                    command.set_unbutton_position(Some(pos));
+                }
+            }
+        }
+    }
+
+    pub(crate) fn apply_grid_to_all_known_objects(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        layout: GridLayout,
+    ) -> usize {
+        let mut changed_count: usize = 0;
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
+            let id_value = object_id.value();
+            if !ObjectLookup::has_icon(id_value) {
+                continue;
+            }
+            let is_command = warcraft_object.kind() == WarcraftObjectKind::Command;
+            let database_button = warcraft_object.default_button_position();
+            let database_research = warcraft_object.default_research_button_position();
+            if is_command {
+                let binding = file.command_or_default_mut(id_value);
+                let cast_position = binding
+                    .button_position()
+                    .map(|position| ButtonPosition::new(position.column(), position.row()))
+                    .or(database_button);
+                if let Some(position) = cast_position
+                    && let Some(letter) = layout.letter_at(position.column(), position.row())
+                {
+                    let new_hotkey = letter.to_string();
+                    if binding.hotkey() != Some(new_hotkey.as_str()) {
+                        binding.set_hotkey(Some(new_hotkey));
+                        changed_count += 1;
+                    }
+                }
+            } else {
+                let is_passive = ObjectLookup::is_passive_ability(id_value);
+                let binding = file.binding_or_default_mut(id_value);
+                let cast_position = binding
+                    .button_position()
+                    .map(|position| ButtonPosition::new(position.column(), position.row()))
+                    .or(database_button);
+                if !is_passive
+                    && let Some(position) = cast_position
+                    && let Some(letter) = layout.letter_at(position.column(), position.row())
+                {
+                    let new_hotkey = letter.to_string();
+                    if binding.hotkey() != Some(new_hotkey.as_str()) {
+                        binding.set_hotkey(Some(new_hotkey));
+                        changed_count += 1;
+                    }
+                }
+                let research_position = binding
+                    .research_button_position()
+                    .map(|position| ButtonPosition::new(position.column(), position.row()))
+                    .or(database_research);
+                if let Some(position) = research_position
+                    && let Some(letter) = layout.letter_at(position.column(), position.row())
+                {
+                    let new_research_hotkey = letter.to_string();
+                    if binding.research_hotkey() != Some(new_research_hotkey.as_str()) {
+                        binding.set_research_hotkey(Some(new_research_hotkey));
+                        changed_count += 1;
+                    }
+                }
+            }
+        }
+        changed_count
+    }
+}
+
+pub(crate) struct MoveRequest<'a> {
+    layout: GridLayout,
+    slot_ids: &'a [GridSlotId],
+    moving_slot: &'a GridSlotId,
+    target_column: u8,
+    target_row: u8,
+    is_research_context: bool,
+}
+
+impl<'a> MoveRequest<'a> {
+    pub(crate) fn new(
+        layout: GridLayout,
+        slot_ids: &'a [GridSlotId],
+        moving_slot: &'a GridSlotId,
+        target_column: u8,
+        target_row: u8,
+        is_research_context: bool,
+    ) -> Self {
+        Self {
+            layout,
+            slot_ids,
+            moving_slot,
+            target_column,
+            target_row,
+            is_research_context,
+        }
+    }
+}

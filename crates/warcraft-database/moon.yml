@@ -1,0 +1,11 @@
+id: warcraft-database
+stack: backend
+layer: library
+tags:
+  - rust
+  - lib
+  - generated
+language: rust
+
+dependsOn:
+  - warcraft-api
