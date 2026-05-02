@@ -1,6 +1,13 @@
 {
   description = "Warcraft III Hotkey Editor — web-based CustomKeys.txt editor";
 
+  nixConfig = {
+    extra-substituters = ["https://clemenscodes.cachix.org"];
+    extra-trusted-public-keys = [
+      "clemenscodes.cachix.org-1:yEwW1YgttL2xdsyfFDz/vv8zZRhRGMeDQsKKmtV1N18="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";

@@ -1,6 +1,7 @@
+---
 name: Deploy to GitHub Pages
 
-on:
+"on":
   push:
     branches: [main]
   workflow_dispatch:
@@ -23,8 +24,11 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Restore Nix store cache
-        uses: DeterminateSystems/flakehub-cache-action@main
+      - name: Use Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: clemenscodes
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       # `nix build .#warcraft-hotkey-editor` runs the full pipeline:
       # stable Rust + wasm32 target → dx build → tailwind → wasm-bindgen
@@ -32,7 +36,10 @@ jobs:
       # `.nojekyll` and `404.html`, so the output at ./result is exactly
       # what GH Pages expects — no post-processing here.
       - name: Build the static bundle
-        run: nix build .#warcraft-hotkey-editor --print-build-logs
+        run: >
+          nix build .#warcraft-hotkey-editor
+          --accept-flake-config
+          --print-build-logs
 
       - name: Stage Pages artifact
         run: |
