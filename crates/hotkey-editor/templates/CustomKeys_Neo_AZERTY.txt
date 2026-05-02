@@ -14,6 +14,8 @@ Unbuttonpos=3,1
 
 [CmdBuild]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [CmdBuildHuman]
 Hotkey=W
@@ -37,15 +39,23 @@ Unbuttonpos=0,2
 
 [CmdCancel]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [CmdCancelBuild]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [CmdCancelTrain]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [CmdCancelRevive]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [CmdHoldPos]
 Hotkey=E
@@ -78,6 +88,8 @@ Unbuttonpos=0,2
 
 [CmdPurchase]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [Ahar]
 Hotkey=F
@@ -265,6 +277,8 @@ Tip=Flare (|cffffcc00Z|r)
 
 [hmtt]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [hrtt]
 Hotkey=E
@@ -823,6 +837,8 @@ UnTip=Ethereal Form (|cffffcc00V|r)
 
 [Aetf]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [Aspl]
 Hotkey=W
@@ -1331,6 +1347,8 @@ UnTip=Night Elf Form (|cffffcc00V|r)
 
 [edcm]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [Ara2]
 Hotkey=W
@@ -1364,6 +1382,8 @@ Tip=Train Hippogryph (|cffffcc00Q|r)
 
 [ehpr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [Aco3]
 Hotkey=W
@@ -1398,6 +1418,8 @@ UnTip=Night Elf Form (|cffffcc00V|r)
 
 [edtm]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [Afa2]
 Hotkey=W
@@ -1568,6 +1590,8 @@ Tip=Eat Tree (|cffffcc00Z|r)
 
 [Aroo]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [Aro1]
 Hotkey=V
@@ -1848,6 +1872,8 @@ Researchtip=Learn Vengeance (|cffffcc00V|r)
 
 [espv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [Avng]
 Hotkey=W
@@ -1936,6 +1962,8 @@ UnTip=Gargoyle Form (|cffffcc00Z|r)
 
 [ugrm]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [unec]
 Hotkey=A
@@ -2762,6 +2790,8 @@ Tip=Summon Tinker (|cffffcc00C|r)
 
 [Nrob]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [ANsy]
 Hotkey=W
@@ -2949,12 +2979,18 @@ Tip=Summon Alchemist (|cffffcc00V|r)
 
 [Nalm]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [Nal2]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [Nal3]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [ANhs]
 Hotkey=W
@@ -2994,21 +3030,31 @@ Researchtip=Learn Transmute (|cffffcc00V|r)
 
 [clsd]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [rst1]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [rin1]
 Hotkey=I
 
 [rnsp]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [rag1]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [rat6]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [gcel]
 Hotkey=G
@@ -3023,6 +3069,8 @@ Tip=Purchase Circlet of Nobility (|cffffcc00E|r)
 
 [rat9]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [penr]
 Hotkey=P
@@ -3038,42 +3086,64 @@ Hotkey=53
 
 [rlif]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [evtl]
 Hotkey=T
 
 [afac]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [bgst]
 Hotkey=B
 
 [belv]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ram1]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ram2]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ram3]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ram4]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ciri]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [brac]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [sbch]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [rwiz]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [lhst]
 Hotkey=H
@@ -3083,9 +3153,13 @@ Hotkey=J
 
 [ratc]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [clfm]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [hval]
 Hotkey=H
@@ -3104,9 +3178,13 @@ Hotkey=M
 
 [ward]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [spsh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [rhth]
 Hotkey=H
@@ -3119,30 +3197,46 @@ Hotkey=P
 
 [ssil]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [crys]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [rej1]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [rej2]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [rej3]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [rej4]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [wswd]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [will]
 Hotkey=I
 
 [pghe]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [pgma]
 Hotkey=M
@@ -3152,72 +3246,112 @@ Hotkey=I
 
 [sror]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [woms]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [ankh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [fgsk]
 Hotkey=B
 
 [whwd]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [hlst]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [mnst]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [wcyc]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [fgbd]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [iotw]
 Hotkey=I
 
 [pdiv]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [pdi2]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [pres]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [sres]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [fgfh]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [fgrg]
 Hotkey=T
 
 [wild]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [fgdg]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [engr]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [shar]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [scav]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [ccmd]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [amrc]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [bspd]
 Hotkey=A
@@ -3230,6 +3364,8 @@ Hotkey=K
 
 [desc]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [gemt]
 Hotkey=G
@@ -3245,6 +3381,8 @@ Hotkey=U
 
 [gfor]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [mdpb]
 Hotkey=P
@@ -3254,6 +3392,8 @@ Hotkey=K
 
 [rde1]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [rde2]
 Hotkey=3
@@ -3272,9 +3412,13 @@ Tip=Purchase Orb of Fire (|cffffcc00Z|r)
 
 [ofro]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [olig]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [oli2]
 Hotkey=W
@@ -3322,9 +3466,13 @@ Tip=Purchase Potion of Lesser Invulnerability (|cffffcc00V|r)
 
 [pspd]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [sfog]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [rhe1]
 Hotkey=H
@@ -3358,6 +3506,8 @@ Tip=Purchase Scroll of Protection (|cffffcc00A|r)
 
 [rres]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [stwp]
 Hotkey=D
@@ -3370,9 +3520,13 @@ Hotkey=T
 
 [tdex]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [texp]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [tint]
 Hotkey=T
@@ -3382,9 +3536,13 @@ Hotkey=P
 
 [tstr]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [war2]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [wneg]
 Hotkey=F
@@ -3393,12 +3551,18 @@ Unbuttonpos=3,1
 
 [rdis]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [rwat]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [fgrd]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 Tip=Purchase Drake Egg
 
 [rnec]
@@ -3424,6 +3588,8 @@ Tip=Purchase Healing Salve (|cffffcc00Q|r)
 
 [pclr]
 Hotkey=X
+Buttonpos=1,2
+Unbuttonpos=1,2
 
 [plcl]
 Hotkey=Z
@@ -3433,9 +3599,13 @@ Tip=Purchase Lesser Clarity Potion (|cffffcc00W|r)
 
 [rej5]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [rej6]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [sreg]
 Hotkey=A
@@ -3445,6 +3615,8 @@ Tip=Purchase Scroll of Regeneration (|cffffcc00Q|r)
 
 [fgun]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [pomn]
 Hotkey=O
@@ -3457,6 +3629,8 @@ Hotkey=N
 
 [silk]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [lure]
 Hotkey=L
@@ -3475,9 +3649,13 @@ Tip=Purchase Moonstone (|cffffcc00Q|r)
 
 [vamp]
 Hotkey=V
+Buttonpos=3,2
+Unbuttonpos=3,2
 
 [tcas]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [tgrh]
 Hotkey=X
@@ -3493,6 +3671,8 @@ Tip=Purchase Ivory Tower (|cffffcc00F|r)
 
 [wshs]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [tret]
 Hotkey=W
@@ -3523,6 +3703,8 @@ Tip=Purchase Mechanical Critter (|cffffcc00E|r)
 
 [rsps]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [sbok]
 Hotkey=B
@@ -3541,6 +3723,8 @@ Tip=Purchase Scroll of Speed (|cffffcc00E|r)
 
 [rspd]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [dust]
 Hotkey=R
@@ -3558,6 +3742,8 @@ Hotkey=B
 
 [dsum]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [sor1]
 Hotkey=O
@@ -3594,6 +3780,8 @@ Hotkey=O
 
 [fwss]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [gmfr]
 Hotkey=G
@@ -3603,12 +3791,16 @@ Hotkey=H
 
 [esaz]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [jpnt]
 Hotkey=J
 
 [shwd]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [gldo]
 Hotkey=K
@@ -3624,9 +3816,13 @@ Hotkey=B
 
 [tfar]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [tlum]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [tbar]
 Hotkey=B
@@ -3639,30 +3835,46 @@ Hotkey=K
 
 [stre]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [horl]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [hbth]
 Hotkey=B
 
 [blba]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [rugt]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [frhg]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [gvsm]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [crdt]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [arsc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [scul]
 Hotkey=I
@@ -3672,21 +3884,29 @@ Hotkey=T
 
 [dtsb]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [grsl]
 Hotkey=G
 
 [arsh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [shdt]
 Hotkey=D
+Buttonpos=2,1
+Unbuttonpos=2,1
 
 [shhn]
 Hotkey=H
 
 [shen]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [thdm]
 Hotkey=T
@@ -3696,45 +3916,65 @@ Hotkey=P
 
 [shrs]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [bfhr]
 Hotkey=B
 
 [cosl]
 Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 
 [shcw]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [srbd]
 Hotkey=B
 
 [frgd]
 Hotkey=F
+Buttonpos=3,1
+Unbuttonpos=3,1
 
 [envl]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [rump]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [mort]
 Hotkey=M
 
 [srtl]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [stwa]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [klmm]
 Hotkey=K
 
 [rots]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [axas]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [mnsf]
 Hotkey=M
@@ -3744,6 +3984,8 @@ Hotkey=H
 
 [asbl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [kgal]
 Hotkey=K
@@ -4028,6 +4270,8 @@ Tip=Hire Gnoll Brute (|cffffcc00Q|r)
 
 [ngnw]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 Tip=Hire Gnoll Warden (|cffffcc00W|r)
 
 [ACpu]
@@ -4223,6 +4467,8 @@ Tip=Searing Arrows (|cffffcc00X|r)
 
 [nowb]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 Tip=Summon Wildkin (|cffffcc00W|r)
 
 [nmbg]
@@ -4293,6 +4539,8 @@ Hotkey=T
 
 [npn3]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ngz3]
 
@@ -4328,9 +4576,13 @@ Tip=Rain of Fire (|cffffcc00V|r)
 
 [nfra]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfrb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ngst]
 
@@ -4352,6 +4604,8 @@ Tip=Mana Burn (|cffffcc00Z|r)
 
 [nbdo]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ACbf]
 Hotkey=W
@@ -5090,6 +5344,8 @@ Tip=Build Tidal Guardian (|cffffcc00R|r)
 
 [nnsa]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 Tip=Build Shrine of Azshara (|cffffcc00A|r)
 
 [nnad]
@@ -6161,6 +6417,8 @@ Buttonpos=0,2
 
 [Edmm]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [Eevm]
 
@@ -6172,6 +6430,8 @@ Hotkey=W
 
 [Hant]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [Hapm]
 
@@ -6179,6 +6439,8 @@ Hotkey=Q
 
 [Hgam]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [Hhkl]
 
@@ -6204,31 +6466,47 @@ Hotkey=Q
 
 [Nmsr]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [Npld]
 
 [Nsjs]
 Hotkey=S
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [Nswt]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [Ocb2]
 
 [Odrt]
 Hotkey=X
+Buttonpos=1,2
+Unbuttonpos=1,2
 
 [Ogld]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [Orex]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [Orkn]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [Osam]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [Otcc]
 
@@ -6285,6 +6563,8 @@ Unbuttonpos=0,2
 
 [efon]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [eilw]
 
@@ -6294,6 +6574,8 @@ Hotkey=A
 
 [ensh]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [eshd]
 
@@ -6301,6 +6583,8 @@ Hotkey=Z
 
 [even]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [flag]
 
@@ -6312,6 +6596,8 @@ Hotkey=A
 
 [haro]
 Hotkey=X
+Buttonpos=1,2
+Unbuttonpos=1,2
 
 [hbew]
 
@@ -6321,6 +6607,8 @@ Hotkey=X
 
 [hphx]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [hprt]
 
@@ -6372,24 +6660,38 @@ Hotkey=A
 
 [nahy]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nalb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nanb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nanc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nane]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nano]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nanw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [narg]
 
@@ -6397,15 +6699,23 @@ Hotkey=A
 
 [nbda]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nbds]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nbee]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nbel]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nbfl]
 
@@ -6413,6 +6723,8 @@ Hotkey=A
 
 [nbnb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nbrg]
 
@@ -6428,9 +6740,13 @@ Hotkey=A
 
 [ncap]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ncat]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ncaw]
 
@@ -6468,31 +6784,47 @@ Hotkey=A
 
 [nccd]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ncco]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [nccr]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [nccu]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ncer]
 
 [ncfs]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nchp]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [ncim]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ncks]
 
 [ncmw]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [ncnk]
 
@@ -6506,6 +6838,8 @@ Hotkey=Q
 
 [ncrb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nct1]
 
@@ -6513,12 +6847,18 @@ Hotkey=A
 
 [ncta]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [ncte]
 Hotkey=W
+Buttonpos=0,2
+Unbuttonpos=0,2
 
 [nctl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndch]
 
@@ -6546,6 +6886,8 @@ Hotkey=A
 
 [ndmu]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndog]
 
@@ -6569,33 +6911,53 @@ Hotkey=A
 
 [ndrf]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrj]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrn]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ndrp]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrs]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrt]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [ndrv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndrw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ndsa]
 
@@ -6609,12 +6971,18 @@ Hotkey=A
 
 [ndwm]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nech]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [necr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nef0]
 
@@ -6644,6 +7012,8 @@ Hotkey=A
 
 [nehy]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nelb]
 
@@ -6667,12 +7037,18 @@ Hotkey=A
 
 [nfbr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfgl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfgo]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfgt]
 
@@ -6688,31 +7064,47 @@ Hotkey=A
 
 [nfod]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfoh]
 
 [nfor]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfot]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfov]
 
 [nfpc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfpe]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfpl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfpt]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfpu]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfr1]
 
@@ -6720,17 +7112,25 @@ Hotkey=A
 
 [nfre]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfrg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfrl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfrm]
 
 [nfro]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nfrp]
 
@@ -6756,12 +7156,18 @@ Hotkey=A
 
 [nggd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nggg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nggm]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nggr]
 
@@ -6773,6 +7179,8 @@ Hotkey=A
 
 [ngna]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ngnh]
 
@@ -6780,22 +7188,32 @@ Hotkey=A
 
 [ngno]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ngns]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ngob]
 
 [ngog]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ngol]
 
 [ngos]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ngow]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [ngt2]
 
@@ -6815,6 +7233,8 @@ Hotkey=R
 
 [nhar]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [nhcn]
 
@@ -6834,9 +7254,13 @@ Hotkey=Z
 
 [nhmc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nhn2]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nhns]
 
@@ -6846,9 +7270,13 @@ Hotkey=A
 
 [nhyd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nhyh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nhym]
 
@@ -6878,24 +7306,38 @@ Hotkey=A
 
 [njks]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nlkl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nlpd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nlpr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nlps]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nlrv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nltc]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [nltl]
 
@@ -6909,14 +7351,20 @@ Hotkey=E
 
 [nmam]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmcf]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmdm]
 
 [nmdr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmed]
 
@@ -6926,12 +7374,18 @@ Hotkey=A
 
 [nmg2]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmgd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmgr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmgv]
 
@@ -6941,6 +7395,8 @@ Hotkey=A
 
 [nmit]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmmu]
 
@@ -6956,26 +7412,40 @@ Hotkey=A
 
 [nmrv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmsc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmsh]
 
 [nmtw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nmys]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nnrg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nnrs]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nnsu]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nnwq]
 
@@ -6987,6 +7457,8 @@ Hotkey=A
 
 [nogl]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nogn]
 
@@ -6994,6 +7466,8 @@ Hotkey=A
 
 [nogr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [now2]
 
@@ -7015,9 +7489,13 @@ Hotkey=A
 
 [nplb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nplg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [npn1]
 
@@ -7039,6 +7517,8 @@ Hotkey=A
 
 [nrac]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nrat]
 
@@ -7064,17 +7544,25 @@ Hotkey=A
 
 [nsbs]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsc2]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsc3]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsca]
 
 [nscb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsce]
 
@@ -7086,14 +7574,20 @@ Hotkey=A
 
 [nsgb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsgg]
 
 [nsgh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsgn]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsgt]
 
@@ -7115,11 +7609,15 @@ Hotkey=A
 
 [nskk]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nskm]
 
 [nsko]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nslh]
 
@@ -7133,12 +7631,18 @@ Hotkey=A
 
 [nsno]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsns]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsoc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nspb]
 
@@ -7164,15 +7668,23 @@ Hotkey=A
 
 [nsra]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsrn]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsrv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nsrw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nssn]
 
@@ -7198,26 +7710,40 @@ Hotkey=A
 
 [ntka]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntkc]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntkf]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntks]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntkt]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [ntkw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntn2]
 
 [ntn3]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntnt]
 
@@ -7225,34 +7751,52 @@ Hotkey=A
 
 [ntrd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntrg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntrh]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntrs]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntrv]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ntt2]
 
 [ntws]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nubk]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nubr]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nvde]
 
 [nvdg]
 Hotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 
 [nvdl]
 
@@ -7280,6 +7824,8 @@ Hotkey=R
 
 [nwar]
 Hotkey=E
+Buttonpos=2,0
+Unbuttonpos=2,0
 
 [nwat]
 
@@ -7317,6 +7863,8 @@ Hotkey=E
 
 [nws1]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [nwwd]
 
@@ -7332,6 +7880,8 @@ Hotkey=Z
 
 [nwzw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [nzin]
 
@@ -7343,9 +7893,13 @@ Hotkey=A
 
 [ocbw]
 Hotkey=Q
+Buttonpos=0,1
+Unbuttonpos=0,1
 
 [odkt]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [oeye]
 
@@ -7353,6 +7907,8 @@ Hotkey=A
 
 [ogrk]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ohwd]
 
@@ -7360,6 +7916,8 @@ Hotkey=A
 
 [onzg]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [oosc]
 
@@ -7375,6 +7933,8 @@ Hotkey=A
 
 [ospw]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [osw1]
 
@@ -7388,6 +7948,8 @@ Hotkey=A
 
 [ovlj]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [owar]
 
@@ -7439,17 +8001,25 @@ Hotkey=Z
 
 [uabc]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [uarb]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ubdd]
 Hotkey=A
+Buttonpos=0,0
+Unbuttonpos=0,0
 
 [ubdr]
 
 [ucrm]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [ucs1]
 
@@ -7479,6 +8049,8 @@ Hotkey=Z
 
 [uswb]
 Hotkey=Z
+Buttonpos=1,0
+Unbuttonpos=1,0
 
 [vddl]
 
