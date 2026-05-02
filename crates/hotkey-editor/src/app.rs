@@ -14,6 +14,7 @@ use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
 use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::local_storage_cache::LocalStorageCache;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
@@ -28,9 +29,22 @@ const FAVICON: Asset = asset!("/assets/favicon.svg");
 
 #[component]
 pub(crate) fn App() -> Element {
-    let loaded_keys =
-        use_signal::<Option<CustomKeysFile>>(|| Some(CustomKeysFile::from(BASELINE_CUSTOM_KEYS)));
-    let grid_layout = use_signal::<GridLayout>(GridLayout::german_grid);
+    let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
+        Some(
+            LocalStorageCache::load().unwrap_or_else(|| CustomKeysFile::from(BASELINE_CUSTOM_KEYS)),
+        )
+    });
+    use_effect(move || {
+        if let Some(file) = loaded_keys.read().as_ref() {
+            LocalStorageCache::save_export(file);
+        }
+    });
+    let grid_layout = use_signal::<GridLayout>(|| {
+        LocalStorageCache::load()
+            .as_ref()
+            .map(GridLayout::derived_from)
+            .unwrap_or_else(GridLayout::german_grid)
+    });
     let active_race = use_signal::<Race>(|| Race::Human);
     let unit_mode = use_signal::<UnitMode>(|| UnitMode::Melee);
     let selected_unit_id = use_signal::<Option<String>>(|| {
