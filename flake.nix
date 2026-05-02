@@ -145,6 +145,11 @@
           pkgs.binaryen
         ];
 
+        ci-cache-tools = pkgs.buildEnv {
+          name = "warcraft-hotkey-editor-ci-cache-tools";
+          paths = moonRuntimeInputs;
+        };
+
         # Wraps `moon run :<task>` (workspace-default project, which is
         # `hotkey-editor` per `.moon/workspace.yml`) in a shell app so
         # we can expose it as `nix run .#<task>` — no need to enter the
@@ -240,7 +245,9 @@
 
         packages = {
           default = warcraft-hotkey-editor;
-          inherit warcraft-hotkey-editor;
+          inherit cargoArtifacts ci-cache-tools moonCli warcraft-hotkey-editor;
+          dioxus-cli = pkgs.dioxus-cli;
+          wasm-bindgen-cli = pkgs.wasm-bindgen-cli;
         };
 
         # `nix run .#dev` and `nix run .#bundle` are the same thing as
