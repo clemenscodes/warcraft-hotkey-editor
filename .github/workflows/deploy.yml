@@ -31,6 +31,31 @@ jobs:
             git branch main FETCH_HEAD
           fi
 
+      - name: Restore Rust and Moon cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            target
+            .moon/cache
+            ~/.cargo/registry
+            ~/.cargo/git
+            crates/hotkey-editor/assets/tailwind.css
+          key: >
+            ${{ runner.os }}-checks-${{
+            hashFiles(
+            'Cargo.lock',
+            'rust-toolchain.toml',
+            'flake.lock',
+            '.moon/**/*.yml',
+            'moon.yml',
+            'crates/**/moon.yml',
+            'crates/**/Cargo.toml',
+            'crates/hotkey-editor/tailwind.input.css',
+            'crates/hotkey-editor/styles/**/*.css'
+            ) }}
+          restore-keys: |
+            ${{ runner.os }}-checks-
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
@@ -49,6 +74,12 @@ jobs:
         with:
           name: clemenscodes
           skipPush: true
+
+      - name: Build generated assets
+        run: >
+          nix develop
+          --accept-flake-config
+          --command moon run hotkey-editor:tailwind/build
 
       - name: Run checks
         run: >
