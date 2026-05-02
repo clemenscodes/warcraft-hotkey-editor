@@ -4,6 +4,7 @@ name: Deploy to GitHub Pages
 "on":
   push:
     branches: [main]
+    tags: [v*]
   pull_request:
   workflow_dispatch:
 
@@ -64,7 +65,7 @@ jobs:
         uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           useDaemon: true
           pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
 
@@ -90,6 +91,8 @@ jobs:
   build:
     needs: checks
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
 
@@ -101,7 +104,7 @@ jobs:
         uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           useDaemon: true
           pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
 
@@ -144,6 +147,18 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./pages-out
+
+      - name: Package release pages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tar -czf "./warcraft-hotkey-editor-${{ github.ref_name }}-pages.tar.gz" -C ./pages-out .
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+          files: ./warcraft-hotkey-editor-${{ github.ref_name }}-pages.tar.gz
 
   deploy:
     needs: build
