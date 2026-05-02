@@ -32,7 +32,7 @@ jobs:
           fi
 
       - name: Restore Rust and Moon cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             target
@@ -89,7 +89,6 @@ jobs:
 
   build:
     needs: checks
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -125,6 +124,7 @@ jobs:
           --print-build-logs
 
       - name: Stage Pages artifact
+        if: github.event_name != 'pull_request'
         run: |
           # `cp -RL` dereferences the /nix/store symlink so the upload
           # action gets a regular tree rather than a single symlink.
@@ -132,12 +132,14 @@ jobs:
           cp -RL ./result/. ./pages-out/
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./pages-out
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
