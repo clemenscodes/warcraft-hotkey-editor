@@ -57,11 +57,11 @@ jobs:
             ${{ runner.os }}-checks-
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
         if: github.event_name != 'pull_request'
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -70,7 +70,7 @@ jobs:
 
       - name: Use Cachix read-only
         if: github.event_name == 'pull_request'
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
           skipPush: true
@@ -95,10 +95,10 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
