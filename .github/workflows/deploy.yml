@@ -4,6 +4,7 @@ name: Deploy to GitHub Pages
 "on":
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -16,19 +17,100 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Moon base ref
+        run: |
+          git fetch origin main
+          if ! git show-ref --verify --quiet refs/heads/main; then
+            git branch main FETCH_HEAD
+          fi
+
+      - name: Restore Rust and Moon cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            target
+            .moon/cache
+            ~/.cargo/registry
+            ~/.cargo/git
+            crates/hotkey-editor/assets/tailwind.css
+          key: >
+            ${{ runner.os }}-checks-${{
+            hashFiles(
+            'Cargo.lock',
+            'rust-toolchain.toml',
+            'flake.lock',
+            '.moon/**/*.yml',
+            'moon.yml',
+            'crates/**/moon.yml',
+            'crates/**/Cargo.toml',
+            'crates/hotkey-editor/tailwind.input.css',
+            'crates/hotkey-editor/styles/**/*.css'
+            ) }}
+          restore-keys: |
+            ${{ runner.os }}-checks-
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Use Cachix
+        if: github.event_name != 'pull_request'
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          useDaemon: true
+          pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Use Cachix read-only
+        if: github.event_name == 'pull_request'
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          skipPush: true
+
+      - name: Build generated assets
+        run: >
+          nix develop
+          --accept-flake-config
+          --command moon run hotkey-editor:tailwind/build
+
+      - name: Run checks
+        run: >
+          nix develop
+          --accept-flake-config
+          --command moon run :ci
+
   build:
+    needs: checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: clemenscodes
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          useDaemon: true
+          pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Build priority cache inputs
+        run: >
+          nix build
+          .#ci-cache-tools
+          .#cargoArtifacts
+          --accept-flake-config
+          --print-build-logs
 
       # `nix build .#warcraft-hotkey-editor` runs the full pipeline:
       # stable Rust + wasm32 target → dx build → tailwind → wasm-bindgen
@@ -42,6 +124,7 @@ jobs:
           --print-build-logs
 
       - name: Stage Pages artifact
+        if: github.event_name != 'pull_request'
         run: |
           # `cp -RL` dereferences the /nix/store symlink so the upload
           # action gets a regular tree rather than a single symlink.
@@ -49,12 +132,14 @@ jobs:
           cp -RL ./result/. ./pages-out/
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./pages-out
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
