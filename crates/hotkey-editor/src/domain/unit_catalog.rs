@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
+use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::domain::unit_kind::UnitKindHelpers;
@@ -17,9 +17,12 @@ pub(crate) struct UnitCatalog;
 impl UnitCatalog {
     /// The single source of truth for "which units belong in a list view".
     /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, sorts
-    /// by category priority then display name, and dedupes by `(kind, name)`
-    /// so internal-id variants (e.g. `Nal2`/`Nal3`/`Nalc`/`Nalm` all rendering
-    /// as "Alchemist") collapse to a single entry.
+    /// by category priority then display name, and dedupes by
+    /// `(kind, name, abilities)` so internal-id variants with the same name and
+    /// the same command card (e.g. `Nal2`/`Nal3`/`Nalc`/`Nalm` all rendering as
+    /// "Alchemist") collapse to a single entry while morph forms with the same
+    /// name but different abilities (e.g. Druid of the Claw vs. Bear Form)
+    /// remain as distinct entries.
     pub(crate) fn entries_for(
         race: Race,
         mode: UnitMode,
@@ -104,10 +107,17 @@ impl UnitCatalog {
             })
         });
 
-        let mut seen_keys: HashSet<(UnitKind, &'static str)> = HashSet::new();
+        let mut seen_keys: HashSet<(UnitKind, &'static str, Vec<WarcraftObjectId>)> =
+            HashSet::new();
         entries.retain(|entry| {
             let name = entry.warcraft_object.names().first().copied().unwrap_or("");
-            seen_keys.insert((entry.unit_kind, name))
+            let mut ability_signature: Vec<WarcraftObjectId> = Vec::new();
+            if let WarcraftObjectMeta::Unit(unit_meta) = entry.warcraft_object.meta() {
+                ability_signature.extend_from_slice(unit_meta.abilities());
+                ability_signature.extend_from_slice(unit_meta.hero_abilities());
+            }
+            ability_signature.sort_by_key(|ability_id| ability_id.value());
+            seen_keys.insert((entry.unit_kind, name, ability_signature))
         });
 
         entries

@@ -50,6 +50,7 @@ pub struct AbilityBinding {
     research_ubertip: Option<String>,
     un_ubertip: Option<String>,
     icon: Option<String>,
+    un_icon: Option<String>,
     modifier: Option<String>,
     dirty: bool,
 }
@@ -101,6 +102,10 @@ impl AbilityBinding {
 
     pub fn icon(&self) -> Option<&str> {
         self.icon.as_deref()
+    }
+
+    pub fn un_icon(&self) -> Option<&str> {
+        self.un_icon.as_deref()
     }
 
     pub fn modifier(&self) -> Option<&str> {
@@ -199,6 +204,13 @@ impl AbilityBinding {
         }
     }
 
+    pub fn set_un_icon(&mut self, value: Option<String>) {
+        if self.un_icon != value {
+            self.un_icon = value;
+            self.dirty = true;
+        }
+    }
+
     pub fn set_icon(&mut self, value: Option<String>) {
         if self.icon != value {
             self.icon = value;
@@ -221,6 +233,7 @@ struct AbilityBindingAccumulator {
     research_ubertip: Option<String>,
     un_ubertip: Option<String>,
     icon: Option<String>,
+    un_icon: Option<String>,
     modifier: Option<String>,
 }
 
@@ -267,6 +280,14 @@ impl AbilityBindingAccumulator {
                 let icon = value.to_string();
                 self.icon = Some(icon);
             }
+            "art" if !value.is_empty() && self.icon.is_none() => {
+                let art = value.to_string();
+                self.icon = Some(art);
+            }
+            "unart" if !value.is_empty() && self.un_icon.is_none() => {
+                let un_art = value.to_string();
+                self.un_icon = Some(un_art);
+            }
             "modifier" if !value.is_empty() && self.modifier.is_none() => {
                 let modifier = value.to_string();
                 self.modifier = Some(modifier);
@@ -289,6 +310,7 @@ impl AbilityBindingAccumulator {
             research_ubertip: self.research_ubertip,
             un_ubertip: self.un_ubertip,
             icon: self.icon,
+            un_icon: self.un_icon,
             modifier: self.modifier,
             dirty: false,
         }
@@ -486,14 +508,10 @@ impl CustomKeysFile {
         if !self.bindings.contains_key(&lowercase_id) {
             let original_id_string = object_id.to_string();
             self.order.push(lowercase_id.clone());
-            self.original_ids
-                .insert(lowercase_id.clone(), original_id_string);
-            self.bindings
-                .insert(lowercase_id.clone(), AbilityBinding::default());
+            self.original_ids.insert(lowercase_id.clone(), original_id_string);
+            self.bindings.insert(lowercase_id.clone(), AbilityBinding::default());
         }
-        self.bindings
-            .get_mut(&lowercase_id)
-            .expect("binding was just inserted")
+        self.bindings.get_mut(&lowercase_id).expect("binding was just inserted")
     }
 
     pub fn bindings_in_order(&self) -> impl Iterator<Item = BindingEntry<'_>> {
@@ -527,8 +545,7 @@ impl CustomKeysFile {
             self.command_order.push(lowercase_name.clone());
             self.original_command_names
                 .insert(lowercase_name.clone(), original_name_string);
-            self.commands
-                .insert(lowercase_name.clone(), CommandBinding::default());
+            self.commands.insert(lowercase_name.clone(), CommandBinding::default());
         }
         self.commands
             .get_mut(&lowercase_name)
@@ -542,12 +559,10 @@ impl CustomKeysFile {
                 .get(lowercase_name)
                 .map(String::as_str)
                 .unwrap_or(lowercase_name);
-            self.commands
-                .get(lowercase_name)
-                .map(|binding| CommandEntry {
-                    name: original_name,
-                    binding,
-                })
+            self.commands.get(lowercase_name).map(|binding| CommandEntry {
+                name: original_name,
+                binding,
+            })
         })
     }
 
@@ -601,16 +616,6 @@ impl CustomKeysFile {
     }
 
     pub fn to_file_content(&self) -> String {
-        self.serialize(true)
-    }
-
-    /// Serializes all sections from their structured binding state, without
-    /// reusing raw imported text.
-    pub fn to_full_file_content(&self) -> String {
-        self.serialize(false)
-    }
-
-    fn serialize(&self, preserve_raw_sections: bool) -> String {
         let mut output = String::new();
         for lowercase_name in &self.command_order {
             let display_name = self
@@ -621,8 +626,7 @@ impl CustomKeysFile {
             let Some(binding) = self.commands.get(lowercase_name) else {
                 continue;
             };
-            if preserve_raw_sections
-                && !binding.is_dirty()
+            if !binding.is_dirty()
                 && let Some(raw_text) = self.raw_command_sections.get(lowercase_name)
             {
                 output.push_str(raw_text);
@@ -642,8 +646,7 @@ impl CustomKeysFile {
             let Some(binding) = self.bindings.get(lowercase_id) else {
                 continue;
             };
-            if preserve_raw_sections
-                && !binding.is_dirty()
+            if !binding.is_dirty()
                 && let Some(raw_text) = self.raw_sections.get(lowercase_id)
             {
                 output.push_str(raw_text);
@@ -846,9 +849,7 @@ impl From<&str> for CustomKeysFile {
                         command_order.push(order_entry);
                         current_lowercase_key = Some(lowercase_id);
                         current_is_command = true;
-                        accumulator = Some(SectionAccumulator::Command(
-                            CommandBindingAccumulator::default(),
-                        ));
+                        accumulator = Some(SectionAccumulator::Command(CommandBindingAccumulator::default()));
                         current_raw_text.push_str(line);
                         current_raw_text.push('\n');
                     }
@@ -865,9 +866,7 @@ impl From<&str> for CustomKeysFile {
                     order.push(order_entry);
                     current_lowercase_key = Some(lowercase_id);
                     current_is_command = false;
-                    accumulator = Some(SectionAccumulator::Ability(
-                        AbilityBindingAccumulator::default(),
-                    ));
+                    accumulator = Some(SectionAccumulator::Ability(AbilityBindingAccumulator::default()));
                     current_raw_text.push_str(line);
                     current_raw_text.push('\n');
                 }
@@ -883,12 +882,8 @@ impl From<&str> for CustomKeysFile {
                 {
                     let KeyValuePair { key, value } = pair;
                     match current_accumulator {
-                        SectionAccumulator::Ability(ability_accumulator) => {
-                            ability_accumulator.apply(&key, &value)
-                        }
-                        SectionAccumulator::Command(command_accumulator) => {
-                            command_accumulator.apply(&key, &value)
-                        }
+                        SectionAccumulator::Ability(ability_accumulator) => ability_accumulator.apply(&key, &value),
+                        SectionAccumulator::Command(command_accumulator) => command_accumulator.apply(&key, &value),
                     }
                 }
             }
@@ -1123,18 +1118,6 @@ mod tests {
     }
 
     #[test]
-    fn full_output_ignores_raw_comments() {
-        let input = "[AHhb]\nHotkey=Q\n//inline comment\nButtonpos=0,2\n\n";
-        let file = CustomKeysFile::from(input);
-        let output = file.to_full_file_content();
-        assert!(
-            !output.contains("//inline comment"),
-            "full serialization should not preserve raw comment lines",
-        );
-        assert!(output.contains("Buttonpos=0,2"));
-    }
-
-    #[test]
     fn parses_command_section() {
         let input = "[CmdMove]\nHotkey=M\nButtonpos=1,2\nTip=Move\n";
         let file = CustomKeysFile::from(input);
@@ -1151,14 +1134,51 @@ mod tests {
         let mut file = CustomKeysFile::from(input);
         let binding = file.binding_or_default_mut("AHhb");
         binding.set_hotkey(Some("Q".to_string()));
-        assert!(
-            !binding.is_dirty(),
-            "setting same value should not mark dirty"
-        );
+        assert!(!binding.is_dirty(), "setting same value should not mark dirty");
         binding.set_hotkey(Some("R".to_string()));
-        assert!(
-            binding.is_dirty(),
-            "setting different value should mark dirty"
+        assert!(binding.is_dirty(), "setting different value should mark dirty");
+    }
+
+    #[test]
+    fn round_trip_of_baseline_preserves_known_sections() {
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let file = CustomKeysFile::from(baseline);
+        let output = file.to_file_content();
+        let known_sections = [
+            "[CmdAttack]",
+            "[CmdMove]",
+            "[CmdRally]",
+            "[CmdCancel]",
+            "[CmdBuildHuman]",
+            "[Hpal]",
+            "[hkee]",
+            "[Rhpm]",
+            "[AHhb]",
+        ];
+        for section_marker in known_sections {
+            assert!(
+                output.contains(section_marker),
+                "round-trip output is missing section {section_marker:?}",
+            );
+        }
+        use std::collections::BTreeSet;
+        let collect_unique_sections = |text: &str| -> BTreeSet<String> {
+            text.lines()
+                .filter_map(|line| {
+                    let trimmed = line.trim();
+                    if trimmed.starts_with('[') && trimmed.ends_with(']') {
+                        Some(trimmed.to_ascii_lowercase())
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        };
+        let baseline_unique = collect_unique_sections(baseline);
+        let output_unique = collect_unique_sections(&output);
+        assert_eq!(
+            baseline_unique, output_unique,
+            "round-trip preserves the set of unique section headers (duplicates in the source are deduped)",
         );
     }
 }

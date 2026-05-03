@@ -58,11 +58,7 @@ impl<const SIZE: usize> Bytes<SIZE> {
 
 impl<const SIZE: usize> std::fmt::Display for Bytes<SIZE> {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let end = self
-            .handle
-            .iter()
-            .position(|&byte| byte == 0)
-            .unwrap_or(SIZE);
+        let end = self.handle.iter().position(|&byte| byte == 0).unwrap_or(SIZE);
         formatter.write_str(std::str::from_utf8(&self.handle[..end]).unwrap_or_default())
     }
 }
@@ -428,9 +424,7 @@ impl Identifier {
         let mut buffer = self.handle();
         buffer.reverse();
         let end = buffer.iter().position(|&byte| byte == 0).unwrap_or(4);
-        std::str::from_utf8(&buffer[..end])
-            .unwrap_or_default()
-            .to_string()
+        std::str::from_utf8(&buffer[..end]).unwrap_or_default().to_string()
     }
 
     pub fn is_invalid(&self) -> bool {
@@ -661,9 +655,7 @@ impl<const SIZE: usize> From<&str> for ByteString<SIZE> {
         let bytes = value.as_bytes();
         let length = bytes.len().min(SIZE);
         buffer[..length].copy_from_slice(&bytes[..length]);
-        Self {
-            data: buffer.into(),
-        }
+        Self { data: buffer.into() }
     }
 }
 
@@ -682,9 +674,7 @@ impl<const SIZE: usize> ByteString<SIZE> {
         let handle = self.data.handle();
         let end = handle.iter().position(|&byte| byte == 0).unwrap_or(SIZE);
 
-        let decoded = std::str::from_utf8(&handle[..end])
-            .unwrap_or_default()
-            .to_string();
+        let decoded = std::str::from_utf8(&handle[..end]).unwrap_or_default().to_string();
 
         decoded
             .strip_prefix('"')
@@ -933,10 +923,7 @@ impl AgentReference {
     }
 
     pub fn is_valid(&self) -> bool {
-        self.presence_tag()
-            .handle()
-            .iter()
-            .any(|byte| *byte != 0xFF)
+        self.presence_tag().handle().iter().any(|byte| *byte != 0xFF)
     }
 
     fn slice<const OFFSET: usize>(&self) -> [u8; 4] {
@@ -1492,10 +1479,7 @@ pub struct WarcraftObjectText {
 }
 
 impl WarcraftObjectText {
-    pub const fn new(
-        tip_levels: &'static [&'static str],
-        ubertip_levels: &'static [&'static str],
-    ) -> Self {
+    pub const fn new(tip_levels: &'static [&'static str], ubertip_levels: &'static [&'static str]) -> Self {
         Self {
             tip_levels,
             ubertip_levels,
@@ -1695,9 +1679,7 @@ impl WarcraftObject {
             return Some(position);
         }
         match &self.meta {
-            WarcraftObjectMeta::Ability(ability_meta) => {
-                ability_meta.default_research_button_position()
-            }
+            WarcraftObjectMeta::Ability(ability_meta) => ability_meta.default_research_button_position(),
             _ => None,
         }
     }
@@ -1864,12 +1846,7 @@ impl UnitFlags {
         is_special: false,
     };
 
-    pub const fn new(
-        is_campaign: bool,
-        is_in_editor: bool,
-        is_hidden_in_editor: bool,
-        is_special: bool,
-    ) -> Self {
+    pub const fn new(is_campaign: bool, is_in_editor: bool, is_hidden_in_editor: bool, is_special: bool) -> Self {
         Self {
             is_campaign,
             is_in_editor,
@@ -2238,11 +2215,7 @@ pub struct AttributeGrowth {
 }
 
 impl AttributeGrowth {
-    pub const fn new(
-        strength_per_level: f32,
-        agility_per_level: f32,
-        intelligence_per_level: f32,
-    ) -> Self {
+    pub const fn new(strength_per_level: f32, agility_per_level: f32, intelligence_per_level: f32) -> Self {
         Self {
             strength_per_level,
             agility_per_level,
@@ -2802,20 +2775,13 @@ impl Default for GameplayConstants {
     fn default() -> Self {
         // SMALL, MEDIUM, LARGE, FORT, NORMAL, HERO, DIVINE, NONE — matches
         // miscgame.txt DamageBonus* line order.
-        let damage_normal =
-            DamageEffectiveness::new([1.00, 1.50, 1.00, 0.70, 1.00, 1.00, 0.05, 1.00]);
-        let damage_pierce =
-            DamageEffectiveness::new([2.00, 0.75, 1.00, 0.35, 1.00, 0.50, 0.05, 1.50]);
-        let damage_siege =
-            DamageEffectiveness::new([1.00, 0.50, 1.00, 1.50, 1.00, 0.50, 0.05, 1.50]);
-        let damage_magic =
-            DamageEffectiveness::new([1.25, 0.75, 2.00, 0.35, 1.00, 0.50, 0.05, 1.00]);
-        let damage_chaos =
-            DamageEffectiveness::new([1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00]);
-        let damage_spells =
-            DamageEffectiveness::new([1.00, 1.00, 1.00, 1.00, 1.00, 0.70, 0.05, 1.00]);
-        let damage_hero =
-            DamageEffectiveness::new([1.00, 1.00, 1.00, 0.50, 1.00, 1.00, 0.05, 1.00]);
+        let damage_normal = DamageEffectiveness::new([1.00, 1.50, 1.00, 0.70, 1.00, 1.00, 0.05, 1.00]);
+        let damage_pierce = DamageEffectiveness::new([2.00, 0.75, 1.00, 0.35, 1.00, 0.50, 0.05, 1.50]);
+        let damage_siege = DamageEffectiveness::new([1.00, 0.50, 1.00, 1.50, 1.00, 0.50, 0.05, 1.50]);
+        let damage_magic = DamageEffectiveness::new([1.25, 0.75, 2.00, 0.35, 1.00, 0.50, 0.05, 1.00]);
+        let damage_chaos = DamageEffectiveness::new([1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00]);
+        let damage_spells = DamageEffectiveness::new([1.00, 1.00, 1.00, 1.00, 1.00, 0.70, 0.05, 1.00]);
+        let damage_hero = DamageEffectiveness::new([1.00, 1.00, 1.00, 0.50, 1.00, 1.00, 0.05, 1.00]);
         let damage_matrix = DamageMatrix::new(
             damage_normal,
             damage_pierce,
@@ -2849,6 +2815,10 @@ pub struct AbilityMeta {
     research_ubertip: Option<&'static str>,
     code: Option<&'static str>,
     morph_target_unit: Option<WarcraftObjectId>,
+    off_button_position: Option<ButtonPosition>,
+    off_tip: Option<&'static str>,
+    off_ubertip: Option<&'static str>,
+    off_icon: Option<&'static str>,
 }
 
 impl AbilityMeta {
@@ -2863,6 +2833,10 @@ impl AbilityMeta {
             research_ubertip: None,
             code: None,
             morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
     }
 
@@ -2883,6 +2857,10 @@ impl AbilityMeta {
             research_ubertip: None,
             code: None,
             morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
     }
 
@@ -2905,6 +2883,10 @@ impl AbilityMeta {
             research_ubertip,
             code: None,
             morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
     }
 
@@ -2915,6 +2897,20 @@ impl AbilityMeta {
 
     pub const fn with_morph_target(mut self, target: Option<WarcraftObjectId>) -> Self {
         self.morph_target_unit = target;
+        self
+    }
+
+    pub const fn with_off_state(
+        mut self,
+        off_button_position: Option<ButtonPosition>,
+        off_tip: Option<&'static str>,
+        off_ubertip: Option<&'static str>,
+        off_icon: Option<&'static str>,
+    ) -> Self {
+        self.off_button_position = off_button_position;
+        self.off_tip = off_tip;
+        self.off_ubertip = off_ubertip;
+        self.off_icon = off_icon;
         self
     }
 
@@ -2938,6 +2934,33 @@ impl AbilityMeta {
     /// `UnitID1` column of `abilitydata.slk`.
     pub fn morph_target_unit(&self) -> Option<&WarcraftObjectId> {
         self.morph_target_unit.as_ref()
+    }
+
+    /// Off-state button position for toggleable abilities (e.g. Defend on
+    /// the Footman). Some abilities place their "deactivate" cell at a
+    /// different grid slot when active. Sourced from `UnButtonpos=` in
+    /// `abilityfunc.txt`.
+    pub fn off_button_position(&self) -> Option<ButtonPosition> {
+        self.off_button_position
+    }
+
+    /// Off-state short tooltip — the label shown while the ability is
+    /// active (e.g. "Stop Defending" while Defend is on). Sourced from
+    /// `UnTip=` in `abilityfunc.txt`.
+    pub fn off_tip(&self) -> Option<&'static str> {
+        self.off_tip
+    }
+
+    /// Off-state long description — `UnUbertip=` in `abilityfunc.txt`.
+    pub fn off_ubertip(&self) -> Option<&'static str> {
+        self.off_ubertip
+    }
+
+    /// Off-state icon path (`UnArt=` in `abilityfunc.txt`). Different art
+    /// from the on-state icon for toggle abilities like Defend, whose
+    /// active state shows a distinct "Stop Defending" art.
+    pub fn off_icon(&self) -> Option<&'static str> {
+        self.off_icon
     }
 
     pub fn default_button_position(&self) -> Option<ButtonPosition> {
@@ -3125,12 +3148,7 @@ pub struct TeamPlayer {
 }
 
 impl TeamPlayer {
-    pub fn new(
-        name: String,
-        race_preference: RacePreference,
-        state: PlayerSlotState,
-        color: PlayerColor,
-    ) -> Self {
+    pub fn new(name: String, race_preference: RacePreference, state: PlayerSlotState, color: PlayerColor) -> Self {
         Self {
             name,
             race_preference,

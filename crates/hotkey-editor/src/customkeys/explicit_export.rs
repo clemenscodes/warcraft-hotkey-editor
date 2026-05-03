@@ -12,7 +12,7 @@ impl ExplicitExport {
         let mut export_file = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
         UploadOverlay::apply(&mut export_file, loaded_file);
         Self::materialize_default_positions(&mut export_file);
-        export_file.to_full_file_content()
+        export_file.to_file_content()
     }
 
     fn materialize_default_positions(file: &mut CustomKeysFile) {
