@@ -55,7 +55,11 @@ pub(crate) fn TileOverridePanel(
         .map(|token| token.display_label())
         .unwrap_or_default();
     let is_research_context = *selected_from_research.read();
-    let show_hotkey_field = !detail.is_passive() && !is_research_context;
+    // Commands (e.g. CmdCancel pinned to the learn-skills grid) have a single
+    // `Hotkey=` field that applies in every context — there's no separate
+    // research hotkey for a command. Surface the regular hotkey field for
+    // commands even in research context so the cancel button is bindable.
+    let show_hotkey_field = !detail.is_passive() && (!is_research_context || detail.is_command());
     let show_research_field = !detail.is_command() && is_research_context;
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);
