@@ -207,6 +207,16 @@ fn InventoryCell(
                 let Some(web_event) = event.data().try_as_web_event() else {
                     return;
                 };
+                // Drag-to-swap on touch / pen collides with both tap-to-pick
+                // and long-press-for-tooltip. Coarse-pointer users don't need
+                // reordering here — the picker dialog still lets them pick a
+                // hotkey for the slot directly. Skip the drag setup entirely
+                // so a tap fires only `onclick` and a hold fires only the
+                // tooltip long-press.
+                let pointer_type = web_event.pointer_type();
+                if pointer_type == "touch" || pointer_type == "pen" {
+                    return;
+                }
                 let Some(target_node) = web_event.target() else {
                     return;
                 };
