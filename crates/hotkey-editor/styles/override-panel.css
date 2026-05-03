@@ -424,47 +424,43 @@
     transform: none !important;
 }
 
-/* Empty drop-target cells: dashed gold border + faint warm tint so
- * they actively invite a drop. Soft hover-lift sweetens the
- * affordance without competing with the off-state cell's pulse. */
+/* Idle empty cells: keep the look quiet so the contrast against the
+ * `.drop-target` activation below is obvious. Same base treatment as
+ * the live command card — no special invitation until a drag is in
+ * flight, just a faint sketched border so the cell still reads as a
+ * proper grid square. */
 .alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
-    border: 1px dashed rgba(255, 206, 99, 0.45) !important;
-    background: rgba(255, 206, 99, 0.04) !important;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    border: 1px dashed rgba(110, 140, 180, 0.35) !important;
+    background: rgba(15, 30, 55, 0.4) !important;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"]:hover {
-    border-color: rgba(255, 206, 99, 0.85) !important;
-    background: rgba(255, 206, 99, 0.12) !important;
-}
-
-/* During an active drag, the main grid adds `.drop-target` to empty
- * cells in the source section. Boost the picker's gold accent so the
- * landing zones are obvious; the cell the cursor is currently over
- * picks up `.drag-over` and lights up further (solid border, brighter
- * fill, soft glow), matching the lift the main command card uses. */
+/* Drag-active landing zones — main grid sets `.drop-target` on every
+ * empty cell in the active section the moment the source crosses the
+ * drag-movement threshold. The border colour and fill swing to gold
+ * so the player sees "every empty square is now a target". */
 .alt-position-picker-grid-anchor .grid-tile.drop-target {
-    border: 1px dashed rgba(255, 206, 99, 0.7) !important;
-    background: rgba(255, 206, 99, 0.12) !important;
+    border: 2px dashed rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.1) !important;
     cursor: pointer !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile.drop-target:hover,
+/* Cursor is currently over this cell — bump to a solid gold border,
+ * gradient fill, soft outer glow. Matches the lift the main command
+ * grid uses for its hovered drop targets. */
 .alt-position-picker-grid-anchor .grid-tile.drag-over,
-.alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over {
+.alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
+.alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
     border: 2px solid #ffce63 !important;
     background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.28) 0%, rgba(255, 206, 99, 0.16) 100%),
+        linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 206, 99, 0.16) 100%),
         rgba(20, 35, 60, 0.95) !important;
     box-shadow:
-        inset 0 0 0 1px rgba(255, 224, 150, 0.5),
-        0 0 18px rgba(255, 206, 99, 0.55) !important;
+        inset 0 0 0 1px rgba(255, 224, 150, 0.6),
+        0 0 22px rgba(255, 206, 99, 0.7) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
     cursor: grab !important;
     z-index: 1;
     border: 3px solid #ffce63 !important;
@@ -476,6 +472,29 @@
         0 0 0 3px rgba(255, 206, 99, 0.35),
         0 0 28px rgba(255, 206, 99, 0.85) !important;
     animation: alt-picker-handle-pulse 1.4s ease-in-out infinite;
+    transition: transform 0.12s ease;
+}
+
+/* Hover on the source cell — pause the breathing pulse and lock the
+ * ring at its brightest so the cell snaps to "ready to grab", lift it
+ * 1px to mimic the live command card's hover affordance. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus {
+    cursor: grab !important;
+    animation: none !important;
+    transform: translateY(-1px);
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 206, 99, 0.1) 100%),
+        rgba(20, 35, 60, 0.95) !important;
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 235, 180, 0.85),
+        0 0 0 4px rgba(255, 206, 99, 0.55),
+        0 0 36px rgba(255, 206, 99, 1) !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+    cursor: grabbing !important;
+    transform: translateY(0);
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
