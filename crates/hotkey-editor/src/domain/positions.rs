@@ -26,9 +26,37 @@ impl Positions {
             GridSlotId::Ability(ability_id) => {
                 Self::current_for_ability(ability_id, custom_keys, is_research_context)
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                Self::current_for_ability_off(ability_id, custom_keys)
+            }
             GridSlotId::Command(command_name) => {
                 Self::current_for_command(command_name, custom_keys)
             }
+        }
+    }
+
+    /// Off-state position for a toggle ability. Reads `Unbuttonpos` from the
+    /// player's CustomKeys override first; falls through to the SLK default
+    /// (`AbilityMeta::off_button_position`, parsed from `Unbuttonpos` in the
+    /// game's `abilityfunc.txt`). Used by the override card to surface the
+    /// off-state position for toggle abilities — they live alongside the
+    /// regular `Ability` slot rather than as a second cell, so this is a
+    /// direct accessor rather than going through `current_for`.
+    pub(crate) fn current_for_ability_off(
+        ability_id: &str,
+        custom_keys: Option<&CustomKeysFile>,
+    ) -> Option<ButtonPosition> {
+        let custom_unbutton = custom_keys
+            .and_then(|file| file.binding(ability_id))
+            .and_then(|binding| binding.unbutton_position())
+            .map(|position| ButtonPosition::new(position.column(), position.row()));
+        if custom_unbutton.is_some() {
+            return custom_unbutton;
+        }
+        let warcraft_object = ObjectLookup::by_id(ability_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(ability_meta) => ability_meta.off_button_position(),
+            _ => None,
         }
     }
 
@@ -101,9 +129,13 @@ impl Positions {
     ) -> Option<ButtonPosition> {
         let resolved_entries =
             Self::resolve_container(candidate_slots, custom_keys, is_research_context);
+        // Match on the full variant, not just the underlying id string —
+        // `Ability("Adef")` and `AbilityOff("Adef")` share the same as_str
+        // but are distinct slots that resolve to the on-state and off-state
+        // positions respectively.
         let matching_entry = resolved_entries
             .iter()
-            .find(|entry| entry.slot_id.as_str().eq_ignore_ascii_case(slot.as_str()))?;
+            .find(|entry| slots_match(&entry.slot_id, slot))?;
         matching_entry.position
     }
 
@@ -123,8 +155,14 @@ impl Positions {
             entries.push(placeholder_entry);
         }
 
+        // Commands (Move, Stop, Attack, …) are placed first so their positions
+        // are already occupied when abilities cascade.  A cascaded ability must
+        // never land on a command slot — commands are first-class grid citizens.
         for entry in entries.iter_mut() {
-            if !matches!(entry.slot_id, GridSlotId::Ability(_)) {
+            if !matches!(entry.slot_id, GridSlotId::Command(_)) {
+                continue;
+            }
+            if CommandCatalog::is_context_command(&entry.slot_id) {
                 continue;
             }
             let assigned_position = Self::resolve_with_cascade(
@@ -140,10 +178,10 @@ impl Positions {
         }
 
         for entry in entries.iter_mut() {
-            if !matches!(entry.slot_id, GridSlotId::Command(_)) {
-                continue;
-            }
-            if CommandCatalog::is_context_command(&entry.slot_id) {
+            if !matches!(
+                entry.slot_id,
+                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
+            ) {
                 continue;
             }
             let assigned_position = Self::resolve_with_cascade(
@@ -187,14 +225,14 @@ impl Positions {
         match explicit_position {
             Some(position_value) => {
                 if Self::position_occupied(occupied_positions, position_value) {
-                    Self::next_free_cell(occupied_positions)
+                    Self::next_free_cell(position_value.row(), occupied_positions)
                 } else {
                     Some(position_value)
                 }
             }
             None => {
                 if Self::should_auto_position(slot) {
-                    Self::next_free_cell(occupied_positions)
+                    Self::next_free_cell(0, occupied_positions)
                 } else {
                     None
                 }
@@ -208,25 +246,47 @@ impl Positions {
         })
     }
 
-    fn next_free_cell(occupied_positions: &[ButtonPosition]) -> Option<ButtonPosition> {
+    /// Cascade within `preferred_row` first (left-to-right), then fall back
+    /// to a full grid scan.  The game engine cascades within the same row when
+    /// a button's desired position is already occupied, so we must do the same.
+    fn next_free_cell(
+        preferred_row: u8,
+        occupied_positions: &[ButtonPosition],
+    ) -> Option<ButtonPosition> {
+        for column in 0..COMMAND_GRID_COLUMNS {
+            let candidate = ButtonPosition::new(column, preferred_row);
+            if !Self::position_occupied(occupied_positions, candidate) {
+                return Some(candidate);
+            }
+        }
         for row in 0..COMMAND_GRID_ROWS {
+            if row == preferred_row {
+                continue;
+            }
             for column in 0..COMMAND_GRID_COLUMNS {
-                let candidate_position = ButtonPosition::new(column, row);
-                if !Self::position_occupied(occupied_positions, candidate_position) {
-                    return Some(candidate_position);
+                let candidate = ButtonPosition::new(column, row);
+                if !Self::position_occupied(occupied_positions, candidate) {
+                    return Some(candidate);
                 }
             }
         }
         None
     }
 
+    /// Returns both the resolved cell *and* the originating slot id at a
+    /// given grid coordinate. Callers that need to identify which slot owns
+    /// the cell (selection, drag/drop, click handlers) must compare the
+    /// returned `GridSlotId` directly — looking the slot up later by the
+    /// cell's `object_id` string would conflate `Ability("Adef")` with
+    /// `AbilityOff("Adef")`, since both share the same id but represent
+    /// different buttons (Defend vs. Stop Defend).
     pub(crate) fn cell_for_position(
         candidate_slots: &[GridSlotId],
         custom_keys: Option<&CustomKeysFile>,
         is_research_context: bool,
         column: u8,
         row: u8,
-    ) -> Option<AbilityCell> {
+    ) -> Option<(GridSlotId, AbilityCell)> {
         for slot in candidate_slots {
             let Some(position) =
                 Self::resolved_for(slot, candidate_slots, custom_keys, is_research_context)
@@ -234,19 +294,47 @@ impl Positions {
                 continue;
             };
             if position.column() == column && position.row() == row {
-                return Some(match slot {
+                let cell = match slot {
                     GridSlotId::Ability(ability_id) => {
                         let binding = custom_keys.and_then(|file| file.binding(ability_id));
                         AbilityCell::for_ability(ability_id, binding)
+                    }
+                    GridSlotId::AbilityOff(ability_id) => {
+                        let binding = custom_keys.and_then(|file| file.binding(ability_id));
+                        AbilityCell::for_ability_off(ability_id, binding)
                     }
                     GridSlotId::Command(command_name) => {
                         let binding = custom_keys.and_then(|file| file.command(command_name));
                         AbilityCell::for_command(command_name, binding)
                     }
-                });
+                };
+                return Some((slot.clone(), cell));
             }
         }
         None
+    }
+
+    /// Writes the off-state button position for a toggle ability without
+    /// touching the on-state `Buttonpos` or `Hotkey`. Used by the
+    /// override card's mini grid picker — the player drags the *off*
+    /// half of Defend / Burrow / Bear Form to a new cell, and only
+    /// `Unbuttonpos` should change. The on-state binding stays exactly
+    /// where the main command card shows it. Currently unused at the
+    /// callsite (the picker now goes through `move_or_swap` via the
+    /// reused `CommandGridSection`); kept for click-to-place fallbacks
+    /// and external scripts that want to write only the off position.
+    #[allow(dead_code)]
+    pub(crate) fn assign_off_position(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        ability_id: &str,
+        column: u8,
+        row: u8,
+    ) {
+        let new_position = warcraft_keybinds::ButtonPosition::new(column, row);
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        let binding = file.binding_or_default_mut(ability_id);
+        binding.set_unbutton_position(Some(new_position));
     }
 
     pub(crate) fn assign(
@@ -276,9 +364,17 @@ impl Positions {
                     binding.set_button_position(Some(new_position));
                     if !is_passive {
                         binding.set_hotkey(Some(letter_string));
-                        binding.set_unbutton_position(Some(new_position));
                     }
                 }
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                // Off-state slots write `Unbuttonpos` and `Unhotkey` only —
+                // the on-state's `Buttonpos` / `Hotkey` live on the
+                // sibling `Ability` slot for the same id and stay put when
+                // the player drags the off-state half.
+                let binding = file.binding_or_default_mut(ability_id);
+                binding.set_unbutton_position(Some(new_position));
+                binding.set_unhotkey(Some(letter_string));
             }
             GridSlotId::Command(command_name) => {
                 let binding = file.command_or_default_mut(command_name);
@@ -301,24 +397,74 @@ impl Positions {
             custom_keys,
             request.is_research_context,
         );
-        let displaced_cell = Self::cell_for_position(
+        let displaced_pair = Self::cell_for_position(
             request.slot_ids,
             custom_keys,
             request.is_research_context,
             request.target_column,
             request.target_row,
         );
+        // Block only when the target is *empty* (no on-state occupant) but
+        // already claimed by another ability's off-state — swapping onto an
+        // occupied cell is handled below and co-moves the off-state.
+        let off_state_blocks = displaced_pair.is_none()
+            && !request.is_research_context
+            && request.slot_ids.iter().any(|slot| {
+                let GridSlotId::Ability(ability_id) = slot else {
+                    return false;
+                };
+                // The moving toggle is always allowed to land on its own
+                // off-state cell (the two halves overlap by default).
+                if ability_id.eq_ignore_ascii_case(request.moving_slot.as_str()) {
+                    return false;
+                }
+                Self::current_for_ability_off(ability_id, custom_keys).is_some_and(|off_pos| {
+                    off_pos.column() == request.target_column && off_pos.row() == request.target_row
+                })
+            });
+        // Pre-compute co-location flags while the read guard is still live.
+        // When an ability's off-state sits on the same cell as its on-state
+        // (the natural default layout), a swap should carry the off-state
+        // along so the two halves stay together.
+        let moving_off_colocated = match (request.moving_slot, &moving_old_position) {
+            (GridSlotId::Ability(id), Some(old_pos)) => {
+                Self::current_for_ability_off(id, custom_keys).is_some_and(|off_pos| {
+                    off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
+                })
+            }
+            _ => false,
+        };
+        let displaced_off_colocated = match &displaced_pair {
+            Some((GridSlotId::Ability(id), _)) => Self::current_for_ability_off(id, custom_keys)
+                .is_some_and(|off_pos| {
+                    off_pos.column() == request.target_column && off_pos.row() == request.target_row
+                }),
+            _ => false,
+        };
         drop(read_guard);
 
-        let displaced_slot_option = displaced_cell.and_then(|cell| {
-            request
-                .slot_ids
-                .iter()
-                .find(|candidate| candidate.as_str().eq_ignore_ascii_case(cell.object_id()))
-                .cloned()
-        });
+        if off_state_blocks {
+            return;
+        }
+
+        let displaced_slot_option = displaced_pair.map(|(slot, _cell)| slot);
+        // No-op when dropping a slot onto its own position (full variant +
+        // id match — a `Ability("Adef")` drop onto `(0,2)` shouldn't
+        // self-cancel just because `AbilityOff("Adef")` happens to live
+        // there too).
         if let Some(ref displaced_slot) = displaced_slot_option
-            && displaced_slot
+            && slots_match(displaced_slot, request.moving_slot)
+        {
+            return;
+        }
+        // The off-state position picker passes `prevent_swap` to keep
+        // the off half from displacing another ability — drags onto
+        // someone else's cell are rejected outright instead of swapping.
+        // Overlap with the moving slot's *own on-state* (matching id,
+        // different variant) is fine — that's the default toggle layout.
+        if request.prevent_swap
+            && let Some(ref displaced_slot) = displaced_slot_option
+            && !displaced_slot
                 .as_str()
                 .eq_ignore_ascii_case(request.moving_slot.as_str())
         {
@@ -334,8 +480,23 @@ impl Positions {
             request.is_research_context,
         );
 
-        if let (Some(displaced_slot), Some(old_position)) =
-            (displaced_slot_option, moving_old_position)
+        // Co-move the dragged ability's off-state whenever it was at the
+        // same cell — applies to empty targets as well as swaps so the
+        // off-state doesn't stay stranded at the vacated source cell.
+        if moving_off_colocated && let GridSlotId::Ability(moving_id) = request.moving_slot {
+            Self::assign(
+                custom_keys_signal,
+                request.layout,
+                &GridSlotId::AbilityOff(moving_id.clone()),
+                request.target_column,
+                request.target_row,
+                false,
+            );
+        }
+
+        if !request.prevent_swap
+            && let (Some(displaced_slot), Some(old_position)) =
+                (displaced_slot_option, moving_old_position)
         {
             let old_column = old_position.column();
             let old_row = old_position.row();
@@ -347,6 +508,18 @@ impl Positions {
                 old_row,
                 request.is_research_context,
             );
+            // Carry the displaced ability's off-state to the vacated cell
+            // when the two halves were co-located at the drop target.
+            if displaced_off_colocated && let GridSlotId::Ability(displaced_id) = &displaced_slot {
+                Self::assign(
+                    custom_keys_signal,
+                    request.layout,
+                    &GridSlotId::AbilityOff(displaced_id.clone()),
+                    old_column,
+                    old_row,
+                    false,
+                );
+            }
         }
     }
 
@@ -374,6 +547,24 @@ impl Positions {
             .map(|entry| entry.name().to_string())
             .collect();
 
+        // Seed occupied positions with every command slot (Move, Stop, Attack,
+        // …) so the ability cascade can never land on a command position.
+        // Commands are resolved first — they are not lower priority than
+        // abilities.
+        let mut occupied_positions: Vec<ButtonPosition> = command_names
+            .iter()
+            .filter_map(|name| {
+                let database_object = ObjectLookup::by_id(name);
+                let database_button =
+                    database_object.and_then(|object| object.default_button_position());
+                let binding = file.command_or_default_mut(name);
+                binding
+                    .button_position()
+                    .map(|p| ButtonPosition::new(p.column(), p.row()))
+                    .or(database_button)
+            })
+            .collect();
+
         for ability_id in &ability_ids {
             let database_object = ObjectLookup::by_id(ability_id);
             let database_button =
@@ -384,11 +575,31 @@ impl Positions {
             let binding = file.binding_or_default_mut(ability_id);
 
             if !is_passive {
-                let cast_position = binding
+                let explicit_button = binding
                     .button_position()
-                    .map(|position| ButtonPosition::new(position.column(), position.row()))
-                    .or(database_button);
-                if let Some(position) = cast_position
+                    .map(|position| ButtonPosition::new(position.column(), position.row()));
+                let resolved_position = match explicit_button {
+                    Some(position) => {
+                        occupied_positions.push(position);
+                        Some(position)
+                    }
+                    None => {
+                        let fallback = database_button;
+                        let cascaded = match fallback {
+                            Some(preferred)
+                                if Self::position_occupied(&occupied_positions, preferred) =>
+                            {
+                                Self::next_free_cell(preferred.row(), &occupied_positions)
+                            }
+                            other => other,
+                        };
+                        if let Some(position) = cascaded {
+                            occupied_positions.push(position);
+                        }
+                        cascaded
+                    }
+                };
+                if let Some(position) = resolved_position
                     && let Some(letter) = layout.letter_at(position.column(), position.row())
                     && BindingHotkey::accepts_grid_letter(binding.hotkey())
                 {
@@ -448,6 +659,13 @@ pub(crate) struct MoveRequest<'a> {
     target_column: u8,
     target_row: u8,
     is_research_context: bool,
+    /// When true, drops onto a cell occupied by *another* slot are
+    /// rejected (no swap). Used by the off-state position picker —
+    /// dragging the off half of a toggle should never displace another
+    /// ability's on-state. Drops onto the host's own on-state cell are
+    /// always allowed regardless of this flag (overlap is the natural
+    /// default for toggle abilities).
+    prevent_swap: bool,
 }
 
 impl<'a> MoveRequest<'a> {
@@ -466,6 +684,29 @@ impl<'a> MoveRequest<'a> {
             target_column,
             target_row,
             is_research_context,
+            prevent_swap: false,
         }
+    }
+
+    /// Currently unused — the off-state position picker is click-to-place
+    /// and writes through `assign_off_position` directly, never going
+    /// through `move_or_swap`. Kept for the future drag-and-drop picker
+    /// that would feed an `AbilityOff` slot into `CommandGridSection`.
+    #[allow(dead_code)]
+    pub(crate) fn with_prevent_swap(mut self, prevent: bool) -> Self {
+        self.prevent_swap = prevent;
+        self
+    }
+}
+
+/// Compares two slots by full variant *and* id, case-insensitive on the id.
+fn slots_match(slot_a: &GridSlotId, slot_b: &GridSlotId) -> bool {
+    match (slot_a, slot_b) {
+        (GridSlotId::Ability(left), GridSlotId::Ability(right))
+        | (GridSlotId::AbilityOff(left), GridSlotId::AbilityOff(right))
+        | (GridSlotId::Command(left), GridSlotId::Command(right)) => {
+            left.eq_ignore_ascii_case(right)
+        }
+        _ => false,
     }
 }
