@@ -203,6 +203,52 @@ impl InspectorDetail {
                     is_passive,
                 }
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                // Off-state of a toggle ability — only encountered inside
+                // the off-state position picker dialog, where clicking a
+                // cell that hosts this slot pops up an inspector preview.
+                // Pull `un_tip` / `un_ubertip` for the text and the
+                // `unhotkey` from the binding; no research / no level
+                // tiering applies to the off state.
+                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id));
+                let cell = AbilityCell::for_ability_off(ability_id, binding);
+                let position = Positions::current_for(slot, custom_keys_ref, false);
+                let hotkey_token = binding
+                    .and_then(|ability_binding| ability_binding.unhotkey())
+                    .and_then(BindingHotkey::first_token);
+                let database_object = ObjectLookup::by_id(ability_id);
+                let display_name = database_object
+                    .and_then(|warcraft_object| warcraft_object.un_tip())
+                    .map(WarcraftColorCodes::stripped)
+                    .unwrap_or_else(|| cell.display_name().to_string());
+                let ubertip = database_object
+                    .and_then(|warcraft_object| warcraft_object.un_ubertip())
+                    .map(WarcraftColorCodes::stripped);
+                let icon_src = cell.cloned_icon_src();
+                let object_id = cell.cloned_object_id();
+                Self {
+                    display_name,
+                    object_id,
+                    icon_src,
+                    hotkey_token,
+                    research_hotkey_token: None,
+                    button_position: position,
+                    research_button_position: None,
+                    tip: None,
+                    research_tip: None,
+                    ubertip,
+                    research_ubertip: None,
+                    alt_display_name: None,
+                    alt_ubertip: None,
+                    alt_hotkey_token: None,
+                    alt_button_position: None,
+                    name_levels: Vec::new(),
+                    icon_levels: Vec::new(),
+                    ubertip_levels: Vec::new(),
+                    is_command: false,
+                    is_passive: false,
+                }
+            }
             GridSlotId::Command(command_name) => {
                 let binding = custom_keys_ref.and_then(|file| file.command(command_name));
                 let cell = AbilityCell::for_command(command_name, binding);

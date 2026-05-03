@@ -26,6 +26,9 @@ impl Positions {
             GridSlotId::Ability(ability_id) => {
                 Self::current_for_ability(ability_id, custom_keys, is_research_context)
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                Self::current_for_ability_off(ability_id, custom_keys)
+            }
             GridSlotId::Command(command_name) => {
                 Self::current_for_command(command_name, custom_keys)
             }
@@ -153,7 +156,10 @@ impl Positions {
         }
 
         for entry in entries.iter_mut() {
-            if !matches!(entry.slot_id, GridSlotId::Ability(_)) {
+            if !matches!(
+                entry.slot_id,
+                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
+            ) {
                 continue;
             }
             let assigned_position = Self::resolve_with_cascade(
@@ -275,6 +281,10 @@ impl Positions {
                         let binding = custom_keys.and_then(|file| file.binding(ability_id));
                         AbilityCell::for_ability(ability_id, binding)
                     }
+                    GridSlotId::AbilityOff(ability_id) => {
+                        let binding = custom_keys.and_then(|file| file.binding(ability_id));
+                        AbilityCell::for_ability_off(ability_id, binding)
+                    }
                     GridSlotId::Command(command_name) => {
                         let binding = custom_keys.and_then(|file| file.command(command_name));
                         AbilityCell::for_command(command_name, binding)
@@ -335,6 +345,15 @@ impl Positions {
                     }
                 }
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                // Off-state slots write `Unbuttonpos` and `Unhotkey` only —
+                // the on-state's `Buttonpos` / `Hotkey` live on the
+                // sibling `Ability` slot for the same id and stay put when
+                // the player drags the off-state half.
+                let binding = file.binding_or_default_mut(ability_id);
+                binding.set_unbutton_position(Some(new_position));
+                binding.set_unhotkey(Some(letter_string));
+            }
             GridSlotId::Command(command_name) => {
                 let binding = file.command_or_default_mut(command_name);
                 binding.set_button_position(Some(new_position));
@@ -375,6 +394,19 @@ impl Positions {
         {
             return;
         }
+        // The off-state position picker passes `prevent_swap` to keep
+        // the off half from displacing another ability — drags onto
+        // someone else's cell are rejected outright instead of swapping.
+        // Overlap with the moving slot's *own on-state* (matching id,
+        // different variant) is fine — that's the default toggle layout.
+        if request.prevent_swap
+            && let Some(ref displaced_slot) = displaced_slot_option
+            && !displaced_slot
+                .as_str()
+                .eq_ignore_ascii_case(request.moving_slot.as_str())
+        {
+            return;
+        }
 
         Self::assign(
             custom_keys_signal,
@@ -385,8 +417,9 @@ impl Positions {
             request.is_research_context,
         );
 
-        if let (Some(displaced_slot), Some(old_position)) =
-            (displaced_slot_option, moving_old_position)
+        if !request.prevent_swap
+            && let (Some(displaced_slot), Some(old_position)) =
+                (displaced_slot_option, moving_old_position)
         {
             let old_column = old_position.column();
             let old_row = old_position.row();
@@ -499,6 +532,13 @@ pub(crate) struct MoveRequest<'a> {
     target_column: u8,
     target_row: u8,
     is_research_context: bool,
+    /// When true, drops onto a cell occupied by *another* slot are
+    /// rejected (no swap). Used by the off-state position picker —
+    /// dragging the off half of a toggle should never displace another
+    /// ability's on-state. Drops onto the host's own on-state cell are
+    /// always allowed regardless of this flag (overlap is the natural
+    /// default for toggle abilities).
+    prevent_swap: bool,
 }
 
 impl<'a> MoveRequest<'a> {
@@ -517,7 +557,18 @@ impl<'a> MoveRequest<'a> {
             target_column,
             target_row,
             is_research_context,
+            prevent_swap: false,
         }
+    }
+
+    /// Currently unused — the off-state position picker is click-to-place
+    /// and writes through `assign_off_position` directly, never going
+    /// through `move_or_swap`. Kept for the future drag-and-drop picker
+    /// that would feed an `AbilityOff` slot into `CommandGridSection`.
+    #[allow(dead_code)]
+    pub(crate) fn with_prevent_swap(mut self, prevent: bool) -> Self {
+        self.prevent_swap = prevent;
+        self
     }
 }
 
@@ -525,6 +576,7 @@ impl<'a> MoveRequest<'a> {
 fn slots_match(slot_a: &GridSlotId, slot_b: &GridSlotId) -> bool {
     match (slot_a, slot_b) {
         (GridSlotId::Ability(left), GridSlotId::Ability(right))
+        | (GridSlotId::AbilityOff(left), GridSlotId::AbilityOff(right))
         | (GridSlotId::Command(left), GridSlotId::Command(right)) => {
             left.eq_ignore_ascii_case(right)
         }

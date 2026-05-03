@@ -49,6 +49,49 @@ impl AbilityCell {
         }
     }
 
+    /// Off-state half of a toggle ability ("Stop Defend", "Unburrow",
+    /// unmorph). Used by the off-state position picker; pulls the
+    /// alternate name (`un_tip` from the database, falling back to the
+    /// on-state name) and the `unhotkey` from the binding.
+    pub(crate) fn for_ability_off(object_id: &str, binding: Option<&AbilityBinding>) -> Self {
+        let database_object = ObjectLookup::by_id(object_id);
+        let alt_name = database_object
+            .and_then(|warcraft_object| warcraft_object.un_tip())
+            .map(String::from);
+        let database_name = database_object
+            .and_then(|warcraft_object| warcraft_object.names().first().copied())
+            .map(String::from);
+        let tip_name = binding
+            .and_then(|ability_binding| ability_binding.tip())
+            .map(Tip::shortened);
+        let display_name = alt_name
+            .or(database_name)
+            .or(tip_name)
+            .unwrap_or_else(|| String::from("(unknown)"));
+        // Off icon: prefer the binding's `un_icon` (player override or
+        // imported template), then fall through to the on-state icon. We
+        // don't have a database off-icon yet — that lives in
+        // `abilityskin.txt` (BTNStopDefend.blp etc.) which the extractor
+        // doesn't currently parse.
+        let database_icon = database_object
+            .and_then(|warcraft_object| warcraft_object.icons().first().copied())
+            .map(IconUrl::from_database_path);
+        let un_icon = binding
+            .and_then(|ability_binding| ability_binding.un_icon())
+            .map(IconUrl::from_binding_path);
+        let icon_src = un_icon.or(database_icon);
+        let binding_hotkey = binding
+            .and_then(|ability_binding| ability_binding.unhotkey())
+            .and_then(BindingHotkey::first_token);
+        Self {
+            object_id: object_id.to_string(),
+            display_name,
+            icon_src,
+            binding_hotkey,
+            binding_research_hotkey: None,
+        }
+    }
+
     pub(crate) fn for_command(command_name: &str, binding: Option<&CommandBinding>) -> Self {
         let database_object = ObjectLookup::by_id(command_name);
         let database_name = database_object

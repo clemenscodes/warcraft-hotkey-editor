@@ -161,6 +161,10 @@ impl HotkeyOverride {
                     binding.hotkey()
                 }
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                let binding = custom_keys.and_then(|file| file.binding(ability_id))?;
+                binding.unhotkey()
+            }
             GridSlotId::Command(command_name) => {
                 let binding = custom_keys.and_then(|file| file.command(command_name))?;
                 binding.hotkey()
@@ -174,6 +178,11 @@ impl HotkeyOverride {
             GridSlotId::Ability(ability_id) => {
                 let binding = custom_keys.and_then(|file| file.binding(ability_id));
                 let cell = AbilityCell::for_ability(ability_id, binding);
+                cell.cloned_display_name()
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                let binding = custom_keys.and_then(|file| file.binding(ability_id));
+                let cell = AbilityCell::for_ability_off(ability_id, binding);
                 cell.cloned_display_name()
             }
             GridSlotId::Command(command_name) => {
