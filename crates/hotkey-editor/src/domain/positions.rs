@@ -155,11 +155,14 @@ impl Positions {
             entries.push(placeholder_entry);
         }
 
+        // Commands (Move, Stop, Attack, …) are placed first so their positions
+        // are already occupied when abilities cascade.  A cascaded ability must
+        // never land on a command slot — commands are first-class grid citizens.
         for entry in entries.iter_mut() {
-            if !matches!(
-                entry.slot_id,
-                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
-            ) {
+            if !matches!(entry.slot_id, GridSlotId::Command(_)) {
+                continue;
+            }
+            if CommandCatalog::is_context_command(&entry.slot_id) {
                 continue;
             }
             let assigned_position = Self::resolve_with_cascade(
@@ -175,10 +178,10 @@ impl Positions {
         }
 
         for entry in entries.iter_mut() {
-            if !matches!(entry.slot_id, GridSlotId::Command(_)) {
-                continue;
-            }
-            if CommandCatalog::is_context_command(&entry.slot_id) {
+            if !matches!(
+                entry.slot_id,
+                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
+            ) {
                 continue;
             }
             let assigned_position = Self::resolve_with_cascade(
@@ -222,14 +225,14 @@ impl Positions {
         match explicit_position {
             Some(position_value) => {
                 if Self::position_occupied(occupied_positions, position_value) {
-                    Self::next_free_cell(occupied_positions)
+                    Self::next_free_cell(position_value.row(), occupied_positions)
                 } else {
                     Some(position_value)
                 }
             }
             None => {
                 if Self::should_auto_position(slot) {
-                    Self::next_free_cell(occupied_positions)
+                    Self::next_free_cell(0, occupied_positions)
                 } else {
                     None
                 }
@@ -243,12 +246,27 @@ impl Positions {
         })
     }
 
-    fn next_free_cell(occupied_positions: &[ButtonPosition]) -> Option<ButtonPosition> {
+    /// Cascade within `preferred_row` first (left-to-right), then fall back
+    /// to a full grid scan.  The game engine cascades within the same row when
+    /// a button's desired position is already occupied, so we must do the same.
+    fn next_free_cell(
+        preferred_row: u8,
+        occupied_positions: &[ButtonPosition],
+    ) -> Option<ButtonPosition> {
+        for column in 0..COMMAND_GRID_COLUMNS {
+            let candidate = ButtonPosition::new(column, preferred_row);
+            if !Self::position_occupied(occupied_positions, candidate) {
+                return Some(candidate);
+            }
+        }
         for row in 0..COMMAND_GRID_ROWS {
+            if row == preferred_row {
+                continue;
+            }
             for column in 0..COMMAND_GRID_COLUMNS {
-                let candidate_position = ButtonPosition::new(column, row);
-                if !Self::position_occupied(occupied_positions, candidate_position) {
-                    return Some(candidate_position);
+                let candidate = ButtonPosition::new(column, row);
+                if !Self::position_occupied(occupied_positions, candidate) {
+                    return Some(candidate);
                 }
             }
         }
@@ -529,6 +547,24 @@ impl Positions {
             .map(|entry| entry.name().to_string())
             .collect();
 
+        // Seed occupied positions with every command slot (Move, Stop, Attack,
+        // …) so the ability cascade can never land on a command position.
+        // Commands are resolved first — they are not lower priority than
+        // abilities.
+        let mut occupied_positions: Vec<ButtonPosition> = command_names
+            .iter()
+            .filter_map(|name| {
+                let database_object = ObjectLookup::by_id(name);
+                let database_button =
+                    database_object.and_then(|object| object.default_button_position());
+                let binding = file.command_or_default_mut(name);
+                binding
+                    .button_position()
+                    .map(|p| ButtonPosition::new(p.column(), p.row()))
+                    .or(database_button)
+            })
+            .collect();
+
         for ability_id in &ability_ids {
             let database_object = ObjectLookup::by_id(ability_id);
             let database_button =
@@ -539,11 +575,31 @@ impl Positions {
             let binding = file.binding_or_default_mut(ability_id);
 
             if !is_passive {
-                let cast_position = binding
+                let explicit_button = binding
                     .button_position()
-                    .map(|position| ButtonPosition::new(position.column(), position.row()))
-                    .or(database_button);
-                if let Some(position) = cast_position
+                    .map(|position| ButtonPosition::new(position.column(), position.row()));
+                let resolved_position = match explicit_button {
+                    Some(position) => {
+                        occupied_positions.push(position);
+                        Some(position)
+                    }
+                    None => {
+                        let fallback = database_button;
+                        let cascaded = match fallback {
+                            Some(preferred)
+                                if Self::position_occupied(&occupied_positions, preferred) =>
+                            {
+                                Self::next_free_cell(preferred.row(), &occupied_positions)
+                            }
+                            other => other,
+                        };
+                        if let Some(position) = cascaded {
+                            occupied_positions.push(position);
+                        }
+                        cascaded
+                    }
+                };
+                if let Some(position) = resolved_position
                     && let Some(letter) = layout.letter_at(position.column(), position.row())
                     && BindingHotkey::accepts_grid_letter(binding.hotkey())
                 {

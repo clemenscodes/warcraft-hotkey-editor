@@ -2069,9 +2069,9 @@ Unbuttonpos=0,2
 Tip=Devour Magic (|cffffcc00Z|r)
 
 [Aabs]
-Hotkey=V
-Buttonpos=3,2
-Unbuttonpos=3,2
+Hotkey=C
+Buttonpos=2,2
+Unbuttonpos=2,2
 Tip=Absorb Mana (|cffffcc00V|r)
 
 [ufro]
