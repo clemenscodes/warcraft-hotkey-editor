@@ -7,16 +7,14 @@ use crate::components::dialog_header::DialogHeader;
 use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
 use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
-use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::domain::grid_templates::ResolvedTemplate;
 use crate::domain::object_lookup::ObjectLookup;
-use crate::domain::positions::Positions;
 
 #[component]
 pub(crate) fn TemplatesDialog(
     mut loaded_keys: Signal<Option<CustomKeysFile>>,
     mut upload_status: Signal<UploadStatus>,
-    mut grid_layout: Signal<GridLayout>,
     mut templates_dialog_open: Signal<bool>,
 ) -> Element {
     let toast_api = use_toast();
@@ -48,11 +46,9 @@ pub(crate) fn TemplatesDialog(
                                         template_content,
                                         template_resolved,
                                         on_apply: move |_| {
-                                            let mut parsed_template = CustomKeysFile::from(template_content);
+                                            let parsed_template = CustomKeysFile::from(template_content);
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
-                                            let import_layout = *grid_layout.read();
-                                            Positions::fill_positions_from_hotkeys(&mut parsed_template, import_layout);
                                             let mut baseline = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
                                             UploadOverlay::apply(&mut baseline, &parsed_template);
                                             loaded_keys.set(Some(baseline));
