@@ -117,11 +117,17 @@
   }
 
   /* Non-letter tokens (Esc, Mouse4, Mouse5) need wider buttons and a smaller
-     font so multi-character labels don't overflow the square letter cells. */
+     font so multi-character labels don't overflow the square letter cells.
+     Width grows with content via `auto` + explicit horizontal padding; the
+     `min-width` floor matches the letter cell so single-word labels (Esc)
+     still feel proportionate next to the rest of the keyboard. */
   .key-picker-key[data-special="true"] {
-    width: clamp(7rem, 11vw, 16rem);
+    width: auto;
+    min-width: clamp(5rem, 7.5vw, 11rem);
+    padding: 0 0.85rem;
     font-size: clamp(1rem, 1.6vw, 2rem);
     font-family: system-ui, sans-serif;
+    white-space: nowrap;
   }
 
   .key-picker-key-letter {
@@ -145,8 +151,10 @@
     }
 
     .key-picker-key[data-special="true"] {
-      width: clamp(4rem, 14vw, 8rem);
-      font-size: clamp(0.7rem, 2.4vw, 1.2rem);
+      width: auto;
+      min-width: clamp(2.5rem, 8.5vw, 5rem);
+      padding: 0 0.55rem;
+      font-size: clamp(0.75rem, 2.6vw, 1.25rem);
     }
 
     .sys-key-picker-key {
