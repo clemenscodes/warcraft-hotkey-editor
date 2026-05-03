@@ -257,13 +257,11 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         custom_keys_option.and_then(|f| f.binding(ability_id));
                                     if let Some(target) =
                                         ObjectLookup::morph_target_unit(ability_id)
-                                    {
-                                        if target.eq_ignore_ascii_case(&host_unit_id) {
+                                        && target.eq_ignore_ascii_case(&host_unit_id) {
                                             return Some(AbilityCell::for_ability_off(
                                                 ability_id, binding,
                                             ));
                                         }
-                                    }
                                     if BuildingTraits::unit_starts_in_toggle_alt_state(
                                         &host_unit_id,
                                     ) && BuildingTraits::ability_has_alt_state(ability_id)
