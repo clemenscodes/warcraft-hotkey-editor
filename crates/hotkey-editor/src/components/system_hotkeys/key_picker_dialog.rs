@@ -150,7 +150,7 @@ pub(crate) fn SystemKeyPickerDialog(
                                                 let code = entry.0;
                                                 let label = entry.1;
                                                 let is_current = code == current_code;
-                                                let is_wide = label == "Space";
+                                                let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5");
                                                 let cls = if is_current {
                                                     "sys-key-picker-key current"
                                                 } else {

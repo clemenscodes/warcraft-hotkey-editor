@@ -86,8 +86,16 @@ pub(crate) fn TileOverridePanel(
     let research_is_special_token = research_hotkey_token_display
         .map(|token| char::try_from(token).is_err())
         .unwrap_or(false);
-    let hotkey_special_flag = if hotkey_is_special_token { "true" } else { "false" };
-    let research_special_flag = if research_is_special_token { "true" } else { "false" };
+    let hotkey_special_flag = if hotkey_is_special_token {
+        "true"
+    } else {
+        "false"
+    };
+    let research_special_flag = if research_is_special_token {
+        "true"
+    } else {
+        "false"
+    };
 
     let total_tier_count: usize = detail
         .ubertip_levels()
@@ -253,11 +261,7 @@ pub(crate) fn TileOverridePanel(
                 );
             }
             OverrideEditTarget::ResearchHotkey => {
-                HotkeyOverride::apply_research(
-                    &mut loaded_keys,
-                    &picker_object_id,
-                    Some(token),
-                );
+                HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));
             }
         }
         editing_target.set(None);

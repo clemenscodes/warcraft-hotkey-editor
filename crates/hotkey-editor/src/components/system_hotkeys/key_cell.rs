@@ -3,7 +3,7 @@ use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
-use crate::system_hotkeys::keycodes::KeyCodes;
+use crate::system_hotkeys::keycodes::{KeyCode, KeyCodes};
 
 #[derive(Clone, Copy)]
 pub(crate) struct EffectiveBinding {
@@ -51,8 +51,8 @@ impl EffectiveBinding {
 
     pub(crate) fn label(&self) -> String {
         let modifier_text = KeyCodes::modifier_prefix(self.modifier);
-        let code_label = KeyCodes::label(self.hotkey_code);
-        format!("{modifier_text}{code_label}")
+        let code = KeyCode::from(self.hotkey_code);
+        format!("{modifier_text}{code}")
     }
 }
 

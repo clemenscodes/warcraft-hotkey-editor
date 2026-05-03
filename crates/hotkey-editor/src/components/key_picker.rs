@@ -93,10 +93,9 @@ fn KeyPickerKey(cell: KeyPickerCell, on_pick: EventHandler<HotkeyToken>) -> Elem
     let (state_class, conflict_title) = match cell.state() {
         KeyPickerCellState::Available => ("available", None),
         KeyPickerCellState::Current => ("current", None),
-        KeyPickerCellState::Conflict { display_name } => (
-            "conflict",
-            Some(format!("Already used by {display_name}")),
-        ),
+        KeyPickerCellState::Conflict { display_name } => {
+            ("conflict", Some(format!("Already used by {display_name}")))
+        }
     };
     let is_conflict = matches!(cell.state(), KeyPickerCellState::Conflict { .. });
     let is_special = char::try_from(token).is_err();
