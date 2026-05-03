@@ -6,6 +6,7 @@ use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState
 use crate::domain::grid_layout::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout,
 };
+use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::positions::Positions;
 
 const QWERTY_ROWS: &[&[char]] = &[
@@ -29,18 +30,29 @@ pub(crate) fn LayoutEditor(
     let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
         let current_letter = layout_snapshot
             .letter_at(active_cell.column(), active_cell.row())
-            .map(|c| c.to_ascii_uppercase());
+            .map(|character| character.to_ascii_uppercase());
         QWERTY_ROWS
             .iter()
             .map(|row| {
                 row.iter()
                     .map(|&letter| {
-                        let state = if Some(letter) == current_letter {
+                        let token = HotkeyToken::from(letter);
+                        let upper_letter = letter.to_ascii_uppercase();
+                        let state = if Some(upper_letter) == current_letter {
                             KeyPickerCellState::Current
+                        } else if let Some(other_position) =
+                            layout_snapshot.position_for_letter(upper_letter)
+                        {
+                            let display_name = format!(
+                                "row {row}, column {column}",
+                                row = other_position.1 + 1,
+                                column = other_position.0 + 1,
+                            );
+                            KeyPickerCellState::Conflict { display_name }
                         } else {
                             KeyPickerCellState::Available
                         };
-                        KeyPickerCell::new(letter, state)
+                        KeyPickerCell::new(token, state)
                     })
                     .collect()
             })
@@ -143,13 +155,16 @@ pub(crate) fn LayoutEditor(
                 title: "Pick a grid key".to_string(),
                 rows: picker_rows,
                 open: true,
-                on_pick: move |letter: char| {
+                allow_conflict_pick: true,
+                on_pick: move |token: HotkeyToken| {
                     let Some(active_cell) = *editing_layout_cell.read() else {
                         return;
                     };
-                    let upper = letter.to_ascii_uppercase();
+                    let Ok(letter) = char::try_from(token) else {
+                        return;
+                    };
                     let mut next_layout = *grid_layout.read();
-                    next_layout.assign_unique(active_cell.column(), active_cell.row(), upper);
+                    next_layout.assign_unique(active_cell.column(), active_cell.row(), letter);
                     grid_layout.set(next_layout);
                     editing_layout_cell.set(None);
                 },

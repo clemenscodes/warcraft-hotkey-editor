@@ -1,57 +1,83 @@
+use std::fmt;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub(crate) struct KeyCode {
+    value: u32,
+}
+
+impl From<u32> for KeyCode {
+    fn from(value: u32) -> Self {
+        Self { value }
+    }
+}
+
+impl fmt::Display for KeyCode {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.value {
+            5 => formatter.write_str("Mouse4"),
+            6 => formatter.write_str("Mouse5"),
+            8 => formatter.write_str("Backspace"),
+            9 => formatter.write_str("Tab"),
+            13 => formatter.write_str("Enter"),
+            16 => formatter.write_str("Shift"),
+            17 => formatter.write_str("Ctrl"),
+            18 => formatter.write_str("Alt"),
+            19 => formatter.write_str("Pause"),
+            20 => formatter.write_str("CapsLock"),
+            27 => formatter.write_str("Esc"),
+            32 => formatter.write_str("Space"),
+            33 => formatter.write_str("PageUp"),
+            34 => formatter.write_str("PageDown"),
+            35 => formatter.write_str("End"),
+            36 => formatter.write_str("Home"),
+            37 => formatter.write_str("Left"),
+            38 => formatter.write_str("Up"),
+            39 => formatter.write_str("Right"),
+            40 => formatter.write_str("Down"),
+            45 => formatter.write_str("Insert"),
+            46 => formatter.write_str("Delete"),
+            48..=57 => {
+                let digit = self.value - 48;
+                write!(formatter, "{digit}")
+            }
+            65..=90 => {
+                let key_character = char::from_u32(self.value).unwrap_or('?');
+                write!(formatter, "{key_character}")
+            }
+            96..=105 => {
+                let numpad_digit = self.value - 96;
+                write!(formatter, "Num{numpad_digit}")
+            }
+            106 => formatter.write_str("Num*"),
+            107 => formatter.write_str("Num+"),
+            109 => formatter.write_str("Num-"),
+            110 => formatter.write_str("Num."),
+            111 => formatter.write_str("Num/"),
+            112..=123 => {
+                let function_index = self.value - 111;
+                write!(formatter, "F{function_index}")
+            }
+            144 => formatter.write_str("NumLock"),
+            145 => formatter.write_str("ScrollLock"),
+            186 => formatter.write_str(";"),
+            187 => formatter.write_str("="),
+            188 => formatter.write_str(","),
+            189 => formatter.write_str("-"),
+            190 => formatter.write_str("."),
+            191 => formatter.write_str("/"),
+            192 => formatter.write_str("`"),
+            219 => formatter.write_str("["),
+            220 => formatter.write_str("\\"),
+            221 => formatter.write_str("]"),
+            222 => formatter.write_str("'"),
+            other_code => write!(formatter, "Key {other_code}"),
+        }
+    }
+}
+
 pub(crate) struct KeyCodes;
 
 impl KeyCodes {
-    pub(crate) fn label(code: u32) -> String {
-        match code {
-            8 => String::from("Backspace"),
-            9 => String::from("Tab"),
-            13 => String::from("Enter"),
-            16 => String::from("Shift"),
-            17 => String::from("Ctrl"),
-            18 => String::from("Alt"),
-            19 => String::from("Pause"),
-            20 => String::from("CapsLock"),
-            27 => String::from("Esc"),
-            32 => String::from("Space"),
-            33 => String::from("PageUp"),
-            34 => String::from("PageDown"),
-            35 => String::from("End"),
-            36 => String::from("Home"),
-            37 => String::from("Left"),
-            38 => String::from("Up"),
-            39 => String::from("Right"),
-            40 => String::from("Down"),
-            45 => String::from("Insert"),
-            46 => String::from("Delete"),
-            48..=57 => format!("{}", code - 48),
-            65..=90 => {
-                let key_character = char::from_u32(code).unwrap_or('?');
-                format!("{key_character}")
-            }
-            96..=105 => format!("Num{}", code - 96),
-            106 => String::from("Num*"),
-            107 => String::from("Num+"),
-            109 => String::from("Num-"),
-            110 => String::from("Num."),
-            111 => String::from("Num/"),
-            112..=123 => format!("F{}", code - 111),
-            144 => String::from("NumLock"),
-            145 => String::from("ScrollLock"),
-            186 => String::from(";"),
-            187 => String::from("="),
-            188 => String::from(","),
-            189 => String::from("-"),
-            190 => String::from("."),
-            191 => String::from("/"),
-            192 => String::from("`"),
-            219 => String::from("["),
-            220 => String::from("\\"),
-            221 => String::from("]"),
-            222 => String::from("'"),
-            other_code => format!("Key {other_code}"),
-        }
-    }
-
     pub(crate) fn from_event(event_key: &str, event_code: &str) -> Option<u32> {
         if event_key.len() == 1 {
             let first_character = event_key.chars().next()?;

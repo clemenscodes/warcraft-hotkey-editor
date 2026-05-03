@@ -5,6 +5,7 @@ pub(crate) mod grid_layout;
 pub(crate) mod grid_slot;
 pub(crate) mod grid_templates;
 pub(crate) mod hotkey_override;
+pub(crate) mod hotkey_token;
 pub(crate) mod icons;
 pub(crate) mod inspector_detail;
 pub(crate) mod object_lookup;

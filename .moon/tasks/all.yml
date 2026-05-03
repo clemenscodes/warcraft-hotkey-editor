@@ -88,7 +88,7 @@ tasks:
 
   esbuild/build:
     toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts --bundle --format=esm --target=es2022 --outfile=assets/keyboard-navigation.js
+    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --outdir=assets
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
@@ -98,7 +98,7 @@ tasks:
 
   esbuild/build/minify:
     toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts --bundle --format=esm --target=es2022 --minify --outfile=assets/keyboard-navigation.js
+    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --minify --outdir=assets
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false

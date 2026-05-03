@@ -290,13 +290,13 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let icon_src_option = cell_tier_icon
                                 .or_else(|| cell_option.as_ref().and_then(|cell| cell.cloned_icon_src()));
                             let binding_letter_option = cell_option.as_ref().and_then(|cell| {
-                                if is_research_grid {
+                                let token = if is_research_grid {
                                     cell.binding_research_hotkey()
-                                        .map(String::from)
-                                        .or_else(|| cell.binding_hotkey().map(String::from))
+                                        .or_else(|| cell.binding_hotkey())
                                 } else {
-                                    cell.binding_hotkey().map(String::from)
-                                }
+                                    cell.binding_hotkey()
+                                };
+                                token.map(|value| value.display_label())
                             });
                             let is_passive_on_command_grid = !is_research_grid
                                 && cell_option

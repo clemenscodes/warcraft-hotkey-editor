@@ -73,7 +73,12 @@
 
 .tile-override-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 5rem;
+    /* Second column sizes to its content so a multi-character special-token
+       label (Mouse4 / Mouse5) on the override-key-cell can grow beyond the
+       letter-cell footprint without getting clipped. The cell's own min-width
+       (set per breakpoint on [data-special="true"]) keeps the single-letter
+       case visually consistent. */
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 1.5rem;
     text-align: left;
@@ -355,6 +360,20 @@ body[data-kb-modality] .override-key-cell:focus {
     animation: pulse-editing 1s ease-in-out infinite alternate;
 }
 
+/* Multi-character labels (Esc, Mouse4, Mouse5) keep the cell's height but let
+   the width grow leftwards (the header grid's text column shrinks via
+   `minmax(0, 1fr)`) so the label can sit at a comfortable, centered size. */
+.override-key-cell[data-special="true"] {
+    width: auto;
+    min-width: 5rem;
+    padding: 0 0.9rem;
+    font-family: system-ui, sans-serif;
+    font-size: 1.5rem;
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
 /* Desktop ≥ 1100 px: keep the base vertical column layout — header on top
    (name/id + key cell), description in the middle, tier footer below.
    The panel has a minimum readable height and stretches into available
@@ -435,6 +454,13 @@ body[data-kb-modality] .override-key-cell:focus {
         height: 3.6rem;
         font-size: 1.6rem;
     }
+
+    .override-key-cell[data-special="true"] {
+        width: auto;
+        min-width: 3.6rem;
+        padding: 0 0.7rem;
+        font-size: 1.15rem;
+    }
 }
 
 
@@ -452,6 +478,12 @@ body[data-kb-modality] .override-key-cell:focus {
         min-width: 4.6rem;
         min-height: 4.6rem;
         font-size: 2.2rem;
+    }
+    .override-key-cell[data-special="true"] {
+        width: auto;
+        min-width: 4.6rem;
+        padding: 0 0.8rem;
+        font-size: 1.5rem;
     }
     .tile-override-tier-button {
         min-width: 3.6rem;
