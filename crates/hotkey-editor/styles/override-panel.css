@@ -403,63 +403,63 @@
 }
 
 /* Inside the picker only the toggle's off slot is draggable. Mute
- * everything else and aggressively highlight the off slot so the
- * player can't miss which cell is the active handle. */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"] {
-    cursor: default;
-    opacity: 0.45;
-    filter: saturate(0.55);
+ * the other cells aggressively so the contrast carries the message:
+ * "this one cell is the handle; everything else is locked context."
+ * `.grid-tile.has-ability:hover` is `0,3,0` specificity, so we pin
+ * `data-draggable` selectors at the same chain-length and use
+ * `!important` on a couple of overrides to win against transition-y
+ * rules in the main grid CSS. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"],
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:hover,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:focus,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:active {
+    cursor: default !important;
+    opacity: 0.32;
+    filter: saturate(0.4) brightness(0.9);
+    border-color: #2c4a72 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transform: none !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:hover {
-    transform: none;
-    box-shadow: none;
-}
-
-/* Pulsing gold ring + outer glow so the off-state cell jumps off the
- * grid as the obvious thing to grab. Keyframes alternate the inset
- * ring's intensity (`box-shadow`) so the call-to-action breathes
- * without translating the tile (translation would mess with drag
- * pointer-capture). */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
-    cursor: grab;
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+    cursor: grab !important;
     z-index: 1;
-    border-color: #ffce63;
+    border: 3px solid #ffce63 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.18) 0%, rgba(255, 206, 99, 0.04) 100%),
+        rgba(20, 35, 60, 0.95) !important;
     box-shadow:
-        0 0 0 2px #ffce63 inset,
-        0 0 0 1px rgba(255, 206, 99, 0.6),
-        0 0 24px rgba(255, 206, 99, 0.55);
-    animation: alt-picker-handle-pulse 1.6s ease-in-out infinite;
-}
-
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
-    box-shadow:
-        0 0 0 3px #ffce63 inset,
-        0 0 0 1px rgba(255, 206, 99, 0.8),
-        0 0 32px rgba(255, 206, 99, 0.75);
+        inset 0 0 0 1px rgba(255, 224, 150, 0.6),
+        0 0 0 3px rgba(255, 206, 99, 0.35),
+        0 0 28px rgba(255, 206, 99, 0.85) !important;
+    animation: alt-picker-handle-pulse 1.4s ease-in-out infinite;
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
     /* While dragging, the source cell's children are visibility:hidden
      * by `command-grid.css`. The pulsing ring on an empty cell would
-     * draw the eye to the wrong place, so freeze the animation. */
+     * draw the eye to the wrong place, so freeze the animation and
+     * fade the cell. */
     animation: none;
-    opacity: 0.5;
+    opacity: 0.45;
 }
 
 @keyframes alt-picker-handle-pulse {
     0%,
     100% {
         box-shadow:
-            0 0 0 2px #ffce63 inset,
-            0 0 0 1px rgba(255, 206, 99, 0.55),
-            0 0 18px rgba(255, 206, 99, 0.4);
+            inset 0 0 0 1px rgba(255, 224, 150, 0.5),
+            0 0 0 3px rgba(255, 206, 99, 0.3),
+            0 0 22px rgba(255, 206, 99, 0.65);
     }
     50% {
         box-shadow:
-            0 0 0 3px #ffce63 inset,
-            0 0 0 1px rgba(255, 206, 99, 0.85),
-            0 0 32px rgba(255, 206, 99, 0.7);
+            inset 0 0 0 2px rgba(255, 235, 180, 0.85),
+            0 0 0 4px rgba(255, 206, 99, 0.55),
+            0 0 36px rgba(255, 206, 99, 1);
     }
 }
 
