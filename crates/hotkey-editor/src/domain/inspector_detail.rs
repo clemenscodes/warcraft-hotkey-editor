@@ -184,7 +184,7 @@ impl InspectorDetail {
                             .collect()
                     })
                     .unwrap_or_default();
-                let icon_src = if is_morph_targeting_host && prefer_un_state {
+                let icon_src = if prefer_un_state {
                     AbilityCell::for_ability_off(ability_id, binding).cloned_icon_src()
                 } else {
                     cell.cloned_icon_src()

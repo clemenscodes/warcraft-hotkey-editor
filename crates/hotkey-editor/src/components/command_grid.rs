@@ -243,22 +243,36 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             );
                             let occupant_slot: Option<GridSlotId> =
                                 cell_with_slot.as_ref().map(|(slot_id, _)| slot_id.clone());
-                            // When a morph ability is displayed on the unit it
-                            // morphs INTO (e.g. Bear Form on the bear unit),
-                            // show the reverse state: "Night Elf Form" with the
-                            // night-elf icon, not "Bear Form" with the bear icon.
+                            // Show the off-state appearance when either:
+                            // (a) a morph ability is on the unit it morphs INTO
+                            //     (e.g. Bear Form on the bear unit → "Night Elf Form")
+                            // (b) the host unit starts in the toggle alt-state and the
+                            //     ability has an alt-state (e.g. militia's "Back to Work")
                             let morph_reverse_cell: Option<AbilityCell> =
                                 occupant_slot.as_ref().and_then(|slot| {
                                     let GridSlotId::Ability(ability_id) = slot else {
                                         return None;
                                     };
-                                    let target = ObjectLookup::morph_target_unit(ability_id)?;
-                                    if !target.eq_ignore_ascii_case(&host_unit_id) {
-                                        return None;
-                                    }
                                     let binding =
                                         custom_keys_option.and_then(|f| f.binding(ability_id));
-                                    Some(AbilityCell::for_ability_off(ability_id, binding))
+                                    if let Some(target) =
+                                        ObjectLookup::morph_target_unit(ability_id)
+                                    {
+                                        if target.eq_ignore_ascii_case(&host_unit_id) {
+                                            return Some(AbilityCell::for_ability_off(
+                                                ability_id, binding,
+                                            ));
+                                        }
+                                    }
+                                    if BuildingTraits::unit_starts_in_toggle_alt_state(
+                                        &host_unit_id,
+                                    ) && BuildingTraits::ability_has_alt_state(ability_id)
+                                    {
+                                        return Some(AbilityCell::for_ability_off(
+                                            ability_id, binding,
+                                        ));
+                                    }
+                                    None
                                 });
                             let cell_option: Option<&AbilityCell> = morph_reverse_cell
                                 .as_ref()

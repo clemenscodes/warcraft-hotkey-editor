@@ -57969,11 +57969,7 @@ const HMGD_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HMGD_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HMGD_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HMGD_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const HMIL_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Ahar"),
-    WarcraftObjectId::new("Amil"),
-    WarcraftObjectId::new("Ahrp"),
-];
+const HMIL_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Amil")];
 const HMIL_UNIT_BUILDS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("htow"),
     WarcraftObjectId::new("hhou"),
@@ -58024,8 +58020,7 @@ const HMTM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HMTM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HMTM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HMTM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const HMTT_UNIT_ABILITIES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("Srtt"), WarcraftObjectId::new("Aroc")];
+const HMTT_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Srtt")];
 const HMTT_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const HMTT_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const HMTT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
