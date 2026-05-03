@@ -483,18 +483,11 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
-/* Hover on the source cell — clear scale lift + brighter glow. The
- * scale transform is the unmistakable cue (no other state uses one),
- * filter pumps the icon brightness, box-shadow widens. Same rule
- * covers the cell during an active drag (the `.dragging-source`
- * state is set by the main grid plumbing while the player has the
- * pointer down, so this fires while dragging too — the user wants
- * the source to keep responding to the cursor as long as the drag
- * is in flight). */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
+/* Hover (no drag in flight) — clear scale lift + brighter glow. The
+ * scale transform is the unmistakable cue (no other state uses one);
+ * filter pumps the icon brightness, box-shadow widens. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover:not(.dragging-source),
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus:not(.dragging-source) {
     transform: scale(1.07);
     filter: brightness(1.18) saturate(1.15);
     box-shadow:
@@ -503,8 +496,36 @@
         0 0 36px rgba(255, 206, 99, 1) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active,
+/* During an active drag the source cell behaves exactly like the main
+ * command card's source cell does: children are hidden by the global
+ * `.dragging-source > *` rule, and the box itself reverts to a
+ * vacant drop-target look (dashed gold border, faint warm tint,
+ * no glow / no scale). Hover *during* the drag — i.e. the cursor
+ * comes back over the source square after the drag has begun —
+ * lights it up gold the same way an empty drop-target lights up,
+ * so the player sees "yes you can drop the off-state right back here
+ * to leave the position unchanged." */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
+    border: 2px dashed rgba(255, 206, 99, 0.55) !important;
+    background: rgba(255, 206, 99, 0.06) !important;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    cursor: grabbing !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drag-over {
+    border: 3px solid #ffce63 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.16) 100%),
+        rgba(20, 35, 60, 0.95) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 224, 150, 0.65),
+        0 0 24px rgba(255, 206, 99, 0.85) !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
     cursor: grabbing !important;
 }
 
