@@ -1,6 +1,5 @@
 use dioxus::prelude::{ReadableExt, Signal, WritableExt};
-use warcraft_api::{ButtonPosition, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_api::{ButtonPosition, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
@@ -431,61 +430,86 @@ impl Positions {
         let mut changed_count: usize = 0;
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
-        for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
-            let id_value = object_id.value();
-            if !ObjectLookup::has_icon(id_value) {
-                continue;
-            }
-            let is_command = warcraft_object.kind() == WarcraftObjectKind::Command;
-            let database_button = warcraft_object.default_button_position();
-            let database_research = warcraft_object.default_research_button_position();
-            if is_command {
-                let binding = file.command_or_default_mut(id_value);
+
+        // Iterate every binding actually present in the file. The previous
+        // implementation walked WARCRAFT_DATABASE only and filtered by
+        // `has_icon`, so any binding for an id we don't ship metadata for
+        // (templates carry plenty — e.g. `Pick Shop Buyer` in Neo) was
+        // skipped and kept its template-original hotkey, producing
+        // collisions with the freshly-grid-aligned bindings of database
+        // objects sharing the same column/row.
+        let ability_ids: Vec<String> = file
+            .bindings_in_order()
+            .map(|entry| entry.id().to_string())
+            .collect();
+        let command_names: Vec<String> = file
+            .commands_in_order()
+            .map(|entry| entry.name().to_string())
+            .collect();
+
+        for ability_id in &ability_ids {
+            let database_object = ObjectLookup::by_id(ability_id);
+            let database_button =
+                database_object.and_then(|object| object.default_button_position());
+            let database_research =
+                database_object.and_then(|object| object.default_research_button_position());
+            let is_passive = ObjectLookup::is_passive_ability(ability_id);
+            let binding = file.binding_or_default_mut(ability_id);
+
+            if !is_passive {
                 let cast_position = binding
                     .button_position()
                     .map(|position| ButtonPosition::new(position.column(), position.row()))
                     .or(database_button);
                 if let Some(position) = cast_position
                     && let Some(letter) = layout.letter_at(position.column(), position.row())
+                    && BindingHotkey::accepts_grid_letter(binding.hotkey())
                 {
                     let new_hotkey = letter.to_string();
                     if binding.hotkey() != Some(new_hotkey.as_str()) {
                         binding.set_hotkey(Some(new_hotkey));
-                        changed_count += 1;
-                    }
-                }
-            } else {
-                let is_passive = ObjectLookup::is_passive_ability(id_value);
-                let binding = file.binding_or_default_mut(id_value);
-                let cast_position = binding
-                    .button_position()
-                    .map(|position| ButtonPosition::new(position.column(), position.row()))
-                    .or(database_button);
-                if !is_passive
-                    && let Some(position) = cast_position
-                    && let Some(letter) = layout.letter_at(position.column(), position.row())
-                {
-                    let new_hotkey = letter.to_string();
-                    if binding.hotkey() != Some(new_hotkey.as_str()) {
-                        binding.set_hotkey(Some(new_hotkey));
-                        changed_count += 1;
-                    }
-                }
-                let research_position = binding
-                    .research_button_position()
-                    .map(|position| ButtonPosition::new(position.column(), position.row()))
-                    .or(database_research);
-                if let Some(position) = research_position
-                    && let Some(letter) = layout.letter_at(position.column(), position.row())
-                {
-                    let new_research_hotkey = letter.to_string();
-                    if binding.research_hotkey() != Some(new_research_hotkey.as_str()) {
-                        binding.set_research_hotkey(Some(new_research_hotkey));
                         changed_count += 1;
                     }
                 }
             }
+
+            let research_position = binding
+                .research_button_position()
+                .map(|position| ButtonPosition::new(position.column(), position.row()))
+                .or(database_research);
+            if let Some(position) = research_position
+                && let Some(letter) = layout.letter_at(position.column(), position.row())
+                && BindingHotkey::accepts_grid_letter(binding.research_hotkey())
+            {
+                let new_research_hotkey = letter.to_string();
+                if binding.research_hotkey() != Some(new_research_hotkey.as_str()) {
+                    binding.set_research_hotkey(Some(new_research_hotkey));
+                    changed_count += 1;
+                }
+            }
         }
+
+        for command_name in &command_names {
+            let database_object = ObjectLookup::by_id(command_name);
+            let database_button =
+                database_object.and_then(|object| object.default_button_position());
+            let binding = file.command_or_default_mut(command_name);
+            let cast_position = binding
+                .button_position()
+                .map(|position| ButtonPosition::new(position.column(), position.row()))
+                .or(database_button);
+            if let Some(position) = cast_position
+                && let Some(letter) = layout.letter_at(position.column(), position.row())
+                && BindingHotkey::accepts_grid_letter(binding.hotkey())
+            {
+                let new_hotkey = letter.to_string();
+                if binding.hotkey() != Some(new_hotkey.as_str()) {
+                    binding.set_hotkey(Some(new_hotkey));
+                    changed_count += 1;
+                }
+            }
+        }
+
         changed_count
     }
 }

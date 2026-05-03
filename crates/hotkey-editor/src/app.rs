@@ -40,11 +40,16 @@ pub(crate) fn App() -> Element {
             LocalStorageCache::save_export(file);
         }
     });
+    // Grid layout lives in its own local-storage entry; importing a
+    // CustomKeys file or applying a template never touches it, and the
+    // layout editor dialog is the only path that mutates it. First-load
+    // (no entry yet) falls back to the standard QWERTY layout.
     let grid_layout = use_signal::<GridLayout>(|| {
-        LocalStorageCache::load()
-            .as_ref()
-            .map(GridLayout::derived_from)
-            .unwrap_or_else(GridLayout::german_grid)
+        LocalStorageCache::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
+    });
+    use_effect(move || {
+        let snapshot = *grid_layout.read();
+        LocalStorageCache::save_grid_layout(snapshot);
     });
     let active_race = use_signal::<Race>(|| Race::Human);
     let unit_mode = use_signal::<UnitMode>(|| UnitMode::Melee);

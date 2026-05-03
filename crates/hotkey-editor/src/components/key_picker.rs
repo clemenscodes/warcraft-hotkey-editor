@@ -36,6 +36,11 @@ pub(crate) fn KeyPicker(
     title: String,
     rows: Vec<Vec<KeyPickerCell>>,
     open: bool,
+    // When true, conflict cells stay clickable and forward `on_pick` — used
+    // by the grid layout editor where clicking a conflict swaps the two
+    // cells. The spell hotkey picker leaves this off so a binding collision
+    // is visually flagged but cannot be selected.
+    #[props(default = false)] allow_conflict_pick: bool,
     on_pick: EventHandler<HotkeyToken>,
     on_close: EventHandler<()>,
 ) -> Element {
@@ -74,7 +79,11 @@ pub(crate) fn KeyPicker(
                                     key: "{row_index}",
                                     class: "key-picker-row",
                                     for cell in row_cells.iter() {
-                                        KeyPickerKey { cell: cell.clone(), on_pick }
+                                        KeyPickerKey {
+                                            cell: cell.clone(),
+                                            allow_conflict_pick,
+                                            on_pick,
+                                        }
                                     }
                                 }
                             }
@@ -87,17 +96,27 @@ pub(crate) fn KeyPicker(
 }
 
 #[component]
-fn KeyPickerKey(cell: KeyPickerCell, on_pick: EventHandler<HotkeyToken>) -> Element {
+fn KeyPickerKey(
+    cell: KeyPickerCell,
+    allow_conflict_pick: bool,
+    on_pick: EventHandler<HotkeyToken>,
+) -> Element {
     let token = cell.token();
     let label_text = token.display_label();
     let (state_class, conflict_title) = match cell.state() {
         KeyPickerCellState::Available => ("available", None),
         KeyPickerCellState::Current => ("current", None),
         KeyPickerCellState::Conflict { display_name } => {
-            ("conflict", Some(format!("Already used by {display_name}")))
+            let prefix = if allow_conflict_pick {
+                "Pick to swap with"
+            } else {
+                "Already used by"
+            };
+            ("conflict", Some(format!("{prefix} {display_name}")))
         }
     };
     let is_conflict = matches!(cell.state(), KeyPickerCellState::Conflict { .. });
+    let is_disabled = is_conflict && !allow_conflict_pick;
     let is_special = char::try_from(token).is_err();
     let class_name = format!("key-picker-key {state_class}");
     let title_attribute = conflict_title.unwrap_or_default();
@@ -107,12 +126,12 @@ fn KeyPickerKey(cell: KeyPickerCell, on_pick: EventHandler<HotkeyToken>) -> Elem
         button {
             class: "{class_name}",
             r#type: "button",
-            disabled: is_conflict,
+            disabled: is_disabled,
             title: "{title_attribute}",
             "data-label": "{label_text}",
             "data-special": "{special_flag}",
             onclick: move |_| {
-                if !is_conflict {
+                if !is_disabled {
                     on_pick.call(token_for_click);
                 }
             },
