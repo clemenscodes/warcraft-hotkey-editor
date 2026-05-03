@@ -466,41 +466,46 @@
         0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
+/* Source cell idle — clear gold ring + soft glow, no pulse.
+ * Static treatment keeps the idle quiet enough that the
+ * hover-/drag-active state changes below read as deliberate
+ * transitions rather than competing animations. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
     cursor: grab !important;
     z-index: 1;
     border: 3px solid #ffce63 !important;
     background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.18) 0%, rgba(255, 206, 99, 0.04) 100%),
+        linear-gradient(135deg, rgba(255, 206, 99, 0.16) 0%, rgba(255, 206, 99, 0.04) 100%),
         rgba(20, 35, 60, 0.95) !important;
     box-shadow:
-        inset 0 0 0 1px rgba(255, 224, 150, 0.6),
-        0 0 0 3px rgba(255, 206, 99, 0.35),
-        0 0 28px rgba(255, 206, 99, 0.85) !important;
-    animation: alt-picker-handle-pulse 1.4s ease-in-out infinite;
-    transition: transform 0.12s ease;
+        inset 0 0 0 1px rgba(255, 224, 150, 0.5),
+        0 0 16px rgba(255, 206, 99, 0.55) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
-/* Hover on the source cell — pause the breathing pulse and lock the
- * ring at its brightest so the cell snaps to "ready to grab", lift it
- * 1px to mimic the live command card's hover affordance. */
+/* Hover on the source cell — clear scale lift + brighter glow. The
+ * scale transform is the unmistakable cue (no other state uses one),
+ * filter pumps the icon brightness, box-shadow widens. Same rule
+ * covers the cell during an active drag (the `.dragging-source`
+ * state is set by the main grid plumbing while the player has the
+ * pointer down, so this fires while dragging too — the user wants
+ * the source to keep responding to the cursor as long as the drag
+ * is in flight). */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus {
-    cursor: grab !important;
-    animation: none !important;
-    transform: translateY(-1px);
-    background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 206, 99, 0.1) 100%),
-        rgba(20, 35, 60, 0.95) !important;
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
+    transform: scale(1.07);
+    filter: brightness(1.18) saturate(1.15);
     box-shadow:
         inset 0 0 0 2px rgba(255, 235, 180, 0.85),
         0 0 0 4px rgba(255, 206, 99, 0.55),
         0 0 36px rgba(255, 206, 99, 1) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
     cursor: grabbing !important;
-    transform: translateY(0);
 }
 
 /* The source cell during an active drag — main grid hides the cell's
@@ -532,22 +537,6 @@
         inset 0 0 0 2px rgba(255, 245, 200, 0.85),
         0 0 0 5px rgba(255, 206, 99, 0.6),
         0 0 40px rgba(255, 206, 99, 1) !important;
-}
-
-@keyframes alt-picker-handle-pulse {
-    0%,
-    100% {
-        box-shadow:
-            inset 0 0 0 1px rgba(255, 224, 150, 0.5),
-            0 0 0 3px rgba(255, 206, 99, 0.3),
-            0 0 22px rgba(255, 206, 99, 0.65);
-    }
-    50% {
-        box-shadow:
-            inset 0 0 0 2px rgba(255, 235, 180, 0.85),
-            0 0 0 4px rgba(255, 206, 99, 0.55),
-            0 0 36px rgba(255, 206, 99, 1);
-    }
 }
 
 .tile-override-key-group {
