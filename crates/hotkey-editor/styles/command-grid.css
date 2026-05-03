@@ -255,6 +255,28 @@ body[data-kb-modality] .grid-tile.selected.dragging-source:focus {
     border-style: dashed;
 }
 
+/* Cells claimed by a toggle ability's off-state: blocked for regular drops. */
+.grid-tile.blocked-drop-target {
+    border-color: rgba(220, 70, 55, 0.55);
+    border-style: dashed;
+    background: rgba(200, 55, 40, 0.04);
+    cursor: not-allowed;
+}
+.grid-tile.blocked-drop-target.drag-over {
+    border-color: rgba(255, 95, 75, 0.85);
+    background: rgba(200, 55, 40, 0.1);
+}
+body:has(.grid-tile.dragging-source) .grid-tile.blocked-drop-target,
+body:has(.grid-tile.dragging-source) .grid-tile.blocked-drop-target * {
+    cursor: not-allowed !important;
+}
+
+/* Kill all CSS transitions on grid tiles while a drag is in progress so
+ * drag-over/drop-target class changes apply instantly with no wobble. */
+body:has(.grid-tile.dragging-source) .grid-tile {
+    transition: none !important;
+}
+
 
 .command-label {
     position: absolute;

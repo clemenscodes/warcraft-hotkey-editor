@@ -6,11 +6,13 @@ use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
+use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
 use crate::domain::ability_cell::AbilityCell;
+use crate::domain::building_traits::BuildingTraits;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
@@ -141,11 +143,13 @@ fn tile_class(
     is_command: bool,
     is_being_dragged: bool,
     is_drop_target: bool,
+    is_off_state_blocked: bool,
 ) -> String {
     let base = match (has_occupant, is_selected, drag_in_progress, is_command) {
         (true, true, _, _) => "grid-tile has-ability selected",
         (true, false, _, true) => "grid-tile has-ability is-command",
         (true, false, _, false) => "grid-tile has-ability",
+        (false, _, true, _) if is_off_state_blocked => "grid-tile blocked-drop-target",
         (false, _, true, _) => "grid-tile drop-target",
         (false, _, false, _) => "grid-tile",
     };
@@ -189,10 +193,16 @@ pub(crate) struct CommandGridSectionProps {
     /// editing one toggle's off position.
     #[props(default)]
     pub(crate) restrict_draggable_to: Vec<GridSlotId>,
+    /// Unit ID of the host — used to block dragging of morph abilities on
+    /// alternate-form units (e.g. Burrowed Crypt Fiend). Empty string
+    /// disables the check (off-state picker, build menus without a unit).
+    #[props(default)]
+    pub(crate) host_unit_id: String,
 }
 
 #[component]
 pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
+    let toast_api = use_toast();
     let read_guard = props.loaded_keys.read();
     let custom_keys_option = read_guard.as_ref();
     let layout_snapshot = *props.grid_layout.read();
@@ -213,6 +223,9 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let heading_text = props.heading;
     let prevent_swap_on_drop = props.prevent_swap_on_drop;
     let restrict_draggable_to: Rc<[GridSlotId]> = props.restrict_draggable_to.clone().into();
+    let host_unit_id = props.host_unit_id.clone();
+    let host_is_alt_form =
+        !host_unit_id.is_empty() && BuildingTraits::unit_starts_in_toggle_alt_state(&host_unit_id);
 
     rsx! {
         div { class: "command-section",
@@ -241,11 +254,13 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 _ => false,
                             };
                             let is_command_cell = matches!(occupant_slot, Some(GridSlotId::Command(_)));
-                            let drag_in_progress_from_this_section = dragging_slot
-                                .read()
-                                .as_ref()
-                                .map(|dragging| dragging.source_section() == heading_text)
-                                .unwrap_or(false);
+                            let (drag_in_progress_from_this_section, dragging_id_str) = {
+                                let guard = dragging_slot.read();
+                                match guard.as_ref().filter(|d| d.source_section() == heading_text) {
+                                    Some(d) => (true, Some(d.slot_id().as_str().to_string())),
+                                    None => (false, None),
+                                }
+                            };
                             let is_being_dragged = match (dragging_slot.read().as_ref(), &occupant_slot) {
                                 (Some(dragging), Some(occupant)) => {
                                     dragging.slot_id() == occupant && dragging.source_section() == heading_text
@@ -262,6 +277,31 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             && target.row() == row
                                     })
                                     .unwrap_or(false);
+                            // True when this empty cell is claimed by another
+                            // ability's off-state — disallowed as a drop
+                            // target so the off-state isn't silently displaced.
+                            // The dragging ability itself is always exempt: it
+                            // may always land on its own off-state cell.
+                            let is_off_state_blocked = !is_research_grid
+                                && drag_in_progress_from_this_section
+                                && cell_option.is_none()
+                                && slot_ids_cloned.iter().any(|slot| {
+                                    let GridSlotId::Ability(ability_id) = slot else {
+                                        return false;
+                                    };
+                                    if dragging_id_str.as_deref().is_some_and(|id| {
+                                        ability_id.eq_ignore_ascii_case(id)
+                                    }) {
+                                        return false;
+                                    }
+                                    Positions::current_for_ability_off(
+                                        ability_id,
+                                        custom_keys_option,
+                                    )
+                                    .is_some_and(|off_pos| {
+                                        off_pos.column() == column && off_pos.row() == row
+                                    })
+                                });
                             let class_name = tile_class(
                                 cell_option.is_some(),
                                 is_selected,
@@ -269,6 +309,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 is_command_cell,
                                 is_being_dragged,
                                 is_drop_target_cell,
+                                is_off_state_blocked,
                             );
                             let occupant_for_drag = occupant_slot.clone();
                             let occupant_for_click = occupant_slot.clone();
@@ -332,15 +373,28 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // normal command card) or this tile's occupant
                             // matches one of the allowed slots (the picker
                             // dialog only lets the player grab the toggle's
-                            // off half). Drives a CSS cursor / opacity hint
-                            // so non-draggable cells don't look interactive.
-                            let tile_is_draggable = restrict_draggable_to.is_empty()
-                                || occupant_slot
+                            // off half). Morph abilities on alternate-form
+                            // units (Burrowed Crypt Fiend, Militia, …) are
+                            // never draggable — their position is shared with
+                            // the primary form's ability and can't be changed
+                            // independently.
+                            let is_morph_on_alt_form = host_is_alt_form
+                                && occupant_slot
                                     .as_ref()
                                     .map(|slot| {
-                                        restrict_draggable_to.iter().any(|allowed| allowed == slot)
+                                        ObjectLookup::morph_target_unit(slot.as_str()).is_some()
                                     })
                                     .unwrap_or(false);
+                            let tile_is_draggable = !is_morph_on_alt_form
+                                && (restrict_draggable_to.is_empty()
+                                    || occupant_slot
+                                        .as_ref()
+                                        .map(|slot| {
+                                            restrict_draggable_to
+                                                .iter()
+                                                .any(|allowed| allowed == slot)
+                                        })
+                                        .unwrap_or(false));
                             let draggable_attr = if tile_is_draggable { "true" } else { "false" };
                             rsx! {
                                 div { class: "command-tile-wrapper",
@@ -362,6 +416,9 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             }
                                         },
                                         onpointerdown: move |event| {
+                                            if !tile_is_draggable {
+                                                return;
+                                            }
                                             if event.data().trigger_button() != Some(MouseButton::Primary) {
                                                 return;
                                             }
@@ -678,6 +735,66 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     .filter(|drop| drop.section() == heading_text)
                                                     .filter(|drop| drop.column() != column || drop.row() != row);
                                                 if let Some(drop) = valid_drop {
+                                                    // Check whether the target is reserved by
+                                                    // another ability's off-state before committing.
+                                                    let moving_id = dragging.slot_id().as_str();
+                                                    let blocking_name = {
+                                                        let keys = keys_signal.read();
+                                                        let custom_keys = keys.as_ref();
+                                                        // If the target already has an on-state
+                                                        // occupant, this is a normal swap —
+                                                        // move_or_swap will co-move the off-state.
+                                                        let target_occupied =
+                                                            Positions::cell_for_position(
+                                                                &slot_ids_for_drop,
+                                                                custom_keys,
+                                                                is_research_grid,
+                                                                drop.column(),
+                                                                drop.row(),
+                                                            )
+                                                            .is_some();
+                                                        if target_occupied {
+                                                            None
+                                                        } else {
+                                                        slot_ids_for_drop.iter().find_map(|slot| {
+                                                            let GridSlotId::Ability(id) = slot
+                                                            else {
+                                                                return None;
+                                                            };
+                                                            if id.eq_ignore_ascii_case(moving_id) {
+                                                                return None;
+                                                            }
+                                                            let off_pos =
+                                                                Positions::current_for_ability_off(
+                                                                    id,
+                                                                    custom_keys,
+                                                                )?;
+                                                            if off_pos.column() == drop.column()
+                                                                && off_pos.row() == drop.row()
+                                                            {
+                                                                Some(
+                                                                    ObjectLookup::by_id(id)
+                                                                        .and_then(|obj| {
+                                                                            obj.names().first().copied()
+                                                                        })
+                                                                        .unwrap_or(id.as_str())
+                                                                        .to_owned(),
+                                                                )
+                                                            } else {
+                                                                None
+                                                            }
+                                                        })
+                                                        }
+                                                    };
+                                                    if let Some(name) = blocking_name {
+                                                        toast_api.warning(
+                                                            format!("Slot reserved for {name}'s off-state"),
+                                                            ToastOptions::new().description(
+                                                                "Reassign it via the override panel first.",
+                                                            ),
+                                                        );
+                                                        fell_back_to_source = true;
+                                                    } else {
                                                     let move_request = MoveRequest::new(
                                                         layout_snapshot,
                                                         &slot_ids_for_drop,
@@ -691,6 +808,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     let moved_slot = dragging.slot_id().clone();
                                                     select_slot.set(Some(moved_slot));
                                                     performed_swap = true;
+                                                    }
                                                 } else {
                                                     fell_back_to_source = true;
                                                 }

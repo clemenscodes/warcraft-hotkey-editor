@@ -381,7 +381,7 @@ pub(crate) fn TileOverridePanel(
                             div { class: "tile-override-alt-state-header",
                                 div { class: "tile-override-alt-state-header-text",
                                     if let Some(alt_name) = alt_name_text {
-                                        p { class: "tile-override-alt-state-label", "When active: {alt_name}" }
+                                        p { class: "tile-override-alt-state-label", "{alt_name}" }
                                     }
                                 }
                                 if show_alt_controls {
@@ -557,6 +557,7 @@ fn AltPositionPicker(
         is_uprooted_grid: false,
         prevent_swap_on_drop: true,
         restrict_draggable_to: restrict_draggable,
+        host_unit_id: String::new(),
     };
     rsx! {
         DialogRoot {

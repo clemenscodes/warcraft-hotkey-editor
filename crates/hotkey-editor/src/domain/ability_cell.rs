@@ -68,18 +68,17 @@ impl AbilityCell {
             .or(database_name)
             .or(tip_name)
             .unwrap_or_else(|| String::from("(unknown)"));
-        // Off icon: prefer the binding's `un_icon` (player override or
-        // imported template), then fall through to the on-state icon. We
-        // don't have a database off-icon yet — that lives in
-        // `abilityskin.txt` (BTNStopDefend.blp etc.) which the extractor
-        // doesn't currently parse.
+        // Off icon priority: binding un_icon override → database UnArt
+        // (AbilityMeta::off_icon, parsed from UnArt= in abilityfunc.txt) →
+        // on-state icon as last resort.
+        let database_off_icon = ObjectLookup::off_icon(object_id).map(IconUrl::from_database_path);
         let database_icon = database_object
             .and_then(|warcraft_object| warcraft_object.icons().first().copied())
             .map(IconUrl::from_database_path);
         let un_icon = binding
             .and_then(|ability_binding| ability_binding.un_icon())
             .map(IconUrl::from_binding_path);
-        let icon_src = un_icon.or(database_icon);
+        let icon_src = un_icon.or(database_off_icon).or(database_icon);
         let binding_hotkey = binding
             .and_then(|ability_binding| ability_binding.unhotkey())
             .and_then(BindingHotkey::first_token);

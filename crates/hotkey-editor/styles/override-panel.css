@@ -312,11 +312,11 @@
  * so it reads as part of the off-state cluster. */
 .tile-override-alt-state-position-button {
     appearance: none;
-    width: 3.4rem;
-    height: 3.4rem;
+    width: 5rem;
+    height: 5rem;
     padding: 0.3rem;
     background: rgba(110, 195, 255, 0.08);
-    border: 1px solid rgba(110, 195, 255, 0.45);
+    border: 2px solid #6ec3ff;
     color: #a9d8ff;
     border-radius: 4px;
     cursor: pointer;
@@ -428,9 +428,9 @@
  * the colour but keeps the dashed style so the user can tell at a
  * glance the cell isn't yet "armed" by a drag. */
 .alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
-    border: 1px dashed rgba(255, 206, 99, 0.45) !important;
+    border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
-    transition: border 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"]:hover {
@@ -457,7 +457,7 @@
 .alt-position-picker-grid-anchor .grid-tile.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
-    border: 3px solid #ffce63 !important;
+    border: 2px solid #ffce63 !important;
     background:
         linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
         rgba(20, 35, 60, 0.95) !important;
@@ -468,10 +468,13 @@
 
 /* Source cell idle — gold border so the player can tell which cell
  * is the draggable one. No pulse, no glow, no scale, no filter:
- * static, calm. */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
+ * static, calm. Transition suppressed: the border-color is already
+ * gold at rest so hover should produce no animated change at all. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
     cursor: grab !important;
     border-color: #ffce63 !important;
+    transition: none !important;
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
@@ -485,23 +488,12 @@
  * and drag-over states inherited from the rules above apply with
  * the same visuals as the rest of the grid. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
-    border: 1px dashed rgba(255, 206, 99, 0.45) !important;
+    border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
     box-shadow: none !important;
     transform: none !important;
     filter: none !important;
     cursor: grabbing !important;
-}
-
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
-    border-color: rgba(255, 206, 99, 0.75) !important;
-    background: rgba(255, 206, 99, 0.1) !important;
-}
-
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drop-target {
-    border: 2px solid rgba(255, 206, 99, 0.75) !important;
-    background: rgba(255, 206, 99, 0.14) !important;
-    box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drag-over {
@@ -512,37 +504,6 @@
     box-shadow:
         inset 0 0 0 1px rgba(255, 224, 150, 0.65),
         0 0 28px rgba(255, 206, 99, 0.85) !important;
-}
-
-/* The source cell during an active drag — main grid hides the cell's
- * children (icon + hotkey overlay) so the box looks empty, but the
- * border / glow stay visible so the player can see WHERE the drag
- * came from. Freeze the pulse, lock the ring at maximum, and pump up
- * the inner gradient so the source square reads "I'm being dragged"
- * the entire time the drag is in flight. Hover (cursor still on the
- * source while dragging, before moving away) brightens it further. */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
-    animation: none !important;
-    transform: none !important;
-    border: 3px solid #ffce63 !important;
-    background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.22) 0%, rgba(255, 206, 99, 0.06) 100%),
-        rgba(20, 35, 60, 0.92) !important;
-    box-shadow:
-        inset 0 0 0 2px rgba(255, 235, 180, 0.65),
-        0 0 0 4px rgba(255, 206, 99, 0.45),
-        0 0 32px rgba(255, 206, 99, 0.85) !important;
-    cursor: grabbing !important;
-}
-
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
-    background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.34) 0%, rgba(255, 206, 99, 0.12) 100%),
-        rgba(20, 35, 60, 0.92) !important;
-    box-shadow:
-        inset 0 0 0 2px rgba(255, 245, 200, 0.85),
-        0 0 0 5px rgba(255, 206, 99, 0.6),
-        0 0 40px rgba(255, 206, 99, 1) !important;
 }
 
 .tile-override-key-group {
@@ -744,6 +705,11 @@ body[data-kb-modality] .override-key-cell:focus {
         font-size: 1.6rem;
     }
 
+    .tile-override-alt-state-position-button {
+        width: 3.6rem;
+        height: 3.6rem;
+    }
+
     .override-key-cell[data-special="true"] {
         width: auto;
         min-width: 3.6rem;
@@ -767,6 +733,10 @@ body[data-kb-modality] .override-key-cell:focus {
         min-width: 4.6rem;
         min-height: 4.6rem;
         font-size: 2.2rem;
+    }
+    .tile-override-alt-state-position-button {
+        width: 4.6rem;
+        height: 4.6rem;
     }
     .override-key-cell[data-special="true"] {
         width: auto;

@@ -526,10 +526,14 @@ impl CustomKeysFile {
         if !self.bindings.contains_key(&lowercase_id) {
             let original_id_string = object_id.to_string();
             self.order.push(lowercase_id.clone());
-            self.original_ids.insert(lowercase_id.clone(), original_id_string);
-            self.bindings.insert(lowercase_id.clone(), AbilityBinding::default());
+            self.original_ids
+                .insert(lowercase_id.clone(), original_id_string);
+            self.bindings
+                .insert(lowercase_id.clone(), AbilityBinding::default());
         }
-        self.bindings.get_mut(&lowercase_id).expect("binding was just inserted")
+        self.bindings
+            .get_mut(&lowercase_id)
+            .expect("binding was just inserted")
     }
 
     pub fn bindings_in_order(&self) -> impl Iterator<Item = BindingEntry<'_>> {
@@ -563,7 +567,8 @@ impl CustomKeysFile {
             self.command_order.push(lowercase_name.clone());
             self.original_command_names
                 .insert(lowercase_name.clone(), original_name_string);
-            self.commands.insert(lowercase_name.clone(), CommandBinding::default());
+            self.commands
+                .insert(lowercase_name.clone(), CommandBinding::default());
         }
         self.commands
             .get_mut(&lowercase_name)
@@ -577,10 +582,12 @@ impl CustomKeysFile {
                 .get(lowercase_name)
                 .map(String::as_str)
                 .unwrap_or(lowercase_name);
-            self.commands.get(lowercase_name).map(|binding| CommandEntry {
-                name: original_name,
-                binding,
-            })
+            self.commands
+                .get(lowercase_name)
+                .map(|binding| CommandEntry {
+                    name: original_name,
+                    binding,
+                })
         })
     }
 
@@ -872,7 +879,9 @@ impl From<&str> for CustomKeysFile {
                         command_order.push(order_entry);
                         current_lowercase_key = Some(lowercase_id);
                         current_is_command = true;
-                        accumulator = Some(SectionAccumulator::Command(CommandBindingAccumulator::default()));
+                        accumulator = Some(SectionAccumulator::Command(
+                            CommandBindingAccumulator::default(),
+                        ));
                         current_raw_text.push_str(line);
                         current_raw_text.push('\n');
                     }
@@ -905,8 +914,12 @@ impl From<&str> for CustomKeysFile {
                 {
                     let KeyValuePair { key, value } = pair;
                     match current_accumulator {
-                        SectionAccumulator::Ability(ability_accumulator) => ability_accumulator.apply(&key, &value),
-                        SectionAccumulator::Command(command_accumulator) => command_accumulator.apply(&key, &value),
+                        SectionAccumulator::Ability(ability_accumulator) => {
+                            ability_accumulator.apply(&key, &value)
+                        }
+                        SectionAccumulator::Command(command_accumulator) => {
+                            command_accumulator.apply(&key, &value)
+                        }
                     }
                 }
             }
@@ -1157,9 +1170,15 @@ mod tests {
         let mut file = CustomKeysFile::from(input);
         let binding = file.binding_or_default_mut("AHhb");
         binding.set_hotkey(Some("Q".to_string()));
-        assert!(!binding.is_dirty(), "setting same value should not mark dirty");
+        assert!(
+            !binding.is_dirty(),
+            "setting same value should not mark dirty"
+        );
         binding.set_hotkey(Some("R".to_string()));
-        assert!(binding.is_dirty(), "setting different value should mark dirty");
+        assert!(
+            binding.is_dirty(),
+            "setting different value should mark dirty"
+        );
     }
 
     #[test]

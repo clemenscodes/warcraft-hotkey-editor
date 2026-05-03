@@ -85,6 +85,16 @@ impl ObjectLookup {
         }
     }
 
+    /// Off-state icon path for a toggle ability (`UnArt=` in abilityfunc.txt).
+    /// Returns `None` when the ability has no distinct off-state icon.
+    pub(crate) fn off_icon(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.off_icon(),
+            _ => None,
+        }
+    }
+
     /// First forward morph target (i.e. morph ability whose `morph_target` is
     /// a *different* unit than the host). Returns `None` when the unit has no
     /// such ability, or when every morph ability on it self-loops (e.g. the

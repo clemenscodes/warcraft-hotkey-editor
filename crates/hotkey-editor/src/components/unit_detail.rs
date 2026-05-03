@@ -382,6 +382,7 @@ pub(crate) fn UnitDetailPanel(
         is_uprooted_grid: false,
         prevent_swap_on_drop: false,
         restrict_draggable_to: Vec::new(),
+        host_unit_id: unit_id.clone(),
     };
 
     let unit_description = unit_object.ubertip();
@@ -651,6 +652,7 @@ pub(crate) fn UnitDetailPanel(
                                     is_uprooted_grid: false,
         prevent_swap_on_drop: false,
         restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..build_menu_props } }
                             }
@@ -674,6 +676,7 @@ pub(crate) fn UnitDetailPanel(
                                     is_uprooted_grid: true,
                                     prevent_swap_on_drop: false,
                                     restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..uprooted_props } }
                             }
@@ -697,6 +700,7 @@ pub(crate) fn UnitDetailPanel(
                                     is_uprooted_grid: false,
         prevent_swap_on_drop: false,
         restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..research_props } }
                             }

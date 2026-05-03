@@ -386,7 +386,48 @@ impl Positions {
             request.target_column,
             request.target_row,
         );
+        // Block only when the target is *empty* (no on-state occupant) but
+        // already claimed by another ability's off-state — swapping onto an
+        // occupied cell is handled below and co-moves the off-state.
+        let off_state_blocks = displaced_pair.is_none()
+            && !request.is_research_context
+            && request.slot_ids.iter().any(|slot| {
+                let GridSlotId::Ability(ability_id) = slot else {
+                    return false;
+                };
+                // The moving toggle is always allowed to land on its own
+                // off-state cell (the two halves overlap by default).
+                if ability_id.eq_ignore_ascii_case(request.moving_slot.as_str()) {
+                    return false;
+                }
+                Self::current_for_ability_off(ability_id, custom_keys).is_some_and(|off_pos| {
+                    off_pos.column() == request.target_column && off_pos.row() == request.target_row
+                })
+            });
+        // Pre-compute co-location flags while the read guard is still live.
+        // When an ability's off-state sits on the same cell as its on-state
+        // (the natural default layout), a swap should carry the off-state
+        // along so the two halves stay together.
+        let moving_off_colocated = match (request.moving_slot, &moving_old_position) {
+            (GridSlotId::Ability(id), Some(old_pos)) => {
+                Self::current_for_ability_off(id, custom_keys).is_some_and(|off_pos| {
+                    off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
+                })
+            }
+            _ => false,
+        };
+        let displaced_off_colocated = match &displaced_pair {
+            Some((GridSlotId::Ability(id), _)) => Self::current_for_ability_off(id, custom_keys)
+                .is_some_and(|off_pos| {
+                    off_pos.column() == request.target_column && off_pos.row() == request.target_row
+                }),
+            _ => false,
+        };
         drop(read_guard);
+
+        if off_state_blocks {
+            return;
+        }
 
         let displaced_slot_option = displaced_pair.map(|(slot, _cell)| slot);
         // No-op when dropping a slot onto its own position (full variant +
@@ -421,6 +462,20 @@ impl Positions {
             request.is_research_context,
         );
 
+        // Co-move the dragged ability's off-state whenever it was at the
+        // same cell — applies to empty targets as well as swaps so the
+        // off-state doesn't stay stranded at the vacated source cell.
+        if moving_off_colocated && let GridSlotId::Ability(moving_id) = request.moving_slot {
+            Self::assign(
+                custom_keys_signal,
+                request.layout,
+                &GridSlotId::AbilityOff(moving_id.clone()),
+                request.target_column,
+                request.target_row,
+                false,
+            );
+        }
+
         if !request.prevent_swap
             && let (Some(displaced_slot), Some(old_position)) =
                 (displaced_slot_option, moving_old_position)
@@ -435,6 +490,18 @@ impl Positions {
                 old_row,
                 request.is_research_context,
             );
+            // Carry the displaced ability's off-state to the vacated cell
+            // when the two halves were co-located at the drop target.
+            if displaced_off_colocated && let GridSlotId::Ability(displaced_id) = &displaced_slot {
+                Self::assign(
+                    custom_keys_signal,
+                    request.layout,
+                    &GridSlotId::AbilityOff(displaced_id.clone()),
+                    old_column,
+                    old_row,
+                    false,
+                );
+            }
         }
     }
 
