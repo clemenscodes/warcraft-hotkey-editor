@@ -402,6 +402,25 @@
     height: var(--tile-size);
 }
 
+/* Inside the picker only the toggle's off slot is draggable. Mute
+ * everything else so the player isn't tempted to grab an on-state cell
+ * (the drag handler rejects it, but visually it would still feel
+ * interactive otherwise). The off cell keeps the regular grab cursor
+ * and a faint highlight so it reads as the active handle. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"] {
+    cursor: default;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:hover {
+    /* Suppress the main grid's hover lift on locked cells. */
+    transform: none;
+    box-shadow: none;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
+    box-shadow: 0 0 0 2px rgba(255, 206, 99, 0.7) inset, 0 0 12px rgba(255, 206, 99, 0.25);
+}
+
 .tile-override-key-group {
     display: flex;
     flex-direction: row;

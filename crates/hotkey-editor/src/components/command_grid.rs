@@ -328,6 +328,20 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let slot_ids_for_drop = slot_ids_cloned.clone();
                             let is_focusable_cell = cell_option.is_some();
                             let tabindex_value = if is_focusable_cell { "0" } else { "-1" };
+                            // Tile is draggable iff there's no allow-list (the
+                            // normal command card) or this tile's occupant
+                            // matches one of the allowed slots (the picker
+                            // dialog only lets the player grab the toggle's
+                            // off half). Drives a CSS cursor / opacity hint
+                            // so non-draggable cells don't look interactive.
+                            let tile_is_draggable = restrict_draggable_to.is_empty()
+                                || occupant_slot
+                                    .as_ref()
+                                    .map(|slot| {
+                                        restrict_draggable_to.iter().any(|allowed| allowed == slot)
+                                    })
+                                    .unwrap_or(false);
+                            let draggable_attr = if tile_is_draggable { "true" } else { "false" };
                             rsx! {
                                 div { class: "command-tile-wrapper",
                                     div {
@@ -336,6 +350,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         "data-grid-row": "{row}",
                                         "data-grid-col": "{column}",
                                         "data-grid-section": "{heading_text}",
+                                        "data-draggable": "{draggable_attr}",
                                         onkeydown: move |event| {
                                             let key_value = event.data().key().to_string();
                                             if key_value == " " || key_value == "Enter" {
