@@ -1,6 +1,6 @@
 use std::borrow::Borrow;
 
-use warcraft_api::WarcraftObject;
+use warcraft_api::{WarcraftObject, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
 pub(crate) struct ObjectLookup;
@@ -45,5 +45,27 @@ impl ObjectLookup {
                     .starts_with("passivebuttons/")
             })
             .unwrap_or(false)
+    }
+
+    /// Game-mechanic class from `units/abilitydata.slk`'s `code` column —
+    /// e.g. `Apit` for Purchase Item, `Aave` for Avenger Form. Returns
+    /// `None` when the object isn't an ability or has no code recorded.
+    pub(crate) fn ability_code(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.code(),
+            _ => None,
+        }
+    }
+
+    /// For one-way morph abilities, the unit id this ability transforms its
+    /// caster into. Used to suppress the morph trigger on the unit it
+    /// morphs *into* (e.g. Avenger Form on the Destroyer).
+    pub(crate) fn morph_target_unit(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.morph_target_unit().map(|id| id.value()),
+            _ => None,
+        }
     }
 }

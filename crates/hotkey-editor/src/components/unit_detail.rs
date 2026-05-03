@@ -233,6 +233,9 @@ pub(crate) fn UnitDetailPanel(
         if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_id.value()) {
             continue;
         }
+        if morphs_into_self(ability_id.value(), &unit_id) {
+            continue;
+        }
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
@@ -281,6 +284,12 @@ pub(crate) fn UnitDetailPanel(
             }
             for ability_id in regular_abilities {
                 if !ObjectLookup::has_icon(ability_id.value()) {
+                    continue;
+                }
+                if morphs_into_self(ability_id.value(), &unit_id) {
+                    continue;
+                }
+                if is_rooted_only_mechanic(ability_id.value()) {
                     continue;
                 }
                 uprooted_slots.push(GridSlotId::ability(ability_id.value()));
@@ -707,6 +716,32 @@ const ALL_ATTACK_TYPES: [AttackType; 7] = [
     AttackType::Hero,
     AttackType::Spells,
 ];
+
+/// Game-mechanic codes that only make sense on a stationary / rooted form.
+/// When an Ancient uproots and becomes mobile, the shop UI vanishes in-game
+/// — so we suppress these abilities from the editor's uprooted command card.
+/// Sourced from `units/abilitydata.slk`'s `code` column via the extractor.
+///
+/// - `Apit` — Purchase Item (the shop's buy button).
+/// - `Aall` — Allied Building (the mechanic that flags a shop as
+///   purchasable by allied players in team games; appears as
+///   "Select Hero On" / "Pick Shop Buyer" in the unit list).
+const ROOTED_ONLY_ABILITY_CODES: &[&str] = &["Apit", "Aall"];
+
+fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
+    ObjectLookup::morph_target_unit(ability_id)
+        .map(|target_id| target_id.eq_ignore_ascii_case(host_unit_id))
+        .unwrap_or(false)
+}
+
+fn is_rooted_only_mechanic(ability_id: &str) -> bool {
+    let Some(ability_code) = ObjectLookup::ability_code(ability_id) else {
+        return false;
+    };
+    ROOTED_ONLY_ABILITY_CODES
+        .iter()
+        .any(|rooted_only_code| rooted_only_code.eq_ignore_ascii_case(ability_code))
+}
 
 fn matchup_cell_class_attacking(multiplier: f32) -> &'static str {
     if multiplier > 1.05 {
