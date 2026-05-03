@@ -402,20 +402,24 @@
     height: var(--tile-size);
 }
 
-/* Inside the picker only the toggle's off slot is draggable. Mute
- * the other cells aggressively so the contrast carries the message:
- * "this one cell is the handle; everything else is locked context."
- * `.grid-tile.has-ability:hover` is `0,3,0` specificity, so we pin
- * `data-draggable` selectors at the same chain-length and use
- * `!important` on a couple of overrides to win against transition-y
- * rules in the main grid CSS. */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"],
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:hover,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:focus,
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:active {
+/* Three states inside the picker:
+ *
+ * 1. Locked filled cells — another ability lives here and the off
+ *    state can't displace it. Mute heavily so the player reads them
+ *    as background context, not peer drop targets.
+ * 2. Empty cells — valid drop targets. Keep the main grid's regular
+ *    look (and its hover / drop-target styling) untouched.
+ * 3. The toggle's own off cell — the only handle. Cranked-up gold
+ *    border, gradient, glow, and a slow pulse.
+ *
+ * Dimming is scoped to `.has-ability` so empty cells stay alive. */
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"],
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:hover,
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:focus,
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:active {
     cursor: default !important;
-    opacity: 0.32;
-    filter: saturate(0.4) brightness(0.9);
+    opacity: 0.55;
+    filter: saturate(0.55) brightness(0.95);
     border-color: #2c4a72 !important;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
     transform: none !important;
