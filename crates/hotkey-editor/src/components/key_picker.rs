@@ -40,8 +40,7 @@ pub(crate) fn KeyPicker(
     // by the grid layout editor where clicking a conflict swaps the two
     // cells. The spell hotkey picker leaves this off so a binding collision
     // is visually flagged but cannot be selected.
-    #[props(default = false)]
-    allow_conflict_pick: bool,
+    #[props(default = false)] allow_conflict_pick: bool,
     on_pick: EventHandler<HotkeyToken>,
     on_close: EventHandler<()>,
 ) -> Element {
@@ -108,7 +107,11 @@ fn KeyPickerKey(
         KeyPickerCellState::Available => ("available", None),
         KeyPickerCellState::Current => ("current", None),
         KeyPickerCellState::Conflict { display_name } => {
-            let prefix = if allow_conflict_pick { "Pick to swap with" } else { "Already used by" };
+            let prefix = if allow_conflict_pick {
+                "Pick to swap with"
+            } else {
+                "Already used by"
+            };
             ("conflict", Some(format!("{prefix} {display_name}")))
         }
     };
