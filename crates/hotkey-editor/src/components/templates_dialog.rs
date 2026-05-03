@@ -134,13 +134,13 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                                     .map(|cell| ObjectLookup::is_passive_ability(cell.object_id()))
                                     .unwrap_or(false);
                             let binding_letter = cell_option.and_then(|cell| {
-                                if is_research {
+                                let token = if is_research {
                                     cell.binding_research_hotkey()
-                                        .map(String::from)
-                                        .or_else(|| cell.binding_hotkey().map(String::from))
+                                        .or_else(|| cell.binding_hotkey())
                                 } else {
-                                    cell.binding_hotkey().map(String::from)
-                                }
+                                    cell.binding_hotkey()
+                                };
+                                token.map(|value| value.display_label())
                             });
                             let derived_letter = cell_option.and_then(|_| {
                                 resolved.grid().letter_at(column, row).map(|character| character.to_string())

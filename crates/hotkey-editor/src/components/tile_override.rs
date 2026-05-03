@@ -9,6 +9,7 @@ use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState
 use crate::domain::grid_layout::GridLayout;
 use crate::domain::grid_slot::GridSlotId;
 use crate::domain::hotkey_override::HotkeyOverride;
+use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::inspector_detail::InspectorDetail;
 use crate::text::description::Description;
 use crate::text::tip::Tip;
@@ -34,24 +35,24 @@ pub(crate) fn TileOverridePanel(
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
-    let layout_derived_hotkey = detail
+    let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
-        .map(|letter| letter.to_string());
-    let layout_derived_research = detail
+        .map(HotkeyToken::from);
+    let layout_derived_research_token = detail
         .research_button_position()
         .or(detail.button_position())
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
-        .map(|letter| letter.to_string());
-    let hotkey_display = detail
-        .hotkey_letter()
-        .map(String::from)
-        .or(layout_derived_hotkey)
+        .map(HotkeyToken::from);
+    let hotkey_token_display = detail.hotkey_token().or(layout_derived_hotkey_token);
+    let research_hotkey_token_display = detail
+        .research_hotkey_token()
+        .or(layout_derived_research_token);
+    let hotkey_display = hotkey_token_display
+        .map(|token| token.display_label())
         .unwrap_or_default();
-    let research_hotkey_display = detail
-        .research_hotkey_letter()
-        .map(String::from)
-        .or(layout_derived_research)
+    let research_hotkey_display = research_hotkey_token_display
+        .map(|token| token.display_label())
         .unwrap_or_default();
     let is_research_context = *selected_from_research.read();
     let show_hotkey_field = !detail.is_passive() && !is_research_context;
@@ -79,6 +80,14 @@ pub(crate) fn TileOverridePanel(
     } else {
         research_hotkey_display.clone()
     };
+    let hotkey_is_special_token = hotkey_token_display
+        .map(|token| char::try_from(token).is_err())
+        .unwrap_or(false);
+    let research_is_special_token = research_hotkey_token_display
+        .map(|token| char::try_from(token).is_err())
+        .unwrap_or(false);
+    let hotkey_special_flag = if hotkey_is_special_token { "true" } else { "false" };
+    let research_special_flag = if research_is_special_token { "true" } else { "false" };
 
     let total_tier_count: usize = detail
         .ubertip_levels()
@@ -190,9 +199,9 @@ pub(crate) fn TileOverridePanel(
     let picker_target = editing_snapshot;
     let picker_is_research_context =
         matches!(picker_target, Some(OverrideEditTarget::ResearchHotkey));
-    let picker_current_letter: Option<char> = match picker_target {
-        Some(OverrideEditTarget::Hotkey) => hotkey_display.chars().next(),
-        Some(OverrideEditTarget::ResearchHotkey) => research_hotkey_display.chars().next(),
+    let picker_current_token: Option<HotkeyToken> = match picker_target {
+        Some(OverrideEditTarget::Hotkey) => hotkey_token_display,
+        Some(OverrideEditTarget::ResearchHotkey) => research_hotkey_token_display,
         None => None,
     };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
@@ -200,7 +209,7 @@ pub(crate) fn TileOverridePanel(
             layout_snapshot,
             &active_container_slots,
             &object_id_for_capture,
-            picker_current_letter,
+            picker_current_token,
             picker_is_research_context,
             loaded_keys.read().as_ref(),
         )
@@ -214,11 +223,10 @@ pub(crate) fn TileOverridePanel(
     let picker_active_container = active_container_slots.clone();
     let picker_object_id = object_id_for_capture.clone();
 
-    let on_pick = move |letter: char| {
+    let on_pick = move |token: HotkeyToken| {
         let Some(active_target) = *editing_target.read() else {
             return;
         };
-        let upper = letter.to_ascii_uppercase();
         let layout_snapshot_for_check = *grid_layout.read();
         let is_research_check = matches!(active_target, OverrideEditTarget::ResearchHotkey);
         let read_guard = loaded_keys.read();
@@ -226,32 +234,29 @@ pub(crate) fn TileOverridePanel(
         let conflict = HotkeyOverride::detect_conflict(
             &picker_active_container,
             &picker_object_id,
-            upper,
+            token,
             custom_keys_ref,
             layout_snapshot_for_check,
             is_research_check,
         );
         drop(read_guard);
         if conflict.is_some() {
-            // Visual cells already convey conflicts; silently reject so the
-            // keyboard fallback can't bypass the disabled state.
             return;
         }
-        let new_letter = upper.to_string();
         match active_target {
             OverrideEditTarget::Hotkey => {
                 HotkeyOverride::apply(
                     &mut loaded_keys,
                     &picker_object_id,
                     is_command_for_capture,
-                    Some(new_letter),
+                    Some(token),
                 );
             }
             OverrideEditTarget::ResearchHotkey => {
                 HotkeyOverride::apply_research(
                     &mut loaded_keys,
                     &picker_object_id,
-                    Some(new_letter),
+                    Some(token),
                 );
             }
         }
@@ -268,6 +273,7 @@ pub(crate) fn TileOverridePanel(
                 if show_hotkey_field {
                     button {
                         class: "{hotkey_cell_class}",
+                        "data-special": "{hotkey_special_flag}",
                         onclick: move |_| {
                             editing_target.set(Some(OverrideEditTarget::Hotkey));
                         },
@@ -276,6 +282,7 @@ pub(crate) fn TileOverridePanel(
                 } else if show_research_field {
                     button {
                         class: "{research_cell_class}",
+                        "data-special": "{research_special_flag}",
                         onclick: move |_| {
                             editing_target.set(Some(OverrideEditTarget::ResearchHotkey));
                         },
@@ -332,44 +339,76 @@ pub(crate) fn TileOverridePanel(
     }
 }
 
-const QWERTY_ROWS: &[&[char]] = &[
-    &['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    &['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    &['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+const PICKER_ROWS: &[&[HotkeyToken]] = &[
+    &[
+        HotkeyToken::Letter { character: 'Q' },
+        HotkeyToken::Letter { character: 'W' },
+        HotkeyToken::Letter { character: 'E' },
+        HotkeyToken::Letter { character: 'R' },
+        HotkeyToken::Letter { character: 'T' },
+        HotkeyToken::Letter { character: 'Y' },
+        HotkeyToken::Letter { character: 'U' },
+        HotkeyToken::Letter { character: 'I' },
+        HotkeyToken::Letter { character: 'O' },
+        HotkeyToken::Letter { character: 'P' },
+    ],
+    &[
+        HotkeyToken::Letter { character: 'A' },
+        HotkeyToken::Letter { character: 'S' },
+        HotkeyToken::Letter { character: 'D' },
+        HotkeyToken::Letter { character: 'F' },
+        HotkeyToken::Letter { character: 'G' },
+        HotkeyToken::Letter { character: 'H' },
+        HotkeyToken::Letter { character: 'J' },
+        HotkeyToken::Letter { character: 'K' },
+        HotkeyToken::Letter { character: 'L' },
+    ],
+    &[
+        HotkeyToken::Letter { character: 'Z' },
+        HotkeyToken::Letter { character: 'X' },
+        HotkeyToken::Letter { character: 'C' },
+        HotkeyToken::Letter { character: 'V' },
+        HotkeyToken::Letter { character: 'B' },
+        HotkeyToken::Letter { character: 'N' },
+        HotkeyToken::Letter { character: 'M' },
+    ],
+    &[
+        HotkeyToken::Escape,
+        HotkeyToken::MouseBack,
+        HotkeyToken::MouseForward,
+    ],
 ];
 
 fn build_picker_rows(
     layout: GridLayout,
     container_slots: &[GridSlotId],
     target_object_id: &str,
-    current_letter: Option<char>,
+    current_token: Option<HotkeyToken>,
     is_research_context: bool,
     custom_keys: Option<&CustomKeysFile>,
 ) -> Vec<Vec<KeyPickerCell>> {
-    let current_upper = current_letter.map(|c| c.to_ascii_uppercase());
-    QWERTY_ROWS
+    PICKER_ROWS
         .iter()
         .map(|row| {
             row.iter()
-                .map(|&letter| {
-                    let upper = letter.to_ascii_uppercase();
-                    let state = if Some(upper) == current_upper {
+                .map(|token| {
+                    let token_value = *token;
+                    let state = if Some(token_value) == current_token {
                         KeyPickerCellState::Current
                     } else if let Some(conflict) = HotkeyOverride::detect_conflict(
                         container_slots,
                         target_object_id,
-                        upper,
+                        token_value,
                         custom_keys,
                         layout,
                         is_research_context,
                     ) {
-                        KeyPickerCellState::Conflict {
-                            display_name: conflict.conflicting_display_name().to_string(),
-                        }
+                        let display_name = conflict.conflicting_display_name().to_string();
+                        KeyPickerCellState::Conflict { display_name }
                     } else {
                         KeyPickerCellState::Available
                     };
-                    KeyPickerCell::new(upper, state)
+                    KeyPickerCell::new(token_value, state)
                 })
                 .collect()
         })

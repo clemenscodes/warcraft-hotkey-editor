@@ -3,7 +3,7 @@ use warcraft_api::{ButtonPosition, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::CustomKeysFile;
 
-use crate::domain::ability_cell::AbilityCell;
+use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
 use crate::domain::command_catalog::CommandCatalog;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::GridSlotId;
@@ -365,7 +365,8 @@ impl Positions {
             let is_passive = ObjectLookup::is_passive_ability(id);
             if !has_buttonpos
                 && let Some(hotkey_str) = &hotkey
-                && let Some(letter) = hotkey_str.chars().next()
+                && let Some(token) = BindingHotkey::first_token(hotkey_str)
+                && let Ok(letter) = char::try_from(token)
                 && let Some((col, row)) = layout.position_for_letter(letter)
             {
                 let pos = warcraft_keybinds::ButtonPosition::new(col, row);
@@ -385,7 +386,8 @@ impl Positions {
                 .is_some();
             if !has_research_buttonpos
                 && let Some(rk) = &research_hotkey
-                && let Some(letter) = rk.chars().next()
+                && let Some(token) = BindingHotkey::first_token(rk)
+                && let Ok(letter) = char::try_from(token)
                 && let Some((col, row)) = layout.position_for_letter(letter)
             {
                 let pos = warcraft_keybinds::ButtonPosition::new(col, row);
@@ -408,7 +410,8 @@ impl Positions {
                 .is_some();
             if !has_buttonpos
                 && let Some(hotkey_str) = &hotkey
-                && let Some(letter) = hotkey_str.chars().next()
+                && let Some(token) = BindingHotkey::first_token(hotkey_str)
+                && let Ok(letter) = char::try_from(token)
                 && let Some((col, row)) = layout.position_for_letter(letter)
             {
                 let pos = warcraft_keybinds::ButtonPosition::new(col, row);

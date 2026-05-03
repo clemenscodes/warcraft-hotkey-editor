@@ -6,6 +6,7 @@ use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState
 use crate::domain::grid_layout::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout,
 };
+use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::positions::Positions;
 
 const QWERTY_ROWS: &[&[char]] = &[
@@ -35,12 +36,13 @@ pub(crate) fn LayoutEditor(
             .map(|row| {
                 row.iter()
                     .map(|&letter| {
+                        let token = HotkeyToken::from(letter);
                         let state = if Some(letter) == current_letter {
                             KeyPickerCellState::Current
                         } else {
                             KeyPickerCellState::Available
                         };
-                        KeyPickerCell::new(letter, state)
+                        KeyPickerCell::new(token, state)
                     })
                     .collect()
             })
@@ -143,13 +145,15 @@ pub(crate) fn LayoutEditor(
                 title: "Pick a grid key".to_string(),
                 rows: picker_rows,
                 open: true,
-                on_pick: move |letter: char| {
+                on_pick: move |token: HotkeyToken| {
                     let Some(active_cell) = *editing_layout_cell.read() else {
                         return;
                     };
-                    let upper = letter.to_ascii_uppercase();
+                    let Ok(letter) = char::try_from(token) else {
+                        return;
+                    };
                     let mut next_layout = *grid_layout.read();
-                    next_layout.assign_unique(active_cell.column(), active_cell.row(), upper);
+                    next_layout.assign_unique(active_cell.column(), active_cell.row(), letter);
                     grid_layout.set(next_layout);
                     editing_layout_cell.set(None);
                 },

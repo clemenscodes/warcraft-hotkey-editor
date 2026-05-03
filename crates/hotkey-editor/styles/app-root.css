@@ -436,6 +436,12 @@
         height: 4rem;
         font-size: 2rem;
     }
+    .override-key-cell[data-special="true"] {
+        width: auto;
+        min-width: 4rem;
+        padding: 0 0.75rem;
+        font-size: 1.25rem;
+    }
 }
 
 /* ───────────────────────── Compact desktop / tablet (701px – 2000px) ─────────────────────────

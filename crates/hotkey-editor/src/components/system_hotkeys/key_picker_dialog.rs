@@ -85,6 +85,9 @@ static KEYBOARD_ROWS: &[&[(u32, &str)]] = &[
         (34, "PgDn"),
     ],
     &[(38, "↑"), (37, "←"), (40, "↓"), (39, "→")],
+    // VK_XBUTTON1 (5, back) and VK_XBUTTON2 (6, forward) — confirmed against
+    // a CustomKeys.txt exported by the in-game hotkey editor.
+    &[(5, "Mouse4"), (6, "Mouse5")],
 ];
 
 static NUMPAD_ROWS: &[&[(u32, &str)]] = &[
