@@ -4,12 +4,14 @@ use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
+use crate::system_hotkeys::scope::{ContextSet, context_set_for};
 
 #[derive(Clone)]
 pub(crate) struct ResolvedSystemBinding {
     section_id: String,
     section_comment: String,
     binding: EffectiveBinding,
+    context_set: ContextSet,
 }
 
 impl ResolvedSystemBinding {
@@ -36,10 +38,12 @@ impl SystemBindingMap {
                 entry.default_hotkey(),
                 entry.default_modifier(),
             );
+            let context_set = context_set_for(&section_id);
             let resolved = ResolvedSystemBinding {
                 section_id: section_id.clone(),
                 section_comment,
                 binding,
+                context_set,
             };
             bindings_by_section.insert(section_id, resolved);
         }
@@ -49,13 +53,21 @@ impl SystemBindingMap {
     }
 
     /// All sections — other than `excluded_section_id` — whose effective
-    /// binding equals the given `(code, modifier)` pair.
+    /// binding equals the given `(code, modifier)` and whose runtime context
+    /// overlaps with the excluded section's context. Cross-context overlaps
+    /// (e.g. an inventory slot vs. a replay-only key) are filtered out
+    /// because they cannot collide at runtime.
     pub(crate) fn collisions_for(
         &self,
         excluded_section_id: &str,
         code: u32,
         modifier: Option<&str>,
     ) -> Vec<&ResolvedSystemBinding> {
+        let own_context = self
+            .bindings_by_section
+            .get(excluded_section_id)
+            .map(|resolved| resolved.context_set)
+            .unwrap_or(ContextSet::ALWAYS);
         let mut matches: Vec<&ResolvedSystemBinding> = self
             .bindings_by_section
             .values()
@@ -64,25 +76,36 @@ impl SystemBindingMap {
                 let other_binding = resolved.binding;
                 other_binding.hotkey_code == code && other_binding.modifier == modifier
             })
+            .filter(|resolved| own_context.overlaps(resolved.context_set))
             .collect();
         matches.sort_by(|left, right| left.section_id.cmp(&right.section_id));
         matches
     }
 
     /// For the picker dialog: every keycode currently bound by another
-    /// section under the given modifier maps to the comments of those sections
-    /// (joined for tooltip rendering by the caller).
+    /// section under the given modifier — restricted to sections whose
+    /// runtime context overlaps with the editing section's context — maps to
+    /// the comments of those sections (joined for tooltip rendering by the
+    /// caller).
     pub(crate) fn picker_conflicts(
         &self,
         own_section_id: &str,
         own_modifier: Option<&str>,
     ) -> HashMap<u32, Vec<String>> {
+        let own_context = self
+            .bindings_by_section
+            .get(own_section_id)
+            .map(|resolved| resolved.context_set)
+            .unwrap_or(ContextSet::ALWAYS);
         let mut conflicts: HashMap<u32, Vec<String>> = HashMap::new();
         for resolved in self.bindings_by_section.values() {
             if resolved.section_id == own_section_id {
                 continue;
             }
             if resolved.binding.modifier != own_modifier {
+                continue;
+            }
+            if !own_context.overlaps(resolved.context_set) {
                 continue;
             }
             let code = resolved.binding.hotkey_code;
@@ -94,5 +117,4 @@ impl SystemBindingMap {
         }
         conflicts
     }
-
 }
