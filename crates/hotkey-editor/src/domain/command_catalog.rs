@@ -105,8 +105,14 @@ static MOBILE_COMMAND_IDS: LazyLock<Vec<&'static str>> = LazyLock::new(|| {
         .collect()
 });
 
+// CmdCancel is intentionally absent from this list. In-game it never sits as
+// a static slot on a building's main command card — it only surfaces inside
+// hero learn-skill menus (added explicitly by the research builder) and as
+// the per-queue-item cancel that buildings render dynamically while training.
+// Listing it here would pin it to a default position that overlaps real
+// abilities (e.g. an Ancient's Root sits where CmdCancel landed by default).
 static BUILDING_COMMAND_IDS: LazyLock<Vec<&'static str>> = LazyLock::new(|| {
-    ["CmdCancelTrain", "CmdRally", "CmdCancel"]
+    ["CmdCancelTrain", "CmdRally"]
         .into_iter()
         .filter_map(CommandCatalog::known_command)
         .collect()
