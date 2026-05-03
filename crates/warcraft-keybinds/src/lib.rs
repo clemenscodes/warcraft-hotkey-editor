@@ -39,6 +39,7 @@ impl TryFrom<&str> for ButtonPosition {
 #[derive(Default, Debug, Clone)]
 pub struct AbilityBinding {
     hotkey: Option<String>,
+    unhotkey: Option<String>,
     button_position: Option<ButtonPosition>,
     unbutton_position: Option<ButtonPosition>,
     research_hotkey: Option<String>,
@@ -58,6 +59,10 @@ pub struct AbilityBinding {
 impl AbilityBinding {
     pub fn hotkey(&self) -> Option<&str> {
         self.hotkey.as_deref()
+    }
+
+    pub fn unhotkey(&self) -> Option<&str> {
+        self.unhotkey.as_deref()
     }
 
     pub fn button_position(&self) -> Option<&ButtonPosition> {
@@ -148,6 +153,13 @@ impl AbilityBinding {
         }
     }
 
+    pub fn set_unhotkey(&mut self, value: Option<String>) {
+        if self.unhotkey != value {
+            self.unhotkey = value;
+            self.dirty = true;
+        }
+    }
+
     pub fn set_research_hotkey(&mut self, value: Option<String>) {
         if self.research_hotkey != value {
             self.research_hotkey = value;
@@ -222,6 +234,7 @@ impl AbilityBinding {
 #[derive(Default)]
 struct AbilityBindingAccumulator {
     hotkey: Option<String>,
+    unhotkey: Option<String>,
     button_position: Option<ButtonPosition>,
     unbutton_position: Option<ButtonPosition>,
     research_hotkey: Option<String>,
@@ -250,6 +263,10 @@ impl AbilityBindingAccumulator {
             }
             "unbuttonpos" if self.unbutton_position.is_none() => {
                 self.unbutton_position = ButtonPosition::try_from(value).ok();
+            }
+            "unhotkey" if !value.is_empty() && self.unhotkey.is_none() => {
+                let unhotkey = value.to_string();
+                self.unhotkey = Some(unhotkey);
             }
             "researchhotkey" if !value.is_empty() && self.research_hotkey.is_none() => {
                 let research_hotkey = value.to_string();
@@ -299,6 +316,7 @@ impl AbilityBindingAccumulator {
     fn into_binding(self) -> AbilityBinding {
         AbilityBinding {
             hotkey: self.hotkey,
+            unhotkey: self.unhotkey,
             button_position: self.button_position,
             unbutton_position: self.unbutton_position,
             research_hotkey: self.research_hotkey,
@@ -709,6 +727,11 @@ impl CustomKeysFile {
             output.push_str(hotkey);
             output.push('\n');
         }
+        if let Some(unhotkey) = &binding.unhotkey {
+            output.push_str("Unhotkey=");
+            output.push_str(unhotkey);
+            output.push('\n');
+        }
         if let Some(button_position) = &binding.button_position {
             output.push_str("Buttonpos=");
             let column_string = button_position.column.to_string();
@@ -791,7 +814,7 @@ impl CustomKeysFile {
 }
 
 enum SectionAccumulator {
-    Ability(AbilityBindingAccumulator),
+    Ability(Box<AbilityBindingAccumulator>),
     Command(CommandBindingAccumulator),
 }
 
@@ -866,7 +889,7 @@ impl From<&str> for CustomKeysFile {
                     order.push(order_entry);
                     current_lowercase_key = Some(lowercase_id);
                     current_is_command = false;
-                    accumulator = Some(SectionAccumulator::Ability(AbilityBindingAccumulator::default()));
+                    accumulator = Some(SectionAccumulator::Ability(Box::default()));
                     current_raw_text.push_str(line);
                     current_raw_text.push('\n');
                 }
