@@ -23,23 +23,17 @@ impl EffectiveBinding {
             .and_then(|file| file.binding(section_id))
             .and_then(|binding| binding.hotkey())
             .and_then(|raw| raw.parse::<u32>().ok());
-        let custom_modifier_owned = custom_keys
-            .and_then(|file| file.binding(section_id))
-            .and_then(|binding| binding.modifier())
-            .map(String::from);
         let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
-        let modifier = match custom_modifier_owned.as_deref() {
-            Some("Alt") => Some("Alt"),
-            Some("Ctrl") => Some("Ctrl"),
-            Some("Ctrl_or_Alt") => Some("Ctrl_or_Alt"),
-            Some("Shift") => Some("Shift"),
-            Some(_) | None => match default_modifier {
-                SystemKeybindModifier::None => None,
-                SystemKeybindModifier::Alt => Some("Alt"),
-                SystemKeybindModifier::Ctrl => Some("Ctrl"),
-                SystemKeybindModifier::CtrlOrAlt => Some("Ctrl_or_Alt"),
-                SystemKeybindModifier::Shift => Some("Shift"),
-            },
+        // Warcraft III hardcodes the modifier per system hotkey — any
+        // `Modifier=` line in CustomKeys.txt is written for transparency but
+        // discarded at load time. The editor mirrors that: the effective
+        // modifier is always the system default, regardless of the file.
+        let modifier = match default_modifier {
+            SystemKeybindModifier::None => None,
+            SystemKeybindModifier::Alt => Some("Alt"),
+            SystemKeybindModifier::Ctrl => Some("Ctrl"),
+            SystemKeybindModifier::CtrlOrAlt => Some("Ctrl_or_Alt"),
+            SystemKeybindModifier::Shift => Some("Shift"),
         };
         Self {
             hotkey_code,
