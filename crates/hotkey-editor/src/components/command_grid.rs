@@ -339,8 +339,15 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 .clone()
                                 .or_else(|| cell_option.as_ref().map(|cell| cell.display_name().to_string()))
                                 .unwrap_or_default();
-                            let icon_src_option = cell_tier_icon
-                                .or_else(|| cell_option.as_ref().and_then(|cell| cell.cloned_icon_src()));
+                            let icon_src_option = if cell_tier_index > 0 {
+                                cell_tier_icon
+                                    .or_else(|| cell_option.as_ref().and_then(|cell| cell.cloned_icon_src()))
+                            } else {
+                                cell_option
+                                    .as_ref()
+                                    .and_then(|cell| cell.cloned_icon_src())
+                                    .or(cell_tier_icon)
+                            };
                             let binding_letter_option = cell_option.as_ref().and_then(|cell| {
                                 let token = if is_research_grid {
                                     cell.binding_research_hotkey()
