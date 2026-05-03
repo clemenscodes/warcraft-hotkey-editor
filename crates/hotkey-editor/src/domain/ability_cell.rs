@@ -127,4 +127,20 @@ impl BindingHotkey {
             .collect::<Vec<_>>()
             .join(",")
     }
+
+    /// Whether the grid-layout apply pass is allowed to overwrite this raw
+    /// hotkey value with a positional letter. Special tokens (Escape /
+    /// Mouse4 / Mouse5) have no grid position by design — the user picked
+    /// them deliberately, so an "Apply grid to all hotkeys" pass should
+    /// leave them alone. Empty / unparseable values return true so a fresh
+    /// import gets populated normally.
+    pub(crate) fn accepts_grid_letter(raw_value: Option<&str>) -> bool {
+        let Some(value) = raw_value else {
+            return true;
+        };
+        let Some(token) = Self::first_token(value) else {
+            return true;
+        };
+        char::try_from(token).is_ok()
+    }
 }
