@@ -713,6 +713,9 @@ pub(crate) fn UnitDetailPanel(
                                 selected_from_research,
                                 selected_from_uprooted,
                                 tier_overrides,
+                                dragging_slot,
+                                drop_target_cell,
+                                drag_follower,
                                 active_container_slots: active_container_slots.clone(),
                             }
                         } else {

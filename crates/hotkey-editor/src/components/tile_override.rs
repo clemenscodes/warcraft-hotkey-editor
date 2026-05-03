@@ -36,6 +36,13 @@ pub(crate) fn TileOverridePanel(
     selected_from_research: Signal<bool>,
     selected_from_uprooted: Signal<bool>,
     mut tier_overrides: Signal<HashMap<String, usize>>,
+    // Threaded from the app-level state so the off-state picker dialog
+    // can drive the same `DragFollowerOverlay` that's already mounted at
+    // the app root. Without this, dragging inside the picker hides the
+    // source cell but never paints the floating follower.
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_cell: Signal<Option<DropTargetCell>>,
+    drag_follower: Signal<Option<DragFollower>>,
     active_container_slots: Rc<[GridSlotId]>,
 ) -> Element {
     let _ = selected_from_uprooted;
@@ -496,6 +503,9 @@ pub(crate) fn TileOverridePanel(
                         picker_slots,
                         loaded_keys,
                         grid_layout,
+                        dragging_slot,
+                        drop_target_cell,
+                        drag_follower,
                         alt_position_picker_open,
                     }
                 }
@@ -511,19 +521,24 @@ fn AltPositionPicker(
     picker_slots: Rc<[GridSlotId]>,
     loaded_keys: Signal<Option<CustomKeysFile>>,
     grid_layout: Signal<GridLayout>,
+    // Reuse the app-level drag signals so the existing
+    // `DragFollowerOverlay` (mounted at the app root) renders the
+    // floating tile while the player drags inside this dialog.
+    // Picker-local signals would never bind to that overlay and the
+    // icon would silently disappear mid-drag.
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_cell: Signal<Option<DropTargetCell>>,
+    drag_follower: Signal<Option<DragFollower>>,
     mut alt_position_picker_open: Signal<bool>,
 ) -> Element {
-    // Picker-local signals — the dialog has its own drag/drop tracking so
-    // it doesn't poke the outer command card's signals while open.
+    // Selection / tier signals stay local — they only drive look inside
+    // this dialog.
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(&object_id)));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
     let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
-    let picker_dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
-    let picker_drop_target_cell = use_signal::<Option<DropTargetCell>>(|| None);
-    let picker_drag_follower = use_signal::<Option<DragFollower>>(|| None);
-    let dialog_title = format!("Position — {display_name}");
+    let dialog_title = format!("Position: {display_name}");
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(&object_id)];
     let _ = object_id;
     let grid_props = CommandGridSectionProps {
@@ -534,9 +549,9 @@ fn AltPositionPicker(
         selected_from_research: picker_selected_research,
         selected_from_uprooted: picker_selected_uprooted,
         tier_overrides: picker_tier_overrides,
-        dragging_slot: picker_dragging_slot,
-        drop_target_cell: picker_drop_target_cell,
-        drag_follower: picker_drag_follower,
+        dragging_slot,
+        drop_target_cell,
+        drag_follower,
         grid_layout,
         is_research_grid: false,
         is_uprooted_grid: false,
@@ -554,15 +569,18 @@ fn AltPositionPicker(
                     on_close: move |_| alt_position_picker_open.set(false),
                 }
                 div { class: "wc3-dialog-body alt-position-picker-body",
-                    p { class: "alt-position-picker-hint",
-                        "Drag the off-state button to a different cell. Cells holding another ability swap-protect — drops on top of them are rejected so the unit's primary layout stays intact."
+                    // Same gold-uppercase-serif treatment as
+                    // `templates-dialog-explainer` and `preview-dialog-hint`
+                    // so every dialog-tier explanation reads as a sibling.
+                    p { class: "alt-position-picker-explainer",
+                        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
                     }
-                    // Reuse the live command-card grid component end-to-end —
-                    // same hover effects, slot indicators, drag-and-drop,
-                    // tier scrubber, etc. The toggle's off slot is restricted
-                    // to be the only draggable source, and `prevent_swap_on_drop`
-                    // keeps the player from displacing other abilities.
-                    CommandGridSection { ..grid_props }
+                    // Centring wrapper — `.grid-tiles` is fixed-width
+                    // (4 × 10rem) and would otherwise flush to the dialog's
+                    // left edge.
+                    div { class: "alt-position-picker-grid-anchor",
+                        CommandGridSection { ..grid_props }
+                    }
                 }
             }
         }

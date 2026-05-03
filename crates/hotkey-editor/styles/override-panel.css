@@ -344,20 +344,39 @@
 }
 
 /* Off-state position picker reuses `dialog-shell` + `wc3-dialog` from
- * primitives.css plus `CommandGridSection`'s own grid styles, so almost
- * nothing dialog-local is needed here. The picker body just needs a
- * vertical layout and the introductory hint paragraph. */
+ * primitives.css plus `CommandGridSection`'s own grid styles. The picker
+ * body just needs a centred vertical layout for the explainer and the
+ * fixed-width grid below it. */
 .alt-position-picker-body {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 2.5rem 2.5rem;
 }
 
-.alt-position-picker-hint {
+/* Same gold-uppercase-serif treatment as `templates-dialog-explainer`
+ * and `preview-dialog-hint` so dialog-tier explainers all read alike. */
+.alt-position-picker-explainer {
     margin: 0;
-    color: #aab9d4;
-    font-size: 1.35rem;
-    line-height: 1.5;
+    text-align: center;
+    font-family: 'Friz Quadrata', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 206, 99, 0.75);
+    font-size: 1.85rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 0 #000;
+    max-width: 90rem;
+}
+
+/* `.grid-tiles` is `repeat(4, 10rem)` so it has a fixed pixel width.
+ * Wrap it in a flex container that centres horizontally and lets the
+ * grid's own auto-rows determine height. */
+.alt-position-picker-grid-anchor {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .tile-override-key-group {
