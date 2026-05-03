@@ -434,32 +434,147 @@
     }
 
     /* Themed tooltip via [data-tooltip="text"]. Empty values render nothing.
-       Sits above the anchor on hover with WC3 dialog framing. */
+       Sits below the anchor (avoids dialog-header underflow on top rows like
+       F1 in the system-hotkey picker) and sizes to its content with a wide
+       max-width so multi-section labels stay on a single line whenever they
+       fit.
+
+       Three reveal triggers, all sharing the same look:
+       - `:hover` for desktop pointer (with a short delay to suppress flicker).
+       - `:focus-visible` for keyboard tab navigation.
+       - `[data-tooltip-active="true"]` set by `tooltip-touch.js` after a
+         long-press on touch / pen — the long-press itself is the delay, so
+         the touch path skips the hover fade. The script also defers to the
+         inventory drag long-press by aborting if the cell already has the
+         `dragging-source` class. */
     [data-tooltip]:not([data-tooltip=""]) {
         position: relative;
     }
 
-    [data-tooltip]:not([data-tooltip=""]):hover::after {
+    [data-tooltip]:not([data-tooltip=""]):hover::after,
+    [data-tooltip]:not([data-tooltip=""]):focus-visible::after,
+    [data-tooltip][data-tooltip-active="true"]:not([data-tooltip=""])::after {
         content: attr(data-tooltip);
         position: absolute;
-        bottom: calc(100% + 0.5rem);
+        top: calc(100% + 0.6rem);
         left: 50%;
         transform: translateX(-50%);
-        max-width: 24rem;
-        padding: 0.55rem 0.85rem;
+        width: max-content;
+        max-width: 38rem;
+        padding: 0.75rem 1.1rem;
         border: 1px solid #ffce63;
         border-radius: 4px;
         background: linear-gradient(180deg, rgba(15, 22, 45, 0.98) 0%, rgba(8, 14, 30, 0.99) 100%);
         color: #ffce63;
         font-family: 'Friz Quadrata', serif;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         line-height: 1.4;
         text-align: center;
         text-shadow: 1px 1px 0 #000;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7);
         white-space: normal;
         pointer-events: none;
         z-index: 1200;
+        opacity: 1;
+    }
+
+    [data-tooltip]:not([data-tooltip=""]):hover::after,
+    [data-tooltip]:not([data-tooltip=""]):focus-visible::after {
+        opacity: 0;
+        animation: tooltip-fade-in 0.15s ease-out 0.4s forwards;
+    }
+
+    /* Place above the anchor when the default below-placement would overflow:
+       last row of the system-hotkey picker (Mouse4/Mouse5 underflow the
+       dialog body), list-view chips that would otherwise cover the next row,
+       etc. Overrides only the vertical anchoring; the rest of the look comes
+       from the base rule above. */
+    [data-tooltip][data-tooltip-placement="above"]:hover::after,
+    [data-tooltip][data-tooltip-placement="above"]:focus-visible::after,
+    [data-tooltip][data-tooltip-placement="above"][data-tooltip-active="true"]::after {
+        top: auto;
+        bottom: calc(100% + 0.6rem);
+    }
+
+    /* Horizontal alignment override. Defaults to centered (translateX(-50%)).
+       Useful for cells near the viewport edge so the tooltip stays on-screen
+       — e.g. the leftmost / rightmost cells of every picker-keyboard row, or
+       the entire numpad which sits at the dialog's right edge. */
+    [data-tooltip][data-tooltip-anchor="left"]:hover::after,
+    [data-tooltip][data-tooltip-anchor="left"]:focus-visible::after,
+    [data-tooltip][data-tooltip-anchor="left"][data-tooltip-active="true"]::after {
+        left: 0;
+        right: auto;
+        transform: none;
+    }
+
+    [data-tooltip][data-tooltip-anchor="right"]:hover::after,
+    [data-tooltip][data-tooltip-anchor="right"]:focus-visible::after,
+    [data-tooltip][data-tooltip-anchor="right"][data-tooltip-active="true"]::after {
+        left: auto;
+        right: 0;
+        transform: none;
+    }
+
+    /* Touch / coarse-pointer devices have no hover, so the only reveal path
+       is the long-press flag set by tooltip-touch.js. The script ALSO
+       renders a singleton `<div id="tooltip-mobile-banner">` directly under
+       `<body>` whose styling lives below — we can't reuse the ::after
+       pseudo on touch because cells with `filter` (conflict glow / hover
+       brightness / editing pulse) establish their own containing block, so
+       a `position: fixed` ::after gets sized relative to the cell instead
+       of the viewport and renders as a tiny clipped banner. Hiding the
+       ::after on coarse pointers here lets the body-level banner take over
+       cleanly; the cell's `data-tooltip-active` flag stays set so the
+       conflict tint still toggles. */
+    @media (hover: none) {
+        [data-tooltip][data-tooltip-active="true"]:not([data-tooltip=""])::after {
+            display: none;
+        }
+    }
+
+    #tooltip-mobile-banner {
+        display: none;
+        position: fixed;
+        /* `top` and `left` are set inline by tooltip-touch.js after the
+           banner becomes visible, so it lands near the touched cell with
+           viewport-edge clamping. The 0/0 below is just a safe initial
+           placement before the script measures and repositions. */
+        top: 0;
+        left: 0;
+        max-width: min(32rem, calc(100vw - 1rem));
+        padding: 0.75rem 1rem;
+        border: 1px solid #ffce63;
+        border-radius: 4px;
+        background: linear-gradient(180deg, rgba(15, 22, 45, 0.98) 0%, rgba(8, 14, 30, 0.99) 100%);
+        color: #ffce63;
+        font-family: 'Friz Quadrata', serif;
+        font-size: 1.4rem;
+        line-height: 1.4;
+        text-align: center;
+        text-shadow: 1px 1px 0 #000;
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7);
+        white-space: normal;
+        pointer-events: none;
+        z-index: 1300;
+    }
+
+    #tooltip-mobile-banner[data-visible="true"] {
+        display: block;
+        animation: tooltip-fade-in 0.15s ease-out forwards;
+    }
+
+    /* Hover-capable devices use the ::after pseudo on the cell directly —
+       suppress the body-level banner so we don't double-render if a hybrid
+       device (touchscreen laptop) ever triggers both paths. */
+    @media (hover: hover) {
+        #tooltip-mobile-banner {
+            display: none !important;
+        }
+    }
+
+    @keyframes tooltip-fade-in {
+        to { opacity: 1; }
     }
 
     .wc3-binding-row:last-child {
