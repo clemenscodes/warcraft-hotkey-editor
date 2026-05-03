@@ -729,9 +729,18 @@ const ALL_ATTACK_TYPES: [AttackType; 7] = [
 const ROOTED_ONLY_ABILITY_CODES: &[&str] = &["Apit", "Aall"];
 
 fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
-    ObjectLookup::morph_target_unit(ability_id)
-        .map(|target_id| target_id.eq_ignore_ascii_case(host_unit_id))
-        .unwrap_or(false)
+    let Some(target_id) = ObjectLookup::morph_target_unit(ability_id) else {
+        return false;
+    };
+    if !target_id.eq_ignore_ascii_case(host_unit_id) {
+        return false;
+    }
+    // Self-morph + alt-state means a two-way toggle living on the same unit
+    // (Burrow ⇄ Unburrow on `ucrm`/`ucsB`/`ucsC`/`nbnb`, Defend ⇄ Stop Defend
+    // on `Adef`). The on-state's `morph_target` legitimately points at the
+    // host unit, so suppressing the ability here would hide the entire toggle
+    // from the burrowed/active form. Keep it.
+    !BuildingTraits::ability_has_alt_state(ability_id)
 }
 
 fn is_rooted_only_mechanic(ability_id: &str) -> bool {
