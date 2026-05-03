@@ -67,11 +67,8 @@ pub(crate) fn KeyCaptureCell(
     );
     let binding_map = SystemBindingMap::build(custom_keys_ref);
     drop(read_guard);
-    let collisions = binding_map.collisions_for(
-        &lookup_id,
-        effective.hotkey_code,
-        effective.modifier,
-    );
+    let collisions =
+        binding_map.collisions_for(&lookup_id, effective.hotkey_code, effective.modifier);
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
