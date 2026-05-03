@@ -403,22 +403,64 @@
 }
 
 /* Inside the picker only the toggle's off slot is draggable. Mute
- * everything else so the player isn't tempted to grab an on-state cell
- * (the drag handler rejects it, but visually it would still feel
- * interactive otherwise). The off cell keeps the regular grab cursor
- * and a faint highlight so it reads as the active handle. */
+ * everything else and aggressively highlight the off slot so the
+ * player can't miss which cell is the active handle. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="false"] {
     cursor: default;
+    opacity: 0.45;
+    filter: saturate(0.55);
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="false"]:hover {
-    /* Suppress the main grid's hover lift on locked cells. */
     transform: none;
     box-shadow: none;
 }
 
+/* Pulsing gold ring + outer glow so the off-state cell jumps off the
+ * grid as the obvious thing to grab. Keyframes alternate the inset
+ * ring's intensity (`box-shadow`) so the call-to-action breathes
+ * without translating the tile (translation would mess with drag
+ * pointer-capture). */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
-    box-shadow: 0 0 0 2px rgba(255, 206, 99, 0.7) inset, 0 0 12px rgba(255, 206, 99, 0.25);
+    cursor: grab;
+    z-index: 1;
+    border-color: #ffce63;
+    box-shadow:
+        0 0 0 2px #ffce63 inset,
+        0 0 0 1px rgba(255, 206, 99, 0.6),
+        0 0 24px rgba(255, 206, 99, 0.55);
+    animation: alt-picker-handle-pulse 1.6s ease-in-out infinite;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
+    box-shadow:
+        0 0 0 3px #ffce63 inset,
+        0 0 0 1px rgba(255, 206, 99, 0.8),
+        0 0 32px rgba(255, 206, 99, 0.75);
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
+    /* While dragging, the source cell's children are visibility:hidden
+     * by `command-grid.css`. The pulsing ring on an empty cell would
+     * draw the eye to the wrong place, so freeze the animation. */
+    animation: none;
+    opacity: 0.5;
+}
+
+@keyframes alt-picker-handle-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 2px #ffce63 inset,
+            0 0 0 1px rgba(255, 206, 99, 0.55),
+            0 0 18px rgba(255, 206, 99, 0.4);
+    }
+    50% {
+        box-shadow:
+            0 0 0 3px #ffce63 inset,
+            0 0 0 1px rgba(255, 206, 99, 0.85),
+            0 0 32px rgba(255, 206, 99, 0.7);
+    }
 }
 
 .tile-override-key-group {
