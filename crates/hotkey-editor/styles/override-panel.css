@@ -466,67 +466,52 @@
         0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
-/* Source cell idle — clear gold ring + soft glow, no pulse.
- * Static treatment keeps the idle quiet enough that the
- * hover-/drag-active state changes below read as deliberate
- * transitions rather than competing animations. */
+/* Source cell idle — gold border so the player can tell which cell
+ * is the draggable one. No pulse, no glow, no scale, no filter:
+ * static, calm. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
     cursor: grab !important;
-    z-index: 1;
-    border: 3px solid #ffce63 !important;
-    background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.16) 0%, rgba(255, 206, 99, 0.04) 100%),
-        rgba(20, 35, 60, 0.95) !important;
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 224, 150, 0.5),
-        0 0 16px rgba(255, 206, 99, 0.55) !important;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    border-color: #ffce63 !important;
 }
 
-/* Hover (no drag in flight) — clear scale lift + brighter glow. The
- * scale transform is the unmistakable cue (no other state uses one);
- * filter pumps the icon brightness, box-shadow widens. */
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover:not(.dragging-source),
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:focus:not(.dragging-source) {
-    transform: scale(1.07);
-    filter: brightness(1.18) saturate(1.15);
-    box-shadow:
-        inset 0 0 0 2px rgba(255, 235, 180, 0.85),
-        0 0 0 4px rgba(255, 206, 99, 0.55),
-        0 0 36px rgba(255, 206, 99, 1) !important;
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+    cursor: grabbing !important;
 }
 
-/* During an active drag the source cell behaves exactly like the main
- * command card's source cell does: children are hidden by the global
- * `.dragging-source > *` rule, and the box itself reverts to a
- * vacant drop-target look (dashed gold border, faint warm tint,
- * no glow / no scale). Hover *during* the drag — i.e. the cursor
- * comes back over the source square after the drag has begun —
- * lights it up gold the same way an empty drop-target lights up,
- * so the player sees "yes you can drop the off-state right back here
- * to leave the position unchanged." */
+/* Once the drag starts, the source cell IS a target cell — render it
+ * exactly like every other empty drop-target. The main grid's
+ * `.dragging-source > *` rule already hides the icon, so the box is
+ * functionally empty; matching the drop-target styling means hover
+ * and drag-over states inherited from the rules above apply with
+ * the same visuals as the rest of the grid. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
-    border: 2px dashed rgba(255, 206, 99, 0.55) !important;
-    background: rgba(255, 206, 99, 0.06) !important;
+    border: 1px dashed rgba(255, 206, 99, 0.45) !important;
+    background: rgba(255, 206, 99, 0.04) !important;
     box-shadow: none !important;
     transform: none !important;
     filter: none !important;
     cursor: grabbing !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover,
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
+    border-color: rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.1) !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drop-target {
+    border: 2px solid rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.14) !important;
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
+}
+
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drag-over {
     border: 3px solid #ffce63 !important;
     background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.16) 100%),
+        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
         rgba(20, 35, 60, 0.95) !important;
     box-shadow:
         inset 0 0 0 1px rgba(255, 224, 150, 0.65),
-        0 0 24px rgba(255, 206, 99, 0.85) !important;
-}
-
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
-    cursor: grabbing !important;
+        0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
 /* The source cell during an active drag — main grid hides the cell's
