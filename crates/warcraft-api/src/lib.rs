@@ -2847,6 +2847,8 @@ pub struct AbilityMeta {
     default_research_button_position: Option<ButtonPosition>,
     ubertip: Option<&'static str>,
     research_ubertip: Option<&'static str>,
+    code: Option<&'static str>,
+    morph_target_unit: Option<WarcraftObjectId>,
 }
 
 impl AbilityMeta {
@@ -2859,6 +2861,8 @@ impl AbilityMeta {
             default_research_button_position: None,
             ubertip: None,
             research_ubertip: None,
+            code: None,
+            morph_target_unit: None,
         }
     }
 
@@ -2877,6 +2881,8 @@ impl AbilityMeta {
             default_research_button_position,
             ubertip: None,
             research_ubertip: None,
+            code: None,
+            morph_target_unit: None,
         }
     }
 
@@ -2897,7 +2903,19 @@ impl AbilityMeta {
             default_research_button_position,
             ubertip,
             research_ubertip,
+            code: None,
+            morph_target_unit: None,
         }
+    }
+
+    pub const fn with_code(mut self, code: Option<&'static str>) -> Self {
+        self.code = code;
+        self
+    }
+
+    pub const fn with_morph_target(mut self, target: Option<WarcraftObjectId>) -> Self {
+        self.morph_target_unit = target;
+        self
     }
 
     pub fn ubertip(&self) -> Option<&'static str> {
@@ -2906,6 +2924,20 @@ impl AbilityMeta {
 
     pub fn research_ubertip(&self) -> Option<&'static str> {
         self.research_ubertip
+    }
+
+    /// Game-mechanic class as listed in `units/abilitydata.slk`'s `code`
+    /// column. Independent of the per-unit alias — e.g. multiple aliases
+    /// can resolve to `code = "Apit"` (Purchase Item / shop button).
+    pub fn code(&self) -> Option<&'static str> {
+        self.code
+    }
+
+    /// For one-way morph abilities (Avenger Form, Crow Form, etc.) the
+    /// unit id this ability transforms its caster into. Sourced from the
+    /// `UnitID1` column of `abilitydata.slk`.
+    pub fn morph_target_unit(&self) -> Option<&WarcraftObjectId> {
+        self.morph_target_unit.as_ref()
     }
 
     pub fn default_button_position(&self) -> Option<ButtonPosition> {
