@@ -1,12 +1,26 @@
+/// `AbilityOff` is intentionally excluded from a unit's *primary* command
+/// card — the off-state of a toggle is bound through the override card
+/// instead of competing for a second cell next to its on-state. The
+/// variant exists for future reuse (a drag-and-drop picker that wires up
+/// `CommandGridSection` directly), and is wired through the position /
+/// hotkey resolution paths so adding it back to a slot list "just works".
+/// Today's picker is click-to-place and doesn't construct this variant.
 #[derive(Clone, PartialEq, Eq, Debug)]
+#[allow(dead_code)] // see doc-comment above
 pub(crate) enum GridSlotId {
     Ability(String),
+    AbilityOff(String),
     Command(String),
 }
 
 impl GridSlotId {
     pub(crate) fn ability(value: impl Into<String>) -> Self {
         Self::Ability(value.into())
+    }
+
+    #[allow(dead_code)] // matches the AbilityOff variant — see GridSlotId doc.
+    pub(crate) fn ability_off(value: impl Into<String>) -> Self {
+        Self::AbilityOff(value.into())
     }
 
     pub(crate) fn command(value: impl Into<String>) -> Self {
@@ -16,6 +30,7 @@ impl GridSlotId {
     pub(crate) fn as_str(&self) -> &str {
         match self {
             Self::Ability(value) => value.as_str(),
+            Self::AbilityOff(value) => value.as_str(),
             Self::Command(value) => value.as_str(),
         }
     }

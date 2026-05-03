@@ -1,7 +1,23 @@
 use std::borrow::Borrow;
 
-use warcraft_api::WarcraftObject;
+use warcraft_api::{WarcraftObject, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
+
+/// Known-broken icon paths shipped in CASC. Blizzard's `BTNSelectHeroOn.blp`
+/// is literally a red question-mark placeholder both in the SD asset and in
+/// the HD2 add-on; the live game must be substituting a hero portrait at
+/// runtime since players never actually see that file. Treat anything in
+/// this list as "no icon" so abilities that reference it (Aall — "Allied
+/// Building" / Select Hero On) get filtered out of the editor's command
+/// card alongside the other icon-less mechanics.
+const ICON_PATH_BLACKLIST: &[&str] = &["commandbuttons/btnselectheroon.blp"];
+
+fn is_known_bad_icon(icon_path: &str) -> bool {
+    let normalized = icon_path.trim().to_ascii_lowercase();
+    ICON_PATH_BLACKLIST
+        .iter()
+        .any(|blacklisted| *blacklisted == normalized)
+}
 
 pub(crate) struct ObjectLookup;
 
@@ -28,7 +44,7 @@ impl ObjectLookup {
         warcraft_object
             .icons()
             .iter()
-            .any(|icon_path| !icon_path.trim().is_empty())
+            .any(|icon_path| !icon_path.trim().is_empty() && !is_known_bad_icon(icon_path))
     }
 
     pub(crate) fn is_passive_ability(object_id: &str) -> bool {
@@ -45,5 +61,98 @@ impl ObjectLookup {
                     .starts_with("passivebuttons/")
             })
             .unwrap_or(false)
+    }
+
+    /// Game-mechanic class from `units/abilitydata.slk`'s `code` column —
+    /// e.g. `Apit` for Purchase Item, `Aave` for Avenger Form. Returns
+    /// `None` when the object isn't an ability or has no code recorded.
+    pub(crate) fn ability_code(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.code(),
+            _ => None,
+        }
+    }
+
+    /// For one-way morph abilities, the unit id this ability transforms its
+    /// caster into. Used to suppress the morph trigger on the unit it
+    /// morphs *into* (e.g. Avenger Form on the Destroyer).
+    pub(crate) fn morph_target_unit(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.morph_target_unit().map(|id| id.value()),
+            _ => None,
+        }
+    }
+
+    /// Off-state icon path for a toggle ability (`UnArt=` in abilityfunc.txt).
+    /// Returns `None` when the ability has no distinct off-state icon.
+    pub(crate) fn off_icon(object_id: &str) -> Option<&'static str> {
+        let warcraft_object = Self::by_id(object_id)?;
+        match warcraft_object.meta() {
+            WarcraftObjectMeta::Ability(meta) => meta.off_icon(),
+            _ => None,
+        }
+    }
+
+    /// First forward morph target (i.e. morph ability whose `morph_target` is
+    /// a *different* unit than the host). Returns `None` when the unit has no
+    /// such ability, or when every morph ability on it self-loops (e.g. the
+    /// burrowed `ucrm` whose Abur points back at `ucrm`).
+    pub(crate) fn forward_morph_target_for_unit(host_unit_id: &str) -> Option<&'static str> {
+        let host = Self::by_id(host_unit_id)?;
+        let WarcraftObjectMeta::Unit(unit_meta) = host.meta() else {
+            return None;
+        };
+        for ability in unit_meta
+            .abilities()
+            .iter()
+            .chain(unit_meta.hero_abilities().iter())
+        {
+            if let Some(target_id) = Self::morph_target_unit(ability.value())
+                && !target_id.eq_ignore_ascii_case(host_unit_id)
+            {
+                return Some(target_id);
+            }
+        }
+        None
+    }
+
+    /// True iff `ability_id` on `host_unit_id` is the caster-form copy of a
+    /// mechanic that "really" lives on the host's morph target. The classic
+    /// case is the Druid of the Claw: the caster form's `abilList` includes
+    /// `Aroa` (code `Aroa`), but `Aroa` is the bear-form Roar — the bear form
+    /// `edcm` carries `Ara2` (also code `Aroa`). The caster-form button is
+    /// dead weight because in the actual game Roar is only usable after the
+    /// druid morphs. Match the in-game command card by suppressing it.
+    ///
+    /// Mirror cases (Druid of the Talon → Storm Crow, Demon Hunter →
+    /// Metamorphosis, Avenger Form on Destroyer, etc.) follow the same
+    /// "same code on the morph target via a different ability id" pattern.
+    pub(crate) fn ability_belongs_to_alt_form(ability_id: &str, host_unit_id: &str) -> bool {
+        let Some(target_id) = Self::forward_morph_target_for_unit(host_unit_id) else {
+            return false;
+        };
+        let Some(our_code) = Self::ability_code(ability_id) else {
+            return false;
+        };
+        let Some(target) = Self::by_id(target_id) else {
+            return false;
+        };
+        let WarcraftObjectMeta::Unit(target_meta) = target.meta() else {
+            return false;
+        };
+        target_meta
+            .abilities()
+            .iter()
+            .chain(target_meta.hero_abilities().iter())
+            .any(|target_ability| {
+                if target_ability.value().eq_ignore_ascii_case(ability_id) {
+                    return false;
+                }
+                Self::ability_code(target_ability.value())
+                    .map(|target_code| target_code.eq_ignore_ascii_case(our_code))
+                    .unwrap_or(false)
+            })
     }
 }

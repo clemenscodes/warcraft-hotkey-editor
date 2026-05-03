@@ -139,6 +139,7 @@ impl CellGrid {
                             column_u8,
                             row_u8,
                         )
+                        .map(|(_slot, cell)| cell)
                     })
                     .collect()
             })
@@ -213,10 +214,10 @@ impl ArchmageTemplate {
             }
             slots.push(GridSlotId::ability(ability_id.value()));
         }
-        if let Some(cancel_command) = CommandCatalog::known_command("CmdCancel")
-            && ObjectLookup::has_icon(cancel_command)
+        if let Some(back_command) = CommandCatalog::submenu_back_command()
+            && ObjectLookup::has_icon(back_command)
         {
-            slots.push(GridSlotId::command(cancel_command));
+            slots.push(GridSlotId::command(back_command));
         }
         slots
     }

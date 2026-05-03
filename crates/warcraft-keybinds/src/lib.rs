@@ -39,6 +39,7 @@ impl TryFrom<&str> for ButtonPosition {
 #[derive(Default, Debug, Clone)]
 pub struct AbilityBinding {
     hotkey: Option<String>,
+    unhotkey: Option<String>,
     button_position: Option<ButtonPosition>,
     unbutton_position: Option<ButtonPosition>,
     research_hotkey: Option<String>,
@@ -50,6 +51,7 @@ pub struct AbilityBinding {
     research_ubertip: Option<String>,
     un_ubertip: Option<String>,
     icon: Option<String>,
+    un_icon: Option<String>,
     modifier: Option<String>,
     dirty: bool,
 }
@@ -57,6 +59,10 @@ pub struct AbilityBinding {
 impl AbilityBinding {
     pub fn hotkey(&self) -> Option<&str> {
         self.hotkey.as_deref()
+    }
+
+    pub fn unhotkey(&self) -> Option<&str> {
+        self.unhotkey.as_deref()
     }
 
     pub fn button_position(&self) -> Option<&ButtonPosition> {
@@ -103,6 +109,10 @@ impl AbilityBinding {
         self.icon.as_deref()
     }
 
+    pub fn un_icon(&self) -> Option<&str> {
+        self.un_icon.as_deref()
+    }
+
     pub fn modifier(&self) -> Option<&str> {
         self.modifier.as_deref()
     }
@@ -139,6 +149,13 @@ impl AbilityBinding {
     pub fn set_unbutton_position(&mut self, value: Option<ButtonPosition>) {
         if self.unbutton_position != value {
             self.unbutton_position = value;
+            self.dirty = true;
+        }
+    }
+
+    pub fn set_unhotkey(&mut self, value: Option<String>) {
+        if self.unhotkey != value {
+            self.unhotkey = value;
             self.dirty = true;
         }
     }
@@ -199,6 +216,13 @@ impl AbilityBinding {
         }
     }
 
+    pub fn set_un_icon(&mut self, value: Option<String>) {
+        if self.un_icon != value {
+            self.un_icon = value;
+            self.dirty = true;
+        }
+    }
+
     pub fn set_icon(&mut self, value: Option<String>) {
         if self.icon != value {
             self.icon = value;
@@ -210,6 +234,7 @@ impl AbilityBinding {
 #[derive(Default)]
 struct AbilityBindingAccumulator {
     hotkey: Option<String>,
+    unhotkey: Option<String>,
     button_position: Option<ButtonPosition>,
     unbutton_position: Option<ButtonPosition>,
     research_hotkey: Option<String>,
@@ -221,6 +246,7 @@ struct AbilityBindingAccumulator {
     research_ubertip: Option<String>,
     un_ubertip: Option<String>,
     icon: Option<String>,
+    un_icon: Option<String>,
     modifier: Option<String>,
 }
 
@@ -237,6 +263,10 @@ impl AbilityBindingAccumulator {
             }
             "unbuttonpos" if self.unbutton_position.is_none() => {
                 self.unbutton_position = ButtonPosition::try_from(value).ok();
+            }
+            "unhotkey" if !value.is_empty() && self.unhotkey.is_none() => {
+                let unhotkey = value.to_string();
+                self.unhotkey = Some(unhotkey);
             }
             "researchhotkey" if !value.is_empty() && self.research_hotkey.is_none() => {
                 let research_hotkey = value.to_string();
@@ -267,6 +297,14 @@ impl AbilityBindingAccumulator {
                 let icon = value.to_string();
                 self.icon = Some(icon);
             }
+            "art" if !value.is_empty() && self.icon.is_none() => {
+                let art = value.to_string();
+                self.icon = Some(art);
+            }
+            "unart" if !value.is_empty() && self.un_icon.is_none() => {
+                let un_art = value.to_string();
+                self.un_icon = Some(un_art);
+            }
             "modifier" if !value.is_empty() && self.modifier.is_none() => {
                 let modifier = value.to_string();
                 self.modifier = Some(modifier);
@@ -278,6 +316,7 @@ impl AbilityBindingAccumulator {
     fn into_binding(self) -> AbilityBinding {
         AbilityBinding {
             hotkey: self.hotkey,
+            unhotkey: self.unhotkey,
             button_position: self.button_position,
             unbutton_position: self.unbutton_position,
             research_hotkey: self.research_hotkey,
@@ -289,6 +328,7 @@ impl AbilityBindingAccumulator {
             research_ubertip: self.research_ubertip,
             un_ubertip: self.un_ubertip,
             icon: self.icon,
+            un_icon: self.un_icon,
             modifier: self.modifier,
             dirty: false,
         }
@@ -601,16 +641,6 @@ impl CustomKeysFile {
     }
 
     pub fn to_file_content(&self) -> String {
-        self.serialize(true)
-    }
-
-    /// Serializes all sections from their structured binding state, without
-    /// reusing raw imported text.
-    pub fn to_full_file_content(&self) -> String {
-        self.serialize(false)
-    }
-
-    fn serialize(&self, preserve_raw_sections: bool) -> String {
         let mut output = String::new();
         for lowercase_name in &self.command_order {
             let display_name = self
@@ -621,8 +651,7 @@ impl CustomKeysFile {
             let Some(binding) = self.commands.get(lowercase_name) else {
                 continue;
             };
-            if preserve_raw_sections
-                && !binding.is_dirty()
+            if !binding.is_dirty()
                 && let Some(raw_text) = self.raw_command_sections.get(lowercase_name)
             {
                 output.push_str(raw_text);
@@ -642,8 +671,7 @@ impl CustomKeysFile {
             let Some(binding) = self.bindings.get(lowercase_id) else {
                 continue;
             };
-            if preserve_raw_sections
-                && !binding.is_dirty()
+            if !binding.is_dirty()
                 && let Some(raw_text) = self.raw_sections.get(lowercase_id)
             {
                 output.push_str(raw_text);
@@ -704,6 +732,11 @@ impl CustomKeysFile {
         if let Some(hotkey) = &binding.hotkey {
             output.push_str("Hotkey=");
             output.push_str(hotkey);
+            output.push('\n');
+        }
+        if let Some(unhotkey) = &binding.unhotkey {
+            output.push_str("Unhotkey=");
+            output.push_str(unhotkey);
             output.push('\n');
         }
         if let Some(button_position) = &binding.button_position {
@@ -788,7 +821,7 @@ impl CustomKeysFile {
 }
 
 enum SectionAccumulator {
-    Ability(AbilityBindingAccumulator),
+    Ability(Box<AbilityBindingAccumulator>),
     Command(CommandBindingAccumulator),
 }
 
@@ -865,9 +898,7 @@ impl From<&str> for CustomKeysFile {
                     order.push(order_entry);
                     current_lowercase_key = Some(lowercase_id);
                     current_is_command = false;
-                    accumulator = Some(SectionAccumulator::Ability(
-                        AbilityBindingAccumulator::default(),
-                    ));
+                    accumulator = Some(SectionAccumulator::Ability(Box::default()));
                     current_raw_text.push_str(line);
                     current_raw_text.push('\n');
                 }
@@ -1123,18 +1154,6 @@ mod tests {
     }
 
     #[test]
-    fn full_output_ignores_raw_comments() {
-        let input = "[AHhb]\nHotkey=Q\n//inline comment\nButtonpos=0,2\n\n";
-        let file = CustomKeysFile::from(input);
-        let output = file.to_full_file_content();
-        assert!(
-            !output.contains("//inline comment"),
-            "full serialization should not preserve raw comment lines",
-        );
-        assert!(output.contains("Buttonpos=0,2"));
-    }
-
-    #[test]
     fn parses_command_section() {
         let input = "[CmdMove]\nHotkey=M\nButtonpos=1,2\nTip=Move\n";
         let file = CustomKeysFile::from(input);
@@ -1159,6 +1178,49 @@ mod tests {
         assert!(
             binding.is_dirty(),
             "setting different value should mark dirty"
+        );
+    }
+
+    #[test]
+    fn round_trip_of_baseline_preserves_known_sections() {
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let file = CustomKeysFile::from(baseline);
+        let output = file.to_file_content();
+        let known_sections = [
+            "[CmdAttack]",
+            "[CmdMove]",
+            "[CmdRally]",
+            "[CmdCancel]",
+            "[CmdBuildHuman]",
+            "[Hpal]",
+            "[hkee]",
+            "[Rhpm]",
+            "[AHhb]",
+        ];
+        for section_marker in known_sections {
+            assert!(
+                output.contains(section_marker),
+                "round-trip output is missing section {section_marker:?}",
+            );
+        }
+        use std::collections::BTreeSet;
+        let collect_unique_sections = |text: &str| -> BTreeSet<String> {
+            text.lines()
+                .filter_map(|line| {
+                    let trimmed = line.trim();
+                    if trimmed.starts_with('[') && trimmed.ends_with(']') {
+                        Some(trimmed.to_ascii_lowercase())
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        };
+        let baseline_unique = collect_unique_sections(baseline);
+        let output_unique = collect_unique_sections(&output);
+        assert_eq!(
+            baseline_unique, output_unique,
+            "round-trip preserves the set of unique section headers (duplicates in the source are deduped)",
         );
     }
 }

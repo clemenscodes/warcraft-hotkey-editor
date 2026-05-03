@@ -5,9 +5,13 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 
+use dioxus_primitives::dialog::{DialogContent, DialogRoot};
+
+use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
+use crate::components::dialog_header::DialogHeader;
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use crate::domain::grid_layout::GridLayout;
-use crate::domain::grid_slot::GridSlotId;
+use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::domain::hotkey_override::HotkeyOverride;
 use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::inspector_detail::InspectorDetail;
@@ -18,6 +22,10 @@ use crate::text::tip::Tip;
 enum OverrideEditTarget {
     Hotkey,
     ResearchHotkey,
+    /// Off-state hotkey of a toggle ability — Stop Defend, Unburrow,
+    /// unmorph. Routes through `HotkeyOverride::apply_unhotkey`, which
+    /// writes the `Unhotkey` field rather than `Hotkey`.
+    AltHotkey,
 }
 
 #[component]
@@ -28,10 +36,22 @@ pub(crate) fn TileOverridePanel(
     selected_from_research: Signal<bool>,
     selected_from_uprooted: Signal<bool>,
     mut tier_overrides: Signal<HashMap<String, usize>>,
+    // Threaded from the app-level state so the off-state picker dialog
+    // can drive the same `DragFollowerOverlay` that's already mounted at
+    // the app root. Without this, dragging inside the picker hides the
+    // source cell but never paints the floating follower.
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_cell: Signal<Option<DropTargetCell>>,
+    drag_follower: Signal<Option<DragFollower>>,
     active_container_slots: Rc<[GridSlotId]>,
 ) -> Element {
     let _ = selected_from_uprooted;
     let mut editing_target = use_signal::<Option<OverrideEditTarget>>(|| None);
+    // True while the player has the alt-state mini grid open. Distinct
+    // signal from `editing_target` because the position picker is a modal
+    // overlay rather than a hotkey picker, but only one of the two should
+    // be active at a time.
+    let mut alt_position_picker_open = use_signal::<bool>(|| false);
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
@@ -96,6 +116,35 @@ pub(crate) fn TileOverridePanel(
         "false"
     };
     let research_special_flag = if research_is_special_token {
+        "true"
+    } else {
+        "false"
+    };
+
+    // Off-state hotkey field for toggle abilities. Surfaces the `Unhotkey`
+    // value from the binding (Stop Defend's key, Unburrow's key, …) and
+    // routes picks through `apply_unhotkey`. Only shown when the inspector
+    // detail carries an alt display name — that's the same gate the alt
+    // description block already uses, so the two appear together or not.
+    let alt_hotkey_token_display = detail.alt_hotkey_token();
+    let alt_hotkey_display = alt_hotkey_token_display
+        .map(|token| token.display_label())
+        .unwrap_or_default();
+    let alt_hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::AltHotkey);
+    let alt_hotkey_cell_class = if alt_hotkey_is_editing {
+        "override-key-cell editing"
+    } else {
+        "override-key-cell"
+    };
+    let alt_hotkey_label = if alt_hotkey_display.is_empty() {
+        String::from("\u{2013}")
+    } else {
+        alt_hotkey_display.clone()
+    };
+    let alt_hotkey_is_special_token = alt_hotkey_token_display
+        .map(|token| char::try_from(token).is_err())
+        .unwrap_or(false);
+    let alt_hotkey_special_flag = if alt_hotkey_is_special_token {
         "true"
     } else {
         "false"
@@ -214,6 +263,7 @@ pub(crate) fn TileOverridePanel(
     let picker_current_token: Option<HotkeyToken> = match picker_target {
         Some(OverrideEditTarget::Hotkey) => hotkey_token_display,
         Some(OverrideEditTarget::ResearchHotkey) => research_hotkey_token_display,
+        Some(OverrideEditTarget::AltHotkey) => detail.alt_hotkey_token(),
         None => None,
     };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
@@ -267,6 +317,9 @@ pub(crate) fn TileOverridePanel(
             OverrideEditTarget::ResearchHotkey => {
                 HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));
             }
+            OverrideEditTarget::AltHotkey => {
+                HotkeyOverride::apply_unhotkey(&mut loaded_keys, &picker_object_id, Some(token));
+            }
         }
         editing_target.set(None);
     };
@@ -302,6 +355,74 @@ pub(crate) fn TileOverridePanel(
                 div { class: "tile-override-description",
                     for description_line in primary_description_lines.iter() {
                         p { class: "tile-override-description-line", "{description_line}" }
+                    }
+                }
+            }
+            {
+                let alt_name_text = detail.alt_display_name().map(str::to_owned);
+                let alt_description_lines: Vec<String> = detail
+                    .alt_ubertip()
+                    .map(Description::lines_from)
+                    .unwrap_or_default();
+                let has_alt_state = alt_name_text.is_some() || !alt_description_lines.is_empty();
+                // Only let the player edit the off-state hotkey on the
+                // primary command card — research grids only have a single
+                // hotkey field per ability (Hero learn-skill icons aren't
+                // toggles), so the alt slot is irrelevant there.
+                let show_alt_controls = has_alt_state && !is_research_context && !detail.is_command();
+                rsx! {
+                    if has_alt_state {
+                        div { class: "tile-override-alt-state",
+                            // Header mirrors the primary `tile-override-header`
+                            // CSS grid (1fr | auto for hotkey | auto for the
+                            // position button). Same column tracks → the V
+                            // hotkey buttons in the primary and alt blocks
+                            // visually line up at the same X-pixel offset.
+                            div { class: "tile-override-alt-state-header",
+                                div { class: "tile-override-alt-state-header-text",
+                                    if let Some(alt_name) = alt_name_text {
+                                        p { class: "tile-override-alt-state-label", "{alt_name}" }
+                                    }
+                                }
+                                if show_alt_controls {
+                                    button {
+                                        class: "tile-override-alt-state-position-button",
+                                        r#type: "button",
+                                        title: "Pick where the off-state button appears on the command card",
+                                        aria_label: "Edit off-state button position",
+                                        onclick: move |_| {
+                                            alt_position_picker_open.set(true);
+                                        },
+                                        // Crosshair-style position icon. Matches the
+                                        // gold accent the rest of the override card uses.
+                                        svg {
+                                            class: "tile-override-alt-state-position-icon",
+                                            view_box: "0 0 24 24",
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            // Outer ring + cross-hair lines.
+                                            circle { cx: "12", cy: "12", r: "5", fill: "none", stroke: "currentColor", stroke_width: "1.6" }
+                                            line { x1: "12", y1: "2.5", x2: "12", y2: "6", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                            line { x1: "12", y1: "18", x2: "12", y2: "21.5", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                            line { x1: "2.5", y1: "12", x2: "6", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                            line { x1: "18", y1: "12", x2: "21.5", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                            circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
+                                        }
+                                    }
+                                    button {
+                                        class: "{alt_hotkey_cell_class}",
+                                        "data-special": "{alt_hotkey_special_flag}",
+                                        title: "Hotkey for the off state (writes Unhotkey)",
+                                        onclick: move |_| {
+                                            editing_target.set(Some(OverrideEditTarget::AltHotkey));
+                                        },
+                                        "{alt_hotkey_label}"
+                                    }
+                                }
+                            }
+                            for description_line in alt_description_lines.iter() {
+                                p { class: "tile-override-alt-state-line", "{description_line}" }
+                            }
+                        }
                     }
                 }
             }
@@ -342,6 +463,126 @@ pub(crate) fn TileOverridePanel(
                 open: true,
                 on_pick,
                 on_close: move |_| editing_target.set(None),
+            }
+        }
+        {
+            let alt_picker_visible = *alt_position_picker_open.read();
+            let alt_picker_object_id = object_id_for_capture.clone();
+            let alt_display_name = detail
+                .alt_display_name()
+                .map(str::to_owned)
+                .unwrap_or_else(|| detail.display_name().to_string());
+            // Slot list for the picker grid: the toggle's off half on top
+            // (so cell_for_position picks it first when both halves
+            // resolve to the same cell), then everything else from the
+            // host's primary command card. We deliberately drop the
+            // toggle's own on-state slot from the list so the picker grid
+            // shows the off icon at the on/off position, leaving every
+            // other unit slot in place for context.
+            let picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
+                let mut combined: Vec<GridSlotId> =
+                    Vec::with_capacity(active_container_slots.len() + 1);
+                combined.push(GridSlotId::ability_off(alt_picker_object_id.clone()));
+                for slot in active_container_slots.iter() {
+                    if let GridSlotId::Ability(ability_id) = slot
+                        && ability_id.eq_ignore_ascii_case(&alt_picker_object_id)
+                    {
+                        continue;
+                    }
+                    combined.push(slot.clone());
+                }
+                combined.into()
+            } else {
+                Rc::from([] as [GridSlotId; 0])
+            };
+            rsx! {
+                if alt_picker_visible {
+                    AltPositionPicker {
+                        object_id: alt_picker_object_id,
+                        display_name: alt_display_name,
+                        picker_slots,
+                        loaded_keys,
+                        grid_layout,
+                        dragging_slot,
+                        drop_target_cell,
+                        drag_follower,
+                        alt_position_picker_open,
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn AltPositionPicker(
+    object_id: String,
+    display_name: String,
+    picker_slots: Rc<[GridSlotId]>,
+    loaded_keys: Signal<Option<CustomKeysFile>>,
+    grid_layout: Signal<GridLayout>,
+    // Reuse the app-level drag signals so the existing
+    // `DragFollowerOverlay` (mounted at the app root) renders the
+    // floating tile while the player drags inside this dialog.
+    // Picker-local signals would never bind to that overlay and the
+    // icon would silently disappear mid-drag.
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_cell: Signal<Option<DropTargetCell>>,
+    drag_follower: Signal<Option<DragFollower>>,
+    mut alt_position_picker_open: Signal<bool>,
+) -> Element {
+    // Selection / tier signals stay local — they only drive look inside
+    // this dialog.
+    let picker_selected_slot =
+        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(&object_id)));
+    let picker_selected_research = use_signal::<bool>(|| false);
+    let picker_selected_uprooted = use_signal::<bool>(|| false);
+    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let dialog_title = format!("Position: {display_name}");
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(&object_id)];
+    let _ = object_id;
+    let grid_props = CommandGridSectionProps {
+        heading: "Off-state position",
+        slot_ids: picker_slots,
+        loaded_keys,
+        selected_slot: picker_selected_slot,
+        selected_from_research: picker_selected_research,
+        selected_from_uprooted: picker_selected_uprooted,
+        tier_overrides: picker_tier_overrides,
+        dragging_slot,
+        drop_target_cell,
+        drag_follower,
+        grid_layout,
+        is_research_grid: false,
+        is_uprooted_grid: false,
+        prevent_swap_on_drop: true,
+        restrict_draggable_to: restrict_draggable,
+        host_unit_id: String::new(),
+    };
+    rsx! {
+        DialogRoot {
+            class: "dialog-overlay",
+            open: alt_position_picker_open(),
+            on_open_change: move |is_open| alt_position_picker_open.set(is_open),
+            DialogContent { class: "dialog-shell wc3-dialog alt-position-picker-shell".to_string(),
+                DialogHeader {
+                    title: dialog_title,
+                    on_close: move |_| alt_position_picker_open.set(false),
+                }
+                div { class: "wc3-dialog-body alt-position-picker-body",
+                    // Same gold-uppercase-serif treatment as
+                    // `templates-dialog-explainer` and `preview-dialog-hint`
+                    // so every dialog-tier explanation reads as a sibling.
+                    p { class: "alt-position-picker-explainer",
+                        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
+                    }
+                    // Centring wrapper — `.grid-tiles` is fixed-width
+                    // (4 × 10rem) and would otherwise flush to the dialog's
+                    // left edge.
+                    div { class: "alt-position-picker-grid-anchor",
+                        CommandGridSection { ..grid_props }
+                    }
+                }
             }
         }
     }
