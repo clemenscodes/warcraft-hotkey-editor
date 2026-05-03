@@ -171,7 +171,7 @@ pub(crate) fn SystemKeyPickerDialog(
                                                         key: "{key_idx}",
                                                         class: "{cls}",
                                                         r#type: "button",
-                                                        title: "{title_attribute}",
+                                                        "data-tooltip": "{title_attribute}",
                                                         "data-wide": if is_wide { "true" } else { "" },
                                                         onclick: move |_| on_pick.call(code),
                                                         "{label}"
@@ -207,7 +207,7 @@ pub(crate) fn SystemKeyPickerDialog(
                                                         key: "{key_idx}",
                                                         class: "{cls}",
                                                         r#type: "button",
-                                                        title: "{title_attribute}",
+                                                        "data-tooltip": "{title_attribute}",
                                                         onclick: move |_| on_pick.call(code),
                                                         "{label}"
                                                     }

@@ -198,7 +198,7 @@ fn InventoryCell(
             class: "{cell_class}",
             "data-inventory-slot": "{section_id}",
             tabindex: "0",
-            title: "{conflict_title}",
+            "data-tooltip": "{conflict_title}",
             onpointerdown: move |event| {
                 if event.data().trigger_button() != Some(MouseButton::Primary) {
                     return;

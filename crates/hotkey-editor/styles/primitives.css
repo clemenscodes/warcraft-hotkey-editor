@@ -433,6 +433,35 @@
         border-top: 1px solid rgba(255, 206, 99, 0.14);
     }
 
+    /* Themed tooltip via [data-tooltip="text"]. Empty values render nothing.
+       Sits above the anchor on hover with WC3 dialog framing. */
+    [data-tooltip]:not([data-tooltip=""]) {
+        position: relative;
+    }
+
+    [data-tooltip]:not([data-tooltip=""]):hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 24rem;
+        padding: 0.55rem 0.85rem;
+        border: 1px solid #ffce63;
+        border-radius: 4px;
+        background: linear-gradient(180deg, rgba(15, 22, 45, 0.98) 0%, rgba(8, 14, 30, 0.99) 100%);
+        color: #ffce63;
+        font-family: 'Friz Quadrata', serif;
+        font-size: 1.25rem;
+        line-height: 1.4;
+        text-align: center;
+        text-shadow: 1px 1px 0 #000;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
+        white-space: normal;
+        pointer-events: none;
+        z-index: 1200;
+    }
+
     .wc3-binding-row:last-child {
         border-bottom: 1px solid rgba(255, 206, 99, 0.14);
     }

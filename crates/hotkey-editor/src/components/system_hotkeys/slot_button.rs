@@ -69,7 +69,7 @@ pub(crate) fn SlotButton(
             class: "{cell_class}",
             r#type: "button",
             tabindex: "0",
-            title: "{conflict_title}",
+            "data-tooltip": "{conflict_title}",
             onclick: move |_| editing_section.set(Some(section_id_for_click.clone())),
             div { class: "wc3-slot-label", "{slot_label}" }
             div { class: "wc3-slot-key", "{key_label}" }
