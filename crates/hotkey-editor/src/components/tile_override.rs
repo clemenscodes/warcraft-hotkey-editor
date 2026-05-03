@@ -7,14 +7,14 @@ use wasm_bindgen::JsCast;
 
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
+use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::dialog_header::DialogHeader;
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
-use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
-use crate::domain::grid_slot::GridSlotId;
+use crate::domain::grid_layout::GridLayout;
+use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::domain::hotkey_override::HotkeyOverride;
 use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::inspector_detail::InspectorDetail;
-use crate::domain::positions::Positions;
 use crate::text::description::Description;
 use crate::text::tip::Tip;
 
@@ -461,27 +461,41 @@ pub(crate) fn TileOverridePanel(
         {
             let alt_picker_visible = *alt_position_picker_open.read();
             let alt_picker_object_id = object_id_for_capture.clone();
-            let cells = if alt_picker_visible {
-                build_alt_position_cells(
-                    &alt_picker_object_id,
-                    detail.alt_button_position(),
-                    &active_container_slots,
-                    loaded_keys.read().as_ref(),
-                )
-            } else {
-                Vec::new()
-            };
             let alt_display_name = detail
                 .alt_display_name()
                 .map(str::to_owned)
                 .unwrap_or_else(|| detail.display_name().to_string());
+            // Slot list for the picker grid: the toggle's off half on top
+            // (so cell_for_position picks it first when both halves
+            // resolve to the same cell), then everything else from the
+            // host's primary command card. We deliberately drop the
+            // toggle's own on-state slot from the list so the picker grid
+            // shows the off icon at the on/off position, leaving every
+            // other unit slot in place for context.
+            let picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
+                let mut combined: Vec<GridSlotId> =
+                    Vec::with_capacity(active_container_slots.len() + 1);
+                combined.push(GridSlotId::ability_off(alt_picker_object_id.clone()));
+                for slot in active_container_slots.iter() {
+                    if let GridSlotId::Ability(ability_id) = slot
+                        && ability_id.eq_ignore_ascii_case(&alt_picker_object_id)
+                    {
+                        continue;
+                    }
+                    combined.push(slot.clone());
+                }
+                combined.into()
+            } else {
+                Rc::from([] as [GridSlotId; 0])
+            };
             rsx! {
                 if alt_picker_visible {
                     AltPositionPicker {
                         object_id: alt_picker_object_id,
                         display_name: alt_display_name,
-                        cells,
+                        picker_slots,
                         loaded_keys,
+                        grid_layout,
                         alt_position_picker_open,
                     }
                 }
@@ -490,82 +504,45 @@ pub(crate) fn TileOverridePanel(
     }
 }
 
-/// One cell in the off-state position picker.
-#[derive(Clone, PartialEq)]
-struct AltPositionCell {
-    column: u8,
-    row: u8,
-    /// Name of whatever already occupies the cell — drives the aria label
-    /// and the disabled state. `None` for empty cells.
-    occupant_name: Option<String>,
-    /// Icon URL for the occupant; rendered when present so the picker
-    /// looks like a miniature command card instead of an abstract grid.
-    occupant_icon: Option<String>,
-    /// True when the occupant is the *same* ability as the one whose
-    /// off-state we're editing. Drag/click is allowed (overlap is the
-    /// natural toggle default); blocked-by-others styling is suppressed.
-    is_own_on: bool,
-    /// True when this cell is where the off-state currently lives.
-    is_current_off: bool,
-}
-
-fn build_alt_position_cells(
-    self_id: &str,
-    current_off_position: Option<warcraft_api::ButtonPosition>,
-    container_slots: &[GridSlotId],
-    custom_keys: Option<&CustomKeysFile>,
-) -> Vec<AltPositionCell> {
-    let mut cells: Vec<AltPositionCell> =
-        Vec::with_capacity(usize::from(COMMAND_GRID_ROWS) * usize::from(COMMAND_GRID_COLUMNS));
-    for row in 0..COMMAND_GRID_ROWS {
-        for column in 0..COMMAND_GRID_COLUMNS {
-            // Find whichever slot resolves to this cell on the host's
-            // primary command card.
-            let occupant = Positions::cell_for_position(
-                container_slots,
-                custom_keys,
-                false,
-                column,
-                row,
-            );
-            let (occupant_name, occupant_icon, is_own_on) = match occupant {
-                Some((slot, cell)) => {
-                    let is_own = slot.as_str().eq_ignore_ascii_case(self_id)
-                        && matches!(slot, GridSlotId::Ability(_));
-                    (
-                        Some(cell.cloned_display_name()),
-                        cell.cloned_icon_src(),
-                        is_own,
-                    )
-                }
-                None => (None, None, false),
-            };
-            let is_current_off = current_off_position
-                .map(|position| position.column() == column && position.row() == row)
-                .unwrap_or(false);
-            cells.push(AltPositionCell {
-                column,
-                row,
-                occupant_name,
-                occupant_icon,
-                is_own_on,
-                is_current_off,
-            });
-        }
-    }
-    cells
-}
-
 #[component]
 fn AltPositionPicker(
     object_id: String,
     display_name: String,
-    cells: Vec<AltPositionCell>,
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    picker_slots: Rc<[GridSlotId]>,
+    loaded_keys: Signal<Option<CustomKeysFile>>,
+    grid_layout: Signal<GridLayout>,
     mut alt_position_picker_open: Signal<bool>,
 ) -> Element {
-    let object_id_rc: Rc<str> = Rc::from(object_id.as_str());
+    // Picker-local signals — the dialog has its own drag/drop tracking so
+    // it doesn't poke the outer command card's signals while open.
+    let picker_selected_slot =
+        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(&object_id)));
+    let picker_selected_research = use_signal::<bool>(|| false);
+    let picker_selected_uprooted = use_signal::<bool>(|| false);
+    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let picker_dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
+    let picker_drop_target_cell = use_signal::<Option<DropTargetCell>>(|| None);
+    let picker_drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let dialog_title = format!("Position — {display_name}");
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(&object_id)];
+    let _ = object_id;
+    let grid_props = CommandGridSectionProps {
+        heading: "Off-state position",
+        slot_ids: picker_slots,
+        loaded_keys,
+        selected_slot: picker_selected_slot,
+        selected_from_research: picker_selected_research,
+        selected_from_uprooted: picker_selected_uprooted,
+        tier_overrides: picker_tier_overrides,
+        dragging_slot: picker_dragging_slot,
+        drop_target_cell: picker_drop_target_cell,
+        drag_follower: picker_drag_follower,
+        grid_layout,
+        is_research_grid: false,
+        is_uprooted_grid: false,
+        prevent_swap_on_drop: true,
+        restrict_draggable_to: restrict_draggable,
+    };
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
@@ -578,79 +555,14 @@ fn AltPositionPicker(
                 }
                 div { class: "wc3-dialog-body alt-position-picker-body",
                     p { class: "alt-position-picker-hint",
-                        "Click an empty cell to place the off-state button there. Cells holding another ability are blocked; clicking your on-state cell keeps both halves at the same spot (the in-game default for most toggles)."
+                        "Drag the off-state button to a different cell. Cells holding another ability swap-protect — drops on top of them are rejected so the unit's primary layout stays intact."
                     }
-                    // Same `command-section` / `grid-tiles` classes as the
-                    // main command card so the picker grid is visually
-                    // identical to what the player drags abilities around
-                    // on outside the dialog.
-                    div { class: "command-section alt-position-picker-section",
-                        div { class: "grid-tiles alt-position-picker-grid",
-                            for cell in cells.iter() {
-                                {
-                                    let is_blocked = cell.occupant_name.is_some() && !cell.is_own_on;
-                                    let is_current_off = cell.is_current_off;
-                                    let is_own_on = cell.is_own_on;
-                                    let occupant_name_for_label = cell.occupant_name.clone();
-                                    let occupant_icon_src = cell.occupant_icon.clone();
-                                    let aria_label = match (&occupant_name_for_label, is_own_on, is_current_off) {
-                                        (Some(name), false, _) => format!("Cell occupied by {name}"),
-                                        (_, true, true) => "Your on-state cell — currently the off position too".to_string(),
-                                        (_, true, false) => "Your on-state cell — overlap allowed".to_string(),
-                                        (None, false, true) => "Current off position".to_string(),
-                                        _ => "Empty cell".to_string(),
-                                    };
-                                    let blocked_attr = if is_blocked { "true" } else { "false" };
-                                    let current_attr = if is_current_off { "true" } else { "false" };
-                                    let own_on_attr = if is_own_on { "true" } else { "false" };
-                                    let column = cell.column;
-                                    let row = cell.row;
-                                    let cell_object_id = Rc::clone(&object_id_rc);
-                                    let tile_class = if is_blocked {
-                                        "command-tile filled alt-picker-cell blocked"
-                                    } else if cell.occupant_name.is_some() {
-                                        "command-tile filled alt-picker-cell"
-                                    } else {
-                                        "command-tile alt-picker-cell"
-                                    };
-                                    rsx! {
-                                        button {
-                                            class: "{tile_class}",
-                                            r#type: "button",
-                                            "data-blocked": "{blocked_attr}",
-                                            "data-current-off": "{current_attr}",
-                                            "data-own-on": "{own_on_attr}",
-                                            disabled: is_blocked,
-                                            aria_label: "{aria_label}",
-                                            onclick: move |_| {
-                                                if is_blocked {
-                                                    return;
-                                                }
-                                                Positions::assign_off_position(
-                                                    &mut loaded_keys,
-                                                    &cell_object_id,
-                                                    column,
-                                                    row,
-                                                );
-                                                alt_position_picker_open.set(false);
-                                            },
-                                            if let Some(icon_src) = occupant_icon_src.as_deref() {
-                                                img {
-                                                    class: "alt-picker-cell-icon",
-                                                    src: "{icon_src}",
-                                                    alt: "",
-                                                    aria_hidden: "true",
-                                                }
-                                            }
-                                            if is_current_off && !is_own_on {
-                                                span { class: "alt-picker-cell-marker", aria_hidden: "true", "✓" }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // Reuse the live command-card grid component end-to-end —
+                    // same hover effects, slot indicators, drag-and-drop,
+                    // tier scrubber, etc. The toggle's off slot is restricted
+                    // to be the only draggable source, and `prevent_swap_on_drop`
+                    // keeps the player from displacing other abilities.
+                    CommandGridSection { ..grid_props }
                 }
             }
         }

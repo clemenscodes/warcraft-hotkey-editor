@@ -361,6 +361,11 @@ impl InspectorDetail {
         self.alt_hotkey_token
     }
 
+    /// Off-state button position, surfaced for the picker dialog. The
+    /// override card itself no longer exposes the coordinate as text;
+    /// kept on `InspectorDetail` so future surfaces (status line,
+    /// tooltip preview) can pull it without re-querying.
+    #[allow(dead_code)]
     pub(crate) fn alt_button_position(&self) -> Option<ButtonPosition> {
         self.alt_button_position
     }

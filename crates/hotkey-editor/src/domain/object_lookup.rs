@@ -94,7 +94,11 @@ impl ObjectLookup {
         let WarcraftObjectMeta::Unit(unit_meta) = host.meta() else {
             return None;
         };
-        for ability in unit_meta.abilities().iter().chain(unit_meta.hero_abilities().iter()) {
+        for ability in unit_meta
+            .abilities()
+            .iter()
+            .chain(unit_meta.hero_abilities().iter())
+        {
             if let Some(target_id) = Self::morph_target_unit(ability.value())
                 && !target_id.eq_ignore_ascii_case(host_unit_id)
             {
@@ -115,10 +119,7 @@ impl ObjectLookup {
     /// Mirror cases (Druid of the Talon → Storm Crow, Demon Hunter →
     /// Metamorphosis, Avenger Form on Destroyer, etc.) follow the same
     /// "same code on the morph target via a different ability id" pattern.
-    pub(crate) fn ability_belongs_to_alt_form(
-        ability_id: &str,
-        host_unit_id: &str,
-    ) -> bool {
+    pub(crate) fn ability_belongs_to_alt_form(ability_id: &str, host_unit_id: &str) -> bool {
         let Some(target_id) = Self::forward_morph_target_for_unit(host_unit_id) else {
             return false;
         };

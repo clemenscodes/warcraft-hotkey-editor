@@ -176,6 +176,19 @@ pub(crate) struct CommandGridSectionProps {
     pub(crate) is_research_grid: bool,
     #[props(default = false)]
     pub(crate) is_uprooted_grid: bool,
+    /// When true, drops onto cells already occupied by another slot are
+    /// rejected outright instead of swapping. The off-state position
+    /// picker uses this so dragging the toggle's off half can't displace
+    /// another ability's on-state on the unit's command card.
+    #[props(default = false)]
+    pub(crate) prevent_swap_on_drop: bool,
+    /// When non-empty, only slots whose `as_str()` matches one of these
+    /// ids start a drag — other slots render in their cells but are
+    /// display-only. Used by the off-state picker to keep the player from
+    /// accidentally rearranging the unit's primary command card while
+    /// editing one toggle's off position.
+    #[props(default)]
+    pub(crate) restrict_draggable_to: Vec<GridSlotId>,
 }
 
 #[component]
@@ -198,6 +211,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let mut keys_signal = props.loaded_keys;
     let slot_ids_cloned = props.slot_ids.clone();
     let heading_text = props.heading;
+    let prevent_swap_on_drop = props.prevent_swap_on_drop;
+    let restrict_draggable_to: Rc<[GridSlotId]> = props.restrict_draggable_to.clone().into();
 
     rsx! {
         div { class: "command-section",
@@ -258,6 +273,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let occupant_for_drag = occupant_slot.clone();
                             let occupant_for_click = occupant_slot.clone();
                             let occupant_for_keydown = occupant_slot.clone();
+                            let restrict_draggable_to_for_drag = Rc::clone(&restrict_draggable_to);
                             let cell_object_id_option = cell_option
                                 .as_ref()
                                 .map(|cell| cell.object_id().to_string());
@@ -359,6 +375,19 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             let Some(source_slot) = occupant_for_drag.clone() else {
                                                 return;
                                             };
+                                            // Picker mode: drag origin must
+                                            // match the allow-list. Used by
+                                            // the off-state picker so the
+                                            // dialog only lets the player
+                                            // grab the toggle's off half,
+                                            // not the unit's other slots.
+                                            if !restrict_draggable_to_for_drag.is_empty()
+                                                && !restrict_draggable_to_for_drag
+                                                    .iter()
+                                                    .any(|allowed| allowed == &source_slot)
+                                            {
+                                                return;
+                                            }
                                             let Some(target_node) = web_event.target() else {
                                                 return;
                                             };
@@ -641,7 +670,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                         drop.column(),
                                                         drop.row(),
                                                         is_research_grid,
-                                                    );
+                                                    )
+                                                    .with_prevent_swap(prevent_swap_on_drop);
                                                     Positions::move_or_swap(&mut keys_signal, move_request);
                                                     let moved_slot = dragging.slot_id().clone();
                                                     select_slot.set(Some(moved_slot));

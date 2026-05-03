@@ -343,16 +343,10 @@
     display: block;
 }
 
-/* Off-state position picker — uses the project-standard `wc3-dialog`
- * shell + `DialogHeader` (gold-decoration banner, close button) and
- * inherits the primary `command-section` / `grid-tiles` / `command-tile`
- * geometry so the picker grid looks identical to the live command card.
- * Only the cell-level state attributes are local to the picker. */
-.alt-position-picker-shell {
-    max-width: 56rem;
-    width: 100%;
-}
-
+/* Off-state position picker reuses `dialog-shell` + `wc3-dialog` from
+ * primitives.css plus `CommandGridSection`'s own grid styles, so almost
+ * nothing dialog-local is needed here. The picker body just needs a
+ * vertical layout and the introductory hint paragraph. */
 .alt-position-picker-body {
     display: flex;
     flex-direction: column;
@@ -364,50 +358,6 @@
     color: #aab9d4;
     font-size: 1.35rem;
     line-height: 1.5;
-}
-
-.alt-position-picker-section {
-    margin: 0;
-}
-
-/* The picker grid stays click-to-place; ride the existing
- * .grid-tiles + .command-tile rules and only tweak per-cell state. */
-.alt-picker-cell {
-    cursor: pointer;
-    position: relative;
-}
-
-.alt-picker-cell.blocked,
-.alt-picker-cell[data-blocked="true"] {
-    cursor: not-allowed;
-    opacity: 0.55;
-    box-shadow: inset 0 0 0 1px rgba(255, 90, 90, 0.5);
-}
-
-.alt-picker-cell[data-current-off="true"]:not([data-own-on="true"]) {
-    box-shadow: inset 0 0 0 2px #ffce63;
-}
-
-.alt-picker-cell[data-own-on="true"] {
-    box-shadow: inset 0 0 0 2px rgba(110, 195, 255, 0.75);
-}
-
-.alt-picker-cell-icon {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.alt-picker-cell-marker {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffce63;
-    font-size: 2.4rem;
-    pointer-events: none;
 }
 
 .tile-override-key-group {

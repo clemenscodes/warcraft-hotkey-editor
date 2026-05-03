@@ -301,7 +301,11 @@ impl Positions {
     /// override card's mini grid picker — the player drags the *off*
     /// half of Defend / Burrow / Bear Form to a new cell, and only
     /// `Unbuttonpos` should change. The on-state binding stays exactly
-    /// where the main command card shows it.
+    /// where the main command card shows it. Currently unused at the
+    /// callsite (the picker now goes through `move_or_swap` via the
+    /// reused `CommandGridSection`); kept for click-to-place fallbacks
+    /// and external scripts that want to write only the off position.
+    #[allow(dead_code)]
     pub(crate) fn assign_off_position(
         custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
         ability_id: &str,
