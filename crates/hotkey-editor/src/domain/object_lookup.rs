@@ -3,6 +3,22 @@ use std::borrow::Borrow;
 use warcraft_api::{WarcraftObject, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
+/// Known-broken icon paths shipped in CASC. Blizzard's `BTNSelectHeroOn.blp`
+/// is literally a red question-mark placeholder both in the SD asset and in
+/// the HD2 add-on; the live game must be substituting a hero portrait at
+/// runtime since players never actually see that file. Treat anything in
+/// this list as "no icon" so abilities that reference it (Aall — "Allied
+/// Building" / Select Hero On) get filtered out of the editor's command
+/// card alongside the other icon-less mechanics.
+const ICON_PATH_BLACKLIST: &[&str] = &["commandbuttons/btnselectheroon.blp"];
+
+fn is_known_bad_icon(icon_path: &str) -> bool {
+    let normalized = icon_path.trim().to_ascii_lowercase();
+    ICON_PATH_BLACKLIST
+        .iter()
+        .any(|blacklisted| *blacklisted == normalized)
+}
+
 pub(crate) struct ObjectLookup;
 
 impl ObjectLookup {
@@ -28,7 +44,7 @@ impl ObjectLookup {
         warcraft_object
             .icons()
             .iter()
-            .any(|icon_path| !icon_path.trim().is_empty())
+            .any(|icon_path| !icon_path.trim().is_empty() && !is_known_bad_icon(icon_path))
     }
 
     pub(crate) fn is_passive_ability(object_id: &str) -> bool {
