@@ -7,6 +7,28 @@ use crate::domain::building_traits::BuildingTraits;
 use crate::domain::grid_slot::GridSlotId;
 use crate::domain::unit_kind::UnitKindHelpers;
 
+/// Commands the Warcraft III engine overlays *dynamically* during transient
+/// game states — they are never persistent command-card slots. The in-game
+/// hotkey editor reflects this: `CmdCancel` etc. don't appear as
+/// configurable buttons on a shop, a tower, or any normal unit. The engine
+/// paints them on the bottom-right while the player is mid-interaction
+/// (single-target ability picking, building placement, training queue
+/// cancel, hero revive cancel, etc.).
+///
+/// The one place the engine *does* expose a `CmdCancel` slot persistently
+/// is inside submenus modelled as their own command card: the hero
+/// learn-skill menu's "back" button and the worker build menu's "back"
+/// button. Anywhere else, the editor must keep them out of slot lists —
+/// otherwise their database-default position silently overlaps a real
+/// ability (the original Ancient-of-Wonders bug, where `CmdCancel` was
+/// stacked invisibly underneath the Root ability).
+///
+/// `CommandCatalog::is_context_command` and its string-id sibling
+/// `is_context_command_id` consult this list. The slot-list builders
+/// inside this module defensively filter through it so a future addition
+/// to `BUILDING_COMMAND_IDS` etc. cannot reintroduce the regression.
+/// `submenu_back_command` is the one sanctioned way to add `CmdCancel`
+/// back into a slot list — used by hero-research and worker-build menus.
 const CONTEXT_COMMAND_IDS: &[&str] = &[
     "CmdCancel",
     "CmdCancelBuild",
@@ -35,9 +57,23 @@ impl CommandCatalog {
         let GridSlotId::Command(command_name) = slot else {
             return false;
         };
+        Self::is_context_command_id(command_name)
+    }
+
+    pub(crate) fn is_context_command_id(command_name: &str) -> bool {
         CONTEXT_COMMAND_IDS
             .iter()
             .any(|context_name| context_name.eq_ignore_ascii_case(command_name))
+    }
+
+    /// Sanctioned entry point for putting `CmdCancel` back into a slot
+    /// list — used as the "back" button inside submenus the editor models
+    /// as their own command card (hero learn-skill, worker build menu).
+    /// Any other call site adding `CmdCancel` directly is almost certainly
+    /// a bug that will overlap real abilities at the database-default
+    /// position.
+    pub(crate) fn submenu_back_command() -> Option<&'static str> {
+        Self::known_command("CmdCancel")
     }
 
     pub(crate) fn mobile_command_ids() -> &'static [&'static str] {
@@ -84,6 +120,12 @@ impl CommandCatalog {
                 }
             }
         }
+        // Defense in depth: even if a future maintainer adds a context
+        // command (CmdCancel etc.) to one of the static command lists
+        // above, strip it here so it can never become a persistent slot
+        // on a unit's main command card. The only sanctioned path for
+        // surfacing those commands is `submenu_back_command()`.
+        commands.retain(|command_name| !Self::is_context_command_id(command_name));
         commands
     }
 
@@ -94,7 +136,7 @@ impl CommandCatalog {
         if unit_meta.builds().is_empty() {
             return Vec::new();
         }
-        Self::known_command("CmdCancel").into_iter().collect()
+        Self::submenu_back_command().into_iter().collect()
     }
 }
 
@@ -105,12 +147,11 @@ static MOBILE_COMMAND_IDS: LazyLock<Vec<&'static str>> = LazyLock::new(|| {
         .collect()
 });
 
-// CmdCancel is intentionally absent from this list. In-game it never sits as
-// a static slot on a building's main command card — it only surfaces inside
-// hero learn-skill menus (added explicitly by the research builder) and as
-// the per-queue-item cancel that buildings render dynamically while training.
-// Listing it here would pin it to a default position that overlaps real
-// abilities (e.g. an Ancient's Root sits where CmdCancel landed by default).
+// CmdCancel is intentionally absent. See `CONTEXT_COMMAND_IDS` for the
+// rationale. `primary_commands_for` also filters context commands
+// defensively, so adding one here would still be stripped — but keeping
+// the list itself clean documents intent and matches what the in-game
+// hotkey editor exposes for the same units.
 static BUILDING_COMMAND_IDS: LazyLock<Vec<&'static str>> = LazyLock::new(|| {
     ["CmdCancelTrain", "CmdRally"]
         .into_iter()

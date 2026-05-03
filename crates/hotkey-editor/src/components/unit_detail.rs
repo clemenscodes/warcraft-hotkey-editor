@@ -309,10 +309,10 @@ pub(crate) fn UnitDetailPanel(
             }
             research_menu_slots.push(GridSlotId::ability(ability_id.value()));
         }
-        if let Some(cancel_command) = CommandCatalog::known_command("CmdCancel")
-            && ObjectLookup::has_icon(cancel_command)
+        if let Some(back_command) = CommandCatalog::submenu_back_command()
+            && ObjectLookup::has_icon(back_command)
         {
-            research_menu_slots.push(GridSlotId::command(cancel_command));
+            research_menu_slots.push(GridSlotId::command(back_command));
         }
         Some(research_menu_slots.into())
     } else {
