@@ -1,4 +1,4 @@
-use warcraft_api::WarcraftObjectKind;
+use warcraft_api::{WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::CustomKeysFile;
 
@@ -45,11 +45,33 @@ impl ExplicitExport {
                     {
                         binding.set_research_button_position(Some(position_value));
                     }
-                    if !Self::is_passive_icon_set(warcraft_object.icons())
-                        && binding.unbutton_position().is_none()
-                        && let Some(button_position) = binding.button_position()
+                    // Off-state position priority: SLK default
+                    // (`AbilityMeta::off_button_position`, parsed from
+                    // `Unbuttonpos` in `abilityfunc.txt`) wins over mirroring
+                    // the on-state position. The mirror is the legacy
+                    // fallback for non-passive abilities that have no
+                    // explicit off position in the data — preserves the
+                    // game-default placement so existing exports keep
+                    // working.
+                    if binding.unbutton_position().is_none()
+                        && !Self::is_passive_icon_set(warcraft_object.icons())
                     {
-                        binding.set_unbutton_position(Some(*button_position));
+                        let database_off = match warcraft_object.meta() {
+                            WarcraftObjectMeta::Ability(ability_meta) => {
+                                ability_meta.off_button_position().map(|position| {
+                                    warcraft_keybinds::ButtonPosition::new(
+                                        position.column(),
+                                        position.row(),
+                                    )
+                                })
+                            }
+                            _ => None,
+                        };
+                        if let Some(off_position) = database_off {
+                            binding.set_unbutton_position(Some(off_position));
+                        } else if let Some(button_position) = binding.button_position() {
+                            binding.set_unbutton_position(Some(*button_position));
+                        }
                     }
                 }
                 _ => continue,

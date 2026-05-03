@@ -69,6 +69,28 @@ impl HotkeyOverride {
         binding.set_research_hotkey(replicated_value);
     }
 
+    /// Off-state hotkey for a toggle ability ("Stop Defend", "Unburrow"). The
+    /// `Unhotkey` field in CustomKeys.txt — bound independently of the
+    /// on-state `Hotkey`, so a player can press D to defend and F to stop
+    /// defending if they want.
+    pub(crate) fn apply_unhotkey(
+        loaded_keys: &mut Signal<Option<CustomKeysFile>>,
+        object_id: &str,
+        new_token: Option<HotkeyToken>,
+    ) {
+        let mut writable_guard = loaded_keys.write();
+        let empty_source = "";
+        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
+        let binding = file.binding_or_default_mut(object_id);
+        let existing_levels = binding
+            .unhotkey()
+            .map(BindingHotkey::comma_segment_count)
+            .unwrap_or(0);
+        let replicated_value =
+            new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
+        binding.set_unhotkey(replicated_value);
+    }
+
     pub(crate) fn detect_conflict(
         container_slots: &[GridSlotId],
         target_object_id: &str,
@@ -139,6 +161,10 @@ impl HotkeyOverride {
                     binding.hotkey()
                 }
             }
+            GridSlotId::AbilityOff(ability_id) => {
+                let binding = custom_keys.and_then(|file| file.binding(ability_id))?;
+                binding.unhotkey()
+            }
             GridSlotId::Command(command_name) => {
                 let binding = custom_keys.and_then(|file| file.command(command_name))?;
                 binding.hotkey()
@@ -152,6 +178,11 @@ impl HotkeyOverride {
             GridSlotId::Ability(ability_id) => {
                 let binding = custom_keys.and_then(|file| file.binding(ability_id));
                 let cell = AbilityCell::for_ability(ability_id, binding);
+                cell.cloned_display_name()
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                let binding = custom_keys.and_then(|file| file.binding(ability_id));
+                let cell = AbilityCell::for_ability_off(ability_id, binding);
                 cell.cloned_display_name()
             }
             GridSlotId::Command(command_name) => {

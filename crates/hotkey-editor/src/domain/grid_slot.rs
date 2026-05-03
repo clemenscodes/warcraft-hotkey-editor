@@ -1,12 +1,24 @@
+/// A cell on a unit's command card. `Ability` and `Command` cover the
+/// on-state buttons; `AbilityOff` covers the alternate state of toggle
+/// abilities (Defend ⇄ Stop Defend, Burrow ⇄ Unburrow, Bear Form ⇄ unmorph)
+/// — those are real second buttons in WC3, with their own `Unhotkey` and
+/// `Unbuttonpos` in CustomKeys.txt, and they need their own slot in the
+/// editor so a player can bind a footman's "Defend" to one key and "Stop
+/// Defend" to another.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(crate) enum GridSlotId {
     Ability(String),
+    AbilityOff(String),
     Command(String),
 }
 
 impl GridSlotId {
     pub(crate) fn ability(value: impl Into<String>) -> Self {
         Self::Ability(value.into())
+    }
+
+    pub(crate) fn ability_off(value: impl Into<String>) -> Self {
+        Self::AbilityOff(value.into())
     }
 
     pub(crate) fn command(value: impl Into<String>) -> Self {
@@ -16,6 +28,7 @@ impl GridSlotId {
     pub(crate) fn as_str(&self) -> &str {
         match self {
             Self::Ability(value) => value.as_str(),
+            Self::AbilityOff(value) => value.as_str(),
             Self::Command(value) => value.as_str(),
         }
     }

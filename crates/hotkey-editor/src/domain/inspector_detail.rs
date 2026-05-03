@@ -37,6 +37,10 @@ pub(crate) struct InspectorDetail {
     icon_levels: Vec<Option<String>>,
     ubertip_levels: Vec<String>,
     is_command: bool,
+    /// Off-state half of a toggle ability (Stop Defend, Unburrow, …). Drives
+    /// the hotkey-edit and position-edit paths to write `Unhotkey` /
+    /// `Unbuttonpos` instead of the regular fields.
+    is_ability_off: bool,
     is_passive: bool,
 }
 
@@ -183,7 +187,52 @@ impl InspectorDetail {
                     icon_levels,
                     ubertip_levels,
                     is_command: false,
+                    is_ability_off: false,
                     is_passive,
+                }
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                // Off-state half of a toggle ability — Stop Defend on a
+                // footman's Defend, Unburrow on a crypt fiend's Burrow, etc.
+                // The slot binds the alternate `Unhotkey` and renders the
+                // `un_tip` / `un_ubertip` text. No research / no level
+                // tiering for the off state.
+                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id));
+                let cell = AbilityCell::for_ability_off(ability_id, binding);
+                let position = Positions::current_for(slot, custom_keys_ref, false);
+                let hotkey_token = binding
+                    .and_then(|ability_binding| ability_binding.unhotkey())
+                    .and_then(BindingHotkey::first_token);
+                let database_object = ObjectLookup::by_id(ability_id);
+                let display_name = database_object
+                    .and_then(|warcraft_object| warcraft_object.un_tip())
+                    .map(WarcraftColorCodes::stripped)
+                    .unwrap_or_else(|| cell.display_name().to_string());
+                let ubertip = database_object
+                    .and_then(|warcraft_object| warcraft_object.un_ubertip())
+                    .map(WarcraftColorCodes::stripped);
+                let icon_src = cell.cloned_icon_src();
+                let object_id = cell.cloned_object_id();
+                Self {
+                    display_name,
+                    object_id,
+                    icon_src,
+                    hotkey_token,
+                    research_hotkey_token: None,
+                    button_position: position,
+                    research_button_position: None,
+                    tip: None,
+                    research_tip: None,
+                    ubertip,
+                    research_ubertip: None,
+                    alt_display_name: None,
+                    alt_ubertip: None,
+                    name_levels: Vec::new(),
+                    icon_levels: Vec::new(),
+                    ubertip_levels: Vec::new(),
+                    is_command: false,
+                    is_ability_off: true,
+                    is_passive: false,
                 }
             }
             GridSlotId::Command(command_name) => {
@@ -226,6 +275,7 @@ impl InspectorDetail {
                     icon_levels: Vec::new(),
                     ubertip_levels: Vec::new(),
                     is_command: true,
+                    is_ability_off: false,
                     is_passive: false,
                 }
             }
@@ -290,6 +340,10 @@ impl InspectorDetail {
 
     pub(crate) fn ubertip_levels(&self) -> &[String] {
         &self.ubertip_levels
+    }
+
+    pub(crate) fn is_ability_off(&self) -> bool {
+        self.is_ability_off
     }
 
     pub(crate) fn is_command(&self) -> bool {
