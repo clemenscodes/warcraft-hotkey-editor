@@ -882,6 +882,23 @@ body:has(.burger-drawer) .app {
         min-height: 44px;
         font-size: 18px;
     }
+
+    /* Special-token labels (Esc / Mouse4 / Mouse5) need width: auto + a
+       sans-serif at a smaller size so the multi-character text fits the
+       touch-sized cell. Repeated here in `layer(mobile)` because the
+       cascade layer declared after `layer(components)` wins regardless of
+       selector specificity — without this override the component-layer
+       `[data-special="true"]` rule above is shadowed. */
+    .override-key-cell[data-special="true"] {
+        width: auto;
+        min-width: 44px;
+        padding: 0 0.6rem;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        text-transform: none;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
     .app .tile-override-tier-button {
         width: 34px;
         height: 34px;

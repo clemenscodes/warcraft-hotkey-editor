@@ -73,7 +73,12 @@
 
 .tile-override-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 5rem;
+    /* Second column sizes to its content so a multi-character special-token
+       label (Mouse4 / Mouse5) on the override-key-cell can grow beyond the
+       letter-cell footprint without getting clipped. The cell's own min-width
+       (set per breakpoint on [data-special="true"]) keeps the single-letter
+       case visually consistent. */
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 1.5rem;
     text-align: left;
