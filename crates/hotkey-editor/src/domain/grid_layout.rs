@@ -11,18 +11,52 @@ pub(crate) struct GridLayout {
 }
 
 impl GridLayout {
-    pub(crate) const fn german_grid() -> Self {
+    pub(crate) const fn qwerty_grid() -> Self {
         Self {
             letters: [
                 ['Q', 'W', 'E', 'R'],
                 ['A', 'S', 'D', 'F'],
-                ['Y', 'X', 'C', 'V'],
+                ['Z', 'X', 'C', 'V'],
             ],
         }
     }
 
     pub(crate) const fn from_letters(letters: [[char; 4]; 3]) -> Self {
         Self { letters }
+    }
+
+    /// Flatten the 12 cells into a single uppercase ASCII string,
+    /// row-major. Used for the local-storage serialization round-trip.
+    pub(crate) fn to_storage_string(self) -> String {
+        let mut buffer = String::with_capacity(12);
+        for row in self.letters.iter() {
+            for letter in row.iter() {
+                buffer.push(*letter);
+            }
+        }
+        buffer
+    }
+
+    /// Parse a 12-character row-major string into a layout. Returns `None`
+    /// on length / character mismatches so the caller can fall back to the
+    /// default rather than seeding a malformed grid.
+    pub(crate) fn from_storage_string(raw_value: &str) -> Option<Self> {
+        let trimmed_value = raw_value.trim();
+        if trimmed_value.len() != 12 {
+            return None;
+        }
+        let mut characters = trimmed_value.chars();
+        let mut letters = [[' '; 4]; 3];
+        for row in letters.iter_mut() {
+            for cell in row.iter_mut() {
+                let next_character = characters.next()?;
+                if !next_character.is_ascii_alphabetic() {
+                    return None;
+                }
+                *cell = next_character.to_ascii_uppercase();
+            }
+        }
+        Some(Self::from_letters(letters))
     }
 
     pub(crate) fn derived_from(file: &CustomKeysFile) -> Self {
@@ -49,7 +83,7 @@ impl GridLayout {
             let entry = cell_histogram.entry(upper_letter).or_insert(0);
             *entry += 1;
         }
-        let fallback = Self::german_grid();
+        let fallback = Self::qwerty_grid();
         let mut derived_letters = [[' '; 4]; 3];
         for row_index in 0..histograms.len() {
             for column_index in 0..histograms[row_index].len() {
