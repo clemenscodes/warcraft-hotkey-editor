@@ -370,17 +370,24 @@
     max-width: 90rem;
 }
 
-/* `.command-section` uses `container-type: inline-size`, and the
- * desktop tile-size clamp inside `.grid-tiles` references `100cqi`. In
- * the dialog the section is `flex: 0 0 auto`, so its inline size
- * depends on its own content — circular, and the formula collapses to
- * the lower bound of the clamp (≈4.6rem) rather than the desktop
- * default of 8rem. Pin the picker grid to the desktop max directly so
- * cells render at the same size players see in the main command card. */
+/* The picker grid reuses `CommandGridSection`, which carries
+ * `.command-section { container-type: inline-size }` plus a desktop
+ * tile-size clamp keyed off `100cqi`. With container-size containment
+ * the section's inline size doesn't depend on its descendants — so
+ * inside our flex wrapper it collapses to the heading's min-content
+ * (one word per line) and the cqi-based formula drops to its lower
+ * bound. Disable the containment for the picker (we don't need
+ * container queries here) and pin the grid to the desktop max so the
+ * cells match what players see on the live command card. */
 .alt-position-picker-grid-anchor {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+.alt-position-picker-grid-anchor .command-section {
+    container-type: normal;
+    width: max-content;
 }
 
 .alt-position-picker-grid-anchor .grid-tiles {
