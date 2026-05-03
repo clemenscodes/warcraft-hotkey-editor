@@ -10,6 +10,7 @@ use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use crate::system_hotkeys::binding_map::SystemBindingMap;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
@@ -131,8 +132,29 @@ fn InventoryCell(
     mut drag_follower: Signal<Option<InventoryDragFollower>>,
 ) -> Element {
     let mut keys_signal = loaded_keys;
-    let effective =
-        EffectiveBinding::resolve(&loaded_keys, &section_id, default_hotkey, default_modifier);
+    let read_guard = loaded_keys.read();
+    let custom_keys_ref = read_guard.as_ref();
+    let effective = EffectiveBinding::resolve_from_file(
+        custom_keys_ref,
+        &section_id,
+        default_hotkey,
+        default_modifier,
+    );
+    let binding_map = SystemBindingMap::build(custom_keys_ref);
+    drop(read_guard);
+    let collisions =
+        binding_map.collisions_for(&section_id, effective.hotkey_code, effective.modifier);
+    let is_in_conflict = !collisions.is_empty();
+    let conflict_title = if is_in_conflict {
+        let names: Vec<String> = collisions
+            .iter()
+            .map(|resolved| resolved.section_comment().to_string())
+            .collect();
+        format!("Also used by {}", names.join(", "))
+    } else {
+        String::new()
+    };
+    let picker_conflicts = binding_map.picker_conflicts(&section_id, effective.modifier);
     let key_label = effective.label();
     let is_editing = editing_section
         .read()
@@ -159,6 +181,9 @@ fn InventoryCell(
     if is_drop_target {
         cell_class.push_str(" drag-over");
     }
+    if is_in_conflict {
+        cell_class.push_str(" conflict");
+    }
     let section_id_for_click = section_id.clone();
     let section_id_for_pick = section_id.clone();
     let section_id_for_pointerdown = section_id.clone();
@@ -170,6 +195,8 @@ fn InventoryCell(
             class: "{cell_class}",
             "data-inventory-slot": "{section_id}",
             tabindex: "0",
+            "data-tooltip": "{conflict_title}",
+            "data-tooltip-placement": "above",
             onpointerdown: move |event| {
                 if event.data().trigger_button() != Some(MouseButton::Primary) {
                     return;
@@ -177,6 +204,16 @@ fn InventoryCell(
                 let Some(web_event) = event.data().try_as_web_event() else {
                     return;
                 };
+                // Drag-to-swap on touch / pen collides with both tap-to-pick
+                // and long-press-for-tooltip. Coarse-pointer users don't need
+                // reordering here — the picker dialog still lets them pick a
+                // hotkey for the slot directly. Skip the drag setup entirely
+                // so a tap fires only `onclick` and a hold fires only the
+                // tooltip long-press.
+                let pointer_type = web_event.pointer_type();
+                if pointer_type == "touch" || pointer_type == "pen" {
+                    return;
+                }
                 let Some(target_node) = web_event.target() else {
                     return;
                 };
@@ -318,6 +355,7 @@ fn InventoryCell(
             SystemKeyPickerDialog {
                 title: String::from("Pick a hotkey"),
                 current_code: effective.hotkey_code,
+                conflicts: picker_conflicts,
                 open: true,
                 on_pick: move |code: u32| {
                     let mut guard = keys_signal.write();

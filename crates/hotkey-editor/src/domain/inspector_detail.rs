@@ -4,6 +4,7 @@ use warcraft_keybinds::CustomKeysFile;
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
 use crate::domain::building_traits::BuildingTraits;
 use crate::domain::grid_slot::GridSlotId;
+use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::icons::IconUrl;
 use crate::domain::object_lookup::ObjectLookup;
 use crate::domain::positions::Positions;
@@ -14,8 +15,8 @@ pub(crate) struct InspectorDetail {
     display_name: String,
     object_id: String,
     icon_src: Option<String>,
-    hotkey_letter: Option<String>,
-    research_hotkey_letter: Option<String>,
+    hotkey_token: Option<HotkeyToken>,
+    research_hotkey_token: Option<HotkeyToken>,
     button_position: Option<ButtonPosition>,
     research_button_position: Option<ButtonPosition>,
     tip: Option<String>,
@@ -48,16 +49,16 @@ impl InspectorDetail {
                     .map(|raw_position| {
                         ButtonPosition::new(raw_position.column(), raw_position.row())
                     });
-                let hotkey_letter = binding
+                let hotkey_token = binding
                     .and_then(|ability_binding| {
                         ability_binding
                             .hotkey()
                             .or_else(|| ability_binding.research_hotkey())
                     })
-                    .and_then(BindingHotkey::first_letter);
-                let research_hotkey_letter = binding
+                    .and_then(BindingHotkey::first_token);
+                let research_hotkey_token = binding
                     .and_then(|ability_binding| ability_binding.research_hotkey())
-                    .and_then(BindingHotkey::first_letter);
+                    .and_then(BindingHotkey::first_token);
                 let tip = binding.and_then(|ability_binding| {
                     ability_binding.tip().map(WarcraftColorCodes::stripped)
                 });
@@ -140,8 +141,8 @@ impl InspectorDetail {
                     display_name: resolved_display_name,
                     object_id,
                     icon_src,
-                    hotkey_letter,
-                    research_hotkey_letter,
+                    hotkey_token,
+                    research_hotkey_token,
                     button_position: position,
                     research_button_position: research_position,
                     tip,
@@ -159,9 +160,9 @@ impl InspectorDetail {
                 let binding = custom_keys_ref.and_then(|file| file.command(command_name));
                 let cell = AbilityCell::for_command(command_name, binding);
                 let position = Positions::current_for(slot, custom_keys_ref, false);
-                let hotkey_letter = binding
+                let hotkey_token = binding
                     .and_then(|command_binding| command_binding.hotkey())
-                    .and_then(BindingHotkey::first_letter);
+                    .and_then(BindingHotkey::first_token);
                 let database_object = ObjectLookup::by_id(command_name);
                 let tip = database_object
                     .and_then(|warcraft_object| warcraft_object.tip())
@@ -181,8 +182,8 @@ impl InspectorDetail {
                     display_name,
                     object_id,
                     icon_src,
-                    hotkey_letter,
-                    research_hotkey_letter: None,
+                    hotkey_token,
+                    research_hotkey_token: None,
                     button_position: position,
                     research_button_position: None,
                     tip,
@@ -207,12 +208,12 @@ impl InspectorDetail {
         &self.object_id
     }
 
-    pub(crate) fn hotkey_letter(&self) -> Option<&str> {
-        self.hotkey_letter.as_deref()
+    pub(crate) fn hotkey_token(&self) -> Option<HotkeyToken> {
+        self.hotkey_token
     }
 
-    pub(crate) fn research_hotkey_letter(&self) -> Option<&str> {
-        self.research_hotkey_letter.as_deref()
+    pub(crate) fn research_hotkey_token(&self) -> Option<HotkeyToken> {
+        self.research_hotkey_token
     }
 
     pub(crate) fn button_position(&self) -> Option<ButtonPosition> {

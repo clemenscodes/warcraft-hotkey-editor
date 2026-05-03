@@ -25,6 +25,7 @@ use crate::focus::navigation::{FocusNavigation, FocusedElementInfo};
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
+const TOOLTIP_TOUCH_SCRIPT: Asset = asset!("/assets/tooltip-touch.js");
 const FAVICON: Asset = asset!("/assets/favicon.svg");
 
 #[component]
@@ -68,6 +69,7 @@ pub(crate) fn App() -> Element {
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
+        document::Script { src: TOOLTIP_TOUCH_SCRIPT, r#type: "module" }
         document::Link { rel: "icon", r#type: "image/svg+xml", href: FAVICON }
         document::Link { rel: "icon", r#type: "image/x-icon", href: "favicon.ico" }
         document::Link { rel: "apple-touch-icon", href: "icon-192.png" }

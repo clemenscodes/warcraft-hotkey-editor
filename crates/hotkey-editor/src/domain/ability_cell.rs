@@ -1,5 +1,6 @@
 use warcraft_keybinds::{AbilityBinding, CommandBinding};
 
+use crate::domain::hotkey_token::{CustomKeysValue, HotkeyToken};
 use crate::domain::icons::IconUrl;
 use crate::domain::object_lookup::ObjectLookup;
 use crate::text::command_label::CommandLabel;
@@ -10,8 +11,8 @@ pub(crate) struct AbilityCell {
     object_id: String,
     display_name: String,
     icon_src: Option<String>,
-    binding_hotkey: Option<String>,
-    binding_research_hotkey: Option<String>,
+    binding_hotkey: Option<HotkeyToken>,
+    binding_research_hotkey: Option<HotkeyToken>,
 }
 
 impl AbilityCell {
@@ -35,10 +36,10 @@ impl AbilityCell {
         let icon_src = database_icon.or(binding_icon);
         let binding_hotkey = binding
             .and_then(|ability_binding| ability_binding.hotkey())
-            .and_then(BindingHotkey::first_letter);
+            .and_then(BindingHotkey::first_token);
         let binding_research_hotkey = binding
             .and_then(|ability_binding| ability_binding.research_hotkey())
-            .and_then(BindingHotkey::first_letter);
+            .and_then(BindingHotkey::first_token);
         Self {
             object_id: object_id.to_string(),
             display_name,
@@ -63,7 +64,7 @@ impl AbilityCell {
             .map(IconUrl::from_database_path);
         let binding_hotkey = binding
             .and_then(|command_binding| command_binding.hotkey())
-            .and_then(BindingHotkey::first_letter);
+            .and_then(BindingHotkey::first_token);
         Self {
             object_id: command_name.to_string(),
             display_name,
@@ -81,12 +82,12 @@ impl AbilityCell {
         &self.display_name
     }
 
-    pub(crate) fn binding_hotkey(&self) -> Option<&str> {
-        self.binding_hotkey.as_deref()
+    pub(crate) fn binding_hotkey(&self) -> Option<HotkeyToken> {
+        self.binding_hotkey
     }
 
-    pub(crate) fn binding_research_hotkey(&self) -> Option<&str> {
-        self.binding_research_hotkey.as_deref()
+    pub(crate) fn binding_research_hotkey(&self) -> Option<HotkeyToken> {
+        self.binding_research_hotkey
     }
 
     pub(crate) fn cloned_object_id(&self) -> String {
@@ -105,11 +106,9 @@ impl AbilityCell {
 pub(crate) struct BindingHotkey;
 
 impl BindingHotkey {
-    pub(crate) fn first_letter(raw_value: &str) -> Option<String> {
-        raw_value
-            .chars()
-            .find(|character| character.is_ascii_alphabetic())
-            .map(|character| character.to_ascii_uppercase().to_string())
+    pub(crate) fn first_token(raw_value: &str) -> Option<HotkeyToken> {
+        let first_segment = raw_value.split(',').next()?;
+        HotkeyToken::try_from(first_segment).ok()
     }
 
     pub(crate) fn comma_segment_count(raw_value: &str) -> usize {
@@ -120,9 +119,11 @@ impl BindingHotkey {
         trimmed.split(',').count()
     }
 
-    pub(crate) fn replicated_letter(letter: &str, level_count: usize) -> String {
+    pub(crate) fn replicated_token(token: HotkeyToken, level_count: usize) -> String {
         let count = level_count.max(1);
-        std::iter::repeat_n(letter, count)
+        let serialized_value = CustomKeysValue::from(token);
+        let segment = serialized_value.as_str();
+        std::iter::repeat_n(segment, count)
             .collect::<Vec<_>>()
             .join(",")
     }
