@@ -370,13 +370,29 @@
     max-width: 90rem;
 }
 
-/* `.grid-tiles` is `repeat(4, 10rem)` so it has a fixed pixel width.
- * Wrap it in a flex container that centres horizontally and lets the
- * grid's own auto-rows determine height. */
+/* `.command-section` uses `container-type: inline-size`, and the
+ * desktop tile-size clamp inside `.grid-tiles` references `100cqi`. In
+ * the dialog the section is `flex: 0 0 auto`, so its inline size
+ * depends on its own content — circular, and the formula collapses to
+ * the lower bound of the clamp (≈4.6rem) rather than the desktop
+ * default of 8rem. Pin the picker grid to the desktop max directly so
+ * cells render at the same size players see in the main command card. */
 .alt-position-picker-grid-anchor {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+.alt-position-picker-grid-anchor .grid-tiles {
+    --tile-size: 8rem;
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-auto-rows: var(--tile-size);
+}
+
+.alt-position-picker-grid-anchor .grid-tile,
+.alt-position-picker-grid-anchor .command-tile-wrapper {
+    width: var(--tile-size);
+    height: var(--tile-size);
 }
 
 .tile-override-key-group {
