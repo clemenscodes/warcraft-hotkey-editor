@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
@@ -101,6 +103,7 @@ static NUMPAD_ROWS: &[&[(u32, &str)]] = &[
 pub(crate) fn SystemKeyPickerDialog(
     title: String,
     current_code: u32,
+    conflicts: HashMap<u32, Vec<String>>,
     open: bool,
     on_pick: EventHandler<u32>,
     on_close: EventHandler<()>,
@@ -151,16 +154,24 @@ pub(crate) fn SystemKeyPickerDialog(
                                                 let label = entry.1;
                                                 let is_current = code == current_code;
                                                 let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5");
+                                                let conflict_names = conflicts.get(&code);
+                                                let is_conflict = conflict_names.is_some();
                                                 let cls = if is_current {
                                                     "sys-key-picker-key current"
+                                                } else if is_conflict {
+                                                    "sys-key-picker-key conflict"
                                                 } else {
                                                     "sys-key-picker-key"
                                                 };
+                                                let title_attribute = conflict_names
+                                                    .map(|names| format!("Already used by {}", names.join(", ")))
+                                                    .unwrap_or_default();
                                                 rsx! {
                                                     button {
                                                         key: "{key_idx}",
                                                         class: "{cls}",
                                                         r#type: "button",
+                                                        title: "{title_attribute}",
                                                         "data-wide": if is_wide { "true" } else { "" },
                                                         onclick: move |_| on_pick.call(code),
                                                         "{label}"
@@ -179,16 +190,24 @@ pub(crate) fn SystemKeyPickerDialog(
                                                 let code = entry.0;
                                                 let label = entry.1;
                                                 let is_current = code == current_code;
+                                                let conflict_names = conflicts.get(&code);
+                                                let is_conflict = conflict_names.is_some();
                                                 let cls = if is_current {
                                                     "sys-key-picker-key current"
+                                                } else if is_conflict {
+                                                    "sys-key-picker-key conflict"
                                                 } else {
                                                     "sys-key-picker-key"
                                                 };
+                                                let title_attribute = conflict_names
+                                                    .map(|names| format!("Already used by {}", names.join(", ")))
+                                                    .unwrap_or_default();
                                                 rsx! {
                                                     button {
                                                         key: "{key_idx}",
                                                         class: "{cls}",
                                                         r#type: "button",
+                                                        title: "{title_attribute}",
                                                         onclick: move |_| on_pick.call(code),
                                                         "{label}"
                                                     }

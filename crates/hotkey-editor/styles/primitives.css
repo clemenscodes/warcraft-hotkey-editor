@@ -323,6 +323,18 @@
         filter: brightness(1.32) drop-shadow(0 0 14px rgba(255, 206, 99, 0.75));
     }
 
+    /* Two or more sections share this binding (modifier-aware). Cell stays
+       fully clickable — Blizzard's editor allows conflicts and we want to
+       support importing pre-existing configs that have them. */
+    .wc3-slot.conflict {
+        filter: drop-shadow(0 0 12px rgba(255, 90, 90, 0.55));
+    }
+
+    .wc3-slot.conflict .wc3-slot-key {
+        color: #ff5a5a;
+        text-shadow: 1px 1px 0 #000, 0 0 14px rgba(255, 90, 90, 0.55);
+    }
+
     .wc3-slot.dragging-source > * {
         visibility: hidden;
     }
@@ -395,6 +407,12 @@
     .wc3-key-chip.editing {
         border-color: #ffce63;
         filter: brightness(1.3) drop-shadow(0 0 12px rgba(255, 206, 99, 0.75));
+    }
+
+    .wc3-key-chip.conflict {
+        color: #ff5a5a;
+        border-color: rgba(255, 90, 90, 0.65);
+        text-shadow: 1px 1px 0 #000, 0 0 10px rgba(255, 90, 90, 0.5);
     }
 
     /* List view: rows separated by subtle gold dividers. The dialog runs
