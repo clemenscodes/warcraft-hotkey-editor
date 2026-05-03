@@ -305,6 +305,26 @@ pub(crate) fn TileOverridePanel(
                     }
                 }
             }
+            {
+                let alt_name_text = detail.alt_display_name().map(str::to_owned);
+                let alt_description_lines: Vec<String> = detail
+                    .alt_ubertip()
+                    .map(Description::lines_from)
+                    .unwrap_or_default();
+                let has_alt_state = alt_name_text.is_some() || !alt_description_lines.is_empty();
+                rsx! {
+                    if has_alt_state {
+                        div { class: "tile-override-alt-state",
+                            if let Some(alt_name) = alt_name_text {
+                                p { class: "tile-override-alt-state-label", "When active: {alt_name}" }
+                            }
+                            for description_line in alt_description_lines.iter() {
+                                p { class: "tile-override-alt-state-line", "{description_line}" }
+                            }
+                        }
+                    }
+                }
+            }
             if has_multiple_tiers {
                 div { class: "tile-override-tier-footer",
                     button {

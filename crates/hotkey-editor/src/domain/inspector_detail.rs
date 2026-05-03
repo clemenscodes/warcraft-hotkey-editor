@@ -23,6 +23,16 @@ pub(crate) struct InspectorDetail {
     research_tip: Option<String>,
     ubertip: Option<String>,
     research_ubertip: Option<String>,
+    /// Display name of the off / alt state (e.g. "Stop Defend"). Populated for
+    /// toggleable abilities whose `un_tip` differs from the on-state name; the
+    /// inspector renders both so the player can see what the alternate button
+    /// becomes when the ability is active. `None` for non-toggle abilities and
+    /// for hosts where the inspector is already flipped to the alt state via
+    /// `prefer_un_state`.
+    alt_display_name: Option<String>,
+    /// Off-state long description ("Deactivate to move at normal speed…").
+    /// Same conditions as `alt_display_name`.
+    alt_ubertip: Option<String>,
     name_levels: Vec<String>,
     icon_levels: Vec<Option<String>>,
     ubertip_levels: Vec<String>,
@@ -90,6 +100,24 @@ impl InspectorDetail {
                     database_object.and_then(|warcraft_object| warcraft_object.ubertip())
                 };
                 let ubertip = primary_ubertip.map(WarcraftColorCodes::stripped);
+                // Surface the *other* state too. When the inspector is already
+                // showing the off state (burrowed crypt fiend → "Unburrow"),
+                // there's nothing extra to add. When it's showing the on state
+                // (a footman's "Defend"), pull `un_tip`/`un_ubertip` so the
+                // player can see the "Stop Defend" name and tooltip without
+                // having to hunt for the toggle.
+                let (alt_display_name, alt_ubertip) =
+                    if object_has_alt_state && !prefer_un_state {
+                        let alt_name = database_object
+                            .and_then(|warcraft_object| warcraft_object.un_tip())
+                            .map(WarcraftColorCodes::stripped);
+                        let alt_long = database_object
+                            .and_then(|warcraft_object| warcraft_object.un_ubertip())
+                            .map(WarcraftColorCodes::stripped);
+                        (alt_name, alt_long)
+                    } else {
+                        (None, None)
+                    };
                 let research_ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.research_ubertip())
                     .map(WarcraftColorCodes::stripped);
@@ -149,6 +177,8 @@ impl InspectorDetail {
                     research_tip,
                     ubertip,
                     research_ubertip,
+                    alt_display_name,
+                    alt_ubertip,
                     name_levels,
                     icon_levels,
                     ubertip_levels,
@@ -190,6 +220,8 @@ impl InspectorDetail {
                     research_tip: None,
                     ubertip,
                     research_ubertip: None,
+                    alt_display_name: None,
+                    alt_ubertip: None,
                     name_levels: Vec::new(),
                     icon_levels: Vec::new(),
                     ubertip_levels: Vec::new(),
@@ -238,6 +270,14 @@ impl InspectorDetail {
 
     pub(crate) fn research_ubertip(&self) -> Option<&str> {
         self.research_ubertip.as_deref()
+    }
+
+    pub(crate) fn alt_display_name(&self) -> Option<&str> {
+        self.alt_display_name.as_deref()
+    }
+
+    pub(crate) fn alt_ubertip(&self) -> Option<&str> {
+        self.alt_ubertip.as_deref()
     }
 
     pub(crate) fn name_levels(&self) -> &[String] {

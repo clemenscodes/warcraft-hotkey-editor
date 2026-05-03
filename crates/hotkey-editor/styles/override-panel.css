@@ -256,6 +256,36 @@
     white-space: pre-wrap;
 }
 
+/* Alt-state block surfaces the off side of toggle abilities — Defend ⇄ Stop
+ * Defend, Burrow ⇄ Unburrow, Bear Form ⇄ unmorph. Visually distinct from the
+ * primary description (cooler border colour, slightly muted background) so
+ * the player can tell at a glance which lines describe the on-state and which
+ * describe what happens after pressing the toggle. */
+.tile-override-alt-state {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.7rem 1rem;
+    background: rgba(8, 18, 35, 0.55);
+    border-left: 2px solid #6ec3ff;
+    border-radius: 4px;
+    color: #c8d4ec;
+    font-size: 1.4rem;
+    line-height: 1.5;
+}
+
+.tile-override-alt-state-label {
+    margin: 0;
+    font-weight: 600;
+    color: #a9d8ff;
+    font-size: 1.45rem;
+}
+
+.tile-override-alt-state-line {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
 .tile-override-key-group {
     display: flex;
     flex-direction: row;
