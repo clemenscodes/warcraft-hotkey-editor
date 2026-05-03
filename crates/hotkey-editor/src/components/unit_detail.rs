@@ -236,6 +236,9 @@ pub(crate) fn UnitDetailPanel(
         if morphs_into_self(ability_id.value(), &unit_id) {
             continue;
         }
+        if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
+            continue;
+        }
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
@@ -287,6 +290,9 @@ pub(crate) fn UnitDetailPanel(
                     continue;
                 }
                 if morphs_into_self(ability_id.value(), &unit_id) {
+                    continue;
+                }
+                if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
                     continue;
                 }
                 if is_rooted_only_mechanic(ability_id.value()) {

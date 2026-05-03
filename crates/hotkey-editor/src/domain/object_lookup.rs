@@ -68,4 +68,64 @@ impl ObjectLookup {
             _ => None,
         }
     }
+
+    /// First forward morph target (i.e. morph ability whose `morph_target` is
+    /// a *different* unit than the host). Returns `None` when the unit has no
+    /// such ability, or when every morph ability on it self-loops (e.g. the
+    /// burrowed `ucrm` whose Abur points back at `ucrm`).
+    pub(crate) fn forward_morph_target_for_unit(host_unit_id: &str) -> Option<&'static str> {
+        let host = Self::by_id(host_unit_id)?;
+        let WarcraftObjectMeta::Unit(unit_meta) = host.meta() else {
+            return None;
+        };
+        for ability in unit_meta.abilities().iter().chain(unit_meta.hero_abilities().iter()) {
+            if let Some(target_id) = Self::morph_target_unit(ability.value())
+                && !target_id.eq_ignore_ascii_case(host_unit_id)
+            {
+                return Some(target_id);
+            }
+        }
+        None
+    }
+
+    /// True iff `ability_id` on `host_unit_id` is the caster-form copy of a
+    /// mechanic that "really" lives on the host's morph target. The classic
+    /// case is the Druid of the Claw: the caster form's `abilList` includes
+    /// `Aroa` (code `Aroa`), but `Aroa` is the bear-form Roar — the bear form
+    /// `edcm` carries `Ara2` (also code `Aroa`). The caster-form button is
+    /// dead weight because in the actual game Roar is only usable after the
+    /// druid morphs. Match the in-game command card by suppressing it.
+    ///
+    /// Mirror cases (Druid of the Talon → Storm Crow, Demon Hunter →
+    /// Metamorphosis, Avenger Form on Destroyer, etc.) follow the same
+    /// "same code on the morph target via a different ability id" pattern.
+    pub(crate) fn ability_belongs_to_alt_form(
+        ability_id: &str,
+        host_unit_id: &str,
+    ) -> bool {
+        let Some(target_id) = Self::forward_morph_target_for_unit(host_unit_id) else {
+            return false;
+        };
+        let Some(our_code) = Self::ability_code(ability_id) else {
+            return false;
+        };
+        let Some(target) = Self::by_id(target_id) else {
+            return false;
+        };
+        let WarcraftObjectMeta::Unit(target_meta) = target.meta() else {
+            return false;
+        };
+        target_meta
+            .abilities()
+            .iter()
+            .chain(target_meta.hero_abilities().iter())
+            .any(|target_ability| {
+                if target_ability.value().eq_ignore_ascii_case(ability_id) {
+                    return false;
+                }
+                Self::ability_code(target_ability.value())
+                    .map(|target_code| target_code.eq_ignore_ascii_case(our_code))
+                    .unwrap_or(false)
+            })
+    }
 }
