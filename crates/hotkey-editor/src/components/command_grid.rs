@@ -243,8 +243,26 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             );
                             let occupant_slot: Option<GridSlotId> =
                                 cell_with_slot.as_ref().map(|(slot_id, _)| slot_id.clone());
-                            let cell_option: Option<&AbilityCell> =
-                                cell_with_slot.as_ref().map(|(_, cell)| cell);
+                            // When a morph ability is displayed on the unit it
+                            // morphs INTO (e.g. Bear Form on the bear unit),
+                            // show the reverse state: "Night Elf Form" with the
+                            // night-elf icon, not "Bear Form" with the bear icon.
+                            let morph_reverse_cell: Option<AbilityCell> =
+                                occupant_slot.as_ref().and_then(|slot| {
+                                    let GridSlotId::Ability(ability_id) = slot else {
+                                        return None;
+                                    };
+                                    let target = ObjectLookup::morph_target_unit(ability_id)?;
+                                    if !target.eq_ignore_ascii_case(&host_unit_id) {
+                                        return None;
+                                    }
+                                    let binding =
+                                        custom_keys_option.and_then(|f| f.binding(ability_id));
+                                    Some(AbilityCell::for_ability_off(ability_id, binding))
+                                });
+                            let cell_option: Option<&AbilityCell> = morph_reverse_cell
+                                .as_ref()
+                                .or_else(|| cell_with_slot.as_ref().map(|(_, cell)| cell));
                             let derived_letter = layout_snapshot.letter_at(column, row);
                             let is_selected = match (&occupant_slot, active_slot.as_ref()) {
                                 (Some(occupant), Some(active)) => {
@@ -335,10 +353,17 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                     warcraft_object.icons().get(cell_tier_index).copied()
                                 })
                                 .map(|raw_icon| IconUrl::from_database_path(raw_icon.trim()));
-                            let label_text = cell_tier_name
-                                .clone()
-                                .or_else(|| cell_option.as_ref().map(|cell| cell.display_name().to_string()))
-                                .unwrap_or_default();
+                            let label_text = if morph_reverse_cell.is_some() {
+                                cell_option
+                                    .as_ref()
+                                    .map(|cell| cell.display_name().to_string())
+                                    .unwrap_or_default()
+                            } else {
+                                cell_tier_name
+                                    .clone()
+                                    .or_else(|| cell_option.as_ref().map(|cell| cell.display_name().to_string()))
+                                    .unwrap_or_default()
+                            };
                             let icon_src_option = if cell_tier_index > 0 {
                                 cell_tier_icon
                                     .or_else(|| cell_option.as_ref().and_then(|cell| cell.cloned_icon_src()))
@@ -385,13 +410,19 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // never draggable — their position is shared with
                             // the primary form's ability and can't be changed
                             // independently.
-                            let is_morph_on_alt_form = host_is_alt_form
-                                && occupant_slot
-                                    .as_ref()
-                                    .map(|slot| {
-                                        ObjectLookup::morph_target_unit(slot.as_str()).is_some()
-                                    })
-                                    .unwrap_or(false);
+                            let is_morph_on_alt_form = occupant_slot
+                                .as_ref()
+                                .map(|slot| {
+                                    let target_option =
+                                        ObjectLookup::morph_target_unit(slot.as_str());
+                                    let morphs_to_host = target_option.is_some_and(|target| {
+                                        target.eq_ignore_ascii_case(&host_unit_id)
+                                    });
+                                    let alt_form_morph =
+                                        host_is_alt_form && target_option.is_some();
+                                    morphs_to_host || alt_form_morph
+                                })
+                                .unwrap_or(false);
                             let tile_is_draggable = !is_morph_on_alt_form
                                 && (restrict_draggable_to.is_empty()
                                     || occupant_slot

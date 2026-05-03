@@ -103,7 +103,12 @@ impl InspectorDetail {
                     .unwrap_or(false);
                 let host_starts_in_alt =
                     BuildingTraits::unit_starts_in_toggle_alt_state(host_unit_id);
-                let prefer_un_state = !from_uprooted && host_starts_in_alt && object_has_alt_state;
+                let is_morph_targeting_host = !host_unit_id.is_empty()
+                    && ObjectLookup::morph_target_unit(ability_id)
+                        .is_some_and(|target| target.eq_ignore_ascii_case(host_unit_id));
+                let prefer_un_state = !from_uprooted
+                    && (host_starts_in_alt || is_morph_targeting_host)
+                    && object_has_alt_state;
                 let primary_ubertip = if prefer_un_state {
                     database_object.and_then(|warcraft_object| warcraft_object.un_ubertip())
                 } else {
@@ -179,7 +184,11 @@ impl InspectorDetail {
                             .collect()
                     })
                     .unwrap_or_default();
-                let icon_src = cell.cloned_icon_src();
+                let icon_src = if is_morph_targeting_host && prefer_un_state {
+                    AbilityCell::for_ability_off(ability_id, binding).cloned_icon_src()
+                } else {
+                    cell.cloned_icon_src()
+                };
                 let object_id = cell.cloned_object_id();
                 Self {
                     display_name: resolved_display_name,
