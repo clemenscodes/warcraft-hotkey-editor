@@ -1,9 +1,6 @@
-use std::collections::HashSet;
-
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
-use crate::domain::object_lookup::ObjectLookup;
 use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
 
@@ -17,13 +14,15 @@ pub(crate) struct UnitCatalog;
 
 impl UnitCatalog {
     /// The single source of truth for "which units belong in a list view".
-    /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, sorts
-    /// by category priority then display name, and dedupes by `(kind, name)`
-    /// — but keeps both forms of a same-name pair when one morphs into the
-    /// other (e.g. Druid of the Claw → Bear Form). Internal-id variants that
-    /// don't morph between each other (Tinker `Nrob`/`Ntin`, Carrion Beetle
-    /// levels `ucs1`/`ucs2`/`ucs3`, Alchemist `Nal2`/`Nal3`/`Nalc`/`Nalm`)
-    /// collapse to a single entry.
+    /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, and
+    /// sorts by category priority then display name. Does *not* dedupe by
+    /// name — same-name internal-id variants (Demon Hunter `Eevi`/`Eevm`/
+    /// `Eidm`/`Eill`/`Eilm`, Alchemist `Nal2`/`Nal3`/`Nalc`/`Nalm`, Tinker
+    /// `Ntin`/`Nrob`, Druid of the Claw `edoc`/`edcm`, Carrion Beetle
+    /// `ucs1`/`ucs2`/`ucs3`) all surface as distinct entries with their unit
+    /// id visible. The game ships these IDs deliberately (campaign variants,
+    /// metamorphosis forms, level-summon variants) and any heuristic that
+    /// tries to pick a canonical one is going to be wrong somewhere.
     pub(crate) fn entries_for(
         race: Race,
         mode: UnitMode,
@@ -104,89 +103,12 @@ impl UnitCatalog {
                     .first()
                     .copied()
                     .unwrap_or("");
-                left_name.cmp(right_name)
+                left_name
+                    .cmp(right_name)
+                    .then_with(|| left_entry.unit_id.cmp(&right_entry.unit_id))
             })
-        });
-
-        // Compute the set of unit ids that share a (kind, name) with another
-        // unit AND are linked to it by a morph ability — those need to survive
-        // dedup as distinct entries. Everything else collapses to the first
-        // occurrence of its (kind, name).
-        let morph_linked_ids: HashSet<&'static str> = compute_morph_linked_ids(&entries);
-
-        let mut seen_keys: HashSet<(UnitKind, &'static str)> = HashSet::new();
-        entries.retain(|entry| {
-            let name = entry.warcraft_object.names().first().copied().unwrap_or("");
-            if morph_linked_ids.contains(entry.unit_id.as_str()) {
-                return true;
-            }
-            seen_keys.insert((entry.unit_kind, name))
         });
 
         entries
     }
-}
-
-/// Returns the set of unit ids that share a `(kind, name)` with at least one
-/// other unit in `entries` AND are connected to it by a morph ability (in
-/// either direction). These survive `(kind, name)` dedup so a player browsing
-/// "Druid of the Claw" sees both the caster and bear forms, while Tinker
-/// `Nrob`/`Ntin` (no morph link, just two duplicate IDs) collapses.
-fn compute_morph_linked_ids(entries: &[CatalogEntry]) -> HashSet<&'static str> {
-    use std::collections::HashMap;
-
-    // Bucket entries by (kind, name); only buckets with >= 2 units can produce
-    // intra-bucket morph links worth preserving.
-    let mut name_buckets: HashMap<(UnitKind, &str), Vec<&CatalogEntry>> = HashMap::new();
-    for entry in entries {
-        let name = entry.warcraft_object.names().first().copied().unwrap_or("");
-        if name.is_empty() {
-            continue;
-        }
-        name_buckets.entry((entry.unit_kind, name)).or_default().push(entry);
-    }
-
-    let mut linked: HashSet<&'static str> = HashSet::new();
-    for bucket in name_buckets.values() {
-        if bucket.len() < 2 {
-            continue;
-        }
-        let bucket_ids: HashSet<&str> =
-            bucket.iter().map(|entry| entry.unit_id.as_str()).collect();
-
-        for entry in bucket {
-            let WarcraftObjectMeta::Unit(unit_meta) = entry.warcraft_object.meta() else {
-                continue;
-            };
-            for ability in unit_meta.abilities().iter().chain(unit_meta.hero_abilities().iter()) {
-                let Some(target_id) = ObjectLookup::morph_target_unit(ability.value()) else {
-                    continue;
-                };
-                if target_id.eq_ignore_ascii_case(&entry.unit_id) {
-                    // Self-morph (alt-state toggle like Burrow/Defend) — not a
-                    // form link to another bucket member.
-                    continue;
-                }
-                if !bucket_ids.iter().any(|id| id.eq_ignore_ascii_case(target_id)) {
-                    continue;
-                }
-                // Promote the source unit's id and the target unit's id to
-                // 'static via the database — both need to survive dedup.
-                if let Some(source_static_id) = static_unit_id(&entry.unit_id) {
-                    linked.insert(source_static_id);
-                }
-                if let Some(target_static_id) = static_unit_id(target_id) {
-                    linked.insert(target_static_id);
-                }
-            }
-        }
-    }
-    linked
-}
-
-fn static_unit_id(unit_id: &str) -> Option<&'static str> {
-    WARCRAFT_DATABASE
-        .iter()
-        .find(|(object_id, _)| object_id.value().eq_ignore_ascii_case(unit_id))
-        .map(|(object_id, _)| object_id.value())
 }
