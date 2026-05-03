@@ -147,34 +147,51 @@ pub(crate) fn SystemKeyPickerDialog(
                         div { class: "sys-key-picker-board",
                             div { class: "sys-key-picker-main",
                                 for (row_idx, row) in KEYBOARD_ROWS.iter().enumerate() {
-                                    div { key: "{row_idx}", class: "sys-key-picker-row",
-                                        for (key_idx, entry) in row.iter().enumerate() {
-                                            {
-                                                let code = entry.0;
-                                                let label = entry.1;
-                                                let is_current = code == current_code;
-                                                let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5");
-                                                let conflict_names = conflicts.get(&code);
-                                                let is_conflict = conflict_names.is_some();
-                                                let cls = if is_current {
-                                                    "sys-key-picker-key current"
-                                                } else if is_conflict {
-                                                    "sys-key-picker-key conflict"
-                                                } else {
-                                                    "sys-key-picker-key"
-                                                };
-                                                let title_attribute = conflict_names
-                                                    .map(|names| format!("Already used by {}", names.join(", ")))
-                                                    .unwrap_or_default();
-                                                rsx! {
-                                                    button {
-                                                        key: "{key_idx}",
-                                                        class: "{cls}",
-                                                        r#type: "button",
-                                                        "data-tooltip": "{title_attribute}",
-                                                        "data-wide": if is_wide { "true" } else { "" },
-                                                        onclick: move |_| on_pick.call(code),
-                                                        "{label}"
+                                    {
+                                        let total_rows = KEYBOARD_ROWS.len();
+                                        let is_bottom_row = row_idx + 2 >= total_rows;
+                                        let placement_attribute = if is_bottom_row { "above" } else { "below" };
+                                        let last_index = row.len().saturating_sub(1);
+                                        rsx! {
+                                            div { key: "{row_idx}", class: "sys-key-picker-row",
+                                                for (key_idx, entry) in row.iter().enumerate() {
+                                                    {
+                                                        let code = entry.0;
+                                                        let label = entry.1;
+                                                        let is_current = code == current_code;
+                                                        let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5");
+                                                        let conflict_names = conflicts.get(&code);
+                                                        let is_conflict = conflict_names.is_some();
+                                                        let cls = if is_current {
+                                                            "sys-key-picker-key current"
+                                                        } else if is_conflict {
+                                                            "sys-key-picker-key conflict"
+                                                        } else {
+                                                            "sys-key-picker-key"
+                                                        };
+                                                        let title_attribute = conflict_names
+                                                            .map(|names| format!("Already used by {}", names.join(", ")))
+                                                            .unwrap_or_default();
+                                                        let anchor_attribute = if key_idx == 0 {
+                                                            "left"
+                                                        } else if key_idx == last_index {
+                                                            "right"
+                                                        } else {
+                                                            ""
+                                                        };
+                                                        rsx! {
+                                                            button {
+                                                                key: "{key_idx}",
+                                                                class: "{cls}",
+                                                                r#type: "button",
+                                                                "data-tooltip": "{title_attribute}",
+                                                                "data-tooltip-placement": "{placement_attribute}",
+                                                                "data-tooltip-anchor": "{anchor_attribute}",
+                                                                "data-wide": if is_wide { "true" } else { "" },
+                                                                onclick: move |_| on_pick.call(code),
+                                                                "{label}"
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -184,32 +201,41 @@ pub(crate) fn SystemKeyPickerDialog(
                             }
                             div { class: "sys-key-picker-numpad",
                                 for (row_idx, row) in NUMPAD_ROWS.iter().enumerate() {
-                                    div { key: "{row_idx}", class: "sys-key-picker-row",
-                                        for (key_idx, entry) in row.iter().enumerate() {
-                                            {
-                                                let code = entry.0;
-                                                let label = entry.1;
-                                                let is_current = code == current_code;
-                                                let conflict_names = conflicts.get(&code);
-                                                let is_conflict = conflict_names.is_some();
-                                                let cls = if is_current {
-                                                    "sys-key-picker-key current"
-                                                } else if is_conflict {
-                                                    "sys-key-picker-key conflict"
-                                                } else {
-                                                    "sys-key-picker-key"
-                                                };
-                                                let title_attribute = conflict_names
-                                                    .map(|names| format!("Already used by {}", names.join(", ")))
-                                                    .unwrap_or_default();
-                                                rsx! {
-                                                    button {
-                                                        key: "{key_idx}",
-                                                        class: "{cls}",
-                                                        r#type: "button",
-                                                        "data-tooltip": "{title_attribute}",
-                                                        onclick: move |_| on_pick.call(code),
-                                                        "{label}"
+                                    {
+                                        let total_rows = NUMPAD_ROWS.len();
+                                        let is_bottom_row = row_idx + 2 >= total_rows;
+                                        let placement_attribute = if is_bottom_row { "above" } else { "below" };
+                                        rsx! {
+                                            div { key: "{row_idx}", class: "sys-key-picker-row",
+                                                for (key_idx, entry) in row.iter().enumerate() {
+                                                    {
+                                                        let code = entry.0;
+                                                        let label = entry.1;
+                                                        let is_current = code == current_code;
+                                                        let conflict_names = conflicts.get(&code);
+                                                        let is_conflict = conflict_names.is_some();
+                                                        let cls = if is_current {
+                                                            "sys-key-picker-key current"
+                                                        } else if is_conflict {
+                                                            "sys-key-picker-key conflict"
+                                                        } else {
+                                                            "sys-key-picker-key"
+                                                        };
+                                                        let title_attribute = conflict_names
+                                                            .map(|names| format!("Already used by {}", names.join(", ")))
+                                                            .unwrap_or_default();
+                                                        rsx! {
+                                                            button {
+                                                                key: "{key_idx}",
+                                                                class: "{cls}",
+                                                                r#type: "button",
+                                                                "data-tooltip": "{title_attribute}",
+                                                                "data-tooltip-placement": "{placement_attribute}",
+                                                                "data-tooltip-anchor": "right",
+                                                                onclick: move |_| on_pick.call(code),
+                                                                "{label}"
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }

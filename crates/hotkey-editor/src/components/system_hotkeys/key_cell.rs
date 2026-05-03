@@ -101,6 +101,7 @@ pub(crate) fn KeyCaptureCell(
             class: "{chip_class}",
             r#type: "button",
             "data-tooltip": "{conflict_title}",
+            "data-tooltip-placement": "above",
             onclick: move |_| editing_section.set(Some(section_id_for_click.clone())),
             "{key_label}"
         }
