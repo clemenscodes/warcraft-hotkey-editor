@@ -424,40 +424,46 @@
     transform: none !important;
 }
 
-/* Idle empty cells: keep the look quiet so the contrast against the
- * `.drop-target` activation below is obvious. Same base treatment as
- * the live command card — no special invitation until a drag is in
- * flight, just a faint sketched border so the cell still reads as a
- * proper grid square. */
+/* Idle empty cells — sketched gold, faint warm tint. Hover deepens
+ * the colour but keeps the dashed style so the user can tell at a
+ * glance the cell isn't yet "armed" by a drag. */
 .alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
-    border: 1px dashed rgba(110, 140, 180, 0.35) !important;
-    background: rgba(15, 30, 55, 0.4) !important;
-    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    border: 1px dashed rgba(255, 206, 99, 0.45) !important;
+    background: rgba(255, 206, 99, 0.04) !important;
+    transition: border 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Drag-active landing zones — main grid sets `.drop-target` on every
- * empty cell in the active section the moment the source crosses the
- * drag-movement threshold. The border colour and fill swing to gold
- * so the player sees "every empty square is now a target". */
-.alt-position-picker-grid-anchor .grid-tile.drop-target {
-    border: 2px dashed rgba(255, 206, 99, 0.75) !important;
+.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"]:hover {
+    border-color: rgba(255, 206, 99, 0.75) !important;
     background: rgba(255, 206, 99, 0.1) !important;
-    cursor: pointer !important;
 }
 
-/* Cursor is currently over this cell — bump to a solid gold border,
- * gradient fill, soft outer glow. Matches the lift the main command
+/* Drag-active drop targets — main grid sets `.drop-target` on every
+ * empty cell in the source section the moment the drag-movement
+ * threshold is crossed. Switch from the idle 1px dashed line to a
+ * 2px *solid* gold border + warmer fill so the activation is the
+ * unambiguous visual cue: "drag is live, every empty cell is in
+ * play". */
+.alt-position-picker-grid-anchor .grid-tile.drop-target {
+    border: 2px solid rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.14) !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
+}
+
+/* Cursor is currently over a drop-target — full-strength gold border,
+ * gradient fill, big outer glow. Matches the lift the live command
  * grid uses for its hovered drop targets. */
 .alt-position-picker-grid-anchor .grid-tile.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
-    border: 2px solid #ffce63 !important;
+    border: 3px solid #ffce63 !important;
     background:
-        linear-gradient(135deg, rgba(255, 206, 99, 0.3) 0%, rgba(255, 206, 99, 0.16) 100%),
+        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
         rgba(20, 35, 60, 0.95) !important;
     box-shadow:
-        inset 0 0 0 1px rgba(255, 224, 150, 0.6),
-        0 0 22px rgba(255, 206, 99, 0.7) !important;
+        inset 0 0 0 1px rgba(255, 224, 150, 0.65),
+        0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"] {
@@ -497,13 +503,35 @@
     transform: translateY(0);
 }
 
+/* The source cell during an active drag — main grid hides the cell's
+ * children (icon + hotkey overlay) so the box looks empty, but the
+ * border / glow stay visible so the player can see WHERE the drag
+ * came from. Freeze the pulse, lock the ring at maximum, and pump up
+ * the inner gradient so the source square reads "I'm being dragged"
+ * the entire time the drag is in flight. Hover (cursor still on the
+ * source while dragging, before moving away) brightens it further. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
-    /* While dragging, the source cell's children are visibility:hidden
-     * by `command-grid.css`. The pulsing ring on an empty cell would
-     * draw the eye to the wrong place, so freeze the animation and
-     * fade the cell. */
-    animation: none;
-    opacity: 0.45;
+    animation: none !important;
+    transform: none !important;
+    border: 3px solid #ffce63 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.22) 0%, rgba(255, 206, 99, 0.06) 100%),
+        rgba(20, 35, 60, 0.92) !important;
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 235, 180, 0.65),
+        0 0 0 4px rgba(255, 206, 99, 0.45),
+        0 0 32px rgba(255, 206, 99, 0.85) !important;
+    cursor: grabbing !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source:hover {
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.34) 0%, rgba(255, 206, 99, 0.12) 100%),
+        rgba(20, 35, 60, 0.92) !important;
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 245, 200, 0.85),
+        0 0 0 5px rgba(255, 206, 99, 0.6),
+        0 0 40px rgba(255, 206, 99, 1) !important;
 }
 
 @keyframes alt-picker-handle-pulse {
