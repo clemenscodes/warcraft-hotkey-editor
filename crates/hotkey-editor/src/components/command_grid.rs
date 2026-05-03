@@ -10,6 +10,7 @@ use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
+use crate::domain::ability_cell::AbilityCell;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
@@ -205,23 +206,17 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                 for row in 0..COMMAND_GRID_ROWS {
                     for column in 0..COMMAND_GRID_COLUMNS {
                         {
-                            let cell_option = Positions::cell_for_position(
+                            let cell_with_slot = Positions::cell_for_position(
                                 &slot_ids_cloned,
                                 custom_keys_option,
                                 is_research_grid,
                                 column,
                                 row,
                             );
-                            let occupant_slot: Option<GridSlotId> = cell_option
-                                .as_ref()
-                                .and_then(|cell| {
-                                    slot_ids_cloned
-                                        .iter()
-                                        .find(|candidate| {
-                                            candidate.as_str().eq_ignore_ascii_case(cell.object_id())
-                                        })
-                                        .cloned()
-                                });
+                            let occupant_slot: Option<GridSlotId> =
+                                cell_with_slot.as_ref().map(|(slot_id, _)| slot_id.clone());
+                            let cell_option: Option<&AbilityCell> =
+                                cell_with_slot.as_ref().map(|(_, cell)| cell);
                             let derived_letter = layout_snapshot.letter_at(column, row);
                             let is_selected = match (&occupant_slot, active_slot.as_ref()) {
                                 (Some(occupant), Some(active)) => {

@@ -227,63 +227,29 @@ pub(crate) fn UnitDetailPanel(
     let is_uprootable = BuildingTraits::can_uproot(&unit_id);
     let host_is_burrowed = BuildingTraits::is_burrowed_form(&unit_id);
     for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
-        let ability_id_str = ability_id.value();
-        if is_uprootable && ability_id_str.eq_ignore_ascii_case("Aeat") {
+        if is_uprootable && ability_id.value().eq_ignore_ascii_case("Aeat") {
             continue;
         }
-        if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_id_str) {
+        if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_id.value()) {
             continue;
         }
-        if ObjectLookup::ability_belongs_to_alt_form(ability_id_str, &unit_id) {
+        if morphs_into_self(ability_id.value(), &unit_id) {
             continue;
         }
-        if !ObjectLookup::has_icon(ability_id_str) {
+        if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
             continue;
         }
-        // Decide which half(es) of a toggle ability live on this unit's
-        // command card. Three cases keyed off the morph relationship:
-        //
-        // 1. **No `morph_target`** (Adef "Defend" on Hfoo). Pure state
-        //    toggle — both halves live on the same unit, so push both
-        //    `Ability` (Defend) and `AbilityOff` (Stop Defend). A control
-        //    group with one defending and one idle footman shows both
-        //    buttons in-game and they bind independently.
-        //
-        // 2. **Forward morph** (Abur "Burrow" on ucry, Abrf "Bear Form" on
-        //    edoc). The on-state lives here; the off-state lives on the
-        //    morph target unit (ucrm / edcm). Push only `Ability`.
-        //
-        // 3. **Self-morph** (Abur on ucrm, Abrf on edcm). The host *is*
-        //    the morph target — this is the form where the off-state
-        //    button appears in-game. Push only `AbilityOff`. The on-state
-        //    half is on the source unit's card and would never be pressed
-        //    here.
-        //
-        // Abilities with no alt state fall through to the simple
-        // `Ability`-only path.
-        let has_alt_state = BuildingTraits::ability_has_alt_state(ability_id_str);
-        let morph_target = ObjectLookup::morph_target_unit(ability_id_str);
-        let is_self_morph = morph_target
-            .map(|target| target.eq_ignore_ascii_case(&unit_id))
-            .unwrap_or(false);
-        let is_forward_morph = morph_target.is_some() && !is_self_morph;
-
-        if has_alt_state && is_self_morph {
-            command_card_slots.push(GridSlotId::ability_off(ability_id_str));
-        } else if has_alt_state && !is_forward_morph {
-            // No morph or forward morph with alt-state-on-source: on-state
-            // here. For pure state toggles (no morph at all), also push
-            // the off slot.
-            command_card_slots.push(GridSlotId::ability(ability_id_str));
-            if morph_target.is_none() {
-                command_card_slots.push(GridSlotId::ability_off(ability_id_str));
-            }
-        } else if !is_self_morph {
-            // No alt state, or forward morph without alt — just the on
-            // slot. (Self-morph without alt is a one-way trigger like
-            // Avenger Form on the Destroyer; suppress it on the host.)
-            command_card_slots.push(GridSlotId::ability(ability_id_str));
+        if !ObjectLookup::has_icon(ability_id.value()) {
+            continue;
         }
+        // One slot per ability — toggle abilities (Adef, Abur, Abrf, …)
+        // expose their off-state hotkey + position through a dedicated
+        // section on the override card rather than as a second grid cell.
+        // Two cells competing for the same default position (Adef both
+        // halves at (0,2)) was unworkable in practice: dragging would
+        // pick the wrong one, clicking selected both, and the off icon
+        // wouldn't surface anyway because we haven't extracted it.
+        command_card_slots.push(GridSlotId::ability(ability_id.value()));
     }
     if unit_kind == UnitKind::Hero
         && !hero_abilities.is_empty()

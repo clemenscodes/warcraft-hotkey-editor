@@ -33,14 +33,20 @@ pub(crate) struct InspectorDetail {
     /// Off-state long description ("Deactivate to move at normal speed…").
     /// Same conditions as `alt_display_name`.
     alt_ubertip: Option<String>,
+    /// Off-state hotkey on a toggle ability (Defend → Stop Defend, Burrow →
+    /// Unburrow, …). Drives a dedicated edit field on the override card so a
+    /// player can bind D for Defend and X for Stop Defend independently. Set
+    /// only on `Ability` slots whose object carries `un_tip`/`un_ubertip`;
+    /// `None` everywhere else.
+    alt_hotkey_token: Option<HotkeyToken>,
+    /// Off-state button position. Reads `Unbuttonpos` from the binding,
+    /// falls through to the SLK default `off_button_position`. Same gate
+    /// as `alt_hotkey_token`.
+    alt_button_position: Option<ButtonPosition>,
     name_levels: Vec<String>,
     icon_levels: Vec<Option<String>>,
     ubertip_levels: Vec<String>,
     is_command: bool,
-    /// Off-state half of a toggle ability (Stop Defend, Unburrow, …). Drives
-    /// the hotkey-edit and position-edit paths to write `Unhotkey` /
-    /// `Unbuttonpos` instead of the regular fields.
-    is_ability_off: bool,
     is_passive: bool,
 }
 
@@ -110,7 +116,7 @@ impl InspectorDetail {
                 // (a footman's "Defend"), pull `un_tip`/`un_ubertip` so the
                 // player can see the "Stop Defend" name and tooltip without
                 // having to hunt for the toggle.
-                let (alt_display_name, alt_ubertip) =
+                let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
                     if object_has_alt_state && !prefer_un_state {
                         let alt_name = database_object
                             .and_then(|warcraft_object| warcraft_object.un_tip())
@@ -118,9 +124,14 @@ impl InspectorDetail {
                         let alt_long = database_object
                             .and_then(|warcraft_object| warcraft_object.un_ubertip())
                             .map(WarcraftColorCodes::stripped);
-                        (alt_name, alt_long)
+                        let alt_hotkey = binding
+                            .and_then(|ability_binding| ability_binding.unhotkey())
+                            .and_then(BindingHotkey::first_token);
+                        let alt_position =
+                            Positions::current_for_ability_off(ability_id, custom_keys_ref);
+                        (alt_name, alt_long, alt_hotkey, alt_position)
                     } else {
-                        (None, None)
+                        (None, None, None, None)
                     };
                 let research_ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.research_ubertip())
@@ -183,56 +194,13 @@ impl InspectorDetail {
                     research_ubertip,
                     alt_display_name,
                     alt_ubertip,
+                    alt_hotkey_token,
+                    alt_button_position,
                     name_levels,
                     icon_levels,
                     ubertip_levels,
                     is_command: false,
-                    is_ability_off: false,
                     is_passive,
-                }
-            }
-            GridSlotId::AbilityOff(ability_id) => {
-                // Off-state half of a toggle ability — Stop Defend on a
-                // footman's Defend, Unburrow on a crypt fiend's Burrow, etc.
-                // The slot binds the alternate `Unhotkey` and renders the
-                // `un_tip` / `un_ubertip` text. No research / no level
-                // tiering for the off state.
-                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id));
-                let cell = AbilityCell::for_ability_off(ability_id, binding);
-                let position = Positions::current_for(slot, custom_keys_ref, false);
-                let hotkey_token = binding
-                    .and_then(|ability_binding| ability_binding.unhotkey())
-                    .and_then(BindingHotkey::first_token);
-                let database_object = ObjectLookup::by_id(ability_id);
-                let display_name = database_object
-                    .and_then(|warcraft_object| warcraft_object.un_tip())
-                    .map(WarcraftColorCodes::stripped)
-                    .unwrap_or_else(|| cell.display_name().to_string());
-                let ubertip = database_object
-                    .and_then(|warcraft_object| warcraft_object.un_ubertip())
-                    .map(WarcraftColorCodes::stripped);
-                let icon_src = cell.cloned_icon_src();
-                let object_id = cell.cloned_object_id();
-                Self {
-                    display_name,
-                    object_id,
-                    icon_src,
-                    hotkey_token,
-                    research_hotkey_token: None,
-                    button_position: position,
-                    research_button_position: None,
-                    tip: None,
-                    research_tip: None,
-                    ubertip,
-                    research_ubertip: None,
-                    alt_display_name: None,
-                    alt_ubertip: None,
-                    name_levels: Vec::new(),
-                    icon_levels: Vec::new(),
-                    ubertip_levels: Vec::new(),
-                    is_command: false,
-                    is_ability_off: true,
-                    is_passive: false,
                 }
             }
             GridSlotId::Command(command_name) => {
@@ -271,11 +239,12 @@ impl InspectorDetail {
                     research_ubertip: None,
                     alt_display_name: None,
                     alt_ubertip: None,
+                    alt_hotkey_token: None,
+                    alt_button_position: None,
                     name_levels: Vec::new(),
                     icon_levels: Vec::new(),
                     ubertip_levels: Vec::new(),
                     is_command: true,
-                    is_ability_off: false,
                     is_passive: false,
                 }
             }
@@ -342,8 +311,12 @@ impl InspectorDetail {
         &self.ubertip_levels
     }
 
-    pub(crate) fn is_ability_off(&self) -> bool {
-        self.is_ability_off
+    pub(crate) fn alt_hotkey_token(&self) -> Option<HotkeyToken> {
+        self.alt_hotkey_token
+    }
+
+    pub(crate) fn alt_button_position(&self) -> Option<ButtonPosition> {
+        self.alt_button_position
     }
 
     pub(crate) fn is_command(&self) -> bool {

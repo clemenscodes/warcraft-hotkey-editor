@@ -18,6 +18,10 @@ use crate::text::tip::Tip;
 enum OverrideEditTarget {
     Hotkey,
     ResearchHotkey,
+    /// Off-state hotkey of a toggle ability — Stop Defend, Unburrow,
+    /// unmorph. Routes through `HotkeyOverride::apply_unhotkey`, which
+    /// writes the `Unhotkey` field rather than `Hotkey`.
+    AltHotkey,
 }
 
 #[component]
@@ -35,7 +39,6 @@ pub(crate) fn TileOverridePanel(
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
-    let is_ability_off_for_capture = detail.is_ability_off();
     let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
@@ -101,6 +104,38 @@ pub(crate) fn TileOverridePanel(
     } else {
         "false"
     };
+
+    // Off-state hotkey field for toggle abilities. Surfaces the `Unhotkey`
+    // value from the binding (Stop Defend's key, Unburrow's key, …) and
+    // routes picks through `apply_unhotkey`. Only shown when the inspector
+    // detail carries an alt display name — that's the same gate the alt
+    // description block already uses, so the two appear together or not.
+    let alt_hotkey_token_display = detail.alt_hotkey_token();
+    let alt_hotkey_display = alt_hotkey_token_display
+        .map(|token| token.display_label())
+        .unwrap_or_default();
+    let alt_hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::AltHotkey);
+    let alt_hotkey_cell_class = if alt_hotkey_is_editing {
+        "override-key-cell editing"
+    } else {
+        "override-key-cell"
+    };
+    let alt_hotkey_label = if alt_hotkey_display.is_empty() {
+        String::from("\u{2013}")
+    } else {
+        alt_hotkey_display.clone()
+    };
+    let alt_hotkey_is_special_token = alt_hotkey_token_display
+        .map(|token| char::try_from(token).is_err())
+        .unwrap_or(false);
+    let alt_hotkey_special_flag = if alt_hotkey_is_special_token {
+        "true"
+    } else {
+        "false"
+    };
+    let alt_button_position_label = detail
+        .alt_button_position()
+        .map(|position| format!("{},{}", position.column(), position.row()));
 
     let total_tier_count: usize = detail
         .ubertip_levels()
@@ -215,6 +250,7 @@ pub(crate) fn TileOverridePanel(
     let picker_current_token: Option<HotkeyToken> = match picker_target {
         Some(OverrideEditTarget::Hotkey) => hotkey_token_display,
         Some(OverrideEditTarget::ResearchHotkey) => research_hotkey_token_display,
+        Some(OverrideEditTarget::AltHotkey) => detail.alt_hotkey_token(),
         None => None,
     };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
@@ -258,23 +294,18 @@ pub(crate) fn TileOverridePanel(
         }
         match active_target {
             OverrideEditTarget::Hotkey => {
-                if is_ability_off_for_capture {
-                    HotkeyOverride::apply_unhotkey(
-                        &mut loaded_keys,
-                        &picker_object_id,
-                        Some(token),
-                    );
-                } else {
-                    HotkeyOverride::apply(
-                        &mut loaded_keys,
-                        &picker_object_id,
-                        is_command_for_capture,
-                        Some(token),
-                    );
-                }
+                HotkeyOverride::apply(
+                    &mut loaded_keys,
+                    &picker_object_id,
+                    is_command_for_capture,
+                    Some(token),
+                );
             }
             OverrideEditTarget::ResearchHotkey => {
                 HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));
+            }
+            OverrideEditTarget::AltHotkey => {
+                HotkeyOverride::apply_unhotkey(&mut loaded_keys, &picker_object_id, Some(token));
             }
         }
         editing_target.set(None);
@@ -321,14 +352,38 @@ pub(crate) fn TileOverridePanel(
                     .map(Description::lines_from)
                     .unwrap_or_default();
                 let has_alt_state = alt_name_text.is_some() || !alt_description_lines.is_empty();
+                // Only let the player edit the off-state hotkey on the
+                // primary command card — research grids only have a single
+                // hotkey field per ability (Hero learn-skill icons aren't
+                // toggles), so the alt slot is irrelevant there.
+                let show_alt_hotkey = has_alt_state && !is_research_context && !detail.is_command();
+                let alt_position_text = alt_button_position_label.clone();
                 rsx! {
                     if has_alt_state {
                         div { class: "tile-override-alt-state",
-                            if let Some(alt_name) = alt_name_text {
-                                p { class: "tile-override-alt-state-label", "When active: {alt_name}" }
+                            div { class: "tile-override-alt-state-header",
+                                if let Some(alt_name) = alt_name_text {
+                                    p { class: "tile-override-alt-state-label", "When active: {alt_name}" }
+                                }
+                                if show_alt_hotkey {
+                                    button {
+                                        class: "{alt_hotkey_cell_class}",
+                                        "data-special": "{alt_hotkey_special_flag}",
+                                        title: "Hotkey for the off state (writes Unhotkey)",
+                                        onclick: move |_| {
+                                            editing_target.set(Some(OverrideEditTarget::AltHotkey));
+                                        },
+                                        "{alt_hotkey_label}"
+                                    }
+                                }
                             }
                             for description_line in alt_description_lines.iter() {
                                 p { class: "tile-override-alt-state-line", "{description_line}" }
+                            }
+                            if let Some(position_label) = alt_position_text {
+                                p { class: "tile-override-alt-state-meta",
+                                    "Off button position: {position_label}"
+                                }
                             }
                         }
                     }
