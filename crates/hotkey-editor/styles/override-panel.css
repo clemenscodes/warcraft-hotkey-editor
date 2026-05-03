@@ -300,6 +300,152 @@
     font-family: var(--default-mono-font-family, monospace);
 }
 
+.tile-override-alt-state-position-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.tile-override-alt-state-position-button {
+    appearance: none;
+    background: rgba(110, 195, 255, 0.12);
+    border: 1px solid rgba(110, 195, 255, 0.45);
+    color: #cfe5ff;
+    font-family: inherit;
+    font-size: 1.3rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tile-override-alt-state-position-button:hover {
+    background: rgba(110, 195, 255, 0.22);
+    border-color: rgba(110, 195, 255, 0.75);
+}
+
+.tile-override-alt-state-position-button:focus-visible {
+    outline: 2px solid #6ec3ff;
+    outline-offset: 2px;
+}
+
+/* Off-state position picker modal — a 4×3 mini grid shown when the player
+ * clicks "Edit position" on the alt-state row. The picker mirrors the
+ * primary command grid's geometry so the spatial mapping is obvious; only
+ * cells occupied by *other* abilities are blocked. */
+.alt-position-picker-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 16, 0.74);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 80;
+    padding: 1.5rem;
+}
+
+.alt-position-picker-dialog {
+    background: #0c1a2c;
+    border: 1px solid #6ec3ff;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    max-width: 32rem;
+    width: 100%;
+}
+
+.alt-position-picker-title {
+    margin: 0;
+    color: #ffce63;
+    font-size: 1.7rem;
+}
+
+.alt-position-picker-hint {
+    margin: 0;
+    color: #aab9d4;
+    font-size: 1.25rem;
+    line-height: 1.45;
+}
+
+.alt-position-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+    aspect-ratio: 4 / 3;
+}
+
+.alt-position-picker-cell {
+    appearance: none;
+    background: rgba(20, 38, 64, 0.65);
+    border: 1px solid rgba(110, 195, 255, 0.35);
+    border-radius: 4px;
+    color: #e6edf8;
+    font-family: inherit;
+    font-size: 1.15rem;
+    padding: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.alt-position-picker-cell:hover:not([data-blocked="true"]) {
+    background: rgba(110, 195, 255, 0.22);
+    border-color: #6ec3ff;
+}
+
+.alt-position-picker-cell[data-blocked="true"] {
+    background: rgba(40, 28, 28, 0.6);
+    border-color: rgba(255, 90, 90, 0.45);
+    color: rgba(255, 200, 200, 0.7);
+    cursor: not-allowed;
+}
+
+.alt-position-picker-cell[data-current-off="true"] {
+    border-color: #ffce63;
+    box-shadow: inset 0 0 0 1px #ffce63;
+}
+
+.alt-position-picker-cell[data-own-on="true"] {
+    border-color: rgba(110, 195, 255, 0.75);
+}
+
+.alt-position-picker-cell-occupant {
+    font-size: 1.15rem;
+    color: rgba(255, 200, 200, 0.85);
+}
+
+.alt-position-picker-cell-marker {
+    font-size: 1.6rem;
+    color: #ffce63;
+}
+
+.alt-position-picker-cancel {
+    align-self: flex-end;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(255, 206, 99, 0.6);
+    color: #ffce63;
+    font-family: inherit;
+    font-size: 1.3rem;
+    padding: 0.35rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.alt-position-picker-cancel:hover {
+    background: rgba(255, 206, 99, 0.12);
+}
+
 .tile-override-key-group {
     display: flex;
     flex-direction: row;

@@ -286,6 +286,25 @@ impl Positions {
         None
     }
 
+    /// Writes the off-state button position for a toggle ability without
+    /// touching the on-state `Buttonpos` or `Hotkey`. Used by the
+    /// override card's mini grid picker — the player drags the *off*
+    /// half of Defend / Burrow / Bear Form to a new cell, and only
+    /// `Unbuttonpos` should change. The on-state binding stays exactly
+    /// where the main command card shows it.
+    pub(crate) fn assign_off_position(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        ability_id: &str,
+        column: u8,
+        row: u8,
+    ) {
+        let new_position = warcraft_keybinds::ButtonPosition::new(column, row);
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        let binding = file.binding_or_default_mut(ability_id);
+        binding.set_unbutton_position(Some(new_position));
+    }
+
     pub(crate) fn assign(
         custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
         layout: GridLayout,

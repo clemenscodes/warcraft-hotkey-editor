@@ -6,11 +6,12 @@ use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
-use crate::domain::grid_layout::GridLayout;
+use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::GridSlotId;
 use crate::domain::hotkey_override::HotkeyOverride;
 use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::inspector_detail::InspectorDetail;
+use crate::domain::positions::Positions;
 use crate::text::description::Description;
 use crate::text::tip::Tip;
 
@@ -36,6 +37,11 @@ pub(crate) fn TileOverridePanel(
 ) -> Element {
     let _ = selected_from_uprooted;
     let mut editing_target = use_signal::<Option<OverrideEditTarget>>(|| None);
+    // True while the player has the alt-state mini grid open. Distinct
+    // signal from `editing_target` because the position picker is a modal
+    // overlay rather than a hotkey picker, but only one of the two should
+    // be active at a time.
+    let mut alt_position_picker_open = use_signal::<bool>(|| false);
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
@@ -380,7 +386,27 @@ pub(crate) fn TileOverridePanel(
                             for description_line in alt_description_lines.iter() {
                                 p { class: "tile-override-alt-state-line", "{description_line}" }
                             }
-                            if let Some(position_label) = alt_position_text {
+                            if show_alt_hotkey {
+                                div { class: "tile-override-alt-state-position-row",
+                                    if let Some(position_label) = alt_position_text {
+                                        span { class: "tile-override-alt-state-meta",
+                                            "Off button position: {position_label}"
+                                        }
+                                    } else {
+                                        span { class: "tile-override-alt-state-meta",
+                                            "Off button position: (none)"
+                                        }
+                                    }
+                                    button {
+                                        class: "tile-override-alt-state-position-button",
+                                        title: "Pick the off-state button position (writes Unbuttonpos)",
+                                        onclick: move |_| {
+                                            alt_position_picker_open.set(true);
+                                        },
+                                        "Edit position"
+                                    }
+                                }
+                            } else if let Some(position_label) = alt_position_text {
                                 p { class: "tile-override-alt-state-meta",
                                     "Off button position: {position_label}"
                                 }
@@ -428,7 +454,177 @@ pub(crate) fn TileOverridePanel(
                 on_close: move |_| editing_target.set(None),
             }
         }
+        {
+            let alt_picker_visible = *alt_position_picker_open.read();
+            let alt_picker_object_id = object_id_for_capture.clone();
+            let cells = if alt_picker_visible {
+                build_alt_position_cells(
+                    &alt_picker_object_id,
+                    detail.alt_button_position(),
+                    &active_container_slots,
+                    loaded_keys.read().as_ref(),
+                )
+            } else {
+                Vec::new()
+            };
+            rsx! {
+                if alt_picker_visible {
+                    AltPositionPicker {
+                        object_id: alt_picker_object_id,
+                        cells,
+                        loaded_keys,
+                        alt_position_picker_open,
+                    }
+                }
+            }
+        }
     }
+}
+
+/// One cell in the off-state position picker.
+#[derive(Clone, PartialEq, Eq)]
+struct AltPositionCell {
+    column: u8,
+    row: u8,
+    /// `Some(name)` when another ability already lives here and the cell
+    /// should be blocked. `None` when the cell is either empty, hosts the
+    /// host ability's *own* on-state (overlap is allowed — most toggles
+    /// default to that), or hosts the host's current off-state.
+    blocked_by: Option<String>,
+    is_current_off: bool,
+    is_own_on: bool,
+}
+
+fn build_alt_position_cells(
+    self_id: &str,
+    current_off_position: Option<warcraft_api::ButtonPosition>,
+    container_slots: &[GridSlotId],
+    custom_keys: Option<&CustomKeysFile>,
+) -> Vec<AltPositionCell> {
+    let mut cells: Vec<AltPositionCell> =
+        Vec::with_capacity(usize::from(COMMAND_GRID_ROWS) * usize::from(COMMAND_GRID_COLUMNS));
+    for row in 0..COMMAND_GRID_ROWS {
+        for column in 0..COMMAND_GRID_COLUMNS {
+            // Find which (if any) slot resolves to this cell on the unit's
+            // primary command card. We only check `Ability` and `Command`
+            // slots — the off-state picker is concerned with on-state
+            // occupancy of *other* abilities, plus the host's own on-state
+            // (which is allowed but flagged so the user sees the overlap).
+            let occupant = Positions::cell_for_position(
+                container_slots,
+                custom_keys,
+                false,
+                column,
+                row,
+            );
+            let (blocked_by, is_own_on) = match occupant {
+                Some((slot, cell)) => {
+                    if slot.as_str().eq_ignore_ascii_case(self_id)
+                        && matches!(slot, GridSlotId::Ability(_))
+                    {
+                        (None, true)
+                    } else {
+                        (Some(cell.cloned_display_name()), false)
+                    }
+                }
+                None => (None, false),
+            };
+            let is_current_off = current_off_position
+                .map(|position| position.column() == column && position.row() == row)
+                .unwrap_or(false);
+            cells.push(AltPositionCell {
+                column,
+                row,
+                blocked_by,
+                is_current_off,
+                is_own_on,
+            });
+        }
+    }
+    cells
+}
+
+#[component]
+fn AltPositionPicker(
+    object_id: String,
+    cells: Vec<AltPositionCell>,
+    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut alt_position_picker_open: Signal<bool>,
+) -> Element {
+    let object_id_rc: Rc<str> = Rc::from(object_id.as_str());
+    rsx! {
+        div {
+            class: "alt-position-picker-backdrop",
+            onclick: move |_| alt_position_picker_open.set(false),
+            div {
+                class: "alt-position-picker-dialog",
+                onclick: move |event| event.stop_propagation(),
+                h3 { class: "alt-position-picker-title", "Off button position" }
+                p { class: "alt-position-picker-hint",
+                    "Pick a free cell. Greyed cells are taken by another ability; the cell with a dot is the on-state of this ability (overlap allowed)."
+                }
+                div { class: "alt-position-picker-grid",
+                    for cell in cells.iter() {
+                        {
+                            let is_blocked = cell.blocked_by.is_some();
+                            let is_current_off = cell.is_current_off;
+                            let is_own_on = cell.is_own_on;
+                            let aria_label = match (&cell.blocked_by, is_own_on, is_current_off) {
+                                (Some(name), _, _) => format!("{} (occupied by {})", cell_label(cell.column, cell.row), name),
+                                (None, true, _) => format!("{} (your on-state)", cell_label(cell.column, cell.row)),
+                                (None, false, true) => format!("{} (current off)", cell_label(cell.column, cell.row)),
+                                _ => cell_label(cell.column, cell.row),
+                            };
+                            let blocked_attr = if is_blocked { "true" } else { "false" };
+                            let current_attr = if is_current_off { "true" } else { "false" };
+                            let own_on_attr = if is_own_on { "true" } else { "false" };
+                            let column = cell.column;
+                            let row = cell.row;
+                            let cell_object_id = Rc::clone(&object_id_rc);
+                            rsx! {
+                                button {
+                                    class: "alt-position-picker-cell",
+                                    "data-blocked": "{blocked_attr}",
+                                    "data-current-off": "{current_attr}",
+                                    "data-own-on": "{own_on_attr}",
+                                    disabled: is_blocked,
+                                    aria_label: "{aria_label}",
+                                    onclick: move |_| {
+                                        if is_blocked {
+                                            return;
+                                        }
+                                        Positions::assign_off_position(
+                                            &mut loaded_keys,
+                                            &cell_object_id,
+                                            column,
+                                            row,
+                                        );
+                                        alt_position_picker_open.set(false);
+                                    },
+                                    if let Some(name) = cell.blocked_by.as_deref() {
+                                        span { class: "alt-position-picker-cell-occupant", "{name}" }
+                                    } else if is_own_on {
+                                        span { class: "alt-position-picker-cell-marker", "•" }
+                                    } else if is_current_off {
+                                        span { class: "alt-position-picker-cell-marker", "✓" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                button {
+                    class: "alt-position-picker-cancel",
+                    onclick: move |_| alt_position_picker_open.set(false),
+                    "Cancel"
+                }
+            }
+        }
+    }
+}
+
+fn cell_label(column: u8, row: u8) -> String {
+    format!("Column {}, Row {}", column, row)
 }
 
 const PICKER_ROWS: &[&[HotkeyToken]] = &[
