@@ -1,4 +1,4 @@
-use warcraft_api::ButtonPosition;
+use warcraft_api::{ButtonPosition, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
@@ -48,6 +48,9 @@ pub(crate) struct InspectorDetail {
     ubertip_levels: Vec<String>,
     is_command: bool,
     is_passive: bool,
+    /// Passive racial ability shown in the research panel for informational
+    /// purposes only (e.g. Shadow Meld Item, Ultravision Item). Not bindable.
+    info_only: bool,
     /// Upgraded-form unit ID for train-slot pairs that share a button position
     /// (e.g. base Siege Engine `hmtt` → upgraded `hrtt`). Populated only on
     /// the base train slot; `None` everywhere else.
@@ -64,6 +67,7 @@ impl InspectorDetail {
         custom_keys: &Option<CustomKeysFile>,
         host_unit_id: &str,
         from_uprooted: bool,
+        from_research: bool,
         upgrade_unit_id: Option<&str>,
     ) -> Self {
         let custom_keys_ref = custom_keys.as_ref();
@@ -105,6 +109,10 @@ impl InspectorDetail {
                             .starts_with("passivebuttons/")
                     })
                     .unwrap_or(false);
+                let info_only = from_research
+                    && database_object
+                        .map(|o| matches!(o.meta(), WarcraftObjectMeta::Ability(m) if m.max_level() == 1 && !m.is_ultimate()))
+                        .unwrap_or(false);
                 let object_has_alt_state = database_object
                     .map(|warcraft_object| {
                         warcraft_object.un_ubertip().is_some() || warcraft_object.un_tip().is_some()
@@ -132,7 +140,7 @@ impl InspectorDetail {
                 // having to hunt for the toggle.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
                 let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
-                    if object_has_alt_state && !prefer_un_state && !ability_is_morph {
+                    if object_has_alt_state && !prefer_un_state && !ability_is_morph && !from_uprooted {
                         let alt_name = database_object
                             .and_then(|warcraft_object| warcraft_object.un_tip())
                             .map(WarcraftColorCodes::stripped);
@@ -234,6 +242,7 @@ impl InspectorDetail {
                     ubertip_levels,
                     is_command: false,
                     is_passive,
+                    info_only,
                     upgrade_unit_id: upgrade_unit_id_field,
                     upgrade_display_name,
                     upgrade_hotkey_token,
@@ -283,6 +292,7 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: false,
                     is_passive: false,
+                    info_only: false,
                     upgrade_unit_id: None,
                     upgrade_display_name: None,
                     upgrade_hotkey_token: None,
@@ -331,6 +341,7 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: true,
                     is_passive: false,
+                    info_only: false,
                     upgrade_unit_id: None,
                     upgrade_display_name: None,
                     upgrade_hotkey_token: None,
@@ -418,6 +429,10 @@ impl InspectorDetail {
 
     pub(crate) fn is_passive(&self) -> bool {
         self.is_passive
+    }
+
+    pub(crate) fn info_only(&self) -> bool {
+        self.info_only
     }
 
     pub(crate) fn upgrade_unit_id(&self) -> Option<&str> {

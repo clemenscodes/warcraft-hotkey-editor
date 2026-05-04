@@ -244,6 +244,21 @@ pub(crate) fn UnitDetailPanel(
     let is_uprootable = BuildingTraits::can_uproot(&unit_id);
     let host_is_burrowed = BuildingTraits::is_burrowed_form(&unit_id);
     for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
+        // Passive racial items (e.g. Shadow Meld Item, Ultravision Item) live
+        // only in the research panel. They're max_level=1, non-ultimate hero
+        // abilities. Genuinely levelable hero abilities are either multi-level
+        // or ultimates.
+        if hero_abilities.contains(ability_id) {
+            let is_levelable = ObjectLookup::by_id(ability_id.value())
+                .map(|o| match o.meta() {
+                    WarcraftObjectMeta::Ability(meta) => meta.max_level() > 1 || meta.is_ultimate(),
+                    _ => true,
+                })
+                .unwrap_or(true);
+            if !is_levelable {
+                continue;
+            }
+        }
         if is_uprootable && ability_id.value().eq_ignore_ascii_case("Aeat") {
             continue;
         }
@@ -259,14 +274,15 @@ pub(crate) fn UnitDetailPanel(
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
-        // One slot per ability — toggle abilities (Adef, Abur, Abrf, …)
-        // expose their off-state hotkey + position through a dedicated
-        // section on the override card rather than as a second grid cell.
-        // Two cells competing for the same default position (Adef both
-        // halves at (0,2)) was unworkable in practice: dragging would
-        // pick the wrong one, clicking selected both, and the off icon
-        // wouldn't surface anyway because we haven't extracted it.
-        command_card_slots.push(GridSlotId::ability(ability_id.value()));
+        // Uprootable ancients show the Uproot button in the rooted (main)
+        // command card. Using an AbilityOff slot gives it an independent
+        // Unbuttonpos/Unhotkey so it can be positioned and bound separately
+        // from the Root slot in the dedicated uprooted panel.
+        if is_uprootable && BuildingTraits::ability_has_alt_state(ability_id.value()) {
+            command_card_slots.push(GridSlotId::ability_off(ability_id.value()));
+        } else {
+            command_card_slots.push(GridSlotId::ability(ability_id.value()));
+        }
     }
     if unit_kind == UnitKind::Hero
         && !hero_abilities.is_empty()
@@ -358,7 +374,7 @@ pub(crate) fn UnitDetailPanel(
         } else {
             None
         };
-        InspectorDetail::build(slot, &loaded_keys.read(), &unit_id, inspector_from_uprooted, upgrade_id)
+        InspectorDetail::build(slot, &loaded_keys.read(), &unit_id, inspector_from_uprooted, inspector_from_research, upgrade_id)
     });
     let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
     let active_container_slots: Rc<[GridSlotId]> = if inspector_from_uprooted {
@@ -778,6 +794,12 @@ const ALL_ATTACK_TYPES: [AttackType; 7] = [
 ///   "Select Hero On" / "Pick Shop Buyer" in the unit list).
 const ROOTED_ONLY_ABILITY_CODES: &[&str] = &["Apit", "Aall"];
 
+/// Ability aliases that have no `code` entry in abilitydata.slk but are still
+/// rooted-only mechanics and must be suppressed from the uprooted panel.
+/// `Anei` (Select User / Neutral Interact) is added implicitly by the game
+/// engine to shops and disappears when the building uproots.
+const ROOTED_ONLY_ABILITY_IDS: &[&str] = &["Anei"];
+
 fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
     let Some(target_id) = ObjectLookup::morph_target_unit(ability_id) else {
         return false;
@@ -794,6 +816,12 @@ fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
 }
 
 fn is_rooted_only_mechanic(ability_id: &str) -> bool {
+    if ROOTED_ONLY_ABILITY_IDS
+        .iter()
+        .any(|id| id.eq_ignore_ascii_case(ability_id))
+    {
+        return true;
+    }
     let Some(ability_code) = ObjectLookup::ability_code(ability_id) else {
         return false;
     };

@@ -231,7 +231,7 @@ impl Positions {
                 }
             }
             None => {
-                if Self::should_auto_position(slot) {
+                if Self::should_auto_position(slot) || is_research_context {
                     Self::next_free_cell(0, occupied_positions)
                 } else {
                     None
@@ -426,14 +426,15 @@ impl Positions {
         // When an ability's off-state sits on the same cell as its on-state
         // (the natural default layout), a swap should carry the off-state
         // along so the two halves stay together.
-        let moving_off_colocated = match (request.moving_slot, &moving_old_position) {
-            (GridSlotId::Ability(id), Some(old_pos)) => {
-                Self::current_for_ability_off(id, custom_keys).is_some_and(|off_pos| {
-                    off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
-                })
-            }
-            _ => false,
-        };
+        let moving_off_colocated = !request.prevent_co_move
+            && match (request.moving_slot, &moving_old_position) {
+                (GridSlotId::Ability(id), Some(old_pos)) => {
+                    Self::current_for_ability_off(id, custom_keys).is_some_and(|off_pos| {
+                        off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
+                    })
+                }
+                _ => false,
+            };
         let displaced_off_colocated = match &displaced_pair {
             Some((GridSlotId::Ability(id), _)) => Self::current_for_ability_off(id, custom_keys)
                 .is_some_and(|off_pos| {
@@ -666,6 +667,11 @@ pub(crate) struct MoveRequest<'a> {
     /// always allowed regardless of this flag (overlap is the natural
     /// default for toggle abilities).
     prevent_swap: bool,
+    /// When true, suppress the automatic co-movement of an ability's
+    /// off-state when the on-state is dragged. Used for grids where the
+    /// off-state is independently positionable in a separate grid (e.g.
+    /// the uprooted-panel's Root slot and the rooted-panel's Uproot slot).
+    prevent_co_move: bool,
 }
 
 impl<'a> MoveRequest<'a> {
@@ -685,6 +691,7 @@ impl<'a> MoveRequest<'a> {
             target_row,
             is_research_context,
             prevent_swap: false,
+            prevent_co_move: false,
         }
     }
 
@@ -695,6 +702,11 @@ impl<'a> MoveRequest<'a> {
     #[allow(dead_code)]
     pub(crate) fn with_prevent_swap(mut self, prevent: bool) -> Self {
         self.prevent_swap = prevent;
+        self
+    }
+
+    pub(crate) fn with_prevent_co_move(mut self, prevent: bool) -> Self {
+        self.prevent_co_move = prevent;
         self
     }
 }

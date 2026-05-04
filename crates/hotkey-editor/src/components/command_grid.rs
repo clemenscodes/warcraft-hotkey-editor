@@ -1,5 +1,5 @@
 use std::cell::{Cell, RefCell};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 use dioxus::html::input_data::MouseButton;
@@ -227,6 +227,33 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let host_is_alt_form =
         !host_unit_id.is_empty() && BuildingTraits::unit_starts_in_toggle_alt_state(&host_unit_id);
 
+    let conflicting_hotkeys: HashSet<String> = {
+        let mut counts: HashMap<String, u32> = HashMap::new();
+        for row in 0..COMMAND_GRID_ROWS {
+            for column in 0..COMMAND_GRID_COLUMNS {
+                let cell_with_slot = Positions::cell_for_position(
+                    &slot_ids_cloned,
+                    custom_keys_option,
+                    is_research_grid,
+                    column,
+                    row,
+                );
+                let letter = cell_with_slot.as_ref().and_then(|(_, cell)| {
+                    let token = if is_research_grid {
+                        cell.binding_research_hotkey().or_else(|| cell.binding_hotkey())
+                    } else {
+                        cell.binding_hotkey()
+                    };
+                    token.map(|t| t.display_label())
+                });
+                if let Some(l) = letter {
+                    *counts.entry(l).or_insert(0) += 1;
+                }
+            }
+        }
+        counts.into_iter().filter(|(_, n)| *n > 1).map(|(k, _)| k).collect()
+    };
+
     rsx! {
         div { class: "command-section",
             h3 { class: "command-section-heading", "{heading_text}" }
@@ -262,9 +289,11 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 ability_id, binding,
                                             ));
                                         }
-                                    if BuildingTraits::unit_starts_in_toggle_alt_state(
-                                        &host_unit_id,
-                                    ) && BuildingTraits::ability_has_alt_state(ability_id)
+                                    if !is_uprooted_grid
+                                        && BuildingTraits::unit_starts_in_toggle_alt_state(
+                                            &host_unit_id,
+                                        )
+                                        && BuildingTraits::ability_has_alt_state(ability_id)
                                     {
                                         return Some(AbilityCell::for_ability_off(
                                             ability_id, binding,
@@ -402,7 +431,13 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let displayed_letter: Option<String> = binding_letter_option
                                 .clone()
                                 .or_else(|| derived_letter.map(|character| character.to_string()));
-                            let hotkey_overlay_class = if is_passive_on_command_grid {
+                            let is_hotkey_conflict = displayed_letter
+                                .as_ref()
+                                .map(|l| conflicting_hotkeys.contains(l.as_str()))
+                                .unwrap_or(false);
+                            let hotkey_overlay_class = if is_hotkey_conflict {
+                                "hotkey-overlay conflict"
+                            } else if is_passive_on_command_grid {
                                 "hotkey-overlay passive"
                             } else {
                                 "hotkey-overlay"
@@ -853,7 +888,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                         drop.row(),
                                                         is_research_grid,
                                                     )
-                                                    .with_prevent_swap(prevent_swap_on_drop);
+                                                    .with_prevent_swap(prevent_swap_on_drop)
+                                                    .with_prevent_co_move(is_uprooted_grid);
                                                     Positions::move_or_swap(&mut keys_signal, move_request);
                                                     let moved_slot = dragging.slot_id().clone();
                                                     select_slot.set(Some(moved_slot));

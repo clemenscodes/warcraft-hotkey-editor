@@ -87,7 +87,7 @@ pub(crate) fn TileOverridePanel(
     // research hotkey for a command. Surface the regular hotkey field for
     // commands even in research context so the cancel button is bindable.
     let show_hotkey_field = !detail.is_passive() && (!is_research_context || detail.is_command());
-    let show_research_field = !detail.is_command() && is_research_context;
+    let show_research_field = !detail.is_command() && is_research_context && !detail.info_only();
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);
     let research_is_editing = editing_snapshot == Some(OverrideEditTarget::ResearchHotkey);
@@ -368,6 +368,8 @@ pub(crate) fn TileOverridePanel(
                         },
                         "{research_label}"
                     }
+                } else if detail.info_only() {
+                    p { class: "tile-override-info-only", "Passive racial ability" }
                 }
             }
             if !primary_description_lines.is_empty() {
