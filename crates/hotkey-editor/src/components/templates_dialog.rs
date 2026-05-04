@@ -10,6 +10,7 @@ use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::domain::grid_templates::ResolvedTemplate;
 use crate::domain::object_lookup::ObjectLookup;
+use crate::domain::positions::Positions;
 
 #[component]
 pub(crate) fn TemplatesDialog(
@@ -52,6 +53,7 @@ pub(crate) fn TemplatesDialog(
                                             let mut baseline = CustomKeysFile::from(baseline_content());
                                             UploadOverlay::apply(&mut baseline, &parsed_template);
                                             loaded_keys.set(Some(baseline));
+                                            Positions::commit_all_unit_positions(&mut loaded_keys);
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,
                                                 command_count,

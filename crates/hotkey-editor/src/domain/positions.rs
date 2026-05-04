@@ -7,6 +7,7 @@ use crate::domain::command_catalog::CommandCatalog;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::GridSlotId;
 use crate::domain::object_lookup::ObjectLookup;
+use crate::domain::unit_slots::UnitSlots;
 
 #[derive(Clone)]
 struct ResolvedSlot {
@@ -599,6 +600,93 @@ impl Positions {
         }
     }
 
+    /// Eagerly resolve stored-position conflicts that would cause hotkey
+    /// collisions after apply-grid. Only considers non-passive abilities that
+    /// have an explicitly stored Buttonpos — passive abilities are skipped by
+    /// apply-grid and must never displace a template-specified active position.
+    /// Database-default positions are also excluded: the baseline pre-bakes
+    /// every ability's database default, so treating defaults as "claimed"
+    /// would falsely conflict with template-specified positions.
+    pub(crate) fn commit_all_unit_positions(
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+    ) {
+        for unit_id in UnitSlots::all_unit_ids() {
+            let cmd_card = UnitSlots::command_card_for(unit_id);
+            if !cmd_card.is_empty() {
+                Self::resolve_stored_active_conflicts(&cmd_card, custom_keys_signal);
+            }
+            if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
+                Self::resolve_stored_active_conflicts(&build_menu, custom_keys_signal);
+            }
+            if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
+                Self::resolve_stored_active_conflicts(&uprooted_menu, custom_keys_signal);
+            }
+        }
+    }
+
+    /// Detect and resolve stored-position conflicts among non-passive abilities
+    /// in a single slot container. Passive abilities and slots without explicit
+    /// stored Buttonpos are ignored — they cannot cause hotkey collisions and
+    /// must not displace template-specified positions.
+    fn resolve_stored_active_conflicts(
+        slot_ids: &[GridSlotId],
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+    ) {
+        let stored: Vec<(GridSlotId, ButtonPosition)> = {
+            let read = custom_keys_signal.read();
+            let file = read.as_ref();
+            slot_ids
+                .iter()
+                .filter_map(|slot| {
+                    let GridSlotId::Ability(id) = slot else {
+                        return None;
+                    };
+                    if ObjectLookup::is_passive_ability(id) {
+                        return None;
+                    }
+                    let pos = file
+                        .and_then(|f| f.binding(id))
+                        .and_then(|b| b.button_position())
+                        .map(|p| ButtonPosition::new(p.column(), p.row()))?;
+                    Some((slot.clone(), pos))
+                })
+                .collect()
+        };
+
+        let mut claimed: Vec<ButtonPosition> = Vec::new();
+        let mut to_move: Vec<(GridSlotId, u8)> = Vec::new();
+
+        for (slot, pos) in &stored {
+            if Self::position_occupied(&claimed, *pos) {
+                to_move.push((slot.clone(), pos.row()));
+            } else {
+                claimed.push(*pos);
+            }
+        }
+
+        if to_move.is_empty() {
+            return;
+        }
+
+        let mut guard = custom_keys_signal.write();
+        let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+
+        for (slot, preferred_row) in to_move {
+            let Some(new_pos) = Self::next_free_cell(preferred_row, &claimed) else {
+                continue;
+            };
+            claimed.push(new_pos);
+            let new_pos_kb =
+                warcraft_keybinds::ButtonPosition::new(new_pos.column(), new_pos.row());
+            let GridSlotId::Ability(id) = &slot else {
+                continue;
+            };
+            if let Some(binding) = file.binding_or_default_mut(id) {
+                binding.set_button_position(Some(new_pos_kb));
+            }
+        }
+    }
+
     pub(crate) fn apply_grid_to_all_known_objects(
         custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
         layout: GridLayout,
@@ -628,7 +716,11 @@ impl Positions {
                 .binding(ability_id)
                 .and_then(|b| b.research_button_position())
                 .map(|p| ButtonPosition::new(p.column(), p.row()));
-            if pos.is_none() && research_pos.is_none() {
+            let unbutton_pos = file
+                .binding(ability_id)
+                .and_then(|b| b.unbutton_position())
+                .map(|p| ButtonPosition::new(p.column(), p.row()));
+            if pos.is_none() && research_pos.is_none() && unbutton_pos.is_none() {
                 continue;
             }
             let Some(binding) = file.binding_or_default_mut(ability_id) else {
@@ -651,6 +743,16 @@ impl Positions {
                 let new_hotkey = letter.to_string();
                 if binding.research_hotkey() != Some(new_hotkey.as_str()) {
                     binding.set_research_hotkey(Some(new_hotkey));
+                    changed_count += 1;
+                }
+            }
+            if let Some(p) = unbutton_pos
+                && let Some(letter) = layout.letter_at(p.column(), p.row())
+                && BindingHotkey::accepts_grid_letter(binding.unhotkey())
+            {
+                let new_hotkey = letter.to_string();
+                if binding.unhotkey() != Some(new_hotkey.as_str()) {
+                    binding.set_unhotkey(Some(new_hotkey));
                     changed_count += 1;
                 }
             }

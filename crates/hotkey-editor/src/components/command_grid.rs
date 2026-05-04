@@ -230,8 +230,12 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
 
     {
         let has_mismatch = slot_ids_cloned.iter().any(|slot| {
-            let resolved =
-                Positions::resolved_for(slot, &slot_ids_cloned, custom_keys_option, is_research_grid);
+            let resolved = Positions::resolved_for(
+                slot,
+                &slot_ids_cloned,
+                custom_keys_option,
+                is_research_grid,
+            );
             let stored = Positions::current_for(slot, custom_keys_option, is_research_grid);
             stored.is_some() && resolved != stored
         });

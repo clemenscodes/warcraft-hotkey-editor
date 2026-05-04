@@ -15,3 +15,4 @@ pub(crate) mod races;
 pub(crate) mod unit_catalog;
 pub(crate) mod unit_kind;
 pub(crate) mod unit_mode;
+pub(crate) mod unit_slots;

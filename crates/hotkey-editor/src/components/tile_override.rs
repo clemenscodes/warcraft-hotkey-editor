@@ -60,6 +60,7 @@ pub(crate) fn TileOverridePanel(
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
+    let is_off_state_for_capture = detail.is_off_state();
     let upgrade_unit_id_for_capture: Option<String> = detail.upgrade_unit_id().map(str::to_owned);
     let layout_derived_hotkey_token = detail
         .button_position()
@@ -323,12 +324,20 @@ pub(crate) fn TileOverridePanel(
         }
         match active_target {
             OverrideEditTarget::Hotkey => {
-                HotkeyOverride::apply(
-                    &mut loaded_keys,
-                    &picker_object_id,
-                    is_command_for_capture,
-                    Some(token),
-                );
+                if is_off_state_for_capture {
+                    HotkeyOverride::apply_unhotkey(
+                        &mut loaded_keys,
+                        &picker_object_id,
+                        Some(token),
+                    );
+                } else {
+                    HotkeyOverride::apply(
+                        &mut loaded_keys,
+                        &picker_object_id,
+                        is_command_for_capture,
+                        Some(token),
+                    );
+                }
             }
             OverrideEditTarget::ResearchHotkey => {
                 HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));

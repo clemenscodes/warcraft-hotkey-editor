@@ -59,6 +59,9 @@ pub(crate) struct InspectorDetail {
     upgrade_display_name: Option<String>,
     /// Hotkey currently assigned to the upgraded form's binding, if any.
     upgrade_hotkey_token: Option<HotkeyToken>,
+    /// True when this detail was built from an `AbilityOff` slot — the hotkey
+    /// field holds `Unhotkey` and the override button must write `Unhotkey`.
+    is_off_state: bool,
 }
 
 impl InspectorDetail {
@@ -255,6 +258,7 @@ impl InspectorDetail {
                     upgrade_unit_id: upgrade_unit_id_field,
                     upgrade_display_name,
                     upgrade_hotkey_token,
+                    is_off_state: false,
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
@@ -305,6 +309,7 @@ impl InspectorDetail {
                     upgrade_unit_id: None,
                     upgrade_display_name: None,
                     upgrade_hotkey_token: None,
+                    is_off_state: true,
                 }
             }
             GridSlotId::Command(command_name) => {
@@ -354,6 +359,7 @@ impl InspectorDetail {
                     upgrade_unit_id: None,
                     upgrade_display_name: None,
                     upgrade_hotkey_token: None,
+                    is_off_state: false,
                 }
             }
         }
@@ -454,5 +460,9 @@ impl InspectorDetail {
 
     pub(crate) fn upgrade_hotkey_token(&self) -> Option<HotkeyToken> {
         self.upgrade_hotkey_token
+    }
+
+    pub(crate) fn is_off_state(&self) -> bool {
+        self.is_off_state
     }
 }
