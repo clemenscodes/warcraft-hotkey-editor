@@ -279,7 +279,7 @@ pub(crate) fn AppHeader(
             }
         }
         if templates_dialog_open() {
-            TemplatesDialog { loaded_keys, upload_status, grid_layout, templates_dialog_open }
+            TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
         }
         if layout_dialog_open() {
             DialogRoot {

@@ -233,9 +233,22 @@ pub(crate) fn UnitDetailPanel(
         if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_id.value()) {
             continue;
         }
+        if morphs_into_self(ability_id.value(), &unit_id) {
+            continue;
+        }
+        if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
+            continue;
+        }
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
+        // One slot per ability — toggle abilities (Adef, Abur, Abrf, …)
+        // expose their off-state hotkey + position through a dedicated
+        // section on the override card rather than as a second grid cell.
+        // Two cells competing for the same default position (Adef both
+        // halves at (0,2)) was unworkable in practice: dragging would
+        // pick the wrong one, clicking selected both, and the off icon
+        // wouldn't surface anyway because we haven't extracted it.
         command_card_slots.push(GridSlotId::ability(ability_id.value()));
     }
     if unit_kind == UnitKind::Hero
@@ -283,6 +296,15 @@ pub(crate) fn UnitDetailPanel(
                 if !ObjectLookup::has_icon(ability_id.value()) {
                     continue;
                 }
+                if morphs_into_self(ability_id.value(), &unit_id) {
+                    continue;
+                }
+                if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
+                    continue;
+                }
+                if is_rooted_only_mechanic(ability_id.value()) {
+                    continue;
+                }
                 uprooted_slots.push(GridSlotId::ability(ability_id.value()));
             }
             Some(uprooted_slots.into())
@@ -300,10 +322,10 @@ pub(crate) fn UnitDetailPanel(
             }
             research_menu_slots.push(GridSlotId::ability(ability_id.value()));
         }
-        if let Some(cancel_command) = CommandCatalog::known_command("CmdCancel")
-            && ObjectLookup::has_icon(cancel_command)
+        if let Some(back_command) = CommandCatalog::submenu_back_command()
+            && ObjectLookup::has_icon(back_command)
         {
-            research_menu_slots.push(GridSlotId::command(cancel_command));
+            research_menu_slots.push(GridSlotId::command(back_command));
         }
         Some(research_menu_slots.into())
     } else {
@@ -358,6 +380,9 @@ pub(crate) fn UnitDetailPanel(
         grid_layout,
         is_research_grid: false,
         is_uprooted_grid: false,
+        prevent_swap_on_drop: false,
+        restrict_draggable_to: Vec::new(),
+        host_unit_id: unit_id.clone(),
     };
 
     let unit_description = unit_object.ubertip();
@@ -625,6 +650,9 @@ pub(crate) fn UnitDetailPanel(
                                     grid_layout,
                                     is_research_grid: false,
                                     is_uprooted_grid: false,
+        prevent_swap_on_drop: false,
+        restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..build_menu_props } }
                             }
@@ -646,6 +674,9 @@ pub(crate) fn UnitDetailPanel(
                                     grid_layout,
                                     is_research_grid: false,
                                     is_uprooted_grid: true,
+                                    prevent_swap_on_drop: false,
+                                    restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..uprooted_props } }
                             }
@@ -667,6 +698,9 @@ pub(crate) fn UnitDetailPanel(
                                     grid_layout,
                                     is_research_grid: true,
                                     is_uprooted_grid: false,
+        prevent_swap_on_drop: false,
+        restrict_draggable_to: Vec::new(),
+                                    host_unit_id: unit_id.clone(),
                                 };
                                 rsx! { CommandGridSection { ..research_props } }
                             }
@@ -683,6 +717,9 @@ pub(crate) fn UnitDetailPanel(
                                 selected_from_research,
                                 selected_from_uprooted,
                                 tier_overrides,
+                                dragging_slot,
+                                drop_target_cell,
+                                drag_follower,
                                 active_container_slots: active_container_slots.clone(),
                             }
                         } else {
@@ -707,6 +744,41 @@ const ALL_ATTACK_TYPES: [AttackType; 7] = [
     AttackType::Hero,
     AttackType::Spells,
 ];
+
+/// Game-mechanic codes that only make sense on a stationary / rooted form.
+/// When an Ancient uproots and becomes mobile, the shop UI vanishes in-game
+/// — so we suppress these abilities from the editor's uprooted command card.
+/// Sourced from `units/abilitydata.slk`'s `code` column via the extractor.
+///
+/// - `Apit` — Purchase Item (the shop's buy button).
+/// - `Aall` — Allied Building (the mechanic that flags a shop as
+///   purchasable by allied players in team games; appears as
+///   "Select Hero On" / "Pick Shop Buyer" in the unit list).
+const ROOTED_ONLY_ABILITY_CODES: &[&str] = &["Apit", "Aall"];
+
+fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
+    let Some(target_id) = ObjectLookup::morph_target_unit(ability_id) else {
+        return false;
+    };
+    if !target_id.eq_ignore_ascii_case(host_unit_id) {
+        return false;
+    }
+    // Self-morph + alt-state means a two-way toggle living on the same unit
+    // (Burrow ⇄ Unburrow on `ucrm`/`ucsB`/`ucsC`/`nbnb`, Defend ⇄ Stop Defend
+    // on `Adef`). The on-state's `morph_target` legitimately points at the
+    // host unit, so suppressing the ability here would hide the entire toggle
+    // from the burrowed/active form. Keep it.
+    !BuildingTraits::ability_has_alt_state(ability_id)
+}
+
+fn is_rooted_only_mechanic(ability_id: &str) -> bool {
+    let Some(ability_code) = ObjectLookup::ability_code(ability_id) else {
+        return false;
+    };
+    ROOTED_ONLY_ABILITY_CODES
+        .iter()
+        .any(|rooted_only_code| rooted_only_code.eq_ignore_ascii_case(ability_code))
+}
 
 fn matchup_cell_class_attacking(multiplier: f32) -> &'static str {
     if multiplier > 1.05 {

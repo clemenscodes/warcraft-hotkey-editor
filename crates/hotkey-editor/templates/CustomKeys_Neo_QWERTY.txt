@@ -1382,6 +1382,10 @@ Tip=Essence of Blight (|cffffcc00X|r)
 Hotkey=V
 Tip=Morph into Destroyer (|cffffcc00V|r)
 
+[aave]
+Hotkey=V
+Buttonpos=3,2
+
 [advm]
 Hotkey=Z
 Tip=Devour Magic (|cffffcc00Z|r)
@@ -1391,7 +1395,7 @@ Hotkey=X
 Tip=Orb of Annihilation (|cffffcc00X|r)
 
 [aabs]
-Hotkey=V
+Hotkey=C
 Tip=Absorb Mana (|cffffcc00V|r)
 
 [unp1]

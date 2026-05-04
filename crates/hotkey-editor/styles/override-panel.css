@@ -256,6 +256,256 @@
     white-space: pre-wrap;
 }
 
+/* Alt-state block surfaces the off side of toggle abilities — Defend ⇄ Stop
+ * Defend, Burrow ⇄ Unburrow, Bear Form ⇄ unmorph. Visually distinct from the
+ * primary description (cooler border colour, slightly muted background) so
+ * the player can tell at a glance which lines describe the on-state and which
+ * describe what happens after pressing the toggle. */
+.tile-override-alt-state {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    /* No right padding — the hotkey button in `.tile-override-alt-state-header`
+     * needs to land at the card's right edge so it lines up vertically with
+     * the primary `.tile-override-header`'s hotkey button. The blue accent
+     * is carried by `border-left` + the muted background; the description
+     * text picking up that extra inch on the right reads fine. */
+    padding: 0.7rem 0 0.7rem 1rem;
+    background: rgba(8, 18, 35, 0.55);
+    border-left: 2px solid #6ec3ff;
+    border-radius: 4px 0 0 4px;
+    color: #c8d4ec;
+    font-size: 1.4rem;
+    line-height: 1.5;
+}
+
+/* Alt-state header mirrors the primary `.tile-override-header` grid track
+ * (1fr | auto | auto) so the gold V hotkey button in the primary block
+ * and the alt block sit on the same right-edge column. The extra `auto`
+ * track holds a small icon button that opens the off-position picker
+ * dialog. */
+.tile-override-alt-state-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: 0.85rem;
+}
+
+.tile-override-alt-state-header-text {
+    min-width: 0;
+}
+
+.tile-override-alt-state-label {
+    margin: 0;
+    font-weight: 600;
+    color: #a9d8ff;
+    font-size: 1.45rem;
+}
+
+.tile-override-alt-state-line {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Square icon button matching the V hotkey cell's footprint, rendered with
+ * a crosshair SVG. Uses the same blue accent as the rest of the alt block
+ * so it reads as part of the off-state cluster. */
+.tile-override-alt-state-position-button {
+    appearance: none;
+    width: 5rem;
+    height: 5rem;
+    padding: 0.3rem;
+    background: rgba(110, 195, 255, 0.08);
+    border: 2px solid #6ec3ff;
+    color: #a9d8ff;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.tile-override-alt-state-position-button:hover {
+    background: rgba(110, 195, 255, 0.22);
+    border-color: #6ec3ff;
+    color: #d6ecff;
+}
+
+.tile-override-alt-state-position-button:focus-visible {
+    outline: 2px solid #6ec3ff;
+    outline-offset: 2px;
+}
+
+.tile-override-alt-state-position-icon {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Off-state position picker reuses `dialog-shell` + `wc3-dialog` from
+ * primitives.css plus `CommandGridSection`'s own grid styles. The picker
+ * body just needs a centred vertical layout for the explainer and the
+ * fixed-width grid below it. */
+.alt-position-picker-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 2.5rem 2.5rem;
+}
+
+/* Same gold-uppercase-serif treatment as `templates-dialog-explainer`
+ * and `preview-dialog-hint` so dialog-tier explainers all read alike. */
+.alt-position-picker-explainer {
+    margin: 0;
+    text-align: center;
+    font-family: 'Friz Quadrata', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 206, 99, 0.75);
+    font-size: 1.85rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 0 #000;
+    max-width: 90rem;
+}
+
+/* The picker grid reuses `CommandGridSection`, which carries
+ * `.command-section { container-type: inline-size }` plus a desktop
+ * tile-size clamp keyed off `100cqi`. With container-size containment
+ * the section's inline size doesn't depend on its descendants — so
+ * inside our flex wrapper it collapses to the heading's min-content
+ * (one word per line) and the cqi-based formula drops to its lower
+ * bound. Disable the containment for the picker (we don't need
+ * container queries here) and pin the grid to the desktop max so the
+ * cells match what players see on the live command card. */
+.alt-position-picker-grid-anchor {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.alt-position-picker-grid-anchor .command-section {
+    container-type: normal;
+    width: max-content;
+}
+
+.alt-position-picker-grid-anchor .grid-tiles {
+    --tile-size: 8rem;
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-auto-rows: var(--tile-size);
+}
+
+.alt-position-picker-grid-anchor .grid-tile,
+.alt-position-picker-grid-anchor .command-tile-wrapper {
+    width: var(--tile-size);
+    height: var(--tile-size);
+}
+
+/* Three states inside the picker:
+ *
+ * 1. Locked filled cells — another ability lives here and the off
+ *    state can't displace it. Mute aggressively so the player reads
+ *    them as background context, not peer drop targets.
+ * 2. Empty cells — valid drop targets. Carry a faint dashed gold
+ *    border + subtle gold tint so they actively read as "drop here".
+ * 3. The toggle's own off cell — the only handle. Cranked-up gold
+ *    border, gradient, glow, and a slow pulse.
+ */
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"],
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:hover,
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:focus,
+.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:active {
+    cursor: default !important;
+    opacity: 0.32;
+    filter: saturate(0.35) brightness(0.85);
+    border-color: #233a5a !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transform: none !important;
+}
+
+/* Idle empty cells — sketched gold, faint warm tint. Hover deepens
+ * the colour but keeps the dashed style so the user can tell at a
+ * glance the cell isn't yet "armed" by a drag. */
+.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
+    border: 2px dashed rgba(255, 206, 99, 0.45) !important;
+    background: rgba(255, 206, 99, 0.04) !important;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"]:hover {
+    border-color: rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.1) !important;
+}
+
+/* Drag-active drop targets — main grid sets `.drop-target` on every
+ * empty cell in the source section the moment the drag-movement
+ * threshold is crossed. Switch from the idle 1px dashed line to a
+ * 2px *solid* gold border + warmer fill so the activation is the
+ * unambiguous visual cue: "drag is live, every empty cell is in
+ * play". */
+.alt-position-picker-grid-anchor .grid-tile.drop-target {
+    border: 2px solid rgba(255, 206, 99, 0.75) !important;
+    background: rgba(255, 206, 99, 0.14) !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
+}
+
+/* Cursor is currently over a drop-target — full-strength gold border,
+ * gradient fill, big outer glow. Matches the lift the live command
+ * grid uses for its hovered drop targets. */
+.alt-position-picker-grid-anchor .grid-tile.drag-over,
+.alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
+.alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
+    border: 2px solid #ffce63 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
+        rgba(20, 35, 60, 0.95) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 224, 150, 0.65),
+        0 0 28px rgba(255, 206, 99, 0.85) !important;
+}
+
+/* Source cell idle — gold border so the player can tell which cell
+ * is the draggable one. No pulse, no glow, no scale, no filter:
+ * static, calm. Transition suppressed: the border-color is already
+ * gold at rest so hover should produce no animated change at all. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
+    cursor: grab !important;
+    border-color: #ffce63 !important;
+    transition: none !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+    cursor: grabbing !important;
+}
+
+/* Once the drag starts, the source cell IS a target cell — render it
+ * exactly like every other empty drop-target. The main grid's
+ * `.dragging-source > *` rule already hides the icon, so the box is
+ * functionally empty; matching the drop-target styling means hover
+ * and drag-over states inherited from the rules above apply with
+ * the same visuals as the rest of the grid. */
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
+    border: 2px dashed rgba(255, 206, 99, 0.45) !important;
+    background: rgba(255, 206, 99, 0.04) !important;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    cursor: grabbing !important;
+}
+
+.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drag-over {
+    border: 3px solid #ffce63 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
+        rgba(20, 35, 60, 0.95) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 224, 150, 0.65),
+        0 0 28px rgba(255, 206, 99, 0.85) !important;
+}
+
 .tile-override-key-group {
     display: flex;
     flex-direction: row;
@@ -455,6 +705,11 @@ body[data-kb-modality] .override-key-cell:focus {
         font-size: 1.6rem;
     }
 
+    .tile-override-alt-state-position-button {
+        width: 3.6rem;
+        height: 3.6rem;
+    }
+
     .override-key-cell[data-special="true"] {
         width: auto;
         min-width: 3.6rem;
@@ -478,6 +733,10 @@ body[data-kb-modality] .override-key-cell:focus {
         min-width: 4.6rem;
         min-height: 4.6rem;
         font-size: 2.2rem;
+    }
+    .tile-override-alt-state-position-button {
+        width: 4.6rem;
+        height: 4.6rem;
     }
     .override-key-cell[data-special="true"] {
         width: auto;

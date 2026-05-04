@@ -2847,6 +2847,12 @@ pub struct AbilityMeta {
     default_research_button_position: Option<ButtonPosition>,
     ubertip: Option<&'static str>,
     research_ubertip: Option<&'static str>,
+    code: Option<&'static str>,
+    morph_target_unit: Option<WarcraftObjectId>,
+    off_button_position: Option<ButtonPosition>,
+    off_tip: Option<&'static str>,
+    off_ubertip: Option<&'static str>,
+    off_icon: Option<&'static str>,
 }
 
 impl AbilityMeta {
@@ -2859,6 +2865,12 @@ impl AbilityMeta {
             default_research_button_position: None,
             ubertip: None,
             research_ubertip: None,
+            code: None,
+            morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
     }
 
@@ -2877,6 +2889,12 @@ impl AbilityMeta {
             default_research_button_position,
             ubertip: None,
             research_ubertip: None,
+            code: None,
+            morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
     }
 
@@ -2897,7 +2915,37 @@ impl AbilityMeta {
             default_research_button_position,
             ubertip,
             research_ubertip,
+            code: None,
+            morph_target_unit: None,
+            off_button_position: None,
+            off_tip: None,
+            off_ubertip: None,
+            off_icon: None,
         }
+    }
+
+    pub const fn with_code(mut self, code: Option<&'static str>) -> Self {
+        self.code = code;
+        self
+    }
+
+    pub const fn with_morph_target(mut self, target: Option<WarcraftObjectId>) -> Self {
+        self.morph_target_unit = target;
+        self
+    }
+
+    pub const fn with_off_state(
+        mut self,
+        off_button_position: Option<ButtonPosition>,
+        off_tip: Option<&'static str>,
+        off_ubertip: Option<&'static str>,
+        off_icon: Option<&'static str>,
+    ) -> Self {
+        self.off_button_position = off_button_position;
+        self.off_tip = off_tip;
+        self.off_ubertip = off_ubertip;
+        self.off_icon = off_icon;
+        self
     }
 
     pub fn ubertip(&self) -> Option<&'static str> {
@@ -2906,6 +2954,47 @@ impl AbilityMeta {
 
     pub fn research_ubertip(&self) -> Option<&'static str> {
         self.research_ubertip
+    }
+
+    /// Game-mechanic class as listed in `units/abilitydata.slk`'s `code`
+    /// column. Independent of the per-unit alias — e.g. multiple aliases
+    /// can resolve to `code = "Apit"` (Purchase Item / shop button).
+    pub fn code(&self) -> Option<&'static str> {
+        self.code
+    }
+
+    /// For one-way morph abilities (Avenger Form, Crow Form, etc.) the
+    /// unit id this ability transforms its caster into. Sourced from the
+    /// `UnitID1` column of `abilitydata.slk`.
+    pub fn morph_target_unit(&self) -> Option<&WarcraftObjectId> {
+        self.morph_target_unit.as_ref()
+    }
+
+    /// Off-state button position for toggleable abilities (e.g. Defend on
+    /// the Footman). Some abilities place their "deactivate" cell at a
+    /// different grid slot when active. Sourced from `UnButtonpos=` in
+    /// `abilityfunc.txt`.
+    pub fn off_button_position(&self) -> Option<ButtonPosition> {
+        self.off_button_position
+    }
+
+    /// Off-state short tooltip — the label shown while the ability is
+    /// active (e.g. "Stop Defending" while Defend is on). Sourced from
+    /// `UnTip=` in `abilityfunc.txt`.
+    pub fn off_tip(&self) -> Option<&'static str> {
+        self.off_tip
+    }
+
+    /// Off-state long description — `UnUbertip=` in `abilityfunc.txt`.
+    pub fn off_ubertip(&self) -> Option<&'static str> {
+        self.off_ubertip
+    }
+
+    /// Off-state icon path (`UnArt=` in `abilityfunc.txt`). Different art
+    /// from the on-state icon for toggle abilities like Defend, whose
+    /// active state shows a distinct "Stop Defending" art.
+    pub fn off_icon(&self) -> Option<&'static str> {
+        self.off_icon
     }
 
     pub fn default_button_position(&self) -> Option<ButtonPosition> {

@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
@@ -16,10 +14,15 @@ pub(crate) struct UnitCatalog;
 
 impl UnitCatalog {
     /// The single source of truth for "which units belong in a list view".
-    /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, sorts
-    /// by category priority then display name, and dedupes by `(kind, name)`
-    /// so internal-id variants (e.g. `Nal2`/`Nal3`/`Nalc`/`Nalm` all rendering
-    /// as "Alchemist") collapse to a single entry.
+    /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, and
+    /// sorts by category priority then display name. Does *not* dedupe by
+    /// name — same-name internal-id variants (Demon Hunter `Eevi`/`Eevm`/
+    /// `Eidm`/`Eill`/`Eilm`, Alchemist `Nal2`/`Nal3`/`Nalc`/`Nalm`, Tinker
+    /// `Ntin`/`Nrob`, Druid of the Claw `edoc`/`edcm`, Carrion Beetle
+    /// `ucs1`/`ucs2`/`ucs3`) all surface as distinct entries with their unit
+    /// id visible. The game ships these IDs deliberately (campaign variants,
+    /// metamorphosis forms, level-summon variants) and any heuristic that
+    /// tries to pick a canonical one is going to be wrong somewhere.
     pub(crate) fn entries_for(
         race: Race,
         mode: UnitMode,
@@ -100,14 +103,10 @@ impl UnitCatalog {
                     .first()
                     .copied()
                     .unwrap_or("");
-                left_name.cmp(right_name)
+                left_name
+                    .cmp(right_name)
+                    .then_with(|| left_entry.unit_id.cmp(&right_entry.unit_id))
             })
-        });
-
-        let mut seen_keys: HashSet<(UnitKind, &'static str)> = HashSet::new();
-        entries.retain(|entry| {
-            let name = entry.warcraft_object.names().first().copied().unwrap_or("");
-            seen_keys.insert((entry.unit_kind, name))
         });
 
         entries
