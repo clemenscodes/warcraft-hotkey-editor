@@ -60,8 +60,7 @@ pub(crate) fn TileOverridePanel(
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
-    let upgrade_unit_id_for_capture: Option<String> =
-        detail.upgrade_unit_id().map(str::to_owned);
+    let upgrade_unit_id_for_capture: Option<String> = detail.upgrade_unit_id().map(str::to_owned);
     let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
@@ -274,14 +273,15 @@ pub(crate) fn TileOverridePanel(
         Some(OverrideEditTarget::UpgradeHotkey) => detail.upgrade_hotkey_token(),
         None => None,
     };
-    let picker_effective_object_id = if matches!(picker_target, Some(OverrideEditTarget::UpgradeHotkey)) {
-        upgrade_unit_id_for_capture
-            .as_deref()
-            .unwrap_or(&object_id_for_capture)
-            .to_string()
-    } else {
-        object_id_for_capture.clone()
-    };
+    let picker_effective_object_id =
+        if matches!(picker_target, Some(OverrideEditTarget::UpgradeHotkey)) {
+            upgrade_unit_id_for_capture
+                .as_deref()
+                .unwrap_or(&object_id_for_capture)
+                .to_string()
+        } else {
+            object_id_for_capture.clone()
+        };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
         build_picker_rows(
             layout_snapshot,

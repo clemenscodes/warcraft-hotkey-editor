@@ -240,7 +240,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                 );
                 let letter = cell_with_slot.as_ref().and_then(|(_, cell)| {
                     let token = if is_research_grid {
-                        cell.binding_research_hotkey().or_else(|| cell.binding_hotkey())
+                        cell.binding_research_hotkey()
+                            .or_else(|| cell.binding_hotkey())
                     } else {
                         cell.binding_hotkey()
                     };
@@ -251,7 +252,11 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                 }
             }
         }
-        counts.into_iter().filter(|(_, n)| *n > 1).map(|(k, _)| k).collect()
+        counts
+            .into_iter()
+            .filter(|(_, n)| *n > 1)
+            .map(|(k, _)| k)
+            .collect()
     };
 
     rsx! {

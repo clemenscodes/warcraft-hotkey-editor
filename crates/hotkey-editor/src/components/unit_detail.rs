@@ -374,7 +374,14 @@ pub(crate) fn UnitDetailPanel(
         } else {
             None
         };
-        InspectorDetail::build(slot, &loaded_keys.read(), &unit_id, inspector_from_uprooted, inspector_from_research, upgrade_id)
+        InspectorDetail::build(
+            slot,
+            &loaded_keys.read(),
+            &unit_id,
+            inspector_from_uprooted,
+            inspector_from_research,
+            upgrade_id,
+        )
     });
     let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
     let active_container_slots: Rc<[GridSlotId]> = if inspector_from_uprooted {

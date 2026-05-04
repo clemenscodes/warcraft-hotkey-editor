@@ -140,7 +140,11 @@ impl InspectorDetail {
                 // having to hunt for the toggle.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
                 let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
-                    if object_has_alt_state && !prefer_un_state && !ability_is_morph && !from_uprooted {
+                    if object_has_alt_state
+                        && !prefer_un_state
+                        && !ability_is_morph
+                        && !from_uprooted
+                    {
                         let alt_name = database_object
                             .and_then(|warcraft_object| warcraft_object.un_tip())
                             .map(WarcraftColorCodes::stripped);

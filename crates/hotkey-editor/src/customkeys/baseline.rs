@@ -1,1 +1,5 @@
-pub(crate) const BASELINE_CUSTOM_KEYS: &str = include_str!("../../templates/CustomKeys.txt");
+use crate::domain::default_config::DefaultConfig;
+
+pub(crate) fn baseline_content() -> &'static str {
+    DefaultConfig::content()
+}
