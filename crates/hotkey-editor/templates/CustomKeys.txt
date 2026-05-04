@@ -3670,6 +3670,7 @@ Buttonpos=0,1
 Ubertip=Warrior Hero, adept at summoning insect minions and crushing enemies. Can learn Impale, Spiked Carapace, Carrion Beetles and Locust Swarm. Attacks land units.
 
 [Ucrl]
+Hotkey=C
 Buttonpos=0,1
 Tip=Summon Crypt Lord
 Ubertip=Warrior Hero, adept at summoning insect minions and crushing enemies. Can learn Impale, Spiked Carapace, Carrion Beetles and Locust Swarm. Attacks land units.
@@ -3729,6 +3730,7 @@ Tip=Create Altar of Elders
 Ubertip=Summons Heroes. Revives slain Heroes.
 
 [ebal]
+Hotkey=T
 Buttonpos=2,0
 Tip=Train Glaive Thrower
 Ubertip=Long-range siege weaponry. Exceptional damage versus buildings. Can gain the Vorpal Blades upgrade to attack trees. Attacks land units.
@@ -3746,7 +3748,6 @@ Tip=Train Chimaera
 Ubertip=Flying two headed Dragon. Can learn Corrosive Breath. Attacks land units.
 
 [edcm]
-Hotkey=C
 Buttonpos=1,0
 Tip=Train Druid of the Claw
 Ubertip=Melee spellcaster. Can initially cast Roar, which increases attack damage. Can also learn Rejuvenation, Bear Form and Mark of the Claw. Attacks land units.
@@ -3794,7 +3795,6 @@ Tip=Train Dryad
 Ubertip=Anti-spellcaster that has a poison attack which slows and damages enemy units. Also has Spell Immunity which renders her invulnerable to magical effects and damage. Can learn Abolish Magic. Attacks land and air units.
 
 [edtm]
-Hotkey=T
 Buttonpos=1,0
 Tip=Train Druid of the Talon
 Ubertip=Maneuverable spellcaster. Can initially cast Faerie Fire, which reduces armor and gives vision of an enemy unit. Can also learn Storm Crow Form, Cyclone and Mark of the Talon. Attacks land and air units.
@@ -4147,6 +4147,7 @@ Tip=Hire Blue Dragonspawn Sorcerer
 Ubertip=Medium ranged unit with Evasion and Frost Nova. Attacks land and air units.
 
 [nbdw]
+Hotkey=W
 Buttonpos=0,0
 Tip=Hire Blue Dragonspawn Warrior
 Ubertip=Heavy melee unit with Evasion. Attacks land units.
@@ -4393,6 +4394,7 @@ Tip=Invoke Fel Boar
 Ubertip=Call upon the spirit of Fel Boar to save you.
 
 [nfgb]
+Hotkey=B
 Buttonpos=1,0
 Tip=Hire Bloodfiend
 Ubertip=Medium melee unit with Cleaving Attack. Attacks land units.
@@ -4640,6 +4642,7 @@ Tip=Hire Kobold Geomancer
 Ubertip=Light ranged unit that casts Slow and Abolish Magic. Attacks land and air units.
 
 [nkot]
+Hotkey=T
 Buttonpos=0,0
 Tip=Hire Kobold Tunneler
 Ubertip=Light melee unit that can Bash opponents. Attacks land units.
@@ -4692,6 +4695,7 @@ Tip=Hire Mammoth
 Ubertip=Medium melee unit. Attacks land units.
 
 [nmbg]
+Hotkey=B
 Buttonpos=0,0
 Tip=Hire Mur'gul Blood-Gill
 Ubertip=Light ranged amphibious unit with Heal. Attacks land and air units.
@@ -4753,7 +4757,7 @@ Tip=Hire Mur'gul Shadowcaster
 Ubertip=Heavy ranged amphibious unit with Curse and Hex. Attacks land and air units.
 
 [nmsn]
-Hotkey=G
+Hotkey=S
 Buttonpos=2,0
 Tip=Hire Mur'gul Snarecaster
 Ubertip=Medium ranged amphibious unit with Abolish Magic and Slow. Attacks land and air units.
@@ -4976,6 +4980,7 @@ Tip=Summon Sludge Flinger
 Ubertip=Light ranged unit that can Slow opponents. Attacks land and air units.
 
 [nsln]
+Hotkey=L
 Buttonpos=2,0
 Tip=Summon Sludge Monstrosity
 Ubertip=Medium melee unit that can Slow opponents. Attacks land units.
@@ -5002,6 +5007,7 @@ Tip=Summon Skeletal Orc Champion
 Ubertip=Heavy melee unit with Death Coil. Attacks land units.
 
 [nsog]
+Hotkey=G
 Buttonpos=3,0
 Tip=Summon Skeletal Orc Grunt
 Ubertip=Heavy melee unit. Attacks land units.
@@ -5012,6 +5018,7 @@ Tip=Hire Stormreaver Apprentice
 Ubertip=Light ranged unit. Attacks land and air units.
 
 [nsrh]
+Hotkey=H
 Buttonpos=1,0
 Tip=Hire Stormreaver Hermit
 Ubertip=Light ranged unit with Purge. Attacks land and air units.
@@ -5032,6 +5039,7 @@ Tip=Hire Stormreaver Warlock
 Ubertip=Heavy ranged unit with Monsoon and Animate Dead. Attacks land and air units.
 
 [nssp]
+Hotkey=P
 Buttonpos=1,0
 Tip=Summon Spitting Spider
 Ubertip=Light ranged unit that spits poison at opponents. Attacks land and air units.
@@ -5064,6 +5072,7 @@ Tip=Hire Tuskarr Fighter
 Ubertip=Light melee unit. Attacks land units.
 
 [ntkh]
+Hotkey=H
 Buttonpos=0,0
 Tip=Hire Tuskarr Healer
 Ubertip=Light ranged unit with Heal and Abolish Magic. Attacks land and air units.
@@ -5145,6 +5154,7 @@ Tip=Hire Unbroken Rager
 Ubertip=Medium melee unit. Can cast ensnare. Attacks land units.
 
 [nubw]
+Hotkey=D
 Buttonpos=0,0
 Tip=Hire Unbroken Darkweaver
 Ubertip=Medium melee unit with Unholy Frenzy. Attacks land units.
@@ -5186,6 +5196,7 @@ Tip=Hire Zeppelin
 Ubertip=Flying air-transport.
 
 [oalt]
+Hotkey=A
 Buttonpos=1,1
 Tip=Build Altar of Storms
 Ubertip=Summons Heroes. Revives slain Heroes.

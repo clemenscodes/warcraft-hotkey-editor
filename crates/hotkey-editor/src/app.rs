@@ -19,6 +19,7 @@ use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::domain::positions::Positions;
 use crate::domain::races::RaceLabels;
 use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
@@ -35,6 +36,7 @@ pub(crate) fn App() -> Element {
         let mut baseline = CustomKeysFile::from(baseline_content());
         if let Some(cached) = LocalStorageCache::load() {
             UploadOverlay::apply(&mut baseline, &cached);
+            Positions::normalize_button_positions(&mut baseline);
         }
         Some(baseline)
     });

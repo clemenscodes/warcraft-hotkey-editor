@@ -8,3 +8,6 @@ description = "Parser and serializer for Warcraft III CustomKeys.txt files."
 
 [lib]
 path = "src/lib.rs"
+
+[dependencies]
+warcraft-api = { path = "../warcraft-api" }

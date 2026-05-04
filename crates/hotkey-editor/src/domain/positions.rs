@@ -333,8 +333,9 @@ impl Positions {
         let new_position = warcraft_keybinds::ButtonPosition::new(column, row);
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
-        let binding = file.binding_or_default_mut(ability_id);
-        binding.set_unbutton_position(Some(new_position));
+        if let Some(binding) = file.binding_or_default_mut(ability_id) {
+            binding.set_unbutton_position(Some(new_position));
+        }
     }
 
     pub(crate) fn assign(
@@ -356,14 +357,15 @@ impl Positions {
         match slot {
             GridSlotId::Ability(ability_id) => {
                 let is_passive = ObjectLookup::is_passive_ability(ability_id);
-                let binding = file.binding_or_default_mut(ability_id);
-                if is_research_context {
-                    binding.set_research_button_position(Some(new_position));
-                    binding.set_research_hotkey(Some(letter_string));
-                } else {
-                    binding.set_button_position(Some(new_position));
-                    if !is_passive {
-                        binding.set_hotkey(Some(letter_string));
+                if let Some(binding) = file.binding_or_default_mut(ability_id) {
+                    if is_research_context {
+                        binding.set_research_button_position(Some(new_position));
+                        binding.set_research_hotkey(Some(letter_string));
+                    } else {
+                        binding.set_button_position(Some(new_position));
+                        if !is_passive {
+                            binding.set_hotkey(Some(letter_string));
+                        }
                     }
                 }
             }
@@ -372,15 +374,17 @@ impl Positions {
                 // the on-state's `Buttonpos` / `Hotkey` live on the
                 // sibling `Ability` slot for the same id and stay put when
                 // the player drags the off-state half.
-                let binding = file.binding_or_default_mut(ability_id);
-                binding.set_unbutton_position(Some(new_position));
-                binding.set_unhotkey(Some(letter_string));
+                if let Some(binding) = file.binding_or_default_mut(ability_id) {
+                    binding.set_unbutton_position(Some(new_position));
+                    binding.set_unhotkey(Some(letter_string));
+                }
             }
             GridSlotId::Command(command_name) => {
-                let binding = file.command_or_default_mut(command_name);
-                binding.set_button_position(Some(new_position));
-                binding.set_hotkey(Some(letter_string));
-                binding.set_unbutton_position(Some(new_position));
+                if let Some(binding) = file.command_or_default_mut(command_name) {
+                    binding.set_button_position(Some(new_position));
+                    binding.set_hotkey(Some(letter_string));
+                    binding.set_unbutton_position(Some(new_position));
+                }
             }
         }
     }
@@ -524,6 +528,64 @@ impl Positions {
         }
     }
 
+    /// Resolve position conflicts in `file` so the stored `Buttonpos` values
+    /// exactly match what the display would show. Must be called after every
+    /// `UploadOverlay::apply` so the export/preview always mirrors the editor.
+    ///
+    /// Command positions are seeded first (they always win); then abilities are
+    /// processed in file order — any ability whose stored position is already
+    /// taken is cascaded to the next free cell on the same row and its
+    /// `Buttonpos` is updated in place.
+    pub(crate) fn normalize_button_positions(file: &mut CustomKeysFile) {
+        let command_names: Vec<String> = file
+            .commands_in_order()
+            .map(|entry| entry.name().to_string())
+            .collect();
+
+        let mut occupied: Vec<ButtonPosition> = command_names
+            .iter()
+            .filter_map(|name| {
+                let db_button = ObjectLookup::by_id(name).and_then(|o| o.default_button_position());
+                let binding = file.command_or_default_mut(name)?;
+                binding
+                    .button_position()
+                    .map(|p| ButtonPosition::new(p.column(), p.row()))
+                    .or(db_button)
+            })
+            .collect();
+
+        let ability_ids: Vec<String> = file
+            .bindings_in_order()
+            .map(|entry| entry.id().to_string())
+            .collect();
+
+        for id in &ability_ids {
+            if ObjectLookup::is_passive_ability(id) {
+                continue;
+            }
+            let Some(binding) = file.binding_or_default_mut(id) else {
+                continue;
+            };
+            let Some(pos) = binding
+                .button_position()
+                .map(|p| ButtonPosition::new(p.column(), p.row()))
+            else {
+                continue;
+            };
+            if Self::position_occupied(&occupied, pos) {
+                if let Some(new_pos) = Self::next_free_cell(pos.row(), &occupied) {
+                    occupied.push(new_pos);
+                    binding.set_button_position(Some(warcraft_keybinds::ButtonPosition::new(
+                        new_pos.column(),
+                        new_pos.row(),
+                    )));
+                }
+            } else {
+                occupied.push(pos);
+            }
+        }
+    }
+
     pub(crate) fn apply_grid_to_all_known_objects(
         custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
         layout: GridLayout,
@@ -558,7 +620,7 @@ impl Positions {
                 let database_object = ObjectLookup::by_id(name);
                 let database_button =
                     database_object.and_then(|object| object.default_button_position());
-                let binding = file.command_or_default_mut(name);
+                let binding = file.command_or_default_mut(name)?;
                 binding
                     .button_position()
                     .map(|p| ButtonPosition::new(p.column(), p.row()))
@@ -573,16 +635,32 @@ impl Positions {
             let database_research =
                 database_object.and_then(|object| object.default_research_button_position());
             let is_passive = ObjectLookup::is_passive_ability(ability_id);
-            let binding = file.binding_or_default_mut(ability_id);
+            let Some(binding) = file.binding_or_default_mut(ability_id) else {
+                continue;
+            };
 
             if !is_passive {
                 let explicit_button = binding
                     .button_position()
                     .map(|position| ButtonPosition::new(position.column(), position.row()));
                 let resolved_position = match explicit_button {
-                    Some(position) => {
+                    Some(position) if !Self::position_occupied(&occupied_positions, position) => {
                         occupied_positions.push(position);
                         Some(position)
+                    }
+                    Some(position) => {
+                        // Two abilities share the same explicit Buttonpos (e.g.
+                        // a template assigned conflicting positions). Cascade to
+                        // the next free cell on the same row and update the
+                        // stored position so the hotkey and visual stay in sync.
+                        let cascaded = Self::next_free_cell(position.row(), &occupied_positions);
+                        if let Some(pos) = cascaded {
+                            occupied_positions.push(pos);
+                            let new_pos =
+                                warcraft_keybinds::ButtonPosition::new(pos.column(), pos.row());
+                            binding.set_button_position(Some(new_pos));
+                        }
+                        cascaded
                     }
                     None => {
                         let fallback = database_button;
@@ -632,7 +710,9 @@ impl Positions {
             let database_object = ObjectLookup::by_id(command_name);
             let database_button =
                 database_object.and_then(|object| object.default_button_position());
-            let binding = file.command_or_default_mut(command_name);
+            let Some(binding) = file.command_or_default_mut(command_name) else {
+                continue;
+            };
             let cast_position = binding
                 .button_position()
                 .map(|position| ButtonPosition::new(position.column(), position.row()))

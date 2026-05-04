@@ -360,8 +360,9 @@ fn InventoryCell(
                 on_pick: move |code: u32| {
                     let mut guard = keys_signal.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
-                    file.binding_or_default_mut(&section_id_for_pick)
-                        .set_hotkey(Some(code.to_string()));
+                    if let Some(binding) = file.binding_or_default_mut(&section_id_for_pick) {
+                        binding.set_hotkey(Some(code.to_string()));
+                    }
                     drop(guard);
                     editing_section.set(None);
                 },
@@ -380,8 +381,12 @@ fn swap_section_bindings(
     let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
     let source_snapshot = BindingSnapshot::capture(file.binding(source_id));
     let target_snapshot = BindingSnapshot::capture(file.binding(target_id));
-    target_snapshot.restore_into(file.binding_or_default_mut(source_id));
-    source_snapshot.restore_into(file.binding_or_default_mut(target_id));
+    if let Some(binding) = file.binding_or_default_mut(source_id) {
+        target_snapshot.restore_into(binding);
+    }
+    if let Some(binding) = file.binding_or_default_mut(target_id) {
+        source_snapshot.restore_into(binding);
+    }
 }
 
 #[derive(Clone, Default)]

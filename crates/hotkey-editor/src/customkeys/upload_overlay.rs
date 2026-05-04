@@ -12,7 +12,14 @@ impl UploadOverlay {
             let Some(uploaded_binding) = uploaded_file.binding(&binding_id) else {
                 continue;
             };
-            let target_binding = target_file.binding_or_default_mut(&binding_id);
+            // System entries (inventory slots, hero selection, …) must never be
+            // overwritten by an ability overlay — they live in their own section.
+            if target_file.system(&binding_id).is_some() {
+                continue;
+            }
+            let Some(target_binding) = target_file.binding_or_default_mut(&binding_id) else {
+                continue;
+            };
             if let Some(value) = uploaded_binding.hotkey() {
                 target_binding.set_hotkey(Some(value.to_string()));
             }
@@ -55,7 +62,9 @@ impl UploadOverlay {
             let Some(uploaded_command) = uploaded_file.command(&command_name) else {
                 continue;
             };
-            let target_command = target_file.command_or_default_mut(&command_name);
+            let Some(target_command) = target_file.command_or_default_mut(&command_name) else {
+                continue;
+            };
             if let Some(value) = uploaded_command.hotkey() {
                 target_command.set_hotkey(Some(value.to_string()));
             }

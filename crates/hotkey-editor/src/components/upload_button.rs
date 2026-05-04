@@ -8,6 +8,7 @@ use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_picker::UPLOAD_INPUT_ELEMENT_ID;
 use crate::customkeys::upload_status::UploadStatus;
+use crate::domain::positions::Positions;
 
 #[component]
 pub(crate) fn UploadButton(
@@ -32,6 +33,7 @@ pub(crate) fn UploadButton(
                     let command_count = uploaded_only.commands_in_order().count();
                     let mut baseline_file = CustomKeysFile::from(baseline_content());
                     UploadOverlay::apply(&mut baseline_file, &uploaded_only);
+                    Positions::normalize_button_positions(&mut baseline_file);
                     loaded_keys.set(Some(baseline_file));
                     let loaded_status = UploadStatus::Loaded {
                         binding_count,

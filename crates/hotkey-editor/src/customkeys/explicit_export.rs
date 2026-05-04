@@ -34,7 +34,9 @@ impl ExplicitExport {
                     if default_button.is_none() && default_research.is_none() {
                         continue;
                     }
-                    let binding = file.binding_or_default_mut(id_value);
+                    let Some(binding) = file.binding_or_default_mut(id_value) else {
+                        continue;
+                    };
                     if binding.button_position().is_none()
                         && let Some(position_value) = default_button
                     {
