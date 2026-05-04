@@ -705,13 +705,17 @@ impl Positions {
             .collect();
 
         for ability_id in &ability_ids {
-            if ObjectLookup::is_passive_ability(ability_id) {
-                continue;
-            }
-            let pos = file
-                .binding(ability_id)
-                .and_then(|b| b.button_position())
-                .map(|p| ButtonPosition::new(p.column(), p.row()));
+            // Passive abilities have no command-card hotkey, but they still
+            // appear in the hero research menu and need ResearchHotkey set.
+            // Suppress only the Buttonpos→Hotkey assignment, not the whole entry.
+            let is_passive = ObjectLookup::is_passive_ability(ability_id);
+            let pos = if is_passive {
+                None
+            } else {
+                file.binding(ability_id)
+                    .and_then(|b| b.button_position())
+                    .map(|p| ButtonPosition::new(p.column(), p.row()))
+            };
             let research_pos = file
                 .binding(ability_id)
                 .and_then(|b| b.research_button_position())
