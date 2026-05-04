@@ -427,23 +427,32 @@ impl Positions {
                 })
             });
         // Pre-compute co-location flags while the read guard is still live.
-        // When an ability's off-state sits on the same cell as its on-state
-        // (the natural default layout), a swap should carry the off-state
-        // along so the two halves stay together.
+        // Only co-move when the player has *explicitly* written Unbuttonpos to
+        // the same cell — don't use current_for_ability_off here because its
+        // database-default fallback makes every morph-toggle look co-located
+        // (Burrow, Bear Form, etc. all default both halves to the same cell),
+        // which causes a drag on the primary unit to silently overwrite the
+        // independently-positioned off-state.
+        let explicit_custom_unbutton = |id: &str| -> Option<ButtonPosition> {
+            custom_keys
+                .and_then(|file| file.binding(id))
+                .and_then(|b| b.unbutton_position())
+                .map(|p| ButtonPosition::new(p.column(), p.row()))
+        };
         let moving_off_colocated = !request.prevent_co_move
             && match (request.moving_slot, &moving_old_position) {
-                (GridSlotId::Ability(id), Some(old_pos)) => {
-                    Self::current_for_ability_off(id, custom_keys).is_some_and(|off_pos| {
+                (GridSlotId::Ability(id), Some(old_pos)) => explicit_custom_unbutton(id)
+                    .is_some_and(|off_pos| {
                         off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
-                    })
-                }
+                    }),
                 _ => false,
             };
         let displaced_off_colocated = match &displaced_pair {
-            Some((GridSlotId::Ability(id), _)) => Self::current_for_ability_off(id, custom_keys)
-                .is_some_and(|off_pos| {
+            Some((GridSlotId::Ability(id), _)) => {
+                explicit_custom_unbutton(id).is_some_and(|off_pos| {
                     off_pos.column() == request.target_column && off_pos.row() == request.target_row
-                }),
+                })
+            }
             _ => false,
         };
         drop(read_guard);
@@ -528,60 +537,64 @@ impl Positions {
         }
     }
 
-    /// Resolve position conflicts in `file` so the stored `Buttonpos` values
-    /// exactly match what the display would show. Must be called after every
-    /// `UploadOverlay::apply` so the export/preview always mirrors the editor.
-    ///
-    /// Command positions are seeded first (they always win); then abilities are
-    /// processed in file order — any ability whose stored position is already
-    /// taken is cascaded to the next free cell on the same row and its
-    /// `Buttonpos` is updated in place.
-    pub(crate) fn normalize_button_positions(file: &mut CustomKeysFile) {
-        let command_names: Vec<String> = file
-            .commands_in_order()
-            .map(|entry| entry.name().to_string())
-            .collect();
+    /// Write the cascade-resolved display positions back to the file for every
+    /// slot in `slot_ids`, using the exact same `resolve_container` logic that
+    /// drives the command-grid renderer. After this call, every stored
+    /// `Buttonpos` in CustomKeys (localStorage) matches what the editor shows.
+    pub(crate) fn commit_resolved_positions(
+        slot_ids: &[GridSlotId],
+        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        is_research_context: bool,
+    ) {
+        let resolved = {
+            let read = custom_keys_signal.read();
+            Self::resolve_container(slot_ids, read.as_ref(), is_research_context)
+        };
 
-        let mut occupied: Vec<ButtonPosition> = command_names
-            .iter()
-            .filter_map(|name| {
-                let db_button = ObjectLookup::by_id(name).and_then(|o| o.default_button_position());
-                let binding = file.command_or_default_mut(name)?;
-                binding
-                    .button_position()
-                    .map(|p| ButtonPosition::new(p.column(), p.row()))
-                    .or(db_button)
-            })
-            .collect();
+        let any_mismatch = resolved.iter().any(|entry| {
+            let Some(vis_pos) = entry.position else {
+                return false;
+            };
+            let read = custom_keys_signal.read();
+            Self::current_for(&entry.slot_id, read.as_ref(), is_research_context) != Some(vis_pos)
+        });
+        if !any_mismatch {
+            return;
+        }
 
-        let ability_ids: Vec<String> = file
-            .bindings_in_order()
-            .map(|entry| entry.id().to_string())
-            .collect();
-
-        for id in &ability_ids {
-            if ObjectLookup::is_passive_ability(id) {
-                continue;
-            }
-            let Some(binding) = file.binding_or_default_mut(id) else {
+        let mut guard = custom_keys_signal.write();
+        let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        for entry in &resolved {
+            let Some(vis_pos) = entry.position else {
                 continue;
             };
-            let Some(pos) = binding
-                .button_position()
-                .map(|p| ButtonPosition::new(p.column(), p.row()))
-            else {
-                continue;
-            };
-            if Self::position_occupied(&occupied, pos) {
-                if let Some(new_pos) = Self::next_free_cell(pos.row(), &occupied) {
-                    occupied.push(new_pos);
-                    binding.set_button_position(Some(warcraft_keybinds::ButtonPosition::new(
-                        new_pos.column(),
-                        new_pos.row(),
-                    )));
+            let new_pos = warcraft_keybinds::ButtonPosition::new(vis_pos.column(), vis_pos.row());
+            match &entry.slot_id {
+                GridSlotId::Ability(id) => {
+                    let stored = file
+                        .binding(id)
+                        .and_then(|b| b.button_position())
+                        .map(|p| ButtonPosition::new(p.column(), p.row()));
+                    if stored == Some(vis_pos) {
+                        continue;
+                    }
+                    if let Some(binding) = file.binding_or_default_mut(id) {
+                        binding.set_button_position(Some(new_pos));
+                    }
                 }
-            } else {
-                occupied.push(pos);
+                GridSlotId::Command(name) => {
+                    let stored = file
+                        .command(name)
+                        .and_then(|b| b.button_position())
+                        .map(|p| ButtonPosition::new(p.column(), p.row()));
+                    if stored == Some(vis_pos) {
+                        continue;
+                    }
+                    if let Some(binding) = file.command_or_default_mut(name) {
+                        binding.set_button_position(Some(new_pos));
+                    }
+                }
+                GridSlotId::AbilityOff(_) => {}
             }
         }
     }
@@ -594,13 +607,6 @@ impl Positions {
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
 
-        // Iterate every binding actually present in the file. The previous
-        // implementation walked WARCRAFT_DATABASE only and filtered by
-        // `has_icon`, so any binding for an id we don't ship metadata for
-        // (templates carry plenty — e.g. `Pick Shop Buyer` in Neo) was
-        // skipped and kept its template-original hotkey, producing
-        // collisions with the freshly-grid-aligned bindings of database
-        // objects sharing the same column/row.
         let ability_ids: Vec<String> = file
             .bindings_in_order()
             .map(|entry| entry.id().to_string())
@@ -610,117 +616,61 @@ impl Positions {
             .map(|entry| entry.name().to_string())
             .collect();
 
-        // Seed occupied positions with every command slot (Move, Stop, Attack,
-        // …) so the ability cascade can never land on a command position.
-        // Commands are resolved first — they are not lower priority than
-        // abilities.
-        let mut occupied_positions: Vec<ButtonPosition> = command_names
-            .iter()
-            .filter_map(|name| {
-                let database_object = ObjectLookup::by_id(name);
-                let database_button =
-                    database_object.and_then(|object| object.default_button_position());
-                let binding = file.command_or_default_mut(name)?;
-                binding
-                    .button_position()
-                    .map(|p| ButtonPosition::new(p.column(), p.row()))
-                    .or(database_button)
-            })
-            .collect();
-
         for ability_id in &ability_ids {
-            let database_object = ObjectLookup::by_id(ability_id);
-            let database_button =
-                database_object.and_then(|object| object.default_button_position());
-            let database_research =
-                database_object.and_then(|object| object.default_research_button_position());
-            let is_passive = ObjectLookup::is_passive_ability(ability_id);
+            if ObjectLookup::is_passive_ability(ability_id) {
+                continue;
+            }
+            let pos = file
+                .binding(ability_id)
+                .and_then(|b| b.button_position())
+                .map(|p| ButtonPosition::new(p.column(), p.row()));
+            let research_pos = file
+                .binding(ability_id)
+                .and_then(|b| b.research_button_position())
+                .map(|p| ButtonPosition::new(p.column(), p.row()));
+            if pos.is_none() && research_pos.is_none() {
+                continue;
+            }
             let Some(binding) = file.binding_or_default_mut(ability_id) else {
                 continue;
             };
-
-            if !is_passive {
-                let explicit_button = binding
-                    .button_position()
-                    .map(|position| ButtonPosition::new(position.column(), position.row()));
-                let resolved_position = match explicit_button {
-                    Some(position) if !Self::position_occupied(&occupied_positions, position) => {
-                        occupied_positions.push(position);
-                        Some(position)
-                    }
-                    Some(position) => {
-                        // Two abilities share the same explicit Buttonpos (e.g.
-                        // a template assigned conflicting positions). Cascade to
-                        // the next free cell on the same row and update the
-                        // stored position so the hotkey and visual stay in sync.
-                        let cascaded = Self::next_free_cell(position.row(), &occupied_positions);
-                        if let Some(pos) = cascaded {
-                            occupied_positions.push(pos);
-                            let new_pos =
-                                warcraft_keybinds::ButtonPosition::new(pos.column(), pos.row());
-                            binding.set_button_position(Some(new_pos));
-                        }
-                        cascaded
-                    }
-                    None => {
-                        let fallback = database_button;
-                        let cascaded = match fallback {
-                            Some(preferred)
-                                if Self::position_occupied(&occupied_positions, preferred) =>
-                            {
-                                Self::next_free_cell(preferred.row(), &occupied_positions)
-                            }
-                            other => other,
-                        };
-                        if let Some(position) = cascaded {
-                            occupied_positions.push(position);
-                        }
-                        cascaded
-                    }
-                };
-                if let Some(position) = resolved_position
-                    && let Some(letter) = layout.letter_at(position.column(), position.row())
-                    && BindingHotkey::accepts_grid_letter(binding.hotkey())
-                {
-                    let new_hotkey = letter.to_string();
-                    if binding.hotkey() != Some(new_hotkey.as_str()) {
-                        binding.set_hotkey(Some(new_hotkey));
-                        changed_count += 1;
-                    }
+            if let Some(p) = pos
+                && let Some(letter) = layout.letter_at(p.column(), p.row())
+                && BindingHotkey::accepts_grid_letter(binding.hotkey())
+            {
+                let new_hotkey = letter.to_string();
+                if binding.hotkey() != Some(new_hotkey.as_str()) {
+                    binding.set_hotkey(Some(new_hotkey));
+                    changed_count += 1;
                 }
             }
-
-            let research_position = binding
-                .research_button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()))
-                .or(database_research);
-            if let Some(position) = research_position
-                && let Some(letter) = layout.letter_at(position.column(), position.row())
+            if let Some(p) = research_pos
+                && let Some(letter) = layout.letter_at(p.column(), p.row())
                 && BindingHotkey::accepts_grid_letter(binding.research_hotkey())
             {
-                let new_research_hotkey = letter.to_string();
-                if binding.research_hotkey() != Some(new_research_hotkey.as_str()) {
-                    binding.set_research_hotkey(Some(new_research_hotkey));
+                let new_hotkey = letter.to_string();
+                if binding.research_hotkey() != Some(new_hotkey.as_str()) {
+                    binding.set_research_hotkey(Some(new_hotkey));
                     changed_count += 1;
                 }
             }
         }
 
         for command_name in &command_names {
-            let database_object = ObjectLookup::by_id(command_name);
-            let database_button =
-                database_object.and_then(|object| object.default_button_position());
+            let pos = file
+                .command(command_name)
+                .and_then(|b| b.button_position())
+                .map(|p| ButtonPosition::new(p.column(), p.row()));
+            let Some(p) = pos else {
+                continue;
+            };
+            let Some(letter) = layout.letter_at(p.column(), p.row()) else {
+                continue;
+            };
             let Some(binding) = file.command_or_default_mut(command_name) else {
                 continue;
             };
-            let cast_position = binding
-                .button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()))
-                .or(database_button);
-            if let Some(position) = cast_position
-                && let Some(letter) = layout.letter_at(position.column(), position.row())
-                && BindingHotkey::accepts_grid_letter(binding.hotkey())
-            {
+            if BindingHotkey::accepts_grid_letter(binding.hotkey()) {
                 let new_hotkey = letter.to_string();
                 if binding.hotkey() != Some(new_hotkey.as_str()) {
                     binding.set_hotkey(Some(new_hotkey));

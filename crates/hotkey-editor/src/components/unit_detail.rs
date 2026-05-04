@@ -243,6 +243,7 @@ pub(crate) fn UnitDetailPanel(
     }
     let is_uprootable = BuildingTraits::can_uproot(&unit_id);
     let host_is_burrowed = BuildingTraits::is_burrowed_form(&unit_id);
+    let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(&unit_id);
     for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
         // Passive racial items (e.g. Shadow Meld Item, Ultravision Item) live
         // only in the research panel. They're max_level=1, non-ultimate hero
@@ -274,11 +275,17 @@ pub(crate) fn UnitDetailPanel(
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
-        // Uprootable ancients show the Uproot button in the rooted (main)
-        // command card. Using an AbilityOff slot gives it an independent
-        // Unbuttonpos/Unhotkey so it can be positioned and bound separately
-        // from the Root slot in the dedicated uprooted panel.
-        if is_uprootable && BuildingTraits::ability_has_alt_state(ability_id.value()) {
+        // Use AbilityOff so the tile is positioned by Unbuttonpos (independent
+        // of the on-state Buttonpos) when:
+        //   • the host unit is in its alternate state and the ability has an
+        //     off-half (uprootable ancients, burrowed units, militia), or
+        //   • the ability's morph target is this unit itself (bear-form druid,
+        //     where Abrf on edcm shows Night Elf Form at a separate Unbuttonpos).
+        let is_morph_back = ObjectLookup::morph_target_unit(ability_id.value())
+            .is_some_and(|target| target.eq_ignore_ascii_case(&unit_id));
+        if is_morph_back
+            || (host_is_in_alt_state && BuildingTraits::ability_has_alt_state(ability_id.value()))
+        {
             command_card_slots.push(GridSlotId::ability_off(ability_id.value()));
         } else {
             command_card_slots.push(GridSlotId::ability(ability_id.value()));

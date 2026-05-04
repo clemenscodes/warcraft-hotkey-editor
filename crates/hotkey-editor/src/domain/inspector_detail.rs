@@ -138,6 +138,11 @@ impl InspectorDetail {
                 // (a footman's "Defend"), pull `un_tip`/`un_ubertip` so the
                 // player can see the "Stop Defend" name and tooltip without
                 // having to hunt for the toggle.
+                // Morph abilities (Bear Form, Storm Crow Form, Burrow…) are
+                // excluded here: their off-state lives on a separate unit's
+                // command card (edcm, edtm, ucrm…) and is edited directly from
+                // that unit's AbilityOff slot.  Showing controls here would let
+                // the player mutate a different unit's grid from this panel.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
                 let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
                     if object_has_alt_state

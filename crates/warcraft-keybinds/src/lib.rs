@@ -908,10 +908,9 @@ struct SectionAccumulator {
 impl SectionAccumulator {
     fn apply(&mut self, key: &str, value: &str) {
         match key.to_lowercase().as_str() {
-            "hotkey" if self.hotkey.is_none()
-                && !value.is_empty() => {
-                    self.hotkey = Some(value.to_string());
-                }
+            "hotkey" if self.hotkey.is_none() && !value.is_empty() => {
+                self.hotkey = Some(value.to_string());
+            }
             "unhotkey" if !value.is_empty() && self.unhotkey.is_none() => {
                 self.unhotkey = Some(value.to_string());
             }
