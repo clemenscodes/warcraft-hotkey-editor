@@ -48,6 +48,14 @@ pub(crate) struct InspectorDetail {
     ubertip_levels: Vec<String>,
     is_command: bool,
     is_passive: bool,
+    /// Upgraded-form unit ID for train-slot pairs that share a button position
+    /// (e.g. base Siege Engine `hmtt` → upgraded `hrtt`). Populated only on
+    /// the base train slot; `None` everywhere else.
+    upgrade_unit_id: Option<String>,
+    /// Display name of the upgraded form (e.g. "Siege Engine").
+    upgrade_display_name: Option<String>,
+    /// Hotkey currently assigned to the upgraded form's binding, if any.
+    upgrade_hotkey_token: Option<HotkeyToken>,
 }
 
 impl InspectorDetail {
@@ -56,6 +64,7 @@ impl InspectorDetail {
         custom_keys: &Option<CustomKeysFile>,
         host_unit_id: &str,
         from_uprooted: bool,
+        upgrade_unit_id: Option<&str>,
     ) -> Self {
         let custom_keys_ref = custom_keys.as_ref();
         match slot {
@@ -190,6 +199,20 @@ impl InspectorDetail {
                     cell.cloned_icon_src()
                 };
                 let object_id = cell.cloned_object_id();
+                let (upgrade_unit_id_field, upgrade_display_name, upgrade_hotkey_token) =
+                    if let Some(upgrade_id) = upgrade_unit_id {
+                        let upgrade_binding =
+                            custom_keys_ref.and_then(|file| file.binding(upgrade_id));
+                        let upgrade_hotkey = upgrade_binding
+                            .and_then(|b| b.hotkey())
+                            .and_then(BindingHotkey::first_token);
+                        let upgrade_name = ObjectLookup::by_id(upgrade_id)
+                            .and_then(|obj| obj.names().first().copied())
+                            .map(String::from);
+                        (Some(upgrade_id.to_string()), upgrade_name, upgrade_hotkey)
+                    } else {
+                        (None, None, None)
+                    };
                 Self {
                     display_name: resolved_display_name,
                     object_id,
@@ -211,6 +234,9 @@ impl InspectorDetail {
                     ubertip_levels,
                     is_command: false,
                     is_passive,
+                    upgrade_unit_id: upgrade_unit_id_field,
+                    upgrade_display_name,
+                    upgrade_hotkey_token,
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
@@ -257,6 +283,9 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: false,
                     is_passive: false,
+                    upgrade_unit_id: None,
+                    upgrade_display_name: None,
+                    upgrade_hotkey_token: None,
                 }
             }
             GridSlotId::Command(command_name) => {
@@ -302,6 +331,9 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: true,
                     is_passive: false,
+                    upgrade_unit_id: None,
+                    upgrade_display_name: None,
+                    upgrade_hotkey_token: None,
                 }
             }
         }
@@ -386,5 +418,17 @@ impl InspectorDetail {
 
     pub(crate) fn is_passive(&self) -> bool {
         self.is_passive
+    }
+
+    pub(crate) fn upgrade_unit_id(&self) -> Option<&str> {
+        self.upgrade_unit_id.as_deref()
+    }
+
+    pub(crate) fn upgrade_display_name(&self) -> Option<&str> {
+        self.upgrade_display_name.as_deref()
+    }
+
+    pub(crate) fn upgrade_hotkey_token(&self) -> Option<HotkeyToken> {
+        self.upgrade_hotkey_token
     }
 }

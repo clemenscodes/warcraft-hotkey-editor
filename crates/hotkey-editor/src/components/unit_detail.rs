@@ -200,11 +200,28 @@ pub(crate) fn UnitDetailPanel(
         }
         command_card_slots.push(GridSlotId::command(command_name));
     }
+    let mut seen_train_positions: HashMap<(u8, u8), String> = HashMap::new();
+    let mut train_unit_upgrades: HashMap<String, String> = HashMap::new();
     for trained_id in primary_train_slots {
-        if !ObjectLookup::has_icon(trained_id.value()) {
+        let id_str = trained_id.value();
+        if !ObjectLookup::has_icon(id_str) {
             continue;
         }
-        command_card_slots.push(GridSlotId::ability(trained_id.value()));
+        let default_pos = ObjectLookup::by_id(id_str)
+            .and_then(|obj| obj.default_button_position())
+            .map(|p| (p.column(), p.row()));
+        if let Some(pos) = default_pos {
+            if let Some(existing_id) = seen_train_positions.get(&pos) {
+                // First collision at this position becomes the upgrade;
+                // further collisions are silently dropped to keep the grid clean.
+                if !train_unit_upgrades.contains_key(existing_id.as_str()) {
+                    train_unit_upgrades.insert(existing_id.clone(), id_str.to_string());
+                }
+                continue;
+            }
+            seen_train_positions.insert(pos, id_str.to_string());
+        }
+        command_card_slots.push(GridSlotId::ability(id_str));
     }
     for research_id in primary_research_slots {
         if !ObjectLookup::has_icon(research_id.value()) {
@@ -336,7 +353,12 @@ pub(crate) fn UnitDetailPanel(
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
     let inspector_panel = inspector_slot.as_ref().map(|slot| {
-        InspectorDetail::build(slot, &loaded_keys.read(), &unit_id, inspector_from_uprooted)
+        let upgrade_id = if let GridSlotId::Ability(id) = slot {
+            train_unit_upgrades.get(id.as_str()).map(String::as_str)
+        } else {
+            None
+        };
+        InspectorDetail::build(slot, &loaded_keys.read(), &unit_id, inspector_from_uprooted, upgrade_id)
     });
     let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
     let active_container_slots: Rc<[GridSlotId]> = if inspector_from_uprooted {
