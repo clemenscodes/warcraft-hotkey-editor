@@ -272,6 +272,50 @@ mod tests {
         out
     }
 
+    /// After applying the default template (or any template that preserves the
+    /// baseline button positions), the export that goes to localStorage must
+    /// have positions that agree with what the editor displays.
+    ///
+    /// Regression: the cascade algorithm used to let a shared ability's position
+    /// be overwritten by a different unit's cascade, causing localStorage to
+    /// disagree with the display.
+    #[test]
+    fn export_positions_match_display_after_template_apply() {
+        use crate::domain::default_config::DefaultConfig;
+        use warcraft_keybinds::CustomKeysFile;
+        use warcraft_keybinds::cascade::fully_normalize;
+
+        let baseline = DefaultConfig::content();
+
+        // Simulate applying the default template: overlay template onto a fresh
+        // baseline, then normalize (same steps as templates_dialog.rs).
+        // Since the default template IS the baseline, the overlay is a no-op for
+        // positions — only hotkeys differ in the Neo variants.
+        let mut loaded = CustomKeysFile::from(baseline);
+        fully_normalize(&mut loaded);
+
+        // Simulate what save_export → serialize produces (= localStorage content).
+        let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
+        let export_file = CustomKeysFile::from(export_content.as_str());
+
+        let pos = |id: &str| {
+            export_file
+                .binding(id)
+                .and_then(|b| b.button_position())
+                .map(|p| (p.column(), p.row()))
+        };
+
+        // nfsh (Forest Troll High Priest) card: Anh2(0,2), ACif(2,2), ACd2(1,2).
+        // No conflict on this card — all three positions are distinct.
+        assert_eq!(pos("ACd2"), Some((1, 2)), "ACd2 should stay at its template position 1,2");
+        assert_eq!(pos("ACif"), Some((2, 2)), "ACif should stay at its template position 2,2");
+
+        // ndth (Dark Troll High Priest) card: ACdm(0,2), Anh2(0,2), ACsl(1,2).
+        // ACdm and Anh2 both default to 0,2 — one must cascade.
+        assert_eq!(pos("ACdm"), Some((1, 2)), "ACdm should cascade to 1,2 when Anh2 occupies 0,2");
+        assert_eq!(pos("ACsl"), Some((2, 2)), "ACsl should cascade to 2,2 when ACdm cascades to 1,2");
+    }
+
     /// Regenerates CustomKeys.txt from the database. Run this whenever
     /// warcraft-database changes to keep the default template in sync.
     #[test]

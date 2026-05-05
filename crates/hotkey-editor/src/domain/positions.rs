@@ -3,6 +3,7 @@ use warcraft_api::ButtonPosition;
 use warcraft_keybinds::CustomKeysFile;
 use warcraft_keybinds::cascade::{current_for, current_for_ability_off, resolved_for, slots_match};
 
+use crate::customkeys::explicit_export::ExplicitExport;
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
 use crate::domain::grid_layout::GridLayout;
 use crate::domain::grid_slot::GridSlotId;
@@ -274,6 +275,12 @@ impl Positions {
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
 
+        // Serialize → normalize → parse to get the same positions localStorage has.
+        // Reading raw positions from the signal would give pre-cascade values for
+        // abilities that share positions across multiple units.
+        let normalized_content = ExplicitExport::serialize(file);
+        let normalized_file = CustomKeysFile::from(normalized_content.as_str());
+
         let ability_ids: Vec<String> = file
             .bindings_in_order()
             .map(|entry| entry.id().to_string())
@@ -288,15 +295,16 @@ impl Positions {
             let pos = if is_passive {
                 None
             } else {
-                file.binding(ability_id)
+                normalized_file
+                    .binding(ability_id)
                     .and_then(|b| b.button_position())
                     .map(|p| ButtonPosition::new(p.column(), p.row()))
             };
-            let research_pos = file
+            let research_pos = normalized_file
                 .binding(ability_id)
                 .and_then(|b| b.research_button_position())
                 .map(|p| ButtonPosition::new(p.column(), p.row()));
-            let unbutton_pos = file
+            let unbutton_pos = normalized_file
                 .binding(ability_id)
                 .and_then(|b| b.unbutton_position())
                 .map(|p| ButtonPosition::new(p.column(), p.row()));
@@ -339,7 +347,7 @@ impl Positions {
         }
 
         for command_name in &command_names {
-            let pos = file
+            let pos = normalized_file
                 .command(command_name)
                 .and_then(|b| b.button_position())
                 .map(|p| ButtonPosition::new(p.column(), p.row()));

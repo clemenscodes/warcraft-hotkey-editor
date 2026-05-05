@@ -1560,10 +1560,9 @@ mod cascade_tests {
 
     #[test]
     fn resolve_container_places_ability_at_custom_position() {
-        // Set a custom Buttonpos for a known ability.
         let custom_keys = CustomKeysFile::from("[Ahrl]\nButtonpos=2,0\n\n");
         let slots = vec![GridSlotId::ability("Ahrl")];
-        let result = resolve_container(&slots, Some(&custom_keys), false, false);
+        let result = resolve_container(&slots, Some(&custom_keys), false);
         let pos = result
             .iter()
             .find(|(s, _)| s.as_str() == "Ahrl")
@@ -1572,13 +1571,15 @@ mod cascade_tests {
     }
 
     #[test]
-    fn resolve_container_cascades_collision_when_normalize_flag_set() {
-        // Two abilities forced to the same position: with cascade_explicit=true
-        // the second must land somewhere else.
+    fn resolve_container_cascades_collision_between_explicit_positions() {
+        // Two abilities with the same explicit Buttonpos must land at distinct
+        // positions — the second cascades to the next free cell. This covers both
+        // the display path and the write-back path (there is no longer a separate
+        // "cascade_explicit" flag; cascading always happens on collision).
         let content = "[Ahrl]\nButtonpos=0,0\n\n[AHbz]\nButtonpos=0,0\n\n";
         let custom_keys = CustomKeysFile::from(content);
         let slots = vec![GridSlotId::ability("Ahrl"), GridSlotId::ability("AHbz")];
-        let result = resolve_container(&slots, Some(&custom_keys), false, true);
+        let result = resolve_container(&slots, Some(&custom_keys), false);
         let pos_ahrl = result
             .iter()
             .find(|(s, _)| s.as_str() == "Ahrl")
@@ -1588,7 +1589,6 @@ mod cascade_tests {
             .find(|(s, _)| s.as_str() == "AHbz")
             .and_then(|(_, p)| *p);
         assert_eq!(pos_ahrl, Some(ButtonPosition::new(0, 0)));
-        // Cascaded away from (0,0) to the next free cell.
         assert!(pos_ahbz.is_some());
         assert_ne!(pos_ahbz, Some(ButtonPosition::new(0, 0)));
     }
@@ -1632,13 +1632,129 @@ mod cascade_tests {
     #[test]
     fn fully_normalize_resolves_collisions_in_real_game_data() {
         use crate::cascade::fully_normalize;
-        // Start from the stock baseline and normalize — should not panic and
-        // should produce a file where abilities have distinct positions
-        // within each unit's command card.
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let mut file = crate::CustomKeysFile::from(baseline);
         fully_normalize(&mut file);
-        // If we get here without a panic, the cascade loop completed for
-        // all units in the database without infinite-looping or aborting.
+    }
+
+    #[test]
+    fn cascade_does_not_displace_ability_via_secondary_chain() {
+        // ACdm and Anh2 both start at (0,2) — a genuine collision in the
+        // default data for unit NDTH.  Anh2 should cascade to (2,2) (the
+        // next free cell that doesn't steal ACsl's reserved (1,2)), while
+        // ACsl must stay at (1,2).  Before the reserved-position fix, Anh2
+        // cascaded to (1,2), which then pushed ACsl to (2,2) — causing
+        // apply-grid to assign hotkey C instead of X to ACsl.
+        use crate::cascade::resolve_container;
+        let content = "[ACdm]\nButtonpos=0,2\n\n[Anh2]\nButtonpos=0,2\n\n[ACsl]\nButtonpos=1,2\n\n";
+        let custom_keys = crate::CustomKeysFile::from(content);
+        let slots = vec![
+            GridSlotId::ability("ACdm"),
+            GridSlotId::ability("Anh2"),
+            GridSlotId::ability("ACsl"),
+        ];
+        let result = resolve_container(&slots, Some(&custom_keys), false);
+        let pos = |id: &str| {
+            result
+                .iter()
+                .find(|(s, _)| s.as_str().eq_ignore_ascii_case(id))
+                .and_then(|(_, p)| *p)
+        };
+        assert_eq!(pos("ACdm"), Some(ButtonPosition::new(0, 2)));
+        assert_eq!(
+            pos("ACsl"),
+            Some(ButtonPosition::new(1, 2)),
+            "ACsl must not be displaced from its reserved (1,2) by Anh2's cascade"
+        );
+        assert_ne!(
+            pos("Anh2"),
+            Some(ButtonPosition::new(1, 2)),
+            "Anh2 must not land on ACsl's reserved (1,2)"
+        );
+    }
+
+    #[test]
+    fn fully_normalize_cascade_does_not_corrupt_cross_unit_ability() {
+        // Anh2 appears in both NDTH (with ACdm@(0,2), ACsl@(1,2)) and NFSH
+        // (with ACif@(2,2), ACd2@(1,2)).  NDTH causes Anh2 to cascade away from
+        // (0,2).  Without the globally-blocked fix, Anh2 lands on (2,2) — ACif's
+        // natural home — corrupting NFSH's layout.  With the fix, Anh2 must land
+        // somewhere that doesn't steal ACif's position.
+        use crate::cascade::fully_normalize;
+        let content = concat!(
+            "[ACdm]\nButtonpos=0,2\n\n",
+            "[Anh2]\nButtonpos=0,2\n\n",
+            "[ACsl]\nButtonpos=1,2\n\n",
+            "[ACif]\nButtonpos=2,2\n\n",
+            "[ACd2]\nButtonpos=1,2\n\n",
+        );
+        // Give the normalizer a real database-backed file so UnitSlots can build
+        // the command cards for NDTH and NFSH from the live database.  We prime
+        // the file with the positions above; fully_normalize must not move ACif.
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let mut file = crate::CustomKeysFile::from(baseline);
+        // Override positions to mirror the problematic scenario.
+        if let Some(b) = file.binding_or_default_mut("ACdm") {
+            b.set_button_position(Some(crate::ButtonPosition::new(0, 2)));
+        }
+        if let Some(b) = file.binding_or_default_mut("Anh2") {
+            b.set_button_position(Some(crate::ButtonPosition::new(0, 2)));
+        }
+        if let Some(b) = file.binding_or_default_mut("ACsl") {
+            b.set_button_position(Some(crate::ButtonPosition::new(1, 2)));
+        }
+        if let Some(b) = file.binding_or_default_mut("ACif") {
+            b.set_button_position(Some(crate::ButtonPosition::new(2, 2)));
+        }
+        if let Some(b) = file.binding_or_default_mut("ACd2") {
+            b.set_button_position(Some(crate::ButtonPosition::new(1, 2)));
+        }
+        fully_normalize(&mut file);
+        let acif_pos = file
+            .binding("ACif")
+            .and_then(|b| b.button_position().copied());
+        assert_eq!(
+            acif_pos,
+            Some(crate::ButtonPosition::new(2, 2)),
+            "ACif must stay at (2,2) — Anh2's cascade in NDTH must not steal ACif's position"
+        );
+        let anh2_pos = file
+            .binding("Anh2")
+            .and_then(|b| b.button_position().copied());
+        assert_ne!(
+            anh2_pos,
+            Some(crate::ButtonPosition::new(2, 2)),
+            "Anh2 must not land on ACif's home (2,2)"
+        );
+    }
+
+    #[test]
+    fn write_container_resolved_fixes_unbutton_collision() {
+        // Two abilities share Buttonpos=0,0 in the file. After write_container_resolved:
+        // - first keeps (0,0), second cascades to (1,0)
+        // - second's UnButtonpos was at (0,0), colliding with first's Buttonpos
+        // - normalize_unbutton_positions must move it to second's self-cell (1,0)
+        use crate::cascade::write_container_resolved;
+        let content =
+            "[Ahrl]\nButtonpos=0,0\nUnButtonpos=0,0\n\n[AHbz]\nButtonpos=0,0\nUnButtonpos=0,0\n\n";
+        let mut file = crate::CustomKeysFile::from(content);
+        let slots = vec![GridSlotId::ability("Ahrl"), GridSlotId::ability("AHbz")];
+        write_container_resolved(&mut file, &slots, false);
+
+        let ahrl_btn = file.binding("Ahrl").and_then(|b| b.button_position().copied());
+        let ahbz_btn = file.binding("AHbz").and_then(|b| b.button_position().copied());
+        let ahbz_unbtn = file.binding("AHbz").and_then(|b| b.unbutton_position().copied());
+
+        assert_eq!(ahrl_btn, Some(crate::ButtonPosition::new(0, 0)));
+        assert!(ahbz_btn.is_some());
+        assert_ne!(
+            ahbz_btn,
+            Some(crate::ButtonPosition::new(0, 0)),
+            "AHbz must cascade away from (0,0)"
+        );
+        assert_eq!(
+            ahbz_unbtn, ahbz_btn,
+            "AHbz UnButtonpos must follow its cascaded Buttonpos (self-cell)"
+        );
     }
 }

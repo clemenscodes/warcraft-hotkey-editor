@@ -11,6 +11,7 @@ pub fn serialize(loaded_file: &CustomKeysFile, baseline: &str) -> String {
     let mut export_file = CustomKeysFile::from(baseline);
     apply_overlay(&mut export_file, loaded_file);
     materialize_default_positions(&mut export_file);
+    crate::cascade::fully_normalize(&mut export_file);
     export_file.to_file_content()
 }
 
