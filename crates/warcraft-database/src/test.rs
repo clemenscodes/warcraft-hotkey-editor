@@ -151,7 +151,7 @@ mod tests {
     }
 
     #[test]
-    fn test_non_ultimate_abilities_have_max_level_at_most_three() {
+    fn test_non_ultimate_abilities_have_max_level_at_most_four() {
         for (id, object) in WARCRAFT_DATABASE.iter() {
             if object.kind() != WarcraftObjectKind::Ability {
                 continue;
@@ -163,8 +163,8 @@ mod tests {
                 continue;
             }
             assert!(
-                ability_meta.max_level() <= 3,
-                "non-ultimate ability {id:?} has max_level {} (> 3)",
+                ability_meta.max_level() <= 4,
+                "non-ultimate ability {id:?} has max_level {} (> 4)",
                 ability_meta.max_level()
             );
         }

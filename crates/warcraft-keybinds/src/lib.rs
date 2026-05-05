@@ -1263,6 +1263,7 @@ mod tests {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n\n[AHbz]\nHotkey=W\nButtonpos=1,2\n\n";
         let mut file = CustomKeysFile::from(input);
         file.binding_or_default_mut("AHhb")
+            .unwrap()
             .set_hotkey(Some("R".to_string()));
         let output = file.to_file_content();
         assert!(output.contains("Hotkey=R"));
@@ -1284,7 +1285,7 @@ mod tests {
     fn dirty_setter_only_marks_dirty_on_actual_change() {
         let input = "[AHhb]\nHotkey=Q\n\n";
         let mut file = CustomKeysFile::from(input);
-        let binding = file.binding_or_default_mut("AHhb");
+        let binding = file.binding_or_default_mut("AHhb").unwrap();
         binding.set_hotkey(Some("Q".to_string()));
         assert!(
             !binding.is_dirty(),
