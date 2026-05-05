@@ -2,6 +2,12 @@ use std::collections::HashMap;
 use std::io;
 use std::path::{Path, PathBuf};
 
+pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId};
+
+// ──────────────────────────────────────────────────────────────
+// ButtonPosition
+// ──────────────────────────────────────────────────────────────
+
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ButtonPosition {
     column: u8,
@@ -27,14 +33,25 @@ impl TryFrom<&str> for ButtonPosition {
 
     fn try_from(text: &str) -> Result<Self, Self::Error> {
         let mut parts = text.splitn(2, ',');
-        let column_str = parts.next().ok_or(())?;
-        let row_str = parts.next().ok_or(())?;
-        let column = column_str.trim().parse::<u8>().map_err(|_| ())?;
-        let row = row_str.trim().parse::<u8>().map_err(|_| ())?;
-        let button_position = ButtonPosition { column, row };
-        Ok(button_position)
+        let column = parts
+            .next()
+            .ok_or(())?
+            .trim()
+            .parse::<u8>()
+            .map_err(|_| ())?;
+        let row = parts
+            .next()
+            .ok_or(())?
+            .trim()
+            .parse::<u8>()
+            .map_err(|_| ())?;
+        Ok(ButtonPosition { column, row })
     }
 }
+
+// ──────────────────────────────────────────────────────────────
+// AbilityBinding  (abilities, units, upgrades, items)
+// ──────────────────────────────────────────────────────────────
 
 #[derive(Default, Debug, Clone)]
 pub struct AbilityBinding {
@@ -117,13 +134,6 @@ impl AbilityBinding {
         self.modifier.as_deref()
     }
 
-    pub fn set_modifier(&mut self, value: Option<String>) {
-        if self.modifier != value {
-            self.modifier = value;
-            self.dirty = true;
-        }
-    }
-
     pub fn is_dirty(&self) -> bool {
         self.dirty
     }
@@ -139,6 +149,13 @@ impl AbilityBinding {
         }
     }
 
+    pub fn set_unhotkey(&mut self, value: Option<String>) {
+        if self.unhotkey != value {
+            self.unhotkey = value;
+            self.dirty = true;
+        }
+    }
+
     pub fn set_button_position(&mut self, value: Option<ButtonPosition>) {
         if self.button_position != value {
             self.button_position = value;
@@ -149,13 +166,6 @@ impl AbilityBinding {
     pub fn set_unbutton_position(&mut self, value: Option<ButtonPosition>) {
         if self.unbutton_position != value {
             self.unbutton_position = value;
-            self.dirty = true;
-        }
-    }
-
-    pub fn set_unhotkey(&mut self, value: Option<String>) {
-        if self.unhotkey != value {
-            self.unhotkey = value;
             self.dirty = true;
         }
     }
@@ -216,6 +226,13 @@ impl AbilityBinding {
         }
     }
 
+    pub fn set_icon(&mut self, value: Option<String>) {
+        if self.icon != value {
+            self.icon = value;
+            self.dirty = true;
+        }
+    }
+
     pub fn set_un_icon(&mut self, value: Option<String>) {
         if self.un_icon != value {
             self.un_icon = value;
@@ -223,132 +240,17 @@ impl AbilityBinding {
         }
     }
 
-    pub fn set_icon(&mut self, value: Option<String>) {
-        if self.icon != value {
-            self.icon = value;
+    pub fn set_modifier(&mut self, value: Option<String>) {
+        if self.modifier != value {
+            self.modifier = value;
             self.dirty = true;
         }
     }
 }
 
-#[derive(Default)]
-struct AbilityBindingAccumulator {
-    hotkey: Option<String>,
-    unhotkey: Option<String>,
-    button_position: Option<ButtonPosition>,
-    unbutton_position: Option<ButtonPosition>,
-    research_hotkey: Option<String>,
-    research_button_position: Option<ButtonPosition>,
-    tip: Option<String>,
-    research_tip: Option<String>,
-    un_tip: Option<String>,
-    ubertip: Option<String>,
-    research_ubertip: Option<String>,
-    un_ubertip: Option<String>,
-    icon: Option<String>,
-    un_icon: Option<String>,
-    modifier: Option<String>,
-}
-
-impl AbilityBindingAccumulator {
-    fn apply(&mut self, key: &str, value: &str) {
-        let lowercase_key = key.to_lowercase();
-        match lowercase_key.as_str() {
-            "hotkey" if !value.is_empty() && self.hotkey.is_none() => {
-                let hotkey = value.to_string();
-                self.hotkey = Some(hotkey);
-            }
-            "buttonpos" if self.button_position.is_none() => {
-                self.button_position = ButtonPosition::try_from(value).ok();
-            }
-            "unbuttonpos" if self.unbutton_position.is_none() => {
-                self.unbutton_position = ButtonPosition::try_from(value).ok();
-            }
-            "unhotkey" if !value.is_empty() && self.unhotkey.is_none() => {
-                let unhotkey = value.to_string();
-                self.unhotkey = Some(unhotkey);
-            }
-            "researchhotkey" if !value.is_empty() && self.research_hotkey.is_none() => {
-                let research_hotkey = value.to_string();
-                self.research_hotkey = Some(research_hotkey);
-            }
-            "researchbuttonpos" if self.research_button_position.is_none() => {
-                self.research_button_position = ButtonPosition::try_from(value).ok();
-            }
-            "tip" if self.tip.is_none() => {
-                self.tip = Some(value.to_string());
-            }
-            "researchtip" if self.research_tip.is_none() => {
-                self.research_tip = Some(value.to_string());
-            }
-            "untip" if self.un_tip.is_none() => {
-                self.un_tip = Some(value.to_string());
-            }
-            "ubertip" if self.ubertip.is_none() => {
-                self.ubertip = Some(value.to_string());
-            }
-            "researchubertip" if self.research_ubertip.is_none() => {
-                self.research_ubertip = Some(value.to_string());
-            }
-            "unubertip" if self.un_ubertip.is_none() => {
-                self.un_ubertip = Some(value.to_string());
-            }
-            "icon" if !value.is_empty() && self.icon.is_none() => {
-                let icon = value.to_string();
-                self.icon = Some(icon);
-            }
-            "art" if !value.is_empty() && self.icon.is_none() => {
-                let art = value.to_string();
-                self.icon = Some(art);
-            }
-            "unart" if !value.is_empty() && self.un_icon.is_none() => {
-                let un_art = value.to_string();
-                self.un_icon = Some(un_art);
-            }
-            "modifier" if !value.is_empty() && self.modifier.is_none() => {
-                let modifier = value.to_string();
-                self.modifier = Some(modifier);
-            }
-            _ => {}
-        }
-    }
-
-    fn into_binding(self) -> AbilityBinding {
-        AbilityBinding {
-            hotkey: self.hotkey,
-            unhotkey: self.unhotkey,
-            button_position: self.button_position,
-            unbutton_position: self.unbutton_position,
-            research_hotkey: self.research_hotkey,
-            research_button_position: self.research_button_position,
-            tip: self.tip,
-            research_tip: self.research_tip,
-            un_tip: self.un_tip,
-            ubertip: self.ubertip,
-            research_ubertip: self.research_ubertip,
-            un_ubertip: self.un_ubertip,
-            icon: self.icon,
-            un_icon: self.un_icon,
-            modifier: self.modifier,
-            dirty: false,
-        }
-    }
-}
-
-pub struct BindingEntry<'a> {
-    id: &'a str,
-    binding: &'a AbilityBinding,
-}
-
-impl<'a> BindingEntry<'a> {
-    pub fn id(&self) -> &'a str {
-        self.id
-    }
-
-    pub fn binding(&self) -> &'a AbilityBinding {
-        self.binding
-    }
-}
+// ──────────────────────────────────────────────────────────────
+// CommandBinding  (Cmd* sections)
+// ──────────────────────────────────────────────────────────────
 
 #[derive(Default, Debug, Clone)]
 pub struct CommandBinding {
@@ -425,48 +327,161 @@ impl CommandBinding {
     }
 }
 
-#[derive(Default)]
-struct CommandBindingAccumulator {
-    hotkey: Option<String>,
-    button_position: Option<ButtonPosition>,
-    unbutton_position: Option<ButtonPosition>,
-    tip: Option<String>,
-    un_tip: Option<String>,
+// ──────────────────────────────────────────────────────────────
+// SystemBinding  (inventory, hero selection, control groups, …)
+// ──────────────────────────────────────────────────────────────
+
+/// Binding for a system-level hotkey section.
+/// Sections are identified by a class-discriminator field
+/// (`GameCommand=1`, `CtrlGroupCommand=1`, etc.).
+#[derive(Debug, Clone)]
+pub struct SystemBinding {
+    hotkey: u32,
+    class: SystemKeybindClass,
+    modifier: Option<SystemKeybindModifier>,
+    dirty: bool,
 }
 
-impl CommandBindingAccumulator {
-    fn apply(&mut self, key: &str, value: &str) {
-        let lowercase_key = key.to_lowercase();
-        match lowercase_key.as_str() {
-            "hotkey" if !value.is_empty() && self.hotkey.is_none() => {
-                let hotkey = value.to_string();
-                self.hotkey = Some(hotkey);
-            }
-            "buttonpos" if self.button_position.is_none() => {
-                self.button_position = ButtonPosition::try_from(value).ok();
-            }
-            "unbuttonpos" if self.unbutton_position.is_none() => {
-                self.unbutton_position = ButtonPosition::try_from(value).ok();
-            }
-            "tip" if self.tip.is_none() => {
-                self.tip = Some(value.to_string());
-            }
-            "untip" if self.un_tip.is_none() => {
-                self.un_tip = Some(value.to_string());
-            }
-            _ => {}
+impl SystemBinding {
+    pub fn new(
+        hotkey: u32,
+        class: SystemKeybindClass,
+        modifier: Option<SystemKeybindModifier>,
+    ) -> Self {
+        Self {
+            hotkey,
+            class,
+            modifier,
+            dirty: false,
         }
     }
 
-    fn into_binding(self) -> CommandBinding {
-        CommandBinding {
-            hotkey: self.hotkey,
-            button_position: self.button_position,
-            unbutton_position: self.unbutton_position,
-            tip: self.tip,
-            un_tip: self.un_tip,
-            dirty: false,
+    pub fn hotkey(&self) -> u32 {
+        self.hotkey
+    }
+
+    pub fn class(&self) -> SystemKeybindClass {
+        self.class
+    }
+
+    pub fn modifier(&self) -> Option<SystemKeybindModifier> {
+        self.modifier
+    }
+
+    pub fn set_hotkey(&mut self, value: u32) {
+        if self.hotkey != value {
+            self.hotkey = value;
+            self.dirty = true;
         }
+    }
+
+    pub fn is_dirty(&self) -> bool {
+        self.dirty
+    }
+
+    pub fn mark_clean(&mut self) {
+        self.dirty = false;
+    }
+}
+
+// ──────────────────────────────────────────────────────────────
+// WarcraftKeybinding  (the unified variant)
+// ──────────────────────────────────────────────────────────────
+
+/// A fully-typed keybinding parsed from a single section of CustomKeys.txt.
+#[derive(Debug, Clone)]
+#[allow(clippy::large_enum_variant)]
+pub enum WarcraftKeybinding {
+    /// Abilities, units, upgrades, and items — all non-command, non-system sections.
+    Ability(AbilityBinding),
+    /// Cmd* command sections (CmdAttack, CmdMove, …).
+    Command(CommandBinding),
+    /// System hotkey sections (inventory slots, hero selection, control groups, …).
+    System(SystemBinding),
+}
+
+impl WarcraftKeybinding {
+    pub fn as_ability(&self) -> Option<&AbilityBinding> {
+        if let Self::Ability(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_ability_mut(&mut self) -> Option<&mut AbilityBinding> {
+        if let Self::Ability(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_command(&self) -> Option<&CommandBinding> {
+        if let Self::Command(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_command_mut(&mut self) -> Option<&mut CommandBinding> {
+        if let Self::Command(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_system(&self) -> Option<&SystemBinding> {
+        if let Self::System(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_system_mut(&mut self) -> Option<&mut SystemBinding> {
+        if let Self::System(b) = self {
+            Some(b)
+        } else {
+            None
+        }
+    }
+
+    pub fn is_dirty(&self) -> bool {
+        match self {
+            Self::Ability(b) => b.is_dirty(),
+            Self::Command(b) => b.is_dirty(),
+            Self::System(b) => b.is_dirty(),
+        }
+    }
+
+    pub fn mark_clean(&mut self) {
+        match self {
+            Self::Ability(b) => b.mark_clean(),
+            Self::Command(b) => b.mark_clean(),
+            Self::System(b) => b.mark_clean(),
+        }
+    }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Entry types for ordered iteration
+// ──────────────────────────────────────────────────────────────
+
+pub struct BindingEntry<'a> {
+    id: &'a str,
+    binding: &'a AbilityBinding,
+}
+
+impl<'a> BindingEntry<'a> {
+    pub fn id(&self) -> &'a str {
+        self.id
+    }
+
+    pub fn binding(&self) -> &'a AbilityBinding {
+        self.binding
     }
 }
 
@@ -485,117 +500,146 @@ impl<'a> CommandEntry<'a> {
     }
 }
 
-fn is_command_section(section_name: &str) -> bool {
-    let lowered = section_name.to_ascii_lowercase();
-    lowered.starts_with("cmd")
-}
+// ──────────────────────────────────────────────────────────────
+// CustomKeysFile
+// ──────────────────────────────────────────────────────────────
 
 pub struct CustomKeysFile {
-    /// Keyed by lowercase object ID for case-insensitive lookup.
-    bindings: HashMap<String, AbilityBinding>,
-    /// Lowercase object IDs in file order, for ordered iteration.
+    /// All entries keyed by lowercase section ID for O(1) lookup.
+    entries: HashMap<String, WarcraftKeybinding>,
+    /// All section IDs in file order for deterministic serialisation.
     order: Vec<String>,
-    /// Original-case IDs indexed by their lowercase form, for round-trip serialisation.
+    /// Original-case IDs indexed by lowercase form for round-trip output.
     original_ids: HashMap<String, String>,
-    /// Built-in command sections (e.g. CommandMove, CommandStop), keyed by lowercase name.
-    commands: HashMap<String, CommandBinding>,
-    /// Lowercase command names in file order, for ordered iteration.
-    command_order: Vec<String>,
-    /// Original-case command names indexed by lowercase form.
-    original_command_names: HashMap<String, String>,
-    /// Verbatim text of each ability section (`[id]` line through trailing blank line) for byte-identical
-    /// preservation of untouched bindings during patch-mode export.
+    /// Verbatim raw text per section for byte-identical preservation of untouched bindings.
     raw_sections: HashMap<String, String>,
-    /// Verbatim text of each command section.
-    raw_command_sections: HashMap<String, String>,
 }
 
 impl CustomKeysFile {
-    pub fn binding(&self, object_id: &str) -> Option<&AbilityBinding> {
-        let lowercase_id = object_id.to_lowercase();
-        self.bindings.get(&lowercase_id)
+    // ── Primary typed API ───────────────────────────────────────
+
+    /// O(1) read. Returns the keybinding for any section, regardless of variant.
+    pub fn get(&self, id: WarcraftObjectId) -> Option<&WarcraftKeybinding> {
+        self.entries.get(&id.value().to_lowercase())
     }
 
-    pub fn binding_mut(&mut self, object_id: &str) -> Option<&mut AbilityBinding> {
-        let lowercase_id = object_id.to_lowercase();
-        self.bindings.get_mut(&lowercase_id)
+    /// O(1) in-place mutation. Use the binding's `set_*` methods to mark dirty.
+    pub fn get_mut(&mut self, id: WarcraftObjectId) -> Option<&mut WarcraftKeybinding> {
+        self.entries.get_mut(&id.value().to_lowercase())
     }
 
-    pub fn binding_or_default_mut(&mut self, object_id: &str) -> &mut AbilityBinding {
-        let lowercase_id = object_id.to_lowercase();
-        if !self.bindings.contains_key(&lowercase_id) {
-            let original_id_string = object_id.to_string();
-            self.order.push(lowercase_id.clone());
+    /// O(1) upsert. Replaces any existing entry and clears the raw-text cache
+    /// so the next `to_file_content()` serialises from the typed struct.
+    pub fn set(&mut self, id: WarcraftObjectId, binding: WarcraftKeybinding) {
+        let key = id.value().to_lowercase();
+        if !self.entries.contains_key(&key) {
+            self.order.push(key.clone());
             self.original_ids
-                .insert(lowercase_id.clone(), original_id_string);
-            self.bindings
-                .insert(lowercase_id.clone(), AbilityBinding::default());
+                .insert(key.clone(), id.value().to_string());
         }
-        self.bindings
-            .get_mut(&lowercase_id)
-            .expect("binding was just inserted")
+        self.raw_sections.remove(&key);
+        self.entries.insert(key, binding);
+    }
+
+    // ── Ability / unit / upgrade / item lookup ──────────────────
+
+    pub fn binding(&self, id: &str) -> Option<&AbilityBinding> {
+        self.entries.get(&id.to_lowercase())?.as_ability()
+    }
+
+    pub fn binding_mut(&mut self, id: &str) -> Option<&mut AbilityBinding> {
+        self.entries.get_mut(&id.to_lowercase())?.as_ability_mut()
+    }
+
+    pub fn binding_or_default_mut(&mut self, id: &str) -> Option<&mut AbilityBinding> {
+        let key = id.to_lowercase();
+        if !matches!(self.entries.get(&key), Some(WarcraftKeybinding::Ability(_))) {
+            if !self.entries.contains_key(&key) {
+                self.order.push(key.clone());
+                self.original_ids.insert(key.clone(), id.to_string());
+            }
+            self.raw_sections.remove(&key);
+            self.entries.insert(
+                key.clone(),
+                WarcraftKeybinding::Ability(AbilityBinding::default()),
+            );
+        }
+        self.entries
+            .get_mut(&key)
+            .and_then(WarcraftKeybinding::as_ability_mut)
     }
 
     pub fn bindings_in_order(&self) -> impl Iterator<Item = BindingEntry<'_>> {
-        self.order.iter().filter_map(|lowercase_id| {
+        self.order.iter().filter_map(|key| {
             let original_id = self
                 .original_ids
-                .get(lowercase_id)
+                .get(key)
                 .map(String::as_str)
-                .unwrap_or(lowercase_id);
-            self.bindings.get(lowercase_id).map(|binding| BindingEntry {
+                .unwrap_or(key);
+            self.entries.get(key)?.as_ability().map(|b| BindingEntry {
                 id: original_id,
-                binding,
+                binding: b,
             })
         })
     }
 
+    // ── Command lookup ──────────────────────────────────────────
+
     pub fn command(&self, name: &str) -> Option<&CommandBinding> {
-        let lowercase_name = name.to_lowercase();
-        self.commands.get(&lowercase_name)
+        self.entries.get(&name.to_lowercase())?.as_command()
     }
 
     pub fn command_mut(&mut self, name: &str) -> Option<&mut CommandBinding> {
-        let lowercase_name = name.to_lowercase();
-        self.commands.get_mut(&lowercase_name)
+        self.entries.get_mut(&name.to_lowercase())?.as_command_mut()
     }
 
-    pub fn command_or_default_mut(&mut self, name: &str) -> &mut CommandBinding {
-        let lowercase_name = name.to_lowercase();
-        if !self.commands.contains_key(&lowercase_name) {
-            let original_name_string = name.to_string();
-            self.command_order.push(lowercase_name.clone());
-            self.original_command_names
-                .insert(lowercase_name.clone(), original_name_string);
-            self.commands
-                .insert(lowercase_name.clone(), CommandBinding::default());
+    pub fn command_or_default_mut(&mut self, name: &str) -> Option<&mut CommandBinding> {
+        let key = name.to_lowercase();
+        if !matches!(self.entries.get(&key), Some(WarcraftKeybinding::Command(_))) {
+            if !self.entries.contains_key(&key) {
+                self.order.push(key.clone());
+                self.original_ids.insert(key.clone(), name.to_string());
+            }
+            self.raw_sections.remove(&key);
+            self.entries.insert(
+                key.clone(),
+                WarcraftKeybinding::Command(CommandBinding::default()),
+            );
         }
-        self.commands
-            .get_mut(&lowercase_name)
-            .expect("command was just inserted")
+        self.entries
+            .get_mut(&key)
+            .and_then(WarcraftKeybinding::as_command_mut)
     }
 
     pub fn commands_in_order(&self) -> impl Iterator<Item = CommandEntry<'_>> {
-        self.command_order.iter().filter_map(|lowercase_name| {
+        self.order.iter().filter_map(|key| {
             let original_name = self
-                .original_command_names
-                .get(lowercase_name)
+                .original_ids
+                .get(key)
                 .map(String::as_str)
-                .unwrap_or(lowercase_name);
-            self.commands
-                .get(lowercase_name)
-                .map(|binding| CommandEntry {
-                    name: original_name,
-                    binding,
-                })
+                .unwrap_or(key);
+            self.entries.get(key)?.as_command().map(|b| CommandEntry {
+                name: original_name,
+                binding: b,
+            })
         })
     }
 
+    // ── System lookup ───────────────────────────────────────────
+
+    pub fn system(&self, id: &str) -> Option<&SystemBinding> {
+        self.entries.get(&id.to_lowercase())?.as_system()
+    }
+
+    pub fn system_mut(&mut self, id: &str) -> Option<&mut SystemBinding> {
+        self.entries.get_mut(&id.to_lowercase())?.as_system_mut()
+    }
+
+    // ── File I/O ────────────────────────────────────────────────
+
     pub fn load(path: impl AsRef<Path>) -> io::Result<Self> {
         let text = std::fs::read_to_string(path)?;
-        let content = text.as_str();
-        let parsed = Self::from(content);
-        Ok(parsed)
+        Ok(Self::from(text.as_str()))
     }
 
     pub fn default_path() -> Option<PathBuf> {
@@ -634,45 +678,28 @@ impl CustomKeysFile {
         let path = Self::default_path().ok_or_else(|| {
             io::Error::new(
                 io::ErrorKind::NotFound,
-                "CustomKeys.txt not found in ~/Documents/Warcraft III/CustomKeyBindings/ or Wine prefix",
+                "CustomKeys.txt not found in ~/Documents/Warcraft III/CustomKeyBindings/ \
+                 or Wine prefix",
             )
         })?;
         Self::load(path)
     }
 
+    // ── Serialisation ───────────────────────────────────────────
+
     pub fn to_file_content(&self) -> String {
         let mut output = String::new();
-        for lowercase_name in &self.command_order {
-            let display_name = self
-                .original_command_names
-                .get(lowercase_name)
-                .map(String::as_str)
-                .unwrap_or(lowercase_name);
-            let Some(binding) = self.commands.get(lowercase_name) else {
-                continue;
-            };
-            if !binding.is_dirty()
-                && let Some(raw_text) = self.raw_command_sections.get(lowercase_name)
-            {
-                output.push_str(raw_text);
-                if !raw_text.ends_with("\n\n") {
-                    output.push('\n');
-                }
-                continue;
-            }
-            Self::format_command_section(&mut output, display_name, binding);
-        }
-        for lowercase_id in &self.order {
+        for key in &self.order {
             let display_id = self
                 .original_ids
-                .get(lowercase_id)
+                .get(key)
                 .map(String::as_str)
-                .unwrap_or(lowercase_id);
-            let Some(binding) = self.bindings.get(lowercase_id) else {
+                .unwrap_or(key);
+            let Some(entry) = self.entries.get(key) else {
                 continue;
             };
-            if !binding.is_dirty()
-                && let Some(raw_text) = self.raw_sections.get(lowercase_id)
+            if !entry.is_dirty()
+                && let Some(raw_text) = self.raw_sections.get(key)
             {
                 output.push_str(raw_text);
                 if !raw_text.ends_with("\n\n") {
@@ -680,124 +707,153 @@ impl CustomKeysFile {
                 }
                 continue;
             }
-            Self::format_ability_section(&mut output, display_id, binding);
+            match entry {
+                WarcraftKeybinding::Ability(b) => {
+                    Self::format_ability_section(&mut output, display_id, b);
+                }
+                WarcraftKeybinding::Command(b) => {
+                    Self::format_command_section(&mut output, display_id, b);
+                }
+                WarcraftKeybinding::System(b) => {
+                    Self::format_system_section(&mut output, display_id, b);
+                }
+            }
         }
         output
     }
 
-    fn format_command_section(output: &mut String, display_name: &str, binding: &CommandBinding) {
+    fn format_ability_section(output: &mut String, id: &str, b: &AbilityBinding) {
         output.push('[');
-        output.push_str(display_name);
+        output.push_str(id);
         output.push_str("]\n");
-        if let Some(hotkey) = &binding.hotkey {
+        if let Some(v) = &b.hotkey {
             output.push_str("Hotkey=");
-            output.push_str(hotkey);
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(button_position) = &binding.button_position {
-            output.push_str("Buttonpos=");
-            let column_string = button_position.column.to_string();
-            output.push_str(&column_string);
-            output.push(',');
-            let row_string = button_position.row.to_string();
-            output.push_str(&row_string);
+        if let Some(v) = &b.unhotkey {
+            output.push_str("Unhotkey=");
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(unbutton_position) = &binding.unbutton_position {
-            output.push_str("Unbuttonpos=");
-            let column_string = unbutton_position.column.to_string();
-            output.push_str(&column_string);
-            output.push(',');
-            let row_string = unbutton_position.row.to_string();
-            output.push_str(&row_string);
+        if let Some(p) = &b.button_position {
+            output.push_str(&format!("Buttonpos={},{}\n", p.column, p.row));
+        }
+        if let Some(p) = &b.unbutton_position {
+            output.push_str(&format!("Unbuttonpos={},{}\n", p.column, p.row));
+        }
+        if let Some(v) = &b.research_hotkey {
+            output.push_str("Researchhotkey=");
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(tip) = &binding.tip {
+        if let Some(p) = &b.research_button_position {
+            output.push_str(&format!("Researchbuttonpos={},{}\n", p.column, p.row));
+        }
+        if let Some(v) = &b.tip {
             output.push_str("Tip=");
-            output.push_str(tip);
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(un_tip) = &binding.un_tip {
+        if let Some(v) = &b.research_tip {
+            output.push_str("Researchtip=");
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.un_tip {
             output.push_str("UnTip=");
-            output.push_str(un_tip);
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.ubertip {
+            output.push_str("Ubertip=");
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.research_ubertip {
+            output.push_str("Researchubertip=");
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.un_ubertip {
+            output.push_str("Unubertip=");
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.icon {
+            output.push_str("Icon=");
+            output.push_str(v);
+            output.push('\n');
+        }
+        if let Some(v) = &b.modifier {
+            output.push_str("Modifier=");
+            output.push_str(v);
             output.push('\n');
         }
         output.push('\n');
     }
 
-    fn format_ability_section(output: &mut String, display_id: &str, binding: &AbilityBinding) {
+    fn format_command_section(output: &mut String, name: &str, b: &CommandBinding) {
         output.push('[');
-        output.push_str(display_id);
+        output.push_str(name);
         output.push_str("]\n");
-        if let Some(hotkey) = &binding.hotkey {
+        if let Some(v) = &b.hotkey {
             output.push_str("Hotkey=");
-            output.push_str(hotkey);
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(unhotkey) = &binding.unhotkey {
-            output.push_str("Unhotkey=");
-            output.push_str(unhotkey);
-            output.push('\n');
+        if let Some(p) = &b.button_position {
+            output.push_str(&format!("Buttonpos={},{}\n", p.column, p.row));
         }
-        if let Some(button_position) = &binding.button_position {
-            output.push_str("Buttonpos=");
-            let column_string = button_position.column.to_string();
-            output.push_str(&column_string);
-            output.push(',');
-            let row_string = button_position.row.to_string();
-            output.push_str(&row_string);
-            output.push('\n');
+        if let Some(p) = &b.unbutton_position {
+            output.push_str(&format!("Unbuttonpos={},{}\n", p.column, p.row));
         }
-        if let Some(unbutton_position) = &binding.unbutton_position {
-            output.push_str("Unbuttonpos=");
-            let column_string = unbutton_position.column.to_string();
-            output.push_str(&column_string);
-            output.push(',');
-            let row_string = unbutton_position.row.to_string();
-            output.push_str(&row_string);
-            output.push('\n');
-        }
-        if let Some(hotkey) = &binding.research_hotkey {
-            output.push_str("Researchhotkey=");
-            output.push_str(hotkey);
-            output.push('\n');
-        }
-        if let Some(research_button_position) = &binding.research_button_position {
-            output.push_str("Researchbuttonpos=");
-            let column_string = research_button_position.column.to_string();
-            output.push_str(&column_string);
-            output.push(',');
-            let row_string = research_button_position.row.to_string();
-            output.push_str(&row_string);
-            output.push('\n');
-        }
-        if let Some(tip) = &binding.tip {
+        if let Some(v) = &b.tip {
             output.push_str("Tip=");
-            output.push_str(tip);
+            output.push_str(v);
             output.push('\n');
         }
-        if let Some(research_tip) = &binding.research_tip {
-            output.push_str("Researchtip=");
-            output.push_str(research_tip);
-            output.push('\n');
-        }
-        if let Some(un_tip) = &binding.un_tip {
+        if let Some(v) = &b.un_tip {
             output.push_str("UnTip=");
-            output.push_str(un_tip);
-            output.push('\n');
-        }
-        if let Some(icon) = &binding.icon {
-            output.push_str("Icon=");
-            output.push_str(icon);
-            output.push('\n');
-        }
-        if let Some(modifier) = &binding.modifier {
-            output.push_str("Modifier=");
-            output.push_str(modifier);
+            output.push_str(v);
             output.push('\n');
         }
         output.push('\n');
     }
+
+    fn format_system_section(output: &mut String, id: &str, b: &SystemBinding) {
+        output.push('[');
+        output.push_str(id);
+        output.push_str("]\n");
+        output.push_str(&format!("Hotkey={}\n", b.hotkey));
+        let class_field = match b.class {
+            SystemKeybindClass::Game => "GameCommand=1",
+            SystemKeybindClass::ControlGroup => "CtrlGroupCommand=1",
+            SystemKeybindClass::Menu => "MenuCommand=1",
+            SystemKeybindClass::Camera => "CameraCommand=1",
+            SystemKeybindClass::Observer => "ObserverCommand=1",
+            SystemKeybindClass::Replay => "ReplayCommand=1",
+        };
+        output.push_str(class_field);
+        output.push('\n');
+        if let Some(modifier) = b.modifier {
+            let modifier_str = match modifier {
+                SystemKeybindModifier::None => None,
+                SystemKeybindModifier::Alt => Some("Alt"),
+                SystemKeybindModifier::Ctrl => Some("Ctrl"),
+                SystemKeybindModifier::CtrlOrAlt => Some("Ctrl_or_Alt"),
+                SystemKeybindModifier::Shift => Some("Shift"),
+            };
+            if let Some(m) = modifier_str {
+                output.push_str("Modifier=");
+                output.push_str(m);
+                output.push('\n');
+            }
+        }
+        output.push('\n');
+    }
+
+    // ── Parser helpers ──────────────────────────────────────────
 
     fn parse_section_header(line: &str) -> Option<String> {
         let without_brackets = line.strip_prefix('[')?.strip_suffix(']')?;
@@ -805,206 +861,285 @@ impl CustomKeysFile {
         if id.is_empty() {
             None
         } else {
-            let id_string = id.to_string();
-            Some(id_string)
+            Some(id.to_string())
         }
     }
 
-    fn parse_key_value(line: &str) -> Option<KeyValuePair> {
-        let (key_str, value_str) = line.split_once('=')?;
-
-        let key = key_str.trim().to_string();
-        let value = value_str.to_string();
-        let pair = KeyValuePair { key, value };
-        Some(pair)
+    fn parse_key_value(line: &str) -> Option<(&str, &str)> {
+        let (key, value) = line.split_once('=')?;
+        Some((key.trim(), value))
     }
 }
 
-enum SectionAccumulator {
-    Ability(Box<AbilityBindingAccumulator>),
-    Command(CommandBindingAccumulator),
+// ──────────────────────────────────────────────────────────────
+// Parser
+// ──────────────────────────────────────────────────────────────
+
+fn is_command_section(id: &str) -> bool {
+    id.to_ascii_lowercase().starts_with("cmd")
+}
+
+/// Collects all fields of a section before we decide its variant.
+#[derive(Default)]
+struct SectionAccumulator {
+    // Shared / ability fields
+    hotkey: Option<String>,
+    unhotkey: Option<String>,
+    button_position: Option<ButtonPosition>,
+    unbutton_position: Option<ButtonPosition>,
+    research_hotkey: Option<String>,
+    research_button_position: Option<ButtonPosition>,
+    tip: Option<String>,
+    research_tip: Option<String>,
+    un_tip: Option<String>,
+    ubertip: Option<String>,
+    research_ubertip: Option<String>,
+    un_ubertip: Option<String>,
+    icon: Option<String>,
+    un_icon: Option<String>,
+    modifier: Option<String>,
+    // System discriminators — set when the corresponding class field is seen
+    system_class: Option<SystemKeybindClass>,
+    system_modifier: Option<SystemKeybindModifier>,
+    // Determined from the section header, not the fields
+    is_command: bool,
+}
+
+impl SectionAccumulator {
+    fn apply(&mut self, key: &str, value: &str) {
+        match key.to_lowercase().as_str() {
+            "hotkey" if self.hotkey.is_none() && !value.is_empty() => {
+                self.hotkey = Some(value.to_string());
+            }
+            "unhotkey" if !value.is_empty() && self.unhotkey.is_none() => {
+                self.unhotkey = Some(value.to_string());
+            }
+            "buttonpos" if self.button_position.is_none() => {
+                self.button_position = ButtonPosition::try_from(value).ok();
+            }
+            "unbuttonpos" if self.unbutton_position.is_none() => {
+                self.unbutton_position = ButtonPosition::try_from(value).ok();
+            }
+            "researchhotkey" if !value.is_empty() && self.research_hotkey.is_none() => {
+                self.research_hotkey = Some(value.to_string());
+            }
+            "researchbuttonpos" if self.research_button_position.is_none() => {
+                self.research_button_position = ButtonPosition::try_from(value).ok();
+            }
+            "tip" if self.tip.is_none() => {
+                self.tip = Some(value.to_string());
+            }
+            "researchtip" if self.research_tip.is_none() => {
+                self.research_tip = Some(value.to_string());
+            }
+            "untip" if self.un_tip.is_none() => {
+                self.un_tip = Some(value.to_string());
+            }
+            "ubertip" if self.ubertip.is_none() => {
+                self.ubertip = Some(value.to_string());
+            }
+            "researchubertip" if self.research_ubertip.is_none() => {
+                self.research_ubertip = Some(value.to_string());
+            }
+            "unubertip" if self.un_ubertip.is_none() => {
+                self.un_ubertip = Some(value.to_string());
+            }
+            "icon" | "art" if !value.is_empty() && self.icon.is_none() => {
+                self.icon = Some(value.to_string());
+            }
+            "unart" if !value.is_empty() && self.un_icon.is_none() => {
+                self.un_icon = Some(value.to_string());
+            }
+            "modifier" if !value.is_empty() && self.modifier.is_none() => {
+                self.modifier = Some(value.to_string());
+            }
+            // System class discriminators
+            "gamecommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::Game);
+            }
+            "ctrlgroupcommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::ControlGroup);
+            }
+            "menucommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::Menu);
+            }
+            "cameracommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::Camera);
+            }
+            "observercommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::Observer);
+            }
+            "replaycommand" if value.trim() == "1" && self.system_class.is_none() => {
+                self.system_class = Some(SystemKeybindClass::Replay);
+            }
+            _ => {}
+        }
+        // Parse system modifier separately since "Modifier" also appears in ability sections
+        // but only matters for System bindings (resolved at flush time).
+        if key.to_lowercase() == "modifier" && self.system_modifier.is_none() {
+            self.system_modifier = parse_system_modifier(value);
+        }
+    }
+
+    fn into_keybinding(self) -> WarcraftKeybinding {
+        if self.is_command {
+            return WarcraftKeybinding::Command(CommandBinding {
+                hotkey: self.hotkey,
+                button_position: self.button_position,
+                unbutton_position: self.unbutton_position,
+                tip: self.tip,
+                un_tip: self.un_tip,
+                dirty: false,
+            });
+        }
+        if let Some(class) = self.system_class {
+            let hotkey = self
+                .hotkey
+                .as_deref()
+                .and_then(|s| s.parse::<u32>().ok())
+                .unwrap_or(0);
+            return WarcraftKeybinding::System(SystemBinding {
+                hotkey,
+                class,
+                modifier: self.system_modifier,
+                dirty: false,
+            });
+        }
+        WarcraftKeybinding::Ability(AbilityBinding {
+            hotkey: self.hotkey,
+            unhotkey: self.unhotkey,
+            button_position: self.button_position,
+            unbutton_position: self.unbutton_position,
+            research_hotkey: self.research_hotkey,
+            research_button_position: self.research_button_position,
+            tip: self.tip,
+            research_tip: self.research_tip,
+            un_tip: self.un_tip,
+            ubertip: self.ubertip,
+            research_ubertip: self.research_ubertip,
+            un_ubertip: self.un_ubertip,
+            icon: self.icon,
+            un_icon: self.un_icon,
+            modifier: self.modifier,
+            dirty: false,
+        })
+    }
+}
+
+fn parse_system_modifier(value: &str) -> Option<SystemKeybindModifier> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "alt" => Some(SystemKeybindModifier::Alt),
+        "ctrl" => Some(SystemKeybindModifier::Ctrl),
+        "ctrl_or_alt" => Some(SystemKeybindModifier::CtrlOrAlt),
+        "shift" => Some(SystemKeybindModifier::Shift),
+        _ => None,
+    }
 }
 
 impl From<&str> for CustomKeysFile {
     fn from(text: &str) -> Self {
-        let mut bindings: HashMap<String, AbilityBinding> = HashMap::new();
+        let mut entries: HashMap<String, WarcraftKeybinding> = HashMap::new();
         let mut order: Vec<String> = Vec::new();
         let mut original_ids: HashMap<String, String> = HashMap::new();
-        let mut commands: HashMap<String, CommandBinding> = HashMap::new();
-        let mut command_order: Vec<String> = Vec::new();
-        let mut original_command_names: HashMap<String, String> = HashMap::new();
         let mut raw_sections: HashMap<String, String> = HashMap::new();
-        let mut raw_command_sections: HashMap<String, String> = HashMap::new();
-        let mut current_lowercase_key: Option<String> = None;
-        let mut current_raw_text: String = String::new();
-        let mut current_is_command: bool = false;
+
+        let mut current_key: Option<String> = None;
+        let mut current_raw: String = String::new();
         let mut accumulator: Option<SectionAccumulator> = None;
+
+        let flush = |current_key: &mut Option<String>,
+                     accumulator: &mut Option<SectionAccumulator>,
+                     current_raw: &mut String,
+                     entries: &mut HashMap<String, WarcraftKeybinding>,
+                     raw_sections: &mut HashMap<String, String>| {
+            if let (Some(key), Some(acc)) = (current_key.take(), accumulator.take()) {
+                let binding = acc.into_keybinding();
+                entries.insert(key.clone(), binding);
+                if !current_raw.is_empty() {
+                    raw_sections.insert(key, std::mem::take(current_raw));
+                } else {
+                    current_raw.clear();
+                }
+            } else {
+                current_raw.clear();
+            }
+        };
 
         for line in text.lines() {
             let trimmed = line.trim();
             let is_blank = trimmed.is_empty();
             let is_comment = trimmed.starts_with("//") || trimmed.starts_with(';');
-            let header_id = if is_blank || is_comment {
+
+            let header = if is_blank || is_comment {
                 None
             } else {
-                Self::parse_section_header(trimmed)
+                CustomKeysFile::parse_section_header(trimmed)
             };
 
-            if let Some(original_id) = header_id {
-                let stores = SectionStores {
-                    bindings: &mut bindings,
-                    commands: &mut commands,
-                    raw_sections: &mut raw_sections,
-                    raw_command_sections: &mut raw_command_sections,
-                };
-                let pending = PendingSection {
-                    lowercase_key: current_lowercase_key.take(),
-                    accumulator: accumulator.take(),
-                    raw_text: std::mem::take(&mut current_raw_text),
-                    is_command: current_is_command,
-                };
-                Self::flush_section(stores, pending);
-                let lowercase_id = original_id.to_lowercase();
-                if is_command_section(&original_id) {
-                    if commands.contains_key(&lowercase_id) {
-                        current_lowercase_key = None;
-                        accumulator = None;
-                        current_is_command = false;
-                    } else {
-                        let lookup_key = lowercase_id.clone();
-                        original_command_names
-                            .entry(lookup_key)
-                            .or_insert_with(|| original_id.clone());
-                        let order_entry = lowercase_id.clone();
-                        command_order.push(order_entry);
-                        current_lowercase_key = Some(lowercase_id);
-                        current_is_command = true;
-                        accumulator = Some(SectionAccumulator::Command(
-                            CommandBindingAccumulator::default(),
-                        ));
-                        current_raw_text.push_str(line);
-                        current_raw_text.push('\n');
-                    }
-                } else if bindings.contains_key(&lowercase_id) {
-                    current_lowercase_key = None;
+            if let Some(original_id) = header {
+                flush(
+                    &mut current_key,
+                    &mut accumulator,
+                    &mut current_raw,
+                    &mut entries,
+                    &mut raw_sections,
+                );
+
+                let key = original_id.to_lowercase();
+                if entries.contains_key(&key) {
+                    // Duplicate section — skip (first occurrence wins)
+                    current_key = None;
                     accumulator = None;
-                    current_is_command = false;
                 } else {
-                    let original_ids_key = lowercase_id.clone();
                     original_ids
-                        .entry(original_ids_key)
+                        .entry(key.clone())
                         .or_insert_with(|| original_id.clone());
-                    let order_entry = lowercase_id.clone();
-                    order.push(order_entry);
-                    current_lowercase_key = Some(lowercase_id);
-                    current_is_command = false;
-                    accumulator = Some(SectionAccumulator::Ability(Box::default()));
-                    current_raw_text.push_str(line);
-                    current_raw_text.push('\n');
+                    order.push(key.clone());
+                    let acc = SectionAccumulator {
+                        is_command: is_command_section(&original_id),
+                        ..Default::default()
+                    };
+                    current_raw.push_str(line);
+                    current_raw.push('\n');
+                    current_key = Some(key);
+                    accumulator = Some(acc);
                 }
             } else {
                 if accumulator.is_some() {
-                    current_raw_text.push_str(line);
-                    current_raw_text.push('\n');
+                    current_raw.push_str(line);
+                    current_raw.push('\n');
                 }
                 if !is_blank
                     && !is_comment
-                    && let Some(pair) = Self::parse_key_value(trimmed)
-                    && let Some(current_accumulator) = accumulator.as_mut()
+                    && let Some((key, value)) = CustomKeysFile::parse_key_value(trimmed)
+                    && let Some(acc) = accumulator.as_mut()
                 {
-                    let KeyValuePair { key, value } = pair;
-                    match current_accumulator {
-                        SectionAccumulator::Ability(ability_accumulator) => {
-                            ability_accumulator.apply(&key, &value)
-                        }
-                        SectionAccumulator::Command(command_accumulator) => {
-                            command_accumulator.apply(&key, &value)
-                        }
-                    }
+                    acc.apply(key, value);
                 }
             }
         }
 
-        let final_stores = SectionStores {
-            bindings: &mut bindings,
-            commands: &mut commands,
-            raw_sections: &mut raw_sections,
-            raw_command_sections: &mut raw_command_sections,
-        };
-        let final_pending = PendingSection {
-            lowercase_key: current_lowercase_key,
-            accumulator,
-            raw_text: current_raw_text,
-            is_command: current_is_command,
-        };
-        Self::flush_section(final_stores, final_pending);
+        flush(
+            &mut current_key,
+            &mut accumulator,
+            &mut current_raw,
+            &mut entries,
+            &mut raw_sections,
+        );
 
         CustomKeysFile {
-            bindings,
+            entries,
             order,
             original_ids,
-            commands,
-            command_order,
-            original_command_names,
             raw_sections,
-            raw_command_sections,
-        }
-    }
-}
-
-struct SectionStores<'a> {
-    bindings: &'a mut HashMap<String, AbilityBinding>,
-    commands: &'a mut HashMap<String, CommandBinding>,
-    raw_sections: &'a mut HashMap<String, String>,
-    raw_command_sections: &'a mut HashMap<String, String>,
-}
-
-struct PendingSection {
-    lowercase_key: Option<String>,
-    accumulator: Option<SectionAccumulator>,
-    raw_text: String,
-    is_command: bool,
-}
-
-impl CustomKeysFile {
-    fn flush_section(stores: SectionStores<'_>, pending: PendingSection) {
-        let Some(lowercase_key) = pending.lowercase_key else {
-            return;
-        };
-        let Some(finished_accumulator) = pending.accumulator else {
-            return;
-        };
-        let raw_text = pending.raw_text;
-        let is_command = pending.is_command;
-        match finished_accumulator {
-            SectionAccumulator::Ability(ability_accumulator) => {
-                let binding = ability_accumulator.into_binding();
-                stores.bindings.insert(lowercase_key.clone(), binding);
-                if !raw_text.is_empty() && !is_command {
-                    stores.raw_sections.insert(lowercase_key, raw_text);
-                }
-            }
-            SectionAccumulator::Command(command_accumulator) => {
-                let binding = command_accumulator.into_binding();
-                stores.commands.insert(lowercase_key.clone(), binding);
-                if !raw_text.is_empty() && is_command {
-                    stores.raw_command_sections.insert(lowercase_key, raw_text);
-                }
-            }
         }
     }
 }
 
 impl From<String> for CustomKeysFile {
     fn from(text: String) -> Self {
-        let text_ref = text.as_str();
-        Self::from(text_ref)
+        Self::from(text.as_str())
     }
-}
-
-struct KeyValuePair {
-    key: String,
-    value: String,
 }
 
 fn home_directory() -> Option<PathBuf> {
@@ -1015,6 +1150,10 @@ fn home_directory() -> Option<PathBuf> {
     }
 }
 
+// ──────────────────────────────────────────────────────────────
+// Tests
+// ──────────────────────────────────────────────────────────────
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1024,43 +1163,33 @@ mod tests {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n";
         let file = CustomKeysFile::from(input);
         let binding = file.binding("AHhb").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, Some("Q"));
+        assert_eq!(binding.hotkey(), Some("Q"));
         let position = binding.button_position().unwrap();
-        let column = position.column();
-        assert_eq!(column, 0);
-        let row = position.row();
-        assert_eq!(row, 2);
+        assert_eq!(position.column(), 0);
+        assert_eq!(position.row(), 2);
     }
 
     #[test]
     fn lookup_is_case_insensitive() {
         let input = "[Hpal]\nHotkey=T\nButtonpos=3,0\n";
         let file = CustomKeysFile::from(input);
-        let exact_result = file.binding("Hpal");
-        assert!(exact_result.is_some());
-        let lower_result = file.binding("hpal");
-        assert!(lower_result.is_some());
-        let upper_result = file.binding("HPAL");
-        assert!(upper_result.is_some());
+        assert!(file.binding("Hpal").is_some());
+        assert!(file.binding("hpal").is_some());
+        assert!(file.binding("HPAL").is_some());
     }
 
     #[test]
     fn missing_hotkey_returns_none() {
         let input = "[AHbz]\nButtonpos=0,0\n";
         let file = CustomKeysFile::from(input);
-        let binding = file.binding("AHbz").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, None);
+        assert_eq!(file.binding("AHbz").unwrap().hotkey(), None);
     }
 
     #[test]
     fn empty_hotkey_value_treated_as_absent() {
         let input = "[AHbz]\nHotkey=\nButtonpos=0,0\n";
         let file = CustomKeysFile::from(input);
-        let binding = file.binding("AHbz").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, None);
+        assert_eq!(file.binding("AHbz").unwrap().hotkey(), None);
     }
 
     #[test]
@@ -1068,20 +1197,17 @@ mod tests {
         let input = "[AHhb]\nResearchhotkey=T\nResearchbuttonpos=3,1\n";
         let file = CustomKeysFile::from(input);
         let binding = file.binding("AHhb").unwrap();
-        let research_hotkey = binding.research_hotkey();
-        assert_eq!(research_hotkey, Some("T"));
+        assert_eq!(binding.research_hotkey(), Some("T"));
         let position = binding.research_button_position().unwrap();
-        let column = position.column();
-        assert_eq!(column, 3);
-        let row = position.row();
-        assert_eq!(row, 1);
+        assert_eq!(position.column(), 3);
+        assert_eq!(position.row(), 1);
     }
 
     #[test]
     fn bindings_in_order_preserves_file_order() {
         let input = "[AHhb]\nHotkey=Q\n\n[AHbz]\nHotkey=W\n";
         let file = CustomKeysFile::from(input);
-        let ids: Vec<&str> = file.bindings_in_order().map(|entry| entry.id()).collect();
+        let ids: Vec<&str> = file.bindings_in_order().map(|e| e.id()).collect();
         assert_eq!(ids, vec!["AHhb", "AHbz"]);
     }
 
@@ -1090,46 +1216,36 @@ mod tests {
         let input = "// This is a comment\n[AHhb]\nHotkey=Q\n; Also a comment\nButtonpos=0,0\n";
         let file = CustomKeysFile::from(input);
         let binding = file.binding("AHhb").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, Some("Q"));
-        let has_button_position = binding.button_position().is_some();
-        assert!(has_button_position);
+        assert_eq!(binding.hotkey(), Some("Q"));
+        assert!(binding.button_position().is_some());
     }
 
     #[test]
     fn unknown_keys_are_silently_ignored() {
         let input = "[AHhb]\nHotkey=Q\nUnknownField=something\n";
         let file = CustomKeysFile::from(input);
-        let binding = file.binding("AHhb").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, Some("Q"));
+        assert_eq!(file.binding("AHhb").unwrap().hotkey(), Some("Q"));
     }
 
     #[test]
     fn malformed_buttonpos_gives_none() {
         let input = "[AHhb]\nButtonpos=notanumber\n";
         let file = CustomKeysFile::from(input);
-        let binding = file.binding("AHhb").unwrap();
-        let has_button_position = binding.button_position().is_none();
-        assert!(has_button_position);
+        assert!(file.binding("AHhb").unwrap().button_position().is_none());
     }
 
     #[test]
     fn round_trip_preserves_original_casing_of_id() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,0\n\n";
         let file = CustomKeysFile::from(input);
-        let content = file.to_file_content();
-        let contains_header = content.contains("[AHhb]");
-        assert!(contains_header);
+        assert!(file.to_file_content().contains("[AHhb]"));
     }
 
     #[test]
     fn duplicate_section_uses_first_occurrence() {
         let input = "[AHhb]\nHotkey=Q\n\n[AHhb]\nHotkey=W\n";
         let file = CustomKeysFile::from(input);
-        let binding = file.binding("AHhb").unwrap();
-        let hotkey = binding.hotkey();
-        assert_eq!(hotkey, Some("Q"));
+        assert_eq!(file.binding("AHhb").unwrap().hotkey(), Some("Q"));
     }
 
     #[test]
@@ -1146,8 +1262,9 @@ mod tests {
     fn touched_section_uses_formatted_output() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n\n[AHbz]\nHotkey=W\nButtonpos=1,2\n\n";
         let mut file = CustomKeysFile::from(input);
-        let binding = file.binding_or_default_mut("AHhb");
-        binding.set_hotkey(Some("R".to_string()));
+        file.binding_or_default_mut("AHhb")
+            .unwrap()
+            .set_hotkey(Some("R".to_string()));
         let output = file.to_file_content();
         assert!(output.contains("Hotkey=R"));
         assert!(output.contains("[AHbz]\nHotkey=W"));
@@ -1168,7 +1285,7 @@ mod tests {
     fn dirty_setter_only_marks_dirty_on_actual_change() {
         let input = "[AHhb]\nHotkey=Q\n\n";
         let mut file = CustomKeysFile::from(input);
-        let binding = file.binding_or_default_mut("AHhb");
+        let binding = file.binding_or_default_mut("AHhb").unwrap();
         binding.set_hotkey(Some("Q".to_string()));
         assert!(
             !binding.is_dirty(),
@@ -1179,6 +1296,44 @@ mod tests {
             binding.is_dirty(),
             "setting different value should mark dirty"
         );
+    }
+
+    #[test]
+    fn parses_system_section_game_command() {
+        let input = "[IsHeroSelect]\nHotkey=9\nGameCommand=1\n";
+        let file = CustomKeysFile::from(input);
+        let sys = file.system("IsHeroSelect").expect("system section parsed");
+        assert_eq!(sys.hotkey(), 9);
+        assert_eq!(sys.class(), SystemKeybindClass::Game);
+        assert!(sys.modifier().is_none());
+    }
+
+    #[test]
+    fn parses_system_section_ctrl_group_with_modifier() {
+        let input = "[SelectGroup01]\nHotkey=49\nCtrlGroupCommand=1\nModifier=Ctrl\n";
+        let file = CustomKeysFile::from(input);
+        let sys = file.system("SelectGroup01").expect("parsed");
+        assert_eq!(sys.hotkey(), 49);
+        assert_eq!(sys.class(), SystemKeybindClass::ControlGroup);
+        assert_eq!(sys.modifier(), Some(SystemKeybindModifier::Ctrl));
+    }
+
+    #[test]
+    fn system_section_not_returned_by_binding() {
+        let input = "[IsHeroSelect]\nHotkey=9\nGameCommand=1\n";
+        let file = CustomKeysFile::from(input);
+        assert!(file.binding("IsHeroSelect").is_none());
+        assert!(file.system("IsHeroSelect").is_some());
+    }
+
+    #[test]
+    fn system_section_round_trips() {
+        let input = "[IsHeroSelect]\nHotkey=9\nGameCommand=1\n\n";
+        let file = CustomKeysFile::from(input);
+        let output = file.to_file_content();
+        assert!(output.contains("[IsHeroSelect]"));
+        assert!(output.contains("Hotkey=9"));
+        assert!(output.contains("GameCommand=1"));
     }
 
     #[test]
@@ -1220,7 +1375,7 @@ mod tests {
         let output_unique = collect_unique_sections(&output);
         assert_eq!(
             baseline_unique, output_unique,
-            "round-trip preserves the set of unique section headers (duplicates in the source are deduped)",
+            "round-trip preserves the set of unique section headers",
         );
     }
 }

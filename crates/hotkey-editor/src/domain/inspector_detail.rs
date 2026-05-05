@@ -1,4 +1,4 @@
-use warcraft_api::ButtonPosition;
+use warcraft_api::{ButtonPosition, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
@@ -48,6 +48,20 @@ pub(crate) struct InspectorDetail {
     ubertip_levels: Vec<String>,
     is_command: bool,
     is_passive: bool,
+    /// Passive racial ability shown in the research panel for informational
+    /// purposes only (e.g. Shadow Meld Item, Ultravision Item). Not bindable.
+    info_only: bool,
+    /// Upgraded-form unit ID for train-slot pairs that share a button position
+    /// (e.g. base Siege Engine `hmtt` → upgraded `hrtt`). Populated only on
+    /// the base train slot; `None` everywhere else.
+    upgrade_unit_id: Option<String>,
+    /// Display name of the upgraded form (e.g. "Siege Engine").
+    upgrade_display_name: Option<String>,
+    /// Hotkey currently assigned to the upgraded form's binding, if any.
+    upgrade_hotkey_token: Option<HotkeyToken>,
+    /// True when this detail was built from an `AbilityOff` slot — the hotkey
+    /// field holds `Unhotkey` and the override button must write `Unhotkey`.
+    is_off_state: bool,
 }
 
 impl InspectorDetail {
@@ -56,6 +70,8 @@ impl InspectorDetail {
         custom_keys: &Option<CustomKeysFile>,
         host_unit_id: &str,
         from_uprooted: bool,
+        from_research: bool,
+        upgrade_unit_id: Option<&str>,
     ) -> Self {
         let custom_keys_ref = custom_keys.as_ref();
         match slot {
@@ -96,6 +112,10 @@ impl InspectorDetail {
                             .starts_with("passivebuttons/")
                     })
                     .unwrap_or(false);
+                let info_only = from_research
+                    && database_object
+                        .map(|o| matches!(o.meta(), WarcraftObjectMeta::Ability(m) if m.max_level() == 1 && !m.is_ultimate()))
+                        .unwrap_or(false);
                 let object_has_alt_state = database_object
                     .map(|warcraft_object| {
                         warcraft_object.un_ubertip().is_some() || warcraft_object.un_tip().is_some()
@@ -121,9 +141,18 @@ impl InspectorDetail {
                 // (a footman's "Defend"), pull `un_tip`/`un_ubertip` so the
                 // player can see the "Stop Defend" name and tooltip without
                 // having to hunt for the toggle.
+                // Morph abilities (Bear Form, Storm Crow Form, Burrow…) are
+                // excluded here: their off-state lives on a separate unit's
+                // command card (edcm, edtm, ucrm…) and is edited directly from
+                // that unit's AbilityOff slot.  Showing controls here would let
+                // the player mutate a different unit's grid from this panel.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
                 let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
-                    if object_has_alt_state && !prefer_un_state && !ability_is_morph {
+                    if object_has_alt_state
+                        && !prefer_un_state
+                        && !ability_is_morph
+                        && !from_uprooted
+                    {
                         let alt_name = database_object
                             .and_then(|warcraft_object| warcraft_object.un_tip())
                             .map(WarcraftColorCodes::stripped);
@@ -190,6 +219,20 @@ impl InspectorDetail {
                     cell.cloned_icon_src()
                 };
                 let object_id = cell.cloned_object_id();
+                let (upgrade_unit_id_field, upgrade_display_name, upgrade_hotkey_token) =
+                    if let Some(upgrade_id) = upgrade_unit_id {
+                        let upgrade_binding =
+                            custom_keys_ref.and_then(|file| file.binding(upgrade_id));
+                        let upgrade_hotkey = upgrade_binding
+                            .and_then(|b| b.hotkey())
+                            .and_then(BindingHotkey::first_token);
+                        let upgrade_name = ObjectLookup::by_id(upgrade_id)
+                            .and_then(|obj| obj.names().first().copied())
+                            .map(String::from);
+                        (Some(upgrade_id.to_string()), upgrade_name, upgrade_hotkey)
+                    } else {
+                        (None, None, None)
+                    };
                 Self {
                     display_name: resolved_display_name,
                     object_id,
@@ -211,6 +254,11 @@ impl InspectorDetail {
                     ubertip_levels,
                     is_command: false,
                     is_passive,
+                    info_only,
+                    upgrade_unit_id: upgrade_unit_id_field,
+                    upgrade_display_name,
+                    upgrade_hotkey_token,
+                    is_off_state: false,
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
@@ -257,6 +305,11 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: false,
                     is_passive: false,
+                    info_only: false,
+                    upgrade_unit_id: None,
+                    upgrade_display_name: None,
+                    upgrade_hotkey_token: None,
+                    is_off_state: true,
                 }
             }
             GridSlotId::Command(command_name) => {
@@ -302,6 +355,11 @@ impl InspectorDetail {
                     ubertip_levels: Vec::new(),
                     is_command: true,
                     is_passive: false,
+                    info_only: false,
+                    upgrade_unit_id: None,
+                    upgrade_display_name: None,
+                    upgrade_hotkey_token: None,
+                    is_off_state: false,
                 }
             }
         }
@@ -386,5 +444,25 @@ impl InspectorDetail {
 
     pub(crate) fn is_passive(&self) -> bool {
         self.is_passive
+    }
+
+    pub(crate) fn info_only(&self) -> bool {
+        self.info_only
+    }
+
+    pub(crate) fn upgrade_unit_id(&self) -> Option<&str> {
+        self.upgrade_unit_id.as_deref()
+    }
+
+    pub(crate) fn upgrade_display_name(&self) -> Option<&str> {
+        self.upgrade_display_name.as_deref()
+    }
+
+    pub(crate) fn upgrade_hotkey_token(&self) -> Option<HotkeyToken> {
+        self.upgrade_hotkey_token
+    }
+
+    pub(crate) fn is_off_state(&self) -> bool {
+        self.is_off_state
     }
 }

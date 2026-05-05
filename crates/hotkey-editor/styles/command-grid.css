@@ -321,6 +321,11 @@ body:has(.grid-tile.dragging-source) .grid-tile {
     background: #1a1f29;
     border-color: #4a5160;
 }
+.hotkey-overlay.conflict {
+    color: #ff4444;
+    background: rgba(80, 0, 0, 0.85);
+    border-color: #ff4444;
+}
 
 .edit-panel {
     margin-top: 1.5rem;

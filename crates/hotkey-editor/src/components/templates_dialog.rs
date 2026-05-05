@@ -4,12 +4,13 @@ use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::dialog_header::DialogHeader;
-use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::domain::grid_templates::ResolvedTemplate;
 use crate::domain::object_lookup::ObjectLookup;
+use crate::domain::positions::Positions;
 
 #[component]
 pub(crate) fn TemplatesDialog(
@@ -49,8 +50,9 @@ pub(crate) fn TemplatesDialog(
                                             let parsed_template = CustomKeysFile::from(template_content);
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
-                                            let mut baseline = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
+                                            let mut baseline = CustomKeysFile::from(baseline_content());
                                             UploadOverlay::apply(&mut baseline, &parsed_template);
+                                            Positions::fully_normalize(&mut baseline);
                                             loaded_keys.set(Some(baseline));
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,

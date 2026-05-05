@@ -80,8 +80,9 @@ pub(crate) fn SlotButton(
                 on_pick: move |code: u32| {
                     let mut guard = loaded_keys.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
-                    file.binding_or_default_mut(&section_id_for_pick)
-                        .set_hotkey(Some(code.to_string()));
+                    if let Some(binding) = file.binding_or_default_mut(&section_id_for_pick) {
+                        binding.set_hotkey(Some(code.to_string()));
+                    }
                     drop(guard);
                     editing_section.set(None);
                 },

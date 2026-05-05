@@ -104,11 +104,7 @@ impl ObjectLookup {
         let WarcraftObjectMeta::Unit(unit_meta) = host.meta() else {
             return None;
         };
-        for ability in unit_meta
-            .abilities()
-            .iter()
-            .chain(unit_meta.hero_abilities().iter())
-        {
+        for ability in unit_meta.abilities().iter() {
             if let Some(target_id) = Self::morph_target_unit(ability.value())
                 && !target_id.eq_ignore_ascii_case(host_unit_id)
             {

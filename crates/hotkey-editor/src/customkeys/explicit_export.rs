@@ -2,14 +2,14 @@ use warcraft_api::{WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::CustomKeysFile;
 
-use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_overlay::UploadOverlay;
 
 pub(crate) struct ExplicitExport;
 
 impl ExplicitExport {
     pub(crate) fn serialize(loaded_file: &CustomKeysFile) -> String {
-        let mut export_file = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
+        let mut export_file = CustomKeysFile::from(baseline_content());
         UploadOverlay::apply(&mut export_file, loaded_file);
         Self::materialize_default_positions(&mut export_file);
         export_file.to_file_content()
@@ -34,7 +34,9 @@ impl ExplicitExport {
                     if default_button.is_none() && default_research.is_none() {
                         continue;
                     }
-                    let binding = file.binding_or_default_mut(id_value);
+                    let Some(binding) = file.binding_or_default_mut(id_value) else {
+                        continue;
+                    };
                     if binding.button_position().is_none()
                         && let Some(position_value) = default_button
                     {

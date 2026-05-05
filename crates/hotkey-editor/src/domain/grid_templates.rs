@@ -5,8 +5,9 @@ use warcraft_keybinds::CustomKeysFile;
 
 use warcraft_api::UnitKind;
 
-use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_overlay::UploadOverlay;
+use crate::domain::default_config::DefaultConfig;
 use crate::domain::unit_kind::UnitKindHelpers;
 
 use crate::domain::ability_cell::AbilityCell;
@@ -18,11 +19,16 @@ use crate::domain::positions::Positions;
 
 const ARCHMAGE_UNIT_ID: &str = "Hamg";
 
-#[derive(PartialEq)]
 pub(crate) struct BundledTemplate {
     name: &'static str,
     description: &'static str,
-    content: &'static str,
+    content: fn() -> &'static str,
+}
+
+impl PartialEq for BundledTemplate {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
 }
 
 impl BundledTemplate {
@@ -35,30 +41,40 @@ impl BundledTemplate {
     }
 
     pub(crate) fn content(&self) -> &'static str {
-        self.content
+        (self.content)()
     }
+}
+
+fn neo_qwerty_content() -> &'static str {
+    include_str!("../../templates/CustomKeys_Neo_QWERTY.txt")
+}
+fn neo_qwertz_content() -> &'static str {
+    include_str!("../../templates/CustomKeys_Neo_QWERTZ.txt")
+}
+fn neo_azerty_content() -> &'static str {
+    include_str!("../../templates/CustomKeys_Neo_AZERTY.txt")
 }
 
 pub(crate) const TEMPLATES: &[BundledTemplate] = &[
     BundledTemplate {
         name: "NEO (QWERTY)",
         description: "Neo's (Back2Warcraft) optimized layout adapted for QWERTY keyboards",
-        content: include_str!("../../templates/CustomKeys_Neo_QWERTY.txt"),
+        content: neo_qwerty_content,
     },
     BundledTemplate {
         name: "NEO (QWERTZ)",
         description: "Neo's (Back2Warcraft) optimized layout adapted for QWERTZ keyboards",
-        content: include_str!("../../templates/CustomKeys_Neo_QWERTZ.txt"),
+        content: neo_qwertz_content,
     },
     BundledTemplate {
         name: "NEO (AZERTY)",
         description: "Neo's (Back2Warcraft) optimized layout converted for AZERTY keyboards",
-        content: include_str!("../../templates/CustomKeys_Neo_AZERTY.txt"),
+        content: neo_azerty_content,
     },
     BundledTemplate {
         name: "Default",
         description: "Stock Warcraft III hotkeys, exactly what the game ships with",
-        content: include_str!("../../templates/CustomKeys.txt"),
+        content: DefaultConfig::content,
     },
 ];
 
@@ -99,9 +115,9 @@ impl ResolvedTemplate {
         TEMPLATES
             .iter()
             .map(|template| {
-                let parsed_file = CustomKeysFile::from(template.content);
+                let parsed_file = CustomKeysFile::from(template.content());
                 let derived_grid = GridLayout::derived_from(&parsed_file);
-                let mut preview_file = CustomKeysFile::from(BASELINE_CUSTOM_KEYS);
+                let mut preview_file = CustomKeysFile::from(baseline_content());
                 UploadOverlay::apply(&mut preview_file, &parsed_file);
                 let command_card_cells = CellGrid::populate(&preview_file, command_slots, false);
                 let research_menu_cells = CellGrid::populate(&preview_file, research_slots, true);
