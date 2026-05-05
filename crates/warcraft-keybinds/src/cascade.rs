@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use warcraft_api::{ButtonPosition, WarcraftObjectMeta};
 
 use crate::CustomKeysFile;
@@ -130,15 +128,6 @@ pub fn resolve_container(
     custom_keys: Option<&CustomKeysFile>,
     is_research_context: bool,
 ) -> Vec<(GridSlotId, Option<ButtonPosition>)> {
-    resolve_container_impl(candidate_slots, custom_keys, is_research_context, &HashMap::new())
-}
-
-fn resolve_container_impl(
-    candidate_slots: &[GridSlotId],
-    custom_keys: Option<&CustomKeysFile>,
-    is_research_context: bool,
-    globally_blocked: &HashMap<String, Vec<ButtonPosition>>,
-) -> Vec<(GridSlotId, Option<ButtonPosition>)> {
     let mut entries: Vec<ResolvedSlot> = candidate_slots
         .iter()
         .map(|slot| ResolvedSlot {
@@ -204,19 +193,7 @@ fn resolve_container_impl(
         }
         let assigned = match explicit_position {
             Some(pos) if position_occupied(&occupied_positions, pos) => {
-                // Extend the avoid list with positions globally claimed by
-                // co-unit abilities across all other units that share this ability.
-                // This prevents a cascade in one unit from stealing the natural
-                // home of an ability in another unit.
-                let global: &[ButtonPosition] = match &entry.slot_id {
-                    GridSlotId::Ability(id) => globally_blocked
-                        .get(&id.to_ascii_lowercase())
-                        .map_or(&[], |v| v.as_slice()),
-                    _ => &[],
-                };
-                let mut combined = reserved_positions.clone();
-                combined.extend_from_slice(global);
-                next_free_cell_not_reserved(pos.row(), &occupied_positions, &combined)
+                next_free_cell_not_reserved(pos.row(), &occupied_positions, &reserved_positions)
             }
             other => other,
         };
@@ -394,85 +371,19 @@ pub fn next_free_cell_not_reserved(
 /// `slot_ids`. After this call the positions stored in `file` are
 /// self-consistent — no further fixup at render time.
 pub fn fully_normalize(file: &mut CustomKeysFile) {
-    // Snapshot initial positions of every ability across every unit BEFORE any
-    // write-back.  When cascading an ability that collides in one unit, we use
-    // this map to avoid landing on a position that another ability claims as its
-    // natural home in a different unit.  Without this, a cascade in unit A can
-    // corrupt a perfectly valid layout in unit B that shares the same ability.
-    let globally_blocked = precompute_globally_blocked(file);
-
     for unit_id in UnitSlots::all_unit_ids() {
         let cmd_card = UnitSlots::command_card_for(unit_id);
         if !cmd_card.is_empty() {
-            write_container_resolved_global(file, &cmd_card, false, &globally_blocked);
+            write_container_resolved(file, &cmd_card, false);
         }
         if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
-            write_container_resolved_global(file, &build_menu, false, &globally_blocked);
+            write_container_resolved(file, &build_menu, false);
         }
         if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
-            write_container_resolved_global(file, &uprooted_menu, false, &globally_blocked);
+            write_container_resolved(file, &uprooted_menu, false);
         }
         if let Some(research_menu) = UnitSlots::research_menu_for(unit_id) {
-            write_container_resolved_global(file, &research_menu, true, &globally_blocked);
-        }
-    }
-}
-
-/// For each ability, records the initial positions of every other ability that
-/// shares a command-card container with it, across all units.  These positions
-/// are "globally blocked" — a cascade must not land on them lest it corrupt
-/// another unit's layout.
-fn precompute_globally_blocked(file: &CustomKeysFile) -> HashMap<String, Vec<ButtonPosition>> {
-    let mut result: HashMap<String, Vec<ButtonPosition>> = HashMap::new();
-
-    for unit_id in UnitSlots::all_unit_ids() {
-        let cmd_card = UnitSlots::command_card_for(unit_id);
-        if !cmd_card.is_empty() {
-            add_co_unit_positions(&cmd_card, file, false, &mut result);
-        }
-        if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
-            add_co_unit_positions(&build_menu, file, false, &mut result);
-        }
-        if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
-            add_co_unit_positions(&uprooted_menu, file, false, &mut result);
-        }
-        if let Some(research_menu) = UnitSlots::research_menu_for(unit_id) {
-            add_co_unit_positions(&research_menu, file, true, &mut result);
-        }
-    }
-
-    result
-}
-
-fn add_co_unit_positions(
-    slots: &[GridSlotId],
-    file: &CustomKeysFile,
-    is_research: bool,
-    result: &mut HashMap<String, Vec<ButtonPosition>>,
-) {
-    let pairs: Vec<(String, ButtonPosition)> = slots
-        .iter()
-        .filter_map(|s| {
-            let GridSlotId::Ability(id) = s else {
-                return None;
-            };
-            let pos = current_for(s, Some(file), is_research)?;
-            Some((id.to_ascii_lowercase(), pos))
-        })
-        .collect();
-
-    for (id_a, _pos_a) in &pairs {
-        let blocked = result.entry(id_a.clone()).or_default();
-        for (id_b, pos_b) in &pairs {
-            if id_a == id_b {
-                continue;
-            }
-            if !blocked
-                .iter()
-                .any(|p: &ButtonPosition| p.column() == pos_b.column() && p.row() == pos_b.row())
-            {
-                blocked.push(*pos_b);
-            }
+            write_container_resolved(file, &research_menu, true);
         }
     }
 }
@@ -482,44 +393,27 @@ pub fn write_container_resolved(
     slot_ids: &[GridSlotId],
     is_research: bool,
 ) {
-    write_container_resolved_global(file, slot_ids, is_research, &HashMap::new());
-}
-
-fn write_container_resolved_global(
-    file: &mut CustomKeysFile,
-    slot_ids: &[GridSlotId],
-    is_research: bool,
-    globally_blocked: &HashMap<String, Vec<ButtonPosition>>,
-) {
-    let resolved = resolve_container_impl(slot_ids, Some(file), is_research, globally_blocked);
+    // Ability button positions are NOT written back here.  The cascade
+    // algorithm assigns positions per-unit to resolve visual collisions, but
+    // the same ability can appear in multiple units with different ideal
+    // positions.  Writing a cascade position globally would corrupt units
+    // where the ability's stored position was perfectly valid.  The display
+    // path (resolve_container / resolved_for) computes cascade on the fly
+    // per unit, so no write-back is needed for correctness.
+    //
+    // We still write back AbilityOff (UnButtonpos) and Command positions.
+    // UnButtonpos normalization uses the cascade-resolved Buttonpos values
+    // (not the stored ones) so it correctly places off-state buttons even
+    // when two abilities share the same stored Buttonpos in this container.
+    let resolved = resolve_container(slot_ids, Some(file), is_research);
     for (slot_id, vis_pos_opt) in &resolved {
         let Some(vis_pos) = vis_pos_opt else {
             continue;
         };
         let new_pos = crate::ButtonPosition::new(vis_pos.column(), vis_pos.row());
         match slot_id {
-            GridSlotId::Ability(id) => {
-                if is_research {
-                    let stored = file
-                        .binding(id)
-                        .and_then(|b| b.research_button_position())
-                        .map(|p| ButtonPosition::new(p.column(), p.row()));
-                    if stored != Some(*vis_pos)
-                        && let Some(binding) = file.binding_or_default_mut(id)
-                    {
-                        binding.set_research_button_position(Some(new_pos));
-                    }
-                } else {
-                    let stored = file
-                        .binding(id)
-                        .and_then(|b| b.button_position())
-                        .map(|p| ButtonPosition::new(p.column(), p.row()));
-                    if stored != Some(*vis_pos)
-                        && let Some(binding) = file.binding_or_default_mut(id)
-                    {
-                        binding.set_button_position(Some(new_pos));
-                    }
-                }
+            GridSlotId::Ability(_) => {
+                // Intentionally skipped — see comment above.
             }
             GridSlotId::AbilityOff(id) => {
                 let stored = file
@@ -546,27 +440,33 @@ fn write_container_resolved_global(
         }
     }
     if !is_research {
-        normalize_unbutton_positions(file, slot_ids);
+        // Build cascade-resolved Buttonpos table so the unbutton normalizer can
+        // detect collisions even when two abilities share the same stored position.
+        let resolved_button_pos: Vec<(String, ButtonPosition)> = resolved
+            .iter()
+            .filter_map(|(slot, pos_opt)| {
+                let GridSlotId::Ability(id) = slot else {
+                    return None;
+                };
+                Some((id.clone(), (*pos_opt)?))
+            })
+            .collect();
+        normalize_unbutton_positions(file, &resolved_button_pos);
     }
 }
 
 /// For each on-state ability in this container whose `UnButtonpos` collides
-/// with another ability's `Buttonpos`, move the `UnButtonpos` to the self-cell
-/// (the ability's own `Buttonpos`).  An empty cell or the self-cell are the
-/// only valid landing spots for an unbutton.
-fn normalize_unbutton_positions(file: &mut CustomKeysFile, slot_ids: &[GridSlotId]) {
-    let button_positions: Vec<(String, crate::ButtonPosition)> = slot_ids
-        .iter()
-        .filter_map(|slot| {
-            let GridSlotId::Ability(id) = slot else {
-                return None;
-            };
-            let pos = file.binding(id.as_str())?.button_position().copied()?;
-            Some((id.clone(), pos))
-        })
-        .collect();
-
-    for (ability_id, button_pos) in &button_positions {
+/// with another ability's cascade-resolved `Buttonpos`, move the `UnButtonpos`
+/// to the ability's own cascade-resolved position (the self-cell).
+///
+/// `resolved_button_pos` is the output of `resolve_container` — it contains
+/// cascade-aware positions rather than raw stored values, which matters when
+/// two abilities share the same stored `Buttonpos` in this container.
+fn normalize_unbutton_positions(
+    file: &mut CustomKeysFile,
+    resolved_button_pos: &[(String, ButtonPosition)],
+) {
+    for (ability_id, self_pos) in resolved_button_pos {
         let Some(unbutton_pos) = file
             .binding(ability_id.as_str())
             .and_then(|b| b.unbutton_position().copied())
@@ -575,19 +475,19 @@ fn normalize_unbutton_positions(file: &mut CustomKeysFile, slot_ids: &[GridSlotI
         };
 
         // Already at self-cell — valid, nothing to do.
-        if unbutton_pos.column() == button_pos.column() && unbutton_pos.row() == button_pos.row() {
+        if unbutton_pos.column() == self_pos.column() && unbutton_pos.row() == self_pos.row() {
             continue;
         }
 
-        // Collides with another ability's button position → move to self-cell.
-        let collides = button_positions.iter().any(|(other_id, other_pos)| {
+        // Collides with another ability's resolved button position → move to self-cell.
+        let collides = resolved_button_pos.iter().any(|(other_id, other_pos)| {
             !other_id.eq_ignore_ascii_case(ability_id)
                 && other_pos.column() == unbutton_pos.column()
                 && other_pos.row() == unbutton_pos.row()
         });
 
         if collides {
-            let new_pos = crate::ButtonPosition::new(button_pos.column(), button_pos.row());
+            let new_pos = crate::ButtonPosition::new(self_pos.column(), self_pos.row());
             if let Some(binding) = file.binding_or_default_mut(ability_id.as_str()) {
                 binding.set_unbutton_position(Some(new_pos));
             }

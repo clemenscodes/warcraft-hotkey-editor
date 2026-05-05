@@ -292,11 +292,39 @@ mod tests {
         // Since the default template IS the baseline, the overlay is a no-op for
         // positions — only hotkeys differ in the Neo variants.
         let mut loaded = CustomKeysFile::from(baseline);
+
+        let bp = |file: &CustomKeysFile, id: &str| -> String {
+            file.binding(id).and_then(|b| b.button_position()).map(|p| format!("{},{}", p.column(), p.row())).unwrap_or_else(|| "None".into())
+        };
+        eprintln!("before normalize: ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
+            bp(&loaded, "ACd2"), bp(&loaded, "ACif"), bp(&loaded, "ACf2"),
+            bp(&loaded, "Anh2"), bp(&loaded, "ACdm"), bp(&loaded, "ACsl"));
+
+        // Debug: what's in ndth's command card?
+        {
+            use warcraft_keybinds::unit_slots::UnitSlots;
+            let card = UnitSlots::command_card_for("ndth");
+            eprintln!("ndth command card slots: {:?}", card);
+            use warcraft_keybinds::cascade::resolve_container;
+            let resolved = resolve_container(&card, Some(&loaded), false);
+            for (slot, pos) in &resolved {
+                eprintln!("  {:?} => {:?}", slot, pos);
+            }
+        }
+
         fully_normalize(&mut loaded);
+
+        eprintln!("after normalize:  ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
+            bp(&loaded, "ACd2"), bp(&loaded, "ACif"), bp(&loaded, "ACf2"),
+            bp(&loaded, "Anh2"), bp(&loaded, "ACdm"), bp(&loaded, "ACsl"));
 
         // Simulate what save_export → serialize produces (= localStorage content).
         let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
         let export_file = CustomKeysFile::from(export_content.as_str());
+
+        eprintln!("export: ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
+            bp(&export_file, "ACd2"), bp(&export_file, "ACif"), bp(&export_file, "ACf2"),
+            bp(&export_file, "Anh2"), bp(&export_file, "ACdm"), bp(&export_file, "ACsl"));
 
         let pos = |id: &str| {
             export_file

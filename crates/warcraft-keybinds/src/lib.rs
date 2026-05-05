@@ -1681,13 +1681,6 @@ mod cascade_tests {
         // natural home — corrupting NFSH's layout.  With the fix, Anh2 must land
         // somewhere that doesn't steal ACif's position.
         use crate::cascade::fully_normalize;
-        let content = concat!(
-            "[ACdm]\nButtonpos=0,2\n\n",
-            "[Anh2]\nButtonpos=0,2\n\n",
-            "[ACsl]\nButtonpos=1,2\n\n",
-            "[ACif]\nButtonpos=2,2\n\n",
-            "[ACd2]\nButtonpos=1,2\n\n",
-        );
         // Give the normalizer a real database-backed file so UnitSlots can build
         // the command cards for NDTH and NFSH from the live database.  We prime
         // the file with the positions above; fully_normalize must not move ACif.
@@ -1729,11 +1722,38 @@ mod cascade_tests {
     }
 
     #[test]
+    fn nfsh_acd2_stays_at_1_2_after_normalize() {
+        use crate::cascade::fully_normalize;
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let mut file = crate::CustomKeysFile::from(baseline);
+
+        let before_anh2 = file.binding("Anh2").and_then(|b| b.button_position().copied());
+        let before_acd2 = file.binding("ACd2").and_then(|b| b.button_position().copied());
+        let before_acif = file.binding("ACif").and_then(|b| b.button_position().copied());
+        eprintln!("BEFORE: Anh2={before_anh2:?} ACd2={before_acd2:?} ACif={before_acif:?}");
+
+        fully_normalize(&mut file);
+
+        let acd2 = file.binding("ACd2").and_then(|b| b.button_position().copied());
+        let acif = file.binding("ACif").and_then(|b| b.button_position().copied());
+        let anh2 = file.binding("Anh2").and_then(|b| b.button_position().copied());
+        eprintln!("AFTER:  Anh2={anh2:?} ACd2={acd2:?} ACif={acif:?}");
+
+        assert_eq!(
+            acd2,
+            Some(crate::ButtonPosition::new(1, 2)),
+            "ACd2 must stay at (1,2) in NFSH — got {acd2:?}"
+        );
+    }
+
+    #[test]
     fn write_container_resolved_fixes_unbutton_collision() {
-        // Two abilities share Buttonpos=0,0 in the file. After write_container_resolved:
-        // - first keeps (0,0), second cascades to (1,0)
-        // - second's UnButtonpos was at (0,0), colliding with first's Buttonpos
-        // - normalize_unbutton_positions must move it to second's self-cell (1,0)
+        // Two abilities share Buttonpos=0,0 in the file.
+        // ButtonPos is NOT written back (display cascade handles it per-unit).
+        // But UnButtonpos IS normalized: AHbz's UnButtonpos was at (0,0),
+        // colliding with Ahrl's Buttonpos.  normalize_unbutton_positions uses
+        // cascade-resolved positions, so it sees AHbz at (1,0) and moves its
+        // UnButtonpos to that self-cell — even though the stored Buttonpos stays (0,0).
         use crate::cascade::write_container_resolved;
         let content =
             "[Ahrl]\nButtonpos=0,0\nUnButtonpos=0,0\n\n[AHbz]\nButtonpos=0,0\nUnButtonpos=0,0\n\n";
@@ -1745,16 +1765,15 @@ mod cascade_tests {
         let ahbz_btn = file.binding("AHbz").and_then(|b| b.button_position().copied());
         let ahbz_unbtn = file.binding("AHbz").and_then(|b| b.unbutton_position().copied());
 
+        // Stored Buttonpos values are NOT cascaded — write-back is intentionally omitted.
         assert_eq!(ahrl_btn, Some(crate::ButtonPosition::new(0, 0)));
-        assert!(ahbz_btn.is_some());
-        assert_ne!(
-            ahbz_btn,
-            Some(crate::ButtonPosition::new(0, 0)),
-            "AHbz must cascade away from (0,0)"
-        );
+        assert_eq!(ahbz_btn, Some(crate::ButtonPosition::new(0, 0)));
+        // AHbz's UnButtonpos IS normalized: it moved from (0,0) — which collides
+        // with Ahrl's stored Buttonpos — to AHbz's cascade-display position (1,0).
         assert_eq!(
-            ahbz_unbtn, ahbz_btn,
-            "AHbz UnButtonpos must follow its cascaded Buttonpos (self-cell)"
+            ahbz_unbtn,
+            Some(crate::ButtonPosition::new(1, 0)),
+            "AHbz UnButtonpos must be normalized to cascade-display self-cell (1,0)"
         );
     }
 }
