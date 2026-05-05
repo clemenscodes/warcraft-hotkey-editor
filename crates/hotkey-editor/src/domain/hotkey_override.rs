@@ -31,16 +31,16 @@ impl HotkeyOverride {
         let empty_source = "";
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
         if is_command {
-            let binding = file.command_or_default_mut(object_id);
-            let existing_levels = binding
-                .hotkey()
-                .map(BindingHotkey::comma_segment_count)
-                .unwrap_or(0);
-            let replicated_value =
-                new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
-            binding.set_hotkey(replicated_value);
-        } else {
-            let binding = file.binding_or_default_mut(object_id);
+            if let Some(binding) = file.command_or_default_mut(object_id) {
+                let existing_levels = binding
+                    .hotkey()
+                    .map(BindingHotkey::comma_segment_count)
+                    .unwrap_or(0);
+                let replicated_value =
+                    new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
+                binding.set_hotkey(replicated_value);
+            }
+        } else if let Some(binding) = file.binding_or_default_mut(object_id) {
             let existing_levels = binding
                 .hotkey()
                 .map(BindingHotkey::comma_segment_count)
@@ -59,14 +59,15 @@ impl HotkeyOverride {
         let mut writable_guard = loaded_keys.write();
         let empty_source = "";
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
-        let binding = file.binding_or_default_mut(object_id);
-        let research_levels = binding
-            .research_hotkey()
-            .map(BindingHotkey::comma_segment_count)
-            .unwrap_or(0);
-        let replicated_value =
-            new_token.map(|token| BindingHotkey::replicated_token(token, research_levels));
-        binding.set_research_hotkey(replicated_value);
+        if let Some(binding) = file.binding_or_default_mut(object_id) {
+            let research_levels = binding
+                .research_hotkey()
+                .map(BindingHotkey::comma_segment_count)
+                .unwrap_or(0);
+            let replicated_value =
+                new_token.map(|token| BindingHotkey::replicated_token(token, research_levels));
+            binding.set_research_hotkey(replicated_value);
+        }
     }
 
     /// Off-state hotkey for a toggle ability ("Stop Defend", "Unburrow"). The
@@ -81,14 +82,15 @@ impl HotkeyOverride {
         let mut writable_guard = loaded_keys.write();
         let empty_source = "";
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
-        let binding = file.binding_or_default_mut(object_id);
-        let existing_levels = binding
-            .unhotkey()
-            .map(BindingHotkey::comma_segment_count)
-            .unwrap_or(0);
-        let replicated_value =
-            new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
-        binding.set_unhotkey(replicated_value);
+        if let Some(binding) = file.binding_or_default_mut(object_id) {
+            let existing_levels = binding
+                .unhotkey()
+                .map(BindingHotkey::comma_segment_count)
+                .unwrap_or(0);
+            let replicated_value =
+                new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
+            binding.set_unhotkey(replicated_value);
+        }
     }
 
     pub(crate) fn detect_conflict(

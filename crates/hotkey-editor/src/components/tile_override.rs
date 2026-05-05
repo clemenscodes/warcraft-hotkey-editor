@@ -26,6 +26,10 @@ enum OverrideEditTarget {
     /// unmorph. Routes through `HotkeyOverride::apply_unhotkey`, which
     /// writes the `Unhotkey` field rather than `Hotkey`.
     AltHotkey,
+    /// Hotkey for the upgraded-form unit that shares this button position
+    /// (e.g. post-Barrage Siege Engine). Writes to the upgrade unit's own
+    /// `Hotkey=` binding, not the base unit's.
+    UpgradeHotkey,
 }
 
 #[component]
@@ -52,9 +56,12 @@ pub(crate) fn TileOverridePanel(
     // overlay rather than a hotkey picker, but only one of the two should
     // be active at a time.
     let mut alt_position_picker_open = use_signal::<bool>(|| false);
+    let mut upgrade_position_picker_open = use_signal::<bool>(|| false);
     let layout_snapshot = *grid_layout.read();
     let object_id_for_capture = detail.object_id().to_string();
     let is_command_for_capture = detail.is_command();
+    let is_off_state_for_capture = detail.is_off_state();
+    let upgrade_unit_id_for_capture: Option<String> = detail.upgrade_unit_id().map(str::to_owned);
     let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
@@ -80,7 +87,7 @@ pub(crate) fn TileOverridePanel(
     // research hotkey for a command. Surface the regular hotkey field for
     // commands even in research context so the cancel button is bindable.
     let show_hotkey_field = !detail.is_passive() && (!is_research_context || detail.is_command());
-    let show_research_field = !detail.is_command() && is_research_context;
+    let show_research_field = !detail.is_command() && is_research_context && !detail.info_only();
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);
     let research_is_editing = editing_snapshot == Some(OverrideEditTarget::ResearchHotkey);
@@ -264,13 +271,23 @@ pub(crate) fn TileOverridePanel(
         Some(OverrideEditTarget::Hotkey) => hotkey_token_display,
         Some(OverrideEditTarget::ResearchHotkey) => research_hotkey_token_display,
         Some(OverrideEditTarget::AltHotkey) => detail.alt_hotkey_token(),
+        Some(OverrideEditTarget::UpgradeHotkey) => detail.upgrade_hotkey_token(),
         None => None,
     };
+    let picker_effective_object_id =
+        if matches!(picker_target, Some(OverrideEditTarget::UpgradeHotkey)) {
+            upgrade_unit_id_for_capture
+                .as_deref()
+                .unwrap_or(&object_id_for_capture)
+                .to_string()
+        } else {
+            object_id_for_capture.clone()
+        };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
         build_picker_rows(
             layout_snapshot,
             &active_container_slots,
-            &object_id_for_capture,
+            &picker_effective_object_id,
             picker_current_token,
             picker_is_research_context,
             loaded_keys.read().as_ref(),
@@ -283,7 +300,7 @@ pub(crate) fn TileOverridePanel(
         _ => String::from("Pick a hotkey"),
     };
     let picker_active_container = active_container_slots.clone();
-    let picker_object_id = object_id_for_capture.clone();
+    let picker_object_id = picker_effective_object_id.clone();
 
     let on_pick = move |token: HotkeyToken| {
         let Some(active_target) = *editing_target.read() else {
@@ -307,18 +324,29 @@ pub(crate) fn TileOverridePanel(
         }
         match active_target {
             OverrideEditTarget::Hotkey => {
-                HotkeyOverride::apply(
-                    &mut loaded_keys,
-                    &picker_object_id,
-                    is_command_for_capture,
-                    Some(token),
-                );
+                if is_off_state_for_capture {
+                    HotkeyOverride::apply_unhotkey(
+                        &mut loaded_keys,
+                        &picker_object_id,
+                        Some(token),
+                    );
+                } else {
+                    HotkeyOverride::apply(
+                        &mut loaded_keys,
+                        &picker_object_id,
+                        is_command_for_capture,
+                        Some(token),
+                    );
+                }
             }
             OverrideEditTarget::ResearchHotkey => {
                 HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));
             }
             OverrideEditTarget::AltHotkey => {
                 HotkeyOverride::apply_unhotkey(&mut loaded_keys, &picker_object_id, Some(token));
+            }
+            OverrideEditTarget::UpgradeHotkey => {
+                HotkeyOverride::apply(&mut loaded_keys, &picker_object_id, false, Some(token));
             }
         }
         editing_target.set(None);
@@ -349,6 +377,8 @@ pub(crate) fn TileOverridePanel(
                         },
                         "{research_label}"
                     }
+                } else if detail.info_only() {
+                    p { class: "tile-override-info-only", "Passive racial ability" }
                 }
             }
             if !primary_description_lines.is_empty() {
@@ -421,6 +451,69 @@ pub(crate) fn TileOverridePanel(
                             }
                             for description_line in alt_description_lines.iter() {
                                 p { class: "tile-override-alt-state-line", "{description_line}" }
+                            }
+                        }
+                    }
+                }
+            }
+            {
+                let upgrade_id = detail.upgrade_unit_id().map(str::to_owned);
+                let upgrade_hotkey_token = detail.upgrade_hotkey_token();
+                let upgrade_hotkey_display = upgrade_hotkey_token
+                    .map(|t| t.display_label())
+                    .unwrap_or_default();
+                let upgrade_is_editing =
+                    editing_snapshot == Some(OverrideEditTarget::UpgradeHotkey);
+                let upgrade_cell_class = if upgrade_is_editing {
+                    "override-key-cell editing"
+                } else {
+                    "override-key-cell"
+                };
+                let upgrade_hotkey_label = if upgrade_hotkey_display.is_empty() {
+                    String::from("\u{2013}")
+                } else {
+                    upgrade_hotkey_display.clone()
+                };
+                let upgrade_hotkey_is_special = upgrade_hotkey_token
+                    .map(|t| char::try_from(t).is_err())
+                    .unwrap_or(false);
+                let upgrade_special_flag = if upgrade_hotkey_is_special { "true" } else { "false" };
+                rsx! {
+                    if upgrade_id.is_some() && !is_research_context {
+                        div { class: "tile-override-alt-state",
+                            div { class: "tile-override-alt-state-header",
+                                div { class: "tile-override-alt-state-header-text",
+                                    p { class: "tile-override-alt-state-label", "Upgraded form" }
+                                }
+                                button {
+                                    class: "tile-override-alt-state-position-button",
+                                    r#type: "button",
+                                    title: "Pick where the upgraded-form button appears on the command card",
+                                    aria_label: "Edit upgraded-form button position",
+                                    onclick: move |_| {
+                                        upgrade_position_picker_open.set(true);
+                                    },
+                                    svg {
+                                        class: "tile-override-alt-state-position-icon",
+                                        view_box: "0 0 24 24",
+                                        xmlns: "http://www.w3.org/2000/svg",
+                                        circle { cx: "12", cy: "12", r: "5", fill: "none", stroke: "currentColor", stroke_width: "1.6" }
+                                        line { x1: "12", y1: "2.5", x2: "12", y2: "6", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                        line { x1: "12", y1: "18", x2: "12", y2: "21.5", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                        line { x1: "2.5", y1: "12", x2: "6", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                        line { x1: "18", y1: "12", x2: "21.5", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
+                                        circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
+                                    }
+                                }
+                                button {
+                                    class: "{upgrade_cell_class}",
+                                    "data-special": "{upgrade_special_flag}",
+                                    title: "Hotkey for the upgraded form",
+                                    onclick: move |_| {
+                                        editing_target.set(Some(OverrideEditTarget::UpgradeHotkey));
+                                    },
+                                    "{upgrade_hotkey_label}"
+                                }
                             }
                         }
                     }
@@ -511,6 +604,50 @@ pub(crate) fn TileOverridePanel(
                 }
             }
         }
+        {
+            let upgrade_picker_visible = *upgrade_position_picker_open.read();
+            let upgrade_display_name = detail
+                .upgrade_display_name()
+                .map(str::to_owned)
+                .unwrap_or_else(|| String::from("Upgraded form"));
+            // Slot list: upgraded unit first (so cell_for_position picks it),
+            // then the rest of the command card minus the base unit (which
+            // shares the same default position and would cause a visual
+            // collision at that cell).
+            let base_unit_id_for_filter = object_id_for_capture.clone();
+            let upgrade_picker_id = upgrade_unit_id_for_capture.clone().unwrap_or_default();
+            let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible && !upgrade_picker_id.is_empty() {
+                let mut combined: Vec<GridSlotId> =
+                    Vec::with_capacity(active_container_slots.len() + 1);
+                combined.push(GridSlotId::ability(upgrade_picker_id.clone()));
+                for slot in active_container_slots.iter() {
+                    if let GridSlotId::Ability(base_id) = slot
+                        && base_id.eq_ignore_ascii_case(&base_unit_id_for_filter)
+                    {
+                        continue;
+                    }
+                    combined.push(slot.clone());
+                }
+                combined.into()
+            } else {
+                Rc::from([] as [GridSlotId; 0])
+            };
+            rsx! {
+                if upgrade_picker_visible && !upgrade_picker_id.is_empty() {
+                    UpgradePositionPicker {
+                        upgrade_unit_id: upgrade_picker_id,
+                        display_name: upgrade_display_name,
+                        picker_slots: upgrade_picker_slots,
+                        loaded_keys,
+                        grid_layout,
+                        dragging_slot,
+                        drop_target_cell,
+                        drag_follower,
+                        upgrade_position_picker_open,
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -579,6 +716,67 @@ fn AltPositionPicker(
                     // Centring wrapper — `.grid-tiles` is fixed-width
                     // (4 × 10rem) and would otherwise flush to the dialog's
                     // left edge.
+                    div { class: "alt-position-picker-grid-anchor",
+                        CommandGridSection { ..grid_props }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn UpgradePositionPicker(
+    upgrade_unit_id: String,
+    display_name: String,
+    picker_slots: Rc<[GridSlotId]>,
+    loaded_keys: Signal<Option<CustomKeysFile>>,
+    grid_layout: Signal<GridLayout>,
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_cell: Signal<Option<DropTargetCell>>,
+    drag_follower: Signal<Option<DragFollower>>,
+    mut upgrade_position_picker_open: Signal<bool>,
+) -> Element {
+    let picker_selected_slot =
+        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability(&upgrade_unit_id)));
+    let picker_selected_research = use_signal::<bool>(|| false);
+    let picker_selected_uprooted = use_signal::<bool>(|| false);
+    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let dialog_title = format!("Position: {display_name} (upgraded)");
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(&upgrade_unit_id)];
+    let _ = upgrade_unit_id;
+    let grid_props = CommandGridSectionProps {
+        heading: "Upgraded-form position",
+        slot_ids: picker_slots,
+        loaded_keys,
+        selected_slot: picker_selected_slot,
+        selected_from_research: picker_selected_research,
+        selected_from_uprooted: picker_selected_uprooted,
+        tier_overrides: picker_tier_overrides,
+        dragging_slot,
+        drop_target_cell,
+        drag_follower,
+        grid_layout,
+        is_research_grid: false,
+        is_uprooted_grid: false,
+        prevent_swap_on_drop: true,
+        restrict_draggable_to: restrict_draggable,
+        host_unit_id: String::new(),
+    };
+    rsx! {
+        DialogRoot {
+            class: "dialog-overlay",
+            open: upgrade_position_picker_open(),
+            on_open_change: move |is_open| upgrade_position_picker_open.set(is_open),
+            DialogContent { class: "dialog-shell wc3-dialog alt-position-picker-shell".to_string(),
+                DialogHeader {
+                    title: dialog_title,
+                    on_close: move |_| upgrade_position_picker_open.set(false),
+                }
+                div { class: "wc3-dialog-body alt-position-picker-body",
+                    p { class: "alt-position-picker-explainer",
+                        "Drag the upgraded-form button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
+                    }
                     div { class: "alt-position-picker-grid-anchor",
                         CommandGridSection { ..grid_props }
                     }

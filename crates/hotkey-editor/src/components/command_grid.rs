@@ -1,5 +1,5 @@
 use std::cell::{Cell, RefCell};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 use dioxus::html::input_data::MouseButton;
@@ -134,6 +134,7 @@ fn reset_drag_thread_locals() {
     DID_DRAG_MOVE.with(|c| c.set(false));
     DRAG_ORIGIN.with(|c| c.set(None));
     PENDING_DRAG.with(|c| *c.borrow_mut() = None);
+    SUPPRESS_NEXT_CLICK.with(|c| c.set(false));
 }
 
 fn tile_class(
@@ -227,6 +228,38 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let host_is_alt_form =
         !host_unit_id.is_empty() && BuildingTraits::unit_starts_in_toggle_alt_state(&host_unit_id);
 
+    let conflicting_hotkeys: HashSet<String> = {
+        let mut counts: HashMap<String, u32> = HashMap::new();
+        for row in 0..COMMAND_GRID_ROWS {
+            for column in 0..COMMAND_GRID_COLUMNS {
+                let cell_with_slot = Positions::cell_for_position(
+                    &slot_ids_cloned,
+                    custom_keys_option,
+                    is_research_grid,
+                    column,
+                    row,
+                );
+                let letter = cell_with_slot.as_ref().and_then(|(_, cell)| {
+                    let token = if is_research_grid {
+                        cell.binding_research_hotkey()
+                            .or_else(|| cell.binding_hotkey())
+                    } else {
+                        cell.binding_hotkey()
+                    };
+                    token.map(|t| t.display_label())
+                });
+                if let Some(l) = letter {
+                    *counts.entry(l).or_insert(0) += 1;
+                }
+            }
+        }
+        counts
+            .into_iter()
+            .filter(|(_, n)| *n > 1)
+            .map(|(k, _)| k)
+            .collect()
+    };
+
     rsx! {
         div { class: "command-section",
             h3 { class: "command-section-heading", "{heading_text}" }
@@ -241,7 +274,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 column,
                                 row,
                             );
-                            let occupant_slot: Option<GridSlotId> =
+                            let raw_occupant_slot: Option<GridSlotId> =
                                 cell_with_slot.as_ref().map(|(slot_id, _)| slot_id.clone());
                             // Show the off-state appearance when either:
                             // (a) a morph ability is on the unit it morphs INTO
@@ -249,7 +282,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // (b) the host unit starts in the toggle alt-state and the
                             //     ability has an alt-state (e.g. militia's "Back to Work")
                             let morph_reverse_cell: Option<AbilityCell> =
-                                occupant_slot.as_ref().and_then(|slot| {
+                                raw_occupant_slot.as_ref().and_then(|slot| {
                                     let GridSlotId::Ability(ability_id) = slot else {
                                         return None;
                                     };
@@ -262,9 +295,11 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 ability_id, binding,
                                             ));
                                         }
-                                    if BuildingTraits::unit_starts_in_toggle_alt_state(
-                                        &host_unit_id,
-                                    ) && BuildingTraits::ability_has_alt_state(ability_id)
+                                    if !is_uprooted_grid
+                                        && BuildingTraits::unit_starts_in_toggle_alt_state(
+                                            &host_unit_id,
+                                        )
+                                        && BuildingTraits::ability_has_alt_state(ability_id)
                                     {
                                         return Some(AbilityCell::for_ability_off(
                                             ability_id, binding,
@@ -272,6 +307,15 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                     }
                                     None
                                 });
+                            // Promote to AbilityOff when the tile is showing the
+                            // reverse half of a toggle (Unburrow, Night Elf Form).
+                            // This makes drag-and-drop write Unbuttonpos instead of
+                            // Buttonpos and wires selection to the off-state inspector.
+                            let occupant_slot: Option<GridSlotId> = if morph_reverse_cell.is_some() {
+                                raw_occupant_slot.map(|s| GridSlotId::AbilityOff(s.as_str().to_string()))
+                            } else {
+                                raw_occupant_slot
+                            };
                             let cell_option: Option<&AbilityCell> = morph_reverse_cell
                                 .as_ref()
                                 .or_else(|| cell_with_slot.as_ref().map(|(_, cell)| cell));
@@ -402,7 +446,13 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let displayed_letter: Option<String> = binding_letter_option
                                 .clone()
                                 .or_else(|| derived_letter.map(|character| character.to_string()));
-                            let hotkey_overlay_class = if is_passive_on_command_grid {
+                            let is_hotkey_conflict = displayed_letter
+                                .as_ref()
+                                .map(|l| conflicting_hotkeys.contains(l.as_str()))
+                                .unwrap_or(false);
+                            let hotkey_overlay_class = if is_hotkey_conflict {
+                                "hotkey-overlay conflict"
+                            } else if is_passive_on_command_grid {
                                 "hotkey-overlay passive"
                             } else {
                                 "hotkey-overlay"
@@ -417,24 +467,25 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // normal command card) or this tile's occupant
                             // matches one of the allowed slots (the picker
                             // dialog only lets the player grab the toggle's
-                            // off half). Morph abilities on alternate-form
-                            // units (Burrowed Crypt Fiend, Militia, …) are
-                            // never draggable — their position is shared with
-                            // the primary form's ability and can't be changed
-                            // independently.
-                            let is_morph_on_alt_form = occupant_slot
-                                .as_ref()
-                                .map(|slot| {
-                                    let target_option =
-                                        ObjectLookup::morph_target_unit(slot.as_str());
-                                    let morphs_to_host = target_option.is_some_and(|target| {
-                                        target.eq_ignore_ascii_case(&host_unit_id)
-                                    });
-                                    let alt_form_morph =
-                                        host_is_alt_form && target_option.is_some();
-                                    morphs_to_host || alt_form_morph
-                                })
-                                .unwrap_or(false);
+                            // off half). AbilityOff slots are already the
+                            // independent off-state half; only block the
+                            // on-state Ability variant when it would write
+                            // Buttonpos for a position that should be
+                            // Unbuttonpos (one-way morphs without alt-state).
+                            let is_morph_on_alt_form = matches!(occupant_slot, Some(GridSlotId::Ability(_)))
+                                && occupant_slot
+                                    .as_ref()
+                                    .map(|slot| {
+                                        let target_option =
+                                            ObjectLookup::morph_target_unit(slot.as_str());
+                                        let morphs_to_host = target_option.is_some_and(|target| {
+                                            target.eq_ignore_ascii_case(&host_unit_id)
+                                        });
+                                        let alt_form_morph =
+                                            host_is_alt_form && target_option.is_some();
+                                        morphs_to_host || alt_form_morph
+                                    })
+                                    .unwrap_or(false);
                             let tile_is_draggable = !is_morph_on_alt_form
                                 && (restrict_draggable_to.is_empty()
                                     || occupant_slot
@@ -853,7 +904,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                         drop.row(),
                                                         is_research_grid,
                                                     )
-                                                    .with_prevent_swap(prevent_swap_on_drop);
+                                                    .with_prevent_swap(prevent_swap_on_drop)
+                                                    .with_prevent_co_move(is_uprooted_grid);
                                                     Positions::move_or_swap(&mut keys_signal, move_request);
                                                     let moved_slot = dragging.slot_id().clone();
                                                     select_slot.set(Some(moved_slot));

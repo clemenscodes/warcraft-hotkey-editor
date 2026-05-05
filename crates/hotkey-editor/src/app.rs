@@ -13,11 +13,13 @@ use crate::components::preview_dialog::PreviewDialog;
 use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
-use crate::customkeys::baseline::BASELINE_CUSTOM_KEYS;
+use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::local_storage_cache::LocalStorageCache;
+use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::domain::positions::Positions;
 use crate::domain::races::RaceLabels;
 use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
@@ -31,9 +33,12 @@ const FAVICON: Asset = asset!("/assets/favicon.svg");
 #[component]
 pub(crate) fn App() -> Element {
     let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
-        Some(
-            LocalStorageCache::load().unwrap_or_else(|| CustomKeysFile::from(BASELINE_CUSTOM_KEYS)),
-        )
+        let mut baseline = CustomKeysFile::from(baseline_content());
+        if let Some(cached) = LocalStorageCache::load() {
+            UploadOverlay::apply(&mut baseline, &cached);
+        }
+        Positions::fully_normalize(&mut baseline);
+        Some(baseline)
     });
     use_effect(move || {
         if let Some(file) = loaded_keys.read().as_ref() {

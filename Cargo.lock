@@ -3125,6 +3125,9 @@ dependencies = [
 [[package]]
 name = "warcraft-keybinds"
 version = "0.1.0"
+dependencies = [
+ "warcraft-api",
+]
 
 [[package]]
 name = "warnings"
