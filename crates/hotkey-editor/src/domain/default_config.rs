@@ -289,42 +289,12 @@ mod tests {
 
         // Simulate applying the default template: overlay template onto a fresh
         // baseline, then normalize (same steps as templates_dialog.rs).
-        // Since the default template IS the baseline, the overlay is a no-op for
-        // positions — only hotkeys differ in the Neo variants.
         let mut loaded = CustomKeysFile::from(baseline);
-
-        let bp = |file: &CustomKeysFile, id: &str| -> String {
-            file.binding(id).and_then(|b| b.button_position()).map(|p| format!("{},{}", p.column(), p.row())).unwrap_or_else(|| "None".into())
-        };
-        eprintln!("before normalize: ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
-            bp(&loaded, "ACd2"), bp(&loaded, "ACif"), bp(&loaded, "ACf2"),
-            bp(&loaded, "Anh2"), bp(&loaded, "ACdm"), bp(&loaded, "ACsl"));
-
-        // Debug: what's in ndth's command card?
-        {
-            use warcraft_keybinds::unit_slots::UnitSlots;
-            let card = UnitSlots::command_card_for("ndth");
-            eprintln!("ndth command card slots: {:?}", card);
-            use warcraft_keybinds::cascade::resolve_container;
-            let resolved = resolve_container(&card, Some(&loaded), false);
-            for (slot, pos) in &resolved {
-                eprintln!("  {:?} => {:?}", slot, pos);
-            }
-        }
-
         fully_normalize(&mut loaded);
-
-        eprintln!("after normalize:  ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
-            bp(&loaded, "ACd2"), bp(&loaded, "ACif"), bp(&loaded, "ACf2"),
-            bp(&loaded, "Anh2"), bp(&loaded, "ACdm"), bp(&loaded, "ACsl"));
 
         // Simulate what save_export → serialize produces (= localStorage content).
         let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
         let export_file = CustomKeysFile::from(export_content.as_str());
-
-        eprintln!("export: ACd2={} ACif={} ACf2={} Anh2={} ACdm={} ACsl={}",
-            bp(&export_file, "ACd2"), bp(&export_file, "ACif"), bp(&export_file, "ACf2"),
-            bp(&export_file, "Anh2"), bp(&export_file, "ACdm"), bp(&export_file, "ACsl"));
 
         let pos = |id: &str| {
             export_file
@@ -334,14 +304,22 @@ mod tests {
         };
 
         // nfsh (Forest Troll High Priest) card: Anh2(0,2), ACif(2,2), ACd2(1,2).
-        // No conflict on this card — all three positions are distinct.
+        // No conflict on this card — all three positions are distinct. The export
+        // must preserve each ability's template position so that both the editor
+        // display and the game agree with what is stored in localStorage.
+        //
+        // Regression: a cross-unit cascade used to overwrite ACd2's stored
+        // position (from nith's card where ACf2 also sits at 1,2), making the
+        // editor display 1,2 while localStorage held a different value.
         assert_eq!(pos("ACd2"), Some((1, 2)), "ACd2 should stay at its template position 1,2");
         assert_eq!(pos("ACif"), Some((2, 2)), "ACif should stay at its template position 2,2");
 
-        // ndth (Dark Troll High Priest) card: ACdm(0,2), Anh2(0,2), ACsl(1,2).
-        // ACdm and Anh2 both default to 0,2 — one must cascade.
-        assert_eq!(pos("ACdm"), Some((1, 2)), "ACdm should cascade to 1,2 when Anh2 occupies 0,2");
-        assert_eq!(pos("ACsl"), Some((2, 2)), "ACsl should cascade to 2,2 when ACdm cascades to 1,2");
+        // nfsh display (resolve_container): Anh2=0,2, ACif=2,2, ACd2=1,2. No conflicts.
+        // nith display (resolve_container): Anh2=0,2, ACf2=1,2, ACd2 cascades to 2,2.
+        // The export stores ACd2=1,2 (its home position, valid for nfsh). The
+        // display handles the nith conflict on the fly — no write-back needed.
+        assert_eq!(pos("ACf2"), Some((1, 2)), "ACf2 should keep its template position");
+        assert_eq!(pos("Anh2"), Some((0, 2)), "Anh2 should keep its template position");
     }
 
     /// Regenerates CustomKeys.txt from the database. Run this whenever
