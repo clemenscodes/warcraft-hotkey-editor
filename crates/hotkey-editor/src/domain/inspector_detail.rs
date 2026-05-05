@@ -147,10 +147,20 @@ impl InspectorDetail {
                 // that unit's AbilityOff slot.  Showing controls here would let
                 // the player mutate a different unit's grid from this panel.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
+                // Some morph abilities use no morph_target_unit in the database
+                // (e.g. Call to Arms / Ant1) yet still transform the unit into a
+                // completely different unit. Detect these by checking whether the
+                // ability appears on any unit that starts in a toggle alt state
+                // (Militia, burrowed forms, uprootable ancients). If it does, the
+                // off-state half is owned by that unit's own grid and must not be
+                // editable from the source unit's inspector.
+                let ability_off_on_alt_unit =
+                    !ability_is_morph && BuildingTraits::ability_is_on_alt_state_unit(ability_id);
                 let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
                     if object_has_alt_state
                         && !prefer_un_state
                         && !ability_is_morph
+                        && !ability_off_on_alt_unit
                         && !from_uprooted
                     {
                         let alt_name = database_object

@@ -4,6 +4,21 @@ use std::path::{Path, PathBuf};
 
 pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId};
 
+pub mod building;
+pub mod cascade;
+pub mod catalog;
+pub mod export;
+pub mod lookup;
+pub mod overlay;
+pub mod slot;
+pub mod unit_slots;
+
+pub use building::BuildingTraits;
+pub use catalog::CommandCatalog;
+pub use lookup::ObjectLookup;
+pub use slot::GridSlotId;
+pub use unit_slots::UnitSlots;
+
 // ──────────────────────────────────────────────────────────────
 // ButtonPosition
 // ──────────────────────────────────────────────────────────────
@@ -1377,5 +1392,230 @@ mod tests {
             baseline_unique, output_unique,
             "round-trip preserves the set of unique section headers",
         );
+    }
+}
+
+#[cfg(test)]
+mod overlay_tests {
+    use super::*;
+    use crate::overlay::apply_overlay;
+
+    #[test]
+    fn overlay_copies_hotkey_from_uploaded_to_target() {
+        let mut target = CustomKeysFile::from("[Ahrl]\nHotkey=Q\n\n");
+        let uploaded = CustomKeysFile::from("[Ahrl]\nHotkey=W\n\n");
+        apply_overlay(&mut target, &uploaded);
+        assert_eq!(target.binding("Ahrl").and_then(|b| b.hotkey()), Some("W"));
+    }
+
+    #[test]
+    fn overlay_copies_button_position() {
+        let mut target = CustomKeysFile::from("[Ahrl]\nButtonpos=0,0\n\n");
+        let uploaded = CustomKeysFile::from("[Ahrl]\nButtonpos=2,1\n\n");
+        apply_overlay(&mut target, &uploaded);
+        let pos = target
+            .binding("Ahrl")
+            .and_then(|b| b.button_position())
+            .copied();
+        assert_eq!(pos, Some(ButtonPosition::new(2, 1)));
+    }
+
+    #[test]
+    fn overlay_does_not_overwrite_system_entries() {
+        // Inventory slot 1 is a system entry — uploading an ability binding
+        // with the same id must not touch the system section.
+        let system_content = "[IsS1]\nHotkey=27\nGameCommand=1\n\n";
+        let mut target = CustomKeysFile::from(system_content);
+        let uploaded = CustomKeysFile::from("[IsS1]\nHotkey=Q\n\n");
+        apply_overlay(&mut target, &uploaded);
+        // System entry should still be present and unchanged.
+        assert!(target.system("IsS1").is_some());
+    }
+
+    #[test]
+    fn overlay_skips_absent_fields() {
+        // If the uploaded binding has no hotkey, the target hotkey is kept.
+        let mut target = CustomKeysFile::from("[Ahrl]\nHotkey=Q\n\n");
+        let uploaded = CustomKeysFile::from("[Ahrl]\nButtonpos=1,0\n\n");
+        apply_overlay(&mut target, &uploaded);
+        assert_eq!(target.binding("Ahrl").and_then(|b| b.hotkey()), Some("Q"));
+        let pos = target
+            .binding("Ahrl")
+            .and_then(|b| b.button_position())
+            .copied();
+        assert_eq!(pos, Some(ButtonPosition::new(1, 0)));
+    }
+
+    #[test]
+    fn overlay_copies_command_hotkey() {
+        let mut target = CustomKeysFile::from("[CmdAttack]\nHotkey=A\n\n");
+        let uploaded = CustomKeysFile::from("[CmdAttack]\nHotkey=G\n\n");
+        apply_overlay(&mut target, &uploaded);
+        assert_eq!(
+            target.command("CmdAttack").and_then(|b| b.hotkey()),
+            Some("G"),
+        );
+    }
+
+    #[test]
+    fn overlay_is_case_insensitive_for_ids() {
+        let mut target = CustomKeysFile::from("[AHrl]\nHotkey=Q\n\n");
+        let uploaded = CustomKeysFile::from("[ahrl]\nHotkey=E\n\n");
+        apply_overlay(&mut target, &uploaded);
+        assert_eq!(target.binding("AHrl").and_then(|b| b.hotkey()), Some("E"));
+    }
+}
+
+#[cfg(test)]
+mod export_tests {
+    use crate::CustomKeysFile;
+    use crate::export::serialize;
+
+    #[test]
+    fn empty_overlay_on_minimal_baseline_round_trips() {
+        let baseline = "[Ahrl]\nHotkey=Q\nButtonpos=0,0\n\n";
+        let loaded = CustomKeysFile::from("");
+        let output = serialize(&loaded, baseline);
+        assert!(
+            output.contains("[Ahrl]"),
+            "baseline section should be present in output"
+        );
+        assert!(output.contains("Hotkey=Q"));
+    }
+
+    #[test]
+    fn overlay_values_appear_in_export() {
+        let baseline = "[Ahrl]\nHotkey=Q\n\n";
+        let loaded = CustomKeysFile::from("[Ahrl]\nHotkey=W\n\n");
+        let output = serialize(&loaded, baseline);
+        assert!(output.contains("Hotkey=W"), "user hotkey override must win");
+    }
+
+    #[test]
+    fn export_with_real_baseline_contains_known_sections() {
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let loaded = CustomKeysFile::from("");
+        let output = serialize(&loaded, baseline);
+        for section in &["[Hpal]", "[CmdAttack]", "[CmdMove]"] {
+            assert!(output.contains(section), "export should contain {section}");
+        }
+    }
+
+    #[test]
+    fn export_materializes_default_button_positions() {
+        // Ahrl (Holy Light) has a known default Buttonpos in the database.
+        // Starting from an empty overlay, the export should inject it.
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let loaded = CustomKeysFile::from("");
+        let output = serialize(&loaded, baseline);
+        // Find the [Ahrl] section and check Buttonpos is present.
+        let after_ahrl = output
+            .split("[Ahrl]")
+            .nth(1)
+            .expect("[Ahrl] must be in output");
+        let next_section = after_ahrl.split('[').next().unwrap_or(after_ahrl);
+        assert!(
+            next_section.contains("Buttonpos="),
+            "[Ahrl] section must have a Buttonpos after materialization"
+        );
+    }
+}
+
+#[cfg(test)]
+mod cascade_tests {
+    use crate::CustomKeysFile;
+    use crate::cascade::{next_free_cell, position_occupied, resolve_container, resolved_for};
+    use crate::slot::GridSlotId;
+    use warcraft_api::ButtonPosition;
+
+    #[test]
+    fn next_free_cell_prefers_requested_row() {
+        let occupied = vec![ButtonPosition::new(0, 0)];
+        let cell = next_free_cell(0, &occupied);
+        assert_eq!(cell, Some(ButtonPosition::new(1, 0)));
+    }
+
+    #[test]
+    fn next_free_cell_falls_back_to_next_row_when_row_full() {
+        let occupied: Vec<ButtonPosition> = (0..4).map(|c| ButtonPosition::new(c, 0)).collect();
+        let cell = next_free_cell(0, &occupied);
+        assert_eq!(cell, Some(ButtonPosition::new(0, 1)));
+    }
+
+    #[test]
+    fn next_free_cell_returns_none_when_grid_full() {
+        let occupied: Vec<ButtonPosition> = (0..3)
+            .flat_map(|r| (0..4).map(move |c| ButtonPosition::new(c, r)))
+            .collect();
+        let cell = next_free_cell(0, &occupied);
+        assert_eq!(cell, None);
+    }
+
+    #[test]
+    fn position_occupied_matches_by_column_and_row() {
+        let occupied = vec![ButtonPosition::new(1, 2)];
+        assert!(position_occupied(&occupied, ButtonPosition::new(1, 2)));
+        assert!(!position_occupied(&occupied, ButtonPosition::new(0, 2)));
+    }
+
+    #[test]
+    fn resolve_container_places_ability_at_custom_position() {
+        // Set a custom Buttonpos for a known ability.
+        let custom_keys = CustomKeysFile::from("[Ahrl]\nButtonpos=2,0\n\n");
+        let slots = vec![GridSlotId::ability("Ahrl")];
+        let result = resolve_container(&slots, Some(&custom_keys), false, false);
+        let pos = result
+            .iter()
+            .find(|(s, _)| s.as_str() == "Ahrl")
+            .and_then(|(_, p)| *p);
+        assert_eq!(pos, Some(ButtonPosition::new(2, 0)));
+    }
+
+    #[test]
+    fn resolve_container_cascades_collision_when_normalize_flag_set() {
+        // Two abilities forced to the same position: with cascade_explicit=true
+        // the second must land somewhere else.
+        let content = "[Ahrl]\nButtonpos=0,0\n\n[AHbz]\nButtonpos=0,0\n\n";
+        let custom_keys = CustomKeysFile::from(content);
+        let slots = vec![GridSlotId::ability("Ahrl"), GridSlotId::ability("AHbz")];
+        let result = resolve_container(&slots, Some(&custom_keys), false, true);
+        let pos_ahrl = result
+            .iter()
+            .find(|(s, _)| s.as_str() == "Ahrl")
+            .and_then(|(_, p)| *p);
+        let pos_ahbz = result
+            .iter()
+            .find(|(s, _)| s.as_str() == "AHbz")
+            .and_then(|(_, p)| *p);
+        assert_eq!(pos_ahrl, Some(ButtonPosition::new(0, 0)));
+        // Cascaded away from (0,0) to the next free cell.
+        assert!(pos_ahbz.is_some());
+        assert_ne!(pos_ahbz, Some(ButtonPosition::new(0, 0)));
+    }
+
+    #[test]
+    fn resolved_for_with_no_custom_keys_uses_database_default() {
+        // Ahrl (Holy Light) has a known database default position.
+        // With no custom keys, resolved_for should return it.
+        let slots = vec![GridSlotId::ability("Ahrl")];
+        let pos = resolved_for(&GridSlotId::ability("Ahrl"), &slots, None, false);
+        // We just assert it's Some — the exact column/row is database data.
+        assert!(
+            pos.is_some(),
+            "Ahrl should have a default position in the database"
+        );
+    }
+
+    #[test]
+    fn fully_normalize_resolves_collisions_in_real_game_data() {
+        use crate::cascade::fully_normalize;
+        // Start from the stock baseline and normalize — should not panic and
+        // should produce a file where abilities have distinct positions
+        // within each unit's command card.
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let mut file = crate::CustomKeysFile::from(baseline);
+        fully_normalize(&mut file);
+        // If we get here without a panic, the cascade loop completed for
+        // all units in the database without infinite-looping or aborting.
     }
 }

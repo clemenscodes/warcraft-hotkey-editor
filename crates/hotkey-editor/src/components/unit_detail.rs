@@ -269,9 +269,6 @@ pub(crate) fn UnitDetailPanel(
         if morphs_into_self(ability_id.value(), &unit_id) {
             continue;
         }
-        if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
-            continue;
-        }
         if !ObjectLookup::has_icon(ability_id.value()) {
             continue;
         }
@@ -279,8 +276,9 @@ pub(crate) fn UnitDetailPanel(
         // of the on-state Buttonpos) when:
         //   • the host unit is in its alternate state and the ability has an
         //     off-half (uprootable ancients, burrowed units, militia), or
-        //   • the ability's morph target is this unit itself (bear-form druid,
-        //     where Abrf on edcm shows Night Elf Form at a separate Unbuttonpos).
+        //   • the ability's morph target is this unit itself — the game encodes
+        //     the reverse-morph direction by pointing the ability back at the
+        //     unit already holding it (e.g. Abrf on edcm for Night Elf Form).
         let is_morph_back = ObjectLookup::morph_target_unit(ability_id.value())
             .is_some_and(|target| target.eq_ignore_ascii_case(&unit_id));
         if is_morph_back
@@ -337,9 +335,6 @@ pub(crate) fn UnitDetailPanel(
                     continue;
                 }
                 if morphs_into_self(ability_id.value(), &unit_id) {
-                    continue;
-                }
-                if ObjectLookup::ability_belongs_to_alt_form(ability_id.value(), &unit_id) {
                     continue;
                 }
                 if is_rooted_only_mechanic(ability_id.value()) {

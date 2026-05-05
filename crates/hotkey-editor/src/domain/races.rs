@@ -30,21 +30,4 @@ impl RaceLabels {
             Race::Neutral => "neutral",
         }
     }
-
-    pub(crate) fn build_command(race: Option<Race>) -> Option<&'static str> {
-        let race_value = race?;
-        let preferred_name = match race_value {
-            Race::Human => "CmdBuildHuman",
-            Race::Orc => "CmdBuildOrc",
-            Race::Nightelf => "CmdBuildNightElf",
-            Race::Undead => "CmdBuildUndead",
-            Race::Neutral => "CmdBuild",
-        };
-        let preferred_match =
-            crate::domain::command_catalog::CommandCatalog::known_command(preferred_name);
-        if preferred_match.is_some() {
-            return preferred_match;
-        }
-        crate::domain::command_catalog::CommandCatalog::known_command("CmdBuild")
-    }
 }

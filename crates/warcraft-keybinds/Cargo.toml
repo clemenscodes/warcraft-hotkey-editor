@@ -11,3 +11,4 @@ path = "src/lib.rs"
 
 [dependencies]
 warcraft-api = { path = "../warcraft-api" }
+warcraft-database = { path = "../warcraft-database" }
