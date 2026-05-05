@@ -2855,9 +2855,9 @@ Untip=Deselect Unit
 
 [Anei]
 Hotkey=U
-Buttonpos=3,2
+Buttonpos=2,2
 ResearchHotkey=V
-ResearchButtonpos=3,2
+ResearchButtonpos=2,2
 Tip=Select User
 
 [Aneu]
@@ -6168,7 +6168,7 @@ Ubertip=Restores 125 mana when used.
 
 [pnvl]
 Hotkey=N
-Buttonpos=2,2
+Buttonpos=3,2
 Tip=Purchase Potion of Lesser Invulnerability
 Ubertip=Makes the Hero invulnerable to damage for 7 seconds when used. An invulnerable Hero may not be the target of spells or effects.
 
