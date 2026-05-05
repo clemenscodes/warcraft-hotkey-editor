@@ -19,6 +19,7 @@ use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::domain::positions::Positions;
 use crate::domain::races::RaceLabels;
 use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
@@ -36,6 +37,7 @@ pub(crate) fn App() -> Element {
         if let Some(cached) = LocalStorageCache::load() {
             UploadOverlay::apply(&mut baseline, &cached);
         }
+        Positions::fully_normalize(&mut baseline);
         Some(baseline)
     });
     use_effect(move || {

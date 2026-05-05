@@ -52,8 +52,8 @@ pub(crate) fn TemplatesDialog(
                                             let command_count = parsed_template.commands_in_order().count();
                                             let mut baseline = CustomKeysFile::from(baseline_content());
                                             UploadOverlay::apply(&mut baseline, &parsed_template);
+                                            Positions::fully_normalize(&mut baseline);
                                             loaded_keys.set(Some(baseline));
-                                            Positions::commit_all_unit_positions(&mut loaded_keys);
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,
                                                 command_count,

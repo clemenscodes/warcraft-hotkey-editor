@@ -228,26 +228,6 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let host_is_alt_form =
         !host_unit_id.is_empty() && BuildingTraits::unit_starts_in_toggle_alt_state(&host_unit_id);
 
-    {
-        let has_mismatch = slot_ids_cloned.iter().any(|slot| {
-            let resolved = Positions::resolved_for(
-                slot,
-                &slot_ids_cloned,
-                custom_keys_option,
-                is_research_grid,
-            );
-            let stored = Positions::current_for(slot, custom_keys_option, is_research_grid);
-            stored.is_some() && resolved != stored
-        });
-        if has_mismatch {
-            let ids = slot_ids_cloned.clone();
-            let mut k = keys_signal;
-            spawn(async move {
-                Positions::commit_resolved_positions(&ids, &mut k, is_research_grid);
-            });
-        }
-    }
-
     let conflicting_hotkeys: HashSet<String> = {
         let mut counts: HashMap<String, u32> = HashMap::new();
         for row in 0..COMMAND_GRID_ROWS {

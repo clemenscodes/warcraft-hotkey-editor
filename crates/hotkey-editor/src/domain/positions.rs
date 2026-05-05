@@ -178,12 +178,38 @@ impl Positions {
             entry.position = assigned_position;
         }
 
+        // Pass 1: abilities with explicit custom positions — placed first,
+        // never cascaded. An explicit Buttonpos/Unbuttonpos in CustomKeys.txt
+        // is an absolute instruction from the player; the cascade must not
+        // override it.
         for entry in entries.iter_mut() {
             if !matches!(
                 entry.slot_id,
                 GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
             ) {
                 continue;
+            }
+            if !Self::has_custom_position(&entry.slot_id, custom_keys, is_research_context) {
+                continue;
+            }
+            let explicit_position =
+                Self::current_for(&entry.slot_id, custom_keys, is_research_context);
+            if let Some(position_value) = explicit_position {
+                occupied_positions.push(position_value);
+            }
+            entry.position = explicit_position;
+        }
+
+        // Pass 2: abilities without a custom position — cascade as before.
+        for entry in entries.iter_mut() {
+            if !matches!(
+                entry.slot_id,
+                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
+            ) {
+                continue;
+            }
+            if entry.position.is_some() {
+                continue; // already placed in pass 1
             }
             let assigned_position = Self::resolve_with_cascade(
                 &entry.slot_id,
@@ -214,6 +240,36 @@ impl Positions {
         }
 
         entries
+    }
+
+    fn has_custom_position(
+        slot: &GridSlotId,
+        custom_keys: Option<&CustomKeysFile>,
+        is_research_context: bool,
+    ) -> bool {
+        match slot {
+            GridSlotId::Ability(ability_id) => {
+                if is_research_context {
+                    custom_keys
+                        .and_then(|f| f.binding(ability_id))
+                        .and_then(|b| b.research_button_position())
+                        .is_some()
+                } else {
+                    custom_keys
+                        .and_then(|f| f.binding(ability_id))
+                        .and_then(|b| b.button_position())
+                        .is_some()
+                }
+            }
+            GridSlotId::AbilityOff(ability_id) => custom_keys
+                .and_then(|f| f.binding(ability_id))
+                .and_then(|b| b.unbutton_position())
+                .is_some(),
+            GridSlotId::Command(command_name) => custom_keys
+                .and_then(|f| f.command(command_name))
+                .and_then(|b| b.button_position())
+                .is_some(),
+        }
     }
 
     fn resolve_with_cascade(
@@ -538,33 +594,36 @@ impl Positions {
         }
     }
 
-    /// Write the cascade-resolved display positions back to the file for every
-    /// slot in `slot_ids`, using the exact same `resolve_container` logic that
-    /// drives the command-grid renderer. After this call, every stored
-    /// `Buttonpos` in CustomKeys (localStorage) matches what the editor shows.
-    pub(crate) fn commit_resolved_positions(
-        slot_ids: &[GridSlotId],
-        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
-        is_research_context: bool,
-    ) {
-        let resolved = {
-            let read = custom_keys_signal.read();
-            Self::resolve_container(slot_ids, read.as_ref(), is_research_context)
-        };
-
-        let any_mismatch = resolved.iter().any(|entry| {
-            let Some(vis_pos) = entry.position else {
-                return false;
-            };
-            let read = custom_keys_signal.read();
-            Self::current_for(&entry.slot_id, read.as_ref(), is_research_context) != Some(vis_pos)
-        });
-        if !any_mismatch {
-            return;
+    /// Resolve cascade positions for every known unit container and write them
+    /// back into `file` synchronously. After this call the file is
+    /// self-consistent: every displayed position matches what is stored, with
+    /// no further fixup needed at render time.
+    pub(crate) fn fully_normalize(file: &mut CustomKeysFile) {
+        for unit_id in UnitSlots::all_unit_ids() {
+            let cmd_card = UnitSlots::command_card_for(unit_id);
+            if !cmd_card.is_empty() {
+                Self::write_container_resolved(file, &cmd_card, false);
+            }
+            if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
+                Self::write_container_resolved(file, &build_menu, false);
+            }
+            if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
+                Self::write_container_resolved(file, &uprooted_menu, false);
+            }
+            if let Some(research_menu) = UnitSlots::research_menu_for(unit_id) {
+                Self::write_container_resolved(file, &research_menu, true);
+            }
         }
+    }
 
-        let mut guard = custom_keys_signal.write();
-        let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+    fn write_container_resolved(
+        file: &mut CustomKeysFile,
+        slot_ids: &[GridSlotId],
+        is_research: bool,
+    ) {
+        // `resolve_container` returns an owned Vec with no lifetime ties to
+        // `file`, so the immutable borrow ends before the write loop below.
+        let resolved = Self::resolve_container(slot_ids, Some(file), is_research);
         for entry in &resolved {
             let Some(vis_pos) = entry.position else {
                 continue;
@@ -572,117 +631,46 @@ impl Positions {
             let new_pos = warcraft_keybinds::ButtonPosition::new(vis_pos.column(), vis_pos.row());
             match &entry.slot_id {
                 GridSlotId::Ability(id) => {
+                    if is_research {
+                        let stored = file
+                            .binding(id)
+                            .and_then(|b| b.research_button_position())
+                            .map(|p| ButtonPosition::new(p.column(), p.row()));
+                        if stored != Some(vis_pos)
+                            && let Some(binding) = file.binding_or_default_mut(id) {
+                                binding.set_research_button_position(Some(new_pos));
+                            }
+                    } else {
+                        let stored = file
+                            .binding(id)
+                            .and_then(|b| b.button_position())
+                            .map(|p| ButtonPosition::new(p.column(), p.row()));
+                        if stored != Some(vis_pos)
+                            && let Some(binding) = file.binding_or_default_mut(id) {
+                                binding.set_button_position(Some(new_pos));
+                            }
+                    }
+                }
+                GridSlotId::AbilityOff(id) => {
                     let stored = file
                         .binding(id)
-                        .and_then(|b| b.button_position())
+                        .and_then(|b| b.unbutton_position())
                         .map(|p| ButtonPosition::new(p.column(), p.row()));
-                    if stored == Some(vis_pos) {
-                        continue;
-                    }
-                    if let Some(binding) = file.binding_or_default_mut(id) {
-                        binding.set_button_position(Some(new_pos));
-                    }
+                    if stored != Some(vis_pos)
+                        && let Some(binding) = file.binding_or_default_mut(id) {
+                            binding.set_unbutton_position(Some(new_pos));
+                        }
                 }
                 GridSlotId::Command(name) => {
                     let stored = file
                         .command(name)
                         .and_then(|b| b.button_position())
                         .map(|p| ButtonPosition::new(p.column(), p.row()));
-                    if stored == Some(vis_pos) {
-                        continue;
-                    }
-                    if let Some(binding) = file.command_or_default_mut(name) {
-                        binding.set_button_position(Some(new_pos));
-                    }
+                    if stored != Some(vis_pos)
+                        && let Some(binding) = file.command_or_default_mut(name) {
+                            binding.set_button_position(Some(new_pos));
+                        }
                 }
-                GridSlotId::AbilityOff(_) => {}
-            }
-        }
-    }
-
-    /// Eagerly resolve stored-position conflicts that would cause hotkey
-    /// collisions after apply-grid. Only considers non-passive abilities that
-    /// have an explicitly stored Buttonpos — passive abilities are skipped by
-    /// apply-grid and must never displace a template-specified active position.
-    /// Database-default positions are also excluded: the baseline pre-bakes
-    /// every ability's database default, so treating defaults as "claimed"
-    /// would falsely conflict with template-specified positions.
-    pub(crate) fn commit_all_unit_positions(
-        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
-    ) {
-        for unit_id in UnitSlots::all_unit_ids() {
-            let cmd_card = UnitSlots::command_card_for(unit_id);
-            if !cmd_card.is_empty() {
-                Self::resolve_stored_active_conflicts(&cmd_card, custom_keys_signal);
-            }
-            if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
-                Self::resolve_stored_active_conflicts(&build_menu, custom_keys_signal);
-            }
-            if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
-                Self::resolve_stored_active_conflicts(&uprooted_menu, custom_keys_signal);
-            }
-        }
-    }
-
-    /// Detect and resolve stored-position conflicts among non-passive abilities
-    /// in a single slot container. Passive abilities and slots without explicit
-    /// stored Buttonpos are ignored — they cannot cause hotkey collisions and
-    /// must not displace template-specified positions.
-    fn resolve_stored_active_conflicts(
-        slot_ids: &[GridSlotId],
-        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
-    ) {
-        let stored: Vec<(GridSlotId, ButtonPosition)> = {
-            let read = custom_keys_signal.read();
-            let file = read.as_ref();
-            slot_ids
-                .iter()
-                .filter_map(|slot| {
-                    let GridSlotId::Ability(id) = slot else {
-                        return None;
-                    };
-                    if ObjectLookup::is_passive_ability(id) {
-                        return None;
-                    }
-                    let pos = file
-                        .and_then(|f| f.binding(id))
-                        .and_then(|b| b.button_position())
-                        .map(|p| ButtonPosition::new(p.column(), p.row()))?;
-                    Some((slot.clone(), pos))
-                })
-                .collect()
-        };
-
-        let mut claimed: Vec<ButtonPosition> = Vec::new();
-        let mut to_move: Vec<(GridSlotId, u8)> = Vec::new();
-
-        for (slot, pos) in &stored {
-            if Self::position_occupied(&claimed, *pos) {
-                to_move.push((slot.clone(), pos.row()));
-            } else {
-                claimed.push(*pos);
-            }
-        }
-
-        if to_move.is_empty() {
-            return;
-        }
-
-        let mut guard = custom_keys_signal.write();
-        let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
-
-        for (slot, preferred_row) in to_move {
-            let Some(new_pos) = Self::next_free_cell(preferred_row, &claimed) else {
-                continue;
-            };
-            claimed.push(new_pos);
-            let new_pos_kb =
-                warcraft_keybinds::ButtonPosition::new(new_pos.column(), new_pos.row());
-            let GridSlotId::Ability(id) = &slot else {
-                continue;
-            };
-            if let Some(binding) = file.binding_or_default_mut(id) {
-                binding.set_button_position(Some(new_pos_kb));
             }
         }
     }

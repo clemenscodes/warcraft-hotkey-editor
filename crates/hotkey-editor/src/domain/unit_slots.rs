@@ -217,6 +217,33 @@ impl UnitSlots {
         Some(slots)
     }
 
+    pub(crate) fn research_menu_for(unit_id: &str) -> Option<Vec<GridSlotId>> {
+        let unit_object = ObjectLookup::by_id(unit_id)?;
+        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
+            return None;
+        };
+        if UnitKindHelpers::effective_kind(unit_meta) != UnitKind::Hero {
+            return None;
+        }
+        let hero_abilities = unit_meta.hero_abilities();
+        if hero_abilities.is_empty() {
+            return None;
+        }
+        let mut slots: Vec<GridSlotId> = Vec::new();
+        for ability_id in hero_abilities.iter() {
+            if !ObjectLookup::has_icon(ability_id.value()) {
+                continue;
+            }
+            slots.push(GridSlotId::ability(ability_id.value()));
+        }
+        if let Some(back_command) = CommandCatalog::submenu_back_command()
+            && ObjectLookup::has_icon(back_command)
+        {
+            slots.push(GridSlotId::command(back_command));
+        }
+        Some(slots)
+    }
+
     pub(crate) fn uprooted_menu_for(unit_id: &str) -> Option<Vec<GridSlotId>> {
         let unit_object = ObjectLookup::by_id(unit_id)?;
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
