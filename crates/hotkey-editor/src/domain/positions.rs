@@ -637,18 +637,20 @@ impl Positions {
                             .and_then(|b| b.research_button_position())
                             .map(|p| ButtonPosition::new(p.column(), p.row()));
                         if stored != Some(vis_pos)
-                            && let Some(binding) = file.binding_or_default_mut(id) {
-                                binding.set_research_button_position(Some(new_pos));
-                            }
+                            && let Some(binding) = file.binding_or_default_mut(id)
+                        {
+                            binding.set_research_button_position(Some(new_pos));
+                        }
                     } else {
                         let stored = file
                             .binding(id)
                             .and_then(|b| b.button_position())
                             .map(|p| ButtonPosition::new(p.column(), p.row()));
                         if stored != Some(vis_pos)
-                            && let Some(binding) = file.binding_or_default_mut(id) {
-                                binding.set_button_position(Some(new_pos));
-                            }
+                            && let Some(binding) = file.binding_or_default_mut(id)
+                        {
+                            binding.set_button_position(Some(new_pos));
+                        }
                     }
                 }
                 GridSlotId::AbilityOff(id) => {
@@ -657,9 +659,10 @@ impl Positions {
                         .and_then(|b| b.unbutton_position())
                         .map(|p| ButtonPosition::new(p.column(), p.row()));
                     if stored != Some(vis_pos)
-                        && let Some(binding) = file.binding_or_default_mut(id) {
-                            binding.set_unbutton_position(Some(new_pos));
-                        }
+                        && let Some(binding) = file.binding_or_default_mut(id)
+                    {
+                        binding.set_unbutton_position(Some(new_pos));
+                    }
                 }
                 GridSlotId::Command(name) => {
                     let stored = file
@@ -667,9 +670,10 @@ impl Positions {
                         .and_then(|b| b.button_position())
                         .map(|p| ButtonPosition::new(p.column(), p.row()));
                     if stored != Some(vis_pos)
-                        && let Some(binding) = file.command_or_default_mut(name) {
-                            binding.set_button_position(Some(new_pos));
-                        }
+                        && let Some(binding) = file.command_or_default_mut(name)
+                    {
+                        binding.set_button_position(Some(new_pos));
+                    }
                 }
             }
         }
