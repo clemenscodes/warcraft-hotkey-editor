@@ -275,6 +275,11 @@ pub fn resolve_with_cascade(
         None => {
             if should_auto_position(slot) || is_research_context {
                 next_free_cell(0, occupied_positions)
+            } else if matches!(slot, GridSlotId::Ability(_)) {
+                // Some abilities have no Buttonpos= in any abilityfunc.txt. The WC3
+                // engine auto-places these on the bottom row (row 2) of the command
+                // card, cascading right if occupied (e.g. Aatp/Prioritize on Gargoyle).
+                next_free_cell(2, occupied_positions)
             } else {
                 None
             }

@@ -1607,6 +1607,29 @@ mod cascade_tests {
     }
 
     #[test]
+    fn ability_without_database_position_is_placed_on_row_2() {
+        // Aatp (Prioritize) has no Buttonpos= in any abilityfunc.txt, so its
+        // default_button_position is None.  It lives on the Gargoyle (UGAR) alongside
+        // Astn (Stone Form) which sits at (0,2).  With no custom keys the cascade
+        // should auto-place Aatp on row 2 at the next free cell: (1,2).
+        use crate::unit_slots::UnitSlots;
+        let card = UnitSlots::command_card_for("UGAR");
+        let aatp_slot = card
+            .iter()
+            .find(|s| s.as_str().eq_ignore_ascii_case("Aatp"));
+        assert!(
+            aatp_slot.is_some(),
+            "Aatp should be in the Gargoyle command card"
+        );
+        let pos = resolved_for(aatp_slot.unwrap(), &card, None, false);
+        assert_eq!(
+            pos,
+            Some(ButtonPosition::new(1, 2)),
+            "Aatp should be auto-placed at (1,2) after Astn occupies (0,2)"
+        );
+    }
+
+    #[test]
     fn fully_normalize_resolves_collisions_in_real_game_data() {
         use crate::cascade::fully_normalize;
         // Start from the stock baseline and normalize — should not panic and
