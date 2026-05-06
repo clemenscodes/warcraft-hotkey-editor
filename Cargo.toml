@@ -4,6 +4,20 @@ members = [
     "crates/hotkey-editor",
     "crates/warcraft-api",
     "crates/warcraft-database",
+    "crates/warcraft-extractor",
+    "crates/warcraft-keybinds",
+    "crates/warcraft-slk",
+]
+# Default workspace members compile on `wasm32-unknown-unknown` for the web app.
+# `warcraft-extractor` and `warcraft-slk` are native-only build/regenerate tools
+# (CASC + cmake + zlib), so they are kept out of default workspace operations
+# (`cargo build`, `cargo clippy --all-targets`, etc.). Run them explicitly:
+#   cargo run -p warcraft-extractor -- --casc <PATH>
+#   cargo test -p warcraft-extractor
+default-members = [
+    "crates/hotkey-editor",
+    "crates/warcraft-api",
+    "crates/warcraft-database",
     "crates/warcraft-keybinds",
 ]
 
@@ -20,6 +34,15 @@ serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 num-traits = "0.2"
 thiserror = "2.0.17"
+
+bcdec_rs = "0.2.0"
+casclib = { git = "https://github.com/clemenscodes/casclib-rs.git" }
+clap = { version = "4.6.1", features = ["derive", "env"] }
+ddsfile = "0.6.0"
+image = "0.25.9"
+paste = "1.0.15"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
 [profile.release]
 codegen-units = 16

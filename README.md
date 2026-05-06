@@ -110,18 +110,36 @@ you are deliberately debugging the toolchain.
 
 ```text
 crates/
-├── hotkey-editor/        # Dioxus web app
+├── hotkey-editor/        # Dioxus web app (wasm)
 ├── warcraft-api/         # Shared Warcraft III data types
 ├── warcraft-database/    # Pre-extracted Warcraft III object database
-└── warcraft-keybinds/    # CustomKeys.txt parser and serializer
+├── warcraft-extractor/   # Native CLI: regenerates db.rs from CASC
+├── warcraft-keybinds/    # CustomKeys.txt parser and serializer
+└── warcraft-slk/         # SLK table parser used by warcraft-extractor
 
 docs/
-└── ARCHITECTURE.md       # Runtime and build architecture
+├── ARCHITECTURE.md       # Runtime and build architecture
+└── EXTRACTION.md         # How db.rs is generated and regenerated
 ```
 
 Generated frontend assets such as
 `crates/hotkey-editor/assets/tailwind.css` are not committed. The dev,
 bundle, and Nix build paths generate them before Dioxus reads them.
+
+## Generated Data
+
+`crates/warcraft-database/src/db.rs` is **machine-generated** by
+`warcraft-extractor` from a Warcraft III: Reforged CASC install. Hand
+edits are wiped on the next regeneration. To refresh it after a patch
+or fix an extraction bug, see [`docs/EXTRACTION.md`](docs/EXTRACTION.md).
+
+The extractor is native-only (CASC + cmake + zlib) and is intentionally
+kept out of the default workspace operations so the wasm build remains
+clean. Run it explicitly:
+
+```bash
+nix develop --command cargo run -p warcraft-extractor -- --casc "$W3_CASC"
+```
 
 ## Release Checklist
 
