@@ -108,7 +108,11 @@ tasks:
 
   dx/serve:
     toolchain: system
-    command: dx serve --platform web
+    # --package pins the Dioxus app explicitly. Without it, dx walks every
+    # workspace member to auto-detect the "main" package and panics when it
+    # encounters native-only crates like warcraft-extractor that have no
+    # Dioxus.toml.
+    command: dx serve --package hotkey-editor --platform web
     options:
       outputStyle: stream
       interactive: true
@@ -120,7 +124,7 @@ tasks:
 
   dx/build:
     toolchain: system
-    command: dx build --release --platform web
+    command: dx build --package hotkey-editor --release --platform web
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
