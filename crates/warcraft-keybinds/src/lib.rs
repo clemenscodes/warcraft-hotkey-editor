@@ -1677,6 +1677,152 @@ mod cascade_tests {
         );
     }
 
+    /// User-pinned placement for the six cross-unit abilities shared
+    /// between the four neutral hostile hero command cards `ndth`,
+    /// `ndtp`, `nfsh`, `nfsp`. After `fully_normalize`, every one of
+    /// these abilities must have its `Buttonpos` and `Unbuttonpos`
+    /// at the canonical cell:
+    ///
+    /// | Ability | Cell  |
+    /// |---------|-------|
+    /// | Anh1    | (0,2) |
+    /// | Anh2    | (0,2) |
+    /// | ACdm    | (1,2) |
+    /// | ACd2    | (1,2) |
+    /// | ACif    | (2,2) |
+    /// | ACsl    | (2,2) |
+    ///
+    /// Pairs share a cell because each pair's two abilities live in
+    /// disjoint subsets of the four units (no within-container
+    /// collision). The user pinned this layout — it is the
+    /// definition of correct for these six slots, and any solver
+    /// change must keep this test green.
+    ///
+    /// Currently `#[ignore]`d: the multiplicity-priority solver
+    /// places `ACdm` (multiplicity 11) at (0,2) and cascades the
+    /// `Anh*` series elsewhere, which is the opposite of the user's
+    /// canonical layout. The solver must be amended (likely a
+    /// "minimize deviation from baseline subject to per-container
+    /// no-collision constraints" pass) before this test can be
+    /// unignored. Run with `cargo test -- --ignored` to confirm the
+    /// spec status.
+    #[test]
+    #[ignore = "spec test — solver does not yet satisfy this pinned layout"]
+    fn neutral_hero_shared_abilities_land_on_canonical_cells() {
+        use crate::cascade::fully_normalize;
+
+        struct ExpectedPlacement {
+            ability_id: &'static str,
+            column: u8,
+            row: u8,
+        }
+
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let mut file = crate::CustomKeysFile::from(baseline);
+        fully_normalize(&mut file);
+
+        let case_anh1 = ExpectedPlacement {
+            ability_id: "Anh1",
+            column: 0,
+            row: 2,
+        };
+        let case_anh2 = ExpectedPlacement {
+            ability_id: "Anh2",
+            column: 0,
+            row: 2,
+        };
+        let case_acdm = ExpectedPlacement {
+            ability_id: "ACdm",
+            column: 1,
+            row: 2,
+        };
+        let case_acd2 = ExpectedPlacement {
+            ability_id: "ACd2",
+            column: 1,
+            row: 2,
+        };
+        let case_acif = ExpectedPlacement {
+            ability_id: "ACif",
+            column: 2,
+            row: 2,
+        };
+        let case_acsl = ExpectedPlacement {
+            ability_id: "ACsl",
+            column: 2,
+            row: 2,
+        };
+        let cases = [
+            case_anh1, case_anh2, case_acdm, case_acd2, case_acif, case_acsl,
+        ];
+
+        for case in &cases {
+            let ability_id = case.ability_id;
+            let column = case.column;
+            let row = case.row;
+            let expected_position = crate::ButtonPosition::new(column, row);
+            let expected = Some(expected_position);
+
+            let binding = file.binding(ability_id);
+            let button_position = binding.and_then(|b| b.button_position()).copied();
+            let unbutton_position = binding.and_then(|b| b.unbutton_position()).copied();
+
+            assert_eq!(
+                button_position, expected,
+                "{ability_id} Buttonpos must be ({column},{row}) after normalize, \
+                 got {button_position:?}",
+            );
+            assert_eq!(
+                unbutton_position, expected,
+                "{ability_id} Unbuttonpos must be ({column},{row}) after normalize, \
+                 got {unbutton_position:?}",
+            );
+        }
+    }
+
+    /// Sanity check: confirms the six pinned abilities really do
+    /// appear in the four neutral hostile hero command cards
+    /// (`ndth`, `ndtp`, `nfsh`, `nfsp`). If this fails, either the
+    /// game database changed shape or the unit ids are wrong, and
+    /// the placement test above is testing the wrong universe.
+    #[test]
+    fn neutral_hero_units_contain_the_six_shared_abilities() {
+        use crate::unit_slots::UnitSlots;
+
+        let neutral_unit_ids = ["ndth", "ndtp", "nfsh", "nfsp"];
+        let pinned_ability_ids = ["Anh1", "Anh2", "ACdm", "ACd2", "ACif", "ACsl"];
+
+        for unit_id in neutral_unit_ids {
+            let command_card = UnitSlots::command_card_for(unit_id);
+            let card_is_empty = command_card.is_empty();
+            assert!(
+                !card_is_empty,
+                "neutral unit {unit_id} must have a non-empty command card",
+            );
+        }
+
+        // Each pinned ability must appear (as Ability or AbilityOff)
+        // in at least one of the four neutral units' command cards.
+        for ability_id in pinned_ability_ids {
+            let mut found_in_any = false;
+            for unit_id in neutral_unit_ids {
+                let command_card = UnitSlots::command_card_for(unit_id);
+                let appears_here = command_card.iter().any(|slot| {
+                    let slot_id = slot.as_str();
+                    slot_id.eq_ignore_ascii_case(ability_id)
+                });
+                if appears_here {
+                    found_in_any = true;
+                    break;
+                }
+            }
+            assert!(
+                found_in_any,
+                "ability {ability_id} must appear in at least one of \
+                 ndth/ndtp/nfsh/nfsp command cards",
+            );
+        }
+    }
+
     #[test]
     fn fully_normalize_assigns_resolved_position_to_cross_unit_ability() {
         // Under the global solver every cross-unit ability ends up
