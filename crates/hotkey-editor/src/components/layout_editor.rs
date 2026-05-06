@@ -43,11 +43,10 @@ pub(crate) fn LayoutEditor(
                         } else if let Some(other_position) =
                             layout_snapshot.position_for_letter(upper_letter)
                         {
-                            let display_name = format!(
-                                "row {row}, column {column}",
-                                row = other_position.1 + 1,
-                                column = other_position.0 + 1,
-                            );
+                            let display_row = other_position.row() + 1;
+                            let display_column = other_position.column() + 1;
+                            let display_name =
+                                format!("row {display_row}, column {display_column}",);
                             KeyPickerCellState::Conflict { display_name }
                         } else {
                             KeyPickerCellState::Available

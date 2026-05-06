@@ -84,7 +84,7 @@ impl ItemsExtraction {
                 continue;
             }
 
-            let Some(item_class) = ItemClass::from_slk(class) else {
+            let Ok(item_class) = ItemClass::try_from(class) else {
                 continue;
             };
 

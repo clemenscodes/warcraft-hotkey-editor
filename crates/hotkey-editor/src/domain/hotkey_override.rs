@@ -36,18 +36,18 @@ impl HotkeyOverride {
                     .hotkey()
                     .map(BindingHotkey::comma_segment_count)
                     .unwrap_or(0);
-                let replicated_value =
+                let replicated_hotkey =
                     new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
-                binding.set_hotkey(replicated_value);
+                binding.set_hotkey(replicated_hotkey);
             }
         } else if let Some(binding) = file.binding_or_default_mut(object_id) {
             let existing_levels = binding
                 .hotkey()
                 .map(BindingHotkey::comma_segment_count)
                 .unwrap_or(0);
-            let replicated_value =
+            let replicated_hotkey =
                 new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
-            binding.set_hotkey(replicated_value);
+            binding.set_hotkey(replicated_hotkey);
         }
     }
 
@@ -64,9 +64,9 @@ impl HotkeyOverride {
                 .research_hotkey()
                 .map(BindingHotkey::comma_segment_count)
                 .unwrap_or(0);
-            let replicated_value =
+            let replicated_hotkey =
                 new_token.map(|token| BindingHotkey::replicated_token(token, research_levels));
-            binding.set_research_hotkey(replicated_value);
+            binding.set_research_hotkey(replicated_hotkey);
         }
     }
 
@@ -87,9 +87,9 @@ impl HotkeyOverride {
                 .unhotkey()
                 .map(BindingHotkey::comma_segment_count)
                 .unwrap_or(0);
-            let replicated_value =
+            let replicated_hotkey =
                 new_token.map(|token| BindingHotkey::replicated_token(token, existing_levels));
-            binding.set_unhotkey(replicated_value);
+            binding.set_unhotkey(replicated_hotkey);
         }
     }
 
@@ -154,7 +154,7 @@ impl HotkeyOverride {
         custom_keys: Option<&CustomKeysFile>,
         is_research_context: bool,
     ) -> Option<HotkeyToken> {
-        let raw_hotkey_string = match slot {
+        let hotkey = match slot {
             GridSlotId::Ability(ability_id) => {
                 let binding = custom_keys.and_then(|file| file.binding(ability_id))?;
                 if is_research_context {
@@ -172,7 +172,7 @@ impl HotkeyOverride {
                 binding.hotkey()
             }
         };
-        raw_hotkey_string.and_then(BindingHotkey::first_token)
+        hotkey.and_then(BindingHotkey::first_token)
     }
 
     fn display_name_for(slot: &GridSlotId, custom_keys: Option<&CustomKeysFile>) -> String {

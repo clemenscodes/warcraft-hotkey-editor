@@ -9,7 +9,7 @@ use crate::system_hotkeys::keycodes::{KeyCode, KeyCodes};
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) struct EffectiveBinding {
     pub(crate) hotkey_code: u32,
-    pub(crate) modifier: Option<&'static str>,
+    pub(crate) modifier: SystemKeybindModifier,
 }
 
 impl EffectiveBinding {
@@ -20,24 +20,16 @@ impl EffectiveBinding {
         default_modifier: SystemKeybindModifier,
     ) -> Self {
         let custom_hotkey = custom_keys
-            .and_then(|file| file.binding(section_id))
-            .and_then(|binding| binding.hotkey())
-            .and_then(|raw| raw.parse::<u32>().ok());
+            .and_then(|file| file.system(section_id))
+            .map(|binding| binding.hotkey());
         let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
         // Warcraft III hardcodes the modifier per system hotkey — any
         // `Modifier=` line in CustomKeys.txt is written for transparency but
         // discarded at load time. The editor mirrors that: the effective
         // modifier is always the system default, regardless of the file.
-        let modifier = match default_modifier {
-            SystemKeybindModifier::None => None,
-            SystemKeybindModifier::Alt => Some("Alt"),
-            SystemKeybindModifier::Ctrl => Some("Ctrl"),
-            SystemKeybindModifier::CtrlOrAlt => Some("Ctrl_or_Alt"),
-            SystemKeybindModifier::Shift => Some("Shift"),
-        };
         Self {
             hotkey_code,
-            modifier,
+            modifier: default_modifier,
         }
     }
 
@@ -111,8 +103,8 @@ pub(crate) fn KeyCaptureCell(
                 on_pick: move |code: u32| {
                     let mut guard = loaded_keys.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
-                    if let Some(binding) = file.binding_or_default_mut(&section_id_for_pick) {
-                        binding.set_hotkey(Some(code.to_string()));
+                    if let Some(binding) = file.system_mut(&section_id_for_pick) {
+                        binding.set_hotkey(code);
                     }
                     drop(guard);
                     editing_section.set(None);

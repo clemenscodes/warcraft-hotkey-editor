@@ -1,6 +1,6 @@
-use warcraft_keybinds::{AbilityBinding, CommandBinding};
+use warcraft_keybinds::{AbilityBinding, CommandBinding, Hotkey};
 
-use crate::domain::hotkey_token::{CustomKeysValue, HotkeyToken};
+use crate::domain::hotkey_token::HotkeyToken;
 use crate::domain::icons::IconUrl;
 use crate::domain::object_lookup::ObjectLookup;
 use crate::text::command_label::CommandLabel;
@@ -148,39 +148,40 @@ impl AbilityCell {
 pub(crate) struct BindingHotkey;
 
 impl BindingHotkey {
-    pub(crate) fn first_token(raw_value: &str) -> Option<HotkeyToken> {
-        let first_segment = raw_value.split(',').next()?;
-        HotkeyToken::try_from(first_segment).ok()
+    pub(crate) fn first_token(hotkey: &Hotkey) -> Option<HotkeyToken> {
+        let single = match hotkey {
+            Hotkey::MultiLevel(levels) => levels.first()?,
+            other => other,
+        };
+        HotkeyToken::try_from(single).ok()
     }
 
-    pub(crate) fn comma_segment_count(raw_value: &str) -> usize {
-        let trimmed = raw_value.trim();
-        if trimmed.is_empty() {
-            return 0;
+    pub(crate) fn comma_segment_count(hotkey: &Hotkey) -> usize {
+        match hotkey {
+            Hotkey::MultiLevel(levels) => levels.len(),
+            _ => 1,
         }
-        trimmed.split(',').count()
     }
 
-    pub(crate) fn replicated_token(token: HotkeyToken, level_count: usize) -> String {
+    pub(crate) fn replicated_token(token: HotkeyToken, level_count: usize) -> Hotkey {
         let count = level_count.max(1);
-        let serialized_value = CustomKeysValue::from(token);
-        let segment = serialized_value.as_str();
-        std::iter::repeat_n(segment, count)
-            .collect::<Vec<_>>()
-            .join(",")
+        let single = Hotkey::from(token);
+        if count == 1 {
+            single
+        } else {
+            Hotkey::MultiLevel(vec![single; count])
+        }
     }
 
-    /// Whether the grid-layout apply pass is allowed to overwrite this raw
-    /// hotkey value with a positional letter. Special tokens (Escape /
-    /// Mouse4 / Mouse5) have no grid position by design — the user picked
-    /// them deliberately, so an "Apply grid to all hotkeys" pass should
-    /// leave them alone. Empty / unparseable values return true so a fresh
-    /// import gets populated normally.
-    pub(crate) fn accepts_grid_letter(raw_value: Option<&str>) -> bool {
-        let Some(value) = raw_value else {
+    /// Whether the grid-layout apply pass is allowed to overwrite this hotkey
+    /// with a positional letter. Special tokens (Escape / Mouse4 / Mouse5)
+    /// have no grid position by design — leave them alone. Empty / unknown
+    /// values return true so a fresh import gets populated normally.
+    pub(crate) fn accepts_grid_letter(hotkey: Option<&Hotkey>) -> bool {
+        let Some(hotkey) = hotkey else {
             return true;
         };
-        let Some(token) = Self::first_token(value) else {
+        let Some(token) = Self::first_token(hotkey) else {
             return true;
         };
         char::try_from(token).is_ok()

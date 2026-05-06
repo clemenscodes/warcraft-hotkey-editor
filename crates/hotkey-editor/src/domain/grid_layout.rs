@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{ButtonPosition, CustomKeysFile};
 
 pub(crate) const COMMAND_GRID_COLUMNS: u8 = 4;
 pub(crate) const COMMAND_GRID_ROWS: u8 = 3;
@@ -21,7 +21,7 @@ impl GridLayout {
         }
     }
 
-    pub(crate) const fn from_letters(letters: [[char; 4]; 3]) -> Self {
+    const fn from_letters(letters: [[char; 4]; 3]) -> Self {
         Self { letters }
     }
 
@@ -37,28 +37,6 @@ impl GridLayout {
         buffer
     }
 
-    /// Parse a 12-character row-major string into a layout. Returns `None`
-    /// on length / character mismatches so the caller can fall back to the
-    /// default rather than seeding a malformed grid.
-    pub(crate) fn from_storage_string(raw_value: &str) -> Option<Self> {
-        let trimmed_value = raw_value.trim();
-        if trimmed_value.len() != 12 {
-            return None;
-        }
-        let mut characters = trimmed_value.chars();
-        let mut letters = [[' '; 4]; 3];
-        for row in letters.iter_mut() {
-            for cell in row.iter_mut() {
-                let next_character = characters.next()?;
-                if !next_character.is_ascii_alphabetic() {
-                    return None;
-                }
-                *cell = next_character.to_ascii_uppercase();
-            }
-        }
-        Some(Self::from_letters(letters))
-    }
-
     pub(crate) fn derived_from(file: &CustomKeysFile) -> Self {
         let mut histograms: [[HashMap<char, u32>; 4]; 3] =
             std::array::from_fn(|_| std::array::from_fn(|_| HashMap::new()));
@@ -70,7 +48,8 @@ impl GridLayout {
             let Some(hotkey) = binding.hotkey() else {
                 continue;
             };
-            let Some(first_character) = hotkey.chars().next() else {
+            let hotkey_string = hotkey.to_string();
+            let Some(first_character) = hotkey_string.chars().next() else {
                 continue;
             };
             let row_index = usize::from(position.row());
@@ -114,14 +93,15 @@ impl GridLayout {
         row_array.get(column_index).copied()
     }
 
-    pub(crate) fn position_for_letter(&self, letter: char) -> Option<(u8, u8)> {
+    pub(crate) fn position_for_letter(&self, letter: char) -> Option<ButtonPosition> {
         let target = letter.to_ascii_uppercase();
         for row_index in 0..self.letters.len() {
             for column_index in 0..self.letters[row_index].len() {
                 if self.letters[row_index][column_index] == target {
                     let row_u8 = u8::try_from(row_index).ok()?;
                     let column_u8 = u8::try_from(column_index).ok()?;
-                    return Some((column_u8, row_u8));
+                    let position = ButtonPosition::new(column_u8, row_u8);
+                    return Some(position);
                 }
             }
         }
@@ -177,6 +157,29 @@ impl GridLayout {
             }
         }
         self.letters[row_index][column_index] = new_letter;
+    }
+}
+
+impl TryFrom<&str> for GridLayout {
+    type Error = ();
+
+    fn try_from(raw_value: &str) -> Result<Self, Self::Error> {
+        let trimmed_value = raw_value.trim();
+        if trimmed_value.len() != 12 {
+            return Err(());
+        }
+        let mut characters = trimmed_value.chars();
+        let mut letters = [[' '; 4]; 3];
+        for row in letters.iter_mut() {
+            for cell in row.iter_mut() {
+                let next_character = characters.next().ok_or(())?;
+                if !next_character.is_ascii_alphabetic() {
+                    return Err(());
+                }
+                *cell = next_character.to_ascii_uppercase();
+            }
+        }
+        Ok(Self::from_letters(letters))
     }
 }
 

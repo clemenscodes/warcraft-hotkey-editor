@@ -39,10 +39,6 @@ pub(crate) struct InspectorDetail {
     /// only on `Ability` slots whose object carries `un_tip`/`un_ubertip`;
     /// `None` everywhere else.
     alt_hotkey_token: Option<HotkeyToken>,
-    /// Off-state button position. Reads `Unbuttonpos` from the binding,
-    /// falls through to the SLK default `off_button_position`. Same gate
-    /// as `alt_hotkey_token`.
-    alt_button_position: Option<ButtonPosition>,
     name_levels: Vec<String>,
     icon_levels: Vec<Option<String>>,
     ubertip_levels: Vec<String>,
@@ -156,28 +152,25 @@ impl InspectorDetail {
                 // editable from the source unit's inspector.
                 let ability_off_on_alt_unit =
                     !ability_is_morph && BuildingTraits::ability_is_on_alt_state_unit(ability_id);
-                let (alt_display_name, alt_ubertip, alt_hotkey_token, alt_button_position) =
-                    if object_has_alt_state
-                        && !prefer_un_state
-                        && !ability_is_morph
-                        && !ability_off_on_alt_unit
-                        && !from_uprooted
-                    {
-                        let alt_name = database_object
-                            .and_then(|warcraft_object| warcraft_object.un_tip())
-                            .map(WarcraftColorCodes::stripped);
-                        let alt_long = database_object
-                            .and_then(|warcraft_object| warcraft_object.un_ubertip())
-                            .map(WarcraftColorCodes::stripped);
-                        let alt_hotkey = binding
-                            .and_then(|ability_binding| ability_binding.unhotkey())
-                            .and_then(BindingHotkey::first_token);
-                        let alt_position =
-                            Positions::current_for_ability_off(ability_id, custom_keys_ref);
-                        (alt_name, alt_long, alt_hotkey, alt_position)
-                    } else {
-                        (None, None, None, None)
-                    };
+                let (alt_display_name, alt_ubertip, alt_hotkey_token) = if object_has_alt_state
+                    && !prefer_un_state
+                    && !ability_is_morph
+                    && !ability_off_on_alt_unit
+                    && !from_uprooted
+                {
+                    let alt_name = database_object
+                        .and_then(|warcraft_object| warcraft_object.un_tip())
+                        .map(WarcraftColorCodes::stripped);
+                    let alt_long = database_object
+                        .and_then(|warcraft_object| warcraft_object.un_ubertip())
+                        .map(WarcraftColorCodes::stripped);
+                    let alt_hotkey = binding
+                        .and_then(|ability_binding| ability_binding.unhotkey())
+                        .and_then(BindingHotkey::first_token);
+                    (alt_name, alt_long, alt_hotkey)
+                } else {
+                    (None, None, None)
+                };
                 let research_ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.research_ubertip())
                     .map(WarcraftColorCodes::stripped);
@@ -258,7 +251,6 @@ impl InspectorDetail {
                     alt_display_name,
                     alt_ubertip,
                     alt_hotkey_token,
-                    alt_button_position,
                     name_levels,
                     icon_levels,
                     ubertip_levels,
@@ -309,7 +301,6 @@ impl InspectorDetail {
                     alt_display_name: None,
                     alt_ubertip: None,
                     alt_hotkey_token: None,
-                    alt_button_position: None,
                     name_levels: Vec::new(),
                     icon_levels: Vec::new(),
                     ubertip_levels: Vec::new(),
@@ -359,7 +350,6 @@ impl InspectorDetail {
                     alt_display_name: None,
                     alt_ubertip: None,
                     alt_hotkey_token: None,
-                    alt_button_position: None,
                     name_levels: Vec::new(),
                     icon_levels: Vec::new(),
                     ubertip_levels: Vec::new(),
@@ -437,15 +427,6 @@ impl InspectorDetail {
 
     pub(crate) fn alt_hotkey_token(&self) -> Option<HotkeyToken> {
         self.alt_hotkey_token
-    }
-
-    /// Off-state button position, surfaced for the picker dialog. The
-    /// override card itself no longer exposes the coordinate as text;
-    /// kept on `InspectorDetail` so future surfaces (status line,
-    /// tooltip preview) can pull it without re-querying.
-    #[allow(dead_code)]
-    pub(crate) fn alt_button_position(&self) -> Option<ButtonPosition> {
-        self.alt_button_position
     }
 
     pub(crate) fn is_command(&self) -> bool {

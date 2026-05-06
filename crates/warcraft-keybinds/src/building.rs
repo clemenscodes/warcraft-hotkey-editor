@@ -53,7 +53,7 @@ impl BuildingTraits {
             if unit_meta
                 .abilities()
                 .iter()
-                .any(|a| a.value().eq_ignore_ascii_case(ability_id))
+                .any(|ability_object_id| ability_object_id.value().eq_ignore_ascii_case(ability_id))
             {
                 return true;
             }

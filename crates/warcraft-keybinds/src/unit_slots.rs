@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 use warcraft_api::{UnitKind, UnitMeta, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
@@ -47,13 +47,15 @@ impl UnitSlots {
     }
 
     pub fn all_unit_ids() -> impl Iterator<Item = &'static str> {
-        WARCRAFT_DATABASE.iter().filter_map(|(id, obj)| {
-            if matches!(obj.meta(), WarcraftObjectMeta::Unit(_)) {
-                Some(id.value())
-            } else {
-                None
-            }
-        })
+        WARCRAFT_DATABASE
+            .iter()
+            .filter_map(|(database_id, warcraft_object)| {
+                if matches!(warcraft_object.meta(), WarcraftObjectMeta::Unit(_)) {
+                    Some(database_id.value())
+                } else {
+                    None
+                }
+            })
     }
 
     pub fn command_card_for(unit_id: &str) -> Vec<GridSlotId> {
@@ -99,20 +101,24 @@ impl UnitSlots {
             slots.push(GridSlotId::command(command_name));
         }
 
-        let mut seen_train_positions: HashMap<(u8, u8), ()> = HashMap::new();
+        let mut seen_train_positions: HashSet<crate::ButtonPosition> = HashSet::new();
         for trained_id in primary_train_slots {
             let id_str = trained_id.value();
             if !ObjectLookup::has_icon(id_str) {
                 continue;
             }
-            let default_pos = ObjectLookup::by_id(id_str)
-                .and_then(|obj| obj.default_button_position())
-                .map(|p| (p.column(), p.row()));
-            if let Some(pos) = default_pos {
-                if seen_train_positions.contains_key(&pos) {
+            let default_train_position: Option<crate::ButtonPosition> = ObjectLookup::by_id(id_str)
+                .and_then(|warcraft_object| warcraft_object.default_button_position())
+                .map(|api_position| {
+                    let column = api_position.column();
+                    let row = api_position.row();
+                    crate::ButtonPosition::new(column, row)
+                });
+            if let Some(train_position) = default_train_position {
+                if seen_train_positions.contains(&train_position) {
                     continue;
                 }
-                seen_train_positions.insert(pos, ());
+                seen_train_positions.insert(train_position);
             }
             slots.push(GridSlotId::ability(id_str));
         }
@@ -143,7 +149,7 @@ impl UnitSlots {
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
             if hero_abilities.contains(ability_id) {
                 let is_levelable = ObjectLookup::by_id(ability_id.value())
-                    .map(|o| match o.meta() {
+                    .map(|object| match object.meta() {
                         WarcraftObjectMeta::Ability(meta) => {
                             meta.max_level() > 1 || meta.is_ultimate()
                         }

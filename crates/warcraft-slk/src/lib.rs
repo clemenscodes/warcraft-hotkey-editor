@@ -18,10 +18,10 @@ pub struct SlkTable {
 
 impl SlkTable {
     pub fn new(columns: Columns, rows: Rows) -> Self {
-        let column_index = columns
-            .iter()
-            .map(|(column_key, column_name)| (column_name.clone(), *column_key))
-            .collect();
+        let mut column_index = ColumnIndex::new();
+        for (column_key, column_name) in &columns {
+            column_index.insert(column_name.clone(), *column_key);
+        }
 
         Self {
             columns,
@@ -94,13 +94,14 @@ impl From<&str> for SlkTable {
             let mut parsed_row: Option<RowKey> = None;
             let mut parsed_value: Option<CellValue> = None;
 
-            for part in line.split(';') {
-                if let Some(rest) = part.strip_prefix("X") {
-                    parsed_column = rest.parse::<usize>().ok().map(ColumnKey::from);
-                } else if let Some(rest) = part.strip_prefix("Y") {
-                    parsed_row = rest.parse::<usize>().ok().map(RowKey::from);
-                } else if let Some(rest) = part.strip_prefix("K") {
-                    parsed_value = Some(Self::parse_cell_value(rest));
+            for field in line.split(';') {
+                match field.as_bytes() {
+                    [b'X', ..] => {
+                        parsed_column = field[1..].parse::<usize>().ok().map(ColumnKey::from)
+                    }
+                    [b'Y', ..] => parsed_row = field[1..].parse::<usize>().ok().map(RowKey::from),
+                    [b'K', ..] => parsed_value = Some(Self::parse_cell_value(&field[1..])),
+                    _ => {}
                 }
             }
 
@@ -144,11 +145,7 @@ impl Extend<SlkTable> for SlkTable {
     fn extend<Source: IntoIterator<Item = SlkTable>>(&mut self, source: Source) {
         for other in source {
             self.columns.extend(other.columns);
-            self.column_index = self
-                .columns
-                .iter()
-                .map(|(column_key, column_name)| (column_name.clone(), *column_key))
-                .collect();
+            self.column_index.extend(other.column_index);
             self.rows.extend(other.rows);
         }
     }
@@ -297,17 +294,65 @@ impl<'a> Iterator for RowIter<'a> {
     type Item = RowView<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.inner.next().map(|(row_key, row)| RowView {
+        let (row_key, row) = self.inner.next()?;
+        let row_view = RowView {
             table: self.table,
             row_key: *row_key,
             row,
-        })
+        };
+        Some(row_view)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    struct SlkTableBuilder {
+        column_names: Vec<String>,
+        data_rows: Vec<Vec<String>>,
+    }
+
+    impl SlkTableBuilder {
+        fn new() -> Self {
+            Self {
+                column_names: Vec::new(),
+                data_rows: Vec::new(),
+            }
+        }
+
+        fn column(mut self, column_name: &str) -> Self {
+            self.column_names.push(column_name.to_string());
+            self
+        }
+
+        fn row(mut self, cell_values: impl IntoIterator<Item = &'static str>) -> Self {
+            let values = cell_values.into_iter().map(str::to_string).collect();
+            self.data_rows.push(values);
+            self
+        }
+
+        fn build(self) -> SlkTable {
+            let mut columns = Columns::new();
+            for (column_position, column_name) in self.column_names.into_iter().enumerate() {
+                let column_key = ColumnKey::from(column_position + 1);
+                columns.insert(column_key, column_name);
+            }
+
+            let mut rows = Rows::new();
+            for (row_position, row_values) in self.data_rows.into_iter().enumerate() {
+                let row_key = RowKey::from(row_position + 2);
+                let mut row = Row::new();
+                for (cell_position, cell_value) in row_values.into_iter().enumerate() {
+                    let column_key = ColumnKey::from(cell_position + 1);
+                    row.insert(column_key, cell_value);
+                }
+                rows.insert(row_key, row);
+            }
+
+            SlkTable::new(columns, rows)
+        }
+    }
 
     #[test]
     fn parses_empty_input_as_empty_table() {
@@ -426,8 +471,10 @@ E
 
     #[test]
     fn column_key_and_name_round_trip() {
-        let input = "ID;P\nC;X1;Y1;K\"first\"\nC;X2;Y1;K\"second\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new()
+            .column("first")
+            .column("second")
+            .build();
         let first_key = table.column_key("first").unwrap();
         let second_key = table.column_key("second").unwrap();
         assert_eq!(table.column_name(first_key), Some("first"));
@@ -437,30 +484,25 @@ E
 
     #[test]
     fn get_returns_none_for_missing_column() {
-        let input = "ID;P\nC;X1;Y1;K\"col\"\nC;X1;Y2;K\"value\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new().column("col").row(["value"]).build();
         let data_row_key = RowKey::from(2);
         assert_eq!(table.get(data_row_key, "unknown"), None);
     }
 
     #[test]
     fn get_returns_none_for_missing_row() {
-        let input = "ID;P\nC;X1;Y1;K\"col\"\nC;X1;Y2;K\"value\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new().column("col").row(["value"]).build();
         let missing_row_key = RowKey::from(999);
         assert_eq!(table.get(missing_row_key, "col"), None);
     }
 
     #[test]
     fn row_view_get_works() {
-        let input = "ID;P
-C;X1;Y1;K\"a\"
-C;X2;Y1;K\"b\"
-C;X1;Y2;K\"one\"
-C;X2;Y2;K\"two\"
-E
-";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new()
+            .column("a")
+            .column("b")
+            .row(["one", "two"])
+            .build();
         let row_view = table.into_iter().next().unwrap();
         assert_eq!(row_view.key(), RowKey::from(2));
         assert_eq!(row_view.get("a"), Some("one"));
@@ -470,8 +512,7 @@ E
 
     #[test]
     fn row_view_get_by_index_works() {
-        let input = "ID;P\nC;X1;Y1;K\"col\"\nC;X1;Y2;K\"value\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new().column("col").row(["value"]).build();
         let row_view = table.into_iter().next().unwrap();
         assert_eq!(row_view.get_by_index(ColumnKey::from(1)), Some("value"));
         assert_eq!(row_view.get_by_index(ColumnKey::from(99)), None);
@@ -506,8 +547,7 @@ E
 
     #[test]
     fn index_operator_returns_row() {
-        let input = "ID;P\nC;X1;Y1;K\"col\"\nC;X1;Y2;K\"value\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new().column("col").row(["value"]).build();
         let row = &table[RowKey::from(2)];
         assert_eq!(
             row.get(&ColumnKey::from(1)).map(String::as_str),
@@ -517,8 +557,7 @@ E
 
     #[test]
     fn display_renders_row_header_and_cells() {
-        let input = "ID;P\nC;X1;Y1;K\"col\"\nC;X1;Y2;K\"value\"\nE\n";
-        let table = SlkTable::from(input);
+        let table = SlkTableBuilder::new().column("col").row(["value"]).build();
         let rendered = format!("{table}");
         assert!(rendered.contains("[2]"));
         assert!(rendered.contains("col = value"));

@@ -29,7 +29,7 @@ impl LocalStorageCache {
 
     pub(crate) fn load_grid_layout() -> Option<GridLayout> {
         let raw_value = storage_get(GRID_LAYOUT_STORAGE_KEY)?;
-        GridLayout::from_storage_string(&raw_value)
+        GridLayout::try_from(raw_value.as_str()).ok()
     }
 
     pub(crate) fn save_grid_layout(layout: GridLayout) {

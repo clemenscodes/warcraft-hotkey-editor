@@ -53,7 +53,7 @@ pub(crate) fn ExportButtons(
                         let serialized = {
                             let read_guard = loaded_keys.read();
                             let Some(file) = read_guard.as_ref() else { return };
-                            let custom_keys = CustomKeys::from_file(file);
+                            let custom_keys = CustomKeys::from(file);
                             let canonical_text = custom_keys.to_text();
                             canonical_text.to_string()
                         };

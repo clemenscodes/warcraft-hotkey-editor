@@ -37,7 +37,7 @@ pub(crate) fn App() -> Element {
     let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
         let stored_text = LocalStorageCache::load_text();
         let initial_custom_keys = match stored_text {
-            Some(stored) => CustomKeys::from_text(&stored),
+            Some(stored) => CustomKeys::from(stored.as_str()),
             None => CustomKeys::from_default(),
         };
         LocalStorageCache::save_custom_keys(&initial_custom_keys);
@@ -56,7 +56,7 @@ pub(crate) fn App() -> Element {
         let Some(file) = read_guard.as_ref() else {
             return;
         };
-        let custom_keys = CustomKeys::from_file(file);
+        let custom_keys = CustomKeys::from(file);
         LocalStorageCache::save_custom_keys(&custom_keys);
     });
     // Grid layout lives in its own local-storage entry; importing a

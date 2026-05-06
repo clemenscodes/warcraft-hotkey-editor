@@ -8,7 +8,7 @@ impl DefaultConfig {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use warcraft_api::{SystemKeybindModifier, WarcraftObjectMeta};
+    use warcraft_api::WarcraftObjectMeta;
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
     use warcraft_keybinds::CustomKeysFile;
 
@@ -32,24 +32,36 @@ mod tests {
             let WarcraftObjectMeta::Command(cmd_meta) = warcraft_object.meta() else {
                 continue;
             };
-            let Some(pos) = cmd_meta.default_button_position() else {
+            let Some(default_position) = cmd_meta.default_button_position() else {
                 continue;
             };
             let traditional = tmpl.command(id);
-            out.push_str(&format!("[{id}]\n"));
-            if let Some(hk) = traditional.and_then(|c| c.hotkey()) {
-                out.push_str(&format!("Hotkey={hk}\n"));
+            let section_header = format!("[{id}]\n");
+            out.push_str(&section_header);
+            if let Some(hotkey_string) = traditional
+                .and_then(|c| c.hotkey())
+                .map(|hotkey_display| hotkey_display.to_string())
+            {
+                let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                out.push_str(&hotkey_line);
             }
-            out.push_str(&format!("Buttonpos={},{}\n", pos.column(), pos.row()));
+            let buttonpos_line = format!(
+                "Buttonpos={},{}\n",
+                default_position.column(),
+                default_position.row()
+            );
+            out.push_str(&buttonpos_line);
             if let Some(tip) = traditional
                 .and_then(|c| c.tip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.tip_levels()))
             {
-                out.push_str(&format!("Tip={tip}\n"));
+                let tip_line = format!("Tip={tip}\n");
+                out.push_str(&tip_line);
             }
             if let Some(ubertip) = warcraft_object.ubertip() {
-                out.push_str(&format!("Ubertip={ubertip}\n"));
+                let ubertip_line = format!("Ubertip={ubertip}\n");
+                out.push_str(&ubertip_line);
             }
             out.push('\n');
         }
@@ -59,86 +71,125 @@ mod tests {
             let WarcraftObjectMeta::Ability(ability_meta) = warcraft_object.meta() else {
                 continue;
             };
-            let btn = warcraft_object.default_button_position();
-            let res = warcraft_object.default_research_button_position();
-            let off = ability_meta.off_button_position();
-            if btn.is_none() && res.is_none() && off.is_none() {
+            let default_button_position = warcraft_object.default_button_position();
+            let default_research_position = warcraft_object.default_research_button_position();
+            let off_button_position = ability_meta.off_button_position();
+            if default_button_position.is_none()
+                && default_research_position.is_none()
+                && off_button_position.is_none()
+            {
                 continue;
             }
             let is_passive = ObjectLookup::is_passive_ability(id);
             let existing_binding = tmpl.binding(id);
 
-            out.push_str(&format!("[{id}]\n"));
+            let section_header = format!("[{id}]\n");
+            out.push_str(&section_header);
 
-            if let Some(p) = btn {
+            if let Some(button_position) = default_button_position {
                 if !is_passive {
                     let hotkey = existing_binding
-                        .and_then(|b| b.hotkey())
-                        .map(str::to_owned)
-                        .or_else(|| layout.letter_at(p.column(), p.row()).map(|c| c.to_string()));
-                    if let Some(hk) = hotkey {
-                        out.push_str(&format!("Hotkey={hk}\n"));
+                        .and_then(|binding| binding.hotkey())
+                        .map(|hotkey_display| hotkey_display.to_string())
+                        .or_else(|| {
+                            layout
+                                .letter_at(button_position.column(), button_position.row())
+                                .map(|letter| letter.to_string())
+                        });
+                    if let Some(hotkey_string) = hotkey {
+                        let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                        out.push_str(&hotkey_line);
                     }
                 }
-                out.push_str(&format!("Buttonpos={},{}\n", p.column(), p.row()));
+                let buttonpos_line = format!(
+                    "Buttonpos={},{}\n",
+                    button_position.column(),
+                    button_position.row()
+                );
+                out.push_str(&buttonpos_line);
             }
 
-            if let Some(p) = res {
+            if let Some(research_position) = default_research_position {
                 let research_hotkey = existing_binding
-                    .and_then(|b| b.research_hotkey())
-                    .map(str::to_owned)
-                    .or_else(|| layout.letter_at(p.column(), p.row()).map(|c| c.to_string()));
-                if let Some(hk) = research_hotkey {
-                    out.push_str(&format!("ResearchHotkey={hk}\n"));
+                    .and_then(|binding| binding.research_hotkey())
+                    .map(|hotkey_display| hotkey_display.to_string())
+                    .or_else(|| {
+                        layout
+                            .letter_at(research_position.column(), research_position.row())
+                            .map(|letter| letter.to_string())
+                    });
+                if let Some(research_hotkey_string) = research_hotkey {
+                    let research_hotkey_line = format!("ResearchHotkey={research_hotkey_string}\n");
+                    out.push_str(&research_hotkey_line);
                 }
-                out.push_str(&format!("ResearchButtonpos={},{}\n", p.column(), p.row()));
+                let research_buttonpos_line = format!(
+                    "ResearchButtonpos={},{}\n",
+                    research_position.column(),
+                    research_position.row()
+                );
+                out.push_str(&research_buttonpos_line);
             }
 
-            if let Some(p) = off {
+            if let Some(off_position) = off_button_position {
                 let un_hotkey = existing_binding
-                    .and_then(|b| b.unhotkey())
-                    .map(str::to_owned)
-                    .or_else(|| layout.letter_at(p.column(), p.row()).map(|c| c.to_string()));
-                if let Some(hk) = un_hotkey {
-                    out.push_str(&format!("Unhotkey={hk}\n"));
+                    .and_then(|binding| binding.unhotkey())
+                    .map(|hotkey_display| hotkey_display.to_string())
+                    .or_else(|| {
+                        layout
+                            .letter_at(off_position.column(), off_position.row())
+                            .map(|letter| letter.to_string())
+                    });
+                if let Some(unhotkey_string) = un_hotkey {
+                    let unhotkey_line = format!("Unhotkey={unhotkey_string}\n");
+                    out.push_str(&unhotkey_line);
                 }
-                out.push_str(&format!("Unbuttonpos={},{}\n", p.column(), p.row()));
+                let unbuttonpos_line = format!(
+                    "Unbuttonpos={},{}\n",
+                    off_position.column(),
+                    off_position.row()
+                );
+                out.push_str(&unbuttonpos_line);
             }
 
             if let Some(tip) = existing_binding
-                .and_then(|b| b.tip())
+                .and_then(|binding| binding.tip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.tip_levels()))
             {
-                out.push_str(&format!("Tip={tip}\n"));
+                let tip_line = format!("Tip={tip}\n");
+                out.push_str(&tip_line);
             }
             if let Some(un_tip) = existing_binding
-                .and_then(|b| b.un_tip())
+                .and_then(|binding| binding.un_tip())
                 .map(str::to_owned)
                 .or_else(|| warcraft_object.un_tip().map(str::to_owned))
             {
-                out.push_str(&format!("Untip={un_tip}\n"));
+                let untip_line = format!("Untip={un_tip}\n");
+                out.push_str(&untip_line);
             }
             if let Some(ubertip) = existing_binding
-                .and_then(|b| b.ubertip())
+                .and_then(|binding| binding.ubertip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.ubertip_levels()))
             {
-                out.push_str(&format!("Ubertip={ubertip}\n"));
+                let ubertip_line = format!("Ubertip={ubertip}\n");
+                out.push_str(&ubertip_line);
             }
             if let Some(un_ubertip) = existing_binding
-                .and_then(|b| b.un_ubertip())
+                .and_then(|binding| binding.un_ubertip())
                 .map(str::to_owned)
                 .or_else(|| warcraft_object.un_ubertip().map(str::to_owned))
             {
-                out.push_str(&format!("Unubertip={un_ubertip}\n"));
+                let un_ubertip_line = format!("Unubertip={un_ubertip}\n");
+                out.push_str(&un_ubertip_line);
             }
-            if let Some(res_ubertip) = existing_binding
-                .and_then(|b| b.research_ubertip())
+            if let Some(research_ubertip) = existing_binding
+                .and_then(|binding| binding.research_ubertip())
                 .map(str::to_owned)
                 .or_else(|| warcraft_object.research_ubertip().map(str::to_owned))
             {
-                out.push_str(&format!("Researchubertip={res_ubertip}\n"));
+                let research_ubertip_line = format!("Researchubertip={research_ubertip}\n");
+                out.push_str(&research_ubertip_line);
             }
 
             out.push('\n');
@@ -149,28 +200,40 @@ mod tests {
             let WarcraftObjectMeta::Unit(_) = warcraft_object.meta() else {
                 continue;
             };
-            let Some(pos) = warcraft_object.default_button_position() else {
+            let Some(default_position) = warcraft_object.default_button_position() else {
                 continue;
             };
             let existing_binding = tmpl.binding(id);
-            out.push_str(&format!("[{id}]\n"));
-            if let Some(hk) = existing_binding.and_then(|b| b.hotkey()) {
-                out.push_str(&format!("Hotkey={hk}\n"));
+            let section_header = format!("[{id}]\n");
+            out.push_str(&section_header);
+            if let Some(hotkey_string) = existing_binding
+                .and_then(|binding| binding.hotkey())
+                .map(|hotkey_display| hotkey_display.to_string())
+            {
+                let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                out.push_str(&hotkey_line);
             }
-            out.push_str(&format!("Buttonpos={},{}\n", pos.column(), pos.row()));
+            let buttonpos_line = format!(
+                "Buttonpos={},{}\n",
+                default_position.column(),
+                default_position.row()
+            );
+            out.push_str(&buttonpos_line);
             if let Some(tip) = existing_binding
-                .and_then(|b| b.tip())
+                .and_then(|binding| binding.tip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.tip_levels()))
             {
-                out.push_str(&format!("Tip={tip}\n"));
+                let tip_line = format!("Tip={tip}\n");
+                out.push_str(&tip_line);
             }
             if let Some(ubertip) = existing_binding
-                .and_then(|b| b.ubertip())
+                .and_then(|binding| binding.ubertip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.ubertip_levels()))
             {
-                out.push_str(&format!("Ubertip={ubertip}\n"));
+                let ubertip_line = format!("Ubertip={ubertip}\n");
+                out.push_str(&ubertip_line);
             }
             out.push('\n');
         }
@@ -183,51 +246,74 @@ mod tests {
             ) {
                 continue;
             }
-            let Some(pos) = warcraft_object.default_button_position() else {
+            let Some(default_position) = warcraft_object.default_button_position() else {
                 continue;
             };
-            let res_pos = warcraft_object.default_research_button_position();
+            let research_position = warcraft_object.default_research_button_position();
             let existing_binding = tmpl.binding(id);
 
-            out.push_str(&format!("[{id}]\n"));
+            let section_header = format!("[{id}]\n");
+            out.push_str(&section_header);
 
             let hotkey = existing_binding
-                .and_then(|b| b.hotkey())
-                .map(str::to_owned)
+                .and_then(|binding| binding.hotkey())
+                .map(|hotkey_display| hotkey_display.to_string())
                 .or_else(|| {
                     layout
-                        .letter_at(pos.column(), pos.row())
-                        .map(|c| c.to_string())
+                        .letter_at(default_position.column(), default_position.row())
+                        .map(|letter| letter.to_string())
                 });
-            if let Some(hk) = hotkey {
-                out.push_str(&format!("Hotkey={hk}\n"));
+            if let Some(hotkey_string) = hotkey {
+                let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                out.push_str(&hotkey_line);
             }
-            out.push_str(&format!("Buttonpos={},{}\n", pos.column(), pos.row()));
+            let buttonpos_line = format!(
+                "Buttonpos={},{}\n",
+                default_position.column(),
+                default_position.row()
+            );
+            out.push_str(&buttonpos_line);
 
-            if let Some(p) = res_pos {
-                let rh = existing_binding
-                    .and_then(|b| b.research_hotkey())
-                    .map(str::to_owned)
-                    .or_else(|| layout.letter_at(p.column(), p.row()).map(|c| c.to_string()));
-                if let Some(hk) = rh {
-                    out.push_str(&format!("ResearchHotkey={hk}\n"));
+            if let Some(research_button_position) = research_position {
+                let research_hotkey_string = existing_binding
+                    .and_then(|binding| binding.research_hotkey())
+                    .map(|hotkey_display| hotkey_display.to_string())
+                    .or_else(|| {
+                        layout
+                            .letter_at(
+                                research_button_position.column(),
+                                research_button_position.row(),
+                            )
+                            .map(|letter| letter.to_string())
+                    });
+                if let Some(research_hotkey_line_value) = research_hotkey_string {
+                    let research_hotkey_line =
+                        format!("ResearchHotkey={research_hotkey_line_value}\n");
+                    out.push_str(&research_hotkey_line);
                 }
-                out.push_str(&format!("ResearchButtonpos={},{}\n", p.column(), p.row()));
+                let research_buttonpos_line = format!(
+                    "ResearchButtonpos={},{}\n",
+                    research_button_position.column(),
+                    research_button_position.row()
+                );
+                out.push_str(&research_buttonpos_line);
             }
 
             if let Some(tip) = existing_binding
-                .and_then(|b| b.tip())
+                .and_then(|binding| binding.tip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.tip_levels()))
             {
-                out.push_str(&format!("Tip={tip}\n"));
+                let tip_line = format!("Tip={tip}\n");
+                out.push_str(&tip_line);
             }
             if let Some(ubertip) = existing_binding
-                .and_then(|b| b.ubertip())
+                .and_then(|binding| binding.ubertip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.ubertip_levels()))
             {
-                out.push_str(&format!("Ubertip={ubertip}\n"));
+                let ubertip_line = format!("Ubertip={ubertip}\n");
+                out.push_str(&ubertip_line);
             }
 
             out.push('\n');
@@ -238,33 +324,20 @@ mod tests {
         // code; Modifier and the command-class field are written for
         // transparency (the game hardcodes both and ignores any override).
         for entry in WARCRAFT_SYSTEM_KEYBINDS.iter() {
-            use warcraft_api::SystemKeybindClass;
             let id = entry.section_id();
-            let existing_binding = tmpl.binding(id);
-            let hotkey_code = existing_binding
-                .and_then(|b| b.hotkey())
-                .and_then(|h| h.parse::<u32>().ok())
-                .unwrap_or(entry.default_hotkey());
-            out.push_str(&format!("[{id}]\n"));
-            out.push_str(&format!("Hotkey={hotkey_code}\n"));
-            let class_field = match entry.class() {
-                SystemKeybindClass::Game => "GameCommand=1",
-                SystemKeybindClass::ControlGroup => "CtrlGroupCommand=1",
-                SystemKeybindClass::Menu => "MenuCommand=1",
-                SystemKeybindClass::Camera => "CameraCommand=1",
-                SystemKeybindClass::Observer => "ObserverCommand=1",
-                SystemKeybindClass::Replay => "ReplayCommand=1",
-            };
-            out.push_str(&format!("{class_field}\n"));
-            let modifier = match entry.default_modifier() {
-                SystemKeybindModifier::None => None,
-                SystemKeybindModifier::Alt => Some("Alt"),
-                SystemKeybindModifier::Ctrl => Some("Ctrl"),
-                SystemKeybindModifier::CtrlOrAlt => Some("Ctrl_or_Alt"),
-                SystemKeybindModifier::Shift => Some("Shift"),
-            };
-            if let Some(m) = modifier {
-                out.push_str(&format!("Modifier={m}\n"));
+            let hotkey_code = tmpl
+                .system(id)
+                .map(|binding| binding.hotkey())
+                .unwrap_or_else(|| entry.default_hotkey());
+            let section_header = format!("[{id}]\n");
+            out.push_str(&section_header);
+            let hotkey_line = format!("Hotkey={hotkey_code}\n");
+            out.push_str(&hotkey_line);
+            out.push_str(entry.class().ini_field());
+            out.push('\n');
+            if let Some(modifier_text) = entry.default_modifier().ini_str() {
+                let modifier_line = format!("Modifier={modifier_text}\n");
+                out.push_str(&modifier_line);
             }
             out.push('\n');
         }
@@ -285,6 +358,7 @@ mod tests {
     #[test]
     fn export_positions_match_display_after_template_apply() {
         use crate::domain::default_config::DefaultConfig;
+        use warcraft_keybinds::ButtonPosition;
         use warcraft_keybinds::CustomKeysFile;
         use warcraft_keybinds::cascade::fully_normalize;
 
@@ -296,19 +370,19 @@ mod tests {
         let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
         let export_file = CustomKeysFile::from(export_content.as_str());
 
-        let normalized_position = |id: &str| -> Option<(u8, u8)> {
+        let normalized_position = |id: &str| -> Option<ButtonPosition> {
             let binding = loaded.binding(id)?;
             let position_ref = binding.button_position()?;
             let column_value = position_ref.column();
             let row_value = position_ref.row();
-            Some((column_value, row_value))
+            Some(ButtonPosition::new(column_value, row_value))
         };
-        let exported_position = |id: &str| -> Option<(u8, u8)> {
+        let exported_position = |id: &str| -> Option<ButtonPosition> {
             let binding = export_file.binding(id)?;
             let position_ref = binding.button_position()?;
             let column_value = position_ref.column();
             let row_value = position_ref.row();
-            Some((column_value, row_value))
+            Some(ButtonPosition::new(column_value, row_value))
         };
 
         let regression_ids = ["Anh2", "ACd2", "ACif", "ACf2"];

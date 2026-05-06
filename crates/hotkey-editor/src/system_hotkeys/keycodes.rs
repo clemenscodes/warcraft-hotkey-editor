@@ -1,5 +1,7 @@
 use std::fmt;
 
+use warcraft_api::SystemKeybindModifier;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub(crate) struct KeyCode {
     value: u32,
@@ -140,13 +142,13 @@ impl KeyCodes {
         }
     }
 
-    pub(crate) fn modifier_prefix(modifier: Option<&str>) -> &'static str {
-        match modifier.unwrap_or("").to_ascii_lowercase().as_str() {
-            "alt" => "Alt + ",
-            "ctrl" => "Ctrl + ",
-            "ctrl_or_alt" => "Ctrl/Alt + ",
-            "shift" => "Shift + ",
-            _ => "",
+    pub(crate) fn modifier_prefix(modifier: SystemKeybindModifier) -> &'static str {
+        match modifier {
+            SystemKeybindModifier::None => "",
+            SystemKeybindModifier::Alt => "Alt + ",
+            SystemKeybindModifier::Ctrl => "Ctrl + ",
+            SystemKeybindModifier::CtrlOrAlt => "Ctrl/Alt + ",
+            SystemKeybindModifier::Shift => "Shift + ",
         }
     }
 }

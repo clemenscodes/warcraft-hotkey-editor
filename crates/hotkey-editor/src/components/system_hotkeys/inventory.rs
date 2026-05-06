@@ -5,11 +5,12 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{AbilityBinding, CustomKeysFile};
+use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use crate::domain::cursor_hit::{CursorPoint, HitTestPoint};
 use crate::system_hotkeys::binding_map::SystemBindingMap;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 
@@ -282,9 +283,11 @@ fn InventoryCell(
                 let Some(document) = web_sys::window().and_then(|window| window.document()) else {
                     return;
                 };
-                let cursor_hit_x = cursor_x as f32;
-                let cursor_hit_y = cursor_y as f32;
-                let elem_under_option = document.element_from_point(cursor_hit_x, cursor_hit_y);
+                let cursor_point = CursorPoint::new(cursor_x, cursor_y);
+                let hit_test_point = HitTestPoint::from(cursor_point);
+                let hit_test_x = hit_test_point.x();
+                let hit_test_y = hit_test_point.y();
+                let elem_under_option = document.element_from_point(hit_test_x, hit_test_y);
                 let cell_under_option = elem_under_option
                     .and_then(|elem| elem.closest(".wc3-slot").ok().flatten());
                 let Some(cell_under) = cell_under_option else {
@@ -360,8 +363,8 @@ fn InventoryCell(
                 on_pick: move |code: u32| {
                     let mut guard = keys_signal.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
-                    if let Some(binding) = file.binding_or_default_mut(&section_id_for_pick) {
-                        binding.set_hotkey(Some(code.to_string()));
+                    if let Some(binding) = file.system_mut(&section_id_for_pick) {
+                        binding.set_hotkey(code);
                     }
                     drop(guard);
                     editing_section.set(None);
@@ -379,35 +382,12 @@ fn swap_section_bindings(
 ) {
     let mut writable_guard = keys_signal.write();
     let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
-    let source_snapshot = BindingSnapshot::capture(file.binding(source_id));
-    let target_snapshot = BindingSnapshot::capture(file.binding(target_id));
-    if let Some(binding) = file.binding_or_default_mut(source_id) {
-        target_snapshot.restore_into(binding);
+    let source_hotkey = file.system(source_id).map(|binding| binding.hotkey());
+    let target_hotkey = file.system(target_id).map(|binding| binding.hotkey());
+    if let Some(binding) = file.system_mut(source_id) {
+        binding.set_hotkey(target_hotkey.unwrap_or(0));
     }
-    if let Some(binding) = file.binding_or_default_mut(target_id) {
-        source_snapshot.restore_into(binding);
-    }
-}
-
-#[derive(Clone, Default)]
-struct BindingSnapshot {
-    hotkey: Option<String>,
-    modifier: Option<String>,
-}
-
-impl BindingSnapshot {
-    fn capture(binding: Option<&AbilityBinding>) -> Self {
-        let Some(binding) = binding else {
-            return Self::default();
-        };
-        Self {
-            hotkey: binding.hotkey().map(String::from),
-            modifier: binding.modifier().map(String::from),
-        }
-    }
-
-    fn restore_into(self, binding: &mut AbilityBinding) {
-        binding.set_hotkey(self.hotkey);
-        binding.set_modifier(self.modifier);
+    if let Some(binding) = file.system_mut(target_id) {
+        binding.set_hotkey(source_hotkey.unwrap_or(0));
     }
 }

@@ -460,7 +460,7 @@ pub(crate) fn TileOverridePanel(
                 let upgrade_id = detail.upgrade_unit_id().map(str::to_owned);
                 let upgrade_hotkey_token = detail.upgrade_hotkey_token();
                 let upgrade_hotkey_display = upgrade_hotkey_token
-                    .map(|t| t.display_label())
+                    .map(|token| token.display_label())
                     .unwrap_or_default();
                 let upgrade_is_editing =
                     editing_snapshot == Some(OverrideEditTarget::UpgradeHotkey);
@@ -475,7 +475,7 @@ pub(crate) fn TileOverridePanel(
                     upgrade_hotkey_display.clone()
                 };
                 let upgrade_hotkey_is_special = upgrade_hotkey_token
-                    .map(|t| char::try_from(t).is_err())
+                    .map(|token| char::try_from(token).is_err())
                     .unwrap_or(false);
                 let upgrade_special_flag = if upgrade_hotkey_is_special { "true" } else { "false" };
                 rsx! {

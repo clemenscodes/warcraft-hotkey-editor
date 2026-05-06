@@ -18,12 +18,19 @@ impl CustomKeysFile {
     fn materialize_default_positions(&mut self) {
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id_value = object_id.value();
-            let default_button = warcraft_object
-                .default_button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()));
-            let default_research = warcraft_object
-                .default_research_button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()));
+            let default_button = warcraft_object.default_button_position().map(|position| {
+                let column = position.column();
+                let row = position.row();
+                ButtonPosition::new(column, row)
+            });
+            let default_research =
+                warcraft_object
+                    .default_research_button_position()
+                    .map(|position| {
+                        let column = position.column();
+                        let row = position.row();
+                        ButtonPosition::new(column, row)
+                    });
 
             match warcraft_object.kind() {
                 WarcraftObjectKind::Command => continue,
@@ -50,7 +57,9 @@ impl CustomKeysFile {
                         let database_off = match warcraft_object.meta() {
                             WarcraftObjectMeta::Ability(ability_meta) => {
                                 ability_meta.off_button_position().map(|position| {
-                                    ButtonPosition::new(position.column(), position.row())
+                                    let column = position.column();
+                                    let row = position.row();
+                                    ButtonPosition::new(column, row)
                                 })
                             }
                             _ => None,
@@ -58,7 +67,8 @@ impl CustomKeysFile {
                         if let Some(off_position) = database_off {
                             binding.set_unbutton_position(Some(off_position));
                         } else if let Some(button_position) = binding.button_position() {
-                            binding.set_unbutton_position(Some(*button_position));
+                            let position_copy = *button_position;
+                            binding.set_unbutton_position(Some(position_copy));
                         }
                     }
                 }

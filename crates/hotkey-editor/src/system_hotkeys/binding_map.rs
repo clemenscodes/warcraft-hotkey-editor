@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use warcraft_api::SystemKeybindModifier;
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
 use warcraft_keybinds::CustomKeysFile;
 
@@ -61,7 +62,7 @@ impl SystemBindingMap {
         &self,
         excluded_section_id: &str,
         code: u32,
-        modifier: Option<&str>,
+        modifier: SystemKeybindModifier,
     ) -> Vec<&ResolvedSystemBinding> {
         let own_context = self
             .bindings_by_section
@@ -90,7 +91,7 @@ impl SystemBindingMap {
     pub(crate) fn picker_conflicts(
         &self,
         own_section_id: &str,
-        own_modifier: Option<&str>,
+        own_modifier: SystemKeybindModifier,
     ) -> HashMap<u32, Vec<String>> {
         let own_context = self
             .bindings_by_section

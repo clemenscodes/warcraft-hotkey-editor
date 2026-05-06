@@ -61,7 +61,7 @@ impl UnitCatalog {
                     let names_lower: String = warcraft_object
                         .names()
                         .iter()
-                        .map(|n| n.to_ascii_lowercase())
+                        .map(|name| name.to_ascii_lowercase())
                         .collect::<Vec<_>>()
                         .join(" ");
                     // Match if the name/id contains the query OR the query contains the name/id as

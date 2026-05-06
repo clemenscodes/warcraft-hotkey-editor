@@ -1,12 +1,14 @@
 use std::fmt;
 
+use warcraft_keybinds::Hotkey;
+
 // CustomKeys.txt uses numeric Windows Virtual-Key codes for keys that aren't
 // plain letters: VK_ESCAPE (27), VK_XBUTTON1 (5, "Mouse4"/back), and
 // VK_XBUTTON2 (6, "Mouse5"/forward). The in-game hotkey editor writes these
 // as `Hotkey=27` etc., and named tokens like "Escape" are not recognized.
-const ESCAPE_TOKEN: &str = "27";
-const MOUSE_BACK_TOKEN: &str = "5";
-const MOUSE_FORWARD_TOKEN: &str = "6";
+const ESCAPE_VK: u32 = 27;
+const MOUSE_BACK_VK: u32 = 5;
+const MOUSE_FORWARD_VK: u32 = 6;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub(crate) enum HotkeyToken {
@@ -54,26 +56,30 @@ impl fmt::Display for HotkeyToken {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct CustomKeysValue {
-    raw: String,
-}
-
-impl CustomKeysValue {
-    pub(crate) fn as_str(&self) -> &str {
-        &self.raw
+impl From<HotkeyToken> for Hotkey {
+    fn from(token: HotkeyToken) -> Self {
+        match token {
+            HotkeyToken::Letter { character } => Self::Letter(character),
+            HotkeyToken::Escape => Self::VirtualKey(ESCAPE_VK),
+            HotkeyToken::MouseForward => Self::VirtualKey(MOUSE_FORWARD_VK),
+            HotkeyToken::MouseBack => Self::VirtualKey(MOUSE_BACK_VK),
+        }
     }
 }
 
-impl From<HotkeyToken> for CustomKeysValue {
-    fn from(token: HotkeyToken) -> Self {
-        let raw = match token {
-            HotkeyToken::Letter { character } => character.to_string(),
-            HotkeyToken::Escape => String::from(ESCAPE_TOKEN),
-            HotkeyToken::MouseForward => String::from(MOUSE_FORWARD_TOKEN),
-            HotkeyToken::MouseBack => String::from(MOUSE_BACK_TOKEN),
-        };
-        Self { raw }
+impl TryFrom<&Hotkey> for HotkeyToken {
+    type Error = ();
+
+    fn try_from(hotkey: &Hotkey) -> Result<Self, ()> {
+        match hotkey {
+            Hotkey::Letter(character) => Ok(Self::Letter {
+                character: *character,
+            }),
+            Hotkey::VirtualKey(ESCAPE_VK) => Ok(Self::Escape),
+            Hotkey::VirtualKey(MOUSE_BACK_VK) => Ok(Self::MouseBack),
+            Hotkey::VirtualKey(MOUSE_FORWARD_VK) => Ok(Self::MouseForward),
+            _ => Err(()),
+        }
     }
 }
 
@@ -97,14 +103,13 @@ impl TryFrom<&str> for HotkeyToken {
         if is_single_character && first_character.is_ascii_alphabetic() {
             return Ok(HotkeyToken::from(first_character));
         }
-        if trimmed_value.eq_ignore_ascii_case(ESCAPE_TOKEN) {
-            return Ok(Self::Escape);
-        }
-        if trimmed_value.eq_ignore_ascii_case(MOUSE_FORWARD_TOKEN) {
-            return Ok(Self::MouseForward);
-        }
-        if trimmed_value.eq_ignore_ascii_case(MOUSE_BACK_TOKEN) {
-            return Ok(Self::MouseBack);
+        if let Ok(code) = trimmed_value.parse::<u32>() {
+            return match code {
+                ESCAPE_VK => Ok(Self::Escape),
+                MOUSE_FORWARD_VK => Ok(Self::MouseForward),
+                MOUSE_BACK_VK => Ok(Self::MouseBack),
+                _ => Err(HotkeyTokenParseError),
+            };
         }
         Err(HotkeyTokenParseError)
     }

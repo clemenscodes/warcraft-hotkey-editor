@@ -1,6 +1,7 @@
 pub(crate) mod ability_cell;
 pub(crate) mod building_traits;
 pub(crate) mod command_catalog;
+pub(crate) mod cursor_hit;
 pub(crate) mod default_config;
 pub(crate) mod grid_layout;
 pub(crate) mod grid_slot;

@@ -13,7 +13,7 @@ pub(crate) fn PreviewDialog(
         let read_guard = loaded_keys.read();
         match read_guard.as_ref() {
             Some(file) => {
-                let custom_keys = CustomKeys::from_file(file);
+                let custom_keys = CustomKeys::from(file);
                 let canonical_text = custom_keys.to_text();
                 canonical_text.to_string()
             }

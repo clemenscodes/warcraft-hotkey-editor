@@ -176,14 +176,14 @@ pub fn resolve_container(
     // pushing C to 2,2) writes a globally wrong position for C.
     let mut reserved_positions: Vec<ButtonPosition> = entries
         .iter()
-        .filter(|e| {
+        .filter(|entry| {
             matches!(
-                e.slot_id,
+                entry.slot_id,
                 GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
             )
         })
-        .filter(|e| has_custom_position(&e.slot_id, custom_keys, is_research_context))
-        .filter_map(|e| current_for(&e.slot_id, custom_keys, is_research_context))
+        .filter(|entry| has_custom_position(&entry.slot_id, custom_keys, is_research_context))
+        .filter_map(|entry| current_for(&entry.slot_id, custom_keys, is_research_context))
         .collect();
 
     for entry in entries.iter_mut() {
@@ -200,9 +200,9 @@ pub fn resolve_container(
         // Release this ability's reservation before computing the cascade so
         // the ability itself is not blocked from its own preferred slot.
         if let Some(pos) = explicit_position
-            && let Some(idx) = reserved_positions
-                .iter()
-                .position(|p| p.column() == pos.column() && p.row() == pos.row())
+            && let Some(idx) = reserved_positions.iter().position(|position| {
+                position.column() == pos.column() && position.row() == pos.row()
+            })
         {
             reserved_positions.remove(idx);
         }
@@ -267,23 +267,23 @@ pub fn has_custom_position(
         GridSlotId::Ability(ability_id) => {
             if is_research_context {
                 custom_keys
-                    .and_then(|f| f.binding(ability_id))
-                    .and_then(|b| b.research_button_position())
+                    .and_then(|custom_keys_file| custom_keys_file.binding(ability_id))
+                    .and_then(|binding| binding.research_button_position())
                     .is_some()
             } else {
                 custom_keys
-                    .and_then(|f| f.binding(ability_id))
-                    .and_then(|b| b.button_position())
+                    .and_then(|custom_keys_file| custom_keys_file.binding(ability_id))
+                    .and_then(|binding| binding.button_position())
                     .is_some()
             }
         }
         GridSlotId::AbilityOff(ability_id) => custom_keys
-            .and_then(|f| f.binding(ability_id))
-            .and_then(|b| b.unbutton_position())
+            .and_then(|custom_keys_file| custom_keys_file.binding(ability_id))
+            .and_then(|binding| binding.unbutton_position())
             .is_some(),
         GridSlotId::Command(command_name) => custom_keys
-            .and_then(|f| f.command(command_name))
-            .and_then(|b| b.button_position())
+            .and_then(|custom_keys_file| custom_keys_file.command(command_name))
+            .and_then(|binding| binding.button_position())
             .is_some(),
     }
 }
@@ -356,8 +356,9 @@ pub fn next_free_cell_not_reserved(
     occupied_positions: &[ButtonPosition],
     reserved_positions: &[ButtonPosition],
 ) -> Option<ButtonPosition> {
-    let is_blocked = |c: ButtonPosition| {
-        position_occupied(occupied_positions, c) || position_occupied(reserved_positions, c)
+    let is_blocked = |candidate: ButtonPosition| {
+        position_occupied(occupied_positions, candidate)
+            || position_occupied(reserved_positions, candidate)
     };
     for column in 0..GRID_COLUMNS {
         let candidate = ButtonPosition::new(column, preferred_row);
@@ -414,34 +415,44 @@ pub fn write_container_resolved(
     // when two abilities share the same stored Buttonpos in this container.
     let resolved = resolve_container(slot_ids, Some(file), is_research);
     for entry in &resolved {
-        let Some(vis_pos) = entry.position() else {
+        let Some(visible_position) = entry.position() else {
             continue;
         };
-        let new_pos = crate::ButtonPosition::new(vis_pos.column(), vis_pos.row());
+        let column = visible_position.column();
+        let row = visible_position.row();
+        let new_position = crate::ButtonPosition::new(column, row);
         match entry.slot_id() {
             GridSlotId::Ability(_) => {
                 // Intentionally skipped — see comment above.
             }
-            GridSlotId::AbilityOff(id) => {
+            GridSlotId::AbilityOff(ability_id) => {
                 let stored = file
-                    .binding(id)
-                    .and_then(|b| b.unbutton_position())
-                    .map(|p| ButtonPosition::new(p.column(), p.row()));
-                if stored != Some(vis_pos)
-                    && let Some(binding) = file.binding_or_default_mut(id)
+                    .binding(ability_id)
+                    .and_then(|binding| binding.unbutton_position())
+                    .map(|position| {
+                        let stored_column = position.column();
+                        let stored_row = position.row();
+                        ButtonPosition::new(stored_column, stored_row)
+                    });
+                if stored != Some(visible_position)
+                    && let Some(binding) = file.binding_or_default_mut(ability_id)
                 {
-                    binding.set_unbutton_position(Some(new_pos));
+                    binding.set_unbutton_position(Some(new_position));
                 }
             }
-            GridSlotId::Command(name) => {
+            GridSlotId::Command(command_name) => {
                 let stored = file
-                    .command(name)
-                    .and_then(|b| b.button_position())
-                    .map(|p| ButtonPosition::new(p.column(), p.row()));
-                if stored != Some(vis_pos)
-                    && let Some(binding) = file.command_or_default_mut(name)
+                    .command(command_name)
+                    .and_then(|binding| binding.button_position())
+                    .map(|position| {
+                        let stored_column = position.column();
+                        let stored_row = position.row();
+                        ButtonPosition::new(stored_column, stored_row)
+                    });
+                if stored != Some(visible_position)
+                    && let Some(binding) = file.command_or_default_mut(command_name)
                 {
-                    binding.set_button_position(Some(new_pos));
+                    binding.set_button_position(Some(new_position));
                 }
             }
         }
@@ -452,12 +463,13 @@ pub fn write_container_resolved(
         let resolved_button_positions: Vec<AbilityPosition> = resolved
             .iter()
             .filter_map(|entry| {
-                let GridSlotId::Ability(id) = entry.slot_id() else {
+                let GridSlotId::Ability(ability_id) = entry.slot_id() else {
                     return None;
                 };
                 let position = entry.position()?;
+                let ability_id_string = ability_id.clone();
                 let ability_position = AbilityPosition {
-                    ability_id: id.clone(),
+                    ability_id: ability_id_string,
                     position,
                 };
                 Some(ability_position)
@@ -481,7 +493,7 @@ fn normalize_unbutton_positions(
     for resolved in resolved_button_positions {
         let Some(unbutton_pos) = file
             .binding(resolved.ability_id.as_str())
-            .and_then(|b| b.unbutton_position().copied())
+            .and_then(|binding| binding.unbutton_position().copied())
         else {
             continue;
         };
@@ -501,10 +513,12 @@ fn normalize_unbutton_positions(
         });
 
         if collides {
-            let new_pos =
-                crate::ButtonPosition::new(resolved.position.column(), resolved.position.row());
-            if let Some(binding) = file.binding_or_default_mut(resolved.ability_id.as_str()) {
-                binding.set_unbutton_position(Some(new_pos));
+            let column = resolved.position.column();
+            let row = resolved.position.row();
+            let new_position = crate::ButtonPosition::new(column, row);
+            let ability_id = resolved.ability_id.as_str();
+            if let Some(binding) = file.binding_or_default_mut(ability_id) {
+                binding.set_unbutton_position(Some(new_position));
             }
         }
     }

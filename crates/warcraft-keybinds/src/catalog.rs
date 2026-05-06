@@ -40,10 +40,11 @@ impl CommandCatalog {
         WARCRAFT_DATABASE
             .iter()
             .find_map(|(object_id, warcraft_object)| {
+                let id_value = object_id.value();
                 if warcraft_object.kind() == WarcraftObjectKind::Command
-                    && object_id.value().eq_ignore_ascii_case(wanted_name)
+                    && id_value.eq_ignore_ascii_case(wanted_name)
                 {
-                    Some(object_id.value())
+                    Some(id_value)
                 } else {
                     None
                 }

@@ -1300,17 +1300,19 @@ impl From<Integer> for ItemClass {
     }
 }
 
-impl ItemClass {
-    pub fn from_slk(value: &str) -> Option<Self> {
+impl TryFrom<&str> for ItemClass {
+    type Error = ();
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "Artifact" => Some(ItemClass::Artifact),
-            "Permanent" => Some(ItemClass::Permanent),
-            "Charged" => Some(ItemClass::Charged),
-            "PowerUp" => Some(ItemClass::PowerUp),
-            "Campaign" => Some(ItemClass::Campaign),
-            "Miscellaneous" => Some(ItemClass::Miscellaneous),
-            "Purchasable" => Some(ItemClass::Purchasable),
-            _ => None,
+            "Artifact" => Ok(ItemClass::Artifact),
+            "Permanent" => Ok(ItemClass::Permanent),
+            "Charged" => Ok(ItemClass::Charged),
+            "PowerUp" => Ok(ItemClass::PowerUp),
+            "Campaign" => Ok(ItemClass::Campaign),
+            "Miscellaneous" => Ok(ItemClass::Miscellaneous),
+            "Purchasable" => Ok(ItemClass::Purchasable),
+            _ => Err(()),
         }
     }
 }
@@ -3088,6 +3090,19 @@ pub enum SystemKeybindClass {
     Replay,
 }
 
+impl SystemKeybindClass {
+    pub fn ini_field(self) -> &'static str {
+        match self {
+            Self::Game => "GameCommand=1",
+            Self::ControlGroup => "CtrlGroupCommand=1",
+            Self::Menu => "MenuCommand=1",
+            Self::Camera => "CameraCommand=1",
+            Self::Observer => "ObserverCommand=1",
+            Self::Replay => "ReplayCommand=1",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum SystemKeybindModifier {
     None,
@@ -3095,6 +3110,32 @@ pub enum SystemKeybindModifier {
     Ctrl,
     CtrlOrAlt,
     Shift,
+}
+
+impl SystemKeybindModifier {
+    pub fn ini_str(self) -> Option<&'static str> {
+        match self {
+            Self::None => Option::None,
+            Self::Alt => Some("Alt"),
+            Self::Ctrl => Some("Ctrl"),
+            Self::CtrlOrAlt => Some("Ctrl_or_Alt"),
+            Self::Shift => Some("Shift"),
+        }
+    }
+}
+
+impl TryFrom<&str> for SystemKeybindModifier {
+    type Error = ();
+
+    fn try_from(text: &str) -> Result<Self, ()> {
+        match text.trim().to_ascii_lowercase().as_str() {
+            "alt" => Ok(Self::Alt),
+            "ctrl" => Ok(Self::Ctrl),
+            "ctrl_or_alt" => Ok(Self::CtrlOrAlt),
+            "shift" => Ok(Self::Shift),
+            _ => Err(()),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy)]

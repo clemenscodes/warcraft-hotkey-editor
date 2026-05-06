@@ -4,8 +4,8 @@ use std::rc::Rc;
 use dioxus::prelude::*;
 use num_traits::cast::cast;
 use warcraft_api::{
-    AttackType, DefenseType, HeroAttributes, PrimaryAttribute, RegenType, UnitAttack, UnitCombat,
-    UnitKind, WarcraftObjectId, WarcraftObjectMeta,
+    AttackType, ButtonPosition, DefenseType, HeroAttributes, PrimaryAttribute, RegenType,
+    UnitAttack, UnitCombat, UnitKind, WarcraftObjectId, WarcraftObjectMeta,
 };
 use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
 use warcraft_keybinds::CustomKeysFile;
@@ -200,18 +200,17 @@ pub(crate) fn UnitDetailPanel(
         }
         command_card_slots.push(GridSlotId::command(command_name));
     }
-    let mut seen_train_positions: HashMap<(u8, u8), String> = HashMap::new();
+    let mut seen_train_positions: HashMap<ButtonPosition, String> = HashMap::new();
     let mut train_unit_upgrades: HashMap<String, String> = HashMap::new();
     for trained_id in primary_train_slots {
         let id_str = trained_id.value();
         if !ObjectLookup::has_icon(id_str) {
             continue;
         }
-        let default_pos = ObjectLookup::by_id(id_str)
-            .and_then(|obj| obj.default_button_position())
-            .map(|p| (p.column(), p.row()));
-        if let Some(pos) = default_pos {
-            if let Some(existing_id) = seen_train_positions.get(&pos) {
+        let default_position =
+            ObjectLookup::by_id(id_str).and_then(|object| object.default_button_position());
+        if let Some(button_position) = default_position {
+            if let Some(existing_id) = seen_train_positions.get(&button_position) {
                 // First collision at this position becomes the upgrade;
                 // further collisions are silently dropped to keep the grid clean.
                 if !train_unit_upgrades.contains_key(existing_id.as_str()) {
@@ -219,7 +218,7 @@ pub(crate) fn UnitDetailPanel(
                 }
                 continue;
             }
-            seen_train_positions.insert(pos, id_str.to_string());
+            seen_train_positions.insert(button_position, id_str.to_string());
         }
         command_card_slots.push(GridSlotId::ability(id_str));
     }
@@ -251,7 +250,7 @@ pub(crate) fn UnitDetailPanel(
         // or ultimates.
         if hero_abilities.contains(ability_id) {
             let is_levelable = ObjectLookup::by_id(ability_id.value())
-                .map(|o| match o.meta() {
+                .map(|object| match object.meta() {
                     WarcraftObjectMeta::Ability(meta) => meta.max_level() > 1 || meta.is_ultimate(),
                     _ => true,
                 })
@@ -548,7 +547,7 @@ pub(crate) fn UnitDetailPanel(
                             }
                             {
                                 let mana_display = display_mana.unwrap_or(0);
-                                let has_mana = display_mana.map(|v| v > 0).unwrap_or(false);
+                                let has_mana = display_mana.map(|mana_value| mana_value > 0).unwrap_or(false);
                                 let mana_regen = leveled_stats
                                     .as_ref()
                                     .map(LeveledStats::mana_regen)

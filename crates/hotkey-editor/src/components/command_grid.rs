@@ -13,6 +13,7 @@ use wasm_bindgen::closure::Closure;
 
 use crate::domain::ability_cell::AbilityCell;
 use crate::domain::building_traits::BuildingTraits;
+use crate::domain::cursor_hit::{CursorPoint, HitTestPoint};
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::domain::grid_slot::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
@@ -79,7 +80,7 @@ thread_local! {
 }
 
 fn cancel_touch_long_press() {
-    if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|c| c.replace(None))
+    if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|cell| cell.replace(None))
         && let Some(window) = web_sys::window()
     {
         window.clear_timeout_with_handle(id);
@@ -130,11 +131,11 @@ fn remove_touch_scroll_lock() {
 fn reset_drag_thread_locals() {
     cancel_touch_long_press();
     remove_touch_scroll_lock();
-    TOUCH_STARTED.with(|c| c.set(false));
-    DID_DRAG_MOVE.with(|c| c.set(false));
-    DRAG_ORIGIN.with(|c| c.set(None));
-    PENDING_DRAG.with(|c| *c.borrow_mut() = None);
-    SUPPRESS_NEXT_CLICK.with(|c| c.set(false));
+    TOUCH_STARTED.with(|cell| cell.set(false));
+    DID_DRAG_MOVE.with(|cell| cell.set(false));
+    DRAG_ORIGIN.with(|cell| cell.set(None));
+    PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
+    SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
 }
 
 fn tile_class(
@@ -246,7 +247,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                     } else {
                         cell.binding_hotkey()
                     };
-                    token.map(|t| t.display_label())
+                    token.map(|token| token.display_label())
                 });
                 if let Some(l) = letter {
                     *counts.entry(l).or_insert(0) += 1;
@@ -287,7 +288,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         return None;
                                     };
                                     let binding =
-                                        custom_keys_option.and_then(|f| f.binding(ability_id));
+                                        custom_keys_option.and_then(|file| file.binding(ability_id));
                                     if let Some(target) =
                                         ObjectLookup::morph_target_unit(ability_id)
                                         && target.eq_ignore_ascii_case(&host_unit_id) {
@@ -312,7 +313,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // This makes drag-and-drop write Unbuttonpos instead of
                             // Buttonpos and wires selection to the off-state inspector.
                             let occupant_slot: Option<GridSlotId> = if morph_reverse_cell.is_some() {
-                                raw_occupant_slot.map(|s| GridSlotId::AbilityOff(s.as_str().to_string()))
+                                raw_occupant_slot.map(|slot| GridSlotId::AbilityOff(slot.as_str().to_string()))
                             } else {
                                 raw_occupant_slot
                             };
@@ -330,8 +331,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             let is_command_cell = matches!(occupant_slot, Some(GridSlotId::Command(_)));
                             let (drag_in_progress_from_this_section, dragging_id_str) = {
                                 let guard = dragging_slot.read();
-                                match guard.as_ref().filter(|d| d.source_section() == heading_text) {
-                                    Some(d) => (true, Some(d.slot_id().as_str().to_string())),
+                                match guard.as_ref().filter(|detail| detail.source_section() == heading_text) {
+                                    Some(detail) => (true, Some(detail.slot_id().as_str().to_string())),
                                     None => (false, None),
                                 }
                             };
@@ -448,7 +449,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 .or_else(|| derived_letter.map(|character| character.to_string()));
                             let is_hotkey_conflict = displayed_letter
                                 .as_ref()
-                                .map(|l| conflicting_hotkeys.contains(l.as_str()))
+                                .map(|label| conflicting_hotkeys.contains(label.as_str()))
                                 .unwrap_or(false);
                             let hotkey_overlay_class = if is_hotkey_conflict {
                                 "hotkey-overlay conflict"
@@ -673,7 +674,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 // pointerup fired outside a tile (pointer_id mismatch).
                                                 let current_pointer_id = web_event.pointer_id();
                                                 let pending_pointer_id = PENDING_DRAG.with(|cell| {
-                                                    cell.borrow().as_ref().map(|p| p.pointer_id)
+                                                    cell.borrow().as_ref().map(|pending| pending.pointer_id)
                                                 });
                                                 if pending_pointer_id != Some(current_pointer_id) {
                                                     cancel_touch_long_press();
@@ -683,7 +684,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 }
 
                                                 let pending_is_touch = PENDING_DRAG.with(|cell| {
-                                                    cell.borrow().as_ref().map(|p| p.is_touch).unwrap_or(false)
+                                                    cell.borrow().as_ref().map(|pending| pending.is_touch).unwrap_or(false)
                                                 });
 
                                                 if pending_is_touch {
@@ -768,14 +769,16 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 drag_follower.set(Some(current_follower));
                                             }
 
-                                            let document_option = web_sys::window().and_then(|w| w.document());
+                                            let document_option = web_sys::window().and_then(|window| window.document());
                                             let Some(document) = document_option else {
                                                 return;
                                             };
-                                            let cursor_hit_x = cursor_x as f32;
-                                            let cursor_hit_y = cursor_y as f32;
+                                            let cursor_point = CursorPoint::new(cursor_x, cursor_y);
+                                            let hit_test_point = HitTestPoint::from(cursor_point);
+                                            let hit_test_x = hit_test_point.x();
+                                            let hit_test_y = hit_test_point.y();
                                             let elem_under_option = document
-                                                .element_from_point(cursor_hit_x, cursor_hit_y);
+                                                .element_from_point(hit_test_x, hit_test_y);
                                             let tile_under_option = elem_under_option
                                                 .and_then(|elem| elem.closest(".grid-tile").ok().flatten());
                                             let Some(tile_under) = tile_under_option else {
