@@ -7,6 +7,7 @@ pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObject
 pub mod building;
 pub mod cascade;
 pub mod catalog;
+pub mod customkeys;
 pub mod export;
 pub mod lookup;
 pub mod overlay;
@@ -15,6 +16,7 @@ pub mod unit_slots;
 
 pub use building::BuildingTraits;
 pub use catalog::CommandCatalog;
+pub use customkeys::CustomKeys;
 pub use lookup::ObjectLookup;
 pub use slot::GridSlotId;
 pub use unit_slots::UnitSlots;
