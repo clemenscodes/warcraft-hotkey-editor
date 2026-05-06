@@ -9,9 +9,24 @@ const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
 
 #[derive(Clone)]
-struct ResolvedSlot {
+pub struct ResolvedSlot {
     slot_id: GridSlotId,
     position: Option<ButtonPosition>,
+}
+
+impl ResolvedSlot {
+    pub fn slot_id(&self) -> &GridSlotId {
+        &self.slot_id
+    }
+
+    pub fn position(&self) -> Option<ButtonPosition> {
+        self.position
+    }
+}
+
+struct AbilityPosition {
+    ability_id: String,
+    position: ButtonPosition,
 }
 
 pub fn current_for(
@@ -117,15 +132,15 @@ pub fn resolved_for(
     let resolved_entries = resolve_container(candidate_slots, custom_keys, is_research_context);
     let matching_entry = resolved_entries
         .iter()
-        .find(|(slot_id, _)| slots_match(slot_id, slot))?;
-    matching_entry.1
+        .find(|entry| slots_match(entry.slot_id(), slot))?;
+    matching_entry.position()
 }
 
 pub fn resolve_container(
     candidate_slots: &[GridSlotId],
     custom_keys: Option<&CustomKeysFile>,
     is_research_context: bool,
-) -> Vec<(GridSlotId, Option<ButtonPosition>)> {
+) -> Vec<ResolvedSlot> {
     let mut entries: Vec<ResolvedSlot> = candidate_slots
         .iter()
         .map(|slot| ResolvedSlot {
@@ -241,9 +256,6 @@ pub fn resolve_container(
     }
 
     entries
-        .into_iter()
-        .map(|entry| (entry.slot_id, entry.position))
-        .collect()
 }
 
 pub fn has_custom_position(
@@ -401,12 +413,12 @@ pub fn write_container_resolved(
     // (not the stored ones) so it correctly places off-state buttons even
     // when two abilities share the same stored Buttonpos in this container.
     let resolved = resolve_container(slot_ids, Some(file), is_research);
-    for (slot_id, vis_pos_opt) in &resolved {
-        let Some(vis_pos) = vis_pos_opt else {
+    for entry in &resolved {
+        let Some(vis_pos) = entry.position() else {
             continue;
         };
         let new_pos = crate::ButtonPosition::new(vis_pos.column(), vis_pos.row());
-        match slot_id {
+        match entry.slot_id() {
             GridSlotId::Ability(_) => {
                 // Intentionally skipped — see comment above.
             }
@@ -415,7 +427,7 @@ pub fn write_container_resolved(
                     .binding(id)
                     .and_then(|b| b.unbutton_position())
                     .map(|p| ButtonPosition::new(p.column(), p.row()));
-                if stored != Some(*vis_pos)
+                if stored != Some(vis_pos)
                     && let Some(binding) = file.binding_or_default_mut(id)
                 {
                     binding.set_unbutton_position(Some(new_pos));
@@ -426,7 +438,7 @@ pub fn write_container_resolved(
                     .command(name)
                     .and_then(|b| b.button_position())
                     .map(|p| ButtonPosition::new(p.column(), p.row()));
-                if stored != Some(*vis_pos)
+                if stored != Some(vis_pos)
                     && let Some(binding) = file.command_or_default_mut(name)
                 {
                     binding.set_button_position(Some(new_pos));
@@ -437,16 +449,21 @@ pub fn write_container_resolved(
     if !is_research {
         // Build cascade-resolved Buttonpos table so the unbutton normalizer can
         // detect collisions even when two abilities share the same stored position.
-        let resolved_button_pos: Vec<(String, ButtonPosition)> = resolved
+        let resolved_button_positions: Vec<AbilityPosition> = resolved
             .iter()
-            .filter_map(|(slot, pos_opt)| {
-                let GridSlotId::Ability(id) = slot else {
+            .filter_map(|entry| {
+                let GridSlotId::Ability(id) = entry.slot_id() else {
                     return None;
                 };
-                Some((id.clone(), (*pos_opt)?))
+                let position = entry.position()?;
+                let ability_position = AbilityPosition {
+                    ability_id: id.clone(),
+                    position,
+                };
+                Some(ability_position)
             })
             .collect();
-        normalize_unbutton_positions(file, &resolved_button_pos);
+        normalize_unbutton_positions(file, &resolved_button_positions);
     }
 }
 
@@ -459,31 +476,34 @@ pub fn write_container_resolved(
 /// two abilities share the same stored `Buttonpos` in this container.
 fn normalize_unbutton_positions(
     file: &mut CustomKeysFile,
-    resolved_button_pos: &[(String, ButtonPosition)],
+    resolved_button_positions: &[AbilityPosition],
 ) {
-    for (ability_id, self_pos) in resolved_button_pos {
+    for resolved in resolved_button_positions {
         let Some(unbutton_pos) = file
-            .binding(ability_id.as_str())
+            .binding(resolved.ability_id.as_str())
             .and_then(|b| b.unbutton_position().copied())
         else {
             continue;
         };
 
         // Already at self-cell — valid, nothing to do.
-        if unbutton_pos.column() == self_pos.column() && unbutton_pos.row() == self_pos.row() {
+        if unbutton_pos.column() == resolved.position.column()
+            && unbutton_pos.row() == resolved.position.row()
+        {
             continue;
         }
 
         // Collides with another ability's resolved button position → move to self-cell.
-        let collides = resolved_button_pos.iter().any(|(other_id, other_pos)| {
-            !other_id.eq_ignore_ascii_case(ability_id)
-                && other_pos.column() == unbutton_pos.column()
-                && other_pos.row() == unbutton_pos.row()
+        let collides = resolved_button_positions.iter().any(|other| {
+            !other.ability_id.eq_ignore_ascii_case(&resolved.ability_id)
+                && other.position.column() == unbutton_pos.column()
+                && other.position.row() == unbutton_pos.row()
         });
 
         if collides {
-            let new_pos = crate::ButtonPosition::new(self_pos.column(), self_pos.row());
-            if let Some(binding) = file.binding_or_default_mut(ability_id.as_str()) {
+            let new_pos =
+                crate::ButtonPosition::new(resolved.position.column(), resolved.position.row());
+            if let Some(binding) = file.binding_or_default_mut(resolved.ability_id.as_str()) {
                 binding.set_unbutton_position(Some(new_pos));
             }
         }

@@ -23,10 +23,6 @@ pub use lookup::ObjectLookup;
 pub use slot::GridSlotId;
 pub use unit_slots::UnitSlots;
 
-// ──────────────────────────────────────────────────────────────
-// ButtonPosition
-// ──────────────────────────────────────────────────────────────
-
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ButtonPosition {
     column: u8,
@@ -67,10 +63,6 @@ impl TryFrom<&str> for ButtonPosition {
         Ok(ButtonPosition { column, row })
     }
 }
-
-// ──────────────────────────────────────────────────────────────
-// AbilityBinding  (abilities, units, upgrades, items)
-// ──────────────────────────────────────────────────────────────
 
 #[derive(Default, Debug, Clone)]
 pub struct AbilityBinding {
@@ -267,10 +259,6 @@ impl AbilityBinding {
     }
 }
 
-// ──────────────────────────────────────────────────────────────
-// CommandBinding  (Cmd* sections)
-// ──────────────────────────────────────────────────────────────
-
 #[derive(Default, Debug, Clone)]
 pub struct CommandBinding {
     hotkey: Option<String>,
@@ -346,10 +334,6 @@ impl CommandBinding {
     }
 }
 
-// ──────────────────────────────────────────────────────────────
-// SystemBinding  (inventory, hero selection, control groups, …)
-// ──────────────────────────────────────────────────────────────
-
 /// Binding for a system-level hotkey section.
 /// Sections are identified by a class-discriminator field
 /// (`GameCommand=1`, `CtrlGroupCommand=1`, etc.).
@@ -402,10 +386,6 @@ impl SystemBinding {
         self.dirty = false;
     }
 }
-
-// ──────────────────────────────────────────────────────────────
-// WarcraftKeybinding  (the unified variant)
-// ──────────────────────────────────────────────────────────────
 
 /// A fully-typed keybinding parsed from a single section of CustomKeys.txt.
 #[derive(Debug, Clone)]
@@ -485,10 +465,6 @@ impl WarcraftKeybinding {
     }
 }
 
-// ──────────────────────────────────────────────────────────────
-// Entry types for ordered iteration
-// ──────────────────────────────────────────────────────────────
-
 pub struct BindingEntry<'a> {
     id: &'a str,
     binding: &'a AbilityBinding,
@@ -519,10 +495,6 @@ impl<'a> CommandEntry<'a> {
     }
 }
 
-// ──────────────────────────────────────────────────────────────
-// CustomKeysFile
-// ──────────────────────────────────────────────────────────────
-
 pub struct CustomKeysFile {
     /// All entries keyed by lowercase section ID for O(1) lookup.
     entries: HashMap<String, WarcraftKeybinding>,
@@ -535,8 +507,6 @@ pub struct CustomKeysFile {
 }
 
 impl CustomKeysFile {
-    // ── Primary typed API ───────────────────────────────────────
-
     /// O(1) read. Returns the keybinding for any section, regardless of variant.
     pub fn get(&self, id: WarcraftObjectId) -> Option<&WarcraftKeybinding> {
         self.entries.get(&id.value().to_lowercase())
@@ -559,8 +529,6 @@ impl CustomKeysFile {
         self.raw_sections.remove(&key);
         self.entries.insert(key, binding);
     }
-
-    // ── Ability / unit / upgrade / item lookup ──────────────────
 
     pub fn binding(&self, id: &str) -> Option<&AbilityBinding> {
         self.entries.get(&id.to_lowercase())?.as_ability()
@@ -602,8 +570,6 @@ impl CustomKeysFile {
         })
     }
 
-    // ── Command lookup ──────────────────────────────────────────
-
     pub fn command(&self, name: &str) -> Option<&CommandBinding> {
         self.entries.get(&name.to_lowercase())?.as_command()
     }
@@ -644,8 +610,6 @@ impl CustomKeysFile {
         })
     }
 
-    // ── System lookup ───────────────────────────────────────────
-
     pub fn system(&self, id: &str) -> Option<&SystemBinding> {
         self.entries.get(&id.to_lowercase())?.as_system()
     }
@@ -653,8 +617,6 @@ impl CustomKeysFile {
     pub fn system_mut(&mut self, id: &str) -> Option<&mut SystemBinding> {
         self.entries.get_mut(&id.to_lowercase())?.as_system_mut()
     }
-
-    // ── File I/O ────────────────────────────────────────────────
 
     pub fn load(path: impl AsRef<Path>) -> io::Result<Self> {
         let text = std::fs::read_to_string(path)?;
@@ -703,8 +665,6 @@ impl CustomKeysFile {
         })?;
         Self::load(path)
     }
-
-    // ── Serialisation ───────────────────────────────────────────
 
     pub fn to_file_content(&self) -> String {
         let mut output = String::new();
@@ -872,8 +832,6 @@ impl CustomKeysFile {
         output.push('\n');
     }
 
-    // ── Parser helpers ──────────────────────────────────────────
-
     fn parse_section_header(line: &str) -> Option<String> {
         let without_brackets = line.strip_prefix('[')?.strip_suffix(']')?;
         let id = without_brackets.trim();
@@ -884,18 +842,19 @@ impl CustomKeysFile {
         }
     }
 
-    fn parse_key_value(line: &str) -> Option<(&str, &str)> {
+    fn parse_key_value(line: &str) -> Option<SectionField<'_>> {
         let (key, value) = line.split_once('=')?;
-        Some((key.trim(), value))
+        let section_field = SectionField {
+            key: key.trim(),
+            value,
+        };
+        Some(section_field)
     }
 }
 
-// ──────────────────────────────────────────────────────────────
-// Parser
-// ──────────────────────────────────────────────────────────────
-
-fn is_command_section(id: &str) -> bool {
-    id.to_ascii_lowercase().starts_with("cmd")
+struct SectionField<'a> {
+    key: &'a str,
+    value: &'a str,
 }
 
 /// Collects all fields of a section before we decide its variant.
@@ -996,20 +955,21 @@ impl SectionAccumulator {
         // Parse system modifier separately since "Modifier" also appears in ability sections
         // but only matters for System bindings (resolved at flush time).
         if key.to_lowercase() == "modifier" && self.system_modifier.is_none() {
-            self.system_modifier = parse_system_modifier(value);
+            self.system_modifier = Self::parse_modifier(value);
         }
     }
 
     fn into_keybinding(self) -> WarcraftKeybinding {
         if self.is_command {
-            return WarcraftKeybinding::Command(CommandBinding {
+            let command_binding = CommandBinding {
                 hotkey: self.hotkey,
                 button_position: self.button_position,
                 unbutton_position: self.unbutton_position,
                 tip: self.tip,
                 un_tip: self.un_tip,
                 dirty: false,
-            });
+            };
+            return WarcraftKeybinding::Command(command_binding);
         }
         if let Some(class) = self.system_class {
             let hotkey = self
@@ -1017,14 +977,15 @@ impl SectionAccumulator {
                 .as_deref()
                 .and_then(|s| s.parse::<u32>().ok())
                 .unwrap_or(0);
-            return WarcraftKeybinding::System(SystemBinding {
+            let system_binding = SystemBinding {
                 hotkey,
                 class,
                 modifier: self.system_modifier,
                 dirty: false,
-            });
+            };
+            return WarcraftKeybinding::System(system_binding);
         }
-        WarcraftKeybinding::Ability(AbilityBinding {
+        let ability_binding = AbilityBinding {
             hotkey: self.hotkey,
             unhotkey: self.unhotkey,
             button_position: self.button_position,
@@ -1041,17 +1002,18 @@ impl SectionAccumulator {
             un_icon: self.un_icon,
             modifier: self.modifier,
             dirty: false,
-        })
+        };
+        WarcraftKeybinding::Ability(ability_binding)
     }
-}
 
-fn parse_system_modifier(value: &str) -> Option<SystemKeybindModifier> {
-    match value.trim().to_ascii_lowercase().as_str() {
-        "alt" => Some(SystemKeybindModifier::Alt),
-        "ctrl" => Some(SystemKeybindModifier::Ctrl),
-        "ctrl_or_alt" => Some(SystemKeybindModifier::CtrlOrAlt),
-        "shift" => Some(SystemKeybindModifier::Shift),
-        _ => None,
+    fn parse_modifier(value: &str) -> Option<SystemKeybindModifier> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "alt" => Some(SystemKeybindModifier::Alt),
+            "ctrl" => Some(SystemKeybindModifier::Ctrl),
+            "ctrl_or_alt" => Some(SystemKeybindModifier::CtrlOrAlt),
+            "shift" => Some(SystemKeybindModifier::Shift),
+            _ => None,
+        }
     }
 }
 
@@ -1114,8 +1076,9 @@ impl From<&str> for CustomKeysFile {
                         .entry(key.clone())
                         .or_insert_with(|| original_id.clone());
                     order.push(key.clone());
+                    let is_command_section = original_id.to_ascii_lowercase().starts_with("cmd");
                     let acc = SectionAccumulator {
-                        is_command: is_command_section(&original_id),
+                        is_command: is_command_section,
                         ..Default::default()
                     };
                     current_raw.push_str(line);
@@ -1130,10 +1093,10 @@ impl From<&str> for CustomKeysFile {
                 }
                 if !is_blank
                     && !is_comment
-                    && let Some((key, value)) = CustomKeysFile::parse_key_value(trimmed)
+                    && let Some(field) = CustomKeysFile::parse_key_value(trimmed)
                     && let Some(acc) = accumulator.as_mut()
                 {
-                    acc.apply(key, value);
+                    acc.apply(field.key, field.value);
                 }
             }
         }
@@ -1168,10 +1131,6 @@ fn home_directory() -> Option<PathBuf> {
         std::env::var("HOME").ok().map(PathBuf::from)
     }
 }
-
-// ──────────────────────────────────────────────────────────────
-// Tests
-// ──────────────────────────────────────────────────────────────
 
 #[cfg(test)]
 mod tests {
@@ -1402,13 +1361,12 @@ mod tests {
 #[cfg(test)]
 mod overlay_tests {
     use super::*;
-    use crate::overlay::apply_overlay;
 
     #[test]
     fn overlay_copies_hotkey_from_uploaded_to_target() {
         let mut target = CustomKeysFile::from("[Ahrl]\nHotkey=Q\n\n");
         let uploaded = CustomKeysFile::from("[Ahrl]\nHotkey=W\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         assert_eq!(target.binding("Ahrl").and_then(|b| b.hotkey()), Some("W"));
     }
 
@@ -1416,7 +1374,7 @@ mod overlay_tests {
     fn overlay_copies_button_position() {
         let mut target = CustomKeysFile::from("[Ahrl]\nButtonpos=0,0\n\n");
         let uploaded = CustomKeysFile::from("[Ahrl]\nButtonpos=2,1\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         let pos = target
             .binding("Ahrl")
             .and_then(|b| b.button_position())
@@ -1431,7 +1389,7 @@ mod overlay_tests {
         let system_content = "[IsS1]\nHotkey=27\nGameCommand=1\n\n";
         let mut target = CustomKeysFile::from(system_content);
         let uploaded = CustomKeysFile::from("[IsS1]\nHotkey=Q\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         // System entry should still be present and unchanged.
         assert!(target.system("IsS1").is_some());
     }
@@ -1441,7 +1399,7 @@ mod overlay_tests {
         // If the uploaded binding has no hotkey, the target hotkey is kept.
         let mut target = CustomKeysFile::from("[Ahrl]\nHotkey=Q\n\n");
         let uploaded = CustomKeysFile::from("[Ahrl]\nButtonpos=1,0\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         assert_eq!(target.binding("Ahrl").and_then(|b| b.hotkey()), Some("Q"));
         let pos = target
             .binding("Ahrl")
@@ -1454,7 +1412,7 @@ mod overlay_tests {
     fn overlay_copies_command_hotkey() {
         let mut target = CustomKeysFile::from("[CmdAttack]\nHotkey=A\n\n");
         let uploaded = CustomKeysFile::from("[CmdAttack]\nHotkey=G\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         assert_eq!(
             target.command("CmdAttack").and_then(|b| b.hotkey()),
             Some("G"),
@@ -1465,7 +1423,7 @@ mod overlay_tests {
     fn overlay_is_case_insensitive_for_ids() {
         let mut target = CustomKeysFile::from("[AHrl]\nHotkey=Q\n\n");
         let uploaded = CustomKeysFile::from("[ahrl]\nHotkey=E\n\n");
-        apply_overlay(&mut target, &uploaded);
+        target.overlay(&uploaded);
         assert_eq!(target.binding("AHrl").and_then(|b| b.hotkey()), Some("E"));
     }
 }
@@ -1569,8 +1527,8 @@ mod cascade_tests {
         let result = resolve_container(&slots, Some(&custom_keys), false);
         let pos = result
             .iter()
-            .find(|(s, _)| s.as_str() == "Ahrl")
-            .and_then(|(_, p)| *p);
+            .find(|entry| entry.slot_id().as_str() == "Ahrl")
+            .and_then(|entry| entry.position());
         assert_eq!(pos, Some(ButtonPosition::new(2, 0)));
     }
 
@@ -1586,12 +1544,12 @@ mod cascade_tests {
         let result = resolve_container(&slots, Some(&custom_keys), false);
         let pos_ahrl = result
             .iter()
-            .find(|(s, _)| s.as_str() == "Ahrl")
-            .and_then(|(_, p)| *p);
+            .find(|entry| entry.slot_id().as_str() == "Ahrl")
+            .and_then(|entry| entry.position());
         let pos_ahbz = result
             .iter()
-            .find(|(s, _)| s.as_str() == "AHbz")
-            .and_then(|(_, p)| *p);
+            .find(|entry| entry.slot_id().as_str() == "AHbz")
+            .and_then(|entry| entry.position());
         assert_eq!(pos_ahrl, Some(ButtonPosition::new(0, 0)));
         assert!(pos_ahbz.is_some());
         assert_ne!(pos_ahbz, Some(ButtonPosition::new(0, 0)));
@@ -1661,8 +1619,8 @@ mod cascade_tests {
         let pos = |id: &str| {
             result
                 .iter()
-                .find(|(s, _)| s.as_str().eq_ignore_ascii_case(id))
-                .and_then(|(_, p)| *p)
+                .find(|entry| entry.slot_id().as_str().eq_ignore_ascii_case(id))
+                .and_then(|entry| entry.position())
         };
         assert_eq!(pos("ACdm"), Some(ButtonPosition::new(0, 2)));
         assert_eq!(

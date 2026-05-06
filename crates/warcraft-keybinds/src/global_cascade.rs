@@ -90,6 +90,45 @@ struct ContainerSlotEntry {
     is_off_form: bool,
 }
 
+impl ContainerSlotEntry {
+    fn position_in_file(&self, file: &CustomKeysFile) -> Option<ButtonPosition> {
+        match (&self.solver_slot.kind, self.solver_slot.is_research) {
+            (SolverSlotKind::Ability(ability_id), false) => {
+                let binding = file.binding(ability_id)?;
+                if self.is_off_form {
+                    let position_ref = binding.unbutton_position()?;
+                    Some(ButtonPosition::new(
+                        position_ref.column(),
+                        position_ref.row(),
+                    ))
+                } else {
+                    let position_ref = binding.button_position()?;
+                    Some(ButtonPosition::new(
+                        position_ref.column(),
+                        position_ref.row(),
+                    ))
+                }
+            }
+            (SolverSlotKind::Ability(ability_id), true) => {
+                let binding = file.binding(ability_id)?;
+                let position_ref = binding.research_button_position()?;
+                Some(ButtonPosition::new(
+                    position_ref.column(),
+                    position_ref.row(),
+                ))
+            }
+            (SolverSlotKind::Command(command_name), _) => {
+                let binding = file.command(command_name)?;
+                let position_ref = binding.button_position()?;
+                Some(ButtonPosition::new(
+                    position_ref.column(),
+                    position_ref.row(),
+                ))
+            }
+        }
+    }
+}
+
 struct CollectedContainer {
     key: ContainerKey,
     entries: Vec<ContainerSlotEntry>,
@@ -201,20 +240,54 @@ pub struct GlobalCascade {
 }
 
 impl GlobalCascade {
-    /// Solve the cascade for every container in the database. Reads
-    /// the file's existing positions as the per-slot preferred
-    /// candidates. Higher-multiplicity slots — abilities and commands
-    /// that appear in many containers, plus toggle abilities whose
-    /// on-form and off-form together cover many containers — are
-    /// placed first; lower-multiplicity slots cascade around the
-    /// frozen high-priority decisions.
+    #[cfg(test)]
+    fn placement_for_ability(&self, ability_id: &str) -> Option<ButtonPosition> {
+        let key = SolverSlot {
+            kind: SolverSlotKind::Ability(ability_id.to_lowercase()),
+            is_research: false,
+        };
+        self.placements.get(&key).copied()
+    }
+}
+
+impl GlobalCascade {
+    /// Solve the cascade for every container in the database.
+    ///
+    /// Two-phase approach:
+    ///
+    /// Phase 1 — contested cross-unit slots. Any cross-unit ability that shares
+    /// its preferred cell with another cross-unit ability in some container is
+    /// "contested". These are sorted fewest-containers-first so the more unit-
+    /// specific ability (fewer units it spans) claims its natural position; the
+    /// broadly-shared ability cascades to the next free cell.
+    ///
+    /// Phase 2 — everything else, in descending-multiplicity order. High-
+    /// multiplicity commands and abilities lock in first; low-multiplicity
+    /// single-unit abilities cascade last. Phase-1 locked positions are pre-
+    /// registered in occupancy so phase-2 slots route around them.
     pub fn solve(file: &CustomKeysFile) -> Self {
         let containers = Self::collect_containers();
         let metadata = Self::build_metadata(&containers);
+        let contested_positions = Self::resolve_contested(file, &containers, &metadata);
         let priority_order = Self::compute_priority_order(&containers, &metadata);
         let mut occupancy = Occupancy::default();
         let mut placements: HashMap<SolverSlot, ButtonPosition> = HashMap::new();
         for solver_slot in &priority_order {
+            if let Some(locked_position) = contested_positions.get(solver_slot) {
+                let containing = Self::containers_holding(&containers, solver_slot);
+                let locked_cell = GridCell::from_position(*locked_position);
+                for container_key in &containing {
+                    let container_value = *container_key;
+                    occupancy.reserve(container_value, locked_cell);
+                }
+                placements.insert(solver_slot.clone(), *locked_position);
+            }
+        }
+        for solver_slot in &priority_order {
+            let already_placed = placements.contains_key(solver_slot);
+            if already_placed {
+                continue;
+            }
             let containing = Self::containers_holding(&containers, solver_slot);
             if containing.is_empty() {
                 continue;
@@ -363,6 +436,112 @@ impl GlobalCascade {
             }
         }
         metadata
+    }
+
+    fn cross_unit_slots(containers: &[CollectedContainer]) -> HashSet<SolverSlot> {
+        let mut units_per_slot: HashMap<SolverSlot, HashSet<&'static str>> = HashMap::new();
+        for container in containers {
+            let unit_id = container.key.unit_id;
+            for entry in &container.entries {
+                let slot_clone = entry.solver_slot.clone();
+                units_per_slot
+                    .entry(slot_clone)
+                    .or_default()
+                    .insert(unit_id);
+            }
+        }
+        let mut result: HashSet<SolverSlot> = HashSet::new();
+        for (solver_slot, unit_ids) in units_per_slot {
+            if unit_ids.len() >= 2 {
+                result.insert(solver_slot);
+            }
+        }
+        result
+    }
+
+    fn find_contested_slots(
+        cross_unit_set: &HashSet<SolverSlot>,
+        containers: &[CollectedContainer],
+        metadata: &HashMap<SolverSlot, PerSlotMetadata>,
+        file: &CustomKeysFile,
+    ) -> HashSet<SolverSlot> {
+        let mut contested: HashSet<SolverSlot> = HashSet::new();
+        for container in containers {
+            let mut cell_to_slots: HashMap<GridCell, Vec<SolverSlot>> = HashMap::new();
+            for entry in &container.entries {
+                if !cross_unit_set.contains(&entry.solver_slot) {
+                    continue;
+                }
+                let preferred = Self::preferred_cell_for(&entry.solver_slot, metadata, file);
+                let auto_row = Self::auto_place_row_for(&entry.solver_slot);
+                let initial_cell = match preferred {
+                    Some(pos) => GridCell::from_position(pos),
+                    None => GridCell {
+                        column: 0,
+                        row: auto_row,
+                    },
+                };
+                cell_to_slots
+                    .entry(initial_cell)
+                    .or_default()
+                    .push(entry.solver_slot.clone());
+            }
+            for slots_at_cell in cell_to_slots.values() {
+                if slots_at_cell.len() >= 2 {
+                    for slot in slots_at_cell {
+                        contested.insert(slot.clone());
+                    }
+                }
+            }
+        }
+        contested
+    }
+
+    fn resolve_contested(
+        file: &CustomKeysFile,
+        containers: &[CollectedContainer],
+        metadata: &HashMap<SolverSlot, PerSlotMetadata>,
+    ) -> HashMap<SolverSlot, ButtonPosition> {
+        let cross_unit_set = Self::cross_unit_slots(containers);
+        let contested_set = Self::find_contested_slots(&cross_unit_set, containers, metadata, file);
+        if contested_set.is_empty() {
+            return HashMap::new();
+        }
+        let mut ordered: Vec<SolverSlot> = Vec::new();
+        let mut seen: HashSet<SolverSlot> = HashSet::new();
+        for container in containers {
+            for entry in &container.entries {
+                let slot = &entry.solver_slot;
+                if contested_set.contains(slot) && seen.insert(slot.clone()) {
+                    ordered.push(slot.clone());
+                }
+            }
+        }
+        let mut counts: HashMap<SolverSlot, usize> = HashMap::new();
+        for slot in &ordered {
+            let slot_clone = slot.clone();
+            let count = Self::containers_holding(containers, slot).len();
+            counts.insert(slot_clone, count);
+        }
+        ordered.sort_by(|left, right| {
+            let count_left = counts.get(left).copied().unwrap_or(0);
+            let count_right = counts.get(right).copied().unwrap_or(0);
+            count_left.cmp(&count_right)
+        });
+        let mut occupancy = Occupancy::default();
+        let mut placements: HashMap<SolverSlot, ButtonPosition> = HashMap::new();
+        for slot in &ordered {
+            let containing = Self::containers_holding(containers, slot);
+            let preferred = Self::preferred_cell_for(slot, metadata, file);
+            let auto_row = Self::auto_place_row_for(slot);
+            let chosen = Self::pick_cell(&occupancy, &containing, preferred, auto_row);
+            for container_key in &containing {
+                let container_value = *container_key;
+                occupancy.reserve(container_value, chosen);
+            }
+            placements.insert(slot.clone(), chosen.into_position());
+        }
+        placements
     }
 
     fn compute_priority_order(
@@ -595,55 +774,27 @@ impl GlobalCascade {
 mod tests {
     use super::*;
 
-    fn count_in_container_collisions(slot_positions: &[(SolverSlot, ButtonPosition)]) -> usize {
-        let mut seen: HashMap<GridCell, usize> = HashMap::new();
-        for entry in slot_positions {
-            let position = entry.1;
-            let cell = GridCell::from_position(position);
-            let count_entry = seen.entry(cell).or_insert(0);
-            *count_entry += 1;
-        }
-        let mut collision_count: usize = 0;
-        for value in seen.values() {
-            let value_copy = *value;
-            if value_copy > 1 {
-                collision_count += value_copy - 1;
-            }
-        }
-        collision_count
+    struct SlotPosition {
+        solver_slot: SolverSlot,
+        position: ButtonPosition,
     }
 
-    fn read_position_for_entry(
-        entry: &ContainerSlotEntry,
-        file: &CustomKeysFile,
-    ) -> Option<ButtonPosition> {
-        match (&entry.solver_slot.kind, entry.solver_slot.is_research) {
-            (SolverSlotKind::Ability(ability_id), false) => {
-                let binding = file.binding(ability_id)?;
-                if entry.is_off_form {
-                    let position_ref = binding.unbutton_position()?;
-                    let position_value =
-                        ButtonPosition::new(position_ref.column(), position_ref.row());
-                    Some(position_value)
-                } else {
-                    let position_ref = binding.button_position()?;
-                    let position_value =
-                        ButtonPosition::new(position_ref.column(), position_ref.row());
-                    Some(position_value)
+    impl SlotPosition {
+        fn collision_count(slot_positions: &[Self]) -> usize {
+            let mut seen: HashMap<GridCell, usize> = HashMap::new();
+            for slot_position in slot_positions {
+                let cell = GridCell::from_position(slot_position.position);
+                let count_entry = seen.entry(cell).or_insert(0);
+                *count_entry += 1;
+            }
+            let mut collision_count: usize = 0;
+            for value in seen.values() {
+                let value_copy = *value;
+                if value_copy > 1 {
+                    collision_count += value_copy - 1;
                 }
             }
-            (SolverSlotKind::Ability(ability_id), true) => {
-                let binding = file.binding(ability_id)?;
-                let position_ref = binding.research_button_position()?;
-                let position_value = ButtonPosition::new(position_ref.column(), position_ref.row());
-                Some(position_value)
-            }
-            (SolverSlotKind::Command(command_name), _) => {
-                let binding = file.command(command_name)?;
-                let position_ref = binding.button_position()?;
-                let position_value = ButtonPosition::new(position_ref.column(), position_ref.row());
-                Some(position_value)
-            }
+            collision_count
         }
     }
 
@@ -656,14 +807,17 @@ mod tests {
 
         let containers = GlobalCascade::collect_containers();
         for container in &containers {
-            let mut positions_in_container: Vec<(SolverSlot, ButtonPosition)> = Vec::new();
+            let mut positions_in_container: Vec<SlotPosition> = Vec::new();
             for entry in &container.entries {
-                if let Some(position) = read_position_for_entry(entry, &file) {
-                    let pair = (entry.solver_slot.clone(), position);
-                    positions_in_container.push(pair);
+                if let Some(position) = entry.position_in_file(&file) {
+                    let slot_position = SlotPosition {
+                        solver_slot: entry.solver_slot.clone(),
+                        position,
+                    };
+                    positions_in_container.push(slot_position);
                 }
             }
-            let collisions = count_in_container_collisions(&positions_in_container);
+            let collisions = SlotPosition::collision_count(&positions_in_container);
             assert_eq!(
                 collisions, 0,
                 "container {:?} has unresolved collisions after solve",
@@ -754,5 +908,94 @@ mod tests {
             on_position, off_position,
             "Aro1 on-form and off-form must share the same cell"
         );
+    }
+
+    fn solved_file() -> CustomKeysFile {
+        let baseline_text = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let mut file = CustomKeysFile::from(baseline_text);
+        let solution = GlobalCascade::solve(&file);
+        solution.apply(&mut file);
+        file
+    }
+
+    fn solved_position(file: &CustomKeysFile, ability_id: &str) -> crate::ButtonPosition {
+        file.binding(ability_id)
+            .and_then(|b| b.button_position())
+            .copied()
+            .unwrap_or_else(|| panic!("{ability_id} must have a resolved Buttonpos after solve"))
+    }
+
+    #[test]
+    fn nfsp_cascade_abilities_at_expected_positions() {
+        let file = solved_file();
+        let anh1 = solved_position(&file, "Anh1");
+        let acdm = solved_position(&file, "ACdm");
+        assert_eq!(anh1.column(), 0, "nfsp: Anh1 column");
+        assert_eq!(anh1.row(), 2, "nfsp: Anh1 row");
+        assert_eq!(acdm.column(), 1, "nfsp: ACdm column");
+        assert_eq!(acdm.row(), 2, "nfsp: ACdm row");
+    }
+
+    #[test]
+    fn nfsh_cascade_abilities_at_expected_positions() {
+        let file = solved_file();
+        let anh2 = solved_position(&file, "Anh2");
+        let acd2 = solved_position(&file, "ACd2");
+        let acif = solved_position(&file, "ACif");
+        assert_eq!(anh2.column(), 0, "nfsh: Anh2 column");
+        assert_eq!(anh2.row(), 2, "nfsh: Anh2 row");
+        assert_eq!(acd2.column(), 1, "nfsh: ACd2 column");
+        assert_eq!(acd2.row(), 2, "nfsh: ACd2 row");
+        assert_eq!(acif.column(), 2, "nfsh: ACif column");
+        assert_eq!(acif.row(), 2, "nfsh: ACif row");
+        let nfsh_cascade = [anh2, acd2, acif];
+        let forbidden = crate::ButtonPosition::new(3, 2);
+        for position in nfsh_cascade {
+            assert_ne!(
+                position, forbidden,
+                "nfsh: no cascade ability may occupy (3, 2)"
+            );
+        }
+    }
+
+    #[test]
+    fn ndtp_cascade_abilities_at_expected_positions() {
+        let file = solved_file();
+        let anh1 = solved_position(&file, "Anh1");
+        assert_eq!(anh1.column(), 0, "ndtp: Anh1 column");
+        assert_eq!(anh1.row(), 2, "ndtp: Anh1 row");
+    }
+
+    #[test]
+    fn ndth_cascade_abilities_at_expected_positions() {
+        let file = solved_file();
+        let anh2 = solved_position(&file, "Anh2");
+        let acdm = solved_position(&file, "ACdm");
+        let acsl = solved_position(&file, "ACsl");
+        assert_eq!(anh2.column(), 0, "ndth: Anh2 column");
+        assert_eq!(anh2.row(), 2, "ndth: Anh2 row");
+        assert_eq!(acdm.column(), 1, "ndth: ACdm column");
+        assert_eq!(acdm.row(), 2, "ndth: ACdm row");
+        assert_eq!(acsl.column(), 2, "ndth: ACsl column");
+        assert_eq!(acsl.row(), 2, "ndth: ACsl row");
+        let ndth_cascade = [anh2, acdm, acsl];
+        let forbidden = crate::ButtonPosition::new(3, 2);
+        for position in ndth_cascade {
+            assert_ne!(
+                position, forbidden,
+                "ndth: no cascade ability may occupy (3, 2)"
+            );
+        }
+    }
+
+    #[test]
+    fn debug_raw_solver_placements() {
+        let baseline_text = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let file = CustomKeysFile::from(baseline_text);
+        let solution = GlobalCascade::solve(&file);
+        for ability_id in ["Anh1", "Anh2", "ACdm", "ACd2", "ACif", "ACsl"] {
+            let pos = solution.placement_for_ability(ability_id);
+            eprintln!("raw solver placement {ability_id}: {pos:?}");
+        }
     }
 }
