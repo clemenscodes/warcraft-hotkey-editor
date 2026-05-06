@@ -1698,16 +1698,15 @@ mod cascade_tests {
     /// definition of correct for these six slots, and any solver
     /// change must keep this test green.
     ///
-    /// Currently `#[ignore]`d: the multiplicity-priority solver
-    /// places `ACdm` (multiplicity 11) at (0,2) and cascades the
-    /// `Anh*` series elsewhere, which is the opposite of the user's
-    /// canonical layout. The solver must be amended (likely a
-    /// "minimize deviation from baseline subject to per-container
-    /// no-collision constraints" pass) before this test can be
-    /// unignored. Run with `cargo test -- --ignored` to confirm the
-    /// spec status.
+    /// **This test is intentionally failing today.** The
+    /// multiplicity-priority solver in `global_cascade.rs` places
+    /// `ACdm` (multiplicity 11) at (0,2) and cascades the `Anh*`
+    /// series elsewhere, which is the opposite of the canonical
+    /// layout. The failure is the release gate: nothing ships until
+    /// the solver is amended (likely a "minimize deviation from
+    /// baseline subject to per-container no-collision constraints"
+    /// pass) and this test passes.
     #[test]
-    #[ignore = "spec test — solver does not yet satisfy this pinned layout"]
     fn neutral_hero_shared_abilities_land_on_canonical_cells() {
         use crate::cascade::fully_normalize;
 
