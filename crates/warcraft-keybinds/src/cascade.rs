@@ -4,7 +4,6 @@ use crate::CustomKeysFile;
 use crate::catalog::CommandCatalog;
 use crate::lookup::ObjectLookup;
 use crate::slot::GridSlotId;
-use crate::unit_slots::UnitSlots;
 
 const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
@@ -369,25 +368,19 @@ pub fn next_free_cell_not_reserved(
     next_free_cell(preferred_row, occupied_positions)
 }
 
-/// Resolve and write back cascade positions for every ability slot in
-/// `slot_ids`. After this call the positions stored in `file` are
-/// self-consistent — no further fixup at render time.
+/// Run the global cascade solver and write its decisions back into the
+/// file. After this call every ability/command/off-state position
+/// the editor cares about is concrete, materialized, and free of
+/// collisions within each container — no further fixup at render time.
+///
+/// The solver places high-multiplicity slots first (cross-unit
+/// abilities, common commands like CmdAttack/CmdMove) so they
+/// secure their positions before single-container slots cascade
+/// around them. See `crate::global_cascade::GlobalCascade` for the
+/// full algorithm.
 pub fn fully_normalize(file: &mut CustomKeysFile) {
-    for unit_id in UnitSlots::all_unit_ids() {
-        let cmd_card = UnitSlots::command_card_for(unit_id);
-        if !cmd_card.is_empty() {
-            write_container_resolved(file, &cmd_card, false);
-        }
-        if let Some(build_menu) = UnitSlots::build_menu_for(unit_id) {
-            write_container_resolved(file, &build_menu, false);
-        }
-        if let Some(uprooted_menu) = UnitSlots::uprooted_menu_for(unit_id) {
-            write_container_resolved(file, &uprooted_menu, false);
-        }
-        if let Some(research_menu) = UnitSlots::research_menu_for(unit_id) {
-            write_container_resolved(file, &research_menu, true);
-        }
-    }
+    let solution = crate::global_cascade::GlobalCascade::solve(file);
+    solution.apply(file);
 }
 
 pub fn write_container_resolved(

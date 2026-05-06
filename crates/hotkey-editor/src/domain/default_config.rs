@@ -272,13 +272,16 @@ mod tests {
         out
     }
 
-    /// After applying the default template (or any template that preserves the
-    /// baseline button positions), the export that goes to localStorage must
-    /// have positions that agree with what the editor displays.
+    /// Under the global cascade, every ability has exactly one stored
+    /// `Buttonpos`. The render path no longer cascades, so whatever
+    /// is stored is what the editor displays — there is no longer a
+    /// way for localStorage to disagree with the display.
     ///
-    /// Regression: the cascade algorithm used to let a shared ability's position
-    /// be overwritten by a different unit's cascade, causing localStorage to
-    /// disagree with the display.
+    /// This test pins the invariant: after `fully_normalize`, every
+    /// shared ability used as a regression case in earlier per-unit
+    /// cascade fixes (Anh2, ACd2, ACif, ACf2) has a concrete
+    /// `Buttonpos` value, and that value is what `serialize` writes
+    /// into localStorage.
     #[test]
     fn export_positions_match_display_after_template_apply() {
         use crate::domain::default_config::DefaultConfig;
@@ -287,55 +290,40 @@ mod tests {
 
         let baseline = DefaultConfig::content();
 
-        // Simulate applying the default template: overlay template onto a fresh
-        // baseline, then normalize (same steps as templates_dialog.rs).
         let mut loaded = CustomKeysFile::from(baseline);
         fully_normalize(&mut loaded);
 
-        // Simulate what save_export → serialize produces (= localStorage content).
         let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
         let export_file = CustomKeysFile::from(export_content.as_str());
 
-        let pos = |id: &str| {
-            export_file
-                .binding(id)
-                .and_then(|b| b.button_position())
-                .map(|p| (p.column(), p.row()))
+        let normalized_position = |id: &str| -> Option<(u8, u8)> {
+            let binding = loaded.binding(id)?;
+            let position_ref = binding.button_position()?;
+            let column_value = position_ref.column();
+            let row_value = position_ref.row();
+            Some((column_value, row_value))
+        };
+        let exported_position = |id: &str| -> Option<(u8, u8)> {
+            let binding = export_file.binding(id)?;
+            let position_ref = binding.button_position()?;
+            let column_value = position_ref.column();
+            let row_value = position_ref.row();
+            Some((column_value, row_value))
         };
 
-        // nfsh (Forest Troll High Priest) card: Anh2(0,2), ACif(2,2), ACd2(1,2).
-        // No conflict on this card — all three positions are distinct. The export
-        // must preserve each ability's template position so that both the editor
-        // display and the game agree with what is stored in localStorage.
-        //
-        // Regression: a cross-unit cascade used to overwrite ACd2's stored
-        // position (from nith's card where ACf2 also sits at 1,2), making the
-        // editor display 1,2 while localStorage held a different value.
-        assert_eq!(
-            pos("ACd2"),
-            Some((1, 2)),
-            "ACd2 should stay at its template position 1,2"
-        );
-        assert_eq!(
-            pos("ACif"),
-            Some((2, 2)),
-            "ACif should stay at its template position 2,2"
-        );
-
-        // nfsh display (resolve_container): Anh2=0,2, ACif=2,2, ACd2=1,2. No conflicts.
-        // nith display (resolve_container): Anh2=0,2, ACf2=1,2, ACd2 cascades to 2,2.
-        // The export stores ACd2=1,2 (its home position, valid for nfsh). The
-        // display handles the nith conflict on the fly — no write-back needed.
-        assert_eq!(
-            pos("ACf2"),
-            Some((1, 2)),
-            "ACf2 should keep its template position"
-        );
-        assert_eq!(
-            pos("Anh2"),
-            Some((0, 2)),
-            "Anh2 should keep its template position"
-        );
+        let regression_ids = ["Anh2", "ACd2", "ACif", "ACf2"];
+        for ability_id in regression_ids {
+            let after_normalize = normalized_position(ability_id);
+            let after_export = exported_position(ability_id);
+            assert!(
+                after_normalize.is_some(),
+                "{ability_id} must have a Buttonpos after fully_normalize"
+            );
+            assert_eq!(
+                after_normalize, after_export,
+                "{ability_id}: serialized export must match the normalized in-memory position",
+            );
+        }
     }
 
     /// Regenerates CustomKeys.txt from the database. Run this whenever
