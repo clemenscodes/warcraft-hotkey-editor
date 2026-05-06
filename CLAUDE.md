@@ -1,0 +1,140 @@
+# Project rules
+
+This project edits **`CustomKeys.txt`** for Warcraft III: Reforged. It is a
+pure-frontend web app — no server, no database, no cloud.
+
+Two documents define the rules of this project. Both are mandatory reading
+before any non-trivial change:
+
+- `docs/ARCHITECTURE.md` — *where* code lives (the wall between renderer
+  and domain crate, the localStorage source-of-truth model).
+- `docs/RUST_STYLE.md` — *how* Rust code is written (naming, no tuples,
+  private fields, no `as` casts, etc.).
+
+If you skip these and "just patch the bug", you will almost certainly
+violate one of the rules below and reintroduce a bug we already fixed.
+Do not do this.
+
+---
+
+## The wall
+
+There are two halves of this project, and a wall between them. **Do not
+move logic across the wall.** If a change feels like it has to, you are
+solving the wrong problem.
+
+```
+hotkey-editor (wasm, Dioxus)        warcraft-keybinds (pure Rust)
+───────────────────────────         ────────────────────────────
+renders state                       owns state shape
+dispatches commands                 parses, serializes, normalizes
+reads localStorage                  cascades, dedupes, materializes
+writes localStorage                 has 100% test coverage
+no domain logic                     no browser deps
+```
+
+## Hard rules
+
+These are the rules. They are not guidelines. They come from real bugs.
+
+1. **localStorage is the source of truth.** The single key
+   `warcraft-hotkey-editor.custom-keys` holds the full canonical
+   `CustomKeys.txt` text. There is no in-memory state that diverges from
+   it. Every mutation writes to localStorage in the same tick.
+
+2. **Stored state is fully normalized.** The text in localStorage has
+   every cascade resolved, every collision settled, every default
+   materialized. Reading it gives you the final positions and hotkeys.
+   Renderer never re-derives them.
+
+3. **The renderer never computes domain decisions.** No cascade lookup,
+   no collision resolution, no "where would this go", no "what hotkey
+   would this be". If you want one of those, call into
+   `warcraft-keybinds`. Domain calls happen at write time, not at render
+   time.
+
+4. **The renderer never mutates `CustomKeysFile` directly.** All
+   mutations go through named domain commands on the canonical
+   `CustomKeys` facade. UI code never calls `binding.set_*` itself.
+
+5. **Export and preview are `localStorage.getItem(KEY)`.** Nothing more.
+   Do not re-serialize, re-overlay, or re-normalize at export time. If
+   the export is wrong, the bug is in the mutation that produced bad
+   state — fix that.
+
+6. **Boot path:** read localStorage if present, else load the bundled
+   default text, run it through the domain normalize function, write the
+   normalized result back to localStorage, then render.
+
+7. **Imports replace, then normalize.** Upload and template-apply both
+   hand the new text to the domain crate, get a normalized text back,
+   write it to localStorage. No "overlay onto the in-memory copy".
+
+8. **`warcraft-keybinds` is pure Rust.** No `wasm-bindgen`, no
+   `web-sys`, no `dioxus`, no `gloo`. Native cargo test must run on it.
+   Allowed deps: `warcraft-api`, `warcraft-database`, optionally `serde`.
+
+9. **Every domain change ships with tests.** A bug fix starts with a
+   failing test that reproduces the bug. Cascade behavior, collision
+   resolution, duplicate detection, grid-layout application — all
+   covered.
+
+10. **UI state ≠ domain state.** Dialog open, current selection, drag
+    state → UI signals. Hotkey, position, binding fields → CustomKeys.txt.
+
+## Rust style — mandatory
+
+Full rules: `docs/RUST_STYLE.md`. Headlines (every one is enforced):
+
+- **Full semantic names everywhere.** No abbreviations, no single letters,
+  no shortened forms — types, fields, locals, parameters alike.
+- **No section header comments** (`// === Rendering ===`). Split the file
+  instead.
+- **No tuples in any form.** No plain tuples, no tuple structs, no
+  newtypes. Always named structs with named fields.
+- **No `print*` functions.** Implement `Display`, call `println!` at the
+  call site.
+- **Private fields with explicit accessors.** No `pub` fields to skip
+  writing getters/setters.
+- **Assign structs to a variable before passing them.** No inline struct
+  construction in argument position.
+- **No evaluated expressions as arguments.** Bind every method call,
+  field access, or conversion to a named local first; functions receive
+  plain variables only.
+- **No inline numeric type suffixes** (`0u32`, `2.0f32`). Annotate the
+  binding instead.
+- **Prefer struct composition over field copying.** When all fields come
+  from another struct, embed it as a named sub-field.
+- **No `verb_noun` free functions** (`render_hero`, `parse_ability`).
+  Make the noun a struct and the verb a method.
+- **No `as` casts outside `From`/`TryFrom` impl bodies.** Use `From`,
+  `Into`, or `TryFrom` everywhere else.
+
+These apply to every line of new Rust. They also apply to existing code
+you edit — if you touch a function, leave it conformant on the way out
+within the scope of the change. Don't drag in scope-creep cleanups; do
+respect the rules in the lines you write.
+
+## When you start a task
+
+- Re-read `docs/ARCHITECTURE.md` if your change touches state, persistence,
+  cascading, or any "what position is this at?" question.
+- If the task seems to require breaking a rule, stop and surface it to
+  the user. Don't decide unilaterally.
+- If you see a violation while doing unrelated work, say so. Don't expand
+  scope to "fix it while you're there" without asking.
+
+## When you finish a task
+
+- Confirm `moon run :ci` is green.
+- For UI changes, actually open the app in a browser and use the feature.
+  Type checking and tests verify code correctness, not feature
+  correctness.
+- Confirm no new code in `hotkey-editor/` imports from
+  `warcraft_keybinds::cascade` or calls `binding.set_*`. If it does, you
+  added a violator — route the change through the `CustomKeys` facade
+  instead.
+- Re-read your diff against `docs/RUST_STYLE.md`. Common slips to grep
+  for: tuple return types `-> (`, tuple structs `struct \w\+(`, `pub `
+  fields, `as ` casts, `print_` function names, single-letter locals,
+  inline struct literals at call sites, numeric suffixes like `0u32`.
