@@ -345,61 +345,6 @@ mod tests {
         out
     }
 
-    /// Under the global cascade, every ability has exactly one stored
-    /// `Buttonpos`. The render path no longer cascades, so whatever
-    /// is stored is what the editor displays — there is no longer a
-    /// way for localStorage to disagree with the display.
-    ///
-    /// This test pins the invariant: after `fully_normalize`, every
-    /// shared ability used as a regression case in earlier per-unit
-    /// cascade fixes (Anh2, ACd2, ACif, ACf2) has a concrete
-    /// `Buttonpos` value, and that value is what `serialize` writes
-    /// into localStorage.
-    #[test]
-    fn export_positions_match_display_after_template_apply() {
-        use crate::domain::default_config::DefaultConfig;
-        use warcraft_keybinds::ButtonPosition;
-        use warcraft_keybinds::CustomKeysFile;
-        use warcraft_keybinds::cascade::fully_normalize;
-
-        let baseline = DefaultConfig::content();
-
-        let mut loaded = CustomKeysFile::from(baseline);
-        fully_normalize(&mut loaded);
-
-        let export_content = warcraft_keybinds::export::serialize(&loaded, baseline);
-        let export_file = CustomKeysFile::from(export_content.as_str());
-
-        let normalized_position = |id: &str| -> Option<ButtonPosition> {
-            let binding = loaded.binding(id)?;
-            let position_ref = binding.button_position()?;
-            let column_value = position_ref.column();
-            let row_value = position_ref.row();
-            Some(ButtonPosition::new(column_value, row_value))
-        };
-        let exported_position = |id: &str| -> Option<ButtonPosition> {
-            let binding = export_file.binding(id)?;
-            let position_ref = binding.button_position()?;
-            let column_value = position_ref.column();
-            let row_value = position_ref.row();
-            Some(ButtonPosition::new(column_value, row_value))
-        };
-
-        let regression_ids = ["Anh2", "ACd2", "ACif", "ACf2"];
-        for ability_id in regression_ids {
-            let after_normalize = normalized_position(ability_id);
-            let after_export = exported_position(ability_id);
-            assert!(
-                after_normalize.is_some(),
-                "{ability_id} must have a Buttonpos after fully_normalize"
-            );
-            assert_eq!(
-                after_normalize, after_export,
-                "{ability_id}: serialized export must match the normalized in-memory position",
-            );
-        }
-    }
-
     /// Regenerates CustomKeys.txt from the database. Run this whenever
     /// warcraft-database changes to keep the default template in sync.
     #[test]
