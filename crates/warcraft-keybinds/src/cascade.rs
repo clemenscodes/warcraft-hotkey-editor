@@ -115,8 +115,7 @@ pub fn resolved_for(
     custom_keys: Option<&CustomKeysFile>,
     is_research_context: bool,
 ) -> Option<ButtonPosition> {
-    let resolved_entries =
-        resolve_container(candidate_slots, custom_keys, is_research_context);
+    let resolved_entries = resolve_container(candidate_slots, custom_keys, is_research_context);
     let matching_entry = resolved_entries
         .iter()
         .find(|(slot_id, _)| slots_match(slot_id, slot))?;
@@ -164,7 +163,10 @@ pub fn resolve_container(
     let mut reserved_positions: Vec<ButtonPosition> = entries
         .iter()
         .filter(|e| {
-            matches!(e.slot_id, GridSlotId::Ability(_) | GridSlotId::AbilityOff(_))
+            matches!(
+                e.slot_id,
+                GridSlotId::Ability(_) | GridSlotId::AbilityOff(_)
+            )
         })
         .filter(|e| has_custom_position(&e.slot_id, custom_keys, is_research_context))
         .filter_map(|e| current_for(&e.slot_id, custom_keys, is_research_context))
@@ -183,13 +185,12 @@ pub fn resolve_container(
         let explicit_position = current_for(&entry.slot_id, custom_keys, is_research_context);
         // Release this ability's reservation before computing the cascade so
         // the ability itself is not blocked from its own preferred slot.
-        if let Some(pos) = explicit_position {
-            if let Some(idx) = reserved_positions
+        if let Some(pos) = explicit_position
+            && let Some(idx) = reserved_positions
                 .iter()
                 .position(|p| p.column() == pos.column() && p.row() == pos.row())
-            {
-                reserved_positions.remove(idx);
-            }
+        {
+            reserved_positions.remove(idx);
         }
         let assigned = match explicit_position {
             Some(pos) if position_occupied(&occupied_positions, pos) => {
@@ -344,8 +345,9 @@ pub fn next_free_cell_not_reserved(
     occupied_positions: &[ButtonPosition],
     reserved_positions: &[ButtonPosition],
 ) -> Option<ButtonPosition> {
-    let is_blocked =
-        |c: ButtonPosition| position_occupied(occupied_positions, c) || position_occupied(reserved_positions, c);
+    let is_blocked = |c: ButtonPosition| {
+        position_occupied(occupied_positions, c) || position_occupied(reserved_positions, c)
+    };
     for column in 0..GRID_COLUMNS {
         let candidate = ButtonPosition::new(column, preferred_row);
         if !is_blocked(candidate) {

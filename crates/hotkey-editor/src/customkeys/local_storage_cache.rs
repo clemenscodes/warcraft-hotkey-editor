@@ -1,6 +1,5 @@
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
-use crate::customkeys::explicit_export::ExplicitExport;
 use crate::domain::grid_layout::GridLayout;
 
 const STORAGE_KEY: &str = "warcraft-hotkey-editor.custom-keys";
@@ -14,13 +13,18 @@ const GRID_LAYOUT_STORAGE_KEY: &str = "warcraft-hotkey-editor.grid-layout";
 pub(crate) struct LocalStorageCache;
 
 impl LocalStorageCache {
-    pub(crate) fn load() -> Option<CustomKeysFile> {
-        storage_get(STORAGE_KEY).map(|contents| CustomKeysFile::from(contents.as_str()))
+    /// Read the canonical CustomKeys.txt text from localStorage.
+    /// Returns `None` on first boot before anything has been persisted.
+    pub(crate) fn load_text() -> Option<String> {
+        storage_get(STORAGE_KEY)
     }
 
-    pub(crate) fn save_export(file: &CustomKeysFile) {
-        let contents = ExplicitExport::serialize(file);
-        storage_set(STORAGE_KEY, &contents);
+    /// Persist a `CustomKeys` instance to localStorage as its canonical
+    /// normalized text. This is the only legal write path — every
+    /// mutation in the app routes through here.
+    pub(crate) fn save_custom_keys(custom_keys: &CustomKeys) {
+        let canonical_text = custom_keys.to_text();
+        storage_set(STORAGE_KEY, canonical_text);
     }
 
     pub(crate) fn load_grid_layout() -> Option<GridLayout> {

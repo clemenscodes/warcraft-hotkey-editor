@@ -1,9 +1,8 @@
 use dioxus::prelude::{ReadableExt, Signal, WritableExt};
 use warcraft_api::ButtonPosition;
-use warcraft_keybinds::CustomKeysFile;
 use warcraft_keybinds::cascade::{current_for, current_for_ability_off, resolved_for, slots_match};
+use warcraft_keybinds::{CustomKeys, CustomKeysFile};
 
-use crate::customkeys::explicit_export::ExplicitExport;
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
 use crate::domain::grid_layout::GridLayout;
 use crate::domain::grid_slot::GridSlotId;
@@ -275,11 +274,12 @@ impl Positions {
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
 
-        // Serialize → normalize → parse to get the same positions localStorage has.
-        // Reading raw positions from the signal would give pre-cascade values for
-        // abilities that share positions across multiple units.
-        let normalized_content = ExplicitExport::serialize(file);
-        let normalized_file = CustomKeysFile::from(normalized_content.as_str());
+        // Round-trip through the canonical facade to get cascade-resolved
+        // positions. Reading raw positions from the in-memory file would give
+        // pre-cascade values for abilities shared across multiple units.
+        let canonical_custom_keys = CustomKeys::from_file(file);
+        let canonical_text = canonical_custom_keys.to_text();
+        let normalized_file = CustomKeysFile::from(canonical_text);
 
         let ability_ids: Vec<String> = file
             .bindings_in_order()

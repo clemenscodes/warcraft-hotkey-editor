@@ -1,9 +1,8 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeys, CustomKeysFile};
 
 use crate::components::dialog_header::DialogHeader;
-use crate::customkeys::explicit_export::ExplicitExport;
 
 #[component]
 pub(crate) fn PreviewDialog(
@@ -12,10 +11,14 @@ pub(crate) fn PreviewDialog(
 ) -> Element {
     let preview_text: String = {
         let read_guard = loaded_keys.read();
-        read_guard
-            .as_ref()
-            .map(ExplicitExport::serialize)
-            .unwrap_or_default()
+        match read_guard.as_ref() {
+            Some(file) => {
+                let custom_keys = CustomKeys::from_file(file);
+                let canonical_text = custom_keys.to_text();
+                canonical_text.to_string()
+            }
+            None => String::new(),
+        }
     };
     rsx! {
         DialogRoot {

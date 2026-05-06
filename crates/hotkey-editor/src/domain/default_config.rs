@@ -311,15 +311,31 @@ mod tests {
         // Regression: a cross-unit cascade used to overwrite ACd2's stored
         // position (from nith's card where ACf2 also sits at 1,2), making the
         // editor display 1,2 while localStorage held a different value.
-        assert_eq!(pos("ACd2"), Some((1, 2)), "ACd2 should stay at its template position 1,2");
-        assert_eq!(pos("ACif"), Some((2, 2)), "ACif should stay at its template position 2,2");
+        assert_eq!(
+            pos("ACd2"),
+            Some((1, 2)),
+            "ACd2 should stay at its template position 1,2"
+        );
+        assert_eq!(
+            pos("ACif"),
+            Some((2, 2)),
+            "ACif should stay at its template position 2,2"
+        );
 
         // nfsh display (resolve_container): Anh2=0,2, ACif=2,2, ACd2=1,2. No conflicts.
         // nith display (resolve_container): Anh2=0,2, ACf2=1,2, ACd2 cascades to 2,2.
         // The export stores ACd2=1,2 (its home position, valid for nfsh). The
         // display handles the nith conflict on the fly — no write-back needed.
-        assert_eq!(pos("ACf2"), Some((1, 2)), "ACf2 should keep its template position");
-        assert_eq!(pos("Anh2"), Some((0, 2)), "Anh2 should keep its template position");
+        assert_eq!(
+            pos("ACf2"),
+            Some((1, 2)),
+            "ACf2 should keep its template position"
+        );
+        assert_eq!(
+            pos("Anh2"),
+            Some((0, 2)),
+            "Anh2 should keep its template position"
+        );
     }
 
     /// Regenerates CustomKeys.txt from the database. Run this whenever

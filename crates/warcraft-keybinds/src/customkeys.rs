@@ -1,8 +1,7 @@
 use crate::CustomKeysFile;
 use crate::export::serialize;
 
-const BUNDLED_BASELINE: &str =
-    include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+const BUNDLED_BASELINE: &str = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
 
 /// Canonical, fully-normalized CustomKeys.txt state.
 ///
@@ -37,6 +36,14 @@ impl CustomKeys {
     pub fn from_text(input_text: &str) -> Self {
         let overlay = CustomKeysFile::from(input_text);
         Self::from_overlay(&overlay)
+    }
+
+    /// Build state from an already-parsed `CustomKeysFile`. Used at
+    /// the persistence boundary: callers who have a mutated file in
+    /// hand pass it here to obtain the canonical normalized text to
+    /// write into localStorage.
+    pub fn from_file(file: &CustomKeysFile) -> Self {
+        Self::from_overlay(file)
     }
 
     fn from_overlay(overlay: &CustomKeysFile) -> Self {

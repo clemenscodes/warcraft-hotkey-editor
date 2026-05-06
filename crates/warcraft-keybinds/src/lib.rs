@@ -1729,16 +1729,28 @@ mod cascade_tests {
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let mut file = crate::CustomKeysFile::from(baseline);
 
-        let before_anh2 = file.binding("Anh2").and_then(|b| b.button_position().copied());
-        let before_acd2 = file.binding("ACd2").and_then(|b| b.button_position().copied());
-        let before_acif = file.binding("ACif").and_then(|b| b.button_position().copied());
+        let before_anh2 = file
+            .binding("Anh2")
+            .and_then(|b| b.button_position().copied());
+        let before_acd2 = file
+            .binding("ACd2")
+            .and_then(|b| b.button_position().copied());
+        let before_acif = file
+            .binding("ACif")
+            .and_then(|b| b.button_position().copied());
         eprintln!("BEFORE: Anh2={before_anh2:?} ACd2={before_acd2:?} ACif={before_acif:?}");
 
         fully_normalize(&mut file);
 
-        let acd2 = file.binding("ACd2").and_then(|b| b.button_position().copied());
-        let acif = file.binding("ACif").and_then(|b| b.button_position().copied());
-        let anh2 = file.binding("Anh2").and_then(|b| b.button_position().copied());
+        let acd2 = file
+            .binding("ACd2")
+            .and_then(|b| b.button_position().copied());
+        let acif = file
+            .binding("ACif")
+            .and_then(|b| b.button_position().copied());
+        let anh2 = file
+            .binding("Anh2")
+            .and_then(|b| b.button_position().copied());
         eprintln!("AFTER:  Anh2={anh2:?} ACd2={acd2:?} ACif={acif:?}");
 
         assert_eq!(
@@ -1763,9 +1775,15 @@ mod cascade_tests {
         let slots = vec![GridSlotId::ability("Ahrl"), GridSlotId::ability("AHbz")];
         write_container_resolved(&mut file, &slots, false);
 
-        let ahrl_btn = file.binding("Ahrl").and_then(|b| b.button_position().copied());
-        let ahbz_btn = file.binding("AHbz").and_then(|b| b.button_position().copied());
-        let ahbz_unbtn = file.binding("AHbz").and_then(|b| b.unbutton_position().copied());
+        let ahrl_btn = file
+            .binding("Ahrl")
+            .and_then(|b| b.button_position().copied());
+        let ahbz_btn = file
+            .binding("AHbz")
+            .and_then(|b| b.button_position().copied());
+        let ahbz_unbtn = file
+            .binding("AHbz")
+            .and_then(|b| b.unbutton_position().copied());
 
         // Stored Buttonpos values are NOT cascaded — write-back is intentionally omitted.
         assert_eq!(ahrl_btn, Some(crate::ButtonPosition::new(0, 0)));

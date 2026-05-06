@@ -3,7 +3,7 @@ use std::collections::{HashMap, HashSet};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::ToastProvider;
 use warcraft_api::{Race, UnitKind};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeys, CustomKeysFile};
 
 use crate::components::app_footer::AppFooter;
 use crate::components::app_header::AppHeader;
@@ -13,13 +13,10 @@ use crate::components::preview_dialog::PreviewDialog;
 use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
-use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::local_storage_cache::LocalStorageCache;
-use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::domain::positions::Positions;
 use crate::domain::races::RaceLabels;
 use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
@@ -32,18 +29,35 @@ const FAVICON: Asset = asset!("/assets/favicon.svg");
 
 #[component]
 pub(crate) fn App() -> Element {
+    // Boot path: localStorage is the source of truth. If an entry
+    // exists, route it through the canonical normalize pipeline; if
+    // not, build the default. Either way, write the normalized text
+    // back so the entry is always present and ready for the
+    // persistence effect below to compare against.
     let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
-        let mut baseline = CustomKeysFile::from(baseline_content());
-        if let Some(cached) = LocalStorageCache::load() {
-            UploadOverlay::apply(&mut baseline, &cached);
-        }
-        Positions::fully_normalize(&mut baseline);
-        Some(baseline)
+        let stored_text = LocalStorageCache::load_text();
+        let initial_custom_keys = match stored_text {
+            Some(stored) => CustomKeys::from_text(&stored),
+            None => CustomKeys::from_default(),
+        };
+        LocalStorageCache::save_custom_keys(&initial_custom_keys);
+        let canonical_text = initial_custom_keys.to_text();
+        let parsed_initial = CustomKeysFile::from(canonical_text);
+        Some(parsed_initial)
     });
+    // Persistence: every signal mutation re-runs the canonical
+    // pipeline through the facade and writes the normalized text to
+    // localStorage. This is the only write path. Mutation sites
+    // continue to mutate the in-memory file directly until Phase 4–5
+    // of the refactor; the facade ensures whatever they produce is
+    // re-normalized before it lands in storage.
     use_effect(move || {
-        if let Some(file) = loaded_keys.read().as_ref() {
-            LocalStorageCache::save_export(file);
-        }
+        let read_guard = loaded_keys.read();
+        let Some(file) = read_guard.as_ref() else {
+            return;
+        };
+        let custom_keys = CustomKeys::from_file(file);
+        LocalStorageCache::save_custom_keys(&custom_keys);
     });
     // Grid layout lives in its own local-storage entry; importing a
     // CustomKeys file or applying a template never touches it, and the
