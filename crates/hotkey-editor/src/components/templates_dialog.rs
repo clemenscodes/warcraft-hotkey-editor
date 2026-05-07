@@ -5,7 +5,6 @@ use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::dialog_header::DialogHeader;
 use crate::customkeys::baseline::baseline_content;
-use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::domain::grid_templates::ResolvedTemplate;
@@ -50,7 +49,7 @@ pub(crate) fn TemplatesDialog(
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
                                             let mut baseline = CustomKeysFile::from(baseline_content());
-                                            UploadOverlay::apply(&mut baseline, &parsed_template);
+                                            baseline.extend(parsed_template);
                                             loaded_keys.set(Some(baseline));
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::{CustomKeys, CustomKeysFile};
+use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::dialog_header::DialogHeader;
 
@@ -12,11 +12,7 @@ pub(crate) fn PreviewDialog(
     let preview_text: String = {
         let read_guard = loaded_keys.read();
         match read_guard.as_ref() {
-            Some(file) => {
-                let custom_keys = CustomKeys::from(file);
-                let canonical_text = custom_keys.to_text();
-                canonical_text.to_string()
-            }
+            Some(file) => file.normalize().to_string(),
             None => String::new(),
         }
     };

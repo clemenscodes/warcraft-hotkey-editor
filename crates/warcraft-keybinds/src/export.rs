@@ -5,21 +5,30 @@ use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::{ButtonPosition, CustomKeysFile};
 
+const BUNDLED_BASELINE: &str = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
 const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
 
-/// Serialize a user's loaded file into a complete CustomKeys.txt, blending
-/// it over `baseline` (the stock default hotkeys file content) and
-/// materializing missing button positions from the game database.
-pub fn serialize(loaded_file: &CustomKeysFile, baseline: &str) -> String {
-    let mut export_file = CustomKeysFile::from(baseline);
-    export_file.overlay(loaded_file);
-    export_file.materialize_default_positions();
-    export_file.materialize_shop_item_positions();
-    export_file.to_file_content()
-}
-
 impl CustomKeysFile {
+    pub fn normalize(&self) -> Self {
+        let mut result = Self::from(BUNDLED_BASELINE);
+        let overlay_clone = self.clone();
+        result.extend(overlay_clone);
+        result.materialize_default_positions();
+        result.materialize_shop_item_positions();
+        result
+    }
+
+    /// Blend `self` over `baseline` and materialize all missing positions.
+    pub fn serialize(&self, baseline: &str) -> String {
+        let mut export_file = CustomKeysFile::from(baseline);
+        let overlay_clone = self.clone();
+        export_file.extend(overlay_clone);
+        export_file.materialize_default_positions();
+        export_file.materialize_shop_item_positions();
+        export_file.to_string()
+    }
+
     fn materialize_default_positions(&mut self) {
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id_value = object_id.value();
@@ -98,10 +107,9 @@ impl CustomKeysFile {
             let mut occupied_positions: HashSet<ButtonPosition> = HashSet::new();
             for item_id_object in sell_items {
                 let item_id = item_id_object.value();
-                let existing_position = self
-                    .binding(item_id)
-                    .and_then(|item_binding| item_binding.button_position())
-                    .copied();
+                let item_binding = self.binding(item_id);
+                let position_ref = item_binding.and_then(|b| b.button_position());
+                let existing_position = position_ref.copied();
                 if let Some(position) = existing_position {
                     occupied_positions.insert(position);
                 }
@@ -109,10 +117,9 @@ impl CustomKeysFile {
 
             for item_id_object in sell_items {
                 let item_id = item_id_object.value();
-                let has_position = self
-                    .binding(item_id)
-                    .and_then(|item_binding| item_binding.button_position())
-                    .is_some();
+                let item_binding = self.binding(item_id);
+                let position_ref = item_binding.and_then(|b| b.button_position());
+                let has_position = position_ref.is_some();
                 if has_position {
                     continue;
                 }

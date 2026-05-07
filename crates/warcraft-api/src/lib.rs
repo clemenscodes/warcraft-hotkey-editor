@@ -1500,6 +1500,12 @@ impl WarcraftObjectId {
     }
 }
 
+impl From<&'static str> for WarcraftObjectId {
+    fn from(value: &'static str) -> Self {
+        Self::new(value)
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 pub struct WarcraftObjectText {
     tip_levels: &'static [&'static str],
@@ -1741,9 +1747,7 @@ impl WarcraftObject {
                 return false;
             }
             let normalized = icon_path.trim().to_ascii_lowercase();
-            !ICON_PATH_BLACKLIST
-                .iter()
-                .any(|blacklisted| *blacklisted == normalized.as_str())
+            !ICON_PATH_BLACKLIST.contains(&normalized.as_str())
         })
     }
 

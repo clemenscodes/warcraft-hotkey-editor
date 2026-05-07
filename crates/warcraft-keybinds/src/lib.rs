@@ -3,11 +3,9 @@ pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObject
 pub mod builder;
 pub mod building;
 pub mod catalog;
-pub mod customkeys;
 pub mod export;
 pub mod file;
 pub mod model;
-pub mod overlay;
 pub mod parser;
 pub mod slot;
 pub mod unit_slots;
@@ -15,7 +13,6 @@ pub mod unit_slots;
 pub use builder::{AbilityBindingBuilder, CommandBindingBuilder, CustomKeysFileBuilder};
 pub use building::BuildingTraits;
 pub use catalog::CommandCatalog;
-pub use customkeys::CustomKeys;
 pub use file::CustomKeysFile;
 pub use model::{
     AbilityBinding, AbilityModifier, BindingEntry, ButtonPosition, CommandBinding, CommandEntry,
@@ -119,7 +116,7 @@ mod tests {
     fn round_trip_outputs_lowercase_section_id() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,0\n\n";
         let file = CustomKeysFile::from(input);
-        assert!(file.to_file_content().contains("[ahhb]"));
+        assert!(file.to_string().contains("[ahhb]"));
     }
 
     #[test]
@@ -137,7 +134,7 @@ mod tests {
     fn untouched_sections_round_trip_byte_identically() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n//inline comment\nIcon=ReplaceableTextures\\CommandButtons\\BTNAvatar.blp\n\n[AHbz]\nHotkey=W\nButtonpos=1,2\n\n";
         let file = CustomKeysFile::from(input);
-        let output = file.to_file_content();
+        let output = file.to_string();
         assert!(output.contains("[ahhb]"));
         assert!(output.contains("BTNAvatar.blp"));
         assert!(output.contains("[ahbz]"));
@@ -165,7 +162,7 @@ mod tests {
         file.binding_or_default_mut("AHhb")
             .unwrap()
             .set_hotkey(Some(hotkey_r));
-        let output = file.to_file_content();
+        let output = file.to_string();
         assert!(output.contains("Hotkey=R"), "mutated hotkey must appear");
         assert!(
             output.contains("Hotkey=W"),
@@ -217,7 +214,7 @@ mod tests {
     fn system_section_round_trips() {
         let input = "[itm1]\nHotkey=9\nGameCommand=1\n\n";
         let file = CustomKeysFile::from(input);
-        let output = file.to_file_content();
+        let output = file.to_string();
         assert!(output.contains("[itm1]"));
         assert!(output.contains("Hotkey=9"));
         assert!(output.contains("GameCommand=1"));
@@ -515,7 +512,7 @@ mod tests {
     fn round_trip_of_baseline_preserves_known_sections() {
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let file = CustomKeysFile::from(baseline);
-        let output = file.to_file_content();
+        let output = file.to_string();
         let known_sections = [
             "[cmdattack]",
             "[cmdmove]",
@@ -556,11 +553,11 @@ mod tests {
 }
 
 #[cfg(test)]
-mod overlay_tests {
+mod extend_tests {
     use super::*;
 
     #[test]
-    fn overlay_copies_hotkey_from_uploaded_to_target() {
+    fn extend_copies_hotkey_from_source_to_target() {
         let target_hotkey = Hotkey::from('Q');
         let uploaded_hotkey = Hotkey::from('W');
         let target_binding = AbilityBinding::builder().hotkey(target_hotkey).build();
@@ -571,7 +568,7 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .ability("Ahrl", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         let expected_hotkey = Hotkey::Letter('W');
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
@@ -580,7 +577,7 @@ mod overlay_tests {
     }
 
     #[test]
-    fn overlay_copies_button_position() {
+    fn extend_copies_button_position() {
         let target_position = ButtonPosition::new(0, 0);
         let uploaded_position = ButtonPosition::new(2, 1);
         let target_binding = AbilityBinding::builder()
@@ -595,7 +592,7 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .ability("Ahrl", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         let position = target
             .binding("Ahrl")
             .and_then(|binding| binding.button_position())
@@ -604,7 +601,7 @@ mod overlay_tests {
     }
 
     #[test]
-    fn overlay_does_not_overwrite_system_entries() {
+    fn extend_does_not_overwrite_system_entries() {
         let system_binding =
             SystemBinding::new(Hotkey::VirtualKey(27), SystemKeybindClass::Game, None);
         let mut target = CustomKeysFile::builder()
@@ -615,12 +612,12 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .ability("IsS1", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         assert!(target.system("IsS1").is_some());
     }
 
     #[test]
-    fn overlay_skips_absent_fields() {
+    fn extend_skips_absent_fields() {
         let target_hotkey = Hotkey::from('Q');
         let uploaded_position = ButtonPosition::new(1, 0);
         let target_binding = AbilityBinding::builder().hotkey(target_hotkey).build();
@@ -633,7 +630,7 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .ability("Ahrl", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
@@ -647,7 +644,7 @@ mod overlay_tests {
     }
 
     #[test]
-    fn overlay_copies_command_hotkey() {
+    fn extend_copies_command_hotkey() {
         let target_hotkey = Hotkey::from('A');
         let uploaded_hotkey = Hotkey::from('G');
         let target_binding = CommandBinding::builder().hotkey(target_hotkey).build();
@@ -658,7 +655,7 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .command("CmdAttack", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         let expected_hotkey = Hotkey::Letter('G');
         assert_eq!(
             target
@@ -669,7 +666,7 @@ mod overlay_tests {
     }
 
     #[test]
-    fn overlay_is_case_insensitive_for_ids() {
+    fn extend_is_case_insensitive_for_ids() {
         let target_hotkey = Hotkey::from('Q');
         let uploaded_hotkey = Hotkey::from('E');
         let target_binding = AbilityBinding::builder().hotkey(target_hotkey).build();
@@ -680,7 +677,7 @@ mod overlay_tests {
         let uploaded = CustomKeysFile::builder()
             .ability("ahrl", uploaded_binding)
             .build();
-        target.overlay(&uploaded);
+        target.extend(uploaded);
         let expected_hotkey = Hotkey::Letter('E');
         assert_eq!(
             target.binding("AHrl").and_then(|binding| binding.hotkey()),
@@ -692,13 +689,12 @@ mod overlay_tests {
 #[cfg(test)]
 mod export_tests {
     use crate::CustomKeysFile;
-    use crate::export::serialize;
 
     #[test]
     fn empty_overlay_on_minimal_baseline_round_trips() {
         let baseline = "[Ahrl]\nHotkey=Q\nButtonpos=0,0\n\n";
         let loaded = CustomKeysFile::from("");
-        let output = serialize(&loaded, baseline);
+        let output = loaded.serialize(baseline);
         assert!(
             output.contains("[ahrl]"),
             "baseline section should be present in output"
@@ -710,7 +706,7 @@ mod export_tests {
     fn overlay_values_appear_in_export() {
         let baseline = "[Ahrl]\nHotkey=Q\n\n";
         let loaded = CustomKeysFile::from("[Ahrl]\nHotkey=W\n\n");
-        let output = serialize(&loaded, baseline);
+        let output = loaded.serialize(baseline);
         assert!(output.contains("Hotkey=W"), "user hotkey override must win");
     }
 
@@ -718,7 +714,7 @@ mod export_tests {
     fn export_with_real_baseline_contains_known_sections() {
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let loaded = CustomKeysFile::from("");
-        let output = serialize(&loaded, baseline);
+        let output = loaded.serialize(baseline);
         for section in &["[hpal]", "[cmdattack]", "[cmdmove]"] {
             assert!(output.contains(section), "export should contain {section}");
         }
@@ -730,7 +726,7 @@ mod export_tests {
         // Starting from an empty overlay, the export should inject it.
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let loaded = CustomKeysFile::from("");
-        let output = serialize(&loaded, baseline);
+        let output = loaded.serialize(baseline);
         // Find the [Ahrl] section and check Buttonpos is present.
         let after_ahrl = output
             .split("[ahrl]")
@@ -750,7 +746,7 @@ mod export_tests {
         // them positions so they appear in the command grid.
         let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
         let loaded = CustomKeysFile::from("");
-        let output = serialize(&loaded, baseline);
+        let output = loaded.serialize(baseline);
 
         for item_id in &["bspd", "spro", "pinv"] {
             let section_marker = format!("[{item_id}]");
@@ -766,5 +762,69 @@ mod export_tests {
                 "[{item_id}] must have a Buttonpos assigned by shop item materialization"
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod normalize_tests {
+    use crate::CustomKeysFile;
+    use crate::model::Hotkey;
+
+    #[test]
+    fn normalize_produces_non_empty_text() {
+        let normalized = CustomKeysFile::from("").normalize();
+        let normalized_text = normalized.to_string();
+        assert!(!normalized_text.is_empty());
+    }
+
+    #[test]
+    fn normalize_includes_known_baseline_sections() {
+        let normalized = CustomKeysFile::from("").normalize();
+        let normalized_text = normalized.to_string();
+        assert!(normalized_text.contains("[hpal]"));
+        assert!(normalized_text.contains("[cmdattack]"));
+    }
+
+    #[test]
+    fn normalize_is_idempotent() {
+        let first_text = CustomKeysFile::from("").normalize().to_string();
+        let second_text = CustomKeysFile::from(first_text.as_str())
+            .normalize()
+            .to_string();
+        assert_eq!(first_text, second_text);
+    }
+
+    #[test]
+    fn normalize_includes_known_ability() {
+        let normalized = CustomKeysFile::from("").normalize();
+        let hpal_present = normalized.binding("Hpal").is_some();
+        assert!(hpal_present);
+    }
+
+    #[test]
+    fn normalize_overlays_user_hotkey_on_baseline() {
+        let user_input = "[Ahrl]\nHotkey=Z\n\n";
+        let normalized = CustomKeysFile::from(user_input).normalize();
+        let ahrl_binding = normalized.binding("Ahrl");
+        let ahrl_hotkey = ahrl_binding.and_then(|binding| binding.hotkey());
+        let expected_hotkey = Hotkey::Letter('Z');
+        assert_eq!(ahrl_hotkey, Some(&expected_hotkey));
+    }
+
+    #[test]
+    fn normalize_materializes_button_position_for_known_ability() {
+        let normalized = CustomKeysFile::from("").normalize();
+        let normalized_text = normalized.to_string();
+        let ahrl_marker = "[ahrl]";
+        let ahrl_section_start = normalized_text
+            .find(ahrl_marker)
+            .expect("baseline must contain [ahrl]");
+        let after_ahrl = &normalized_text[ahrl_section_start + ahrl_marker.len()..];
+        let next_section_length = after_ahrl.find('[').unwrap_or(after_ahrl.len());
+        let ahrl_section = &after_ahrl[..next_section_length];
+        assert!(
+            ahrl_section.contains("Buttonpos="),
+            "[Ahrl] section must have a concrete Buttonpos after normalize",
+        );
     }
 }

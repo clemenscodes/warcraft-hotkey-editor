@@ -6,6 +6,31 @@ use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 use crate::file::CustomKeysFile;
 use crate::model::{SectionAccumulator, SectionKind, WarcraftKeybinding};
 
+fn parse_section_id(line: &str) -> Option<String> {
+    let without_brackets = line.strip_prefix('[')?.strip_suffix(']')?;
+    let section_id = without_brackets.trim();
+    if section_id.is_empty() {
+        None
+    } else {
+        Some(section_id.to_string())
+    }
+}
+
+fn flush_section(
+    current_key: &mut Option<String>,
+    accumulator: &mut Option<SectionAccumulator>,
+    entries: &mut BTreeMap<String, WarcraftKeybinding>,
+) {
+    let maybe_key = current_key.take();
+    let maybe_accumulated = accumulator.take();
+    if let Some(key) = maybe_key
+        && let Some(accumulated) = maybe_accumulated
+    {
+        let binding = WarcraftKeybinding::from(accumulated);
+        entries.insert(key, binding);
+    }
+}
+
 impl SectionKind {
     fn for_section_id(id: &str) -> Option<Self> {
         let lowercase = id.to_ascii_lowercase();
@@ -42,19 +67,6 @@ impl From<&str> for CustomKeysFile {
         let mut current_key: Option<String> = None;
         let mut accumulator: Option<SectionAccumulator> = None;
 
-        let flush = |current_key: &mut Option<String>,
-                     accumulator: &mut Option<SectionAccumulator>,
-                     entries: &mut BTreeMap<String, WarcraftKeybinding>| {
-            let maybe_key = current_key.take();
-            let maybe_accumulated = accumulator.take();
-            if let Some(key) = maybe_key {
-                if let Some(accumulated) = maybe_accumulated {
-                    let binding = WarcraftKeybinding::from(accumulated);
-                    entries.insert(key, binding);
-                }
-            }
-        };
-
         for line in text.lines() {
             let trimmed = line.trim();
             let is_blank = trimmed.is_empty();
@@ -63,11 +75,11 @@ impl From<&str> for CustomKeysFile {
             let header = if is_blank || is_comment {
                 None
             } else {
-                SectionAccumulator::section_id_from(trimmed)
+                parse_section_id(trimmed)
             };
 
             if let Some(original_id) = header {
-                flush(&mut current_key, &mut accumulator, &mut entries);
+                flush_section(&mut current_key, &mut accumulator, &mut entries);
 
                 let key = original_id.to_lowercase();
                 if entries.contains_key(&key) {
@@ -90,7 +102,7 @@ impl From<&str> for CustomKeysFile {
             }
         }
 
-        flush(&mut current_key, &mut accumulator, &mut entries);
+        flush_section(&mut current_key, &mut accumulator, &mut entries);
 
         CustomKeysFile::from_parts(entries)
     }

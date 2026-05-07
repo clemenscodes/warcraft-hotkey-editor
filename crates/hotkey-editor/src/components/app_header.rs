@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::{CustomKeys, CustomKeysFile};
+use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::download_info_dialog::DownloadInfoDialog;
@@ -271,9 +271,7 @@ pub(crate) fn AppHeader(
                     let serialized = {
                         let read_guard = loaded_keys.read();
                         let Some(file) = read_guard.as_ref() else { return };
-                        let custom_keys = CustomKeys::from(file);
-                        let canonical_text = custom_keys.to_text();
-                        canonical_text.to_string()
+                        file.normalize().to_string()
                     };
                     BlobDownload::trigger("CustomKeys.txt", &serialized);
                 },

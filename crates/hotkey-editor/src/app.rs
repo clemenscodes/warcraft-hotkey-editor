@@ -3,7 +3,7 @@ use std::collections::{HashMap, HashSet};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::ToastProvider;
 use warcraft_api::{Race, UnitKind};
-use warcraft_keybinds::{CustomKeys, CustomKeysFile};
+use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::app_footer::AppFooter;
 use crate::components::app_header::AppHeader;
@@ -36,14 +36,13 @@ pub(crate) fn App() -> Element {
     // persistence effect below to compare against.
     let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
         let stored_text = LocalStorageCache::load_text();
-        let initial_custom_keys = match stored_text {
-            Some(stored) => CustomKeys::from(stored.as_str()),
-            None => CustomKeys::from_default(),
+        let initial_file = match stored_text {
+            Some(stored) => CustomKeysFile::from(stored.as_str()).normalize(),
+            None => CustomKeysFile::from("").normalize(),
         };
-        LocalStorageCache::save_custom_keys(&initial_custom_keys);
-        let canonical_text = initial_custom_keys.to_text();
-        let parsed_initial = CustomKeysFile::from(canonical_text);
-        Some(parsed_initial)
+        let canonical_text = initial_file.to_string();
+        LocalStorageCache::save_text(&canonical_text);
+        Some(initial_file)
     });
     // Persistence: every signal mutation re-runs the canonical
     // pipeline through the facade and writes the normalized text to
@@ -56,8 +55,9 @@ pub(crate) fn App() -> Element {
         let Some(file) = read_guard.as_ref() else {
             return;
         };
-        let custom_keys = CustomKeys::from(file);
-        LocalStorageCache::save_custom_keys(&custom_keys);
+        let normalized = file.normalize();
+        let canonical_text = normalized.to_string();
+        LocalStorageCache::save_text(&canonical_text);
     });
     // Grid layout lives in its own local-storage entry; importing a
     // CustomKeys file or applying a template never touches it, and the

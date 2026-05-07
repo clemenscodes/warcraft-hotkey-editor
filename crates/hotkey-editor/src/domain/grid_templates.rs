@@ -6,7 +6,6 @@ use warcraft_keybinds::CustomKeysFile;
 use warcraft_api::UnitKind;
 
 use crate::customkeys::baseline::baseline_content;
-use crate::customkeys::upload_overlay::UploadOverlay;
 use crate::domain::default_config::DefaultConfig;
 use crate::domain::unit_kind::UnitKindHelpers;
 
@@ -118,7 +117,7 @@ impl ResolvedTemplate {
                 let parsed_file = CustomKeysFile::from(template.content());
                 let derived_grid = GridLayout::derived_from(&parsed_file);
                 let mut preview_file = CustomKeysFile::from(baseline_content());
-                UploadOverlay::apply(&mut preview_file, &parsed_file);
+                preview_file.extend(parsed_file);
                 let command_card_cells = CellGrid::populate(&preview_file, command_slots, false);
                 let research_menu_cells = CellGrid::populate(&preview_file, research_slots, true);
                 ResolvedTemplate {

@@ -20,9 +20,21 @@ impl GridSlotId {
 
     pub fn as_str(&self) -> &str {
         match self {
-            Self::Ability(value) => value.as_str(),
-            Self::AbilityOff(value) => value.as_str(),
-            Self::Command(value) => value.as_str(),
+            Self::Ability(value) | Self::AbilityOff(value) | Self::Command(value) => value.as_str(),
         }
+    }
+}
+
+impl AsRef<str> for GridSlotId {
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
+
+impl std::ops::Deref for GridSlotId {
+    type Target = str;
+
+    fn deref(&self) -> &str {
+        self.as_str()
     }
 }

@@ -1,4 +1,6 @@
 use std::fmt;
+use std::ops::Deref;
+use std::str::FromStr;
 use warcraft_api::{SystemKeybindClass, SystemKeybindModifier};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -81,6 +83,25 @@ impl From<Hotkey> for String {
     }
 }
 
+#[derive(Debug)]
+pub struct ParseHotkeyError;
+
+impl fmt::Display for ParseHotkeyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("invalid hotkey")
+    }
+}
+
+impl std::error::Error for ParseHotkeyError {}
+
+impl FromStr for Hotkey {
+    type Err = ParseHotkeyError;
+
+    fn from_str(text: &str) -> Result<Self, ParseHotkeyError> {
+        Self::try_from(text).map_err(|()| ParseHotkeyError)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AbilityModifier {
     Alt,
@@ -118,6 +139,25 @@ impl TryFrom<&str> for AbilityModifier {
 impl From<AbilityModifier> for String {
     fn from(modifier: AbilityModifier) -> Self {
         modifier.to_string()
+    }
+}
+
+#[derive(Debug)]
+pub struct ParseAbilityModifierError;
+
+impl fmt::Display for ParseAbilityModifierError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("invalid ability modifier")
+    }
+}
+
+impl std::error::Error for ParseAbilityModifierError {}
+
+impl FromStr for AbilityModifier {
+    type Err = ParseAbilityModifierError;
+
+    fn from_str(text: &str) -> Result<Self, ParseAbilityModifierError> {
+        Self::try_from(text).map_err(|()| ParseAbilityModifierError)
     }
 }
 
@@ -159,6 +199,31 @@ impl TryFrom<&str> for ButtonPosition {
             .parse::<u8>()
             .map_err(|_| ())?;
         Ok(ButtonPosition { column, row })
+    }
+}
+
+impl fmt::Display for ButtonPosition {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(formatter, "{},{}", self.column, self.row)
+    }
+}
+
+#[derive(Debug)]
+pub struct ParseButtonPositionError;
+
+impl fmt::Display for ParseButtonPositionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("invalid button position")
+    }
+}
+
+impl std::error::Error for ParseButtonPositionError {}
+
+impl FromStr for ButtonPosition {
+    type Err = ParseButtonPositionError;
+
+    fn from_str(text: &str) -> Result<Self, ParseButtonPositionError> {
+        Self::try_from(text).map_err(|()| ParseButtonPositionError)
     }
 }
 
@@ -502,12 +567,73 @@ impl<'a> CommandEntry<'a> {
     }
 }
 
+impl<'a> Deref for BindingEntry<'a> {
+    type Target = AbilityBinding;
+
+    fn deref(&self) -> &AbilityBinding {
+        self.binding
+    }
+}
+
+impl<'a> Deref for CommandEntry<'a> {
+    type Target = CommandBinding;
+
+    fn deref(&self) -> &CommandBinding {
+        self.binding
+    }
+}
+
 /// The type of a CustomKeys.txt section, determined from the game database.
 #[derive(Debug, Clone, Copy)]
 pub(crate) enum SectionKind {
     Ability,
     Command,
     System(SystemKeybindClass),
+}
+
+/// Typed discriminator for INI field names found inside a CustomKeys.txt section.
+/// `"icon"` and `"art"` both map to `Icon`; `"unart"` maps to `UnIcon`.
+enum BindingFieldKey {
+    Hotkey,
+    Unhotkey,
+    ButtonPos,
+    UnButtonPos,
+    ResearchHotkey,
+    ResearchButtonPos,
+    Tip,
+    ResearchTip,
+    UnTip,
+    Ubertip,
+    ResearchUbertip,
+    UnUbertip,
+    Icon,
+    UnIcon,
+    Modifier,
+}
+
+impl TryFrom<&str> for BindingFieldKey {
+    type Error = ();
+
+    fn try_from(key: &str) -> Result<Self, ()> {
+        match key.to_ascii_lowercase().as_str() {
+            "hotkey" => Ok(Self::Hotkey),
+            "unhotkey" => Ok(Self::Unhotkey),
+            "buttonpos" => Ok(Self::ButtonPos),
+            "unbuttonpos" => Ok(Self::UnButtonPos),
+            "researchhotkey" => Ok(Self::ResearchHotkey),
+            "researchbuttonpos" => Ok(Self::ResearchButtonPos),
+            "tip" => Ok(Self::Tip),
+            "researchtip" => Ok(Self::ResearchTip),
+            "untip" => Ok(Self::UnTip),
+            "ubertip" => Ok(Self::Ubertip),
+            "researchubertip" => Ok(Self::ResearchUbertip),
+            "unubertip" => Ok(Self::UnUbertip),
+            "icon" | "art" => Ok(Self::Icon),
+            "unart" => Ok(Self::UnIcon),
+            "modifier" => Ok(Self::Modifier),
+            _ => Err(()),
+        }
+    }
 }
 
 /// Accumulates all fields of a section before converting to a [`WarcraftKeybinding`].
@@ -555,51 +681,53 @@ impl SectionAccumulator {
     }
 
     pub(crate) fn apply(&mut self, key: &str, value: &str) {
-        let lowercase_key = key.to_lowercase();
-        match lowercase_key.as_str() {
-            "hotkey" if self.hotkey.is_none() => {
+        let Ok(field_key) = BindingFieldKey::try_from(key) else {
+            return;
+        };
+        match field_key {
+            BindingFieldKey::Hotkey if self.hotkey.is_none() => {
                 self.hotkey = Hotkey::try_from(value).ok();
             }
-            "unhotkey" if self.unhotkey.is_none() => {
+            BindingFieldKey::Unhotkey if self.unhotkey.is_none() => {
                 self.unhotkey = Hotkey::try_from(value).ok();
             }
-            "buttonpos" if self.button_position.is_none() => {
+            BindingFieldKey::ButtonPos if self.button_position.is_none() => {
                 self.button_position = ButtonPosition::try_from(value).ok();
             }
-            "unbuttonpos" if self.unbutton_position.is_none() => {
+            BindingFieldKey::UnButtonPos if self.unbutton_position.is_none() => {
                 self.unbutton_position = ButtonPosition::try_from(value).ok();
             }
-            "researchhotkey" if self.research_hotkey.is_none() => {
+            BindingFieldKey::ResearchHotkey if self.research_hotkey.is_none() => {
                 self.research_hotkey = Hotkey::try_from(value).ok();
             }
-            "researchbuttonpos" if self.research_button_position.is_none() => {
+            BindingFieldKey::ResearchButtonPos if self.research_button_position.is_none() => {
                 self.research_button_position = ButtonPosition::try_from(value).ok();
             }
-            "tip" if self.tip.is_none() => {
+            BindingFieldKey::Tip if self.tip.is_none() => {
                 self.tip = Some(value.to_string());
             }
-            "researchtip" if self.research_tip.is_none() => {
+            BindingFieldKey::ResearchTip if self.research_tip.is_none() => {
                 self.research_tip = Some(value.to_string());
             }
-            "untip" if self.un_tip.is_none() => {
+            BindingFieldKey::UnTip if self.un_tip.is_none() => {
                 self.un_tip = Some(value.to_string());
             }
-            "ubertip" if self.ubertip.is_none() => {
+            BindingFieldKey::Ubertip if self.ubertip.is_none() => {
                 self.ubertip = Some(value.to_string());
             }
-            "researchubertip" if self.research_ubertip.is_none() => {
+            BindingFieldKey::ResearchUbertip if self.research_ubertip.is_none() => {
                 self.research_ubertip = Some(value.to_string());
             }
-            "unubertip" if self.un_ubertip.is_none() => {
+            BindingFieldKey::UnUbertip if self.un_ubertip.is_none() => {
                 self.un_ubertip = Some(value.to_string());
             }
-            "icon" | "art" if !value.is_empty() && self.icon.is_none() => {
+            BindingFieldKey::Icon if !value.is_empty() && self.icon.is_none() => {
                 self.icon = Some(value.to_string());
             }
-            "unart" if !value.is_empty() && self.un_icon.is_none() => {
+            BindingFieldKey::UnIcon if !value.is_empty() && self.un_icon.is_none() => {
                 self.un_icon = Some(value.to_string());
             }
-            "modifier" => {
+            BindingFieldKey::Modifier => {
                 if self.modifier.is_none() {
                     self.modifier = AbilityModifier::try_from(value).ok();
                 }
@@ -608,16 +736,6 @@ impl SectionAccumulator {
                 }
             }
             _ => {}
-        }
-    }
-
-    pub(crate) fn section_id_from(line: &str) -> Option<String> {
-        let without_brackets = line.strip_prefix('[')?.strip_suffix(']')?;
-        let section_id = without_brackets.trim();
-        if section_id.is_empty() {
-            None
-        } else {
-            Some(section_id.to_string())
         }
     }
 }
@@ -636,7 +754,8 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
                 Self::Command(command_binding)
             }
             SectionKind::System(class) => {
-                let hotkey = accumulator.hotkey.unwrap_or(Hotkey::VirtualKey(0));
+                let missing_hotkey = Hotkey::VirtualKey(0);
+                let hotkey = accumulator.hotkey.unwrap_or(missing_hotkey);
                 let system_binding = SystemBinding {
                     hotkey,
                     class,

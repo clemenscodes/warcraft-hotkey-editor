@@ -1,13 +1,11 @@
 use std::collections::BTreeMap;
-use std::io;
-use std::path::{Path, PathBuf};
-
-use warcraft_api::WarcraftObjectId;
+use std::fmt;
 
 use crate::model::{
     AbilityBinding, BindingEntry, CommandBinding, CommandEntry, SystemBinding, WarcraftKeybinding,
 };
 
+#[derive(Clone)]
 pub struct CustomKeysFile {
     entries: BTreeMap<String, WarcraftKeybinding>,
 }
@@ -15,21 +13,6 @@ pub struct CustomKeysFile {
 impl CustomKeysFile {
     pub(crate) fn from_parts(entries: BTreeMap<String, WarcraftKeybinding>) -> Self {
         Self { entries }
-    }
-
-    pub fn get(&self, id: WarcraftObjectId) -> Option<&WarcraftKeybinding> {
-        let key = id.value().to_lowercase();
-        self.entries.get(&key)
-    }
-
-    pub fn get_mut(&mut self, id: WarcraftObjectId) -> Option<&mut WarcraftKeybinding> {
-        let key = id.value().to_lowercase();
-        self.entries.get_mut(&key)
-    }
-
-    pub fn set(&mut self, id: WarcraftObjectId, binding: WarcraftKeybinding) {
-        let key = id.value().to_lowercase();
-        self.entries.insert(key, binding);
     }
 
     pub fn binding(&self, id: &str) -> Option<&AbilityBinding> {
@@ -44,15 +27,11 @@ impl CustomKeysFile {
 
     pub fn binding_or_default_mut(&mut self, id: &str) -> Option<&mut AbilityBinding> {
         let key = id.to_lowercase();
-        if !matches!(self.entries.get(&key), Some(WarcraftKeybinding::Ability(_))) {
-            self.entries.insert(
-                key.clone(),
-                WarcraftKeybinding::Ability(AbilityBinding::default()),
-            );
-        }
-        self.entries
-            .get_mut(&key)
-            .and_then(WarcraftKeybinding::as_ability_mut)
+        let entry = self
+            .entries
+            .entry(key)
+            .or_insert_with(|| WarcraftKeybinding::Ability(AbilityBinding::default()));
+        entry.as_ability_mut()
     }
 
     pub fn bindings_in_order(&self) -> impl Iterator<Item = BindingEntry<'_>> {
@@ -75,15 +54,11 @@ impl CustomKeysFile {
 
     pub fn command_or_default_mut(&mut self, name: &str) -> Option<&mut CommandBinding> {
         let key = name.to_lowercase();
-        if !matches!(self.entries.get(&key), Some(WarcraftKeybinding::Command(_))) {
-            self.entries.insert(
-                key.clone(),
-                WarcraftKeybinding::Command(CommandBinding::default()),
-            );
-        }
-        self.entries
-            .get_mut(&key)
-            .and_then(WarcraftKeybinding::as_command_mut)
+        let entry = self
+            .entries
+            .entry(key)
+            .or_insert_with(|| WarcraftKeybinding::Command(CommandBinding::default()));
+        entry.as_command_mut()
     }
 
     pub fn commands_in_order(&self) -> impl Iterator<Item = CommandEntry<'_>> {
@@ -126,216 +101,207 @@ impl CustomKeysFile {
             .insert(key, WarcraftKeybinding::System(binding));
     }
 
-    fn home_directory() -> Option<PathBuf> {
-        if cfg!(target_os = "windows") {
-            std::env::var("USERPROFILE").ok().map(PathBuf::from)
-        } else {
-            std::env::var("HOME").ok().map(PathBuf::from)
-        }
-    }
-
-    pub fn load(path: impl AsRef<Path>) -> io::Result<Self> {
-        let text = std::fs::read_to_string(path)?;
-        Ok(Self::from(text.as_str()))
-    }
-
-    pub fn default_path() -> Option<PathBuf> {
-        let home = Self::home_directory()?;
-        let native_path = home
-            .join("Documents")
-            .join("Warcraft III")
-            .join("CustomKeyBindings")
-            .join("CustomKeys.txt");
-        if native_path.exists() {
-            return Some(native_path);
-        }
-        #[cfg(target_os = "linux")]
-        {
-            let wine_prefix = std::env::var("WINEPREFIX")
-                .map(PathBuf::from)
-                .unwrap_or_else(|_| home.join(".wine"));
-            if let Ok(user) = std::env::var("USER") {
-                let wine_path = wine_prefix
-                    .join("drive_c")
-                    .join("users")
-                    .join(user)
-                    .join("Documents")
-                    .join("Warcraft III")
-                    .join("CustomKeyBindings")
-                    .join("CustomKeys.txt");
-                if wine_path.exists() {
-                    return Some(wine_path);
-                }
-            }
-        }
-        None
-    }
-
-    pub fn load_default() -> io::Result<Self> {
-        let path = Self::default_path().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::NotFound,
-                "CustomKeys.txt not found in ~/Documents/Warcraft III/CustomKeyBindings/ \
-                 or Wine prefix",
-            )
-        })?;
-        Self::load(path)
-    }
-
-    pub fn to_file_content(&self) -> String {
-        let mut output = String::new();
-        for (id, entry) in &self.entries {
-            match entry {
-                WarcraftKeybinding::Ability(binding) => {
-                    Self::format_ability_section(&mut output, id, binding);
-                }
-                WarcraftKeybinding::Command(binding) => {
-                    Self::format_command_section(&mut output, id, binding);
-                }
-                WarcraftKeybinding::System(binding) => {
-                    Self::format_system_section(&mut output, id, binding);
-                }
-            }
-        }
-        output
-    }
-
-    fn format_ability_section(output: &mut String, id: &str, binding: &AbilityBinding) {
-        output.push('[');
-        output.push_str(id);
-        output.push_str("]\n");
+    fn write_ability_section(
+        formatter: &mut fmt::Formatter<'_>,
+        id: &str,
+        binding: &AbilityBinding,
+    ) -> fmt::Result {
+        writeln!(formatter, "[{id}]")?;
         if let Some(hotkey) = binding.hotkey() {
             let hotkey_string = hotkey.to_string();
-            output.push_str("Hotkey=");
-            output.push_str(&hotkey_string);
-            output.push('\n');
+            writeln!(formatter, "Hotkey={hotkey_string}")?;
         }
         if let Some(hotkey) = binding.unhotkey() {
             let hotkey_string = hotkey.to_string();
-            output.push_str("Unhotkey=");
-            output.push_str(&hotkey_string);
-            output.push('\n');
+            writeln!(formatter, "Unhotkey={hotkey_string}")?;
         }
         if let Some(position) = binding.button_position() {
-            let column = position.column();
-            let row = position.row();
-            let buttonpos_line = format!("Buttonpos={column},{row}\n");
-            output.push_str(&buttonpos_line);
+            writeln!(formatter, "Buttonpos={position}")?;
         }
         if let Some(position) = binding.unbutton_position() {
-            let column = position.column();
-            let row = position.row();
-            let unbuttonpos_line = format!("Unbuttonpos={column},{row}\n");
-            output.push_str(&unbuttonpos_line);
+            writeln!(formatter, "Unbuttonpos={position}")?;
         }
         if let Some(hotkey) = binding.research_hotkey() {
             let hotkey_string = hotkey.to_string();
-            output.push_str("Researchhotkey=");
-            output.push_str(&hotkey_string);
-            output.push('\n');
+            writeln!(formatter, "Researchhotkey={hotkey_string}")?;
         }
         if let Some(position) = binding.research_button_position() {
-            let column = position.column();
-            let row = position.row();
-            let researchbuttonpos_line = format!("Researchbuttonpos={column},{row}\n");
-            output.push_str(&researchbuttonpos_line);
+            writeln!(formatter, "Researchbuttonpos={position}")?;
         }
         if let Some(value) = binding.tip() {
-            output.push_str("Tip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Tip={value}")?;
         }
         if let Some(value) = binding.research_tip() {
-            output.push_str("Researchtip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Researchtip={value}")?;
         }
         if let Some(value) = binding.un_tip() {
-            output.push_str("UnTip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "UnTip={value}")?;
         }
         if let Some(value) = binding.ubertip() {
-            output.push_str("Ubertip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Ubertip={value}")?;
         }
         if let Some(value) = binding.research_ubertip() {
-            output.push_str("Researchubertip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Researchubertip={value}")?;
         }
         if let Some(value) = binding.un_ubertip() {
-            output.push_str("Unubertip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Unubertip={value}")?;
         }
         if let Some(value) = binding.icon() {
-            output.push_str("Icon=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Icon={value}")?;
         }
         if let Some(modifier) = binding.modifier() {
             let modifier_string = modifier.to_string();
-            output.push_str("Modifier=");
-            output.push_str(&modifier_string);
-            output.push('\n');
+            writeln!(formatter, "Modifier={modifier_string}")?;
         }
-        output.push('\n');
+        writeln!(formatter)
     }
 
-    fn format_command_section(output: &mut String, name: &str, binding: &CommandBinding) {
-        output.push('[');
-        output.push_str(name);
-        output.push_str("]\n");
+    fn write_command_section(
+        formatter: &mut fmt::Formatter<'_>,
+        id: &str,
+        binding: &CommandBinding,
+    ) -> fmt::Result {
+        writeln!(formatter, "[{id}]")?;
         if let Some(hotkey) = binding.hotkey() {
             let hotkey_string = hotkey.to_string();
-            output.push_str("Hotkey=");
-            output.push_str(&hotkey_string);
-            output.push('\n');
+            writeln!(formatter, "Hotkey={hotkey_string}")?;
         }
         if let Some(position) = binding.button_position() {
-            let column = position.column();
-            let row = position.row();
-            let buttonpos_line = format!("Buttonpos={column},{row}\n");
-            output.push_str(&buttonpos_line);
+            writeln!(formatter, "Buttonpos={position}")?;
         }
         if let Some(position) = binding.unbutton_position() {
-            let column = position.column();
-            let row = position.row();
-            let unbuttonpos_line = format!("Unbuttonpos={column},{row}\n");
-            output.push_str(&unbuttonpos_line);
+            writeln!(formatter, "Unbuttonpos={position}")?;
         }
         if let Some(value) = binding.tip() {
-            output.push_str("Tip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "Tip={value}")?;
         }
         if let Some(value) = binding.un_tip() {
-            output.push_str("UnTip=");
-            output.push_str(value);
-            output.push('\n');
+            writeln!(formatter, "UnTip={value}")?;
         }
-        output.push('\n');
+        writeln!(formatter)
     }
 
-    fn format_system_section(output: &mut String, id: &str, binding: &SystemBinding) {
-        output.push('[');
-        output.push_str(id);
-        output.push_str("]\n");
+    fn write_system_section(
+        formatter: &mut fmt::Formatter<'_>,
+        id: &str,
+        binding: &SystemBinding,
+    ) -> fmt::Result {
+        writeln!(formatter, "[{id}]")?;
         let hotkey = binding.hotkey();
-        let hotkey_line = format!("Hotkey={hotkey}\n");
-        output.push_str(&hotkey_line);
-        let class_field = binding.class().ini_field();
-        output.push_str(class_field);
-        output.push('\n');
+        writeln!(formatter, "Hotkey={hotkey}")?;
+        let binding_class = binding.class();
+        let class_field = binding_class.ini_field();
+        writeln!(formatter, "{class_field}")?;
         if let Some(modifier) = binding.modifier()
             && let Some(modifier_text) = modifier.ini_str()
         {
-            output.push_str("Modifier=");
-            output.push_str(modifier_text);
-            output.push('\n');
+            writeln!(formatter, "Modifier={modifier_text}")?;
         }
-        output.push('\n');
+        writeln!(formatter)
+    }
+}
+
+impl fmt::Display for CustomKeysFile {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for (id, entry) in &self.entries {
+            match entry {
+                WarcraftKeybinding::Ability(binding) => {
+                    Self::write_ability_section(formatter, id, binding)?;
+                }
+                WarcraftKeybinding::Command(binding) => {
+                    Self::write_command_section(formatter, id, binding)?;
+                }
+                WarcraftKeybinding::System(binding) => {
+                    Self::write_system_section(formatter, id, binding)?;
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+impl IntoIterator for CustomKeysFile {
+    type Item = (String, WarcraftKeybinding);
+    type IntoIter = std::collections::btree_map::IntoIter<String, WarcraftKeybinding>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.entries.into_iter()
+    }
+}
+
+impl Extend<(String, WarcraftKeybinding)> for CustomKeysFile {
+    fn extend<I>(&mut self, iter: I)
+    where
+        I: IntoIterator<Item = (String, WarcraftKeybinding)>,
+    {
+        for (key, binding) in iter {
+            match binding {
+                WarcraftKeybinding::Ability(source_binding) => {
+                    if self.system(&key).is_some() {
+                        continue;
+                    }
+                    let Some(target_binding) = self.binding_or_default_mut(&key) else {
+                        continue;
+                    };
+                    if let Some(hotkey) = source_binding.hotkey() {
+                        let hotkey_clone = hotkey.clone();
+                        target_binding.set_hotkey(Some(hotkey_clone));
+                    }
+                    if let Some(position) = source_binding.button_position().copied() {
+                        target_binding.set_button_position(Some(position));
+                    }
+                    if let Some(position) = source_binding.unbutton_position().copied() {
+                        target_binding.set_unbutton_position(Some(position));
+                    }
+                    if let Some(hotkey) = source_binding.research_hotkey() {
+                        let hotkey_clone = hotkey.clone();
+                        target_binding.set_research_hotkey(Some(hotkey_clone));
+                    }
+                    if let Some(position) = source_binding.research_button_position().copied() {
+                        target_binding.set_research_button_position(Some(position));
+                    }
+                    if let Some(tip) = source_binding.tip() {
+                        let tip_string = tip.to_string();
+                        target_binding.set_tip(Some(tip_string));
+                    }
+                    if let Some(tip) = source_binding.research_tip() {
+                        let tip_string = tip.to_string();
+                        target_binding.set_research_tip(Some(tip_string));
+                    }
+                    if let Some(tip) = source_binding.un_tip() {
+                        let tip_string = tip.to_string();
+                        target_binding.set_un_tip(Some(tip_string));
+                    }
+                    if let Some(icon) = source_binding.icon() {
+                        let icon_string = icon.to_string();
+                        target_binding.set_icon(Some(icon_string));
+                    }
+                }
+                WarcraftKeybinding::Command(source_binding) => {
+                    let Some(target_binding) = self.command_or_default_mut(&key) else {
+                        continue;
+                    };
+                    if let Some(hotkey) = source_binding.hotkey() {
+                        let hotkey_clone = hotkey.clone();
+                        target_binding.set_hotkey(Some(hotkey_clone));
+                    }
+                    if let Some(position) = source_binding.button_position().copied() {
+                        target_binding.set_button_position(Some(position));
+                    }
+                    if let Some(position) = source_binding.unbutton_position().copied() {
+                        target_binding.set_unbutton_position(Some(position));
+                    }
+                    if let Some(tip) = source_binding.tip() {
+                        let tip_string = tip.to_string();
+                        target_binding.set_tip(Some(tip_string));
+                    }
+                    if let Some(tip) = source_binding.un_tip() {
+                        let tip_string = tip.to_string();
+                        target_binding.set_un_tip(Some(tip_string));
+                    }
+                }
+                WarcraftKeybinding::System(_) => {}
+            }
+        }
     }
 }

@@ -122,6 +122,18 @@ impl AbilityBindingBuilder {
 
     /// Consume the builder and produce a clean (not-dirty) [`AbilityBinding`].
     pub fn build(self) -> AbilityBinding {
+        AbilityBinding::from(self)
+    }
+}
+
+impl Default for AbilityBindingBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl From<AbilityBindingBuilder> for AbilityBinding {
+    fn from(builder: AbilityBindingBuilder) -> Self {
         let AbilityBindingBuilder {
             hotkey,
             unhotkey,
@@ -138,7 +150,7 @@ impl AbilityBindingBuilder {
             icon,
             un_icon,
             modifier,
-        } = self;
+        } = builder;
         let mut binding = AbilityBinding::default();
         binding.set_hotkey(hotkey);
         binding.set_unhotkey(unhotkey);
@@ -208,13 +220,25 @@ impl CommandBindingBuilder {
 
     /// Consume the builder and produce a clean (not-dirty) [`CommandBinding`].
     pub fn build(self) -> CommandBinding {
+        CommandBinding::from(self)
+    }
+}
+
+impl Default for CommandBindingBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl From<CommandBindingBuilder> for CommandBinding {
+    fn from(builder: CommandBindingBuilder) -> Self {
         let CommandBindingBuilder {
             hotkey,
             button_position,
             unbutton_position,
             tip,
             un_tip,
-        } = self;
+        } = builder;
         let mut binding = CommandBinding::default();
         binding.set_hotkey(hotkey);
         binding.set_button_position(button_position);
@@ -258,7 +282,19 @@ impl CustomKeysFileBuilder {
 
     /// Produce a [`CustomKeysFile`]; keys are lowercased and ordered alphabetically; duplicates keep the last value.
     pub fn build(self) -> CustomKeysFile {
-        self.file
+        CustomKeysFile::from(self)
+    }
+}
+
+impl Default for CustomKeysFileBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl From<CustomKeysFileBuilder> for CustomKeysFile {
+    fn from(builder: CustomKeysFileBuilder) -> Self {
+        builder.file
     }
 }
 
@@ -606,7 +642,7 @@ mod builder_tests {
             .modifier(AbilityModifier::Shift)
             .build();
         let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         let reparsed = CustomKeysFile::from(serialized.as_str());
         let reparsed_binding = reparsed
             .binding("Ahrl")
@@ -644,7 +680,7 @@ mod builder_tests {
         let hotkey = Hotkey::FunctionKey(5);
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
         let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         let reparsed = CustomKeysFile::from(serialized.as_str());
         let hotkey_value = reparsed
             .binding("Ahrl")
@@ -719,7 +755,7 @@ mod builder_tests {
         let file = CustomKeysFile::builder()
             .command("CmdMove", binding)
             .build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         let reparsed = CustomKeysFile::from(serialized.as_str());
         let reparsed_binding = reparsed
             .command("CmdMove")
@@ -832,7 +868,7 @@ mod builder_tests {
     fn file_builder_serializes_ability_section_header() {
         let binding = AbilityBinding::builder().tip("test").build();
         let file = CustomKeysFile::builder().ability("AHhb", binding).build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         assert!(
             serialized.contains("[ahhb]"),
             "section header must appear in output"
@@ -845,7 +881,7 @@ mod builder_tests {
         let file = CustomKeysFile::builder()
             .command("CmdMove", binding)
             .build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         assert!(
             serialized.contains("[cmdmove]"),
             "command section header must appear in output"
@@ -862,7 +898,7 @@ mod builder_tests {
             .tip("Holy Light")
             .build();
         let original_file = CustomKeysFile::builder().ability("Ahrl", binding).build();
-        let serialized = original_file.to_file_content();
+        let serialized = original_file.to_string();
         let reparsed_file = CustomKeysFile::from(serialized.as_str());
         let original_binding = original_file.binding("Ahrl").expect("present in original");
         let reparsed_binding = reparsed_file
@@ -884,7 +920,7 @@ mod builder_tests {
             Some(SystemKeybindModifier::Ctrl),
         );
         let file = CustomKeysFile::builder().system("Ctr1", binding).build();
-        let serialized = file.to_file_content();
+        let serialized = file.to_string();
         let reparsed = CustomKeysFile::from(serialized.as_str());
         let retrieved = reparsed.system("Ctr1").expect("must survive round-trip");
         assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(49));

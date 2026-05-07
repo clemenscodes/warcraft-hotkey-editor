@@ -5,8 +5,9 @@ pub struct BuildingTraits;
 
 impl BuildingTraits {
     pub fn can_attack(object_id: &str) -> bool {
+        let lowercase_id = object_id.to_ascii_lowercase();
         matches!(
-            object_id.to_ascii_lowercase().as_str(),
+            lowercase_id.as_str(),
             "hgtw"
                 | "hatw"
                 | "hctw"
@@ -23,8 +24,9 @@ impl BuildingTraits {
     }
 
     pub fn can_uproot(object_id: &str) -> bool {
+        let lowercase_id = object_id.to_ascii_lowercase();
         matches!(
-            object_id.to_ascii_lowercase().as_str(),
+            lowercase_id.as_str(),
             "etol" | "etoa" | "etoe" | "eaow" | "eaoe" | "eaom" | "etrp" | "eden"
         )
     }
@@ -36,7 +38,7 @@ impl BuildingTraits {
         if Self::is_burrowed_form(unit_id) {
             return true;
         }
-        matches!(unit_id.to_ascii_lowercase().as_str(), "hmil")
+        unit_id.eq_ignore_ascii_case("hmil")
     }
 
     pub fn ability_is_on_alt_state_unit(ability_id: &str) -> bool {
@@ -48,11 +50,11 @@ impl BuildingTraits {
             let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
                 continue;
             };
-            if unit_meta
-                .abilities()
-                .iter()
-                .any(|ability_object_id| ability_object_id.value().eq_ignore_ascii_case(ability_id))
-            {
+            let has_ability = unit_meta.abilities().iter().any(|ability_id_obj| {
+                let ability_object_id = ability_id_obj.value();
+                ability_object_id.eq_ignore_ascii_case(ability_id)
+            });
+            if has_ability {
                 return true;
             }
         }
@@ -63,12 +65,12 @@ impl BuildingTraits {
         let Some(warcraft_object) = WARCRAFT_DATABASE.by_id(unit_id) else {
             return false;
         };
-        warcraft_object
-            .names()
-            .first()
-            .copied()
-            .map(|first_name| first_name.to_ascii_lowercase().starts_with("burrowed "))
-            .unwrap_or(false)
+        let names = warcraft_object.names();
+        let Some(first_name) = names.first().copied() else {
+            return false;
+        };
+        let lowercase_name = first_name.to_ascii_lowercase();
+        lowercase_name.starts_with("burrowed ")
     }
 
     pub fn ability_has_alt_state(ability_id: &str) -> bool {
