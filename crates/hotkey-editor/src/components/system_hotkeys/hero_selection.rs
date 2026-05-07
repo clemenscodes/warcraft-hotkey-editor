@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::slot_button::SlotButton;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
@@ -8,7 +8,7 @@ const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item
 
 #[component]
 pub(crate) fn HeroSelectionHotkeysView(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     editing_section: Signal<Option<String>>,
 ) -> Element {
     let entries = SystemHotkeysCategory::HeroSelection.entries();

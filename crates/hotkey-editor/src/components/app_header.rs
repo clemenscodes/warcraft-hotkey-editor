@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::download_info_dialog::DownloadInfoDialog;
@@ -20,7 +20,7 @@ const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decora
 
 #[component]
 pub(crate) fn AppHeader(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     upload_status: Signal<UploadStatus>,
     preview_open: Signal<bool>,
     grid_layout: Signal<GridLayout>,

@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::key_cell::KeyCaptureCell;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
@@ -7,7 +7,7 @@ use crate::system_hotkeys::category::SystemHotkeysCategory;
 #[component]
 pub(crate) fn SystemHotkeysListView(
     category: SystemHotkeysCategory,
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     editing_section: Signal<Option<String>>,
 ) -> Element {
     let entries = category.entries();

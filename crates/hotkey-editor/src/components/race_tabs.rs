@@ -3,7 +3,7 @@ use warcraft_api::Race;
 
 use crate::focus::modality::FocusModality;
 use crate::grid_slot::GridSlotId;
-use crate::races::{RaceLabels, SUPPORTED_RACES};
+use warcraft_api::{RaceLabels, SUPPORTED_RACES};
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
 #[component]

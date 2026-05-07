@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeys, HotkeyTarget};
 use wasm_bindgen::JsCast;
 
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
@@ -13,20 +13,20 @@ use crate::components::dialog_header::DialogHeader;
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
 
+use warcraft_keybinds::InspectorDetail;
+use warcraft_keybinds::text::description::Description;
+use warcraft_keybinds::text::tip::Tip;
+
 use crate::customkeys::hotkey_override::HotkeyOverride;
 use crate::grid_layout::GridLayout;
 use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::inspector_detail::InspectorDetail;
-use crate::text::description::Description;
-use crate::text::tip::Tip;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum OverrideEditTarget {
     Hotkey,
     ResearchHotkey,
     /// Off-state hotkey of a toggle ability — Stop Defend, Unburrow,
-    /// unmorph. Routes through `HotkeyOverride::apply_unhotkey`, which
-    /// writes the `Unhotkey` field rather than `Hotkey`.
+    /// unmorph. Writes the `Unhotkey` field rather than `Hotkey`.
     AltHotkey,
     /// Hotkey for the upgraded-form unit that shares this button position
     /// (e.g. post-Barrage Siege Engine). Writes to the upgrade unit's own
@@ -37,7 +37,7 @@ enum OverrideEditTarget {
 #[component]
 pub(crate) fn TileOverridePanel(
     detail: InspectorDetail,
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
     selected_from_research: Signal<bool>,
     selected_from_uprooted: Signal<bool>,
@@ -321,46 +321,19 @@ pub(crate) fn TileOverridePanel(
         if conflict.is_some() {
             return;
         }
-        match active_target {
-            OverrideEditTarget::Hotkey => {
-                if is_off_state_for_capture {
-                    HotkeyOverride::apply_unhotkey(
-                        &mut loaded_keys,
-                        picker_object_id.value(),
-                        Some(token),
-                    );
-                } else {
-                    HotkeyOverride::apply(
-                        &mut loaded_keys,
-                        picker_object_id.value(),
-                        is_command_for_capture,
-                        Some(token),
-                    );
-                }
+        let hotkey_target = match active_target {
+            OverrideEditTarget::Hotkey if is_off_state_for_capture => {
+                HotkeyTarget::ability_off_state(picker_object_id)
             }
-            OverrideEditTarget::ResearchHotkey => {
-                HotkeyOverride::apply_research(
-                    &mut loaded_keys,
-                    picker_object_id.value(),
-                    Some(token),
-                );
+            OverrideEditTarget::Hotkey if is_command_for_capture => {
+                HotkeyTarget::command(picker_object_id)
             }
-            OverrideEditTarget::AltHotkey => {
-                HotkeyOverride::apply_unhotkey(
-                    &mut loaded_keys,
-                    picker_object_id.value(),
-                    Some(token),
-                );
-            }
-            OverrideEditTarget::UpgradeHotkey => {
-                HotkeyOverride::apply(
-                    &mut loaded_keys,
-                    picker_object_id.value(),
-                    false,
-                    Some(token),
-                );
-            }
-        }
+            OverrideEditTarget::Hotkey => HotkeyTarget::ability(picker_object_id),
+            OverrideEditTarget::ResearchHotkey => HotkeyTarget::ability_research(picker_object_id),
+            OverrideEditTarget::AltHotkey => HotkeyTarget::ability_off_state(picker_object_id),
+            OverrideEditTarget::UpgradeHotkey => HotkeyTarget::ability(picker_object_id),
+        };
+        HotkeyOverride::apply(&mut loaded_keys, hotkey_target, Some(token));
         editing_target.set(None);
     };
 
@@ -590,7 +563,7 @@ pub(crate) fn TileOverridePanel(
                 combined.push(GridSlotId::ability_off(alt_picker_object_id));
                 for slot in active_container_slots.iter() {
                     if let GridSlotId::Ability(ability_id) = slot
-                        && *ability_id == alt_picker_object_id
+                        && ability_id.object_id() == alt_picker_object_id
                     {
                         continue;
                     }
@@ -635,7 +608,7 @@ pub(crate) fn TileOverridePanel(
                     combined.push(GridSlotId::ability(upgrade_id));
                     for slot in active_container_slots.iter() {
                         if let GridSlotId::Ability(base_id) = slot
-                            && *base_id == base_unit_id_for_filter
+                            && base_id.object_id() == base_unit_id_for_filter
                         {
                             continue;
                         }
@@ -672,7 +645,7 @@ fn AltPositionPicker(
     object_id: WarcraftObjectId,
     display_name: String,
     picker_slots: Rc<[GridSlotId]>,
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
     // Reuse the app-level drag signals so the existing
     // `DragFollowerOverlay` (mounted at the app root) renders the
@@ -745,7 +718,7 @@ fn UpgradePositionPicker(
     upgrade_unit_id: WarcraftObjectId,
     display_name: String,
     picker_slots: Rc<[GridSlotId]>,
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
     dragging_slot: Signal<Option<DraggingSlot>>,
     drop_target_cell: Signal<Option<DropTargetCell>>,
@@ -849,7 +822,7 @@ impl PickerRows {
         target_object_id: &str,
         current_token: Option<HotkeyToken>,
         is_research_context: bool,
-        custom_keys: Option<&CustomKeysFile>,
+        custom_keys: Option<&CustomKeys>,
     ) -> Vec<Vec<KeyPickerCell>> {
         PICKER_ROWS
             .iter()

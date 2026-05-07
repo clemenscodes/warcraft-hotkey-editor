@@ -1,6 +1,6 @@
-use warcraft_api::Race;
+use crate::object::Race;
 
-pub(crate) const SUPPORTED_RACES: &[Race] = &[
+pub const SUPPORTED_RACES: &[Race] = &[
     Race::Human,
     Race::Orc,
     Race::Nightelf,
@@ -8,10 +8,10 @@ pub(crate) const SUPPORTED_RACES: &[Race] = &[
     Race::Neutral,
 ];
 
-pub(crate) struct RaceLabels;
+pub struct RaceLabels;
 
 impl RaceLabels {
-    pub(crate) fn display_name(race: Race) -> &'static str {
+    pub fn display_name(race: Race) -> &'static str {
         match race {
             Race::Human => "Human",
             Race::Orc => "Orc",
@@ -21,7 +21,7 @@ impl RaceLabels {
         }
     }
 
-    pub(crate) fn data_attribute(race: Race) -> &'static str {
+    pub fn data_attribute(race: Race) -> &'static str {
         match race {
             Race::Human => "human",
             Race::Orc => "orc",

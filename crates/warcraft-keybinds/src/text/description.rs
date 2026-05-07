@@ -1,11 +1,11 @@
-use crate::text::inner_spaces::InnerSpaces;
-use crate::text::level_markers::LevelMarkers;
-use crate::text::substitution_placeholders::SubstitutionPlaceholders;
+use super::inner_spaces::InnerSpaces;
+use super::level_markers::LevelMarkers;
+use super::substitution_placeholders::SubstitutionPlaceholders;
 
-pub(crate) struct Description;
+pub struct Description;
 
 impl Description {
-    pub(crate) fn lines_from(raw_description: &str) -> Vec<String> {
+    pub fn lines_from(raw_description: &str) -> Vec<String> {
         let mut output: Vec<String> = Vec::new();
         let with_newlines = raw_description.replace("|n", "\n");
         let placeholders_stripped = SubstitutionPlaceholders::stripped(&with_newlines);

@@ -3,6 +3,7 @@ pub mod meta;
 pub mod object;
 pub mod player;
 pub mod primitives;
+pub mod race_labels;
 pub mod version;
 
 pub use keybind::{SystemKeybind, SystemKeybindClass, SystemKeybindModifier};
@@ -26,4 +27,5 @@ pub use primitives::{
     Address, AgentReference, Boolean, Byte, ByteString, Bytes, Float, Identifier, Integer, OwnerId,
     Time,
 };
+pub use race_labels::{RaceLabels, SUPPORTED_RACES};
 pub use version::{SUPPORTED_VERSION, SUPPORTED_VERSION_STRING, WarcraftVersion};

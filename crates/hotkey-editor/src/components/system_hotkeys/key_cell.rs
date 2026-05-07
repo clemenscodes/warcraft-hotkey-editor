@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeysFile, Hotkey};
+use warcraft_keybinds::{CustomKeys, Hotkey};
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
 use crate::system_hotkeys::binding_map::SystemBindingMap;
@@ -14,7 +14,7 @@ pub(crate) struct EffectiveBinding {
 
 impl EffectiveBinding {
     pub(crate) fn resolve_from_file(
-        custom_keys: Option<&CustomKeysFile>,
+        custom_keys: Option<&CustomKeys>,
         section_id: &str,
         default_hotkey: u32,
         default_modifier: SystemKeybindModifier,
@@ -48,7 +48,7 @@ pub(crate) fn KeyCaptureCell(
     section_id: String,
     default_hotkey: u32,
     default_modifier: SystemKeybindModifier,
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
     mut editing_section: Signal<Option<String>>,
 ) -> Element {
     let lookup_id = section_id.clone();
@@ -105,7 +105,7 @@ pub(crate) fn KeyCaptureCell(
                 open: true,
                 on_pick: move |code: u32| {
                     let mut guard = loaded_keys.write();
-                    let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+                    let file = guard.get_or_insert_with(|| CustomKeys::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
                         binding.set_hotkey(Hotkey::VirtualKey(code));
                     }

@@ -1,7 +1,7 @@
-pub(crate) struct SubstitutionPlaceholders;
+pub struct SubstitutionPlaceholders;
 
 impl SubstitutionPlaceholders {
-    pub(crate) fn stripped(input: &str) -> String {
+    pub fn stripped(input: &str) -> String {
         let mut output = String::with_capacity(input.len());
         let mut depth: usize = 0;
         for current_character in input.chars() {

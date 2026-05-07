@@ -5,7 +5,7 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeysFile, Hotkey};
+use warcraft_keybinds::{CustomKeys, Hotkey};
 use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
@@ -22,8 +22,8 @@ const INVENTORY_ROWS: usize = 3;
 
 #[derive(Clone, Copy)]
 struct DragOrigin {
-    cursor_x: f64,
-    cursor_y: f64,
+    cursor_horizontal_position: f64,
+    cursor_vertical_position: f64,
 }
 
 thread_local! {
@@ -36,21 +36,21 @@ thread_local! {
 pub(crate) struct InventoryDragFollower {
     section_id: String,
     label: String,
-    click_offset_x: f64,
-    click_offset_y: f64,
-    cursor_x: f64,
-    cursor_y: f64,
+    click_offset_horizontal: f64,
+    click_offset_vertical: f64,
+    cursor_horizontal_position: f64,
+    cursor_vertical_position: f64,
     width: f64,
     height: f64,
 }
 
 impl InventoryDragFollower {
     pub(crate) fn left(&self) -> f64 {
-        self.cursor_x - self.click_offset_x
+        self.cursor_horizontal_position - self.click_offset_horizontal
     }
 
     pub(crate) fn top(&self) -> f64 {
-        self.cursor_y - self.click_offset_y
+        self.cursor_vertical_position - self.click_offset_vertical
     }
 
     pub(crate) fn width(&self) -> f64 {
@@ -73,7 +73,7 @@ struct InventoryDragSource {
 
 #[component]
 pub(crate) fn InventoryHotkeysView(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     editing_section: Signal<Option<String>>,
     drag_follower: Signal<Option<InventoryDragFollower>>,
 ) -> Element {
@@ -126,7 +126,7 @@ fn InventoryCell(
     section_id: String,
     default_hotkey: u32,
     default_modifier: SystemKeybindModifier,
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     mut editing_section: Signal<Option<String>>,
     mut dragging_source: Signal<Option<InventoryDragSource>>,
     mut drop_target: Signal<Option<String>>,
@@ -227,14 +227,17 @@ fn InventoryCell(
                     return;
                 };
                 let cell_rect = cell_element.get_bounding_client_rect();
-                let cursor_x = f64::from(web_event.client_x());
-                let cursor_y = f64::from(web_event.client_y());
-                let click_offset_x = cursor_x - cell_rect.left();
-                let click_offset_y = cursor_y - cell_rect.top();
+                let cursor_horizontal_position = f64::from(web_event.client_x());
+                let cursor_vertical_position = f64::from(web_event.client_y());
+                let click_offset_horizontal = cursor_horizontal_position - cell_rect.left();
+                let click_offset_vertical = cursor_vertical_position - cell_rect.top();
                 let pointer_id = web_event.pointer_id();
                 let _ = cell_element.set_pointer_capture(pointer_id);
 
-                let drag_origin = DragOrigin { cursor_x, cursor_y };
+                let drag_origin = DragOrigin {
+                    cursor_horizontal_position,
+                    cursor_vertical_position,
+                };
                 DRAG_ORIGIN.with(|cell| cell.set(Some(drag_origin)));
                 DID_DRAG_MOVE.with(|cell| cell.set(false));
 
@@ -244,10 +247,10 @@ fn InventoryCell(
                 let follower = InventoryDragFollower {
                     section_id: section_id_for_pointerdown.clone(),
                     label: label_for_drag.clone(),
-                    click_offset_x,
-                    click_offset_y,
-                    cursor_x,
-                    cursor_y,
+                    click_offset_horizontal,
+                    click_offset_vertical,
+                    cursor_horizontal_position,
+                    cursor_vertical_position,
                     width: cell_rect.width(),
                     height: cell_rect.height(),
                 };
@@ -260,13 +263,13 @@ fn InventoryCell(
                 let Some(web_event) = event.data().try_as_web_event() else {
                     return;
                 };
-                let cursor_x = f64::from(web_event.client_x());
-                let cursor_y = f64::from(web_event.client_y());
+                let cursor_horizontal_position = f64::from(web_event.client_x());
+                let cursor_vertical_position = f64::from(web_event.client_y());
 
                 if let Some(origin) = DRAG_ORIGIN.with(|cell| cell.get()) {
-                    let delta_x = cursor_x - origin.cursor_x;
-                    let delta_y = cursor_y - origin.cursor_y;
-                    let distance_squared = delta_x * delta_x + delta_y * delta_y;
+                    let horizontal_delta = cursor_horizontal_position - origin.cursor_horizontal_position;
+                    let vertical_delta = cursor_vertical_position - origin.cursor_vertical_position;
+                    let distance_squared = horizontal_delta * horizontal_delta + vertical_delta * vertical_delta;
                     let threshold_squared = DRAG_MOVEMENT_THRESHOLD_PIXELS * DRAG_MOVEMENT_THRESHOLD_PIXELS;
                     if distance_squared > threshold_squared {
                         DID_DRAG_MOVE.with(|cell| cell.set(true));
@@ -275,19 +278,19 @@ fn InventoryCell(
 
                 let current_follower_option = drag_follower.read().clone();
                 if let Some(mut current_follower) = current_follower_option {
-                    current_follower.cursor_x = cursor_x;
-                    current_follower.cursor_y = cursor_y;
+                    current_follower.cursor_horizontal_position = cursor_horizontal_position;
+                    current_follower.cursor_vertical_position = cursor_vertical_position;
                     drag_follower.set(Some(current_follower));
                 }
 
                 let Some(document) = web_sys::window().and_then(|window| window.document()) else {
                     return;
                 };
-                let cursor_point = CursorPoint::new(cursor_x, cursor_y);
+                let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
                 let hit_test_point = HitTestPoint::from(cursor_point);
-                let hit_test_x = hit_test_point.x();
-                let hit_test_y = hit_test_point.y();
-                let elem_under_option = document.element_from_point(hit_test_x, hit_test_y);
+                let hit_test_horizontal = hit_test_point.horizontal_position();
+                let hit_test_vertical = hit_test_point.vertical_position();
+                let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
                 let cell_under_option = elem_under_option
                     .and_then(|elem| elem.closest(".wc3-slot").ok().flatten());
                 let Some(cell_under) = cell_under_option else {
@@ -326,7 +329,7 @@ fn InventoryCell(
                 {
                     keys_signal
                         .write()
-                        .get_or_insert_with(|| CustomKeysFile::from(""))
+                        .get_or_insert_with(|| CustomKeys::from(""))
                         .swap_system_bindings(&section_id_for_pointerup, &target_id);
                     performed_swap = true;
                 }
@@ -365,7 +368,7 @@ fn InventoryCell(
                 open: true,
                 on_pick: move |code: u32| {
                     let mut guard = keys_signal.write();
-                    let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+                    let file = guard.get_or_insert_with(|| CustomKeys::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
                         binding.set_hotkey(Hotkey::VirtualKey(code));
                     }

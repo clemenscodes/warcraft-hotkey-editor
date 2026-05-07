@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeysFile, Hotkey};
+use warcraft_keybinds::{CustomKeys, Hotkey};
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
@@ -15,7 +15,7 @@ pub(crate) fn SlotButton(
     section_id: String,
     default_hotkey: u32,
     default_modifier: SystemKeybindModifier,
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
     mut editing_section: Signal<Option<String>>,
 ) -> Element {
     let lookup_id = section_id.clone();
@@ -79,7 +79,7 @@ pub(crate) fn SlotButton(
                 open: true,
                 on_pick: move |code: u32| {
                     let mut guard = loaded_keys.write();
-                    let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
+                    let file = guard.get_or_insert_with(|| CustomKeys::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
                         binding.set_hotkey(Hotkey::VirtualKey(code));
                     }

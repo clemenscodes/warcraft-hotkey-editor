@@ -1,20 +1,17 @@
 use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_keybinds::CustomKeysFile;
-
 use warcraft_database::{BuildingTraits, ObjectLookup};
-use warcraft_keybinds::HotkeyToken;
 
-use crate::ability_cell::AbilityCell;
-use crate::customkeys::positions::Positions;
-use crate::grid_slot::GridSlotId;
-use crate::icons::IconUrl;
+use crate::ability_cell::{AbilityCell, AbilityIconPath};
+use crate::custom_keys::CustomKeys;
+use crate::hotkey_token::HotkeyToken;
+use crate::slot::GridSlotId;
 use crate::text::color_codes::WarcraftColorCodes;
 
 #[derive(Clone, PartialEq)]
-pub(crate) struct InspectorDetail {
+pub struct InspectorDetail {
     display_name: String,
     object_id: WarcraftObjectId,
-    icon_src: Option<String>,
+    icon_path: Option<AbilityIconPath>,
     hotkey_token: Option<HotkeyToken>,
     research_hotkey_token: Option<HotkeyToken>,
     button_position: Option<GridCoordinate>,
@@ -40,7 +37,7 @@ pub(crate) struct InspectorDetail {
     /// `None` everywhere else.
     alt_hotkey_token: Option<HotkeyToken>,
     name_levels: Vec<String>,
-    icon_levels: Vec<Option<String>>,
+    icon_levels: Vec<Option<&'static str>>,
     ubertip_levels: Vec<String>,
     is_command: bool,
     is_passive: bool,
@@ -61,9 +58,9 @@ pub(crate) struct InspectorDetail {
 }
 
 impl InspectorDetail {
-    pub(crate) fn build(
+    pub fn build(
         slot: &GridSlotId,
-        custom_keys: &Option<CustomKeysFile>,
+        custom_keys: &Option<CustomKeys>,
         host_unit_id: &str,
         from_uprooted: bool,
         from_research: bool,
@@ -75,7 +72,7 @@ impl InspectorDetail {
                 let ability_id_str = ability_id.value();
                 let binding = custom_keys_ref.and_then(|file| file.binding(ability_id_str));
                 let cell = AbilityCell::for_ability(*ability_id, binding);
-                let position = Positions::current_for(slot, custom_keys_ref, false);
+                let position = custom_keys_ref.and_then(|file| file.position_for_slot(slot, false));
                 let research_position = custom_keys_ref
                     .and_then(|file| file.binding(ability_id_str))
                     .and_then(|ability_binding| ability_binding.research_button_position())
@@ -109,7 +106,7 @@ impl InspectorDetail {
                     .unwrap_or(false);
                 let info_only = from_research
                     && database_object
-                        .map(|o| matches!(o.meta(), WarcraftObjectMeta::Ability(m) if m.max_level() == 1 && !m.is_ultimate()))
+                        .map(|object| matches!(object.meta(), WarcraftObjectMeta::Ability(meta) if meta.max_level() == 1 && !meta.is_ultimate()))
                         .unwrap_or(false);
                 let object_has_alt_state = database_object
                     .map(|warcraft_object| {
@@ -130,25 +127,7 @@ impl InspectorDetail {
                     database_object.and_then(|warcraft_object| warcraft_object.ubertip())
                 };
                 let ubertip = primary_ubertip.map(WarcraftColorCodes::stripped);
-                // Surface the *other* state too. When the inspector is already
-                // showing the off state (burrowed crypt fiend → "Unburrow"),
-                // there's nothing extra to add. When it's showing the on state
-                // (a footman's "Defend"), pull `un_tip`/`un_ubertip` so the
-                // player can see the "Stop Defend" name and tooltip without
-                // having to hunt for the toggle.
-                // Morph abilities (Bear Form, Storm Crow Form, Burrow…) are
-                // excluded here: their off-state lives on a separate unit's
-                // command card (edcm, edtm, ucrm…) and is edited directly from
-                // that unit's AbilityOff slot.  Showing controls here would let
-                // the player mutate a different unit's grid from this panel.
                 let ability_is_morph = ObjectLookup::morph_target_unit(ability_id_str).is_some();
-                // Some morph abilities use no morph_target_unit in the database
-                // (e.g. Call to Arms / Ant1) yet still transform the unit into a
-                // completely different unit. Detect these by checking whether the
-                // ability appears on any unit that starts in a toggle alt state
-                // (Militia, burrowed forms, uprootable ancients). If it does, the
-                // off-state half is owned by that unit's own grid and must not be
-                // editable from the source unit's inspector.
                 let ability_off_on_alt_unit = !ability_is_morph
                     && BuildingTraits::ability_is_on_alt_state_unit(ability_id_str);
                 let should_show_alt_state = object_has_alt_state
@@ -197,17 +176,18 @@ impl InspectorDetail {
                             .collect()
                     })
                     .unwrap_or_default();
-                let icon_levels: Vec<Option<String>> = database_object
+                let icon_levels: Vec<Option<&'static str>> = database_object
                     .map(|warcraft_object| {
                         warcraft_object
                             .icons()
                             .iter()
+                            .copied()
                             .map(|raw_icon| {
                                 let trimmed_icon = raw_icon.trim();
                                 if trimmed_icon.is_empty() {
                                     None
                                 } else {
-                                    Some(IconUrl::from_database_path(trimmed_icon))
+                                    Some(trimmed_icon)
                                 }
                             })
                             .collect()
@@ -222,10 +202,11 @@ impl InspectorDetail {
                             .collect()
                     })
                     .unwrap_or_default();
-                let icon_src = if prefer_un_state {
-                    AbilityCell::for_ability_off(*ability_id, binding).cloned_icon_src()
+                let icon_path = if prefer_un_state {
+                    let off_cell = AbilityCell::for_ability_off(*ability_id, binding);
+                    off_cell.icon_path().cloned()
                 } else {
-                    cell.cloned_icon_src()
+                    cell.icon_path().cloned()
                 };
                 let object_id = cell.object_id();
                 let upgrade_unit_id_field = upgrade_unit_id;
@@ -235,14 +216,15 @@ impl InspectorDetail {
                     .map(String::from);
                 let upgrade_hotkey_token = upgrade_unit_id
                     .and_then(|upgrade_id| {
-                        custom_keys_ref.and_then(|file| file.binding(upgrade_id.value()))
+                        let upgrade_id_str = upgrade_id.value();
+                        custom_keys_ref.and_then(|file| file.binding(upgrade_id_str))
                     })
                     .and_then(|upgrade_binding| upgrade_binding.hotkey())
                     .and_then(|hotkey| hotkey.first_token());
                 Self {
                     display_name: resolved_display_name,
                     object_id,
-                    icon_src,
+                    icon_path,
                     hotkey_token,
                     research_hotkey_token,
                     button_position: position,
@@ -267,16 +249,10 @@ impl InspectorDetail {
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
-                // Off-state of a toggle ability — only encountered inside
-                // the off-state position picker dialog, where clicking a
-                // cell that hosts this slot pops up an inspector preview.
-                // Pull `un_tip` / `un_ubertip` for the text and the
-                // `unhotkey` from the binding; no research / no level
-                // tiering applies to the off state.
                 let ability_id_str = ability_id.value();
                 let binding = custom_keys_ref.and_then(|file| file.binding(ability_id_str));
                 let cell = AbilityCell::for_ability_off(*ability_id, binding);
-                let position = Positions::current_for(slot, custom_keys_ref, false);
+                let position = custom_keys_ref.and_then(|file| file.position_for_slot(slot, false));
                 let hotkey_token = binding
                     .and_then(|ability_binding| ability_binding.unhotkey())
                     .and_then(|hotkey| hotkey.first_token());
@@ -288,12 +264,12 @@ impl InspectorDetail {
                 let ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.un_ubertip())
                     .map(WarcraftColorCodes::stripped);
-                let icon_src = cell.cloned_icon_src();
+                let icon_path = cell.icon_path().cloned();
                 let object_id = cell.object_id();
                 Self {
                     display_name,
                     object_id,
-                    icon_src,
+                    icon_path,
                     hotkey_token,
                     research_hotkey_token: None,
                     button_position: position,
@@ -321,7 +297,7 @@ impl InspectorDetail {
                 let command_name_str = command_name.value();
                 let binding = custom_keys_ref.and_then(|file| file.command(command_name_str));
                 let cell = AbilityCell::for_command(*command_name, binding);
-                let position = Positions::current_for(slot, custom_keys_ref, false);
+                let position = custom_keys_ref.and_then(|file| file.position_for_slot(slot, false));
                 let hotkey_token = binding
                     .and_then(|command_binding| command_binding.hotkey())
                     .and_then(|hotkey| hotkey.first_token());
@@ -337,13 +313,13 @@ impl InspectorDetail {
                 let ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.ubertip())
                     .map(WarcraftColorCodes::stripped);
-                let icon_src = cell.cloned_icon_src();
-                let display_name = cell.cloned_display_name();
+                let icon_path = cell.icon_path().cloned();
+                let display_name = cell.display_name().to_string();
                 let object_id = cell.object_id();
                 Self {
                     display_name,
                     object_id,
-                    icon_src,
+                    icon_path,
                     hotkey_token,
                     research_hotkey_token: None,
                     button_position: position,
@@ -370,95 +346,99 @@ impl InspectorDetail {
         }
     }
 
-    pub(crate) fn display_name(&self) -> &str {
+    pub fn display_name(&self) -> &str {
         &self.display_name
     }
 
-    pub(crate) fn object_id(&self) -> WarcraftObjectId {
+    pub fn object_id(&self) -> WarcraftObjectId {
         self.object_id
     }
 
-    pub(crate) fn hotkey_token(&self) -> Option<HotkeyToken> {
+    pub fn icon_path(&self) -> Option<&AbilityIconPath> {
+        self.icon_path.as_ref()
+    }
+
+    pub fn hotkey_token(&self) -> Option<HotkeyToken> {
         self.hotkey_token
     }
 
-    pub(crate) fn research_hotkey_token(&self) -> Option<HotkeyToken> {
+    pub fn research_hotkey_token(&self) -> Option<HotkeyToken> {
         self.research_hotkey_token
     }
 
-    pub(crate) fn button_position(&self) -> Option<GridCoordinate> {
+    pub fn button_position(&self) -> Option<GridCoordinate> {
         self.button_position
     }
 
-    pub(crate) fn research_button_position(&self) -> Option<GridCoordinate> {
+    pub fn research_button_position(&self) -> Option<GridCoordinate> {
         self.research_button_position
     }
 
-    pub(crate) fn tip(&self) -> Option<&str> {
+    pub fn tip(&self) -> Option<&str> {
         self.tip.as_deref()
     }
 
-    pub(crate) fn research_tip(&self) -> Option<&str> {
+    pub fn research_tip(&self) -> Option<&str> {
         self.research_tip.as_deref()
     }
 
-    pub(crate) fn ubertip(&self) -> Option<&str> {
+    pub fn ubertip(&self) -> Option<&str> {
         self.ubertip.as_deref()
     }
 
-    pub(crate) fn research_ubertip(&self) -> Option<&str> {
+    pub fn research_ubertip(&self) -> Option<&str> {
         self.research_ubertip.as_deref()
     }
 
-    pub(crate) fn alt_display_name(&self) -> Option<&str> {
+    pub fn alt_display_name(&self) -> Option<&str> {
         self.alt_display_name.as_deref()
     }
 
-    pub(crate) fn alt_ubertip(&self) -> Option<&str> {
+    pub fn alt_ubertip(&self) -> Option<&str> {
         self.alt_ubertip.as_deref()
     }
 
-    pub(crate) fn name_levels(&self) -> &[String] {
+    pub fn name_levels(&self) -> &[String] {
         &self.name_levels
     }
 
-    pub(crate) fn icon_levels_len(&self) -> usize {
+    pub fn icon_levels_len(&self) -> usize {
         self.icon_levels.len()
     }
 
-    pub(crate) fn ubertip_levels(&self) -> &[String] {
+    pub fn ubertip_levels(&self) -> &[String] {
         &self.ubertip_levels
     }
 
-    pub(crate) fn alt_hotkey_token(&self) -> Option<HotkeyToken> {
+    pub fn alt_hotkey_token(&self) -> Option<HotkeyToken> {
         self.alt_hotkey_token
     }
 
-    pub(crate) fn is_command(&self) -> bool {
+    pub fn is_command(&self) -> bool {
         self.is_command
     }
 
-    pub(crate) fn is_passive(&self) -> bool {
+    pub fn is_passive(&self) -> bool {
         self.is_passive
     }
 
-    pub(crate) fn info_only(&self) -> bool {
+    pub fn info_only(&self) -> bool {
         self.info_only
     }
 
-    pub(crate) fn upgrade_unit_id(&self) -> Option<WarcraftObjectId> {
+    pub fn upgrade_unit_id(&self) -> Option<WarcraftObjectId> {
         self.upgrade_unit_id
     }
 
-    pub(crate) fn upgrade_display_name(&self) -> Option<&str> {
+    pub fn upgrade_display_name(&self) -> Option<&str> {
         self.upgrade_display_name.as_deref()
     }
 
-    pub(crate) fn upgrade_hotkey_token(&self) -> Option<HotkeyToken> {
+    pub fn upgrade_hotkey_token(&self) -> Option<HotkeyToken> {
         self.upgrade_hotkey_token
     }
 
-    pub(crate) fn is_off_state(&self) -> bool {
+    pub fn is_off_state(&self) -> bool {
         self.is_off_state
     }
 }

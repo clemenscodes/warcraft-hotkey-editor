@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::download_info_dialog::DownloadInfoDialog;
 use crate::components::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
@@ -7,7 +7,7 @@ use crate::customkeys::blob_download::BlobDownload;
 
 #[component]
 pub(crate) fn ExportButtons(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     mut preview_open: Signal<bool>,
 ) -> Element {
     let has_loaded_file = loaded_keys.read().is_some();

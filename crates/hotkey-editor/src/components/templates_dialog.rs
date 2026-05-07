@@ -1,18 +1,19 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
+use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 
 use crate::components::dialog_header::DialogHeader;
 use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_status::UploadStatus;
 use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::grid_templates::ResolvedTemplate;
+use crate::icons::IconUrl;
 use warcraft_database::ObjectLookup;
 
 #[component]
 pub(crate) fn TemplatesDialog(
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
     mut upload_status: Signal<UploadStatus>,
     mut templates_dialog_open: Signal<bool>,
 ) -> Element {
@@ -45,10 +46,10 @@ pub(crate) fn TemplatesDialog(
                                         template_content,
                                         template_resolved,
                                         on_apply: move |_| {
-                                            let parsed_template = CustomKeysFile::from(template_content);
+                                            let parsed_template = CustomKeys::from(template_content);
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
-                                            let mut baseline = CustomKeysFile::from(baseline_content());
+                                            let mut baseline = CustomKeys::from(baseline_content());
                                             baseline.extend(parsed_template);
                                             loaded_keys.set(Some(baseline));
                                             upload_status.set(UploadStatus::Loaded {
@@ -123,7 +124,7 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                             } else {
                                 resolved.command_card_cell(column, row)
                             };
-                            let icon_src = cell_option.and_then(|cell| cell.cloned_icon_src());
+                            let icon_source = cell_option.and_then(|cell| cell.icon_path().map(IconUrl::from_icon_path));
                             let is_passive_command_cell = !is_research
                                 && cell_option
                                     .map(|cell| ObjectLookup::is_passive_ability(cell.object_id().value()))
@@ -154,7 +155,7 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                             };
                             rsx! {
                                 span { class: "{cell_class}",
-                                    if let Some(source) = icon_src {
+                                    if let Some(source) = icon_source {
                                         img {
                                             class: "template-card-cell-icon",
                                             src: "{source}",

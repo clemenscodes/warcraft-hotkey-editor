@@ -370,7 +370,9 @@ impl<'a> IntoIterator for &'a WarcraftDatabase {
 
 impl WarcraftDatabase {
     pub fn new(db: ObjectMap) -> Self {
-        let lowercase_index = db.keys().map(|key| (key.value().to_ascii_lowercase(), *key))
+        let lowercase_index = db
+            .keys()
+            .map(|key| (key.value().to_ascii_lowercase(), *key))
             .collect();
         Self {
             db,

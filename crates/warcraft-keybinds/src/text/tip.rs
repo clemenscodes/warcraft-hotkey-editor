@@ -1,10 +1,10 @@
-use crate::text::color_codes::WarcraftColorCodes;
-use crate::text::level_markers::LevelMarkers;
+use super::color_codes::WarcraftColorCodes;
+use super::level_markers::LevelMarkers;
 
-pub(crate) struct Tip;
+pub struct Tip;
 
 impl Tip {
-    pub(crate) fn lines_from(raw_tip: &str) -> Vec<String> {
+    pub fn lines_from(raw_tip: &str) -> Vec<String> {
         let mut output: Vec<String> = Vec::new();
         for raw_segment in raw_tip.split(['\n', ',']) {
             let level_markers_stripped = LevelMarkers::stripped(raw_segment);
@@ -26,7 +26,7 @@ impl Tip {
         output
     }
 
-    pub(crate) fn shortened(raw_tip: &str) -> String {
+    pub fn shortened(raw_tip: &str) -> String {
         let color_stripped_tip = WarcraftColorCodes::stripped(raw_tip);
         let trimmed_tip = color_stripped_tip.trim();
         let after_hotkey_hint = match trimmed_tip.strip_prefix('(') {

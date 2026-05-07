@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
+use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
@@ -19,7 +19,7 @@ pub(crate) fn LayoutEditor(
     mut grid_layout: Signal<GridLayout>,
     mut editing_layout_cell: Signal<Option<EditingCell>>,
     mut dragging_layout_cell: Signal<Option<EditingCell>>,
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
 ) -> Element {
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();

@@ -1,7 +1,7 @@
-pub(crate) struct LevelMarkers;
+pub struct LevelMarkers;
 
 impl LevelMarkers {
-    pub(crate) fn stripped(input: &str) -> String {
+    pub fn stripped(input: &str) -> String {
         let level_marker_prefix = "[Level ";
         let mut output = String::with_capacity(input.len());
         let mut remainder = input;

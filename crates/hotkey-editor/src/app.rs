@@ -3,7 +3,7 @@ use std::collections::{HashMap, HashSet};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::ToastProvider;
 use warcraft_api::{Race, UnitKind};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::app_footer::AppFooter;
 use crate::components::app_header::AppHeader;
@@ -19,7 +19,7 @@ use crate::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::grid_layout::{EditingCell, GridLayout};
 use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::navigation::url_state::UrlNavigationState;
-use crate::races::RaceLabels;
+use warcraft_api::RaceLabels;
 use warcraft_database::UnitMode;
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
@@ -34,11 +34,11 @@ pub(crate) fn App() -> Element {
     // not, build the default. Either way, write the normalized text
     // back so the entry is always present and ready for the
     // persistence effect below to compare against.
-    let loaded_keys = use_signal::<Option<CustomKeysFile>>(|| {
+    let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
         let stored_text = LocalStorageCache::load_text();
         let initial_file = match stored_text {
-            Some(stored) => CustomKeysFile::from(stored.as_str()).normalize(),
-            None => CustomKeysFile::from("").normalize(),
+            Some(stored) => CustomKeys::from(stored.as_str()).normalize(),
+            None => CustomKeys::from("").normalize(),
         };
         let canonical_text = initial_file.to_string();
         LocalStorageCache::save_text(&canonical_text);
@@ -73,12 +73,12 @@ pub(crate) fn App() -> Element {
     let initial_nav = UrlNavigationState::from_url();
     let initial_race = initial_nav.race();
     let initial_mode = initial_nav.unit_mode();
-    let initial_unit_id = initial_nav.selected_unit_id();
-    let initial_search = initial_nav.search_query();
+    let initial_unit_id = initial_nav.selected_unit_id().map(|id| id.to_string());
+    let initial_search = initial_nav.search_query().to_string();
 
     let active_race = use_signal::<Race>(move || initial_race);
     let unit_mode = use_signal::<UnitMode>(move || initial_mode);
-    let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id.clone());
+    let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id);
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
@@ -88,7 +88,7 @@ pub(crate) fn App() -> Element {
     let mut drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
-    let search_query = use_signal::<String>(move || initial_search.clone());
+    let search_query = use_signal::<String>(move || initial_search);
     use_effect(move || {
         let race = *active_race.read();
         let mode = *unit_mode.read();
@@ -291,7 +291,7 @@ fn DragFollowerOverlay(
     let race_attribute = RaceLabels::data_attribute(*active_race.read());
     rsx! {
         div { class: "{class_name}", "data-race": "{race_attribute}", style: "{style_value}",
-            if let Some(source) = visual.icon_src() {
+            if let Some(source) = visual.icon_source() {
                 img {
                     src: "{source}",
                     alt: "{visual.label_text()}",

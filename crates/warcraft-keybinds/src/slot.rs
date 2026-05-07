@@ -2,21 +2,22 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
+use crate::ability_id::AbilityId;
 use crate::model::GridCoordinate;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum GridSlotId {
-    Ability(WarcraftObjectId),
-    AbilityOff(WarcraftObjectId),
+    Ability(AbilityId),
+    AbilityOff(AbilityId),
     Command(WarcraftObjectId),
 }
 
 impl GridSlotId {
-    pub fn ability(id: impl Into<WarcraftObjectId>) -> Self {
+    pub fn ability(id: impl Into<AbilityId>) -> Self {
         Self::Ability(id.into())
     }
 
-    pub fn ability_off(id: impl Into<WarcraftObjectId>) -> Self {
+    pub fn ability_off(id: impl Into<AbilityId>) -> Self {
         Self::AbilityOff(id.into())
     }
 
@@ -26,13 +27,15 @@ impl GridSlotId {
 
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::Ability(id) | Self::AbilityOff(id) | Self::Command(id) => id.value(),
+            Self::Ability(id) | Self::AbilityOff(id) => id.value(),
+            Self::Command(id) => id.value(),
         }
     }
 
     pub fn id(&self) -> WarcraftObjectId {
         match self {
-            Self::Ability(id) | Self::AbilityOff(id) | Self::Command(id) => *id,
+            Self::Ability(id) | Self::AbilityOff(id) => id.object_id(),
+            Self::Command(id) => *id,
         }
     }
 }
@@ -90,6 +93,20 @@ impl CommandCard {
         self.slots
             .iter()
             .all(|row| row.iter().all(|slot| slot.is_none()))
+    }
+
+    /// Place `slot` at the first empty position scanning left-to-right, top-to-bottom.
+    /// Returns `false` if all positions are occupied.
+    pub fn place_at_next_empty(&mut self, slot: GridSlotId) -> bool {
+        for row_index in 0..CARD_ROW_COUNT {
+            for column_index in 0..CARD_COLUMN_COUNT {
+                if self.slots[row_index][column_index].is_none() {
+                    self.slots[row_index][column_index] = Some(slot);
+                    return true;
+                }
+            }
+        }
+        false
     }
 
     pub fn filled_slots(&self) -> impl Iterator<Item = GridSlotId> + '_ {

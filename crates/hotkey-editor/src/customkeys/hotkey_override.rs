@@ -1,9 +1,6 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{AbilityCell, CustomKeys, HotkeyTarget, HotkeyToken};
 
-use warcraft_keybinds::HotkeyToken;
-
-use crate::ability_cell::AbilityCell;
 use crate::grid_layout::GridLayout;
 use crate::grid_slot::GridSlotId;
 
@@ -22,47 +19,21 @@ pub(crate) struct HotkeyOverride;
 
 impl HotkeyOverride {
     pub(crate) fn apply(
-        loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &'static str,
-        is_command: bool,
+        loaded_keys: &mut Signal<Option<CustomKeys>>,
+        target: HotkeyTarget,
         new_token: Option<HotkeyToken>,
     ) {
         let mut writable_guard = loaded_keys.write();
         let empty_source = "";
-        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
-        file.set_hotkey_for_slot(object_id, is_command, new_token);
-    }
-
-    pub(crate) fn apply_research(
-        loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &'static str,
-        new_token: Option<HotkeyToken>,
-    ) {
-        let mut writable_guard = loaded_keys.write();
-        let empty_source = "";
-        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
-        file.set_research_hotkey_for_slot(object_id, new_token);
-    }
-
-    /// Off-state hotkey for a toggle ability ("Stop Defend", "Unburrow"). The
-    /// `Unhotkey` field in CustomKeys.txt — bound independently of the
-    /// on-state `Hotkey`.
-    pub(crate) fn apply_unhotkey(
-        loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &'static str,
-        new_token: Option<HotkeyToken>,
-    ) {
-        let mut writable_guard = loaded_keys.write();
-        let empty_source = "";
-        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(empty_source));
-        file.set_unhotkey_for_slot(object_id, new_token);
+        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(empty_source));
+        file.set_hotkey(target, new_token);
     }
 
     pub(crate) fn detect_conflict(
         container_slots: &[GridSlotId],
         target_object_id: &str,
         proposed_token: HotkeyToken,
-        custom_keys: Option<&CustomKeysFile>,
+        custom_keys: Option<&CustomKeys>,
         layout: GridLayout,
         is_research_context: bool,
     ) -> Option<HotkeyConflict> {
@@ -81,22 +52,29 @@ impl HotkeyOverride {
         Some(conflict_record)
     }
 
-    fn display_name_for(slot: &GridSlotId, custom_keys: Option<&CustomKeysFile>) -> String {
+    fn display_name_for(slot: &GridSlotId, custom_keys: Option<&CustomKeys>) -> String {
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
-                let cell = AbilityCell::for_ability(*ability_id, binding);
-                cell.cloned_display_name()
+                let bound_id = *ability_id;
+                let binding = custom_keys.and_then(|file| file.binding(bound_id));
+                let cell = AbilityCell::for_ability(bound_id, binding);
+                let name = cell.display_name();
+                name.to_string()
             }
             GridSlotId::AbilityOff(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
-                let cell = AbilityCell::for_ability_off(*ability_id, binding);
-                cell.cloned_display_name()
+                let bound_id = *ability_id;
+                let binding = custom_keys.and_then(|file| file.binding(bound_id));
+                let cell = AbilityCell::for_ability_off(bound_id, binding);
+                let name = cell.display_name();
+                name.to_string()
             }
             GridSlotId::Command(command_name) => {
-                let binding = custom_keys.and_then(|file| file.command(command_name.value()));
-                let cell = AbilityCell::for_command(*command_name, binding);
-                cell.cloned_display_name()
+                let bound_name = *command_name;
+                let command_name_str = bound_name.value();
+                let binding = custom_keys.and_then(|file| file.command(command_name_str));
+                let cell = AbilityCell::for_command(bound_name, binding);
+                let name = cell.display_name();
+                name.to_string()
             }
         }
     }

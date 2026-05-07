@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use warcraft_api::SystemKeybindModifier;
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::system_hotkeys::scope::{ContextSet, context_set_for};
@@ -27,7 +27,7 @@ pub(crate) struct SystemBindingMap {
 }
 
 impl SystemBindingMap {
-    pub(crate) fn build(custom_keys: Option<&CustomKeysFile>) -> Self {
+    pub(crate) fn build(custom_keys: Option<&CustomKeys>) -> Self {
         let mut bindings_by_section: HashMap<String, ResolvedSystemBinding> =
             HashMap::with_capacity(WARCRAFT_SYSTEM_KEYBINDS.len());
         for entry in WARCRAFT_SYSTEM_KEYBINDS.iter() {

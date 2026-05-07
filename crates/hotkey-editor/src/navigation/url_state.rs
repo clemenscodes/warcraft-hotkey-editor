@@ -1,6 +1,6 @@
 use warcraft_api::Race;
-
-use crate::races::RaceLabels;
+#[cfg(target_arch = "wasm32")]
+use warcraft_api::RaceLabels;
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
 pub(crate) struct UrlNavigationState {
@@ -19,12 +19,12 @@ impl UrlNavigationState {
         self.unit_mode
     }
 
-    pub(crate) fn selected_unit_id(&self) -> Option<String> {
-        self.selected_unit_id.clone()
+    pub(crate) fn selected_unit_id(&self) -> Option<&str> {
+        self.selected_unit_id.as_deref()
     }
 
-    pub(crate) fn search_query(&self) -> String {
-        self.search_query.clone()
+    pub(crate) fn search_query(&self) -> &str {
+        &self.search_query
     }
 
     #[cfg(not(target_arch = "wasm32"))]
@@ -46,13 +46,24 @@ impl UrlNavigationState {
         let race_param = params.get("race");
         let race = race_param
             .as_deref()
-            .and_then(Self::race_from_param)
+            .and_then(|param| match param {
+                "human" => Some(Race::Human),
+                "orc" => Some(Race::Orc),
+                "nightelf" => Some(Race::Nightelf),
+                "undead" => Some(Race::Undead),
+                "neutral" => Some(Race::Neutral),
+                _ => None,
+            })
             .unwrap_or(Race::Human);
 
         let mode_param = params.get("mode");
         let unit_mode = mode_param
             .as_deref()
-            .and_then(Self::mode_from_param)
+            .and_then(|param| match param {
+                "melee" => Some(UnitMode::Melee),
+                "campaign" => Some(UnitMode::Campaign),
+                _ => None,
+            })
             .unwrap_or(UnitMode::Melee);
 
         let unit_param = params.get("unit");
@@ -88,8 +99,11 @@ impl UrlNavigationState {
             return;
         };
 
-        let race_param = Self::race_to_param(race);
-        let mode_param = Self::mode_to_param(unit_mode);
+        let race_param = RaceLabels::data_attribute(race);
+        let mode_param = match unit_mode {
+            UnitMode::Melee => "melee",
+            UnitMode::Campaign => "campaign",
+        };
         let mut url = format!("?race={race_param}&mode={mode_param}");
 
         if let Some(id) = unit_id {
@@ -116,36 +130,6 @@ impl UrlNavigationState {
             unit_mode,
             selected_unit_id,
             search_query: String::new(),
-        }
-    }
-
-    fn race_to_param(race: Race) -> &'static str {
-        RaceLabels::data_attribute(race)
-    }
-
-    fn race_from_param(param: &str) -> Option<Race> {
-        match param {
-            "human" => Some(Race::Human),
-            "orc" => Some(Race::Orc),
-            "nightelf" => Some(Race::Nightelf),
-            "undead" => Some(Race::Undead),
-            "neutral" => Some(Race::Neutral),
-            _ => None,
-        }
-    }
-
-    fn mode_to_param(mode: UnitMode) -> &'static str {
-        match mode {
-            UnitMode::Melee => "melee",
-            UnitMode::Campaign => "campaign",
-        }
-    }
-
-    fn mode_from_param(param: &str) -> Option<UnitMode> {
-        match param {
-            "melee" => Some(UnitMode::Melee),
-            "campaign" => Some(UnitMode::Campaign),
-            _ => None,
         }
     }
 }

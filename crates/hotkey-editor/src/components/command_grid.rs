@@ -7,13 +7,10 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
+use warcraft_keybinds::{AbilityCell, ColumnIndex, CustomKeys, RowIndex};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
-use warcraft_database::{BuildingTraits, ObjectLookup};
-
-use crate::ability_cell::AbilityCell;
 use crate::cursor_hit::{CursorPoint, HitTestPoint};
 use crate::customkeys::positions::{MoveRequest, Positions};
 use crate::focus::modality::FocusModality;
@@ -22,6 +19,7 @@ use crate::grid_slot::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
 };
 use crate::icons::IconUrl;
+use warcraft_database::{BuildingTraits, ObjectLookup};
 
 const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
 const TOUCH_CANCEL_THRESHOLD_PIXELS: f64 = 12.0;
@@ -29,8 +27,8 @@ const LONG_PRESS_MS: i32 = 300;
 
 #[derive(Clone, Copy)]
 struct DragOrigin {
-    cursor_x: f64,
-    cursor_y: f64,
+    cursor_horizontal_position: f64,
+    cursor_vertical_position: f64,
 }
 
 struct PendingDragData {
@@ -39,14 +37,14 @@ struct PendingDragData {
     column: u8,
     row: u8,
     visual: DragFollowerVisual,
-    click_offset_x: f64,
-    click_offset_y: f64,
+    click_offset_horizontal: f64,
+    click_offset_vertical: f64,
     tile_width: f64,
     tile_height: f64,
     tile_element: web_sys::Element,
     pointer_id: i32,
-    last_cursor_x: f64,
-    last_cursor_y: f64,
+    last_cursor_horizontal_position: f64,
+    last_cursor_vertical_position: f64,
     is_touch: bool,
 }
 
@@ -173,7 +171,7 @@ fn tile_class(
 pub(crate) struct CommandGridSectionProps {
     pub(crate) heading: &'static str,
     pub(crate) slot_ids: Rc<[GridSlotId]>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeysFile>>,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
     pub(crate) selected_slot: Signal<Option<GridSlotId>>,
     pub(crate) selected_from_research: Signal<bool>,
     pub(crate) selected_from_uprooted: Signal<bool>,
@@ -319,7 +317,10 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // This makes drag-and-drop write Unbuttonpos instead of
                             // Buttonpos and wires selection to the off-state inspector.
                             let occupant_slot: Option<GridSlotId> = if morph_reverse_cell.is_some() {
-                                raw_occupant_slot.map(|slot| GridSlotId::AbilityOff(slot.id()))
+                                raw_occupant_slot.map(|slot| {
+                                    let slot_object_id = slot.id();
+                                    GridSlotId::ability_off(slot_object_id)
+                                })
                             } else {
                                 raw_occupant_slot
                             };
@@ -379,8 +380,9 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                     }) {
                                         return false;
                                     }
+                                    let bound_ability_id = *ability_id;
                                     Positions::current_for_ability_off(
-                                        ability_id.value(),
+                                        bound_ability_id,
                                         custom_keys_option,
                                     )
                                     .is_some_and(|off_pos| {
@@ -430,11 +432,11 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             };
                             let icon_src_option = if cell_tier_index > 0 {
                                 cell_tier_icon
-                                    .or_else(|| cell_option.as_ref().and_then(|cell| cell.cloned_icon_src()))
+                                    .or_else(|| cell_option.as_ref().and_then(|cell| cell.icon_path().map(IconUrl::from_icon_path)))
                             } else {
                                 cell_option
                                     .as_ref()
-                                    .and_then(|cell| cell.cloned_icon_src())
+                                    .and_then(|cell| cell.icon_path().map(IconUrl::from_icon_path))
                                     .or(cell_tier_icon)
                             };
                             let binding_letter_option = cell_option.as_ref().and_then(|cell| {
@@ -464,7 +466,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             } else {
                                 "hotkey-overlay"
                             };
-                            let icon_src_for_drag = icon_src_option.as_ref().map(|url| url.to_string());
+                            let icon_src_for_drag = icon_src_option.clone();
                             let label_for_drag = label_text.clone();
                             let displayed_letter_for_drag = displayed_letter.clone();
                             let slot_ids_for_drop = slot_ids_cloned.clone();
@@ -580,15 +582,18 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 return;
                                             };
                                             let tile_rect = tile_element.get_bounding_client_rect();
-                                            let cursor_x = f64::from(web_event.client_x());
-                                            let cursor_y = f64::from(web_event.client_y());
-                                            let click_offset_x = cursor_x - tile_rect.left();
-                                            let click_offset_y = cursor_y - tile_rect.top();
+                                            let cursor_horizontal_position = f64::from(web_event.client_x());
+                                            let cursor_vertical_position = f64::from(web_event.client_y());
+                                            let click_offset_horizontal = cursor_horizontal_position - tile_rect.left();
+                                            let click_offset_vertical = cursor_vertical_position - tile_rect.top();
                                             let tile_width = tile_rect.width();
                                             let tile_height = tile_rect.height();
                                             let pointer_id = web_event.pointer_id();
 
-                                            let drag_origin = DragOrigin { cursor_x, cursor_y };
+                                            let drag_origin = DragOrigin {
+                                                cursor_horizontal_position,
+                                                cursor_vertical_position,
+                                            };
                                             DRAG_ORIGIN.with(|cell| cell.set(Some(drag_origin)));
                                             DID_DRAG_MOVE.with(|cell| cell.set(false));
 
@@ -605,14 +610,14 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 column,
                                                 row,
                                                 visual,
-                                                click_offset_x,
-                                                click_offset_y,
+                                                click_offset_horizontal,
+                                                click_offset_vertical,
                                                 tile_width,
                                                 tile_height,
                                                 tile_element,
                                                 pointer_id,
-                                                last_cursor_x: cursor_x,
-                                                last_cursor_y: cursor_y,
+                                                last_cursor_horizontal_position: cursor_horizontal_position,
+                                                last_cursor_vertical_position: cursor_vertical_position,
                                                 is_touch,
                                             };
                                             PENDING_DRAG.with(|cell| *cell.borrow_mut() = Some(pending));
@@ -640,10 +645,10 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     drop_target_cell_cb.set(Some(initial_target));
                                                     let follower = DragFollower::new(
                                                         pending.visual,
-                                                        pending.click_offset_x,
-                                                        pending.click_offset_y,
-                                                        pending.last_cursor_x,
-                                                        pending.last_cursor_y,
+                                                        pending.click_offset_horizontal,
+                                                        pending.click_offset_vertical,
+                                                        pending.last_cursor_horizontal_position,
+                                                        pending.last_cursor_vertical_position,
                                                         pending.tile_width,
                                                         pending.tile_height,
                                                     );
@@ -672,8 +677,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             let Some(web_event) = event.data().try_as_web_event() else {
                                                 return;
                                             };
-                                            let cursor_x = f64::from(web_event.client_x());
-                                            let cursor_y = f64::from(web_event.client_y());
+                                            let cursor_horizontal_position = f64::from(web_event.client_x());
+                                            let cursor_vertical_position = f64::from(web_event.client_y());
 
                                             if has_pending {
                                                 // Reject stale pending from a previous gesture whose
@@ -698,9 +703,9 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     // drifted far enough to be a swipe.
                                                     let origin_option = DRAG_ORIGIN.with(|cell| cell.get());
                                                     if let Some(origin) = origin_option {
-                                                        let dx = cursor_x - origin.cursor_x;
-                                                        let dy = cursor_y - origin.cursor_y;
-                                                        if dx * dx + dy * dy > TOUCH_CANCEL_THRESHOLD_PIXELS * TOUCH_CANCEL_THRESHOLD_PIXELS {
+                                                        let horizontal_delta = cursor_horizontal_position - origin.cursor_horizontal_position;
+                                                        let vertical_delta = cursor_vertical_position - origin.cursor_vertical_position;
+                                                        if horizontal_delta * horizontal_delta + vertical_delta * vertical_delta > TOUCH_CANCEL_THRESHOLD_PIXELS * TOUCH_CANCEL_THRESHOLD_PIXELS {
                                                             DragThreadState::cancel_long_press();
                                                             PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
                                                             DRAG_ORIGIN.with(|cell| cell.set(None));
@@ -711,8 +716,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     // appears at the right spot when the timer fires.
                                                     PENDING_DRAG.with(|cell| {
                                                         if let Some(p) = cell.borrow_mut().as_mut() {
-                                                            p.last_cursor_x = cursor_x;
-                                                            p.last_cursor_y = cursor_y;
+                                                            p.last_cursor_horizontal_position = cursor_horizontal_position;
+                                                            p.last_cursor_vertical_position = cursor_vertical_position;
                                                         }
                                                     });
                                                     // Drag not yet committed; wait for timer.
@@ -723,9 +728,9 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     // Mouse pending: commit on movement threshold.
                                                     let origin_option = DRAG_ORIGIN.with(|cell| cell.get());
                                                     if let Some(origin) = origin_option {
-                                                        let delta_x = cursor_x - origin.cursor_x;
-                                                        let delta_y = cursor_y - origin.cursor_y;
-                                                        let distance_squared = delta_x * delta_x + delta_y * delta_y;
+                                                        let horizontal_delta = cursor_horizontal_position - origin.cursor_horizontal_position;
+                                                        let vertical_delta = cursor_vertical_position - origin.cursor_vertical_position;
+                                                        let distance_squared = horizontal_delta * horizontal_delta + vertical_delta * vertical_delta;
                                                         let threshold_squared = DRAG_MOVEMENT_THRESHOLD_PIXELS
                                                             * DRAG_MOVEMENT_THRESHOLD_PIXELS;
                                                         if distance_squared > threshold_squared {
@@ -742,8 +747,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                                 let pending_column = pending.column;
                                                                 let pending_row = pending.row;
                                                                 let pending_visual = pending.visual;
-                                                                let pending_click_offset_x = pending.click_offset_x;
-                                                                let pending_click_offset_y = pending.click_offset_y;
+                                                                let pending_click_offset_horizontal = pending.click_offset_horizontal;
+                                                                let pending_click_offset_vertical = pending.click_offset_vertical;
                                                                 let pending_tile_width = pending.tile_width;
                                                                 let pending_tile_height = pending.tile_height;
                                                                 let dragging = DraggingSlot::new(pending_source_slot, pending_section);
@@ -752,10 +757,10 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                                 drop_target_cell.set(Some(initial_target));
                                                                 let follower = DragFollower::new(
                                                                     pending_visual,
-                                                                    pending_click_offset_x,
-                                                                    pending_click_offset_y,
-                                                                    cursor_x,
-                                                                    cursor_y,
+                                                                    pending_click_offset_horizontal,
+                                                                    pending_click_offset_vertical,
+                                                                    cursor_horizontal_position,
+                                                                    cursor_vertical_position,
                                                                     pending_tile_width,
                                                                     pending_tile_height,
                                                                 );
@@ -771,7 +776,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
 
                                             let current_follower_option = drag_follower.read().clone();
                                             if let Some(mut current_follower) = current_follower_option {
-                                                current_follower.set_cursor(cursor_x, cursor_y);
+                                                current_follower.set_cursor_position(cursor_horizontal_position, cursor_vertical_position);
                                                 drag_follower.set(Some(current_follower));
                                             }
 
@@ -779,12 +784,12 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             let Some(document) = document_option else {
                                                 return;
                                             };
-                                            let cursor_point = CursorPoint::new(cursor_x, cursor_y);
+                                            let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
                                             let hit_test_point = HitTestPoint::from(cursor_point);
-                                            let hit_test_x = hit_test_point.x();
-                                            let hit_test_y = hit_test_point.y();
+                                            let hit_test_horizontal = hit_test_point.horizontal_position();
+                                            let hit_test_vertical = hit_test_point.vertical_position();
                                             let elem_under_option = document
-                                                .element_from_point(hit_test_x, hit_test_y);
+                                                .element_from_point(hit_test_horizontal, hit_test_vertical);
                                             let tile_under_option = elem_under_option
                                                 .and_then(|elem| elem.closest(".grid-tile").ok().flatten());
                                             let Some(tile_under) = tile_under_option else {
@@ -874,9 +879,10 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                             if id.value().eq_ignore_ascii_case(moving_id) {
                                                                 return None;
                                                             }
+                                                            let bound_id = *id;
                                                             let off_pos =
                                                                 Positions::current_for_ability_off(
-                                                                    id.value(),
+                                                                    bound_id,
                                                                     custom_keys,
                                                                 )?;
                                                             if off_pos.column().as_u8()

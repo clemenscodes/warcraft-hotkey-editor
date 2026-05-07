@@ -1,9 +1,8 @@
 use dioxus::prelude::{Signal, WritableExt};
-use warcraft_keybinds::{CustomKeysFile, GridCoordinate, GridLayout};
+use warcraft_keybinds::{AbilityCell, AbilityId, CustomKeys, GridCoordinate, GridLayout};
 
 pub(crate) use warcraft_keybinds::MoveRequest;
 
-use crate::ability_cell::AbilityCell;
 use crate::grid_slot::GridSlotId;
 
 pub(crate) struct GridCellOccupant {
@@ -24,18 +23,9 @@ impl GridCellOccupant {
 pub(crate) struct Positions;
 
 impl Positions {
-    pub(crate) fn current_for(
-        slot: &GridSlotId,
-        custom_keys: Option<&CustomKeysFile>,
-        is_research_context: bool,
-    ) -> Option<GridCoordinate> {
-        let file = custom_keys?;
-        file.position_for_slot(slot, is_research_context)
-    }
-
     pub(crate) fn current_for_ability_off(
-        ability_id: &str,
-        custom_keys: Option<&CustomKeysFile>,
+        ability_id: AbilityId,
+        custom_keys: Option<&CustomKeys>,
     ) -> Option<GridCoordinate> {
         let file = custom_keys?;
         let binding = file.binding(ability_id)?;
@@ -44,7 +34,7 @@ impl Positions {
 
     pub(crate) fn cell_for_position(
         candidate_slots: &[GridSlotId],
-        custom_keys: Option<&CustomKeysFile>,
+        custom_keys: Option<&CustomKeys>,
         is_research_context: bool,
         column: u8,
         row: u8,
@@ -53,15 +43,16 @@ impl Positions {
         let slot_id = file.slot_at_position(candidate_slots, is_research_context, column, row)?;
         let cell = match slot_id {
             GridSlotId::Ability(ability_id) => {
-                let binding = file.binding(ability_id.value());
+                let binding = file.binding(ability_id);
                 AbilityCell::for_ability(ability_id, binding)
             }
             GridSlotId::AbilityOff(ability_id) => {
-                let binding = file.binding(ability_id.value());
+                let binding = file.binding(ability_id);
                 AbilityCell::for_ability_off(ability_id, binding)
             }
             GridSlotId::Command(command_name) => {
-                let binding = file.command(command_name.value());
+                let command_name_str = command_name.value();
+                let binding = file.command(command_name_str);
                 AbilityCell::for_command(command_name, binding)
             }
         };
@@ -70,20 +61,20 @@ impl Positions {
     }
 
     pub(crate) fn move_or_swap(
-        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        custom_keys_signal: &mut Signal<Option<CustomKeys>>,
         request: MoveRequest<'_>,
     ) {
         let mut writable_guard = custom_keys_signal.write();
-        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(""));
         file.move_slot(&request);
     }
 
     pub(crate) fn apply_grid_to_all_known_objects(
-        custom_keys_signal: &mut Signal<Option<CustomKeysFile>>,
+        custom_keys_signal: &mut Signal<Option<CustomKeys>>,
         layout: GridLayout,
     ) -> usize {
         let mut writable_guard = custom_keys_signal.write();
-        let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
+        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(""));
         file.apply_grid_to_all_bindings(layout)
     }
 }

@@ -1,18 +1,18 @@
 use std::sync::OnceLock;
 
 use warcraft_api::WarcraftObjectMeta;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use warcraft_api::UnitKind;
 
 use warcraft_database::{CommandCatalog, ObjectLookup, UnitKindHelpers};
 
-use crate::ability_cell::AbilityCell;
 use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::default_config::DefaultConfig;
 use crate::customkeys::positions::Positions;
 use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::grid_slot::GridSlotId;
+use warcraft_keybinds::AbilityCell;
 
 const ARCHMAGE_UNIT_ID: &str = "Hamg";
 
@@ -117,9 +117,9 @@ impl ResolvedTemplate {
         TEMPLATES
             .iter()
             .map(|template| {
-                let parsed_file = CustomKeysFile::from(template.content());
+                let parsed_file = CustomKeys::from(template.content());
                 let derived_grid = GridLayout::derived_from(&parsed_file);
-                let mut preview_file = CustomKeysFile::from(baseline_content());
+                let mut preview_file = CustomKeys::from(baseline_content());
                 preview_file.extend(parsed_file);
                 let command_card_cells = CellGrid::populate(&preview_file, command_slots, false);
                 let research_menu_cells = CellGrid::populate(&preview_file, research_slots, true);
@@ -138,7 +138,7 @@ struct CellGrid;
 
 impl CellGrid {
     fn populate(
-        file: &CustomKeysFile,
+        file: &CustomKeys,
         slot_ids: &[GridSlotId],
         is_research_context: bool,
     ) -> Vec<Vec<Option<AbilityCell>>> {

@@ -8,16 +8,16 @@ use warcraft_api::{
     UnitAttack, UnitCombat, UnitKind, WarcraftObjectId, WarcraftObjectMeta,
 };
 use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::tile_override::TileOverridePanel;
 use warcraft_database::{BuildingTraits, CommandCatalog};
+use warcraft_keybinds::InspectorDetail;
 
 use crate::grid_layout::GridLayout;
 use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::icons::IconUrl;
-use crate::inspector_detail::InspectorDetail;
 use warcraft_database::{ObjectLookup, UnitKindHelpers};
 
 const MAX_HERO_LEVEL_DISPLAY: u32 = 10;
@@ -118,7 +118,7 @@ pub(crate) fn UnitDetailPanel(
     dragging_slot: Signal<Option<DraggingSlot>>,
     drop_target_cell: Signal<Option<DropTargetCell>>,
     drag_follower: Signal<Option<DragFollower>>,
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
 ) -> Element {
     let mut selected_hero_level = use_signal::<u32>(|| 1);

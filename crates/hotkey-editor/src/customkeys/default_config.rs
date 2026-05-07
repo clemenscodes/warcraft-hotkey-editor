@@ -10,7 +10,7 @@ impl DefaultConfig {
 mod tests {
     use warcraft_api::WarcraftObjectMeta;
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
-    use warcraft_keybinds::CustomKeysFile;
+    use warcraft_keybinds::CustomKeys;
 
     use crate::grid_layout::GridLayout;
     use warcraft_database::ObjectLookup;
@@ -24,7 +24,7 @@ mod tests {
     }
 
     fn build_text(layout: &GridLayout) -> String {
-        let tmpl = CustomKeysFile::from(include_str!("../../templates/CustomKeys.txt"));
+        let tmpl = CustomKeys::from(include_str!("../../templates/CustomKeys.txt"));
         let mut out = String::new();
 
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {

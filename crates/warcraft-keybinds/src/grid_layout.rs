@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::file::CustomKeysFile;
+use crate::custom_keys::CustomKeys;
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
 
 pub const COMMAND_GRID_COLUMNS: u8 = 4;
@@ -36,7 +36,7 @@ impl GridLayout {
         buffer
     }
 
-    pub fn derived_from(file: &CustomKeysFile) -> Self {
+    pub fn derived_from(file: &CustomKeys) -> Self {
         let mut histograms: [[HashMap<char, u32>; 4]; 3] =
             std::array::from_fn(|_| std::array::from_fn(|_| HashMap::new()));
         for entry in file.bindings_in_order() {

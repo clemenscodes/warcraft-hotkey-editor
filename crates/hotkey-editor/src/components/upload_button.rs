@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::icons::ICON_UPLOAD;
 use crate::components::upload_info_dialog::UploadInfoDialog;
@@ -10,7 +10,7 @@ use crate::customkeys::upload_status::UploadStatus;
 
 #[component]
 pub(crate) fn UploadButton(
-    mut loaded_keys: Signal<Option<CustomKeysFile>>,
+    mut loaded_keys: Signal<Option<CustomKeys>>,
     mut upload_status: Signal<UploadStatus>,
 ) -> Element {
     let toast_api = use_toast();
@@ -26,10 +26,10 @@ pub(crate) fn UploadButton(
         spawn(async move {
             match first_file.read_string().await {
                 Ok(contents) => {
-                    let uploaded_only = CustomKeysFile::from(contents.as_str());
+                    let uploaded_only = CustomKeys::from(contents.as_str());
                     let binding_count = uploaded_only.bindings_in_order().count();
                     let command_count = uploaded_only.commands_in_order().count();
-                    let mut baseline_file = CustomKeysFile::from(baseline_content());
+                    let mut baseline_file = CustomKeys::from(baseline_content());
                     baseline_file.extend(uploaded_only);
                     loaded_keys.set(Some(baseline_file));
                     let loaded_status = UploadStatus::Loaded {

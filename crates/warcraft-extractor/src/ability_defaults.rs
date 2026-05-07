@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use warcraft_api::GridCoordinate;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
 
@@ -82,12 +82,12 @@ impl AbilityDefaultsExtraction {
     fn process(_: &str, bytes: &[u8]) -> Result<ExtractResult, ExtractError> {
         let text = std::str::from_utf8(bytes)
             .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidData, "invalid UTF-8"))?;
-        let parsed = CustomKeysFile::from(text);
+        let parsed = CustomKeys::from(text);
         let requires_map = Self::extract_requires(text);
 
         let mut database = AbilityDefaultsDatabase::new();
         for entry in parsed.bindings_in_order() {
-            let id = entry.id();
+            let ability_id = entry.ability_id();
             let binding = entry.binding();
             let regular_position = binding.button_position();
             let research_position = binding.research_button_position();
@@ -97,7 +97,7 @@ impl AbilityDefaultsExtraction {
             let off_ubertip = binding.un_ubertip().map(str::to_owned);
             let off_tip = binding.un_tip().map(str::to_owned);
             let off_icon = binding.un_icon().map(str::to_owned);
-            let requires = requires_map.get(id.value()).cloned();
+            let requires = requires_map.get(ability_id.value()).cloned();
 
             if regular_position.is_none()
                 && research_position.is_none()
@@ -123,13 +123,13 @@ impl AbilityDefaultsExtraction {
                 off_icon,
                 requires,
             };
-            database.insert(id.value().to_string(), entry_data);
+            database.insert(ability_id.value().to_string(), entry_data);
         }
         Ok(ExtractResult::AbilityDefaults(database))
     }
 
     /// Scan the raw func file text for `Requires=` entries per ability section.
-    /// The `CustomKeysFile` parser doesn't expose this field, so we scan directly.
+    /// The `CustomKeys` parser doesn't expose this field, so we scan directly.
     fn extract_requires(text: &str) -> std::collections::HashMap<String, String> {
         let mut result = std::collections::HashMap::new();
         let mut current_id: Option<&str> = None;

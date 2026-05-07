@@ -7,7 +7,8 @@ use warcraft_api::{
 };
 use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
-use crate::file::CustomKeysFile;
+use crate::ability_id::AbilityId;
+use crate::custom_keys::CustomKeys;
 use crate::hotkey_token::HotkeyToken;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -624,17 +625,20 @@ impl WarcraftKeybinding {
 }
 
 pub struct BindingEntry<'a> {
-    id: WarcraftObjectId,
+    ability_id: AbilityId,
     binding: &'a AbilityBinding,
 }
 
 impl<'a> BindingEntry<'a> {
-    pub(crate) fn new(id: WarcraftObjectId, binding: &'a AbilityBinding) -> Self {
-        Self { id, binding }
+    pub(crate) fn new(ability_id: AbilityId, binding: &'a AbilityBinding) -> Self {
+        Self {
+            ability_id,
+            binding,
+        }
     }
 
-    pub fn id(&self) -> WarcraftObjectId {
-        self.id
+    pub fn ability_id(&self) -> AbilityId {
+        self.ability_id
     }
 
     pub fn binding(&self) -> &'a AbilityBinding {
@@ -1277,12 +1281,12 @@ impl From<CommandBindingBuilder> for CommandBinding {
 }
 
 #[derive(Default)]
-pub struct CustomKeysFileBuilder {
-    file: CustomKeysFile,
+pub struct CustomKeysBuilder {
+    file: CustomKeys,
 }
 
-impl CustomKeysFileBuilder {
-    pub fn ability(mut self, id: impl Into<WarcraftObjectId>, binding: AbilityBinding) -> Self {
+impl CustomKeysBuilder {
+    pub fn ability(mut self, id: impl Into<AbilityId>, binding: AbilityBinding) -> Self {
         self.file.put_ability(id, binding);
         self
     }
@@ -1297,13 +1301,13 @@ impl CustomKeysFileBuilder {
         self
     }
 
-    pub fn build(self) -> CustomKeysFile {
-        CustomKeysFile::from(self)
+    pub fn build(self) -> CustomKeys {
+        CustomKeys::from(self)
     }
 }
 
-impl From<CustomKeysFileBuilder> for CustomKeysFile {
-    fn from(builder: CustomKeysFileBuilder) -> Self {
+impl From<CustomKeysBuilder> for CustomKeys {
+    fn from(builder: CustomKeysBuilder) -> Self {
         builder.file
     }
 }
@@ -1651,9 +1655,9 @@ mod builder_tests {
             .un_icon("buttons\\BTNBar.blp")
             .modifier(AbilityModifier::Shift)
             .build();
-        let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
+        let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeysFile::from(serialized.as_str());
+        let reparsed = CustomKeys::from(serialized.as_str());
         let reparsed_binding = reparsed
             .binding("Ahrl")
             .expect("Ahrl must survive round-trip");
@@ -1689,9 +1693,9 @@ mod builder_tests {
     fn ability_builder_function_key_hotkey_round_trips() {
         let hotkey = Hotkey::FunctionKey(5);
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
-        let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
+        let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeysFile::from(serialized.as_str());
+        let reparsed = CustomKeys::from(serialized.as_str());
         let hotkey_value = reparsed
             .binding("Ahrl")
             .and_then(|binding| binding.hotkey());
@@ -1762,11 +1766,9 @@ mod builder_tests {
             .tip("Move Unit")
             .un_tip("Cancel Move")
             .build();
-        let file = CustomKeysFile::builder()
-            .command("CmdMove", binding)
-            .build();
+        let file = CustomKeys::builder().command("CmdMove", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeysFile::from(serialized.as_str());
+        let reparsed = CustomKeys::from(serialized.as_str());
         let reparsed_binding = reparsed
             .command("CmdMove")
             .expect("CmdMove must survive round-trip");
@@ -1792,7 +1794,7 @@ mod builder_tests {
             .hotkey(hotkey)
             .button_position(position)
             .build();
-        let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
+        let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let retrieved = file.binding("Ahrl").expect("Ahrl must be present");
         assert_eq!(retrieved.hotkey(), Some(&expected));
     }
@@ -1801,7 +1803,7 @@ mod builder_tests {
     fn file_builder_lookup_uses_canonical_case() {
         let hotkey = Hotkey::from('T');
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
-        let file = CustomKeysFile::builder().ability("Hpal", binding).build();
+        let file = CustomKeys::builder().ability("Hpal", binding).build();
         assert!(file.binding("Hpal").is_some());
     }
 
@@ -1810,14 +1812,14 @@ mod builder_tests {
         let binding_ahrl = AbilityBinding::builder().tip("First").build();
         let binding_ahbz = AbilityBinding::builder().tip("Second").build();
         let binding_ahhb = AbilityBinding::builder().tip("Third").build();
-        let file = CustomKeysFile::builder()
+        let file = CustomKeys::builder()
             .ability("Ahrl", binding_ahrl)
             .ability("AHbz", binding_ahbz)
             .ability("AHhb", binding_ahhb)
             .build();
         let ids: Vec<&str> = file
             .bindings_in_order()
-            .map(|entry| entry.id().value())
+            .map(|entry| entry.ability_id().value())
             .collect();
         assert_eq!(ids, ["AHbz", "AHhb", "Ahrl"]);
     }
@@ -1827,9 +1829,7 @@ mod builder_tests {
         let hotkey = Hotkey::from('A');
         let expected = Hotkey::from('A');
         let binding = CommandBinding::builder().hotkey(hotkey).build();
-        let file = CustomKeysFile::builder()
-            .command("CmdAttack", binding)
-            .build();
+        let file = CustomKeys::builder().command("CmdAttack", binding).build();
         let retrieved = file
             .command("CmdAttack")
             .expect("CmdAttack must be present");
@@ -1839,7 +1839,7 @@ mod builder_tests {
     #[test]
     fn file_builder_system_entry_is_accessible() {
         let binding = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
-        let file = CustomKeysFile::builder()
+        let file = CustomKeys::builder()
             .system("IsHeroSelect", binding)
             .build();
         let retrieved = file
@@ -1856,7 +1856,7 @@ mod builder_tests {
         let command_hotkey = Hotkey::from('A');
         let command = CommandBinding::builder().hotkey(command_hotkey).build();
         let system = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
-        let file = CustomKeysFile::builder()
+        let file = CustomKeys::builder()
             .ability("Ahrl", ability)
             .command("CmdAttack", command)
             .system("IsHeroSelect", system)
@@ -1870,7 +1870,7 @@ mod builder_tests {
     fn file_builder_ability_is_not_returned_as_command() {
         let hotkey = Hotkey::from('Q');
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
-        let file = CustomKeysFile::builder().ability("Ahrl", binding).build();
+        let file = CustomKeys::builder().ability("Ahrl", binding).build();
         assert!(file.command("Ahrl").is_none());
         assert!(file.system("Ahrl").is_none());
     }
@@ -1878,7 +1878,7 @@ mod builder_tests {
     #[test]
     fn file_builder_serializes_ability_section_header() {
         let binding = AbilityBinding::builder().tip("test").build();
-        let file = CustomKeysFile::builder().ability("AHhb", binding).build();
+        let file = CustomKeys::builder().ability("AHhb", binding).build();
         let serialized = file.to_string();
         assert!(
             serialized.contains("[ahhb]"),
@@ -1889,9 +1889,7 @@ mod builder_tests {
     #[test]
     fn file_builder_serializes_command_section_header() {
         let binding = CommandBinding::builder().tip("Move").build();
-        let file = CustomKeysFile::builder()
-            .command("CmdMove", binding)
-            .build();
+        let file = CustomKeys::builder().command("CmdMove", binding).build();
         let serialized = file.to_string();
         assert!(
             serialized.contains("[cmdmove]"),
@@ -1908,9 +1906,9 @@ mod builder_tests {
             .button_position(position)
             .tip("Holy Light")
             .build();
-        let original_file = CustomKeysFile::builder().ability("Ahrl", binding).build();
+        let original_file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = original_file.to_string();
-        let reparsed_file = CustomKeysFile::from(serialized.as_str());
+        let reparsed_file = CustomKeys::from(serialized.as_str());
         let original_binding = original_file.binding("Ahrl").expect("present in original");
         let reparsed_binding = reparsed_file
             .binding("Ahrl")
@@ -1930,9 +1928,9 @@ mod builder_tests {
             SystemKeybindClass::ControlGroup,
             Some(SystemKeybindModifier::Ctrl),
         );
-        let file = CustomKeysFile::builder().system("Ctr1", binding).build();
+        let file = CustomKeys::builder().system("Ctr1", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeysFile::from(serialized.as_str());
+        let reparsed = CustomKeys::from(serialized.as_str());
         let retrieved = reparsed.system("Ctr1").expect("must survive round-trip");
         assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(49));
         assert_eq!(retrieved.class(), SystemKeybindClass::ControlGroup);

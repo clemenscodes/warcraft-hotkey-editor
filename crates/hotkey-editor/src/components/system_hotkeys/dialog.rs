@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
@@ -14,7 +14,7 @@ const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item
 
 #[component]
 pub(crate) fn SystemHotkeysDialog(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     mut system_hotkeys_open: Signal<bool>,
 ) -> Element {
     let editing_section = use_signal::<Option<String>>(|| None);

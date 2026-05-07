@@ -1,3 +1,5 @@
+use crate::icons::IconUrl;
+
 pub(crate) use warcraft_keybinds::GridSlotId;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -54,7 +56,7 @@ impl DropTargetCell {
 
 #[derive(Clone, PartialEq, Debug)]
 pub(crate) struct DragFollowerVisual {
-    icon_src: Option<String>,
+    icon_source: Option<IconUrl>,
     label_text: String,
     displayed_letter: Option<String>,
     is_passive_command: bool,
@@ -63,14 +65,14 @@ pub(crate) struct DragFollowerVisual {
 
 impl DragFollowerVisual {
     pub(crate) fn new(
-        icon_src: Option<String>,
+        icon_source: Option<IconUrl>,
         label_text: String,
         displayed_letter: Option<String>,
         is_passive_command: bool,
         is_command_cell: bool,
     ) -> Self {
         Self {
-            icon_src,
+            icon_source,
             label_text,
             displayed_letter,
             is_passive_command,
@@ -78,8 +80,8 @@ impl DragFollowerVisual {
         }
     }
 
-    pub(crate) fn icon_src(&self) -> Option<&str> {
-        self.icon_src.as_deref()
+    pub(crate) fn icon_source(&self) -> Option<&str> {
+        self.icon_source.as_ref().map(|icon| icon.url())
     }
 
     pub(crate) fn label_text(&self) -> &str {
@@ -102,10 +104,10 @@ impl DragFollowerVisual {
 #[derive(Clone, PartialEq, Debug)]
 pub(crate) struct DragFollower {
     visual: DragFollowerVisual,
-    click_offset_x: f64,
-    click_offset_y: f64,
-    cursor_x: f64,
-    cursor_y: f64,
+    click_offset_horizontal: f64,
+    click_offset_vertical: f64,
+    cursor_horizontal_position: f64,
+    cursor_vertical_position: f64,
     tile_width: f64,
     tile_height: f64,
 }
@@ -113,19 +115,19 @@ pub(crate) struct DragFollower {
 impl DragFollower {
     pub(crate) fn new(
         visual: DragFollowerVisual,
-        click_offset_x: f64,
-        click_offset_y: f64,
-        cursor_x: f64,
-        cursor_y: f64,
+        click_offset_horizontal: f64,
+        click_offset_vertical: f64,
+        cursor_horizontal_position: f64,
+        cursor_vertical_position: f64,
         tile_width: f64,
         tile_height: f64,
     ) -> Self {
         Self {
             visual,
-            click_offset_x,
-            click_offset_y,
-            cursor_x,
-            cursor_y,
+            click_offset_horizontal,
+            click_offset_vertical,
+            cursor_horizontal_position,
+            cursor_vertical_position,
             tile_width,
             tile_height,
         }
@@ -144,15 +146,19 @@ impl DragFollower {
     }
 
     pub(crate) fn left(&self) -> f64 {
-        self.cursor_x - self.click_offset_x
+        self.cursor_horizontal_position - self.click_offset_horizontal
     }
 
     pub(crate) fn top(&self) -> f64 {
-        self.cursor_y - self.click_offset_y
+        self.cursor_vertical_position - self.click_offset_vertical
     }
 
-    pub(crate) fn set_cursor(&mut self, cursor_x: f64, cursor_y: f64) {
-        self.cursor_x = cursor_x;
-        self.cursor_y = cursor_y;
+    pub(crate) fn set_cursor_position(
+        &mut self,
+        cursor_horizontal_position: f64,
+        cursor_vertical_position: f64,
+    ) {
+        self.cursor_horizontal_position = cursor_horizontal_position;
+        self.cursor_vertical_position = cursor_vertical_position;
     }
 }

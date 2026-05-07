@@ -1,7 +1,7 @@
-pub(crate) struct WarcraftColorCodes;
+pub struct WarcraftColorCodes;
 
 impl WarcraftColorCodes {
-    pub(crate) fn stripped(input: &str) -> String {
+    pub fn stripped(input: &str) -> String {
         let mut output = String::with_capacity(input.len());
         let mut characters = input.chars().peekable();
         while let Some(current_character) = characters.next() {

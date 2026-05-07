@@ -139,6 +139,7 @@ impl UnitCommandSlots for WarcraftDatabase {
             card.place(slot_position, research_slot);
         }
 
+        let mut unplaced_sell_item_slots: Vec<GridSlotId> = Vec::new();
         for sell_item_id in sell_items {
             let sell_item_str = sell_item_id.value();
             let sell_item_object = self.by_id(sell_item_str);
@@ -147,13 +148,23 @@ impl UnitCommandSlots for WarcraftDatabase {
             if !sell_item_has_icon {
                 continue;
             }
-            let Some(slot_position) = slot_position_from_database(self, sell_item_str) else {
-                continue;
-            };
             let sell_item_slot = GridSlotId::ability(sell_item_str);
-            card.place(slot_position, sell_item_slot);
+            match slot_position_from_database(self, sell_item_str) {
+                Some(sell_item_position) => {
+                    if !card.place(sell_item_position, sell_item_slot) {
+                        unplaced_sell_item_slots.push(sell_item_slot);
+                    }
+                }
+                None => {
+                    unplaced_sell_item_slots.push(sell_item_slot);
+                }
+            }
+        }
+        for unplaced_slot in unplaced_sell_item_slots {
+            card.place_at_next_empty(unplaced_slot);
         }
 
+        let mut unplaced_sell_unit_slots: Vec<GridSlotId> = Vec::new();
         for sell_unit_id in sell_units {
             let sell_unit_str = sell_unit_id.value();
             let sell_unit_object = self.by_id(sell_unit_str);
@@ -162,17 +173,27 @@ impl UnitCommandSlots for WarcraftDatabase {
             if !sell_unit_has_icon {
                 continue;
             }
-            let Some(slot_position) = slot_position_from_database(self, sell_unit_str) else {
-                continue;
-            };
             let sell_unit_slot = GridSlotId::ability(sell_unit_str);
-            card.place(slot_position, sell_unit_slot);
+            match slot_position_from_database(self, sell_unit_str) {
+                Some(sell_unit_position) => {
+                    if !card.place(sell_unit_position, sell_unit_slot) {
+                        unplaced_sell_unit_slots.push(sell_unit_slot);
+                    }
+                }
+                None => {
+                    unplaced_sell_unit_slots.push(sell_unit_slot);
+                }
+            }
+        }
+        for unplaced_slot in unplaced_sell_unit_slots {
+            card.place_at_next_empty(unplaced_slot);
         }
 
         let is_uprootable = BuildingTraits::can_uproot(unit_id_str);
         let host_is_burrowed = BuildingTraits::is_burrowed_form(unit_id_str);
         let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(unit_id_str);
 
+        let mut unplaced_ability_slots: Vec<GridSlotId> = Vec::new();
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
             let ability_str = ability_id.value();
             if hero_abilities.contains(ability_id) {
@@ -211,16 +232,24 @@ impl UnitCommandSlots for WarcraftDatabase {
                 morph_target_id.is_some_and(|target| target.eq_ignore_ascii_case(unit_id_str));
             let use_off_state = is_morph_back
                 || (host_is_in_alt_state && BuildingTraits::ability_has_alt_state(ability_str));
-
-            let Some(slot_position) = slot_position_from_database(self, ability_str) else {
-                continue;
-            };
             let ability_slot = if use_off_state {
                 GridSlotId::ability_off(ability_str)
             } else {
                 GridSlotId::ability(ability_str)
             };
-            card.place(slot_position, ability_slot);
+            match slot_position_from_database(self, ability_str) {
+                Some(ability_position) => {
+                    if !card.place(ability_position, ability_slot) {
+                        unplaced_ability_slots.push(ability_slot);
+                    }
+                }
+                None => {
+                    unplaced_ability_slots.push(ability_slot);
+                }
+            }
+        }
+        for unplaced_slot in unplaced_ability_slots {
+            card.place_at_next_empty(unplaced_slot);
         }
 
         if unit_kind == UnitKind::Hero
@@ -510,5 +539,63 @@ mod unit_slots_tests {
             .all_unit_ids()
             .any(|id| id.value().eq_ignore_ascii_case("hpea"));
         assert!(has_peasant);
+    }
+
+    #[test]
+    fn goblin_lab_command_card_shows_all_three_sell_units() {
+        let unit_id = WarcraftObjectId::new("ngad");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_sapper = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ngsp"));
+        let has_zeppelin = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("nzep"));
+        let has_shredder = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ngir"));
+        assert!(
+            has_sapper,
+            "Goblin Lab command card must contain Goblin Sapper (ngsp)"
+        );
+        assert!(
+            has_zeppelin,
+            "Goblin Lab command card must contain Goblin Zeppelin (nzep)"
+        );
+        assert!(
+            has_shredder,
+            "Goblin Lab command card must contain Goblin Shredder (ngir)"
+        );
+    }
+
+    #[test]
+    fn goblin_merchant_command_card_shows_all_eleven_sell_items() {
+        let unit_id = WarcraftObjectId::new("ngme");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let sell_item_ids = [
+            "stwp", "bspd", "dust", "tret", "prvt", "cnob", "stel", "pnvl", "shea", "spro", "pinv",
+        ];
+        for sell_item_id in sell_item_ids {
+            let present = card
+                .filled_slots()
+                .any(|slot| slot.id().value().eq_ignore_ascii_case(sell_item_id));
+            assert!(
+                present,
+                "Goblin Merchant command card must contain sell item {sell_item_id}"
+            );
+        }
+    }
+
+    #[test]
+    fn gargoyle_command_card_contains_prioritize() {
+        let unit_id = WarcraftObjectId::new("ugar");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_prioritize = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Aatp"));
+        assert!(
+            has_prioritize,
+            "Gargoyle command card must contain Prioritize (Aatp)"
+        );
     }
 }

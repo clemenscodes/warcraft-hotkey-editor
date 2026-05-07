@@ -1,12 +1,12 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialog_header::DialogHeader;
 
 #[component]
 pub(crate) fn PreviewDialog(
-    loaded_keys: Signal<Option<CustomKeysFile>>,
+    loaded_keys: Signal<Option<CustomKeys>>,
     mut preview_open: Signal<bool>,
 ) -> Element {
     let preview_text: String = {

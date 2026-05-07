@@ -1,7 +1,7 @@
-pub(crate) struct InnerSpaces;
+pub struct InnerSpaces;
 
 impl InnerSpaces {
-    pub(crate) fn collapsed(input: &str) -> String {
+    pub fn collapsed(input: &str) -> String {
         let mut output = String::with_capacity(input.len());
         let mut previous_was_space = false;
         for current_character in input.chars() {
