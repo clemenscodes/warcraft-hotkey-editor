@@ -3,12 +3,10 @@ use std::collections::HashSet;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 
-use crate::domain::grid_slot::GridSlotId;
-use crate::domain::icons::IconUrl;
-use crate::domain::unit_catalog::UnitCatalog;
-use crate::domain::unit_kind::UnitKindHelpers;
-use crate::domain::unit_mode::UnitMode;
 use crate::focus::modality::FocusModality;
+use crate::grid_slot::GridSlotId;
+use crate::icons::IconUrl;
+use warcraft_database::{UnitCatalog, UnitKindHelpers, UnitMode};
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
@@ -94,16 +92,17 @@ pub(crate) fn UnitListPanel(
                         let mut current_kind: Option<UnitKind> = None;
                         let mut output: Vec<Element> = Vec::new();
                         for entry in units {
-                            if Some(entry.unit_kind) != current_kind {
-                                current_kind = Some(entry.unit_kind);
-                                let category_label = UnitKindHelpers::category_label(entry.unit_kind);
-                                let is_collapsed = collapsed_snapshot.contains(&entry.unit_kind);
+                            let entry_kind = entry.unit_kind();
+                            if Some(entry_kind) != current_kind {
+                                current_kind = Some(entry_kind);
+                                let category_label = UnitKindHelpers::category_label(entry_kind);
+                                let is_collapsed = collapsed_snapshot.contains(&entry_kind);
                                 let heading_class = if is_collapsed {
                                     "unit-category-heading collapsed"
                                 } else {
                                     "unit-category-heading"
                                 };
-                                let captured_kind = entry.unit_kind;
+                                let captured_kind = entry_kind;
                                 let mut categories_signal = collapsed_categories;
                                 output.push(rsx! {
                                     button {
@@ -124,17 +123,18 @@ pub(crate) fn UnitListPanel(
                                     }
                                 });
                             }
-                            if collapsed_snapshot.contains(&entry.unit_kind) {
+                            if collapsed_snapshot.contains(&entry_kind) {
                                 continue;
                             }
-                            let display_name = entry.warcraft_object.names().first().copied().unwrap_or("(unnamed)");
-                            let icon_path = entry.warcraft_object.icons().first().copied().map(IconUrl::from_database_path);
-                            let unit_id_for_click = entry.unit_id.clone();
-                            let is_selected = active_unit_id.as_deref() == Some(entry.unit_id.as_str());
+                            let entry_object = entry.warcraft_object();
+                            let display_name = entry_object.names().first().copied().unwrap_or("(unnamed)");
+                            let icon_path = entry_object.icons().first().copied().map(IconUrl::from_database_path);
+                            let unit_id_for_click = entry.unit_id().to_owned();
+                            let is_selected = active_unit_id.as_deref() == Some(entry.unit_id());
                             let class_name = if is_selected { "unit-card selected" } else { "unit-card" };
-                            let unit_id_label = entry.unit_id.clone();
-                            let unit_id_for_keydown = entry.unit_id.clone();
-                            let card_kind = entry.unit_kind;
+                            let unit_id_label = entry.unit_id().to_owned();
+                            let unit_id_for_keydown = entry.unit_id().to_owned();
+                            let card_kind = entry_kind;
                             output.push(rsx! {
                                 button {
                                     class: "{class_name}",

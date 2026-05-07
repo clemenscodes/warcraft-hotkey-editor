@@ -12,8 +12,8 @@ mod tests {
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
     use warcraft_keybinds::CustomKeysFile;
 
-    use crate::domain::grid_layout::GridLayout;
-    use crate::domain::object_lookup::ObjectLookup;
+    use crate::grid_layout::GridLayout;
+    use warcraft_database::ObjectLookup;
 
     fn join_levels(levels: &[&str]) -> Option<String> {
         if levels.is_empty() {

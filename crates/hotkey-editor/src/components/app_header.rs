@@ -14,7 +14,7 @@ use crate::components::upload_button::UploadButton;
 use crate::components::upload_info_dialog::UploadInfoDialog;
 use crate::customkeys::blob_download::BlobDownload;
 use crate::customkeys::upload_status::UploadStatus;
-use crate::domain::grid_layout::{EditingCell, GridLayout};
+use crate::grid_layout::{EditingCell, GridLayout};
 
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 

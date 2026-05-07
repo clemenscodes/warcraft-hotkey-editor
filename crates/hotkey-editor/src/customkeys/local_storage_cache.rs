@@ -1,4 +1,4 @@
-use crate::domain::grid_layout::GridLayout;
+use crate::grid_layout::GridLayout;
 
 const STORAGE_KEY: &str = "warcraft-hotkey-editor.custom-keys";
 

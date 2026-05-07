@@ -6,9 +6,9 @@ use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 use crate::components::dialog_header::DialogHeader;
 use crate::customkeys::baseline::baseline_content;
 use crate::customkeys::upload_status::UploadStatus;
-use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
-use crate::domain::grid_templates::ResolvedTemplate;
-use crate::domain::object_lookup::ObjectLookup;
+use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
+use crate::grid_templates::ResolvedTemplate;
+use warcraft_database::ObjectLookup;
 
 #[component]
 pub(crate) fn TemplatesDialog(

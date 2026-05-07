@@ -1,16 +1,30 @@
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
 
-use crate::domain::unit_kind::UnitKindHelpers;
-use crate::domain::unit_mode::UnitMode;
+use crate::WARCRAFT_DATABASE;
+use crate::unit_kind::UnitKindHelpers;
+use crate::unit_mode::UnitMode;
 
-pub(crate) struct CatalogEntry {
-    pub(crate) unit_id: String,
-    pub(crate) warcraft_object: &'static WarcraftObject,
-    pub(crate) unit_kind: UnitKind,
+pub struct CatalogEntry {
+    unit_id: String,
+    warcraft_object: &'static WarcraftObject,
+    unit_kind: UnitKind,
 }
 
-pub(crate) struct UnitCatalog;
+impl CatalogEntry {
+    pub fn unit_id(&self) -> &str {
+        &self.unit_id
+    }
+
+    pub fn warcraft_object(&self) -> &'static WarcraftObject {
+        self.warcraft_object
+    }
+
+    pub fn unit_kind(&self) -> UnitKind {
+        self.unit_kind
+    }
+}
+
+pub struct UnitCatalog;
 
 impl UnitCatalog {
     /// The single source of truth for "which units belong in a list view".
@@ -23,7 +37,7 @@ impl UnitCatalog {
     /// id visible. The game ships these IDs deliberately (campaign variants,
     /// metamorphosis forms, level-summon variants) and any heuristic that
     /// tries to pick a canonical one is going to be wrong somewhere.
-    pub(crate) fn entries_for(
+    pub fn entries_for(
         race: Race,
         mode: UnitMode,
         kind_filter: Option<UnitKind>,
@@ -57,15 +71,15 @@ impl UnitCatalog {
                 let unit_id_string = object_id.value().to_string();
                 if let Some(query) = lowercase_query.as_deref() {
                     let id_lower = unit_id_string.to_ascii_lowercase();
-                    // Check all names, not just the first — some units have alternate display names.
+                    // Check all names — some units have alternate display names.
                     let names_lower: String = warcraft_object
                         .names()
                         .iter()
                         .map(|name| name.to_ascii_lowercase())
                         .collect::<Vec<_>>()
                         .join(" ");
-                    // Match if the name/id contains the query OR the query contains the name/id as
-                    // a word — the latter lets "peasant worker" find a unit named just "Peasant".
+                    // Match if name/id contains the query OR query contains name/id as a word —
+                    // the latter lets "peasant worker" find a unit named just "Peasant".
                     let matches_id = id_lower.contains(query) || query.contains(id_lower.as_str());
                     let matches_name = names_lower.contains(query)
                         || names_lower
@@ -90,23 +104,14 @@ impl UnitCatalog {
         entries.sort_by(|left_entry, right_entry| {
             let left_priority = UnitKindHelpers::category_priority(left_entry.unit_kind);
             let right_priority = UnitKindHelpers::category_priority(right_entry.unit_kind);
-            left_priority.cmp(&right_priority).then_with(|| {
-                let left_name = left_entry
-                    .warcraft_object
-                    .names()
-                    .first()
-                    .copied()
-                    .unwrap_or("");
-                let right_name = right_entry
-                    .warcraft_object
-                    .names()
-                    .first()
-                    .copied()
-                    .unwrap_or("");
-                left_name
-                    .cmp(right_name)
-                    .then_with(|| left_entry.unit_id.cmp(&right_entry.unit_id))
-            })
+            let left_object = left_entry.warcraft_object;
+            let right_object = right_entry.warcraft_object;
+            let left_name = left_object.names().first().copied().unwrap_or("");
+            let right_name = right_object.names().first().copied().unwrap_or("");
+            left_priority
+                .cmp(&right_priority)
+                .then_with(|| left_name.cmp(right_name))
+                .then_with(|| left_entry.unit_id.cmp(&right_entry.unit_id))
         });
 
         entries

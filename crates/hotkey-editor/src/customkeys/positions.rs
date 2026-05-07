@@ -3,8 +3,8 @@ use warcraft_keybinds::{CustomKeysFile, GridCoordinate, GridLayout};
 
 pub(crate) use warcraft_keybinds::MoveRequest;
 
-use crate::domain::ability_cell::AbilityCell;
-use crate::domain::grid_slot::GridSlotId;
+use crate::ability_cell::AbilityCell;
+use crate::grid_slot::GridSlotId;
 
 pub(crate) struct GridCellOccupant {
     slot_id: GridSlotId,

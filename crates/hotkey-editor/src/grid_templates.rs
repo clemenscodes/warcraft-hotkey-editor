@@ -5,16 +5,14 @@ use warcraft_keybinds::CustomKeysFile;
 
 use warcraft_api::UnitKind;
 
-use crate::customkeys::baseline::baseline_content;
-use crate::domain::default_config::DefaultConfig;
-use crate::domain::unit_kind::UnitKindHelpers;
+use warcraft_database::{CommandCatalog, ObjectLookup, UnitKindHelpers};
 
-use crate::domain::ability_cell::AbilityCell;
-use crate::domain::command_catalog::CommandCatalog;
-use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
-use crate::domain::grid_slot::GridSlotId;
-use crate::domain::object_lookup::ObjectLookup;
-use crate::domain::positions::Positions;
+use crate::ability_cell::AbilityCell;
+use crate::customkeys::baseline::baseline_content;
+use crate::customkeys::default_config::DefaultConfig;
+use crate::customkeys::positions::Positions;
+use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::grid_slot::GridSlotId;
 
 const ARCHMAGE_UNIT_ID: &str = "Hamg";
 
@@ -45,13 +43,13 @@ impl BundledTemplate {
 }
 
 fn neo_qwerty_content() -> &'static str {
-    include_str!("../../templates/CustomKeys_Neo_QWERTY.txt")
+    include_str!("../templates/CustomKeys_Neo_QWERTY.txt")
 }
 fn neo_qwertz_content() -> &'static str {
-    include_str!("../../templates/CustomKeys_Neo_QWERTZ.txt")
+    include_str!("../templates/CustomKeys_Neo_QWERTZ.txt")
 }
 fn neo_azerty_content() -> &'static str {
-    include_str!("../../templates/CustomKeys_Neo_AZERTY.txt")
+    include_str!("../templates/CustomKeys_Neo_AZERTY.txt")
 }
 
 pub(crate) const TEMPLATES: &[BundledTemplate] = &[

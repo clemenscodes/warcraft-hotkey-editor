@@ -12,14 +12,13 @@ use warcraft_keybinds::CustomKeysFile;
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::tile_override::TileOverridePanel;
-use crate::domain::building_traits::BuildingTraits;
-use crate::domain::command_catalog::CommandCatalog;
-use crate::domain::grid_layout::GridLayout;
-use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::domain::icons::IconUrl;
-use crate::domain::inspector_detail::InspectorDetail;
-use crate::domain::object_lookup::ObjectLookup;
-use crate::domain::unit_kind::UnitKindHelpers;
+use warcraft_database::{BuildingTraits, CommandCatalog};
+
+use crate::grid_layout::GridLayout;
+use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::icons::IconUrl;
+use crate::inspector_detail::InspectorDetail;
+use warcraft_database::{ObjectLookup, UnitKindHelpers};
 
 const MAX_HERO_LEVEL_DISPLAY: u32 = 10;
 

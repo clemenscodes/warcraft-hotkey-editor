@@ -11,17 +11,17 @@ use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
-use crate::domain::ability_cell::AbilityCell;
-use crate::domain::building_traits::BuildingTraits;
-use crate::domain::cursor_hit::{CursorPoint, HitTestPoint};
-use crate::domain::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
-use crate::domain::grid_slot::{
+use warcraft_database::{BuildingTraits, ObjectLookup};
+
+use crate::ability_cell::AbilityCell;
+use crate::cursor_hit::{CursorPoint, HitTestPoint};
+use crate::customkeys::positions::{MoveRequest, Positions};
+use crate::focus::modality::FocusModality;
+use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::grid_slot::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
 };
-use crate::domain::icons::IconUrl;
-use crate::domain::object_lookup::ObjectLookup;
-use crate::domain::positions::{MoveRequest, Positions};
-use crate::focus::modality::FocusModality;
+use crate::icons::IconUrl;
 
 const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
 const TOUCH_CANCEL_THRESHOLD_PIXELS: f64 = 12.0;

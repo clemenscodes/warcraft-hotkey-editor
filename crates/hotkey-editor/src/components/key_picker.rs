@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::dialog_header::DialogHeader;
-use crate::domain::hotkey_token::HotkeyToken;
+use warcraft_keybinds::HotkeyToken;
 
 #[derive(Clone, PartialEq, Eq)]
 pub(crate) enum KeyPickerCellState {

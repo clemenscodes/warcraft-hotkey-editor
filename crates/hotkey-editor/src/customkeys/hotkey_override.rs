@@ -1,10 +1,11 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeysFile;
 
-use crate::domain::ability_cell::AbilityCell;
-use crate::domain::grid_layout::GridLayout;
-use crate::domain::grid_slot::GridSlotId;
-use crate::domain::hotkey_token::HotkeyToken;
+use warcraft_keybinds::HotkeyToken;
+
+use crate::ability_cell::AbilityCell;
+use crate::grid_layout::GridLayout;
+use crate::grid_slot::GridSlotId;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(crate) struct HotkeyConflict {

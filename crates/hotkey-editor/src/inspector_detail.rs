@@ -1,13 +1,13 @@
 use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
-use crate::domain::ability_cell::AbilityCell;
-use crate::domain::building_traits::BuildingTraits;
-use crate::domain::grid_slot::GridSlotId;
-use crate::domain::hotkey_token::HotkeyToken;
-use crate::domain::icons::IconUrl;
-use crate::domain::object_lookup::ObjectLookup;
-use crate::domain::positions::Positions;
+use warcraft_database::{BuildingTraits, ObjectLookup};
+use warcraft_keybinds::HotkeyToken;
+
+use crate::ability_cell::AbilityCell;
+use crate::customkeys::positions::Positions;
+use crate::grid_slot::GridSlotId;
+use crate::icons::IconUrl;
 use crate::text::color_codes::WarcraftColorCodes;
 
 #[derive(Clone, PartialEq)]

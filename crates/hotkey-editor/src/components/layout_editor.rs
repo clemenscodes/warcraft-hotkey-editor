@@ -3,11 +3,10 @@ use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
-use crate::domain::grid_layout::{
-    COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout,
-};
-use crate::domain::hotkey_token::HotkeyToken;
-use crate::domain::positions::Positions;
+use warcraft_keybinds::HotkeyToken;
+
+use crate::customkeys::positions::Positions;
+use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout};
 
 const QWERTY_ROWS: &[&[char]] = &[
     &['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],

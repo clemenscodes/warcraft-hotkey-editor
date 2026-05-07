@@ -1,8 +1,7 @@
 use warcraft_api::Race;
 
-use crate::domain::races::RaceLabels;
-use crate::domain::unit_kind::UnitKindHelpers;
-use crate::domain::unit_mode::UnitMode;
+use crate::races::RaceLabels;
+use warcraft_database::{UnitKindHelpers, UnitMode};
 
 pub(crate) struct UrlNavigationState {
     race: Race,

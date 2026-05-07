@@ -15,12 +15,12 @@ use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
 use crate::customkeys::local_storage_cache::LocalStorageCache;
 use crate::customkeys::upload_status::UploadStatus;
-use crate::domain::grid_layout::{EditingCell, GridLayout};
-use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::domain::races::RaceLabels;
-use crate::domain::unit_mode::UnitMode;
 use crate::focus::navigation::{FocusNavigation, FocusedElementInfo};
+use crate::grid_layout::{EditingCell, GridLayout};
+use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::navigation::url_state::UrlNavigationState;
+use crate::races::RaceLabels;
+use warcraft_database::UnitMode;
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");

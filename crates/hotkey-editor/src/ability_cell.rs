@@ -1,11 +1,12 @@
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{AbilityBinding, CommandBinding, Hotkey};
 
-use crate::domain::hotkey_token::HotkeyToken;
-use crate::domain::icons::IconUrl;
-use crate::domain::object_lookup::ObjectLookup;
+use warcraft_keybinds::HotkeyToken;
+
+use crate::icons::IconUrl;
 use crate::text::command_label::CommandLabel;
 use crate::text::tip::Tip;
+use warcraft_database::ObjectLookup;
 
 #[derive(Clone, PartialEq)]
 pub(crate) struct AbilityCell {

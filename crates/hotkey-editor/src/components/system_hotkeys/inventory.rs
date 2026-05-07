@@ -10,7 +10,7 @@ use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
-use crate::domain::cursor_hit::{CursorPoint, HitTestPoint};
+use crate::cursor_hit::{CursorPoint, HitTestPoint};
 use crate::system_hotkeys::binding_map::SystemBindingMap;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 

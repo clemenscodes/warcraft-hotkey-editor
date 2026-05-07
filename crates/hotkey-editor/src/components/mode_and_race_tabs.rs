@@ -2,10 +2,9 @@ use dioxus::prelude::*;
 use warcraft_api::Race;
 
 use crate::components::race_tabs::RaceTabs;
-use crate::domain::grid_slot::GridSlotId;
-use crate::domain::unit_kind::UnitKindHelpers;
-use crate::domain::unit_mode::UnitMode;
 use crate::focus::modality::FocusModality;
+use crate::grid_slot::GridSlotId;
+use warcraft_database::{UnitKindHelpers, UnitMode};
 
 #[component]
 pub(crate) fn ModeAndRaceTabs(

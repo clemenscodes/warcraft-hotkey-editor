@@ -1,5 +1,5 @@
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub(crate) enum UnitMode {
+pub enum UnitMode {
     Melee,
     Campaign,
 }

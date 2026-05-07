@@ -11,11 +11,12 @@ use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::dialog_header::DialogHeader;
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
-use crate::domain::grid_layout::GridLayout;
-use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::domain::hotkey_override::HotkeyOverride;
-use crate::domain::hotkey_token::HotkeyToken;
-use crate::domain::inspector_detail::InspectorDetail;
+use warcraft_keybinds::HotkeyToken;
+
+use crate::customkeys::hotkey_override::HotkeyOverride;
+use crate::grid_layout::GridLayout;
+use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::inspector_detail::InspectorDetail;
 use crate::text::description::Description;
 use crate::text::tip::Tip;
 

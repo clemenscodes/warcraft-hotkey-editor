@@ -1,19 +1,19 @@
 use warcraft_api::{Race, UnitKind, UnitMeta};
 
-use crate::domain::unit_catalog::UnitCatalog;
-use crate::domain::unit_mode::UnitMode;
+use crate::unit_catalog::UnitCatalog;
+use crate::unit_mode::UnitMode;
 
-pub(crate) struct UnitKindHelpers;
+pub struct UnitKindHelpers;
 
 impl UnitKindHelpers {
-    pub(crate) fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
+    pub fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
         if unit_meta.is_special() && unit_meta.unit_kind() == UnitKind::Worker {
             return UnitKind::Soldier;
         }
         unit_meta.unit_kind()
     }
 
-    pub(crate) fn category_label(unit_kind: UnitKind) -> &'static str {
+    pub fn category_label(unit_kind: UnitKind) -> &'static str {
         match unit_kind {
             UnitKind::Hero => "Heroes",
             UnitKind::Soldier => "Units",
@@ -22,7 +22,7 @@ impl UnitKindHelpers {
         }
     }
 
-    pub(crate) fn category_priority(unit_kind: UnitKind) -> u8 {
+    pub fn category_priority(unit_kind: UnitKind) -> u8 {
         match unit_kind {
             UnitKind::Hero => 0,
             UnitKind::Soldier => 1,
@@ -31,7 +31,7 @@ impl UnitKindHelpers {
         }
     }
 
-    pub(crate) fn passes_filter(mode: UnitMode, unit_meta: &UnitMeta) -> bool {
+    pub fn passes_filter(mode: UnitMode, unit_meta: &UnitMeta) -> bool {
         if unit_meta.is_hidden_in_editor() {
             return false;
         }
@@ -41,10 +41,10 @@ impl UnitKindHelpers {
         }
     }
 
-    pub(crate) fn default_unit_id_for(race: Race, mode: UnitMode) -> Option<String> {
-        UnitCatalog::entries_for(race, mode, None, None)
+    pub fn default_unit_id_for(race: Race, mode: UnitMode) -> Option<String> {
+        let first_entry = UnitCatalog::entries_for(race, mode, None, None)
             .into_iter()
-            .next()
-            .map(|entry| entry.unit_id)
+            .next();
+        first_entry.map(|entry| entry.unit_id().to_owned())
     }
 }
