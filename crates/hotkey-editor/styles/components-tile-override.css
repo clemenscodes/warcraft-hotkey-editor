@@ -19,9 +19,7 @@
     }
 }
 
-/* ─── Tablet / narrow desktop (701–1099px): panel fills remaining height.
-   Override base `align-self: start` so the panel stretches to fill its 1fr
-   grid row in .unit-detail-row, then the card/empty div fills the panel. ─── */
+/* ─── Tablet / narrow desktop (701–1099px): panel fills remaining height. ─── */
 @media (min-width: 701px) and (max-width: 1099px) {
     .tile-override-panel {
         align-self: stretch;
@@ -73,11 +71,6 @@
 
 .tile-override-header {
     display: grid;
-    /* Second column sizes to its content so a multi-character special-token
-       label (Mouse4 / Mouse5) on the override-key-cell can grow beyond the
-       letter-cell footprint without getting clipped. The cell's own min-width
-       (set per breakpoint on [data-special="true"]) keeps the single-letter
-       case visually consistent. */
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 1.5rem;
@@ -263,20 +256,10 @@
     white-space: pre-wrap;
 }
 
-/* Alt-state block surfaces the off side of toggle abilities — Defend ⇄ Stop
- * Defend, Burrow ⇄ Unburrow, Bear Form ⇄ unmorph. Visually distinct from the
- * primary description (cooler border colour, slightly muted background) so
- * the player can tell at a glance which lines describe the on-state and which
- * describe what happens after pressing the toggle. */
 .tile-override-alt-state {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    /* No right padding — the hotkey button in `.tile-override-alt-state-header`
-     * needs to land at the card's right edge so it lines up vertically with
-     * the primary `.tile-override-header`'s hotkey button. The blue accent
-     * is carried by `border-left` + the muted background; the description
-     * text picking up that extra inch on the right reads fine. */
     padding: 0.7rem 0 0.7rem 1rem;
     background: rgba(8, 18, 35, 0.55);
     border-left: 2px solid #6ec3ff;
@@ -286,11 +269,6 @@
     line-height: 1.5;
 }
 
-/* Alt-state header mirrors the primary `.tile-override-header` grid track
- * (1fr | auto | auto) so the gold V hotkey button in the primary block
- * and the alt block sit on the same right-edge column. The extra `auto`
- * track holds a small icon button that opens the off-position picker
- * dialog. */
 .tile-override-alt-state-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
@@ -314,9 +292,6 @@
     white-space: pre-wrap;
 }
 
-/* Square icon button matching the V hotkey cell's footprint, rendered with
- * a crosshair SVG. Uses the same blue accent as the rest of the alt block
- * so it reads as part of the off-state cluster. */
 .tile-override-alt-state-position-button {
     appearance: none;
     width: 5rem;
@@ -350,10 +325,6 @@
     display: block;
 }
 
-/* Off-state position picker reuses `dialog-shell` + `wc3-dialog` from
- * primitives.css plus `CommandGridSection`'s own grid styles. The picker
- * body just needs a centred vertical layout for the explainer and the
- * fixed-width grid below it. */
 .alt-position-picker-body {
     display: flex;
     flex-direction: column;
@@ -362,8 +333,6 @@
     padding: 2rem 2.5rem 2.5rem;
 }
 
-/* Same gold-uppercase-serif treatment as `templates-dialog-explainer`
- * and `preview-dialog-hint` so dialog-tier explainers all read alike. */
 .alt-position-picker-explainer {
     margin: 0;
     text-align: center;
@@ -377,15 +346,6 @@
     max-width: 90rem;
 }
 
-/* The picker grid reuses `CommandGridSection`, which carries
- * `.command-section { container-type: inline-size }` plus a desktop
- * tile-size clamp keyed off `100cqi`. With container-size containment
- * the section's inline size doesn't depend on its descendants — so
- * inside our flex wrapper it collapses to the heading's min-content
- * (one word per line) and the cqi-based formula drops to its lower
- * bound. Disable the containment for the picker (we don't need
- * container queries here) and pin the grid to the desktop max so the
- * cells match what players see on the live command card. */
 .alt-position-picker-grid-anchor {
     display: flex;
     justify-content: center;
@@ -409,16 +369,6 @@
     height: var(--tile-size);
 }
 
-/* Three states inside the picker:
- *
- * 1. Locked filled cells — another ability lives here and the off
- *    state can't displace it. Mute aggressively so the player reads
- *    them as background context, not peer drop targets.
- * 2. Empty cells — valid drop targets. Carry a faint dashed gold
- *    border + subtle gold tint so they actively read as "drop here".
- * 3. The toggle's own off cell — the only handle. Cranked-up gold
- *    border, gradient, glow, and a slow pulse.
- */
 .alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"],
 .alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:hover,
 .alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:focus,
@@ -431,9 +381,6 @@
     transform: none !important;
 }
 
-/* Idle empty cells — sketched gold, faint warm tint. Hover deepens
- * the colour but keeps the dashed style so the user can tell at a
- * glance the cell isn't yet "armed" by a drag. */
 .alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
     border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
@@ -445,12 +392,6 @@
     background: rgba(255, 206, 99, 0.1) !important;
 }
 
-/* Drag-active drop targets — main grid sets `.drop-target` on every
- * empty cell in the source section the moment the drag-movement
- * threshold is crossed. Switch from the idle 1px dashed line to a
- * 2px *solid* gold border + warmer fill so the activation is the
- * unambiguous visual cue: "drag is live, every empty cell is in
- * play". */
 .alt-position-picker-grid-anchor .grid-tile.drop-target {
     border: 2px solid rgba(255, 206, 99, 0.75) !important;
     background: rgba(255, 206, 99, 0.14) !important;
@@ -458,9 +399,6 @@
     box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
 }
 
-/* Cursor is currently over a drop-target — full-strength gold border,
- * gradient fill, big outer glow. Matches the lift the live command
- * grid uses for its hovered drop targets. */
 .alt-position-picker-grid-anchor .grid-tile.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
 .alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
@@ -473,10 +411,6 @@
         0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
-/* Source cell idle — gold border so the player can tell which cell
- * is the draggable one. No pulse, no glow, no scale, no filter:
- * static, calm. Transition suppressed: the border-color is already
- * gold at rest so hover should produce no animated change at all. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
     cursor: grab !important;
@@ -488,12 +422,6 @@
     cursor: grabbing !important;
 }
 
-/* Once the drag starts, the source cell IS a target cell — render it
- * exactly like every other empty drop-target. The main grid's
- * `.dragging-source > *` rule already hides the icon, so the box is
- * functionally empty; matching the drop-target styling means hover
- * and drag-over states inherited from the rules above apply with
- * the same visuals as the rest of the grid. */
 .alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
     border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
@@ -617,9 +545,6 @@ body[data-kb-modality] .override-key-cell:focus {
     animation: pulse-editing 1s ease-in-out infinite alternate;
 }
 
-/* Multi-character labels (Esc, Mouse4, Mouse5) keep the cell's height but let
-   the width grow leftwards (the header grid's text column shrinks via
-   `minmax(0, 1fr)`) so the label can sit at a comfortable, centered size. */
 .override-key-cell[data-special="true"] {
     width: auto;
     min-width: 5rem;
@@ -631,10 +556,6 @@ body[data-kb-modality] .override-key-cell:focus {
     white-space: nowrap;
 }
 
-/* Desktop ≥ 1100 px: keep the base vertical column layout — header on top
-   (name/id + key cell), description in the middle, tier footer below.
-   The panel has a minimum readable height and stretches into available
-   bottom space while .unit-detail owns short-viewport scrolling. */
 @media (min-width: 1100px) {
     .tile-override-panel {
         flex: 1 0 auto;
@@ -725,14 +646,6 @@ body[data-kb-modality] .override-key-cell:focus {
     }
 }
 
-
-/* ───────────────────────── Hotkey override panel touch targets (A6) ─────────────────────────
-   Phone (≤ 480 px): bump the keyboard preview ("override-key-cell") and the
-   tier-stepper buttons to comfortable tap target sizes. The empty state also
-   gets a generous min-height so the placeholder is unambiguously a hint, not
-   ambient text. Auto-scroll into view on selection is handled in
-   `tile_override.rs` via a `use_effect` keyed on the detail's object id. */
-
 @media (max-width: 480px) {
     .override-key-cell {
         width: 4.6rem;
@@ -762,7 +675,6 @@ body[data-kb-modality] .override-key-cell:focus {
     }
 }
 
-/* ── Mobile layout — must come after base rules above to win source order. ── */
 @media (max-width: 700px) {
     .tile-override-card {
         gap: 0.75rem;
@@ -798,9 +710,318 @@ body[data-kb-modality] .override-key-cell:focus {
 }
 
 @media (max-width: 480px) {
-    /* Negative margin must match unit-detail's 0.85rem padding at this breakpoint. */
     .tile-override-panel {
         margin: 0 -0.85rem;
     }
 }
+
+  .key-picker-body {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    overflow: hidden;
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+
+  .dialog-key-scope {
+    display: contents;
+  }
+
+  .key-picker-board {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .key-picker-row {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+  }
+
+  .key-picker-shell {
+    height: auto;
+    max-height: 90dvh;
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .key-picker-shell .wc3-dialog-body {
+    flex: none;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  @media (min-width: 1100px) {
+    .dialog-shell.key-picker-shell {
+      width: 90vw;
+      max-width: 90vw;
+    }
+
+    .key-picker-shell .wc3-dialog-body {
+      overflow: hidden;
+    }
+  }
+
+  .key-picker-key {
+    width: clamp(5rem, 7.5vw, 11rem);
+    height: clamp(5rem, 7.5vw, 11rem);
+    padding: 0;
+    background: rgba(40, 30, 8, 0.55);
+    border: 1px solid #6c5a1f;
+    border-radius: 6px;
+    color: #ffce63;
+    font-family: "Friz Quadrata", serif;
+    font-size: clamp(2rem, 3.5vw, 5rem);
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    transition:
+      border-color 0.12s ease,
+      background 0.12s ease,
+      box-shadow 0.12s ease;
+    text-shadow:
+      1px 1px 0 #000,
+      -1px 1px 0 #000,
+      1px -1px 0 #000,
+      -1px -1px 0 #000;
+  }
+
+  .key-picker-key:hover:not(:disabled) {
+    border-color: #ffce63;
+    background: rgba(255, 206, 99, 0.12);
+    box-shadow: 0 0 8px rgba(255, 206, 99, 0.5);
+  }
+
+  body[data-kb-modality] .key-picker-key:focus-visible {
+    outline: none;
+    border-color: #fff;
+    color: #fff;
+    box-shadow:
+      0 0 0 3px #fff,
+      0 0 16px rgba(255, 255, 255, 0.55);
+  }
+
+  .key-picker-key.current {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 206, 99, 0.32) 0%,
+      rgba(255, 171, 1, 0.18) 100%
+    );
+    border-color: #ffce63;
+    box-shadow:
+      0 0 14px rgba(255, 206, 99, 0.55),
+      inset 0 0 10px rgba(255, 206, 99, 0.22);
+  }
+
+  .key-picker-key.conflict {
+    background: rgba(80, 16, 18, 0.5);
+    border-color: #6a2020;
+    color: #f0a8a8;
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+
+  .key-picker-key[data-special="true"] {
+    width: auto;
+    min-width: clamp(5rem, 7.5vw, 11rem);
+    padding: 0 0.85rem;
+    font-size: clamp(1rem, 1.6vw, 2rem);
+    font-family: system-ui, sans-serif;
+    white-space: nowrap;
+  }
+
+  .key-picker-key-letter {
+    line-height: 1;
+  }
+
+  @media (max-width: 480px) {
+    .dialog-shell.key-picker-shell {
+      height: auto;
+    }
+    .key-picker-board {
+      gap: 0.3rem;
+    }
+    .key-picker-row {
+      gap: 0.3rem;
+    }
+    .key-picker-key {
+      width: clamp(2.5rem, 8.5vw, 5rem);
+      height: clamp(2.5rem, 8.5vw, 5rem);
+      font-size: clamp(1.1rem, 3.5vw, 2.2rem);
+    }
+
+    .key-picker-key[data-special="true"] {
+      width: auto;
+      min-width: clamp(2.5rem, 8.5vw, 5rem);
+      padding: 0 0.55rem;
+      font-size: clamp(0.75rem, 2.6vw, 1.25rem);
+    }
+
+    .sys-key-picker-key {
+      font-size: 0.25vw;
+    }
+  }
+
+  .dialog-shell.sys-key-picker-shell {
+    height: auto;
+    max-height: 90dvh;
+    overflow: hidden;
+  }
+
+  @media (min-width: 1100px) {
+    .dialog-shell.sys-key-picker-shell {
+      width: 90vw;
+    }
+  }
+
+  .sys-key-picker-shell .wc3-dialog-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .sys-key-picker-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+
+  .sys-key-picker-board {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.8rem;
+  }
+
+  .sys-key-picker-main,
+  .sys-key-picker-numpad {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .sys-key-picker-row {
+    display: flex;
+    gap: 0.28rem;
+  }
+
+  .sys-key-picker-key {
+    min-width: 0;
+    width: 4.7vw;
+    height: 5.5vw;
+    padding: 0 0.2rem;
+    background: rgba(40, 30, 8, 0.55);
+    border: 1px solid #6c5a1f;
+    border-radius: 4px;
+    color: #ffce63;
+    font-family: system-ui, sans-serif;
+    font-size: 1.3vw;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    transition:
+      border-color 0.1s ease,
+      background 0.1s ease,
+      box-shadow 0.1s ease;
+    text-shadow:
+      1px 1px 0 #000,
+      -1px 1px 0 #000,
+      1px -1px 0 #000,
+      -1px -1px 0 #000;
+  }
+
+  .sys-key-picker-key:hover {
+    border-color: #ffce63;
+    background: rgba(255, 206, 99, 0.12);
+    box-shadow: 0 0 6px rgba(255, 206, 99, 0.5);
+  }
+
+  body[data-kb-modality] .sys-key-picker-key:focus-visible {
+    outline: none;
+    border-color: #fff;
+    color: #fff;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 12px rgba(255, 255, 255, 0.5);
+  }
+
+  .sys-key-picker-key.current {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 206, 99, 0.32) 0%,
+      rgba(255, 171, 1, 0.18) 100%
+    );
+    border-color: #ffce63;
+    box-shadow:
+      0 0 10px rgba(255, 206, 99, 0.55),
+      inset 0 0 8px rgba(255, 206, 99, 0.2);
+  }
+
+  .sys-key-picker-key.conflict {
+    background: rgba(80, 16, 18, 0.5);
+    border-color: #6a2020;
+    color: #f0a8a8;
+  }
+
+  .sys-key-picker-key.conflict:hover {
+    background: rgba(120, 24, 28, 0.55);
+    border-color: #ff5a5a;
+    box-shadow: 0 0 8px rgba(255, 90, 90, 0.5);
+  }
+
+  .sys-key-picker-key[data-wide="true"] {
+    width: 9.4vw;
+  }
+
+  @media (min-width: 901px) and (max-width: 1099px) {
+    .sys-key-picker-key {
+      width: 4.7vw;
+      height: 5.5vw;
+      font-size: 1.3vw;
+      padding: 0 0.2rem;
+    }
+    .sys-key-picker-key[data-wide="true"] {
+      width: 9.4vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sys-key-picker-body {
+      padding: 0.5rem 0.4rem 0.7rem;
+      gap: 0.5rem;
+    }
+    .sys-key-picker-board {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .sys-key-picker-main,
+    .sys-key-picker-numpad {
+      gap: 0.18rem;
+    }
+    .sys-key-picker-row {
+      gap: 0.18rem;
+    }
+    .sys-key-picker-key {
+      width: 6.5vw;
+      height: 8vw;
+      padding: 0;
+      font-size: clamp(0.3rem, 1.5vw, 0.5rem);
+    }
+    .sys-key-picker-key[data-wide="true"] {
+      width: 13vw;
+    }
+  }
 }

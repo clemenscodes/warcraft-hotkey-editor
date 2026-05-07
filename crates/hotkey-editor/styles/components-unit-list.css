@@ -1,0 +1,506 @@
+@layer components {
+
+/* ── unit-list responsive layout overrides ───────────────────────────────── */
+@media (max-width: 700px) {
+    .unit-list {
+        max-height: 32rem;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1099px) {
+    .unit-list {
+        max-height: calc(100dvh - 16rem);
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+@media (min-width: 701px) and (max-height: 900px) {
+    .unit-list {
+        max-height: none;
+    }
+}
+
+@media (min-width: 1100px) {
+    .unit-list {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--main-sidebar-w);
+        height: 100%;
+    }
+}
+
+/* ── unit-list-search theming ────────────────────────────────────────────── */
+.unit-list-search {
+    background: rgba(13, 31, 61, 0.85);
+    border: 1px solid #1f3d63;
+    border-radius: 6px;
+}
+
+.unit-list-search input {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+    background: rgba(8, 18, 35, 0.7);
+    border: 1px solid #2a5085;
+    border-radius: 4px;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 1.4rem;
+}
+
+.unit-list-search input:focus {
+    outline: none;
+    border-color: #ffce63;
+    box-shadow: 0 0 6px rgba(255, 206, 99, 0.4);
+}
+
+/* ── unit-list-scroll scrollbar ──────────────────────────────────────────── */
+.unit-list-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 206, 99, 0.0) transparent;
+    transition: scrollbar-color 0.2s ease;
+}
+.unit-list:hover .unit-list-scroll,
+.unit-list-scroll:hover,
+.unit-list-scroll:focus-within {
+    scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
+}
+.unit-list-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.unit-list-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.unit-list-scroll::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+.unit-list:hover .unit-list-scroll::-webkit-scrollbar-thumb,
+.unit-list-scroll:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 206, 99, 0.45);
+}
+.unit-list-scroll::-webkit-scrollbar-thumb:hover {
+    background: #ffce63;
+}
+
+/* ── download-button ─────────────────────────────────────────────────────── */
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 3.5rem;
+    background: linear-gradient(180deg, #2a5085 0%, #1a3a5c 100%);
+    border: 1px solid #ffce63;
+    border-radius: 8px;
+    color: #ffce63;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 2rem;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+    transition: all 0.12s ease;
+    white-space: nowrap;
+}
+.download-button:hover {
+    background: linear-gradient(180deg, #356dac 0%, #1f4a72 100%);
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.4);
+}
+
+/* ── unit-card ───────────────────────────────────────────────────────────── */
+.unit-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1rem;
+    background: rgba(13, 31, 61, 0.55);
+    border: 1px solid #1f3d63;
+    border-radius: 6px;
+    text-align: left;
+    color: #e0d8c8;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    transition: all 0.12s ease;
+    min-width: 0;
+    width: 100%;
+}
+
+.unit-card:hover {
+    background: rgba(30, 60, 95, 0.7);
+    border-color: var(--race-color, #2a5085);
+    color: #fff;
+}
+
+.unit-card:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .unit-card:focus-visible,
+body[data-kb-modality] .unit-card:focus {
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+    color: #fff;
+    background: rgba(40, 80, 130, 0.85);
+}
+
+.unit-card.selected {
+    background: linear-gradient(135deg, rgba(45, 80, 130, 0.9) 0%, rgba(20, 45, 80, 0.9) 100%);
+    border-color: var(--race-color, #ffce63);
+    color: var(--race-color, #ffce63);
+    box-shadow: 0 0 8px var(--race-color-soft, rgba(255, 206, 99, 0.3));
+}
+
+.unit-card-icon {
+    width: 80px;
+    height: 80px;
+    image-rendering: auto;
+    border: 1px solid #2a5085;
+    border-radius: 3px;
+    flex-shrink: 0;
+    object-fit: cover;
+    background: rgba(20, 35, 60, 0.7);
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+}
+
+.unit-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.unit-card-name {
+    font-size: 1.05rem;
+    line-height: 1.25;
+    padding-bottom: 0.1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+@media (min-width: 1900px) {
+    .unit-card-name {
+        font-size: 1.35rem;
+    }
+}
+
+.unit-card-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    color: #7b818d;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unit-card.selected .unit-card-id {
+    color: var(--race-color, #c0a67c);
+    opacity: 0.7;
+}
+
+/* ── unit-category-heading ───────────────────────────────────────────────── */
+.unit-category-heading {
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.2rem;
+    color: #7b818d;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 0.75rem 0 0.25rem 0;
+    padding: 0.35rem 0.25rem;
+    border-bottom: 1px solid #1f3d63;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: color 0.12s ease;
+}
+.unit-category-heading.collapsed {
+    color: #5a6075;
+}
+.unit-category-heading:hover {
+    color: #ffce63;
+}
+.unit-category-heading:focus {
+    outline: none;
+}
+body[data-kb-modality] .unit-category-heading:focus-visible,
+body[data-kb-modality] .unit-category-heading:focus {
+    outline: none;
+    color: #ffce63;
+}
+.unit-category-heading:first-child {
+    margin-top: 0;
+}
+
+.category-chevron {
+    font-size: 0.9rem;
+    display: inline-flex;
+    width: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* Category-tab pill row — mobile-only. Desktop layout uses the inline
+   .unit-category-heading collapsibles instead, so the tab row is hidden by
+   default and re-enabled in mobile-foundation.css. */
+.unit-category-tabs {
+    display: none;
+}
+
+.unit-category-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 0.5rem;
+    background: rgba(13, 31, 61, 0.55);
+    border: 1px solid #1f3d63;
+    border-radius: 8px;
+    color: #c0c8d4;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unit-category-tab:hover {
+    background: rgba(30, 60, 95, 0.7);
+    color: #fff;
+    border-color: var(--race-color, #2a5085);
+}
+
+.unit-category-tab:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .unit-category-tab:focus-visible,
+body[data-kb-modality] .unit-category-tab:focus {
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.unit-category-tab.active {
+    background: linear-gradient(135deg, rgba(45, 80, 130, 0.95) 0%, rgba(20, 45, 80, 0.95) 100%);
+    border-color: var(--race-color, #ffce63);
+    color: var(--race-color, #ffce63);
+    box-shadow: 0 0 6px var(--race-color-soft, rgba(255, 206, 99, 0.3));
+}
+
+/* ── mode-toggle sizing (uses CSS custom properties) ─────────────────────── */
+.mode-toggle {
+    flex: 0 0 var(--sidebar-column-width);
+    width: var(--sidebar-column-width);
+}
+
+.mode-toggle-button {
+    flex: 1 1 0;
+    min-height: 2.75rem;
+    padding: 0 1.5rem;
+    background: linear-gradient(180deg, rgba(40, 30, 8, 0.55) 0%, rgba(15, 12, 4, 0.55) 100%);
+    border: 1px solid #6c5a1f;
+    border-radius: 10px;
+    color: #c0c8da;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-shadow: 1px 1px 0 #000;
+    transition: border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mode-toggle-button:hover {
+    border-color: #ffce63;
+    color: #ffce63;
+}
+
+.mode-toggle-button:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .mode-toggle-button:focus-visible,
+body[data-kb-modality] .mode-toggle-button:focus {
+    outline: none;
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+}
+
+.mode-toggle-button.active {
+    background: linear-gradient(180deg, rgba(255, 206, 99, 0.18) 0%, rgba(40, 30, 8, 0.55) 100%);
+    border-color: #ffce63;
+    color: #ffce63;
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.3);
+}
+
+/* ── mode-strip / mode-toggle responsive overrides ───────────────────────── */
+@media (max-width: 1099px) {
+    .mode-toggle {
+        flex: 0 0 18rem;
+        width: 18rem;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 2000px) {
+    .mode-toggle-button {
+        font-size: clamp(1rem, 0.5vw + 0.7rem, 1.4rem);
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .mode-strip {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    .mode-toggle {
+        flex-direction: row;
+        flex: none;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    .mode-toggle-button {
+        flex: 1 1 0;
+        min-height: 3.5rem;
+        font-size: 1.15rem;
+        padding: 0 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mode-toggle-button {
+        font-size: 1rem;
+        min-height: 3.2rem;
+        padding: 0 0.6rem;
+    }
+}
+
+/* ── race-tab ────────────────────────────────────────────────────────────── */
+.race-tab {
+    --race-color: #ffce63;
+    --race-color-soft: rgba(255, 206, 99, 0.30);
+    --race-color-strong: #1c2540;
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+    background: linear-gradient(180deg, var(--race-color-strong) 0%, #050a1a 100%);
+    border: 1px solid #3a4a6c;
+    border-radius: 8px;
+    color: #fff5d6;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: clamp(4rem, 7vw, 7rem);
+    min-width: clamp(4.5rem, 8vw, 9rem);
+    text-shadow:
+        1px 1px 0 #000,
+        -1px 1px 0 #000,
+        1px -1px 0 #000,
+        -1px -1px 0 #000,
+        0 0 8px rgba(0, 0, 0, 0.85);
+}
+
+.race-tab::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--race-banner, none);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    filter: brightness(1.5) saturate(1.25);
+    opacity: 1;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+}
+
+.race-tab::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.0) 0%,
+        rgba(0, 0, 0, 0.0) 45%,
+        rgba(0, 0, 0, 0.55) 75%,
+        rgba(0, 0, 0, 0.85) 100%);
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
+.race-tab[data-race="human"]    { --race-color: #6aa1ff; --race-color-soft: rgba(106, 161, 255, 0.45); --race-color-strong: #173266; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png'); }
+.race-tab[data-race="orc"]      { --race-color: #ff7a7a; --race-color-soft: rgba(255, 122, 122, 0.45); --race-color-strong: #5a1212; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png'); }
+.race-tab[data-race="nightelf"] { --race-color: #5fdada; --race-color-soft: rgba(95, 218, 218, 0.45); --race-color-strong: #0c4348; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png'); }
+.race-tab[data-race="undead"]   { --race-color: #c79bff; --race-color-soft: rgba(199, 155, 255, 0.45); --race-color-strong: #321650; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png'); }
+.race-tab[data-race="neutral"]  { --race-color: #ffce63; --race-color-soft: rgba(255, 206, 99, 0.45); --race-color-strong: #4a3d14; --race-banner: url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png'); }
+
+.race-tab:hover:not(.active) {
+    color: #fff;
+    border-color: var(--race-color);
+    box-shadow: 0 0 12px var(--race-color-soft);
+}
+
+.race-tab:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .race-tab:focus-visible,
+body[data-kb-modality] .race-tab:focus {
+    outline: none;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #fff, 0 0 18px rgba(255, 255, 255, 0.55);
+}
+
+.race-tab.active {
+    color: #fff;
+    border-color: var(--race-color);
+    background: linear-gradient(180deg, var(--race-color-strong) 0%, #0a1432 100%);
+    box-shadow: 0 0 22px var(--race-color-soft), inset 0 0 24px rgba(255, 255, 255, 0.04);
+}
+
+.race-tab-label {
+    position: relative;
+    z-index: 2;
+    padding: 0.4rem 0.6rem 0.5rem;
+    width: 100%;
+    color: #fff;
+    min-width: 0;
+}
+
+.race-tab.active .race-tab-label {
+    color: var(--race-color);
+}
+
+@media (min-width: 481px) and (max-width: 2000px) {
+    .race-tab {
+        min-height: clamp(3rem, 6vh, 5rem);
+    }
+}
+
+}

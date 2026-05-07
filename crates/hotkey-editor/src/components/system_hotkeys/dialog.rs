@@ -5,7 +5,8 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
 use crate::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
-use crate::components::system_hotkeys::inventory::{InventoryDragFollower, InventoryHotkeysView};
+use crate::components::system_hotkeys::inventory::InventoryHotkeysView;
+use crate::components::system_hotkeys::inventory_grid::InventoryDragFollower;
 use crate::components::system_hotkeys::list_view::SystemHotkeysListView;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 

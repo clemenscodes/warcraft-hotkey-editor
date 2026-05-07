@@ -14,7 +14,7 @@ pub(crate) fn RaceTabs(
     mut selected_slot: Signal<Option<GridSlotId>>,
 ) -> Element {
     rsx! {
-        nav { class: "race-tabs",
+        nav { class: "race-tabs flex gap-4 flex-nowrap w-full min-w-0 grow self-stretch",
             for race in SUPPORTED_RACES.iter().copied() {
                 {
                     let is_active = *active_race.read() == race;

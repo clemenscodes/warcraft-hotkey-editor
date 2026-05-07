@@ -17,8 +17,8 @@ pub(crate) fn ModeAndRaceTabs(
     let active_race_for_melee = *active_race.read();
     let active_race_for_campaign = *active_race.read();
     rsx! {
-        div { class: "mode-strip",
-            div { class: "mode-toggle",
+        div { class: "mode-strip flex items-stretch gap-10 grow min-w-0",
+            div { class: "mode-toggle flex flex-col gap-2 self-stretch",
                 button {
                     class: if mode_snapshot == UnitMode::Melee { "mode-toggle-button active" } else { "mode-toggle-button" },
                     onclick: move |_| {

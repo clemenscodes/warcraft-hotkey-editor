@@ -1,18 +1,17 @@
+mod description;
+mod key_field;
+mod position_picker;
+mod upgrade_tier;
+
 use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::{CustomKeys, HotkeyTarget};
+use warcraft_keybinds::{CustomKeys, HotkeyTarget, HotkeyToken};
 use wasm_bindgen::JsCast;
 
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-
-use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
-use crate::components::dialog_header::DialogHeader;
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
-use warcraft_keybinds::HotkeyToken;
-
 use warcraft_keybinds::InspectorDetail;
 use warcraft_keybinds::text::description::Description;
 use warcraft_keybinds::text::tip::Tip;
@@ -20,6 +19,11 @@ use warcraft_keybinds::text::tip::Tip;
 use crate::customkeys::hotkey_override::HotkeyOverride;
 use crate::grid_layout::GridLayout;
 use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+
+use description::AbilityDescription;
+use key_field::OverrideKeyField;
+use position_picker::{AltPositionPicker, UpgradePositionPicker};
+use upgrade_tier::UpgradeTierSelector;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum OverrideEditTarget {
@@ -93,16 +97,6 @@ pub(crate) fn TileOverridePanel(
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);
     let research_is_editing = editing_snapshot == Some(OverrideEditTarget::ResearchHotkey);
-    let hotkey_cell_class = if hotkey_is_editing {
-        "override-key-cell editing"
-    } else {
-        "override-key-cell"
-    };
-    let research_cell_class = if research_is_editing {
-        "override-key-cell editing"
-    } else {
-        "override-key-cell"
-    };
     let hotkey_label = if hotkey_display.is_empty() {
         String::from("\u{2013}")
     } else {
@@ -119,32 +113,12 @@ pub(crate) fn TileOverridePanel(
     let research_is_special_token = research_hotkey_token_display
         .map(|token| char::try_from(token).is_err())
         .unwrap_or(false);
-    let hotkey_special_flag = if hotkey_is_special_token {
-        "true"
-    } else {
-        "false"
-    };
-    let research_special_flag = if research_is_special_token {
-        "true"
-    } else {
-        "false"
-    };
 
-    // Off-state hotkey field for toggle abilities. Surfaces the `Unhotkey`
-    // value from the binding (Stop Defend's key, Unburrow's key, …) and
-    // routes picks through `apply_unhotkey`. Only shown when the inspector
-    // detail carries an alt display name — that's the same gate the alt
-    // description block already uses, so the two appear together or not.
     let alt_hotkey_token_display = detail.alt_hotkey_token();
     let alt_hotkey_display = alt_hotkey_token_display
         .map(|token| token.display_label())
         .unwrap_or_default();
     let alt_hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::AltHotkey);
-    let alt_hotkey_cell_class = if alt_hotkey_is_editing {
-        "override-key-cell editing"
-    } else {
-        "override-key-cell"
-    };
     let alt_hotkey_label = if alt_hotkey_display.is_empty() {
         String::from("\u{2013}")
     } else {
@@ -153,11 +127,6 @@ pub(crate) fn TileOverridePanel(
     let alt_hotkey_is_special_token = alt_hotkey_token_display
         .map(|token| char::try_from(token).is_err())
         .unwrap_or(false);
-    let alt_hotkey_special_flag = if alt_hotkey_is_special_token {
-        "true"
-    } else {
-        "false"
-    };
 
     let total_tier_count: usize = detail
         .ubertip_levels()
@@ -211,8 +180,6 @@ pub(crate) fn TileOverridePanel(
         }
     }
     let tier_label_text = format!("Level {} of {}", active_tier_index + 1, total_tier_count);
-    let prev_object_id_for_click = detail.object_id();
-    let next_object_id_for_click = detail.object_id();
     let object_id_text = detail.object_id().value();
 
     // Auto-scroll the override card into view when its detail changes (i.e. when
@@ -345,33 +312,29 @@ pub(crate) fn TileOverridePanel(
                     code { class: "tile-override-id", "{object_id_text}" }
                 }
                 if show_hotkey_field {
-                    button {
-                        class: "{hotkey_cell_class}",
-                        "data-special": "{hotkey_special_flag}",
-                        onclick: move |_| {
-                            editing_target.set(Some(OverrideEditTarget::Hotkey));
-                        },
-                        "{hotkey_label}"
+                    OverrideKeyField {
+                        label: hotkey_label,
+                        is_editing: hotkey_is_editing,
+                        is_special: hotkey_is_special_token,
+                        title: String::from("Hotkey"),
+                        on_activate: move |_| editing_target.set(Some(OverrideEditTarget::Hotkey)),
                     }
                 } else if show_research_field {
-                    button {
-                        class: "{research_cell_class}",
-                        "data-special": "{research_special_flag}",
-                        onclick: move |_| {
+                    OverrideKeyField {
+                        label: research_label,
+                        is_editing: research_is_editing,
+                        is_special: research_is_special_token,
+                        title: String::from("Research hotkey"),
+                        on_activate: move |_| {
                             editing_target.set(Some(OverrideEditTarget::ResearchHotkey));
                         },
-                        "{research_label}"
                     }
                 } else if detail.info_only() {
                     p { class: "tile-override-info-only", "Passive racial ability" }
                 }
             }
             if !primary_description_lines.is_empty() {
-                div { class: "tile-override-description",
-                    for description_line in primary_description_lines.iter() {
-                        p { class: "tile-override-description-line", "{description_line}" }
-                    }
-                }
+                AbilityDescription { description_lines: primary_description_lines }
             }
             {
                 let alt_name_text = detail.alt_display_name().map(str::to_owned);
@@ -388,11 +351,6 @@ pub(crate) fn TileOverridePanel(
                 rsx! {
                     if has_alt_state {
                         div { class: "tile-override-alt-state",
-                            // Header mirrors the primary `tile-override-header`
-                            // CSS grid (1fr | auto for hotkey | auto for the
-                            // position button). Same column tracks → the V
-                            // hotkey buttons in the primary and alt blocks
-                            // visually line up at the same X-pixel offset.
                             div { class: "tile-override-alt-state-header",
                                 div { class: "tile-override-alt-state-header-text",
                                     if let Some(alt_name) = alt_name_text {
@@ -408,13 +366,10 @@ pub(crate) fn TileOverridePanel(
                                         onclick: move |_| {
                                             alt_position_picker_open.set(true);
                                         },
-                                        // Crosshair-style position icon. Matches the
-                                        // gold accent the rest of the override card uses.
                                         svg {
                                             class: "tile-override-alt-state-position-icon",
                                             view_box: "0 0 24 24",
                                             xmlns: "http://www.w3.org/2000/svg",
-                                            // Outer ring + cross-hair lines.
                                             circle { cx: "12", cy: "12", r: "5", fill: "none", stroke: "currentColor", stroke_width: "1.6" }
                                             line { x1: "12", y1: "2.5", x2: "12", y2: "6", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
                                             line { x1: "12", y1: "18", x2: "12", y2: "21.5", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
@@ -423,14 +378,14 @@ pub(crate) fn TileOverridePanel(
                                             circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
                                         }
                                     }
-                                    button {
-                                        class: "{alt_hotkey_cell_class}",
-                                        "data-special": "{alt_hotkey_special_flag}",
-                                        title: "Hotkey for the off state (writes Unhotkey)",
-                                        onclick: move |_| {
+                                    OverrideKeyField {
+                                        label: alt_hotkey_label,
+                                        is_editing: alt_hotkey_is_editing,
+                                        is_special: alt_hotkey_is_special_token,
+                                        title: String::from("Hotkey for the off state (writes Unhotkey)"),
+                                        on_activate: move |_| {
                                             editing_target.set(Some(OverrideEditTarget::AltHotkey));
                                         },
-                                        "{alt_hotkey_label}"
                                     }
                                 }
                             }
@@ -449,11 +404,6 @@ pub(crate) fn TileOverridePanel(
                     .unwrap_or_default();
                 let upgrade_is_editing =
                     editing_snapshot == Some(OverrideEditTarget::UpgradeHotkey);
-                let upgrade_cell_class = if upgrade_is_editing {
-                    "override-key-cell editing"
-                } else {
-                    "override-key-cell"
-                };
                 let upgrade_hotkey_label = if upgrade_hotkey_display.is_empty() {
                     String::from("\u{2013}")
                 } else {
@@ -462,7 +412,6 @@ pub(crate) fn TileOverridePanel(
                 let upgrade_hotkey_is_special = upgrade_hotkey_token
                     .map(|token| char::try_from(token).is_err())
                     .unwrap_or(false);
-                let upgrade_special_flag = if upgrade_hotkey_is_special { "true" } else { "false" };
                 rsx! {
                     if upgrade_id.is_some() && !is_research_context {
                         div { class: "tile-override-alt-state",
@@ -490,14 +439,14 @@ pub(crate) fn TileOverridePanel(
                                         circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
                                     }
                                 }
-                                button {
-                                    class: "{upgrade_cell_class}",
-                                    "data-special": "{upgrade_special_flag}",
-                                    title: "Hotkey for the upgraded form",
-                                    onclick: move |_| {
+                                OverrideKeyField {
+                                    label: upgrade_hotkey_label,
+                                    is_editing: upgrade_is_editing,
+                                    is_special: upgrade_hotkey_is_special,
+                                    title: String::from("Hotkey for the upgraded form"),
+                                    on_activate: move |_| {
                                         editing_target.set(Some(OverrideEditTarget::UpgradeHotkey));
                                     },
-                                    "{upgrade_hotkey_label}"
                                 }
                             }
                         }
@@ -505,32 +454,12 @@ pub(crate) fn TileOverridePanel(
                 }
             }
             if has_multiple_tiers {
-                div { class: "tile-override-tier-footer",
-                    button {
-                        class: "tile-override-tier-button",
-                        aria_label: "Previous level",
-                        onclick: move |_| {
-                            let tier_count = total_tier_count;
-                            let id_key = prev_object_id_for_click.value().to_string();
-                            let mut writable_guard = tier_overrides.write();
-                            let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
-                            let next = if current == 0 { tier_count - 1 } else { current - 1 };
-                            writable_guard.insert(id_key, next);
-                        }
-                    }
-                    span { class: "tile-override-tier-label", "{tier_label_text}" }
-                    button {
-                        class: "tile-override-tier-button",
-                        aria_label: "Next level",
-                        onclick: move |_| {
-                            let tier_count = total_tier_count;
-                            let id_key = next_object_id_for_click.value().to_string();
-                            let mut writable_guard = tier_overrides.write();
-                            let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
-                            let next = (current + 1) % tier_count;
-                            writable_guard.insert(id_key, next);
-                        }
-                    }
+                UpgradeTierSelector {
+                    object_id: detail.object_id(),
+                    active_tier_index,
+                    total_tier_count,
+                    tier_label_text,
+                    tier_overrides,
                 }
             }
         }
@@ -550,13 +479,6 @@ pub(crate) fn TileOverridePanel(
                 .alt_display_name()
                 .map(str::to_owned)
                 .unwrap_or_else(|| detail.display_name().to_string());
-            // Slot list for the picker grid: the toggle's off half on top
-            // (so cell_for_position picks it first when both halves
-            // resolve to the same cell), then everything else from the
-            // host's primary command card. We deliberately drop the
-            // toggle's own on-state slot from the list so the picker grid
-            // shows the off icon at the on/off position, leaving every
-            // other unit slot in place for context.
             let picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
                 let mut combined: Vec<GridSlotId> =
                     Vec::with_capacity(active_container_slots.len() + 1);
@@ -595,10 +517,6 @@ pub(crate) fn TileOverridePanel(
                 .upgrade_display_name()
                 .map(str::to_owned)
                 .unwrap_or_else(|| String::from("Upgraded form"));
-            // Slot list: upgraded unit first (so cell_for_position picks it),
-            // then the rest of the command card minus the base unit (which
-            // shares the same default position and would cause a visual
-            // collision at that cell).
             let base_unit_id_for_filter = object_id_for_capture;
             let upgrade_picker_id = upgrade_unit_id_for_capture;
             let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible {
@@ -633,139 +551,6 @@ pub(crate) fn TileOverridePanel(
                         drop_target_cell,
                         drag_follower,
                         upgrade_position_picker_open,
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn AltPositionPicker(
-    object_id: WarcraftObjectId,
-    display_name: String,
-    picker_slots: Rc<[GridSlotId]>,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    grid_layout: Signal<GridLayout>,
-    // Reuse the app-level drag signals so the existing
-    // `DragFollowerOverlay` (mounted at the app root) renders the
-    // floating tile while the player drags inside this dialog.
-    // Picker-local signals would never bind to that overlay and the
-    // icon would silently disappear mid-drag.
-    dragging_slot: Signal<Option<DraggingSlot>>,
-    drop_target_cell: Signal<Option<DropTargetCell>>,
-    drag_follower: Signal<Option<DragFollower>>,
-    mut alt_position_picker_open: Signal<bool>,
-) -> Element {
-    // Selection / tier signals stay local — they only drive look inside
-    // this dialog.
-    let picker_selected_slot =
-        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(object_id)));
-    let picker_selected_research = use_signal::<bool>(|| false);
-    let picker_selected_uprooted = use_signal::<bool>(|| false);
-    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
-    let dialog_title = format!("Position: {display_name}");
-    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(object_id)];
-    let grid_props = CommandGridSectionProps {
-        heading: "Off-state position",
-        slot_ids: picker_slots,
-        loaded_keys,
-        selected_slot: picker_selected_slot,
-        selected_from_research: picker_selected_research,
-        selected_from_uprooted: picker_selected_uprooted,
-        tier_overrides: picker_tier_overrides,
-        dragging_slot,
-        drop_target_cell,
-        drag_follower,
-        grid_layout,
-        is_research_grid: false,
-        is_uprooted_grid: false,
-        prevent_swap_on_drop: true,
-        restrict_draggable_to: restrict_draggable,
-        host_unit_id: String::new(),
-    };
-    rsx! {
-        DialogRoot {
-            class: "dialog-overlay",
-            open: alt_position_picker_open(),
-            on_open_change: move |is_open| alt_position_picker_open.set(is_open),
-            DialogContent { class: "dialog-shell wc3-dialog alt-position-picker-shell".to_string(),
-                DialogHeader {
-                    title: dialog_title,
-                    on_close: move |_| alt_position_picker_open.set(false),
-                }
-                div { class: "wc3-dialog-body alt-position-picker-body",
-                    // Same gold-uppercase-serif treatment as
-                    // `templates-dialog-explainer` and `preview-dialog-hint`
-                    // so every dialog-tier explanation reads as a sibling.
-                    p { class: "alt-position-picker-explainer",
-                        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
-                    }
-                    // Centring wrapper — `.grid-tiles` is fixed-width
-                    // (4 × 10rem) and would otherwise flush to the dialog's
-                    // left edge.
-                    div { class: "alt-position-picker-grid-anchor",
-                        CommandGridSection { ..grid_props }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn UpgradePositionPicker(
-    upgrade_unit_id: WarcraftObjectId,
-    display_name: String,
-    picker_slots: Rc<[GridSlotId]>,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    grid_layout: Signal<GridLayout>,
-    dragging_slot: Signal<Option<DraggingSlot>>,
-    drop_target_cell: Signal<Option<DropTargetCell>>,
-    drag_follower: Signal<Option<DragFollower>>,
-    mut upgrade_position_picker_open: Signal<bool>,
-) -> Element {
-    let picker_selected_slot =
-        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability(upgrade_unit_id)));
-    let picker_selected_research = use_signal::<bool>(|| false);
-    let picker_selected_uprooted = use_signal::<bool>(|| false);
-    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
-    let dialog_title = format!("Position: {display_name} (upgraded)");
-    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(upgrade_unit_id)];
-    let grid_props = CommandGridSectionProps {
-        heading: "Upgraded-form position",
-        slot_ids: picker_slots,
-        loaded_keys,
-        selected_slot: picker_selected_slot,
-        selected_from_research: picker_selected_research,
-        selected_from_uprooted: picker_selected_uprooted,
-        tier_overrides: picker_tier_overrides,
-        dragging_slot,
-        drop_target_cell,
-        drag_follower,
-        grid_layout,
-        is_research_grid: false,
-        is_uprooted_grid: false,
-        prevent_swap_on_drop: true,
-        restrict_draggable_to: restrict_draggable,
-        host_unit_id: String::new(),
-    };
-    rsx! {
-        DialogRoot {
-            class: "dialog-overlay",
-            open: upgrade_position_picker_open(),
-            on_open_change: move |is_open| upgrade_position_picker_open.set(is_open),
-            DialogContent { class: "dialog-shell wc3-dialog alt-position-picker-shell".to_string(),
-                DialogHeader {
-                    title: dialog_title,
-                    on_close: move |_| upgrade_position_picker_open.set(false),
-                }
-                div { class: "wc3-dialog-body alt-position-picker-body",
-                    p { class: "alt-position-picker-explainer",
-                        "Drag the upgraded-form button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
-                    }
-                    div { class: "alt-position-picker-grid-anchor",
-                        CommandGridSection { ..grid_props }
                     }
                 }
             }

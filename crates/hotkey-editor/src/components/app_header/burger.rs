@@ -1,35 +1,21 @@
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::download_info_dialog::DownloadInfoDialog;
-use crate::components::export_buttons::ExportButtons;
 use crate::components::icons::{
     ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_TEMPLATES, ICON_UPLOAD,
 };
-use crate::components::layout_editor::LayoutEditor;
-use crate::components::templates_dialog::TemplatesDialog;
-use crate::components::upload_button::UploadButton;
 use crate::components::upload_info_dialog::UploadInfoDialog;
 use crate::customkeys::blob_download::BlobDownload;
-use crate::customkeys::upload_status::UploadStatus;
-use crate::grid_layout::{EditingCell, GridLayout};
-
-const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
 #[component]
-pub(crate) fn AppHeader(
+pub(crate) fn BurgerMenu(
     loaded_keys: Signal<Option<CustomKeys>>,
-    upload_status: Signal<UploadStatus>,
     preview_open: Signal<bool>,
-    grid_layout: Signal<GridLayout>,
-    editing_layout_cell: Signal<Option<EditingCell>>,
-    dragging_layout_cell: Signal<Option<EditingCell>>,
+    layout_dialog_open: Signal<bool>,
+    templates_dialog_open: Signal<bool>,
     mut system_hotkeys_open: Signal<bool>,
 ) -> Element {
-    let mut layout_dialog_open = use_signal::<bool>(|| false);
-    let mut templates_dialog_open = use_signal::<bool>(|| false);
     let mut burger_open = use_signal::<bool>(|| false);
     let mut burger_upload_info_open = use_signal::<bool>(|| false);
     let mut burger_download_info_open = use_signal::<bool>(|| false);
@@ -38,92 +24,20 @@ pub(crate) fn AppHeader(
     let preview_active = preview_open();
 
     rsx! {
-        header { class: "app-header",
-            div { class: "app-header-brand",
-                img {
-                    class: "wc3-header-decoration",
-                    src: "{HEADER_GOLD_DECORATION}",
-                    alt: "",
-                    aria_hidden: "true",
-                }
-                h1 { class: "app-header-title", "Warcraft III Hotkey Editor" }
-                img {
-                    class: "wc3-header-decoration wc3-header-decoration-mirrored",
-                    src: "{HEADER_GOLD_DECORATION}",
-                    alt: "",
-                    aria_hidden: "true",
-                }
-            }
-            div { class: "app-header-center",
-                button {
-                    class: "layout-pill",
-                    r#type: "button",
-                    aria_label: "Edit global hotkey layout",
-                    aria_haspopup: "dialog",
-                    aria_expanded: "{layout_dialog_open()}",
-                    onclick: move |_| {
-                        let next = !*layout_dialog_open.read();
-                        layout_dialog_open.set(next);
-                    },
-                    span {
-                        class: "layout-pill-icon",
-                        aria_hidden: "true",
-                        dangerous_inner_html: ICON_GRID,
-                    }
-                    span { class: "layout-pill-letters", "GRID LAYOUT" }
-                }
-            }
-            div {
-                class: "app-header-actions",
-                role: "toolbar",
-                aria_label: "File actions",
-                UploadButton { loaded_keys, upload_status }
-                button {
-                    class: "toolbar-icon-button",
-                    r#type: "button",
-                    aria_label: "Browse layout templates",
-                    aria_haspopup: "dialog",
-                    aria_expanded: "{templates_dialog_open()}",
-                    onclick: move |_| {
-                        let next = !*templates_dialog_open.read();
-                        templates_dialog_open.set(next);
-                    },
-                    span {
-                        class: "toolbar-icon",
-                        aria_hidden: "true",
-                        dangerous_inner_html: ICON_TEMPLATES,
-                    }
-                }
-                button {
-                    class: if system_hotkeys_open() { "toolbar-icon-button active" } else { "toolbar-icon-button" },
-                    r#type: "button",
-                    aria_label: "General hotkeys",
-                    aria_haspopup: "dialog",
-                    aria_expanded: "{system_hotkeys_open()}",
-                    onclick: move |_| {
-                        let next = !*system_hotkeys_open.read();
-                        system_hotkeys_open.set(next);
-                    },
-                    span {
-                        class: "toolbar-icon",
-                        aria_hidden: "true",
-                        dangerous_inner_html: ICON_COG,
-                    }
-                }
-                ExportButtons { loaded_keys, preview_open }
-            }
-            button {
-                class: "app-header-burger-btn toolbar-icon-button",
-                r#type: "button",
-                aria_label: "Open menu",
-                aria_expanded: "{burger_open()}",
-                aria_controls: "burger-drawer",
-                onclick: move |_| { let next = !*burger_open.read(); burger_open.set(next); },
-                span {
-                    class: "toolbar-icon",
-                    aria_hidden: "true",
-                    dangerous_inner_html: ICON_BURGER,
-                }
+        button {
+            class: "app-header-burger-btn toolbar-icon-button",
+            r#type: "button",
+            aria_label: "Open menu",
+            aria_expanded: "{burger_open()}",
+            aria_controls: "burger-drawer",
+            onclick: move |_| {
+                let next = !*burger_open.read();
+                burger_open.set(next);
+            },
+            span {
+                class: "toolbar-icon",
+                aria_hidden: "true",
+                dangerous_inner_html: ICON_BURGER,
             }
         }
         if burger_open() {
@@ -275,61 +189,6 @@ pub(crate) fn AppHeader(
                     };
                     BlobDownload::trigger("CustomKeys.txt", &serialized);
                 },
-            }
-        }
-        if templates_dialog_open() {
-            TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
-        }
-        if layout_dialog_open() {
-            DialogRoot {
-                class: "dialog-overlay",
-                open: layout_dialog_open(),
-                on_open_change: move |is_open: bool| {
-                    if !is_open && nested_picker_dialog_is_present() {
-                        return;
-                    }
-                    layout_dialog_open.set(is_open);
-                },
-                DialogContent { class: "dialog-shell wc3-dialog layout-editor-shell".to_string(),
-                    header { class: "wc3-dialog-header",
-                        img {
-                            class: "wc3-header-decoration",
-                            src: "{HEADER_GOLD_DECORATION}",
-                            alt: "",
-                            aria_hidden: "true",
-                        }
-                        h2 { class: "wc3-dialog-title", "Global Hotkey Layout" }
-                        img {
-                            class: "wc3-header-decoration wc3-header-decoration-mirrored",
-                            src: "{HEADER_GOLD_DECORATION}",
-                            alt: "",
-                            aria_hidden: "true",
-                        }
-                        button {
-                            class: "wc3-close-button",
-                            r#type: "button",
-                            aria_label: "Close",
-                            onclick: move |_| layout_dialog_open.set(false),
-                            "\u{2715}"
-                        }
-                    }
-                    div { class: "wc3-dialog-body layout-editor-body",
-                        div { class: "layout-editor-explainer",
-                            p { class: "layout-editor-explainer-line",
-                                "Define a hotkey letter for each button position."
-                            }
-                            p { class: "layout-editor-explainer-line",
-                                "Click apply to rewrite every ability hotkey to match this grid layout."
-                            }
-                        }
-                        LayoutEditor {
-                            grid_layout,
-                            editing_layout_cell,
-                            dragging_layout_cell,
-                            loaded_keys,
-                        }
-                    }
-                }
             }
         }
     }
