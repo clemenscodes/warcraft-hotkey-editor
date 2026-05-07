@@ -4,7 +4,7 @@ use warcraft_api::{UnitKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::ButtonPosition;
-use crate::building::BuildingTraits;
+use crate::catalog::BuildingTraits;
 use crate::catalog::CommandCatalog;
 use crate::slot::GridSlotId;
 

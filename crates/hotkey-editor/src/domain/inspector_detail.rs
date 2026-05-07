@@ -1,4 +1,4 @@
-use warcraft_api::{ButtonPosition, WarcraftObjectMeta};
+use warcraft_api::{ButtonPosition, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
@@ -13,7 +13,7 @@ use crate::text::color_codes::WarcraftColorCodes;
 #[derive(Clone, PartialEq)]
 pub(crate) struct InspectorDetail {
     display_name: String,
-    object_id: String,
+    object_id: WarcraftObjectId,
     icon_src: Option<String>,
     hotkey_token: Option<HotkeyToken>,
     research_hotkey_token: Option<HotkeyToken>,
@@ -50,7 +50,7 @@ pub(crate) struct InspectorDetail {
     /// Upgraded-form unit ID for train-slot pairs that share a button position
     /// (e.g. base Siege Engine `hmtt` → upgraded `hrtt`). Populated only on
     /// the base train slot; `None` everywhere else.
-    upgrade_unit_id: Option<String>,
+    upgrade_unit_id: Option<WarcraftObjectId>,
     /// Display name of the upgraded form (e.g. "Siege Engine").
     upgrade_display_name: Option<String>,
     /// Hotkey currently assigned to the upgraded form's binding, if any.
@@ -67,16 +67,17 @@ impl InspectorDetail {
         host_unit_id: &str,
         from_uprooted: bool,
         from_research: bool,
-        upgrade_unit_id: Option<&str>,
+        upgrade_unit_id: Option<WarcraftObjectId>,
     ) -> Self {
         let custom_keys_ref = custom_keys.as_ref();
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id));
-                let cell = AbilityCell::for_ability(ability_id, binding);
+                let ability_id_str = ability_id.value();
+                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id_str));
+                let cell = AbilityCell::for_ability(*ability_id, binding);
                 let position = Positions::current_for(slot, custom_keys_ref, false);
                 let research_position = custom_keys_ref
-                    .and_then(|file| file.binding(ability_id))
+                    .and_then(|file| file.binding(ability_id_str))
                     .and_then(|ability_binding| ability_binding.research_button_position())
                     .map(|raw_position| {
                         ButtonPosition::new(raw_position.column(), raw_position.row())
@@ -99,7 +100,7 @@ impl InspectorDetail {
                         .research_tip()
                         .map(WarcraftColorCodes::stripped)
                 });
-                let database_object = ObjectLookup::by_id(ability_id);
+                let database_object = ObjectLookup::by_id(ability_id_str);
                 let is_passive = database_object
                     .and_then(|warcraft_object| warcraft_object.icons().first().copied())
                     .map(|icon_path| {
@@ -120,7 +121,7 @@ impl InspectorDetail {
                 let host_starts_in_alt =
                     BuildingTraits::unit_starts_in_toggle_alt_state(host_unit_id);
                 let is_morph_targeting_host = !host_unit_id.is_empty()
-                    && ObjectLookup::morph_target_unit(ability_id)
+                    && ObjectLookup::morph_target_unit(ability_id_str)
                         .is_some_and(|target| target.eq_ignore_ascii_case(host_unit_id));
                 let prefer_un_state = !from_uprooted
                     && (host_starts_in_alt || is_morph_targeting_host)
@@ -142,7 +143,7 @@ impl InspectorDetail {
                 // command card (edcm, edtm, ucrm…) and is edited directly from
                 // that unit's AbilityOff slot.  Showing controls here would let
                 // the player mutate a different unit's grid from this panel.
-                let ability_is_morph = ObjectLookup::morph_target_unit(ability_id).is_some();
+                let ability_is_morph = ObjectLookup::morph_target_unit(ability_id_str).is_some();
                 // Some morph abilities use no morph_target_unit in the database
                 // (e.g. Call to Arms / Ant1) yet still transform the unit into a
                 // completely different unit. Detect these by checking whether the
@@ -150,8 +151,8 @@ impl InspectorDetail {
                 // (Militia, burrowed forms, uprootable ancients). If it does, the
                 // off-state half is owned by that unit's own grid and must not be
                 // editable from the source unit's inspector.
-                let ability_off_on_alt_unit =
-                    !ability_is_morph && BuildingTraits::ability_is_on_alt_state_unit(ability_id);
+                let ability_off_on_alt_unit = !ability_is_morph
+                    && BuildingTraits::ability_is_on_alt_state_unit(ability_id_str);
                 let (alt_display_name, alt_ubertip, alt_hotkey_token) = if object_has_alt_state
                     && !prefer_un_state
                     && !ability_is_morph
@@ -217,22 +218,22 @@ impl InspectorDetail {
                     })
                     .unwrap_or_default();
                 let icon_src = if prefer_un_state {
-                    AbilityCell::for_ability_off(ability_id, binding).cloned_icon_src()
+                    AbilityCell::for_ability_off(*ability_id, binding).cloned_icon_src()
                 } else {
                     cell.cloned_icon_src()
                 };
-                let object_id = cell.cloned_object_id();
+                let object_id = cell.object_id();
                 let (upgrade_unit_id_field, upgrade_display_name, upgrade_hotkey_token) =
                     if let Some(upgrade_id) = upgrade_unit_id {
                         let upgrade_binding =
-                            custom_keys_ref.and_then(|file| file.binding(upgrade_id));
+                            custom_keys_ref.and_then(|file| file.binding(upgrade_id.value()));
                         let upgrade_hotkey = upgrade_binding
                             .and_then(|b| b.hotkey())
                             .and_then(BindingHotkey::first_token);
-                        let upgrade_name = ObjectLookup::by_id(upgrade_id)
+                        let upgrade_name = ObjectLookup::by_id(upgrade_id.value())
                             .and_then(|obj| obj.names().first().copied())
                             .map(String::from);
-                        (Some(upgrade_id.to_string()), upgrade_name, upgrade_hotkey)
+                        (Some(upgrade_id), upgrade_name, upgrade_hotkey)
                     } else {
                         (None, None, None)
                     };
@@ -270,13 +271,14 @@ impl InspectorDetail {
                 // Pull `un_tip` / `un_ubertip` for the text and the
                 // `unhotkey` from the binding; no research / no level
                 // tiering applies to the off state.
-                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id));
-                let cell = AbilityCell::for_ability_off(ability_id, binding);
+                let ability_id_str = ability_id.value();
+                let binding = custom_keys_ref.and_then(|file| file.binding(ability_id_str));
+                let cell = AbilityCell::for_ability_off(*ability_id, binding);
                 let position = Positions::current_for(slot, custom_keys_ref, false);
                 let hotkey_token = binding
                     .and_then(|ability_binding| ability_binding.unhotkey())
                     .and_then(BindingHotkey::first_token);
-                let database_object = ObjectLookup::by_id(ability_id);
+                let database_object = ObjectLookup::by_id(ability_id_str);
                 let display_name = database_object
                     .and_then(|warcraft_object| warcraft_object.un_tip())
                     .map(WarcraftColorCodes::stripped)
@@ -285,7 +287,7 @@ impl InspectorDetail {
                     .and_then(|warcraft_object| warcraft_object.un_ubertip())
                     .map(WarcraftColorCodes::stripped);
                 let icon_src = cell.cloned_icon_src();
-                let object_id = cell.cloned_object_id();
+                let object_id = cell.object_id();
                 Self {
                     display_name,
                     object_id,
@@ -314,13 +316,14 @@ impl InspectorDetail {
                 }
             }
             GridSlotId::Command(command_name) => {
-                let binding = custom_keys_ref.and_then(|file| file.command(command_name));
-                let cell = AbilityCell::for_command(command_name, binding);
+                let command_name_str = command_name.value();
+                let binding = custom_keys_ref.and_then(|file| file.command(command_name_str));
+                let cell = AbilityCell::for_command(*command_name, binding);
                 let position = Positions::current_for(slot, custom_keys_ref, false);
                 let hotkey_token = binding
                     .and_then(|command_binding| command_binding.hotkey())
                     .and_then(BindingHotkey::first_token);
-                let database_object = ObjectLookup::by_id(command_name);
+                let database_object = ObjectLookup::by_id(command_name_str);
                 let tip = database_object
                     .and_then(|warcraft_object| warcraft_object.tip())
                     .map(WarcraftColorCodes::stripped)
@@ -334,7 +337,7 @@ impl InspectorDetail {
                     .map(WarcraftColorCodes::stripped);
                 let icon_src = cell.cloned_icon_src();
                 let display_name = cell.cloned_display_name();
-                let object_id = cell.cloned_object_id();
+                let object_id = cell.object_id();
                 Self {
                     display_name,
                     object_id,
@@ -369,8 +372,8 @@ impl InspectorDetail {
         &self.display_name
     }
 
-    pub(crate) fn object_id(&self) -> &str {
-        &self.object_id
+    pub(crate) fn object_id(&self) -> WarcraftObjectId {
+        self.object_id
     }
 
     pub(crate) fn hotkey_token(&self) -> Option<HotkeyToken> {
@@ -441,8 +444,8 @@ impl InspectorDetail {
         self.info_only
     }
 
-    pub(crate) fn upgrade_unit_id(&self) -> Option<&str> {
-        self.upgrade_unit_id.as_deref()
+    pub(crate) fn upgrade_unit_id(&self) -> Option<WarcraftObjectId> {
+        self.upgrade_unit_id
     }
 
     pub(crate) fn upgrade_display_name(&self) -> Option<&str> {

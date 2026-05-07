@@ -1,5 +1,5 @@
 use dioxus::prelude::{ReadableExt, Signal, WritableExt};
-use warcraft_api::ButtonPosition;
+use warcraft_api::{ButtonPosition, WarcraftObjectId};
 use warcraft_keybinds::{CustomKeysFile, Hotkey};
 
 use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
@@ -18,7 +18,7 @@ impl Positions {
         let file = custom_keys?;
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let binding = file.binding(ability_id)?;
+                let binding = file.binding(ability_id.value())?;
                 let position = if is_research_context {
                     binding.research_button_position()?
                 } else {
@@ -27,12 +27,12 @@ impl Positions {
                 Some(ButtonPosition::new(position.column(), position.row()))
             }
             GridSlotId::AbilityOff(ability_id) => {
-                let binding = file.binding(ability_id)?;
+                let binding = file.binding(ability_id.value())?;
                 let position = binding.unbutton_position()?;
                 Some(ButtonPosition::new(position.column(), position.row()))
             }
             GridSlotId::Command(command_name) => {
-                let binding = file.command(command_name)?;
+                let binding = file.command(command_name.value())?;
                 let position = binding.button_position()?;
                 Some(ButtonPosition::new(position.column(), position.row()))
             }
@@ -72,19 +72,20 @@ impl Positions {
             if position.column() == column && position.row() == row {
                 let cell = match slot {
                     GridSlotId::Ability(ability_id) => {
-                        let binding = custom_keys.and_then(|file| file.binding(ability_id));
-                        AbilityCell::for_ability(ability_id, binding)
+                        let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
+                        AbilityCell::for_ability(*ability_id, binding)
                     }
                     GridSlotId::AbilityOff(ability_id) => {
-                        let binding = custom_keys.and_then(|file| file.binding(ability_id));
-                        AbilityCell::for_ability_off(ability_id, binding)
+                        let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
+                        AbilityCell::for_ability_off(*ability_id, binding)
                     }
                     GridSlotId::Command(command_name) => {
-                        let binding = custom_keys.and_then(|file| file.command(command_name));
-                        AbilityCell::for_command(command_name, binding)
+                        let binding =
+                            custom_keys.and_then(|file| file.command(command_name.value()));
+                        AbilityCell::for_command(*command_name, binding)
                     }
                 };
-                return Some((slot.clone(), cell));
+                return Some((*slot, cell));
             }
         }
         None
@@ -107,8 +108,8 @@ impl Positions {
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let is_passive = ObjectLookup::is_passive_ability(ability_id);
-                if let Some(binding) = file.binding_or_default_mut(ability_id) {
+                let is_passive = ObjectLookup::is_passive_ability(ability_id.value());
+                if let Some(binding) = file.binding_or_default_mut(*ability_id) {
                     if is_research_context {
                         binding.set_research_button_position(Some(new_position));
                         let research_hotkey = Hotkey::from(letter);
@@ -123,14 +124,14 @@ impl Positions {
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
-                if let Some(binding) = file.binding_or_default_mut(ability_id) {
+                if let Some(binding) = file.binding_or_default_mut(*ability_id) {
                     binding.set_unbutton_position(Some(new_position));
                     let unhotkey = Hotkey::from(letter);
                     binding.set_unhotkey(Some(unhotkey));
                 }
             }
             GridSlotId::Command(command_name) => {
-                if let Some(binding) = file.command_or_default_mut(command_name) {
+                if let Some(binding) = file.command_or_default_mut(*command_name) {
                     binding.set_button_position(Some(new_position));
                     let command_hotkey = Hotkey::from(letter);
                     binding.set_hotkey(Some(command_hotkey));
@@ -164,12 +165,18 @@ impl Positions {
                 let GridSlotId::Ability(ability_id) = slot else {
                     return false;
                 };
-                if ability_id.eq_ignore_ascii_case(request.moving_slot.as_str()) {
+                if ability_id
+                    .value()
+                    .eq_ignore_ascii_case(request.moving_slot.as_str())
+                {
                     return false;
                 }
-                Self::current_for_ability_off(ability_id, custom_keys).is_some_and(|off_pos| {
-                    off_pos.column() == request.target_column && off_pos.row() == request.target_row
-                })
+                Self::current_for_ability_off(ability_id.value(), custom_keys).is_some_and(
+                    |off_pos| {
+                        off_pos.column() == request.target_column
+                            && off_pos.row() == request.target_row
+                    },
+                )
             });
         let explicit_custom_unbutton = |id: &str| -> Option<ButtonPosition> {
             custom_keys
@@ -179,14 +186,14 @@ impl Positions {
         };
         let off_state_in_grid = |id: &str| -> bool {
             request.slot_ids.iter().any(
-                |s| matches!(s, GridSlotId::AbilityOff(off_id) if off_id.eq_ignore_ascii_case(id)),
+                |s| matches!(s, GridSlotId::AbilityOff(off_id) if off_id.value().eq_ignore_ascii_case(id)),
             )
         };
         let moving_off_colocated = !request.prevent_co_move
             && match (request.moving_slot, &moving_old_position) {
                 (GridSlotId::Ability(id), Some(old_pos)) => {
-                    off_state_in_grid(id)
-                        && explicit_custom_unbutton(id).is_some_and(|off_pos| {
+                    off_state_in_grid(id.value())
+                        && explicit_custom_unbutton(id.value()).is_some_and(|off_pos| {
                             off_pos.column() == old_pos.column() && off_pos.row() == old_pos.row()
                         })
                 }
@@ -194,8 +201,8 @@ impl Positions {
             };
         let displaced_off_colocated = match &displaced_pair {
             Some((GridSlotId::Ability(id), _)) => {
-                off_state_in_grid(id)
-                    && explicit_custom_unbutton(id).is_some_and(|off_pos| {
+                off_state_in_grid(id.value())
+                    && explicit_custom_unbutton(id.value()).is_some_and(|off_pos| {
                         off_pos.column() == request.target_column
                             && off_pos.row() == request.target_row
                     })
@@ -214,7 +221,7 @@ impl Positions {
                 (GridSlotId::Ability(left), GridSlotId::Ability(right))
                 | (GridSlotId::AbilityOff(left), GridSlotId::AbilityOff(right))
                 | (GridSlotId::Command(left), GridSlotId::Command(right)) => {
-                    left.eq_ignore_ascii_case(right)
+                    left.value().eq_ignore_ascii_case(right.value())
                 }
                 _ => false,
             };
@@ -244,7 +251,7 @@ impl Positions {
             Self::assign(
                 custom_keys_signal,
                 request.layout,
-                &GridSlotId::AbilityOff(moving_id.clone()),
+                &GridSlotId::AbilityOff(*moving_id),
                 request.target_column,
                 request.target_row,
                 false,
@@ -269,7 +276,7 @@ impl Positions {
                 Self::assign(
                     custom_keys_signal,
                     request.layout,
-                    &GridSlotId::AbilityOff(displaced_id.clone()),
+                    &GridSlotId::AbilityOff(*displaced_id),
                     old_column,
                     old_row,
                     false,
@@ -286,30 +293,27 @@ impl Positions {
         let mut writable_guard = custom_keys_signal.write();
         let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
 
-        let ability_ids: Vec<String> = file
-            .bindings_in_order()
-            .map(|entry| entry.id().to_string())
-            .collect();
-        let command_names: Vec<String> = file
-            .commands_in_order()
-            .map(|entry| entry.name().to_string())
-            .collect();
+        let ability_ids: Vec<WarcraftObjectId> =
+            file.bindings_in_order().map(|entry| entry.id()).collect();
+        let command_names: Vec<WarcraftObjectId> =
+            file.commands_in_order().map(|entry| entry.name()).collect();
 
         for ability_id in &ability_ids {
-            let is_passive = ObjectLookup::is_passive_ability(ability_id);
+            let ability_id_str = ability_id.value();
+            let is_passive = ObjectLookup::is_passive_ability(ability_id_str);
             let button_position = if is_passive {
                 None
             } else {
-                file.binding(ability_id)
+                file.binding(ability_id_str)
                     .and_then(|binding| binding.button_position())
                     .copied()
             };
             let research_button_position = file
-                .binding(ability_id)
+                .binding(ability_id_str)
                 .and_then(|binding| binding.research_button_position())
                 .copied();
             let unbutton_position = file
-                .binding(ability_id)
+                .binding(ability_id_str)
                 .and_then(|binding| binding.unbutton_position())
                 .copied();
             if button_position.is_none()
@@ -318,7 +322,7 @@ impl Positions {
             {
                 continue;
             }
-            let Some(binding) = file.binding_or_default_mut(ability_id) else {
+            let Some(binding) = file.binding_or_default_mut(*ability_id) else {
                 continue;
             };
             if let Some(position) = button_position
@@ -355,7 +359,7 @@ impl Positions {
 
         for command_name in &command_names {
             let button_position = file
-                .command(command_name)
+                .command(command_name.value())
                 .and_then(|binding| binding.button_position())
                 .copied();
             let Some(position) = button_position else {
@@ -364,7 +368,7 @@ impl Positions {
             let Some(letter) = layout.letter_at(position.column(), position.row()) else {
                 continue;
             };
-            let Some(binding) = file.command_or_default_mut(command_name) else {
+            let Some(binding) = file.command_or_default_mut(*command_name) else {
                 continue;
             };
             if BindingHotkey::accepts_grid_letter(binding.hotkey()) {

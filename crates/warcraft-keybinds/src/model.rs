@@ -1,7 +1,7 @@
 use std::fmt;
 use std::ops::Deref;
 use std::str::FromStr;
-use warcraft_api::{SystemKeybindClass, SystemKeybindModifier};
+use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Hotkey {
@@ -227,80 +227,89 @@ impl FromStr for ButtonPosition {
     }
 }
 
+/// Slot data for a single command-card position.
+/// Shared by the primary (on) and alt (off/un) states of an ability.
+#[derive(Default, Debug, Clone)]
+struct AbilitySlotData {
+    hotkey: Option<Hotkey>,
+    button_position: Option<ButtonPosition>,
+    tip: Option<String>,
+    ubertip: Option<String>,
+    icon: Option<String>,
+}
+
+/// Slot data for the research/upgrade button of an upgradeable ability.
+#[derive(Default, Debug, Clone)]
+struct ResearchSlotData {
+    hotkey: Option<Hotkey>,
+    button_position: Option<ButtonPosition>,
+    tip: Option<String>,
+    ubertip: Option<String>,
+}
+
 #[derive(Default, Debug, Clone)]
 pub struct AbilityBinding {
-    hotkey: Option<Hotkey>,
-    unhotkey: Option<Hotkey>,
-    button_position: Option<ButtonPosition>,
-    unbutton_position: Option<ButtonPosition>,
-    research_hotkey: Option<Hotkey>,
-    research_button_position: Option<ButtonPosition>,
-    tip: Option<String>,
-    research_tip: Option<String>,
-    un_tip: Option<String>,
-    ubertip: Option<String>,
-    research_ubertip: Option<String>,
-    un_ubertip: Option<String>,
-    icon: Option<String>,
-    un_icon: Option<String>,
+    primary: AbilitySlotData,
+    alt: AbilitySlotData,
+    research: ResearchSlotData,
     modifier: Option<AbilityModifier>,
 }
 
 impl AbilityBinding {
     pub fn hotkey(&self) -> Option<&Hotkey> {
-        self.hotkey.as_ref()
+        self.primary.hotkey.as_ref()
     }
 
     pub fn unhotkey(&self) -> Option<&Hotkey> {
-        self.unhotkey.as_ref()
+        self.alt.hotkey.as_ref()
     }
 
     pub fn button_position(&self) -> Option<&ButtonPosition> {
-        self.button_position.as_ref()
+        self.primary.button_position.as_ref()
     }
 
     pub fn unbutton_position(&self) -> Option<&ButtonPosition> {
-        self.unbutton_position.as_ref()
+        self.alt.button_position.as_ref()
     }
 
     pub fn research_hotkey(&self) -> Option<&Hotkey> {
-        self.research_hotkey.as_ref()
+        self.research.hotkey.as_ref()
     }
 
     pub fn research_button_position(&self) -> Option<&ButtonPosition> {
-        self.research_button_position.as_ref()
+        self.research.button_position.as_ref()
     }
 
     pub fn tip(&self) -> Option<&str> {
-        self.tip.as_deref()
+        self.primary.tip.as_deref()
     }
 
     pub fn research_tip(&self) -> Option<&str> {
-        self.research_tip.as_deref()
+        self.research.tip.as_deref()
     }
 
     pub fn un_tip(&self) -> Option<&str> {
-        self.un_tip.as_deref()
+        self.alt.tip.as_deref()
     }
 
     pub fn ubertip(&self) -> Option<&str> {
-        self.ubertip.as_deref()
+        self.primary.ubertip.as_deref()
     }
 
     pub fn research_ubertip(&self) -> Option<&str> {
-        self.research_ubertip.as_deref()
+        self.research.ubertip.as_deref()
     }
 
     pub fn un_ubertip(&self) -> Option<&str> {
-        self.un_ubertip.as_deref()
+        self.alt.ubertip.as_deref()
     }
 
     pub fn icon(&self) -> Option<&str> {
-        self.icon.as_deref()
+        self.primary.icon.as_deref()
     }
 
     pub fn un_icon(&self) -> Option<&str> {
-        self.un_icon.as_deref()
+        self.alt.icon.as_deref()
     }
 
     pub fn modifier(&self) -> Option<AbilityModifier> {
@@ -308,59 +317,59 @@ impl AbilityBinding {
     }
 
     pub fn set_hotkey(&mut self, value: Option<Hotkey>) {
-        self.hotkey = value;
+        self.primary.hotkey = value;
     }
 
     pub fn set_unhotkey(&mut self, value: Option<Hotkey>) {
-        self.unhotkey = value;
+        self.alt.hotkey = value;
     }
 
     pub fn set_button_position(&mut self, value: Option<ButtonPosition>) {
-        self.button_position = value;
+        self.primary.button_position = value;
     }
 
     pub fn set_unbutton_position(&mut self, value: Option<ButtonPosition>) {
-        self.unbutton_position = value;
+        self.alt.button_position = value;
     }
 
     pub fn set_research_hotkey(&mut self, value: Option<Hotkey>) {
-        self.research_hotkey = value;
+        self.research.hotkey = value;
     }
 
     pub fn set_research_button_position(&mut self, value: Option<ButtonPosition>) {
-        self.research_button_position = value;
+        self.research.button_position = value;
     }
 
     pub fn set_tip(&mut self, value: Option<String>) {
-        self.tip = value;
+        self.primary.tip = value;
     }
 
     pub fn set_research_tip(&mut self, value: Option<String>) {
-        self.research_tip = value;
+        self.research.tip = value;
     }
 
     pub fn set_un_tip(&mut self, value: Option<String>) {
-        self.un_tip = value;
+        self.alt.tip = value;
     }
 
     pub fn set_ubertip(&mut self, value: Option<String>) {
-        self.ubertip = value;
+        self.primary.ubertip = value;
     }
 
     pub fn set_research_ubertip(&mut self, value: Option<String>) {
-        self.research_ubertip = value;
+        self.research.ubertip = value;
     }
 
     pub fn set_un_ubertip(&mut self, value: Option<String>) {
-        self.un_ubertip = value;
+        self.alt.ubertip = value;
     }
 
     pub fn set_icon(&mut self, value: Option<String>) {
-        self.icon = value;
+        self.primary.icon = value;
     }
 
     pub fn set_un_icon(&mut self, value: Option<String>) {
-        self.un_icon = value;
+        self.alt.icon = value;
     }
 
     pub fn set_modifier(&mut self, value: Option<AbilityModifier>) {
@@ -530,16 +539,16 @@ impl WarcraftKeybinding {
 }
 
 pub struct BindingEntry<'a> {
-    id: &'a str,
+    id: WarcraftObjectId,
     binding: &'a AbilityBinding,
 }
 
 impl<'a> BindingEntry<'a> {
-    pub(crate) fn new(id: &'a str, binding: &'a AbilityBinding) -> Self {
+    pub(crate) fn new(id: WarcraftObjectId, binding: &'a AbilityBinding) -> Self {
         Self { id, binding }
     }
 
-    pub fn id(&self) -> &'a str {
+    pub fn id(&self) -> WarcraftObjectId {
         self.id
     }
 
@@ -549,16 +558,16 @@ impl<'a> BindingEntry<'a> {
 }
 
 pub struct CommandEntry<'a> {
-    name: &'a str,
+    name: WarcraftObjectId,
     binding: &'a CommandBinding,
 }
 
 impl<'a> CommandEntry<'a> {
-    pub(crate) fn new(name: &'a str, binding: &'a CommandBinding) -> Self {
+    pub(crate) fn new(name: WarcraftObjectId, binding: &'a CommandBinding) -> Self {
         Self { name, binding }
     }
 
-    pub fn name(&self) -> &'a str {
+    pub fn name(&self) -> WarcraftObjectId {
         self.name
     }
 
@@ -764,21 +773,30 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
                 Self::System(system_binding)
             }
             SectionKind::Ability => {
-                let ability_binding = AbilityBinding {
+                let primary_slot = AbilitySlotData {
                     hotkey: accumulator.hotkey,
-                    unhotkey: accumulator.unhotkey,
                     button_position: accumulator.button_position,
-                    unbutton_position: accumulator.unbutton_position,
-                    research_hotkey: accumulator.research_hotkey,
-                    research_button_position: accumulator.research_button_position,
                     tip: accumulator.tip,
-                    research_tip: accumulator.research_tip,
-                    un_tip: accumulator.un_tip,
                     ubertip: accumulator.ubertip,
-                    research_ubertip: accumulator.research_ubertip,
-                    un_ubertip: accumulator.un_ubertip,
                     icon: accumulator.icon,
-                    un_icon: accumulator.un_icon,
+                };
+                let alt_slot = AbilitySlotData {
+                    hotkey: accumulator.unhotkey,
+                    button_position: accumulator.unbutton_position,
+                    tip: accumulator.un_tip,
+                    ubertip: accumulator.un_ubertip,
+                    icon: accumulator.un_icon,
+                };
+                let research_slot = ResearchSlotData {
+                    hotkey: accumulator.research_hotkey,
+                    button_position: accumulator.research_button_position,
+                    tip: accumulator.research_tip,
+                    ubertip: accumulator.research_ubertip,
+                };
+                let ability_binding = AbilityBinding {
+                    primary: primary_slot,
+                    alt: alt_slot,
+                    research: research_slot,
                     modifier: accumulator.modifier,
                 };
                 Self::Ability(ability_binding)

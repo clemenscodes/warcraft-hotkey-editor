@@ -23,7 +23,7 @@ pub(crate) struct HotkeyOverride;
 impl HotkeyOverride {
     pub(crate) fn apply(
         loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &str,
+        object_id: &'static str,
         is_command: bool,
         new_token: Option<HotkeyToken>,
     ) {
@@ -53,7 +53,7 @@ impl HotkeyOverride {
 
     pub(crate) fn apply_research(
         loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &str,
+        object_id: &'static str,
         new_token: Option<HotkeyToken>,
     ) {
         let mut writable_guard = loaded_keys.write();
@@ -76,7 +76,7 @@ impl HotkeyOverride {
     /// defending if they want.
     pub(crate) fn apply_unhotkey(
         loaded_keys: &mut Signal<Option<CustomKeysFile>>,
-        object_id: &str,
+        object_id: &'static str,
         new_token: Option<HotkeyToken>,
     ) {
         let mut writable_guard = loaded_keys.write();
@@ -156,7 +156,7 @@ impl HotkeyOverride {
     ) -> Option<HotkeyToken> {
         let hotkey = match slot {
             GridSlotId::Ability(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id))?;
+                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()))?;
                 if is_research_context {
                     binding.research_hotkey()
                 } else {
@@ -164,11 +164,11 @@ impl HotkeyOverride {
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id))?;
+                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()))?;
                 binding.unhotkey()
             }
             GridSlotId::Command(command_name) => {
-                let binding = custom_keys.and_then(|file| file.command(command_name))?;
+                let binding = custom_keys.and_then(|file| file.command(command_name.value()))?;
                 binding.hotkey()
             }
         };
@@ -178,18 +178,18 @@ impl HotkeyOverride {
     fn display_name_for(slot: &GridSlotId, custom_keys: Option<&CustomKeysFile>) -> String {
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id));
-                let cell = AbilityCell::for_ability(ability_id, binding);
+                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
+                let cell = AbilityCell::for_ability(*ability_id, binding);
                 cell.cloned_display_name()
             }
             GridSlotId::AbilityOff(ability_id) => {
-                let binding = custom_keys.and_then(|file| file.binding(ability_id));
-                let cell = AbilityCell::for_ability_off(ability_id, binding);
+                let binding = custom_keys.and_then(|file| file.binding(ability_id.value()));
+                let cell = AbilityCell::for_ability_off(*ability_id, binding);
                 cell.cloned_display_name()
             }
             GridSlotId::Command(command_name) => {
-                let binding = custom_keys.and_then(|file| file.command(command_name));
-                let cell = AbilityCell::for_command(command_name, binding);
+                let binding = custom_keys.and_then(|file| file.command(command_name.value()));
+                let cell = AbilityCell::for_command(*command_name, binding);
                 cell.cloned_display_name()
             }
         }

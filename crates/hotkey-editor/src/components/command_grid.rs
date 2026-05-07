@@ -208,7 +208,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let read_guard = props.loaded_keys.read();
     let custom_keys_option = read_guard.as_ref();
     let layout_snapshot = *props.grid_layout.read();
-    let active_slot = props.selected_slot.read().clone();
+    let active_slot = *props.selected_slot.read();
     let active_selection_is_research = *props.selected_from_research.read();
 
     let mut select_slot = props.selected_slot;
@@ -276,7 +276,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 row,
                             );
                             let raw_occupant_slot: Option<GridSlotId> =
-                                cell_with_slot.as_ref().map(|(slot_id, _)| slot_id.clone());
+                                cell_with_slot.as_ref().map(|(slot_id, _)| *slot_id);
                             // Show the off-state appearance when either:
                             // (a) a morph ability is on the unit it morphs INTO
                             //     (e.g. Bear Form on the bear unit → "Night Elf Form")
@@ -287,23 +287,24 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                     let GridSlotId::Ability(ability_id) = slot else {
                                         return None;
                                     };
+                                    let ability_id_str = ability_id.value();
                                     let binding =
-                                        custom_keys_option.and_then(|file| file.binding(ability_id));
+                                        custom_keys_option.and_then(|file| file.binding(ability_id_str));
                                     if let Some(target) =
-                                        ObjectLookup::morph_target_unit(ability_id)
+                                        ObjectLookup::morph_target_unit(ability_id_str)
                                         && target.eq_ignore_ascii_case(&host_unit_id) {
                                             return Some(AbilityCell::for_ability_off(
-                                                ability_id, binding,
+                                                *ability_id, binding,
                                             ));
                                         }
                                     if !is_uprooted_grid
                                         && BuildingTraits::unit_starts_in_toggle_alt_state(
                                             &host_unit_id,
                                         )
-                                        && BuildingTraits::ability_has_alt_state(ability_id)
+                                        && BuildingTraits::ability_has_alt_state(ability_id_str)
                                     {
                                         return Some(AbilityCell::for_ability_off(
-                                            ability_id, binding,
+                                            *ability_id, binding,
                                         ));
                                     }
                                     None
@@ -313,7 +314,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             // This makes drag-and-drop write Unbuttonpos instead of
                             // Buttonpos and wires selection to the off-state inspector.
                             let occupant_slot: Option<GridSlotId> = if morph_reverse_cell.is_some() {
-                                raw_occupant_slot.map(|slot| GridSlotId::AbilityOff(slot.as_str().to_string()))
+                                raw_occupant_slot.map(|slot| GridSlotId::AbilityOff(slot.id()))
                             } else {
                                 raw_occupant_slot
                             };
@@ -365,12 +366,12 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         return false;
                                     };
                                     if dragging_id_str.as_deref().is_some_and(|id| {
-                                        ability_id.eq_ignore_ascii_case(id)
+                                        ability_id.value().eq_ignore_ascii_case(id)
                                     }) {
                                         return false;
                                     }
                                     Positions::current_for_ability_off(
-                                        ability_id,
+                                        ability_id.value(),
                                         custom_keys_option,
                                     )
                                     .is_some_and(|off_pos| {
@@ -386,20 +387,16 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 is_drop_target_cell,
                                 is_off_state_blocked,
                             );
-                            let occupant_for_drag = occupant_slot.clone();
-                            let occupant_for_click = occupant_slot.clone();
-                            let occupant_for_keydown = occupant_slot.clone();
+                            let occupant_for_drag = occupant_slot;
+                            let occupant_for_click = occupant_slot;
+                            let occupant_for_keydown = occupant_slot;
                             let restrict_draggable_to_for_drag = Rc::clone(&restrict_draggable_to);
-                            let cell_object_id_option = cell_option
-                                .as_ref()
-                                .map(|cell| cell.object_id().to_string());
+                            let cell_object_id_option = cell_option.map(|cell| cell.object_id());
                             let cell_tier_index = cell_object_id_option
-                                .as_deref()
-                                .and_then(|object_id| tier_overrides.read().get(object_id).copied())
+                                .and_then(|id| tier_overrides.read().get(id.value()).copied())
                                 .unwrap_or(0);
                             let cell_database_object = cell_object_id_option
-                                .as_deref()
-                                .and_then(ObjectLookup::by_id);
+                                .and_then(|id| ObjectLookup::by_id(id.value()));
                             let cell_tier_name = cell_database_object
                                 .and_then(|warcraft_object| {
                                     warcraft_object.names().get(cell_tier_index).copied()
@@ -440,9 +437,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 token.map(|value| value.display_label())
                             });
                             let is_passive_on_command_grid = !is_research_grid
-                                && cell_option
-                                    .as_ref()
-                                    .map(|cell| ObjectLookup::is_passive_ability(cell.object_id()))
+                                && cell_object_id_option
+                                    .map(|id| ObjectLookup::is_passive_ability(id.value()))
                                     .unwrap_or(false);
                             let displayed_letter: Option<String> = binding_letter_option
                                 .clone()
@@ -511,7 +507,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             let key_value = event.data().key().to_string();
                                             if key_value == " " || key_value == "Enter" {
                                                 event.prevent_default();
-                                                select_slot.set(occupant_for_keydown.clone());
+                                                select_slot.set(occupant_for_keydown);
                                                 select_from_research.set(is_research_grid);
                                                 select_from_uprooted.set(is_uprooted_grid);
                                                 FocusModality::after_render(".tile-override-card .override-key-cell");
@@ -546,7 +542,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 drop_target_cell.set(None);
                                                 drag_follower.set(None);
                                             }
-                                            let Some(source_slot) = occupant_for_drag.clone() else {
+                                            let Some(source_slot) = occupant_for_drag else {
                                                 return;
                                             };
                                             // Picker mode: drag origin must
@@ -865,23 +861,23 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                             else {
                                                                 return None;
                                                             };
-                                                            if id.eq_ignore_ascii_case(moving_id) {
+                                                            if id.value().eq_ignore_ascii_case(moving_id) {
                                                                 return None;
                                                             }
                                                             let off_pos =
                                                                 Positions::current_for_ability_off(
-                                                                    id,
+                                                                    id.value(),
                                                                     custom_keys,
                                                                 )?;
                                                             if off_pos.column() == drop.column()
                                                                 && off_pos.row() == drop.row()
                                                             {
                                                                 Some(
-                                                                    ObjectLookup::by_id(id)
+                                                                    ObjectLookup::by_id(id.value())
                                                                         .and_then(|obj| {
                                                                             obj.names().first().copied()
                                                                         })
-                                                                        .unwrap_or(id.as_str())
+                                                                        .unwrap_or(id.value())
                                                                         .to_owned(),
                                                                 )
                                                             } else {
@@ -910,7 +906,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     .with_prevent_swap(prevent_swap_on_drop)
                                                     .with_prevent_co_move(is_uprooted_grid);
                                                     Positions::move_or_swap(&mut keys_signal, move_request);
-                                                    let moved_slot = dragging.slot_id().clone();
+                                                    let moved_slot = *dragging.slot_id();
                                                     select_slot.set(Some(moved_slot));
                                                     performed_swap = true;
                                                     }
@@ -925,7 +921,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             if fell_back_to_source && did_move
                                                 && let Some(dragging) = dragging_clone.as_ref()
                                             {
-                                                let source_slot = dragging.slot_id().clone();
+                                                let source_slot = *dragging.slot_id();
                                                 select_slot.set(Some(source_slot));
                                                 select_from_research.set(is_research_grid);
                                                 select_from_uprooted.set(is_uprooted_grid);
@@ -957,7 +953,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             if was_suppressed {
                                                 return;
                                             }
-                                            select_slot.set(occupant_for_click.clone());
+                                            select_slot.set(occupant_for_click);
                                             select_from_research.set(is_research_grid);
                                             select_from_uprooted.set(is_uprooted_grid);
                                         },

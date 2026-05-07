@@ -1,3 +1,5 @@
+use warcraft_api::WarcraftObjectId;
+
 use crate::{
     AbilityBinding, AbilityModifier, ButtonPosition, CommandBinding, CustomKeysFile, Hotkey,
     SystemBinding,
@@ -262,25 +264,22 @@ impl CustomKeysFileBuilder {
         Self { file }
     }
 
-    pub fn ability(mut self, id: impl Into<String>, binding: AbilityBinding) -> Self {
-        let id_string = id.into();
-        self.file.put_ability(&id_string, binding);
+    pub fn ability(mut self, id: impl Into<WarcraftObjectId>, binding: AbilityBinding) -> Self {
+        self.file.put_ability(id, binding);
         self
     }
 
-    pub fn command(mut self, name: impl Into<String>, binding: CommandBinding) -> Self {
-        let name_string = name.into();
-        self.file.put_command(&name_string, binding);
+    pub fn command(mut self, name: impl Into<WarcraftObjectId>, binding: CommandBinding) -> Self {
+        self.file.put_command(name, binding);
         self
     }
 
-    pub fn system(mut self, id: impl Into<String>, binding: SystemBinding) -> Self {
-        let id_string = id.into();
-        self.file.put_system(&id_string, binding);
+    pub fn system(mut self, id: impl Into<WarcraftObjectId>, binding: SystemBinding) -> Self {
+        self.file.put_system(id, binding);
         self
     }
 
-    /// Produce a [`CustomKeysFile`]; keys are lowercased and ordered alphabetically; duplicates keep the last value.
+    /// Produce a [`CustomKeysFile`]; keys are canonical-case and ordered alphabetically.
     pub fn build(self) -> CustomKeysFile {
         CustomKeysFile::from(self)
     }
@@ -788,13 +787,11 @@ mod builder_tests {
     }
 
     #[test]
-    fn file_builder_lookup_is_case_insensitive() {
+    fn file_builder_lookup_uses_canonical_case() {
         let hotkey = Hotkey::from('T');
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
         let file = CustomKeysFile::builder().ability("Hpal", binding).build();
         assert!(file.binding("Hpal").is_some());
-        assert!(file.binding("hpal").is_some());
-        assert!(file.binding("HPAL").is_some());
     }
 
     #[test]
@@ -807,8 +804,11 @@ mod builder_tests {
             .ability("AHbz", binding_ahbz)
             .ability("AHhb", binding_ahhb)
             .build();
-        let ids: Vec<&str> = file.bindings_in_order().map(|entry| entry.id()).collect();
-        assert_eq!(ids, ["ahbz", "ahhb", "ahrl"]);
+        let ids: Vec<&str> = file
+            .bindings_in_order()
+            .map(|entry| entry.id().value())
+            .collect();
+        assert_eq!(ids, ["AHbz", "AHhb", "Ahrl"]);
     }
 
     #[test]

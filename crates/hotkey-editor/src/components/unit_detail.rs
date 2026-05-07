@@ -200,8 +200,8 @@ pub(crate) fn UnitDetailPanel(
         }
         command_card_slots.push(GridSlotId::command(command_name));
     }
-    let mut seen_train_positions: HashMap<ButtonPosition, String> = HashMap::new();
-    let mut train_unit_upgrades: HashMap<String, String> = HashMap::new();
+    let mut seen_train_positions: HashMap<ButtonPosition, &'static str> = HashMap::new();
+    let mut train_unit_upgrades: HashMap<&'static str, &'static str> = HashMap::new();
     for trained_id in primary_train_slots {
         let id_str = trained_id.value();
         if !ObjectLookup::has_icon(id_str) {
@@ -213,12 +213,12 @@ pub(crate) fn UnitDetailPanel(
             if let Some(existing_id) = seen_train_positions.get(&button_position) {
                 // First collision at this position becomes the upgrade;
                 // further collisions are silently dropped to keep the grid clean.
-                if !train_unit_upgrades.contains_key(existing_id.as_str()) {
-                    train_unit_upgrades.insert(existing_id.clone(), id_str.to_string());
+                if !train_unit_upgrades.contains_key(existing_id) {
+                    train_unit_upgrades.insert(existing_id, id_str);
                 }
                 continue;
             }
-            seen_train_positions.insert(button_position, id_str.to_string());
+            seen_train_positions.insert(button_position, id_str);
         }
         command_card_slots.push(GridSlotId::ability(id_str));
     }
@@ -366,12 +366,15 @@ pub(crate) fn UnitDetailPanel(
         None
     };
 
-    let inspector_slot = selected_slot.read().clone();
+    let inspector_slot = *selected_slot.read();
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
     let inspector_panel = inspector_slot.as_ref().map(|slot| {
         let upgrade_id = if let GridSlotId::Ability(id) = slot {
-            train_unit_upgrades.get(id.as_str()).map(String::as_str)
+            train_unit_upgrades
+                .get(id.value())
+                .copied()
+                .map(WarcraftObjectId::new)
         } else {
             None
         };

@@ -1,40 +1,34 @@
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+use warcraft_api::WarcraftObjectId;
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum GridSlotId {
-    Ability(String),
-    AbilityOff(String),
-    Command(String),
+    Ability(WarcraftObjectId),
+    AbilityOff(WarcraftObjectId),
+    Command(WarcraftObjectId),
 }
 
 impl GridSlotId {
-    pub fn ability(value: impl Into<String>) -> Self {
-        Self::Ability(value.into())
+    pub fn ability(id: impl Into<WarcraftObjectId>) -> Self {
+        Self::Ability(id.into())
     }
 
-    pub fn ability_off(value: impl Into<String>) -> Self {
-        Self::AbilityOff(value.into())
+    pub fn ability_off(id: impl Into<WarcraftObjectId>) -> Self {
+        Self::AbilityOff(id.into())
     }
 
-    pub fn command(value: impl Into<String>) -> Self {
-        Self::Command(value.into())
+    pub fn command(id: impl Into<WarcraftObjectId>) -> Self {
+        Self::Command(id.into())
     }
 
-    pub fn as_str(&self) -> &str {
+    pub fn as_str(&self) -> &'static str {
         match self {
-            Self::Ability(value) | Self::AbilityOff(value) | Self::Command(value) => value.as_str(),
+            Self::Ability(id) | Self::AbilityOff(id) | Self::Command(id) => id.value(),
         }
     }
-}
 
-impl AsRef<str> for GridSlotId {
-    fn as_ref(&self) -> &str {
-        self.as_str()
-    }
-}
-
-impl std::ops::Deref for GridSlotId {
-    type Target = str;
-
-    fn deref(&self) -> &str {
-        self.as_str()
+    pub fn id(&self) -> WarcraftObjectId {
+        match self {
+            Self::Ability(id) | Self::AbilityOff(id) | Self::Command(id) => *id,
+        }
     }
 }

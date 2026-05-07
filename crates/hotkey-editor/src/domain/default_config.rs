@@ -327,8 +327,8 @@ mod tests {
             let id = entry.section_id();
             let hotkey_code = tmpl
                 .system(id)
-                .map(|binding| binding.hotkey())
-                .unwrap_or_else(|| entry.default_hotkey());
+                .map(|binding| binding.hotkey().to_string())
+                .unwrap_or_else(|| entry.default_hotkey().to_string());
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
             let hotkey_line = format!("Hotkey={hotkey_code}\n");

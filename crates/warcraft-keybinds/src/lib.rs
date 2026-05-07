@@ -1,18 +1,14 @@
 pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId};
 
 pub mod builder;
-pub mod building;
 pub mod catalog;
-pub mod export;
 pub mod file;
 pub mod model;
-pub mod parser;
 pub mod slot;
 pub mod unit_slots;
 
 pub use builder::{AbilityBindingBuilder, CommandBindingBuilder, CustomKeysFileBuilder};
-pub use building::BuildingTraits;
-pub use catalog::CommandCatalog;
+pub use catalog::{BuildingTraits, CommandCatalog};
 pub use file::CustomKeysFile;
 pub use model::{
     AbilityBinding, AbilityModifier, BindingEntry, ButtonPosition, CommandBinding, CommandEntry,
@@ -38,12 +34,10 @@ mod tests {
     }
 
     #[test]
-    fn lookup_is_case_insensitive() {
+    fn lookup_uses_canonical_case() {
         let input = "[Hpal]\nHotkey=T\nButtonpos=3,0\n";
         let file = CustomKeysFile::from(input);
         assert!(file.binding("Hpal").is_some());
-        assert!(file.binding("hpal").is_some());
-        assert!(file.binding("HPAL").is_some());
     }
 
     #[test]
@@ -80,8 +74,11 @@ mod tests {
             .ability("AHhb", binding_ahhb)
             .ability("AHbz", binding_ahbz)
             .build();
-        let ids: Vec<&str> = file.bindings_in_order().map(|entry| entry.id()).collect();
-        assert_eq!(ids, ["ahbz", "ahhb"]);
+        let ids: Vec<&str> = file
+            .bindings_in_order()
+            .map(|entry| entry.id().value())
+            .collect();
+        assert_eq!(ids, ["AHbz", "AHhb"]);
     }
 
     #[test]
@@ -345,8 +342,11 @@ mod tests {
             .command("CmdMove", cmd_move)
             .command("CmdStop", cmd_stop)
             .build();
-        let names: Vec<&str> = file.commands_in_order().map(|entry| entry.name()).collect();
-        assert_eq!(names, ["cmdattack", "cmdmove", "cmdstop"]);
+        let names: Vec<&str> = file
+            .commands_in_order()
+            .map(|entry| entry.name().value())
+            .collect();
+        assert_eq!(names, ["CmdAttack", "CmdMove", "CmdStop"]);
     }
 
     #[test]
@@ -666,21 +666,21 @@ mod extend_tests {
     }
 
     #[test]
-    fn extend_is_case_insensitive_for_ids() {
+    fn extend_merges_by_canonical_id() {
         let target_hotkey = Hotkey::from('Q');
         let uploaded_hotkey = Hotkey::from('E');
         let target_binding = AbilityBinding::builder().hotkey(target_hotkey).build();
         let uploaded_binding = AbilityBinding::builder().hotkey(uploaded_hotkey).build();
         let mut target = CustomKeysFile::builder()
-            .ability("AHrl", target_binding)
+            .ability("Ahrl", target_binding)
             .build();
         let uploaded = CustomKeysFile::builder()
-            .ability("ahrl", uploaded_binding)
+            .ability("Ahrl", uploaded_binding)
             .build();
         target.extend(uploaded);
         let expected_hotkey = Hotkey::Letter('E');
         assert_eq!(
-            target.binding("AHrl").and_then(|binding| binding.hotkey()),
+            target.binding("Ahrl").and_then(|binding| binding.hotkey()),
             Some(&expected_hotkey)
         );
     }

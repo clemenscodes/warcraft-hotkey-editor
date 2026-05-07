@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::CustomKeysFile;
 use wasm_bindgen::JsCast;
 
@@ -58,10 +59,10 @@ pub(crate) fn TileOverridePanel(
     let mut alt_position_picker_open = use_signal::<bool>(|| false);
     let mut upgrade_position_picker_open = use_signal::<bool>(|| false);
     let layout_snapshot = *grid_layout.read();
-    let object_id_for_capture = detail.object_id().to_string();
+    let object_id_for_capture = detail.object_id();
     let is_command_for_capture = detail.is_command();
     let is_off_state_for_capture = detail.is_off_state();
-    let upgrade_unit_id_for_capture: Option<String> = detail.upgrade_unit_id().map(str::to_owned);
+    let upgrade_unit_id_for_capture = detail.upgrade_unit_id();
     let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
@@ -164,7 +165,7 @@ pub(crate) fn TileOverridePanel(
         .max(detail.icon_levels_len());
     let stored_tier_index = tier_overrides
         .read()
-        .get(detail.object_id())
+        .get(detail.object_id().value())
         .copied()
         .unwrap_or(0);
     let active_tier_index = if total_tier_count <= 1 {
@@ -209,9 +210,9 @@ pub(crate) fn TileOverridePanel(
         }
     }
     let tier_label_text = format!("Level {} of {}", active_tier_index + 1, total_tier_count);
-    let prev_object_id_for_click = detail.object_id().to_string();
-    let next_object_id_for_click = detail.object_id().to_string();
-    let object_id_text = detail.object_id().to_string();
+    let prev_object_id_for_click = detail.object_id();
+    let next_object_id_for_click = detail.object_id();
+    let object_id_text = detail.object_id().value();
 
     // Auto-scroll the override card into view when its detail changes (i.e. when
     // a different tile gets selected). On phone / tablet widths the override
@@ -220,9 +221,9 @@ pub(crate) fn TileOverridePanel(
     // gate keeps desktop selections from yanking the page mid-interaction;
     // `documentElement.clientWidth` is preferred over `Window::inner_width` so
     // the threshold matches the CSS breakpoint (which excludes scrollbars).
-    let scroll_dependency = detail.object_id().to_string();
+    let scroll_dependency = detail.object_id();
     use_effect(move || {
-        let _track = &scroll_dependency;
+        let _track = scroll_dependency;
         let Some(window) = web_sys::window() else {
             return;
         };
@@ -274,20 +275,17 @@ pub(crate) fn TileOverridePanel(
         Some(OverrideEditTarget::UpgradeHotkey) => detail.upgrade_hotkey_token(),
         None => None,
     };
-    let picker_effective_object_id =
+    let picker_effective_object_id: WarcraftObjectId =
         if matches!(picker_target, Some(OverrideEditTarget::UpgradeHotkey)) {
-            upgrade_unit_id_for_capture
-                .as_deref()
-                .unwrap_or(&object_id_for_capture)
-                .to_string()
+            upgrade_unit_id_for_capture.unwrap_or(object_id_for_capture)
         } else {
-            object_id_for_capture.clone()
+            object_id_for_capture
         };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
         build_picker_rows(
             layout_snapshot,
             &active_container_slots,
-            &picker_effective_object_id,
+            picker_effective_object_id.value(),
             picker_current_token,
             picker_is_research_context,
             loaded_keys.read().as_ref(),
@@ -300,7 +298,7 @@ pub(crate) fn TileOverridePanel(
         _ => String::from("Pick a hotkey"),
     };
     let picker_active_container = active_container_slots.clone();
-    let picker_object_id = picker_effective_object_id.clone();
+    let picker_object_id = picker_effective_object_id;
 
     let on_pick = move |token: HotkeyToken| {
         let Some(active_target) = *editing_target.read() else {
@@ -312,7 +310,7 @@ pub(crate) fn TileOverridePanel(
         let custom_keys_ref = read_guard.as_ref();
         let conflict = HotkeyOverride::detect_conflict(
             &picker_active_container,
-            &picker_object_id,
+            picker_object_id.value(),
             token,
             custom_keys_ref,
             layout_snapshot_for_check,
@@ -327,26 +325,39 @@ pub(crate) fn TileOverridePanel(
                 if is_off_state_for_capture {
                     HotkeyOverride::apply_unhotkey(
                         &mut loaded_keys,
-                        &picker_object_id,
+                        picker_object_id.value(),
                         Some(token),
                     );
                 } else {
                     HotkeyOverride::apply(
                         &mut loaded_keys,
-                        &picker_object_id,
+                        picker_object_id.value(),
                         is_command_for_capture,
                         Some(token),
                     );
                 }
             }
             OverrideEditTarget::ResearchHotkey => {
-                HotkeyOverride::apply_research(&mut loaded_keys, &picker_object_id, Some(token));
+                HotkeyOverride::apply_research(
+                    &mut loaded_keys,
+                    picker_object_id.value(),
+                    Some(token),
+                );
             }
             OverrideEditTarget::AltHotkey => {
-                HotkeyOverride::apply_unhotkey(&mut loaded_keys, &picker_object_id, Some(token));
+                HotkeyOverride::apply_unhotkey(
+                    &mut loaded_keys,
+                    picker_object_id.value(),
+                    Some(token),
+                );
             }
             OverrideEditTarget::UpgradeHotkey => {
-                HotkeyOverride::apply(&mut loaded_keys, &picker_object_id, false, Some(token));
+                HotkeyOverride::apply(
+                    &mut loaded_keys,
+                    picker_object_id.value(),
+                    false,
+                    Some(token),
+                );
             }
         }
         editing_target.set(None);
@@ -457,7 +468,7 @@ pub(crate) fn TileOverridePanel(
                 }
             }
             {
-                let upgrade_id = detail.upgrade_unit_id().map(str::to_owned);
+                let upgrade_id = detail.upgrade_unit_id();
                 let upgrade_hotkey_token = detail.upgrade_hotkey_token();
                 let upgrade_hotkey_display = upgrade_hotkey_token
                     .map(|token| token.display_label())
@@ -526,7 +537,7 @@ pub(crate) fn TileOverridePanel(
                         aria_label: "Previous level",
                         onclick: move |_| {
                             let tier_count = total_tier_count;
-                            let id_key = prev_object_id_for_click.clone();
+                            let id_key = prev_object_id_for_click.value().to_string();
                             let mut writable_guard = tier_overrides.write();
                             let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
                             let next = if current == 0 { tier_count - 1 } else { current - 1 };
@@ -539,7 +550,7 @@ pub(crate) fn TileOverridePanel(
                         aria_label: "Next level",
                         onclick: move |_| {
                             let tier_count = total_tier_count;
-                            let id_key = next_object_id_for_click.clone();
+                            let id_key = next_object_id_for_click.value().to_string();
                             let mut writable_guard = tier_overrides.write();
                             let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
                             let next = (current + 1) % tier_count;
@@ -560,7 +571,7 @@ pub(crate) fn TileOverridePanel(
         }
         {
             let alt_picker_visible = *alt_position_picker_open.read();
-            let alt_picker_object_id = object_id_for_capture.clone();
+            let alt_picker_object_id = object_id_for_capture;
             let alt_display_name = detail
                 .alt_display_name()
                 .map(str::to_owned)
@@ -575,14 +586,14 @@ pub(crate) fn TileOverridePanel(
             let picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
                 let mut combined: Vec<GridSlotId> =
                     Vec::with_capacity(active_container_slots.len() + 1);
-                combined.push(GridSlotId::ability_off(alt_picker_object_id.clone()));
+                combined.push(GridSlotId::ability_off(alt_picker_object_id));
                 for slot in active_container_slots.iter() {
                     if let GridSlotId::Ability(ability_id) = slot
-                        && ability_id.eq_ignore_ascii_case(&alt_picker_object_id)
+                        && *ability_id == alt_picker_object_id
                     {
                         continue;
                     }
-                    combined.push(slot.clone());
+                    combined.push(*slot);
                 }
                 combined.into()
             } else {
@@ -614,28 +625,32 @@ pub(crate) fn TileOverridePanel(
             // then the rest of the command card minus the base unit (which
             // shares the same default position and would cause a visual
             // collision at that cell).
-            let base_unit_id_for_filter = object_id_for_capture.clone();
-            let upgrade_picker_id = upgrade_unit_id_for_capture.clone().unwrap_or_default();
-            let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible && !upgrade_picker_id.is_empty() {
-                let mut combined: Vec<GridSlotId> =
-                    Vec::with_capacity(active_container_slots.len() + 1);
-                combined.push(GridSlotId::ability(upgrade_picker_id.clone()));
-                for slot in active_container_slots.iter() {
-                    if let GridSlotId::Ability(base_id) = slot
-                        && base_id.eq_ignore_ascii_case(&base_unit_id_for_filter)
-                    {
-                        continue;
+            let base_unit_id_for_filter = object_id_for_capture;
+            let upgrade_picker_id = upgrade_unit_id_for_capture;
+            let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible {
+                if let Some(upgrade_id) = upgrade_picker_id {
+                    let mut combined: Vec<GridSlotId> =
+                        Vec::with_capacity(active_container_slots.len() + 1);
+                    combined.push(GridSlotId::ability(upgrade_id));
+                    for slot in active_container_slots.iter() {
+                        if let GridSlotId::Ability(base_id) = slot
+                            && *base_id == base_unit_id_for_filter
+                        {
+                            continue;
+                        }
+                        combined.push(*slot);
                     }
-                    combined.push(slot.clone());
+                    combined.into()
+                } else {
+                    Rc::from([] as [GridSlotId; 0])
                 }
-                combined.into()
             } else {
                 Rc::from([] as [GridSlotId; 0])
             };
             rsx! {
-                if upgrade_picker_visible && !upgrade_picker_id.is_empty() {
+                if upgrade_picker_visible && upgrade_picker_id.is_some() {
                     UpgradePositionPicker {
-                        upgrade_unit_id: upgrade_picker_id,
+                        upgrade_unit_id: upgrade_picker_id.unwrap(),
                         display_name: upgrade_display_name,
                         picker_slots: upgrade_picker_slots,
                         loaded_keys,
@@ -653,7 +668,7 @@ pub(crate) fn TileOverridePanel(
 
 #[component]
 fn AltPositionPicker(
-    object_id: String,
+    object_id: WarcraftObjectId,
     display_name: String,
     picker_slots: Rc<[GridSlotId]>,
     loaded_keys: Signal<Option<CustomKeysFile>>,
@@ -671,13 +686,12 @@ fn AltPositionPicker(
     // Selection / tier signals stay local — they only drive look inside
     // this dialog.
     let picker_selected_slot =
-        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(&object_id)));
+        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(object_id)));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
     let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let dialog_title = format!("Position: {display_name}");
-    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(&object_id)];
-    let _ = object_id;
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(object_id)];
     let grid_props = CommandGridSectionProps {
         heading: "Off-state position",
         slot_ids: picker_slots,
@@ -727,7 +741,7 @@ fn AltPositionPicker(
 
 #[component]
 fn UpgradePositionPicker(
-    upgrade_unit_id: String,
+    upgrade_unit_id: WarcraftObjectId,
     display_name: String,
     picker_slots: Rc<[GridSlotId]>,
     loaded_keys: Signal<Option<CustomKeysFile>>,
@@ -738,13 +752,12 @@ fn UpgradePositionPicker(
     mut upgrade_position_picker_open: Signal<bool>,
 ) -> Element {
     let picker_selected_slot =
-        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability(&upgrade_unit_id)));
+        use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability(upgrade_unit_id)));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
     let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let dialog_title = format!("Position: {display_name} (upgraded)");
-    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(&upgrade_unit_id)];
-    let _ = upgrade_unit_id;
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(upgrade_unit_id)];
     let grid_props = CommandGridSectionProps {
         heading: "Upgraded-form position",
         slot_ids: picker_slots,

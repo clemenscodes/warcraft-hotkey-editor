@@ -103,7 +103,7 @@ impl AbilityDefaultsExtraction {
             let off_ubertip = binding.un_ubertip().map(str::to_owned);
             let off_tip = binding.un_tip().map(str::to_owned);
             let off_icon = binding.un_icon().map(str::to_owned);
-            let requires = requires_map.get(id).cloned();
+            let requires = requires_map.get(id.value()).cloned();
 
             if regular_position.is_none()
                 && research_position.is_none()
@@ -129,7 +129,7 @@ impl AbilityDefaultsExtraction {
                 off_icon,
                 requires,
             };
-            database.insert(id.to_string(), entry_data);
+            database.insert(id.value().to_string(), entry_data);
         }
         Ok(ExtractResult::AbilityDefaults(database))
     }

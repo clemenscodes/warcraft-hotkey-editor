@@ -126,7 +126,7 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                             let icon_src = cell_option.and_then(|cell| cell.cloned_icon_src());
                             let is_passive_command_cell = !is_research
                                 && cell_option
-                                    .map(|cell| ObjectLookup::is_passive_ability(cell.object_id()))
+                                    .map(|cell| ObjectLookup::is_passive_ability(cell.object_id().value()))
                                     .unwrap_or(false);
                             let binding_letter = cell_option.and_then(|cell| {
                                 let token = if is_research {

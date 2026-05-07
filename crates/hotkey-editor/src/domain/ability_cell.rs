@@ -1,3 +1,4 @@
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{AbilityBinding, CommandBinding, Hotkey};
 
 use crate::domain::hotkey_token::HotkeyToken;
@@ -8,7 +9,7 @@ use crate::text::tip::Tip;
 
 #[derive(Clone, PartialEq)]
 pub(crate) struct AbilityCell {
-    object_id: String,
+    object_id: WarcraftObjectId,
     display_name: String,
     icon_src: Option<String>,
     binding_hotkey: Option<HotkeyToken>,
@@ -16,8 +17,12 @@ pub(crate) struct AbilityCell {
 }
 
 impl AbilityCell {
-    pub(crate) fn for_ability(object_id: &str, binding: Option<&AbilityBinding>) -> Self {
-        let database_object = ObjectLookup::by_id(object_id);
+    pub(crate) fn for_ability(
+        object_id: WarcraftObjectId,
+        binding: Option<&AbilityBinding>,
+    ) -> Self {
+        let id_str = object_id.value();
+        let database_object = ObjectLookup::by_id(id_str);
         let database_name = database_object
             .and_then(|warcraft_object| warcraft_object.names().first().copied())
             .map(String::from);
@@ -41,7 +46,7 @@ impl AbilityCell {
             .and_then(|ability_binding| ability_binding.research_hotkey())
             .and_then(BindingHotkey::first_token);
         Self {
-            object_id: object_id.to_string(),
+            object_id,
             display_name,
             icon_src,
             binding_hotkey,
@@ -53,8 +58,12 @@ impl AbilityCell {
     /// unmorph). Used by the off-state position picker; pulls the
     /// alternate name (`un_tip` from the database, falling back to the
     /// on-state name) and the `unhotkey` from the binding.
-    pub(crate) fn for_ability_off(object_id: &str, binding: Option<&AbilityBinding>) -> Self {
-        let database_object = ObjectLookup::by_id(object_id);
+    pub(crate) fn for_ability_off(
+        object_id: WarcraftObjectId,
+        binding: Option<&AbilityBinding>,
+    ) -> Self {
+        let id_str = object_id.value();
+        let database_object = ObjectLookup::by_id(id_str);
         let alt_name = database_object
             .and_then(|warcraft_object| warcraft_object.un_tip())
             .map(String::from);
@@ -71,7 +80,7 @@ impl AbilityCell {
         // Off icon priority: binding un_icon override → database UnArt
         // (AbilityMeta::off_icon, parsed from UnArt= in abilityfunc.txt) →
         // on-state icon as last resort.
-        let database_off_icon = ObjectLookup::off_icon(object_id).map(IconUrl::from_database_path);
+        let database_off_icon = ObjectLookup::off_icon(id_str).map(IconUrl::from_database_path);
         let database_icon = database_object
             .and_then(|warcraft_object| warcraft_object.icons().first().copied())
             .map(IconUrl::from_database_path);
@@ -83,7 +92,7 @@ impl AbilityCell {
             .and_then(|ability_binding| ability_binding.unhotkey())
             .and_then(BindingHotkey::first_token);
         Self {
-            object_id: object_id.to_string(),
+            object_id,
             display_name,
             icon_src,
             binding_hotkey,
@@ -91,8 +100,12 @@ impl AbilityCell {
         }
     }
 
-    pub(crate) fn for_command(command_name: &str, binding: Option<&CommandBinding>) -> Self {
-        let database_object = ObjectLookup::by_id(command_name);
+    pub(crate) fn for_command(
+        command_name: WarcraftObjectId,
+        binding: Option<&CommandBinding>,
+    ) -> Self {
+        let id_str = command_name.value();
+        let database_object = ObjectLookup::by_id(id_str);
         let database_name = database_object
             .and_then(|warcraft_object| warcraft_object.names().first().copied())
             .map(String::from);
@@ -100,7 +113,7 @@ impl AbilityCell {
             .and_then(|command_binding| command_binding.tip())
             .map(Tip::shortened)
             .or(database_name)
-            .unwrap_or_else(|| CommandLabel::pretty(command_name));
+            .unwrap_or_else(|| CommandLabel::pretty(id_str));
         let icon_src = database_object
             .and_then(|warcraft_object| warcraft_object.icons().first().copied())
             .map(IconUrl::from_database_path);
@@ -108,7 +121,7 @@ impl AbilityCell {
             .and_then(|command_binding| command_binding.hotkey())
             .and_then(BindingHotkey::first_token);
         Self {
-            object_id: command_name.to_string(),
+            object_id: command_name,
             display_name,
             icon_src,
             binding_hotkey,
@@ -116,8 +129,8 @@ impl AbilityCell {
         }
     }
 
-    pub(crate) fn object_id(&self) -> &str {
-        &self.object_id
+    pub(crate) fn object_id(&self) -> WarcraftObjectId {
+        self.object_id
     }
 
     pub(crate) fn display_name(&self) -> &str {
@@ -130,10 +143,6 @@ impl AbilityCell {
 
     pub(crate) fn binding_research_hotkey(&self) -> Option<HotkeyToken> {
         self.binding_research_hotkey
-    }
-
-    pub(crate) fn cloned_object_id(&self) -> String {
-        self.object_id.clone()
     }
 
     pub(crate) fn cloned_display_name(&self) -> String {
