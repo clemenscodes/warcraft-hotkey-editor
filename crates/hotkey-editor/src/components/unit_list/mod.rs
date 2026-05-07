@@ -1,15 +1,17 @@
+mod category;
+mod state;
+mod unit_card;
+
 use std::collections::HashSet;
 
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{UnitCatalog, UnitKindHelpers, UnitMode};
+use warcraft_database::{UnitKindHelpers, UnitMode};
 
 use crate::grid_slot::GridSlotId;
 
-mod category;
-mod unit_card;
-
 use category::UnitCategorySection;
+use state::UnitListState;
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
@@ -36,35 +38,24 @@ pub(crate) fn UnitListPanel(
     mut search_query: Signal<String>,
     collapsed_categories: Signal<HashSet<UnitKind>>,
 ) -> Element {
-    let mut active_category = use_signal::<UnitKind>(|| UnitKind::Soldier);
-
-    let race = *active_race.read();
-    let mode = *unit_mode.read();
-    let query_snapshot = search_query.read().clone();
-    let search_active = !query_snapshot.is_empty();
-    let active_kind = *active_category.read();
-    let active_unit_id = selected_unit_id.read().clone();
-    let collapsed_snapshot = collapsed_categories.read().clone();
-
-    let category_kinds = {
-        let all_entries = UnitCatalog::entries_for(race, mode, None, Some(query_snapshot.as_str()));
-        let mut seen: Vec<UnitKind> = Vec::new();
-        for entry in all_entries {
-            let entry_kind = entry.unit_kind();
-            if !seen.contains(&entry_kind) {
-                seen.push(entry_kind);
-            }
-        }
-        seen
-    };
+    let state = UnitListState::new(
+        active_race,
+        unit_mode,
+        search_query,
+        selected_unit_id,
+        collapsed_categories,
+    );
+    let mut active_category_signal = state.active_category();
 
     rsx! {
         aside {
-            class: "unit-list flex flex-col gap-2 overflow-hidden min-w-0 min-h-0",
-            "data-active-category": "{unit_kind_data_attr(active_kind)}",
-            "data-search-active": "{search_active}",
-            div { class: "unit-list-search shrink-0 flex items-center gap-2 p-2 min-w-0",
+            class: "group flex flex-col gap-2 overflow-hidden min-w-0 min-h-0 max-[700px]:max-h-[32rem] min-[701px]:max-[1099px]:sticky min-[701px]:max-[1099px]:top-4 min-[701px]:max-[1099px]:max-h-[calc(100dvh-16rem)] [@media(min-width:701px)_and_(max-height:900px)]:max-h-none min-[1100px]:absolute min-[1100px]:top-0 min-[1100px]:left-0 min-[1100px]:w-[var(--main-sidebar-w)] min-[1100px]:h-full",
+            "data-active-category": "{unit_kind_data_attr(state.active_kind())}",
+            "data-search-active": "{state.search_active()}",
+            div {
+                class: "shrink-0 flex items-center gap-2 p-2 min-w-0 bg-[rgba(13,31,61,0.85)] border border-[#1f3d63] rounded-[6px]",
                 input {
+                    class: "flex-1 min-w-0 w-full bg-[rgba(8,18,35,0.7)] border border-warcraft-blue rounded text-white py-3 px-4 font-[inherit] text-[1.4rem] focus:outline-none focus:border-warcraft-gold focus:shadow-[0_0_6px_rgba(255,206,99,0.4)]",
                     r#type: "search",
                     placeholder: "Search units…",
                     value: "{search_query}",
@@ -72,41 +63,39 @@ pub(crate) fn UnitListPanel(
                 }
             }
             nav {
-                class: "unit-category-tabs",
+                class: "hidden",
                 role: "tablist",
                 aria_label: "Unit categories",
                 for kind in MOBILE_CATEGORY_ORDER {
                     {
                         let label = UnitKindHelpers::category_label(kind);
-                        let is_active = kind == active_kind;
-                        let class_name = if is_active {
-                            "unit-category-tab active"
-                        } else {
-                            "unit-category-tab"
-                        };
+                        let is_active = kind == state.active_kind();
+                        let kind_attr = unit_kind_data_attr(kind);
                         rsx! {
                             button {
-                                key: "{unit_kind_data_attr(kind)}",
-                                class: "{class_name}",
+                                key: "{kind_attr}",
+                                class: "flex-1 min-w-0 min-h-[44px] px-2 bg-[rgba(13,31,61,0.55)] border border-[#1f3d63] rounded-[8px] text-[#c0c8d4] font-friz-quadrata text-[0.95rem] tracking-[0.04em] uppercase text-center cursor-pointer transition-all duration-[120ms] whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[rgba(30,60,95,0.7)] hover:text-white hover:border-warcraft-blue focus:outline-none [body[data-kb-modality]_&]:focus:outline-none [body[data-kb-modality]_&]:focus:border-white [body[data-kb-modality]_&]:focus:shadow-[0_0_0_2px_#fff] data-[active=true]:bg-gradient-to-br data-[active=true]:from-[rgba(45,80,130,0.95)] data-[active=true]:to-[rgba(20,45,80,0.95)] data-[active=true]:border-warcraft-gold data-[active=true]:text-warcraft-gold data-[active=true]:shadow-[0_0_6px_rgba(255,206,99,0.3)]",
                                 role: "tab",
                                 r#type: "button",
                                 aria_selected: "{is_active}",
-                                "data-unit-kind": "{unit_kind_data_attr(kind)}",
-                                onclick: move |_| active_category.set(kind),
+                                "data-unit-kind": "{kind_attr}",
+                                "data-active": "{is_active}",
+                                onclick: move |_| active_category_signal.set(kind),
                                 "{label}"
                             }
                         }
                     }
                 }
             }
-            div { class: "unit-list-scroll grow overflow-y-auto overflow-x-hidden pr-1 flex flex-col min-h-0",
+            div {
+                class: "grow overflow-y-auto overflow-x-hidden pr-1 flex flex-col min-h-0 [scrollbar-width:thin] [scrollbar-color:rgba(255,206,99,0)_transparent] transition-[scrollbar-color] duration-200 group-hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] focus-within:[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
                 div { class: "flex flex-col gap-2",
-                    for category_kind in category_kinds {
+                    for category_kind in state.category_kinds().to_owned() {
                         {
                             let category_label = UnitKindHelpers::category_label(category_kind).to_owned();
-                            let is_collapsed = collapsed_snapshot.contains(&category_kind);
-                            let query_for_section = query_snapshot.clone();
-                            let active_unit_id_for_section = active_unit_id.clone();
+                            let is_collapsed = state.collapsed_snapshot().contains(&category_kind);
+                            let query_for_section = state.query_snapshot().to_owned();
+                            let active_unit_id_for_section = state.active_unit_id().map(str::to_owned);
                             rsx! {
                                 UnitCategorySection {
                                     key: "{unit_kind_data_attr(category_kind)}",
@@ -114,13 +103,13 @@ pub(crate) fn UnitListPanel(
                                     category_label,
                                     is_collapsed,
                                     collapsed_categories,
-                                    race,
-                                    mode,
+                                    race: state.race(),
+                                    mode: state.mode(),
                                     query: query_for_section,
                                     active_unit_id: active_unit_id_for_section,
                                     selected_unit_id,
                                     selected_slot,
-                                    active_category,
+                                    active_category: active_category_signal,
                                 }
                             }
                         }

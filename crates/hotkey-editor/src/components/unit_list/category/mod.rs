@@ -1,3 +1,5 @@
+mod state;
+
 use std::collections::HashSet;
 
 use dioxus::prelude::*;
@@ -9,6 +11,7 @@ use crate::icons::IconUrl;
 
 use super::unit_card::UnitCard;
 use super::unit_kind_data_attr;
+use state::UnitCategoryHeadingClass;
 
 #[component]
 pub(super) fn UnitCategorySection(
@@ -24,15 +27,13 @@ pub(super) fn UnitCategorySection(
     mut selected_slot: Signal<Option<GridSlotId>>,
     mut active_category: Signal<UnitKind>,
 ) -> Element {
-    let heading_class = if is_collapsed {
-        "unit-category-heading collapsed"
-    } else {
-        "unit-category-heading"
-    };
+    let heading_class = UnitCategoryHeadingClass::compute(is_collapsed);
     let kind_attr = unit_kind_data_attr(category_kind);
     let captured_kind = category_kind;
-
-    let entries = UnitCatalog::entries_for(race, mode, Some(category_kind), Some(query.as_str()));
+    let query_str = query.as_str();
+    let query_option = Some(query_str);
+    let category_option = Some(category_kind);
+    let entries = UnitCatalog::entries_for(race, mode, category_option, query_option);
 
     rsx! {
         button {
@@ -46,7 +47,7 @@ pub(super) fn UnitCategorySection(
                     categories.insert(captured_kind);
                 }
             },
-            span { class: "category-chevron",
+            span { class: "text-[0.9rem] inline-flex w-[0.8rem] shrink-0",
                 if is_collapsed { "\u{25b6}" } else { "\u{25bc}" }
             }
             "{category_label}"
@@ -67,6 +68,7 @@ pub(super) fn UnitCategorySection(
                             display_name,
                             icon_path,
                             unit_kind: entry_kind,
+                            race,
                             is_selected,
                             selected_unit_id,
                             selected_slot,

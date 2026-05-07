@@ -1,10 +1,13 @@
+mod state;
+
 use dioxus::prelude::*;
-use warcraft_api::Race;
+use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};
+use warcraft_database::{UnitKindHelpers, UnitMode};
 
 use crate::focus::modality::FocusModality;
 use crate::grid_slot::GridSlotId;
-use warcraft_api::{RaceLabels, SUPPORTED_RACES};
-use warcraft_database::{UnitKindHelpers, UnitMode};
+
+use state::RaceTabClasses;
 
 #[component]
 pub(crate) fn RaceTabs(
@@ -14,17 +17,19 @@ pub(crate) fn RaceTabs(
     mut selected_slot: Signal<Option<GridSlotId>>,
 ) -> Element {
     rsx! {
-        nav { class: "race-tabs flex gap-4 flex-nowrap w-full min-w-0 grow self-stretch",
+        nav { class: "flex gap-4 flex-nowrap w-full min-w-0 grow self-stretch",
             for race in SUPPORTED_RACES.iter().copied() {
                 {
                     let is_active = *active_race.read() == race;
-                    let class_name = if is_active { "race-tab active" } else { "race-tab" };
+                    let classes = RaceTabClasses::for_race(race);
                     let label_text = RaceLabels::display_name(race);
                     let race_attribute = RaceLabels::data_attribute(race);
                     rsx! {
                         button {
-                            class: "{class_name}",
+                            key: "{race_attribute}",
+                            class: "{classes.button_class()}",
                             "data-race": "{race_attribute}",
+                            "data-active": "{is_active}",
                             onclick: move |_| {
                                 active_race.set(race);
                                 let mode_value = *unit_mode.read();
@@ -44,7 +49,7 @@ pub(crate) fn RaceTabs(
                                     FocusModality::after_render(".unit-card.selected, .unit-card");
                                 }
                             },
-                            span { class: "race-tab-label", "{label_text}" }
+                            span { class: "{classes.label_class()}", "{label_text}" }
                         }
                     }
                 }
