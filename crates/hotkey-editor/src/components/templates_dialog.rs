@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 
 use crate::components::dialog_header::DialogHeader;
 use crate::customkeys::baseline::baseline_content;
@@ -138,7 +138,9 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                                 token.map(|value| value.display_label())
                             });
                             let derived_letter = cell_option.and_then(|_| {
-                                resolved.grid().letter_at(column, row).map(|character| character.to_string())
+                                let col = ColumnIndex::try_from(column).ok()?;
+                                let row_idx = RowIndex::try_from(row).ok()?;
+                                resolved.grid().letter_at(col, row_idx).map(|character| character.to_string())
                             });
                             let displayed_letter = binding_letter.or(derived_letter);
                             let mut cell_class = String::from("template-card-cell");

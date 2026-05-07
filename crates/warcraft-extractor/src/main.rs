@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use clap::Parser;
 use warcraft_api::{
-    ButtonPosition, WarcraftDatabase, WarcraftObject, WarcraftObjectId, WarcraftObjectMeta,
+    GridCoordinate, WarcraftDatabase, WarcraftObject, WarcraftObjectId, WarcraftObjectMeta,
 };
 use warcraft_extractor::*;
 
@@ -510,19 +510,19 @@ impl CodegenContext {
             if let Some(position) = default_button
                 && emit_button
             {
-                let column = position.column();
-                let row = position.row();
+                let column_variant = column_index_variant(position.column());
+                let row_variant = row_index_variant(position.row());
                 output.push_str(&format!(
-                    "        .with_default_position(Some(ButtonPosition::new({column}, {row})))\n"
+                    "        .with_default_position(Some(GridCoordinate::new(ColumnIndex::{column_variant}, RowIndex::{row_variant})))\n"
                 ));
             }
             if let Some(position) = default_research
                 && emit_research
             {
-                let column = position.column();
-                let row = position.row();
+                let column_variant = column_index_variant(position.column());
+                let row_variant = row_index_variant(position.row());
                 output.push_str(&format!(
-                    "        .with_default_research_position(Some(ButtonPosition::new({column}, {row})))\n"
+                    "        .with_default_research_position(Some(GridCoordinate::new(ColumnIndex::{column_variant}, RowIndex::{row_variant})))\n"
                 ));
             }
             output.push_str("        ,\n");
@@ -732,14 +732,33 @@ impl CodegenContext {
     }
 }
 
-fn format_button_position_option(position: Option<ButtonPosition>) -> String {
+fn format_button_position_option(position: Option<GridCoordinate>) -> String {
     match position {
         Some(value) => {
-            let column = value.column();
-            let row = value.row();
-            format!("Some(ButtonPosition::new({column}, {row}))")
+            let column_variant = column_index_variant(value.column());
+            let row_variant = row_index_variant(value.row());
+            format!(
+                "Some(GridCoordinate::new(ColumnIndex::{column_variant}, RowIndex::{row_variant}))"
+            )
         }
         None => "None".to_string(),
+    }
+}
+
+fn column_index_variant(index: warcraft_api::ColumnIndex) -> &'static str {
+    match index {
+        warcraft_api::ColumnIndex::Zero => "Zero",
+        warcraft_api::ColumnIndex::One => "One",
+        warcraft_api::ColumnIndex::Two => "Two",
+        warcraft_api::ColumnIndex::Three => "Three",
+    }
+}
+
+fn row_index_variant(index: warcraft_api::RowIndex) -> &'static str {
+    match index {
+        warcraft_api::RowIndex::Zero => "Zero",
+        warcraft_api::RowIndex::One => "One",
+        warcraft_api::RowIndex::Two => "Two",
     }
 }
 

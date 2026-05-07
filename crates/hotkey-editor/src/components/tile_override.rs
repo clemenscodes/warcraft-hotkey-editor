@@ -282,7 +282,7 @@ pub(crate) fn TileOverridePanel(
             object_id_for_capture
         };
     let picker_rows: Vec<Vec<KeyPickerCell>> = if picker_open {
-        build_picker_rows(
+        PickerRows::build(
             layout_snapshot,
             &active_container_slots,
             picker_effective_object_id.value(),
@@ -839,38 +839,42 @@ const PICKER_ROWS: &[&[HotkeyToken]] = &[
     ],
 ];
 
-fn build_picker_rows(
-    layout: GridLayout,
-    container_slots: &[GridSlotId],
-    target_object_id: &str,
-    current_token: Option<HotkeyToken>,
-    is_research_context: bool,
-    custom_keys: Option<&CustomKeysFile>,
-) -> Vec<Vec<KeyPickerCell>> {
-    PICKER_ROWS
-        .iter()
-        .map(|row| {
-            row.iter()
-                .map(|token| {
-                    let token_value = *token;
-                    let state = if Some(token_value) == current_token {
-                        KeyPickerCellState::Current
-                    } else if let Some(conflict) = HotkeyOverride::detect_conflict(
-                        container_slots,
-                        target_object_id,
-                        token_value,
-                        custom_keys,
-                        layout,
-                        is_research_context,
-                    ) {
-                        let display_name = conflict.conflicting_display_name().to_string();
-                        KeyPickerCellState::Conflict { display_name }
-                    } else {
-                        KeyPickerCellState::Available
-                    };
-                    KeyPickerCell::new(token_value, state)
-                })
-                .collect()
-        })
-        .collect()
+struct PickerRows;
+
+impl PickerRows {
+    fn build(
+        layout: GridLayout,
+        container_slots: &[GridSlotId],
+        target_object_id: &str,
+        current_token: Option<HotkeyToken>,
+        is_research_context: bool,
+        custom_keys: Option<&CustomKeysFile>,
+    ) -> Vec<Vec<KeyPickerCell>> {
+        PICKER_ROWS
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .map(|token| {
+                        let token_value = *token;
+                        let state = if Some(token_value) == current_token {
+                            KeyPickerCellState::Current
+                        } else if let Some(conflict) = HotkeyOverride::detect_conflict(
+                            container_slots,
+                            target_object_id,
+                            token_value,
+                            custom_keys,
+                            layout,
+                            is_research_context,
+                        ) {
+                            let display_name = conflict.conflicting_display_name().to_string();
+                            KeyPickerCellState::Conflict { display_name }
+                        } else {
+                            KeyPickerCellState::Available
+                        };
+                        KeyPickerCell::new(token_value, state)
+                    })
+                    .collect()
+            })
+            .collect()
+    }
 }

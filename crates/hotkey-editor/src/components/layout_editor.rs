@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use crate::domain::grid_layout::{
@@ -28,8 +28,11 @@ pub(crate) fn LayoutEditor(
 
     let picker_open = editing_snapshot.is_some();
     let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
-        let current_letter = layout_snapshot
-            .letter_at(active_cell.column(), active_cell.row())
+        let active_column = ColumnIndex::try_from(active_cell.column()).ok();
+        let active_row = RowIndex::try_from(active_cell.row()).ok();
+        let current_letter = active_column
+            .zip(active_row)
+            .and_then(|(col, row)| layout_snapshot.letter_at(col, row))
             .map(|character| character.to_ascii_uppercase());
         QWERTY_ROWS
             .iter()
@@ -43,8 +46,8 @@ pub(crate) fn LayoutEditor(
                         } else if let Some(other_position) =
                             layout_snapshot.position_for_letter(upper_letter)
                         {
-                            let display_row = other_position.row() + 1;
-                            let display_column = other_position.column() + 1;
+                            let display_row = other_position.row().as_u8() + 1;
+                            let display_column = other_position.column().as_u8() + 1;
                             let display_name =
                                 format!("row {display_row}, column {display_column}",);
                             KeyPickerCellState::Conflict { display_name }
@@ -66,8 +69,11 @@ pub(crate) fn LayoutEditor(
                 for row in 0..COMMAND_GRID_ROWS {
                     for column in 0..COMMAND_GRID_COLUMNS {
                         {
-                            let current_letter = layout_snapshot
-                                .letter_at(column, row)
+                            let column_index = ColumnIndex::try_from(column).ok();
+                            let row_index = RowIndex::try_from(row).ok();
+                            let current_letter = column_index
+                                .zip(row_index)
+                                .and_then(|(col, row_idx)| layout_snapshot.letter_at(col, row_idx))
                                 .map(|letter| letter.to_string())
                                 .unwrap_or_default();
                             let is_editing = editing_snapshot

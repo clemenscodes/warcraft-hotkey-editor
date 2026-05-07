@@ -4,7 +4,7 @@ use std::rc::Rc;
 use dioxus::prelude::*;
 use num_traits::cast::cast;
 use warcraft_api::{
-    AttackType, ButtonPosition, DefenseType, HeroAttributes, PrimaryAttribute, RegenType,
+    AttackType, DefenseType, GridCoordinate, HeroAttributes, PrimaryAttribute, RegenType,
     UnitAttack, UnitCombat, UnitKind, WarcraftObjectId, WarcraftObjectMeta,
 };
 use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
@@ -200,7 +200,7 @@ pub(crate) fn UnitDetailPanel(
         }
         command_card_slots.push(GridSlotId::command(command_name));
     }
-    let mut seen_train_positions: HashMap<ButtonPosition, &'static str> = HashMap::new();
+    let mut seen_train_positions: HashMap<GridCoordinate, &'static str> = HashMap::new();
     let mut train_unit_upgrades: HashMap<&'static str, &'static str> = HashMap::new();
     for trained_id in primary_train_slots {
         let id_str = trained_id.value();

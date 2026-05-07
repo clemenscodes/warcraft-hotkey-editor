@@ -1,68 +1,73 @@
-use std::collections::HashSet;
+use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectMeta};
 
-use warcraft_api::{UnitKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_database::{BuildingTraits, CommandCatalog};
 
-use crate::ButtonPosition;
-use crate::catalog::BuildingTraits;
-use crate::catalog::CommandCatalog;
-use crate::slot::GridSlotId;
+use crate::GridCoordinate;
+use crate::slot::{CommandCard, GridSlotId};
 
-const ROOTED_ONLY_ABILITY_CODES: &[&str] = &["Apit", "Aall"];
-const ROOTED_ONLY_ABILITY_IDS: &[&str] = &["Anei"];
+const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Apit"), WarcraftObjectId::new("Aall")];
+const ROOTED_ONLY_ABILITY_IDS: &[WarcraftObjectId] = &[WarcraftObjectId::new("Anei")];
 
-pub struct UnitSlots;
+pub trait UnitCommandSlots {
+    fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard;
+    fn build_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+    fn research_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+    fn uprooted_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+    fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId>;
+}
 
-impl UnitSlots {
-    fn morphs_into_self(ability_id: &str, host_unit_id: &str) -> bool {
-        let ability_object = WARCRAFT_DATABASE.by_id(ability_id);
-        let Some(target_id) = ability_object.and_then(|object| object.ability_morph_target_id())
-        else {
-            return false;
-        };
-        if !target_id.eq_ignore_ascii_case(host_unit_id) {
-            return false;
-        }
-        !BuildingTraits::ability_has_alt_state(ability_id)
+fn ability_reverts_to_host(
+    database: &WarcraftDatabase,
+    ability_id: &str,
+    host_unit_id: &str,
+) -> bool {
+    let ability_object = database.by_id(ability_id);
+    let Some(target_id) = ability_object.and_then(|object| object.ability_morph_target_id()) else {
+        return false;
+    };
+    if !target_id.eq_ignore_ascii_case(host_unit_id) {
+        return false;
     }
+    !BuildingTraits::ability_has_alt_state(ability_id)
+}
 
-    fn is_rooted_only_mechanic(ability_id: &str) -> bool {
-        if ROOTED_ONLY_ABILITY_IDS
-            .iter()
-            .any(|id| id.eq_ignore_ascii_case(ability_id))
-        {
-            return true;
-        }
-        let ability_object = WARCRAFT_DATABASE.by_id(ability_id);
-        let Some(ability_code) = ability_object.and_then(|object| object.ability_code()) else {
-            return false;
-        };
-        ROOTED_ONLY_ABILITY_CODES
-            .iter()
-            .any(|code| code.eq_ignore_ascii_case(ability_code))
+fn ability_requires_rooted_form(database: &WarcraftDatabase, ability_id: &str) -> bool {
+    if ROOTED_ONLY_ABILITY_IDS
+        .iter()
+        .any(|id| id.value().eq_ignore_ascii_case(ability_id))
+    {
+        return true;
     }
+    let ability_object = database.by_id(ability_id);
+    let Some(ability_code) = ability_object.and_then(|object| object.ability_code()) else {
+        return false;
+    };
+    ROOTED_ONLY_ABILITY_CODES
+        .iter()
+        .any(|code| code.value().eq_ignore_ascii_case(ability_code))
+}
 
-    pub fn all_unit_ids() -> impl Iterator<Item = &'static str> {
-        WARCRAFT_DATABASE
-            .iter()
-            .filter_map(|(database_id, warcraft_object)| {
-                if matches!(warcraft_object.meta(), WarcraftObjectMeta::Unit(_)) {
-                    Some(database_id.value())
-                } else {
-                    None
-                }
-            })
-    }
+fn slot_position_from_database(
+    database: &WarcraftDatabase,
+    object_id: &str,
+) -> Option<GridCoordinate> {
+    let database_object = database.by_id(object_id)?;
+    database_object.default_button_position()
+}
 
-    pub fn command_card_for(unit_id: &str) -> Vec<GridSlotId> {
-        let Some(unit_object) = WARCRAFT_DATABASE.by_id(unit_id) else {
-            return Vec::new();
+impl UnitCommandSlots for WarcraftDatabase {
+    fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard {
+        let unit_id_str = unit_id.value();
+        let Some(unit_object) = self.by_id(unit_id_str) else {
+            return CommandCard::empty();
         };
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
-            return Vec::new();
+            return CommandCard::empty();
         };
         let unit_race = unit_object.race();
-        let primary_commands = CommandCatalog::primary_commands_for(unit_meta, unit_race, unit_id);
+        let primary_commands =
+            CommandCatalog::primary_commands_for(unit_meta, unit_race, unit_id_str);
         let unit_kind = CommandCatalog::effective_kind(unit_meta);
         let regular_abilities = unit_meta.abilities();
         let hero_abilities = unit_meta.hero_abilities();
@@ -88,82 +93,90 @@ impl UnitSlots {
             &[]
         };
 
-        let mut slots: Vec<GridSlotId> = Vec::new();
+        let mut card = CommandCard::empty();
 
         for command_name in primary_commands {
-            let command_database_object = WARCRAFT_DATABASE.by_id(command_name);
+            let command_object = self.by_id(command_name);
             let command_has_icon =
-                command_database_object.is_some_and(|o| o.has_displayable_icon());
+                command_object.is_some_and(|object| object.has_displayable_icon());
             if !command_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::command(command_name));
+            let Some(slot_position) = slot_position_from_database(self, command_name) else {
+                continue;
+            };
+            let command_slot = GridSlotId::command(command_name);
+            card.place(slot_position, command_slot);
         }
 
-        let mut seen_train_positions: HashSet<ButtonPosition> = HashSet::new();
         for trained_id in primary_train_slots {
-            let id_str = trained_id.value();
-            let trained_database_object = WARCRAFT_DATABASE.by_id(id_str);
+            let trained_str = trained_id.value();
+            let trained_object = self.by_id(trained_str);
             let trained_has_icon =
-                trained_database_object.is_some_and(|o| o.has_displayable_icon());
+                trained_object.is_some_and(|object| object.has_displayable_icon());
             if !trained_has_icon {
                 continue;
             }
-            let train_object = WARCRAFT_DATABASE.by_id(id_str);
-            let api_position = train_object.and_then(|object| object.default_button_position());
-            let default_train_position = api_position.map(|pos| {
-                let column = pos.column();
-                let row = pos.row();
-                ButtonPosition::new(column, row)
-            });
-            if let Some(train_position) = default_train_position {
-                if seen_train_positions.contains(&train_position) {
-                    continue;
-                }
-                seen_train_positions.insert(train_position);
-            }
-            slots.push(GridSlotId::ability(id_str));
+            let Some(slot_position) = slot_position_from_database(self, trained_str) else {
+                continue;
+            };
+            let train_slot = GridSlotId::ability(trained_str);
+            card.place(slot_position, train_slot);
         }
 
         for research_id in primary_research_slots {
-            let research_id_str = research_id.value();
-            let research_database_object = WARCRAFT_DATABASE.by_id(research_id_str);
+            let research_str = research_id.value();
+            let research_object = self.by_id(research_str);
             let research_has_icon =
-                research_database_object.is_some_and(|o| o.has_displayable_icon());
+                research_object.is_some_and(|object| object.has_displayable_icon());
             if !research_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::ability(research_id_str));
+            let Some(slot_position) = slot_position_from_database(self, research_str) else {
+                continue;
+            };
+            let research_slot = GridSlotId::ability(research_str);
+            card.place(slot_position, research_slot);
         }
+
         for sell_item_id in sell_items {
-            let sell_item_id_str = sell_item_id.value();
-            let sell_item_database_object = WARCRAFT_DATABASE.by_id(sell_item_id_str);
+            let sell_item_str = sell_item_id.value();
+            let sell_item_object = self.by_id(sell_item_str);
             let sell_item_has_icon =
-                sell_item_database_object.is_some_and(|o| o.has_displayable_icon());
+                sell_item_object.is_some_and(|object| object.has_displayable_icon());
             if !sell_item_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::ability(sell_item_id_str));
+            let Some(slot_position) = slot_position_from_database(self, sell_item_str) else {
+                continue;
+            };
+            let sell_item_slot = GridSlotId::ability(sell_item_str);
+            card.place(slot_position, sell_item_slot);
         }
+
         for sell_unit_id in sell_units {
-            let sell_unit_id_str = sell_unit_id.value();
-            let sell_unit_database_object = WARCRAFT_DATABASE.by_id(sell_unit_id_str);
+            let sell_unit_str = sell_unit_id.value();
+            let sell_unit_object = self.by_id(sell_unit_str);
             let sell_unit_has_icon =
-                sell_unit_database_object.is_some_and(|o| o.has_displayable_icon());
+                sell_unit_object.is_some_and(|object| object.has_displayable_icon());
             if !sell_unit_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::ability(sell_unit_id_str));
+            let Some(slot_position) = slot_position_from_database(self, sell_unit_str) else {
+                continue;
+            };
+            let sell_unit_slot = GridSlotId::ability(sell_unit_str);
+            card.place(slot_position, sell_unit_slot);
         }
 
-        let is_uprootable = BuildingTraits::can_uproot(unit_id);
-        let host_is_burrowed = BuildingTraits::is_burrowed_form(unit_id);
-        let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(unit_id);
+        let is_uprootable = BuildingTraits::can_uproot(unit_id_str);
+        let host_is_burrowed = BuildingTraits::is_burrowed_form(unit_id_str);
+        let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(unit_id_str);
 
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
-            let ability_id_str = ability_id.value();
+            let ability_str = ability_id.value();
             if hero_abilities.contains(ability_id) {
-                let levelable_object = WARCRAFT_DATABASE.by_id(ability_id_str);
+                let levelable_object = self.by_id(ability_str);
                 let is_levelable = levelable_object
                     .map(|object| match object.meta() {
                         WarcraftObjectMeta::Ability(meta) => {
@@ -176,52 +189,62 @@ impl UnitSlots {
                     continue;
                 }
             }
-            if is_uprootable && ability_id_str.eq_ignore_ascii_case("Aeat") {
+            if is_uprootable && ability_str.eq_ignore_ascii_case("Aeat") {
                 continue;
             }
-            if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_id_str) {
+            if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_str) {
                 continue;
             }
-            if Self::morphs_into_self(ability_id_str, unit_id) {
+            if ability_reverts_to_host(self, ability_str, unit_id_str) {
                 continue;
             }
-            let ability_database_object = WARCRAFT_DATABASE.by_id(ability_id_str);
+            let ability_database_object = self.by_id(ability_str);
             let ability_has_icon =
-                ability_database_object.is_some_and(|o| o.has_displayable_icon());
+                ability_database_object.is_some_and(|object| object.has_displayable_icon());
             if !ability_has_icon {
                 continue;
             }
-            let morph_target_object = WARCRAFT_DATABASE.by_id(ability_id_str);
+            let morph_target_object = self.by_id(ability_str);
             let morph_target_id =
                 morph_target_object.and_then(|object| object.ability_morph_target_id());
             let is_morph_back =
-                morph_target_id.is_some_and(|target| target.eq_ignore_ascii_case(unit_id));
-            if is_morph_back
-                || (host_is_in_alt_state && BuildingTraits::ability_has_alt_state(ability_id_str))
-            {
-                slots.push(GridSlotId::ability_off(ability_id_str));
+                morph_target_id.is_some_and(|target| target.eq_ignore_ascii_case(unit_id_str));
+            let use_off_state = is_morph_back
+                || (host_is_in_alt_state && BuildingTraits::ability_has_alt_state(ability_str));
+
+            let Some(slot_position) = slot_position_from_database(self, ability_str) else {
+                continue;
+            };
+            let ability_slot = if use_off_state {
+                GridSlotId::ability_off(ability_str)
             } else {
-                slots.push(GridSlotId::ability(ability_id_str));
-            }
+                GridSlotId::ability(ability_str)
+            };
+            card.place(slot_position, ability_slot);
         }
 
         if unit_kind == UnitKind::Hero
             && !hero_abilities.is_empty()
             && let Some(select_skill) = CommandCatalog::known_command("CmdSelectSkill")
         {
-            let select_skill_database_object = WARCRAFT_DATABASE.by_id(select_skill);
+            let select_skill_object = self.by_id(select_skill);
             let select_skill_has_icon =
-                select_skill_database_object.is_some_and(|o| o.has_displayable_icon());
+                select_skill_object.is_some_and(|object| object.has_displayable_icon());
             if select_skill_has_icon {
-                slots.push(GridSlotId::command(select_skill));
+                let position_option = slot_position_from_database(self, select_skill);
+                if let Some(slot_position) = position_option {
+                    let select_skill_slot = GridSlotId::command(select_skill);
+                    card.place(slot_position, select_skill_slot);
+                }
             }
         }
 
-        slots
+        card
     }
 
-    pub fn build_menu_for(unit_id: &str) -> Option<Vec<GridSlotId>> {
-        let unit_object = WARCRAFT_DATABASE.by_id(unit_id)?;
+    fn build_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard> {
+        let unit_id_str = unit_id.value();
+        let unit_object = self.by_id(unit_id_str)?;
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
             return None;
         };
@@ -232,31 +255,40 @@ impl UnitSlots {
             return None;
         }
         let build_menu_commands = CommandCatalog::build_menu_commands_for(unit_meta);
-        let mut slots: Vec<GridSlotId> = Vec::new();
+        let mut card = CommandCard::empty();
         for command_name in build_menu_commands {
-            let command_database_object = WARCRAFT_DATABASE.by_id(command_name);
+            let command_object = self.by_id(command_name);
             let command_has_icon =
-                command_database_object.is_some_and(|o| o.has_displayable_icon());
+                command_object.is_some_and(|object| object.has_displayable_icon());
             if !command_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::command(command_name));
+            let Some(slot_position) = slot_position_from_database(self, command_name) else {
+                continue;
+            };
+            let command_slot = GridSlotId::command(command_name);
+            card.place(slot_position, command_slot);
         }
         for production_id in unit_meta.builds() {
-            let production_id_str = production_id.value();
-            let production_database_object = WARCRAFT_DATABASE.by_id(production_id_str);
+            let production_str = production_id.value();
+            let production_object = self.by_id(production_str);
             let production_has_icon =
-                production_database_object.is_some_and(|o| o.has_displayable_icon());
+                production_object.is_some_and(|object| object.has_displayable_icon());
             if !production_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::ability(production_id_str));
+            let Some(slot_position) = slot_position_from_database(self, production_str) else {
+                continue;
+            };
+            let production_slot = GridSlotId::ability(production_str);
+            card.place(slot_position, production_slot);
         }
-        Some(slots)
+        Some(card)
     }
 
-    pub fn research_menu_for(unit_id: &str) -> Option<Vec<GridSlotId>> {
-        let unit_object = WARCRAFT_DATABASE.by_id(unit_id)?;
+    fn research_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard> {
+        let unit_id_str = unit_id.value();
+        let unit_object = self.by_id(unit_id_str)?;
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
             return None;
         };
@@ -267,65 +299,216 @@ impl UnitSlots {
         if hero_abilities.is_empty() {
             return None;
         }
-        let mut slots: Vec<GridSlotId> = Vec::new();
+        let mut card = CommandCard::empty();
         for ability_id in hero_abilities.iter() {
-            let ability_id_str = ability_id.value();
-            let ability_database_object = WARCRAFT_DATABASE.by_id(ability_id_str);
+            let ability_str = ability_id.value();
+            let ability_object = self.by_id(ability_str);
             let ability_has_icon =
-                ability_database_object.is_some_and(|o| o.has_displayable_icon());
+                ability_object.is_some_and(|object| object.has_displayable_icon());
             if !ability_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::ability(ability_id_str));
+            let Some(slot_position) = slot_position_from_database(self, ability_str) else {
+                continue;
+            };
+            let ability_slot = GridSlotId::ability(ability_str);
+            card.place(slot_position, ability_slot);
         }
         if let Some(back_command) = CommandCatalog::submenu_back_command() {
-            let back_command_database_object = WARCRAFT_DATABASE.by_id(back_command);
+            let back_command_object = self.by_id(back_command);
             let back_command_has_icon =
-                back_command_database_object.is_some_and(|o| o.has_displayable_icon());
+                back_command_object.is_some_and(|object| object.has_displayable_icon());
             if back_command_has_icon {
-                slots.push(GridSlotId::command(back_command));
+                let position_option = slot_position_from_database(self, back_command);
+                if let Some(slot_position) = position_option {
+                    let back_slot = GridSlotId::command(back_command);
+                    card.place(slot_position, back_slot);
+                }
             }
         }
-        Some(slots)
+        Some(card)
     }
 
-    pub fn uprooted_menu_for(unit_id: &str) -> Option<Vec<GridSlotId>> {
-        let unit_object = WARCRAFT_DATABASE.by_id(unit_id)?;
+    fn uprooted_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard> {
+        let unit_id_str = unit_id.value();
+        let unit_object = self.by_id(unit_id_str)?;
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
             return None;
         };
         if CommandCatalog::effective_kind(unit_meta) != UnitKind::Building {
             return None;
         }
-        if !BuildingTraits::can_uproot(unit_id) {
+        if !BuildingTraits::can_uproot(unit_id_str) {
             return None;
         }
-        let mut slots: Vec<GridSlotId> = Vec::new();
+        let mut card = CommandCard::empty();
         for command_name in CommandCatalog::mobile_command_ids().iter().copied() {
-            let command_database_object = WARCRAFT_DATABASE.by_id(command_name);
+            let command_object = self.by_id(command_name);
             let command_has_icon =
-                command_database_object.is_some_and(|o| o.has_displayable_icon());
+                command_object.is_some_and(|object| object.has_displayable_icon());
             if !command_has_icon {
                 continue;
             }
-            slots.push(GridSlotId::command(command_name));
+            let Some(slot_position) = slot_position_from_database(self, command_name) else {
+                continue;
+            };
+            let command_slot = GridSlotId::command(command_name);
+            card.place(slot_position, command_slot);
         }
         for ability_id in unit_meta.abilities() {
-            let ability_id_str = ability_id.value();
-            let ability_database_object = WARCRAFT_DATABASE.by_id(ability_id_str);
+            let ability_str = ability_id.value();
+            let ability_object = self.by_id(ability_str);
             let ability_has_icon =
-                ability_database_object.is_some_and(|o| o.has_displayable_icon());
+                ability_object.is_some_and(|object| object.has_displayable_icon());
             if !ability_has_icon {
                 continue;
             }
-            if Self::morphs_into_self(ability_id_str, unit_id) {
+            if ability_reverts_to_host(self, ability_str, unit_id_str) {
                 continue;
             }
-            if Self::is_rooted_only_mechanic(ability_id_str) {
+            if ability_requires_rooted_form(self, ability_str) {
                 continue;
             }
-            slots.push(GridSlotId::ability(ability_id_str));
+            let Some(slot_position) = slot_position_from_database(self, ability_str) else {
+                continue;
+            };
+            let ability_slot = GridSlotId::ability(ability_str);
+            card.place(slot_position, ability_slot);
         }
-        Some(slots)
+        Some(card)
+    }
+
+    fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId> {
+        self.iter().filter_map(|(database_id, warcraft_object)| {
+            if matches!(warcraft_object.meta(), WarcraftObjectMeta::Unit(_)) {
+                Some(*database_id)
+            } else {
+                None
+            }
+        })
+    }
+}
+
+#[cfg(test)]
+mod unit_slots_tests {
+    use super::*;
+    use warcraft_database::WARCRAFT_DATABASE;
+
+    #[test]
+    fn command_card_for_unknown_unit_is_empty() {
+        let unit_id = WarcraftObjectId::new("ZZZUnknown");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        assert!(card.is_empty());
+    }
+
+    #[test]
+    fn command_card_for_peasant_is_non_empty() {
+        let unit_id = WarcraftObjectId::new("hpea");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        assert!(!card.is_empty());
+    }
+
+    #[test]
+    fn command_card_for_peasant_contains_attack() {
+        let unit_id = WarcraftObjectId::new("hpea");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_attack = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("CmdAttack"));
+        assert!(has_attack, "peasant command card must contain CmdAttack");
+    }
+
+    #[test]
+    fn command_card_for_paladin_is_non_empty() {
+        let unit_id = WarcraftObjectId::new("Hpal");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        assert!(!card.is_empty());
+    }
+
+    #[test]
+    fn command_card_for_paladin_contains_hero_abilities() {
+        let unit_id = WarcraftObjectId::new("Hpal");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let ability_count = card
+            .filled_slots()
+            .filter(|slot| matches!(slot, GridSlotId::Ability(_)))
+            .count();
+        assert!(
+            ability_count > 0,
+            "paladin must have at least one ability slot"
+        );
+    }
+
+    #[test]
+    fn build_menu_for_non_worker_returns_none() {
+        let unit_id = WarcraftObjectId::new("Hpal");
+        let result = WARCRAFT_DATABASE.build_menu(unit_id);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn build_menu_for_peasant_returns_some() {
+        let unit_id = WarcraftObjectId::new("hpea");
+        let result = WARCRAFT_DATABASE.build_menu(unit_id);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn build_menu_for_peasant_is_non_empty() {
+        let unit_id = WarcraftObjectId::new("hpea");
+        let card = WARCRAFT_DATABASE.build_menu(unit_id).unwrap();
+        assert!(!card.is_empty());
+    }
+
+    #[test]
+    fn research_menu_for_non_hero_returns_none() {
+        let unit_id = WarcraftObjectId::new("hpea");
+        let result = WARCRAFT_DATABASE.research_menu(unit_id);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn research_menu_for_paladin_returns_some() {
+        let unit_id = WarcraftObjectId::new("Hpal");
+        let result = WARCRAFT_DATABASE.research_menu(unit_id);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn uprooted_menu_for_non_uprootable_building_returns_none() {
+        let unit_id = WarcraftObjectId::new("htow");
+        let result = WARCRAFT_DATABASE.uprooted_menu(unit_id);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn uprooted_menu_for_tree_of_life_returns_some() {
+        let unit_id = WarcraftObjectId::new("etol");
+        let result = WARCRAFT_DATABASE.uprooted_menu(unit_id);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn uprooted_menu_for_tree_of_life_contains_movement_commands() {
+        let unit_id = WarcraftObjectId::new("etol");
+        let card = WARCRAFT_DATABASE.uprooted_menu(unit_id).unwrap();
+        let has_move = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("CmdMove"));
+        assert!(has_move, "uprooted Tree of Life must have CmdMove");
+    }
+
+    #[test]
+    fn all_unit_ids_is_non_empty() {
+        let count = WARCRAFT_DATABASE.all_unit_ids().count();
+        assert!(count > 0);
+    }
+
+    #[test]
+    fn all_unit_ids_contains_peasant() {
+        let has_peasant = WARCRAFT_DATABASE
+            .all_unit_ids()
+            .any(|id| id.value().eq_ignore_ascii_case("hpea"));
+        assert!(has_peasant);
     }
 }

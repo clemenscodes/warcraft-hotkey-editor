@@ -41,10 +41,10 @@ impl AbilityCell {
         let icon_src = database_icon.or(binding_icon);
         let binding_hotkey = binding
             .and_then(|ability_binding| ability_binding.hotkey())
-            .and_then(BindingHotkey::first_token);
+            .and_then(Hotkey::first_token);
         let binding_research_hotkey = binding
             .and_then(|ability_binding| ability_binding.research_hotkey())
-            .and_then(BindingHotkey::first_token);
+            .and_then(Hotkey::first_token);
         Self {
             object_id,
             display_name,
@@ -90,7 +90,7 @@ impl AbilityCell {
         let icon_src = un_icon.or(database_off_icon).or(database_icon);
         let binding_hotkey = binding
             .and_then(|ability_binding| ability_binding.unhotkey())
-            .and_then(BindingHotkey::first_token);
+            .and_then(Hotkey::first_token);
         Self {
             object_id,
             display_name,
@@ -119,7 +119,7 @@ impl AbilityCell {
             .map(IconUrl::from_database_path);
         let binding_hotkey = binding
             .and_then(|command_binding| command_binding.hotkey())
-            .and_then(BindingHotkey::first_token);
+            .and_then(Hotkey::first_token);
         Self {
             object_id: command_name,
             display_name,
@@ -151,48 +151,5 @@ impl AbilityCell {
 
     pub(crate) fn cloned_icon_src(&self) -> Option<String> {
         self.icon_src.clone()
-    }
-}
-
-pub(crate) struct BindingHotkey;
-
-impl BindingHotkey {
-    pub(crate) fn first_token(hotkey: &Hotkey) -> Option<HotkeyToken> {
-        let single = match hotkey {
-            Hotkey::MultiLevel(levels) => levels.first()?,
-            other => other,
-        };
-        HotkeyToken::try_from(single).ok()
-    }
-
-    pub(crate) fn comma_segment_count(hotkey: &Hotkey) -> usize {
-        match hotkey {
-            Hotkey::MultiLevel(levels) => levels.len(),
-            _ => 1,
-        }
-    }
-
-    pub(crate) fn replicated_token(token: HotkeyToken, level_count: usize) -> Hotkey {
-        let count = level_count.max(1);
-        let single = Hotkey::from(token);
-        if count == 1 {
-            single
-        } else {
-            Hotkey::MultiLevel(vec![single; count])
-        }
-    }
-
-    /// Whether the grid-layout apply pass is allowed to overwrite this hotkey
-    /// with a positional letter. Special tokens (Escape / Mouse4 / Mouse5)
-    /// have no grid position by design — leave them alone. Empty / unknown
-    /// values return true so a fresh import gets populated normally.
-    pub(crate) fn accepts_grid_letter(hotkey: Option<&Hotkey>) -> bool {
-        let Some(hotkey) = hotkey else {
-            return true;
-        };
-        let Some(token) = Self::first_token(hotkey) else {
-            return true;
-        };
-        char::try_from(token).is_ok()
     }
 }

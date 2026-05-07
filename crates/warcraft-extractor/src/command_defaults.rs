@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, path::PathBuf};
 
-use warcraft_api::ButtonPosition;
+use warcraft_api::{ColumnIndex, GridCoordinate, RowIndex};
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
 
@@ -15,14 +15,14 @@ pub static COMMAND_DEFAULTS_EXTRACTION_RULE: ExtractionRule = ExtractionRule {
 
 #[derive(Debug, Clone, Default)]
 pub struct CommandDefaultsEntry {
-    button_position: Option<ButtonPosition>,
+    button_position: Option<GridCoordinate>,
     art: Option<String>,
     tip: Option<String>,
     ubertip: Option<String>,
 }
 
 impl CommandDefaultsEntry {
-    pub fn button_position(&self) -> Option<ButtonPosition> {
+    pub fn button_position(&self) -> Option<GridCoordinate> {
         self.button_position
     }
 
@@ -38,7 +38,7 @@ impl CommandDefaultsEntry {
         self.ubertip.as_deref()
     }
 
-    pub fn set_button_position(&mut self, value: Option<ButtonPosition>) {
+    pub fn set_button_position(&mut self, value: Option<GridCoordinate>) {
         self.button_position = value;
     }
 
@@ -152,12 +152,14 @@ impl CommandDefaultsExtraction {
         database.entry(id).or_insert(entry);
     }
 
-    fn parse_button_position(value: &str) -> Option<ButtonPosition> {
+    fn parse_button_position(value: &str) -> Option<GridCoordinate> {
         let mut parts = value.splitn(2, ',');
         let column_str = parts.next()?.trim();
         let row_str = parts.next()?.trim();
-        let column = column_str.parse::<u8>().ok()?;
-        let row = row_str.parse::<u8>().ok()?;
-        Some(ButtonPosition::new(column, row))
+        let column_raw = column_str.parse::<u8>().ok()?;
+        let row_raw = row_str.parse::<u8>().ok()?;
+        let column = ColumnIndex::try_from(column_raw).ok()?;
+        let row = RowIndex::try_from(row_raw).ok()?;
+        Some(GridCoordinate::new(column, row))
     }
 }

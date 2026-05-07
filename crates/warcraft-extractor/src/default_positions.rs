@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use warcraft_api::ButtonPosition;
+use warcraft_api::{ColumnIndex, GridCoordinate, RowIndex};
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
 
@@ -9,14 +9,14 @@ pub type DefaultPositionsDatabase = BTreeMap<String, DefaultPositionEntry>;
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct DefaultPositionEntry {
-    button_position: Option<ButtonPosition>,
-    research_button_position: Option<ButtonPosition>,
+    button_position: Option<GridCoordinate>,
+    research_button_position: Option<GridCoordinate>,
 }
 
 impl DefaultPositionEntry {
     pub fn new(
-        button_position: Option<ButtonPosition>,
-        research_button_position: Option<ButtonPosition>,
+        button_position: Option<GridCoordinate>,
+        research_button_position: Option<GridCoordinate>,
     ) -> Self {
         Self {
             button_position,
@@ -24,11 +24,11 @@ impl DefaultPositionEntry {
         }
     }
 
-    pub fn button_position(&self) -> Option<ButtonPosition> {
+    pub fn button_position(&self) -> Option<GridCoordinate> {
         self.button_position
     }
 
-    pub fn research_button_position(&self) -> Option<ButtonPosition> {
+    pub fn research_button_position(&self) -> Option<GridCoordinate> {
         self.research_button_position
     }
 
@@ -73,8 +73,8 @@ impl DefaultPositionsExtraction {
 fn parse(text: &str) -> DefaultPositionsDatabase {
     let mut database: DefaultPositionsDatabase = DefaultPositionsDatabase::new();
     let mut current_id: Option<String> = None;
-    let mut current_button: Option<ButtonPosition> = None;
-    let mut current_research: Option<ButtonPosition> = None;
+    let mut current_button: Option<GridCoordinate> = None;
+    let mut current_research: Option<GridCoordinate> = None;
     for raw_line in text.lines() {
         let line = raw_line.trim();
         if line.is_empty() || line.starts_with("//") || line.starts_with(';') {
@@ -122,8 +122,8 @@ fn parse(text: &str) -> DefaultPositionsDatabase {
 fn flush(
     database: &mut DefaultPositionsDatabase,
     current_id: &mut Option<String>,
-    current_button: &mut Option<ButtonPosition>,
-    current_research: &mut Option<ButtonPosition>,
+    current_button: &mut Option<GridCoordinate>,
+    current_research: &mut Option<GridCoordinate>,
 ) {
     let Some(id) = current_id.take() else {
         current_button.take();
@@ -143,11 +143,13 @@ fn flush(
     existing.merge(entry);
 }
 
-fn parse_button_position(value: &str) -> Option<ButtonPosition> {
+fn parse_button_position(value: &str) -> Option<GridCoordinate> {
     let mut parts = value.splitn(2, ',');
     let column_str = parts.next()?.trim();
     let row_str = parts.next()?.trim();
-    let column = column_str.parse::<u8>().ok()?;
-    let row = row_str.parse::<u8>().ok()?;
-    Some(ButtonPosition::new(column, row))
+    let column_raw = column_str.parse::<u8>().ok()?;
+    let row_raw = row_str.parse::<u8>().ok()?;
+    let column = ColumnIndex::try_from(column_raw).ok()?;
+    let row = RowIndex::try_from(row_raw).ok()?;
+    Some(GridCoordinate::new(column, row))
 }

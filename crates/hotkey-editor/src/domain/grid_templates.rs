@@ -154,7 +154,7 @@ impl CellGrid {
                             column_u8,
                             row_u8,
                         )
-                        .map(|(_slot, cell)| cell)
+                        .map(|occupant| occupant.cell().clone())
                     })
                     .collect()
             })

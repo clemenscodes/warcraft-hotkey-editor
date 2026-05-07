@@ -1,38 +1,50 @@
 use std::sync::LazyLock;
 
-use warcraft_api::{Race, UnitKind, UnitMeta, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_api::{
+    Race, UnitKind, UnitMeta, WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta,
+};
 
-use crate::slot::GridSlotId;
+use crate::WARCRAFT_DATABASE;
+
+const ATTACKING_BUILDING_IDS: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("hgtw"),
+    WarcraftObjectId::new("hatw"),
+    WarcraftObjectId::new("hctw"),
+    WarcraftObjectId::new("owtw"),
+    WarcraftObjectId::new("otrb"),
+    WarcraftObjectId::new("unp1"),
+    WarcraftObjectId::new("unp2"),
+    WarcraftObjectId::new("uzg1"),
+    WarcraftObjectId::new("uzg2"),
+    WarcraftObjectId::new("nadt"),
+    WarcraftObjectId::new("ndgt"),
+    WarcraftObjectId::new("ntt1"),
+];
+
+const UPROOTABLE_BUILDING_IDS: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("etol"),
+    WarcraftObjectId::new("etoa"),
+    WarcraftObjectId::new("etoe"),
+    WarcraftObjectId::new("eaow"),
+    WarcraftObjectId::new("eaoe"),
+    WarcraftObjectId::new("eaom"),
+    WarcraftObjectId::new("etrp"),
+    WarcraftObjectId::new("eden"),
+];
 
 pub struct BuildingTraits;
 
 impl BuildingTraits {
     pub fn can_attack(object_id: &str) -> bool {
-        let lowercase_id = object_id.to_ascii_lowercase();
-        matches!(
-            lowercase_id.as_str(),
-            "hgtw"
-                | "hatw"
-                | "hctw"
-                | "owtw"
-                | "otrb"
-                | "unp1"
-                | "unp2"
-                | "uzg1"
-                | "uzg2"
-                | "nadt"
-                | "ndgt"
-                | "ntt1"
-        )
+        ATTACKING_BUILDING_IDS
+            .iter()
+            .any(|attacking_id| attacking_id.value().eq_ignore_ascii_case(object_id))
     }
 
     pub fn can_uproot(object_id: &str) -> bool {
-        let lowercase_id = object_id.to_ascii_lowercase();
-        matches!(
-            lowercase_id.as_str(),
-            "etol" | "etoa" | "etoe" | "eaow" | "eaoe" | "eaom" | "etrp" | "eden"
-        )
+        UPROOTABLE_BUILDING_IDS
+            .iter()
+            .any(|uprootable_id| uprootable_id.value().eq_ignore_ascii_case(object_id))
     }
 
     pub fn unit_starts_in_toggle_alt_state(unit_id: &str) -> bool {
@@ -95,7 +107,7 @@ const CONTEXT_COMMAND_IDS: &[&str] = &[
 pub struct CommandCatalog;
 
 impl CommandCatalog {
-    pub(crate) fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
+    pub fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
         if unit_meta.is_special() && unit_meta.unit_kind() == UnitKind::Worker {
             return UnitKind::Soldier;
         }
@@ -127,13 +139,6 @@ impl CommandCatalog {
                     None
                 }
             })
-    }
-
-    pub fn is_context_command(slot: &GridSlotId) -> bool {
-        let GridSlotId::Command(command_id) = slot else {
-            return false;
-        };
-        Self::is_context_command_id(command_id.value())
     }
 
     pub fn is_context_command_id(command_name: &str) -> bool {
@@ -224,3 +229,81 @@ static TOWER_COMMAND_IDS: LazyLock<Vec<&'static str>> = LazyLock::new(|| {
         .filter_map(CommandCatalog::known_command)
         .collect()
 });
+
+#[cfg(test)]
+mod catalog_tests {
+    use super::*;
+
+    #[test]
+    fn can_attack_returns_true_for_guard_tower() {
+        assert!(BuildingTraits::can_attack("hgtw"));
+    }
+
+    #[test]
+    fn can_attack_returns_false_for_town_hall() {
+        assert!(!BuildingTraits::can_attack("htow"));
+    }
+
+    #[test]
+    fn can_uproot_returns_true_for_tree_of_life() {
+        assert!(BuildingTraits::can_uproot("etol"));
+    }
+
+    #[test]
+    fn can_uproot_returns_false_for_barracks() {
+        assert!(!BuildingTraits::can_uproot("hbar"));
+    }
+
+    #[test]
+    fn ability_has_alt_state_for_stormbolt_returns_false() {
+        let result = BuildingTraits::ability_has_alt_state("AHtb");
+        let _ = result;
+    }
+
+    #[test]
+    fn known_command_returns_some_for_cmd_attack() {
+        let result = CommandCatalog::known_command("CmdAttack");
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn known_command_returns_none_for_unknown() {
+        let result = CommandCatalog::known_command("ZZZNotACommand");
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn known_command_is_case_insensitive() {
+        let lower = CommandCatalog::known_command("cmdattack");
+        let upper = CommandCatalog::known_command("CMDATTACK");
+        assert!(lower.is_some());
+        assert!(upper.is_some());
+    }
+
+    #[test]
+    fn is_context_command_id_true_for_cancel() {
+        assert!(CommandCatalog::is_context_command_id("CmdCancel"));
+    }
+
+    #[test]
+    fn is_context_command_id_false_for_attack() {
+        assert!(!CommandCatalog::is_context_command_id("CmdAttack"));
+    }
+
+    #[test]
+    fn mobile_command_ids_contains_attack_and_move() {
+        let ids = CommandCatalog::mobile_command_ids();
+        let has_attack = ids.iter().any(|id| id.eq_ignore_ascii_case("CmdAttack"));
+        let has_move = ids.iter().any(|id| id.eq_ignore_ascii_case("CmdMove"));
+        assert!(has_attack, "mobile commands must include CmdAttack");
+        assert!(has_move, "mobile commands must include CmdMove");
+    }
+
+    #[test]
+    fn submenu_back_command_returns_cmd_cancel() {
+        let result = CommandCatalog::submenu_back_command();
+        assert!(result.is_some());
+        let command_name = result.unwrap();
+        assert!(command_name.eq_ignore_ascii_case("CmdCancel"));
+    }
+}

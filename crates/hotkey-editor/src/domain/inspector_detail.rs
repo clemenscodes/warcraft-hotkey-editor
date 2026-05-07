@@ -1,7 +1,7 @@
-use warcraft_api::{ButtonPosition, WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_keybinds::CustomKeysFile;
 
-use crate::domain::ability_cell::{AbilityCell, BindingHotkey};
+use crate::domain::ability_cell::AbilityCell;
 use crate::domain::building_traits::BuildingTraits;
 use crate::domain::grid_slot::GridSlotId;
 use crate::domain::hotkey_token::HotkeyToken;
@@ -17,8 +17,8 @@ pub(crate) struct InspectorDetail {
     icon_src: Option<String>,
     hotkey_token: Option<HotkeyToken>,
     research_hotkey_token: Option<HotkeyToken>,
-    button_position: Option<ButtonPosition>,
-    research_button_position: Option<ButtonPosition>,
+    button_position: Option<GridCoordinate>,
+    research_button_position: Option<GridCoordinate>,
     tip: Option<String>,
     research_tip: Option<String>,
     ubertip: Option<String>,
@@ -79,19 +79,17 @@ impl InspectorDetail {
                 let research_position = custom_keys_ref
                     .and_then(|file| file.binding(ability_id_str))
                     .and_then(|ability_binding| ability_binding.research_button_position())
-                    .map(|raw_position| {
-                        ButtonPosition::new(raw_position.column(), raw_position.row())
-                    });
+                    .copied();
                 let hotkey_token = binding
                     .and_then(|ability_binding| {
                         ability_binding
                             .hotkey()
                             .or_else(|| ability_binding.research_hotkey())
                     })
-                    .and_then(BindingHotkey::first_token);
+                    .and_then(|hotkey| hotkey.first_token());
                 let research_hotkey_token = binding
                     .and_then(|ability_binding| ability_binding.research_hotkey())
-                    .and_then(BindingHotkey::first_token);
+                    .and_then(|hotkey| hotkey.first_token());
                 let tip = binding.and_then(|ability_binding| {
                     ability_binding.tip().map(WarcraftColorCodes::stripped)
                 });
@@ -153,25 +151,32 @@ impl InspectorDetail {
                 // editable from the source unit's inspector.
                 let ability_off_on_alt_unit = !ability_is_morph
                     && BuildingTraits::ability_is_on_alt_state_unit(ability_id_str);
-                let (alt_display_name, alt_ubertip, alt_hotkey_token) = if object_has_alt_state
+                let should_show_alt_state = object_has_alt_state
                     && !prefer_un_state
                     && !ability_is_morph
                     && !ability_off_on_alt_unit
-                    && !from_uprooted
-                {
-                    let alt_name = database_object
-                        .and_then(|warcraft_object| warcraft_object.un_tip())
-                        .map(WarcraftColorCodes::stripped);
-                    let alt_long = database_object
-                        .and_then(|warcraft_object| warcraft_object.un_ubertip())
-                        .map(WarcraftColorCodes::stripped);
-                    let alt_hotkey = binding
-                        .and_then(|ability_binding| ability_binding.unhotkey())
-                        .and_then(BindingHotkey::first_token);
-                    (alt_name, alt_long, alt_hotkey)
-                } else {
-                    (None, None, None)
-                };
+                    && !from_uprooted;
+                let alt_display_name = should_show_alt_state
+                    .then(|| {
+                        database_object
+                            .and_then(|warcraft_object| warcraft_object.un_tip())
+                            .map(WarcraftColorCodes::stripped)
+                    })
+                    .flatten();
+                let alt_ubertip = should_show_alt_state
+                    .then(|| {
+                        database_object
+                            .and_then(|warcraft_object| warcraft_object.un_ubertip())
+                            .map(WarcraftColorCodes::stripped)
+                    })
+                    .flatten();
+                let alt_hotkey_token = should_show_alt_state
+                    .then(|| {
+                        binding
+                            .and_then(|ability_binding| ability_binding.unhotkey())
+                            .and_then(|hotkey| hotkey.first_token())
+                    })
+                    .flatten();
                 let research_ubertip = database_object
                     .and_then(|warcraft_object| warcraft_object.research_ubertip())
                     .map(WarcraftColorCodes::stripped);
@@ -223,20 +228,17 @@ impl InspectorDetail {
                     cell.cloned_icon_src()
                 };
                 let object_id = cell.object_id();
-                let (upgrade_unit_id_field, upgrade_display_name, upgrade_hotkey_token) =
-                    if let Some(upgrade_id) = upgrade_unit_id {
-                        let upgrade_binding =
-                            custom_keys_ref.and_then(|file| file.binding(upgrade_id.value()));
-                        let upgrade_hotkey = upgrade_binding
-                            .and_then(|b| b.hotkey())
-                            .and_then(BindingHotkey::first_token);
-                        let upgrade_name = ObjectLookup::by_id(upgrade_id.value())
-                            .and_then(|obj| obj.names().first().copied())
-                            .map(String::from);
-                        (Some(upgrade_id), upgrade_name, upgrade_hotkey)
-                    } else {
-                        (None, None, None)
-                    };
+                let upgrade_unit_id_field = upgrade_unit_id;
+                let upgrade_display_name = upgrade_unit_id
+                    .and_then(|upgrade_id| ObjectLookup::by_id(upgrade_id.value()))
+                    .and_then(|obj| obj.names().first().copied())
+                    .map(String::from);
+                let upgrade_hotkey_token = upgrade_unit_id
+                    .and_then(|upgrade_id| {
+                        custom_keys_ref.and_then(|file| file.binding(upgrade_id.value()))
+                    })
+                    .and_then(|upgrade_binding| upgrade_binding.hotkey())
+                    .and_then(|hotkey| hotkey.first_token());
                 Self {
                     display_name: resolved_display_name,
                     object_id,
@@ -277,7 +279,7 @@ impl InspectorDetail {
                 let position = Positions::current_for(slot, custom_keys_ref, false);
                 let hotkey_token = binding
                     .and_then(|ability_binding| ability_binding.unhotkey())
-                    .and_then(BindingHotkey::first_token);
+                    .and_then(|hotkey| hotkey.first_token());
                 let database_object = ObjectLookup::by_id(ability_id_str);
                 let display_name = database_object
                     .and_then(|warcraft_object| warcraft_object.un_tip())
@@ -322,7 +324,7 @@ impl InspectorDetail {
                 let position = Positions::current_for(slot, custom_keys_ref, false);
                 let hotkey_token = binding
                     .and_then(|command_binding| command_binding.hotkey())
-                    .and_then(BindingHotkey::first_token);
+                    .and_then(|hotkey| hotkey.first_token());
                 let database_object = ObjectLookup::by_id(command_name_str);
                 let tip = database_object
                     .and_then(|warcraft_object| warcraft_object.tip())
@@ -384,11 +386,11 @@ impl InspectorDetail {
         self.research_hotkey_token
     }
 
-    pub(crate) fn button_position(&self) -> Option<ButtonPosition> {
+    pub(crate) fn button_position(&self) -> Option<GridCoordinate> {
         self.button_position
     }
 
-    pub(crate) fn research_button_position(&self) -> Option<ButtonPosition> {
+    pub(crate) fn research_button_position(&self) -> Option<GridCoordinate> {
         self.research_button_position
     }
 

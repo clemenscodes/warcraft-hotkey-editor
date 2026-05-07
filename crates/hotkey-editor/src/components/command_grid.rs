@@ -7,7 +7,7 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{ColumnIndex, CustomKeysFile, RowIndex};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
@@ -79,63 +79,67 @@ thread_local! {
     static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const { RefCell::new(None) };
 }
 
-fn cancel_touch_long_press() {
-    if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|cell| cell.replace(None))
-        && let Some(window) = web_sys::window()
-    {
-        window.clear_timeout_with_handle(id);
-    }
-}
+struct DragThreadState;
 
-fn install_touch_scroll_lock() {
-    TOUCH_SCROLL_LOCK.with(|cell| {
-        if cell.borrow().is_some() {
-            return;
+impl DragThreadState {
+    fn cancel_long_press() {
+        if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|cell| cell.replace(None))
+            && let Some(window) = web_sys::window()
+        {
+            window.clear_timeout_with_handle(id);
         }
-        let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+    }
+
+    fn install_scroll_lock() {
+        TOUCH_SCROLL_LOCK.with(|cell| {
+            if cell.borrow().is_some() {
+                return;
+            }
+            let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+                return;
+            };
+            let cb = Closure::<dyn FnMut(web_sys::Event)>::new(|event: web_sys::Event| {
+                event.prevent_default();
+            });
+            let options = web_sys::AddEventListenerOptions::new();
+            options.set_capture(true);
+            options.set_passive(false);
+            if document
+                .add_event_listener_with_callback_and_add_event_listener_options(
+                    "touchmove",
+                    cb.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .is_ok()
+            {
+                *cell.borrow_mut() = Some(cb);
+            }
+        });
+    }
+
+    fn remove_scroll_lock() {
+        let cb_option = TOUCH_SCROLL_LOCK.with(|cell| cell.borrow_mut().take());
+        let Some(cb) = cb_option else {
             return;
         };
-        let cb = Closure::<dyn FnMut(web_sys::Event)>::new(|event: web_sys::Event| {
-            event.prevent_default();
-        });
-        let options = web_sys::AddEventListenerOptions::new();
-        options.set_capture(true);
-        options.set_passive(false);
-        if document
-            .add_event_listener_with_callback_and_add_event_listener_options(
+        if let Some(document) = web_sys::window().and_then(|window| window.document()) {
+            let _ = document.remove_event_listener_with_callback_and_bool(
                 "touchmove",
                 cb.as_ref().unchecked_ref(),
-                &options,
-            )
-            .is_ok()
-        {
-            *cell.borrow_mut() = Some(cb);
+                true,
+            );
         }
-    });
-}
-
-fn remove_touch_scroll_lock() {
-    let cb_option = TOUCH_SCROLL_LOCK.with(|cell| cell.borrow_mut().take());
-    let Some(cb) = cb_option else {
-        return;
-    };
-    if let Some(document) = web_sys::window().and_then(|window| window.document()) {
-        let _ = document.remove_event_listener_with_callback_and_bool(
-            "touchmove",
-            cb.as_ref().unchecked_ref(),
-            true,
-        );
     }
-}
 
-fn reset_drag_thread_locals() {
-    cancel_touch_long_press();
-    remove_touch_scroll_lock();
-    TOUCH_STARTED.with(|cell| cell.set(false));
-    DID_DRAG_MOVE.with(|cell| cell.set(false));
-    DRAG_ORIGIN.with(|cell| cell.set(None));
-    PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
-    SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
+    fn reset() {
+        Self::cancel_long_press();
+        Self::remove_scroll_lock();
+        TOUCH_STARTED.with(|cell| cell.set(false));
+        DID_DRAG_MOVE.with(|cell| cell.set(false));
+        DRAG_ORIGIN.with(|cell| cell.set(None));
+        PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
+        SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
+    }
 }
 
 fn tile_class(
@@ -240,7 +244,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                     column,
                     row,
                 );
-                let letter = cell_with_slot.as_ref().and_then(|(_, cell)| {
+                let letter = cell_with_slot.as_ref().and_then(|occupant| {
+                    let cell = occupant.cell();
                     let token = if is_research_grid {
                         cell.binding_research_hotkey()
                             .or_else(|| cell.binding_hotkey())
@@ -276,7 +281,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                 row,
                             );
                             let raw_occupant_slot: Option<GridSlotId> =
-                                cell_with_slot.as_ref().map(|(slot_id, _)| *slot_id);
+                                cell_with_slot.as_ref().map(|occupant| occupant.slot_id());
                             // Show the off-state appearance when either:
                             // (a) a morph ability is on the unit it morphs INTO
                             //     (e.g. Bear Form on the bear unit → "Night Elf Form")
@@ -320,8 +325,12 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             };
                             let cell_option: Option<&AbilityCell> = morph_reverse_cell
                                 .as_ref()
-                                .or_else(|| cell_with_slot.as_ref().map(|(_, cell)| cell));
-                            let derived_letter = layout_snapshot.letter_at(column, row);
+                                .or_else(|| cell_with_slot.as_ref().map(|occupant| occupant.cell()));
+                            let col_index = ColumnIndex::try_from(column).ok();
+                            let row_index = RowIndex::try_from(row).ok();
+                            let derived_letter = col_index
+                                .zip(row_index)
+                                .and_then(|(col, row_idx)| layout_snapshot.letter_at(col, row_idx));
                             let is_selected = match (&occupant_slot, active_slot.as_ref()) {
                                 (Some(occupant), Some(active)) => {
                                     occupant == active
@@ -375,7 +384,8 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         custom_keys_option,
                                     )
                                     .is_some_and(|off_pos| {
-                                        off_pos.column() == column && off_pos.row() == row
+                                        off_pos.column().as_u8() == column
+                                            && off_pos.row().as_u8() == row
                                     })
                                 });
                             let class_name = tile_class(
@@ -531,7 +541,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                 return;
                                             }
                                             // Clean up any stuck drag state from a previous gesture.
-                                            reset_drag_thread_locals();
+                                            DragThreadState::reset();
                                             // Flag so the compat mouse event is suppressed, but
                                             // continue handling the touch event itself.
                                             if is_touch {
@@ -622,7 +632,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     if pending.tile_element.set_pointer_capture(pending.pointer_id).is_err() {
                                                         return;
                                                     }
-                                                    install_touch_scroll_lock();
+                                                    DragThreadState::install_scroll_lock();
                                                     DID_DRAG_MOVE.with(|c| c.set(true));
                                                     let dragging = DraggingSlot::new(pending.source_slot, pending.section);
                                                     dragging_slot_cb.set(Some(dragging));
@@ -673,7 +683,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                     cell.borrow().as_ref().map(|pending| pending.pointer_id)
                                                 });
                                                 if pending_pointer_id != Some(current_pointer_id) {
-                                                    cancel_touch_long_press();
+                                                    DragThreadState::cancel_long_press();
                                                     PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
                                                     DRAG_ORIGIN.with(|cell| cell.set(None));
                                                     return;
@@ -691,7 +701,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                         let dx = cursor_x - origin.cursor_x;
                                                         let dy = cursor_y - origin.cursor_y;
                                                         if dx * dx + dy * dy > TOUCH_CANCEL_THRESHOLD_PIXELS * TOUCH_CANCEL_THRESHOLD_PIXELS {
-                                                            cancel_touch_long_press();
+                                                            DragThreadState::cancel_long_press();
                                                             PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
                                                             DRAG_ORIGIN.with(|cell| cell.set(None));
                                                             return;
@@ -823,7 +833,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                         onpointerup: move |_event| {
                                             // Cancel pending long-press if the finger lifted before
                                             // the timer fired (tap → select).
-                                            cancel_touch_long_press();
+                                            DragThreadState::cancel_long_press();
                                             let dragging_clone = dragging_slot.read().clone();
                                             let mut performed_swap = false;
                                             let mut fell_back_to_source = false;
@@ -869,8 +879,10 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                                                     id.value(),
                                                                     custom_keys,
                                                                 )?;
-                                                            if off_pos.column() == drop.column()
-                                                                && off_pos.row() == drop.row()
+                                                            if off_pos.column().as_u8()
+                                                                == drop.column()
+                                                                && off_pos.row().as_u8()
+                                                                    == drop.row()
                                                             {
                                                                 Some(
                                                                     ObjectLookup::by_id(id.value())
@@ -917,7 +929,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             let did_move = DID_DRAG_MOVE.with(|cell| cell.replace(false));
                                             DRAG_ORIGIN.with(|cell| cell.set(None));
                                             PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
-                                            remove_touch_scroll_lock();
+                                            DragThreadState::remove_scroll_lock();
                                             if fell_back_to_source && did_move
                                                 && let Some(dragging) = dragging_clone.as_ref()
                                             {
@@ -934,7 +946,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             drag_follower.set(None);
                                         },
                                         onpointercancel: move |_event| {
-                                            reset_drag_thread_locals();
+                                            DragThreadState::reset();
                                             dragging_slot.set(None);
                                             drop_target_cell.set(None);
                                             drag_follower.set(None);
@@ -943,7 +955,7 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                                             // Safety net: fires whenever pointer capture is released
                                             // (after pointerup, pointercancel, or browser scroll
                                             // takeover). Ensures drag state never stays stuck.
-                                            reset_drag_thread_locals();
+                                            DragThreadState::reset();
                                             dragging_slot.set(None);
                                             drop_target_cell.set(None);
                                             drag_follower.set(None);

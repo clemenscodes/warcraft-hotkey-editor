@@ -47,8 +47,8 @@ mod tests {
             }
             let buttonpos_line = format!(
                 "Buttonpos={},{}\n",
-                default_position.column(),
-                default_position.row()
+                default_position.column().as_u8(),
+                default_position.row().as_u8()
             );
             out.push_str(&buttonpos_line);
             if let Some(tip) = traditional
@@ -103,8 +103,8 @@ mod tests {
                 }
                 let buttonpos_line = format!(
                     "Buttonpos={},{}\n",
-                    button_position.column(),
-                    button_position.row()
+                    button_position.column().as_u8(),
+                    button_position.row().as_u8()
                 );
                 out.push_str(&buttonpos_line);
             }
@@ -124,8 +124,8 @@ mod tests {
                 }
                 let research_buttonpos_line = format!(
                     "ResearchButtonpos={},{}\n",
-                    research_position.column(),
-                    research_position.row()
+                    research_position.column().as_u8(),
+                    research_position.row().as_u8()
                 );
                 out.push_str(&research_buttonpos_line);
             }
@@ -145,8 +145,8 @@ mod tests {
                 }
                 let unbuttonpos_line = format!(
                     "Unbuttonpos={},{}\n",
-                    off_position.column(),
-                    off_position.row()
+                    off_position.column().as_u8(),
+                    off_position.row().as_u8()
                 );
                 out.push_str(&unbuttonpos_line);
             }
@@ -215,8 +215,8 @@ mod tests {
             }
             let buttonpos_line = format!(
                 "Buttonpos={},{}\n",
-                default_position.column(),
-                default_position.row()
+                default_position.column().as_u8(),
+                default_position.row().as_u8()
             );
             out.push_str(&buttonpos_line);
             if let Some(tip) = existing_binding
@@ -269,8 +269,8 @@ mod tests {
             }
             let buttonpos_line = format!(
                 "Buttonpos={},{}\n",
-                default_position.column(),
-                default_position.row()
+                default_position.column().as_u8(),
+                default_position.row().as_u8()
             );
             out.push_str(&buttonpos_line);
 
@@ -293,8 +293,8 @@ mod tests {
                 }
                 let research_buttonpos_line = format!(
                     "ResearchButtonpos={},{}\n",
-                    research_button_position.column(),
-                    research_button_position.row()
+                    research_button_position.column().as_u8(),
+                    research_button_position.row().as_u8()
                 );
                 out.push_str(&research_buttonpos_line);
             }

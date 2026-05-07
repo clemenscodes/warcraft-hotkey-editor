@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use warcraft_api::ButtonPosition;
+use warcraft_api::GridCoordinate;
 use warcraft_keybinds::CustomKeysFile;
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
@@ -10,9 +10,9 @@ pub type AbilityDefaultsDatabase = BTreeMap<String, AbilityDefaultsEntry>;
 
 #[derive(Debug, Clone, Default)]
 pub struct AbilityDefaultsEntry {
-    button_position: Option<ButtonPosition>,
-    research_button_position: Option<ButtonPosition>,
-    off_button_position: Option<ButtonPosition>,
+    button_position: Option<GridCoordinate>,
+    research_button_position: Option<GridCoordinate>,
+    off_button_position: Option<GridCoordinate>,
     ubertip: Option<String>,
     research_ubertip: Option<String>,
     off_ubertip: Option<String>,
@@ -24,15 +24,15 @@ pub struct AbilityDefaultsEntry {
 }
 
 impl AbilityDefaultsEntry {
-    pub fn button_position(&self) -> Option<ButtonPosition> {
+    pub fn button_position(&self) -> Option<GridCoordinate> {
         self.button_position
     }
 
-    pub fn research_button_position(&self) -> Option<ButtonPosition> {
+    pub fn research_button_position(&self) -> Option<GridCoordinate> {
         self.research_button_position
     }
 
-    pub fn off_button_position(&self) -> Option<ButtonPosition> {
+    pub fn off_button_position(&self) -> Option<GridCoordinate> {
         self.off_button_position
     }
 
@@ -89,15 +89,9 @@ impl AbilityDefaultsExtraction {
         for entry in parsed.bindings_in_order() {
             let id = entry.id();
             let binding = entry.binding();
-            let regular_position = binding
-                .button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()));
-            let research_position = binding
-                .research_button_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()));
-            let off_position = binding
-                .unbutton_position()
-                .map(|position| ButtonPosition::new(position.column(), position.row()));
+            let regular_position = binding.button_position();
+            let research_position = binding.research_button_position();
+            let off_position = binding.unbutton_position();
             let ubertip = binding.ubertip().map(str::to_owned);
             let research_ubertip = binding.research_ubertip().map(str::to_owned);
             let off_ubertip = binding.un_ubertip().map(str::to_owned);
@@ -119,9 +113,9 @@ impl AbilityDefaultsExtraction {
             }
 
             let entry_data = AbilityDefaultsEntry {
-                button_position: regular_position,
-                research_button_position: research_position,
-                off_button_position: off_position,
+                button_position: regular_position.copied(),
+                research_button_position: research_position.copied(),
+                off_button_position: off_position.copied(),
                 ubertip,
                 research_ubertip,
                 off_ubertip,

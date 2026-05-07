@@ -324,7 +324,10 @@ fn InventoryCell(
                 if let Some(target_id) = drop_clone
                     && target_id != section_id_for_pointerup
                 {
-                    swap_section_bindings(&mut keys_signal, &section_id_for_pointerup, &target_id);
+                    keys_signal
+                        .write()
+                        .get_or_insert_with(|| CustomKeysFile::from(""))
+                        .swap_system_bindings(&section_id_for_pointerup, &target_id);
                     performed_swap = true;
                 }
                 let did_move = DID_DRAG_MOVE.with(|cell| cell.replace(false));
@@ -372,32 +375,5 @@ fn InventoryCell(
                 on_close: move |_| editing_section.set(None),
             }
         }
-    }
-}
-
-fn swap_section_bindings(
-    keys_signal: &mut Signal<Option<CustomKeysFile>>,
-    source_id: &str,
-    target_id: &str,
-) {
-    let mut writable_guard = keys_signal.write();
-    let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
-    let source_hotkey = file
-        .system(source_id)
-        .and_then(|binding| match binding.hotkey() {
-            Hotkey::VirtualKey(code) => Some(*code),
-            _ => None,
-        });
-    let target_hotkey = file
-        .system(target_id)
-        .and_then(|binding| match binding.hotkey() {
-            Hotkey::VirtualKey(code) => Some(*code),
-            _ => None,
-        });
-    if let Some(binding) = file.system_mut(source_id) {
-        binding.set_hotkey(Hotkey::VirtualKey(target_hotkey.unwrap_or(0)));
-    }
-    if let Some(binding) = file.system_mut(target_id) {
-        binding.set_hotkey(Hotkey::VirtualKey(source_hotkey.unwrap_or(0)));
     }
 }

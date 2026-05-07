@@ -4,19 +4,19 @@ use serde::{Deserialize, Serialize};
 
 pub const SUPPORTED_VERSION_STRING: &str = "2.0.4.23745";
 
-pub const SUPPORTED_VERSION: W3Version = W3Version::parse(SUPPORTED_VERSION_STRING);
+pub const SUPPORTED_VERSION: WarcraftVersion = WarcraftVersion::parse(SUPPORTED_VERSION_STRING);
 
 /// Structured representation of a Warcraft III patch version:
 /// `<major>.<minor>.<patch>.<build>`.
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
-pub struct W3Version {
+pub struct WarcraftVersion {
     major: u32,
     minor: u32,
     patch: u32,
     build: u64,
 }
 
-impl W3Version {
+impl WarcraftVersion {
     pub const fn new(major: u32, minor: u32, patch: u32, build: u64) -> Self {
         Self {
             major,
@@ -39,7 +39,7 @@ impl W3Version {
         while index < length {
             if bytes[index] == b'.' {
                 if dots_seen >= 3 {
-                    panic!("W3Version::parse: version string has more than 3 dots");
+                    panic!("WarcraftVersion::parse: version string has more than 3 dots");
                 }
                 dot_positions[dots_seen] = index;
                 dots_seen += 1;
@@ -47,7 +47,7 @@ impl W3Version {
             index += 1;
         }
         if dots_seen != 3 {
-            panic!("W3Version::parse: version must be major.minor.patch.build");
+            panic!("WarcraftVersion::parse: version must be major.minor.patch.build");
         }
 
         let major = Self::parse_u32(bytes, 0, dot_positions[0]);
@@ -59,7 +59,7 @@ impl W3Version {
 
     const fn parse_u32(bytes: &[u8], start: usize, end: usize) -> u32 {
         if start >= end {
-            panic!("W3Version::parse: empty version segment");
+            panic!("WarcraftVersion::parse: empty version segment");
         }
         let mut result: u32 = 0;
         let mut cursor = start;
@@ -76,7 +76,7 @@ impl W3Version {
                 b'7' => 7,
                 b'8' => 8,
                 b'9' => 9,
-                _ => panic!("W3Version::parse: non-digit in version segment"),
+                _ => panic!("WarcraftVersion::parse: non-digit in version segment"),
             };
             result = result * 10 + digit;
             cursor += 1;
@@ -86,7 +86,7 @@ impl W3Version {
 
     const fn parse_u64(bytes: &[u8], start: usize, end: usize) -> u64 {
         if start >= end {
-            panic!("W3Version::parse: empty build segment");
+            panic!("WarcraftVersion::parse: empty build segment");
         }
         let mut result: u64 = 0;
         let mut cursor = start;
@@ -103,7 +103,7 @@ impl W3Version {
                 b'7' => 7,
                 b'8' => 8,
                 b'9' => 9,
-                _ => panic!("W3Version::parse: non-digit in build segment"),
+                _ => panic!("WarcraftVersion::parse: non-digit in build segment"),
             };
             result = result * 10 + digit;
             cursor += 1;
@@ -128,7 +128,7 @@ impl W3Version {
     }
 }
 
-impl fmt::Display for W3Version {
+impl fmt::Display for WarcraftVersion {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             formatter,
@@ -148,23 +148,23 @@ mod tests {
     }
 
     #[test]
-    fn w3version_equality_is_field_wise() {
-        let version_a = W3Version::new(2, 0, 4, 23745);
-        let version_b = W3Version::new(2, 0, 4, 23745);
-        let version_c = W3Version::new(2, 0, 4, 23746);
+    fn warcraft_version_equality_is_field_wise() {
+        let version_a = WarcraftVersion::new(2, 0, 4, 23745);
+        let version_b = WarcraftVersion::new(2, 0, 4, 23745);
+        let version_c = WarcraftVersion::new(2, 0, 4, 23746);
         assert_eq!(version_a, version_b);
         assert_ne!(version_a, version_c);
     }
 
     #[test]
     fn parse_reconstructs_fields_from_dotted_string() {
-        let parsed = W3Version::parse("2.0.4.23745");
-        assert_eq!(parsed, W3Version::new(2, 0, 4, 23745));
+        let parsed = WarcraftVersion::parse("2.0.4.23745");
+        assert_eq!(parsed, WarcraftVersion::new(2, 0, 4, 23745));
     }
 
     #[test]
     fn parse_handles_larger_build_numbers() {
-        let parsed = W3Version::parse("1.35.0.14481");
+        let parsed = WarcraftVersion::parse("1.35.0.14481");
         assert_eq!(parsed.major(), 1);
         assert_eq!(parsed.minor(), 35);
         assert_eq!(parsed.patch(), 0);
