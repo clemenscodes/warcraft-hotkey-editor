@@ -1781,4 +1781,28 @@ mod normalize_tests {
             "[Ahrl] section must have a concrete Buttonpos after normalize",
         );
     }
+
+    #[test]
+    fn normalize_assigns_positions_to_goblin_merchant_sell_items_without_template_positions() {
+        let normalized = CustomKeys::from("").normalize();
+        for item_id in &["bspd", "spro", "pinv"] {
+            let binding = normalized.binding(*item_id);
+            let button_position = binding.and_then(|binding| binding.button_position());
+            assert!(
+                button_position.is_some(),
+                "[{item_id}] must have a button_position in the normalized output"
+            );
+        }
+    }
+
+    #[test]
+    fn normalize_assigns_position_to_goblin_shredder_sell_unit() {
+        let normalized = CustomKeys::from("").normalize();
+        let binding = normalized.binding("ngir");
+        let button_position = binding.and_then(|binding| binding.button_position());
+        assert!(
+            button_position.is_some(),
+            "[ngir] (Goblin Shredder) must have a button_position in the normalized output"
+        );
+    }
 }

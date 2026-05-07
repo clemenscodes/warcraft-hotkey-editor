@@ -51,7 +51,8 @@ pub(crate) fn TemplatesDialog(
                                             let command_count = parsed_template.commands_in_order().count();
                                             let mut baseline = CustomKeys::from(baseline_content());
                                             baseline.extend(parsed_template);
-                                            loaded_keys.set(Some(baseline));
+                                            let normalized = baseline.normalize();
+                                            loaded_keys.set(Some(normalized));
                                             upload_status.set(UploadStatus::Loaded {
                                                 binding_count,
                                                 command_count,

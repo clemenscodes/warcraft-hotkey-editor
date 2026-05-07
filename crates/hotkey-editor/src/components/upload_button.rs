@@ -31,7 +31,8 @@ pub(crate) fn UploadButton(
                     let command_count = uploaded_only.commands_in_order().count();
                     let mut baseline_file = CustomKeys::from(baseline_content());
                     baseline_file.extend(uploaded_only);
-                    loaded_keys.set(Some(baseline_file));
+                    let normalized = baseline_file.normalize();
+                    loaded_keys.set(Some(normalized));
                     let loaded_status = UploadStatus::Loaded {
                         binding_count,
                         command_count,
