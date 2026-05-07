@@ -13,29 +13,28 @@ const CONTEXT_COMMAND_IDS: &[&str] = &[
     "CmdCancelTrain",
 ];
 
-fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
-    if unit_meta.is_special() && unit_meta.unit_kind() == UnitKind::Worker {
-        return UnitKind::Soldier;
-    }
-    unit_meta.unit_kind()
-}
-
-fn build_command_for_race(race: Option<Race>) -> Option<&'static str> {
-    let race_value = race?;
-    let preferred_name = match race_value {
-        Race::Human => "CmdBuildHuman",
-        Race::Orc => "CmdBuildOrc",
-        Race::Nightelf => "CmdBuildNightElf",
-        Race::Undead => "CmdBuildUndead",
-        Race::Neutral => "CmdBuild",
-    };
-    CommandCatalog::known_command(preferred_name)
-        .or_else(|| CommandCatalog::known_command("CmdBuild"))
-}
-
 pub struct CommandCatalog;
 
 impl CommandCatalog {
+    pub(crate) fn effective_kind(unit_meta: &UnitMeta) -> UnitKind {
+        if unit_meta.is_special() && unit_meta.unit_kind() == UnitKind::Worker {
+            return UnitKind::Soldier;
+        }
+        unit_meta.unit_kind()
+    }
+
+    fn build_command_for_race(race: Option<Race>) -> Option<&'static str> {
+        let race_value = race?;
+        let preferred_name = match race_value {
+            Race::Human => "CmdBuildHuman",
+            Race::Orc => "CmdBuildOrc",
+            Race::Nightelf => "CmdBuildNightElf",
+            Race::Undead => "CmdBuildUndead",
+            Race::Neutral => "CmdBuild",
+        };
+        Self::known_command(preferred_name).or_else(|| Self::known_command("CmdBuild"))
+    }
+
     pub fn known_command(wanted_name: &str) -> Option<&'static str> {
         WARCRAFT_DATABASE
             .iter()
@@ -77,7 +76,7 @@ impl CommandCatalog {
         race: Option<Race>,
         object_id: &str,
     ) -> Vec<&'static str> {
-        let unit_kind = effective_kind(unit_meta);
+        let unit_kind = Self::effective_kind(unit_meta);
         let has_builds = !unit_meta.builds().is_empty();
         let has_trains = !unit_meta.trains().is_empty();
         let has_production = has_builds || has_trains;
@@ -105,7 +104,7 @@ impl CommandCatalog {
                 }
                 if has_builds
                     && unit_kind == UnitKind::Worker
-                    && let Some(build_command) = build_command_for_race(race)
+                    && let Some(build_command) = Self::build_command_for_race(race)
                 {
                     commands.insert(0, build_command);
                 }
@@ -116,7 +115,7 @@ impl CommandCatalog {
     }
 
     pub fn build_menu_commands_for(unit_meta: &UnitMeta) -> Vec<&'static str> {
-        if effective_kind(unit_meta) != UnitKind::Worker {
+        if Self::effective_kind(unit_meta) != UnitKind::Worker {
             return Vec::new();
         }
         if unit_meta.builds().is_empty() {

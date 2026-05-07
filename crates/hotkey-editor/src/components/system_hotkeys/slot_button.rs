@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeysFile, Hotkey};
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
@@ -81,7 +81,7 @@ pub(crate) fn SlotButton(
                     let mut guard = loaded_keys.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
-                        binding.set_hotkey(code);
+                        binding.set_hotkey(Hotkey::VirtualKey(code));
                     }
                     drop(guard);
                     editing_section.set(None);

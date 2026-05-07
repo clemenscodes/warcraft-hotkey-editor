@@ -1374,6 +1374,21 @@ impl WarcraftDatabase {
         &self.db
     }
 
+    pub fn by_id(&self, needle_id: &str) -> Option<&WarcraftObject> {
+        let database_map = self.db();
+        let direct_lookup = database_map.get(needle_id);
+        if direct_lookup.is_some() {
+            return direct_lookup;
+        }
+        for (object_id, warcraft_object) in database_map.iter() {
+            let id_value: &str = object_id.borrow();
+            if id_value.eq_ignore_ascii_case(needle_id) {
+                return Some(warcraft_object);
+            }
+        }
+        None
+    }
+
     pub fn get_icons(&self, id: Identifier) -> Option<&'static [&'static str]> {
         self.get(id).map(|object| object.icons)
     }
@@ -1536,6 +1551,8 @@ impl WarcraftObjectText {
         self.un_ubertip
     }
 }
+
+const ICON_PATH_BLACKLIST: &[&str] = &["commandbuttons/btnselectheroon.blp"];
 
 #[derive(Default, Debug, Clone)]
 pub struct WarcraftObject {
@@ -1714,6 +1731,52 @@ impl WarcraftObject {
     pub fn cooldowns(&self) -> Option<[u32; 4]> {
         match self.meta() {
             WarcraftObjectMeta::Ability(ability_meta) => Some(ability_meta.cooldowns),
+            _ => None,
+        }
+    }
+
+    pub fn has_displayable_icon(&self) -> bool {
+        self.icons().iter().any(|icon_path| {
+            if icon_path.trim().is_empty() {
+                return false;
+            }
+            let normalized = icon_path.trim().to_ascii_lowercase();
+            !ICON_PATH_BLACKLIST
+                .iter()
+                .any(|blacklisted| *blacklisted == normalized.as_str())
+        })
+    }
+
+    pub fn is_passive_ability(&self) -> bool {
+        self.icons()
+            .first()
+            .map(|icon_path| {
+                icon_path
+                    .to_ascii_lowercase()
+                    .starts_with("passivebuttons/")
+            })
+            .unwrap_or(false)
+    }
+
+    pub fn ability_code(&self) -> Option<&'static str> {
+        match &self.meta {
+            WarcraftObjectMeta::Ability(ability_meta) => ability_meta.code(),
+            _ => None,
+        }
+    }
+
+    pub fn ability_morph_target_id(&self) -> Option<&'static str> {
+        match &self.meta {
+            WarcraftObjectMeta::Ability(ability_meta) => {
+                ability_meta.morph_target_unit().map(|id| id.value())
+            }
+            _ => None,
+        }
+    }
+
+    pub fn ability_off_icon(&self) -> Option<&'static str> {
+        match &self.meta {
+            WarcraftObjectMeta::Ability(ability_meta) => ability_meta.off_icon(),
             _ => None,
         }
     }

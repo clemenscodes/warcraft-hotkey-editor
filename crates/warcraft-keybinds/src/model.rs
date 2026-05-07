@@ -367,14 +367,14 @@ impl CommandBinding {
 /// (`GameCommand=1`, `CtrlGroupCommand=1`, etc.).
 #[derive(Debug, Clone)]
 pub struct SystemBinding {
-    hotkey: u32,
+    hotkey: Hotkey,
     class: SystemKeybindClass,
     modifier: Option<SystemKeybindModifier>,
 }
 
 impl SystemBinding {
     pub fn new(
-        hotkey: u32,
+        hotkey: Hotkey,
         class: SystemKeybindClass,
         modifier: Option<SystemKeybindModifier>,
     ) -> Self {
@@ -385,8 +385,8 @@ impl SystemBinding {
         }
     }
 
-    pub fn hotkey(&self) -> u32 {
-        self.hotkey
+    pub fn hotkey(&self) -> &Hotkey {
+        &self.hotkey
     }
 
     pub fn class(&self) -> SystemKeybindClass {
@@ -397,7 +397,7 @@ impl SystemBinding {
         self.modifier
     }
 
-    pub fn set_hotkey(&mut self, value: u32) {
+    pub fn set_hotkey(&mut self, value: Hotkey) {
         self.hotkey = value;
     }
 }
@@ -636,12 +636,9 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
                 Self::Command(command_binding)
             }
             SectionKind::System(class) => {
-                let hotkey_number: u32 = match &accumulator.hotkey {
-                    Some(Hotkey::VirtualKey(code)) => *code,
-                    _ => 0,
-                };
+                let hotkey = accumulator.hotkey.unwrap_or(Hotkey::VirtualKey(0));
                 let system_binding = SystemBinding {
-                    hotkey: hotkey_number,
+                    hotkey,
                     class,
                     modifier: accumulator.system_modifier,
                 };

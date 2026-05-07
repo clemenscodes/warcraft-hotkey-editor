@@ -225,88 +225,40 @@ impl CommandBindingBuilder {
     }
 }
 
-/// A single entry to be inserted into a [`CustomKeysFile`].
-enum PendingEntry {
-    Ability {
-        id: String,
-        binding: AbilityBinding,
-    },
-    Command {
-        name: String,
-        binding: CommandBinding,
-    },
-    System {
-        id: String,
-        binding: SystemBinding,
-    },
-}
-
 /// Builds a [`CustomKeysFile`] from typed bindings without parsing raw text.
 ///
 /// Obtain one via [`CustomKeysFile::builder`].
 pub struct CustomKeysFileBuilder {
-    pending_entries: Vec<PendingEntry>,
+    file: CustomKeysFile,
 }
 
 impl CustomKeysFileBuilder {
     pub(crate) fn new() -> Self {
-        Self {
-            pending_entries: Vec::new(),
-        }
+        let file = CustomKeysFile::default();
+        Self { file }
     }
 
     pub fn ability(mut self, id: impl Into<String>, binding: AbilityBinding) -> Self {
         let id_string = id.into();
-        let entry = PendingEntry::Ability {
-            id: id_string,
-            binding,
-        };
-        self.pending_entries.push(entry);
+        self.file.put_ability(&id_string, binding);
         self
     }
 
     pub fn command(mut self, name: impl Into<String>, binding: CommandBinding) -> Self {
         let name_string = name.into();
-        let entry = PendingEntry::Command {
-            name: name_string,
-            binding,
-        };
-        self.pending_entries.push(entry);
+        self.file.put_command(&name_string, binding);
         self
     }
 
     pub fn system(mut self, id: impl Into<String>, binding: SystemBinding) -> Self {
         let id_string = id.into();
-        let entry = PendingEntry::System {
-            id: id_string,
-            binding,
-        };
-        self.pending_entries.push(entry);
+        self.file.put_system(&id_string, binding);
         self
     }
 
-    /// Consume the builder and produce a [`CustomKeysFile`].
-    ///
-    /// Entries are stored with lowercase keys and iterate in alphabetical
-    /// order. Duplicate section IDs are silently overwritten by the last
-    /// entry with that ID.
+    /// Produce a [`CustomKeysFile`]; keys are lowercased and ordered alphabetically; duplicates keep the last value.
     pub fn build(self) -> CustomKeysFile {
-        let pending_entries = self.pending_entries;
-        let mut file = CustomKeysFile::default();
-        for entry in pending_entries {
-            match entry {
-                PendingEntry::Ability { id, binding } => {
-                    file.put_ability(&id, binding);
-                }
-                PendingEntry::Command { name, binding } => {
-                    file.put_command(&name, binding);
-                }
-                PendingEntry::System { id, binding } => {
-                    file.put_system(&id, binding);
-                }
-            }
-        }
-        file
+        self.file
     }
 }
 
@@ -839,14 +791,14 @@ mod builder_tests {
 
     #[test]
     fn file_builder_system_entry_is_accessible() {
-        let binding = SystemBinding::new(9, SystemKeybindClass::Game, None);
+        let binding = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
         let file = CustomKeysFile::builder()
             .system("IsHeroSelect", binding)
             .build();
         let retrieved = file
             .system("IsHeroSelect")
             .expect("IsHeroSelect must be present");
-        assert_eq!(retrieved.hotkey(), 9);
+        assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(9));
         assert_eq!(retrieved.class(), SystemKeybindClass::Game);
     }
 
@@ -856,7 +808,7 @@ mod builder_tests {
         let ability = AbilityBinding::builder().hotkey(ability_hotkey).build();
         let command_hotkey = Hotkey::from('A');
         let command = CommandBinding::builder().hotkey(command_hotkey).build();
-        let system = SystemBinding::new(9, SystemKeybindClass::Game, None);
+        let system = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
         let file = CustomKeysFile::builder()
             .ability("Ahrl", ability)
             .command("CmdAttack", command)
@@ -927,7 +879,7 @@ mod builder_tests {
     #[test]
     fn file_builder_system_entry_survives_serialization() {
         let binding = SystemBinding::new(
-            49,
+            Hotkey::VirtualKey(49),
             SystemKeybindClass::ControlGroup,
             Some(SystemKeybindModifier::Ctrl),
         );
@@ -935,7 +887,7 @@ mod builder_tests {
         let serialized = file.to_file_content();
         let reparsed = CustomKeysFile::from(serialized.as_str());
         let retrieved = reparsed.system("Ctr1").expect("must survive round-trip");
-        assert_eq!(retrieved.hotkey(), 49);
+        assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(49));
         assert_eq!(retrieved.class(), SystemKeybindClass::ControlGroup);
         assert_eq!(retrieved.modifier(), Some(SystemKeybindModifier::Ctrl));
     }

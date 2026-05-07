@@ -6,25 +6,27 @@ use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 use crate::file::CustomKeysFile;
 use crate::model::{SectionAccumulator, SectionKind, WarcraftKeybinding};
 
-fn section_kind_for(id: &str) -> Option<SectionKind> {
-    let lowercase = id.to_ascii_lowercase();
-    if let Some(object) = WARCRAFT_DATABASE
-        .iter()
-        .find(|(key, _)| key.value().to_ascii_lowercase() == lowercase)
-        .map(|(_, object)| object)
-    {
-        return match object.kind() {
-            WarcraftObjectKind::Command => Some(SectionKind::Command),
-            _ => Some(SectionKind::Ability),
-        };
+impl SectionKind {
+    fn for_section_id(id: &str) -> Option<Self> {
+        let lowercase = id.to_ascii_lowercase();
+        if let Some(object) = WARCRAFT_DATABASE
+            .iter()
+            .find(|(key, _)| key.value().to_ascii_lowercase() == lowercase)
+            .map(|(_, object)| object)
+        {
+            return match object.kind() {
+                WarcraftObjectKind::Command => Some(SectionKind::Command),
+                _ => Some(SectionKind::Ability),
+            };
+        }
+        if let Some(entry) = WARCRAFT_SYSTEM_KEYBINDS
+            .iter()
+            .find(|entry| entry.section_id().to_ascii_lowercase() == lowercase)
+        {
+            return Some(SectionKind::System(entry.class()));
+        }
+        None
     }
-    if let Some(entry) = WARCRAFT_SYSTEM_KEYBINDS
-        .iter()
-        .find(|entry| entry.section_id().to_ascii_lowercase() == lowercase)
-    {
-        return Some(SectionKind::System(entry.class()));
-    }
-    None
 }
 
 impl Default for CustomKeysFile {
@@ -43,9 +45,13 @@ impl From<&str> for CustomKeysFile {
         let flush = |current_key: &mut Option<String>,
                      accumulator: &mut Option<SectionAccumulator>,
                      entries: &mut BTreeMap<String, WarcraftKeybinding>| {
-            if let (Some(key), Some(accumulated)) = (current_key.take(), accumulator.take()) {
-                let binding = WarcraftKeybinding::from(accumulated);
-                entries.insert(key, binding);
+            let maybe_key = current_key.take();
+            let maybe_accumulated = accumulator.take();
+            if let Some(key) = maybe_key {
+                if let Some(accumulated) = maybe_accumulated {
+                    let binding = WarcraftKeybinding::from(accumulated);
+                    entries.insert(key, binding);
+                }
             }
         };
 
@@ -67,7 +73,7 @@ impl From<&str> for CustomKeysFile {
                 if entries.contains_key(&key) {
                     current_key = None;
                     accumulator = None;
-                } else if let Some(section_kind) = section_kind_for(&original_id) {
+                } else if let Some(section_kind) = SectionKind::for_section_id(&original_id) {
                     let section_accumulator = SectionAccumulator::new(section_kind);
                     current_key = Some(key);
                     accumulator = Some(section_accumulator);

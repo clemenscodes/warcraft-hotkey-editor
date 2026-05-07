@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeysFile, Hotkey};
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
 use crate::system_hotkeys::binding_map::SystemBindingMap;
@@ -21,7 +21,10 @@ impl EffectiveBinding {
     ) -> Self {
         let custom_hotkey = custom_keys
             .and_then(|file| file.system(section_id))
-            .map(|binding| binding.hotkey());
+            .and_then(|binding| match binding.hotkey() {
+                Hotkey::VirtualKey(code) => Some(*code),
+                _ => None,
+            });
         let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
         // Warcraft III hardcodes the modifier per system hotkey — any
         // `Modifier=` line in CustomKeys.txt is written for transparency but
@@ -104,7 +107,7 @@ pub(crate) fn KeyCaptureCell(
                     let mut guard = loaded_keys.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
-                        binding.set_hotkey(code);
+                        binding.set_hotkey(Hotkey::VirtualKey(code));
                     }
                     drop(guard);
                     editing_section.set(None);

@@ -126,13 +126,21 @@ impl CustomKeysFile {
             .insert(key, WarcraftKeybinding::System(binding));
     }
 
+    fn home_directory() -> Option<PathBuf> {
+        if cfg!(target_os = "windows") {
+            std::env::var("USERPROFILE").ok().map(PathBuf::from)
+        } else {
+            std::env::var("HOME").ok().map(PathBuf::from)
+        }
+    }
+
     pub fn load(path: impl AsRef<Path>) -> io::Result<Self> {
         let text = std::fs::read_to_string(path)?;
         Ok(Self::from(text.as_str()))
     }
 
     pub fn default_path() -> Option<PathBuf> {
-        let home = home_directory()?;
+        let home = Self::home_directory()?;
         let native_path = home
             .join("Documents")
             .join("Warcraft III")
@@ -329,13 +337,5 @@ impl CustomKeysFile {
             output.push('\n');
         }
         output.push('\n');
-    }
-}
-
-fn home_directory() -> Option<PathBuf> {
-    if cfg!(target_os = "windows") {
-        std::env::var("USERPROFILE").ok().map(PathBuf::from)
-    } else {
-        std::env::var("HOME").ok().map(PathBuf::from)
     }
 }

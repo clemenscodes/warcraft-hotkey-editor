@@ -5,7 +5,7 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::CustomKeysFile;
+use warcraft_keybinds::{CustomKeysFile, Hotkey};
 use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
@@ -364,7 +364,7 @@ fn InventoryCell(
                     let mut guard = keys_signal.write();
                     let file = guard.get_or_insert_with(|| CustomKeysFile::from(""));
                     if let Some(binding) = file.system_mut(&section_id_for_pick) {
-                        binding.set_hotkey(code);
+                        binding.set_hotkey(Hotkey::VirtualKey(code));
                     }
                     drop(guard);
                     editing_section.set(None);
@@ -382,12 +382,22 @@ fn swap_section_bindings(
 ) {
     let mut writable_guard = keys_signal.write();
     let file = writable_guard.get_or_insert_with(|| CustomKeysFile::from(""));
-    let source_hotkey = file.system(source_id).map(|binding| binding.hotkey());
-    let target_hotkey = file.system(target_id).map(|binding| binding.hotkey());
+    let source_hotkey = file
+        .system(source_id)
+        .and_then(|binding| match binding.hotkey() {
+            Hotkey::VirtualKey(code) => Some(*code),
+            _ => None,
+        });
+    let target_hotkey = file
+        .system(target_id)
+        .and_then(|binding| match binding.hotkey() {
+            Hotkey::VirtualKey(code) => Some(*code),
+            _ => None,
+        });
     if let Some(binding) = file.system_mut(source_id) {
-        binding.set_hotkey(target_hotkey.unwrap_or(0));
+        binding.set_hotkey(Hotkey::VirtualKey(target_hotkey.unwrap_or(0)));
     }
     if let Some(binding) = file.system_mut(target_id) {
-        binding.set_hotkey(source_hotkey.unwrap_or(0));
+        binding.set_hotkey(Hotkey::VirtualKey(source_hotkey.unwrap_or(0)));
     }
 }

@@ -6,7 +6,6 @@ pub mod catalog;
 pub mod customkeys;
 pub mod export;
 pub mod file;
-pub mod lookup;
 pub mod model;
 pub mod overlay;
 pub mod parser;
@@ -18,7 +17,6 @@ pub use building::BuildingTraits;
 pub use catalog::CommandCatalog;
 pub use customkeys::CustomKeys;
 pub use file::CustomKeysFile;
-pub use lookup::ObjectLookup;
 pub use model::{
     AbilityBinding, AbilityModifier, BindingEntry, ButtonPosition, CommandBinding, CommandEntry,
     Hotkey, SystemBinding, WarcraftKeybinding,
@@ -192,7 +190,7 @@ mod tests {
         let input = "[itm1]\nHotkey=9\nGameCommand=1\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("itm1").expect("system section parsed");
-        assert_eq!(sys.hotkey(), 9);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(9));
         assert_eq!(sys.class(), SystemKeybindClass::Game);
         assert!(sys.modifier().is_none());
     }
@@ -202,7 +200,7 @@ mod tests {
         let input = "[Ctr1]\nHotkey=49\nCtrlGroupCommand=1\nModifier=Ctrl\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("Ctr1").expect("parsed");
-        assert_eq!(sys.hotkey(), 49);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(49));
         assert_eq!(sys.class(), SystemKeybindClass::ControlGroup);
         assert_eq!(sys.modifier(), Some(SystemKeybindModifier::Ctrl));
     }
@@ -387,7 +385,7 @@ mod tests {
         let input = "[THer]\nHotkey=120\nObserverCommand=1\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("THer").expect("observer section parsed");
-        assert_eq!(sys.hotkey(), 120);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(120));
         assert_eq!(sys.class(), SystemKeybindClass::Observer);
     }
 
@@ -396,7 +394,7 @@ mod tests {
         let input = "[TRpl]\nHotkey=80\nReplayCommand=1\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("TRpl").expect("replay section parsed");
-        assert_eq!(sys.hotkey(), 80);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(80));
         assert_eq!(sys.class(), SystemKeybindClass::Replay);
     }
 
@@ -405,7 +403,7 @@ mod tests {
         let input = "[ctcr]\nHotkey=65\nCameraCommand=1\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("ctcr").expect("camera section parsed");
-        assert_eq!(sys.hotkey(), 65);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(65));
         assert_eq!(sys.class(), SystemKeybindClass::Camera);
     }
 
@@ -414,7 +412,7 @@ mod tests {
         let input = "[QLog]\nHotkey=27\nMenuCommand=1\n";
         let file = CustomKeysFile::from(input);
         let sys = file.system("QLog").expect("menu section parsed");
-        assert_eq!(sys.hotkey(), 27);
+        assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(27));
         assert_eq!(sys.class(), SystemKeybindClass::Menu);
     }
 
@@ -487,13 +485,13 @@ mod tests {
 
     #[test]
     fn put_system_inserts_and_is_accessible() {
-        let binding = SystemBinding::new(9, SystemKeybindClass::Game, None);
+        let binding = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
         let mut file = CustomKeysFile::default();
         file.put_system("IsHeroSelect", binding);
         assert_eq!(
             file.system("IsHeroSelect")
-                .map(|system_binding| system_binding.hotkey()),
-            Some(9)
+                .map(|system_binding| system_binding.hotkey().clone()),
+            Some(Hotkey::VirtualKey(9))
         );
     }
 
@@ -607,7 +605,8 @@ mod overlay_tests {
 
     #[test]
     fn overlay_does_not_overwrite_system_entries() {
-        let system_binding = SystemBinding::new(27, SystemKeybindClass::Game, None);
+        let system_binding =
+            SystemBinding::new(Hotkey::VirtualKey(27), SystemKeybindClass::Game, None);
         let mut target = CustomKeysFile::builder()
             .system("IsS1", system_binding)
             .build();
@@ -742,5 +741,30 @@ mod export_tests {
             next_section.contains("Buttonpos="),
             "[Ahrl] section must have a Buttonpos after materialization"
         );
+    }
+
+    #[test]
+    fn export_assigns_positions_to_goblin_merchant_shop_items_without_db_positions() {
+        // bspd, spro, pinv are sold by the Goblin Merchant (ngme) but have no
+        // default position in the game database. The export pipeline must assign
+        // them positions so they appear in the command grid.
+        let baseline = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let loaded = CustomKeysFile::from("");
+        let output = serialize(&loaded, baseline);
+
+        for item_id in &["bspd", "spro", "pinv"] {
+            let section_marker = format!("[{item_id}]");
+            let after_section = output
+                .to_ascii_lowercase()
+                .split(section_marker.as_str())
+                .nth(1)
+                .unwrap_or("")
+                .to_string();
+            let before_next_section = after_section.split('[').next().unwrap_or("").to_string();
+            assert!(
+                before_next_section.contains("buttonpos="),
+                "[{item_id}] must have a Buttonpos assigned by shop item materialization"
+            );
+        }
     }
 }

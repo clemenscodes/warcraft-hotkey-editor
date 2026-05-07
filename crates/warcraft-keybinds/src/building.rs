@@ -1,8 +1,6 @@
 use warcraft_api::WarcraftObjectMeta;
 use warcraft_database::WARCRAFT_DATABASE;
 
-use crate::lookup::ObjectLookup;
-
 pub struct BuildingTraits;
 
 impl BuildingTraits {
@@ -62,7 +60,7 @@ impl BuildingTraits {
     }
 
     pub fn is_burrowed_form(unit_id: &str) -> bool {
-        let Some(warcraft_object) = ObjectLookup::by_id(unit_id) else {
+        let Some(warcraft_object) = WARCRAFT_DATABASE.by_id(unit_id) else {
             return false;
         };
         warcraft_object
@@ -74,7 +72,7 @@ impl BuildingTraits {
     }
 
     pub fn ability_has_alt_state(ability_id: &str) -> bool {
-        let Some(warcraft_object) = ObjectLookup::by_id(ability_id) else {
+        let Some(warcraft_object) = WARCRAFT_DATABASE.by_id(ability_id) else {
             return false;
         };
         warcraft_object.un_tip().is_some() || warcraft_object.un_ubertip().is_some()
