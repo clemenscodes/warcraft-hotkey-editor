@@ -426,6 +426,12 @@ Untip=|cffc3dbffRight-click to activate auto-casting.
 Ubertip=Creates a shield of frost around a target friendly unit. The shield adds 3 armor and slows melee units that attack it for 5 seconds. Lasts 45 seconds.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 
+[AChv]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Healing Wave
+Ubertip=Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage.
+
 [AChw]
 Hotkey=Z
 Buttonpos=0,2

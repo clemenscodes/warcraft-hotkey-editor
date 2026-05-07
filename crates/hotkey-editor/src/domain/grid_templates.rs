@@ -109,6 +109,11 @@ impl ResolvedTemplate {
     }
 
     pub(crate) fn resolve_all() -> Vec<ResolvedTemplate> {
+        static CACHE: OnceLock<Vec<ResolvedTemplate>> = OnceLock::new();
+        CACHE.get_or_init(Self::compute_all).clone()
+    }
+
+    fn compute_all() -> Vec<ResolvedTemplate> {
         let command_slots = ArchmageTemplate::command_card_slots();
         let research_slots = ArchmageTemplate::research_menu_slots();
         TEMPLATES

@@ -765,7 +765,7 @@ fn insert_objects_chunk_0(
             ACHV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, None, None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACHV_TIP_LEVELS, ACHV_UBERTIP_LEVELS),
         ),
     );

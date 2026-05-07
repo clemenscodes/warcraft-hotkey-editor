@@ -18,9 +18,9 @@ use crate::customkeys::upload_status::UploadStatus;
 use crate::domain::grid_layout::{EditingCell, GridLayout};
 use crate::domain::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::domain::races::RaceLabels;
-use crate::domain::unit_kind::UnitKindHelpers;
 use crate::domain::unit_mode::UnitMode;
 use crate::focus::navigation::{FocusNavigation, FocusedElementInfo};
+use crate::navigation::url_state::UrlNavigationState;
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
@@ -70,11 +70,15 @@ pub(crate) fn App() -> Element {
         let snapshot = *grid_layout.read();
         LocalStorageCache::save_grid_layout(snapshot);
     });
-    let active_race = use_signal::<Race>(|| Race::Human);
-    let unit_mode = use_signal::<UnitMode>(|| UnitMode::Melee);
-    let selected_unit_id = use_signal::<Option<String>>(|| {
-        UnitKindHelpers::default_unit_id_for(Race::Human, UnitMode::Melee)
-    });
+    let initial_nav = UrlNavigationState::from_url();
+    let initial_race = initial_nav.race();
+    let initial_mode = initial_nav.unit_mode();
+    let initial_unit_id = initial_nav.selected_unit_id();
+    let initial_search = initial_nav.search_query();
+
+    let active_race = use_signal::<Race>(move || initial_race);
+    let unit_mode = use_signal::<UnitMode>(move || initial_mode);
+    let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id.clone());
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
@@ -84,7 +88,16 @@ pub(crate) fn App() -> Element {
     let mut drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
-    let search_query = use_signal::<String>(String::new);
+    let search_query = use_signal::<String>(move || initial_search.clone());
+    use_effect(move || {
+        let race = *active_race.read();
+        let mode = *unit_mode.read();
+        let unit_id_option = selected_unit_id.read().clone();
+        let query = search_query.read().clone();
+        let unit_id_ref = unit_id_option.as_deref();
+        let query_str = query.as_str();
+        UrlNavigationState::push_to_url(race, mode, unit_id_ref, query_str);
+    });
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
     let mut preview_open = use_signal::<bool>(|| false);
     let mut system_hotkeys_open = use_signal::<bool>(|| false);

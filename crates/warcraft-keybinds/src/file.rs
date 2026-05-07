@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, HashSet};
 use std::fmt;
+use std::sync::OnceLock;
 
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
@@ -151,12 +152,20 @@ impl CustomKeysFile {
     }
 
     pub fn normalize(&self) -> Self {
-        let mut result = Self::from(BUNDLED_BASELINE);
+        let mut result = Self::materialized_baseline().clone();
         let overlay_clone = self.clone();
         result.extend(overlay_clone);
-        result.materialize_default_positions();
-        result.materialize_shop_item_positions();
         result
+    }
+
+    fn materialized_baseline() -> &'static Self {
+        static CACHE: OnceLock<CustomKeysFile> = OnceLock::new();
+        CACHE.get_or_init(|| {
+            let mut file = Self::from(BUNDLED_BASELINE);
+            file.materialize_default_positions();
+            file.materialize_shop_item_positions();
+            file
+        })
     }
 
     pub fn serialize(&self, baseline: &str) -> String {
@@ -695,10 +704,8 @@ impl CustomKeysFile {
 
 fn is_passive_ability(id: &str) -> bool {
     WARCRAFT_DATABASE
-        .iter()
-        .find(|(object_id, _)| object_id.value().eq_ignore_ascii_case(id))
-        .map(|(_, object)| object.is_passive_ability())
-        .unwrap_or(false)
+        .by_id(id)
+        .is_some_and(|object| object.is_passive_ability())
 }
 
 impl fmt::Display for CustomKeysFile {

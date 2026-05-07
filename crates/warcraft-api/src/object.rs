@@ -1,4 +1,9 @@
-use std::{borrow::Borrow, collections::BTreeMap, fmt, str::FromStr};
+use std::{
+    borrow::Borrow,
+    collections::{BTreeMap, HashMap},
+    fmt,
+    str::FromStr,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -351,6 +356,7 @@ pub type ObjectMap = BTreeMap<WarcraftObjectId, WarcraftObject>;
 #[derive(Default, Debug, Clone)]
 pub struct WarcraftDatabase {
     db: ObjectMap,
+    lowercase_index: HashMap<String, WarcraftObjectId>,
 }
 
 impl<'a> IntoIterator for &'a WarcraftDatabase {
@@ -364,7 +370,14 @@ impl<'a> IntoIterator for &'a WarcraftDatabase {
 
 impl WarcraftDatabase {
     pub fn new(db: ObjectMap) -> Self {
-        Self { db }
+        let lowercase_index = db
+            .iter()
+            .map(|(key, _)| (key.value().to_ascii_lowercase(), *key))
+            .collect();
+        Self {
+            db,
+            lowercase_index,
+        }
     }
 
     pub fn get(&self, id: Identifier) -> Option<&WarcraftObject> {
@@ -376,18 +389,16 @@ impl WarcraftDatabase {
     }
 
     pub fn by_id(&self, needle_id: &str) -> Option<&WarcraftObject> {
-        let database_map = self.db();
-        let direct_lookup = database_map.get(needle_id);
-        if direct_lookup.is_some() {
-            return direct_lookup;
-        }
-        for (object_id, warcraft_object) in database_map.iter() {
-            let id_value: &str = object_id.borrow();
-            if id_value.eq_ignore_ascii_case(needle_id) {
-                return Some(warcraft_object);
-            }
-        }
-        None
+        let lowercase = needle_id.to_ascii_lowercase();
+        let canonical_key = self.lowercase_index.get(&lowercase)?;
+        self.db.get(canonical_key.value())
+    }
+
+    pub fn by_id_and_key(&self, needle_id: &str) -> Option<(WarcraftObjectId, &WarcraftObject)> {
+        let lowercase = needle_id.to_ascii_lowercase();
+        let canonical_key = self.lowercase_index.get(&lowercase)?;
+        let warcraft_object = self.db.get(canonical_key.value())?;
+        Some((*canonical_key, warcraft_object))
     }
 
     pub fn get_icons(&self, id: Identifier) -> Option<&'static [&'static str]> {

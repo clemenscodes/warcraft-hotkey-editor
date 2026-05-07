@@ -696,21 +696,17 @@ impl SectionResolution {
     /// Look up `section_id` in the game database and system-keybind table.
     /// Returns `None` for unknown section IDs.
     pub(crate) fn from_section_id(section_id: &str) -> Option<Self> {
-        let lowercase_id = section_id.to_ascii_lowercase();
-        if let Some((canonical_id, warcraft_object)) = WARCRAFT_DATABASE
-            .iter()
-            .find(|(key, _)| key.value().to_ascii_lowercase() == lowercase_id)
-        {
+        if let Some((canonical_id, warcraft_object)) = WARCRAFT_DATABASE.by_id_and_key(section_id) {
             let section_kind = match warcraft_object.kind() {
                 WarcraftObjectKind::Command => SectionKind::Command,
                 _ => SectionKind::Ability,
             };
-            let resolved_id = *canonical_id;
             return Some(Self {
-                canonical_id: resolved_id,
+                canonical_id,
                 kind: section_kind,
             });
         }
+        let lowercase_id = section_id.to_ascii_lowercase();
         if let Some(system_keybind) = WARCRAFT_SYSTEM_KEYBINDS
             .iter()
             .find(|system_keybind| system_keybind.section_id().to_ascii_lowercase() == lowercase_id)
