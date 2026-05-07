@@ -7,7 +7,7 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::system_hotkeys::scope::{ContextSet, context_set_for};
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ResolvedSystemBinding {
     section_id: String,
     section_comment: String,
@@ -21,7 +21,7 @@ impl ResolvedSystemBinding {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SystemBindingMap {
     bindings_by_section: HashMap<String, ResolvedSystemBinding>,
 }

@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::slot_button::SlotButton;
+use crate::system_hotkeys::binding_map::SystemBindingMap;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
@@ -12,6 +13,10 @@ pub(crate) fn ControlGroupsHotkeysView(
     editing_section: Signal<Option<String>>,
 ) -> Element {
     let entries = SystemHotkeysCategory::ControlGroups.entries();
+    let binding_map = use_memo(move || {
+        let guard = loaded_keys.read();
+        SystemBindingMap::build(guard.as_ref())
+    });
     let frame_url = SLOT_FRAME_GOLD;
     let frame_style = format!("--wc3-slot-frame: url('{frame_url}');");
     rsx! {
@@ -28,6 +33,7 @@ pub(crate) fn ControlGroupsHotkeysView(
                         default_modifier: entry.default_modifier(),
                         loaded_keys,
                         editing_section,
+                        binding_map,
                     }
                 }
             }

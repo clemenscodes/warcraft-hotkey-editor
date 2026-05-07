@@ -50,6 +50,7 @@ pub(crate) fn KeyCaptureCell(
     default_modifier: SystemKeybindModifier,
     mut loaded_keys: Signal<Option<CustomKeys>>,
     mut editing_section: Signal<Option<String>>,
+    binding_map: ReadSignal<SystemBindingMap>,
 ) -> Element {
     let lookup_id = section_id.clone();
     let read_guard = loaded_keys.read();
@@ -60,10 +61,10 @@ pub(crate) fn KeyCaptureCell(
         default_hotkey,
         default_modifier,
     );
-    let binding_map = SystemBindingMap::build(custom_keys_ref);
     drop(read_guard);
+    let map_guard = binding_map.read();
     let collisions =
-        binding_map.collisions_for(&lookup_id, effective.hotkey_code, effective.modifier);
+        map_guard.collisions_for(&lookup_id, effective.hotkey_code, effective.modifier);
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -79,7 +80,8 @@ pub(crate) fn KeyCaptureCell(
     } else {
         "wc3-key-chip"
     };
-    let picker_conflicts = binding_map.picker_conflicts(&lookup_id, effective.modifier);
+    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier);
+    drop(map_guard);
     let is_editing = editing_section
         .read()
         .as_deref()

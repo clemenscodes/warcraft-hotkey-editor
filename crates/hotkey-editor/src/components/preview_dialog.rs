@@ -9,13 +9,13 @@ pub(crate) fn PreviewDialog(
     loaded_keys: Signal<Option<CustomKeys>>,
     mut preview_open: Signal<bool>,
 ) -> Element {
-    let preview_text: String = {
+    let preview_text = use_memo(move || {
         let read_guard = loaded_keys.read();
         match read_guard.as_ref() {
             Some(file) => file.normalize().to_string(),
             None => String::new(),
         }
-    };
+    });
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
@@ -38,7 +38,7 @@ pub(crate) fn PreviewDialog(
                         readonly: true,
                         spellcheck: false,
                         wrap: "off",
-                        value: "{preview_text}",
+                        value: "{preview_text.read()}",
                     }
                 }
             }

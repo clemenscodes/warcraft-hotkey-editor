@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::key_cell::KeyCaptureCell;
+use crate::system_hotkeys::binding_map::SystemBindingMap;
 use crate::system_hotkeys::category::SystemHotkeysCategory;
 
 #[component]
@@ -11,6 +12,10 @@ pub(crate) fn SystemHotkeysListView(
     editing_section: Signal<Option<String>>,
 ) -> Element {
     let entries = category.entries();
+    let binding_map = use_memo(move || {
+        let guard = loaded_keys.read();
+        SystemBindingMap::build(guard.as_ref())
+    });
     rsx! {
         div { class: "wc3-stage",
             ul { class: "wc3-binding-list",
@@ -29,6 +34,7 @@ pub(crate) fn SystemHotkeysListView(
                                     default_modifier,
                                     loaded_keys,
                                     editing_section,
+                                    binding_map,
                                 }
                             }
                         }

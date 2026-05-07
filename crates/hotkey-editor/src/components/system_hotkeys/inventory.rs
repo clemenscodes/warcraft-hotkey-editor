@@ -80,6 +80,10 @@ pub(crate) fn InventoryHotkeysView(
     let entries = SystemHotkeysCategory::Inventory.entries();
     let dragging_source = use_signal::<Option<InventoryDragSource>>(|| None);
     let drop_target = use_signal::<Option<String>>(|| None);
+    let binding_map = use_memo(move || {
+        let guard = loaded_keys.read();
+        SystemBindingMap::build(guard.as_ref())
+    });
 
     let slot_frame_url = SLOT_FRAME_GOLD;
     let frame_style = format!("--wc3-slot-frame: url('{slot_frame_url}');");
@@ -106,6 +110,7 @@ pub(crate) fn InventoryHotkeysView(
                                         dragging_source,
                                         drop_target,
                                         drag_follower,
+                                        binding_map,
                                     }
                                 },
                                 None => rsx! {
@@ -131,6 +136,7 @@ fn InventoryCell(
     mut dragging_source: Signal<Option<InventoryDragSource>>,
     mut drop_target: Signal<Option<String>>,
     mut drag_follower: Signal<Option<InventoryDragFollower>>,
+    binding_map: ReadSignal<SystemBindingMap>,
 ) -> Element {
     let mut keys_signal = loaded_keys;
     let read_guard = loaded_keys.read();
@@ -141,10 +147,10 @@ fn InventoryCell(
         default_hotkey,
         default_modifier,
     );
-    let binding_map = SystemBindingMap::build(custom_keys_ref);
     drop(read_guard);
+    let map_guard = binding_map.read();
     let collisions =
-        binding_map.collisions_for(&section_id, effective.hotkey_code, effective.modifier);
+        map_guard.collisions_for(&section_id, effective.hotkey_code, effective.modifier);
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -155,7 +161,8 @@ fn InventoryCell(
     } else {
         String::new()
     };
-    let picker_conflicts = binding_map.picker_conflicts(&section_id, effective.modifier);
+    let picker_conflicts = map_guard.picker_conflicts(&section_id, effective.modifier);
+    drop(map_guard);
     let key_label = effective.label();
     let is_editing = editing_section
         .read()
