@@ -6,8 +6,8 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
-use crate::components::shell::footer::AppFooter;
-use crate::components::shell::header::AppHeader;
+use crate::components::shell::footer::Footer;
+use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
 use crate::components::shell::tooltips::TooltipMount;
 use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
@@ -217,7 +217,7 @@ pub(crate) fn App() -> Element {
                     }
                 }
             },
-            AppHeader {
+            Header {
                 loaded_keys,
                 upload_status,
                 preview_open,
@@ -249,7 +249,7 @@ pub(crate) fn App() -> Element {
                     grid_layout,
                 }
             }
-            AppFooter {}
+            Footer {}
                 if *preview_open.read() {
                     PreviewDialog { loaded_keys, preview_open }
                 }
@@ -290,10 +290,10 @@ fn DragFollowerOverlay(
     };
     let race_attribute = RaceLabels::data_attribute(*active_race.read());
     rsx! {
-        div { class: "{class_name}", "data-race": "{race_attribute}", style: "{style_value}",
+        div { class: class_name, "data-race": race_attribute, style: style_value,
             if let Some(source) = visual.icon_source() {
                 img {
-                    src: "{source}",
+                    src: source,
                     alt: "{visual.label_text()}",
                     draggable: "false",
                     decoding: "async",
@@ -302,7 +302,7 @@ fn DragFollowerOverlay(
                 span { class: "command-label", "{visual.label_text()}" }
             }
             if let Some(letter_text) = visual.displayed_letter() {
-                span { class: "{hotkey_overlay_class}", "{letter_text}" }
+                span { class: hotkey_overlay_class, "{letter_text}" }
             }
         }
     }

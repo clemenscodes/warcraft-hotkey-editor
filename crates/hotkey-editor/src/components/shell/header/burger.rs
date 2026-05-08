@@ -55,6 +55,50 @@ pub(crate) fn BurgerMenu(
     let mut preview_open = preview_open;
     let has_loaded_file = loaded_keys.read().is_some();
     let preview_active = preview_open();
+    let toggle_burger = move |_| {
+        let next = !*burger_open.read();
+        burger_open.set(next);
+    };
+    let close_burger_backdrop = move |_| burger_open.set(false);
+    let close_burger_button = move |_| burger_open.set(false);
+    let toggle_layout = move |_| {
+        let next = !*layout_dialog_open.read();
+        layout_dialog_open.set(next);
+        burger_open.set(false);
+    };
+    let open_upload = move |_| {
+        burger_upload_info_open.set(true);
+        burger_open.set(false);
+    };
+    let toggle_templates = move |_| {
+        let next = !*templates_dialog_open.read();
+        templates_dialog_open.set(next);
+        burger_open.set(false);
+    };
+    let toggle_system_hotkeys = move |_| {
+        let next = !*system_hotkeys_open.read();
+        system_hotkeys_open.set(next);
+        burger_open.set(false);
+    };
+    let toggle_preview = move |_| {
+        let next = !*preview_open.read();
+        preview_open.set(next);
+        burger_open.set(false);
+    };
+    let open_download = move |_| {
+        burger_download_info_open.set(true);
+        burger_open.set(false);
+    };
+    let handle_download_confirm = move |_| {
+        let serialized = {
+            let read_guard = loaded_keys.read();
+            let Some(file) = read_guard.as_ref() else {
+                return;
+            };
+            file.normalize().to_string()
+        };
+        BlobDownload::trigger("CustomKeys.txt", &serialized);
+    };
 
     rsx! {
         button {
@@ -78,10 +122,7 @@ pub(crate) fn BurgerMenu(
             aria_label: "Open menu",
             aria_expanded: "{burger_open()}",
             aria_controls: "burger-drawer",
-            onclick: move |_| {
-                let next = !*burger_open.read();
-                burger_open.set(next);
-            },
+            onclick: toggle_burger,
             span {
                 class: "flex items-center justify-center \
                         [width:calc(2.2rem_*_var(--hdr-scale))] [height:calc(2.2rem_*_var(--hdr-scale))] \
@@ -97,7 +138,7 @@ pub(crate) fn BurgerMenu(
                 role: "button",
                 aria_label: "Close menu",
                 tabindex: "-1",
-                onclick: move |_| burger_open.set(false),
+                onclick: close_burger_backdrop,
             }
             div {
                 id: "burger-drawer",
@@ -129,7 +170,7 @@ pub(crate) fn BurgerMenu(
                                 focus-visible:[box-shadow:0_0_0_2px_#fff]",
                         r#type: "button",
                         aria_label: "Close menu",
-                        onclick: move |_| burger_open.set(false),
+                        onclick: close_burger_button,
                         "\u{2715}"
                     }
                 }
@@ -155,11 +196,7 @@ pub(crate) fn BurgerMenu(
                         aria_label: "Edit global hotkey layout",
                         aria_haspopup: "dialog",
                         aria_expanded: "{layout_dialog_open()}",
-                        onclick: move |_| {
-                            let next = !*layout_dialog_open.read();
-                            layout_dialog_open.set(next);
-                            burger_open.set(false);
-                        },
+                        onclick: toggle_layout,
                         span {
                             class: BURGER_MENU_ITEM_ICON_CLASS,
                             aria_hidden: "true",
@@ -177,10 +214,7 @@ pub(crate) fn BurgerMenu(
                             class: BURGER_MENU_ITEM_CLASS,
                             r#type: "button",
                             role: "menuitem",
-                            onclick: move |_| {
-                                burger_upload_info_open.set(true);
-                                burger_open.set(false);
-                            },
+                            onclick: open_upload,
                             span {
                                 class: BURGER_MENU_ITEM_ICON_CLASS,
                                 aria_hidden: "true",
@@ -194,11 +228,7 @@ pub(crate) fn BurgerMenu(
                             role: "menuitem",
                             aria_haspopup: "dialog",
                             aria_expanded: "{templates_dialog_open()}",
-                            onclick: move |_| {
-                                let next = !*templates_dialog_open.read();
-                                templates_dialog_open.set(next);
-                                burger_open.set(false);
-                            },
+                            onclick: toggle_templates,
                             span {
                                 class: BURGER_MENU_ITEM_ICON_CLASS,
                                 aria_hidden: "true",
@@ -212,11 +242,7 @@ pub(crate) fn BurgerMenu(
                             role: "menuitem",
                             aria_haspopup: "dialog",
                             aria_expanded: "{system_hotkeys_open()}",
-                            onclick: move |_| {
-                                let next = !*system_hotkeys_open.read();
-                                system_hotkeys_open.set(next);
-                                burger_open.set(false);
-                            },
+                            onclick: toggle_system_hotkeys,
                             span {
                                 class: BURGER_MENU_ITEM_ICON_CLASS,
                                 aria_hidden: "true",
@@ -228,12 +254,8 @@ pub(crate) fn BurgerMenu(
                             class: if preview_active { BURGER_MENU_ITEM_ACTIVE_CLASS } else { BURGER_MENU_ITEM_CLASS },
                             r#type: "button",
                             role: "menuitem",
-                            aria_pressed: "{preview_active}",
-                            onclick: move |_| {
-                                let next = !*preview_open.read();
-                                preview_open.set(next);
-                                burger_open.set(false);
-                            },
+                            aria_pressed: preview_active,
+                            onclick: toggle_preview,
                             span {
                                 class: BURGER_MENU_ITEM_ICON_CLASS,
                                 aria_hidden: "true",
@@ -249,10 +271,7 @@ pub(crate) fn BurgerMenu(
                                 class: BURGER_MENU_ITEM_CLASS,
                                 r#type: "button",
                                 role: "menuitem",
-                                onclick: move |_| {
-                                    burger_download_info_open.set(true);
-                                    burger_open.set(false);
-                                },
+                                onclick: open_download,
                                 span {
                                     class: BURGER_MENU_ITEM_ICON_CLASS,
                                     aria_hidden: "true",
@@ -269,14 +288,7 @@ pub(crate) fn BurgerMenu(
         if has_loaded_file {
             DownloadInfoDialog {
                 open: burger_download_info_open,
-                on_confirm: move |_| {
-                    let serialized = {
-                        let read_guard = loaded_keys.read();
-                        let Some(file) = read_guard.as_ref() else { return };
-                        file.normalize().to_string()
-                    };
-                    BlobDownload::trigger("CustomKeys.txt", &serialized);
-                },
+                on_confirm: handle_download_confirm,
             }
         }
     }

@@ -1,4 +1,5 @@
 mod category;
+mod mobile_category_tab;
 mod state;
 mod unit_card;
 
@@ -11,6 +12,7 @@ use warcraft_database::{UnitKindHelpers, UnitMode};
 use crate::model::grid::GridSlotId;
 
 use category::UnitCategorySection;
+use mobile_category_tab::MobileCategoryTab;
 use state::UnitListState;
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
@@ -45,7 +47,8 @@ pub(crate) fn UnitListPanel(
         selected_unit_id,
         collapsed_categories,
     );
-    let mut active_category_signal = state.active_category();
+    let active_category_signal = state.active_category();
+    let handle_search_input = move |event: Event<FormData>| search_query.set(event.value());
 
     rsx! {
         aside {
@@ -58,8 +61,8 @@ pub(crate) fn UnitListPanel(
                     class: "flex-1 min-w-0 w-full bg-[rgba(8,18,35,0.7)] border border-warcraft-blue rounded text-white py-3 px-4 font-[inherit] text-[1.4rem] focus:outline-none focus:border-warcraft-gold focus:shadow-[0_0_6px_rgba(255,206,99,0.4)]",
                     r#type: "search",
                     placeholder: "Search units…",
-                    value: "{search_query}",
-                    oninput: move |event| search_query.set(event.value()),
+                    value: search_query,
+                    oninput: handle_search_input,
                 }
             }
             nav {
@@ -68,20 +71,14 @@ pub(crate) fn UnitListPanel(
                 aria_label: "Unit categories",
                 for kind in MOBILE_CATEGORY_ORDER {
                     {
-                        let label = UnitKindHelpers::category_label(kind);
-                        let is_active = kind == state.active_kind();
                         let kind_attr = unit_kind_data_attr(kind);
+                        let is_active = kind == state.active_kind();
                         rsx! {
-                            button {
+                            MobileCategoryTab {
                                 key: "{kind_attr}",
-                                class: "flex-1 min-w-0 min-h-[44px] px-2 bg-[rgba(13,31,61,0.55)] border border-[#1f3d63] rounded-[8px] text-[#c0c8d4] font-friz-quadrata text-[0.95rem] tracking-[0.04em] uppercase text-center cursor-pointer transition-all duration-[120ms] whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[rgba(30,60,95,0.7)] hover:text-white hover:border-warcraft-blue focus:outline-none [body[data-kb-modality]_&]:focus:outline-none [body[data-kb-modality]_&]:focus:border-white [body[data-kb-modality]_&]:focus:shadow-[0_0_0_2px_#fff] data-[active=true]:bg-gradient-to-br data-[active=true]:from-[rgba(45,80,130,0.95)] data-[active=true]:to-[rgba(20,45,80,0.95)] data-[active=true]:border-warcraft-gold data-[active=true]:text-warcraft-gold data-[active=true]:shadow-[0_0_6px_rgba(255,206,99,0.3)]",
-                                role: "tab",
-                                r#type: "button",
-                                aria_selected: "{is_active}",
-                                "data-unit-kind": "{kind_attr}",
-                                "data-active": "{is_active}",
-                                onclick: move |_| active_category_signal.set(kind),
-                                "{label}"
+                                kind,
+                                is_active,
+                                active_category: active_category_signal,
                             }
                         }
                     }

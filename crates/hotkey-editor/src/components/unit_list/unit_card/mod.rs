@@ -1,3 +1,5 @@
+mod icon;
+mod info;
 mod state;
 
 use dioxus::prelude::*;
@@ -8,6 +10,8 @@ use crate::model::icons::IconUrl;
 use crate::services::focus::modality::FocusModality;
 
 use super::unit_kind_data_attr;
+use icon::UnitCardIcon;
+use info::UnitCardInfo;
 use state::UnitCardClasses;
 
 #[component]
@@ -23,50 +27,39 @@ pub(super) fn UnitCard(
     mut active_category: Signal<UnitKind>,
 ) -> Element {
     let classes = UnitCardClasses::compute(is_selected, race);
+    let button_class = classes.button_class();
+    let id_class = classes.id_class();
     let kind_attr = unit_kind_data_attr(unit_kind);
     let unit_id_for_click = unit_id.clone();
     let unit_id_for_keydown = unit_id.clone();
-    let unit_id_label = unit_id.clone();
+    let display_name_for_icon = display_name.clone();
     let kind_for_click = unit_kind;
     let kind_for_keydown = unit_kind;
 
+    let handle_click = move |_| {
+        selected_unit_id.set(Some(unit_id_for_click.clone()));
+        selected_slot.set(None);
+        active_category.set(kind_for_click);
+    };
+    let handle_keydown = move |event: Event<KeyboardData>| {
+        let key_value = event.data().key().to_string();
+        if key_value == " " || key_value == "Enter" {
+            event.prevent_default();
+            selected_unit_id.set(Some(unit_id_for_keydown.clone()));
+            selected_slot.set(None);
+            active_category.set(kind_for_keydown);
+            FocusModality::after_render(".unit-card.selected, .unit-card");
+        }
+    };
+
     rsx! {
         button {
-            class: "{classes.button_class()}",
-            "data-unit-kind": "{kind_attr}",
-            onclick: move |_| {
-                selected_unit_id.set(Some(unit_id_for_click.clone()));
-                selected_slot.set(None);
-                active_category.set(kind_for_click);
-            },
-            onkeydown: move |event| {
-                let key_value = event.data().key().to_string();
-                if key_value == " " || key_value == "Enter" {
-                    event.prevent_default();
-                    selected_unit_id.set(Some(unit_id_for_keydown.clone()));
-                    selected_slot.set(None);
-                    active_category.set(kind_for_keydown);
-                    FocusModality::after_render(".unit-card.selected, .unit-card");
-                }
-            },
-            if let Some(source) = icon_path {
-                img {
-                    class: "w-20 h-20 border border-warcraft-blue rounded-[3px] shrink-0 object-cover bg-[rgba(20,35,60,0.7)] text-transparent",
-                    src: "{source}",
-                    alt: "{display_name}",
-                    loading: "lazy",
-                    decoding: "async",
-                }
-            } else {
-                div { class: "w-20 h-20 border border-warcraft-blue rounded-[3px] shrink-0 bg-[rgba(20,35,60,0.7)]" }
-            }
-            div { class: "flex flex-col gap-[0.45rem] min-w-0 flex-1",
-                span {
-                    class: "text-[1.05rem] leading-[1.25] pb-[0.1rem] overflow-hidden text-ellipsis whitespace-nowrap min-w-0 min-[1900px]:text-[1.35rem]",
-                    "{display_name}"
-                }
-                code { class: "{classes.id_class()}", "{unit_id_label}" }
-            }
+            class: button_class,
+            "data-unit-kind": kind_attr,
+            onclick: handle_click,
+            onkeydown: handle_keydown,
+            UnitCardIcon { icon_path, display_name: display_name_for_icon }
+            UnitCardInfo { display_name, unit_id, id_class }
         }
     }
 }

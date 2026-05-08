@@ -60,10 +60,11 @@ pub(crate) fn UploadButton(
         });
     };
 
+    let open_info = move |_| info_open.set(true);
     rsx! {
         div { class: "contents",
             input {
-                id: "{UPLOAD_INPUT_ELEMENT_ID}",
+                id: UPLOAD_INPUT_ELEMENT_ID,
                 class: "absolute -left-[9999px] w-px h-px opacity-0",
                 r#type: "file",
                 accept: ".txt,text/plain",
@@ -73,7 +74,7 @@ pub(crate) fn UploadButton(
                 class: TOOLBAR_BTN_CLASS,
                 r#type: "button",
                 aria_label: "Upload CustomKeys.txt",
-                onclick: move |_| info_open.set(true),
+                onclick: open_info,
                 span {
                     class: TOOLBAR_ICON_CLASS,
                     aria_hidden: "true",

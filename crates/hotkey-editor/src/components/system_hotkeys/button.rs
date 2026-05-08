@@ -2,6 +2,10 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn SystemHotkeysButton(mut system_hotkeys_open: Signal<bool>) -> Element {
+    let handle_click = move |_| {
+        let next_value = !*system_hotkeys_open.read();
+        system_hotkeys_open.set(next_value);
+    };
     rsx! {
         button {
             class: "inline-flex items-center justify-center px-14 py-6 \
@@ -11,10 +15,7 @@ pub(crate) fn SystemHotkeysButton(mut system_hotkeys_open: Signal<bool>) -> Elem
                 hover:border-warcraft-gold hover:text-warcraft-gold \
                 hover:[box-shadow:0_0_12px_rgba(255,206,99,0.25)]",
             r#type: "button",
-            onclick: move |_| {
-                let next_value = !*system_hotkeys_open.read();
-                system_hotkeys_open.set(next_value);
-            },
+            onclick: handle_click,
             "System Hotkeys"
         }
     }

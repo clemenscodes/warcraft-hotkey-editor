@@ -70,13 +70,24 @@ pub(crate) fn KeyCaptureCell(
     let key_label = effective.label();
     let section_id_for_click = lookup_id.clone();
     let section_id_for_pick = lookup_id.clone();
+    let handle_click = move |_| editing_section.set(Some(section_id_for_click.clone()));
+    let handle_pick = move |code: u32| {
+        let mut guard = loaded_keys.write();
+        let file = guard.get_or_insert_with(|| CustomKeys::from(""));
+        if let Some(binding) = file.system_mut(&section_id_for_pick) {
+            binding.set_hotkey(Hotkey::VirtualKey(code));
+        }
+        drop(guard);
+        editing_section.set(None);
+    };
+    let handle_picker_close = move |_| editing_section.set(None);
     rsx! {
         button {
-            class: "{chip_class}",
+            class: chip_class,
             r#type: "button",
-            "data-tooltip": "{conflict_title}",
+            "data-tooltip": conflict_title,
             "data-tooltip-placement": "above",
-            onclick: move |_| editing_section.set(Some(section_id_for_click.clone())),
+            onclick: handle_click,
             "{key_label}"
         }
         if is_editing {
@@ -85,16 +96,8 @@ pub(crate) fn KeyCaptureCell(
                 current_code: effective.hotkey_code(),
                 conflicts: picker_conflicts,
                 open: true,
-                on_pick: move |code: u32| {
-                    let mut guard = loaded_keys.write();
-                    let file = guard.get_or_insert_with(|| CustomKeys::from(""));
-                    if let Some(binding) = file.system_mut(&section_id_for_pick) {
-                        binding.set_hotkey(Hotkey::VirtualKey(code));
-                    }
-                    drop(guard);
-                    editing_section.set(None);
-                },
-                on_close: move |_| editing_section.set(None),
+                on_pick: handle_pick,
+                on_close: handle_picker_close,
             }
         }
     }

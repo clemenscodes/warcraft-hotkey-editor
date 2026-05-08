@@ -48,15 +48,17 @@ pub(crate) fn TemplatesDialog(
     let toast_api = use_toast();
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
 
+    let handle_open_change = move |is_open| templates_dialog_open.set(is_open);
+    let handle_close = move |_| templates_dialog_open.set(false);
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
             open: templates_dialog_open(),
-            on_open_change: move |is_open| templates_dialog_open.set(is_open),
+            on_open_change: handle_open_change,
             DialogContent { class: "dialog-shell wc3-dialog templates-dialog-shell".to_string(),
                 DialogHeader {
                     title: "Layout Templates".to_string(),
-                    on_close: move |_| templates_dialog_open.set(false),
+                    on_close: handle_close,
                 }
                 div { class: "wc3-dialog-body flex flex-col items-stretch gap-[2.5rem]",
                     div { class: "grid grid-cols-2 gap-[2.25rem] w-full max-[1099px]:grid-cols-1 max-[1099px]:gap-[10px]",
@@ -66,6 +68,25 @@ pub(crate) fn TemplatesDialog(
                                 let template_description: &'static str = resolved.template().description();
                                 let template_content: &'static str = resolved.template().content();
                                 let template_resolved = resolved.clone();
+                                let apply_template = move |_| {
+                                    let parsed_template = CustomKeys::from(template_content);
+                                    let binding_count = parsed_template.bindings_in_order().count();
+                                    let command_count = parsed_template.commands_in_order().count();
+                                    let mut baseline = CustomKeys::from(warcraft_keybinds::DEFAULT_CUSTOM_KEYS);
+                                    baseline.extend(parsed_template);
+                                    let normalized = baseline.normalize();
+                                    loaded_keys.set(Some(normalized));
+                                    upload_status.set(UploadStatus::Loaded {
+                                        binding_count,
+                                        command_count,
+                                    });
+                                    let summary = format!("{binding_count} ability bindings, {command_count} command bindings loaded");
+                                    toast_api.success(
+                                        format!("{template_name} applied"),
+                                        ToastOptions::new().description(summary),
+                                    );
+                                    templates_dialog_open.set(false);
+                                };
                                 rsx! {
                                     TemplateCard {
                                         key: "{template_name}",
@@ -73,25 +94,7 @@ pub(crate) fn TemplatesDialog(
                                         template_description: template_description.to_string(),
                                         template_content,
                                         template_resolved,
-                                        on_apply: move |_| {
-                                            let parsed_template = CustomKeys::from(template_content);
-                                            let binding_count = parsed_template.bindings_in_order().count();
-                                            let command_count = parsed_template.commands_in_order().count();
-                                            let mut baseline = CustomKeys::from(warcraft_keybinds::DEFAULT_CUSTOM_KEYS);
-                                            baseline.extend(parsed_template);
-                                            let normalized = baseline.normalize();
-                                            loaded_keys.set(Some(normalized));
-                                            upload_status.set(UploadStatus::Loaded {
-                                                binding_count,
-                                                command_count,
-                                            });
-                                            let summary = format!("{binding_count} ability bindings, {command_count} command bindings loaded");
-                                            toast_api.success(
-                                                format!("{template_name} applied"),
-                                                ToastOptions::new().description(summary),
-                                            );
-                                            templates_dialog_open.set(false);
-                                        },
+                                        on_apply: apply_template,
                                     }
                                 }
                             }
@@ -114,14 +117,15 @@ fn TemplateCard(
     let _ = template_content;
     let command_card_resolved = template_resolved.clone();
     let research_menu_resolved = template_resolved.clone();
+    let handle_click = move |_| on_apply.call(());
     rsx! {
         button {
-            class: "{TEMPLATE_CARD}",
+            class: TEMPLATE_CARD,
             r#type: "button",
-            onclick: move |_| on_apply.call(()),
+            onclick: handle_click,
             div { class: "flex flex-col gap-[0.5rem] max-[1099px]:gap-[4px]",
-                h3 { class: "{TEMPLATE_CARD_NAME}", "{template_name}" }
-                p { class: "{TEMPLATE_CARD_DESCRIPTION}", "{template_description}" }
+                h3 { class: TEMPLATE_CARD_NAME, "{template_name}" }
+                p { class: TEMPLATE_CARD_DESCRIPTION, "{template_description}" }
             }
             div { class: "flex flex-row flex-wrap gap-[2rem] items-start max-[1099px]:flex-nowrap max-[1099px]:gap-[8px]",
                 TemplateCardGrid {
@@ -143,7 +147,7 @@ fn TemplateCard(
 fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool) -> Element {
     rsx! {
         div { class: "flex flex-col gap-[0.85rem] [flex:1_1_auto] max-[1099px]:[flex:1_1_0] max-[1099px]:min-w-0 max-[1099px]:w-auto max-[1099px]:items-stretch max-[1099px]:gap-[5px]",
-            div { class: "{TEMPLATE_CARD_GRID_LABEL}", "{label}" }
+            div { class: TEMPLATE_CARD_GRID_LABEL, "{label}" }
             div { class: "grid grid-cols-4 [grid-auto-rows:1fr] [aspect-ratio:4/3] gap-[0.55rem] w-full max-w-[26rem] max-[1099px]:max-w-full max-[1099px]:gap-[3px]", aria_hidden: "true",
                 for row in 0..COMMAND_GRID_ROWS {
                     for column in 0..COMMAND_GRID_COLUMNS {
@@ -184,7 +188,7 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                                 format!("{TEMPLATE_CELL_HOTKEY_BASE} {TEMPLATE_CELL_HOTKEY_NORMAL}")
                             };
                             rsx! {
-                                span { class: "{cell_class}",
+                                span { class: cell_class,
                                     if let Some(source) = icon_source {
                                         img {
                                             class: "w-full h-full object-cover",
@@ -195,7 +199,7 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                                         }
                                     }
                                     if let Some(letter) = displayed_letter {
-                                        span { class: "{hotkey_class}", "{letter}" }
+                                        span { class: hotkey_class, "{letter}" }
                                     }
                                 }
                             }

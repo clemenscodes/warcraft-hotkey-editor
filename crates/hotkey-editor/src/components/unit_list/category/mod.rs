@@ -34,19 +34,20 @@ pub(super) fn UnitCategorySection(
     let query_option = Some(query_str);
     let category_option = Some(category_kind);
     let entries = UnitCatalog::entries_for(race, mode, category_option, query_option);
+    let toggle_collapse = move |_| {
+        let mut categories = collapsed_categories.write();
+        if categories.contains(&captured_kind) {
+            categories.remove(&captured_kind);
+        } else {
+            categories.insert(captured_kind);
+        }
+    };
 
     rsx! {
         button {
-            class: "{heading_class}",
-            "data-unit-kind": "{kind_attr}",
-            onclick: move |_| {
-                let mut categories = collapsed_categories.write();
-                if categories.contains(&captured_kind) {
-                    categories.remove(&captured_kind);
-                } else {
-                    categories.insert(captured_kind);
-                }
-            },
+            class: heading_class,
+            "data-unit-kind": kind_attr,
+            onclick: toggle_collapse,
             span { class: "text-[0.9rem] inline-flex w-[0.8rem] shrink-0",
                 if is_collapsed { "\u{25b6}" } else { "\u{25bc}" }
             }

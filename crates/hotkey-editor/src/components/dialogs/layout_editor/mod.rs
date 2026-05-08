@@ -114,10 +114,40 @@ pub(crate) fn LayoutEditor(
         Vec::new()
     };
 
+    let apply_grid = move |_| {
+        let snapshot = *grid_layout.read();
+        let changed_count = Positions::apply_grid_to_all_known_objects(&mut loaded_keys, snapshot);
+        if changed_count > 0 {
+            let hotkey_word = if changed_count == 1 {
+                "HOTKEY"
+            } else {
+                "HOTKEYS"
+            };
+            let message = format!("{changed_count} {hotkey_word} UPDATED");
+            toast_api.success(
+                "GRID APPLIED".to_string(),
+                ToastOptions::new().description(message),
+            );
+        }
+    };
+    let handle_pick = move |token: HotkeyToken| {
+        let Some(active_cell) = *editing_layout_cell.read() else {
+            return;
+        };
+        let Ok(letter) = char::try_from(token) else {
+            return;
+        };
+        let mut next_layout = *grid_layout.read();
+        next_layout.assign_unique(active_cell.column(), active_cell.row(), letter);
+        grid_layout.set(next_layout);
+        editing_layout_cell.set(None);
+    };
+    let handle_picker_close = move |_| editing_layout_cell.set(None);
+
     rsx! {
         document::Stylesheet { href: LAYOUT_EDITOR_STYLES }
-        div { class: "{LAYOUT_EDITOR}",
-            div { class: "{LAYOUT_EDITOR_GRID}",
+        div { class: LAYOUT_EDITOR,
+            div { class: LAYOUT_EDITOR_GRID,
                 for row in 0..COMMAND_GRID_ROWS {
                     for column in 0..COMMAND_GRID_COLUMNS {
                         {
@@ -140,46 +170,51 @@ pub(crate) fn LayoutEditor(
                             } else {
                                 current_letter.clone()
                             };
+                            let handle_drag_start = move |_| {
+                                let cell = EditingCell::new(column, row);
+                                dragging_layout_cell.set(Some(cell));
+                            };
+                            let handle_drag_end = move |_| {
+                                dragging_layout_cell.set(None);
+                            };
+                            let handle_drag_over = move |event: Event<DragData>| {
+                                event.prevent_default();
+                            };
+                            let handle_drop = move |event: Event<DragData>| {
+                                event.prevent_default();
+                                let source_option = *dragging_layout_cell.read();
+                                let Some(source_cell) = source_option else {
+                                    return;
+                                };
+                                if source_cell.column() == column && source_cell.row() == row {
+                                    dragging_layout_cell.set(None);
+                                    return;
+                                }
+                                let mut next_layout = *grid_layout.read();
+                                next_layout.swap_cells(
+                                    source_cell.column(),
+                                    source_cell.row(),
+                                    column,
+                                    row,
+                                );
+                                grid_layout.set(next_layout);
+                                dragging_layout_cell.set(None);
+                            };
+                            let handle_click = move |_| {
+                                let cell = EditingCell::new(column, row);
+                                editing_layout_cell.set(Some(cell));
+                            };
                             rsx! {
                                 button {
                                     class: cell_class,
                                     draggable: "true",
                                     "data-layout-row": row,
                                     "data-layout-col": column,
-                                    ondragstart: move |_| {
-                                        let cell = EditingCell::new(column, row);
-                                        dragging_layout_cell.set(Some(cell));
-                                    },
-                                    ondragend: move |_| {
-                                        dragging_layout_cell.set(None);
-                                    },
-                                    ondragover: move |event| {
-                                        event.prevent_default();
-                                    },
-                                    ondrop: move |event| {
-                                        event.prevent_default();
-                                        let source_option = *dragging_layout_cell.read();
-                                        let Some(source_cell) = source_option else {
-                                            return;
-                                        };
-                                        if source_cell.column() == column && source_cell.row() == row {
-                                            dragging_layout_cell.set(None);
-                                            return;
-                                        }
-                                        let mut next_layout = *grid_layout.read();
-                                        next_layout.swap_cells(
-                                            source_cell.column(),
-                                            source_cell.row(),
-                                            column,
-                                            row,
-                                        );
-                                        grid_layout.set(next_layout);
-                                        dragging_layout_cell.set(None);
-                                    },
-                                    onclick: move |_| {
-                                        let cell = EditingCell::new(column, row);
-                                        editing_layout_cell.set(Some(cell));
-                                    },
+                                    ondragstart: handle_drag_start,
+                                    ondragend: handle_drag_end,
+                                    ondragover: handle_drag_over,
+                                    ondrop: handle_drop,
+                                    onclick: handle_click,
                                     "{cell_label}"
                                 }
                             }
@@ -190,15 +225,7 @@ pub(crate) fn LayoutEditor(
             button {
                 class: LAYOUT_APPLY_BUTTON,
                 r#type: "button",
-                onclick: move |_| {
-                    let snapshot = *grid_layout.read();
-                    let changed_count = Positions::apply_grid_to_all_known_objects(&mut loaded_keys, snapshot);
-                    if changed_count > 0 {
-                        let hotkey_word = if changed_count == 1 { "HOTKEY" } else { "HOTKEYS" };
-                        let message = format!("{changed_count} {hotkey_word} UPDATED");
-                        toast_api.success("GRID APPLIED".to_string(), ToastOptions::new().description(message));
-                    }
-                },
+                onclick: apply_grid,
                 "Apply grid to all hotkeys"
             }
         }
@@ -208,19 +235,8 @@ pub(crate) fn LayoutEditor(
                 rows: picker_rows,
                 open: true,
                 allow_conflict_pick: true,
-                on_pick: move |token: HotkeyToken| {
-                    let Some(active_cell) = *editing_layout_cell.read() else {
-                        return;
-                    };
-                    let Ok(letter) = char::try_from(token) else {
-                        return;
-                    };
-                    let mut next_layout = *grid_layout.read();
-                    next_layout.assign_unique(active_cell.column(), active_cell.row(), letter);
-                    grid_layout.set(next_layout);
-                    editing_layout_cell.set(None);
-                },
-                on_close: move |_| editing_layout_cell.set(None),
+                on_pick: handle_pick,
+                on_close: handle_picker_close,
             }
         }
     }

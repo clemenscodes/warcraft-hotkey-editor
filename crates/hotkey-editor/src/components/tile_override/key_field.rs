@@ -22,12 +22,13 @@ pub(crate) fn OverrideKeyField(
         "override-key-cell"
     };
     let special_flag = if is_special { "true" } else { "false" };
+    let handle_click = move |_| on_activate.call(());
     rsx! {
         button {
-            class: "{cell_class}",
-            "data-special": "{special_flag}",
-            title: "{title}",
-            onclick: move |_| on_activate.call(()),
+            class: cell_class,
+            "data-special": special_flag,
+            title: title,
+            onclick: handle_click,
             "{label}"
         }
     }

@@ -109,36 +109,39 @@ pub(crate) fn SystemKeyPickerDialog(
     on_close: EventHandler<()>,
 ) -> Element {
     let dialog_title = title.clone();
+    let handle_open_change = move |next_open: bool| {
+        if !next_open {
+            on_close.call(());
+        }
+    };
+    let handle_keydown = move |event: Event<KeyboardData>| {
+        event.stop_propagation();
+        let key_val = event.data().key().to_string();
+        if key_val == "Escape" {
+            event.prevent_default();
+            on_close.call(());
+            return;
+        }
+        let code_val = event.data().code().to_string();
+        let Some(code) = KeyCodes::from_event(&key_val, &code_val) else {
+            return;
+        };
+        event.prevent_default();
+        on_pick.call(code);
+    };
+    let handle_close = move |_| on_close.call(());
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
             open,
-            on_open_change: move |next_open: bool| {
-                if !next_open {
-                    on_close.call(());
-                }
-            },
+            on_open_change: handle_open_change,
             DialogContent { class: "dialog-shell wc3-dialog sys-key-picker-shell".to_string(),
                 div {
                     class: "dialog-key-scope",
-                    onkeydown: move |event| {
-                        event.stop_propagation();
-                        let key_val = event.data().key().to_string();
-                        if key_val == "Escape" {
-                            event.prevent_default();
-                            on_close.call(());
-                            return;
-                        }
-                        let code_val = event.data().code().to_string();
-                        let Some(code) = KeyCodes::from_event(&key_val, &code_val) else {
-                            return;
-                        };
-                        event.prevent_default();
-                        on_pick.call(code);
-                    },
+                    onkeydown: handle_keydown,
                     DialogHeader {
                         title: dialog_title,
-                        on_close: move |_| on_close.call(()),
+                        on_close: handle_close,
                     }
                     div {
                         class: "wc3-dialog-body sys-key-picker-body",
@@ -179,16 +182,17 @@ pub(crate) fn SystemKeyPickerDialog(
                                                         } else {
                                                             ""
                                                         };
+                                                        let handle_click = move |_| on_pick.call(code);
                                                         rsx! {
                                                             button {
                                                                 key: "{key_idx}",
-                                                                class: "{cls}",
+                                                                class: cls,
                                                                 r#type: "button",
-                                                                "data-tooltip": "{title_attribute}",
-                                                                "data-tooltip-placement": "{placement_attribute}",
-                                                                "data-tooltip-anchor": "{anchor_attribute}",
+                                                                "data-tooltip": title_attribute,
+                                                                "data-tooltip-placement": placement_attribute,
+                                                                "data-tooltip-anchor": anchor_attribute,
                                                                 "data-wide": if is_wide { "true" } else { "" },
-                                                                onclick: move |_| on_pick.call(code),
+                                                                onclick: handle_click,
                                                                 "{label}"
                                                             }
                                                         }
@@ -224,15 +228,16 @@ pub(crate) fn SystemKeyPickerDialog(
                                                         let title_attribute = conflict_names
                                                             .map(|names| format!("Already used by {}", names.join(", ")))
                                                             .unwrap_or_default();
+                                                        let handle_click = move |_| on_pick.call(code);
                                                         rsx! {
                                                             button {
                                                                 key: "{key_idx}",
-                                                                class: "{cls}",
+                                                                class: cls,
                                                                 r#type: "button",
-                                                                "data-tooltip": "{title_attribute}",
-                                                                "data-tooltip-placement": "{placement_attribute}",
+                                                                "data-tooltip": title_attribute,
+                                                                "data-tooltip-placement": placement_attribute,
                                                                 "data-tooltip-anchor": "right",
-                                                                onclick: move |_| on_pick.call(code),
+                                                                onclick: handle_click,
                                                                 "{label}"
                                                             }
                                                         }

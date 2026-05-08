@@ -7,10 +7,6 @@
     :root {
         --hdr-scale: 0.7;
     }
-    .app-footer {
-        padding-top: 0.25rem !important;
-        padding-bottom: 0 !important;
-    }
 }
 
 /* The drawer is a sibling of .app-header, not a descendant, so --hdr-scale

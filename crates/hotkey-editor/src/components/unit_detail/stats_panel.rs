@@ -139,11 +139,11 @@ pub(crate) fn UnitStatsPanel(
                     rsx! {
                         div { class: "stat-row mana",
                             span { class: "stat-row-label", "Mana" }
-                            span { class: "{mana_value_class}", "{mana_display}" }
+                            span { class: mana_value_class, "{mana_display}" }
                         }
                         div { class: "stat-row regen-row mana",
                             span { class: "stat-row-label", "Regeneration" }
-                            span { class: "{mana_regen_class}", "{mana_regen_text}" }
+                            span { class: mana_regen_class, "{mana_regen_text}" }
                         }
                     }
                 }
@@ -163,7 +163,7 @@ pub(crate) fn UnitStatsPanel(
                             div { class: "stat-icon-frame",
                                 img {
                                     class: "stat-icon",
-                                    src: "{attack_icon}",
+                                    src: attack_icon,
                                     alt: "{attack_type_label} attack icon",
                                 }
                             }
@@ -201,7 +201,7 @@ pub(crate) fn UnitStatsPanel(
                         div { class: "stat-icon-frame",
                             img {
                                 class: "stat-icon",
-                                src: "{defense_icon}",
+                                src: defense_icon,
                                 alt: "{defense_label} defense icon",
                             }
                         }
@@ -235,7 +235,7 @@ pub(crate) fn UnitStatsPanel(
                             div { class: "stat-icon-frame",
                                 img {
                                     class: "stat-icon",
-                                    src: "{primary_icon}",
+                                    src: primary_icon,
                                     alt: "{primary_label} primary attribute icon",
                                 }
                             }
@@ -279,7 +279,7 @@ fn DamageMatchupRow(attack_type: AttackType) -> Element {
                     let cell_class = matchup_cell_class_attacking(multiplier);
                     let defense_label = defense_type.to_string();
                     rsx! {
-                        div { class: "{cell_class}", title: "vs {defense_label}",
+                        div { class: cell_class, title: "vs {defense_label}",
                             span { class: "matchup-label", "{defense_label}" }
                             span { class: "matchup-value", "{percent_text}" }
                         }
@@ -303,7 +303,7 @@ fn DefenseMatchupRow(defense_type: DefenseType) -> Element {
                     let cell_class = matchup_cell_class_defending(multiplier);
                     let attack_label = attack_type.to_string();
                     rsx! {
-                        div { class: "{cell_class}", title: "{attack_label} attacks",
+                        div { class: cell_class, title: "{attack_label} attacks",
                             span { class: "matchup-label", "{attack_label}" }
                             span { class: "matchup-value", "{percent_text}" }
                         }
@@ -323,7 +323,7 @@ fn AttributeRow(label: &'static str, value: u32, per_level: f32, is_primary: boo
     };
     let per_level_text = format!("+{per_level:.1}");
     rsx! {
-        div { class: "{row_class}",
+        div { class: row_class,
             span { class: "stat-row-label", "{label}" }
             span { class: "stat-row-value", "{value}" }
             span { class: "stat-row-gain", "{per_level_text}" }

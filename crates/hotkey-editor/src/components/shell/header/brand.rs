@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
 #[component]
-pub(crate) fn AppHeaderBrand() -> Element {
+pub(crate) fn HeaderBrand() -> Element {
     rsx! {
         div {
             class: "flex flex-row items-center justify-start \
@@ -14,7 +14,7 @@ pub(crate) fn AppHeaderBrand() -> Element {
                 class: "[height:calc(2rem_*_var(--hdr-scale))] w-auto flex-none \
                         [filter:drop-shadow(0_1px_0_rgba(0,0,0,0.7))] \
                         hidden min-[1500px]:block",
-                src: "{HEADER_GOLD_DECORATION}",
+                src: HEADER_GOLD_DECORATION,
                 alt: "",
                 aria_hidden: "true",
             }
@@ -35,7 +35,7 @@ pub(crate) fn AppHeaderBrand() -> Element {
                         [filter:drop-shadow(0_1px_0_rgba(0,0,0,0.7))] \
                         [transform:scaleX(-1)] \
                         hidden min-[1500px]:block",
-                src: "{HEADER_GOLD_DECORATION}",
+                src: HEADER_GOLD_DECORATION,
                 alt: "",
                 aria_hidden: "true",
             }

@@ -21,16 +21,23 @@ const BTN_PRIMARY: &str = "inline-flex items-center justify-center px-14 py-6 \
 
 #[component]
 pub(crate) fn DownloadInfoDialog(mut open: Signal<bool>, on_confirm: EventHandler<()>) -> Element {
+    let handle_open_change = move |is_open| open.set(is_open);
+    let handle_close = move |_| open.set(false);
+    let handle_cancel = move |_| open.set(false);
+    let handle_download = move |_| {
+        open.set(false);
+        on_confirm.call(());
+    };
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
             open: open(),
-            on_open_change: move |is_open| open.set(is_open),
+            on_open_change: handle_open_change,
             DialogContent {
                 class: "dialog-shell wc3-dialog download-info-dialog".to_string(),
                 DialogHeader {
                     title: "Download CustomKeys.txt".to_string(),
-                    on_close: move |_| open.set(false),
+                    on_close: handle_close,
                 }
                 div { class: "wc3-dialog-body flex flex-col",
                     div {
@@ -61,18 +68,15 @@ pub(crate) fn DownloadInfoDialog(mut open: Signal<bool>, on_confirm: EventHandle
                     }
                     div { class: "flex flex-wrap gap-4 justify-end flex-none pt-4",
                         button {
-                            class: "{BTN_SECONDARY}",
+                            class: BTN_SECONDARY,
                             r#type: "button",
-                            onclick: move |_| open.set(false),
+                            onclick: handle_cancel,
                             "Cancel"
                         }
                         button {
-                            class: "{BTN_PRIMARY}",
+                            class: BTN_PRIMARY,
                             r#type: "button",
-                            onclick: move |_| {
-                                open.set(false);
-                                on_confirm.call(());
-                            },
+                            onclick: handle_download,
                             "Download"
                         }
                     }

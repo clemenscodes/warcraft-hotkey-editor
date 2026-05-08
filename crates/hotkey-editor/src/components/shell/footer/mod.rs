@@ -11,13 +11,20 @@ const DISCLAIMER_URL: &str =
     "https://github.com/clemenscodes/warcraft-hotkey-editor/blob/main/DISCLAIMER.md";
 
 #[component]
-pub(crate) fn AppFooter() -> Element {
+pub(crate) fn Footer() -> Element {
     rsx! {
         footer {
-            class: "app-footer flex-none flex flex-wrap items-center justify-center gap-x-3 gap-y-1 \
+            class: "flex-none flex flex-wrap items-center justify-center gap-x-3 gap-y-1 \
                     pt-5 pb-3 \
-                    text-sm tracking-wide text-white/60 \
-                    select-none",
+                    text-sm tracking-wide text-white/60 select-none \
+                    max-[1099px]:text-xs max-[1099px]:text-center max-[1099px]:leading-[1.3] \
+                    max-[500px]:text-[11px] \
+                    max-[1099px]:pt-2 max-[1099px]:px-[max(0.5rem,env(safe-area-inset-left))] \
+                    max-[1099px]:pb-[max(0.5rem,env(safe-area-inset-bottom))] \
+                    min-[701px]:max-[1099px]:mt-auto \
+                    [@media(min-width:701px)_and_(max-width:1099px)_and_(max-height:900px)]:mt-0 \
+                    [@media(min-width:1440px)_and_(max-width:2000px)_and_(max-height:1100px)]:!pt-1 \
+                    [@media(min-width:1440px)_and_(max-width:2000px)_and_(max-height:1100px)]:!pb-0",
             span {
                 class: "flex items-center gap-2",
                 "Crafted with"

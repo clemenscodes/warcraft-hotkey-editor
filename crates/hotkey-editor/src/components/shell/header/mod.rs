@@ -14,7 +14,7 @@ use crate::components::shared::icons::ICON_GRID;
 use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::upload_status::UploadStatus;
 
-use brand::AppHeaderBrand;
+use brand::HeaderBrand;
 use burger::BurgerMenu;
 use toolbar::HeaderToolbar;
 
@@ -40,7 +40,7 @@ pub(crate) const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
      leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full";
 
 #[component]
-pub(crate) fn AppHeader(
+pub(crate) fn Header(
     loaded_keys: Signal<Option<CustomKeys>>,
     upload_status: Signal<UploadStatus>,
     preview_open: Signal<bool>,
@@ -51,6 +51,17 @@ pub(crate) fn AppHeader(
 ) -> Element {
     let mut layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
+    let toggle_layout_dialog = move |_| {
+        let next = !*layout_dialog_open.read();
+        layout_dialog_open.set(next);
+    };
+    let handle_layout_open_change = move |is_open: bool| {
+        if !is_open && nested_picker_dialog_is_present() {
+            return;
+        }
+        layout_dialog_open.set(is_open);
+    };
+    let close_layout_dialog = move |_| layout_dialog_open.set(false);
 
     rsx! {
         document::Stylesheet { href: APP_HEADER_STYLES }
@@ -69,7 +80,7 @@ pub(crate) fn AppHeader(
                     min-[1500px]:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)] \
                     min-[1500px]:[gap:calc(1.5rem_*_var(--hdr-scale))] \
                     min-[1500px]:[padding:0_0_calc(1.75rem_*_var(--hdr-scale))_0]",
-            AppHeaderBrand {}
+            HeaderBrand {}
             div {
                 class: "hidden min-[1500px]:flex min-[1500px]:items-center min-[1500px]:justify-center",
                 button {
@@ -94,10 +105,7 @@ pub(crate) fn AppHeader(
                     aria_label: "Edit global hotkey layout",
                     aria_haspopup: "dialog",
                     aria_expanded: "{layout_dialog_open()}",
-                    onclick: move |_| {
-                        let next = !*layout_dialog_open.read();
-                        layout_dialog_open.set(next);
-                    },
+                    onclick: toggle_layout_dialog,
                     span {
                         class: "inline-flex \
                                 [width:calc(2.2rem_*_var(--hdr-scale))] \
@@ -135,16 +143,11 @@ pub(crate) fn AppHeader(
             DialogRoot {
                 class: "dialog-overlay",
                 open: layout_dialog_open(),
-                on_open_change: move |is_open: bool| {
-                    if !is_open && nested_picker_dialog_is_present() {
-                        return;
-                    }
-                    layout_dialog_open.set(is_open);
-                },
+                on_open_change: handle_layout_open_change,
                 DialogContent { class: "dialog-shell wc3-dialog layout-editor-shell".to_string(),
                     DialogHeader {
                         title: "Global Hotkey Layout".to_string(),
-                        on_close: move |_| layout_dialog_open.set(false),
+                        on_close: close_layout_dialog,
                     }
                     div { class: "wc3-dialog-body flex flex-col items-center justify-center gap-[4rem] pt-[4rem] pb-[4rem] max-[1099px]:[flex:1_1_0] max-[1099px]:min-h-0 max-[1099px]:overflow-y-auto max-[1099px]:[-webkit-overflow-scrolling:touch] max-[1099px]:[overscroll-behavior:contain] max-[1099px]:justify-start max-[1099px]:gap-[20px] max-[1099px]:pt-[20px] max-[1099px]:pb-[20px]",
                         div { class: "flex flex-col items-center gap-[0.7rem] m-0 text-center [text-shadow:1px_1px_0_#000]",

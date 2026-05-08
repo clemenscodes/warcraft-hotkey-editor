@@ -88,7 +88,7 @@ pub(crate) fn InventoryGrid(
     let slot_frame_url = SLOT_FRAME_GOLD;
     let frame_style = format!("--wc3-slot-frame: url('{slot_frame_url}');");
     rsx! {
-        div { class: "wc3-inventory-grid", style: "{frame_style}",
+        div { class: "wc3-inventory-grid", style: frame_style,
             for row in 0..INVENTORY_ROWS {
                 for column in 0..INVENTORY_COLUMNS {
                     {
@@ -195,10 +195,10 @@ fn InventoryCell(
     let label_for_drag = key_label.clone();
     rsx! {
         div {
-            class: "{cell_class}",
-            "data-inventory-slot": "{section_id}",
+            class: cell_class,
+            "data-inventory-slot": section_id,
             tabindex: "0",
-            "data-tooltip": "{conflict_title}",
+            "data-tooltip": conflict_title,
             "data-tooltip-placement": "above",
             onpointerdown: move |event| {
                 if event.data().trigger_button() != Some(MouseButton::Primary) {

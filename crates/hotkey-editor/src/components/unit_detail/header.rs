@@ -12,13 +12,15 @@ pub(crate) fn UnitDetailHeader(
     level_picker_open: Signal<bool>,
 ) -> Element {
     let current_level = selected_hero_level();
+    let toggle_level_picker = move |_| level_picker_open.set(!level_picker_open());
+    let close_level_picker = move |_| level_picker_open.set(false);
     rsx! {
         header { class: "unit-detail-header",
             if let Some(source) = portrait_url {
                 img {
                     class: "unit-portrait",
-                    src: "{source}",
-                    alt: "{unit_name}",
+                    src: source,
+                    alt: unit_name,
                     loading: "lazy",
                     decoding: "async",
                 }
@@ -31,7 +33,7 @@ pub(crate) fn UnitDetailHeader(
                             button {
                                 class: if level_picker_open() { "hero-level-trigger open" } else { "hero-level-trigger" },
                                 r#type: "button",
-                                onclick: move |_| level_picker_open.set(!level_picker_open()),
+                                onclick: toggle_level_picker,
                                 span { class: "hero-level-trigger-label", "Level" }
                                 span { class: "hero-level-trigger-number", "{current_level}" }
                                 span { class: "hero-level-trigger-chevron", "▾" }
@@ -41,15 +43,16 @@ pub(crate) fn UnitDetailHeader(
                                     for level_index in 1..=MAX_HERO_LEVEL_DISPLAY {
                                         {
                                             let is_active = level_index == current_level;
+                                            let select_level = move |_| {
+                                                selected_hero_level.set(level_index);
+                                                level_picker_open.set(false);
+                                            };
                                             rsx! {
                                                 button {
                                                     key: "{level_index}",
                                                     class: if is_active { "hero-level-option active" } else { "hero-level-option" },
                                                     r#type: "button",
-                                                    onclick: move |_| {
-                                                        selected_hero_level.set(level_index);
-                                                        level_picker_open.set(false);
-                                                    },
+                                                    onclick: select_level,
                                                     "Level {level_index}"
                                                 }
                                             }
@@ -58,7 +61,7 @@ pub(crate) fn UnitDetailHeader(
                                 }
                                 div {
                                     class: "hero-level-backdrop",
-                                    onclick: move |_| level_picker_open.set(false),
+                                    onclick: close_level_picker,
                                 }
                             }
                         }

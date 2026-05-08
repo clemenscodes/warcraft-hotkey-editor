@@ -63,13 +63,24 @@ pub(crate) fn SlotButton(
     }
     let section_id_for_click = lookup_id.clone();
     let section_id_for_pick = lookup_id.clone();
+    let handle_click = move |_| editing_section.set(Some(section_id_for_click.clone()));
+    let handle_pick = move |code: u32| {
+        let mut guard = loaded_keys.write();
+        let file = guard.get_or_insert_with(|| CustomKeys::from(""));
+        if let Some(binding) = file.system_mut(&section_id_for_pick) {
+            binding.set_hotkey(Hotkey::VirtualKey(code));
+        }
+        drop(guard);
+        editing_section.set(None);
+    };
+    let handle_picker_close = move |_| editing_section.set(None);
     rsx! {
         button {
-            class: "{cell_class}",
+            class: cell_class,
             r#type: "button",
             tabindex: "0",
-            "data-tooltip": "{conflict_title}",
-            onclick: move |_| editing_section.set(Some(section_id_for_click.clone())),
+            "data-tooltip": conflict_title,
+            onclick: handle_click,
             div { class: "wc3-slot-label", "{slot_label}" }
             div { class: "wc3-slot-key", "{key_label}" }
         }
@@ -79,16 +90,8 @@ pub(crate) fn SlotButton(
                 current_code: effective.hotkey_code(),
                 conflicts: picker_conflicts,
                 open: true,
-                on_pick: move |code: u32| {
-                    let mut guard = loaded_keys.write();
-                    let file = guard.get_or_insert_with(|| CustomKeys::from(""));
-                    if let Some(binding) = file.system_mut(&section_id_for_pick) {
-                        binding.set_hotkey(Hotkey::VirtualKey(code));
-                    }
-                    drop(guard);
-                    editing_section.set(None);
-                },
-                on_close: move |_| editing_section.set(None),
+                on_pick: handle_pick,
+                on_close: handle_picker_close,
             }
         }
     }

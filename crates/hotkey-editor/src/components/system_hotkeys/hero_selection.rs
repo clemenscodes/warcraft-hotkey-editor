@@ -24,7 +24,7 @@ pub(crate) fn HeroSelectionHotkeysView(
             p { class: "m-0 text-[2rem] max-w-[90rem] text-center leading-snug font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.75)] [text-shadow:1px_1px_0_#000] max-[1099px]:text-[clamp(11px,3vw,14px)] max-[1099px]:tracking-[0.04em] max-[1099px]:leading-[1.35] max-[1099px]:px-[0.25rem] max-[1099px]:max-w-full",
                 "Hotkeys for selecting your heroes by index."
             }
-            div { class: "wc3-row wc3-row-3", style: "{frame_style}",
+            div { class: "wc3-row wc3-row-3", style: frame_style,
                 for (slot_index, entry) in entries.iter().enumerate() {
                     SlotButton {
                         slot_label: format!("Hero {}", slot_index + 1),

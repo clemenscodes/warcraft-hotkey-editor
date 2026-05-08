@@ -100,12 +100,12 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
     rsx! {
         div { class: "command-tile-wrapper",
             div {
-                class: "{class_name}",
-                tabindex: "{tabindex_value}",
-                "data-grid-row": "{row}",
-                "data-grid-col": "{column}",
-                "data-grid-section": "{heading_text}",
-                "data-draggable": "{draggable_attr}",
+                class: class_name,
+                tabindex: tabindex_value,
+                "data-grid-row": row,
+                "data-grid-col": column,
+                "data-grid-section": heading_text,
+                "data-draggable": draggable_attr,
                 onkeydown: move |event| {
                     let key_value = event.data().key().to_string();
                     if key_value == " " || key_value == "Enter" {
@@ -569,7 +569,7 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
                 if let Some(source) = icon_src_option {
                     img {
                         src: "{source}",
-                        alt: "{label_text}",
+                        alt: label_text,
                         draggable: "false",
                         loading: "lazy",
                         decoding: "async",
@@ -578,7 +578,7 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
                     span { class: "command-label", "{label_text}" }
                 }
                 if let Some(letter_text) = displayed_letter.clone() {
-                    span { class: "{hotkey_overlay_class}", "{letter_text}" }
+                    span { class: hotkey_overlay_class, "{letter_text}" }
                 }
             }
         }

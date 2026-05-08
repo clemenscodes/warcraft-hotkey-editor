@@ -45,29 +45,32 @@ pub(crate) fn KeyPicker(
     on_close: EventHandler<()>,
 ) -> Element {
     let dialog_title = title.clone();
+    let handle_open_change = move |next_open: bool| {
+        if !next_open {
+            on_close.call(());
+        }
+    };
+    let handle_keydown = move |event: Event<KeyboardData>| {
+        event.stop_propagation();
+        let key_value = event.data().key().to_string();
+        if key_value == "Escape" {
+            event.prevent_default();
+            on_close.call(());
+        }
+    };
+    let handle_close = move |_| on_close.call(());
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
             open,
-            on_open_change: move |next_open: bool| {
-                if !next_open {
-                    on_close.call(());
-                }
-            },
+            on_open_change: handle_open_change,
             DialogContent { class: "dialog-shell wc3-dialog key-picker-shell".to_string(),
                 div {
                     class: "dialog-key-scope",
-                    onkeydown: move |event| {
-                        event.stop_propagation();
-                        let key_value = event.data().key().to_string();
-                        if key_value == "Escape" {
-                            event.prevent_default();
-                            on_close.call(());
-                        }
-                    },
+                    onkeydown: handle_keydown,
                     DialogHeader {
                         title: dialog_title.clone(),
-                        on_close: move |_| on_close.call(()),
+                        on_close: handle_close,
                     }
                     div {
                         class: "wc3-dialog-body key-picker-body",
@@ -122,19 +125,20 @@ fn KeyPickerKey(
     let title_attribute = conflict_title.unwrap_or_default();
     let special_flag = if is_special { "true" } else { "false" };
     let token_for_click = token;
+    let handle_click = move |_| {
+        if !is_disabled {
+            on_pick.call(token_for_click);
+        }
+    };
     rsx! {
         button {
-            class: "{class_name}",
+            class: class_name,
             r#type: "button",
             disabled: is_disabled,
-            title: "{title_attribute}",
-            "data-label": "{label_text}",
-            "data-special": "{special_flag}",
-            onclick: move |_| {
-                if !is_disabled {
-                    on_pick.call(token_for_click);
-                }
-            },
+            title: title_attribute,
+            "data-label": label_text,
+            "data-special": special_flag,
+            onclick: handle_click,
             "{label_text}"
         }
     }

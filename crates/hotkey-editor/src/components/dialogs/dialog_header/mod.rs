@@ -8,27 +8,28 @@ const CLOSE_BUTTON_CLASS: &str = "close-button absolute right-4 top-1/2 -transla
 
 #[component]
 pub(crate) fn DialogHeader(title: String, on_close: EventHandler<()>) -> Element {
+    let handle_close = move |_| on_close.call(());
     rsx! {
         header {
             class: "relative flex items-center justify-center gap-6 flex-none pt-[1.6rem] px-[4.5rem] pb-[1.4rem] [border-bottom:1px_solid_rgba(255,206,99,0.4)] [box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
             img {
-                class: "{DECORATION_CLASS}",
-                src: "{HEADER_GOLD_DECORATION}",
+                class: DECORATION_CLASS,
+                src: HEADER_GOLD_DECORATION,
                 alt: "",
                 aria_hidden: "true",
             }
-            h2 { class: "{TITLE_CLASS}", "{title}" }
+            h2 { class: TITLE_CLASS, "{title}" }
             img {
                 class: "{DECORATION_CLASS} [transform:scaleX(-1)]",
-                src: "{HEADER_GOLD_DECORATION}",
+                src: HEADER_GOLD_DECORATION,
                 alt: "",
                 aria_hidden: "true",
             }
             button {
-                class: "{CLOSE_BUTTON_CLASS}",
+                class: CLOSE_BUTTON_CLASS,
                 r#type: "button",
                 aria_label: "Close",
-                onclick: move |_| on_close.call(()),
+                onclick: handle_close,
                 "\u{2715}"
             }
         }

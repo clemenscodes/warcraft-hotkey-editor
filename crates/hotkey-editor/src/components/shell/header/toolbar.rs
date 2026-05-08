@@ -14,6 +14,14 @@ pub(crate) fn HeaderToolbar(
     templates_dialog_open: Signal<bool>,
     mut system_hotkeys_open: Signal<bool>,
 ) -> Element {
+    let toggle_templates = move |_| {
+        let next = !*templates_dialog_open.read();
+        templates_dialog_open.set(next);
+    };
+    let toggle_system_hotkeys = move |_| {
+        let next = !*system_hotkeys_open.read();
+        system_hotkeys_open.set(next);
+    };
     rsx! {
         div {
             class: "hidden flex-row items-center justify-end \
@@ -28,10 +36,7 @@ pub(crate) fn HeaderToolbar(
                 aria_label: "Browse layout templates",
                 aria_haspopup: "dialog",
                 aria_expanded: "{templates_dialog_open()}",
-                onclick: move |_| {
-                    let next = !*templates_dialog_open.read();
-                    templates_dialog_open.set(next);
-                },
+                onclick: toggle_templates,
                 span {
                     class: super::TOOLBAR_ICON_CLASS,
                     aria_hidden: "true",
@@ -44,10 +49,7 @@ pub(crate) fn HeaderToolbar(
                 aria_label: "General hotkeys",
                 aria_haspopup: "dialog",
                 aria_expanded: "{system_hotkeys_open()}",
-                onclick: move |_| {
-                    let next = !*system_hotkeys_open.read();
-                    system_hotkeys_open.set(next);
-                },
+                onclick: toggle_system_hotkeys,
                 span {
                     class: super::TOOLBAR_ICON_CLASS,
                     aria_hidden: "true",
