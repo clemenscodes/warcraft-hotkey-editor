@@ -58,6 +58,7 @@ body {
 
 @import "./styles/primitives.css" layer(components);
 @import "./styles/app-root.css" layer(components);
+@import "./styles/components-unit-list.css";
 @import "./styles/components-unit-detail.css";
 @import "./styles/components-command-grid.css";
 @import "./styles/dialog-shared.css" layer(components);
@@ -115,4 +116,3 @@ body {
   --font-friz-quadrata: "Friz Quadrata", serif;
   --font-display: "Inter", system-ui, -apple-system, sans-serif;
 }
-

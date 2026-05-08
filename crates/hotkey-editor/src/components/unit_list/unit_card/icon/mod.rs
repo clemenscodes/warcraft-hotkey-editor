@@ -16,15 +16,14 @@ pub(super) fn UnitCardIcon(props: UnitCardIconProps) -> Element {
     rsx! {
         if let Some(source) = icon_url {
             img {
-                class: "w-20 h-20 border border-warcraft-blue rounded-[3px] shrink-0 object-cover \
-                        bg-[rgba(20,35,60,0.7)] text-transparent",
+                class: "unit-card-icon",
                 src: source,
                 alt: display_name,
                 loading: "lazy",
                 decoding: "async",
             }
         } else {
-            div { class: "w-20 h-20 border border-warcraft-blue rounded-[3px] shrink-0 bg-[rgba(20,35,60,0.7)]" }
+            div { class: "unit-card-icon" }
         }
     }
 }

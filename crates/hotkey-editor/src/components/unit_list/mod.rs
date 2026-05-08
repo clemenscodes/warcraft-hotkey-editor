@@ -128,13 +128,12 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
 
     rsx! {
         aside {
-            class: "group flex flex-col gap-2 overflow-hidden min-w-0 min-h-0 max-[700px]:max-h-[32rem] min-[701px]:max-[1099px]:sticky min-[701px]:max-[1099px]:top-4 min-[701px]:max-[1099px]:max-h-[calc(100dvh-16rem)] [@media(min-width:701px)_and_(max-height:900px)]:max-h-none min-[1100px]:absolute min-[1100px]:top-0 min-[1100px]:left-0 min-[1100px]:w-[var(--main-sidebar-w)] min-[1100px]:h-full",
+            class: "unit-list",
             "data-active-category": "{unit_kind_data_attr(active_kind)}",
             "data-search-active": search_active,
             div {
-                class: "shrink-0 flex items-center gap-2 p-2 min-w-0 bg-[rgba(13,31,61,0.85)] border border-[#1f3d63] rounded-[6px]",
+                class: "unit-list-search",
                 input {
-                    class: "flex-1 min-w-0 w-full bg-[rgba(8,18,35,0.7)] border border-warcraft-blue rounded text-white py-3 px-4 font-[inherit] text-[1.4rem] focus:outline-none focus:border-warcraft-gold focus:shadow-[0_0_6px_rgba(255,206,99,0.4)]",
                     r#type: "search",
                     placeholder: "Search units…",
                     value: search_query,
@@ -142,7 +141,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                 }
             }
             nav {
-                class: "hidden",
+                class: "unit-category-tabs",
                 role: "tablist",
                 aria_label: "Unit categories",
                 for tab in mobile_tab_entries {
@@ -155,8 +154,8 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                 }
             }
             div {
-                class: "grow overflow-y-auto overflow-x-hidden pr-1 flex flex-col min-h-0 [scrollbar-width:thin] [scrollbar-color:rgba(255,206,99,0)_transparent] transition-[scrollbar-color] duration-200 group-hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] focus-within:[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
-                div { class: "flex flex-col gap-2",
+                class: "unit-list-scroll",
+                div { class: "unit-list-track",
                     for section in category_section_entries {
                         UnitCategorySection {
                             key: "{unit_kind_data_attr(section.kind())}",

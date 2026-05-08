@@ -106,7 +106,7 @@ pub(super) fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
             class: heading_class,
             "data-unit-kind": kind_attr,
             onclick: toggle_collapse,
-            span { class: "text-[0.9rem] inline-flex w-[0.8rem] shrink-0",
+            span { class: "category-chevron",
                 if is_collapsed { "\u{25b6}" } else { "\u{25bc}" }
             }
             {category_label}
