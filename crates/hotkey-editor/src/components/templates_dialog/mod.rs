@@ -11,6 +11,34 @@ use crate::grid_templates::ResolvedTemplate;
 use crate::icons::IconUrl;
 use warcraft_database::ObjectLookup;
 
+const TEMPLATE_CARD: &str = "flex flex-col gap-[2.25rem] py-[2.5rem] px-[2.75rem] \
+    [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
+    border border-[#6c5a1f] rounded-[14px] text-[#c0c8da] cursor-pointer text-left \
+    [transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease] \
+    hover:border-warcraft-gold hover:text-warcraft-gold \
+    hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] \
+    hover:[box-shadow:0_0_14px_rgba(255,206,99,0.35)] \
+    focus:outline-none \
+    [body[data-kb-modality]_&]:focus:outline-none \
+    [body[data-kb-modality]_&]:focus:border-white \
+    [body[data-kb-modality]_&]:focus:text-white \
+    [body[data-kb-modality]_&]:focus:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)] \
+    max-[1099px]:py-[12px] max-[1099px]:px-[14px] max-[1099px]:gap-[10px] max-[1099px]:rounded-[10px]";
+
+const TEMPLATE_CARD_NAME: &str = "m-0 font-friz-quadrata text-[2.75rem] uppercase tracking-[0.08em] text-inherit [text-shadow:1px_1px_0_#000] max-[1099px]:text-[clamp(17px,5vw,24px)] max-[1099px]:tracking-[0.06em] max-[1099px]:text-warcraft-gold";
+
+const TEMPLATE_CARD_DESCRIPTION: &str = "m-0 text-[1.6rem] leading-[1.45] opacity-80 max-[1099px]:text-[13px] max-[1099px]:leading-[1.35] max-[1099px]:text-[#c0c8da] max-[1099px]:opacity-90";
+
+const TEMPLATE_CARD_GRID_LABEL: &str = "font-friz-quadrata text-[1.55rem] uppercase tracking-[0.1em] text-[rgba(255,206,99,0.75)] [text-shadow:1px_1px_0_#000] max-[1099px]:text-[10px] max-[1099px]:text-left";
+
+const TEMPLATE_CARD_CELL_BASE: &str = "relative flex items-center justify-center bg-[rgba(8,18,35,0.6)] border border-[rgba(74,112,144,0.55)] rounded-[5px] overflow-hidden";
+const TEMPLATE_CARD_CELL_FILLED: &str = "bg-[rgba(20,35,60,0.85)] border-[rgba(255,206,99,0.4)]";
+
+const TEMPLATE_CELL_HOTKEY_BASE: &str = "absolute top-[3px] right-[3px] min-w-[1.4rem] h-[1.4rem] px-[0.3rem] py-0 flex items-center justify-center font-friz-quadrata text-[1.1rem] leading-none border rounded-[3px] [text-shadow:1px_1px_0_#000] pointer-events-none max-[1099px]:text-[9px] max-[1099px]:min-w-[12px] max-[1099px]:h-[12px] max-[1099px]:top-[1px] max-[1099px]:right-[1px] max-[1099px]:px-[2px] max-[1099px]:rounded-[2px]";
+const TEMPLATE_CELL_HOTKEY_NORMAL: &str =
+    "text-warcraft-gold bg-[rgba(0,0,0,0.88)] border-[rgba(255,206,99,0.65)]";
+const TEMPLATE_CELL_HOTKEY_PASSIVE: &str = "text-[#b8bcc4] bg-[#1a1f29] border-[#4a5160]";
+
 #[component]
 pub(crate) fn TemplatesDialog(
     mut loaded_keys: Signal<Option<CustomKeys>>,
@@ -30,8 +58,8 @@ pub(crate) fn TemplatesDialog(
                     title: "Layout Templates".to_string(),
                     on_close: move |_| templates_dialog_open.set(false),
                 }
-                div { class: "wc3-dialog-body templates-dialog-body",
-                    div { class: "templates-grid",
+                div { class: "wc3-dialog-body flex flex-col items-stretch gap-[2.5rem]",
+                    div { class: "grid grid-cols-2 gap-[2.25rem] w-full max-[1099px]:grid-cols-1 max-[1099px]:gap-[10px]",
                         for resolved in resolved_templates.iter() {
                             {
                                 let template_name: &'static str = resolved.template().name();
@@ -88,14 +116,14 @@ fn TemplateCard(
     let research_menu_resolved = template_resolved.clone();
     rsx! {
         button {
-            class: "template-card",
+            class: "{TEMPLATE_CARD}",
             r#type: "button",
             onclick: move |_| on_apply.call(()),
-            div { class: "template-card-info",
-                h3 { class: "template-card-name", "{template_name}" }
-                p { class: "template-card-description", "{template_description}" }
+            div { class: "flex flex-col gap-[0.5rem] max-[1099px]:gap-[4px]",
+                h3 { class: "{TEMPLATE_CARD_NAME}", "{template_name}" }
+                p { class: "{TEMPLATE_CARD_DESCRIPTION}", "{template_description}" }
             }
-            div { class: "template-card-grids",
+            div { class: "flex flex-row flex-wrap gap-[2rem] items-start max-[1099px]:flex-nowrap max-[1099px]:gap-[8px]",
                 TemplateCardGrid {
                     label: "Command card".to_string(),
                     resolved: command_card_resolved,
@@ -114,9 +142,9 @@ fn TemplateCard(
 #[component]
 fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool) -> Element {
     rsx! {
-        div { class: "template-card-grid",
-            div { class: "template-card-grid-label", "{label}" }
-            div { class: "template-card-cells", aria_hidden: "true",
+        div { class: "flex flex-col gap-[0.85rem] [flex:1_1_auto] max-[1099px]:[flex:1_1_0] max-[1099px]:min-w-0 max-[1099px]:w-auto max-[1099px]:items-stretch max-[1099px]:gap-[5px]",
+            div { class: "{TEMPLATE_CARD_GRID_LABEL}", "{label}" }
+            div { class: "grid grid-cols-4 [grid-auto-rows:1fr] [aspect-ratio:4/3] gap-[0.55rem] w-full max-w-[26rem] max-[1099px]:max-w-full max-[1099px]:gap-[3px]", aria_hidden: "true",
                 for row in 0..COMMAND_GRID_ROWS {
                     for column in 0..COMMAND_GRID_COLUMNS {
                         {
@@ -145,20 +173,21 @@ fn TemplateCardGrid(label: String, resolved: ResolvedTemplate, is_research: bool
                                 resolved.grid().letter_at(col, row_idx).map(|character| character.to_string())
                             });
                             let displayed_letter = binding_letter.or(derived_letter);
-                            let mut cell_class = String::from("template-card-cell");
-                            if cell_option.is_some() {
-                                cell_class.push_str(" filled");
-                            }
-                            let hotkey_class = if is_passive_command_cell {
-                                "template-card-cell-hotkey passive"
+                            let cell_class = if cell_option.is_some() {
+                                format!("{TEMPLATE_CARD_CELL_BASE} {TEMPLATE_CARD_CELL_FILLED}")
                             } else {
-                                "template-card-cell-hotkey"
+                                TEMPLATE_CARD_CELL_BASE.to_string()
+                            };
+                            let hotkey_class = if is_passive_command_cell {
+                                format!("{TEMPLATE_CELL_HOTKEY_BASE} {TEMPLATE_CELL_HOTKEY_PASSIVE}")
+                            } else {
+                                format!("{TEMPLATE_CELL_HOTKEY_BASE} {TEMPLATE_CELL_HOTKEY_NORMAL}")
                             };
                             rsx! {
                                 span { class: "{cell_class}",
                                     if let Some(source) = icon_source {
                                         img {
-                                            class: "template-card-cell-icon",
+                                            class: "w-full h-full object-cover",
                                             src: "{source}",
                                             alt: "",
                                             draggable: "false",

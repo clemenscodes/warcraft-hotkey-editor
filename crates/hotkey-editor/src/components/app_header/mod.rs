@@ -6,6 +6,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_keybinds::CustomKeys;
 
+use crate::components::dialog_header::DialogHeader;
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::icons::ICON_GRID;
 use crate::components::layout_editor::LayoutEditor;
@@ -16,8 +17,6 @@ use crate::grid_layout::{EditingCell, GridLayout};
 use brand::AppHeaderBrand;
 use burger::BurgerMenu;
 use toolbar::HeaderToolbar;
-
-const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
 #[component]
 pub(crate) fn AppHeader(
@@ -83,34 +82,16 @@ pub(crate) fn AppHeader(
                     layout_dialog_open.set(is_open);
                 },
                 DialogContent { class: "dialog-shell wc3-dialog layout-editor-shell".to_string(),
-                    header { class: "wc3-dialog-header",
-                        img {
-                            class: "wc3-header-decoration",
-                            src: "{HEADER_GOLD_DECORATION}",
-                            alt: "",
-                            aria_hidden: "true",
-                        }
-                        h2 { class: "wc3-dialog-title", "Global Hotkey Layout" }
-                        img {
-                            class: "wc3-header-decoration wc3-header-decoration-mirrored",
-                            src: "{HEADER_GOLD_DECORATION}",
-                            alt: "",
-                            aria_hidden: "true",
-                        }
-                        button {
-                            class: "wc3-close-button",
-                            r#type: "button",
-                            aria_label: "Close",
-                            onclick: move |_| layout_dialog_open.set(false),
-                            "\u{2715}"
-                        }
+                    DialogHeader {
+                        title: "Global Hotkey Layout".to_string(),
+                        on_close: move |_| layout_dialog_open.set(false),
                     }
-                    div { class: "wc3-dialog-body layout-editor-body",
-                        div { class: "layout-editor-explainer",
-                            p { class: "layout-editor-explainer-line",
+                    div { class: "wc3-dialog-body flex flex-col items-center justify-center gap-[4rem] pt-[4rem] pb-[4rem] max-[1099px]:[flex:1_1_0] max-[1099px]:min-h-0 max-[1099px]:overflow-y-auto max-[1099px]:[-webkit-overflow-scrolling:touch] max-[1099px]:[overscroll-behavior:contain] max-[1099px]:justify-start max-[1099px]:gap-[20px] max-[1099px]:pt-[20px] max-[1099px]:pb-[20px]",
+                        div { class: "flex flex-col items-center gap-[0.7rem] m-0 text-center [text-shadow:1px_1px_0_#000]",
+                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.85)] text-[2.1rem] leading-[1.35] max-[1099px]:text-[clamp(13px,3.5vw,16px)] max-[1099px]:tracking-[0.05em]",
                                 "Define a hotkey letter for each button position."
                             }
-                            p { class: "layout-editor-explainer-line",
+                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.85)] text-[2.1rem] leading-[1.35] max-[1099px]:text-[clamp(13px,3.5vw,16px)] max-[1099px]:tracking-[0.05em]",
                                 "Click apply to rewrite every ability hotkey to match this grid layout."
                             }
                         }

@@ -1,7 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
 use dioxus::prelude::*;
-use dioxus_primitives::toast::ToastProvider;
 use warcraft_api::{Race, UnitKind};
 use warcraft_keybinds::CustomKeys;
 
@@ -11,6 +10,8 @@ use crate::components::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::mode_and_race_tabs::ModeAndRaceTabs;
 use crate::components::preview_dialog::PreviewDialog;
 use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
+use crate::components::toast_mount::ToastMount;
+use crate::components::tooltip_mount::TooltipMount;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
 use crate::customkeys::local_storage_cache::LocalStorageCache;
@@ -24,7 +25,6 @@ use warcraft_database::UnitMode;
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
-const TOOLTIP_TOUCH_SCRIPT: Asset = asset!("/assets/tooltip-touch.js");
 const FAVICON: Asset = asset!("/assets/favicon.svg");
 
 #[component]
@@ -106,7 +106,6 @@ pub(crate) fn App() -> Element {
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
-        document::Script { src: TOOLTIP_TOUCH_SCRIPT, r#type: "module" }
         document::Link { rel: "icon", r#type: "image/svg+xml", href: FAVICON }
         document::Link { rel: "icon", r#type: "image/x-icon", href: "favicon.ico" }
         document::Link { rel: "apple-touch-icon", href: "icon-192.png" }
@@ -130,7 +129,8 @@ pub(crate) fn App() -> Element {
             content: "https://clemenscodes.github.io/warcraft-hotkey-editor/",
         }
         document::Meta { name: "twitter:card", content: "summary_large_image" }
-        ToastProvider {
+        TooltipMount {}
+        ToastMount {
             div {
                 class: "app mx-auto pt-7 pb-12 px-14 flex flex-col gap-8 \
                         min-h-[100dvh] \

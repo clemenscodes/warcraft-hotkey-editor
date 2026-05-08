@@ -15,6 +15,8 @@ pub(crate) mod system_hotkeys;
 pub(crate) mod system_hotkeys_button;
 pub(crate) mod templates_dialog;
 pub(crate) mod tile_override;
+pub(crate) mod toast_mount;
+pub(crate) mod tooltip_mount;
 pub(crate) mod unit_detail;
 pub(crate) mod unit_list;
 pub(crate) mod upload_button;

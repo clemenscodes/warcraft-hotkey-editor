@@ -87,65 +87,6 @@
     min-width: 0;
 }
 
-.tile-override-tier-footer {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.85rem;
-    padding-top: 1rem;
-}
-
-.tile-override-tier-button {
-    width: 2.4rem;
-    height: 2.4rem;
-    padding: 0;
-    font-size: 0;
-    background: rgba(40, 30, 8, 0.55);
-    border: 1px solid #6c5a1f;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.12s ease, background 0.12s ease;
-}
-
-.tile-override-tier-button::before {
-    content: "";
-    display: block;
-    width: 1.7rem;
-    height: 1.7rem;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-}
-
-.tile-override-tier-footer button:first-child::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='14.7,6 6.7,12 14.7,18' fill='%23ffce63'/></svg>");
-}
-
-.tile-override-tier-footer button:last-child::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='9.3,6 17.3,12 9.3,18' fill='%23ffce63'/></svg>");
-}
-
-.tile-override-tier-button:hover:not(:disabled) {
-    border-color: #ffce63;
-    background: rgba(255, 206, 99, 0.12);
-}
-
-.tile-override-tier-button:disabled {
-    opacity: 0.4;
-    cursor: default;
-}
-
-.tile-override-tier-label {
-    font-family: 'Friz Quadrata', serif;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 1.3rem;
-    color: #c0c8da;
-}
 
 .tile-override-name {
     font-family: 'Friz Quadrata', serif;
@@ -206,21 +147,6 @@
     color: #7b818d;
 }
 
-.tile-override-description {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding: 0.85rem 1rem;
-    background: rgba(8, 18, 35, 0.35);
-    border-left: 2px solid #ffce63;
-    border-radius: 4px;
-    color: #d6dcec;
-    font-size: 1.55rem;
-    line-height: 1.55;
-}
 
 .tile-override-conflict {
     display: flex;
@@ -251,10 +177,6 @@
     opacity: 0.85;
 }
 
-.tile-override-description-line {
-    margin: 0;
-    white-space: pre-wrap;
-}
 
 .tile-override-alt-state {
     display: flex;
@@ -535,6 +457,11 @@ body[data-kb-modality] .override-key-cell:focus {
     border-color: #fff;
     color: #fff;
     box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+}
+
+@keyframes pulse-editing {
+    from { box-shadow: 0 0 12px rgba(255, 206, 99, 0.45), inset 0 0 12px rgba(255, 206, 99, 0.2); }
+    to   { box-shadow: 0 0 18px rgba(255, 206, 99, 0.85), inset 0 0 14px rgba(255, 206, 99, 0.35); }
 }
 
 .override-key-cell.editing {

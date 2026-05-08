@@ -1,0 +1,18 @@
+.preview-textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.preview-textarea::-webkit-scrollbar-track {
+    background: rgba(8, 18, 35, 0.45);
+    border-radius: 4px;
+}
+.preview-textarea::-webkit-scrollbar-thumb {
+    background: rgba(255, 206, 99, 0.45);
+    border-radius: 4px;
+}
+.preview-textarea::-webkit-scrollbar-thumb:hover {
+    background: #ffce63;
+}
+.preview-textarea::-webkit-scrollbar-corner {
+    background: rgba(8, 18, 35, 0.45);
+}
