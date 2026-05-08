@@ -39,16 +39,26 @@ pub(crate) const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
      [width:calc(2.2rem_*_var(--hdr-scale))] [height:calc(2.2rem_*_var(--hdr-scale))] \
      leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full";
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct HeaderProps {
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) upload_status: Signal<UploadStatus>,
+    pub(crate) preview_open: Signal<bool>,
+    pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
+    pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub(crate) system_hotkeys_open: Signal<bool>,
+}
+
 #[component]
-pub(crate) fn Header(
-    loaded_keys: Signal<Option<CustomKeys>>,
-    upload_status: Signal<UploadStatus>,
-    preview_open: Signal<bool>,
-    grid_layout: Signal<GridLayout>,
-    editing_layout_cell: Signal<Option<EditingCell>>,
-    dragging_layout_cell: Signal<Option<EditingCell>>,
-    mut system_hotkeys_open: Signal<bool>,
-) -> Element {
+pub(crate) fn Header(props: HeaderProps) -> Element {
+    let loaded_keys = props.loaded_keys;
+    let upload_status = props.upload_status;
+    let preview_open = props.preview_open;
+    let grid_layout = props.grid_layout;
+    let editing_layout_cell = props.editing_layout_cell;
+    let dragging_layout_cell = props.dragging_layout_cell;
+    let system_hotkeys_open = props.system_hotkeys_open;
     let mut layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
     let toggle_layout_dialog = move |_| {

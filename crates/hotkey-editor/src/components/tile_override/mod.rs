@@ -1,6 +1,8 @@
+mod alt_state_section;
 mod description;
 mod key_field;
 mod position_picker;
+mod upgrade_section;
 mod upgrade_tier;
 
 use std::collections::HashMap;
@@ -20,9 +22,11 @@ use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
 
+use alt_state_section::AltStateSection;
 use description::AbilityDescription;
 use key_field::OverrideKeyField;
 use position_picker::{AltPositionPicker, UpgradePositionPicker};
+use upgrade_section::UpgradeSection;
 use upgrade_tier::UpgradeTierSelector;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -38,23 +42,36 @@ enum OverrideEditTarget {
     UpgradeHotkey,
 }
 
-#[component]
-pub(crate) fn TileOverridePanel(
-    detail: InspectorDetail,
-    mut loaded_keys: Signal<Option<CustomKeys>>,
-    grid_layout: Signal<GridLayout>,
-    selected_from_research: Signal<bool>,
-    selected_from_uprooted: Signal<bool>,
-    mut tier_overrides: Signal<HashMap<String, usize>>,
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct TileOverridePanelProps {
+    pub(crate) detail: InspectorDetail,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) selected_from_research: Signal<bool>,
+    pub(crate) selected_from_uprooted: Signal<bool>,
+    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
     // Threaded from the app-level state so the off-state picker dialog
     // can drive the same `DragFollowerOverlay` that's already mounted at
     // the app root. Without this, dragging inside the picker hides the
     // source cell but never paints the floating follower.
-    dragging_slot: Signal<Option<DraggingSlot>>,
-    drop_target_cell: Signal<Option<DropTargetCell>>,
-    drag_follower: Signal<Option<DragFollower>>,
-    active_container_slots: Rc<[GridSlotId]>,
-) -> Element {
+    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
+    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub(crate) drag_follower: Signal<Option<DragFollower>>,
+    pub(crate) active_container_slots: Rc<[GridSlotId]>,
+}
+
+#[component]
+pub(crate) fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
+    let detail = props.detail;
+    let mut loaded_keys = props.loaded_keys;
+    let grid_layout = props.grid_layout;
+    let selected_from_research = props.selected_from_research;
+    let selected_from_uprooted = props.selected_from_uprooted;
+    let tier_overrides = props.tier_overrides;
+    let dragging_slot = props.dragging_slot;
+    let drop_target_cell = props.drop_target_cell;
+    let drag_follower = props.drag_follower;
+    let active_container_slots = props.active_container_slots;
     let _ = selected_from_uprooted;
     let mut editing_target = use_signal::<Option<OverrideEditTarget>>(|| None);
     // True while the player has the alt-state mini grid open. Distinct
@@ -268,6 +285,16 @@ pub(crate) fn TileOverridePanel(
     let picker_active_container = active_container_slots.clone();
     let picker_object_id = picker_effective_object_id;
 
+    let handle_hotkey_activate = move |_| editing_target.set(Some(OverrideEditTarget::Hotkey));
+    let handle_research_activate =
+        move |_| editing_target.set(Some(OverrideEditTarget::ResearchHotkey));
+    let handle_alt_position_click = move |_| alt_position_picker_open.set(true);
+    let handle_alt_activate = move |_| editing_target.set(Some(OverrideEditTarget::AltHotkey));
+    let handle_upgrade_position_click = move |_| upgrade_position_picker_open.set(true);
+    let handle_upgrade_activate =
+        move |_| editing_target.set(Some(OverrideEditTarget::UpgradeHotkey));
+    let handle_picker_close = move |_| editing_target.set(None);
+
     let on_pick = move |token: HotkeyToken| {
         let Some(active_target) = *editing_target.read() else {
             return;
@@ -304,153 +331,136 @@ pub(crate) fn TileOverridePanel(
         editing_target.set(None);
     };
 
+    let alt_name_text = detail.alt_display_name().map(str::to_owned);
+    let alt_description_lines: Vec<String> = detail
+        .alt_ubertip()
+        .map(Description::lines_from)
+        .unwrap_or_default();
+    let has_alt_state = alt_name_text.is_some() || !alt_description_lines.is_empty();
+    // Only let the player edit the off-state hotkey on the
+    // primary command card — research grids only have a single
+    // hotkey field per ability (Hero learn-skill icons aren't
+    // toggles), so the alt slot is irrelevant there.
+    let show_alt_controls = has_alt_state && !is_research_context && !detail.is_command();
+
+    let upgrade_id_option = detail.upgrade_unit_id();
+    let upgrade_hotkey_token = detail.upgrade_hotkey_token();
+    let upgrade_hotkey_display = upgrade_hotkey_token
+        .map(|token| token.display_label())
+        .unwrap_or_default();
+    let upgrade_is_editing = editing_snapshot == Some(OverrideEditTarget::UpgradeHotkey);
+    let upgrade_hotkey_label = if upgrade_hotkey_display.is_empty() {
+        String::from("\u{2013}")
+    } else {
+        upgrade_hotkey_display.clone()
+    };
+    let upgrade_hotkey_is_special = upgrade_hotkey_token
+        .map(|token| char::try_from(token).is_err())
+        .unwrap_or(false);
+
+    let alt_picker_visible = *alt_position_picker_open.read();
+    let alt_picker_object_id = object_id_for_capture;
+    let alt_display_name = detail
+        .alt_display_name()
+        .map(str::to_owned)
+        .unwrap_or_else(|| detail.display_name().to_string());
+    let alt_picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
+        let mut combined: Vec<GridSlotId> = Vec::with_capacity(active_container_slots.len() + 1);
+        combined.push(GridSlotId::ability_off(alt_picker_object_id));
+        for slot in active_container_slots.iter() {
+            if let GridSlotId::Ability(ability_id) = slot
+                && ability_id.object_id() == alt_picker_object_id
+            {
+                continue;
+            }
+            combined.push(*slot);
+        }
+        combined.into()
+    } else {
+        Rc::from([] as [GridSlotId; 0])
+    };
+
+    let upgrade_picker_visible = *upgrade_position_picker_open.read();
+    let upgrade_display_name = detail
+        .upgrade_display_name()
+        .map(str::to_owned)
+        .unwrap_or_else(|| String::from("Upgraded form"));
+    let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible {
+        if let Some(upgrade_id) = upgrade_unit_id_for_capture {
+            let base_unit_id_for_filter = object_id_for_capture;
+            let mut combined: Vec<GridSlotId> =
+                Vec::with_capacity(active_container_slots.len() + 1);
+            combined.push(GridSlotId::ability(upgrade_id));
+            for slot in active_container_slots.iter() {
+                if let GridSlotId::Ability(base_id) = slot
+                    && base_id.object_id() == base_unit_id_for_filter
+                {
+                    continue;
+                }
+                combined.push(*slot);
+            }
+            combined.into()
+        } else {
+            Rc::from([] as [GridSlotId; 0])
+        }
+    } else {
+        Rc::from([] as [GridSlotId; 0])
+    };
+
+    let is_info_only = detail.info_only();
+    let hotkey_title = String::from("Hotkey");
+    let research_hotkey_title = String::from("Research hotkey");
+
     rsx! {
         div { class: "tile-override-card",
             div { class: "tile-override-header",
                 div { class: "tile-override-header-text",
-                    h3 { class: "tile-override-name", "{active_tier_name}" }
-                    code { class: "tile-override-id", "{object_id_text}" }
+                    h3 { class: "tile-override-name", {active_tier_name} }
+                    code { class: "tile-override-id", {object_id_text} }
                 }
                 if show_hotkey_field {
                     OverrideKeyField {
                         label: hotkey_label,
                         is_editing: hotkey_is_editing,
                         is_special: hotkey_is_special_token,
-                        title: String::from("Hotkey"),
-                        on_activate: move |_| editing_target.set(Some(OverrideEditTarget::Hotkey)),
+                        title: hotkey_title,
+                        on_activate: handle_hotkey_activate,
                     }
                 } else if show_research_field {
                     OverrideKeyField {
                         label: research_label,
                         is_editing: research_is_editing,
                         is_special: research_is_special_token,
-                        title: String::from("Research hotkey"),
-                        on_activate: move |_| {
-                            editing_target.set(Some(OverrideEditTarget::ResearchHotkey));
-                        },
+                        title: research_hotkey_title,
+                        on_activate: handle_research_activate,
                     }
-                } else if detail.info_only() {
+                } else if is_info_only {
                     p { class: "tile-override-info-only", "Passive racial ability" }
                 }
             }
             if !primary_description_lines.is_empty() {
                 AbilityDescription { description_lines: primary_description_lines }
             }
-            {
-                let alt_name_text = detail.alt_display_name().map(str::to_owned);
-                let alt_description_lines: Vec<String> = detail
-                    .alt_ubertip()
-                    .map(Description::lines_from)
-                    .unwrap_or_default();
-                let has_alt_state = alt_name_text.is_some() || !alt_description_lines.is_empty();
-                // Only let the player edit the off-state hotkey on the
-                // primary command card — research grids only have a single
-                // hotkey field per ability (Hero learn-skill icons aren't
-                // toggles), so the alt slot is irrelevant there.
-                let show_alt_controls = has_alt_state && !is_research_context && !detail.is_command();
-                rsx! {
-                    if has_alt_state {
-                        div { class: "tile-override-alt-state",
-                            div { class: "tile-override-alt-state-header",
-                                div { class: "tile-override-alt-state-header-text",
-                                    if let Some(alt_name) = alt_name_text {
-                                        p { class: "tile-override-alt-state-label", "{alt_name}" }
-                                    }
-                                }
-                                if show_alt_controls {
-                                    button {
-                                        class: "tile-override-alt-state-position-button",
-                                        r#type: "button",
-                                        title: "Pick where the off-state button appears on the command card",
-                                        aria_label: "Edit off-state button position",
-                                        onclick: move |_| {
-                                            alt_position_picker_open.set(true);
-                                        },
-                                        svg {
-                                            class: "tile-override-alt-state-position-icon",
-                                            view_box: "0 0 24 24",
-                                            xmlns: "http://www.w3.org/2000/svg",
-                                            circle { cx: "12", cy: "12", r: "5", fill: "none", stroke: "currentColor", stroke_width: "1.6" }
-                                            line { x1: "12", y1: "2.5", x2: "12", y2: "6", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                            line { x1: "12", y1: "18", x2: "12", y2: "21.5", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                            line { x1: "2.5", y1: "12", x2: "6", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                            line { x1: "18", y1: "12", x2: "21.5", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                            circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
-                                        }
-                                    }
-                                    OverrideKeyField {
-                                        label: alt_hotkey_label,
-                                        is_editing: alt_hotkey_is_editing,
-                                        is_special: alt_hotkey_is_special_token,
-                                        title: String::from("Hotkey for the off state (writes Unhotkey)"),
-                                        on_activate: move |_| {
-                                            editing_target.set(Some(OverrideEditTarget::AltHotkey));
-                                        },
-                                    }
-                                }
-                            }
-                            for description_line in alt_description_lines.iter() {
-                                p { class: "tile-override-alt-state-line", "{description_line}" }
-                            }
-                        }
-                    }
+            if has_alt_state {
+                AltStateSection {
+                    alt_name_text,
+                    alt_description_lines,
+                    show_alt_controls,
+                    alt_hotkey_label,
+                    alt_hotkey_is_editing,
+                    alt_hotkey_is_special_token,
+                    on_position_click: handle_alt_position_click,
+                    on_hotkey_activate: handle_alt_activate,
                 }
             }
-            {
-                let upgrade_id = detail.upgrade_unit_id();
-                let upgrade_hotkey_token = detail.upgrade_hotkey_token();
-                let upgrade_hotkey_display = upgrade_hotkey_token
-                    .map(|token| token.display_label())
-                    .unwrap_or_default();
-                let upgrade_is_editing =
-                    editing_snapshot == Some(OverrideEditTarget::UpgradeHotkey);
-                let upgrade_hotkey_label = if upgrade_hotkey_display.is_empty() {
-                    String::from("\u{2013}")
-                } else {
-                    upgrade_hotkey_display.clone()
-                };
-                let upgrade_hotkey_is_special = upgrade_hotkey_token
-                    .map(|token| char::try_from(token).is_err())
-                    .unwrap_or(false);
-                rsx! {
-                    if upgrade_id.is_some() && !is_research_context {
-                        div { class: "tile-override-alt-state",
-                            div { class: "tile-override-alt-state-header",
-                                div { class: "tile-override-alt-state-header-text",
-                                    p { class: "tile-override-alt-state-label", "Upgraded form" }
-                                }
-                                button {
-                                    class: "tile-override-alt-state-position-button",
-                                    r#type: "button",
-                                    title: "Pick where the upgraded-form button appears on the command card",
-                                    aria_label: "Edit upgraded-form button position",
-                                    onclick: move |_| {
-                                        upgrade_position_picker_open.set(true);
-                                    },
-                                    svg {
-                                        class: "tile-override-alt-state-position-icon",
-                                        view_box: "0 0 24 24",
-                                        xmlns: "http://www.w3.org/2000/svg",
-                                        circle { cx: "12", cy: "12", r: "5", fill: "none", stroke: "currentColor", stroke_width: "1.6" }
-                                        line { x1: "12", y1: "2.5", x2: "12", y2: "6", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                        line { x1: "12", y1: "18", x2: "12", y2: "21.5", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                        line { x1: "2.5", y1: "12", x2: "6", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                        line { x1: "18", y1: "12", x2: "21.5", y2: "12", stroke: "currentColor", stroke_width: "1.6", stroke_linecap: "round" }
-                                        circle { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }
-                                    }
-                                }
-                                OverrideKeyField {
-                                    label: upgrade_hotkey_label,
-                                    is_editing: upgrade_is_editing,
-                                    is_special: upgrade_hotkey_is_special,
-                                    title: String::from("Hotkey for the upgraded form"),
-                                    on_activate: move |_| {
-                                        editing_target.set(Some(OverrideEditTarget::UpgradeHotkey));
-                                    },
-                                }
-                            }
-                        }
-                    }
+            if upgrade_id_option.is_some() && !is_research_context {
+                UpgradeSection {
+                    upgrade_hotkey_label,
+                    upgrade_is_editing,
+                    upgrade_hotkey_is_special,
+                    is_research_context,
+                    on_position_click: handle_upgrade_position_click,
+                    on_hotkey_activate: handle_upgrade_activate,
                 }
             }
             if has_multiple_tiers {
@@ -469,89 +479,34 @@ pub(crate) fn TileOverridePanel(
                 rows: picker_rows,
                 open: true,
                 on_pick,
-                on_close: move |_| editing_target.set(None),
+                on_close: handle_picker_close,
             }
         }
-        {
-            let alt_picker_visible = *alt_position_picker_open.read();
-            let alt_picker_object_id = object_id_for_capture;
-            let alt_display_name = detail
-                .alt_display_name()
-                .map(str::to_owned)
-                .unwrap_or_else(|| detail.display_name().to_string());
-            let picker_slots: Rc<[GridSlotId]> = if alt_picker_visible {
-                let mut combined: Vec<GridSlotId> =
-                    Vec::with_capacity(active_container_slots.len() + 1);
-                combined.push(GridSlotId::ability_off(alt_picker_object_id));
-                for slot in active_container_slots.iter() {
-                    if let GridSlotId::Ability(ability_id) = slot
-                        && ability_id.object_id() == alt_picker_object_id
-                    {
-                        continue;
-                    }
-                    combined.push(*slot);
-                }
-                combined.into()
-            } else {
-                Rc::from([] as [GridSlotId; 0])
-            };
-            rsx! {
-                if alt_picker_visible {
-                    AltPositionPicker {
-                        object_id: alt_picker_object_id,
-                        display_name: alt_display_name,
-                        picker_slots,
-                        loaded_keys,
-                        grid_layout,
-                        dragging_slot,
-                        drop_target_cell,
-                        drag_follower,
-                        alt_position_picker_open,
-                    }
-                }
+        if alt_picker_visible {
+            AltPositionPicker {
+                object_id: alt_picker_object_id,
+                display_name: alt_display_name,
+                picker_slots: alt_picker_slots,
+                loaded_keys,
+                grid_layout,
+                dragging_slot,
+                drop_target_cell,
+                drag_follower,
+                alt_position_picker_open,
             }
         }
-        {
-            let upgrade_picker_visible = *upgrade_position_picker_open.read();
-            let upgrade_display_name = detail
-                .upgrade_display_name()
-                .map(str::to_owned)
-                .unwrap_or_else(|| String::from("Upgraded form"));
-            let base_unit_id_for_filter = object_id_for_capture;
-            let upgrade_picker_id = upgrade_unit_id_for_capture;
-            let upgrade_picker_slots: Rc<[GridSlotId]> = if upgrade_picker_visible {
-                if let Some(upgrade_id) = upgrade_picker_id {
-                    let mut combined: Vec<GridSlotId> =
-                        Vec::with_capacity(active_container_slots.len() + 1);
-                    combined.push(GridSlotId::ability(upgrade_id));
-                    for slot in active_container_slots.iter() {
-                        if let GridSlotId::Ability(base_id) = slot
-                            && base_id.object_id() == base_unit_id_for_filter
-                        {
-                            continue;
-                        }
-                        combined.push(*slot);
-                    }
-                    combined.into()
-                } else {
-                    Rc::from([] as [GridSlotId; 0])
-                }
-            } else {
-                Rc::from([] as [GridSlotId; 0])
-            };
-            rsx! {
-                if upgrade_picker_visible && upgrade_picker_id.is_some() {
-                    UpgradePositionPicker {
-                        upgrade_unit_id: upgrade_picker_id.unwrap(),
-                        display_name: upgrade_display_name,
-                        picker_slots: upgrade_picker_slots,
-                        loaded_keys,
-                        grid_layout,
-                        dragging_slot,
-                        drop_target_cell,
-                        drag_follower,
-                        upgrade_position_picker_open,
-                    }
+        if let Some(upgrade_id) = upgrade_unit_id_for_capture {
+            if upgrade_picker_visible {
+                UpgradePositionPicker {
+                    upgrade_unit_id: upgrade_id,
+                    display_name: upgrade_display_name,
+                    picker_slots: upgrade_picker_slots,
+                    loaded_keys,
+                    grid_layout,
+                    dragging_slot,
+                    drop_target_cell,
+                    drag_follower,
+                    upgrade_position_picker_open,
                 }
             }
         }

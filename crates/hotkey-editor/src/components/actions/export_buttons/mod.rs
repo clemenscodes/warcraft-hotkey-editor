@@ -6,11 +6,16 @@ use crate::components::shared::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
 use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
 use crate::services::files::download::BlobDownload;
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct ExportButtonsProps {
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) preview_open: Signal<bool>,
+}
+
 #[component]
-pub(crate) fn ExportButtons(
-    loaded_keys: Signal<Option<CustomKeys>>,
-    mut preview_open: Signal<bool>,
-) -> Element {
+pub(crate) fn ExportButtons(props: ExportButtonsProps) -> Element {
+    let loaded_keys = props.loaded_keys;
+    let mut preview_open = props.preview_open;
     let has_loaded_file = loaded_keys.read().is_some();
     let preview_visible = *preview_open.read();
     let preview_label = if preview_visible {

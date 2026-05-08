@@ -10,13 +10,20 @@ use crate::services::focus::modality::FocusModality;
 
 use state::ModeButtonClass;
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct ModeAndRaceTabsProps {
+    pub(crate) unit_mode: Signal<UnitMode>,
+    pub(crate) active_race: Signal<Race>,
+    pub(crate) selected_unit_id: Signal<Option<String>>,
+    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
+}
+
 #[component]
-pub(crate) fn ModeAndRaceTabs(
-    mut unit_mode: Signal<UnitMode>,
-    active_race: Signal<Race>,
-    mut selected_unit_id: Signal<Option<String>>,
-    mut selected_slot: Signal<Option<GridSlotId>>,
-) -> Element {
+pub(crate) fn ModeAndRaceTabs(props: ModeAndRaceTabsProps) -> Element {
+    let mut unit_mode = props.unit_mode;
+    let active_race = props.active_race;
+    let mut selected_unit_id = props.selected_unit_id;
+    let mut selected_slot = props.selected_slot;
     let mode_snapshot = *unit_mode.read();
     let active_race_for_melee = *active_race.read();
     let active_race_for_campaign = *active_race.read();

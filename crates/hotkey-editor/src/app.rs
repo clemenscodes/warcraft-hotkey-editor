@@ -6,6 +6,7 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
+use crate::components::shell::drag_follower_overlay::DragFollowerOverlay;
 use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
@@ -103,6 +104,85 @@ pub(crate) fn App() -> Element {
     let mut system_hotkeys_open = use_signal::<bool>(|| false);
     let collapsed_categories = use_signal::<HashSet<UnitKind>>(HashSet::new);
 
+    let handle_keydown = move |event: Event<KeyboardData>| {
+        let key_value = event.data().key().to_string();
+        let shift_held = event.data().modifiers().shift();
+        let active_info = FocusedElementInfo::current();
+
+        if key_value == "Tab"
+            && active_info
+                .as_ref()
+                .map(FocusedElementInfo::is_inside_grid_panel)
+                .unwrap_or(false)
+        {
+            event.prevent_default();
+            FocusNavigation::cycle_inside_unit_detail(shift_held);
+            return;
+        }
+
+        if key_value == "Tab"
+            && active_info
+                .as_ref()
+                .map(FocusedElementInfo::is_inside_system_dialog)
+                .unwrap_or(false)
+        {
+            event.prevent_default();
+            FocusNavigation::cycle_inside_system_dialog(shift_held);
+            return;
+        }
+
+        if key_value != "Escape" {
+            return;
+        }
+
+        if dragging_slot.read().is_some() {
+            event.prevent_default();
+            dragging_slot.set(None);
+            drop_target_cell.set(None);
+            drag_follower.set(None);
+            return;
+        }
+
+        if nested_picker_dialog_is_present() {
+            event.prevent_default();
+            return;
+        }
+
+        let preview_was_open = *preview_open.read();
+        let system_was_open = *system_hotkeys_open.read();
+        if system_was_open {
+            event.prevent_default();
+            system_hotkeys_open.set(false);
+            return;
+        }
+        if preview_was_open {
+            event.prevent_default();
+            preview_open.set(false);
+            return;
+        }
+
+        if let Some(info) = active_info {
+            let target_selectors: &[&str] = if info.classes().contains("override-key-cell") {
+                &[".grid-tile.has-ability.selected", ".grid-tile.has-ability"]
+            } else if info.classes().contains("grid-tile") {
+                &[".unit-card.selected", ".unit-card"]
+            } else if info.classes().contains("unit-card")
+                || info.classes().contains("unit-category-heading")
+            {
+                &[".race-tab.active", ".race-tab"]
+            } else if info.classes().contains("race-tab") {
+                &[".mode-toggle-button.active", ".mode-toggle-button"]
+            } else if info.classes().contains("mode-toggle-button") {
+                &[".upload-button"]
+            } else {
+                return;
+            };
+            if FocusNavigation::first_matching(target_selectors) {
+                event.prevent_default();
+            }
+        }
+    };
+
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
@@ -139,84 +219,7 @@ pub(crate) fn App() -> Element {
                         max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible \
                         max-[700px]:px-4 max-[700px]:gap-4 \
                         max-[480px]:px-2 max-[480px]:gap-3",
-            onkeydown: move |event| {
-                let key_value = event.data().key().to_string();
-                let shift_held = event.data().modifiers().shift();
-                let active_info = FocusedElementInfo::current();
-
-                if key_value == "Tab"
-                    && active_info
-                        .as_ref()
-                        .map(FocusedElementInfo::is_inside_grid_panel)
-                        .unwrap_or(false)
-                {
-                    event.prevent_default();
-                    FocusNavigation::cycle_inside_unit_detail(shift_held);
-                    return;
-                }
-
-                if key_value == "Tab"
-                    && active_info
-                        .as_ref()
-                        .map(FocusedElementInfo::is_inside_system_dialog)
-                        .unwrap_or(false)
-                {
-                    event.prevent_default();
-                    FocusNavigation::cycle_inside_system_dialog(shift_held);
-                    return;
-                }
-
-                if key_value != "Escape" {
-                    return;
-                }
-
-                if dragging_slot.read().is_some() {
-                    event.prevent_default();
-                    dragging_slot.set(None);
-                    drop_target_cell.set(None);
-                    drag_follower.set(None);
-                    return;
-                }
-
-                if nested_picker_dialog_is_present() {
-                    event.prevent_default();
-                    return;
-                }
-
-                let preview_was_open = *preview_open.read();
-                let system_was_open = *system_hotkeys_open.read();
-                if system_was_open {
-                    event.prevent_default();
-                    system_hotkeys_open.set(false);
-                    return;
-                }
-                if preview_was_open {
-                    event.prevent_default();
-                    preview_open.set(false);
-                    return;
-                }
-
-                if let Some(info) = active_info {
-                    let target_selectors: &[&str] = if info.classes().contains("override-key-cell") {
-                        &[".grid-tile.has-ability.selected", ".grid-tile.has-ability"]
-                    } else if info.classes().contains("grid-tile") {
-                        &[".unit-card.selected", ".unit-card"]
-                    } else if info.classes().contains("unit-card")
-                        || info.classes().contains("unit-category-heading")
-                    {
-                        &[".race-tab.active", ".race-tab"]
-                    } else if info.classes().contains("race-tab") {
-                        &[".mode-toggle-button.active", ".mode-toggle-button"]
-                    } else if info.classes().contains("mode-toggle-button") {
-                        &[".upload-button"]
-                    } else {
-                        return;
-                    };
-                    if FocusNavigation::first_matching(target_selectors) {
-                        event.prevent_default();
-                    }
-                }
-            },
+            onkeydown: handle_keydown,
             Header {
                 loaded_keys,
                 upload_status,
@@ -257,52 +260,6 @@ pub(crate) fn App() -> Element {
                     SystemHotkeysDialog { loaded_keys, system_hotkeys_open }
                 }
                 DragFollowerOverlay { drag_follower, active_race }
-            }
-        }
-    }
-}
-
-#[component]
-fn DragFollowerOverlay(
-    drag_follower: Signal<Option<DragFollower>>,
-    active_race: Signal<Race>,
-) -> Element {
-    let follower_option = drag_follower.read().clone();
-    let Some(follower) = follower_option else {
-        return rsx! {};
-    };
-    let visual = follower.visual();
-    let style_value = format!(
-        "left: {left}px; top: {top}px; width: {width}px; height: {height}px;",
-        left = follower.left(),
-        top = follower.top(),
-        width = follower.tile_width(),
-        height = follower.tile_height(),
-    );
-    let mut class_name = String::from("drag-follower");
-    if visual.is_command_cell() {
-        class_name.push_str(" is-command");
-    }
-    let hotkey_overlay_class = if visual.is_passive_command() {
-        "hotkey-overlay passive"
-    } else {
-        "hotkey-overlay"
-    };
-    let race_attribute = RaceLabels::data_attribute(*active_race.read());
-    rsx! {
-        div { class: class_name, "data-race": race_attribute, style: style_value,
-            if let Some(source) = visual.icon_source() {
-                img {
-                    src: source,
-                    alt: "{visual.label_text()}",
-                    draggable: "false",
-                    decoding: "async",
-                }
-            } else {
-                span { class: "command-label", "{visual.label_text()}" }
-            }
-            if let Some(letter_text) = visual.displayed_letter() {
-                span { class: hotkey_overlay_class, "{letter_text}" }
             }
         }
     }

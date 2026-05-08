@@ -66,13 +66,20 @@ const LAYOUT_APPLY_BUTTON: &str = "mt-[0.85rem] px-[3rem] py-[1.4rem] \
     max-[1099px]:w-full max-[1099px]:min-h-[44px] max-[1099px]:text-[16px] \
     max-[1099px]:py-[12px] max-[1099px]:px-[24px]";
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct LayoutEditorProps {
+    pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
+    pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+}
+
 #[component]
-pub(crate) fn LayoutEditor(
-    mut grid_layout: Signal<GridLayout>,
-    mut editing_layout_cell: Signal<Option<EditingCell>>,
-    mut dragging_layout_cell: Signal<Option<EditingCell>>,
-    mut loaded_keys: Signal<Option<CustomKeys>>,
-) -> Element {
+pub(crate) fn LayoutEditor(props: LayoutEditorProps) -> Element {
+    let mut grid_layout = props.grid_layout;
+    let mut editing_layout_cell = props.editing_layout_cell;
+    let mut dragging_layout_cell = props.dragging_layout_cell;
+    let mut loaded_keys = props.loaded_keys;
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();
     let toast_api = use_toast();
@@ -215,7 +222,7 @@ pub(crate) fn LayoutEditor(
                                     ondragover: handle_drag_over,
                                     ondrop: handle_drop,
                                     onclick: handle_click,
-                                    "{cell_label}"
+                                    {cell_label}
                                 }
                             }
                         }

@@ -31,15 +31,69 @@ pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
     }
 }
 
+struct MobileTabEntry {
+    kind: UnitKind,
+    is_active: bool,
+}
+
+impl MobileTabEntry {
+    fn kind(&self) -> UnitKind {
+        self.kind
+    }
+
+    fn is_active(&self) -> bool {
+        self.is_active
+    }
+}
+
+struct CategorySectionEntry {
+    kind: UnitKind,
+    label: String,
+    is_collapsed: bool,
+    query: String,
+    active_unit_id: Option<String>,
+}
+
+impl CategorySectionEntry {
+    fn kind(&self) -> UnitKind {
+        self.kind
+    }
+
+    fn label(&self) -> String {
+        self.label.clone()
+    }
+
+    fn is_collapsed(&self) -> bool {
+        self.is_collapsed
+    }
+
+    fn query(&self) -> String {
+        self.query.clone()
+    }
+
+    fn active_unit_id(&self) -> Option<String> {
+        self.active_unit_id.clone()
+    }
+}
+
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct UnitListPanelProps {
+    pub(crate) active_race: Signal<Race>,
+    pub(crate) unit_mode: Signal<UnitMode>,
+    pub(crate) selected_unit_id: Signal<Option<String>>,
+    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
+    pub(crate) search_query: Signal<String>,
+    pub(crate) collapsed_categories: Signal<HashSet<UnitKind>>,
+}
+
 #[component]
-pub(crate) fn UnitListPanel(
-    active_race: Signal<Race>,
-    unit_mode: Signal<UnitMode>,
-    mut selected_unit_id: Signal<Option<String>>,
-    mut selected_slot: Signal<Option<GridSlotId>>,
-    mut search_query: Signal<String>,
-    collapsed_categories: Signal<HashSet<UnitKind>>,
-) -> Element {
+pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
+    let active_race = props.active_race;
+    let unit_mode = props.unit_mode;
+    let selected_unit_id = props.selected_unit_id;
+    let selected_slot = props.selected_slot;
+    let mut search_query = props.search_query;
+    let collapsed_categories = props.collapsed_categories;
     let state = UnitListState::new(
         active_race,
         unit_mode,
@@ -48,13 +102,35 @@ pub(crate) fn UnitListPanel(
         collapsed_categories,
     );
     let active_category_signal = state.active_category();
+    let active_kind = state.active_kind();
+    let search_active = state.search_active();
+    let race = state.race();
+    let mode = state.mode();
     let handle_search_input = move |event: Event<FormData>| search_query.set(event.value());
+    let mobile_tab_entries: Vec<MobileTabEntry> = MOBILE_CATEGORY_ORDER
+        .iter()
+        .map(|&kind| MobileTabEntry {
+            kind,
+            is_active: kind == active_kind,
+        })
+        .collect();
+    let category_section_entries: Vec<CategorySectionEntry> = state
+        .category_kinds()
+        .iter()
+        .map(|&kind| CategorySectionEntry {
+            kind,
+            label: UnitKindHelpers::category_label(kind).to_owned(),
+            is_collapsed: state.collapsed_snapshot().contains(&kind),
+            query: state.query_snapshot().to_owned(),
+            active_unit_id: state.active_unit_id().map(str::to_owned),
+        })
+        .collect();
 
     rsx! {
         aside {
             class: "group flex flex-col gap-2 overflow-hidden min-w-0 min-h-0 max-[700px]:max-h-[32rem] min-[701px]:max-[1099px]:sticky min-[701px]:max-[1099px]:top-4 min-[701px]:max-[1099px]:max-h-[calc(100dvh-16rem)] [@media(min-width:701px)_and_(max-height:900px)]:max-h-none min-[1100px]:absolute min-[1100px]:top-0 min-[1100px]:left-0 min-[1100px]:w-[var(--main-sidebar-w)] min-[1100px]:h-full",
-            "data-active-category": "{unit_kind_data_attr(state.active_kind())}",
-            "data-search-active": "{state.search_active()}",
+            "data-active-category": "{unit_kind_data_attr(active_kind)}",
+            "data-search-active": search_active,
             div {
                 class: "shrink-0 flex items-center gap-2 p-2 min-w-0 bg-[rgba(13,31,61,0.85)] border border-[#1f3d63] rounded-[6px]",
                 input {
@@ -69,46 +145,32 @@ pub(crate) fn UnitListPanel(
                 class: "hidden",
                 role: "tablist",
                 aria_label: "Unit categories",
-                for kind in MOBILE_CATEGORY_ORDER {
-                    {
-                        let kind_attr = unit_kind_data_attr(kind);
-                        let is_active = kind == state.active_kind();
-                        rsx! {
-                            MobileCategoryTab {
-                                key: "{kind_attr}",
-                                kind,
-                                is_active,
-                                active_category: active_category_signal,
-                            }
-                        }
+                for tab in mobile_tab_entries {
+                    MobileCategoryTab {
+                        key: "{unit_kind_data_attr(tab.kind())}",
+                        kind: tab.kind(),
+                        is_active: tab.is_active(),
+                        active_category: active_category_signal,
                     }
                 }
             }
             div {
                 class: "grow overflow-y-auto overflow-x-hidden pr-1 flex flex-col min-h-0 [scrollbar-width:thin] [scrollbar-color:rgba(255,206,99,0)_transparent] transition-[scrollbar-color] duration-200 group-hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] hover:[scrollbar-color:rgba(255,206,99,0.45)_transparent] focus-within:[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
                 div { class: "flex flex-col gap-2",
-                    for category_kind in state.category_kinds().to_owned() {
-                        {
-                            let category_label = UnitKindHelpers::category_label(category_kind).to_owned();
-                            let is_collapsed = state.collapsed_snapshot().contains(&category_kind);
-                            let query_for_section = state.query_snapshot().to_owned();
-                            let active_unit_id_for_section = state.active_unit_id().map(str::to_owned);
-                            rsx! {
-                                UnitCategorySection {
-                                    key: "{unit_kind_data_attr(category_kind)}",
-                                    category_kind,
-                                    category_label,
-                                    is_collapsed,
-                                    collapsed_categories,
-                                    race: state.race(),
-                                    mode: state.mode(),
-                                    query: query_for_section,
-                                    active_unit_id: active_unit_id_for_section,
-                                    selected_unit_id,
-                                    selected_slot,
-                                    active_category: active_category_signal,
-                                }
-                            }
+                    for section in category_section_entries {
+                        UnitCategorySection {
+                            key: "{unit_kind_data_attr(section.kind())}",
+                            category_kind: section.kind(),
+                            category_label: section.label(),
+                            is_collapsed: section.is_collapsed(),
+                            collapsed_categories,
+                            race,
+                            mode,
+                            query: section.query(),
+                            active_unit_id: section.active_unit_id(),
+                            selected_unit_id,
+                            selected_slot,
+                            active_category: active_category_signal,
                         }
                     }
                 }

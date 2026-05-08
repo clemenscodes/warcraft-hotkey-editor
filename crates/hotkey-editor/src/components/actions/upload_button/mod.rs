@@ -9,11 +9,16 @@ use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct UploadButtonProps {
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) upload_status: Signal<UploadStatus>,
+}
+
 #[component]
-pub(crate) fn UploadButton(
-    mut loaded_keys: Signal<Option<CustomKeys>>,
-    mut upload_status: Signal<UploadStatus>,
-) -> Element {
+pub(crate) fn UploadButton(props: UploadButtonProps) -> Element {
+    let mut loaded_keys = props.loaded_keys;
+    let mut upload_status = props.upload_status;
     let toast_api = use_toast();
     let mut info_open = use_signal(|| false);
     let on_file_change = move |event: Event<FormData>| {

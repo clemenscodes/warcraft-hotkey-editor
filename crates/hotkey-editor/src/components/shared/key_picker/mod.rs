@@ -1,3 +1,7 @@
+mod key_picker_key;
+
+use key_picker_key::KeyPickerKey;
+
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
@@ -31,19 +35,29 @@ impl KeyPickerCell {
     }
 }
 
-#[component]
-pub(crate) fn KeyPicker(
-    title: String,
-    rows: Vec<Vec<KeyPickerCell>>,
-    open: bool,
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct KeyPickerProps {
+    pub(crate) title: String,
+    pub(crate) rows: Vec<Vec<KeyPickerCell>>,
+    pub(crate) open: bool,
     // When true, conflict cells stay clickable and forward `on_pick` — used
     // by the grid layout editor where clicking a conflict swaps the two
     // cells. The spell hotkey picker leaves this off so a binding collision
     // is visually flagged but cannot be selected.
-    #[props(default = false)] allow_conflict_pick: bool,
-    on_pick: EventHandler<HotkeyToken>,
-    on_close: EventHandler<()>,
-) -> Element {
+    #[props(default = false)]
+    pub(crate) allow_conflict_pick: bool,
+    pub(crate) on_pick: EventHandler<HotkeyToken>,
+    pub(crate) on_close: EventHandler<()>,
+}
+
+#[component]
+pub(crate) fn KeyPicker(props: KeyPickerProps) -> Element {
+    let title = props.title;
+    let rows = props.rows;
+    let open = props.open;
+    let allow_conflict_pick = props.allow_conflict_pick;
+    let on_pick = props.on_pick;
+    let on_close = props.on_close;
     let dialog_title = title.clone();
     let handle_open_change = move |next_open: bool| {
         if !next_open {
@@ -94,52 +108,6 @@ pub(crate) fn KeyPicker(
                     }
                 }
             }
-        }
-    }
-}
-
-#[component]
-fn KeyPickerKey(
-    cell: KeyPickerCell,
-    allow_conflict_pick: bool,
-    on_pick: EventHandler<HotkeyToken>,
-) -> Element {
-    let token = cell.token();
-    let label_text = token.display_label();
-    let (state_class, conflict_title) = match cell.state() {
-        KeyPickerCellState::Available => ("available", None),
-        KeyPickerCellState::Current => ("current", None),
-        KeyPickerCellState::Conflict { display_name } => {
-            let prefix = if allow_conflict_pick {
-                "Pick to swap with"
-            } else {
-                "Already used by"
-            };
-            ("conflict", Some(format!("{prefix} {display_name}")))
-        }
-    };
-    let is_conflict = matches!(cell.state(), KeyPickerCellState::Conflict { .. });
-    let is_disabled = is_conflict && !allow_conflict_pick;
-    let is_special = char::try_from(token).is_err();
-    let class_name = format!("key-picker-key {state_class}");
-    let title_attribute = conflict_title.unwrap_or_default();
-    let special_flag = if is_special { "true" } else { "false" };
-    let token_for_click = token;
-    let handle_click = move |_| {
-        if !is_disabled {
-            on_pick.call(token_for_click);
-        }
-    };
-    rsx! {
-        button {
-            class: class_name,
-            r#type: "button",
-            disabled: is_disabled,
-            title: title_attribute,
-            "data-label": label_text,
-            "data-special": special_flag,
-            onclick: handle_click,
-            "{label_text}"
         }
     }
 }

@@ -6,12 +6,18 @@ use warcraft_keybinds::{CustomKeys, SystemBindingMap};
 
 use entry::SystemHotkeysListEntry;
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct SystemHotkeysListViewProps {
+    pub(crate) category: SystemHotkeysCategory,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) editing_section: Signal<Option<String>>,
+}
+
 #[component]
-pub(crate) fn SystemHotkeysListView(
-    category: SystemHotkeysCategory,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    editing_section: Signal<Option<String>>,
-) -> Element {
+pub(crate) fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
+    let category = props.category;
+    let loaded_keys = props.loaded_keys;
+    let editing_section = props.editing_section;
     let entries = category.entries();
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();

@@ -1,7 +1,5 @@
 mod grids;
 mod header;
-mod leveled_stats;
-mod stat_icon;
 mod stats_panel;
 
 use std::collections::HashMap;
@@ -21,19 +19,32 @@ use grids::UnitCommandGrids;
 use header::UnitDetailHeader;
 use stats_panel::UnitStatsPanel;
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct UnitDetailPanelProps {
+    pub(crate) selected_unit_id: Signal<Option<String>>,
+    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
+    pub(crate) selected_from_research: Signal<bool>,
+    pub(crate) selected_from_uprooted: Signal<bool>,
+    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
+    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
+    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub(crate) drag_follower: Signal<Option<DragFollower>>,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) grid_layout: Signal<GridLayout>,
+}
+
 #[component]
-pub(crate) fn UnitDetailPanel(
-    selected_unit_id: Signal<Option<String>>,
-    selected_slot: Signal<Option<GridSlotId>>,
-    selected_from_research: Signal<bool>,
-    selected_from_uprooted: Signal<bool>,
-    tier_overrides: Signal<HashMap<String, usize>>,
-    dragging_slot: Signal<Option<DraggingSlot>>,
-    drop_target_cell: Signal<Option<DropTargetCell>>,
-    drag_follower: Signal<Option<DragFollower>>,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    grid_layout: Signal<GridLayout>,
-) -> Element {
+pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
+    let selected_unit_id = props.selected_unit_id;
+    let selected_slot = props.selected_slot;
+    let selected_from_research = props.selected_from_research;
+    let selected_from_uprooted = props.selected_from_uprooted;
+    let tier_overrides = props.tier_overrides;
+    let dragging_slot = props.dragging_slot;
+    let drop_target_cell = props.drop_target_cell;
+    let drag_follower = props.drag_follower;
+    let loaded_keys = props.loaded_keys;
+    let grid_layout = props.grid_layout;
     let mut selected_hero_level = use_signal::<u32>(|| 1);
     let mut level_picker_open = use_signal::<bool>(|| false);
     use_effect(move || {
