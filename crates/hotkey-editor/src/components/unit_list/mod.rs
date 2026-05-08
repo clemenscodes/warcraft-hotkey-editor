@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
-use crate::grid_slot::GridSlotId;
+use crate::model::grid::GridSlotId;
 
 use category::UnitCategorySection;
 use state::UnitListState;

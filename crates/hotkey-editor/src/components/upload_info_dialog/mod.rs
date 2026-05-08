@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::dialog_header::DialogHeader;
-use crate::customkeys::upload_picker::UploadPicker;
+use crate::services::files::upload::UploadPicker;
 
 const BTN_SECONDARY: &str = "inline-flex items-center justify-center px-14 py-6 \
     rounded-lg border border-warcraft-blue text-warcraft-text-secondary \

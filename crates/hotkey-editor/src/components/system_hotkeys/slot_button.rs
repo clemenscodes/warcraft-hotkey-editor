@@ -4,7 +4,7 @@ use warcraft_keybinds::{CustomKeys, Hotkey};
 
 use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
-use crate::system_hotkeys::binding_map::SystemBindingMap;
+use crate::model::hotkeys::binding_map::SystemBindingMap;
 
 /// Big WC3-style slot used in inventory-derived layouts (hero selection,
 /// control groups). Same gold-frame visuals as the inventory cell minus the

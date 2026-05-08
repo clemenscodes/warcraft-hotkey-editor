@@ -9,8 +9,8 @@ use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::dialog_header::DialogHeader;
-use crate::grid_layout::GridLayout;
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::GridLayout;
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 
 /// Modal dialog for repositioning the off-state button of a toggle ability
 /// (e.g. Stop Defend, Unburrow) on the command card.

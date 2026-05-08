@@ -1,3 +1,4 @@
+pub(crate) mod button;
 pub(crate) mod control_groups;
 pub(crate) mod dialog;
 pub(crate) mod hero_selection;

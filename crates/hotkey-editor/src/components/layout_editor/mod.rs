@@ -7,8 +7,8 @@ use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
 
-use crate::customkeys::positions::Positions;
-use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout};
+use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout};
+use crate::services::customkeys::positions::Positions;
 
 const QWERTY_ROWS: &[&[char]] = &[
     &['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],

@@ -2,8 +2,8 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::system_hotkeys::key_cell::KeyCaptureCell;
-use crate::system_hotkeys::binding_map::SystemBindingMap;
-use crate::system_hotkeys::category::SystemHotkeysCategory;
+use crate::model::hotkeys::binding_map::SystemBindingMap;
+use warcraft_database::SystemHotkeysCategory;
 
 #[component]
 pub(crate) fn SystemHotkeysListView(

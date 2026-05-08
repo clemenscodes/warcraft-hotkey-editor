@@ -11,7 +11,6 @@
     Sections:
       1. Foundation        — viewport hygiene, no horizontal scroll, dvh, safe-area
       2. Drag & touch      — prevent page scroll while dragging tiles
-      3. Header & burger   — header sticky, drawer body scroll-lock, safe areas
       4. Race tabs         — tame the carousel banner so it doesn't dominate
       5. Mode tabs         — equal-width row, no wrap blowout
       6. Unit list / cards — compact, finger-sized, scroll bounded
@@ -134,133 +133,6 @@ body {
        top-level, so this is fine. The translate3d above just promotes. */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-}
-
-/* ─────────────────────── 3. HEADER & BURGER ─────────────────────── */
-
-@media (max-width: 1099px) {
-    /* Header sticky + safe-area padding for all non-desktop widths.
-       This layer (mobile) wins over @layer components, so it always applies. */
-    .app-header {
-        position: sticky;
-        top: 0;
-        z-index: 60;
-        background: linear-gradient(180deg, rgba(8, 14, 30, 0.98) 0%, rgba(8, 14, 30, 0.96) 100%);
-        padding-top: max(0.5rem, env(safe-area-inset-top));
-        padding-bottom: 0.5rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        margin-left: 0;
-        margin-right: 0;
-        border-bottom: 1px solid rgba(255, 206, 99, 0.3);
-        min-height: 3.5rem;
-        max-width: 100%;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .app-header h1,
-    .app-header-title {
-        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
-        line-height: 1.15;
-        margin: 0;
-        flex: 1 1 auto;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .app-header-brand {
-        gap: 0.5rem;
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    /* Burger button must stay tappable: 44px minimum. */
-    .app-header-burger-btn {
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-        min-height: 44px;
-        flex-shrink: 0;
-    }
-    .app-header-burger-btn .toolbar-icon {
-        width: 1.4rem;
-        height: 1.4rem;
-    }
-}
-
-/* Burger drawer: full mobile-height, safe-area aware, body-scroll-locked
-   while open. The body lock is provided by the .body-scroll-locked helper
-   below — the burger toggle in app_header.rs needs to add/remove that
-   class on `body`, but as a CSS-only fallback we lock body via :has() on
-   the drawer's existence. */
-.burger-drawer {
-    height: 100dvh;
-    max-height: 100dvh;
-    width: min(85vw, 320px);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-.burger-backdrop {
-    z-index: 70;
-    background: rgba(0, 0, 0, 0.65);
-}
-
-/* Body scroll lock when burger is open. :has() is supported on iOS 16.4+
-   which covers iPhone 12 + every device that matters. Without this, the
-   underlying page scrolls behind the open drawer and the grid container
-   queries trigger a layout recalc — which is why "burger open blew up
-   the grid". */
-body:has(.burger-drawer) {
-    overflow: hidden;
-    position: relative;
-    overscroll-behavior: contain;
-}
-body:has(.burger-drawer) .app {
-    /* Container queries on .command-section read `inline-size` of the
-       section. When the drawer overlay forces a body reflow, the grid
-       can recompute its --tile-size to a different bucket and the icons
-       jump. Pin the section's inline size to prevent recalc. */
-    overflow: hidden;
-}
-
-/* Drawer body: bigger touch targets in the action row. */
-@media (max-width: 1099px) {
-    .burger-drawer-body {
-        padding: 1.25rem 1rem max(1.25rem, env(safe-area-inset-bottom));
-        gap: 1rem;
-    }
-    .burger-actions .toolbar-icon-button {
-        width: 44px;
-        height: 44px;
-    }
-}
-
-/* The drawer is a sibling of `.app-header`, not a descendant — so the
-   `--hdr-scale` custom property defined on `.app-header` does not inherit.
-   Every `calc(... * var(--hdr-scale))` inside the drawer therefore evaluates
-   to an invalid value and falls back to `auto`. For SVG-bearing icon boxes
-   (`.layout-pill-icon`, `.toolbar-icon`) `width: auto` lets the SVG draw at
-   its intrinsic size — which is huge — so the GRID LAYOUT pill renders a
-   200px icon stack on top of the rest of the drawer. Re-define the variable
-   on the drawer and pin explicit sizes for any element whose calc relied on
-   it, so the math becomes deterministic regardless of inheritance. */
-.burger-drawer {
-    --hdr-scale: 1;
-}
-
-.burger-drawer .toolbar-icon-button {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-}
-.burger-drawer .toolbar-icon,
-.burger-drawer .toolbar-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
 }
 
 /* ─────────────────────── 4. RACE TABS ─────────────────────── */
@@ -966,8 +838,6 @@ body:has(.templates-dialog) {
     .app .race-tab:hover,
     .app .unit-card:hover,
     .app .grid-tile:hover,
-    .app .toolbar-icon-button:hover,
-    .app .layout-pill:hover,
     .app .mode-toggle-button:hover {
         /* Force inheritance — overrides component :hover declarations.
            Active state still visible via :active in component CSS. */
@@ -1363,11 +1233,6 @@ body.body-scroll-locked {
    readability-critical text to absolute px on phone. */
 
 @media (max-width: 1099px) {
-    .app-header h1,
-    .app-header-title {
-        font-size: clamp(15px, 4.5vw, 22px);
-    }
-
     .mode-toggle-button {
         font-size: clamp(13px, 3vw, 16px);
         min-height: 52px;

@@ -8,7 +8,7 @@ use crate::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
 use crate::components::system_hotkeys::inventory::InventoryHotkeysView;
 use crate::components::system_hotkeys::inventory_grid::InventoryDragFollower;
 use crate::components::system_hotkeys::list_view::SystemHotkeysListView;
-use crate::system_hotkeys::category::SystemHotkeysCategory;
+use warcraft_database::SystemHotkeysCategory;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
@@ -95,7 +95,7 @@ fn SystemHotkeysBreadcrumbs(mut active_category: Signal<SystemHotkeysCategory>) 
     let active = *active_category.read();
     let mut picker_open = use_signal::<bool>(|| false);
     let is_open = picker_open();
-    let trigger_label = active.label();
+    let trigger_label = active.to_string();
     let tab_base = "font-friz-quadrata uppercase tracking-[0.1em] text-[2rem] leading-none \
         px-3 py-1 m-0 bg-transparent border-0 cursor-pointer whitespace-nowrap \
         [text-shadow:1px_1px_0_#000] [transition:color_0.15s_ease,text-shadow_0.15s_ease] \
@@ -197,7 +197,7 @@ fn SystemHotkeysBreadcrumbs(mut active_category: Signal<SystemHotkeysCategory>) 
                                     active_category.set(category);
                                     picker_open.set(false);
                                 },
-                                "{category.label()}"
+                                "{category}"
                             }
                             if let Some(separator_text) = separator {
                                 span {

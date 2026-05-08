@@ -2,8 +2,9 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
+use crate::ability_cell::AbilityCell;
 use crate::ability_id::AbilityId;
-use crate::model::GridCoordinate;
+use crate::model::{AbilityBinding, CommandBinding, GridCoordinate};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum GridSlotId {
@@ -36,6 +37,24 @@ impl GridSlotId {
         match self {
             Self::Ability(id) | Self::AbilityOff(id) => id.object_id(),
             Self::Command(id) => *id,
+        }
+    }
+
+    pub fn display_name(
+        &self,
+        ability_binding: Option<&AbilityBinding>,
+        command_binding: Option<&CommandBinding>,
+    ) -> String {
+        match self {
+            Self::Ability(id) => AbilityCell::for_ability(*id, ability_binding)
+                .display_name()
+                .to_string(),
+            Self::AbilityOff(id) => AbilityCell::for_ability_off(*id, ability_binding)
+                .display_name()
+                .to_string(),
+            Self::Command(name) => AbilityCell::for_command(*name, command_binding)
+                .display_name()
+                .to_string(),
         }
     }
 }

@@ -56,7 +56,6 @@ body {
   cursor: pointer;
 }
 
-@import "./styles/components-app-header.css" layer(components);
 @import "./styles/primitives.css" layer(components);
 @import "./styles/app-root.css" layer(components);
 @import "./styles/components-unit-detail.css";

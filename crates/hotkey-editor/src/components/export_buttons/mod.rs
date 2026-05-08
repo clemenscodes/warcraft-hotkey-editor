@@ -3,7 +3,7 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::download_info_dialog::DownloadInfoDialog;
 use crate::components::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
-use crate::customkeys::blob_download::BlobDownload;
+use crate::services::files::download::BlobDownload;
 
 #[component]
 pub(crate) fn ExportButtons(

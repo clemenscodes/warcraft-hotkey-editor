@@ -1,3 +1,45 @@
+use std::fmt;
+
+/// Set of runtime contexts in which a system hotkey is active.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct ContextSet {
+    in_player: bool,
+    in_observer: bool,
+    in_replay: bool,
+}
+
+impl ContextSet {
+    pub const ALWAYS: Self = Self {
+        in_player: true,
+        in_observer: true,
+        in_replay: true,
+    };
+
+    pub const PLAYER_ONLY: Self = Self {
+        in_player: true,
+        in_observer: false,
+        in_replay: false,
+    };
+
+    pub const OBSERVER_ONLY: Self = Self {
+        in_player: false,
+        in_observer: true,
+        in_replay: false,
+    };
+
+    pub const REPLAY_ONLY: Self = Self {
+        in_player: false,
+        in_observer: false,
+        in_replay: true,
+    };
+
+    pub fn overlaps(self, other: Self) -> bool {
+        (self.in_player && other.in_player)
+            || (self.in_observer && other.in_observer)
+            || (self.in_replay && other.in_replay)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum SystemKeybindClass {
     Menu,
@@ -39,6 +81,18 @@ impl SystemKeybindModifier {
             Self::CtrlOrAlt => Some("Ctrl_or_Alt"),
             Self::Shift => Some("Shift"),
         }
+    }
+}
+
+impl fmt::Display for SystemKeybindModifier {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::None => "",
+            Self::Alt => "Alt + ",
+            Self::Ctrl => "Ctrl + ",
+            Self::CtrlOrAlt => "Ctrl/Alt + ",
+            Self::Shift => "Shift + ",
+        })
     }
 }
 
@@ -100,6 +154,23 @@ impl SystemKeybind {
 
     pub fn class(&self) -> SystemKeybindClass {
         self.class
+    }
+
+    pub fn context_set(&self) -> ContextSet {
+        match self.section_id {
+            "itm1" | "itm2" | "itm3" | "itm4" | "itm5" | "itm6" => ContextSet::PLAYER_ONLY,
+            "her1" | "her2" | "her3" => ContextSet::PLAYER_ONLY,
+            "Ctr1" | "Ctr2" | "Ctr3" | "Ctr4" | "Ctr5" | "Ctr6" | "Ctr7" | "Ctr8" | "Ctr9"
+            | "Ctr0" => ContextSet::PLAYER_ONLY,
+            "sbgp" | "sidw" | "mpng" | "TFmv" | "Ally" | "QSav" | "MSav" | "MLod" => {
+                ContextSet::PLAYER_ONLY
+            }
+            "THer" | "TSta" | "TPUQ" | "TSel" | "TMap" | "TToD" | "TAll" | "SPQM" | "SULM" => {
+                ContextSet::OBSERVER_ONLY
+            }
+            "TRpl" | "TPPl" | "InGS" | "DeGS" | "TFoW" | "TAuC" => ContextSet::REPLAY_ONLY,
+            _ => ContextSet::ALWAYS,
+        }
     }
 }
 

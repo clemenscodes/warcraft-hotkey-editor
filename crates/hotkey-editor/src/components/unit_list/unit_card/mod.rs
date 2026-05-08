@@ -3,9 +3,9 @@ mod state;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 
-use crate::focus::modality::FocusModality;
-use crate::grid_slot::GridSlotId;
-use crate::icons::IconUrl;
+use crate::model::grid::GridSlotId;
+use crate::model::icons::IconUrl;
+use crate::services::focus::modality::FocusModality;
 
 use super::unit_kind_data_attr;
 use state::UnitCardClasses;

@@ -4,8 +4,8 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
-use crate::focus::modality::FocusModality;
-use crate::grid_slot::GridSlotId;
+use crate::model::grid::GridSlotId;
+use crate::services::focus::modality::FocusModality;
 
 use state::RaceTabClasses;
 

@@ -9,10 +9,10 @@ use dioxus::prelude::*;
 use warcraft_database::{BuildingTraits, ObjectLookup};
 use warcraft_keybinds::{AbilityCell, ColumnIndex, CustomKeys, RowIndex};
 
-use crate::customkeys::positions::Positions;
-use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::icons::IconUrl;
+use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::icons::IconUrl;
+use crate::services::customkeys::positions::Positions;
 
 use grid_cell::{GridCell, GridCellProps};
 use tile_class::tile_class;

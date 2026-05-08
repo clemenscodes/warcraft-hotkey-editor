@@ -10,14 +10,14 @@ use warcraft_keybinds::CustomKeys;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
-use crate::cursor_hit::{CursorPoint, HitTestPoint};
-use crate::customkeys::positions::{MoveRequest, Positions};
-use crate::focus::modality::FocusModality;
-use crate::grid_layout::GridLayout;
-use crate::grid_slot::{
+use crate::model::grid::GridLayout;
+use crate::model::grid::{CursorPoint, HitTestPoint};
+use crate::model::grid::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, GridSlotId,
 };
-use crate::icons::IconUrl;
+use crate::model::icons::IconUrl;
+use crate::services::customkeys::positions::{MoveRequest, Positions};
+use crate::services::focus::modality::FocusModality;
 
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, DragThreadState,

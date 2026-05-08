@@ -1,4 +1,5 @@
 pub mod keybind;
+pub mod keycode;
 pub mod meta;
 pub mod object;
 pub mod player;
@@ -6,7 +7,8 @@ pub mod primitives;
 pub mod race_labels;
 pub mod version;
 
-pub use keybind::{SystemKeybind, SystemKeybindClass, SystemKeybindModifier};
+pub use keybind::{ContextSet, SystemKeybind, SystemKeybindClass, SystemKeybindModifier};
+pub use keycode::KeyCode;
 pub use meta::{
     AbilityMeta, AgilityBonuses, AttackType, AttributeBase, AttributeGrowth, CommandMeta,
     DamageEffectiveness, DamageMatrix, DefenseType, GameplayConstants, HeroAttributes,

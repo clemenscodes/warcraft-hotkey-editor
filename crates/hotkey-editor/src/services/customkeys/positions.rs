@@ -1,0 +1,80 @@
+use dioxus::prelude::{Signal, WritableExt};
+use warcraft_keybinds::{AbilityCell, AbilityId, CustomKeys, GridCoordinate, GridLayout};
+
+pub(crate) use warcraft_keybinds::MoveRequest;
+
+use crate::model::grid::GridSlotId;
+
+pub(crate) struct GridCellOccupant {
+    slot_id: GridSlotId,
+    cell: AbilityCell,
+}
+
+impl GridCellOccupant {
+    pub(crate) fn slot_id(&self) -> GridSlotId {
+        self.slot_id
+    }
+
+    pub(crate) fn cell(&self) -> &AbilityCell {
+        &self.cell
+    }
+}
+
+pub(crate) struct Positions;
+
+impl Positions {
+    pub(crate) fn current_for_ability_off(
+        ability_id: AbilityId,
+        custom_keys: Option<&CustomKeys>,
+    ) -> Option<GridCoordinate> {
+        let file = custom_keys?;
+        let binding = file.binding(ability_id)?;
+        binding.unbutton_position().copied()
+    }
+
+    pub(crate) fn cell_for_position(
+        candidate_slots: &[GridSlotId],
+        custom_keys: Option<&CustomKeys>,
+        is_research_context: bool,
+        column: u8,
+        row: u8,
+    ) -> Option<GridCellOccupant> {
+        let file = custom_keys?;
+        let slot_id = file.slot_at_position(candidate_slots, is_research_context, column, row)?;
+        let cell = match slot_id {
+            GridSlotId::Ability(ability_id) => {
+                let binding = file.binding(ability_id);
+                AbilityCell::for_ability(ability_id, binding)
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                let binding = file.binding(ability_id);
+                AbilityCell::for_ability_off(ability_id, binding)
+            }
+            GridSlotId::Command(command_name) => {
+                let command_name_str = command_name.value();
+                let binding = file.command(command_name_str);
+                AbilityCell::for_command(command_name, binding)
+            }
+        };
+        let occupant = GridCellOccupant { slot_id, cell };
+        Some(occupant)
+    }
+
+    pub(crate) fn move_or_swap(
+        custom_keys_signal: &mut Signal<Option<CustomKeys>>,
+        request: MoveRequest<'_>,
+    ) {
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(""));
+        file.move_slot(&request);
+    }
+
+    pub(crate) fn apply_grid_to_all_known_objects(
+        custom_keys_signal: &mut Signal<Option<CustomKeys>>,
+        layout: GridLayout,
+    ) -> usize {
+        let mut writable_guard = custom_keys_signal.write();
+        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(""));
+        file.apply_grid_to_all_bindings(layout)
+    }
+}

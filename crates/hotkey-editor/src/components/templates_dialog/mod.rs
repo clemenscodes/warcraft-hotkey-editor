@@ -4,11 +4,11 @@ use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 
 use crate::components::dialog_header::DialogHeader;
-use crate::customkeys::baseline::baseline_content;
-use crate::customkeys::upload_status::UploadStatus;
-use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
-use crate::grid_templates::ResolvedTemplate;
-use crate::icons::IconUrl;
+
+use crate::model::grid::ResolvedTemplate;
+use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
+use crate::model::icons::IconUrl;
+use crate::services::customkeys::upload_status::UploadStatus;
 use warcraft_database::ObjectLookup;
 
 const TEMPLATE_CARD: &str = "flex flex-col gap-[2.25rem] py-[2.5rem] px-[2.75rem] \
@@ -77,7 +77,7 @@ pub(crate) fn TemplatesDialog(
                                             let parsed_template = CustomKeys::from(template_content);
                                             let binding_count = parsed_template.bindings_in_order().count();
                                             let command_count = parsed_template.commands_in_order().count();
-                                            let mut baseline = CustomKeys::from(baseline_content());
+                                            let mut baseline = CustomKeys::from(warcraft_keybinds::DEFAULT_CUSTOM_KEYS);
                                             baseline.extend(parsed_template);
                                             let normalized = baseline.normalize();
                                             loaded_keys.set(Some(normalized));

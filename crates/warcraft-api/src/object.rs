@@ -19,6 +19,21 @@ pub enum Race {
     Neutral,
 }
 
+impl TryFrom<&str> for Race {
+    type Error = ();
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value {
+            "human" => Ok(Self::Human),
+            "orc" => Ok(Self::Orc),
+            "nightelf" => Ok(Self::Nightelf),
+            "undead" => Ok(Self::Undead),
+            "neutral" => Ok(Self::Neutral),
+            _ => Err(()),
+        }
+    }
+}
+
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum UnitKind {
     #[default]

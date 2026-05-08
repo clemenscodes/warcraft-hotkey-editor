@@ -5,8 +5,8 @@ use warcraft_api::Race;
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
 use crate::components::race_tabs::RaceTabs;
-use crate::focus::modality::FocusModality;
-use crate::grid_slot::GridSlotId;
+use crate::model::grid::GridSlotId;
+use crate::services::focus::modality::FocusModality;
 
 use state::ModeButtonClass;
 

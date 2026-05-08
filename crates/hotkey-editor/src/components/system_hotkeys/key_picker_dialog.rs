@@ -4,7 +4,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::dialog_header::DialogHeader;
-use crate::system_hotkeys::keycodes::KeyCodes;
+use crate::model::hotkeys::keycodes::KeyCodes;
 
 static KEYBOARD_ROWS: &[&[(u32, &str)]] = &[
     &[

@@ -4,22 +4,22 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::app_footer::AppFooter;
-use crate::components::app_header::AppHeader;
 use crate::components::dialog_stack::nested_picker_dialog_is_present;
+use crate::components::footer::AppFooter;
+use crate::components::header::AppHeader;
 use crate::components::mode_and_race_tabs::ModeAndRaceTabs;
 use crate::components::preview_dialog::PreviewDialog;
 use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
-use crate::components::toast_mount::ToastMount;
-use crate::components::tooltip_mount::TooltipMount;
+use crate::components::toasts::ToastMount;
+use crate::components::tooltips::TooltipMount;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
-use crate::customkeys::local_storage_cache::LocalStorageCache;
-use crate::customkeys::upload_status::UploadStatus;
-use crate::focus::navigation::{FocusNavigation, FocusedElementInfo};
-use crate::grid_layout::{EditingCell, GridLayout};
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::navigation::url_state::UrlNavigationState;
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::{EditingCell, GridLayout};
+use crate::services::customkeys::persistence::CustomKeysPersistence;
+use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
+use crate::services::navigation::url_state::UrlNavigationState;
 use warcraft_api::RaceLabels;
 use warcraft_database::UnitMode;
 
@@ -35,13 +35,13 @@ pub(crate) fn App() -> Element {
     // back so the entry is always present and ready for the
     // persistence effect below to compare against.
     let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
-        let stored_text = LocalStorageCache::load_text();
+        let stored_text = CustomKeysPersistence::load_text();
         let initial_file = match stored_text {
             Some(stored) => CustomKeys::from(stored.as_str()).normalize(),
             None => CustomKeys::from("").normalize(),
         };
         let canonical_text = initial_file.to_string();
-        LocalStorageCache::save_text(&canonical_text);
+        CustomKeysPersistence::save_text(&canonical_text);
         Some(initial_file)
     });
     // Persistence: every signal mutation re-runs the canonical
@@ -57,18 +57,18 @@ pub(crate) fn App() -> Element {
         };
         let normalized = file.normalize();
         let canonical_text = normalized.to_string();
-        LocalStorageCache::save_text(&canonical_text);
+        CustomKeysPersistence::save_text(&canonical_text);
     });
     // Grid layout lives in its own local-storage entry; importing a
     // CustomKeys file or applying a template never touches it, and the
     // layout editor dialog is the only path that mutates it. First-load
     // (no entry yet) falls back to the standard QWERTY layout.
     let grid_layout = use_signal::<GridLayout>(|| {
-        LocalStorageCache::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
+        CustomKeysPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
     });
     use_effect(move || {
         let snapshot = *grid_layout.read();
-        LocalStorageCache::save_grid_layout(snapshot);
+        CustomKeysPersistence::save_grid_layout(snapshot);
     });
     let initial_nav = UrlNavigationState::from_url();
     let initial_race = initial_nav.race();

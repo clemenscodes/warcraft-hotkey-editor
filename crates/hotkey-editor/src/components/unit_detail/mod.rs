@@ -1,7 +1,6 @@
 mod grids;
 mod header;
 mod leveled_stats;
-mod slot_data;
 mod stat_icon;
 mod stats_panel;
 
@@ -9,18 +8,17 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
-use warcraft_api::{WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_keybinds::{CustomKeys, InspectorDetail};
+use warcraft_api::WarcraftObjectMeta;
+use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
+use warcraft_keybinds::{CustomKeys, InspectorDetail, UnitCommandSlots};
 
 use crate::components::tile_override::TileOverridePanel;
-use crate::grid_layout::GridLayout;
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::icons::IconUrl;
-use warcraft_database::ObjectLookup;
+use crate::model::grid::GridLayout;
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::icons::IconUrl;
 
 use grids::UnitCommandGrids;
 use header::UnitDetailHeader;
-use slot_data::UnitSlotData;
 use stats_panel::UnitStatsPanel;
 
 #[component]
@@ -45,10 +43,32 @@ pub(crate) fn UnitDetailPanel(
     });
     let slot_data_memo = use_memo(move || {
         let unit_id_option = selected_unit_id.read().clone();
-        match unit_id_option.as_deref() {
-            Some(uid) => UnitSlotData::compute(uid),
-            None => UnitSlotData::empty(),
-        }
+        let unit_id_str = unit_id_option.as_deref().unwrap_or("");
+        let unit_id_obj = WARCRAFT_DATABASE
+            .by_id_and_key(unit_id_str)
+            .map(|(id, _)| id)
+            .unwrap_or_default();
+        let command_card_slots: Rc<[GridSlotId]> = WARCRAFT_DATABASE
+            .command_card(unit_id_obj)
+            .filled_slots()
+            .collect();
+        let build_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
+            .build_menu(unit_id_obj)
+            .map(|card| card.filled_slots().collect());
+        let uprooted_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
+            .uprooted_menu(unit_id_obj)
+            .map(|card| card.filled_slots().collect());
+        let research_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
+            .research_menu(unit_id_obj)
+            .map(|card| card.filled_slots().collect());
+        let train_upgrades = WARCRAFT_DATABASE.train_unit_upgrades(unit_id_obj);
+        (
+            command_card_slots,
+            build_menu_slots,
+            uprooted_menu_slots,
+            research_menu_slots,
+            train_upgrades,
+        )
     });
 
     let unit_id_option = selected_unit_id.read().clone();
@@ -81,21 +101,20 @@ pub(crate) fn UnitDetailPanel(
         .map(|url| url.to_string());
 
     let slot_data_guard = slot_data_memo.read();
-    let command_card_slots_rc = slot_data_guard.command_card_slots().clone();
-    let build_menu_slots_rc = slot_data_guard.build_menu_slots().cloned();
-    let uprooted_menu_slots_rc = slot_data_guard.uprooted_menu_slots().cloned();
-    let research_menu_slots_rc = slot_data_guard.research_menu_slots().cloned();
-    let train_unit_upgrades = slot_data_guard.train_unit_upgrades();
+    let (
+        command_card_slots_rc,
+        build_menu_slots_rc,
+        uprooted_menu_slots_rc,
+        research_menu_slots_rc,
+        train_upgrades,
+    ) = slot_data_guard.clone();
 
     let inspector_slot = *selected_slot.read();
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
     let inspector_panel = inspector_slot.as_ref().map(|slot| {
         let upgrade_id = if let GridSlotId::Ability(id) = slot {
-            train_unit_upgrades
-                .get(id.value())
-                .copied()
-                .map(WarcraftObjectId::new)
+            train_upgrades.get(&id.object_id()).copied()
         } else {
             None
         };

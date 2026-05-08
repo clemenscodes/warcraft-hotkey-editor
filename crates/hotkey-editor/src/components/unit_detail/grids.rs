@@ -5,8 +5,8 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
-use crate::grid_layout::GridLayout;
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::GridLayout;
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 
 #[component]
 pub(crate) fn UnitCommandGrids(

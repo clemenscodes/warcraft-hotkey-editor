@@ -6,8 +6,8 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{UnitCatalog, UnitMode};
 
-use crate::grid_slot::GridSlotId;
-use crate::icons::IconUrl;
+use crate::model::grid::GridSlotId;
+use crate::model::icons::IconUrl;
 
 use super::unit_card::UnitCard;
 use super::unit_kind_data_attr;

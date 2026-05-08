@@ -13,7 +13,7 @@ pub(super) struct DragOrigin {
     pub(super) cursor_vertical_position: f64,
 }
 
-use crate::grid_slot::{DragFollowerVisual, GridSlotId};
+use crate::model::grid::{DragFollowerVisual, GridSlotId};
 
 pub(super) struct PendingDragData {
     pub(super) source_slot: GridSlotId,

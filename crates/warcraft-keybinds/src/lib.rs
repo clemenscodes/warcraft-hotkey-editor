@@ -15,7 +15,7 @@ pub mod unit_slots;
 
 pub use ability_cell::{AbilityCell, AbilityIconPath};
 pub use ability_id::AbilityId;
-pub use custom_keys::CustomKeys;
+pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict};
 pub use grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 pub use hotkey_target::HotkeyTarget;
 pub use hotkey_token::{HotkeyToken, HotkeyTokenIsNotLetter, HotkeyTokenParseError};

@@ -4,9 +4,9 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::icons::ICON_UPLOAD;
 use crate::components::upload_info_dialog::UploadInfoDialog;
-use crate::customkeys::baseline::baseline_content;
-use crate::customkeys::upload_picker::UPLOAD_INPUT_ELEMENT_ID;
-use crate::customkeys::upload_status::UploadStatus;
+
+use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
 
 #[component]
 pub(crate) fn UploadButton(
@@ -29,7 +29,8 @@ pub(crate) fn UploadButton(
                     let uploaded_only = CustomKeys::from(contents.as_str());
                     let binding_count = uploaded_only.bindings_in_order().count();
                     let command_count = uploaded_only.commands_in_order().count();
-                    let mut baseline_file = CustomKeys::from(baseline_content());
+                    let mut baseline_file =
+                        CustomKeys::from(warcraft_keybinds::DEFAULT_CUSTOM_KEYS);
                     baseline_file.extend(uploaded_only);
                     let normalized = baseline_file.normalize();
                     loaded_keys.set(Some(normalized));

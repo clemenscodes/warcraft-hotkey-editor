@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectMeta};
 
 use warcraft_database::{BuildingTraits, CommandCatalog};
@@ -14,6 +16,10 @@ pub trait UnitCommandSlots {
     fn build_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
     fn research_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
     fn uprooted_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+    fn train_unit_upgrades(
+        &self,
+        unit_id: WarcraftObjectId,
+    ) -> HashMap<WarcraftObjectId, WarcraftObjectId>;
     fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId>;
 }
 
@@ -405,6 +411,41 @@ impl UnitCommandSlots for WarcraftDatabase {
             card.place(slot_position, ability_slot);
         }
         Some(card)
+    }
+
+    fn train_unit_upgrades(
+        &self,
+        unit_id: WarcraftObjectId,
+    ) -> HashMap<WarcraftObjectId, WarcraftObjectId> {
+        let unit_id_str = unit_id.value();
+        let Some(unit_object) = self.by_id(unit_id_str) else {
+            return HashMap::new();
+        };
+        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
+            return HashMap::new();
+        };
+        let primary_train_slots = unit_meta.trains();
+        let mut seen_positions: HashMap<crate::GridCoordinate, WarcraftObjectId> = HashMap::new();
+        let mut upgrades: HashMap<WarcraftObjectId, WarcraftObjectId> = HashMap::new();
+        for trained_id in primary_train_slots {
+            let trained_str = trained_id.value();
+            let trained_object = self.by_id(trained_str);
+            let has_icon = trained_object.is_some_and(|object| object.has_displayable_icon());
+            if !has_icon {
+                continue;
+            }
+            let position_option =
+                trained_object.and_then(|object| object.default_button_position());
+            let Some(position) = position_option else {
+                continue;
+            };
+            if let Some(existing_id) = seen_positions.get(&position).copied() {
+                upgrades.entry(existing_id).or_insert(*trained_id);
+            } else {
+                seen_positions.insert(position, *trained_id);
+            }
+        }
+        upgrades
     }
 
     fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId> {

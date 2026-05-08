@@ -16,9 +16,9 @@ use warcraft_keybinds::InspectorDetail;
 use warcraft_keybinds::text::description::Description;
 use warcraft_keybinds::text::tip::Tip;
 
-use crate::customkeys::hotkey_override::HotkeyOverride;
-use crate::grid_layout::GridLayout;
-use crate::grid_slot::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::GridLayout;
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::services::customkeys::hotkey_override::HotkeyOverride;
 
 use description::AbilityDescription;
 use key_field::OverrideKeyField;
@@ -625,7 +625,7 @@ impl PickerRows {
                             layout,
                             is_research_context,
                         ) {
-                            let display_name = conflict.conflicting_display_name().to_string();
+                            let display_name = conflict.display_name().to_string();
                             KeyPickerCellState::Conflict { display_name }
                         } else {
                             KeyPickerCellState::Available
