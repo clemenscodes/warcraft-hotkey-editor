@@ -2,9 +2,9 @@ use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, Hotkey};
 
-use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
-use crate::model::hotkeys::binding_map::SystemBindingMap;
+use warcraft_keybinds::EffectiveBinding;
+use warcraft_keybinds::SystemBindingMap;
 
 /// Big WC3-style slot used in inventory-derived layouts (hero selection,
 /// control groups). Same gold-frame visuals as the inventory cell minus the
@@ -31,7 +31,7 @@ pub(crate) fn SlotButton(
     drop(read_guard);
     let map_guard = binding_map.read();
     let collisions =
-        map_guard.collisions_for(&lookup_id, effective.hotkey_code, effective.modifier);
+        map_guard.collisions_for(&lookup_id, effective.hotkey_code(), effective.modifier());
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -42,7 +42,7 @@ pub(crate) fn SlotButton(
     } else {
         String::new()
     };
-    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier);
+    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier());
     drop(map_guard);
     let is_editing = editing_section
         .read()
@@ -76,7 +76,7 @@ pub(crate) fn SlotButton(
         if is_editing {
             SystemKeyPickerDialog {
                 title: String::from("Pick a hotkey"),
-                current_code: effective.hotkey_code,
+                current_code: effective.hotkey_code(),
                 conflicts: picker_conflicts,
                 open: true,
                 on_pick: move |code: u32| {

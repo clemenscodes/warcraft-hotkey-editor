@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_primitives::toast::ToastProvider;
 
-const TOAST_STYLES: Asset = asset!("/src/components/toasts/toasts.css");
+const TOAST_STYLES: Asset = asset!("/src/components/shell/toasts/toasts.css");
 
 #[component]
 pub(crate) fn ToastMount(children: Element) -> Element {

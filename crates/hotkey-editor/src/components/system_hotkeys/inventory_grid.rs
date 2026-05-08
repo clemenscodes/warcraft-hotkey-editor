@@ -8,11 +8,11 @@ use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, Hotkey};
 use wasm_bindgen::JsCast;
 
-use crate::components::system_hotkeys::key_cell::EffectiveBinding;
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
 use crate::model::grid::{CursorPoint, HitTestPoint};
-use crate::model::hotkeys::binding_map::SystemBindingMap;
 use warcraft_database::SystemHotkeysCategory;
+use warcraft_keybinds::EffectiveBinding;
+use warcraft_keybinds::SystemBindingMap;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
@@ -145,7 +145,7 @@ fn InventoryCell(
     drop(read_guard);
     let map_guard = binding_map.read();
     let collisions =
-        map_guard.collisions_for(&section_id, effective.hotkey_code, effective.modifier);
+        map_guard.collisions_for(&section_id, effective.hotkey_code(), effective.modifier());
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -156,7 +156,7 @@ fn InventoryCell(
     } else {
         String::new()
     };
-    let picker_conflicts = map_guard.picker_conflicts(&section_id, effective.modifier);
+    let picker_conflicts = map_guard.picker_conflicts(&section_id, effective.modifier());
     drop(map_guard);
     let key_label = effective.label();
     let is_editing = editing_section
@@ -365,7 +365,7 @@ fn InventoryCell(
         if is_editing {
             SystemKeyPickerDialog {
                 title: String::from("Pick a hotkey"),
-                current_code: effective.hotkey_code,
+                current_code: effective.hotkey_code(),
                 conflicts: picker_conflicts,
                 open: true,
                 on_pick: move |code: u32| {

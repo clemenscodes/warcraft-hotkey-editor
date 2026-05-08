@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
-use crate::components::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog_header::DialogHeader;
 use warcraft_keybinds::HotkeyToken;
 
 #[derive(Clone, PartialEq, Eq)]

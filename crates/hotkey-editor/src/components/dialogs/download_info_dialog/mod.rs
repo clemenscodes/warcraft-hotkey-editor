@@ -1,8 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
-use crate::components::dialog_header::DialogHeader;
-use crate::services::files::upload::UploadPicker;
+use crate::components::dialogs::dialog_header::DialogHeader;
 
 const BTN_SECONDARY: &str = "inline-flex items-center justify-center px-14 py-6 \
     rounded-lg border border-warcraft-blue text-warcraft-text-secondary \
@@ -21,31 +20,43 @@ const BTN_PRIMARY: &str = "inline-flex items-center justify-center px-14 py-6 \
     hover:[box-shadow:0_0_12px_rgba(255,206,99,0.4)]";
 
 #[component]
-pub(crate) fn UploadInfoDialog(mut open: Signal<bool>) -> Element {
+pub(crate) fn DownloadInfoDialog(mut open: Signal<bool>, on_confirm: EventHandler<()>) -> Element {
     rsx! {
         DialogRoot {
             class: "dialog-overlay",
             open: open(),
             on_open_change: move |is_open| open.set(is_open),
             DialogContent {
-                class: "dialog-shell wc3-dialog upload-info-dialog".to_string(),
+                class: "dialog-shell wc3-dialog download-info-dialog".to_string(),
                 DialogHeader {
-                    title: "Import CustomKeys.txt".to_string(),
+                    title: "Download CustomKeys.txt".to_string(),
                     on_close: move |_| open.set(false),
                 }
                 div { class: "wc3-dialog-body flex flex-col",
                     div {
-                        class: "flex flex-col items-center justify-center gap-8 flex-1 \
+                        class: "flex flex-col items-center justify-center gap-10 flex-1 \
                                 max-w-[70rem] mx-auto w-full",
                         p { class: "m-0 text-[2rem] max-w-[90rem] text-center leading-snug font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.75)] [text-shadow:1px_1px_0_#000]",
-                            "Open your Documents folder, navigate to Warcraft III, \
-                            then CustomKeyBindings, and select this file:"
+                            "Place the file in your Documents folder, inside Warcraft III, \
+                            then CustomKeyBindings. The filename must be exactly:"
                         }
                         div {
                             class: "font-mono text-[2rem] px-8 py-4 rounded-md \
                                     border border-[rgba(255,206,99,0.35)] \
                                     bg-[rgba(8,18,35,0.85)] text-warcraft-gold",
                             "CustomKeys.txt"
+                        }
+                        p {
+                            class: "w-full rounded-md px-6 py-5 m-0 text-center \
+                                    font-friz-quadrata uppercase tracking-[0.08em] \
+                                    text-[1.75rem] leading-relaxed",
+                            style: "border: 1px solid rgba(255,180,0,0.45); \
+                                    background: rgba(60,40,0,0.45); \
+                                    color: rgba(255,206,99,0.85); \
+                                    text-shadow: 1px 1px 0 #000;",
+                            "Any other filename will not be detected by Warcraft III. \
+                            Note: button positions in saved custom games are fixed at \
+                            save time and will not update, even if hotkeys change."
                         }
                     }
                     div { class: "flex flex-wrap gap-4 justify-end flex-none pt-4",
@@ -60,9 +71,9 @@ pub(crate) fn UploadInfoDialog(mut open: Signal<bool>) -> Element {
                             r#type: "button",
                             onclick: move |_| {
                                 open.set(false);
-                                UploadPicker::trigger();
+                                on_confirm.call(());
                             },
-                            "Choose File"
+                            "Download"
                         }
                     }
                 }

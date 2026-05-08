@@ -2,8 +2,9 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::icons::ICON_UPLOAD;
-use crate::components::upload_info_dialog::UploadInfoDialog;
+use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
+use crate::components::shared::icons::ICON_UPLOAD;
+use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
 
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
@@ -69,12 +70,12 @@ pub(crate) fn UploadButton(
                 onchange: on_file_change,
             }
             button {
-                class: "toolbar-icon-button",
+                class: TOOLBAR_BTN_CLASS,
                 r#type: "button",
                 aria_label: "Upload CustomKeys.txt",
                 onclick: move |_| info_open.set(true),
                 span {
-                    class: "toolbar-icon",
+                    class: TOOLBAR_ICON_CLASS,
                     aria_hidden: "true",
                     dangerous_inner_html: ICON_UPLOAD,
                 }

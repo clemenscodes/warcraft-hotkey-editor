@@ -1,11 +1,11 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::download_info_dialog::DownloadInfoDialog;
-use crate::components::icons::{
+use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
+use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
+use crate::components::shared::icons::{
     ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_TEMPLATES, ICON_UPLOAD,
 };
-use crate::components::upload_info_dialog::UploadInfoDialog;
 use crate::services::files::download::BlobDownload;
 
 const BURGER_MENU_ITEM_CLASS: &str = "flex items-center gap-[0.85rem] w-full min-h-12 py-[0.65rem] px-[0.9rem] \

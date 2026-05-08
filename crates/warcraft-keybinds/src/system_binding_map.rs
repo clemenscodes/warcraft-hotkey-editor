@@ -1,14 +1,56 @@
 use std::collections::HashMap;
 
-use warcraft_api::SystemKeybindModifier;
+use warcraft_api::{ContextSet, KeyCode, SystemKeybindModifier};
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
-use warcraft_keybinds::CustomKeys;
 
-use crate::components::system_hotkeys::key_cell::EffectiveBinding;
-use warcraft_api::ContextSet;
+use crate::{CustomKeys, Hotkey};
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub struct EffectiveBinding {
+    hotkey_code: u32,
+    modifier: SystemKeybindModifier,
+}
+
+impl EffectiveBinding {
+    pub fn resolve_from_file(
+        custom_keys: Option<&CustomKeys>,
+        section_id: &str,
+        default_hotkey: u32,
+        default_modifier: SystemKeybindModifier,
+    ) -> Self {
+        let custom_hotkey = custom_keys
+            .and_then(|file| file.system(section_id))
+            .and_then(|binding| match binding.hotkey() {
+                Hotkey::VirtualKey(code) => Some(*code),
+                _ => None,
+            });
+        let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
+        // Warcraft III hardcodes the modifier per system hotkey — any
+        // `Modifier=` line in CustomKeys.txt is written for transparency but
+        // discarded at load time. The editor mirrors that: the effective
+        // modifier is always the system default, regardless of the file.
+        Self {
+            hotkey_code,
+            modifier: default_modifier,
+        }
+    }
+
+    pub fn hotkey_code(&self) -> u32 {
+        self.hotkey_code
+    }
+
+    pub fn modifier(&self) -> SystemKeybindModifier {
+        self.modifier
+    }
+
+    pub fn label(&self) -> String {
+        let code = KeyCode::from(self.hotkey_code);
+        format!("{}{code}", self.modifier)
+    }
+}
 
 #[derive(Clone, PartialEq)]
-pub(crate) struct ResolvedSystemBinding {
+pub struct ResolvedSystemBinding {
     section_id: String,
     section_comment: String,
     binding: EffectiveBinding,
@@ -16,18 +58,18 @@ pub(crate) struct ResolvedSystemBinding {
 }
 
 impl ResolvedSystemBinding {
-    pub(crate) fn section_comment(&self) -> &str {
+    pub fn section_comment(&self) -> &str {
         &self.section_comment
     }
 }
 
 #[derive(Clone, PartialEq)]
-pub(crate) struct SystemBindingMap {
+pub struct SystemBindingMap {
     bindings_by_section: HashMap<String, ResolvedSystemBinding>,
 }
 
 impl SystemBindingMap {
-    pub(crate) fn build(custom_keys: Option<&CustomKeys>) -> Self {
+    pub fn build(custom_keys: Option<&CustomKeys>) -> Self {
         let mut bindings_by_section: HashMap<String, ResolvedSystemBinding> =
             HashMap::with_capacity(WARCRAFT_SYSTEM_KEYBINDS.len());
         for entry in WARCRAFT_SYSTEM_KEYBINDS.iter() {
@@ -53,12 +95,7 @@ impl SystemBindingMap {
         }
     }
 
-    /// All sections — other than `excluded_section_id` — whose effective
-    /// binding equals the given `(code, modifier)` and whose runtime context
-    /// overlaps with the excluded section's context. Cross-context overlaps
-    /// (e.g. an inventory slot vs. a replay-only key) are filtered out
-    /// because they cannot collide at runtime.
-    pub(crate) fn collisions_for(
+    pub fn collisions_for(
         &self,
         excluded_section_id: &str,
         code: u32,
@@ -74,8 +111,7 @@ impl SystemBindingMap {
             .values()
             .filter(|resolved| resolved.section_id != excluded_section_id)
             .filter(|resolved| {
-                let other_binding = resolved.binding;
-                other_binding.hotkey_code == code && other_binding.modifier == modifier
+                resolved.binding.hotkey_code == code && resolved.binding.modifier == modifier
             })
             .filter(|resolved| own_context.overlaps(resolved.context_set))
             .collect();
@@ -83,12 +119,7 @@ impl SystemBindingMap {
         matches
     }
 
-    /// For the picker dialog: every keycode currently bound by another
-    /// section under the given modifier — restricted to sections whose
-    /// runtime context overlaps with the editing section's context — maps to
-    /// the comments of those sections (joined for tooltip rendering by the
-    /// caller).
-    pub(crate) fn picker_conflicts(
+    pub fn picker_conflicts(
         &self,
         own_section_id: &str,
         own_modifier: SystemKeybindModifier,

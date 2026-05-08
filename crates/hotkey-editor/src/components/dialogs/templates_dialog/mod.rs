@@ -3,7 +3,7 @@ use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 
-use crate::components::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog_header::DialogHeader;
 
 use crate::model::grid::ResolvedTemplate;
 use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};

@@ -1,9 +1,9 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::export_buttons::ExportButtons;
-use crate::components::icons::{ICON_COG, ICON_TEMPLATES};
-use crate::components::upload_button::UploadButton;
+use crate::components::actions::export_buttons::ExportButtons;
+use crate::components::actions::upload_button::UploadButton;
+use crate::components::shared::icons::{ICON_COG, ICON_TEMPLATES};
 use crate::services::customkeys::upload_status::UploadStatus;
 
 #[component]

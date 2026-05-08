@@ -1,16 +1,12 @@
 use std::sync::OnceLock;
 
-use warcraft_api::WarcraftObjectMeta;
-use warcraft_keybinds::CustomKeys;
-
-use warcraft_api::UnitKind;
-
-use warcraft_database::{CommandCatalog, ObjectLookup, UnitKindHelpers};
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_keybinds::{AbilityCell, CustomKeys, UnitCommandSlots};
 
 use crate::model::grid::GridSlotId;
 use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::services::customkeys::positions::Positions;
-use warcraft_keybinds::AbilityCell;
 
 pub(crate) struct BundledTemplate {
     name: &'static str,
@@ -98,8 +94,16 @@ impl ResolvedTemplate {
     }
 
     fn compute_all() -> Vec<ResolvedTemplate> {
-        let command_slots = ArchmageTemplate::command_card_slots();
-        let research_slots = ArchmageTemplate::research_menu_slots();
+        let archmage_id = WarcraftObjectId::new("Hamg");
+        let command_slots: Vec<GridSlotId> = WARCRAFT_DATABASE
+            .command_card(archmage_id)
+            .filled_slots()
+            .collect();
+        let research_slots: Vec<GridSlotId> = WARCRAFT_DATABASE
+            .research_menu(archmage_id)
+            .into_iter()
+            .flat_map(|card| card.filled_slots().collect::<Vec<_>>())
+            .collect();
         TEMPLATES
             .iter()
             .map(|template| {
@@ -107,8 +111,8 @@ impl ResolvedTemplate {
                 let derived_grid = GridLayout::derived_from(&parsed_file);
                 let mut preview_file = CustomKeys::from(warcraft_keybinds::DEFAULT_CUSTOM_KEYS);
                 preview_file.extend(parsed_file);
-                let command_card_cells = CellGrid::populate(&preview_file, command_slots, false);
-                let research_menu_cells = CellGrid::populate(&preview_file, research_slots, true);
+                let command_card_cells = CellGrid::populate(&preview_file, &command_slots, false);
+                let research_menu_cells = CellGrid::populate(&preview_file, &research_slots, true);
                 ResolvedTemplate {
                     template,
                     grid: derived_grid,
@@ -148,82 +152,5 @@ impl CellGrid {
                     .collect()
             })
             .collect()
-    }
-}
-
-const ARCHMAGE_UNIT_ID: &str = "Hamg";
-static ARCHMAGE_COMMAND_CARD_SLOTS: OnceLock<Vec<GridSlotId>> = OnceLock::new();
-static ARCHMAGE_RESEARCH_MENU_SLOTS: OnceLock<Vec<GridSlotId>> = OnceLock::new();
-
-struct ArchmageTemplate;
-
-impl ArchmageTemplate {
-    fn command_card_slots() -> &'static [GridSlotId] {
-        ARCHMAGE_COMMAND_CARD_SLOTS.get_or_init(Self::compute_command_card_slots)
-    }
-
-    fn research_menu_slots() -> &'static [GridSlotId] {
-        ARCHMAGE_RESEARCH_MENU_SLOTS.get_or_init(Self::compute_research_menu_slots)
-    }
-
-    fn compute_command_card_slots() -> Vec<GridSlotId> {
-        let Some(unit_object) = ObjectLookup::by_id(ARCHMAGE_UNIT_ID) else {
-            return Vec::new();
-        };
-        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
-            return Vec::new();
-        };
-        let primary_commands =
-            CommandCatalog::primary_commands_for(unit_meta, unit_object.race(), ARCHMAGE_UNIT_ID);
-        let regular_abilities = unit_meta.abilities();
-        let hero_abilities = unit_meta.hero_abilities();
-        let mut slots: Vec<GridSlotId> = Vec::new();
-        for command_name in primary_commands {
-            if !ObjectLookup::has_icon(command_name) {
-                continue;
-            }
-            slots.push(GridSlotId::command(command_name));
-        }
-        for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
-            if !ObjectLookup::has_icon(ability_id.value()) {
-                continue;
-            }
-            slots.push(GridSlotId::ability(ability_id.value()));
-        }
-        let unit_is_hero = UnitKindHelpers::effective_kind(unit_meta) == UnitKind::Hero;
-        if unit_is_hero
-            && !hero_abilities.is_empty()
-            && let Some(select_skill_command) = CommandCatalog::known_command("CmdSelectSkill")
-            && ObjectLookup::has_icon(select_skill_command)
-        {
-            slots.push(GridSlotId::command(select_skill_command));
-        }
-        slots
-    }
-
-    fn compute_research_menu_slots() -> Vec<GridSlotId> {
-        let Some(unit_object) = ObjectLookup::by_id(ARCHMAGE_UNIT_ID) else {
-            return Vec::new();
-        };
-        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
-            return Vec::new();
-        };
-        let hero_abilities = unit_meta.hero_abilities();
-        if hero_abilities.is_empty() {
-            return Vec::new();
-        }
-        let mut slots: Vec<GridSlotId> = Vec::new();
-        for ability_id in hero_abilities.iter() {
-            if !ObjectLookup::has_icon(ability_id.value()) {
-                continue;
-            }
-            slots.push(GridSlotId::ability(ability_id.value()));
-        }
-        if let Some(back_command) = CommandCatalog::submenu_back_command()
-            && ObjectLookup::has_icon(back_command)
-        {
-            slots.push(GridSlotId::command(back_command));
-        }
-        slots
     }
 }

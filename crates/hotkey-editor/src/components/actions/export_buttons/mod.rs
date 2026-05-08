@@ -1,8 +1,9 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::download_info_dialog::DownloadInfoDialog;
-use crate::components::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
+use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
+use crate::components::shared::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
+use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
 use crate::services::files::download::BlobDownload;
 
 #[component]
@@ -22,7 +23,7 @@ pub(crate) fn ExportButtons(
     rsx! {
         div { class: "contents",
             button {
-                class: "toolbar-icon-button",
+                class: TOOLBAR_BTN_CLASS,
                 r#type: "button",
                 aria_label: "{preview_label}",
                 aria_pressed: "{preview_visible}",
@@ -31,19 +32,19 @@ pub(crate) fn ExportButtons(
                     preview_open.set(next_value);
                 },
                 span {
-                    class: "toolbar-icon",
+                    class: TOOLBAR_ICON_CLASS,
                     aria_hidden: "true",
                     dangerous_inner_html: ICON_PREVIEW,
                 }
             }
             if has_loaded_file {
                 button {
-                    class: "toolbar-icon-button",
+                    class: TOOLBAR_BTN_CLASS,
                     r#type: "button",
                     aria_label: "Download CustomKeys.txt",
                     onclick: move |_| download_info_open.set(true),
                     span {
-                        class: "toolbar-icon",
+                        class: TOOLBAR_ICON_CLASS,
                         dangerous_inner_html: ICON_DOWNLOAD,
                     }
                 }

@@ -1,46 +1,8 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeys, Hotkey};
+use warcraft_keybinds::{CustomKeys, EffectiveBinding, Hotkey, SystemBindingMap};
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
-use crate::model::hotkeys::binding_map::SystemBindingMap;
-use warcraft_api::KeyCode;
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub(crate) struct EffectiveBinding {
-    pub(crate) hotkey_code: u32,
-    pub(crate) modifier: SystemKeybindModifier,
-}
-
-impl EffectiveBinding {
-    pub(crate) fn resolve_from_file(
-        custom_keys: Option<&CustomKeys>,
-        section_id: &str,
-        default_hotkey: u32,
-        default_modifier: SystemKeybindModifier,
-    ) -> Self {
-        let custom_hotkey = custom_keys
-            .and_then(|file| file.system(section_id))
-            .and_then(|binding| match binding.hotkey() {
-                Hotkey::VirtualKey(code) => Some(*code),
-                _ => None,
-            });
-        let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
-        // Warcraft III hardcodes the modifier per system hotkey — any
-        // `Modifier=` line in CustomKeys.txt is written for transparency but
-        // discarded at load time. The editor mirrors that: the effective
-        // modifier is always the system default, regardless of the file.
-        Self {
-            hotkey_code,
-            modifier: default_modifier,
-        }
-    }
-
-    pub(crate) fn label(&self) -> String {
-        let code = KeyCode::from(self.hotkey_code);
-        format!("{}{code}", self.modifier)
-    }
-}
 
 #[component]
 pub(crate) fn KeyCaptureCell(
@@ -63,7 +25,7 @@ pub(crate) fn KeyCaptureCell(
     drop(read_guard);
     let map_guard = binding_map.read();
     let collisions =
-        map_guard.collisions_for(&lookup_id, effective.hotkey_code, effective.modifier);
+        map_guard.collisions_for(&lookup_id, effective.hotkey_code(), effective.modifier());
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -98,7 +60,7 @@ pub(crate) fn KeyCaptureCell(
     } else {
         format!("{CHIP_BASE} {CHIP_NORMAL}")
     };
-    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier);
+    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier());
     drop(map_guard);
     let is_editing = editing_section
         .read()
@@ -120,7 +82,7 @@ pub(crate) fn KeyCaptureCell(
         if is_editing {
             SystemKeyPickerDialog {
                 title: String::from("Pick a hotkey"),
-                current_code: effective.hotkey_code,
+                current_code: effective.hotkey_code(),
                 conflicts: picker_conflicts,
                 open: true,
                 on_pick: move |code: u32| {

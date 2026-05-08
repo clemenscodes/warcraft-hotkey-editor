@@ -1,10 +1,11 @@
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 
-const LAYOUT_EDITOR_STYLES: Asset = asset!("/src/components/layout_editor/layout_editor.css");
+const LAYOUT_EDITOR_STYLES: Asset =
+    asset!("/src/components/dialogs/layout_editor/layout_editor.css");
 use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 
-use crate::components::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
+use crate::components::shared::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
 
 use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout};

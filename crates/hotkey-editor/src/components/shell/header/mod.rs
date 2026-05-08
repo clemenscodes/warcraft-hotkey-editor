@@ -6,11 +6,11 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::dialog_header::DialogHeader;
-use crate::components::dialog_stack::nested_picker_dialog_is_present;
-use crate::components::icons::ICON_GRID;
-use crate::components::layout_editor::LayoutEditor;
-use crate::components::templates_dialog::TemplatesDialog;
+use crate::components::dialogs::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
+use crate::components::dialogs::layout_editor::LayoutEditor;
+use crate::components::dialogs::templates_dialog::TemplatesDialog;
+use crate::components::shared::icons::ICON_GRID;
 use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::upload_status::UploadStatus;
 
@@ -18,10 +18,10 @@ use brand::AppHeaderBrand;
 use burger::BurgerMenu;
 use toolbar::HeaderToolbar;
 
-const APP_HEADER_STYLES: Asset = asset!("/src/components/header/header.css");
+const APP_HEADER_STYLES: Asset = asset!("/src/components/shell/header/header.css");
 
-// Shared by toolbar.rs and burger.rs via `super::`.
-const TOOLBAR_BTN_CLASS: &str = "inline-flex items-center justify-center \
+// Shared by toolbar.rs, burger.rs, and action components via `super::` or direct path.
+pub(crate) const TOOLBAR_BTN_CLASS: &str = "inline-flex items-center justify-center \
      [width:calc(5rem_*_var(--hdr-scale))] [height:calc(5rem_*_var(--hdr-scale))] p-0 \
      [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
      border border-[#6c5a1f] [border-radius:calc(12px_*_var(--hdr-scale))] \
@@ -35,7 +35,7 @@ const TOOLBAR_BTN_CLASS: &str = "inline-flex items-center justify-center \
      focus-visible:border-white focus-visible:text-white \
      focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]";
 
-const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
+pub(crate) const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
      [width:calc(2.2rem_*_var(--hdr-scale))] [height:calc(2.2rem_*_var(--hdr-scale))] \
      leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full";
 

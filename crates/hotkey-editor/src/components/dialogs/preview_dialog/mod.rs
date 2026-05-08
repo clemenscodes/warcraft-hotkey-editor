@@ -2,9 +2,9 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog_header::DialogHeader;
 
-const PREVIEW_STYLES: Asset = asset!("/src/components/preview_dialog/preview_dialog.css");
+const PREVIEW_STYLES: Asset = asset!("/src/components/dialogs/preview_dialog/preview_dialog.css");
 
 #[component]
 pub(crate) fn PreviewDialog(

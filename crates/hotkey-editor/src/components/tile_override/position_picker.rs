@@ -8,7 +8,7 @@ use warcraft_keybinds::CustomKeys;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
-use crate::components::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog_header::DialogHeader;
 use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 

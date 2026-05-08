@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-use crate::components::icons::{ICON_TIER_NEXT, ICON_TIER_PREV};
+use crate::components::shared::icons::{ICON_TIER_NEXT, ICON_TIER_PREV};
 
 /// Tier-cycling footer for multi-level abilities (upgrades that have distinct
 /// ubertip/name text per level). Shows a prev/next button and a "Level N of M"

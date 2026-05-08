@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::dialog_stack::nested_picker_dialog_is_present;
+use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
 use crate::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
 use crate::components::system_hotkeys::inventory::InventoryHotkeysView;
