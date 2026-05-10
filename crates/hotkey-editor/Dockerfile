@@ -59,7 +59,7 @@ WORKDIR /app
 
 FROM base AS builder
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
 RUN pnpm install --frozen-lockfile
 
@@ -71,3 +71,28 @@ FROM nginx:alpine AS production
 COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /usr/share/nginx/html/warcraft-hotkey-editor
 COPY crates/hotkey-editor/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
+
+FROM base AS e2e
+
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/pnpm/bin:/root/.cargo/bin"
+
+RUN apt-get update && apt-get install -y --no-install-recommends nginx \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+RUN pnpm install --frozen-lockfile
+
+WORKDIR /app/crates/hotkey-editor
+RUN pnpm add @playwright/test@1.59.1
+RUN node node_modules/@playwright/test/cli.js install --with-deps chromium
+
+COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /usr/share/nginx/html/warcraft-hotkey-editor
+COPY crates/hotkey-editor/nginx.conf /etc/nginx/conf.d/default.conf
+# playwright.config.ts uses baseURL http://localhost:8080 — match nginx to that
+RUN sed -i 's/listen 80;/listen 8080;/' /etc/nginx/conf.d/default.conf
+
+COPY crates/hotkey-editor/e2e/tests e2e/tests
+COPY crates/hotkey-editor/playwright.config.ts .
+
+CMD ["/bin/sh", "-c", "nginx && node node_modules/@playwright/test/cli.js test"]

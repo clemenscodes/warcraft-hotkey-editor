@@ -164,6 +164,7 @@
           pkgs.wasm-bindgen-cli
           pkgs.tailwindcss_4
           pkgs.binaryen
+          pkgs.typescript
           nodejs
           pnpm
           playwright-test
@@ -351,6 +352,7 @@
 
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+          MOON_TOOLCHAIN_FORCE_GLOBALS = "true";
 
           # Runtime linking for the extractor binary: zlib is dlopened
           # by the freshly-built CascLib, gcc.cc.lib provides libstdc++
@@ -361,6 +363,7 @@
           ]);
 
           shellHook = ''
+            export NODE_PATH="${playwright-test}/lib/node_modules''${NODE_PATH:+":$NODE_PATH"}"
             echo ""
             echo "  Warcraft III Hotkey Editor — dev shell"
             echo ""

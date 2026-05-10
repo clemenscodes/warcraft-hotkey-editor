@@ -19,6 +19,8 @@ Cargo.lock.bak
 
 # dx build output and Playwright e2e artifacts
 /crates/hotkey-editor/dist/
+/crates/hotkey-editor/e2e/test-results/
+/crates/hotkey-editor/e2e/playwright-report/
 
 # Node / pnpm
 node_modules/

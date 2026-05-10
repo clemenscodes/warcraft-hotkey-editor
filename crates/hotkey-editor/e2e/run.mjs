@@ -21,9 +21,16 @@ function startServer() {
         process.on("exit", () => proc.kill());
 
         const timeout = setTimeout(
-            () => reject(new Error("App did not compile within 120s")),
+            () => reject(new Error("App did not become ready within 120s")),
             120_000
         );
+
+        proc.on("exit", (code) => {
+            if (code !== null && code !== 0) {
+                clearTimeout(timeout);
+                reject(new Error(`dx serve exited with code ${code}`));
+            }
+        });
 
         const onData = (chunk) => {
             process.stdout.write(chunk);
@@ -45,12 +52,11 @@ function startServer() {
 if (await checkPort(8080)) {
     console.log("Dev server already running, reusing.");
 } else {
-    process.stdout.write("Waiting for app to compile...\n");
+    process.stdout.write("Waiting for app to become ready...\n");
     await startServer();
 }
 
-const tests = spawn("pnpm", ["exec", "playwright", "test", ...process.argv.slice(2)], {
+const tests = spawn("playwright", ["test", ...process.argv.slice(2)], {
     stdio: "inherit",
 });
-
 tests.on("exit", (code) => process.exit(code ?? 0));

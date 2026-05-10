@@ -90,11 +90,24 @@ tasks:
     deps:
       - dx/build
 
+  playwright/typecheck:
+    toolchain: system
+    command: tsc --project e2e/tsconfig.json --noEmit
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "e2e/**/*.ts"
+      - "e2e/tsconfig.json"
+      - "playwright.config.ts"
+      - "package.json"
+
   playwright/test:
     toolchain: system
     command: node e2e/run.mjs
     deps:
       - tailwind/build
+      # - playwright/typecheck
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
@@ -139,6 +152,16 @@ tasks:
   docker/down:
     toolchain: system
     command: docker stop warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/e2e:
+    toolchain: system
+    script: >
+      docker build -f crates/hotkey-editor/Dockerfile --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
+      docker run --rm warcraft-hotkey-editor-e2e
     options:
       outputStyle: stream
       runFromWorkspaceRoot: true
