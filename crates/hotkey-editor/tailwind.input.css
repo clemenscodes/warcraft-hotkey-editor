@@ -58,12 +58,12 @@ body {
 
 @import "./styles/primitives.css" layer(components);
 @import "./styles/app-root.css" layer(components);
-@import "./styles/components-unit-list.css";
-@import "./styles/components-unit-detail.css";
-@import "./styles/components-command-grid.css";
-@import "./styles/dialog-shared.css" layer(components);
-@import "./styles/components-tile-override.css";
-@import "./styles/components-system-hotkeys.css";
+@import "./src/components/unit_list/unit_list.css";
+@import "./src/components/unit_detail/unit_detail.css";
+@import "./src/components/command_grid/command_grid.css";
+@import "./src/components/dialogs/dialogs.css" layer(components);
+@import "./src/components/tile_override/tile_override.css";
+@import "./src/components/system_hotkeys/system_hotkeys.css";
 @import "./styles/mobile-foundation.css" layer(mobile);
 
 @source "./src/**/*.rs";

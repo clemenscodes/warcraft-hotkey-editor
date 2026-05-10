@@ -11,58 +11,60 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
+    fenix = {
+      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     crane.url = "github:ipetkov/crane";
+    playwright.url = "github:pietdevries94/playwright-web-flake";
+    moon-tui.url = "github:clemenscodes/moon-tui";
   };
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
-    rust-overlay,
+    fenix,
     crane,
+    playwright,
+    moon-tui,
   }:
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            (import rust-overlay)
-            # `dioxus-cli` 0.7.6 strictly checks the wasm-bindgen-cli
+            # `dioxus-cli` 0.7.9 strictly checks the wasm-bindgen-cli
             # version against the wasm-bindgen library (transitively
-            # pinned to 0.2.114 by `dioxus = =0.7.6`). nixpkgs ships a
-            # newer 0.2.117, so we pin our own at 0.2.114 via the
-            # in-tree builder.
+            # resolved to 0.2.121 by `dioxus = =0.7.9`). nixpkgs ships
+            # 0.2.117, so we pin our own at 0.2.121 via the in-tree builder.
             (final: prev: {
               wasm-bindgen-cli = final.buildWasmBindgenCli rec {
                 src = final.fetchCrate {
                   pname = "wasm-bindgen-cli";
-                  version = "0.2.114";
-                  hash = "sha256-xrCym+rFY6EUQFWyWl6OPA+LtftpUAE5pIaElAIVqW0=";
+                  version = "0.2.121";
+                  hash = "sha256-ZOMgFNOcGkO66Jz/Z83eoIu+DIzo3Z/vq6Z5g6BDY/w=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-Z8+dUXPQq7S+Q7DWNr2Y9d8GMuEdSnq00quUR0wDNPM=";
+                  hash = "sha256-DPdCDPTAPBrbqLUqnCwQu1dePs9lGg85JCJOCIr9qjU=";
                 };
               };
-              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.6 to match
+              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.9 to match
               # the workspace pin. Same `no-downloads` + `disable-telemetry`
               # build features that nixpkgs already configures.
               dioxus-cli = prev.dioxus-cli.overrideAttrs (old: rec {
-                version = "0.7.6";
+                version = "0.7.9";
                 src = final.fetchCrate {
                   pname = "dioxus-cli";
                   inherit version;
-                  hash = "sha256-PKidohK85wv/ZN9WcNS+HTlVGgR5o07gWLshZhzyg5k=";
+                  hash = "sha256-tLMtUlohSJt3okdJh+ARweQNGmzj/vYiNl8iZhDbSAc=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-T6xLlu8XeJPm+ULgpTALTT93X55ExJhDMuhpal2QLhg=";
+                  hash = "sha256-h5wkxHP8ehZLHqcUsro08/dpqSPnPuBbZuUGG8i4nBc=";
                 };
               });
 
@@ -80,10 +82,11 @@
           ];
         };
 
-        # Stable Rust with the WASM target the Dioxus build needs.
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-          targets = ["wasm32-unknown-unknown"];
-          extensions = ["rust-src" "rust-analyzer" "clippy" "rustfmt"];
+        # Rust toolchain — version, targets, and components are all
+        # declared in rust-toolchain.toml; fenix reads from there.
+        rustToolchain = fenix.packages.${system}.fromToolchainFile {
+          file = ./rust-toolchain.toml;
+          sha256 = "sha256-gh/xTkxKHL4eiRXzWv8KP7vfjSk61Iq48x47BEDFgfk=";
         };
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
@@ -146,6 +149,8 @@
         # `.moon/tasks.yml` or a per-crate `moon.yml` shells out to has
         # to be in here, otherwise `nix run .#dev` and friends crash
         # with "command not found".
+        inherit (playwright.packages.${system}) playwright-test playwright-driver;
+        moonTui = moon-tui.packages.${system}.moon-tui;
         moonRuntimeInputs = [
           rustToolchain
           moonCli
@@ -154,6 +159,9 @@
           pkgs.tailwindcss_4
           pkgs.esbuild
           pkgs.binaryen
+          playwright-test
+          playwright-driver
+          moonTui
         ];
 
         ci-cache-tools = pkgs.buildEnv {
@@ -269,10 +277,18 @@
           dev = {
             type = "app";
             program = "${runMoonTask "dev"}/bin/moon-dev";
+            meta = {
+              description = "Start the Tailwind watcher and dx serve";
+              mainProgram = "moon-dev";
+            };
           };
           bundle = {
             type = "app";
             program = "${runMoonTask "bundle"}/bin/moon-bundle";
+            meta = {
+              description = "Build a production WASM bundle via dx";
+              mainProgram = "moon-bundle";
+            };
           };
           # `nix run .#extract -- --casc /path/to/Warcraft\ III/Data`
           # rebuilds crates/warcraft-database/src/db.rs from CASC. Native
@@ -298,6 +314,10 @@
           in {
             type = "app";
             program = "${extractApp}/bin/warcraft-extract";
+            meta = {
+              description = "Regenerate db.rs from a Warcraft III CASC archive";
+              mainProgram = "warcraft-extract";
+            };
           };
         };
 
@@ -326,6 +346,9 @@
           # build reproducible across machines without any network
           # fetches at build time.
           CASCLIB_DIR = pkgs.casclib;
+
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+          PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
 
           # Runtime linking for the extractor binary: zlib is dlopened
           # by the freshly-built CascLib, gcc.cc.lib provides libstdc++

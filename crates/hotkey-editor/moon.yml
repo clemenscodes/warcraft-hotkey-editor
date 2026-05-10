@@ -8,9 +8,130 @@ tags:
 language: rust
 
 tasks:
+  rust/build:
+    toolchain: rust
+    command: cargo build --target wasm32-unknown-unknown
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*.txt"
+
+  rust/lint:
+    toolchain: rust
+    command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*.txt"
+
+  tailwind/build:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "tailwind.input.css"
+      - "styles/**/*.css"
+      - "src/**/*.css"
+      - "src/**/*.rs"
+
+  tailwind/watch:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --watch
+    options:
+      outputStyle: stream
+      persistent: true
+      runFromWorkspaceRoot: false
+      cache: false
+
+  esbuild/build:
+    toolchain: system
+    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --outdir=assets
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "scripts/**/*.ts"
+      - "tsconfig.json"
+
+  esbuild/build/minify:
+    toolchain: system
+    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --minify --outdir=assets
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "scripts/**/*.ts"
+      - "tsconfig.json"
+
+  dx/serve:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+      - esbuild/build
+
+  dx/build:
+    toolchain: system
+    command: dx build --package hotkey-editor --release --platform web
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    deps:
+      - tailwind/build
+      - esbuild/build/minify
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "@group(static-assets)"
+      - "templates/**/*.txt"
+      - "Dioxus.toml"
+
+  nix/bundle:
+    toolchain: system
+    command: nix build .#warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
   dev:
     extends: dx/serve
 
   bundle:
     deps:
       - dx/build
+
+  playwright/test:
+    toolchain: system
+    command: playwright test
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+      cache: false
+    inputs:
+      - "e2e/**/*.ts"
+      - "e2e/tsconfig.json"
+      - "playwright.config.ts"
+
+  lookbook/serve:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --bin lookbook --features lookbook-preview
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+      - esbuild/build

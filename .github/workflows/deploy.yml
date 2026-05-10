@@ -52,7 +52,8 @@ jobs:
             'crates/**/moon.yml',
             'crates/**/Cargo.toml',
             'crates/hotkey-editor/tailwind.input.css',
-            'crates/hotkey-editor/styles/**/*.css'
+            'crates/hotkey-editor/styles/**/*.css',
+            'crates/hotkey-editor/src/**/*.css'
             ) }}
           restore-keys: |
             ${{ runner.os }}-checks-

@@ -5,11 +5,11 @@ fileGroups:
     - "*.toml"
     - "*.lock"
   sources:
-    - src/**/*
-  assets:
-    - assets/**/*
-    - public/**/*
-    - "**/*.css"
+    - "src/**/*"
+  static-assets:
+    - "assets/webui/**/*"
+    - "assets/favicon.svg"
+    - "public/**/*"
   artifacts:
     - target
 
@@ -25,7 +25,7 @@ implicitInputs:
 tasks:
   rust/build:
     toolchain: rust
-    command: cargo build --target wasm32-unknown-unknown
+    command: cargo build
     options:
       outputStyle: stream
     inputs:
@@ -38,7 +38,7 @@ tasks:
     options:
       outputStyle: stream
     inputs:
-      - "@group(sources)"
+      - "src/**/*.rs"
 
   rust/fmt/fix:
     toolchain: rust
@@ -46,11 +46,11 @@ tasks:
     options:
       outputStyle: stream
     inputs:
-      - "@group(sources)"
+      - "src/**/*.rs"
 
   rust/lint:
     toolchain: rust
-    command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
+    command: cargo clippy --all-targets -- -D warnings
     options:
       outputStyle: stream
     inputs:
@@ -65,85 +65,6 @@ tasks:
     inputs:
       - "@group(sources)"
       - "@group(configs)"
-
-  tailwind/build:
-    toolchain: system
-    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "tailwind.input.css"
-      - "styles/**/*.css"
-      - "src/**/*.rs"
-
-  tailwind/watch:
-    toolchain: system
-    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --watch
-    options:
-      outputStyle: stream
-      persistent: true
-      runFromWorkspaceRoot: false
-      cache: false
-
-  esbuild/build:
-    toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --outdir=assets
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "scripts/**/*.ts"
-      - "tsconfig.json"
-
-  esbuild/build/minify:
-    toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --minify --outdir=assets
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "scripts/**/*.ts"
-      - "tsconfig.json"
-
-  dx/serve:
-    toolchain: system
-    # --package pins the Dioxus app explicitly. Without it, dx walks every
-    # workspace member to auto-detect the "main" package and panics when it
-    # encounters native-only crates like warcraft-extractor that have no
-    # Dioxus.toml.
-    command: dx serve --package hotkey-editor --platform web
-    options:
-      outputStyle: stream
-      interactive: true
-      runFromWorkspaceRoot: false
-      cache: false
-    deps:
-      - tailwind/build
-      - esbuild/build
-
-  dx/build:
-    toolchain: system
-    command: dx build --package hotkey-editor --release --platform web
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    deps:
-      - tailwind/build
-      - esbuild/build/minify
-    inputs:
-      - "@group(sources)"
-      - "@group(assets)"
-      - "@group(configs)"
-      - "Dioxus.toml"
-
-  nix/bundle:
-    toolchain: system
-    command: nix build .#warcraft-hotkey-editor
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: true
-      cache: false
 
   ci:
     options:
