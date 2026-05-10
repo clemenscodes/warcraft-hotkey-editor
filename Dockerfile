@@ -101,4 +101,4 @@ COPY crates/hotkey-editor/playwright.config.ts crates/hotkey-editor/playwright.c
 ENV STATIC_DIR=/app/dist
 
 WORKDIR /app/crates/hotkey-editor
-CMD ["playwright", "test"]
+CMD ["/app/crates/hotkey-editor/node_modules/.bin/playwright", "test"]
