@@ -145,6 +145,12 @@
           };
         });
 
+        # Node.js 24.14.1 and pnpm 11.0.9 — both built from pinned
+        # sources so the exact versions survive future nixpkgs updates.
+        # The derivation files mirror the pattern used in the unival repo.
+        nodejs = import ./nix/mkNode.nix {inherit nixpkgs system;};
+        pnpm = import ./nix/mkPnpm.nix {inherit nodejs; inherit (pkgs) pnpm;};
+
         # Tools every moon task needs on $PATH at runtime. Anything
         # `.moon/tasks.yml` or a per-crate `moon.yml` shells out to has
         # to be in here, otherwise `nix run .#dev` and friends crash
@@ -159,6 +165,8 @@
           pkgs.tailwindcss_4
           pkgs.esbuild
           pkgs.binaryen
+          nodejs
+          pnpm
           playwright-test
           playwright-driver
           moonTui

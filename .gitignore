@@ -16,3 +16,9 @@ Cargo.lock.bak
 
 # Compiled Tailwind asset; edit tailwind.input.css and styles/* instead.
 /crates/hotkey-editor/assets/tailwind.css
+
+# dx build output and Playwright e2e artifacts
+/crates/hotkey-editor/dist/
+
+# Node / pnpm
+node_modules/

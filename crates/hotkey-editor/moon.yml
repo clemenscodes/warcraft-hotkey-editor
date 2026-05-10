@@ -124,14 +124,3 @@ tasks:
       - "e2e/tsconfig.json"
       - "playwright.config.ts"
 
-  lookbook/serve:
-    toolchain: system
-    command: dx serve --package hotkey-editor --platform web --bin lookbook --features lookbook-preview
-    options:
-      outputStyle: stream
-      interactive: true
-      runFromWorkspaceRoot: false
-      cache: false
-    deps:
-      - tailwind/build
-      - esbuild/build
