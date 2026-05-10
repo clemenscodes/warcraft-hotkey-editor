@@ -3,11 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: "moon run hotkey-editor:dev/docker"
+      target: development
+    command: "moon run hotkey-editor:dx/serve-container"
     stdin_open: true
     tty: true
     environment:
       FORCE_COLOR: "1"
+      RUSTUP_TOOLCHAIN: "1.95.0-x86_64-unknown-linux-gnu"
     volumes:
       - .:/app
       - cargo-registry:/root/.cargo/registry
@@ -16,28 +18,9 @@ services:
       - moon-cache:/app/.moon/cache
       - root-node-modules:/app/node_modules
       - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
-      - dx-home:/root/.dx
+      - moon-home:/root/.moon
     ports:
       - "8080:8080"
-
-  e2e:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: "moon run hotkey-editor:playwright/test"
-    environment:
-      FORCE_COLOR: "1"
-    volumes:
-      - .:/app
-      - cargo-registry:/root/.cargo/registry
-      - cargo-git:/root/.cargo/git
-      - target:/app/target
-      - moon-cache:/app/.moon/cache
-      - root-node-modules:/app/node_modules
-      - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
-      - dx-home:/root/.dx
-    profiles:
-      - e2e
 
 volumes:
   cargo-registry:
@@ -46,4 +29,4 @@ volumes:
   moon-cache:
   root-node-modules:
   hotkey-editor-node-modules:
-  dx-home:
+  moon-home:

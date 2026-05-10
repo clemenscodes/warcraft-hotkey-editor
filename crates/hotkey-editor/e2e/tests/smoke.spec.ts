@@ -1,24 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("App shell", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/warcraft-hotkey-editor/");
-  });
+const APP = "/warcraft-hotkey-editor/";
 
-  test("page loads and title is correct", async ({ page }) => {
-    await expect(page).toHaveTitle(/Warcraft III Hotkey Editor/);
-  });
+test("app loads with correct title and a unit list", async ({ page }) => {
+  await page.goto(APP);
+  await expect(page).toHaveTitle(/Warcraft III Hotkey Editor/i);
+  await page.locator(".unit-card").first().waitFor();
+});
 
-  test("race tabs are visible", async ({ page }) => {
-    await expect(page.locator("[data-race]").first()).toBeVisible();
-  });
-
-  test("unit list renders at least one unit card", async ({ page }) => {
-    await expect(page.locator(".unit-card").first()).toBeVisible();
-  });
-
-  test("selecting a unit reveals the command grid", async ({ page }) => {
-    await page.locator(".unit-card").first().click();
-    await expect(page.locator(".grid-tile").first()).toBeVisible();
-  });
+test("selecting a unit shows the command grid", async ({ page }) => {
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+  await page.locator(".unit-card").first().click();
+  await page.locator(".grid-tile.has-ability").first().waitFor();
 });

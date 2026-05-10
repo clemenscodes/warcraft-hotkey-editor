@@ -30,15 +30,4 @@ tasks:
       runFromWorkspaceRoot: true
       cache: false
 
-  docker/e2e:
-    toolchain: system
-    script: >
-      docker compose --profile e2e build --progress plain e2e &&
-      docker compose --profile e2e run --rm e2e
-    env:
-      FORCE_COLOR: "1"
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: true
-      cache: false
 

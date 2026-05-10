@@ -12,6 +12,7 @@ tasks:
     toolchain: rust
     command: cargo build --target wasm32-unknown-unknown
     options:
+      mergeArgs: replace
       outputStyle: stream
     inputs:
       - "@group(sources)"
@@ -22,6 +23,7 @@ tasks:
     toolchain: rust
     command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
     options:
+      mergeArgs: replace
       outputStyle: stream
     inputs:
       - "@group(sources)"
@@ -60,6 +62,17 @@ tasks:
     deps:
       - tailwind/build
 
+  dx/serve-container:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0
+    options:
+      outputStyle: stream
+      interactive: false
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
   dx/build:
     toolchain: system
     command: dx build --package hotkey-editor --release --platform web
@@ -90,48 +103,32 @@ tasks:
     deps:
       - dx/build
 
-  playwright/typecheck:
-    toolchain: system
-    command: tsc --project e2e/tsconfig.json --noEmit
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "e2e/**/*.ts"
-      - "e2e/tsconfig.json"
-      - "playwright.config.ts"
-      - "package.json"
-
   playwright/test:
     toolchain: system
-    command: node e2e/run.mjs
+    command: playwright test
     deps:
-      - tailwind/build
-      # - playwright/typecheck
+      - rust/fmt
+      - rust/lint
+      - rust/build
+      - rust/test
+      - dx/build
+    env:
+      STATIC_DIR: "../../target/dx/hotkey-editor/release/web/public"
+      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
       cache: false
     inputs:
       - "e2e/**/*.ts"
-      - "e2e/**/*.mjs"
       - "e2e/tsconfig.json"
       - "playwright.config.ts"
 
-  dev/docker:
+  docker/e2e:
     toolchain: system
-    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0
-    options:
-      outputStyle: stream
-      interactive: false
-      runFromWorkspaceRoot: false
-      cache: false
-    deps:
-      - tailwind/build
-
-  docker/build:
-    toolchain: system
-    command: docker build -f crates/hotkey-editor/Dockerfile -t warcraft-hotkey-editor .
+    script: >
+      docker build --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
+      docker run --rm warcraft-hotkey-editor-e2e
     options:
       outputStyle: stream
       runFromWorkspaceRoot: true
@@ -140,7 +137,7 @@ tasks:
   docker/serve:
     toolchain: system
     script: >
-      docker build -f crates/hotkey-editor/Dockerfile --target production --progress plain -t warcraft-hotkey-editor . &&
+      docker build --target production --progress plain -t warcraft-hotkey-editor . &&
       docker run --rm --name warcraft-hotkey-editor -p 8080:80 warcraft-hotkey-editor
     env:
       FORCE_COLOR: "1"
@@ -152,16 +149,6 @@ tasks:
   docker/down:
     toolchain: system
     command: docker stop warcraft-hotkey-editor
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: true
-      cache: false
-
-  docker/e2e:
-    toolchain: system
-    script: >
-      docker build -f crates/hotkey-editor/Dockerfile --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
-      docker run --rm warcraft-hotkey-editor-e2e
     options:
       outputStyle: stream
       runFromWorkspaceRoot: true

@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV CI=true
 ENV MOON_TOOLCHAIN_FORCE_GLOBALS=true
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:/root/.cargo/bin:$PATH"
+ENV PATH="/usr/local/bin:$PNPM_HOME/bin:$PNPM_HOME:/root/.cargo/bin:$PATH"
 ENV PLAYWRIGHT_BROWSERS_PATH="/ms-playwright"
 ENV DX_HOME="/root/.dx"
 
@@ -38,6 +38,7 @@ RUN set -eux; \
       | tar -xz -C /usr/local/bin
 
 # wasm-bindgen-cli 0.2.121 — GitHub release binary, no crates.io involved
+# Also install to $DX_HOME/bin/ so dx finds it without downloading at runtime
 RUN set -eux; \
     arch=$(uname -m); \
     case "$arch" in \
@@ -48,21 +49,56 @@ RUN set -eux; \
     curl --retry 5 --retry-delay 2 -fsSL \
       "https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.121/wasm-bindgen-0.2.121-${triple}.tar.gz" \
       | tar -xz --strip-components=1 -C /usr/local/bin \
-          "wasm-bindgen-0.2.121-${triple}/wasm-bindgen"
+          "wasm-bindgen-0.2.121-${triple}/wasm-bindgen"; \
+    mkdir -p "${DX_HOME}/bin"; \
+    cp /usr/local/bin/wasm-bindgen "${DX_HOME}/bin/wasm-bindgen"
 
-# pnpm + moon + tailwindcss (v4) + playwright (pinned to match Nix devshell)
+# pnpm + moon + tailwindcss (v4, pinned to match Nix devshell) + playwright (matches flake)
 RUN corepack enable && corepack prepare pnpm@11.0.9 --activate
 RUN pnpm add -g @moonrepo/cli@2.0.3 @tailwindcss/cli@4.3.0 @playwright/test@1.59.1
-
-# Chromium + its system library dependencies
-RUN playwright install --with-deps chromium
 
 RUN git config --global --add safe.directory '*'
 
 WORKDIR /app
 
+# development: docker-compose dev workflow — source mounted at runtime
 FROM base AS development
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
 RUN pnpm install --frozen-lockfile
+
+# builder: compiles the production WASM app
+FROM base AS builder
+
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+RUN moon run hotkey-editor:bundle
+
+# production: static file serving
+FROM nginx:alpine AS production
+
+COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /usr/share/nginx/html/warcraft-hotkey-editor
+COPY crates/hotkey-editor/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+
+# e2e: playwright against the production build served by a zero-dep Node static server
+FROM base AS e2e
+
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+RUN pnpm install --frozen-lockfile \
+    && playwright install --with-deps chromium \
+    && pnpm --filter @warcraft-hotkey-editor/hotkey-editor add @playwright/test@1.59.1
+
+COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /app/dist/warcraft-hotkey-editor
+COPY crates/hotkey-editor/e2e crates/hotkey-editor/e2e
+COPY crates/hotkey-editor/playwright.config.ts crates/hotkey-editor/playwright.config.ts
+
+ENV STATIC_DIR=/app/dist
+
+WORKDIR /app/crates/hotkey-editor
+CMD ["playwright", "test"]
