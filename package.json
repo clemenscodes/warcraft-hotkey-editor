@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@11.0.9",
   "engines": {
-    "node": "24.14.1",
+    "node": "24.15.0",
     "pnpm": "11.0.9"
   }
 }

@@ -7,16 +7,16 @@ export default defineConfig({
   forbidOnly: !!process.env["CI"],
   retries: process.env["CI"] ? 2 : 0,
   workers: process.env["CI"] ? 1 : undefined,
-  reporter: [["html", { open: "never", outputFolder: "dist/e2e-report", host: "127.0.0.1", port: 9100 }]],
+  reporter: [
+    ["list"],
+    ["html", { open: "never", outputFolder: "dist/e2e-report", host: "127.0.0.1", port: 9100 }],
+  ],
+  expect: {
+    timeout: 30_000,
+  },
   use: {
     baseURL: "http://localhost:8080",
     trace: "on-first-retry",
-  },
-  webServer: {
-    command: "dx serve --package hotkey-editor --platform web",
-    url: "http://localhost:8080",
-    reuseExistingServer: true,
-    timeout: 120_000,
   },
   projects: [
     {

@@ -49,26 +49,6 @@ tasks:
       runFromWorkspaceRoot: false
       cache: false
 
-  esbuild/build:
-    toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --outdir=assets
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "scripts/**/*.ts"
-      - "tsconfig.json"
-
-  esbuild/build/minify:
-    toolchain: system
-    command: esbuild scripts/keyboard-navigation.ts scripts/tooltip-touch.ts --bundle --format=esm --target=es2022 --minify --outdir=assets
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "scripts/**/*.ts"
-      - "tsconfig.json"
-
   dx/serve:
     toolchain: system
     command: dx serve --package hotkey-editor --platform web
@@ -79,7 +59,6 @@ tasks:
       cache: false
     deps:
       - tailwind/build
-      - esbuild/build
 
   dx/build:
     toolchain: system
@@ -89,7 +68,6 @@ tasks:
       runFromWorkspaceRoot: false
     deps:
       - tailwind/build
-      - esbuild/build/minify
     inputs:
       - "@group(sources)"
       - "@group(configs)"
@@ -114,13 +92,59 @@ tasks:
 
   playwright/test:
     toolchain: system
-    command: playwright test
+    command: node e2e/run.mjs
+    deps:
+      - tailwind/build
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
       cache: false
     inputs:
       - "e2e/**/*.ts"
+      - "e2e/**/*.mjs"
       - "e2e/tsconfig.json"
       - "playwright.config.ts"
+
+  dev/docker:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0
+    options:
+      outputStyle: stream
+      interactive: false
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
+  docker/build:
+    toolchain: system
+    command: docker build -f crates/hotkey-editor/Dockerfile -t warcraft-hotkey-editor .
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/serve:
+    toolchain: system
+    script: >
+      docker build -f crates/hotkey-editor/Dockerfile --target production --progress plain -t warcraft-hotkey-editor . &&
+      docker run --rm --name warcraft-hotkey-editor -p 8080:80 warcraft-hotkey-editor
+    env:
+      FORCE_COLOR: "1"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/down:
+    toolchain: system
+    command: docker stop warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  ci:
+    deps:
+      - playwright/test
 

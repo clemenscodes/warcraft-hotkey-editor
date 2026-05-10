@@ -133,7 +133,8 @@ respect the rules in the lines you write.
 
 ## When you finish a task
 
-- Confirm `moon run :ci` is green.
+- Confirm `moon run :ci` is green. This now includes the Playwright e2e
+  gate — all four smoke tests must pass.
 - For UI changes, actually open the app in a browser and use the feature.
   Type checking and tests verify code correctness, not feature
   correctness.

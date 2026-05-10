@@ -1,0 +1,49 @@
+services:
+  hotkey-editor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "moon run hotkey-editor:dev/docker"
+    stdin_open: true
+    tty: true
+    environment:
+      FORCE_COLOR: "1"
+    volumes:
+      - .:/app
+      - cargo-registry:/root/.cargo/registry
+      - cargo-git:/root/.cargo/git
+      - target:/app/target
+      - moon-cache:/app/.moon/cache
+      - root-node-modules:/app/node_modules
+      - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
+      - dx-home:/root/.dx
+    ports:
+      - "8080:8080"
+
+  e2e:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "moon run hotkey-editor:playwright/test"
+    environment:
+      FORCE_COLOR: "1"
+    volumes:
+      - .:/app
+      - cargo-registry:/root/.cargo/registry
+      - cargo-git:/root/.cargo/git
+      - target:/app/target
+      - moon-cache:/app/.moon/cache
+      - root-node-modules:/app/node_modules
+      - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
+      - dx-home:/root/.dx
+    profiles:
+      - e2e
+
+volumes:
+  cargo-registry:
+  cargo-git:
+  target:
+  moon-cache:
+  root-node-modules:
+  hotkey-editor-node-modules:
+  dx-home:

@@ -1,5 +1,9 @@
 # Frontend Refactor Plan — Composable Tailwind Components
 
+> **Status**: In progress. Component decomposition (WT-A through WT-F) is
+> largely complete — the major components now live in sub-directories. CSS
+> consolidation (WT-G) is not yet complete.
+
 ## Goal
 
 Replace the current 21-file global CSS architecture with Tailwind utility classes

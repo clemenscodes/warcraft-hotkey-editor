@@ -163,7 +163,6 @@
           pkgs.dioxus-cli
           pkgs.wasm-bindgen-cli
           pkgs.tailwindcss_4
-          pkgs.esbuild
           pkgs.binaryen
           nodejs
           pnpm
@@ -201,7 +200,6 @@
             ./crates/hotkey-editor/Dioxus.toml
             ./crates/hotkey-editor/tailwind.input.css
             ./crates/hotkey-editor/styles
-            ./crates/hotkey-editor/scripts
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
             ./crates/hotkey-editor/templates
@@ -222,7 +220,6 @@
             dioxus-cli
             wasm-bindgen-cli
             tailwindcss_4
-            esbuild
             binaryen
           ];
         };
@@ -242,9 +239,6 @@
             buildPhaseCargoCommand = ''
               cd crates/hotkey-editor
               tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
-              esbuild scripts/keyboard-navigation.ts \
-                --bundle --format=esm --target=es2022 --minify \
-                --outfile=assets/keyboard-navigation.js
               dx build --release --platform web --offline
             '';
             installPhaseCommand = ''

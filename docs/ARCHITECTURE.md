@@ -304,21 +304,126 @@ exactly one API surface to depend on.
 Each phase ends with `moon run :ci` green and the app working in the
 browser.
 
-## 7. Build and release (unchanged)
+## 7. Build, test, and release
 
-Moon for local tasks:
+### Moon tasks — quick reference
 
 ```bash
-moon run :dev
-moon run :bundle
-moon run :ci
+# Local (Nix dev shell)
+moon run :dev                           # tailwind/build → dx serve (localhost:8080)
+moon run :bundle                        # tailwind/build → dx build --release
+moon run hotkey-editor:playwright/test  # tailwind/build → e2e (starts own server)
+moon run :ci                            # fmt + clippy + tests + wasm build + e2e
+
+# Docker
+moon run :docker/up                     # dev server in container (localhost:8080)
+moon run :docker/down                   # stop docker compose
+moon run :docker/e2e                    # e2e tests in container
+moon run hotkey-editor:docker/serve     # build prod image + serve on localhost:8080
+moon run hotkey-editor:docker/down      # stop the prod container
 ```
 
-Nix for reproducible release:
+### Tailwind
+
+`assets/tailwind.css` is a build artifact — it is not committed to git. It
+must be compiled before `dx serve` or `dx build` runs. Every task that
+starts the app lists `tailwind/build` as a dependency:
+
+```
+tailwind/build  →  dx/serve   (dev)
+tailwind/build  →  dx/build   (production bundle)
+tailwind/build  →  playwright/test  (e2e, because run.mjs starts dx serve directly)
+```
+
+`tailwind/build` runs `tailwindcss -i tailwind.input.css -o assets/tailwind.css
+--minify` from `crates/hotkey-editor/`. Moon caches it on inputs
+(`tailwind.input.css`, `styles/**`, `src/**/*.rs`) so it only re-runs when
+those files change.
+
+### End-to-end tests
+
+Tests live in `crates/hotkey-editor/e2e/tests/` and run with
+[Playwright](https://playwright.dev) against a live dev server on port 8080.
+
+`moon run hotkey-editor:playwright/test` runs `tailwind/build` first, then
+hands off to `e2e/run.mjs`, which owns the server lifecycle:
+
+1. Check whether port 8080 is already open. If so, reuse it.
+2. Otherwise spawn `dx serve`, stream stdout/stderr, and wait until
+   `"launching app"` appears (compilation done, server live).
+3. Run `playwright test`.
+4. Kill the server on exit.
+
+The tests are a CI gate — `moon run :ci` will not pass without them.
+
+### Nix (reproducible release)
 
 ```bash
 nix build .#warcraft-hotkey-editor
 ```
 
-`Dioxus.toml` sets `base_path = "warcraft-hotkey-editor"` for GitHub
-Pages. Hand-built public URLs include the same prefix.
+`Dioxus.toml` sets `base_path = "warcraft-hotkey-editor"` for GitHub Pages.
+All asset URLs the bundler generates include that prefix.
+
+### Docker
+
+All Docker paths use `ubuntu:24.04` as the base and pin the same tool
+versions as the Nix dev shell: Rust 1.95.0, dioxus-cli 0.7.9,
+wasm-bindgen-cli 0.2.121, Node.js 24.15.0, pnpm 11.0.9, moon 2.0.3,
+tailwindcss 4.3.0. `git` is installed in the image because moon requires
+it to detect the workspace root and changed files.
+
+#### Dev server (`Dockerfile` — root)
+
+```bash
+moon run :docker/up     # same as: docker compose up hotkey-editor
+```
+
+`docker-compose.yml` defines the `hotkey-editor` service. It mounts the
+entire repo at `/app` and uses named volumes for `target/`, `node_modules/`,
+and the moon and Cargo caches so they survive container restarts. The
+service runs:
+
+```
+moon run hotkey-editor:dev/docker
+```
+
+That task first runs `tailwind/build`, then starts
+`dx serve --platform web --addr 0.0.0.0` from `crates/hotkey-editor/` so
+the server is reachable from the host on port 8080.
+
+#### E2e tests (`Dockerfile` — root)
+
+```bash
+moon run :docker/e2e    # same as: docker compose --profile e2e run --rm e2e
+```
+
+The `e2e` service uses the same image (which also includes the Playwright
+Chromium binary and its system dependencies). It runs:
+
+```
+moon run hotkey-editor:playwright/test
+```
+
+That task builds tailwind first, then `e2e/run.mjs` starts `dx serve`
+inside the container and runs the Playwright suite against it.
+
+#### Production image (`crates/hotkey-editor/Dockerfile`)
+
+```bash
+moon run hotkey-editor:docker/serve   # build prod image → serve on localhost:8080
+moon run hotkey-editor:docker/down    # stop the prod container
+```
+
+Multi-stage build:
+
+| Stage | What it does |
+|---|---|
+| `base` | Installs all tooling (Rust, Node, pnpm, moon, tailwindcss, dx, wasm-bindgen, git) |
+| `builder` | Copies source, runs `moon run hotkey-editor:bundle` (tailwind → dx build --release) |
+| `production` | `nginx:alpine` image; copies `target/dx/hotkey-editor/release/web/public` and `nginx.conf` |
+
+The nginx config (`crates/hotkey-editor/nginx.conf`) redirects `/` to
+`/warcraft-hotkey-editor/` and serves the SPA with `try_files` fallback to
+`index.html` for client-side routing. The build output lands in
+`target/dx/hotkey-editor/release/web/public` — not `dist/`.

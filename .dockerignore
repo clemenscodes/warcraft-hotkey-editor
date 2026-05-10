@@ -1,0 +1,10 @@
+.direnv
+.moon/cache
+**/Dockerfile
+**/dist
+**/node_modules
+**/target
+**/README.md
+**/.envrc
+**/.env
+docker-compose.yml
