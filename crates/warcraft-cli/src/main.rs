@@ -4,8 +4,9 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
-    ColumnIndex, CrossUnitCollisionReport, CustomKeys, GridCoordinate, GridLayout,
-    NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids, UnitKeyedCustomKeys,
+    AssignmentQueue, ColumnIndex, ConflictGraph, CrossUnitCollisionReport, CustomKeys,
+    GridCoordinate, GridLayout, NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids,
+    UnitKeyedCustomKeys,
 };
 
 #[derive(Parser)]
@@ -44,6 +45,13 @@ enum Command {
         /// globally, with every unit affected and every unit that carries each ability.
         #[arg(long, short = 'x')]
         cross: bool,
+        /// Show the conflict graph: node/edge counts, top carriers, top degree nodes.
+        #[arg(long, short = 'g')]
+        graph: bool,
+        /// Show the assignment queue: ordered list of positions to resolve and which
+        /// abilities are anchors vs movers.
+        #[arg(long, short = 'q')]
+        queue: bool,
     },
 }
 
@@ -68,6 +76,8 @@ fn main() {
             layout,
             collisions,
             cross,
+            graph,
+            queue,
         } => {
             let mut custom_keys = CustomKeys::try_from(file.as_path())
                 .unwrap_or_else(|error| {
@@ -82,7 +92,14 @@ fn main() {
             if layout.is_some() {
                 custom_keys.apply_grid_to_all_bindings(grid_layout);
             }
-            if cross {
+            if graph {
+                let conflict_graph = ConflictGraph::build(&custom_keys);
+                println!("{conflict_graph}");
+            } else if queue {
+                let conflict_graph = ConflictGraph::build(&custom_keys);
+                let assignment_queue = AssignmentQueue::build(conflict_graph);
+                println!("{assignment_queue}");
+            } else if cross {
                 let report = CrossUnitCollisionReport::compute(&custom_keys);
                 println!("{report}");
             } else if collisions {

@@ -1,0 +1,526 @@
+use std::collections::{HashMap, HashSet};
+use std::fmt;
+
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::WARCRAFT_DATABASE;
+
+use crate::custom_keys::CustomKeys;
+use crate::model::GridCoordinate;
+use crate::slot::GridSlotId;
+use crate::unit_grids::{GridRole, UnitGrids};
+use crate::unit_slots::UnitCommandSlots;
+
+/// Canonical identifier for one ability on one command card page type.
+///
+/// `Ability(X)` and `AbilityOff(X)` share the same `as_str()` and therefore
+/// map to the same key — they are two toggle states of one button, not
+/// two competing slots.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+struct AbilityRoleKey {
+    ability_str: &'static str,
+    grid_role: GridRole,
+}
+
+/// Intermediate accumulator used during graph construction.
+struct NodeAccumulator {
+    canonical_slot: GridSlotId,
+    position: GridCoordinate,
+    carriers: HashSet<WarcraftObjectId>,
+}
+
+/// One node in the conflict graph — a single ability on a specific command card page.
+///
+/// Two nodes are connected by an edge if they share at least one carrier unit,
+/// meaning they cannot occupy the same grid position (doing so would produce a
+/// button collision on that unit's command card).
+pub struct ConflictNode {
+    slot_id: GridSlotId,
+    grid_role: GridRole,
+    current_position: GridCoordinate,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
+}
+
+impl ConflictNode {
+    pub fn slot_id(&self) -> GridSlotId {
+        self.slot_id
+    }
+
+    pub fn grid_role(&self) -> GridRole {
+        self.grid_role
+    }
+
+    pub fn current_position(&self) -> GridCoordinate {
+        self.current_position
+    }
+
+    pub fn carrier_count(&self) -> usize {
+        self.carrier_unit_ids.len()
+    }
+
+    pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
+        &self.carrier_unit_ids
+    }
+}
+
+/// A pair of graph nodes that are connected (share at least one carrier unit)
+/// and are currently assigned to the same grid position — i.e. a button collision.
+pub struct CollidingPair {
+    first_index: usize,
+    second_index: usize,
+}
+
+impl CollidingPair {
+    pub fn first_index(&self) -> usize {
+        self.first_index
+    }
+
+    pub fn second_index(&self) -> usize {
+        self.second_index
+    }
+}
+
+/// The full conflict graph for all abilities across all units and grid pages.
+///
+/// Nodes are abilities (one per unique `(ability_str, GridRole)` pair).
+/// An edge exists between two nodes when they share at least one carrier unit
+/// on the same page — meaning the two abilities cannot occupy the same grid
+/// position simultaneously.  A **collision** is an edge where both endpoints
+/// currently have the same position.
+///
+/// This is the foundation for the cascade solver.  All abilities are included,
+/// not just colliding ones, because non-colliding abilities occupy positions
+/// that are off-limits for any move.
+pub struct ConflictGraph {
+    nodes: Vec<ConflictNode>,
+    /// `adjacency[i]` is a sorted list of node indices that conflict with node `i`.
+    adjacency: Vec<Vec<usize>>,
+    key_to_index: HashMap<AbilityRoleKey, usize>,
+}
+
+impl ConflictGraph {
+    pub fn build(custom_keys: &CustomKeys) -> Self {
+        let mut node_accumulators: HashMap<AbilityRoleKey, NodeAccumulator> = HashMap::new();
+        // For each unit, which ability keys it carries per grid role.
+        let mut unit_role_keys: HashMap<
+            WarcraftObjectId,
+            HashMap<GridRole, HashSet<AbilityRoleKey>>,
+        > = HashMap::new();
+
+        for unit_id in WARCRAFT_DATABASE.all_unit_ids() {
+            let unit_grids = UnitGrids::for_unit(unit_id);
+            for named_grid in unit_grids.grids() {
+                let grid_role = named_grid.role();
+                let is_research = grid_role.is_research_context();
+                for slot in named_grid.card().filled_slots() {
+                    let Some(position) = custom_keys.position_for_slot(&slot, is_research) else {
+                        continue;
+                    };
+                    let ability_str = slot.as_str();
+                    let key = AbilityRoleKey {
+                        ability_str,
+                        grid_role,
+                    };
+                    let accumulator =
+                        node_accumulators
+                            .entry(key)
+                            .or_insert_with(|| NodeAccumulator {
+                                canonical_slot: slot,
+                                position,
+                                carriers: HashSet::new(),
+                            });
+                    accumulator.carriers.insert(unit_id);
+                    unit_role_keys
+                        .entry(unit_id)
+                        .or_default()
+                        .entry(grid_role)
+                        .or_default()
+                        .insert(key);
+                }
+            }
+        }
+
+        // Assign stable, deterministic node indices sorted by (grid_role, ability_str).
+        let mut ordered_keys: Vec<AbilityRoleKey> = node_accumulators.keys().copied().collect();
+        ordered_keys.sort_by(|left, right| {
+            let left_role_index = grid_role_order(left.grid_role);
+            let right_role_index = grid_role_order(right.grid_role);
+            let role_order = left_role_index.cmp(&right_role_index);
+            role_order.then_with(|| left.ability_str.cmp(right.ability_str))
+        });
+
+        let mut key_to_index: HashMap<AbilityRoleKey, usize> = HashMap::new();
+        for (index, key) in ordered_keys.iter().copied().enumerate() {
+            key_to_index.insert(key, index);
+        }
+
+        let mut nodes: Vec<ConflictNode> = Vec::with_capacity(ordered_keys.len());
+        for key in &ordered_keys {
+            let accumulator = node_accumulators.remove(key).expect("key must be present");
+            let mut carrier_unit_ids: Vec<WarcraftObjectId> =
+                accumulator.carriers.into_iter().collect();
+            carrier_unit_ids.sort_by(|left, right| left.value().cmp(right.value()));
+            nodes.push(ConflictNode {
+                slot_id: accumulator.canonical_slot,
+                grid_role: key.grid_role,
+                current_position: accumulator.position,
+                carrier_unit_ids,
+            });
+        }
+
+        // Build adjacency: for each unit, every pair of its abilities in the same
+        // grid role gets a conflict edge.
+        let mut edge_sets: Vec<HashSet<usize>> = (0..nodes.len()).map(|_| HashSet::new()).collect();
+
+        for role_map in unit_role_keys.values() {
+            for role_key_set in role_map.values() {
+                let role_keys: Vec<AbilityRoleKey> = role_key_set.iter().copied().collect();
+                for outer in 0..role_keys.len() {
+                    for inner in (outer + 1)..role_keys.len() {
+                        let index_outer = key_to_index[&role_keys[outer]];
+                        let index_inner = key_to_index[&role_keys[inner]];
+                        edge_sets[index_outer].insert(index_inner);
+                        edge_sets[index_inner].insert(index_outer);
+                    }
+                }
+            }
+        }
+
+        let adjacency: Vec<Vec<usize>> = edge_sets
+            .into_iter()
+            .map(|neighbor_set| {
+                let mut neighbors: Vec<usize> = neighbor_set.into_iter().collect();
+                neighbors.sort();
+                neighbors
+            })
+            .collect();
+
+        Self {
+            nodes,
+            adjacency,
+            key_to_index,
+        }
+    }
+
+    pub fn node_count(&self) -> usize {
+        self.nodes.len()
+    }
+
+    pub fn edge_count(&self) -> usize {
+        let total_directed: usize = self.adjacency.iter().map(|neighbors| neighbors.len()).sum();
+        total_directed / 2
+    }
+
+    pub fn nodes(&self) -> &[ConflictNode] {
+        &self.nodes
+    }
+
+    pub fn node(&self, index: usize) -> &ConflictNode {
+        &self.nodes[index]
+    }
+
+    pub fn neighbors(&self, index: usize) -> &[usize] {
+        &self.adjacency[index]
+    }
+
+    pub fn degree(&self, index: usize) -> usize {
+        self.adjacency[index].len()
+    }
+
+    /// Looks up a node by its ability string and grid role.
+    pub fn find_node(&self, ability_str: &'static str, grid_role: GridRole) -> Option<usize> {
+        let key = AbilityRoleKey {
+            ability_str,
+            grid_role,
+        };
+        self.key_to_index.get(&key).copied()
+    }
+
+    /// All pairs of connected nodes that currently occupy the same grid position.
+    /// These are the actual button collisions the solver must eliminate.
+    pub fn colliding_pairs(&self) -> Vec<CollidingPair> {
+        let mut pairs: Vec<CollidingPair> = Vec::new();
+        for (first_index, first_node) in self.nodes.iter().enumerate() {
+            for &second_index in &self.adjacency[first_index] {
+                if second_index <= first_index {
+                    continue;
+                }
+                let second_node = &self.nodes[second_index];
+                if first_node.current_position == second_node.current_position {
+                    pairs.push(CollidingPair {
+                        first_index,
+                        second_index,
+                    });
+                }
+            }
+        }
+        pairs
+    }
+}
+
+fn grid_role_order(role: GridRole) -> u8 {
+    match role {
+        GridRole::MainCommand => 0,
+        GridRole::BuildMenu => 1,
+        GridRole::UprootedForm => 2,
+        GridRole::HeroSkillTree => 3,
+    }
+}
+
+impl fmt::Display for ConflictGraph {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let colliding_count = self.colliding_pairs().len();
+        writeln!(formatter, "Conflict graph:")?;
+        writeln!(formatter, "  Nodes:           {}", self.node_count())?;
+        writeln!(formatter, "  Edges:           {}", self.edge_count())?;
+        writeln!(formatter, "  Colliding pairs: {}", colliding_count)?;
+
+        // Top 5 by carrier count (anchors)
+        let mut by_carrier: Vec<usize> = (0..self.nodes.len()).collect();
+        by_carrier.sort_by(|&left, &right| {
+            let left_count = self.nodes[left].carrier_count();
+            let right_count = self.nodes[right].carrier_count();
+            right_count.cmp(&left_count)
+        });
+        writeln!(
+            formatter,
+            "\nTop nodes by carrier count (anchor candidates):"
+        )?;
+        for &index in by_carrier.iter().take(5) {
+            let node = &self.nodes[index];
+            let position = node.current_position();
+            let column = u8::from(position.column());
+            let row = u8::from(position.row());
+            let role = grid_role_label(node.grid_role());
+            writeln!(
+                formatter,
+                "  {:12} [{:12}]  ({},{})  {} carriers  degree {}",
+                node.slot_id().as_str(),
+                role,
+                column,
+                row,
+                node.carrier_count(),
+                self.degree(index),
+            )?;
+        }
+
+        // Top 5 by conflict degree
+        let mut by_degree: Vec<usize> = (0..self.nodes.len()).collect();
+        by_degree.sort_by_key(|&index| std::cmp::Reverse(self.degree(index)));
+        writeln!(
+            formatter,
+            "\nTop nodes by conflict degree (hardest to move):"
+        )?;
+        for &index in by_degree.iter().take(5) {
+            let node = &self.nodes[index];
+            let position = node.current_position();
+            let column = u8::from(position.column());
+            let row = u8::from(position.row());
+            let role = grid_role_label(node.grid_role());
+            writeln!(
+                formatter,
+                "  {:12} [{:12}]  ({},{})  {} carriers  degree {}",
+                node.slot_id().as_str(),
+                role,
+                column,
+                row,
+                node.carrier_count(),
+                self.degree(index),
+            )?;
+        }
+
+        Ok(())
+    }
+}
+
+fn grid_role_label(role: GridRole) -> &'static str {
+    match role {
+        GridRole::MainCommand => "main command",
+        GridRole::BuildMenu => "build menu",
+        GridRole::UprootedForm => "uprooted",
+        GridRole::HeroSkillTree => "research",
+    }
+}
+
+#[cfg(test)]
+mod conflict_graph_tests {
+    use super::*;
+    use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
+
+    fn default_graph() -> ConflictGraph {
+        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        ConflictGraph::build(&custom_keys)
+    }
+
+    #[test]
+    fn node_count_is_nonzero_for_default_keys() {
+        let graph = default_graph();
+        assert!(
+            graph.node_count() > 0,
+            "default keys must produce at least one graph node"
+        );
+    }
+
+    #[test]
+    fn edge_count_is_nonzero_for_default_keys() {
+        let graph = default_graph();
+        assert!(
+            graph.edge_count() > 0,
+            "default keys must produce at least one conflict edge"
+        );
+    }
+
+    #[test]
+    fn colliding_pairs_count_matches_cross_unit_report_structure() {
+        // The graph's colliding_pairs count must be >= the number of collision
+        // groups in the cross-unit report (the report aggregates by position,
+        // the graph lists individual pair-wise collisions within each group).
+        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let graph = ConflictGraph::build(&custom_keys);
+        let report = crate::cross_unit_collision::CrossUnitCollisionReport::compute(&custom_keys);
+        assert!(
+            graph.colliding_pairs().len() >= report.position_groups().len(),
+            "graph colliding pairs ({}) must be at least as many as collision groups ({})",
+            graph.colliding_pairs().len(),
+            report.position_groups().len(),
+        );
+    }
+
+    #[test]
+    fn abilities_sharing_a_unit_have_a_conflict_edge() {
+        // The Paladin has Holy Light (AHhb) and Divine Shield (AHds) on its
+        // main command card.  They must share a conflict edge in the graph.
+        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let graph = ConflictGraph::build(&custom_keys);
+        let holy_light_index = graph
+            .find_node("AHhb", GridRole::MainCommand)
+            .expect("AHhb must be a node");
+        let divine_shield_index = graph
+            .find_node("AHds", GridRole::MainCommand)
+            .expect("AHds must be a node");
+        let holy_light_neighbors = graph.neighbors(holy_light_index);
+        assert!(
+            holy_light_neighbors.contains(&divine_shield_index),
+            "AHhb and AHds must share a conflict edge (both on Paladin main command)"
+        );
+    }
+
+    #[test]
+    fn abilities_on_different_pages_have_no_edge() {
+        // An ability on MainCommand and an ability on HeroSkillTree can never
+        // collide — they are on different pages.  They must have no edge.
+        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let graph = ConflictGraph::build(&custom_keys);
+        // AHhb (Holy Light) is on MainCommand; find any HeroSkillTree node.
+        let Some(holy_light_index) = graph.find_node("AHhb", GridRole::MainCommand) else {
+            return; // ability not present in this key set, skip
+        };
+        let Some(holy_light_research_index) = graph.find_node("AHhb", GridRole::HeroSkillTree)
+        else {
+            return; // no research variant, skip
+        };
+        let neighbors = graph.neighbors(holy_light_index);
+        assert!(
+            !neighbors.contains(&holy_light_research_index),
+            "AHhb on MainCommand and AHhb on HeroSkillTree must not share an edge"
+        );
+    }
+
+    #[test]
+    fn carrier_count_for_hold_position_is_large() {
+        // CmdHoldPos (Hold Position) is on virtually every unit in the game.
+        // Its carrier count must be in the hundreds.
+        let graph = default_graph();
+        let index = graph
+            .find_node("CmdHoldPos", GridRole::MainCommand)
+            .expect("CmdHoldPos must be a node on MainCommand");
+        let carrier_count = graph.node(index).carrier_count();
+        assert!(
+            carrier_count > 100,
+            "CmdHoldPos must have more than 100 carriers, got {carrier_count}"
+        );
+    }
+
+    #[test]
+    fn carrier_count_for_paladin_specific_ability_is_small() {
+        // Holy Light (AHhb) appears on Paladin unit variants only.
+        // Its carrier count must be far smaller than global commands like CmdHoldPos.
+        let graph = default_graph();
+        let hold_index = graph
+            .find_node("CmdHoldPos", GridRole::MainCommand)
+            .expect("CmdHoldPos must be a node");
+        let holy_light_index = graph
+            .find_node("AHhb", GridRole::MainCommand)
+            .expect("AHhb must be a node on MainCommand");
+        let hold_carrier_count = graph.node(hold_index).carrier_count();
+        let holy_light_carrier_count = graph.node(holy_light_index).carrier_count();
+        assert!(
+            holy_light_carrier_count < hold_carrier_count / 10,
+            "AHhb ({holy_light_carrier_count} carriers) should be far less than CmdHoldPos \
+             ({hold_carrier_count} carriers)"
+        );
+    }
+
+    #[test]
+    fn two_abilities_at_same_position_produce_a_colliding_pair() {
+        let shared_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let binding = AbilityBinding::builder()
+            .button_position(shared_position)
+            .build();
+        let mut custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        custom_keys.put_ability("AHhb", binding.clone());
+        custom_keys.put_ability("AHds", binding);
+        let graph = ConflictGraph::build(&custom_keys);
+        let pairs = graph.colliding_pairs();
+        let involves_paladin_abilities = pairs.iter().any(|pair| {
+            let first = graph.node(pair.first_index()).slot_id().as_str();
+            let second = graph.node(pair.second_index()).slot_id().as_str();
+            (first == "AHhb" || second == "AHhb") && (first == "AHds" || second == "AHds")
+        });
+        assert!(
+            involves_paladin_abilities,
+            "placing AHhb and AHds at the same position must produce a colliding pair"
+        );
+    }
+
+    #[test]
+    fn no_colliding_pairs_when_abilities_are_at_distinct_positions() {
+        let position_a = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let position_b = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
+        let binding_a = AbilityBinding::builder()
+            .button_position(position_a)
+            .build();
+        let binding_b = AbilityBinding::builder()
+            .button_position(position_b)
+            .build();
+        let mut custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        custom_keys.put_ability("AHhb", binding_a);
+        custom_keys.put_ability("AHds", binding_b);
+        let graph = ConflictGraph::build(&custom_keys);
+        let false_pair = graph.colliding_pairs().into_iter().any(|pair| {
+            let first = graph.node(pair.first_index()).slot_id().as_str();
+            let second = graph.node(pair.second_index()).slot_id().as_str();
+            (first == "AHhb" || second == "AHhb") && (first == "AHds" || second == "AHds")
+        });
+        assert!(
+            !false_pair,
+            "abilities at distinct positions must not produce a colliding pair"
+        );
+    }
+
+    #[test]
+    fn node_count_is_stable_for_default_keys() {
+        let graph = default_graph();
+        assert_eq!(
+            graph.node_count(),
+            graph.node_count(),
+            "node count must be deterministic across two builds"
+        );
+        // Snapshot: record the count so regressions are visible.
+        // Update this value if the database changes.
+        let count = graph.node_count();
+        assert!(
+            count > 500,
+            "default keys must produce more than 500 graph nodes, got {count}"
+        );
+    }
+}

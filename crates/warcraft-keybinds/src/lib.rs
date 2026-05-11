@@ -2,6 +2,8 @@ pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObject
 
 pub mod ability_cell;
 pub mod ability_id;
+pub mod cascade_queue;
+pub mod conflict_graph;
 pub mod cross_unit_collision;
 pub mod custom_keys;
 pub mod grid_layout;
@@ -20,6 +22,8 @@ pub mod unit_slots;
 
 pub use ability_cell::{AbilityCell, AbilityIconPath};
 pub use ability_id::AbilityId;
+pub use cascade_queue::{AssignmentQueue, PositionAssignmentGroup};
+pub use conflict_graph::{CollidingPair, ConflictGraph, ConflictNode};
 pub use cross_unit_collision::{
     AffectedUnitEntry, CrossUnitCollisionReport, CrossUnitPositionGroup, SharedAbilityEntry,
 };
