@@ -1743,6 +1743,7 @@ version = "0.1.0"
 dependencies = [
  "dioxus",
  "dioxus-primitives",
+ "gloo-timers",
  "js-sys",
  "num-traits",
  "warcraft-api",

@@ -7,7 +7,7 @@ use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::ability_id::AbilityId;
 use crate::cascade_planner::{self, CascadePlan, PlannedMove, UnresolvedMover};
-use crate::cascade_queue::AssignmentQueue;
+use crate::cascade_queue::{AssignmentQueue, AssignmentScope};
 use crate::conflict_graph::ConflictGraph;
 use crate::grid_layout::GridLayout;
 use crate::hotkey_target::HotkeyTarget;
@@ -708,22 +708,61 @@ impl CustomKeys {
     /// cascade just redistributes geometry to remove cross-unit collisions
     /// (and pack rows left where it can).
     ///
-    /// The algorithm loops internally until a fixed point — applying one
-    /// pass's moves can expose new gaps that a follow-up pass can close (the
-    /// spill phase rearranges things in ways the original raster sweep
-    /// couldn't anticipate).  The returned `CascadePlan` aggregates every
-    /// net position change from the starting state to the final state so the
-    /// caller sees a single `(old → new)` per ability.  Unresolved nodes are
-    /// the ones still stuck after the final iteration.
+    /// **Two phases**:
+    ///   1. **Cross-unit cascade** (`AssignmentScope::CrossUnitOnly`) — the
+    ///      classic cascade, treating only multi-carrier and pinned slots
+    ///      as anchor candidates.  Settles all cross-unit collisions first.
+    ///   2. **Intra-unit cleanup** (`AssignmentScope::IncludingIntraUnit`)
+    ///      — a second pass with single-carrier abilities also eligible.
+    ///      Resolves the remaining "two shop items on the same Goblin
+    ///      Merchant slot" style collisions that phase 1 deliberately left
+    ///      alone.
+    ///
+    /// Each phase loops to a fixed point because the spill step can create
+    /// new gap-pull opportunities that a follow-up pass closes.  The returned
+    /// `CascadePlan` aggregates every net position change from the starting
+    /// state to the final state so the caller sees a single `(old → new)` per
+    /// ability.  Unresolved nodes are the ones still stuck after both phases.
     pub fn resolve_conflicts(&mut self) -> CascadePlan {
-        const MAX_ITERATIONS: usize = 32;
-
         let mut net_moves: HashMap<MoveKey, AccumulatedMove> = HashMap::new();
-        let mut last_unresolved: Vec<UnresolvedMover> = Vec::new();
+        let _phase_one_unresolved =
+            self.run_cascade_phase(AssignmentScope::CrossUnitOnly, &mut net_moves);
+        let last_unresolved =
+            self.run_cascade_phase(AssignmentScope::IncludingIntraUnit, &mut net_moves);
 
-        for _ in 0..MAX_ITERATIONS {
+        let mut combined_moves: Vec<PlannedMove> = Vec::new();
+        for (key, accumulated) in net_moves {
+            if accumulated.old_position == accumulated.new_position {
+                continue;
+            }
+            let planned_move = PlannedMove::new(
+                key.slot_id,
+                key.grid_role,
+                accumulated.old_position,
+                accumulated.new_position,
+                accumulated.carrier_unit_ids,
+            );
+            combined_moves.push(planned_move);
+        }
+        CascadePlan::from_parts(combined_moves, last_unresolved)
+    }
+
+    /// Drives one cascade phase to a fixed point under the given
+    /// `AssignmentScope`.  Each iteration rebuilds the conflict graph,
+    /// builds the queue with that scope, applies every planned move, and
+    /// merges the moves into `net_moves` (so a single ability that moves
+    /// across multiple iterations collapses into one `(old → new)` entry).
+    /// Returns the unresolved set from the final iteration.
+    fn run_cascade_phase(
+        &mut self,
+        scope: AssignmentScope,
+        net_moves: &mut HashMap<MoveKey, AccumulatedMove>,
+    ) -> Vec<UnresolvedMover> {
+        const MAX_ITERATIONS_PER_PHASE: usize = 32;
+        let mut last_unresolved: Vec<UnresolvedMover> = Vec::new();
+        for _ in 0..MAX_ITERATIONS_PER_PHASE {
             let graph = ConflictGraph::build(self);
-            let queue = AssignmentQueue::build(graph);
+            let queue = AssignmentQueue::build_with_scope(graph, scope);
             let pass_plan = cascade_planner::solve(&queue);
             last_unresolved = pass_plan.unresolved().to_vec();
             if pass_plan.move_count() == 0 {
@@ -749,22 +788,7 @@ impl CustomKeys {
                 self.apply_resolved_position(application);
             }
         }
-
-        let mut combined_moves: Vec<PlannedMove> = Vec::new();
-        for (key, accumulated) in net_moves {
-            if accumulated.old_position == accumulated.new_position {
-                continue;
-            }
-            let planned_move = PlannedMove::new(
-                key.slot_id,
-                key.grid_role,
-                accumulated.old_position,
-                accumulated.new_position,
-                accumulated.carrier_unit_ids,
-            );
-            combined_moves.push(planned_move);
-        }
-        CascadePlan::from_parts(combined_moves, last_unresolved)
+        last_unresolved
     }
 
     fn apply_resolved_position(&mut self, application: MoveApplication) {
@@ -2115,6 +2139,63 @@ mod normalize_tests {
                 "{} must have its new position written back to the binding",
                 slot.as_str(),
             );
+        }
+    }
+
+    #[test]
+    fn resolve_conflicts_eliminates_intra_unit_collisions_too() {
+        // Phase 2 of resolve_conflicts must clear any intra-unit collision
+        // (both endpoints single-carrier) that phase 1 deliberately left
+        // alone.  After resolve_conflicts returns, every pair of conflict-
+        // graph neighbors that ended up resolved must occupy distinct cells
+        // on the same role — regardless of carrier count.
+        use crate::cascade_planner;
+        use crate::cascade_queue::{AssignmentQueue, AssignmentScope};
+        use crate::conflict_graph::ConflictGraph;
+
+        let mut keys = CustomKeys::from("").normalize();
+        let _plan = keys.resolve_conflicts();
+
+        // Re-evaluate against the full graph using the IncludingIntraUnit
+        // scope so unresolved bookkeeping reflects every potential collision.
+        let graph = ConflictGraph::build(&keys);
+        let queue = AssignmentQueue::build_with_scope(graph, AssignmentScope::IncludingIntraUnit);
+        let plan = cascade_planner::solve(&queue);
+        let unresolved: std::collections::HashSet<usize> = plan
+            .unresolved()
+            .iter()
+            .filter_map(|mover| {
+                queue.graph().nodes().iter().position(|node| {
+                    node.slot_id() == mover.slot_id() && node.grid_role() == mover.grid_role()
+                })
+            })
+            .collect();
+
+        let graph_ref = queue.graph();
+        for (first_index, first_node) in graph_ref.nodes().iter().enumerate() {
+            if unresolved.contains(&first_index) {
+                continue;
+            }
+            for &second_index in graph_ref.neighbors(first_index) {
+                if second_index <= first_index {
+                    continue;
+                }
+                if unresolved.contains(&second_index) {
+                    continue;
+                }
+                let second_node = graph_ref.node(second_index);
+                let first_position = queue.final_position(first_index);
+                let second_position = queue.final_position(second_index);
+                let same_role = first_node.grid_role() == second_node.grid_role();
+                assert!(
+                    first_position != second_position || !same_role,
+                    "intra/cross-unit collision survives resolve_conflicts: {} and {} at ({},{})",
+                    first_node.slot_id().as_str(),
+                    second_node.slot_id().as_str(),
+                    u8::from(first_position.column()),
+                    u8::from(first_position.row()),
+                );
+            }
         }
     }
 }

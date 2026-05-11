@@ -135,6 +135,22 @@ pub struct AssignmentQueue {
     total_mover_count: usize,
 }
 
+/// Which conflicts the cascade is allowed to resolve in this pass.
+///
+/// `resolve_conflicts` runs a `CrossUnitOnly` pass first (the classic cascade
+/// that ignores intra-unit collisions) and a follow-up `IncludingIntraUnit`
+/// pass to clean up the remaining same-unit collisions (e.g. two shop items
+/// on a Goblin Merchant claiming the same slot).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum AssignmentScope {
+    /// Anchor candidates: nodes with carrier count ≥ 2, plus pinned slots.
+    /// Pure intra-unit collisions are left untouched.
+    CrossUnitOnly,
+    /// Every node in the conflict component is an anchor candidate.  Used
+    /// for the second pass after cross-unit cascading has settled.
+    IncludingIntraUnit,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct UnitRoleKey {
     unit_id: WarcraftObjectId,
@@ -143,6 +159,10 @@ struct UnitRoleKey {
 
 impl AssignmentQueue {
     pub fn build(graph: ConflictGraph) -> Self {
+        Self::build_with_scope(graph, AssignmentScope::CrossUnitOnly)
+    }
+
+    pub fn build_with_scope(graph: ConflictGraph, scope: AssignmentScope) -> Self {
         let mut state = QueueBuildState::new(&graph);
         let role_sweep_order = [
             GridRole::MainCommand,
@@ -160,7 +180,7 @@ impl AssignmentQueue {
                 };
                 let position = GridCoordinate::new(column, row);
                 for &role in &role_sweep_order {
-                    state.process_cell(position, role, &graph);
+                    state.process_cell(position, role, &graph, scope);
                 }
             }
         }
@@ -249,9 +269,10 @@ impl QueueBuildState {
         position: GridCoordinate,
         grid_role: GridRole,
         graph: &ConflictGraph,
+        scope: AssignmentScope,
     ) {
         let residents = self.residents_at(position, grid_role, graph);
-        let fight_groups = decompose_for_fight(&residents, position, grid_role, graph);
+        let fight_groups = decompose_for_fight(&residents, position, grid_role, graph, scope);
         for fight_group in fight_groups {
             let mover_indices_for_relocation: Vec<usize> = fight_group.mover_indices.clone();
             self.groups.push(fight_group);
@@ -620,6 +641,7 @@ fn decompose_for_fight(
     position: GridCoordinate,
     grid_role: GridRole,
     graph: &ConflictGraph,
+    scope: AssignmentScope,
 ) -> Vec<PositionAssignmentGroup> {
     let resident_set: HashSet<usize> = residents.iter().copied().collect();
     let mut position_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
@@ -667,6 +689,7 @@ fn decompose_for_fight(
             graph,
             position,
             grid_role,
+            scope,
         );
         groups.extend(component_groups);
     }
@@ -688,19 +711,32 @@ fn assignment_groups_for_component(
     graph: &ConflictGraph,
     position: GridCoordinate,
     grid_role: GridRole,
+    scope: AssignmentScope,
 ) -> Vec<PositionAssignmentGroup> {
-    // Anchor candidates are cross-unit nodes (carriers ≥ 2) plus any pinned
-    // node, since pinned slots are permanent fixtures regardless of how many
-    // units carry them.
-    let anchor_candidates: Vec<usize> = component
-        .iter()
-        .copied()
-        .filter(|&index| {
-            let node = graph.node(index);
-            let slot_id = node.slot_id();
-            node.carrier_count() >= 2 || is_pinned_slot(&slot_id)
-        })
-        .collect();
+    // Anchor candidates are filtered by the scope passed to
+    // `AssignmentQueue::build`:
+    //
+    //   - `CrossUnitOnly` (phase 1): cross-unit nodes (carriers ≥ 2) plus
+    //     any pinned node.  This is the existing cascade — intra-unit
+    //     collisions (single-carrier abilities competing for one slot on
+    //     one unit) are out of scope and silently ignored.
+    //   - `IncludingIntraUnit` (phase 2): every node in the component is
+    //     a candidate.  Cross-unit abilities still beat intra-unit ones
+    //     via the carrier-count comparator below, but pure single-carrier
+    //     collisions (e.g. two shop items on a Goblin Merchant) finally
+    //     get resolved.
+    let anchor_candidates: Vec<usize> = match scope {
+        AssignmentScope::CrossUnitOnly => component
+            .iter()
+            .copied()
+            .filter(|&index| {
+                let node = graph.node(index);
+                let slot_id = node.slot_id();
+                node.carrier_count() >= 2 || is_pinned_slot(&slot_id)
+            })
+            .collect(),
+        AssignmentScope::IncludingIntraUnit => component.to_vec(),
+    };
 
     if anchor_candidates.len() < 2 {
         return Vec::new();
@@ -749,6 +785,7 @@ fn assignment_groups_for_component(
             graph,
             position,
             grid_role,
+            scope,
         );
     }
 
@@ -826,6 +863,7 @@ fn assignment_groups_for_component(
             graph,
             position,
             grid_role,
+            scope,
         );
         groups.extend(sub_groups);
     }
@@ -1058,20 +1096,21 @@ mod cascade_queue_tests {
     }
 
     #[test]
-    fn every_fight_group_has_at_least_one_cross_unit_node() {
+    fn every_fight_group_has_at_least_two_members() {
+        // The cascade resolves both cross-unit collisions (carrier_count ≥ 2)
+        // and pure intra-unit collisions (single-carrier abilities competing
+        // for one slot on one unit, e.g. shop items on a Goblin Merchant).
+        // The only invariant left is that a fight group must have an anchor
+        // plus at least one mover — otherwise there's no fight to resolve.
         let queue = default_queue();
         for group in queue.groups() {
-            if group.is_gap_pull() {
+            if !group.is_fight() {
                 continue;
             }
-            let anchor_carriers = queue.graph().node(group.anchor_index()).carrier_count();
-            let any_mover_shared = group
-                .mover_indices()
-                .iter()
-                .any(|&index| queue.graph().node(index).carrier_count() >= 2);
+            let total_members = group.mover_count() + 1;
             assert!(
-                anchor_carriers >= 2 || any_mover_shared,
-                "every fight group must have at least one node with carrier_count >= 2"
+                total_members >= 2,
+                "a fight group must have an anchor plus ≥ 1 mover, got {total_members}",
             );
         }
     }
@@ -1166,6 +1205,11 @@ mod cascade_queue_tests {
 
     #[test]
     fn no_post_queue_collisions_for_resolved_cross_unit_nodes() {
+        // `default_queue()` uses `AssignmentScope::CrossUnitOnly`.  Intra-unit
+        // collisions (both endpoints have carrier_count == 1) are not the
+        // queue's domain in that scope — they are resolved in phase 2 of
+        // `CustomKeys::resolve_conflicts`.  Here we only check cross-unit
+        // pairs.
         let queue = default_queue();
         let graph = queue.graph();
         for (first_index, first_node) in graph.nodes().iter().enumerate() {

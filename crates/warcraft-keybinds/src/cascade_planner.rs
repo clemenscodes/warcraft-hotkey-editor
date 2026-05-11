@@ -317,6 +317,11 @@ mod cascade_planner_tests {
                     continue;
                 }
                 let second_node = queue.graph().node(second_index);
+                // `AssignmentQueue::build` defaults to `CrossUnitOnly`.  In
+                // that scope the planner only resolves cross-unit collisions
+                // (carrier_count ≥ 2 on both endpoints); intra-unit
+                // collisions are phase 2 of `CustomKeys::resolve_conflicts`
+                // and not visible to a single-pass planner test.
                 if first_node.carrier_count() < 2 || second_node.carrier_count() < 2 {
                     continue;
                 }

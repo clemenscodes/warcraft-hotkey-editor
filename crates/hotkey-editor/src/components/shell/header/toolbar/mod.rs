@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::actions::export_buttons::ExportButtons;
+use crate::components::actions::resolve_button::ResolveButton;
 use crate::components::actions::upload_button::UploadButton;
 use crate::components::shared::icons::{ICON_COG, ICON_TEMPLATES};
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -64,6 +65,7 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
                     dangerous_inner_html: ICON_COG,
                 }
             }
+            ResolveButton { loaded_keys }
             ExportButtons { loaded_keys, preview_open }
         }
     }
