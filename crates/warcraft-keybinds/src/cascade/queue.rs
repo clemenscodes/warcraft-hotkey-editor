@@ -324,7 +324,11 @@ impl QueueBuildState {
                 continue;
             }
             let mut anyone_at_cell = false;
-            let mut anyone_rightward = false;
+            // True only when an ability was originally at ≤ current column but the
+            // cascade displaced it past the current column — a real gap.  An ability
+            // that was always to the right of this cell (intentional design) does not
+            // qualify and must not trigger a gap-pull.
+            let mut anyone_displaced_past_here = false;
             for &node_index in node_indices {
                 if self.unresolved.contains(&node_index) {
                     continue;
@@ -340,10 +344,14 @@ impl QueueBuildState {
                     break;
                 }
                 if node_column_value > column_value {
-                    anyone_rightward = true;
+                    let original_column_value =
+                        u8::from(graph.node(node_index).current_position().column());
+                    if original_column_value <= column_value {
+                        anyone_displaced_past_here = true;
+                    }
                 }
             }
-            if !anyone_at_cell && anyone_rightward {
+            if !anyone_at_cell && anyone_displaced_past_here {
                 units_needing_gap_close.insert(key.unit_id);
             }
         }
@@ -1392,5 +1400,26 @@ mod cascade_queue_tests {
                 original_row,
             );
         }
+    }
+
+    #[test]
+    fn gap_pull_does_not_displace_abilities_with_intentional_gaps() {
+        // Arav (Raven Form, Druid of the Talon) has default position (3,2).
+        // EDOT has Afae at (0,2), Acyc at (1,2), and Arav at (3,2) — column 2 is
+        // intentionally empty.  The gap-pull must not pull Arav leftward to (2,2)
+        // because no ability was ever displaced from (2,2): the gap is by design.
+        let queue = default_queue();
+        let graph = queue.graph();
+        let Some(arav_index) = graph.find_node("Arav", GridRole::MainCommand) else {
+            return;
+        };
+        let original_column = u8::from(graph.node(arav_index).current_position().column());
+        let final_position = queue.final_position(arav_index);
+        let final_column = u8::from(final_position.column());
+        assert!(
+            final_column >= original_column,
+            "Arav must not be gap-pulled leftward: started at column {original_column}, \
+             ended at column {final_column}"
+        );
     }
 }
