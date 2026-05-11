@@ -41,10 +41,14 @@ impl PositionAssignmentGroup {
 
 /// The ordered work queue for the cascade solver.
 ///
-/// Groups are sorted by mover count descending — positions with the most
-/// competing abilities are resolved first because they have the least
-/// flexibility and the most work to do.  Within a group, movers are ordered
-/// by carrier count ascending so the cheapest blast-radius moves happen first.
+/// One group corresponds to one **connected component of the collision subgraph
+/// at a position**: the set of abilities at a given (position, grid_role) that
+/// are mutually reachable through conflict edges.  Two abilities at the same
+/// position that share no carrier unit are in different components and belong
+/// to independent groups — neither needs to move because of the other.
+///
+/// Groups are sorted left-to-right, top-to-bottom.  Within a group, movers are
+/// ordered by carrier count descending (highest blast-radius first).
 ///
 /// Owns the `ConflictGraph` it was derived from so that `Display` can render
 /// full ability names and carrier counts without a separate argument.
@@ -60,75 +64,87 @@ struct PositionKey {
     grid_role: GridRole,
 }
 
+/// One collision edge stored while building the position's subgraph.
+struct PositionEdge {
+    first_node_index: usize,
+    second_node_index: usize,
+}
+
 impl AssignmentQueue {
     pub fn build(graph: ConflictGraph) -> Self {
-        // Collect all node indices involved in collisions, grouped by position.
-        let mut nodes_by_position: HashMap<PositionKey, HashSet<usize>> = HashMap::new();
-
+        // Step 1: group all colliding pairs by their shared position.
+        let mut edges_by_position: HashMap<PositionKey, Vec<PositionEdge>> = HashMap::new();
         for pair in graph.colliding_pairs() {
             let first_node = graph.node(pair.first_index());
             let key = PositionKey {
                 position: first_node.current_position(),
                 grid_role: first_node.grid_role(),
             };
-            nodes_by_position
-                .entry(key)
-                .or_default()
-                .insert(pair.first_index());
-            nodes_by_position
-                .entry(key)
-                .or_default()
-                .insert(pair.second_index());
+            let edge = PositionEdge {
+                first_node_index: pair.first_index(),
+                second_node_index: pair.second_index(),
+            };
+            edges_by_position.entry(key).or_default().push(edge);
         }
 
-        let mut groups: Vec<PositionAssignmentGroup> = nodes_by_position
-            .into_iter()
-            .map(|(key, node_index_set)| {
-                let mut node_indices: Vec<usize> = node_index_set.into_iter().collect();
-                // Anchor = highest carrier count. Stable sort to break ties by node index
-                // so results are deterministic.
-                node_indices.sort_by(|&left, &right| {
-                    let left_carriers = graph.node(left).carrier_count();
-                    let right_carriers = graph.node(right).carrier_count();
-                    right_carriers
-                        .cmp(&left_carriers)
-                        .then_with(|| left.cmp(&right))
-                });
-                let anchor_index = node_indices[0];
-                let mut mover_indices: Vec<usize> = node_indices.into_iter().skip(1).collect();
-                // Movers: highest carrier count first so the most impactful moves
-                // are visible at the top of each group.
-                mover_indices.sort_by(|&left, &right| {
-                    let left_carriers = graph.node(left).carrier_count();
-                    let right_carriers = graph.node(right).carrier_count();
-                    right_carriers
-                        .cmp(&left_carriers)
-                        .then_with(|| left.cmp(&right))
-                });
-                PositionAssignmentGroup {
-                    position: key.position,
-                    grid_role: key.grid_role,
-                    anchor_index,
-                    mover_indices,
+        let mut groups: Vec<PositionAssignmentGroup> = Vec::new();
+
+        // Step 2: for each position, decompose into connected components, then
+        // recursively split each component into direct-conflict groups.
+        //
+        // A node is only a mover for the group whose anchor it DIRECTLY conflicts
+        // with.  Nodes connected only through chains do not form a single group —
+        // they form separate groups at successive recursion levels.
+        for (key, edges) in edges_by_position {
+            let mut node_set: HashSet<usize> = HashSet::new();
+            let mut position_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
+            for edge in &edges {
+                let first_index = edge.first_node_index;
+                let second_index = edge.second_node_index;
+                node_set.insert(first_index);
+                node_set.insert(second_index);
+                position_adjacency
+                    .entry(first_index)
+                    .or_default()
+                    .push(second_index);
+                position_adjacency
+                    .entry(second_index)
+                    .or_default()
+                    .push(first_index);
+            }
+
+            let mut all_nodes: Vec<usize> = node_set.into_iter().collect();
+            all_nodes.sort();
+
+            let mut visited: HashSet<usize> = HashSet::new();
+            for &start_node in &all_nodes {
+                if visited.contains(&start_node) {
+                    continue;
                 }
-            })
-            .collect();
+                let mut component: Vec<usize> = Vec::new();
+                let mut pending: Vec<usize> = vec![start_node];
+                while let Some(current) = pending.pop() {
+                    if !visited.insert(current) {
+                        continue;
+                    }
+                    component.push(current);
+                    if let Some(neighbors) = position_adjacency.get(&current) {
+                        pending.extend(neighbors.iter().copied());
+                    }
+                }
+                let component_groups = assignment_groups_for_component(
+                    &component,
+                    &position_adjacency,
+                    &graph,
+                    key.position,
+                    key.grid_role,
+                );
+                groups.extend(component_groups);
+            }
+        }
 
-        // Drop groups where every node has exactly 1 carrier — those are purely
-        // intra-unit collisions (all abilities live on the same single unit).
-        // Moving any of them has zero cross-unit blast radius; they belong to a
-        // simpler, independent solver and must not pollute this queue.
-        groups.retain(|group| {
-            let anchor_carriers = graph.node(group.anchor_index).carrier_count();
-            let any_mover_is_shared = group
-                .mover_indices
-                .iter()
-                .any(|&index| graph.node(index).carrier_count() >= 2);
-            anchor_carriers >= 2 || any_mover_is_shared
-        });
-
-        // Left-to-right, top-to-bottom: row ascending, then column ascending,
-        // then grid role as a stable tiebreaker.
+        // Sort groups left-to-right, top-to-bottom.
+        // Within the same position: highest-carrier anchor first, then stable by anchor index.
         groups.sort_by(|left, right| {
             let left_row = u8::from(left.position.row());
             let right_row = u8::from(right.position.row());
@@ -136,10 +152,14 @@ impl AssignmentQueue {
             let right_col = u8::from(right.position.column());
             let left_role = grid_role_order(left.grid_role);
             let right_role = grid_role_order(right.grid_role);
+            let left_anchor_carriers = graph.node(left.anchor_index).carrier_count();
+            let right_anchor_carriers = graph.node(right.anchor_index).carrier_count();
             left_row
                 .cmp(&right_row)
                 .then_with(|| left_col.cmp(&right_col))
                 .then_with(|| left_role.cmp(&right_role))
+                .then_with(|| right_anchor_carriers.cmp(&left_anchor_carriers))
+                .then_with(|| left.anchor_index.cmp(&right.anchor_index))
         });
 
         let total_mover_count = groups.iter().map(|group| group.mover_count()).sum();
@@ -172,6 +192,159 @@ impl AssignmentQueue {
     }
 }
 
+/// Recursively splits a connected component at a position into assignment groups.
+///
+/// Each group contains exactly one anchor (the highest-carrier cross-unit node)
+/// and its **direct** conflict neighbours at that position as movers.  Nodes that
+/// are connected to the anchor only through a chain — but share no carrier unit
+/// with the anchor — are not movers for this group; they are handled in a
+/// sub-group produced by the next recursion level.
+///
+/// This ensures that e.g. Wind Walk is not forced to move just because Abolish
+/// Magic is the anchor: Wind Walk conflicts only with Dispel Magic (an
+/// intermediate node), so it belongs to a separate Dispel Magic–anchored group.
+fn assignment_groups_for_component(
+    component: &[usize],
+    position_adjacency: &HashMap<usize, Vec<usize>>,
+    graph: &ConflictGraph,
+    position: GridCoordinate,
+    grid_role: GridRole,
+) -> Vec<PositionAssignmentGroup> {
+    let cross_unit_nodes: Vec<usize> = component
+        .iter()
+        .copied()
+        .filter(|&index| graph.node(index).carrier_count() >= 2)
+        .collect();
+
+    if cross_unit_nodes.len() < 2 {
+        return Vec::new();
+    }
+
+    // Anchor: highest carrier count; stable tiebreak — lower index wins.
+    let anchor_index = cross_unit_nodes
+        .iter()
+        .copied()
+        .max_by(|&left, &right| {
+            let left_carriers = graph.node(left).carrier_count();
+            let right_carriers = graph.node(right).carrier_count();
+            left_carriers
+                .cmp(&right_carriers)
+                .then_with(|| right.cmp(&left))
+        })
+        .expect("cross_unit_nodes is non-empty");
+
+    let empty_neighbors: Vec<usize> = Vec::new();
+    let anchor_position_neighbors: &Vec<usize> = position_adjacency
+        .get(&anchor_index)
+        .unwrap_or(&empty_neighbors);
+    let anchor_neighbor_set: HashSet<usize> = anchor_position_neighbors.iter().copied().collect();
+
+    // Direct movers: cross-unit nodes with a direct conflict edge to the anchor
+    // within this position's subgraph.
+    let mut direct_mover_indices: Vec<usize> = cross_unit_nodes
+        .iter()
+        .copied()
+        .filter(|&index| index != anchor_index && anchor_neighbor_set.contains(&index))
+        .collect();
+
+    if direct_mover_indices.is_empty() {
+        // The anchor has no cross-unit direct conflicts at this position.
+        // Remove it and let the remaining nodes form their own groups.
+        let without_anchor: Vec<usize> = component
+            .iter()
+            .copied()
+            .filter(|&index| index != anchor_index)
+            .collect();
+        return assignment_groups_for_component(
+            &without_anchor,
+            position_adjacency,
+            graph,
+            position,
+            grid_role,
+        );
+    }
+
+    direct_mover_indices.sort_by(|&left, &right| {
+        let left_carriers = graph.node(left).carrier_count();
+        let right_carriers = graph.node(right).carrier_count();
+        right_carriers
+            .cmp(&left_carriers)
+            .then_with(|| left.cmp(&right))
+    });
+
+    let excluded_from_remaining: HashSet<usize> = std::iter::once(anchor_index)
+        .chain(direct_mover_indices.iter().copied())
+        .collect();
+    let first_group = PositionAssignmentGroup {
+        position,
+        grid_role,
+        anchor_index,
+        mover_indices: direct_mover_indices,
+    };
+    let mut groups: Vec<PositionAssignmentGroup> = vec![first_group];
+
+    let remaining_nodes: Vec<usize> = component
+        .iter()
+        .copied()
+        .filter(|&index| !excluded_from_remaining.contains(&index))
+        .collect();
+
+    if remaining_nodes.is_empty() {
+        return groups;
+    }
+
+    let remaining_node_set: HashSet<usize> = remaining_nodes.iter().copied().collect();
+    let mut remaining_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
+    for &node in &remaining_nodes {
+        let restricted_neighbors: Vec<usize> = position_adjacency
+            .get(&node)
+            .map(|neighbors| {
+                neighbors
+                    .iter()
+                    .copied()
+                    .filter(|&neighbor| remaining_node_set.contains(&neighbor))
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !restricted_neighbors.is_empty() {
+            remaining_adjacency.insert(node, restricted_neighbors);
+        }
+    }
+
+    // BFS on the remaining subgraph to find independent sub-components.
+    let mut visited: HashSet<usize> = HashSet::new();
+    for &start_node in &remaining_nodes {
+        if visited.contains(&start_node) {
+            continue;
+        }
+        let mut sub_component: Vec<usize> = Vec::new();
+        let mut pending: Vec<usize> = vec![start_node];
+        while let Some(current) = pending.pop() {
+            if !visited.insert(current) {
+                continue;
+            }
+            sub_component.push(current);
+            if let Some(neighbors) = remaining_adjacency.get(&current) {
+                for &neighbor in neighbors {
+                    if !visited.contains(&neighbor) {
+                        pending.push(neighbor);
+                    }
+                }
+            }
+        }
+        let sub_groups = assignment_groups_for_component(
+            &sub_component,
+            &remaining_adjacency,
+            graph,
+            position,
+            grid_role,
+        );
+        groups.extend(sub_groups);
+    }
+
+    groups
+}
+
 fn grid_role_order(role: GridRole) -> u8 {
     match role {
         GridRole::MainCommand => 0,
@@ -200,7 +373,7 @@ impl fmt::Display for AssignmentQueue {
         }
         writeln!(
             formatter,
-            "Assignment queue: {} position(s), {} mover(s) total\n",
+            "Assignment queue: {} group(s), {} mover(s) total\n",
             self.groups.len(),
             self.total_mover_count,
         )?;
@@ -221,18 +394,30 @@ impl fmt::Display for AssignmentQueue {
             let anchor_name = anchor_node.slot_id().display_name(None, None);
             let anchor_id = anchor_node.slot_id().as_str();
             let anchor_carriers = anchor_node.carrier_count();
+            let anchor_carrier_ids = anchor_node
+                .carrier_unit_ids()
+                .iter()
+                .map(|id| id.value())
+                .collect::<Vec<_>>()
+                .join(", ");
             writeln!(
                 formatter,
-                "    ANCHOR  {anchor_name} ({anchor_id})  [{anchor_carriers} carriers]"
+                "    ANCHOR  {anchor_name} ({anchor_id})  [{anchor_carriers} carriers: {anchor_carrier_ids}]"
             )?;
             for &mover_index in &group.mover_indices {
                 let mover_node = self.graph.node(mover_index);
                 let mover_name = mover_node.slot_id().display_name(None, None);
                 let mover_id = mover_node.slot_id().as_str();
                 let mover_carriers = mover_node.carrier_count();
+                let mover_carrier_ids = mover_node
+                    .carrier_unit_ids()
+                    .iter()
+                    .map(|id| id.value())
+                    .collect::<Vec<_>>()
+                    .join(", ");
                 writeln!(
                     formatter,
-                    "    MOVE    {mover_name} ({mover_id})  [{mover_carriers} carriers]"
+                    "    MOVE    {mover_name} ({mover_id})  [{mover_carriers} carriers: {mover_carrier_ids}]"
                 )?;
             }
             writeln!(formatter)?;
@@ -264,35 +449,36 @@ mod cascade_queue_tests {
     }
 
     #[test]
-    fn group_count_matches_cross_unit_collision_position_count() {
-        // The queue must have exactly one group per collision position that involves
-        // at least one ability with carrier_count >= 2 (pure intra-unit positions
-        // are filtered out).  Count those positions directly from the graph.
+    fn every_mover_has_a_conflict_edge_within_its_group() {
+        // Every mover must conflict with at least one other node in its group
+        // (the anchor or another mover).  A mover with no in-group edges would
+        // mean it was pulled in from a different connected component — the core
+        // bug this decomposition fixes.
         let custom_keys = CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
-        let mut qualifying_positions: std::collections::HashSet<(u8, u8, u8)> =
-            std::collections::HashSet::new();
-        for pair in graph.colliding_pairs() {
-            let first_node = graph.node(pair.first_index());
-            let second_node = graph.node(pair.second_index());
-            if first_node.carrier_count() >= 2 || second_node.carrier_count() >= 2 {
-                let col = u8::from(first_node.current_position().column());
-                let row = u8::from(first_node.current_position().row());
-                let role_index = match first_node.grid_role() {
-                    GridRole::MainCommand => 0,
-                    GridRole::BuildMenu => 1,
-                    GridRole::UprootedForm => 2,
-                    GridRole::HeroSkillTree => 3,
-                };
-                qualifying_positions.insert((col, row, role_index));
+        let queue = AssignmentQueue::build(graph);
+        for group in queue.groups() {
+            let anchor_index = group.anchor_index();
+            let mut group_nodes: HashSet<usize> = group.mover_indices().iter().copied().collect();
+            group_nodes.insert(anchor_index);
+
+            for &mover_index in group.mover_indices() {
+                let mover_neighbors: HashSet<usize> = queue
+                    .graph()
+                    .neighbors(mover_index)
+                    .iter()
+                    .copied()
+                    .collect();
+                let shares_edge_with_group = group_nodes
+                    .iter()
+                    .any(|&other| other != mover_index && mover_neighbors.contains(&other));
+                assert!(
+                    shares_edge_with_group,
+                    "mover {} has no conflict edge with any other node in its group",
+                    queue.graph().node(mover_index).slot_id().as_str(),
+                );
             }
         }
-        let queue = AssignmentQueue::build(graph);
-        assert_eq!(
-            queue.group_count(),
-            qualifying_positions.len(),
-            "one group per cross-unit collision position (single-carrier positions excluded)"
-        );
     }
 
     #[test]

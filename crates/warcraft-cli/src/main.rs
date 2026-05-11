@@ -6,7 +6,7 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
     AssignmentQueue, ColumnIndex, ConflictGraph, CrossUnitCollisionReport, CustomKeys,
     GridCoordinate, GridLayout, NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids,
-    UnitKeyedCustomKeys,
+    UnitKeyedCustomKeys, cascade_planner,
 };
 
 #[derive(Parser)]
@@ -52,6 +52,10 @@ enum Command {
         /// abilities are anchors vs movers.
         #[arg(long, short = 'q')]
         queue: bool,
+        /// Run the cascade solver and show every planned move plus any unresolvable
+        /// movers that were skipped.
+        #[arg(long, short = 'p')]
+        plan: bool,
     },
 }
 
@@ -78,6 +82,7 @@ fn main() {
             cross,
             graph,
             queue,
+            plan,
         } => {
             let mut custom_keys = CustomKeys::try_from(file.as_path())
                 .unwrap_or_else(|error| {
@@ -99,6 +104,11 @@ fn main() {
                 let conflict_graph = ConflictGraph::build(&custom_keys);
                 let assignment_queue = AssignmentQueue::build(conflict_graph);
                 println!("{assignment_queue}");
+            } else if plan {
+                let conflict_graph = ConflictGraph::build(&custom_keys);
+                let assignment_queue = AssignmentQueue::build(conflict_graph);
+                let cascade_plan = cascade_planner::solve(&assignment_queue);
+                println!("{cascade_plan}");
             } else if cross {
                 let report = CrossUnitCollisionReport::compute(&custom_keys);
                 println!("{report}");

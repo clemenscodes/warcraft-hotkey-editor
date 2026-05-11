@@ -72,6 +72,15 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Moon base ref
+        run: |
+          git fetch origin main
+          if ! git show-ref --verify --quiet refs/heads/main; then
+            git branch main FETCH_HEAD
+          fi
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
