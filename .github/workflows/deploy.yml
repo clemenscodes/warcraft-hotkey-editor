@@ -82,6 +82,12 @@ jobs:
             git branch main FETCH_HEAD
           fi
 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+
       - name: Install Nix
         uses: cachix/install-nix-action@v31
 
