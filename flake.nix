@@ -145,11 +145,11 @@
           };
         });
 
-        # Node.js 24.14.1 and pnpm 11.0.9 — both built from pinned
-        # sources so the exact versions survive future nixpkgs updates.
-        # The derivation files mirror the pattern used in the unival repo.
-        nodejs = import ./nix/mkNode.nix {inherit nixpkgs system;};
-        pnpm = import ./nix/mkPnpm.nix {inherit nodejs; inherit (pkgs) pnpm;};
+        # MOON_TOOLCHAIN_FORCE_GLOBALS=true bypasses Moon's version check,
+        # so any nixpkgs-provided nodejs_24/pnpm works. Building from source
+        # took 2h+ in CI; the pre-built binaries from cache.nixos.org are instant.
+        nodejs = pkgs.nodejs_24;
+        pnpm = pkgs.pnpm;
 
         # Tools every moon task needs on $PATH at runtime. Anything
         # `.moon/tasks.yml` or a per-crate `moon.yml` shells out to has
@@ -157,7 +157,10 @@
         # with "command not found".
         inherit (playwright.packages.${system}) playwright-test playwright-driver;
         moonTui = moon-tui.packages.${system}.moon-tui;
-        moonRuntimeInputs = [
+
+        # Packages needed to run moon tasks in CI and dev. moonTui is a
+        # TUI wrapper for the interactive dev experience — not needed in CI.
+        ciRuntimeInputs = [
           rustToolchain
           moonCli
           pkgs.dioxus-cli
@@ -169,12 +172,12 @@
           pnpm
           playwright-test
           playwright-driver
-          moonTui
         ];
+        moonRuntimeInputs = ciRuntimeInputs ++ [moonTui];
 
         ci-cache-tools = pkgs.buildEnv {
           name = "warcraft-hotkey-editor-ci-cache-tools";
-          paths = moonRuntimeInputs;
+          paths = ciRuntimeInputs;
         };
 
         # Wraps `moon run :<task>` (workspace-default project, which is

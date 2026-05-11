@@ -79,13 +79,13 @@ jobs:
 
       - name: Build generated assets
         run: >
-          nix develop
+          nix shell .#ci-cache-tools
           --accept-flake-config
           --command moon run hotkey-editor:tailwind/build
 
       - name: Run checks
         run: >
-          nix develop
+          nix shell .#ci-cache-tools
           --accept-flake-config
           --command moon run :ci
 

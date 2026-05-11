@@ -166,7 +166,11 @@ pub(super) fn GridTile(props: GridTileProps) -> Element {
             }
             let bound_ability_id = *ability_id;
             Positions::current_for_ability_off(bound_ability_id, custom_keys_option).is_some_and(
-                |off_pos| off_pos.column().as_u8() == column && off_pos.row().as_u8() == row,
+                |off_pos| {
+                    let off_column = u8::from(off_pos.column());
+                    let off_row = u8::from(off_pos.row());
+                    off_column == column && off_row == row
+                },
             )
         });
 

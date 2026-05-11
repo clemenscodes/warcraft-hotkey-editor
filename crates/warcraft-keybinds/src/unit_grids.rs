@@ -12,7 +12,7 @@ use crate::unit_slots::UnitCommandSlots;
 
 const GRID_SLOT_COUNT: usize = 12;
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum GridRole {
     MainCommand,
     HeroSkillTree,
@@ -80,89 +80,85 @@ impl UnitGrids {
         self.grids.len()
     }
 
-    pub fn position_collisions(&self, custom_keys: &CustomKeys) -> Box<[PositionCollisionCard]> {
-        self.grids
-            .iter()
-            .filter_map(|named_grid| {
-                let role = named_grid.role;
-                let is_research = role.is_research_context();
-                let mut slots_by_position: HashMap<GridCoordinate, Vec<GridSlotId>> =
-                    HashMap::new();
-                for slot in named_grid.card.filled_slots() {
-                    if let Some(position) = custom_keys.position_for_slot(&slot, is_research) {
-                        slots_by_position.entry(position).or_default().push(slot);
-                    }
+    pub fn position_collisions(&self, custom_keys: &CustomKeys) -> [PositionCollisionCard; 2] {
+        let empty = PositionCollisionCard {
+            role: GridRole::MainCommand,
+            cells: [[None; 4]; 3],
+        };
+        let mut result = [empty, empty];
+        for (grid_index, named_grid) in self.grids.iter().enumerate().take(2) {
+            let role = named_grid.role;
+            let is_research = role.is_research_context();
+            let mut slots_by_position: HashMap<GridCoordinate, Vec<GridSlotId>> = HashMap::new();
+            for slot in named_grid.card.filled_slots() {
+                if let Some(position) = custom_keys.position_for_slot(&slot, is_research) {
+                    slots_by_position.entry(position).or_default().push(slot);
                 }
-                let mut cells: [[Option<CollisionSlots>; 4]; 3] =
-                    std::array::from_fn(|_| std::array::from_fn(|_| None));
-                let mut has_collision = false;
-                for (position, colliding_slots) in slots_by_position {
-                    if colliding_slots.len() < 2 {
-                        continue;
-                    }
-                    let row = usize::from(position.row());
-                    let column = usize::from(position.column());
-                    cells[row][column] = Some(CollisionSlots::new(&colliding_slots));
-                    has_collision = true;
+            }
+            let mut cells: [[Option<CollisionSlots>; 4]; 3] =
+                std::array::from_fn(|_| std::array::from_fn(|_| None));
+            for (position, colliding_slots) in slots_by_position {
+                if colliding_slots.len() < 2 {
+                    continue;
                 }
-                if !has_collision {
-                    return None;
-                }
-                Some(PositionCollisionCard { role, cells })
-            })
-            .collect()
+                let row = usize::from(position.row());
+                let column = usize::from(position.column());
+                let slots_slice = colliding_slots.as_slice();
+                cells[row][column] = Some(CollisionSlots::new(slots_slice));
+            }
+            result[grid_index] = PositionCollisionCard { role, cells };
+        }
+        result
     }
 
     pub fn hotkey_collisions(
         &self,
         custom_keys: &CustomKeys,
         layout: GridLayout,
-    ) -> Box<[HotkeyCollisionCard]> {
-        self.grids
-            .iter()
-            .filter_map(|named_grid| {
-                let role = named_grid.role;
-                let is_research = role.is_research_context();
-                let mut slots_by_token: HashMap<HotkeyToken, Vec<GridSlotId>> = HashMap::new();
-                for slot in named_grid.card.filled_slots() {
-                    if let Some(token) =
-                        custom_keys.effective_hotkey_token(&slot, layout, is_research)
-                    {
-                        slots_by_token.entry(token).or_default().push(slot);
-                    }
+    ) -> [HotkeyCollisionCard; 2] {
+        let empty = HotkeyCollisionCard {
+            role: GridRole::MainCommand,
+            cells: [[None; 4]; 3],
+        };
+        let mut result = [empty, empty];
+        for (grid_index, named_grid) in self.grids.iter().enumerate().take(2) {
+            let role = named_grid.role;
+            let is_research = role.is_research_context();
+            let mut slots_by_token: HashMap<HotkeyToken, Vec<GridSlotId>> = HashMap::new();
+            for slot in named_grid.card.filled_slots() {
+                if let Some(token) = custom_keys.effective_hotkey_token(&slot, layout, is_research)
+                {
+                    slots_by_token.entry(token).or_default().push(slot);
                 }
-                let mut cells: [[Option<HotkeyCollisionAtCell>; 4]; 3] =
-                    std::array::from_fn(|_| std::array::from_fn(|_| None));
-                let mut has_collision = false;
-                for (token, colliding_slots) in slots_by_token {
-                    if colliding_slots.len() < 2 {
-                        continue;
-                    }
-                    let HotkeyToken::Letter { character } = token else {
-                        continue;
-                    };
-                    let Some(position) = layout.position_for_letter(character) else {
-                        continue;
-                    };
-                    let row = usize::from(position.row());
-                    let column = usize::from(position.column());
-                    let collision_slots = CollisionSlots::new(&colliding_slots);
-                    cells[row][column] = Some(HotkeyCollisionAtCell {
-                        token,
-                        collision_slots,
-                    });
-                    has_collision = true;
+            }
+            let mut cells: [[Option<HotkeyCollisionAtCell>; 4]; 3] =
+                std::array::from_fn(|_| std::array::from_fn(|_| None));
+            for (token, colliding_slots) in slots_by_token {
+                if colliding_slots.len() < 2 {
+                    continue;
                 }
-                if !has_collision {
-                    return None;
-                }
-                Some(HotkeyCollisionCard { role, cells })
-            })
-            .collect()
+                let HotkeyToken::Letter { character } = token else {
+                    continue;
+                };
+                let Some(position) = layout.position_for_letter(character) else {
+                    continue;
+                };
+                let row = usize::from(position.row());
+                let column = usize::from(position.column());
+                let slots_slice = colliding_slots.as_slice();
+                let collision_slots = CollisionSlots::new(slots_slice);
+                cells[row][column] = Some(HotkeyCollisionAtCell {
+                    token,
+                    collision_slots,
+                });
+            }
+            result[grid_index] = HotkeyCollisionCard { role, cells };
+        }
+        result
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct CollisionSlots {
     slots: [Option<GridSlotId>; GRID_SLOT_COUNT],
     count: u8,
@@ -193,7 +189,7 @@ impl CollisionSlots {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct PositionCollisionCard {
     role: GridRole,
     cells: [[Option<CollisionSlots>; 4]; 3],
@@ -215,25 +211,52 @@ impl PositionCollisionCard {
             .iter()
             .all(|row| row.iter().all(|cell| cell.is_none()))
     }
+}
 
-    pub fn iter(&self) -> impl Iterator<Item = (GridCoordinate, CollisionSlots)> + '_ {
-        self.cells.iter().enumerate().flat_map(|(row_index, row)| {
-            row.iter()
-                .enumerate()
-                .filter_map(move |(column_index, cell)| {
-                    let collision_slots = (*cell)?;
-                    let row_u8 = u8::try_from(row_index).ok()?;
-                    let column_u8 = u8::try_from(column_index).ok()?;
-                    let row = crate::model::RowIndex::try_from(row_u8).ok()?;
-                    let column = crate::model::ColumnIndex::try_from(column_u8).ok()?;
-                    let position = GridCoordinate::new(column, row);
-                    Some((position, collision_slots))
-                })
-        })
+pub struct PositionCollisionCardIterator {
+    card: PositionCollisionCard,
+    index: u8,
+}
+
+impl Iterator for PositionCollisionCardIterator {
+    type Item = (GridCoordinate, CollisionSlots);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            let index = self.index;
+            if index >= 12 {
+                return None;
+            }
+            self.index += 1;
+            let row_u8 = index / 4;
+            let column_u8 = index % 4;
+            let row_usize = usize::from(row_u8);
+            let column_usize = usize::from(column_u8);
+            let cell = self.card.cells[row_usize][column_usize];
+            let Some(collision_slots) = cell else {
+                continue;
+            };
+            let row = crate::model::RowIndex::try_from(row_u8).ok()?;
+            let column = crate::model::ColumnIndex::try_from(column_u8).ok()?;
+            let position = GridCoordinate::new(column, row);
+            return Some((position, collision_slots));
+        }
     }
 }
 
-#[derive(Clone, Copy)]
+impl IntoIterator for PositionCollisionCard {
+    type Item = (GridCoordinate, CollisionSlots);
+    type IntoIter = PositionCollisionCardIterator;
+
+    fn into_iter(self) -> Self::IntoIter {
+        PositionCollisionCardIterator {
+            card: self,
+            index: 0,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct HotkeyCollisionAtCell {
     token: HotkeyToken,
     collision_slots: CollisionSlots,
@@ -249,7 +272,7 @@ impl HotkeyCollisionAtCell {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct HotkeyCollisionCard {
     role: GridRole,
     cells: [[Option<HotkeyCollisionAtCell>; 4]; 3],
@@ -271,21 +294,133 @@ impl HotkeyCollisionCard {
             .iter()
             .all(|row| row.iter().all(|cell| cell.is_none()))
     }
+}
 
-    pub fn iter(&self) -> impl Iterator<Item = (GridCoordinate, HotkeyCollisionAtCell)> + '_ {
-        self.cells.iter().enumerate().flat_map(|(row_index, row)| {
-            row.iter()
-                .enumerate()
-                .filter_map(move |(column_index, cell)| {
-                    let entry = (*cell)?;
-                    let row_u8 = u8::try_from(row_index).ok()?;
-                    let column_u8 = u8::try_from(column_index).ok()?;
-                    let row = crate::model::RowIndex::try_from(row_u8).ok()?;
-                    let column = crate::model::ColumnIndex::try_from(column_u8).ok()?;
-                    let position = GridCoordinate::new(column, row);
-                    Some((position, entry))
-                })
+pub struct HotkeyCollisionCardIterator {
+    card: HotkeyCollisionCard,
+    index: u8,
+}
+
+impl Iterator for HotkeyCollisionCardIterator {
+    type Item = (GridCoordinate, HotkeyCollisionAtCell);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            let index = self.index;
+            if index >= 12 {
+                return None;
+            }
+            self.index += 1;
+            let row_u8 = index / 4;
+            let column_u8 = index % 4;
+            let row_usize = usize::from(row_u8);
+            let column_usize = usize::from(column_u8);
+            let cell = self.card.cells[row_usize][column_usize];
+            let Some(entry) = cell else {
+                continue;
+            };
+            let row = crate::model::RowIndex::try_from(row_u8).ok()?;
+            let column = crate::model::ColumnIndex::try_from(column_u8).ok()?;
+            let position = GridCoordinate::new(column, row);
+            return Some((position, entry));
+        }
+    }
+}
+
+impl IntoIterator for HotkeyCollisionCard {
+    type Item = (GridCoordinate, HotkeyCollisionAtCell);
+    type IntoIter = HotkeyCollisionCardIterator;
+
+    fn into_iter(self) -> Self::IntoIter {
+        HotkeyCollisionCardIterator {
+            card: self,
+            index: 0,
+        }
+    }
+}
+
+impl PartialEq for CollisionSlots {
+    fn eq(&self, other: &Self) -> bool {
+        if self.count != other.count {
+            return false;
+        }
+        let count = usize::from(self.count);
+        (0..count).all(|index| {
+            let left = self.slots[index].map(|slot| slot.as_str());
+            let right = other.slots[index].map(|slot| slot.as_str());
+            left == right
         })
+    }
+}
+
+#[cfg(test)]
+pub(crate) struct PositionCollisionCardBuilder {
+    role: GridRole,
+    cells: [[Option<CollisionSlots>; 4]; 3],
+}
+
+#[cfg(test)]
+impl PositionCollisionCardBuilder {
+    pub(crate) fn new(role: GridRole) -> Self {
+        Self {
+            role,
+            cells: [[None; 4]; 3],
+        }
+    }
+
+    pub(crate) fn collision_at(mut self, column: u8, row: u8, slots: &[GridSlotId]) -> Self {
+        let column_index = usize::from(column);
+        let row_index = usize::from(row);
+        self.cells[row_index][column_index] = Some(CollisionSlots::new(slots));
+        self
+    }
+
+    pub(crate) fn build(self) -> PositionCollisionCard {
+        PositionCollisionCard {
+            role: self.role,
+            cells: self.cells,
+        }
+    }
+}
+
+#[cfg(test)]
+pub(crate) struct HotkeyCollisionCardBuilder {
+    role: GridRole,
+    cells: [[Option<HotkeyCollisionAtCell>; 4]; 3],
+    layout: GridLayout,
+}
+
+#[cfg(test)]
+impl HotkeyCollisionCardBuilder {
+    pub(crate) fn new(role: GridRole, layout: GridLayout) -> Self {
+        Self {
+            role,
+            cells: [[None; 4]; 3],
+            layout,
+        }
+    }
+
+    pub(crate) fn collision(mut self, letter: char, slots: &[GridSlotId]) -> Self {
+        let upper = letter.to_ascii_uppercase();
+        let token = HotkeyToken::Letter { character: upper };
+        let Some(position) = self.layout.position_for_letter(upper) else {
+            return self;
+        };
+        let row = usize::from(position.row());
+        let column = usize::from(position.column());
+        let collision_slots = CollisionSlots::new(slots);
+        self.cells[row][column] = Some(HotkeyCollisionAtCell {
+            token,
+            collision_slots,
+        });
+        self
+    }
+
+    pub(crate) fn build(self) -> HotkeyCollisionCard {
+        HotkeyCollisionCard {
+            role: self.role,
+            cells: self.cells,
+        }
     }
 }
 
@@ -411,7 +546,7 @@ mod unit_grids_tests {
         let unit_grids = UnitGrids::for_unit(paladin_id());
         let cards = unit_grids.position_collisions(&custom_keys);
         assert!(
-            cards.is_empty(),
+            cards.iter().all(|card| card.is_empty()),
             "normalized default state must have no position collisions for Paladin"
         );
     }
@@ -469,7 +604,7 @@ mod unit_grids_tests {
         let unit_grids = UnitGrids::for_unit(paladin_id());
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
         assert!(
-            cards.is_empty(),
+            cards.iter().all(|card| card.is_empty()),
             "normalized default state must have no hotkey collisions for Paladin"
         );
     }
@@ -477,7 +612,7 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collisions_detects_two_abilities_with_same_hotkey() {
         let hotkey_q = Hotkey::from('Q');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q.clone()).build();
+        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
         let divine_shield_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
@@ -486,7 +621,7 @@ mod unit_grids_tests {
         let unit_grids = UnitGrids::for_unit(paladin_id());
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
         assert!(
-            !cards.is_empty(),
+            cards.iter().any(|card| !card.is_empty()),
             "two Paladin abilities with hotkey Q must produce a hotkey collision"
         );
     }
@@ -494,7 +629,7 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collision_reports_colliding_token() {
         let hotkey_w = Hotkey::from('W');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_w.clone()).build();
+        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_w).build();
         let divine_shield_binding = AbilityBinding::builder().hotkey(hotkey_w).build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
@@ -517,7 +652,7 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collisions_are_per_grid_not_cross_grid() {
         let hotkey_q = Hotkey::from('Q');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q.clone()).build();
+        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
         let divine_shield_research = AbilityBinding::builder().research_hotkey(hotkey_q).build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
@@ -527,7 +662,7 @@ mod unit_grids_tests {
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
         let q_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let cross_grid_collision = cards.iter().any(|card| {
-            card.collision_at(q_position).map_or(false, |entry| {
+            card.collision_at(q_position).is_some_and(|entry| {
                 let slot_ids: Vec<&str> = entry.slots().iter().map(|slot| slot.as_str()).collect();
                 slot_ids.contains(&"AHhb") && slot_ids.contains(&"AHds")
             })

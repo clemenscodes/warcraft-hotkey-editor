@@ -14,14 +14,14 @@ pub struct UnitKeyedCustomKeys {
     groups: Vec<UnitAbilityGroup>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct UnitAbilityGroup {
     unit_id: WarcraftObjectId,
     unit_name: &'static str,
-    slots: Vec<UnitAbilitySlot>,
+    slots: [Option<UnitAbilitySlot>; 12],
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct UnitAbilitySlot {
     slot_id: GridSlotId,
     hotkey: Option<Hotkey>,
@@ -34,16 +34,16 @@ impl UnitAbilitySlot {
         self.slot_id
     }
 
-    pub fn hotkey(&self) -> Option<&Hotkey> {
-        self.hotkey.as_ref()
+    pub fn hotkey(&self) -> Option<Hotkey> {
+        self.hotkey
     }
 
     pub fn position(&self) -> Option<GridCoordinate> {
         self.position
     }
 
-    pub fn research_hotkey(&self) -> Option<&Hotkey> {
-        self.research_hotkey.as_ref()
+    pub fn research_hotkey(&self) -> Option<Hotkey> {
+        self.research_hotkey
     }
 }
 
@@ -56,8 +56,8 @@ impl UnitAbilityGroup {
         self.unit_name
     }
 
-    pub fn slots(&self) -> &[UnitAbilitySlot] {
-        &self.slots
+    pub fn slots(&self) -> impl Iterator<Item = UnitAbilitySlot> + '_ {
+        self.slots.iter().flatten().copied()
     }
 }
 
@@ -98,20 +98,25 @@ impl From<&CustomKeys> for UnitKeyedCustomKeys {
                     return None;
                 }
                 let command_card = WARCRAFT_DATABASE.command_card(*unit_id);
-                let slots: Vec<UnitAbilitySlot> = command_card
-                    .filled_slots()
-                    .filter_map(|slot_id| {
-                        let binding = overridden_ids.get(slot_id.as_str())?;
-                        let slot = UnitAbilitySlot {
-                            slot_id,
-                            hotkey: binding.hotkey().cloned(),
-                            position: binding.button_position().copied(),
-                            research_hotkey: binding.research_hotkey().cloned(),
-                        };
-                        Some(slot)
-                    })
-                    .collect();
-                if slots.is_empty() {
+                let mut slots: [Option<UnitAbilitySlot>; 12] = [None; 12];
+                let mut slot_count: usize = 0;
+                for slot_id in command_card.filled_slots() {
+                    let Some(binding) = overridden_ids.get(slot_id.as_str()) else {
+                        continue;
+                    };
+                    let hotkey = binding.hotkey().cloned();
+                    let position = binding.button_position().copied();
+                    let research_hotkey = binding.research_hotkey().cloned();
+                    let slot = UnitAbilitySlot {
+                        slot_id,
+                        hotkey,
+                        position,
+                        research_hotkey,
+                    };
+                    slots[slot_count] = Some(slot);
+                    slot_count += 1;
+                }
+                if slot_count == 0 {
                     return None;
                 }
                 Some(UnitAbilityGroup {
@@ -144,13 +149,13 @@ impl From<&UnitKeyedCustomKeys> for CustomKeys {
                 }
                 let mut builder: AbilityBindingBuilder = AbilityBinding::builder();
                 if let Some(hotkey) = slot.hotkey() {
-                    builder = builder.hotkey(hotkey.clone());
+                    builder = builder.hotkey(hotkey);
                 }
                 if let Some(position) = slot.position() {
                     builder = builder.button_position(position);
                 }
                 if let Some(research_hotkey) = slot.research_hotkey() {
-                    builder = builder.research_hotkey(research_hotkey.clone());
+                    builder = builder.research_hotkey(research_hotkey);
                 }
                 let binding = builder.build();
                 custom_keys.put_ability(id, binding);
@@ -204,7 +209,7 @@ mod unit_keyed_tests {
         let position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::One);
         let hotkey = Hotkey::Letter('Q');
         let binding = AbilityBinding::builder()
-            .hotkey(hotkey.clone())
+            .hotkey(hotkey)
             .button_position(position)
             .build();
         let mut original = CustomKeys::from("");
@@ -224,7 +229,7 @@ mod unit_keyed_tests {
     fn round_trip_preserves_research_hotkey() {
         let research_hotkey = Hotkey::Letter('E');
         let binding = AbilityBinding::builder()
-            .research_hotkey(research_hotkey.clone())
+            .research_hotkey(research_hotkey)
             .build();
         let mut original = CustomKeys::from("");
         original.put_ability("AHds", binding);

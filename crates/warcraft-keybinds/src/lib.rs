@@ -2,6 +2,7 @@ pub use warcraft_api::{SystemKeybindClass, SystemKeybindModifier, WarcraftObject
 
 pub mod ability_cell;
 pub mod ability_id;
+pub mod cross_unit_collision;
 pub mod custom_keys;
 pub mod grid_layout;
 pub mod hotkey_target;
@@ -19,6 +20,9 @@ pub mod unit_slots;
 
 pub use ability_cell::{AbilityCell, AbilityIconPath};
 pub use ability_id::AbilityId;
+pub use cross_unit_collision::{
+    AffectedUnitEntry, CrossUnitCollisionReport, CrossUnitPositionGroup, SharedAbilityEntry,
+};
 pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict};
 pub use grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 pub use hotkey_target::HotkeyTarget;
@@ -34,8 +38,9 @@ pub use slot::{CommandCard, GridSlotId};
 pub use system_binding_map::{EffectiveBinding, ResolvedSystemBinding, SystemBindingMap};
 pub use unit_collision_report::{UnitCollisionEntry, UnitCollisionReport};
 pub use unit_grids::{
-    CollisionSlots, GridRole, HotkeyCollisionAtCell, HotkeyCollisionCard, NamedCommandGrid,
-    PositionCollisionCard, UnitGrids,
+    CollisionSlots, GridRole, HotkeyCollisionAtCell, HotkeyCollisionCard,
+    HotkeyCollisionCardIterator, NamedCommandGrid, PositionCollisionCard,
+    PositionCollisionCardIterator, UnitGrids,
 };
 pub use unit_keyed_custom_keys::{UnitAbilityGroup, UnitAbilitySlot, UnitKeyedCustomKeys};
 pub use unit_slots::UnitCommandSlots;

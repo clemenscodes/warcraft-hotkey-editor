@@ -62,13 +62,13 @@ pub enum ColumnIndex {
     Three,
 }
 
-impl ColumnIndex {
-    pub fn as_u8(self) -> u8 {
-        match self {
-            Self::Zero => 0,
-            Self::One => 1,
-            Self::Two => 2,
-            Self::Three => 3,
+impl From<ColumnIndex> for u8 {
+    fn from(index: ColumnIndex) -> Self {
+        match index {
+            ColumnIndex::Zero => 0,
+            ColumnIndex::One => 1,
+            ColumnIndex::Two => 2,
+            ColumnIndex::Three => 3,
         }
     }
 }
@@ -89,7 +89,8 @@ impl TryFrom<u8> for ColumnIndex {
 
 impl From<ColumnIndex> for usize {
     fn from(index: ColumnIndex) -> Self {
-        usize::from(index.as_u8())
+        let byte = u8::from(index);
+        usize::from(byte)
     }
 }
 
@@ -101,12 +102,12 @@ pub enum RowIndex {
     Two,
 }
 
-impl RowIndex {
-    pub fn as_u8(self) -> u8 {
-        match self {
-            Self::Zero => 0,
-            Self::One => 1,
-            Self::Two => 2,
+impl From<RowIndex> for u8 {
+    fn from(index: RowIndex) -> Self {
+        match index {
+            RowIndex::Zero => 0,
+            RowIndex::One => 1,
+            RowIndex::Two => 2,
         }
     }
 }
@@ -126,7 +127,8 @@ impl TryFrom<u8> for RowIndex {
 
 impl From<RowIndex> for usize {
     fn from(index: RowIndex) -> Self {
-        usize::from(index.as_u8())
+        let byte = u8::from(index);
+        usize::from(byte)
     }
 }
 
@@ -184,7 +186,9 @@ impl TryFrom<&str> for GridCoordinate {
 
 impl fmt::Display for GridCoordinate {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "{},{}", self.column.as_u8(), self.row.as_u8())
+        let column = u8::from(self.column);
+        let row = u8::from(self.row);
+        write!(formatter, "{column},{row}")
     }
 }
 

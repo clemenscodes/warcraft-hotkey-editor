@@ -4,8 +4,8 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
-    ColumnIndex, CustomKeys, GridCoordinate, GridLayout, NamedCommandGrid, RowIndex,
-    UnitCollisionReport, UnitGrids, UnitKeyedCustomKeys,
+    ColumnIndex, CrossUnitCollisionReport, CustomKeys, GridCoordinate, GridLayout,
+    NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids, UnitKeyedCustomKeys,
 };
 
 #[derive(Parser)]
@@ -40,6 +40,10 @@ enum Command {
         /// Show all position and hotkey collisions instead of the binding list.
         #[arg(long, short)]
         collisions: bool,
+        /// Show cross-unit collisions: positions where multiple abilities overlap
+        /// globally, with every unit affected and every unit that carries each ability.
+        #[arg(long, short = 'x')]
+        cross: bool,
     },
 }
 
@@ -63,6 +67,7 @@ fn main() {
             unit,
             layout,
             collisions,
+            cross,
         } => {
             let mut custom_keys = CustomKeys::try_from(file.as_path())
                 .unwrap_or_else(|error| {
@@ -77,7 +82,10 @@ fn main() {
             if layout.is_some() {
                 custom_keys.apply_grid_to_all_bindings(grid_layout);
             }
-            if collisions {
+            if cross {
+                let report = CrossUnitCollisionReport::compute(&custom_keys);
+                println!("{report}");
+            } else if collisions {
                 let report = UnitCollisionReport::compute(&custom_keys, grid_layout);
                 let display = match unit.as_deref() {
                     None => report,
@@ -128,31 +136,33 @@ fn inspect_unit(unit_id_string: String, custom_keys: CustomKeys) {
     let position_cards = unit_grids.position_collisions(&custom_keys);
     let hotkey_cards = unit_grids.hotkey_collisions(&custom_keys, layout);
 
-    if position_cards.is_empty() && hotkey_cards.is_empty() {
+    let no_position_collisions = position_cards.iter().all(|card| card.is_empty());
+    let no_hotkey_collisions = hotkey_cards.iter().all(|card| card.is_empty());
+    if no_position_collisions && no_hotkey_collisions {
         println!("\nNo collisions.");
         return;
     }
 
-    if !position_cards.is_empty() {
+    if !no_position_collisions {
         println!("\nPosition collisions:");
-        for card in position_cards.iter() {
-            for (position, collision_slots) in card.iter() {
+        for card in position_cards {
+            for (position, collision_slots) in card {
                 let slot_list: Vec<&str> = collision_slots.iter().map(|s| s.as_str()).collect();
+                let column = u8::from(position.column());
+                let row = u8::from(position.row());
                 println!(
-                    "  {:?}  ({},{})  {}",
+                    "  {:?}  ({column},{row})  {}",
                     card.role(),
-                    position.column().as_u8(),
-                    position.row().as_u8(),
                     slot_list.join(", ")
                 );
             }
         }
     }
 
-    if !hotkey_cards.is_empty() {
+    if !no_hotkey_collisions {
         println!("\nHotkey collisions:");
-        for card in hotkey_cards.iter() {
-            for (_, entry) in card.iter() {
+        for card in hotkey_cards {
+            for (_, entry) in card {
                 let slot_list: Vec<&str> = entry.slots().iter().map(|s| s.as_str()).collect();
                 println!(
                     "  {:?}  key {}  {}",

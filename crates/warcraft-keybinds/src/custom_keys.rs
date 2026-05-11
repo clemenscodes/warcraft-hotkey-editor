@@ -367,7 +367,9 @@ impl CustomKeys {
             let Some(position) = self.position_for_slot(slot, is_research_context) else {
                 continue;
             };
-            if position.column().as_u8() == column && position.row().as_u8() == row {
+            let position_column = u8::from(position.column());
+            let position_row = u8::from(position.row());
+            if position_column == column && position_row == row {
                 return Some(*slot);
             }
         }
@@ -456,8 +458,9 @@ impl CustomKeys {
                 let off_slot = GridSlotId::AbilityOff(*ability_id);
                 self.position_for_slot(&off_slot, false)
                     .is_some_and(|off_pos| {
-                        off_pos.column().as_u8() == request.target_column()
-                            && off_pos.row().as_u8() == request.target_row()
+                        let off_column = u8::from(off_pos.column());
+                        let off_row = u8::from(off_pos.row());
+                        off_column == request.target_column() && off_row == request.target_row()
                     })
             });
         let moving_off_colocated = !request.prevent_co_move()
@@ -467,8 +470,11 @@ impl CustomKeys {
                         && self
                             .position_for_slot(&GridSlotId::AbilityOff(*id), false)
                             .is_some_and(|off_pos| {
-                                off_pos.column().as_u8() == old_pos.column().as_u8()
-                                    && off_pos.row().as_u8() == old_pos.row().as_u8()
+                                let off_column = u8::from(off_pos.column());
+                                let off_row = u8::from(off_pos.row());
+                                let old_column = u8::from(old_pos.column());
+                                let old_row = u8::from(old_pos.row());
+                                off_column == old_column && off_row == old_row
                             })
                 }
                 _ => false,
@@ -479,8 +485,9 @@ impl CustomKeys {
                     && self
                         .position_for_slot(&GridSlotId::AbilityOff(*id), false)
                         .is_some_and(|off_pos| {
-                            off_pos.column().as_u8() == request.target_column()
-                                && off_pos.row().as_u8() == request.target_row()
+                            let off_column = u8::from(off_pos.column());
+                            let off_row = u8::from(off_pos.row());
+                            off_column == request.target_column() && off_row == request.target_row()
                         })
             }
             _ => false,
@@ -533,8 +540,8 @@ impl CustomKeys {
             && let Some(displaced) = displaced_slot
             && let Some(old_position) = moving_old_position
         {
-            let old_column = old_position.column().as_u8();
-            let old_row = old_position.row().as_u8();
+            let old_column = u8::from(old_position.column());
+            let old_row = u8::from(old_position.row());
             self.assign_position(
                 request.layout(),
                 &displaced,
@@ -813,7 +820,7 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                         continue;
                     };
                     if let Some(hotkey) = source_binding.hotkey() {
-                        let hotkey_clone = hotkey.clone();
+                        let hotkey_clone = *hotkey;
                         target_binding.set_hotkey(Some(hotkey_clone));
                     }
                     if let Some(position) = source_binding.button_position().copied() {
@@ -823,7 +830,7 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                         target_binding.set_unbutton_position(Some(position));
                     }
                     if let Some(hotkey) = source_binding.research_hotkey() {
-                        let hotkey_clone = hotkey.clone();
+                        let hotkey_clone = *hotkey;
                         target_binding.set_research_hotkey(Some(hotkey_clone));
                     }
                     if let Some(position) = source_binding.research_button_position().copied() {
@@ -851,7 +858,7 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                         continue;
                     };
                     if let Some(hotkey) = source_binding.hotkey() {
-                        let hotkey_clone = hotkey.clone();
+                        let hotkey_clone = *hotkey;
                         target_binding.set_hotkey(Some(hotkey_clone));
                     }
                     if let Some(position) = source_binding.button_position().copied() {
@@ -1422,7 +1429,7 @@ mod tests {
         file.set_system_hotkey("QLog", 65);
         let expected_hotkey = Hotkey::VirtualKey(65);
         assert_eq!(
-            file.system("QLog").map(|binding| binding.hotkey().clone()),
+            file.system("QLog").map(|binding| *binding.hotkey()),
             Some(expected_hotkey)
         );
     }
@@ -1468,7 +1475,7 @@ mod tests {
         file.put_system("IsHeroSelect", binding);
         assert_eq!(
             file.system("IsHeroSelect")
-                .map(|system_binding| system_binding.hotkey().clone()),
+                .map(|system_binding| *system_binding.hotkey()),
             Some(Hotkey::VirtualKey(9))
         );
     }
@@ -1898,11 +1905,9 @@ mod template_generation_tests {
                 let hotkey_line = format!("Hotkey={hotkey_string}\n");
                 out.push_str(&hotkey_line);
             }
-            let buttonpos_line = format!(
-                "Buttonpos={},{}\n",
-                default_position.column().as_u8(),
-                default_position.row().as_u8()
-            );
+            let default_column = u8::from(default_position.column());
+            let default_row = u8::from(default_position.row());
+            let buttonpos_line = format!("Buttonpos={default_column},{default_row}\n");
             out.push_str(&buttonpos_line);
             if let Some(tip) = traditional
                 .and_then(|c| c.tip())
@@ -1954,11 +1959,9 @@ mod template_generation_tests {
                         out.push_str(&hotkey_line);
                     }
                 }
-                let buttonpos_line = format!(
-                    "Buttonpos={},{}\n",
-                    button_position.column().as_u8(),
-                    button_position.row().as_u8()
-                );
+                let btn_column = u8::from(button_position.column());
+                let btn_row = u8::from(button_position.row());
+                let buttonpos_line = format!("Buttonpos={btn_column},{btn_row}\n");
                 out.push_str(&buttonpos_line);
             }
 
@@ -1975,11 +1978,9 @@ mod template_generation_tests {
                     let research_hotkey_line = format!("ResearchHotkey={research_hotkey_string}\n");
                     out.push_str(&research_hotkey_line);
                 }
-                let research_buttonpos_line = format!(
-                    "ResearchButtonpos={},{}\n",
-                    research_position.column().as_u8(),
-                    research_position.row().as_u8()
-                );
+                let res_column = u8::from(research_position.column());
+                let res_row = u8::from(research_position.row());
+                let research_buttonpos_line = format!("ResearchButtonpos={res_column},{res_row}\n");
                 out.push_str(&research_buttonpos_line);
             }
 
@@ -1996,11 +1997,9 @@ mod template_generation_tests {
                     let unhotkey_line = format!("Unhotkey={unhotkey_string}\n");
                     out.push_str(&unhotkey_line);
                 }
-                let unbuttonpos_line = format!(
-                    "Unbuttonpos={},{}\n",
-                    off_position.column().as_u8(),
-                    off_position.row().as_u8()
-                );
+                let off_column = u8::from(off_position.column());
+                let off_row = u8::from(off_position.row());
+                let unbuttonpos_line = format!("Unbuttonpos={off_column},{off_row}\n");
                 out.push_str(&unbuttonpos_line);
             }
 
@@ -2066,11 +2065,9 @@ mod template_generation_tests {
                 let hotkey_line = format!("Hotkey={hotkey_string}\n");
                 out.push_str(&hotkey_line);
             }
-            let buttonpos_line = format!(
-                "Buttonpos={},{}\n",
-                default_position.column().as_u8(),
-                default_position.row().as_u8()
-            );
+            let cmd_column = u8::from(default_position.column());
+            let cmd_row = u8::from(default_position.row());
+            let buttonpos_line = format!("Buttonpos={cmd_column},{cmd_row}\n");
             out.push_str(&buttonpos_line);
             if let Some(tip) = existing_binding
                 .and_then(|binding| binding.tip())
@@ -2120,11 +2117,9 @@ mod template_generation_tests {
                 let hotkey_line = format!("Hotkey={hotkey_string}\n");
                 out.push_str(&hotkey_line);
             }
-            let buttonpos_line = format!(
-                "Buttonpos={},{}\n",
-                default_position.column().as_u8(),
-                default_position.row().as_u8()
-            );
+            let upg_column = u8::from(default_position.column());
+            let upg_row = u8::from(default_position.row());
+            let buttonpos_line = format!("Buttonpos={upg_column},{upg_row}\n");
             out.push_str(&buttonpos_line);
 
             if let Some(research_button_position) = research_position {
@@ -2144,11 +2139,10 @@ mod template_generation_tests {
                         format!("ResearchHotkey={research_hotkey_line_value}\n");
                     out.push_str(&research_hotkey_line);
                 }
-                let research_buttonpos_line = format!(
-                    "ResearchButtonpos={},{}\n",
-                    research_button_position.column().as_u8(),
-                    research_button_position.row().as_u8()
-                );
+                let res_btn_column = u8::from(research_button_position.column());
+                let res_btn_row = u8::from(research_button_position.row());
+                let research_buttonpos_line =
+                    format!("ResearchButtonpos={res_btn_column},{res_btn_row}\n");
                 out.push_str(&research_buttonpos_line);
             }
 

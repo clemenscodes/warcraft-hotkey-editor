@@ -104,8 +104,8 @@ pub(crate) fn LayoutEditor(props: LayoutEditorProps) -> Element {
                         } else if let Some(other_position) =
                             layout_snapshot.position_for_letter(upper_letter)
                         {
-                            let display_row = other_position.row().as_u8() + 1;
-                            let display_column = other_position.column().as_u8() + 1;
+                            let display_row = u8::from(other_position.row()) + 1;
+                            let display_column = u8::from(other_position.column()) + 1;
                             let display_name =
                                 format!("row {display_row}, column {display_column}",);
                             KeyPickerCellState::Conflict { display_name }

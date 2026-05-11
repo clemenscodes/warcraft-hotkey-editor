@@ -475,9 +475,9 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
                             let bound_id = *id;
                             let off_pos =
                                 Positions::current_for_ability_off(bound_id, custom_keys)?;
-                            if off_pos.column().as_u8() == drop.column()
-                                && off_pos.row().as_u8() == drop.row()
-                            {
+                            let off_column = u8::from(off_pos.column());
+                            let off_row = u8::from(off_pos.row());
+                            if off_column == drop.column() && off_row == drop.row() {
                                 Some(
                                     ObjectLookup::by_id(id.value())
                                         .and_then(|obj| obj.names().first().copied())

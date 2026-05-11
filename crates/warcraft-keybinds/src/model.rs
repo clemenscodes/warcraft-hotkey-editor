@@ -11,12 +11,12 @@ use crate::ability_id::AbilityId;
 use crate::custom_keys::CustomKeys;
 use crate::hotkey_token::HotkeyToken;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Hotkey {
     Letter(char),
     FunctionKey(u8),
     VirtualKey(u32),
-    MultiLevel(Vec<Self>),
+    MultiLevel { tokens: [Option<HotkeyToken>; 4] },
 }
 
 impl fmt::Display for Hotkey {
@@ -25,13 +25,13 @@ impl fmt::Display for Hotkey {
             Self::Letter(character) => write!(formatter, "{character}"),
             Self::FunctionKey(number) => write!(formatter, "F{number}"),
             Self::VirtualKey(code) => write!(formatter, "{code}"),
-            Self::MultiLevel(levels) => {
+            Self::MultiLevel { tokens } => {
                 let mut first = true;
-                for level in levels {
+                for token in tokens.iter().flatten() {
                     if !first {
                         formatter.write_str(",")?;
                     }
-                    write!(formatter, "{level}")?;
+                    write!(formatter, "{token}")?;
                     first = false;
                 }
                 Ok(())
@@ -48,15 +48,14 @@ impl TryFrom<&str> for Hotkey {
             return Err(());
         }
         if text.contains(',') {
-            let levels: Result<Vec<Self>, ()> = text
-                .split(',')
-                .map(|segment| Self::try_from(segment.trim()))
-                .collect();
-            let level_vec = levels?;
-            if level_vec.is_empty() {
-                return Err(());
+            let mut tokens: [Option<HotkeyToken>; 4] = [None; 4];
+            for (index, segment) in text.split(',').enumerate() {
+                if index >= 4 {
+                    return Err(());
+                }
+                tokens[index] = Some(HotkeyToken::try_from(segment.trim()).map_err(|_| ())?);
             }
-            return Ok(Self::MultiLevel(level_vec));
+            return Ok(Self::MultiLevel { tokens });
         }
         let lowercase = text.to_ascii_lowercase();
         if let Some(rest) = lowercase.strip_prefix('f')
@@ -93,27 +92,29 @@ impl From<Hotkey> for String {
 
 impl Hotkey {
     pub fn first_token(&self) -> Option<HotkeyToken> {
-        let single = match self {
-            Self::MultiLevel(levels) => levels.first()?,
-            other => other,
-        };
-        HotkeyToken::try_from(single).ok()
+        match self {
+            Self::MultiLevel { tokens } => tokens.iter().flatten().next().copied(),
+            other => HotkeyToken::try_from(other).ok(),
+        }
     }
 
     pub fn level_count(&self) -> usize {
         match self {
-            Self::MultiLevel(levels) => levels.len(),
+            Self::MultiLevel { tokens } => tokens.iter().flatten().count(),
             _ => 1,
         }
     }
 
     pub fn replicated(token: HotkeyToken, count: usize) -> Self {
-        let clamped_count = count.max(1);
-        let single = Self::from(token);
+        let clamped_count = count.clamp(1, 4);
         if clamped_count == 1 {
-            single
+            Self::from(token)
         } else {
-            Self::MultiLevel(vec![single; clamped_count])
+            let mut tokens: [Option<HotkeyToken>; 4] = [None; 4];
+            for slot in tokens.iter_mut().take(clamped_count) {
+                *slot = Some(token);
+            }
+            Self::MultiLevel { tokens }
         }
     }
 
@@ -969,12 +970,16 @@ mod model_tests {
 
     #[test]
     fn hotkey_try_from_multi_level_comma_separated() {
+        use crate::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::try_from("Q,W,E").unwrap();
-        let expected = Hotkey::MultiLevel(vec![
-            Hotkey::Letter('Q'),
-            Hotkey::Letter('W'),
-            Hotkey::Letter('E'),
-        ]);
+        let expected = Hotkey::MultiLevel {
+            tokens: [
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter { character: 'W' }),
+                Some(HotkeyToken::Letter { character: 'E' }),
+                None,
+            ],
+        };
         assert_eq!(hotkey, expected);
     }
 
@@ -998,14 +1003,22 @@ mod model_tests {
 
     #[test]
     fn hotkey_display_multi_level() {
-        let hotkey = Hotkey::MultiLevel(vec![Hotkey::Letter('Q'), Hotkey::Letter('Q')]);
+        use crate::hotkey_token::HotkeyToken;
+        let hotkey = Hotkey::MultiLevel {
+            tokens: [
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                None,
+                None,
+            ],
+        };
         assert_eq!(hotkey.to_string(), "Q,Q");
     }
 
     #[test]
     fn hotkey_from_string_roundtrip() {
         let original = Hotkey::FunctionKey(12);
-        let string_form: String = original.clone().into();
+        let string_form: String = original.into();
         let reparsed = Hotkey::try_from(string_form.as_str()).unwrap();
         assert_eq!(original, reparsed);
     }
@@ -1392,18 +1405,30 @@ mod builder_tests {
 
     #[test]
     fn hotkey_multi_level_parses_from_comma_separated() {
+        use crate::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::try_from("Q,Q,Q").unwrap();
-        let expected = Hotkey::MultiLevel(vec![
-            Hotkey::Letter('Q'),
-            Hotkey::Letter('Q'),
-            Hotkey::Letter('Q'),
-        ]);
+        let expected = Hotkey::MultiLevel {
+            tokens: [
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                None,
+            ],
+        };
         assert_eq!(hotkey, expected);
     }
 
     #[test]
     fn hotkey_multi_level_displays_with_commas() {
-        let hotkey = Hotkey::MultiLevel(vec![Hotkey::Letter('Q'), Hotkey::Letter('W')]);
+        use crate::hotkey_token::HotkeyToken;
+        let hotkey = Hotkey::MultiLevel {
+            tokens: [
+                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter { character: 'W' }),
+                None,
+                None,
+            ],
+        };
         assert_eq!(hotkey.to_string(), "Q,W");
     }
 
