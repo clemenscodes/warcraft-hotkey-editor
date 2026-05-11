@@ -1,7 +1,9 @@
+pub(crate) mod button;
 pub(crate) mod control_groups;
 pub(crate) mod dialog;
 pub(crate) mod hero_selection;
 pub(crate) mod inventory;
+pub(crate) mod inventory_grid;
 pub(crate) mod key_cell;
 pub(crate) mod key_picker_dialog;
 pub(crate) mod list_view;

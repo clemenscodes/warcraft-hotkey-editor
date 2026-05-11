@@ -1,0 +1,613 @@
+@layer components {
+/* ── Base layout ── */
+.unit-detail-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: stretch;
+}
+
+.unit-detail-row {
+    /* Base (narrow / fallback): 1-column stack — grids row, then
+       override below. The wide-screen rule (≥ 1100 px viewport)
+       further down restructures this into a flex column layout. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+        "grids"
+        "override";
+    gap: 2.5rem;
+    align-items: start;
+    margin-top: 1.25rem;
+}
+
+.unit-detail-row > .unit-detail-grids   { grid-area: grids; }
+.unit-detail-row > .tile-override-panel { grid-area: override; width: 100%; }
+
+/* ── Base component rules ──────────────────────────────────────────────────
+   These MUST appear before the @media (min-width: 1100px) block below so
+   that the responsive tile-size formula wins on source order at ≥1100px.
+   Equal specificity → later in source wins; putting base rules first
+   ensures the media-query overrides take precedence. */
+
+.unit-detail-grids {
+    display: flex;
+    /* 4rem (down from 5rem) so two 4×3 grids fit comfortably inside
+       col 1's max-content track at 1640 px viewport without rounding
+       pushing one section to a wrap line. */
+    gap: 4rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.command-section {
+    flex: 0 0 auto;
+}
+
+.command-section-heading {
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: #ffce63;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0.5rem 0 0.75rem 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+}
+
+.grid-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 10rem);
+    grid-auto-rows: 10rem;
+    gap: 0.7rem;
+    overflow: visible;
+}
+
+.command-tile-wrapper {
+    position: relative;
+    width: 10rem;
+    height: 10rem;
+    overflow: visible;
+}
+
+.command-tile-caption {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 0;
+    right: 0;
+    font-size: 1rem;
+    color: #c0c8da;
+    text-align: center;
+    line-height: 1.1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+}
+
+.grid-tile {
+    width: 10rem;
+    height: 10rem;
+    background: linear-gradient(135deg, rgba(15, 30, 55, 0.85) 0%, rgba(8, 14, 30, 0.85) 100%);
+    border: 2px solid #2c4a72;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.5);
+    /* Let quick vertical swipes over command tiles scroll the page. Touch
+       drag still starts from the Rust long-press handler, which locks touch
+       scrolling only after the drag is active. */
+    touch-action: pan-y;
+}
+
+.grid-tile.has-ability {
+    background: rgba(20, 35, 60, 0.95);
+    border-color: #4a7090;
+    cursor: grab;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.grid-tile.has-ability:active {
+    border-color: var(--race-color, #ffce63);
+}
+
+.grid-tile.has-ability:hover {
+    border-color: var(--race-color, #ffce63);
+}
+
+.grid-tile:focus {
+    outline: none;
+}
+
+body[data-kb-modality] .grid-tile.has-ability:focus-visible,
+body[data-kb-modality] .grid-tile.has-ability:focus {
+    outline: none;
+    border-color: #ffce63;
+    box-shadow: 0 0 0 3px #ffce63, 0 0 18px rgba(255, 206, 99, 0.55);
+}
+
+/* Drag rules moved to the end of the file so they beat per-tile state rules
+   like `.grid-tile.is-command` on source order (all share the same 0,2,0
+   specificity). */
+
+.grid-tile.selected {
+    border-color: var(--race-color, #ffce63);
+    box-shadow: 0 0 14px var(--race-color-soft, rgba(255, 206, 99, 0.6));
+}
+
+.grid-tile.drop-target {
+    border-color: #4a7090;
+    border-style: dashed;
+    cursor: pointer;
+}
+.grid-tile.drop-target:hover {
+    border-color: #ffce63;
+    background: rgba(255, 206, 99, 0.08);
+}
+
+.key-capture {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    border: none;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+    pointer-events: none;
+}
+
+.selection-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 206, 99, 0.12);
+    border: 1px solid #ffce63;
+    border-radius: 6px;
+    color: #ffce63;
+    font-size: 0.85rem;
+}
+
+.selection-badge strong {
+    color: #fff;
+    font-family: 'Friz Quadrata', serif;
+    font-weight: 400;
+}
+
+
+.grid-tile img {
+    width: 100%;
+    height: 100%;
+    image-rendering: auto;
+    object-fit: cover;
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+    background:
+        radial-gradient(circle at center,
+            rgba(255, 206, 99, 0.08) 0%,
+            rgba(255, 206, 99, 0.0) 65%);
+}
+
+.grid-tile.is-command {
+    background: linear-gradient(135deg, rgba(40, 50, 80, 0.95) 0%, rgba(15, 22, 45, 0.95) 100%);
+    border-color: #5b6f9c;
+}
+
+/* Drag-state rules: must come after `.grid-tile.is-command` and any other
+   per-tile state rules of equal specificity so they win on source order. */
+.grid-tile.dragging-source > * {
+    /* Drag uses pointer events plus a position-fixed `.drag-follower` rendered
+       at app top level, so we hide the source's children directly with no
+       drag-image timing tricks. */
+    visibility: hidden;
+}
+
+/* Force grabbing everywhere while a drag is in progress, so the cursor
+   doesn't flicker as the pointer passes over other tiles, empty cells, or
+   gaps. Keyed off `.dragging-source`, which is only added after movement
+   crosses the drag threshold — quick clicks never trigger this. */
+body:has(.grid-tile.dragging-source),
+body:has(.grid-tile.dragging-source) *,
+body:has(.grid-tile.dragging-source) .grid-tile.has-ability,
+body:has(.grid-tile.dragging-source) .grid-tile.has-ability:hover,
+body:has(.grid-tile.dragging-source) .grid-tile.has-ability:active {
+    cursor: grabbing;
+}
+
+
+/* While being dragged, the source cell is functionally empty (the ability has
+   "left" the cell and follows the cursor), so render it like an empty
+   drop-target: dashed border, no race-color glow, base empty-cell background.
+   Specificity 0,4,0 beats `.grid-tile.has-ability:hover/:focus-visible` and
+   the `.selected` rule. */
+.grid-tile.has-ability.dragging-source,
+.grid-tile.has-ability.dragging-source:hover,
+.grid-tile.has-ability.dragging-source:focus,
+body[data-kb-modality] .grid-tile.has-ability.dragging-source:focus-visible,
+body[data-kb-modality] .grid-tile.has-ability.dragging-source:focus,
+.grid-tile.selected.dragging-source,
+.grid-tile.selected.dragging-source:focus,
+body[data-kb-modality] .grid-tile.selected.dragging-source:focus-visible,
+body[data-kb-modality] .grid-tile.selected.dragging-source:focus {
+    background: linear-gradient(135deg, rgba(15, 30, 55, 0.85) 0%, rgba(8, 14, 30, 0.85) 100%);
+    border-color: #4a7090;
+    border-style: dashed;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Compound selectors to beat `.grid-tile.has-ability:hover` (0,3,0), the
+   per-state rules like `.selected` / `.is-command`, AND the focus suppression
+   above when the source cell is also the current drop target. */
+.grid-tile.has-ability.drag-over {
+    border-color: #ffce63;
+    border-style: solid;
+}
+.grid-tile.dragging-source.has-ability.drag-over,
+.grid-tile.drop-target.drag-over,
+.grid-tile.drag-over {
+    border-color: #ffce63;
+    border-style: dashed;
+}
+
+/* Cells claimed by a toggle ability's off-state: blocked for regular drops. */
+.grid-tile.blocked-drop-target {
+    border-color: rgba(220, 70, 55, 0.55);
+    border-style: dashed;
+    background: rgba(200, 55, 40, 0.04);
+    cursor: not-allowed;
+}
+.grid-tile.blocked-drop-target.drag-over {
+    border-color: rgba(255, 95, 75, 0.85);
+    background: rgba(200, 55, 40, 0.1);
+}
+body:has(.grid-tile.dragging-source) .grid-tile.blocked-drop-target,
+body:has(.grid-tile.dragging-source) .grid-tile.blocked-drop-target * {
+    cursor: not-allowed !important;
+}
+
+/* Kill all CSS transitions on grid tiles while a drag is in progress so
+ * drag-over/drop-target class changes apply instantly with no wobble. */
+body:has(.grid-tile.dragging-source) .grid-tile {
+    transition: none !important;
+}
+
+
+.command-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.25rem;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 0.85rem;
+    color: #ffce63;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+    line-height: 1.1;
+}
+
+.hotkey-overlay {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.78);
+    border: 1px solid rgba(255, 206, 99, 0.55);
+    border-radius: 4px;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #ffce63;
+    font-weight: 400;
+    text-shadow: 1px 1px 0 #000;
+    pointer-events: none;
+}
+.hotkey-overlay.passive {
+    color: #b8bcc4;
+    background: #1a1f29;
+    border-color: #4a5160;
+}
+.hotkey-overlay.conflict {
+    color: #ff4444;
+    background: rgba(80, 0, 0, 0.85);
+    border-color: #ff4444;
+}
+
+.edit-panel {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(20, 40, 70, 0.5);
+    border: 1px solid #ffce63;
+    border-radius: 8px;
+}
+
+.edit-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.edit-panel-header h4 {
+    font-family: 'Friz Quadrata', serif;
+    color: #ffce63;
+    margin: 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.edit-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.edit-panel-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.edit-panel-field label {
+    font-family: 'Friz Quadrata', serif;
+    color: #ffce63;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.edit-panel-field input {
+    padding: 0.5rem 0.75rem;
+    background: rgba(8, 18, 35, 0.8);
+    border: 1px solid #2a5085;
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+}
+
+.edit-panel-field input:focus {
+    outline: none;
+    border-color: #ffce63;
+    box-shadow: 0 0 6px rgba(255, 206, 99, 0.4);
+}
+
+.close-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: rgba(20, 40, 70, 0.7);
+    border: 1px solid #2a5085;
+    border-radius: 6px;
+    color: #9ca8c5;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.close-button:hover {
+    border-color: #ffce63;
+    color: #ffce63;
+}
+
+/* ─── Wide layout (≥ 1100 px): readable grids above compact override. ───
+   Placed AFTER all base rules so these overrides win on source order at
+   ≥1100 px. The tile-size formula is the critical path: it replaces the
+   10rem base values defined above. */
+@media (min-width: 1100px) {
+    /* The body can grow to the card bottom, but never shrink below its
+       content. Short viewports scroll inside .unit-detail instead of
+       compressing sections until they overlap following content. */
+    .unit-detail-body {
+        flex: 1 0 auto;
+        min-height: 0;
+        gap: clamp(1rem, 1.3vh, 1.4rem);
+    }
+
+    .unit-detail-row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding-inline: 0;
+        margin-top: 0;
+        padding-top: 0;
+        flex: 1 0 auto;
+        min-height: 0;
+        gap: clamp(1rem, 1.4vh, 1.5rem);
+    }
+
+    .unit-detail-row > .unit-detail-grids {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(1rem, 1.2vh, 1.35rem) clamp(1.5rem, 1.4vw, 2rem);
+        align-items: start;
+        flex: 0 0 auto;
+    }
+
+    .unit-detail-row > .tile-override-panel {
+        flex: 1 0 auto;
+        min-height: clamp(13rem, 18vh, 22rem);
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .unit-detail-row > .tile-override-panel > .tile-override-card,
+    .unit-detail-row > .tile-override-panel > .tile-override-empty {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex: 1 0 auto;
+        height: auto;
+        overflow: visible;
+    }
+
+    /* Desktop tiles: scale with column width, but stay clearly readable. */
+    .command-section {
+        container-type: inline-size;
+        min-width: 0;
+    }
+    .command-section-heading {
+        font-size: clamp(1.45rem, 0.55vw + 0.95rem, 1.95rem);
+        margin: 0.45rem 0 0.8rem;
+    }
+    .grid-tiles {
+        --tile-size: clamp(
+            4.6rem,
+            calc((100cqi - 2.1rem) / 4),
+            8rem
+        );
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.7rem;
+    }
+    .grid-tile,
+    .command-tile-wrapper {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+    .hotkey-overlay {
+        top: 3px;
+        right: 3px;
+        min-width: 1.6rem;
+        height: 1.6rem;
+        padding: 0 0.3rem;
+        border-radius: 4px;
+        font-size: 1.1rem;
+    }
+    .command-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        line-height: 1.08;
+    }
+}
+
+
+/* ───────────────────────── Command grids (A5) ─────────────────────────
+   Phone (≤ 480 px): the four command grids (command card / build menu /
+   research menu / uprooted) stack vertically. Cells stay finger-sized
+   (clamp lower bound 4.5rem ≈ 57 px at the project's base font size, well
+   above the 44 px touch target floor).
+   Tablet (481–1024 px): grids pair two-up via wrap on the parent flex
+   container. Cells get a moderate clamp so two grids fit beside each
+   other comfortably. */
+
+@media (max-width: 480px) {
+    .unit-detail-row {
+        gap: 1rem;
+    }
+    /* Stack grids vertically, one per row. */
+    .unit-detail-grids {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .grid-tiles {
+        --tile-size: clamp(4.5rem, calc((100vw - 5rem) / 4), 7rem);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.4rem;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+}
+
+@media (min-width: 481px) and (max-width: 1099px) {
+    /* CSS grid guarantees each section gets exactly 1fr = 50%, so the
+       Research Menu always starts at the same x as the stats panel's
+       right column. Flex-basis percentages with wrapping weren't reliable. */
+    .unit-detail-grids {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem 2.5rem;
+        align-items: start;
+    }
+    .command-section {
+        container-type: inline-size;
+        min-width: 0;
+    }
+    /* 100cqi = column width; 4 tiles + 3×0.5rem gaps = 1.5rem total gap.
+       Tiles fill the column without overflow, capped at 9rem. */
+    .grid-tiles {
+        --tile-size: clamp(5rem, calc((100cqi - 1.5rem) / 4), 9rem);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.5rem;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+}
+
+/* ── 4K (≥ 2000 px): grow tiles and overlay badge to fill the excess space
+   that would otherwise stay in the override panel. ── */
+@media (min-width: 2000px) {
+    .grid-tiles {
+        --tile-size: clamp(4.6rem, calc((100cqi - 2.1rem) / 4), 12rem);
+    }
+    .grid-tile,
+    .command-tile-wrapper {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+    .hotkey-overlay {
+        min-width: 2.2rem;
+        height: 2.2rem;
+        font-size: 1.5rem;
+    }
+}
+
+.drag-follower {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    background: rgba(20, 35, 60, 0.95);
+    border: 2px solid var(--race-color, #ffce63);
+    border-radius: 6px;
+    box-shadow: 0 0 14px var(--race-color-soft, rgba(255, 206, 99, 0.6)), 0 8px 24px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    user-select: none;
+}
+
+.drag-follower[data-race="human"]    { --race-color: #6aa1ff; --race-color-soft: rgba(106, 161, 255, 0.45); }
+.drag-follower[data-race="orc"]      { --race-color: #ff7a7a; --race-color-soft: rgba(255, 122, 122, 0.45); }
+.drag-follower[data-race="nightelf"] { --race-color: #5fdada; --race-color-soft: rgba(95, 218, 218, 0.45); }
+.drag-follower[data-race="undead"]   { --race-color: #c79bff; --race-color-soft: rgba(199, 155, 255, 0.45); }
+.drag-follower[data-race="neutral"]  { --race-color: #ffce63; --race-color-soft: rgba(255, 206, 99, 0.45); }
+
+.drag-follower.is-command {
+    background: linear-gradient(135deg, rgba(40, 50, 80, 0.95) 0%, rgba(15, 22, 45, 0.95) 100%);
+}
+
+.drag-follower img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: auto;
+}
+
+.drag-follower .hotkey-overlay {
+    pointer-events: none;
+}
+}

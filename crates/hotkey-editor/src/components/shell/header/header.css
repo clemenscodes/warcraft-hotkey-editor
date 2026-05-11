@@ -1,0 +1,31 @@
+:root {
+    --hdr-t: clamp(0, calc((100vw - 320px) / 1180px), 1);
+    --hdr-scale: calc(0.55 + 0.45 * var(--hdr-t));
+}
+
+@media (min-width: 1440px) and (max-width: 2000px) and (max-height: 1100px) {
+    :root {
+        --hdr-scale: 0.7;
+    }
+}
+
+/* The drawer is a sibling of .app-header, not a descendant, so --hdr-scale
+   does not inherit. Pin it to 1 so calc() inside the drawer resolves correctly. */
+.burger-drawer {
+    --hdr-scale: 1;
+}
+
+body:has(.burger-drawer) {
+    overflow: hidden;
+    position: relative;
+    overscroll-behavior: contain;
+}
+
+body:has(.burger-drawer) .app {
+    overflow: hidden;
+}
+
+@keyframes burger-slide-in {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}

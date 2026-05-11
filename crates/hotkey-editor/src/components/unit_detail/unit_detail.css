@@ -1,0 +1,1078 @@
+@layer components {
+
+.unit-detail {
+    background: linear-gradient(135deg, rgba(13, 31, 61, 0.7) 0%, rgba(6, 12, 31, 0.7) 100%);
+    border: 1px solid #1f3d63;
+    border-radius: 12px;
+    padding: 2rem 2rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    max-height: none;
+}
+
+.unit-detail.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7b818d;
+    font-size: 1rem;
+    min-height: 16rem;
+    font-style: italic;
+}
+
+.unit-detail-header {
+    /* Grid: portrait column is fixed width, title fills remaining space.
+       No explicit height — portrait (fixed size) drives it, so it never
+       shifts when switching units now that the description lives outside. */
+    display: grid;
+    grid-template-columns: 14.5rem 1fr;
+    align-items: start;
+    column-gap: 1.75rem;
+    margin-bottom: 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #1f3d63;
+}
+
+.unit-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    /* Lock the row to the name's height so adding/removing the optional
+       hero level bar (which lives inline at the right edge) never pushes
+       the id/description below it down — the level bar must stay shorter
+       than the h2 to honor this. */
+    min-height: 4.2rem;
+}
+
+.unit-detail-title {
+    min-width: 0;
+    /* overflow-x: clip prevents long text from overflowing the grid cell
+       without creating a scroll container — unlike overflow: hidden, clip
+       does not clip absolutely-positioned descendants (the level dropdown). */
+    overflow-x: clip;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.unit-description {
+    margin-top: 1rem;
+    color: #c0c8da;
+    font-size: 1.75rem;
+    line-height: 1.45;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    min-height: 9rem;
+}
+
+
+.unit-portrait {
+    width: 14rem;
+    height: 14rem;
+    image-rendering: auto;
+    border: 2px solid #2a5085;
+    border-radius: 4px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    object-fit: cover;
+    background: rgba(20, 35, 60, 0.7);
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+}
+
+.unit-detail-header h2 {
+    font-family: 'Friz Quadrata', serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: #ffce63;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.92);
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+.unit-detail-header code {
+    color: #7b818d;
+    font-size: 1.6rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.hero-level-picker {
+    position: relative;
+}
+
+.hero-level-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    width: 10.5rem;
+    white-space: nowrap;
+    background: linear-gradient(135deg, rgba(40, 30, 8, 0.6) 0%, rgba(15, 12, 4, 0.6) 100%);
+    border: 1px solid rgba(255, 206, 99, 0.45);
+    border-radius: 6px;
+    color: #ffce63;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-shadow: 1px 1px 0 #000;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hero-level-trigger:hover {
+    border-color: #ffce63;
+    box-shadow: 0 0 8px rgba(255, 206, 99, 0.3);
+}
+
+.hero-level-trigger.open {
+    border-color: #ffce63;
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.4);
+}
+
+.hero-level-trigger-number {
+    flex: 1;
+    text-align: center;
+}
+
+.hero-level-trigger-chevron {
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.18s ease;
+}
+
+.hero-level-trigger.open .hero-level-trigger-chevron {
+    transform: rotate(180deg);
+}
+
+body[data-kb-modality] .hero-level-trigger:focus-visible,
+body[data-kb-modality] .hero-level-trigger:focus {
+    outline: none;
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 0 2px #fff, 0 0 14px rgba(255, 255, 255, 0.45);
+}
+
+.hero-level-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 200;
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px;
+    background: linear-gradient(170deg, rgba(12, 25, 50, 0.98) 0%, rgba(6, 12, 28, 0.98) 100%);
+    border: 1px solid rgba(255, 206, 99, 0.45);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 12px rgba(255, 206, 99, 0.1);
+}
+
+.hero-level-option {
+    display: block;
+    width: 100%;
+    padding: 0.4rem 0.7rem;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    color: #c0c8da;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.1s ease, color 0.1s ease;
+}
+
+.hero-level-option:hover {
+    background: rgba(255, 206, 99, 0.12);
+    color: #ffce63;
+}
+
+.hero-level-option.active {
+    background: linear-gradient(135deg, rgba(255, 206, 99, 0.25) 0%, rgba(60, 45, 14, 0.7) 100%);
+    color: #ffce63;
+}
+
+body[data-kb-modality] .hero-level-option:focus-visible,
+body[data-kb-modality] .hero-level-option:focus {
+    outline: none;
+    color: #fff;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+.hero-level-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 199;
+    background: transparent;
+    cursor: default;
+}
+
+/* Desktop ≥ 1100 px: stretch the card to fill the full grid track height so
+   its bottom border meets the footer. Inner sections (header, description,
+   stats) take their natural size; the override panel below absorbs leftover
+   vertical space (see command-grid.css). */
+@media (min-width: 1100px) {
+    .unit-detail {
+        grid-column: 2 / 3;
+        align-self: stretch;
+        width: 100%;
+        padding: clamp(0.9rem, 1.2vh, 1.25rem) clamp(1rem, 1vw, 1.5rem);
+        padding-bottom: clamp(1.4rem, 2vh, 2rem);
+        overflow-y: auto;
+        overflow-x: clip;
+        min-height: 0;
+        max-height: 100%;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 206, 99, 0.35) transparent;
+    }
+    .unit-detail > .unit-detail-header,
+    .unit-detail > .unit-description,
+    .unit-detail > .unit-stats-panel,
+    .unit-detail > .unit-detail-body {
+        flex-shrink: 0;
+    }
+    .unit-detail::-webkit-scrollbar {
+        width: 5px;
+    }
+    .unit-detail::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .unit-detail::-webkit-scrollbar-thumb {
+        background: rgba(255, 206, 99, 0.35);
+        border-radius: 3px;
+    }
+    .unit-detail::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 206, 99, 0.55);
+    }
+    .unit-portrait {
+        width: clamp(7rem, 5.8vw, 9.5rem);
+        height: clamp(7rem, 5.8vw, 9.5rem);
+    }
+    .unit-detail-header {
+        grid-template-columns: clamp(7.5rem, 6.4vw, 10rem) 1fr;
+        column-gap: clamp(0.85rem, 0.8vw, 1.25rem);
+        padding-bottom: clamp(0.65rem, 1vh, 1rem);
+    }
+    .unit-name-row {
+        gap: clamp(0.75rem, 0.8vw, 1rem);
+        min-height: 0;
+    }
+    .unit-detail-header h2 {
+        font-size: clamp(2.2rem, 0.85vw + 1.1rem, 3rem);
+        line-height: 1.1;
+    }
+    .unit-detail-header code {
+        font-size: clamp(0.95rem, 0.42vw + 0.35rem, 1.25rem);
+    }
+    .hero-level-trigger {
+        width: 8.25rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 1.15rem;
+    }
+    .hero-level-option {
+        padding: 0.3rem 0.55rem;
+        font-size: 1.05rem;
+    }
+    .unit-stats-panel {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        flex-shrink: 0;
+    }
+    .unit-description {
+        font-size: clamp(1.2rem, 0.34vw + 0.72rem, 1.45rem);
+        margin-top: 0.45rem;
+        /* Lock to exactly 2 lines regardless of content. height alone is
+           not enough — empty descriptions in a flex column would still
+           collapse below `height` if min-height is 0 and flex-shrink is
+           the default 1. flex: none + matching min/max-height makes the
+           reserved space invariant whether the text is 0, 1, or 2+ lines. */
+        flex: none;
+        height: calc(2 * 1.35em);
+        min-height: calc(2 * 1.35em);
+        max-height: calc(2 * 1.35em);
+        line-height: 1.35;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+}
+
+@media (min-width: 1100px) and (min-height: 1300px) {
+    .unit-description {
+        height: calc(3 * 1.35em);
+        min-height: calc(3 * 1.35em);
+        max-height: calc(3 * 1.35em);
+        -webkit-line-clamp: 3;
+    }
+}
+
+/* ───────────────────────── Unit detail header + stats panel (A4) ─────────────────────────
+   Phone (≤ 480 px): the 2-column header (portrait | title) stacks vertically
+   with the portrait above; hero level pills become a horizontal scroll strip
+   so all 10 levels stay reachable; the 4-column stats grid collapses to a
+   single column ordered vitality → combat → defense → attributes. The matchup
+   tables stay 2-up so the cells don't grow past readable widths.
+
+   Tablet (481–1099 px): stats grid drops to 2×2; matchup tables stay 2-up.
+   The header keeps its inline portrait + title layout but at smaller portrait. */
+
+@media (min-width: 481px) and (max-width: 1099px) {
+    .unit-stats-panel {
+        /* Switch back to grid here so `grid-template-columns` actually
+           applies — the desktop base rule is `display: flex` (auto-
+           distributes whatever columns the unit has). */
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.75rem 2rem;
+        padding: 1.5rem 1.75rem;
+        min-height: 0;
+    }
+    /* Override `flex: 1 1 0` from the desktop rule so columns don't
+       stretch weirdly inside the grid cells. */
+    .unit-stats-panel > .stat-column {
+        flex: 0 1 auto;
+    }
+    /* Drop the inter-column divider when stat columns wrap into a 2x2 grid:
+       the original `.stat-column + .stat-column { border-left }` rule paints
+       a divider on every column after the first, which produces stray
+       verticals on the second-row columns. */
+    .stat-column + .stat-column {
+        padding-left: 0;
+        border-left: none;
+    }
+    .unit-detail-header {
+        grid-template-columns: 11.5rem 1fr;
+        column-gap: 1.25rem;
+        padding-bottom: 1rem;
+    }
+    .unit-portrait {
+        width: 11rem;
+        height: 11rem;
+    }
+    .unit-detail-header h2 {
+        font-size: 2.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .unit-detail-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: auto;
+        gap: 0.85rem;
+        padding-bottom: 1rem;
+    }
+    .unit-portrait {
+        width: 12rem;
+        height: 12rem;
+    }
+    .unit-name-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        min-height: 0;
+    }
+    .unit-detail-title {
+        align-items: center;
+    }
+    .unit-detail-header h2 {
+        font-size: 2.2rem;
+        text-align: center;
+    }
+    /* Hero level pills: scroll strip instead of wrapping. */
+    .hero-level-bar {
+        align-self: stretch;
+        overflow: hidden;
+    }
+    .hero-level-selector {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0.35rem;
+        padding-bottom: 0.2rem;
+    }
+    .hero-level-selector::-webkit-scrollbar {
+        display: none;
+    }
+    .hero-level-pill {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        min-width: 3rem;
+        min-height: 3rem;
+    }
+    /* 4-column stats grid → 1 column. Order: vitality, combat, defense,
+       attributes. The HTML order already matches; no `order:` overrides needed. */
+    .unit-stats-panel {
+        /* Same grid-override as the tablet breakpoint — desktop base is
+           flex for auto-distribution, mobile reverts to grid for
+           stacking control. */
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.25rem;
+        padding: 1.25rem;
+        min-height: 0;
+    }
+    .unit-stats-panel > .stat-column {
+        flex: 0 1 auto;
+    }
+    .stat-column + .stat-column {
+        padding-left: 0;
+        padding-top: 1rem;
+        border-left: none;
+        border-top: 1px solid rgba(255, 206, 99, 0.15);
+    }
+    /* Matchup tables stay 2-up on phone so labels don't collide with values. */
+    .damage-matchup {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1099px) {
+    .unit-detail {
+        align-self: stretch;
+    }
+}
+
+/* ── Mobile layout overrides — must come after base rules above so they
+   win on source order within @layer components. ── */
+@media (max-width: 700px) {
+    .unit-detail {
+        overflow-y: visible;
+        padding: 1.25rem;
+        border-radius: 8px;
+        max-height: none;
+        align-self: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .unit-detail {
+        padding: 0.85rem;
+        border-radius: 6px;
+    }
+}
+
+
+.unit-stats-panel {
+    /* The four columns have two distinct visual weights:
+       - Vitality (no icon, 2-4 short rows) and Attributes (icon + 3
+         short rows) are compact "summary" cards.
+       - Combat and Defense both carry icon + few stat rows + a 2x4
+         matchup grid pinned to the bottom.
+       Default to 2×2 at all desktop widths, pairing
+       Vitality ↔ Attributes on row 1 (short summary cards) and
+       Combat ↔ Defense on row 2 (taller matchup-bearing cards).
+       Reads cleanly even at very wide viewports — better than a
+       4-col line-up where the short summary cards leave dead space
+       above the matchup grids. */
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "vitality attributes"
+        "combat   defense";
+    align-items: stretch;
+    gap: 1.25rem 2.1rem;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    padding: 1.4rem 1.75rem;
+    background: rgba(8, 18, 35, 0.55);
+    border: 1px solid #1f3d63;
+    border-radius: 8px;
+}
+
+.unit-stats-panel > .vitality-column   { grid-area: vitality; }
+.unit-stats-panel > .combat-column     { grid-area: combat; }
+.unit-stats-panel > .defense-column    { grid-area: defense; }
+.unit-stats-panel > .attributes-column { grid-area: attributes; }
+
+/* Stack vertically when the panel has nowhere left to go.
+   Attributes sit directly under vitality (HP/Mana) — both are
+   compact "summary" cards with no matchup grid. Combat and Defense
+   (taller, with matchup grids) go below. Each stacked column gets
+   a top divider so the four categories read as distinct sections
+   rather than running into each other. */
+@media (max-width: 700px) {
+    .unit-stats-panel {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "vitality"
+            "attributes"
+            "combat"
+            "defense";
+        gap: 2.5rem;
+        padding: 1.75rem;
+    }
+
+    .unit-stats-panel > .stat-column + .stat-column {
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 206, 99, 0.18);
+    }
+}
+
+/* Layout-stability: every unit type uses the same 2×2 named-area
+   grid above, regardless of which categories are present. Selecting
+   different units never reflows the stats panel's outer geometry —
+   only the cells' content changes. Missing categories simply leave
+   their named cell empty; the remaining cells stay put.
+   - Heroes (4-cat: V, A, C, D)         → all four cells filled.
+   - Combat units (3-cat: V, C, D)      → top-right (attributes) empty.
+   - 2-cat units (V, D — buildings,
+     Phoenix Egg)                       → top-right + bottom-left empty.
+   The tall row (matchups in C/D) drives panel height in every case,
+   so panel height stays roughly constant across unit types and the
+   command grids below never jump vertically. */
+
+.stat-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.stat-column.with-icon {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.9rem;
+}
+
+.stat-column.with-icon .stat-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.stat-icon-frame {
+    /* Pin to the top of the column rather than stretching to its full
+       height (the parent's `align-items: stretch` would otherwise make
+       the icon as tall as the column's matchup grid). Square aspect,
+       smaller than before so the stats panel stays compact. */
+    flex: 0 0 auto;
+    align-self: flex-start;
+    width: clamp(4rem, 2.7vw + 1.75rem, 5.75rem);
+    height: clamp(4rem, 2.7vw + 1.75rem, 5.75rem);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.stat-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: auto;
+}
+
+.stat-row.regen-row {
+    margin-top: -0.2rem;
+    padding-left: 1.25rem;
+}
+
+.stat-row.regen-row .stat-row-label {
+    font-size: clamp(1.3rem, 0.85rem + 0.32vw, 1.75rem);
+    color: rgba(255, 206, 99, 0.7);
+    font-weight: 400;
+}
+
+.stat-row.regen-row .stat-row-gain {
+    /* Right-align the regen number so it lines up with the HP/Mana value
+       column directly above. Without this, the gain packs against the
+       label and floats mid-column. */
+    margin-left: auto;
+    text-align: right;
+    font-size: clamp(1.3rem, 0.85rem + 0.32vw, 1.75rem);
+    font-weight: 400;
+}
+
+.stat-row.regen-row.mana .stat-row-gain {
+    color: #60a5fa;
+}
+
+.regen-qualifier {
+    /* `margin-left: auto` pulls the qualifier away from the label and
+       parks it just before the gain on the right side, so it reads as a
+       modifier on the value ("at night  +0.95") rather than a tag on the
+       label. The gain itself drops its own auto margin in this case. */
+    flex: 0 0 auto;
+    margin-left: auto;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: rgba(192, 200, 218, 0.55);
+    text-shadow: 1px 1px 0 #000;
+}
+
+.stat-row.regen-row:has(.regen-qualifier) .stat-row-gain {
+    margin-left: 0.55rem;
+}
+
+.stat-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    /* Body tier: every standard row (Damage, Range, Armor, attribute
+       label/value, matchup cell) shares this size for visual rhythm. */
+    font-size: clamp(1.35rem, 0.95rem + 0.32vw, 1.7rem);
+    line-height: 1.2;
+    text-shadow: 1px 1px 0 #000;
+    min-width: 0;
+}
+
+.stat-row-label {
+    /* Allow shrink + ellipsis so a long label can clip cleanly instead
+       of overflowing into the value column when the card is narrow. */
+    flex: 0 1 auto;
+    min-width: 0;
+    font-family: 'Friz Quadrata', serif;
+    font-size: inherit;
+    color: rgba(255, 206, 99, 0.9);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stat-row-value {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: right;
+    color: #f3e6c4;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-row-gain.stat-zero,
+.stat-row-value.stat-zero,
+.stat-row.mana .stat-row-value.stat-zero,
+.stat-row.regen-row.mana .stat-row-gain.stat-zero {
+    color: #4a5160;
+    font-weight: 400;
+}
+
+.stat-row-gain {
+    flex: 0 0 auto;
+    color: #4ade80;
+    font-size: clamp(1.3rem, 0.85rem + 0.32vw, 1.75rem);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.stat-row.hp .stat-row-value {
+    color: #4ade80;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.05rem + 0.48vw, 2.2rem);
+}
+
+.stat-row.mana .stat-row-value {
+    color: #60a5fa;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.05rem + 0.48vw, 2.2rem);
+}
+
+.attribute-row.primary .stat-row-label,
+.attribute-row.primary .stat-row-value {
+    color: #ffce63;
+}
+
+.attribute-row.primary {
+    text-shadow: 1px 1px 0 #000, 0 0 8px rgba(255, 206, 99, 0.35);
+}
+
+/* ─── §4.6 stack-mode font scaling at ≤900 ──────────────────────
+   When the panel reflows to a single-column stack, each row uses
+   the full panel width (~70rem at 800 px viewport). The desktop
+   `clamp(1.4rem, 0.9rem + 0.45vw, 1.85rem)` lands at the 1.4rem
+   floor on narrow viewports, leaving stat text at ~13 px while
+   the command grid tiles below scale to ~120 px each. Bump fonts
+   so the stats card is visually proportional to the grids. */
+@media (max-width: 700px) {
+    .stat-row {
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+    .stat-row-label {
+        font-size: inherit;
+    }
+    .stat-row.hp .stat-row-value,
+    .stat-row.mana .stat-row-value {
+        font-size: 2.6rem;
+    }
+    .stat-row.regen-row .stat-row-label,
+    .stat-row.regen-row .stat-row-gain {
+        font-size: 1.7rem;
+    }
+    .stat-row-gain {
+        font-size: 1.7rem;
+    }
+    .regen-qualifier {
+        font-size: 1.55rem;
+    }
+    .stat-icon-frame {
+        width: 5rem;
+        height: 5rem;
+    }
+}
+
+/* ─── 2×2 layout separators (≥701) ──────────────────────────────
+   "Broken cross" pattern: pseudo-element rules sit in the middle
+   of the grid gap area (not on cell borders), and each rule is
+   inset from the cell corners so all four arms stop short of the
+   intersection. Result is a clean + with a small breathing square
+   at the centre — no closed corners on any cell, every category
+   visually separated, no L-corner traps.
+
+   Geometry (column-gap = 3.5rem, row-gap = 2.5rem):
+     - vertical rule at attributes/defense x = -1.75rem (mid-gap);
+       y inset 0.75rem from cell top/bottom.
+     - horizontal rule at combat/defense y = -1.25rem (mid-gap);
+       x inset 0.75rem from cell left/right.
+   Per-cell pseudo, so the line breaks naturally at the row break
+   (between attributes and defense's vertical pieces) and the
+   column break (between combat and defense's horizontal pieces).
+*/
+@media (min-width: 701px) {
+    /* Keep gap at the base 2rem column / 2.5rem row so the stats
+       panel's column boundaries match the .unit-detail-row's grids
+       row below it (which uses the same 2rem column-gap and 2.5rem
+       padding-inline so grid 2 aligns with stats col 2). */
+    .unit-stats-panel {
+        gap: 2.5rem 2rem;
+    }
+
+    .unit-stats-panel > .stat-column {
+        position: relative;
+    }
+
+    /* Padding to make space for the separator rule that might draw on
+       this side. Each rule's existence is conditional on the relevant
+       neighbour cell being present (see ::before/::after rules below).
+       Padding is applied unconditionally per cell so the cell's own
+       content layout doesn't shift when separators come and go. */
+    .unit-stats-panel > .attributes-column {
+        padding-left: 1rem;
+    }
+    .unit-stats-panel:has(.combat-column) > .defense-column {
+        padding-left: 1rem;
+    }
+    .unit-stats-panel > .combat-column {
+        padding-top: 1.25rem;
+    }
+    .unit-stats-panel:has(.attributes-column) > .defense-column {
+        padding-top: 1.25rem;
+    }
+    /* 3-cat (combat + defense, no attributes): defense also needs top
+       padding so the horizontal separator above it has room. */
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column {
+        padding-top: 1.25rem;
+    }
+    /* No attack: defense moves to bottom-left (combat's slot) so it
+       doesn't float to the far right and layout stays stable. */
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column {
+        grid-area: combat;
+        padding-top: 1.25rem;
+    }
+    /* 2-category only (vitality + defense): span defense full width so
+       the panel doesn't show a large empty right column. */
+    .unit-stats-panel:not(:has(.combat-column)):not(:has(.attributes-column)) > .defense-column {
+        grid-column: 1 / -1;
+    }
+    /* Vitality spans full width whenever there are no hero attributes
+       (2-cat and 3-cat layouts). Heroes keep vitality in the left cell
+       with attributes on the right. */
+    .unit-stats-panel:not(:has(.attributes-column)) > .vitality-column {
+        grid-column: 1 / -1;
+    }
+
+    /* Vertical rule between V (col 1) and A (col 2): only when A exists.
+       V is always present so no need to check it. Position at -1rem =
+       middle of the 2rem column-gap. */
+    .unit-stats-panel > .attributes-column::before {
+        content: "";
+        position: absolute;
+        left: -1rem;
+        top: 0.75rem;
+        bottom: 0.75rem;
+        width: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+    /* Vertical rule between C (col 1) and D (col 2): only when both
+       C and D are present. */
+    .unit-stats-panel:has(.combat-column) > .defense-column::before {
+        content: "";
+        position: absolute;
+        left: -1rem;
+        top: 0.75rem;
+        bottom: 0.75rem;
+        width: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+
+    /* Horizontal rule between V (row 1) and C (row 2): only when C
+       exists (V is always there). Position at -1.25rem = middle of
+       the 2.5rem row-gap. */
+    .unit-stats-panel > .combat-column::after {
+        content: "";
+        position: absolute;
+        top: -1.25rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        height: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+    /* Horizontal rule above defense in 3-cat layout (combat present,
+       no attributes). */
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column::after {
+        content: "";
+        position: absolute;
+        top: -1.25rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        height: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+    /* Horizontal rule between A (row 1) and D (row 2): only when both
+       A and D are present. */
+    .unit-stats-panel:has(.attributes-column) > .defense-column::after {
+        content: "";
+        position: absolute;
+        top: -1.25rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        height: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+    /* Horizontal rule above defense when it occupies the combat slot
+       (no attack column present — e.g. non-attacking buildings). */
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column::after {
+        content: "";
+        position: absolute;
+        top: -1.25rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        height: 1px;
+        background: rgba(255, 206, 99, 0.22);
+        pointer-events: none;
+    }
+}
+
+/* ─── Full desktop (≥ 1100 px): compact stats panel ─────────────────────────
+   The stats panel sits above the command grids in a flex column. At wide
+   viewports the panel must stay compact so the grids + override panel below
+   it have room to breathe. Reduce margins, padding, gaps, fonts, and icon
+   sizes — the panel still reads cleanly but takes significantly less vertical
+   space than the base rules designed for mid-range viewports. */
+@media (min-width: 1100px) {
+    .unit-stats-panel {
+        flex: 0 0 auto;
+        min-height: 0;
+        overflow: visible;
+        margin-top: 0.8rem;
+        margin-bottom: 0.4rem;
+        padding: 1rem 1.25rem;
+        gap: 1rem 1.5rem;
+    }
+
+    /* Separator pseudo-element positions adjusted for the reduced row-gap
+       (0.8rem → separator sits at half that = -0.4rem from cell edge). */
+    .unit-stats-panel > .combat-column,
+    .unit-stats-panel:has(.attributes-column) > .defense-column,
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column,
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column {
+        padding-top: 0.4rem;
+    }
+    .unit-stats-panel > .combat-column::after,
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column::after,
+    .unit-stats-panel:has(.attributes-column) > .defense-column::after,
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column::after {
+        top: -0.4rem;
+    }
+
+    .stat-column,
+    .stat-column.with-icon .stat-rows { gap: 0.3rem; }
+    .stat-column.with-icon { gap: 0.65rem; }
+
+    .stat-icon-frame {
+        width: clamp(2.8rem, 1.5vw + 0.75rem, 3.8rem);
+        height: clamp(2.8rem, 1.5vw + 0.75rem, 3.8rem);
+    }
+
+    .stat-row {
+        gap: 0.3rem;
+        font-size: clamp(1.25rem, 0.85rem + 0.3vw, 1.4rem);
+        line-height: 1.15;
+    }
+
+    .stat-row.hp .stat-row-value,
+    .stat-row.mana .stat-row-value {
+        font-size: clamp(1.55rem, 0.95rem + 0.45vw, 1.85rem);
+    }
+
+    .stat-row.regen-row .stat-row-label,
+    .stat-row.regen-row .stat-row-gain {
+        font-size: clamp(1.2rem, 0.8rem + 0.3vw, 1.55rem);
+    }
+    .stat-row-gain {
+        font-size: clamp(1.2rem, 0.8rem + 0.3vw, 1.55rem);
+    }
+    .regen-qualifier {
+        font-size: clamp(1.05rem, 0.65rem + 0.25vw, 1.3rem);
+    }
+}
+
+/* ── 4K (≥ 2000 px): undo the compact-desktop size reductions so the stats
+   panel absorbs a larger share of the available height, shrinking the
+   otherwise-oversized override panel below. ── */
+@media (min-width: 2000px) {
+    .unit-stats-panel {
+        padding: 2rem 2.5rem;
+        gap: 2rem 2.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    /* Separator mid-point moves to half the new 2rem row-gap = -1rem */
+    .unit-stats-panel > .combat-column,
+    .unit-stats-panel:has(.attributes-column) > .defense-column,
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column,
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column {
+        padding-top: 1rem;
+    }
+    .unit-stats-panel > .combat-column::after,
+    .unit-stats-panel:has(.combat-column):not(:has(.attributes-column)) > .defense-column::after,
+    .unit-stats-panel:has(.attributes-column) > .defense-column::after,
+    .unit-stats-panel:not(:has(.combat-column)) > .defense-column::after {
+        top: -1rem;
+    }
+    .stat-column,
+    .stat-column.with-icon .stat-rows { gap: 0.5rem; }
+    .stat-column.with-icon { gap: 0.9rem; }
+    .stat-icon-frame {
+        width: clamp(3.5rem, 1.5vw + 1rem, 5rem);
+        height: clamp(3.5rem, 1.5vw + 1rem, 5rem);
+    }
+    .stat-row {
+        gap: 0.5rem;
+        font-size: clamp(1.35rem, 0.9rem + 0.3vw, 1.7rem);
+        line-height: 1.2;
+    }
+    .stat-row.hp .stat-row-value,
+    .stat-row.mana .stat-row-value {
+        font-size: clamp(1.6rem, 1rem + 0.45vw, 2.1rem);
+    }
+    .stat-row.regen-row .stat-row-label,
+    .stat-row.regen-row .stat-row-gain,
+    .stat-row-gain {
+        font-size: clamp(1.3rem, 0.85rem + 0.3vw, 1.65rem);
+    }
+    .regen-qualifier {
+        font-size: clamp(1.1rem, 0.7rem + 0.25vw, 1.4rem);
+    }
+}
+
+
+.damage-matchup {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 206, 99, 0.15);
+}
+
+.matchup-cell {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.35rem 0.55rem;
+    border-radius: 4px;
+    /* Fluid font matches `.stat-row`'s scale so labels and matchup cells
+       step together as the panel reflows. min-width: 0 + ellipsis on the
+       label keeps long names ("Unarmored", "Fortified") from overflowing
+       the cell and visually colliding with the percentage. */
+    font-size: clamp(1.3rem, 0.85rem + 0.4vw, 1.85rem);
+    line-height: 1.25;
+    font-family: 'JetBrains Mono', monospace;
+    text-shadow: 1px 1px 0 #000;
+    min-width: 0;
+}
+
+.matchup-label {
+    color: #9aa5bd;
+    font-family: 'Friz Quadrata', serif;
+    font-size: inherit;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.matchup-value {
+    color: #d6dcec;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    flex: 0 0 auto;
+}
+
+.matchup-cell.strong {
+    background: rgba(74, 222, 128, 0.12);
+}
+
+.matchup-cell.strong .matchup-value {
+    color: #4ade80;
+}
+
+.matchup-cell.weak {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.matchup-cell.weak .matchup-value {
+    color: #f87171;
+}
+
+@media (min-width: 1100px) {
+    .damage-matchup {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.2rem 0.45rem;
+        padding-top: 0.5rem;
+    }
+
+    .matchup-cell {
+        gap: 0.35rem;
+        padding: 0.2rem 0.45rem;
+        font-size: clamp(1rem, 0.18vw + 0.78rem, 1.2rem);
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 700px) {
+    /* Match the stack-mode font scale in stats-panel.css so matchup
+       cells stay proportional to the stat rows above them. */
+    .matchup-cell {
+        font-size: 1.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+}

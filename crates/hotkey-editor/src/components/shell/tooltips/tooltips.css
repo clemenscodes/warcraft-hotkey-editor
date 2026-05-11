@@ -1,0 +1,108 @@
+/* CSS-driven tooltips via [data-tooltip="text"] on the trigger element.
+   Reveal paths: :hover (desktop), :focus-visible (keyboard),
+   [data-tooltip-active="true"] (touch long-press via tooltip-touch.js). */
+
+[data-tooltip]:not([data-tooltip=""]) {
+    position: relative;
+}
+
+[data-tooltip]:not([data-tooltip=""]):hover::after,
+[data-tooltip]:not([data-tooltip=""]):focus-visible::after,
+[data-tooltip][data-tooltip-active="true"]:not([data-tooltip=""])::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 38rem;
+    padding: 0.75rem 1.1rem;
+    border: 1px solid #ffce63;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(15, 22, 45, 0.98) 0%, rgba(8, 14, 30, 0.99) 100%);
+    color: #ffce63;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7);
+    white-space: normal;
+    pointer-events: none;
+    z-index: 1200;
+    opacity: 1;
+}
+
+[data-tooltip]:not([data-tooltip=""]):hover::after,
+[data-tooltip]:not([data-tooltip=""]):focus-visible::after {
+    opacity: 0;
+    animation: tooltip-fade-in 0.15s ease-out 0.4s forwards;
+}
+
+[data-tooltip][data-tooltip-placement="above"]:hover::after,
+[data-tooltip][data-tooltip-placement="above"]:focus-visible::after,
+[data-tooltip][data-tooltip-placement="above"][data-tooltip-active="true"]::after {
+    top: auto;
+    bottom: calc(100% + 0.6rem);
+}
+
+[data-tooltip][data-tooltip-anchor="left"]:hover::after,
+[data-tooltip][data-tooltip-anchor="left"]:focus-visible::after,
+[data-tooltip][data-tooltip-anchor="left"][data-tooltip-active="true"]::after {
+    left: 0;
+    right: auto;
+    transform: none;
+}
+
+[data-tooltip][data-tooltip-anchor="right"]:hover::after,
+[data-tooltip][data-tooltip-anchor="right"]:focus-visible::after,
+[data-tooltip][data-tooltip-anchor="right"][data-tooltip-active="true"]::after {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+/* Touch/coarse-pointer: hide ::after, body-level banner takes over. */
+@media (hover: none) {
+    [data-tooltip][data-tooltip-active="true"]:not([data-tooltip=""])::after {
+        display: none;
+    }
+}
+
+/* Mobile banner: shown by tooltip-touch.js on long-press. */
+#tooltip-mobile-banner {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: min(32rem, calc(100vw - 1rem));
+    padding: 0.75rem 1rem;
+    border: 1px solid #ffce63;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(15, 22, 45, 0.98) 0%, rgba(8, 14, 30, 0.99) 100%);
+    color: #ffce63;
+    font-family: 'Friz Quadrata', serif;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7);
+    white-space: normal;
+    pointer-events: none;
+    z-index: 1300;
+}
+
+#tooltip-mobile-banner[data-visible="true"] {
+    display: block;
+    animation: tooltip-fade-in 0.15s ease-out forwards;
+}
+
+@media (hover: hover) {
+    #tooltip-mobile-banner {
+        display: none !important;
+    }
+}
+
+@keyframes tooltip-fade-in {
+    to { opacity: 1; }
+}

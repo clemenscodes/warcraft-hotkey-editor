@@ -1,0 +1,75 @@
+use dioxus::prelude::*;
+use warcraft_keybinds::CustomKeys;
+
+use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
+use crate::components::shared::icons::{ICON_DOWNLOAD, ICON_PREVIEW};
+use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
+use crate::services::files::download::BlobDownload;
+
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct ExportButtonsProps {
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) preview_open: Signal<bool>,
+}
+
+#[component]
+pub(crate) fn ExportButtons(props: ExportButtonsProps) -> Element {
+    let loaded_keys = props.loaded_keys;
+    let mut preview_open = props.preview_open;
+    let has_loaded_file = loaded_keys.read().is_some();
+    let preview_visible = *preview_open.read();
+    let preview_label = if preview_visible {
+        "Hide preview"
+    } else {
+        "Preview"
+    };
+    let mut download_info_open = use_signal(|| false);
+    let toggle_preview = move |_| {
+        let next_value = !*preview_open.read();
+        preview_open.set(next_value);
+    };
+    let open_download_info = move |_| download_info_open.set(true);
+    let handle_download_confirm = move |_| {
+        let serialized = {
+            let read_guard = loaded_keys.read();
+            let Some(file) = read_guard.as_ref() else {
+                return;
+            };
+            file.normalize().to_string()
+        };
+        BlobDownload::trigger("CustomKeys.txt", &serialized);
+    };
+
+    rsx! {
+        div { class: "contents",
+            button {
+                class: TOOLBAR_BTN_CLASS,
+                r#type: "button",
+                aria_label: preview_label,
+                aria_pressed: preview_visible,
+                onclick: toggle_preview,
+                span {
+                    class: TOOLBAR_ICON_CLASS,
+                    aria_hidden: "true",
+                    dangerous_inner_html: ICON_PREVIEW,
+                }
+            }
+            if has_loaded_file {
+                button {
+                    class: TOOLBAR_BTN_CLASS,
+                    r#type: "button",
+                    aria_label: "Download CustomKeys.txt",
+                    onclick: open_download_info,
+                    span {
+                        class: TOOLBAR_ICON_CLASS,
+                        dangerous_inner_html: ICON_DOWNLOAD,
+                    }
+                }
+                DownloadInfoDialog {
+                    open: download_info_open,
+                    on_confirm: handle_download_confirm,
+                }
+            }
+        }
+    }
+}

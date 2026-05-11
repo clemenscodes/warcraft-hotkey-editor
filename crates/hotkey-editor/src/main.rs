@@ -1,10 +1,7 @@
 mod app;
 mod components;
-mod customkeys;
-mod domain;
-mod focus;
-mod system_hotkeys;
-mod text;
+mod model;
+mod services;
 
 use crate::app::App;
 

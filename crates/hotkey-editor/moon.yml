@@ -8,9 +8,153 @@ tags:
 language: rust
 
 tasks:
+  rust/build:
+    toolchain: rust
+    command: cargo build --target wasm32-unknown-unknown
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*.txt"
+
+  rust/lint:
+    toolchain: rust
+    command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*.txt"
+
+  tailwind/build:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "tailwind.input.css"
+      - "styles/**/*.css"
+      - "src/**/*.css"
+      - "src/**/*.rs"
+
+  tailwind/watch:
+    toolchain: system
+    command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --watch
+    options:
+      outputStyle: stream
+      persistent: true
+      runFromWorkspaceRoot: false
+      cache: false
+
+  dx/serve:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
+  dx/serve-container:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0
+    options:
+      outputStyle: stream
+      interactive: false
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
+  dx/build:
+    toolchain: system
+    command: dx build --package hotkey-editor --release --platform web
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    deps:
+      - tailwind/build
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "@group(static-assets)"
+      - "templates/**/*.txt"
+      - "Dioxus.toml"
+
+  nix/bundle:
+    toolchain: system
+    command: nix build .#warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
   dev:
     extends: dx/serve
 
   bundle:
     deps:
       - dx/build
+
+  playwright/test:
+    toolchain: system
+    command: playwright test
+    deps:
+      - rust/fmt
+      - rust/lint
+      - rust/build
+      - rust/test
+      - dx/build
+    env:
+      STATIC_DIR: "../../target/dx/hotkey-editor/release/web/public"
+      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+      cache: false
+    inputs:
+      - "e2e/**/*.ts"
+      - "e2e/tsconfig.json"
+      - "playwright.config.ts"
+
+  docker/e2e:
+    toolchain: system
+    script: >
+      docker build --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
+      docker run --rm warcraft-hotkey-editor-e2e
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/serve:
+    toolchain: system
+    script: >
+      docker build --target production --progress plain -t warcraft-hotkey-editor . &&
+      docker run --rm --name warcraft-hotkey-editor -p 8080:80 warcraft-hotkey-editor
+    env:
+      FORCE_COLOR: "1"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/down:
+    toolchain: system
+    command: docker stop warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  ci:
+    deps:
+      - playwright/test
+

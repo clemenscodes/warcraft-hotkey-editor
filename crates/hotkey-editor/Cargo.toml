@@ -22,8 +22,10 @@ web-sys = { version = "0.3", features = [
     "DomRect", "Document", "EventTarget", "DomTokenList",
     "Window", "Blob", "BlobPropertyBag", "Url",
     "Storage",
+    "History", "Location", "UrlSearchParams",
 ] }
 js-sys = "0.3"
+gloo-timers = { version = "0.3", features = ["futures"] }
 num-traits.workspace = true
 warcraft-api = { path = "../warcraft-api" }
 warcraft-database = { path = "../warcraft-database" }

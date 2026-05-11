@@ -1,0 +1,14 @@
+# Workspace-level environment variables available to every crate at compile
+# time (via `env!(…)`) and at build time.
+[env]
+
+# Exposes the workspace root directory. Lets crates reference workspace-level
+# paths (e.g. `fixtures/`, `assets/`) without hardcoding `../../../`
+# traversals. `relative = true` resolves the empty value against the directory
+# containing this config file — i.e. the workspace root.
+CARGO_WORKSPACE_DIR = { value = "", relative = true }
+
+# The last Warcraft III patch this workspace has been validated against.
+# Bumped here when a new patch lands; downstream tools and tests pick it up
+# via `env!("WARCRAFT_SUPPORTED_VERSION")`.
+WARCRAFT_SUPPORTED_VERSION = "2.0.4.23745"

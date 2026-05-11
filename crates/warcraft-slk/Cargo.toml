@@ -1,0 +1,6 @@
+[package]
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+name = "warcraft-slk"
+version.workspace = true

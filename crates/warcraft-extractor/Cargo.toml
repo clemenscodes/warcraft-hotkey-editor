@@ -1,0 +1,33 @@
+[package]
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+name = "warcraft-extractor"
+version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "warcraft-extractor"
+path = "src/main.rs"
+
+[dependencies]
+bcdec_rs.workspace = true
+casclib.workspace = true
+clap.workspace = true
+ddsfile.workspace = true
+image.workspace = true
+num-traits.workspace = true
+paste.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+warcraft-api = { path = "../warcraft-api" }
+warcraft-keybinds = { path = "../warcraft-keybinds" }
+warcraft-slk = { path = "../warcraft-slk" }
+
+[[test]]
+name = "rules"
+path = "tests/rules.rs"

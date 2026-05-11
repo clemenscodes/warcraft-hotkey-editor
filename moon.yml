@@ -6,3 +6,28 @@ tags:
 
 dependsOn:
   - hotkey-editor
+
+tasks:
+  docker/up:
+    toolchain: system
+    command: docker compose --ansi always up --remove-orphans hotkey-editor
+    env:
+      COMPOSE_MENU: "false"
+      FORCE_COLOR: "1"
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/down:
+    toolchain: system
+    command: docker compose --ansi always down
+    env:
+      FORCE_COLOR: "1"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+

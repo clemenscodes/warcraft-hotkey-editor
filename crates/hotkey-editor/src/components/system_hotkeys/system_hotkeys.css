@@ -1,0 +1,27 @@
+@layer components {
+@media (min-width: 1100px) and (max-width: 2000px) {
+    /* Keep inventory sizing in a stable pixel range across the desktop band.
+       Base rem sizing grows with viewport width and gets too large >1100px. */
+    .system-hotkeys-dialog .wc3-inventory-grid {
+        grid-template-columns: repeat(2, 230px);
+        grid-auto-rows: 165px;
+        gap: 12px;
+    }
+
+    .system-hotkeys-dialog .wc3-inventory-grid .wc3-slot {
+        border-width: 10px;
+        border-image-slice: 12 fill;
+        padding: 6px 5px;
+        gap: 4px;
+    }
+
+    .system-hotkeys-dialog .wc3-inventory-grid .wc3-slot-label {
+        font-size: 18px;
+        letter-spacing: 0.12em;
+    }
+
+    .system-hotkeys-dialog .wc3-inventory-grid .wc3-slot-key {
+        font-size: 26px;
+    }
+}
+}

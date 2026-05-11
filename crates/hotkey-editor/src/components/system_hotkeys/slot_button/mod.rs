@@ -1,0 +1,106 @@
+use dioxus::prelude::*;
+use warcraft_api::SystemKeybindModifier;
+use warcraft_keybinds::CustomKeys;
+
+use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use warcraft_keybinds::EffectiveBinding;
+use warcraft_keybinds::SystemBindingMap;
+
+/// Big WC3-style slot used in inventory-derived layouts (hero selection,
+/// control groups). Same gold-frame visuals as the inventory cell minus the
+/// pointer-event drag — those views aren't reorderable, just edit-on-click.
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct SlotButtonProps {
+    pub(crate) slot_label: String,
+    pub(crate) section_id: String,
+    pub(crate) default_hotkey: u32,
+    pub(crate) default_modifier: SystemKeybindModifier,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) editing_section: Signal<Option<String>>,
+    pub(crate) binding_map: ReadSignal<SystemBindingMap>,
+}
+
+#[component]
+pub(crate) fn SlotButton(props: SlotButtonProps) -> Element {
+    let slot_label = props.slot_label;
+    let section_id = props.section_id;
+    let default_hotkey = props.default_hotkey;
+    let default_modifier = props.default_modifier;
+    let mut loaded_keys = props.loaded_keys;
+    let mut editing_section = props.editing_section;
+    let binding_map = props.binding_map;
+    let lookup_id = section_id.clone();
+    let read_guard = loaded_keys.read();
+    let custom_keys_ref = read_guard.as_ref();
+    let effective = EffectiveBinding::resolve_from_file(
+        custom_keys_ref,
+        &lookup_id,
+        default_hotkey,
+        default_modifier,
+    );
+    drop(read_guard);
+    let map_guard = binding_map.read();
+    let collisions =
+        map_guard.collisions_for(&lookup_id, effective.hotkey_code(), effective.modifier());
+    let is_in_conflict = !collisions.is_empty();
+    let conflict_title = if is_in_conflict {
+        let names: Vec<String> = collisions
+            .iter()
+            .map(|resolved| resolved.section_comment().to_string())
+            .collect();
+        format!("Also used by {}", names.join(", "))
+    } else {
+        String::new()
+    };
+    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier());
+    drop(map_guard);
+    let is_editing = editing_section
+        .read()
+        .as_deref()
+        .map(|active| active == lookup_id.as_str())
+        .unwrap_or(false);
+    let key_label = if is_editing {
+        String::from("…")
+    } else {
+        effective.label()
+    };
+    let mut cell_class = String::from("wc3-slot");
+    if is_editing {
+        cell_class.push_str(" editing");
+    }
+    if is_in_conflict {
+        cell_class.push_str(" conflict");
+    }
+    let section_id_for_click = lookup_id.clone();
+    let section_id_for_pick = lookup_id.clone();
+    let handle_click = move |_| editing_section.set(Some(section_id_for_click.clone()));
+    let handle_pick = move |code: u32| {
+        let mut guard = loaded_keys.write();
+        let file = guard.get_or_insert_with(|| CustomKeys::from(""));
+        file.set_system_hotkey(&section_id_for_pick, code);
+        drop(guard);
+        editing_section.set(None);
+    };
+    let handle_picker_close = move |_| editing_section.set(None);
+    rsx! {
+        button {
+            class: cell_class,
+            r#type: "button",
+            tabindex: "0",
+            "data-tooltip": conflict_title,
+            onclick: handle_click,
+            div { class: "wc3-slot-label", {slot_label} }
+            div { class: "wc3-slot-key", {key_label} }
+        }
+        if is_editing {
+            SystemKeyPickerDialog {
+                title: String::from("Pick a hotkey"),
+                current_code: effective.hotkey_code(),
+                conflicts: picker_conflicts,
+                open: true,
+                on_pick: handle_pick,
+                on_close: handle_picker_close,
+            }
+        }
+    }
+}

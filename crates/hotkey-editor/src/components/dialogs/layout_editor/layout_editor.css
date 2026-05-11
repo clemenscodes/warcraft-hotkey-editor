@@ -1,0 +1,4 @@
+@keyframes pulse-editing {
+    from { box-shadow: 0 0 12px rgba(255, 206, 99, 0.45), inset 0 0 12px rgba(255, 206, 99, 0.2); }
+    to   { box-shadow: 0 0 18px rgba(255, 206, 99, 0.85), inset 0 0 14px rgba(255, 206, 99, 0.35); }
+}

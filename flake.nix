@@ -11,68 +11,82 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
+    fenix = {
+      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     crane.url = "github:ipetkov/crane";
+    playwright.url = "github:pietdevries94/playwright-web-flake";
+    moon-tui.url = "github:clemenscodes/moon-tui";
   };
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
-    rust-overlay,
+    fenix,
     crane,
+    playwright,
+    moon-tui,
   }:
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            (import rust-overlay)
-            # `dioxus-cli` 0.7.6 strictly checks the wasm-bindgen-cli
+            # `dioxus-cli` 0.7.9 strictly checks the wasm-bindgen-cli
             # version against the wasm-bindgen library (transitively
-            # pinned to 0.2.114 by `dioxus = =0.7.6`). nixpkgs ships a
-            # newer 0.2.117, so we pin our own at 0.2.114 via the
-            # in-tree builder.
+            # resolved to 0.2.121 by `dioxus = =0.7.9`). nixpkgs ships
+            # 0.2.117, so we pin our own at 0.2.121 via the in-tree builder.
             (final: prev: {
               wasm-bindgen-cli = final.buildWasmBindgenCli rec {
                 src = final.fetchCrate {
                   pname = "wasm-bindgen-cli";
-                  version = "0.2.114";
-                  hash = "sha256-xrCym+rFY6EUQFWyWl6OPA+LtftpUAE5pIaElAIVqW0=";
+                  version = "0.2.121";
+                  hash = "sha256-ZOMgFNOcGkO66Jz/Z83eoIu+DIzo3Z/vq6Z5g6BDY/w=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-Z8+dUXPQq7S+Q7DWNr2Y9d8GMuEdSnq00quUR0wDNPM=";
+                  hash = "sha256-DPdCDPTAPBrbqLUqnCwQu1dePs9lGg85JCJOCIr9qjU=";
                 };
               };
-              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.6 to match
+              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.9 to match
               # the workspace pin. Same `no-downloads` + `disable-telemetry`
               # build features that nixpkgs already configures.
               dioxus-cli = prev.dioxus-cli.overrideAttrs (old: rec {
-                version = "0.7.6";
+                version = "0.7.9";
                 src = final.fetchCrate {
                   pname = "dioxus-cli";
                   inherit version;
-                  hash = "sha256-PKidohK85wv/ZN9WcNS+HTlVGgR5o07gWLshZhzyg5k=";
+                  hash = "sha256-tLMtUlohSJt3okdJh+ARweQNGmzj/vYiNl8iZhDbSAc=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-T6xLlu8XeJPm+ULgpTALTT93X55ExJhDMuhpal2QLhg=";
+                  hash = "sha256-h5wkxHP8ehZLHqcUsro08/dpqSPnPuBbZuUGG8i4nBc=";
                 };
               });
+
+              # Pinned upstream CascLib source. `casclib-rs`'s build script
+              # builds CascLib from source via cmake; pointing it at this
+              # vendored snapshot makes the extractor build reproducible
+              # across machines and keeps it offline-friendly inside Nix.
+              casclib = prev.fetchFromGitHub {
+                owner = "ladislav-zezula";
+                repo = "CascLib";
+                rev = "07ab5f37ad282cc101d5c17793c550a0a6d4637f";
+                hash = "sha256-E1Z4Y1i3KbMuG17M0L3xCLVVcvAGzF5NWWOadAAw3ZQ=";
+              };
             })
           ];
         };
 
-        # Stable Rust with the WASM target the Dioxus build needs.
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-          targets = ["wasm32-unknown-unknown"];
-          extensions = ["rust-src" "rust-analyzer" "clippy" "rustfmt"];
+        # Rust toolchain — version, targets, and components are all
+        # declared in rust-toolchain.toml; fenix reads from there.
+        rustToolchain = fenix.packages.${system}.fromToolchainFile {
+          file = ./rust-toolchain.toml;
+          sha256 = "sha256-gh/xTkxKHL4eiRXzWv8KP7vfjSk61Iq48x47BEDFgfk=";
         };
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
@@ -131,23 +145,39 @@
           };
         });
 
+        # MOON_TOOLCHAIN_FORCE_GLOBALS=true bypasses Moon's version check,
+        # so any nixpkgs-provided nodejs_24/pnpm works. Building from source
+        # took 2h+ in CI; the pre-built binaries from cache.nixos.org are instant.
+        nodejs = pkgs.nodejs_24;
+        pnpm = pkgs.pnpm;
+
         # Tools every moon task needs on $PATH at runtime. Anything
         # `.moon/tasks.yml` or a per-crate `moon.yml` shells out to has
         # to be in here, otherwise `nix run .#dev` and friends crash
         # with "command not found".
-        moonRuntimeInputs = [
+        inherit (playwright.packages.${system}) playwright-test playwright-driver;
+        moonTui = moon-tui.packages.${system}.moon-tui;
+
+        # Packages needed to run moon tasks in CI and dev. moonTui is a
+        # TUI wrapper for the interactive dev experience — not needed in CI.
+        ciRuntimeInputs = [
           rustToolchain
           moonCli
           pkgs.dioxus-cli
           pkgs.wasm-bindgen-cli
           pkgs.tailwindcss_4
-          pkgs.esbuild
           pkgs.binaryen
+          pkgs.typescript
+          nodejs
+          pnpm
+          playwright-test
+          playwright-driver
         ];
+        moonRuntimeInputs = ciRuntimeInputs ++ [moonTui];
 
         ci-cache-tools = pkgs.buildEnv {
           name = "warcraft-hotkey-editor-ci-cache-tools";
-          paths = moonRuntimeInputs;
+          paths = ciRuntimeInputs;
         };
 
         # Wraps `moon run :<task>` (workspace-default project, which is
@@ -174,10 +204,11 @@
             ./crates/hotkey-editor/Dioxus.toml
             ./crates/hotkey-editor/tailwind.input.css
             ./crates/hotkey-editor/styles
-            ./crates/hotkey-editor/scripts
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
             ./crates/hotkey-editor/templates
+            ./crates/warcraft-keybinds/templates
+            (pkgs.lib.fileset.fileFilter (file: file.hasExt "css") ./crates/hotkey-editor/src)
           ];
         };
 
@@ -195,7 +226,6 @@
             dioxus-cli
             wasm-bindgen-cli
             tailwindcss_4
-            esbuild
             binaryen
           ];
         };
@@ -215,10 +245,7 @@
             buildPhaseCargoCommand = ''
               cd crates/hotkey-editor
               tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
-              esbuild scripts/keyboard-navigation.ts \
-                --bundle --format=esm --target=es2022 --minify \
-                --outfile=assets/keyboard-navigation.js
-              dx build --release --platform web --offline
+              dx build --release --platform web --offline --package hotkey-editor
             '';
             installPhaseCommand = ''
               mkdir -p $out
@@ -258,10 +285,47 @@
           dev = {
             type = "app";
             program = "${runMoonTask "dev"}/bin/moon-dev";
+            meta = {
+              description = "Start the Tailwind watcher and dx serve";
+              mainProgram = "moon-dev";
+            };
           };
           bundle = {
             type = "app";
             program = "${runMoonTask "bundle"}/bin/moon-bundle";
+            meta = {
+              description = "Build a production WASM bundle via dx";
+              mainProgram = "moon-bundle";
+            };
+          };
+          # `nix run .#extract -- --casc /path/to/Warcraft\ III/Data`
+          # rebuilds crates/warcraft-database/src/db.rs from CASC. Native
+          # only — needs cmake + zlib + the CascLib source pinned in the
+          # overlay above. The wrapper delegates to `nix develop` so
+          # build-time linker flags (zlib, libstdc++) are wired up the
+          # same way they are inside the interactive shell.
+          extract = let
+            extractApp = pkgs.writeShellApplication {
+              name = "warcraft-extract";
+              runtimeInputs = [pkgs.nix];
+              text = ''
+                # Re-enter the project's dev shell so build-time linker
+                # flags (zlib, libstdc++) are wired up exactly the way
+                # they are inside `nix develop`. Resolves the flake from
+                # the user's current working directory, so this works
+                # whether invoked as `nix run .#extract` from the repo
+                # root or `nix run /path/to/repo#extract` from anywhere.
+                exec nix develop . --command \
+                  cargo run -p warcraft-extractor -- "$@"
+              '';
+            };
+          in {
+            type = "app";
+            program = "${extractApp}/bin/warcraft-extract";
+            meta = {
+              description = "Regenerate db.rs from a Warcraft III CASC archive";
+              mainProgram = "warcraft-extract";
+            };
           };
         };
 
@@ -275,21 +339,78 @@
               taplo
               alejandra
               nil
+              # Native build deps for `warcraft-extractor`: casclib-rs's
+              # build.rs builds CascLib from source via cmake and links
+              # against zlib. None of this is in the wasm graph, so the
+              # commonArgs / wasm bundle stay untouched.
+              cmake
+              pkg-config
+              zlib
             ]);
+
+          # `casclib-rs`' build script reads CASCLIB_DIR to locate the
+          # CascLib source tree it should compile. Pointing it at the
+          # pinned overlay attribute (added above) makes the extractor
+          # build reproducible across machines without any network
+          # fetches at build time.
+          CASCLIB_DIR = pkgs.casclib;
+
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+          PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+          MOON_TOOLCHAIN_FORCE_GLOBALS = "true";
+
+          # Runtime linking for the extractor binary: zlib is dlopened
+          # by the freshly-built CascLib, gcc.cc.lib provides libstdc++
+          # for the C++ portion of CascLib.
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
+            gcc.cc.lib
+            zlib
+          ]);
+
           shellHook = ''
+            export NODE_PATH="${playwright-test}/lib/node_modules''${NODE_PATH:+":$NODE_PATH"}"
             echo ""
             echo "  Warcraft III Hotkey Editor — dev shell"
             echo ""
-            echo "  Tasks (moon-driven):"
+            echo "  Web app (wasm):"
             echo "    moon run :dev        — Tailwind watcher + dx serve"
             echo "    moon run :bundle     — production build via dx"
             echo "    moon run :ci         — fmt + lint + test + build"
             echo ""
-            echo "  Or skip the shell entirely:"
             echo "    nix run .#dev        — same as moon run :dev"
             echo "    nix run .#bundle     — same as moon run :bundle"
-            echo "    nix build .#warcraft-hotkey-editor   — fully reproducible"
+            echo "    nix build .#warcraft-hotkey-editor   — reproducible bundle"
             echo ""
+            echo "  Native data extraction (regenerates db.rs):"
+            echo "    cargo run -p warcraft-extractor -- --casc \"\$W3_CASC\""
+            echo "    cargo test -p warcraft-extractor"
+            echo "    cargo run -p warcraft-extractor --example inspect_slk -- \"\$W3_CASC\" units/abilitydata.slk"
+            echo ""
+            echo "  Set W3_CASC to your Warcraft III install's Data/ dir."
+            echo "  Typical Wine layout (auto-detected if present):"
+            echo "    \$WINEPREFIX/drive_c/Program Files (x86)/Warcraft III/Data"
+            echo ""
+
+            # Convenience: if W3_CASC is unset and a likely Wine install
+            # is on disk, point at it. Mirrors vk-overlay's discovery
+            # behavior without hardcoding a specific WINEPREFIX layout.
+            if [ -z "''${W3_CASC:-}" ]; then
+              for candidate in \
+                "''${WINEPREFIX:-$HOME/.wine}/drive_c/Program Files (x86)/Warcraft III/Data" \
+                "$HOME/Games/W3Champions/drive_c/Program Files (x86)/Warcraft III/Data" \
+                "$HOME/.wine/drive_c/Program Files (x86)/Warcraft III/Data" \
+                "$HOME/Library/Application Support/Blizzard/Warcraft III/Data"; do
+                if [ -d "$candidate" ]; then
+                  export W3_CASC="$candidate"
+                  echo "  W3_CASC auto-detected: $W3_CASC"
+                  echo ""
+                  break
+                fi
+              done
+            else
+              echo "  W3_CASC=$W3_CASC"
+              echo ""
+            fi
           '';
         };
       }

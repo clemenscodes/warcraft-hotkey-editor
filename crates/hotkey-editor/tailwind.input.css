@@ -1,25 +1,69 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-size: clamp(8.4px, 0.7vw, 12.6px);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: #e0d8c8;
+  background-color: #050a1a;
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+body {
+  background-image: radial-gradient(ellipse 90% 60% at 50% 0%, #18365b 0%, transparent 60%), linear-gradient(180deg, #0a1a35 0%, #050a1a 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+
+:root {
+  --sidebar-column-width: 27rem;
+}
+
+@media (min-width: 1800px) {
+  :root {
+    --sidebar-column-width: 34rem;
+  }
+}
+
+@media (min-width: 2400px) {
+  :root {
+    --sidebar-column-width: 46rem;
+  }
+}
+
+@media (min-width: 3200px) {
+  :root {
+    --sidebar-column-width: 62rem;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 2000px) {
+  html,
+  body {
+    font-size: clamp(8.4px, 0.44vw, 8.8px);
+  }
+}
+
+:where(button) {
+  cursor: pointer;
+}
+
 @import "./styles/primitives.css" layer(components);
-@import "./styles/preflight.css" layer(components);
 @import "./styles/app-root.css" layer(components);
-@import "./styles/app-header.css" layer(components);
-@import "./styles/mode-tabs.css" layer(components);
-@import "./styles/race-tabs.css" layer(components);
-@import "./styles/unit-list.css" layer(components);
-@import "./styles/unit-detail.css" layer(components);
-@import "./styles/stats-panel.css" layer(components);
-@import "./styles/matchups.css" layer(components);
-@import "./styles/command-grid.css" layer(components);
-@import "./styles/layout-editor.css" layer(components);
-@import "./styles/override-panel.css" layer(components);
-@import "./styles/drag-follower.css" layer(components);
-@import "./styles/dialog-shared.css" layer(components);
-@import "./styles/key-picker.css" layer(components);
-@import "./styles/system-hotkeys.css" layer(components);
-@import "./styles/templates.css" layer(components);
-@import "./styles/preview.css" layer(components);
-@import "./styles/toasts.css" layer(components);
+@import "./src/components/unit_list/unit_list.css";
+@import "./src/components/unit_detail/unit_detail.css";
+@import "./src/components/command_grid/command_grid.css";
+@import "./src/components/dialogs/dialogs.css" layer(components);
+@import "./src/components/tile_override/tile_override.css";
+@import "./src/components/system_hotkeys/system_hotkeys.css";
 @import "./styles/mobile-foundation.css" layer(mobile);
 
 @source "./src/**/*.rs";
