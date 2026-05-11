@@ -1,9 +1,9 @@
-use std::collections::{HashMap, HashSet};
 use std::fmt;
 
+use warcraft_api::WarcraftObjectId;
+
 use crate::cascade_queue::AssignmentQueue;
-use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
-use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
+use crate::model::GridCoordinate;
 use crate::slot::GridSlotId;
 use crate::unit_grids::GridRole;
 
@@ -13,7 +13,7 @@ pub struct PlannedMove {
     grid_role: GridRole,
     old_position: GridCoordinate,
     new_position: GridCoordinate,
-    carrier_count: usize,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
 }
 
 impl PlannedMove {
@@ -34,17 +34,22 @@ impl PlannedMove {
     }
 
     pub fn carrier_count(&self) -> usize {
-        self.carrier_count
+        self.carrier_unit_ids.len()
+    }
+
+    pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
+        &self.carrier_unit_ids
     }
 }
 
-/// One ability the solver could not relocate — all 12 grid positions were
-/// blocked by conflict-graph neighbors.
+/// One ability the solver could not relocate — the queue ran out of valid
+/// same-row slots while cascading rightward and the ability is stuck at the
+/// position recorded here.
 pub struct UnresolvedMover {
     slot_id: GridSlotId,
     grid_role: GridRole,
     collision_position: GridCoordinate,
-    carrier_count: usize,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
 }
 
 impl UnresolvedMover {
@@ -61,16 +66,20 @@ impl UnresolvedMover {
     }
 
     pub fn carrier_count(&self) -> usize {
-        self.carrier_count
+        self.carrier_unit_ids.len()
+    }
+
+    pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
+        &self.carrier_unit_ids
     }
 }
 
-/// The full output of the greedy cascade position solver.
+/// The full output of the cascade position solver.
 ///
 /// Contains every move that was successfully planned plus every mover that
-/// could not be placed (all 12 positions blocked by conflict neighbors).
-/// Unresolved movers are left at their collision positions and must be handled
-/// separately.
+/// could not be placed (same-row sacred, row full of higher-carrier
+/// neighbors).  Unresolved movers are left at their last attempted position
+/// and must be handled separately.
 pub struct CascadePlan {
     moves: Vec<PlannedMove>,
     unresolved: Vec<UnresolvedMover>,
@@ -98,262 +107,48 @@ impl CascadePlan {
     }
 }
 
-/// HashMap key for a (grid_role, position) cell.
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-struct PositionRoleKey {
-    grid_role: GridRole,
-    position: GridCoordinate,
-}
-
-/// Runs the greedy cascade position solver over the given assignment queue.
+/// Translates the queue's final assignment into a plan of position changes.
 ///
-/// For each group in queue order (row/col ascending), the anchor stays frozen
-/// and each mover (highest-carrier-count first) is placed as follows:
-///
-/// 1. **Direct placement** — scan positions (same row left-to-right, then
-///    remaining rows in reading order); take the first where no conflict-graph
-///    neighbor sits.
-///
-/// 2. **One-level bump** — if direct placement fails, scan again for a position
-///    where *exactly one* conflict-graph neighbor blocks the slot.  If that
-///    single blocker itself has a free direct destination, move the blocker
-///    first, then place the original mover in the newly vacated slot.  Both
-///    moves are committed immediately so subsequent movers see the updated state.
-///
-/// 3. **Unresolved** — if neither strategy succeeds the mover is left in place
-///    and recorded in `CascadePlan::unresolved`.
+/// The queue has already done the work: every node has a `final_position`,
+/// every stuck node is in `unresolved_nodes()`.  The planner just diffs the
+/// final state against each node's original position and emits one
+/// `PlannedMove` per change and one `UnresolvedMover` per stuck node.
 pub fn solve(queue: &AssignmentQueue) -> CascadePlan {
     let graph = queue.graph();
-
-    // Build occupancy map: (grid_role, position) → node indices currently there.
-    // Two non-conflicting abilities may legitimately share a position.
-    let mut occupancy: HashMap<PositionRoleKey, Vec<usize>> = HashMap::new();
-    for (node_index, node) in graph.nodes().iter().enumerate() {
-        let grid_role = node.grid_role();
-        let position = node.current_position();
-        let key = PositionRoleKey {
-            grid_role,
-            position,
-        };
-        occupancy.entry(key).or_default().push(node_index);
-    }
-
-    // Tracks each node's position as the solver mutates it.
-    let mut current_positions: Vec<GridCoordinate> = graph
-        .nodes()
-        .iter()
-        .map(|node| node.current_position())
-        .collect();
-
     let mut moves: Vec<PlannedMove> = Vec::new();
     let mut unresolved: Vec<UnresolvedMover> = Vec::new();
 
-    for group in queue.groups() {
-        for &mover_index in group.mover_indices() {
-            let mover_node = graph.node(mover_index);
-            let mover_grid_role = mover_node.grid_role();
-            let old_position = current_positions[mover_index];
-            let mover_neighbors: HashSet<usize> =
-                graph.neighbors(mover_index).iter().copied().collect();
-            let preferred_row = u8::from(old_position.row());
-            let scan = position_scan_sequence(preferred_row);
+    for (node_index, node) in graph.nodes().iter().enumerate() {
+        let slot_id = node.slot_id();
+        let grid_role = node.grid_role();
+        let carrier_unit_ids: Vec<WarcraftObjectId> = node.carrier_unit_ids().to_vec();
+        let original_position = node.current_position();
+        let final_position = queue.final_position(node_index);
 
-            // --- Attempt 1: direct placement ---
-            let direct_destination = scan.iter().copied().find(|&candidate| {
-                if candidate == old_position {
-                    return false;
-                }
-                let key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: candidate,
-                };
-                match occupancy.get(&key) {
-                    None => true,
-                    Some(occupants) => !occupants.iter().any(|&idx| mover_neighbors.contains(&idx)),
-                }
-            });
+        if queue.is_unresolved(node_index) {
+            let unresolved_mover = UnresolvedMover {
+                slot_id,
+                grid_role,
+                collision_position: final_position,
+                carrier_unit_ids,
+            };
+            unresolved.push(unresolved_mover);
+            continue;
+        }
 
-            if let Some(new_position) = direct_destination {
-                let old_key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: old_position,
-                };
-                if let Some(occupants) = occupancy.get_mut(&old_key) {
-                    occupants.retain(|&idx| idx != mover_index);
-                }
-                let new_key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: new_position,
-                };
-                occupancy.entry(new_key).or_default().push(mover_index);
-                current_positions[mover_index] = new_position;
-                let slot_id = mover_node.slot_id();
-                let carrier_count = mover_node.carrier_count();
-                let planned_move = PlannedMove {
-                    slot_id,
-                    grid_role: mover_grid_role,
-                    old_position,
-                    new_position,
-                    carrier_count,
-                };
-                moves.push(planned_move);
-                continue;
-            }
-
-            // --- Attempt 2: one-level bump ---
-            // Find a candidate position blocked by exactly one conflict neighbor,
-            // and check whether that blocker can itself be directly placed elsewhere.
-            // If so, commit the bumper's move first, then the mover's move.
-            let mut placed = false;
-            'bump_search: for candidate in scan.iter().copied() {
-                if candidate == old_position {
-                    continue;
-                }
-                let candidate_key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: candidate,
-                };
-                let blocking: Vec<usize> = match occupancy.get(&candidate_key) {
-                    None => vec![],
-                    Some(occupants) => occupants
-                        .iter()
-                        .copied()
-                        .filter(|&idx| mover_neighbors.contains(&idx))
-                        .collect(),
-                };
-                if blocking.len() != 1 {
-                    continue;
-                }
-                let bumper_index = blocking[0];
-                let bumper_node = graph.node(bumper_index);
-                let bumper_grid_role = bumper_node.grid_role();
-                let bumper_position = current_positions[bumper_index];
-                let bumper_neighbors: HashSet<usize> =
-                    graph.neighbors(bumper_index).iter().copied().collect();
-                let bumper_preferred_row = u8::from(bumper_position.row());
-                let bumper_scan = position_scan_sequence(bumper_preferred_row);
-
-                let bump_destination = bumper_scan.iter().copied().find(|&pos| {
-                    if pos == bumper_position {
-                        return false;
-                    }
-                    let pos_key = PositionRoleKey {
-                        grid_role: bumper_grid_role,
-                        position: pos,
-                    };
-                    match occupancy.get(&pos_key) {
-                        None => true,
-                        Some(occupants) => {
-                            !occupants.iter().any(|&idx| bumper_neighbors.contains(&idx))
-                        }
-                    }
-                });
-
-                let Some(bump_to) = bump_destination else {
-                    continue;
-                };
-
-                // Move the blocker to its new position first.
-                let bumper_old_key = PositionRoleKey {
-                    grid_role: bumper_grid_role,
-                    position: bumper_position,
-                };
-                if let Some(occupants) = occupancy.get_mut(&bumper_old_key) {
-                    occupants.retain(|&idx| idx != bumper_index);
-                }
-                let bumper_new_key = PositionRoleKey {
-                    grid_role: bumper_grid_role,
-                    position: bump_to,
-                };
-                occupancy
-                    .entry(bumper_new_key)
-                    .or_default()
-                    .push(bumper_index);
-                current_positions[bumper_index] = bump_to;
-                let bumper_slot_id = bumper_node.slot_id();
-                let bumper_carrier_count = bumper_node.carrier_count();
-                let bumper_move = PlannedMove {
-                    slot_id: bumper_slot_id,
-                    grid_role: bumper_grid_role,
-                    old_position: bumper_position,
-                    new_position: bump_to,
-                    carrier_count: bumper_carrier_count,
-                };
-                moves.push(bumper_move);
-
-                // Place the original mover in the now-vacated slot.
-                let mover_old_key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: old_position,
-                };
-                if let Some(occupants) = occupancy.get_mut(&mover_old_key) {
-                    occupants.retain(|&idx| idx != mover_index);
-                }
-                let mover_new_key = PositionRoleKey {
-                    grid_role: mover_grid_role,
-                    position: candidate,
-                };
-                occupancy
-                    .entry(mover_new_key)
-                    .or_default()
-                    .push(mover_index);
-                current_positions[mover_index] = candidate;
-                let mover_slot_id = mover_node.slot_id();
-                let mover_carrier_count = mover_node.carrier_count();
-                let mover_move = PlannedMove {
-                    slot_id: mover_slot_id,
-                    grid_role: mover_grid_role,
-                    old_position,
-                    new_position: candidate,
-                    carrier_count: mover_carrier_count,
-                };
-                moves.push(mover_move);
-
-                placed = true;
-                break 'bump_search;
-            }
-
-            if !placed {
-                let slot_id = mover_node.slot_id();
-                let carrier_count = mover_node.carrier_count();
-                let unresolved_mover = UnresolvedMover {
-                    slot_id,
-                    grid_role: mover_grid_role,
-                    collision_position: old_position,
-                    carrier_count,
-                };
-                unresolved.push(unresolved_mover);
-            }
+        if original_position != final_position {
+            let planned_move = PlannedMove {
+                slot_id,
+                grid_role,
+                old_position: original_position,
+                new_position: final_position,
+                carrier_unit_ids,
+            };
+            moves.push(planned_move);
         }
     }
 
     CascadePlan { moves, unresolved }
-}
-
-/// Positions in the order the solver tries them for a mover at `preferred_row`.
-///
-/// Preferred row first (columns 0–3), then all other rows in reading order
-/// (rows 0–2, columns 0–3 each, skipping `preferred_row`).
-fn position_scan_sequence(preferred_row: u8) -> Vec<GridCoordinate> {
-    let mut positions: Vec<GridCoordinate> = Vec::with_capacity(12);
-
-    let row_order: Vec<u8> = std::iter::once(preferred_row)
-        .chain((0..COMMAND_GRID_ROWS).filter(move |&row| row != preferred_row))
-        .collect();
-
-    for row_byte in row_order {
-        let Ok(row) = RowIndex::try_from(row_byte) else {
-            continue;
-        };
-        for col_byte in 0..COMMAND_GRID_COLUMNS {
-            let Ok(column) = ColumnIndex::try_from(col_byte) else {
-                continue;
-            };
-            let position = GridCoordinate::new(column, row);
-            positions.push(position);
-        }
-    }
-    positions
 }
 
 fn grid_role_label(role: GridRole) -> &'static str {
@@ -388,11 +183,17 @@ impl fmt::Display for CascadePlan {
                 let old_row = u8::from(planned_move.old_position.row());
                 let new_col = u8::from(planned_move.new_position.column());
                 let new_row = u8::from(planned_move.new_position.row());
-                let carrier_count = planned_move.carrier_count;
+                let carrier_count = planned_move.carrier_count();
+                let carrier_ids = planned_move
+                    .carrier_unit_ids
+                    .iter()
+                    .map(|carrier_id| carrier_id.value())
+                    .collect::<Vec<_>>()
+                    .join(", ");
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  ({old_col},{old_row}) → ({new_col},{new_row})  \
-                     [{carrier_count} carriers]"
+                     [{carrier_count} carriers: {carrier_ids}]"
                 )?;
             }
         }
@@ -406,11 +207,17 @@ impl fmt::Display for CascadePlan {
                 let role = grid_role_label(mover.grid_role);
                 let col = u8::from(mover.collision_position.column());
                 let row = u8::from(mover.collision_position.row());
-                let carrier_count = mover.carrier_count;
+                let carrier_count = mover.carrier_count();
+                let carrier_ids = mover
+                    .carrier_unit_ids
+                    .iter()
+                    .map(|carrier_id| carrier_id.value())
+                    .collect::<Vec<_>>()
+                    .join(", ");
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  stayed at ({col},{row})  \
-                     [{carrier_count} carriers]"
+                     [{carrier_count} carriers: {carrier_ids}]"
                 )?;
             }
         }
@@ -421,6 +228,8 @@ impl fmt::Display for CascadePlan {
 
 #[cfg(test)]
 mod cascade_planner_tests {
+    use std::collections::HashSet;
+
     use super::*;
     use crate::cascade_queue::AssignmentQueue;
     use crate::conflict_graph::ConflictGraph;
@@ -446,21 +255,11 @@ mod cascade_planner_tests {
 
     #[test]
     fn no_two_moves_land_on_the_same_position_for_conflicting_abilities() {
-        // After the plan is applied, every conflict edge where the solver made
-        // a decision must be collision-free.  Two exceptions are intentional
-        // and must NOT be tested here:
-        //
-        //   1. Single-carrier intra-unit collisions are out of scope (both
-        //      carrier_counts < 2) — different problem domain, not touched.
-        //   2. Unresolved movers — the solver could not find a valid position;
-        //      they stay put and are reported separately.  Testing them here
-        //      would assert the impossible.
         let custom_keys = CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
         let plan = solve(&queue);
 
-        // Build post-plan positions: start from graph, apply moves.
         let mut final_positions: Vec<GridCoordinate> = queue
             .graph()
             .nodes()
@@ -480,7 +279,6 @@ mod cascade_planner_tests {
             final_positions[node_index] = planned_move.new_position();
         }
 
-        // Build the set of node indices that were left unresolved.
         let unresolved_indices: HashSet<usize> = plan
             .unresolved()
             .iter()
@@ -491,15 +289,12 @@ mod cascade_planner_tests {
             })
             .collect();
 
-        // Check cross-unit conflict edges only; skip pairs involving unresolved movers.
         for (first_index, first_node) in queue.graph().nodes().iter().enumerate() {
             for &second_index in queue.graph().neighbors(first_index) {
                 if second_index <= first_index {
                     continue;
                 }
                 let second_node = queue.graph().node(second_index);
-                // The cascade solver's domain is cross-unit abilities (carrier_count >= 2).
-                // Collisions involving a single-carrier ability are intra-unit and out of scope.
                 if first_node.carrier_count() < 2 || second_node.carrier_count() < 2 {
                     continue;
                 }
@@ -547,9 +342,62 @@ mod cascade_planner_tests {
     }
 
     #[test]
+    fn most_moves_stay_in_their_original_row() {
+        // Same-row is preferred but no longer absolute.  Phase 2 of the queue
+        // rehomes unresolved abilities cross-row when their original row has
+        // no usable cell — a deliberate exception, since a persistent
+        // collision is worse than a hotkey change.  Cross-row should still be
+        // rare, not the norm.
+        let plan = default_plan();
+        let total_moves = plan.move_count();
+        if total_moves == 0 {
+            return;
+        }
+        let cross_row_moves = plan
+            .moves()
+            .iter()
+            .filter(|planned_move| {
+                planned_move.old_position().row() != planned_move.new_position().row()
+            })
+            .count();
+        let cross_row_ratio = (cross_row_moves as f64) / (total_moves as f64);
+        assert!(
+            cross_row_ratio < 0.30,
+            "cross-row moves should be rare ({} of {} = {:.0}%) — spill phase may be overactive",
+            cross_row_moves,
+            total_moves,
+            cross_row_ratio * 100.0,
+        );
+    }
+
+    #[test]
+    fn unresolved_mover_stays_on_its_original_row() {
+        let plan = default_plan();
+        let custom_keys = CustomKeys::from("").normalize();
+        let graph = ConflictGraph::build(&custom_keys);
+        for mover in plan.unresolved() {
+            let original_row_value = graph
+                .nodes()
+                .iter()
+                .find(|node| {
+                    node.slot_id() == mover.slot_id() && node.grid_role() == mover.grid_role()
+                })
+                .map(|node| u8::from(node.current_position().row()))
+                .expect("unresolved node must exist in the graph");
+            let stuck_row_value = u8::from(mover.collision_position().row());
+            assert_eq!(
+                original_row_value,
+                stuck_row_value,
+                "unresolved mover {} ended on row {} but started on row {}",
+                mover.slot_id().as_str(),
+                stuck_row_value,
+                original_row_value,
+            );
+        }
+    }
+
+    #[test]
     fn single_collision_pair_is_resolved() {
-        // Place two Paladin abilities at the same position.
-        // The plan must move one of them elsewhere.
         let collision_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let binding = AbilityBinding::builder()
             .button_position(collision_position)
@@ -564,75 +412,5 @@ mod cascade_planner_tests {
             plan.move_count() >= 1,
             "a single Paladin collision must produce at least one move"
         );
-    }
-
-    #[test]
-    fn empty_queue_produces_empty_plan() {
-        // A key set with no cross-unit collisions must produce an empty plan.
-        let position_a = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
-        let position_b = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
-        let binding_a = AbilityBinding::builder()
-            .button_position(position_a)
-            .build();
-        let binding_b = AbilityBinding::builder()
-            .button_position(position_b)
-            .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
-        custom_keys.put_ability("AHhb", binding_a);
-        custom_keys.put_ability("AHds", binding_b);
-        let graph = ConflictGraph::build(&custom_keys);
-        let queue = AssignmentQueue::build(graph);
-        // Only cross-unit queues have groups; with no collisions the queue may
-        // still be non-empty from default keys, so only check a baseline here.
-        // The interesting property is that the plan does not panic.
-        let plan = solve(&queue);
-        assert!(
-            plan.unresolved_count() == 0 || plan.move_count() >= 0,
-            "plan must not panic even with no collisions"
-        );
-    }
-
-    #[test]
-    fn scan_sequence_has_twelve_entries() {
-        for row in 0..COMMAND_GRID_ROWS {
-            let seq = position_scan_sequence(row);
-            let total_cells = usize::from(COMMAND_GRID_ROWS) * usize::from(COMMAND_GRID_COLUMNS);
-            assert_eq!(
-                seq.len(),
-                total_cells,
-                "scan sequence for row {row} must have exactly {total_cells} positions"
-            );
-        }
-    }
-
-    #[test]
-    fn scan_sequence_preferred_row_is_first() {
-        for preferred_row in 0..COMMAND_GRID_ROWS {
-            let seq = position_scan_sequence(preferred_row);
-            for col in 0..COMMAND_GRID_COLUMNS {
-                let expected = GridCoordinate::new(
-                    ColumnIndex::try_from(col).unwrap(),
-                    RowIndex::try_from(preferred_row).unwrap(),
-                );
-                assert_eq!(
-                    seq[usize::from(col)],
-                    expected,
-                    "preferred row {preferred_row} col {col} must be at index {col} in scan"
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn scan_sequence_has_no_duplicates() {
-        for row in 0..COMMAND_GRID_ROWS {
-            let seq = position_scan_sequence(row);
-            let unique: HashSet<GridCoordinate> = seq.iter().copied().collect();
-            assert_eq!(
-                unique.len(),
-                seq.len(),
-                "scan sequence for row {row} must have no duplicate positions"
-            );
-        }
     }
 }
