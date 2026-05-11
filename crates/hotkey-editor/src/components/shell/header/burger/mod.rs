@@ -1,10 +1,14 @@
 use dioxus::prelude::*;
+use dioxus_primitives::toast::{ToastOptions, use_toast};
+use gloo_timers::future::TimeoutFuture;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
+use crate::components::dialogs::resolve_info_dialog::ResolveInfoDialog;
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use crate::components::shared::icons::{
-    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_TEMPLATES, ICON_UPLOAD,
+    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_RESOLVE, ICON_TEMPLATES,
+    ICON_UPLOAD,
 };
 use crate::services::files::download::BlobDownload;
 
@@ -52,14 +56,17 @@ pub(crate) struct BurgerMenuProps {
 
 #[component]
 pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
-    let loaded_keys = props.loaded_keys;
+    let mut loaded_keys = props.loaded_keys;
     let mut system_hotkeys_open = props.system_hotkeys_open;
     let mut layout_dialog_open = props.layout_dialog_open;
     let mut templates_dialog_open = props.templates_dialog_open;
     let mut burger_open = use_signal::<bool>(|| false);
     let mut burger_upload_info_open = use_signal::<bool>(|| false);
     let mut burger_download_info_open = use_signal::<bool>(|| false);
+    let mut burger_resolve_open = use_signal::<bool>(|| false);
+    let mut burger_resolve_running = use_signal::<bool>(|| false);
     let mut preview_open = props.preview_open;
+    let toast_api = use_toast();
     let has_loaded_file = loaded_keys.read().is_some();
     let preview_active = preview_open();
     let toggle_burger = move |_| {
@@ -105,6 +112,49 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
             file.normalize().to_string()
         };
         BlobDownload::trigger("CustomKeys.txt", &serialized);
+    };
+    let open_resolve = move |_| {
+        if *burger_resolve_running.read() {
+            return;
+        }
+        burger_resolve_open.set(true);
+        burger_open.set(false);
+    };
+    let handle_resolve_apply = move |_| {
+        if *burger_resolve_running.read() {
+            return;
+        }
+        let working_copy: CustomKeys = {
+            let read_guard = loaded_keys.read();
+            let Some(file) = read_guard.as_ref() else {
+                return;
+            };
+            file.clone()
+        };
+        burger_resolve_running.set(true);
+        spawn(async move {
+            // Yield once so the dialog can paint the spinner before the
+            // CPU-bound cascade blocks the main thread.
+            TimeoutFuture::new(0).await;
+            let mut working_copy = working_copy;
+            let plan = working_copy.resolve_conflicts();
+            let move_count = plan.move_count();
+            let unresolved_count = plan.unresolved_count();
+            let normalized = working_copy.normalize();
+            loaded_keys.set(Some(normalized));
+            burger_resolve_running.set(false);
+            burger_resolve_open.set(false);
+            let summary = if unresolved_count == 0 {
+                format!("Moved {move_count} ability slot(s). No remaining conflicts.")
+            } else {
+                format!(
+                    "Moved {move_count} ability slot(s). {unresolved_count} could not be placed."
+                )
+            };
+            let title = String::from("Cascade applied");
+            let toast_options = ToastOptions::new().description(summary);
+            toast_api.success(title, toast_options);
+        });
     };
 
     rsx! {
@@ -278,6 +328,20 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
                                 class: BURGER_MENU_ITEM_CLASS,
                                 r#type: "button",
                                 role: "menuitem",
+                                aria_haspopup: "dialog",
+                                aria_expanded: "{burger_resolve_open()}",
+                                onclick: open_resolve,
+                                span {
+                                    class: BURGER_MENU_ITEM_ICON_CLASS,
+                                    aria_hidden: "true",
+                                    dangerous_inner_html: ICON_RESOLVE,
+                                }
+                                span { class: BURGER_MENU_ITEM_LABEL_CLASS, "Resolve Conflicts" }
+                            }
+                            button {
+                                class: BURGER_MENU_ITEM_CLASS,
+                                r#type: "button",
+                                role: "menuitem",
                                 onclick: open_download,
                                 span {
                                     class: BURGER_MENU_ITEM_ICON_CLASS,
@@ -296,6 +360,11 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
             DownloadInfoDialog {
                 open: burger_download_info_open,
                 on_confirm: handle_download_confirm,
+            }
+            ResolveInfoDialog {
+                open: burger_resolve_open,
+                is_running: burger_resolve_running,
+                on_apply: handle_resolve_apply,
             }
         }
     }

@@ -173,7 +173,6 @@ body {
         content: "";
         position: absolute;
         inset: 0;
-        background-image: var(--race-banner, none);
         background-size: cover;
         background-position: center 30%;
         background-repeat: no-repeat;
