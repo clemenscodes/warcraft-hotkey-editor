@@ -5,7 +5,7 @@ use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectM
 use warcraft_database::{BuildingTraits, CommandCatalog};
 
 use crate::GridCoordinate;
-use crate::slot::{CommandCard, GridSlotId};
+use crate::identity::slot::{CommandCard, GridSlotId};
 
 const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Apit"), WarcraftObjectId::new("Aall")];

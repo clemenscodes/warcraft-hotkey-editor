@@ -4,11 +4,11 @@ use std::fmt;
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
-use crate::unit_slots::UnitCommandSlots;
+use crate::unit::slots::UnitCommandSlots;
 
 use crate::custom_keys::CustomKeys;
+use crate::identity::slot::GridSlotId;
 use crate::model::{AbilityBinding, AbilityBindingBuilder, GridCoordinate, Hotkey};
-use crate::slot::GridSlotId;
 
 pub struct UnitKeyedCustomKeys {
     groups: Vec<UnitAbilityGroup>,

@@ -7,9 +7,9 @@ use warcraft_api::{
 };
 use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
-use crate::ability_id::AbilityId;
 use crate::custom_keys::CustomKeys;
-use crate::hotkey_token::HotkeyToken;
+use crate::identity::ability_id::AbilityId;
+use crate::identity::hotkey_token::HotkeyToken;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Hotkey {
@@ -970,7 +970,7 @@ mod model_tests {
 
     #[test]
     fn hotkey_try_from_multi_level_comma_separated() {
-        use crate::hotkey_token::HotkeyToken;
+        use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::try_from("Q,W,E").unwrap();
         let expected = Hotkey::MultiLevel {
             tokens: [
@@ -1003,7 +1003,7 @@ mod model_tests {
 
     #[test]
     fn hotkey_display_multi_level() {
-        use crate::hotkey_token::HotkeyToken;
+        use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::MultiLevel {
             tokens: [
                 Some(HotkeyToken::Letter { character: 'Q' }),
@@ -1405,7 +1405,7 @@ mod builder_tests {
 
     #[test]
     fn hotkey_multi_level_parses_from_comma_separated() {
-        use crate::hotkey_token::HotkeyToken;
+        use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::try_from("Q,Q,Q").unwrap();
         let expected = Hotkey::MultiLevel {
             tokens: [
@@ -1420,7 +1420,7 @@ mod builder_tests {
 
     #[test]
     fn hotkey_multi_level_displays_with_commas() {
-        use crate::hotkey_token::HotkeyToken;
+        use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::MultiLevel {
             tokens: [
                 Some(HotkeyToken::Letter { character: 'Q' }),

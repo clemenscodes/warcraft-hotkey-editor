@@ -4,9 +4,9 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::custom_keys::CustomKeys;
-use crate::grid_layout::GridLayout;
-use crate::unit_grids::{HotkeyCollisionCard, PositionCollisionCard, UnitGrids};
-use crate::unit_slots::UnitCommandSlots;
+use crate::grid::layout::GridLayout;
+use crate::unit::grids::{HotkeyCollisionCard, PositionCollisionCard, UnitGrids};
+use crate::unit::slots::UnitCommandSlots;
 
 #[derive(Debug)]
 pub struct UnitCollisionReport {
@@ -181,9 +181,9 @@ impl fmt::Display for UnitCollisionReport {
 #[cfg(test)]
 mod unit_collision_report_tests {
     use super::*;
+    use crate::identity::slot::GridSlotId;
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, Hotkey, RowIndex};
-    use crate::slot::GridSlotId;
-    use crate::unit_grids::{GridRole, HotkeyCollisionCardBuilder, PositionCollisionCardBuilder};
+    use crate::unit::grids::{GridRole, HotkeyCollisionCardBuilder, PositionCollisionCardBuilder};
     use warcraft_api::WarcraftObjectId;
 
     struct UnitCollisionReportBuilder {
@@ -391,7 +391,7 @@ mod unit_collision_report_tests {
     }
 
     fn run_default_collision_check() {
-        let template_text = include_str!("../../hotkey-editor/templates/CustomKeys.txt");
+        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt");
         let custom_keys = CustomKeys::from(template_text).normalize();
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);

@@ -5,10 +5,10 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::custom_keys::CustomKeys;
+use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
-use crate::slot::GridSlotId;
-use crate::unit_grids::{GridRole, UnitGrids};
-use crate::unit_slots::UnitCommandSlots;
+use crate::unit::grids::{GridRole, UnitGrids};
+use crate::unit::slots::UnitCommandSlots;
 
 /// Canonical identifier for one ability on one command card page type.
 ///
@@ -149,8 +149,8 @@ impl ConflictGraph {
         // Assign stable, deterministic node indices sorted by (grid_role, ability_str_lowercase).
         let mut ordered_keys: Vec<AbilityRoleKey> = node_accumulators.keys().cloned().collect();
         ordered_keys.sort_by(|left, right| {
-            let left_role_index = grid_role_order(left.grid_role);
-            let right_role_index = grid_role_order(right.grid_role);
+            let left_role_index = left.grid_role.sort_index();
+            let right_role_index = right.grid_role.sort_index();
             let role_order = left_role_index.cmp(&right_role_index);
             role_order.then_with(|| left.ability_str_lowercase.cmp(&right.ability_str_lowercase))
         });
@@ -266,15 +266,6 @@ impl ConflictGraph {
     }
 }
 
-fn grid_role_order(role: GridRole) -> u8 {
-    match role {
-        GridRole::MainCommand => 0,
-        GridRole::BuildMenu => 1,
-        GridRole::UprootedForm => 2,
-        GridRole::HeroSkillTree => 3,
-    }
-}
-
 impl fmt::Display for ConflictGraph {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         let colliding_count = self.colliding_pairs().len();
@@ -299,7 +290,7 @@ impl fmt::Display for ConflictGraph {
             let position = node.current_position();
             let column = u8::from(position.column());
             let row = u8::from(position.row());
-            let role = grid_role_label(node.grid_role());
+            let role = node.grid_role().label();
             writeln!(
                 formatter,
                 "  {:12} [{:12}]  ({},{})  {} carriers  degree {}",
@@ -324,7 +315,7 @@ impl fmt::Display for ConflictGraph {
             let position = node.current_position();
             let column = u8::from(position.column());
             let row = u8::from(position.row());
-            let role = grid_role_label(node.grid_role());
+            let role = node.grid_role().label();
             writeln!(
                 formatter,
                 "  {:12} [{:12}]  ({},{})  {} carriers  degree {}",
@@ -338,15 +329,6 @@ impl fmt::Display for ConflictGraph {
         }
 
         Ok(())
-    }
-}
-
-fn grid_role_label(role: GridRole) -> &'static str {
-    match role {
-        GridRole::MainCommand => "main command",
-        GridRole::BuildMenu => "build menu",
-        GridRole::UprootedForm => "uprooted",
-        GridRole::HeroSkillTree => "research",
     }
 }
 
@@ -385,7 +367,7 @@ mod conflict_graph_tests {
         // the graph lists individual pair-wise collisions within each group).
         let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
-        let report = crate::cross_unit_collision::CrossUnitCollisionReport::compute(&custom_keys);
+        let report = crate::collision::cross_unit::CrossUnitCollisionReport::compute(&custom_keys);
         assert!(
             graph.colliding_pairs().len() >= report.position_groups().len(),
             "graph colliding pairs ({}) must be at least as many as collision groups ({})",

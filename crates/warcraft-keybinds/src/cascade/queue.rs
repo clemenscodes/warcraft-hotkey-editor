@@ -3,33 +3,10 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
-use crate::conflict_graph::ConflictGraph;
-use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
+use crate::cascade::conflict_graph::ConflictGraph;
+use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
-use crate::slot::GridSlotId;
-use crate::unit_grids::GridRole;
-
-/// Whether a slot is treated as a permanent fixture: it always wins anchor
-/// decisions over non-pinned residents (regardless of carrier count) and is
-/// never selected as a gap-pull candidate.
-///
-/// Two categories qualify:
-///
-/// - **System commands** (`GridSlotId::Command`) like Attack, Hold Position,
-///   Stop, Cancel.  These are functional UI controls, not classic abilities;
-///   players expect them at fixed positions on every unit.
-/// - **Ancient root/uproot toggles** (`Aro1`, `Aro2`).  This is the morph
-///   command that lets Tree of Life / Ancient Protector / etc. move between
-///   stationary and mobile forms.  It's structural rather than a spell, and
-///   its slot is part of the building's identity.
-fn is_pinned_slot(slot_id: &GridSlotId) -> bool {
-    match slot_id {
-        GridSlotId::Command(_) => true,
-        GridSlotId::Ability(id) | GridSlotId::AbilityOff(id) => {
-            matches!(id.value(), "Aro1" | "Aro2")
-        }
-    }
-}
+use crate::unit::grids::GridRole;
 
 /// What sort of event produced a `PositionAssignmentGroup`.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -272,7 +249,9 @@ impl QueueBuildState {
         scope: AssignmentScope,
     ) {
         let residents = self.residents_at(position, grid_role, graph);
-        let fight_groups = decompose_for_fight(&residents, position, grid_role, graph, scope);
+        let fight_groups = PositionAssignmentGroup::fight_groups_at_cell(
+            &residents, position, grid_role, graph, scope,
+        );
         for fight_group in fight_groups {
             let mover_indices_for_relocation: Vec<usize> = fight_group.mover_indices.clone();
             self.groups.push(fight_group);
@@ -384,7 +363,7 @@ impl QueueBuildState {
             if self.unresolved.contains(&index) {
                 continue;
             }
-            if is_pinned_slot(&node.slot_id()) {
+            if node.slot_id().is_pinned() {
                 continue;
             }
             let node_position = self.live_positions[index];
@@ -461,7 +440,7 @@ impl QueueBuildState {
         });
 
         for node_index in spill_order {
-            if is_pinned_slot(&graph.node(node_index).slot_id()) {
+            if graph.node(node_index).slot_id().is_pinned() {
                 continue;
             }
             let decision = self.find_spill_decision(node_index, graph);
@@ -482,12 +461,18 @@ impl QueueBuildState {
         let stuck_column = u8::from(stuck_position.column());
         let stuck_row = u8::from(stuck_position.row());
 
-        // Same row first, then other rows in distance order.
+        // Same row first, then other rows in distance order, with stable
+        // tie-break by row number ascending.
         let mut row_order: Vec<u8> = (0..COMMAND_GRID_ROWS).collect();
-        row_order.sort_by_key(|&candidate_row| {
-            let row_distance_signed = candidate_row as i32 - stuck_row as i32;
-            let row_distance = row_distance_signed.unsigned_abs();
-            (row_distance, candidate_row)
+        let stuck_row_value = i32::from(stuck_row);
+        row_order.sort_by(|&left_row, &right_row| {
+            let left_row_value = i32::from(left_row);
+            let right_row_value = i32::from(right_row);
+            let left_distance = (left_row_value - stuck_row_value).unsigned_abs();
+            let right_distance = (right_row_value - stuck_row_value).unsigned_abs();
+            left_distance
+                .cmp(&right_distance)
+                .then_with(|| left_row.cmp(&right_row))
         });
 
         for candidate_row_byte in row_order {
@@ -550,7 +535,9 @@ impl QueueBuildState {
                 continue;
             }
 
-            let column_distance_signed = col_byte as i32 - origin_column as i32;
+            let col_byte_value = i32::from(col_byte);
+            let origin_column_value = i32::from(origin_column);
+            let column_distance_signed = col_byte_value - origin_column_value;
             let column_distance = column_distance_signed.unsigned_abs();
             let beats_best = occupation_count < best_occupation_count
                 || (occupation_count == best_occupation_count
@@ -560,10 +547,11 @@ impl QueueBuildState {
             }
             best_occupation_count = occupation_count;
             best_column_distance = column_distance;
-            best = Some(SpillDecision {
+            let new_best = SpillDecision {
                 destination: candidate,
                 incumbents,
-            });
+            };
+            best = Some(new_best);
             if best_occupation_count == 0 && best_column_distance == 0 {
                 break;
             }
@@ -579,7 +567,7 @@ impl QueueBuildState {
         graph: &ConflictGraph,
     ) -> bool {
         let incumbent = graph.node(incumbent_index);
-        if is_pinned_slot(&incumbent.slot_id()) {
+        if incumbent.slot_id().is_pinned() {
             return false;
         }
         if self.unresolved.contains(&incumbent_index) {
@@ -634,249 +622,244 @@ struct GapPullCandidate {
     carrier_count: usize,
 }
 
-/// Decomposes the conflict subgraph among current residents at one cell into
-/// one or more anchor+movers groups.
-fn decompose_for_fight(
-    residents: &[usize],
-    position: GridCoordinate,
-    grid_role: GridRole,
-    graph: &ConflictGraph,
-    scope: AssignmentScope,
-) -> Vec<PositionAssignmentGroup> {
-    let resident_set: HashSet<usize> = residents.iter().copied().collect();
-    let mut position_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
-    let mut any_edge_in_residents = false;
-    for &index in residents {
-        let mut in_set_neighbors: Vec<usize> = Vec::new();
-        for &neighbor_index in graph.neighbors(index) {
-            if resident_set.contains(&neighbor_index) {
-                in_set_neighbors.push(neighbor_index);
-                any_edge_in_residents = true;
+impl PositionAssignmentGroup {
+    /// Decomposes the conflict subgraph among current residents at one cell
+    /// into one or more anchor+movers groups.  The cell's position and grid
+    /// role are carried into each emitted group.
+    fn fight_groups_at_cell(
+        residents: &[usize],
+        position: GridCoordinate,
+        grid_role: GridRole,
+        graph: &ConflictGraph,
+        scope: AssignmentScope,
+    ) -> Vec<PositionAssignmentGroup> {
+        let resident_set: HashSet<usize> = residents.iter().copied().collect();
+        let mut position_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
+        let mut any_edge_in_residents = false;
+        for &index in residents {
+            let mut in_set_neighbors: Vec<usize> = Vec::new();
+            for &neighbor_index in graph.neighbors(index) {
+                if resident_set.contains(&neighbor_index) {
+                    in_set_neighbors.push(neighbor_index);
+                    any_edge_in_residents = true;
+                }
+            }
+            if !in_set_neighbors.is_empty() {
+                position_adjacency.insert(index, in_set_neighbors);
             }
         }
-        if !in_set_neighbors.is_empty() {
-            position_adjacency.insert(index, in_set_neighbors);
+        if !any_edge_in_residents {
+            return Vec::new();
         }
-    }
-    if !any_edge_in_residents {
-        return Vec::new();
-    }
 
-    let mut groups: Vec<PositionAssignmentGroup> = Vec::new();
-    let mut visited: HashSet<usize> = HashSet::new();
-    for &start_node in residents {
-        if visited.contains(&start_node) {
-            continue;
-        }
-        if !position_adjacency.contains_key(&start_node) {
-            visited.insert(start_node);
-            continue;
-        }
-        let mut component: Vec<usize> = Vec::new();
-        let mut pending: Vec<usize> = vec![start_node];
-        while let Some(current) = pending.pop() {
-            if !visited.insert(current) {
+        let mut groups: Vec<PositionAssignmentGroup> = Vec::new();
+        let mut visited: HashSet<usize> = HashSet::new();
+        for &start_node in residents {
+            if visited.contains(&start_node) {
                 continue;
             }
-            component.push(current);
-            if let Some(neighbors) = position_adjacency.get(&current) {
-                pending.extend(neighbors.iter().copied());
+            if !position_adjacency.contains_key(&start_node) {
+                visited.insert(start_node);
+                continue;
             }
+            let mut component: Vec<usize> = Vec::new();
+            let mut pending: Vec<usize> = vec![start_node];
+            while let Some(current) = pending.pop() {
+                if !visited.insert(current) {
+                    continue;
+                }
+                component.push(current);
+                if let Some(neighbors) = position_adjacency.get(&current) {
+                    pending.extend(neighbors.iter().copied());
+                }
+            }
+            let component_groups = Self::groups_for_component(
+                &component,
+                &position_adjacency,
+                graph,
+                position,
+                grid_role,
+                scope,
+            );
+            groups.extend(component_groups);
         }
-        let component_groups = assignment_groups_for_component(
-            &component,
-            &position_adjacency,
-            graph,
-            position,
-            grid_role,
-            scope,
-        );
-        groups.extend(component_groups);
+        groups
     }
-    groups
-}
 
-/// Recursively splits one connected conflict component at a cell into
-/// direct-conflict groups.
-///
-/// Each group contains exactly one anchor (the highest-carrier cross-unit
-/// node) and its *direct* conflict neighbours as movers.  Nodes connected to
-/// the anchor only through a chain — but sharing no carrier unit with the
-/// anchor — are handled in a sub-group at the next recursion level.  This
-/// keeps Wind Walk from being forced to move just because Abolish Magic is
-/// the anchor when they only meet through Dispel Magic.
-fn assignment_groups_for_component(
-    component: &[usize],
-    position_adjacency: &HashMap<usize, Vec<usize>>,
-    graph: &ConflictGraph,
-    position: GridCoordinate,
-    grid_role: GridRole,
-    scope: AssignmentScope,
-) -> Vec<PositionAssignmentGroup> {
-    // Anchor candidates are filtered by the scope passed to
-    // `AssignmentQueue::build`:
-    //
-    //   - `CrossUnitOnly` (phase 1): cross-unit nodes (carriers ≥ 2) plus
-    //     any pinned node.  This is the existing cascade — intra-unit
-    //     collisions (single-carrier abilities competing for one slot on
-    //     one unit) are out of scope and silently ignored.
-    //   - `IncludingIntraUnit` (phase 2): every node in the component is
-    //     a candidate.  Cross-unit abilities still beat intra-unit ones
-    //     via the carrier-count comparator below, but pure single-carrier
-    //     collisions (e.g. two shop items on a Goblin Merchant) finally
-    //     get resolved.
-    let anchor_candidates: Vec<usize> = match scope {
-        AssignmentScope::CrossUnitOnly => component
+    /// Recursively splits one connected conflict component at a cell into
+    /// direct-conflict groups.
+    ///
+    /// Each group contains exactly one anchor (the highest-carrier cross-unit
+    /// node) and its *direct* conflict neighbours as movers.  Nodes connected
+    /// to the anchor only through a chain — but sharing no carrier unit with
+    /// the anchor — are handled in a sub-group at the next recursion level.
+    /// This keeps Wind Walk from being forced to move just because Abolish
+    /// Magic is the anchor when they only meet through Dispel Magic.
+    fn groups_for_component(
+        component: &[usize],
+        position_adjacency: &HashMap<usize, Vec<usize>>,
+        graph: &ConflictGraph,
+        position: GridCoordinate,
+        grid_role: GridRole,
+        scope: AssignmentScope,
+    ) -> Vec<PositionAssignmentGroup> {
+        // Anchor candidates are filtered by the scope passed to
+        // `AssignmentQueue::build`:
+        //
+        //   - `CrossUnitOnly` (phase 1): cross-unit nodes (carriers ≥ 2) plus
+        //     any pinned node.  This is the existing cascade — intra-unit
+        //     collisions (single-carrier abilities competing for one slot on
+        //     one unit) are out of scope and silently ignored.
+        //   - `IncludingIntraUnit` (phase 2): every node in the component is
+        //     a candidate.  Cross-unit abilities still beat intra-unit ones
+        //     via the carrier-count comparator below, but pure single-carrier
+        //     collisions (e.g. two shop items on a Goblin Merchant) finally
+        //     get resolved.
+        let anchor_candidates: Vec<usize> = match scope {
+            AssignmentScope::CrossUnitOnly => component
+                .iter()
+                .copied()
+                .filter(|&index| {
+                    let node = graph.node(index);
+                    let slot_id = node.slot_id();
+                    node.carrier_count() >= 2 || slot_id.is_pinned()
+                })
+                .collect(),
+            AssignmentScope::IncludingIntraUnit => component.to_vec(),
+        };
+
+        if anchor_candidates.len() < 2 {
+            return Vec::new();
+        }
+
+        // Anchor preference: pinned first, then highest carrier count, then
+        // stable tiebreak by lower index.
+        let anchor_index = anchor_candidates
             .iter()
             .copied()
-            .filter(|&index| {
-                let node = graph.node(index);
-                let slot_id = node.slot_id();
-                node.carrier_count() >= 2 || is_pinned_slot(&slot_id)
+            .max_by(|&left, &right| {
+                let left_slot = graph.node(left).slot_id();
+                let right_slot = graph.node(right).slot_id();
+                let left_pinned = left_slot.is_pinned();
+                let right_pinned = right_slot.is_pinned();
+                let left_carriers = graph.node(left).carrier_count();
+                let right_carriers = graph.node(right).carrier_count();
+                left_pinned
+                    .cmp(&right_pinned)
+                    .then_with(|| left_carriers.cmp(&right_carriers))
+                    .then_with(|| right.cmp(&left))
             })
-            .collect(),
-        AssignmentScope::IncludingIntraUnit => component.to_vec(),
-    };
+            .expect("anchor_candidates is non-empty");
 
-    if anchor_candidates.len() < 2 {
-        return Vec::new();
-    }
+        let empty_neighbors: Vec<usize> = Vec::new();
+        let anchor_position_neighbors: &Vec<usize> = position_adjacency
+            .get(&anchor_index)
+            .unwrap_or(&empty_neighbors);
+        let anchor_neighbor_set: HashSet<usize> =
+            anchor_position_neighbors.iter().copied().collect();
 
-    // Anchor preference: pinned first, then highest carrier count, then
-    // stable tiebreak by lower index.
-    let anchor_index = anchor_candidates
-        .iter()
-        .copied()
-        .max_by(|&left, &right| {
-            let left_slot = graph.node(left).slot_id();
-            let right_slot = graph.node(right).slot_id();
-            let left_pinned = is_pinned_slot(&left_slot);
-            let right_pinned = is_pinned_slot(&right_slot);
+        let mut direct_mover_indices: Vec<usize> = anchor_candidates
+            .iter()
+            .copied()
+            .filter(|&index| index != anchor_index && anchor_neighbor_set.contains(&index))
+            .collect();
+
+        if direct_mover_indices.is_empty() {
+            let without_anchor: Vec<usize> = component
+                .iter()
+                .copied()
+                .filter(|&index| index != anchor_index)
+                .collect();
+            return Self::groups_for_component(
+                &without_anchor,
+                position_adjacency,
+                graph,
+                position,
+                grid_role,
+                scope,
+            );
+        }
+
+        direct_mover_indices.sort_by(|&left, &right| {
             let left_carriers = graph.node(left).carrier_count();
             let right_carriers = graph.node(right).carrier_count();
-            left_pinned
-                .cmp(&right_pinned)
-                .then_with(|| left_carriers.cmp(&right_carriers))
-                .then_with(|| right.cmp(&left))
-        })
-        .expect("anchor_candidates is non-empty");
+            right_carriers
+                .cmp(&left_carriers)
+                .then_with(|| left.cmp(&right))
+        });
 
-    let empty_neighbors: Vec<usize> = Vec::new();
-    let anchor_position_neighbors: &Vec<usize> = position_adjacency
-        .get(&anchor_index)
-        .unwrap_or(&empty_neighbors);
-    let anchor_neighbor_set: HashSet<usize> = anchor_position_neighbors.iter().copied().collect();
-
-    let mut direct_mover_indices: Vec<usize> = anchor_candidates
-        .iter()
-        .copied()
-        .filter(|&index| index != anchor_index && anchor_neighbor_set.contains(&index))
-        .collect();
-
-    if direct_mover_indices.is_empty() {
-        let without_anchor: Vec<usize> = component
-            .iter()
-            .copied()
-            .filter(|&index| index != anchor_index)
+        let excluded_from_remaining: HashSet<usize> = std::iter::once(anchor_index)
+            .chain(direct_mover_indices.iter().copied())
             .collect();
-        return assignment_groups_for_component(
-            &without_anchor,
-            position_adjacency,
-            graph,
+        let first_group = PositionAssignmentGroup {
             position,
             grid_role,
-            scope,
-        );
-    }
+            anchor_index,
+            mover_indices: direct_mover_indices,
+            kind: GroupKind::Fight,
+        };
+        let mut groups: Vec<PositionAssignmentGroup> = vec![first_group];
 
-    direct_mover_indices.sort_by(|&left, &right| {
-        let left_carriers = graph.node(left).carrier_count();
-        let right_carriers = graph.node(right).carrier_count();
-        right_carriers
-            .cmp(&left_carriers)
-            .then_with(|| left.cmp(&right))
-    });
+        let remaining_nodes: Vec<usize> = component
+            .iter()
+            .copied()
+            .filter(|&index| !excluded_from_remaining.contains(&index))
+            .collect();
 
-    let excluded_from_remaining: HashSet<usize> = std::iter::once(anchor_index)
-        .chain(direct_mover_indices.iter().copied())
-        .collect();
-    let first_group = PositionAssignmentGroup {
-        position,
-        grid_role,
-        anchor_index,
-        mover_indices: direct_mover_indices,
-        kind: GroupKind::Fight,
-    };
-    let mut groups: Vec<PositionAssignmentGroup> = vec![first_group];
-
-    let remaining_nodes: Vec<usize> = component
-        .iter()
-        .copied()
-        .filter(|&index| !excluded_from_remaining.contains(&index))
-        .collect();
-
-    if remaining_nodes.is_empty() {
-        return groups;
-    }
-
-    let remaining_node_set: HashSet<usize> = remaining_nodes.iter().copied().collect();
-    let mut remaining_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
-    for &node in &remaining_nodes {
-        let restricted_neighbors: Vec<usize> = position_adjacency
-            .get(&node)
-            .map(|neighbors| {
-                neighbors
-                    .iter()
-                    .copied()
-                    .filter(|&neighbor| remaining_node_set.contains(&neighbor))
-                    .collect()
-            })
-            .unwrap_or_default();
-        if !restricted_neighbors.is_empty() {
-            remaining_adjacency.insert(node, restricted_neighbors);
+        if remaining_nodes.is_empty() {
+            return groups;
         }
-    }
 
-    let mut visited: HashSet<usize> = HashSet::new();
-    for &start_node in &remaining_nodes {
-        if visited.contains(&start_node) {
-            continue;
+        let remaining_node_set: HashSet<usize> = remaining_nodes.iter().copied().collect();
+        let mut remaining_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
+        for &node in &remaining_nodes {
+            let restricted_neighbors: Vec<usize> = position_adjacency
+                .get(&node)
+                .map(|neighbors| {
+                    neighbors
+                        .iter()
+                        .copied()
+                        .filter(|&neighbor| remaining_node_set.contains(&neighbor))
+                        .collect()
+                })
+                .unwrap_or_default();
+            if !restricted_neighbors.is_empty() {
+                remaining_adjacency.insert(node, restricted_neighbors);
+            }
         }
-        let mut sub_component: Vec<usize> = Vec::new();
-        let mut pending: Vec<usize> = vec![start_node];
-        while let Some(current) = pending.pop() {
-            if !visited.insert(current) {
+
+        let mut visited: HashSet<usize> = HashSet::new();
+        for &start_node in &remaining_nodes {
+            if visited.contains(&start_node) {
                 continue;
             }
-            sub_component.push(current);
-            if let Some(neighbors) = remaining_adjacency.get(&current) {
-                for &neighbor in neighbors {
-                    if !visited.contains(&neighbor) {
-                        pending.push(neighbor);
+            let mut sub_component: Vec<usize> = Vec::new();
+            let mut pending: Vec<usize> = vec![start_node];
+            while let Some(current) = pending.pop() {
+                if !visited.insert(current) {
+                    continue;
+                }
+                sub_component.push(current);
+                if let Some(neighbors) = remaining_adjacency.get(&current) {
+                    for &neighbor in neighbors {
+                        if !visited.contains(&neighbor) {
+                            pending.push(neighbor);
+                        }
                     }
                 }
             }
+            let sub_groups = Self::groups_for_component(
+                &sub_component,
+                &remaining_adjacency,
+                graph,
+                position,
+                grid_role,
+                scope,
+            );
+            groups.extend(sub_groups);
         }
-        let sub_groups = assignment_groups_for_component(
-            &sub_component,
-            &remaining_adjacency,
-            graph,
-            position,
-            grid_role,
-            scope,
-        );
-        groups.extend(sub_groups);
-    }
 
-    groups
-}
-
-fn grid_role_label(role: GridRole) -> &'static str {
-    match role {
-        GridRole::MainCommand => "main command",
-        GridRole::BuildMenu => "build menu",
-        GridRole::UprootedForm => "uprooted",
-        GridRole::HeroSkillTree => "research",
+        groups
     }
 }
 
@@ -898,7 +881,7 @@ impl fmt::Display for AssignmentQueue {
         for (ordinal, group) in self.groups.iter().enumerate() {
             let column = u8::from(group.position.column());
             let row = u8::from(group.position.row());
-            let role = grid_role_label(group.grid_role);
+            let role = group.grid_role.label();
             let kind = match group.kind {
                 GroupKind::Fight => "fight",
                 GroupKind::GapPull => "gap-pull",
@@ -957,7 +940,7 @@ impl fmt::Display for AssignmentQueue {
                 let position = self.final_positions[node_index];
                 let column = u8::from(position.column());
                 let row = u8::from(position.row());
-                let role = grid_role_label(node.grid_role());
+                let role = node.grid_role().label();
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  stuck at ({column},{row})"
@@ -971,8 +954,9 @@ impl fmt::Display for AssignmentQueue {
 #[cfg(test)]
 mod cascade_queue_tests {
     use super::*;
-    use crate::conflict_graph::ConflictGraph;
+    use crate::cascade::conflict_graph::ConflictGraph;
     use crate::custom_keys::CustomKeys;
+    use crate::identity::slot::GridSlotId;
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
 
     fn default_queue() -> AssignmentQueue {
@@ -1240,7 +1224,7 @@ mod cascade_queue_tests {
                     second_node.slot_id().as_str(),
                     u8::from(first_final.column()),
                     u8::from(first_final.row()),
-                    grid_role_label(first_node.grid_role()),
+                    first_node.grid_role().label(),
                 );
             }
         }

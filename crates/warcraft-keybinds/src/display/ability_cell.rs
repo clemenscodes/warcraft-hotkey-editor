@@ -1,8 +1,8 @@
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::ObjectLookup;
 
-use crate::ability_id::AbilityId;
-use crate::hotkey_token::HotkeyToken;
+use crate::identity::ability_id::AbilityId;
+use crate::identity::hotkey_token::HotkeyToken;
 use crate::model::{AbilityBinding, CommandBinding, Hotkey};
 use crate::text::command_label::CommandLabel;
 use crate::text::tip::Tip;

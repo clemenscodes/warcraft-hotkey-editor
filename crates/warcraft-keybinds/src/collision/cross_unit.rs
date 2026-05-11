@@ -5,10 +5,10 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::custom_keys::CustomKeys;
+use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
-use crate::slot::GridSlotId;
-use crate::unit_grids::{GridRole, UnitGrids};
-use crate::unit_slots::UnitCommandSlots;
+use crate::unit::grids::{GridRole, UnitGrids};
+use crate::unit::slots::UnitCommandSlots;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct PositionContext {

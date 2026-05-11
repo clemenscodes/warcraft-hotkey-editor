@@ -1,10 +1,10 @@
 use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_database::{BuildingTraits, ObjectLookup};
 
-use crate::ability_cell::{AbilityCell, AbilityIconPath};
 use crate::custom_keys::CustomKeys;
-use crate::hotkey_token::HotkeyToken;
-use crate::slot::GridSlotId;
+use crate::display::ability_cell::{AbilityCell, AbilityIconPath};
+use crate::identity::hotkey_token::HotkeyToken;
+use crate::identity::slot::GridSlotId;
 use crate::text::color_codes::WarcraftColorCodes;
 
 #[derive(Clone, PartialEq)]

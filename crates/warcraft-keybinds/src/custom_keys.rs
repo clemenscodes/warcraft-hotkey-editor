@@ -3,22 +3,22 @@ use std::fmt;
 use std::sync::OnceLock;
 
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 
-use crate::ability_id::AbilityId;
-use crate::cascade_planner::{self, CascadePlan, PlannedMove, UnresolvedMover};
-use crate::cascade_queue::{AssignmentQueue, AssignmentScope};
-use crate::conflict_graph::ConflictGraph;
-use crate::grid_layout::GridLayout;
-use crate::hotkey_target::HotkeyTarget;
-use crate::hotkey_token::HotkeyToken;
+use crate::cascade::conflict_graph::ConflictGraph;
+use crate::cascade::planner::{CascadePlan, PlannedMove, UnresolvedMover};
+use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
+use crate::command::move_request::MoveRequest;
+use crate::grid::layout::GridLayout;
+use crate::identity::ability_id::AbilityId;
+use crate::identity::hotkey_target::HotkeyTarget;
+use crate::identity::hotkey_token::HotkeyToken;
+use crate::identity::slot::GridSlotId;
 use crate::model::{
     AbilityBinding, BindingEntry, ColumnIndex, CommandBinding, CommandEntry, GridCoordinate,
     Hotkey, RowIndex, SectionAccumulator, SectionResolution, SystemBinding, WarcraftKeybinding,
 };
-use crate::move_request::MoveRequest;
-use crate::slot::GridSlotId;
-use crate::unit_grids::GridRole;
+use crate::unit::grids::GridRole;
 
 pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../templates/CustomKeys.txt");
 
@@ -435,7 +435,7 @@ impl CustomKeys {
         let new_position = GridCoordinate::new(column_index, row_index);
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let is_passive = is_passive_ability(ability_id.value());
+                let is_passive = ObjectLookup::is_passive_ability(ability_id.value());
                 if let Some(binding) = self.binding_or_default_mut(*ability_id) {
                     if is_research_context {
                         binding.set_research_button_position(Some(new_position));
@@ -611,7 +611,7 @@ impl CustomKeys {
 
         for ability_id in &ability_ids {
             let ability_id_str = ability_id.value();
-            let is_passive = is_passive_ability(ability_id_str);
+            let is_passive = ObjectLookup::is_passive_ability(ability_id_str);
             let button_position = if is_passive {
                 None
             } else {
@@ -763,7 +763,7 @@ impl CustomKeys {
         for _ in 0..MAX_ITERATIONS_PER_PHASE {
             let graph = ConflictGraph::build(self);
             let queue = AssignmentQueue::build_with_scope(graph, scope);
-            let pass_plan = cascade_planner::solve(&queue);
+            let pass_plan = CascadePlan::from(&queue);
             last_unresolved = pass_plan.unresolved().to_vec();
             if pass_plan.move_count() == 0 {
                 break;
@@ -931,12 +931,6 @@ impl CustomKeys {
             layout.letter_at(resolved_position.column(), resolved_position.row())?;
         Some(HotkeyToken::from(layout_letter))
     }
-}
-
-fn is_passive_ability(id: &str) -> bool {
-    WARCRAFT_DATABASE
-        .by_id(id)
-        .is_some_and(|object| object.is_passive_ability())
 }
 
 /// Snapshot of a single `PlannedMove` decoupled from the plan's borrow, so
@@ -2107,7 +2101,7 @@ mod normalize_tests {
     fn resolve_conflicts_writes_new_positions_into_bindings() {
         // After resolve_conflicts, every PlannedMove's slot must read back the
         // new_position from the bindings map.
-        use crate::slot::GridSlotId;
+        use crate::identity::slot::GridSlotId;
         let mut keys = CustomKeys::from("").normalize();
         let plan = keys.resolve_conflicts();
         for planned_move in plan.moves() {
@@ -2149,9 +2143,9 @@ mod normalize_tests {
         // alone.  After resolve_conflicts returns, every pair of conflict-
         // graph neighbors that ended up resolved must occupy distinct cells
         // on the same role — regardless of carrier count.
-        use crate::cascade_planner;
-        use crate::cascade_queue::{AssignmentQueue, AssignmentScope};
-        use crate::conflict_graph::ConflictGraph;
+        use crate::cascade::conflict_graph::ConflictGraph;
+        use crate::cascade::planner::CascadePlan;
+        use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
 
         let mut keys = CustomKeys::from("").normalize();
         let _plan = keys.resolve_conflicts();
@@ -2160,7 +2154,7 @@ mod normalize_tests {
         // scope so unresolved bookkeeping reflects every potential collision.
         let graph = ConflictGraph::build(&keys);
         let queue = AssignmentQueue::build_with_scope(graph, AssignmentScope::IncludingIntraUnit);
-        let plan = cascade_planner::solve(&queue);
+        let plan = CascadePlan::from(&queue);
         let unresolved: std::collections::HashSet<usize> = plan
             .unresolved()
             .iter()
@@ -2198,6 +2192,48 @@ mod normalize_tests {
             }
         }
     }
+
+    #[test]
+    fn resolved_default_customkeys_matches_snapshot() {
+        // Full-text regression snapshot: normalize() the bundled default
+        // CustomKeys.txt, run both cascade phases via resolve_conflicts(), and
+        // serialize.  The byte sequence must match the checked-in expected
+        // snapshot.  Any algorithm change (cascade ordering, pinning rules,
+        // spill behavior), database change, or serialization tweak that
+        // shifts the output trips this test.
+        //
+        // To accept a deliberate change: re-run the CLI
+        //
+        //   cargo run -p warcraft-cli -- resolve \
+        //     crates/warcraft-keybinds/templates/CustomKeys.txt \
+        //     --output crates/warcraft-keybinds/fixtures/resolved_default_customkeys.txt
+        //
+        // and inspect the diff before committing.
+        let mut keys = CustomKeys::from("").normalize();
+        let _plan = keys.resolve_conflicts();
+        let actual = keys.to_string();
+        let expected = include_str!("../fixtures/resolved_default_customkeys.txt");
+        if actual != expected {
+            let actual_bytes = actual.len();
+            let expected_bytes = expected.len();
+            let mut first_difference_offset: Option<usize> = None;
+            for (offset, (actual_char, expected_char)) in
+                actual.chars().zip(expected.chars()).enumerate()
+            {
+                if actual_char != expected_char {
+                    first_difference_offset = Some(offset);
+                    break;
+                }
+            }
+            panic!(
+                "resolved default CustomKeys drifted from snapshot \
+                 (actual={actual_bytes}B, expected={expected_bytes}B, \
+                 first diff at char {first_difference_offset:?}). \
+                 To accept the new output, regenerate the snapshot via the CLI — \
+                 see the test source for the exact command."
+            );
+        }
+    }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -2207,7 +2243,7 @@ mod template_generation_tests {
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
     use super::CustomKeys;
-    use crate::grid_layout::GridLayout;
+    use crate::grid::layout::GridLayout;
 
     fn join_levels(levels: &[&str]) -> Option<String> {
         if levels.is_empty() {

@@ -1,5 +1,5 @@
-use crate::grid_layout::GridLayout;
-use crate::slot::GridSlotId;
+use crate::grid::layout::GridLayout;
+use crate::identity::slot::GridSlotId;
 
 pub struct MoveRequest<'a> {
     layout: GridLayout,

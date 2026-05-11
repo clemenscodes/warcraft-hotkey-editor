@@ -2,10 +2,10 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
-use crate::cascade_queue::AssignmentQueue;
+use crate::cascade::queue::AssignmentQueue;
+use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
-use crate::slot::GridSlotId;
-use crate::unit_grids::GridRole;
+use crate::unit::grids::GridRole;
 
 /// One ability successfully relocated by the cascade solver.
 #[derive(Clone)]
@@ -135,50 +135,43 @@ impl CascadePlan {
 /// every stuck node is in `unresolved_nodes()`.  The planner just diffs the
 /// final state against each node's original position and emits one
 /// `PlannedMove` per change and one `UnresolvedMover` per stuck node.
-pub fn solve(queue: &AssignmentQueue) -> CascadePlan {
-    let graph = queue.graph();
-    let mut moves: Vec<PlannedMove> = Vec::new();
-    let mut unresolved: Vec<UnresolvedMover> = Vec::new();
+impl From<&AssignmentQueue> for CascadePlan {
+    fn from(queue: &AssignmentQueue) -> CascadePlan {
+        let graph = queue.graph();
+        let mut moves: Vec<PlannedMove> = Vec::new();
+        let mut unresolved: Vec<UnresolvedMover> = Vec::new();
 
-    for (node_index, node) in graph.nodes().iter().enumerate() {
-        let slot_id = node.slot_id();
-        let grid_role = node.grid_role();
-        let carrier_unit_ids: Vec<WarcraftObjectId> = node.carrier_unit_ids().to_vec();
-        let original_position = node.current_position();
-        let final_position = queue.final_position(node_index);
+        for (node_index, node) in graph.nodes().iter().enumerate() {
+            let slot_id = node.slot_id();
+            let grid_role = node.grid_role();
+            let carrier_unit_ids: Vec<WarcraftObjectId> = node.carrier_unit_ids().to_vec();
+            let original_position = node.current_position();
+            let final_position = queue.final_position(node_index);
 
-        if queue.is_unresolved(node_index) {
-            let unresolved_mover = UnresolvedMover {
-                slot_id,
-                grid_role,
-                collision_position: final_position,
-                carrier_unit_ids,
-            };
-            unresolved.push(unresolved_mover);
-            continue;
+            if queue.is_unresolved(node_index) {
+                let unresolved_mover = UnresolvedMover {
+                    slot_id,
+                    grid_role,
+                    collision_position: final_position,
+                    carrier_unit_ids,
+                };
+                unresolved.push(unresolved_mover);
+                continue;
+            }
+
+            if original_position != final_position {
+                let planned_move = PlannedMove {
+                    slot_id,
+                    grid_role,
+                    old_position: original_position,
+                    new_position: final_position,
+                    carrier_unit_ids,
+                };
+                moves.push(planned_move);
+            }
         }
 
-        if original_position != final_position {
-            let planned_move = PlannedMove {
-                slot_id,
-                grid_role,
-                old_position: original_position,
-                new_position: final_position,
-                carrier_unit_ids,
-            };
-            moves.push(planned_move);
-        }
-    }
-
-    CascadePlan { moves, unresolved }
-}
-
-fn grid_role_label(role: GridRole) -> &'static str {
-    match role {
-        GridRole::MainCommand => "main command",
-        GridRole::BuildMenu => "build menu",
-        GridRole::UprootedForm => "uprooted",
-        GridRole::HeroSkillTree => "research",
+        CascadePlan { moves, unresolved }
     }
 }
 
@@ -200,7 +193,7 @@ impl fmt::Display for CascadePlan {
             for planned_move in &self.moves {
                 let name = planned_move.slot_id.display_name(None, None);
                 let id = planned_move.slot_id.as_str();
-                let role = grid_role_label(planned_move.grid_role);
+                let role = planned_move.grid_role.label();
                 let old_col = u8::from(planned_move.old_position.column());
                 let old_row = u8::from(planned_move.old_position.row());
                 let new_col = u8::from(planned_move.new_position.column());
@@ -226,7 +219,7 @@ impl fmt::Display for CascadePlan {
             for mover in &self.unresolved {
                 let name = mover.slot_id.display_name(None, None);
                 let id = mover.slot_id.as_str();
-                let role = grid_role_label(mover.grid_role);
+                let role = mover.grid_role.label();
                 let col = u8::from(mover.collision_position.column());
                 let row = u8::from(mover.collision_position.row());
                 let carrier_count = mover.carrier_count();
@@ -253,17 +246,17 @@ mod cascade_planner_tests {
     use std::collections::HashSet;
 
     use super::*;
-    use crate::cascade_queue::AssignmentQueue;
-    use crate::conflict_graph::ConflictGraph;
+    use crate::cascade::conflict_graph::ConflictGraph;
+    use crate::cascade::queue::AssignmentQueue;
     use crate::custom_keys::CustomKeys;
-    use crate::grid_layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
+    use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
 
     fn default_plan() -> CascadePlan {
         let custom_keys = CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
-        solve(&queue)
+        CascadePlan::from(&queue)
     }
 
     #[test]
@@ -280,7 +273,7 @@ mod cascade_planner_tests {
         let custom_keys = CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
-        let plan = solve(&queue);
+        let plan = CascadePlan::from(&queue);
 
         let mut final_positions: Vec<GridCoordinate> = queue
             .graph()
@@ -339,7 +332,7 @@ mod cascade_planner_tests {
                     second_node.slot_id().as_str(),
                     u8::from(first_pos.column()),
                     u8::from(first_pos.row()),
-                    grid_role_label(first_node.grid_role()),
+                    first_node.grid_role().label(),
                 );
             }
         }
@@ -387,13 +380,14 @@ mod cascade_planner_tests {
                 planned_move.old_position().row() != planned_move.new_position().row()
             })
             .count();
-        let cross_row_ratio = (cross_row_moves as f64) / (total_moves as f64);
+        // Integer comparison instead of floating-point ratio: cross_row / total
+        // < 30/100 ⇔ cross_row * 100 < total * 30.
+        let cross_row_share_basis_points = cross_row_moves * 100;
+        let allowed_share_basis_points = total_moves * 30;
         assert!(
-            cross_row_ratio < 0.30,
-            "cross-row moves should be rare ({} of {} = {:.0}%) — spill phase may be overactive",
-            cross_row_moves,
-            total_moves,
-            cross_row_ratio * 100.0,
+            cross_row_share_basis_points < allowed_share_basis_points,
+            "cross-row moves should be rare ({cross_row_moves} of {total_moves}) — \
+             spill phase may be overactive",
         );
     }
 
@@ -434,7 +428,7 @@ mod cascade_planner_tests {
         custom_keys.put_ability("AHds", binding);
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
-        let plan = solve(&queue);
+        let plan = CascadePlan::from(&queue);
         assert!(
             plan.move_count() >= 1,
             "a single Paladin collision must produce at least one move"

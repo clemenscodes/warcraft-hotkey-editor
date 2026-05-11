@@ -5,9 +5,9 @@ use std::path::{Path, PathBuf};
 use clap::{Parser, Subcommand};
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
-    AssignmentQueue, ColumnIndex, ConflictGraph, CrossUnitCollisionReport, CustomKeys,
+    AssignmentQueue, CascadePlan, ColumnIndex, ConflictGraph, CrossUnitCollisionReport, CustomKeys,
     GridCoordinate, GridLayout, NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids,
-    UnitKeyedCustomKeys, cascade_planner,
+    UnitKeyedCustomKeys,
 };
 
 #[derive(Parser)]
@@ -86,10 +86,15 @@ fn main() {
                     })
                     .normalize(),
             };
-            inspect_unit(unit_id, custom_keys);
+            let unit_inspection = UnitInspection {
+                unit_id_string: unit_id,
+                custom_keys,
+            };
+            unit_inspection.run();
         }
         Command::Resolve { input, output } => {
-            resolve_keys_file(input, output);
+            let resolve_command = ResolveCommand { input, output };
+            resolve_command.run();
         }
         Command::Keys {
             file,
@@ -109,7 +114,7 @@ fn main() {
                 .normalize();
             let grid_layout = layout
                 .as_deref()
-                .map(grid_layout_from_spec)
+                .map(LayoutSpec::parse)
                 .unwrap_or_else(GridLayout::qwerty_grid);
             if layout.is_some() {
                 custom_keys.apply_grid_to_all_bindings(grid_layout);
@@ -124,7 +129,7 @@ fn main() {
             } else if plan {
                 let conflict_graph = ConflictGraph::build(&custom_keys);
                 let assignment_queue = AssignmentQueue::build(conflict_graph);
-                let cascade_plan = cascade_planner::solve(&assignment_queue);
+                let cascade_plan = CascadePlan::from(&assignment_queue);
                 println!("{cascade_plan}");
             } else if cross {
                 let report = CrossUnitCollisionReport::compute(&custom_keys);
@@ -148,107 +153,132 @@ fn main() {
     }
 }
 
-fn resolve_keys_file(input: PathBuf, output: Option<PathBuf>) {
-    let mut custom_keys = CustomKeys::try_from(input.as_path())
-        .unwrap_or_else(|error| {
-            eprintln!("error: cannot read {}: {error}", input.display());
-            std::process::exit(1);
-        })
-        .normalize();
-    let output_path = output.unwrap_or_else(|| PathBuf::from("CustomKeys.txt"));
-    if paths_resolve_to_same_file(&input, &output_path) {
-        eprintln!(
-            "error: output {} would overwrite the input file; pass --output FILE to choose a \
-             different destination",
-            output_path.display(),
-        );
-        std::process::exit(1);
-    }
-    let plan = custom_keys.resolve_conflicts();
-    let serialized = custom_keys.to_string();
-    if let Err(error) = fs::write(&output_path, &serialized) {
-        eprintln!("error: cannot write {}: {error}", output_path.display());
-        std::process::exit(1);
-    }
-    println!("{plan}");
-    println!("Wrote resolved keys to {}", output_path.display());
+struct ResolveCommand {
+    input: PathBuf,
+    output: Option<PathBuf>,
 }
 
-fn paths_resolve_to_same_file(left: &Path, right: &Path) -> bool {
-    let canonical_left = fs::canonicalize(left).ok();
-    let canonical_right = fs::canonicalize(right).ok();
-    match (canonical_left, canonical_right) {
-        (Some(a), Some(b)) => a == b,
-        _ => left == right,
-    }
-}
-
-fn grid_layout_from_spec(spec: &str) -> GridLayout {
-    match spec {
-        "qwerty" => GridLayout::qwerty_grid(),
-        other => GridLayout::try_from(other).unwrap_or_else(|_| {
+impl ResolveCommand {
+    fn run(self) {
+        let ResolveCommand { input, output } = self;
+        let input_path = input.as_path();
+        let mut custom_keys = CustomKeys::try_from(input_path)
+            .unwrap_or_else(|error| {
+                eprintln!("error: cannot read {}: {error}", input_path.display());
+                std::process::exit(1);
+            })
+            .normalize();
+        let default_output_path = PathBuf::from("CustomKeys.txt");
+        let output_path = output.unwrap_or(default_output_path);
+        let output_path_ref = output_path.as_path();
+        if Self::same_underlying_file(input_path, output_path_ref) {
             eprintln!(
-                "error: invalid layout {other:?} — use \"qwerty\" or a 12-character \
-                 row-major string (e.g. \"QWERASDFZXCV\")"
+                "error: output {} would overwrite the input file; pass --output FILE to choose a \
+                 different destination",
+                output_path.display(),
             );
             std::process::exit(1);
-        }),
+        }
+        let plan = custom_keys.resolve_conflicts();
+        let serialized = custom_keys.to_string();
+        let write_result = fs::write(output_path_ref, &serialized);
+        if let Err(error) = write_result {
+            eprintln!("error: cannot write {}: {error}", output_path.display());
+            std::process::exit(1);
+        }
+        println!("{plan}");
+        println!("Wrote resolved keys to {}", output_path.display());
+    }
+
+    fn same_underlying_file(left: &Path, right: &Path) -> bool {
+        let canonical_left = fs::canonicalize(left).ok();
+        let canonical_right = fs::canonicalize(right).ok();
+        if let Some(canonical_left_path) = canonical_left
+            && let Some(canonical_right_path) = canonical_right
+        {
+            return canonical_left_path == canonical_right_path;
+        }
+        left == right
     }
 }
 
-fn inspect_unit(unit_id_string: String, custom_keys: CustomKeys) {
-    let leaked: &'static mut str = Box::leak(unit_id_string.clone().into_boxed_str());
-    let static_id: &'static str = leaked;
-    let unit_id = WarcraftObjectId::from(static_id);
+struct LayoutSpec;
 
-    let unit_grids = UnitGrids::for_unit(unit_id);
-    let layout = GridLayout::qwerty_grid();
-
-    println!("Unit: {unit_id_string}");
-
-    for (index, named_grid) in unit_grids.grids().iter().enumerate() {
-        let display = CommandGridDisplay::new(named_grid, &custom_keys, layout);
-        println!("\n[{index}] {:?}", named_grid.role());
-        println!("{display}");
-    }
-
-    let position_cards = unit_grids.position_collisions(&custom_keys);
-    let hotkey_cards = unit_grids.hotkey_collisions(&custom_keys, layout);
-
-    let no_position_collisions = position_cards.iter().all(|card| card.is_empty());
-    let no_hotkey_collisions = hotkey_cards.iter().all(|card| card.is_empty());
-    if no_position_collisions && no_hotkey_collisions {
-        println!("\nNo collisions.");
-        return;
-    }
-
-    if !no_position_collisions {
-        println!("\nPosition collisions:");
-        for card in position_cards {
-            for (position, collision_slots) in card {
-                let slot_list: Vec<&str> = collision_slots.iter().map(|s| s.as_str()).collect();
-                let column = u8::from(position.column());
-                let row = u8::from(position.row());
-                println!(
-                    "  {:?}  ({column},{row})  {}",
-                    card.role(),
-                    slot_list.join(", ")
+impl LayoutSpec {
+    fn parse(spec: &str) -> GridLayout {
+        match spec {
+            "qwerty" => GridLayout::qwerty_grid(),
+            other => GridLayout::try_from(other).unwrap_or_else(|_| {
+                eprintln!(
+                    "error: invalid layout {other:?} — use \"qwerty\" or a 12-character \
+                     row-major string (e.g. \"QWERASDFZXCV\")"
                 );
-            }
+                std::process::exit(1);
+            }),
         }
     }
+}
 
-    if !no_hotkey_collisions {
-        println!("\nHotkey collisions:");
-        for card in hotkey_cards {
-            for (_, entry) in card {
-                let slot_list: Vec<&str> = entry.slots().iter().map(|s| s.as_str()).collect();
-                println!(
-                    "  {:?}  key {}  {}",
-                    card.role(),
-                    entry.token(),
-                    slot_list.join(", ")
-                );
+struct UnitInspection {
+    unit_id_string: String,
+    custom_keys: CustomKeys,
+}
+
+impl UnitInspection {
+    fn run(self) {
+        let UnitInspection {
+            unit_id_string,
+            custom_keys,
+        } = self;
+        let leaked: &'static mut str = Box::leak(unit_id_string.clone().into_boxed_str());
+        let static_id: &'static str = leaked;
+        let unit_id = WarcraftObjectId::from(static_id);
+
+        let unit_grids = UnitGrids::for_unit(unit_id);
+        let layout = GridLayout::qwerty_grid();
+
+        println!("Unit: {unit_id_string}");
+
+        for (index, named_grid) in unit_grids.grids().iter().enumerate() {
+            let display = CommandGridDisplay::new(named_grid, &custom_keys, layout);
+            println!("\n[{index}] {:?}", named_grid.role());
+            println!("{display}");
+        }
+
+        let position_cards = unit_grids.position_collisions(&custom_keys);
+        let hotkey_cards = unit_grids.hotkey_collisions(&custom_keys, layout);
+
+        let no_position_collisions = position_cards.iter().all(|card| card.is_empty());
+        let no_hotkey_collisions = hotkey_cards.iter().all(|card| card.is_empty());
+        if no_position_collisions && no_hotkey_collisions {
+            println!("\nNo collisions.");
+            return;
+        }
+
+        if !no_position_collisions {
+            println!("\nPosition collisions:");
+            for card in position_cards {
+                for (position, collision_slots) in card {
+                    let slot_list: Vec<&str> = collision_slots.iter().map(|s| s.as_str()).collect();
+                    let column = u8::from(position.column());
+                    let row = u8::from(position.row());
+                    let joined_slots = slot_list.join(", ");
+                    let role = card.role();
+                    println!("  {role:?}  ({column},{row})  {joined_slots}");
+                }
+            }
+        }
+
+        if !no_hotkey_collisions {
+            println!("\nHotkey collisions:");
+            for card in hotkey_cards {
+                for (_, entry) in card {
+                    let slot_list: Vec<&str> = entry.slots().iter().map(|s| s.as_str()).collect();
+                    let joined_slots = slot_list.join(", ");
+                    let role = card.role();
+                    let token = entry.token();
+                    println!("  {role:?}  key {token}  {joined_slots}");
+                }
             }
         }
     }

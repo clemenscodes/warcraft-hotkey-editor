@@ -1,6 +1,6 @@
 use warcraft_api::WarcraftObjectId;
 
-use crate::ability_id::AbilityId;
+use crate::identity::ability_id::AbilityId;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum HotkeyTarget {

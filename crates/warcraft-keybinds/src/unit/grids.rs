@@ -4,11 +4,11 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::custom_keys::CustomKeys;
-use crate::grid_layout::GridLayout;
-use crate::hotkey_token::HotkeyToken;
+use crate::grid::layout::GridLayout;
+use crate::identity::hotkey_token::HotkeyToken;
+use crate::identity::slot::{CommandCard, GridSlotId};
 use crate::model::GridCoordinate;
-use crate::slot::{CommandCard, GridSlotId};
-use crate::unit_slots::UnitCommandSlots;
+use crate::unit::slots::UnitCommandSlots;
 
 const GRID_SLOT_COUNT: usize = 12;
 
@@ -23,6 +23,33 @@ pub enum GridRole {
 impl GridRole {
     pub fn is_research_context(self) -> bool {
         matches!(self, GridRole::HeroSkillTree)
+    }
+
+    /// Stable sort index for laying out groups when multiple grid roles share
+    /// the same `(row, col)` cell.  Lower comes first.
+    pub fn sort_index(self) -> u8 {
+        match self {
+            GridRole::MainCommand => 0,
+            GridRole::BuildMenu => 1,
+            GridRole::UprootedForm => 2,
+            GridRole::HeroSkillTree => 3,
+        }
+    }
+
+    /// Short human-readable label used in CLI output and Display formatting.
+    pub fn label(self) -> &'static str {
+        match self {
+            GridRole::MainCommand => "main command",
+            GridRole::BuildMenu => "build menu",
+            GridRole::UprootedForm => "uprooted",
+            GridRole::HeroSkillTree => "research",
+        }
+    }
+}
+
+impl std::fmt::Display for GridRole {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str(self.label())
     }
 }
 
@@ -428,7 +455,7 @@ impl HotkeyCollisionCardBuilder {
 mod unit_grids_tests {
     use super::*;
     use crate::custom_keys::CustomKeys;
-    use crate::grid_layout::GridLayout;
+    use crate::grid::layout::GridLayout;
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, Hotkey, RowIndex};
 
     fn paladin_id() -> WarcraftObjectId {

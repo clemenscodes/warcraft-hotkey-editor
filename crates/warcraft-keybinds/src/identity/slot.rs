@@ -2,8 +2,8 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
-use crate::ability_cell::AbilityCell;
-use crate::ability_id::AbilityId;
+use crate::display::ability_cell::AbilityCell;
+use crate::identity::ability_id::AbilityId;
 use crate::model::{AbilityBinding, CommandBinding, GridCoordinate};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -55,6 +55,28 @@ impl GridSlotId {
             Self::Command(name) => AbilityCell::for_command(*name, command_binding)
                 .display_name()
                 .to_string(),
+        }
+    }
+
+    /// Whether this slot is treated as a permanent fixture by the cascade
+    /// conflict-resolution algorithm: it always wins anchor decisions and is
+    /// never selected as a gap-pull candidate.
+    ///
+    /// Two categories qualify:
+    ///   - **System commands** (any `GridSlotId::Command`) like Attack, Hold
+    ///     Position, Stop, Cancel.  These are functional UI controls, not
+    ///     classic abilities; players expect them at fixed positions on every
+    ///     unit.
+    ///   - **Ancient root/uproot toggles** (`Aro1`, `Aro2`).  This is the
+    ///     morph command that lets Tree of Life / Ancient Protector / etc.
+    ///     move between stationary and mobile forms.  It's structural rather
+    ///     than a spell, and its slot is part of the building's identity.
+    pub fn is_pinned(&self) -> bool {
+        match self {
+            Self::Command(_) => true,
+            Self::Ability(ability_id) | Self::AbilityOff(ability_id) => {
+                matches!(ability_id.value(), "Aro1" | "Aro2")
+            }
         }
     }
 }
