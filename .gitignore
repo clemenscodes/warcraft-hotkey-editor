@@ -14,9 +14,6 @@ Cargo.lock.bak
 /.moon/docker
 .claude/
 
-# Compiled Tailwind asset; edit tailwind.input.css and styles/* instead.
-/crates/hotkey-editor/assets/tailwind.css
-
 # dx build output and Playwright e2e artifacts
 /crates/hotkey-editor/dist/
 /crates/hotkey-editor/e2e/test-results/
