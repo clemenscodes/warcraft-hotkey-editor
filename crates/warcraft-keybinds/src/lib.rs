@@ -12,6 +12,9 @@ pub mod move_request;
 pub mod slot;
 pub mod system_binding_map;
 pub mod text;
+pub mod unit_collision_report;
+pub mod unit_grids;
+pub mod unit_keyed_custom_keys;
 pub mod unit_slots;
 
 pub use ability_cell::{AbilityCell, AbilityIconPath};
@@ -29,5 +32,11 @@ pub use model::{
 pub use move_request::MoveRequest;
 pub use slot::{CommandCard, GridSlotId};
 pub use system_binding_map::{EffectiveBinding, ResolvedSystemBinding, SystemBindingMap};
+pub use unit_collision_report::{UnitCollisionEntry, UnitCollisionReport};
+pub use unit_grids::{
+    CollisionSlots, GridRole, HotkeyCollisionAtCell, HotkeyCollisionCard, NamedCommandGrid,
+    PositionCollisionCard, UnitGrids,
+};
+pub use unit_keyed_custom_keys::{UnitAbilityGroup, UnitAbilitySlot, UnitKeyedCustomKeys};
 pub use unit_slots::UnitCommandSlots;
 pub use warcraft_database::{BuildingTraits, CommandCatalog};

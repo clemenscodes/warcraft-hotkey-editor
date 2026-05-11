@@ -3,15 +3,18 @@ resolver = "2"
 members = [
     "crates/hotkey-editor",
     "crates/warcraft-api",
+    "crates/warcraft-cli",
     "crates/warcraft-database",
     "crates/warcraft-extractor",
     "crates/warcraft-keybinds",
     "crates/warcraft-slk",
 ]
 # Default workspace members compile on `wasm32-unknown-unknown` for the web app.
-# `warcraft-extractor` and `warcraft-slk` are native-only build/regenerate tools
-# (CASC + cmake + zlib), so they are kept out of default workspace operations
-# (`cargo build`, `cargo clippy --all-targets`, etc.). Run them explicitly:
+# `warcraft-extractor`, `warcraft-slk`, and `warcraft-cli` are native-only tools
+# kept out of default workspace operations (`cargo build`, `cargo clippy --all-targets`).
+# Run the CLI:
+#   cargo run -p warcraft-cli -- unit Hpal
+#   cargo run -p warcraft-cli -- --help
 #   cargo run -p warcraft-extractor -- --casc <PATH>
 #   cargo test -p warcraft-extractor
 default-members = [

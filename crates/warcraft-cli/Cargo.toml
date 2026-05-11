@@ -1,0 +1,16 @@
+[package]
+name = "warcraft-cli"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "Command-line frontend for querying the Warcraft III game database."
+
+[[bin]]
+name = "warcraft"
+path = "src/main.rs"
+
+[dependencies]
+warcraft-keybinds = { path = "../warcraft-keybinds" }
+warcraft-api = { path = "../warcraft-api" }
+clap = { workspace = true }

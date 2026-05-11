@@ -109,6 +109,28 @@ isn't supposed to be here.
 These are the rules every change must obey. Treat each as a compile-time
 constraint, even when the compiler can't enforce it.
 
+### How the wall is enforced today
+
+All internal mutation helpers on `CustomKeys` that the renderer must not
+call are `pub(crate)`:
+
+- `binding_or_default_mut` — `pub(crate)`
+- `command_or_default_mut` — `pub(crate)`
+- `system_mut` — `pub(crate)`
+
+Calling any of these from `hotkey-editor` is a **compile error**. The only
+public API the renderer may use to mutate state is named facade commands:
+`set_hotkey`, `move_slot`, `assign_position`, `apply_grid_to_all_bindings`,
+`set_system_hotkey`, `swap_system_bindings`, `normalize`, `serialize`.
+
+**When adding a new mutation to `CustomKeys`:**
+- If the renderer needs it, add a named command method (`pub fn do_thing`)
+  that encapsulates the entire operation and returns a normalized result.
+- Do NOT add a `pub fn something_mut` that exposes a raw `&mut` reference.
+  That bypasses normalization and re-opens the R4 violation.
+- Internal helpers that are only needed by other `CustomKeys` methods stay
+  `pub(crate)` or private.
+
 **R1. localStorage is the source of truth.**
 There is no `Signal<CustomKeysFile>` that holds "the real" state in memory
 while localStorage trails behind. Every mutation writes to localStorage

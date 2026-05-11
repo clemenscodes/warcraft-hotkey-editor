@@ -51,13 +51,7 @@ impl CustomKeys {
         self.entries.get(id_str)?.as_ability()
     }
 
-    pub fn binding_mut(&mut self, id: impl Into<AbilityId>) -> Option<&mut AbilityBinding> {
-        let ability_id = id.into();
-        let id_str = ability_id.value();
-        self.entries.get_mut(id_str)?.as_ability_mut()
-    }
-
-    pub fn binding_or_default_mut(
+    pub(crate) fn binding_or_default_mut(
         &mut self,
         id: impl Into<AbilityId>,
     ) -> Option<&mut AbilityBinding> {
@@ -90,11 +84,7 @@ impl CustomKeys {
         self.entries.get(name)?.as_command()
     }
 
-    pub fn command_mut(&mut self, name: &str) -> Option<&mut CommandBinding> {
-        self.entries.get_mut(name)?.as_command_mut()
-    }
-
-    pub fn command_or_default_mut(
+    pub(crate) fn command_or_default_mut(
         &mut self,
         name: impl Into<WarcraftObjectId>,
     ) -> Option<&mut CommandBinding> {
@@ -125,8 +115,15 @@ impl CustomKeys {
         self.entries.get(id)?.as_system()
     }
 
-    pub fn system_mut(&mut self, id: &str) -> Option<&mut SystemBinding> {
+    pub(crate) fn system_mut(&mut self, id: &str) -> Option<&mut SystemBinding> {
         self.entries.get_mut(id)?.as_system_mut()
+    }
+
+    pub fn set_system_hotkey(&mut self, section_id: &str, hotkey_code: u32) {
+        let hotkey = Hotkey::VirtualKey(hotkey_code);
+        if let Some(binding) = self.system_mut(section_id) {
+            binding.set_hotkey(hotkey);
+        }
     }
 
     pub fn builder() -> crate::model::CustomKeysBuilder {
@@ -707,7 +704,7 @@ impl CustomKeys {
                 continue;
             }
             let candidate_token =
-                self.effective_token_for_slot(candidate_slot, layout, is_research_context);
+                self.effective_hotkey_token(candidate_slot, layout, is_research_context);
             let Some(token_value) = candidate_token else {
                 continue;
             };
@@ -730,7 +727,7 @@ impl CustomKeys {
         None
     }
 
-    fn effective_token_for_slot(
+    pub fn effective_hotkey_token(
         &self,
         slot: &GridSlotId,
         layout: GridLayout,
@@ -965,6 +962,15 @@ impl From<&str> for CustomKeys {
 impl From<String> for CustomKeys {
     fn from(text: String) -> Self {
         Self::from(text.as_str())
+    }
+}
+
+impl TryFrom<&std::path::Path> for CustomKeys {
+    type Error = std::io::Error;
+
+    fn try_from(path: &std::path::Path) -> Result<Self, Self::Error> {
+        let text = std::fs::read_to_string(path)?;
+        Ok(Self::from(text.as_str()))
     }
 }
 
@@ -1404,6 +1410,28 @@ mod tests {
                 "Modifier={modifier_text} must parse correctly",
             );
         }
+    }
+
+    #[test]
+    fn set_system_hotkey_updates_existing_binding() {
+        let initial_binding =
+            SystemBinding::new(Hotkey::VirtualKey(27), SystemKeybindClass::Game, None);
+        let mut file = CustomKeys::builder()
+            .system("QLog", initial_binding)
+            .build();
+        file.set_system_hotkey("QLog", 65);
+        let expected_hotkey = Hotkey::VirtualKey(65);
+        assert_eq!(
+            file.system("QLog").map(|binding| binding.hotkey().clone()),
+            Some(expected_hotkey)
+        );
+    }
+
+    #[test]
+    fn set_system_hotkey_is_noop_for_missing_section() {
+        let mut file = CustomKeys::default();
+        file.set_system_hotkey("nonexistent", 65);
+        assert!(file.system("nonexistent").is_none());
     }
 
     #[test]

@@ -3950,6 +3950,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "warcraft-cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "warcraft-api",
+ "warcraft-keybinds",
+]
+
+[[package]]
 name = "warcraft-database"
 version = "0.1.0"
 dependencies = [

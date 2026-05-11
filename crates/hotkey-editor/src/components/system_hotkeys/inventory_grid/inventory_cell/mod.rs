@@ -5,7 +5,7 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeys, Hotkey};
+use warcraft_keybinds::CustomKeys;
 use wasm_bindgen::JsCast;
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
@@ -256,9 +256,7 @@ pub(super) fn InventoryCell(props: InventoryCellProps) -> Element {
     let handle_pick = move |code: u32| {
         let mut guard = keys_signal.write();
         let file = guard.get_or_insert_with(|| CustomKeys::from(""));
-        if let Some(binding) = file.system_mut(&section_id_for_pick) {
-            binding.set_hotkey(Hotkey::VirtualKey(code));
-        }
+        file.set_system_hotkey(&section_id_for_pick, code);
         drop(guard);
         editing_section.set(None);
     };
