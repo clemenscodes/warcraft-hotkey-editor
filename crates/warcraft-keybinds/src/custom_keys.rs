@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fmt;
 use std::sync::OnceLock;
 
@@ -6,6 +6,9 @@ use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::ability_id::AbilityId;
+use crate::cascade_planner::{self, CascadePlan, PlannedMove, UnresolvedMover};
+use crate::cascade_queue::AssignmentQueue;
+use crate::conflict_graph::ConflictGraph;
 use crate::grid_layout::GridLayout;
 use crate::hotkey_target::HotkeyTarget;
 use crate::hotkey_token::HotkeyToken;
@@ -15,6 +18,7 @@ use crate::model::{
 };
 use crate::move_request::MoveRequest;
 use crate::slot::GridSlotId;
+use crate::unit_grids::GridRole;
 
 pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../templates/CustomKeys.txt");
 
@@ -47,8 +51,10 @@ impl From<BTreeMap<WarcraftObjectId, WarcraftKeybinding>> for CustomKeys {
 impl CustomKeys {
     pub fn binding(&self, id: impl Into<AbilityId>) -> Option<&AbilityBinding> {
         let ability_id = id.into();
-        let id_str = ability_id.value();
-        self.entries.get(id_str)?.as_ability()
+        let canonical_object_id = self
+            .canonical_object_id_for(ability_id.object_id())
+            .unwrap_or_else(|| ability_id.object_id());
+        self.entries.get(canonical_object_id.value())?.as_ability()
     }
 
     pub(crate) fn binding_or_default_mut(
@@ -56,19 +62,39 @@ impl CustomKeys {
         id: impl Into<AbilityId>,
     ) -> Option<&mut AbilityBinding> {
         let ability_id = id.into();
-        let object_id = ability_id.object_id();
+        let requested_object_id = ability_id.object_id();
+        let canonical_object_id = self
+            .canonical_object_id_for(requested_object_id)
+            .unwrap_or(requested_object_id);
         if !matches!(
-            self.entries.get(object_id.value()),
+            self.entries.get(canonical_object_id.value()),
             Some(WarcraftKeybinding::Ability(_))
         ) {
             self.entries.insert(
-                object_id,
+                canonical_object_id,
                 WarcraftKeybinding::Ability(AbilityBinding::default()),
             );
         }
         self.entries
-            .get_mut(object_id.value())
+            .get_mut(canonical_object_id.value())
             .and_then(WarcraftKeybinding::as_ability_mut)
+    }
+
+    /// Looks up the actual key under which `requested` is stored, matching
+    /// case-insensitively.  This collapses casing variants from the auto-
+    /// generated database (e.g. `ACvs` and `Acvs` for Envenomed Weapons) so
+    /// they share a single binding in the entries map and produce a single
+    /// section in the serialized output.
+    fn canonical_object_id_for(&self, requested: WarcraftObjectId) -> Option<WarcraftObjectId> {
+        let requested_value = requested.value();
+        if self.entries.contains_key(requested_value) {
+            return Some(requested);
+        }
+        let requested_lowercase = requested_value.to_ascii_lowercase();
+        self.entries
+            .keys()
+            .find(|stored| stored.value().to_ascii_lowercase() == requested_lowercase)
+            .copied()
     }
 
     pub fn bindings_in_order(&self) -> impl Iterator<Item = BindingEntry<'_>> {
@@ -81,25 +107,38 @@ impl CustomKeys {
     }
 
     pub fn command(&self, name: &str) -> Option<&CommandBinding> {
-        self.entries.get(name)?.as_command()
+        if let Some(entry) = self.entries.get(name)
+            && let Some(command) = entry.as_command()
+        {
+            return Some(command);
+        }
+        let lowercase_name = name.to_ascii_lowercase();
+        let canonical = self
+            .entries
+            .keys()
+            .find(|stored| stored.value().to_ascii_lowercase() == lowercase_name)?;
+        self.entries.get(canonical.value())?.as_command()
     }
 
     pub(crate) fn command_or_default_mut(
         &mut self,
         name: impl Into<WarcraftObjectId>,
     ) -> Option<&mut CommandBinding> {
-        let object_id = name.into();
+        let requested_object_id = name.into();
+        let canonical_object_id = self
+            .canonical_object_id_for(requested_object_id)
+            .unwrap_or(requested_object_id);
         if !matches!(
-            self.entries.get(object_id.value()),
+            self.entries.get(canonical_object_id.value()),
             Some(WarcraftKeybinding::Command(_))
         ) {
             self.entries.insert(
-                object_id,
+                canonical_object_id,
                 WarcraftKeybinding::Command(CommandBinding::default()),
             );
         }
         self.entries
-            .get_mut(object_id.value())
+            .get_mut(canonical_object_id.value())
             .and_then(WarcraftKeybinding::as_command_mut)
     }
 
@@ -658,6 +697,106 @@ impl CustomKeys {
         changed_count
     }
 
+    /// Runs the cascade conflict-resolution algorithm and applies its plan to
+    /// this `CustomKeys`.  This is a user-triggered, opt-in operation — it is
+    /// **not** called from `normalize()` or the boot path.  Use it when the
+    /// user explicitly asks the app to try resolving collisions (typically
+    /// before export).
+    ///
+    /// Only **positions** are written back; hotkeys are untouched.  Hotkeys
+    /// belong to `assign_position` and `apply_grid_to_all_bindings`; the
+    /// cascade just redistributes geometry to remove cross-unit collisions
+    /// (and pack rows left where it can).
+    ///
+    /// The algorithm loops internally until a fixed point — applying one
+    /// pass's moves can expose new gaps that a follow-up pass can close (the
+    /// spill phase rearranges things in ways the original raster sweep
+    /// couldn't anticipate).  The returned `CascadePlan` aggregates every
+    /// net position change from the starting state to the final state so the
+    /// caller sees a single `(old → new)` per ability.  Unresolved nodes are
+    /// the ones still stuck after the final iteration.
+    pub fn resolve_conflicts(&mut self) -> CascadePlan {
+        const MAX_ITERATIONS: usize = 32;
+
+        let mut net_moves: HashMap<MoveKey, AccumulatedMove> = HashMap::new();
+        let mut last_unresolved: Vec<UnresolvedMover> = Vec::new();
+
+        for _ in 0..MAX_ITERATIONS {
+            let graph = ConflictGraph::build(self);
+            let queue = AssignmentQueue::build(graph);
+            let pass_plan = cascade_planner::solve(&queue);
+            last_unresolved = pass_plan.unresolved().to_vec();
+            if pass_plan.move_count() == 0 {
+                break;
+            }
+            for planned_move in pass_plan.moves() {
+                let key = MoveKey {
+                    slot_id: planned_move.slot_id(),
+                    grid_role: planned_move.grid_role(),
+                };
+                let new_position = planned_move.new_position();
+                let carrier_unit_ids: Vec<WarcraftObjectId> =
+                    planned_move.carrier_unit_ids().to_vec();
+                net_moves
+                    .entry(key)
+                    .and_modify(|accumulated| accumulated.new_position = new_position)
+                    .or_insert_with(|| AccumulatedMove {
+                        old_position: planned_move.old_position(),
+                        new_position,
+                        carrier_unit_ids,
+                    });
+                let application = MoveApplication::from_planned_move(planned_move);
+                self.apply_resolved_position(application);
+            }
+        }
+
+        let mut combined_moves: Vec<PlannedMove> = Vec::new();
+        for (key, accumulated) in net_moves {
+            if accumulated.old_position == accumulated.new_position {
+                continue;
+            }
+            let planned_move = PlannedMove::new(
+                key.slot_id,
+                key.grid_role,
+                accumulated.old_position,
+                accumulated.new_position,
+                accumulated.carrier_unit_ids,
+            );
+            combined_moves.push(planned_move);
+        }
+        CascadePlan::from_parts(combined_moves, last_unresolved)
+    }
+
+    fn apply_resolved_position(&mut self, application: MoveApplication) {
+        let is_research_context = application.grid_role.is_research_context();
+        let new_position = application.new_position;
+        match application.slot_id {
+            GridSlotId::Ability(ability_id) => {
+                let Some(binding) = self.binding_or_default_mut(ability_id) else {
+                    return;
+                };
+                if is_research_context {
+                    binding.set_research_button_position(Some(new_position));
+                } else {
+                    binding.set_button_position(Some(new_position));
+                }
+            }
+            GridSlotId::AbilityOff(ability_id) => {
+                let Some(binding) = self.binding_or_default_mut(ability_id) else {
+                    return;
+                };
+                binding.set_unbutton_position(Some(new_position));
+            }
+            GridSlotId::Command(command_id) => {
+                let Some(binding) = self.command_or_default_mut(command_id) else {
+                    return;
+                };
+                binding.set_button_position(Some(new_position));
+                binding.set_unbutton_position(Some(new_position));
+            }
+        }
+    }
+
     pub fn set_hotkey(&mut self, target: HotkeyTarget, new_token: Option<HotkeyToken>) {
         match target {
             HotkeyTarget::Ability(ability_id) => {
@@ -774,6 +913,43 @@ fn is_passive_ability(id: &str) -> bool {
     WARCRAFT_DATABASE
         .by_id(id)
         .is_some_and(|object| object.is_passive_ability())
+}
+
+/// Snapshot of a single `PlannedMove` decoupled from the plan's borrow, so
+/// `resolve_conflicts` can release its read of `&self` before mutating.
+struct MoveApplication {
+    slot_id: GridSlotId,
+    grid_role: GridRole,
+    new_position: GridCoordinate,
+}
+
+impl MoveApplication {
+    fn from_planned_move(planned_move: &PlannedMove) -> Self {
+        Self {
+            slot_id: planned_move.slot_id(),
+            grid_role: planned_move.grid_role(),
+            new_position: planned_move.new_position(),
+        }
+    }
+}
+
+/// Identifies a slot/role pair across multiple `resolve_conflicts` iterations
+/// so we can collapse repeated moves of the same ability into a single
+/// `(original → final)` entry.
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+struct MoveKey {
+    slot_id: GridSlotId,
+    grid_role: GridRole,
+}
+
+/// Net movement of a single slot accumulated across iterations.  The
+/// `old_position` is the first one we saw (before any mutation), the
+/// `new_position` is updated on each subsequent move so the final value
+/// reflects where the slot ended up.
+struct AccumulatedMove {
+    old_position: GridCoordinate,
+    new_position: GridCoordinate,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
 }
 
 impl fmt::Display for CustomKeys {
@@ -1863,6 +2039,83 @@ mod normalize_tests {
             button_position.is_some(),
             "[ngir] (Goblin Shredder) must have a button_position in the normalized output"
         );
+    }
+
+    #[test]
+    fn resolve_conflicts_produces_at_least_one_move_on_default_keys() {
+        let mut normalized = CustomKeys::from("").normalize();
+        let plan = normalized.resolve_conflicts();
+        assert!(
+            plan.move_count() > 0,
+            "default keys have known collisions so resolve_conflicts must produce moves"
+        );
+    }
+
+    #[test]
+    fn resolve_conflicts_is_idempotent_on_default_keys() {
+        let mut keys = CustomKeys::from("").normalize();
+        let first_plan = keys.resolve_conflicts();
+        assert!(first_plan.move_count() > 0, "first call must make moves");
+        let second_plan = keys.resolve_conflicts();
+        if second_plan.move_count() != 0 {
+            let mut lines: Vec<String> = Vec::new();
+            for planned_move in second_plan.moves() {
+                let line = format!(
+                    "  {} {:?} ({},{}) -> ({},{})",
+                    planned_move.slot_id().as_str(),
+                    planned_move.grid_role(),
+                    u8::from(planned_move.old_position().column()),
+                    u8::from(planned_move.old_position().row()),
+                    u8::from(planned_move.new_position().column()),
+                    u8::from(planned_move.new_position().row()),
+                );
+                lines.push(line);
+            }
+            panic!(
+                "second resolve_conflicts call produced {} moves:\n{}",
+                second_plan.move_count(),
+                lines.join("\n"),
+            );
+        }
+    }
+
+    #[test]
+    fn resolve_conflicts_writes_new_positions_into_bindings() {
+        // After resolve_conflicts, every PlannedMove's slot must read back the
+        // new_position from the bindings map.
+        use crate::slot::GridSlotId;
+        let mut keys = CustomKeys::from("").normalize();
+        let plan = keys.resolve_conflicts();
+        for planned_move in plan.moves() {
+            let slot = planned_move.slot_id();
+            let expected = planned_move.new_position();
+            let stored = match slot {
+                GridSlotId::Ability(ability_id) => keys
+                    .binding(ability_id)
+                    .and_then(|binding| {
+                        if planned_move.grid_role().is_research_context() {
+                            binding.research_button_position()
+                        } else {
+                            binding.button_position()
+                        }
+                    })
+                    .copied(),
+                GridSlotId::AbilityOff(ability_id) => keys
+                    .binding(ability_id)
+                    .and_then(|binding| binding.unbutton_position())
+                    .copied(),
+                GridSlotId::Command(command_id) => keys
+                    .command(command_id.value())
+                    .and_then(|binding| binding.button_position())
+                    .copied(),
+            };
+            assert_eq!(
+                stored,
+                Some(expected),
+                "{} must have its new position written back to the binding",
+                slot.as_str(),
+            );
+        }
     }
 }
 

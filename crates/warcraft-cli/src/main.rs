@@ -1,5 +1,6 @@
 use std::fmt;
-use std::path::PathBuf;
+use std::fs;
+use std::path::{Path, PathBuf};
 
 use clap::{Parser, Subcommand};
 use warcraft_api::WarcraftObjectId;
@@ -57,6 +58,19 @@ enum Command {
         #[arg(long, short = 'p')]
         plan: bool,
     },
+    /// Run the cascade conflict-resolution algorithm on a CustomKeys.txt file
+    /// and write the resolved result to a new file.  The input file is never
+    /// modified.  Prints a summary of moves applied and any abilities that
+    /// remained unresolved.
+    Resolve {
+        /// Path to the input CustomKeys.txt file.
+        input: PathBuf,
+        /// Output path for the resolved file.  Defaults to inserting
+        /// `.resolved` before the extension (e.g. `CustomKeys.txt` →
+        /// `CustomKeys.resolved.txt`).
+        #[arg(long, short)]
+        output: Option<PathBuf>,
+    },
 }
 
 fn main() {
@@ -73,6 +87,9 @@ fn main() {
                     .normalize(),
             };
             inspect_unit(unit_id, custom_keys);
+        }
+        Command::Resolve { input, output } => {
+            resolve_keys_file(input, output);
         }
         Command::Keys {
             file,
@@ -128,6 +145,41 @@ fn main() {
                 println!("{display}");
             }
         }
+    }
+}
+
+fn resolve_keys_file(input: PathBuf, output: Option<PathBuf>) {
+    let mut custom_keys = CustomKeys::try_from(input.as_path())
+        .unwrap_or_else(|error| {
+            eprintln!("error: cannot read {}: {error}", input.display());
+            std::process::exit(1);
+        })
+        .normalize();
+    let output_path = output.unwrap_or_else(|| PathBuf::from("CustomKeys.txt"));
+    if paths_resolve_to_same_file(&input, &output_path) {
+        eprintln!(
+            "error: output {} would overwrite the input file; pass --output FILE to choose a \
+             different destination",
+            output_path.display(),
+        );
+        std::process::exit(1);
+    }
+    let plan = custom_keys.resolve_conflicts();
+    let serialized = custom_keys.to_string();
+    if let Err(error) = fs::write(&output_path, &serialized) {
+        eprintln!("error: cannot write {}: {error}", output_path.display());
+        std::process::exit(1);
+    }
+    println!("{plan}");
+    println!("Wrote resolved keys to {}", output_path.display());
+}
+
+fn paths_resolve_to_same_file(left: &Path, right: &Path) -> bool {
+    let canonical_left = fs::canonicalize(left).ok();
+    let canonical_right = fs::canonicalize(right).ok();
+    match (canonical_left, canonical_right) {
+        (Some(a), Some(b)) => a == b,
+        _ => left == right,
     }
 }
 

@@ -8,6 +8,7 @@ use crate::slot::GridSlotId;
 use crate::unit_grids::GridRole;
 
 /// One ability successfully relocated by the cascade solver.
+#[derive(Clone)]
 pub struct PlannedMove {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -17,6 +18,22 @@ pub struct PlannedMove {
 }
 
 impl PlannedMove {
+    pub fn new(
+        slot_id: GridSlotId,
+        grid_role: GridRole,
+        old_position: GridCoordinate,
+        new_position: GridCoordinate,
+        carrier_unit_ids: Vec<WarcraftObjectId>,
+    ) -> Self {
+        Self {
+            slot_id,
+            grid_role,
+            old_position,
+            new_position,
+            carrier_unit_ids,
+        }
+    }
+
     pub fn slot_id(&self) -> GridSlotId {
         self.slot_id
     }
@@ -45,6 +62,7 @@ impl PlannedMove {
 /// One ability the solver could not relocate — the queue ran out of valid
 /// same-row slots while cascading rightward and the ability is stuck at the
 /// position recorded here.
+#[derive(Clone)]
 pub struct UnresolvedMover {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -86,6 +104,10 @@ pub struct CascadePlan {
 }
 
 impl CascadePlan {
+    pub fn from_parts(moves: Vec<PlannedMove>, unresolved: Vec<UnresolvedMover>) -> Self {
+        Self { moves, unresolved }
+    }
+
     pub fn moves(&self) -> &[PlannedMove] {
         &self.moves
     }

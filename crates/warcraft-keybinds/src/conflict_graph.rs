@@ -15,9 +15,16 @@ use crate::unit_slots::UnitCommandSlots;
 /// `Ability(X)` and `AbilityOff(X)` share the same `as_str()` and therefore
 /// map to the same key — they are two toggle states of one button, not
 /// two competing slots.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+///
+/// The `ability_str_lowercase` field collapses casing variants together: the
+/// auto-generated database contains some abilities registered under two
+/// different casings (e.g. `ACvs` and `Acvs` for Envenomed Weapons) with
+/// disjoint carrier unit sets.  Without lowercasing, the conflict graph would
+/// treat them as two separate abilities and miss the very real conflict
+/// between them.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 struct AbilityRoleKey {
-    ability_str: &'static str,
+    ability_str_lowercase: String,
     grid_role: GridRole,
 }
 
@@ -115,14 +122,14 @@ impl ConflictGraph {
                     let Some(position) = custom_keys.position_for_slot(&slot, is_research) else {
                         continue;
                     };
-                    let ability_str = slot.as_str();
+                    let ability_str_lowercase = slot.as_str().to_ascii_lowercase();
                     let key = AbilityRoleKey {
-                        ability_str,
+                        ability_str_lowercase,
                         grid_role,
                     };
                     let accumulator =
                         node_accumulators
-                            .entry(key)
+                            .entry(key.clone())
                             .or_insert_with(|| NodeAccumulator {
                                 canonical_slot: slot,
                                 position,
@@ -139,18 +146,18 @@ impl ConflictGraph {
             }
         }
 
-        // Assign stable, deterministic node indices sorted by (grid_role, ability_str).
-        let mut ordered_keys: Vec<AbilityRoleKey> = node_accumulators.keys().copied().collect();
+        // Assign stable, deterministic node indices sorted by (grid_role, ability_str_lowercase).
+        let mut ordered_keys: Vec<AbilityRoleKey> = node_accumulators.keys().cloned().collect();
         ordered_keys.sort_by(|left, right| {
             let left_role_index = grid_role_order(left.grid_role);
             let right_role_index = grid_role_order(right.grid_role);
             let role_order = left_role_index.cmp(&right_role_index);
-            role_order.then_with(|| left.ability_str.cmp(right.ability_str))
+            role_order.then_with(|| left.ability_str_lowercase.cmp(&right.ability_str_lowercase))
         });
 
         let mut key_to_index: HashMap<AbilityRoleKey, usize> = HashMap::new();
-        for (index, key) in ordered_keys.iter().copied().enumerate() {
-            key_to_index.insert(key, index);
+        for (index, key) in ordered_keys.iter().enumerate() {
+            key_to_index.insert(key.clone(), index);
         }
 
         let mut nodes: Vec<ConflictNode> = Vec::with_capacity(ordered_keys.len());
@@ -173,7 +180,7 @@ impl ConflictGraph {
 
         for role_map in unit_role_keys.values() {
             for role_key_set in role_map.values() {
-                let role_keys: Vec<AbilityRoleKey> = role_key_set.iter().copied().collect();
+                let role_keys: Vec<AbilityRoleKey> = role_key_set.iter().cloned().collect();
                 for outer in 0..role_keys.len() {
                     for inner in (outer + 1)..role_keys.len() {
                         let index_outer = key_to_index[&role_keys[outer]];
@@ -226,10 +233,12 @@ impl ConflictGraph {
         self.adjacency[index].len()
     }
 
-    /// Looks up a node by its ability string and grid role.
-    pub fn find_node(&self, ability_str: &'static str, grid_role: GridRole) -> Option<usize> {
+    /// Looks up a node by its ability string and grid role.  The lookup is
+    /// case-insensitive — the conflict graph keys nodes by the lowercase form
+    /// of the ability string so casing variants in the database are merged.
+    pub fn find_node(&self, ability_str: &str, grid_role: GridRole) -> Option<usize> {
         let key = AbilityRoleKey {
-            ability_str,
+            ability_str_lowercase: ability_str.to_ascii_lowercase(),
             grid_role,
         };
         self.key_to_index.get(&key).copied()
@@ -521,6 +530,38 @@ mod conflict_graph_tests {
         assert!(
             count > 500,
             "default keys must produce more than 500 graph nodes, got {count}"
+        );
+    }
+
+    #[test]
+    fn ability_casing_variants_collapse_into_a_single_node() {
+        // The auto-generated database has Envenomed Weapons registered under
+        // both `ACvs` and `Acvs` with disjoint carrier sets.  The conflict
+        // graph must merge them into one node so the cascade sees the union
+        // of carriers and treats them as one ability.
+        let custom_keys = CustomKeys::from("").normalize();
+        let graph = ConflictGraph::build(&custom_keys);
+        let upper_index = graph.find_node("ACvs", GridRole::MainCommand);
+        let lower_index = graph.find_node("Acvs", GridRole::MainCommand);
+        let mixed_lower_index = graph.find_node("acvs", GridRole::MainCommand);
+        assert!(
+            upper_index.is_some(),
+            "expected to find Envenomed Weapons node via uppercase casing"
+        );
+        assert_eq!(
+            upper_index, lower_index,
+            "ACvs and Acvs must resolve to the same conflict-graph node"
+        );
+        assert_eq!(
+            upper_index, mixed_lower_index,
+            "lowercase 'acvs' must also resolve to the same node"
+        );
+        let merged_node = graph.node(upper_index.expect("node must exist"));
+        assert!(
+            merged_node.carrier_count() >= 8,
+            "merged Envenomed Weapons node must carry the union of both casings' \
+             carriers (≥ 8 units), got {}",
+            merged_node.carrier_count(),
         );
     }
 }
