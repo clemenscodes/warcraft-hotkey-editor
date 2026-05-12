@@ -243,17 +243,33 @@ impl CustomKeys {
             match warcraft_object.kind() {
                 WarcraftObjectKind::Command => continue,
                 WarcraftObjectKind::Ability => {
-                    if default_button.is_none() && default_research.is_none() {
+                    // Toggle ability with no Buttonpos in the game data (e.g.
+                    // Prioritize / Aatp on the Gargoyle).  Without a fallback
+                    // the renderer skips it entirely; place it at origin and
+                    // let the cascade move it to an actually-free cell.
+                    // Passive/inventory abilities are excluded — they're never
+                    // user-clickable buttons and must not enter the grid.
+                    let needs_origin_fallback = default_button.is_none()
+                        && default_research.is_none()
+                        && !warcraft_object.is_passive_ability()
+                        && matches!(warcraft_object.meta(), WarcraftObjectMeta::Ability(meta) if meta.has_off_state());
+                    if default_button.is_none()
+                        && default_research.is_none()
+                        && !needs_origin_fallback
+                    {
                         continue;
                     }
                     let canonical_id = *object_id;
                     let Some(binding) = self.binding_or_default_mut(canonical_id) else {
                         continue;
                     };
-                    if binding.button_position().is_none()
-                        && let Some(position_value) = default_button
-                    {
-                        binding.set_button_position(Some(position_value));
+                    if binding.button_position().is_none() {
+                        if let Some(position_value) = default_button {
+                            binding.set_button_position(Some(position_value));
+                        } else if needs_origin_fallback {
+                            let origin = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+                            binding.set_button_position(Some(origin));
+                        }
                     }
                     if binding.research_button_position().is_none()
                         && let Some(position_value) = default_research
@@ -1968,7 +1984,7 @@ mod export_tests {
 #[cfg(test)]
 mod normalize_tests {
     use crate::CustomKeys;
-    use crate::model::Hotkey;
+    use crate::model::{ColumnIndex, GridCoordinate, Hotkey, RowIndex};
 
     #[test]
     fn normalize_produces_non_empty_text() {
@@ -2050,6 +2066,23 @@ mod normalize_tests {
             button_position.is_some(),
             "[ngir] (Goblin Shredder) must have a button_position in the normalized output"
         );
+    }
+
+    #[test]
+    fn normalize_defaults_button_position_to_origin_when_database_has_no_position() {
+        // Prioritize (Aatp) on the Gargoyle has no default Buttonpos or
+        // ResearchButtonpos in the game data, so it would otherwise be skipped
+        // by materialize_default_positions and never render in the command card.
+        // When both defaults are absent, fall back to (0, 0).
+        let normalized = CustomKeys::from("").normalize();
+        let binding = normalized
+            .binding("Aatp")
+            .expect("Aatp must have a binding after normalize");
+        let button_position = binding
+            .button_position()
+            .expect("Aatp must have a fallback button_position");
+        let origin = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        assert_eq!(*button_position, origin);
     }
 
     #[test]
@@ -2392,6 +2425,30 @@ mod normalize_tests {
         check("Advm", 0, 2);
         check("Afak", 1, 2);
         check("Aabs", 3, 2);
+    }
+
+    #[test]
+    fn resolve_conflicts_cascades_origin_default_to_leftmost_free_cell() {
+        // Prioritize (Aatp) on the Gargoyle has no default button position;
+        // materialize_default_positions assigns (0,0).  The cascade pushes it
+        // rightward through the pinned command row (Move/Stop/HoldPos/Attack),
+        // then spills into row 1.  Patrol pins (0,1); the leftmost remaining
+        // free cell is (1,1).  The spill must prefer the column closest to the
+        // ability's *original* default column (0) rather than the cascade's
+        // stuck column (3), so Aatp lands at (1,1) — not (3,1).
+        let mut keys = CustomKeys::from("").normalize();
+        let _plan = keys.resolve_conflicts();
+        let binding = keys.binding("Aatp").expect("Aatp must have a binding");
+        let position = binding
+            .button_position()
+            .expect("Aatp must have a button_position after resolve");
+        let column = u8::from(position.column());
+        let row = u8::from(position.row());
+        assert_eq!(
+            (column, row),
+            (1, 1),
+            "Aatp expected to cascade to (1,1), got ({column},{row})"
+        );
     }
 
     #[test]

@@ -1082,6 +1082,23 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // Gargoyle (ugar): position (0,0) MainCommand  CmdMove, Aatp
+        // Aatp (Prioritize) has no default Buttonpos in the game data;
+        // materialize_default_positions assigns (0,0), which collides with
+        // CmdMove until cascade resolution moves it.
+        let entry = {
+            let slot1 = GridSlotId::command("CmdMove");
+            let slot2 = GridSlotId::ability("Aatp");
+            let slots = [slot1, slot2];
+            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
+            let pos_builder = pos_builder.collision_at(0, 0, &slots);
+            let pos_card = pos_builder.build();
+            let eb = UnitCollisionEntryBuilder::new("ugar", "Gargoyle", empty_pos, empty_hot);
+            let eb = eb.main_position_card(pos_card);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // Giant Spider (nsgt): position (0,2) MainCommand  ACvs, ACen
         //                       hotkey Z MainCommand  ACvs, ACen
         let entry = {
