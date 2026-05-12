@@ -1245,6 +1245,17 @@ impl AbilityMeta {
         self.off_icon
     }
 
+    /// Returns true if the ability has any off-state data in the database.
+    /// One-shot abilities (e.g. Healing Wave) have all four off-state fields
+    /// set to None and must not receive a materialized unbutton_position.
+    pub fn has_off_state(&self) -> bool {
+        let position_set = self.off_button_position.is_some();
+        let tip_set = self.off_tip.is_some();
+        let ubertip_set = self.off_ubertip.is_some();
+        let icon_set = self.off_icon.is_some();
+        position_set || tip_set || ubertip_set || icon_set
+    }
+
     pub fn default_button_position(&self) -> Option<GridCoordinate> {
         self.default_button_position
     }

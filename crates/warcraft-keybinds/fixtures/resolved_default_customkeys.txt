@@ -6,7 +6,6 @@ Ubertip=Gives extra damage to the attacks of nearby friendly units.
 [acad]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Tip=Animate Dead
 Ubertip=Raises 6 dead units in an area for 40 seconds.
 
@@ -18,7 +17,6 @@ Ubertip=An aura that gives nearby friendly units a damage shield, which deals 10
 [acam]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Anti-magic Shell
 Ubertip=Creates a barrier that stops spells from affecting a target unit. Lasts 90 seconds.
 
@@ -50,14 +48,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acbc]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Breath of Fire
 Ubertip=Breathes a cone of fire at enemy units, dealing 150 damage.
 
 [acbf]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Breath of Frost
 Ubertip=Breathes a cone of frost at enemy units that deals 50 initial damage, and 7 damage per second over 5 seconds.
 
@@ -70,7 +66,7 @@ Ubertip=Gives a 15% chance that an attack will do 25 bonus damage and stun the t
 Hotkey=Z
 Unhotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Black Arrow
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Adds 2 bonus damage to attacks. Units killed while under the effect of Black Arrow will turn into skeletons.
@@ -80,7 +76,7 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 Hotkey=Z
 Unhotkey=Z
 Buttonpos=2,2
-Unbuttonpos=0,2
+Unbuttonpos=2,2
 Tip=Bloodlust
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Increases a target friendly unit's attack rate by 40% and movement speed by 25% for 40 seconds.
@@ -89,14 +85,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acbz]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Blizzard
 Ubertip=Calls down 6 freezing ice shard waves; each wave deals 15 damage to units in a small area.
 
 [acc2]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Crushing Wave
@@ -105,7 +99,6 @@ Ubertip=Sends a gigantic wave which deals 150 damage to each enemy land unit in 
 [acc3]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Crushing Wave
@@ -114,14 +107,12 @@ Ubertip=Sends a gigantic wave which deals 100 damage to each enemy land unit in 
 [acca]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Carrion Swarm
 Ubertip=Sends a horde of bats to deal 75 damage to each enemy land unit in a line, up to 300 max damage.
 
 [accb]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Frost Bolt
 Ubertip=Throws a magical shard of ice at a target enemy unit, dealing 100 damage and stunning the target for 5 seconds.
 
@@ -133,28 +124,24 @@ Ubertip=The creature strikes with such force that 25% of their damage strikes th
 [acch]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Tip=Charm
 Ubertip=Takes permanent control of a target enemy unit. Charm cannot be used on Heroes, or creeps above level 6.
 
 [accl]
 Hotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
 Tip=Chain Lightning
 Ubertip=Hurls a bolt of lightning that bounces up to 4 times, dealing 100 damage to the primary target. Each jump deals less damage.
 
 [accn]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Cannibalize
 Ubertip=Consumes a nearby corpse to heal 12 hit points per second.
 
 [accr]
 Hotkey=C
 Buttonpos=3,2
-Unbuttonpos=2,2
 Tip=Cripple
 Ubertip=Reduces movement speed by 75%, attack rate by 50%, and damage by 50% of a target enemy unit. Lasts 20 seconds.
 
@@ -162,7 +149,7 @@ Ubertip=Reduces movement speed by 75%, attack rate by 50%, and damage by 50% of 
 Hotkey=C
 Unhotkey=C
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Curse
 UnTip=|cffc3dbffRight-click to activate auto-casting.
 Ubertip=Curses a target enemy unit, causing it to have a 33% chance to miss on an attack. Lasts 30 seconds.
@@ -176,7 +163,6 @@ Ubertip=Gives a 20% chance to do 2 times total damage on an attack.
 [accv]
 Hotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Crushing Wave
@@ -195,7 +181,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [accy]
 Hotkey=C
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Cyclone
 Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it unable to move, attack or cast spells, and stopping others from attacking or casting on it. Lasts 20 seconds.
 
@@ -203,7 +188,7 @@ Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it una
 Hotkey=B
 Unhotkey=B
 Buttonpos=0,2
-Unbuttonpos=1,2
+Unbuttonpos=0,2
 Tip=Abolish Magic
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Dispels positive buffs from enemy units, and negative buffs from friendly units. Deals 150 damage to summoned units.
@@ -212,14 +197,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acdc]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Death Coil
 Ubertip=A coil of death that can heal a friendly Undead unit for 400 hit points, or deal half damage to an enemy living unit.
 
 [acde]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Devour Magic
 Ubertip=Consumes all magical buffs from units in an area. Each unit that is devoured of magic gives the caster 50 hit points and 75 mana. Deals 160 damage to summoned units.
 
@@ -236,7 +219,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acdr]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Life Drain
 Ubertip=Absorbs the life essence of a target enemy unit by taking 55 hit points per second from it and giving them to the caster. Lasts 8 seconds.
 
@@ -252,14 +234,12 @@ Ubertip=An impenetrable shield surrounds this unit, protecting it from all damag
 [acdv]
 Hotkey=D
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Devour
 Ubertip=Consumes an enemy unit, slowly digesting it and dealing 5 damage per second to it. If the creep is killed while the consumed unit is still digesting, the unit that was devoured will be released.
 
 [acen]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Ensnare
 Ubertip=Causes a target enemy unit to be bound to the ground so that it cannot move for 8 seconds. Air units that are ensnared can be attacked as though they were land units.
 
@@ -272,7 +252,7 @@ Ubertip=Gives a 15% percent chance to avoid an attack.
 Hotkey=X
 Unhotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
+Unbuttonpos=2,2
 Tip=Frost Armor
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Creates a shield of frost around a target friendly unit. The shield adds 3 armor and slows melee units that attack it for 3 seconds. Lasts 45 seconds.
@@ -281,7 +261,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acf3]
 Hotkey=D
 Buttonpos=2,1
-Unbuttonpos=2,1
 Researchhotkey=A
 Researchbuttonpos=0,1
 Tip=Finger of Pain
@@ -291,14 +270,12 @@ Researchubertip=Horribly cripples the innards of a creature or building.
 [acfb]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Firebolt
 Ubertip=Hurls a fiery bolt that stuns a target enemy unit.
 
 [acfd]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Finger of Pain
@@ -318,21 +295,18 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acfl]
 Hotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
 Tip=Forked Lightning
 Ubertip=Calls forth a cone of lightning on a target enemy unit, hitting up to 3 enemy units for 175 damage.
 
 [acfn]
 Hotkey=N
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Frost Nova
 Ubertip=Blasts enemy units with a wave of frost that deals 50 damage to the target, and 50 nova damage. Cold damage slows units' movement and attack rate for 2 seconds.
 
 [acfr]
 Hotkey=X
 Buttonpos=0,2
-Unbuttonpos=1,2
 Tip=Force of Nature
 Ubertip=Converts a small area of trees into 2 Treants. Lasts 60 seconds. Attacks land units.
 
@@ -349,21 +323,18 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [achv]
 Hotkey=Z
 Buttonpos=3,2
-Unbuttonpos=0,2
 Tip=Healing Wave
 Ubertip=Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage.
 
 [achw]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Healing Ward
 Ubertip=Summons an immovable ward that heals 2% of a nearby friendly non-mechanical unit's hit points per second. Lasts 25 seconds.
 
 [achx]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Tip=Hex
 Ubertip=Transforms an enemy unit into a random critter for 15 seconds.
 
@@ -390,7 +361,6 @@ Unubertip=Deactivate Immolation to stop draining mana.
 [acls]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Tip=Lightning Shield
 Ubertip=Forms a shield of electricity around a target unit, dealing 20 damage per second to units around it. Lasts 20 seconds.
 
@@ -416,7 +386,6 @@ Ubertip=Renders this unit immune to magic and most spells.
 [acmo]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Monsoon - [Level 1],Monsoon - [Level 2],Monsoon - [Level 3]
@@ -436,14 +405,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acps]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Possession
 Ubertip=Displaces the soul of a target unit, giving you control of it, but destroying the caster's body. Possession cannot be used on flying units, Heroes, or creeps above level 5.
 
 [acpu]
 Hotkey=G
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Purge
 Ubertip=Removes all buffs from a target unit, and slows its movement speed by a factor of 5. Purged units will slowly regain their movement speed over 5 seconds. Deals 200 damage to summoned units.
 
@@ -455,14 +422,12 @@ Ubertip=Gives a 15% chance that an attack will deal 30 damage to nearby units.
 [acpy]
 Hotkey=C
 Buttonpos=3,2
-Unbuttonpos=2,2
 Tip=Polymorph
 Ubertip=Turns a target enemy unit into a sheep. The targeted unit retains its hit points and armor, but cannot attack. Cannot be cast on Heroes or summoned units. Lasts 20 seconds.
 
 [acr2]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Rejuvenation
 Ubertip=Heals a target friendly unit for 400 hit points over 12 seconds.
 
@@ -470,7 +435,7 @@ Ubertip=Heals a target friendly unit for 400 hit points over 12 seconds.
 Hotkey=R
 Unhotkey=R
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Raise Dead
 UnTip=|cffc3dbffRight-click to activate auto-casting.
 Ubertip=Raises 2 skeletons from a corpse.
@@ -479,14 +444,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [acrf]
 Hotkey=F
 Buttonpos=2,2
-Unbuttonpos=3,2
 Tip=Rain of Fire
 Ubertip=Calls down waves of fire that damage units in an area. Each wave deals 25 damage. Lasts for 6 waves.
 
 [acrj]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Rejuvenation
 Ubertip=Heals a target friendly unit for 400 hit points over 12 seconds.
 
@@ -503,14 +466,12 @@ Ubertip=When killed, this unit will come back to life. Reincarnation has a 240 s
 [acro]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Roar
 Ubertip=Gives nearby friendly units a 25% bonus to damage. Lasts 45 seconds.
 
 [acs7]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Feral Spirit - [Level 1],Feral Spirit - [Level 2],Feral Spirit - [Level 3]
@@ -520,7 +481,6 @@ Researchubertip=Summons 2 Spirit Wolves to fight the Far Seer's enemies. |nLasts
 [acs9]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Feral Spirit
 Ubertip=Summons 2 Spirit Pig companions. Lasts 60 seconds. Attacks land units.
 
@@ -537,14 +497,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [acsh]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Shockwave
 Ubertip=A wave of force that ripples outward, causing 75 damage to land units in a line.
 
 [acsi]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Silence
@@ -558,7 +516,6 @@ Ubertip=Reduces the duration of negative spells and renders the unit immune to c
 [acsl]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Tip=Sleep
 Ubertip=Puts a target enemy unit to sleep for 8 seconds. A sleeping unit can be awoken by attacking it.
 
@@ -566,7 +523,7 @@ Ubertip=Puts a target enemy unit to sleep for 8 seconds. A sleeping unit can be 
 Hotkey=W
 Unhotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Slow
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Slows enemy unit's attack rate by 25% and movement speed by 60%. Lasts 20 seconds.
@@ -575,28 +532,24 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [act2]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Slam
 Ubertip=Slams the ground, dealing 70 points of damage and slowing the movement and attack rate of nearby enemy units.
 
 [actb]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Hurl Boulder
 Ubertip=A magical boulder that is thrown at an enemy unit, causing 100 points of damage and stunning the target for 2 seconds.
 
 [actc]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Slam
 Ubertip=Slams the ground, dealing 70 points of damage and slowing the movement and attack rate of nearby enemy units.
 
 [actn]
 Hotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
 Tip=Spawn Tentacle
 Ubertip=Unleashes a mighty tentacle upon the enemy.
 
@@ -608,7 +561,6 @@ Ubertip=Increases nearby friendly units' movement speed by 10% and life regenera
 [acuf]
 Hotkey=U
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
@@ -630,7 +582,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [acwe]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Sea Elemental
@@ -639,7 +590,6 @@ Ubertip=Summons a powerful Sea Elemental with 550 hit points that does 28 - 37 d
 [aeil]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Metamorphosis
@@ -665,7 +615,6 @@ Researchubertip=An aura that gives friendly nearby units bonus damage to their r
 [aebl]
 Hotkey=B
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=B
 Researchbuttonpos=1,0
 Tip=Blink - [Level 1],Blink - [Level 2],Blink - [Level 3]
@@ -675,7 +624,6 @@ Researchubertip=Short distance teleportation that allows the Warden to move in a
 [aeer]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=E
 Researchbuttonpos=0,0
 Tip=Entangling Roots - [Level 1],Entangling Roots - [Level 2],Entangling Roots - [Level 3]
@@ -693,7 +641,6 @@ Researchubertip=Gives a percent chance to avoid attacks. |n|n|cffffcc00Level 1|r
 [aefk]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Fan of Knives - [Level 1],Fan of Knives - [Level 2],Fan of Knives - [Level 3]
@@ -703,7 +650,6 @@ Researchubertip=The Warden hurls a flurry of knives, damaging nearby enemies. |n
 [aefn]
 Hotkey=F
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=F
 Researchbuttonpos=1,0
 Tip=Force of Nature - [Level 1],Force of Nature - [Level 2],Force of Nature - [Level 3]
@@ -726,7 +672,6 @@ Unubertip=Deactivate Immolation to stop draining mana.
 [aemb]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=B
 Researchbuttonpos=0,0
 Tip=Mana Burn - [Level 1],Mana Burn - [Level 2],Mana Burn - [Level 3]
@@ -736,7 +681,6 @@ Researchubertip=Sends a bolt of negative energy that burns a target enemy unit's
 [aeme]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Metamorphosis
@@ -746,7 +690,6 @@ Researchubertip=Transforms the Demon Hunter into a powerful Demon with a ranged 
 [aesb]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Starfall
@@ -756,7 +699,6 @@ Researchubertip=Calls down waves of falling stars that damage nearby enemy units
 [aesf]
 Hotkey=F
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=F
 Researchbuttonpos=3,0
 Tip=Starfall
@@ -766,7 +708,6 @@ Researchubertip=Calls down waves of falling stars that damage nearby enemy units
 [aesh]
 Hotkey=D
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=D
 Researchbuttonpos=2,0
 Tip=Shadow Strike - [Level 1],Shadow Strike - [Level 2],Shadow Strike - [Level 3]
@@ -776,7 +717,6 @@ Researchubertip=Hurls a poisoned dagger which deals large initial damage, and th
 [aest]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=C
 Researchbuttonpos=0,0
 Tip=Scout - [Level 1],Scout - [Level 2],Scout - [Level 3]
@@ -786,7 +726,6 @@ Researchubertip=Temporarily summons an invincible Owl Scout, which can be used t
 [aesv]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=V
 Researchbuttonpos=3,0
 Tip=Vengeance
@@ -796,7 +735,6 @@ Researchubertip=Creates a powerful avatar that summons invulnerable spirits from
 [aetq]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Tranquility
@@ -806,7 +744,6 @@ Researchubertip=Causes rains of healing energy to pour down in a large area, hea
 [aevi]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Metamorphosis
@@ -852,7 +789,6 @@ Researchubertip=Gives a chance that an attack will do 25 bonus damage and stun t
 [ahbn]
 Hotkey=B
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=B
 Researchbuttonpos=1,0
 Tip=Banish - [Level 1],Banish - [Level 2],Banish - [Level 3]
@@ -862,7 +798,6 @@ Researchubertip=Turns a non-mechanical unit ethereal and slows its movement spee
 [ahbz]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=B
 Researchbuttonpos=0,0
 Tip=Blizzard - [Level 1],Blizzard - [Level 2],Blizzard - [Level 3]
@@ -885,7 +820,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [ahdr]
 Hotkey=N
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=N
 Researchbuttonpos=2,0
 Tip=Siphon Mana - [Level 1],Siphon Mana - [Level 2],Siphon Mana - [Level 3]
@@ -920,7 +854,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [ahfs]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Flame Strike - [Level 1],Flame Strike - [Level 2],Flame Strike - [Level 3]
@@ -930,7 +863,6 @@ Researchubertip=Conjures a pillar of fire which damages ground units in a target
 [ahhb]
 Hotkey=T
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=T
 Researchbuttonpos=0,0
 Tip=Holy Light - [Level 1],Holy Light - [Level 2],Holy Light - [Level 3]
@@ -940,7 +872,6 @@ Researchubertip=A holy light that can heal a friendly living unit or damage an e
 [ahmt]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Mass Teleport
@@ -950,7 +881,6 @@ Researchubertip=Teleports 24 of the player's nearby units, including the Archmag
 [ahpx]
 Hotkey=X
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=X
 Researchbuttonpos=3,0
 Tip=Phoenix
@@ -960,7 +890,6 @@ Researchubertip=Summons a powerful Phoenix. The Phoenix burns with such intensit
 [ahre]
 Hotkey=R
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Resurrection
@@ -970,14 +899,12 @@ Researchubertip=Brings back to life the corpses of 6 friendly nearby units.
 [ahta]
 Hotkey=R
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Reveal
 Ubertip=Reveals an area of the map. Detects invisible units. Lasts 15 seconds.
 
 [ahtb]
 Hotkey=T
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=T
 Researchbuttonpos=0,0
 Tip=Storm Bolt - [Level 1],Storm Bolt - [Level 2],Storm Bolt - [Level 3]
@@ -987,7 +914,6 @@ Researchubertip=A magical hammer that is thrown at an enemy unit, causing damage
 [ahtc]
 Hotkey=C
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=C
 Researchbuttonpos=1,0
 Tip=Thunder Clap - [Level 1],Thunder Clap - [Level 2],Thunder Clap - [Level 3]
@@ -997,7 +923,6 @@ Researchubertip=Slams the ground, dealing damage to and slowing the movement spe
 [ahwe]
 Hotkey=W
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Water Elemental - [Level 1],Summon Water Elemental - [Level 2],Summon Water Elemental - [Level 3]
@@ -1007,7 +932,6 @@ Researchubertip=Summons a water elemental to attack the Archmage's enemies. |nLa
 [aihm]
 Hotkey=I
 Buttonpos=2,1
-Unbuttonpos=2,1
 Researchhotkey=D
 Researchbuttonpos=2,1
 Tip=Hide
@@ -1016,7 +940,6 @@ Ubertip=Stops the hero with Cloak of Shadows from auto-acquiring enemies, allowi
 [anab]
 Hotkey=B
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=B
 Researchbuttonpos=2,0
 Tip=Acid Bomb - [Level 1],Acid Bomb - [Level 2],Acid Bomb - [Level 3]
@@ -1056,7 +979,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [anbf]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Breath of Fire - [Level 1],Breath of Fire - [Level 2],Breath of Fire - [Level 3],Breath of Fire - [Level 1],Breath of Fire - [Level 2],Breath of Fire - [Level 3]
@@ -1071,14 +993,12 @@ Ubertip=Gives a 25% chance that an attack will do 25 bonus damage and stun the t
 [anbl]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Blink
 Ubertip=Teleports the bear a short distance, allowing it to move in and out of combat.
 
 [anc1]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
@@ -1088,7 +1008,6 @@ Researchubertip=Bombards an area with rockets, stunning enemy ground and air uni
 [anc2]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
@@ -1098,7 +1017,6 @@ Researchubertip=Bombards an area with rockets, stunning enemy units for 1.01 sec
 [anc3]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
@@ -1116,7 +1034,6 @@ Researchubertip=The Pit Lord strikes with such force that he damages multiple en
 [ancf]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Breath of Fire - [Level 1],Breath of Fire - [Level 2],Breath of Fire - [Level 3],Breath of Fire - [Level 4]
@@ -1126,7 +1043,6 @@ Researchubertip=Breathes a cone of fire at enemy units which deals damage. Units
 [anch]
 Hotkey=C
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=C
 Researchbuttonpos=3,0
 Tip=Charm
@@ -1136,14 +1052,12 @@ Researchubertip=Takes permanent control of a target enemy unit. |nCharm pierces 
 [ancl]
 Hotkey=E
 Buttonpos=2,1
-Unbuttonpos=2,0
 Tip=Channel
 Ubertip=Channels powerful warding magic.
 
 [ancr]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Chemical Rage - [Level 1],Chemical Rage - [Level 2],Chemical Rage - [Level 3]
@@ -1153,7 +1067,6 @@ Researchubertip=The Alchemist causes his Ogre to enter a chemically induced rage
 [ancs]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
@@ -1186,7 +1099,6 @@ Researchubertip=Gives a percent chance to avoid attacks and a 10% chance to deal
 [andc]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Dark Conversion
@@ -1201,7 +1113,6 @@ Ubertip=Causes attacks to do 2 times normal damage to buildings.
 [andh]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=D
 Researchbuttonpos=1,0
 Tip=Drunken Haze - [Level 1],Drunken Haze - [Level 2],Drunken Haze - [Level 3]
@@ -1211,7 +1122,6 @@ Researchubertip=Drenches enemy units in alcohol, causing their movement speed to
 [ando]
 Hotkey=D
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=D
 Researchbuttonpos=3,0
 Tip=Doom
@@ -1221,7 +1131,6 @@ Researchubertip=Marks a target unit for the manifestation of a Demon. The afflic
 [andp]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Dark Portal
@@ -1231,7 +1140,6 @@ Researchubertip=Opens a portal, allowing demons to step through and do Archimond
 [andr]
 Hotkey=D
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=D
 Researchbuttonpos=2,0
 Tip=Life Drain - [Level 1],Life Drain - [Level 2],Life Drain - [Level 3]
@@ -1241,7 +1149,6 @@ Researchubertip=Absorbs the life essence of a target enemy unit by taking hit po
 [anef]
 Hotkey=E
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=E
 Researchbuttonpos=3,0
 Tip=Storm, Earth, And Fire
@@ -1251,7 +1158,6 @@ Researchubertip=Splits the Brewmaster into elements, forming 3 specialized warri
 [aneg]
 Hotkey=E
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Engineering Upgrade - [Level 1],Engineering Upgrade - [Level 2],Engineering Upgrade - [Level 3]
@@ -1261,7 +1167,6 @@ Researchubertip=Enhances other Tinker abilities with each level learned:|n|n|cff
 [anen]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Ensnare
 Ubertip=Causes a target enemy unit to be bound to the ground so that it cannot move for 9 seconds. Air units that are ensnared can be attacked as though they were land units.
 
@@ -1281,14 +1186,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [anfb]
 Hotkey=Z
 Buttonpos=1,2
-Unbuttonpos=0,2
 Tip=Firebolt
 Ubertip=Hurls a fiery bolt that stuns a target enemy unit.
 
 [anfd]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Finger of Death
@@ -1298,7 +1201,6 @@ Researchubertip=Instantly turns a creature or building inside-out, destroying it
 [anfl]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Forked Lightning - [Level 1],Forked Lightning - [Level 2],Forked Lightning - [Level 3]
@@ -1357,7 +1259,6 @@ Unubertip=Return the carried resources to the nearest Temple of the Tides.
 [anhs]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=E
 Researchbuttonpos=0,0
 Tip=Healing Spray - [Level 1],Healing Spray - [Level 2],Healing Spray - [Level 3]
@@ -1367,7 +1268,6 @@ Researchubertip=Sprays waves of healing mist that heal friendly units in a targe
 [anht]
 Hotkey=T
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=T
 Researchbuttonpos=1,0
 Tip=Howl of Terror - [Level 1],Howl of Terror - [Level 2],Howl of Terror - [Level 3]
@@ -1377,7 +1277,6 @@ Researchubertip=The Pit Lord lets loose a terrifying howl that causes nearby ene
 [anhw]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Healing Wave - [Level 1],Healing Wave - [Level 2],Healing Wave - [Level 3],Healing Wave - [Level 4]
@@ -1387,7 +1286,6 @@ Researchubertip=Calls forth a wave of energy that heals a target and bounces to 
 [anhx]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Hex - [Level 1],Hex - [Level 2],Hex - [Level 3],Hex - [Level 4]
@@ -1418,7 +1316,6 @@ Researchubertip=Each attack made is enhanced with living flames that cling to th
 [anin]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Inferno
@@ -1427,7 +1324,6 @@ Ubertip=Summons an Infernal from the sky, causing area effect damage where it la
 [anlm]
 Hotkey=W
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Lava Spawn - [Level 1],Summon Lava Spawn - [Level 2],Summon Lava Spawn - [Level 3]
@@ -1472,7 +1368,6 @@ Researchubertip=When killed, this Hero will come back to life. Reincarnation has
 [anr3]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Rain of Chaos
@@ -1482,7 +1377,6 @@ Researchubertip=Calls down multiple Infernals from the sky.
 [anrc]
 Hotkey=X
 Buttonpos=3,1
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Rain of Chaos
@@ -1492,7 +1386,6 @@ Researchubertip=Calls down multiple Infernals from the sky.
 [anrf]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Rain of Fire - [Level 1],Rain of Fire - [Level 2],Rain of Fire - [Level 3]
@@ -1523,7 +1416,6 @@ Researchubertip=When killed, the demon will come back to life. Reincarnation has
 [ans1]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Pocket Factory - [Level 1],Pocket Factory - [Level 2],Pocket Factory - [Level 3]
@@ -1533,7 +1425,6 @@ Researchubertip=Creates a factory which automatically constructs Clockwerk Gobli
 [ans2]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Pocket Factory - [Level 1],Pocket Factory - [Level 2],Pocket Factory - [Level 3]
@@ -1543,7 +1434,6 @@ Researchubertip=Creates a factory which automatically constructs Clockwerk Gobli
 [ans3]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Pocket Factory - [Level 1],Pocket Factory - [Level 2],Pocket Factory - [Level 3]
@@ -1553,7 +1443,6 @@ Researchubertip=Creates a factory which automatically constructs Clockwerk Gobli
 [ansb]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Storm Bolt - [Level 1],Storm Bolt - [Level 2],Storm Bolt - [Level 3],Storm Bolt - [Level 4]
@@ -1563,7 +1452,6 @@ Researchubertip=A magical hammer that is thrown at an enemy unit, causing damage
 [ansg]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=B
 Researchbuttonpos=0,0
 Tip=Summon Bear - [Level 1],Summon Bear - [Level 2],Summon Bear - [Level 3]
@@ -1573,7 +1461,6 @@ Researchubertip=Summons a powerful bear to attack your enemies. |nLasts 70 secon
 [ansh]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Shockwave - [Level 1],Shockwave - [Level 2],Shockwave - [Level 3]
@@ -1583,7 +1470,6 @@ Researchubertip=A wave of force that ripples out from the Hero, causing damage t
 [ansi]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=E
 Researchbuttonpos=0,0
 Tip=Silence - [Level 1],Silence - [Level 2],Silence - [Level 3]
@@ -1593,7 +1479,6 @@ Researchubertip=Stops all enemies in a target area from casting spells. The area
 [ansl]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Soul Preservation
@@ -1603,7 +1488,6 @@ Researchubertip=Puts a converted zombie into the nether-realm for later use.
 [anso]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=B
 Researchbuttonpos=0,0
 Tip=Soul Burn - [Level 1],Soul Burn - [Level 2],Soul Burn - [Level 3]
@@ -1613,7 +1497,6 @@ Researchubertip=Wreaths an enemy unit in magical flames which cause damage over 
 [ansq]
 Hotkey=Q
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=Q
 Researchbuttonpos=1,0
 Tip=Summon Quilbeast - [Level 1],Summon Quilbeast - [Level 2],Summon Quilbeast - [Level 3]
@@ -1623,7 +1506,6 @@ Researchubertip=Summons an angry quilbeast to attack your enemies. |nLasts 70 se
 [anst]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Stampede
@@ -1633,7 +1515,6 @@ Researchubertip=Calls down hordes of rampaging thunder lizards to explode upon t
 [answ]
 Hotkey=W
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=W
 Researchbuttonpos=2,0
 Tip=Summon Hawk - [Level 1],Summon Hawk - [Level 2],Summon Hawk - [Level 3]
@@ -1643,7 +1524,6 @@ Researchubertip=Summons a proud hawk to spy on your enemies. |nLasts 70 seconds.
 [ansy]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=F
 Researchbuttonpos=0,0
 Tip=Pocket Factory - [Level 1],Pocket Factory - [Level 2],Pocket Factory - [Level 3]
@@ -1660,7 +1540,6 @@ Ubertip=Razor-sharp spikes on the Turtle's shell deal 30% of an enemy unit's mel
 [anta]
 Hotkey=T
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Taunt
 Ubertip=The closest 10 enemies are forced to attack this unit.
 
@@ -1676,7 +1555,6 @@ Ubertip=Razor-sharp spikes on the Turtle's shell deal 30% of an enemy unit's mel
 [antm]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Transmute
@@ -1686,7 +1564,6 @@ Researchubertip=Kills a target enemy unit instantly, transforming it into gold w
 [anto]
 Hotkey=T
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=T
 Researchbuttonpos=3,0
 Tip=Tornado
@@ -1701,7 +1578,6 @@ Ubertip=Reveals nearby invisible units.
 [anvc]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=V
 Researchbuttonpos=3,0
 Tip=Volcano
@@ -1711,7 +1587,6 @@ Researchubertip=Causes the ground to erupt into a massive Volcano. Every 3 secon
 [anwk]
 Hotkey=W
 Buttonpos=2,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Wind Walk
@@ -1728,7 +1603,6 @@ Researchubertip=Increases the movement speed and attack rate of nearby friendly 
 [aocl]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=C
 Researchbuttonpos=0,0
 Tip=Chain Lightning - [Level 1],Chain Lightning - [Level 2],Chain Lightning - [Level 3]
@@ -1746,7 +1620,6 @@ Researchubertip=Gives a chance to do more damage on an attack. |n|n|cffffcc00Lev
 [aoeq]
 Hotkey=E
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=E
 Researchbuttonpos=3,0
 Tip=Earthquake
@@ -1756,7 +1629,6 @@ Researchubertip=Makes the ground tremble and break, causing 60 damage per second
 [aofs]
 Hotkey=F
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=F
 Researchbuttonpos=1,0
 Tip=Far Sight - [Level 1],Far Sight - [Level 2],Far Sight - [Level 3]
@@ -1766,7 +1638,6 @@ Researchubertip=Reveals the area of the map that it is cast upon. Also reveals i
 [aohw]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=E
 Researchbuttonpos=0,0
 Tip=Healing Wave - [Level 1],Healing Wave - [Level 2],Healing Wave - [Level 3]
@@ -1776,7 +1647,6 @@ Researchubertip=Calls forth a wave of energy that heals a target and bounces to 
 [aohx]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=X
 Researchbuttonpos=1,0
 Tip=Hex - [Level 1],Hex - [Level 2],Hex - [Level 3]
@@ -1786,7 +1656,6 @@ Researchubertip=Transforms an enemy unit into a random critter, disabling specia
 [aols]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Voodoo Spirits - [Level 1],Voodoo Spirits - [Level 2]
@@ -1796,7 +1665,6 @@ Researchubertip=Creates a swarm of angry spirits that drain the life energies of
 [aomi]
 Hotkey=R
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=R
 Researchbuttonpos=1,0
 Tip=Mirror Image - [Level 1],Mirror Image - [Level 2],Mirror Image - [Level 3]
@@ -1830,7 +1698,6 @@ Researchubertip=When killed, the Tauren Chieftain will come back to life. Reinca
 [aos2]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Shockwave - [Level 1],Shockwave - [Level 2],Shockwave - [Level 3],Shockwave - [Level 4]
@@ -1840,7 +1707,6 @@ Researchubertip=A wave of force that ripples out from the Hero, causing damage t
 [aosf]
 Hotkey=T
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=T
 Researchbuttonpos=2,0
 Tip=Feral Spirit - [Level 1],Feral Spirit - [Level 2],Feral Spirit - [Level 3]
@@ -1850,7 +1716,6 @@ Researchubertip=Summons 2 Spirit Wolves to fight the Far Seer's enemies. |nLasts
 [aosh]
 Hotkey=W
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=W
 Researchbuttonpos=0,0
 Tip=Shockwave - [Level 1],Shockwave - [Level 2],Shockwave - [Level 3]
@@ -1860,7 +1725,6 @@ Researchubertip=A wave of force that ripples out from the Hero, causing damage t
 [aosw]
 Hotkey=W
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=W
 Researchbuttonpos=2,0
 Tip=Serpent Ward - [Level 1],Serpent Ward - [Level 2],Serpent Ward - [Level 3]
@@ -1870,7 +1734,6 @@ Researchubertip=Summons an immobile serpentine ward to attack the Shadow Hunter'
 [aovd]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=V
 Researchbuttonpos=3,0
 Tip=Big Bad Voodoo
@@ -1880,7 +1743,6 @@ Researchubertip=Turns all friendly units invulnerable in an area around the Shad
 [aow2]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=War Stomp - [Level 1],War Stomp - [Level 2],War Stomp - [Level 3],War Stomp - [Level 4]
@@ -1890,7 +1752,6 @@ Researchubertip=Slams the ground, stunning and damaging nearby enemy land units.
 [aowk]
 Hotkey=W
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=W
 Researchbuttonpos=0,0
 Tip=Wind Walk - [Level 1],Wind Walk - [Level 2],Wind Walk - [Level 3]
@@ -1900,7 +1761,6 @@ Researchubertip=Allows the Blademaster to become invisible, move through units, 
 [aows]
 Hotkey=T
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=T
 Researchbuttonpos=1,0
 Tip=War Stomp - [Level 1],War Stomp - [Level 2],War Stomp - [Level 3]
@@ -1910,7 +1770,6 @@ Researchubertip=Slams the ground, stunning and damaging nearby enemy land units.
 [aoww]
 Hotkey=B
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=B
 Researchbuttonpos=3,0
 Tip=Bladestorm
@@ -1920,12 +1779,10 @@ Researchubertip=Causes a bladestorm of destructive force around the Blademaster,
 [aral]
 Hotkey=Y
 Buttonpos=3,1
-Unbuttonpos=3,1
 
 [aua2]
 Hotkey=D
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=D
 Researchbuttonpos=3,0
 Tip=Animate Dead
@@ -1935,7 +1792,6 @@ Researchubertip=Raises 6 dead units in an area to fight for the Death Knight for
 [auan]
 Hotkey=D
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=D
 Researchbuttonpos=3,0
 Tip=Animate Dead
@@ -1974,7 +1830,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [aucs]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=C
 Researchbuttonpos=0,0
 Tip=Carrion Swarm - [Level 1],Carrion Swarm - [Level 2],Carrion Swarm - [Level 3]
@@ -1984,7 +1839,6 @@ Researchubertip=Sends a horde of bats to damage enemies. |n|n|cffffcc00Level 1|r
 [audc]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=C
 Researchbuttonpos=0,0
 Tip=Death Coil - [Level 1],Death Coil - [Level 2],Death Coil - [Level 3]
@@ -1994,7 +1848,6 @@ Researchubertip=A coil of death that can damage an enemy living unit, or heal a 
 [audd]
 Hotkey=D
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=D
 Researchbuttonpos=3,0
 Tip=Death And Decay
@@ -2004,7 +1857,6 @@ Researchubertip=Damages everything in its area of effect by 4% of its max hit po
 [audp]
 Hotkey=E
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=E
 Researchbuttonpos=1,0
 Tip=Death Pact - [Level 1],Death Pact - [Level 2],Death Pact - [Level 3]
@@ -2014,7 +1866,6 @@ Researchubertip=Kills a target friendly Undead unit, giving a percentage of its 
 [audr]
 Hotkey=R
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=R
 Researchbuttonpos=2,0
 Tip=Dark Ritual - [Level 1],Dark Ritual - [Level 2],Dark Ritual - [Level 3]
@@ -2024,7 +1875,6 @@ Researchubertip=Sacrifices a target friendly Undead unit to convert its hit poin
 [aufa]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Frost Armor - [Level 1],Frost Armor - [Level 2],Frost Armor - [Level 3]
@@ -2034,7 +1884,6 @@ Researchubertip=Creates a shield of frost around a target friendly unit. The shi
 [aufn]
 Hotkey=N
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=N
 Researchbuttonpos=0,0
 Tip=Frost Nova - [Level 1],Frost Nova - [Level 2],Frost Nova - [Level 3]
@@ -2057,7 +1906,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [auim]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=E
 Researchbuttonpos=0,0
 Tip=Impale - [Level 1],Impale - [Level 2],Impale - [Level 3]
@@ -2067,7 +1915,6 @@ Researchubertip=Slams the ground with the Crypt Lord's massive claws, shooting s
 [auin]
 Hotkey=N
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=N
 Researchbuttonpos=3,0
 Tip=Inferno
@@ -2077,7 +1924,6 @@ Researchubertip=Calls an Infernal down from the sky, dealing 50 damage and stunn
 [auls]
 Hotkey=L
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=L
 Researchbuttonpos=3,0
 Tip=Locust Swarm
@@ -2087,7 +1933,6 @@ Researchubertip=Creates a swarm of angry locusts that bite and tear at nearby en
 [ausl]
 Hotkey=E
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=E
 Researchbuttonpos=1,0
 Tip=Sleep - [Level 1],Sleep - [Level 2],Sleep - [Level 3]
@@ -2106,8 +1951,7 @@ Researchubertip=The Crypt Lord forms barbed layers of chitinous armor that incre
 
 [aabs]
 Hotkey=B
-Buttonpos=0,2
-Unbuttonpos=0,2
+Buttonpos=3,2
 Tip=Absorb Mana
 Ubertip=Takes all mana from one of your units and gives it to the Destroyer.
 
@@ -2145,7 +1989,6 @@ Unbuttonpos=3,2
 [aam2]
 Hotkey=N
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Anti-magic Shell
 Ubertip=Creates a barrier that stops 300 points of spell, summon, or magic damage from affecting a target unit. Lasts 90 seconds.
 
@@ -2175,7 +2018,6 @@ Ubertip=Infects nearby enemy living units with Disease Cloud. Disease Cloud deal
 [aast]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Ancestral Spirit
 Ubertip=Raises a fallen non-Hero Tauren from the dead. The Tauren is revived with 100% of its hit points restored.
 
@@ -2213,14 +2055,12 @@ Unubertip=Transforms the Druid into a Night Elf.
 [absk]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Berserk
 Ubertip=Causes this unit to attack 50% faster, but take 40% more damage.
 
 [abtl]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Battle Stations
 Ubertip=Causes nearby Peons to run into the Burrow so that they can defend their base.
 
@@ -2267,7 +2107,6 @@ Unubertip=The Crypt Fiend pops out of the ground and becomes visible again.
 [acan]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Cannibalize
 Ubertip=Consumes a nearby corpse to heal 16 hit points per second.
 
@@ -2282,7 +2121,6 @@ Researchubertip=Gives a percent chance to avoid attacks and a 10% chance to deal
 [acdh]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Drunken Haze - [Level 1],Drunken Haze - [Level 2],Drunken Haze - [Level 3],Drunken Haze - [Level 4]
@@ -2292,7 +2130,6 @@ Researchubertip=Drenches enemy units in alcohol, causing their movement speed to
 [acef]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Storm, Earth, And Fire - [Level 1],Storm, Earth, And Fire - [Level 2]
@@ -2302,56 +2139,48 @@ Researchubertip=Splits the Brewmaster into elements, forming 3 specialized warri
 [ache]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Cast Ray of Disruption
 Ubertip=Conjures a stream of neutralizing magic that bounces up to 8 times, dispelling units in its wake.
 
 [acht]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Howl of Terror
 Ubertip=Emits a terrifying howl that reduces nearby enemy units' attack damage by 25% for 10 seconds.
 
 [aclf]
 Hotkey=C
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Cloud
 Ubertip=Cast on enemy buildings with ranged attacks to stop the buildings from attacking. Lasts 30 seconds.
 
 [acmg]
 Hotkey=C
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Control Magic
 Ubertip=Takes control of an enemy summoned unit. The mana cost is 35% of the summoned unit's current hit points.
 
 [acn2]
 Hotkey=C
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Cannibalize
 Ubertip=Consumes a nearby corpse to heal 25 hit points per second.
 
 [acny]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Cyclone
 Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it unable to move, attack or cast spells, and stopping others from attacking or casting on it. Lasts 20 seconds.
 
 [aco2]
 Hotkey=U
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Mount Hippogryph
 Ubertip=Mounts a Hippogryph so that the Archer can attack from the air. Attacks land and air units.
 
 [aco3]
 Hotkey=U
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Pick up Archer
 Ubertip=Picks up an Archer so that the Archer can attack from the air. Attacks land and air units.
 
@@ -2373,7 +2202,6 @@ Unubertip=Turns the Spirit Walker ethereal, making him immune to physical damage
 [acri]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Cripple
 Ubertip=Reduces movement speed by 75%, attack rate by 50%, and damage by 50% of a target enemy unit. Lasts 60 seconds.
 
@@ -2395,21 +2223,18 @@ Ubertip=Deals 2 poison damage per second. Lasts 20 seconds.
 [acyc]
 Hotkey=C
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Cyclone
 Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it unable to move, attack or cast spells, and stopping others from attacking or casting on it. Lasts 20 seconds.
 
 [adcn]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Disenchant
 Ubertip=Removes all buffs from units in a target area. Deals 250 damage to hostile summoned units.
 
 [adec]
 Hotkey=U
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Dismount Archer & Hippogryph
 Ubertip=Dismounts the Archer from the Hippogryph.
 
@@ -2426,42 +2251,36 @@ Unubertip=Deactivate to move at normal speed, but take regular damage from Pierc
 [adev]
 Hotkey=D
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Devour
 Ubertip=Consumes an enemy land unit, slowly digesting it and dealing 5 damage per second to it. If the Kodo Beast is killed while the consumed unit is still digesting, the unit that was devoured will be released.
 
 [adis]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Dispel Magic
 Ubertip=Removes all buffs from units in a target area. Deals 200 damage to summoned units.
 
 [adri]
 Hotkey=U
-Buttonpos=1,2
-Unbuttonpos=1,2
+Buttonpos=2,2
 Tip=Unload All
 Ubertip=Unloads all units.
 
 [adro]
 Hotkey=U
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unload All
 Ubertip=Unloads all carried units at a target location.
 
 [adsm]
 Hotkey=D
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Dispel Magic
 Ubertip=Removes all buffs from units in a target area. Deals 200 damage to summoned units.
 
 [adt1]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 
 [adtg]
 Buttonpos=0,2
@@ -2471,7 +2290,6 @@ Ubertip=Reveals nearby invisible units.
 [adtn]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Detonate
 Ubertip=Destroys the Wisp, dispelling all magical buffs and draining 40 mana from each unit in an area around the Wisp. Deals 225 damage to summoned units.
 
@@ -2482,15 +2300,13 @@ Ubertip=Reveals nearby invisible units.
 
 [advm]
 Hotkey=D
-Buttonpos=1,2
-Unbuttonpos=0,2
+Buttonpos=0,2
 Tip=Devour Magic
 Ubertip=Consumes all magical buffs from units in an area. Each unit that is devoured of magic gives the Destroyer 50 hit points and 75 mana. Deals 160 damage to summoned units.
 
 [aeat]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Eat Tree
 Ubertip=Consume a tree to restore 500 hit points over 30 seconds.
 
@@ -2512,7 +2328,7 @@ Ubertip=Increases damage of Archers and Hippogryph Riders by 4.
 [aenc]
 Hotkey=L
 Unhotkey=U
-Buttonpos=2,2
+Buttonpos=1,2
 Unbuttonpos=0,2
 Tip=Load
 UnTip=Unload All
@@ -2522,42 +2338,36 @@ Unubertip=Removes all Wisps from the gold mine.
 [aenr]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Entangling Roots
 Ubertip=Causes roots to burst from the ground, immobilizing a target enemy unit for 6 seconds, and dealing 10 damage per second.
 
 [aens]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Ensnare
 Ubertip=Causes a target enemy unit to be bound to the ground so that it cannot move for 9 seconds. Air units that are ensnared can be attacked as though they were land units.
 
 [aent]
 Hotkey=G
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Entangle Gold Mine
 Ubertip=Entangles the gold mine, allowing Wisps to enter and mine the gold.
 
 [aenw]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Entangling Roots
 Ubertip=Causes roots to burst from the ground, immobilizing a target enemy unit for 6 seconds, and dealing 10 damage per second.
 
 [aesn]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Sentinel
 Ubertip=Send an owl to a nearby tree to reveal the area around it. Can see invisible units. Lasts 120 seconds.
 
 [aesr]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Sentinel
 Ubertip=Send an owl to a nearby tree to reveal the area around it. Can see invisible units.
 
@@ -2574,7 +2384,6 @@ Ubertip=Generates a corpse within the Meat Wagon every 15 seconds.
 [aeye]
 Hotkey=W
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Sentry Ward
 Ubertip=Summons an invisible and immovable ward that provides vision in an area. Wards are spell immune. Can see invisible units. Lasts 600 seconds.
 
@@ -2601,7 +2410,7 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [afak]
 Hotkey=O
 Unhotkey=O
-Buttonpos=3,2
+Buttonpos=1,2
 Unbuttonpos=1,2
 Tip=Orb of Annihilation
 UnTip=|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r
@@ -2626,7 +2435,6 @@ Ubertip=This tower's attacks destroy 24 mana per hit against any unit, causing b
 [afla]
 Hotkey=F
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Flare
 Ubertip=Launches a Dwarven flare above a target point, which reveals that area for 15 seconds. Reveals invisible units.
 
@@ -2673,7 +2481,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [agra]
 Hotkey=W
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=War Club
 Ubertip=Picks up a tree to give the Mountain Giant Siege damage, and increased attack range. Lasts for 15 strikes.
 
@@ -2715,7 +2522,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [ahid]
 Hotkey=I
 Buttonpos=2,1
-Unbuttonpos=2,1
 Tip=Hide
 Ubertip=Stops the unit from auto-acquiring enemies, allowing it to Shadowmeld and remain unseen at night.
 
@@ -2727,12 +2533,11 @@ Ubertip=Increases the amount of lumber that Peasants can carry by 10.,Increases 
 [ahnl]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Tip=Summoning Ritual
 Ubertip=Summons energies from the twisting nether.
 
 [ahpe]
-Buttonpos=0,2
+Buttonpos=1,2
 Tip=Phoenix
 Ubertip=The Phoenix spreads enchanted flames to nearby enemies, dealing 20 damage on impact and burning them for 2 per second over 10 seconds. Its flames burn with such intensity that the Phoenix damages itself as well. When it dies, it creates an egg that will hatch into a Phoenix.
 
@@ -2779,7 +2584,6 @@ Ubertip=Increases damage dealt to enemy targets with Medium armor by 10%.
 [ahwd]
 Hotkey=E
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Healing Ward
 Ubertip=Summons an immovable ward that heals 2% of a nearby friendly non-mechanical unit's hit points per second. Wards are spell immune. Lasts 25 seconds.
 
@@ -2796,14 +2600,12 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [aivs]
 Hotkey=I
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Invisibility
 Ubertip=Makes a unit invisible. If the unit attacks, uses an ability or casts a spell, it will become visible. Lasts 120 seconds.
 
 [alam]
 Hotkey=C
 Buttonpos=3,2
-Unbuttonpos=3,2
 Tip=Sacrifice
 Ubertip=Target a Sacrificial Pit to sacrifice the Acolyte and turn it into a Shade. Shades are invisible spirits that can see invisible units. Shades cannot attack.
 
@@ -2819,21 +2621,18 @@ MenuCommand=1
 [aloa]
 Hotkey=L
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Load
 Ubertip=Loads a targeted friendly land unit.
 
 [alsh]
 Hotkey=L
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Lightning Shield
 Ubertip=Forms a shield of electricity around a target unit, dealing 20 damage per second to units around it. Lasts 20 seconds.
 
 [ambb]
 Hotkey=B
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Mana Burn
@@ -2842,7 +2641,6 @@ Ubertip=Sends a bolt of negative energy that burns 50 points of a target enemy u
 [ambd]
 Hotkey=Z
 Buttonpos=3,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Mana Burn
@@ -2861,7 +2659,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [amed]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Drop All Corpses
 Ubertip=Drops all corpses for immediate use.
 
@@ -2923,7 +2720,6 @@ Ubertip=Renders this unit immune to magic and most spells.
 [amls]
 Hotkey=E
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Aerial Shackles
 Ubertip=Magically binds a target enemy air unit, so that it cannot move or attack and takes 30 damage per second. Lasts 40 seconds.
 
@@ -2950,7 +2746,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [andt]
 Hotkey=R
 Buttonpos=0,0
-Unbuttonpos=0,0
 Tip=Reveal
 Ubertip=Reveals an area of the map. Detects invisible units. Lasts 6 seconds.
 
@@ -2965,7 +2760,6 @@ UnTip=Deselect Unit
 [anei]
 Hotkey=U
 Buttonpos=2,2
-Unbuttonpos=3,2
 Researchhotkey=V
 Researchbuttonpos=3,2
 Tip=Select User
@@ -2982,7 +2776,7 @@ UnTip=Deselect Hero
 Hotkey=E
 Unhotkey=E
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Heal
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Heals a target friendly non-mechanical wounded unit.
@@ -2992,7 +2786,7 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 Hotkey=E
 Unhotkey=E
 Buttonpos=1,2
-Unbuttonpos=0,2
+Unbuttonpos=1,2
 Tip=Heal
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Heals a target friendly non-mechanical wounded unit.
@@ -3031,7 +2825,6 @@ Ubertip=Increases the hit point regeneration rate of Headhunters, Witch Doctors 
 [apg2]
 Hotkey=G
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Purge
 Ubertip=Removes all buffs from a target unit. Enemy units are also immobilized for 3 seconds and their movement speed is reduced by a factor of 5; they will slowly regain their movement speed over 15 seconds. Deals 400 damage to summoned units.
 
@@ -3043,14 +2836,12 @@ Ubertip=Burns nearby enemy units for 10 points of damage per second.
 [aply]
 Hotkey=O
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Polymorph
 Ubertip=Turns a target enemy unit into a sheep. The targeted unit retains its hit points and armor, but cannot attack. Cannot be cast on Heroes. Lasts 60 seconds.
 
 [aps2]
 Hotkey=O
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Possession
 Ubertip=Stuns a target unit and the Banshee for 4.5 seconds, during which the Banshee takes extra damage from attacks. She then displaces the soul of the enemy, giving you permanent control of it, but destroying the caster's body. Possession cannot be used on flying units, Heroes, or creeps above level 5.
 
@@ -3071,15 +2862,13 @@ Ubertip=Drops a Disease Cloud with each attack. Disease Cloud deals 2 damage per
 
 [apxf]
 Hotkey=Z
-Buttonpos=1,2
-Unbuttonpos=0,2
+Buttonpos=0,2
 Tip=Phoenix Fire
 Ubertip=Fires down streams of flame, lighting nearby enemies on fire.
 
 [ara2]
 Hotkey=R
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Roar
 Ubertip=Gives friendly nearby units a 25% bonus to damage. Lasts 45 seconds.
 
@@ -3106,7 +2895,6 @@ Unubertip=Transforms the Druid into a Night Elf.
 [arej]
 Hotkey=E
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Rejuvenation
 Ubertip=Heals a target friendly unit for 400 hit points over 12 seconds.
 
@@ -3153,7 +2941,6 @@ Unubertip=Allows the Ancient to pull itself up out of the ground so that it can 
 [aroa]
 Hotkey=R
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Roar
 Ubertip=Gives friendly nearby units a 25% bonus to damage. Lasts 45 seconds.
 
@@ -3185,7 +2972,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [arsg]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Researchhotkey=Q
 Researchbuttonpos=0,0
 Tip=Summon Misha - [Level 1],Summon Misha - [Level 2],Summon Misha - [Level 3],Summon Misha - [Level 4]
@@ -3200,7 +2986,6 @@ Ubertip=Reduces the duration of negative spells and renders the Mountain Giant i
 [arsp]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Stampede - [Level 1],Stampede - [Level 2]
@@ -3210,7 +2995,6 @@ Researchubertip=Calls down hordes of rampaging thunder lizards to explode upon t
 [arsq]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Quilbeast - [Level 1],Summon Quilbeast - [Level 2],Summon Quilbeast - [Level 3],Summon Quilbeast - [Level 4]
@@ -3230,7 +3014,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [arsw]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Serpent Ward - [Level 1],Serpent Ward - [Level 2],Serpent Ward - [Level 3],Serpent Ward - [Level 4]
@@ -3240,7 +3023,6 @@ Researchubertip=Summons an immobile serpentine ward to attack the Shadow Hunter'
 [asac]
 Hotkey=C
 Buttonpos=0,0
-Unbuttonpos=0,0
 Tip=Sacrifice
 Ubertip=Target an Acolyte to sacrifice it and turn it into a Shade. Shades are invisible spirits that can see invisible units. Shades cannot attack.
 
@@ -3322,7 +3104,6 @@ Unubertip=|cffc3dbff|cffc3dbffRight-click to deactivate auto-casting.|r|r
 [ashm]
 Hotkey=I
 Buttonpos=2,1
-Unbuttonpos=2,1
 Tip=Hide
 Ubertip=Stops the unit from auto-acquiring enemies, allowing it to Shadowmeld and remain unseen at night.
 
@@ -3339,7 +3120,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 [aslp]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Summon Prawns
@@ -3376,14 +3156,12 @@ Ubertip=Reduces all attacks on the Mountain Giant by 8 damage. Attacks cannot be
 [asta]
 Hotkey=T
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Stasis Trap
 Ubertip=Summons an invisible and immovable ward that stuns enemy land units around it. The trap activates when an enemy land unit approaches and destroys all other stasis wards in its area of effect. Wards are spell immune. The trap lasts 150 seconds. The stun lasts 4 seconds.
 
 [astd]
 Hotkey=D
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Stand Down
 Ubertip=Causes Peons within the Burrow to return to work.
 
@@ -3405,7 +3183,6 @@ Unubertip=Returns the Gargoyle to the air.
 [atau]
 Hotkey=T
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Taunt
 Ubertip=The closest 10 enemies are forced to attack this unit. After 3 seconds Taunt will activate again.
 
@@ -3437,14 +3214,12 @@ Ubertip=This unit is permanently invisible.
 [auhf]
 Hotkey=U
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
 [auns]
 Hotkey=U
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unsummon Building
 Ubertip=Unsummons your building to regain 50% of the spent resources.
 
@@ -3488,7 +3263,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 [awfb]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Firebolt
 Ubertip=Hurls a fiery bolt that stuns a target enemy unit.
 
@@ -3503,14 +3277,12 @@ Ubertip=Mines gold from Entangled Gold Mines and harvests lumber from trees.
 [awrh]
 Hotkey=X
 Buttonpos=2,2
-Unbuttonpos=1,2
 Tip=War Stomp
 Ubertip=Slams the ground, dealing 25 damage to nearby enemy land units and stunning them for 3 seconds.
 
 [awrs]
 Hotkey=T
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=War Stomp
 Ubertip=Slams the ground, dealing 25 damage to nearby enemy land units and stunning them for 3 seconds.
 
@@ -4412,14 +4184,12 @@ Ubertip=Increases nearby friendly units' movement speed by 10% and attack rate b
 [scc1]
 Hotkey=S
 Buttonpos=1,1
-Unbuttonpos=1,1
 Tip=Cyclone
 Ubertip=Tosses a target enemy unit into the air, rendering it unable to move, attack or cast spells, and stopping others from attacking or casting on it. Lasts 30 seconds.
 
 [snin]
 Hotkey=V
 Buttonpos=3,2
-Unbuttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Inferno
@@ -4439,42 +4209,36 @@ Modifier=Alt
 [sbtl]
 Hotkey=Z
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Battle Stations
 Ubertip=Causes nearby Peons to run into the Burrow so that they can defend their base.
 
 [scri]
 Hotkey=C
 Buttonpos=2,2
-Unbuttonpos=2,2
 Tip=Cripple
 Ubertip=Reduces movement speed by 75%, attack rate by 50%, and damage by 50% of a target enemy unit. Lasts 60 seconds.
 
 [sdro]
 Hotkey=U
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unload All
 Ubertip=Unloads all carried units at a target location.
 
 [slo2]
 Hotkey=L
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Load Wisp
 Ubertip=Loads a targeted friendly Wisp.
 
 [slo3]
 Hotkey=L
 Buttonpos=0,2
-Unbuttonpos=0,2
 Tip=Load
 Ubertip=Loads a targeted friendly land unit.
 
 [suhf]
 Hotkey=X
 Buttonpos=1,2
-Unbuttonpos=1,2
 Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
@@ -5165,7 +4929,7 @@ Ubertip=Medium ranged unit with Evasion and Frost Nova. Attacks land and air uni
 
 [nbdw]
 Hotkey=W
-Buttonpos=0,0
+Buttonpos=3,0
 Tip=Hire Blue Dragonspawn Warrior
 Ubertip=Heavy melee unit with Evasion. Attacks land units.
 
@@ -5242,13 +5006,13 @@ Buttonpos=2,0
 
 [ncea]
 Hotkey=A
-Buttonpos=0,0
+Buttonpos=3,0
 Tip=Hire Centaur Archer
 Ubertip=Light ranged unit. Attacks land and air units.
 
 [ncen]
 Hotkey=O
-Buttonpos=1,0
+Buttonpos=0,0
 Tip=Hire Centaur Outrunner
 Ubertip=Medium melee attacker wielding a large axe. Attacks land units.
 
@@ -5564,7 +5328,7 @@ Buttonpos=0,0
 Buttonpos=0,0
 
 [ngir]
-Buttonpos=1,0
+Buttonpos=3,0
 
 [ngna]
 Hotkey=A
@@ -5970,7 +5734,7 @@ Tip=Hire Giant Polar Bear
 Ubertip=Heavy melee amphibious unit. Attacks land units.
 
 [nqbh]
-Buttonpos=3,0
+Buttonpos=1,0
 
 [nrac]
 Buttonpos=0,0
@@ -6238,7 +6002,7 @@ Ubertip=Medium melee unit. Can cast ensnare. Attacks land units.
 
 [nubw]
 Hotkey=D
-Buttonpos=3,0
+Buttonpos=0,0
 Tip=Hire Unbroken Darkweaver
 Ubertip=Medium melee unit with Unholy Frenzy. Attacks land units.
 
@@ -6277,7 +6041,7 @@ Buttonpos=0,0
 
 [nzep]
 Hotkey=Z
-Buttonpos=3,0
+Buttonpos=1,0
 Tip=Hire Zeppelin
 Ubertip=Flying air-transport.
 

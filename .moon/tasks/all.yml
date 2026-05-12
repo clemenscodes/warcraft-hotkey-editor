@@ -13,9 +13,6 @@ fileGroups:
   artifacts:
     - target
 
-implicitDeps:
-  - ^:build
-
 implicitInputs:
   - /moon.yml
   - /Cargo.toml
@@ -26,6 +23,8 @@ tasks:
   rust/build:
     toolchain: rust
     command: cargo build
+    deps:
+      - ^:rust/build
     options:
       outputStyle: stream
     inputs:
@@ -51,6 +50,8 @@ tasks:
   rust/lint:
     toolchain: rust
     command: cargo clippy --all-targets -- -D warnings
+    deps:
+      - ^:rust/build
     options:
       outputStyle: stream
     inputs:
@@ -60,6 +61,8 @@ tasks:
   rust/test:
     toolchain: rust
     command: cargo test
+    deps:
+      - ^:rust/build
     options:
       outputStyle: stream
     inputs:

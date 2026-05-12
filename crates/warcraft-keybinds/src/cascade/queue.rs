@@ -741,7 +741,13 @@ impl PositionAssignmentGroup {
         }
 
         // Anchor preference: pinned first, then highest carrier count, then
-        // stable tiebreak by lower index.
+        // stable tiebreak.  For intra-unit ties (carrier_count == 1) the
+        // ability that appears earlier in its unit's abilList wins: it is the
+        // game's intended priority order, and the later-list loser cascades
+        // through same-row incumbents without displacing them, keeping the
+        // total count of moved abilities low.  The cross-unit tiebreak
+        // (carrier_count > 1) is unchanged: lower node index (alphabetically
+        // earlier) wins, preserving the existing cascade order.
         let anchor_index = anchor_candidates
             .iter()
             .copied()
@@ -755,7 +761,17 @@ impl PositionAssignmentGroup {
                 left_pinned
                     .cmp(&right_pinned)
                     .then_with(|| left_carriers.cmp(&right_carriers))
-                    .then_with(|| right.cmp(&left))
+                    .then_with(|| {
+                        if left_carriers == 1 {
+                            let left_priority = graph.node(left).ability_list_priority();
+                            let right_priority = graph.node(right).ability_list_priority();
+                            right_priority
+                                .cmp(&left_priority)
+                                .then_with(|| left.cmp(&right))
+                        } else {
+                            right.cmp(&left)
+                        }
+                    })
             })
             .expect("anchor_candidates is non-empty");
 

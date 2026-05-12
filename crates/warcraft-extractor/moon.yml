@@ -1,0 +1,26 @@
+id: warcraft-extractor
+stack: backend
+layer: application
+tags:
+  - rust
+  - cli
+language: rust
+
+dependsOn:
+  - warcraft-api
+  - warcraft-keybinds
+  - warcraft-slk
+
+tasks:
+  rust/lint:
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "examples/**/*"
+      - "tests/**/*"
+
+  rust/test:
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "tests/**/*"

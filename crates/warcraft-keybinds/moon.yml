@@ -5,3 +5,23 @@ tags:
   - rust
   - lib
 language: rust
+
+dependsOn:
+  - warcraft-api
+  - warcraft-database
+
+tasks:
+  rust/build:
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*"
+      - "/crates/hotkey-editor/templates/**/*"
+
+  rust/test:
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "templates/**/*"
+      - "fixtures/**/*"
+      - "/crates/hotkey-editor/templates/**/*"

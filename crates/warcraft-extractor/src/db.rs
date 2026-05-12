@@ -523,20 +523,19 @@ impl WarcraftDataAggregation {
         };
         let mut hero_abil_codes: std::collections::HashSet<String> =
             std::collections::HashSet::new();
-        if let Some(kinds) = self.units.get(&race) {
-            if let Some(heroes) = kinds.get(&UnitKind::Hero) {
-                for (hero_id, _) in heroes {
-                    if let Some(entry) = self.unit_abilities.get(hero_id.as_str()) {
-                        for ability_id in entry.abilities() {
-                            let abil_race = self.data_table_lookup(ability_id, "race");
-                            if abil_race
-                                .as_deref()
-                                .is_some_and(|r| r.trim().eq_ignore_ascii_case(race_str))
-                            {
-                                if let Some(code) = self.data_table_lookup(ability_id, "code") {
-                                    hero_abil_codes.insert(code.trim().to_ascii_lowercase());
-                                }
-                            }
+        if let Some(kinds) = self.units.get(&race)
+            && let Some(heroes) = kinds.get(&UnitKind::Hero)
+        {
+            for hero_id in heroes.keys() {
+                if let Some(entry) = self.unit_abilities.get(hero_id.as_str()) {
+                    for ability_id in entry.abilities() {
+                        let abil_race = self.data_table_lookup(ability_id, "race");
+                        if abil_race
+                            .as_deref()
+                            .is_some_and(|r| r.trim().eq_ignore_ascii_case(race_str))
+                            && let Some(code) = self.data_table_lookup(ability_id, "code")
+                        {
+                            hero_abil_codes.insert(code.trim().to_ascii_lowercase());
                         }
                     }
                 }
@@ -1016,19 +1015,19 @@ impl WarcraftDataAggregation {
                             let from_unit = meta.transform_from_unit()?.to_string();
                             Some((ability_id.clone(), from_unit))
                         });
-                    if let Some((transform_ability_id, from_unit_id)) = transform_info {
-                        if let Some(from_entry) = self.unit_abilities.get(from_unit_id.as_str()) {
-                            let from_abilities: std::collections::HashSet<String> = from_entry
-                                .abilities()
-                                .iter()
-                                .map(|s| s.to_ascii_lowercase())
-                                .collect();
-                            combined.retain(|ability_id| {
-                                // Always keep the transform ability itself.
-                                ability_id.eq_ignore_ascii_case(&transform_ability_id)
-                                    || !from_abilities.contains(&ability_id.to_ascii_lowercase())
-                            });
-                        }
+                    if let Some((transform_ability_id, from_unit_id)) = transform_info
+                        && let Some(from_entry) = self.unit_abilities.get(from_unit_id.as_str())
+                    {
+                        let from_abilities: std::collections::HashSet<String> = from_entry
+                            .abilities()
+                            .iter()
+                            .map(|s| s.to_ascii_lowercase())
+                            .collect();
+                        combined.retain(|ability_id| {
+                            // Always keep the transform ability itself.
+                            ability_id.eq_ignore_ascii_case(&transform_ability_id)
+                                || !from_abilities.contains(&ability_id.to_ascii_lowercase())
+                        });
                     }
                     Self::leak_object_ids(&combined)
                 };
@@ -1393,7 +1392,7 @@ impl WarcraftDataAggregation {
                         inferred.entry(item_alias).or_insert(Some(*race));
                     }
                 }
-                for (unit_id, _) in units {
+                for unit_id in units.keys() {
                     let raw: Vec<String> = self
                         .unit_abilities
                         .get(unit_id.as_str())
