@@ -88,12 +88,9 @@ jobs:
           --print-build-logs
 
       - name: Lint WASM and build static bundle
-        run: >
-          nix build
-          .#cargoClippyWasm
-          .#warcraft-hotkey-editor
-          --accept-flake-config
-          --print-build-logs
+        run: |
+          nix build .#cargoClippyWasm --no-link --accept-flake-config --print-build-logs
+          nix build .#warcraft-hotkey-editor --accept-flake-config --print-build-logs
 
       - name: Run e2e tests
         run: >
