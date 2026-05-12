@@ -94,6 +94,29 @@ impl UnitCatalog {
                 if !passes_mode {
                     return None;
                 }
+                let has_production = !unit_meta.trains().is_empty()
+                    || !unit_meta.builds().is_empty()
+                    || !unit_meta.researches().is_empty()
+                    || !unit_meta.sell_items().is_empty()
+                    || !unit_meta.sell_units().is_empty();
+                let mut all_abilities = unit_meta
+                    .abilities()
+                    .iter()
+                    .chain(unit_meta.hero_abilities().iter());
+                let has_visible_ability = all_abilities.any(|ability_id| {
+                    let ability_id_str = ability_id.value();
+                    let Some(ability_object) = WARCRAFT_DATABASE.by_id(ability_id_str) else {
+                        return false;
+                    };
+                    let WarcraftObjectMeta::Ability(ability_meta) = ability_object.meta() else {
+                        return false;
+                    };
+                    let button_position = ability_meta.default_button_position();
+                    button_position.is_some()
+                });
+                if !has_production && !has_visible_ability {
+                    return None;
+                }
                 let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
                 if let Some(required_kind) = kind_filter
                     && effective_kind != required_kind

@@ -39,6 +39,12 @@ test.describe("Category sort order", () => {
     }
   });
 
+  test("units with no editable hotkeys are hidden (Water Elemental is a summon with no abilities)", async ({ page }) => {
+    await page.locator('input[type="search"]').fill("Water Elemental");
+    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page.locator(".unit-card").filter({ hasText: "Water Elemental" })).toHaveCount(0);
+  });
+
   test("search results category order is Heroes > Buildings > Workers > Units", async ({ page }) => {
     await page.locator('input[type="search"]').fill("elf");
     await page.locator('.unit-list[data-search-active="true"]').waitFor();

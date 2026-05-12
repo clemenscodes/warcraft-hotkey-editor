@@ -28,18 +28,18 @@ test.describe("Trailing-space narrows search to word boundary", () => {
     await page.locator(".unit-card").first().waitFor();
   });
 
-  test("'water' matches both Water Elemental and Watery Minion", async ({ page }) => {
-    await page.locator('input[type="search"]').fill("water");
+  test("'dark' matches both Dark Ranger and Altar of Darkness", async ({ page }) => {
+    await page.locator('input[type="search"]').fill("dark");
     await page.locator('.unit-list[data-search-active="true"]').waitFor();
-    await page.locator(".unit-card").filter({ hasText: "Water Elemental" }).first().waitFor();
-    await page.locator(".unit-card").filter({ hasText: "Watery Minion" }).first().waitFor();
+    await page.locator(".unit-card").filter({ hasText: "Dark Ranger" }).first().waitFor();
+    await page.locator(".unit-card").filter({ hasText: "Altar of Darkness" }).first().waitFor();
   });
 
-  test("'water ' (trailing space) matches Water Elemental but not Watery Minion", async ({ page }) => {
-    await page.locator('input[type="search"]').fill("water ");
+  test("'dark ' (trailing space) matches Dark Ranger but not Altar of Darkness", async ({ page }) => {
+    await page.locator('input[type="search"]').fill("dark ");
     await page.locator('.unit-list[data-search-active="true"]').waitFor();
-    await page.locator(".unit-card").filter({ hasText: "Water Elemental" }).first().waitFor();
-    await expect(page.locator(".unit-card").filter({ hasText: "Watery Minion" })).toHaveCount(0);
+    await page.locator(".unit-card").filter({ hasText: "Dark Ranger" }).first().waitFor();
+    await expect(page.locator(".unit-card").filter({ hasText: "Altar of Darkness" })).toHaveCount(0);
   });
 });
 
