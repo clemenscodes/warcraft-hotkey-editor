@@ -7,6 +7,11 @@ tags:
   - wasm
 language: rust
 
+dependsOn:
+  - warcraft-keybinds
+  - warcraft-api
+  - warcraft-database
+
 tasks:
   rust/build:
     toolchain: rust
@@ -81,6 +86,9 @@ tasks:
       runFromWorkspaceRoot: false
     deps:
       - tailwind/build
+      - warcraft-keybinds:rust/build
+      - warcraft-api:rust/build
+      - warcraft-database:rust/build
     inputs:
       - "@group(sources)"
       - "@group(configs)"
@@ -114,6 +122,26 @@ tasks:
       - dx/build
     env:
       STATIC_DIR: "../../target/dx/hotkey-editor/release/web/public"
+      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "e2e/**/*.ts"
+      - "e2e/tsconfig.json"
+      - "playwright.config.ts"
+    outputs:
+      - "dist/test-results"
+      - "dist/playwright-report"
+
+  # CI-only variant: runs the Nix build first, then tests against the
+  # resulting bundle at ../../result. In CI the Nix store is already warm
+  # so nix/bundle is a fast no-op; locally it builds from scratch.
+  playwright/ci:
+    toolchain: system
+    command: playwright test
+    env:
+      STATIC_DIR: "../../result"
       STATIC_BASE_PATH: "/warcraft-hotkey-editor"
     options:
       outputStyle: stream

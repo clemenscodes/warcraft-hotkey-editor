@@ -262,17 +262,15 @@ impl CustomKeys {
                     }
                     if binding.unbutton_position().is_none()
                         && !warcraft_object.is_passive_ability()
+                        && let WarcraftObjectMeta::Ability(ability_meta) = warcraft_object.meta()
+                        && ability_meta.has_off_state()
                     {
-                        if let WarcraftObjectMeta::Ability(ability_meta) = warcraft_object.meta() {
-                            if ability_meta.has_off_state() {
-                                let database_off = ability_meta.off_button_position();
-                                if let Some(off_position) = database_off {
-                                    binding.set_unbutton_position(Some(off_position));
-                                } else if let Some(button_position) = binding.button_position() {
-                                    let position_copy = *button_position;
-                                    binding.set_unbutton_position(Some(position_copy));
-                                }
-                            }
+                        let database_off = ability_meta.off_button_position();
+                        if let Some(off_position) = database_off {
+                            binding.set_unbutton_position(Some(off_position));
+                        } else if let Some(button_position) = binding.button_position() {
+                            let position_copy = *button_position;
+                            binding.set_unbutton_position(Some(position_copy));
                         }
                     }
                 }
@@ -801,7 +799,14 @@ impl CustomKeys {
                 if is_research_context {
                     binding.set_research_button_position(Some(new_position));
                 } else {
+                    let old_button_position = binding.button_position().copied();
+                    let old_unbutton_position = binding.unbutton_position().copied();
+                    let off_was_colocated = old_unbutton_position.is_some()
+                        && old_unbutton_position == old_button_position;
                     binding.set_button_position(Some(new_position));
+                    if off_was_colocated {
+                        binding.set_unbutton_position(Some(new_position));
+                    }
                 }
             }
             GridSlotId::AbilityOff(ability_id) => {
@@ -2072,6 +2077,42 @@ mod normalize_tests {
         assert!(
             healing_wave_off.is_none(),
             "AChv has no off-state — normalize must not invent an unbutton_position"
+        );
+    }
+
+    #[test]
+    fn resolve_conflicts_co_moves_off_state_with_ability() {
+        // ACsw (Slow) is a toggle ability whose off-state button sits at the
+        // same grid cell as the on-state button. The cascade moves ACsw to
+        // resolve a cross-unit collision. After resolve_conflicts the
+        // unbutton_position must follow to the new cell — not be left behind
+        // at the pre-cascade position, where it would ghost-block further edits.
+        use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
+        let mut keys = CustomKeys::from("").normalize();
+        let normalized_position = keys
+            .binding("ACsw")
+            .and_then(|binding| binding.button_position())
+            .copied();
+        let default_slow_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two);
+        assert_eq!(
+            normalized_position,
+            Some(default_slow_position),
+            "ACsw must start at (0,2) after normalize"
+        );
+        let _plan = keys.resolve_conflicts();
+        let binding = keys
+            .binding("ACsw")
+            .expect("ACsw must remain after resolve");
+        let button_position = binding.button_position().copied();
+        let unbutton_position = binding.unbutton_position().copied();
+        assert_ne!(
+            button_position,
+            Some(default_slow_position),
+            "ACsw must have been moved by the cascade"
+        );
+        assert_eq!(
+            unbutton_position, button_position,
+            "ACsw off-state must be co-located with on-state after resolve_conflicts"
         );
     }
 

@@ -1,0 +1,11 @@
+id: warcraft-cli
+stack: backend
+layer: application
+tags:
+  - rust
+  - cli
+language: rust
+
+dependsOn:
+  - warcraft-keybinds
+  - warcraft-api

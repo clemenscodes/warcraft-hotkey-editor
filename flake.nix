@@ -230,9 +230,41 @@
           ];
         };
 
+        # Native build args: host target, excludes wasm-only and cmake-heavy crates.
+        commonArgsNative = {
+          inherit src;
+          pname = "warcraft-hotkey-editor";
+          version = "0.1.0";
+          strictDeps = true;
+          doCheck = false;
+          cargoExtraArgs = "--workspace --exclude hotkey-editor --exclude warcraft-extractor";
+        };
+
         # Cache cargo dependencies separately so a code-only change
         # doesn't re-download the world.
         cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+        cargoArtifactsNative = craneLib.buildDepsOnly commonArgsNative;
+
+        # Nix-native check derivations — all reuse the cached artifacts above
+        # so they never recompile deps. These replace the raw cargo calls that
+        # used to run in the `rust-checks` CI job.
+        cargoFmt = craneLib.cargoFmt { inherit src; };
+
+        cargoClippyNative = craneLib.cargoClippy (commonArgsNative // {
+          cargoArtifacts = cargoArtifactsNative;
+          cargoClippyExtraArgs = "-- -D warnings";
+        });
+
+        cargoClippyWasm = craneLib.cargoClippy (commonArgs // {
+          inherit cargoArtifacts;
+          pnameSuffix = "-wasm";
+          cargoExtraArgs = "-p hotkey-editor";
+          cargoClippyExtraArgs = "-- -D warnings";
+        });
+
+        cargoTestNative = craneLib.cargoTest (commonArgsNative // {
+          cargoArtifacts = cargoArtifactsNative;
+        });
 
         # The final static bundle: index.html + hashed JS/WASM + assets +
         # `.nojekyll` and `404.html` for GitHub Pages compatibility.
@@ -272,7 +304,8 @@
 
         packages = {
           default = warcraft-hotkey-editor;
-          inherit cargoArtifacts ci-cache-tools moonCli warcraft-hotkey-editor;
+          inherit cargoArtifacts cargoArtifactsNative ci-cache-tools moonCli warcraft-hotkey-editor;
+          inherit cargoFmt cargoClippyNative cargoClippyWasm cargoTestNative;
           dioxus-cli = pkgs.dioxus-cli;
           wasm-bindgen-cli = pkgs.wasm-bindgen-cli;
         };

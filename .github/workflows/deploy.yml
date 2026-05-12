@@ -14,79 +14,17 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Fast Rust checks — no Nix, no playwright, no browser deps.
-  # Runs cargo fmt / clippy / test directly. With rust-cache this is
-  # consistently under 2 minutes even on a cold run.
-  rust-checks:
+  # Nix-based Rust checks — fmt, clippy (native), tests.
+  # All derivations reuse cargoArtifactsNative from Cachix so there is
+  # no second Rust compilation step; a warm Cachix hit is nearly instant.
+  nix-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        # dtolnay reads rust-toolchain.toml automatically: pins to 1.95.0,
-        # adds wasm32-unknown-unknown target and the declared components.
-
-      - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
-
-      - name: Format check
-        run: cargo fmt --all -- --check
-
-      # Native crates: warcraft-api, warcraft-database, warcraft-keybinds,
-      # warcraft-cli, warcraft-slk. Exclude hotkey-editor (wasm-only) and
-      # warcraft-extractor (needs cmake + casclib C lib).
-      - name: Clippy (native crates)
-        run: >
-          cargo clippy
-          --workspace
-          --exclude hotkey-editor
-          --exclude warcraft-extractor
-          -- -D warnings
-
-      - name: Clippy (wasm crate)
-        run: >
-          cargo clippy
-          -p hotkey-editor
-          --target wasm32-unknown-unknown
-          -- -D warnings
-
-      - name: Tests (native crates)
-        run: >
-          cargo test
-          --workspace
-          --exclude hotkey-editor
-          --exclude warcraft-extractor
-
-  # Nix-based build: runs playwright e2e tests then produces the final
-  # static bundle. Slow on first run (cold Nix store) but subsequent runs
-  # are fast once Cachix is warm.
-  build:
-    needs: rust-checks
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Prepare Moon base ref
-        run: |
-          git fetch origin main
-          if ! git show-ref --verify --quiet refs/heads/main; then
-            git branch main FETCH_HEAD
-          fi
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -99,7 +37,42 @@ jobs:
           useDaemon: true
           pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
 
-      - name: Build priority cache inputs
+      - name: Build native cargo artifacts
+        run: >
+          nix build .#cargoArtifactsNative
+          --accept-flake-config
+          --print-build-logs
+
+      - name: Format, lint and test
+        run: >
+          nix build
+          .#cargoFmt
+          .#cargoClippyNative
+          .#cargoTestNative
+          --accept-flake-config
+          --print-build-logs
+
+  # Nix-based build: produces the static bundle then runs playwright e2e
+  # tests against it. Runs in parallel with rust-checks.
+  # Slow on first run (cold Nix store) but subsequent runs are fast once
+  # Cachix is warm.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Use Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          useDaemon: true
+          pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Build WASM cargo artifacts and CI tools
         run: >
           nix build
           .#ci-cache-tools
@@ -107,17 +80,19 @@ jobs:
           --accept-flake-config
           --print-build-logs
 
+      - name: Lint WASM and build static bundle
+        run: >
+          nix build
+          .#cargoClippyWasm
+          .#warcraft-hotkey-editor
+          --accept-flake-config
+          --print-build-logs
+
       - name: Run e2e tests
         run: >
           nix shell .#ci-cache-tools
           --accept-flake-config
-          --command moon run hotkey-editor:playwright/test
-
-      - name: Build the static bundle
-        run: >
-          nix build .#warcraft-hotkey-editor
-          --accept-flake-config
-          --print-build-logs
+          --command moon run hotkey-editor:playwright/ci
 
       - name: Stage Pages artifact
         if: github.event_name != 'pull_request'
@@ -144,7 +119,7 @@ jobs:
           files: ./warcraft-hotkey-editor-${{ github.ref_name }}-pages.tar.gz
 
   deploy:
-    needs: build
+    needs: [nix-checks, build]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
