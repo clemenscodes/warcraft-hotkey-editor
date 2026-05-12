@@ -2251,6 +2251,40 @@ mod normalize_tests {
     }
 
     #[test]
+    fn destroyer_intra_unit_collision_produces_minimal_displacement() {
+        // Aabs and Advm both default to (0,2) on the Destroyer (ubsp).
+        // The WC3-canonical resolution keeps Advm at (0,2) and pushes Aabs
+        // to (3,2), displacing only one ability.  With the old "lower index
+        // wins" tiebreak Aabs won instead, then cascaded Advm into Afak,
+        // displacing two abilities.  The intra-unit tiebreak (carrier_count=1
+        // → higher index wins) restores the minimal-displacement outcome.
+        let mut keys = CustomKeys::from("").normalize();
+        let _plan = keys.resolve_conflicts();
+
+        use crate::cascade::conflict_graph::ConflictGraph;
+        use crate::unit::grids::GridRole;
+        let graph = ConflictGraph::build(&keys);
+
+        let check = |ability: &str, expected_col: u8, expected_row: u8| {
+            let index = graph
+                .find_node(ability, GridRole::MainCommand)
+                .unwrap_or_else(|| panic!("{ability} not found in conflict graph"));
+            let position = graph.node(index).current_position();
+            let col = u8::from(position.column());
+            let row = u8::from(position.row());
+            assert_eq!(
+                (col, row),
+                (expected_col, expected_row),
+                "{ability} expected ({expected_col},{expected_row}), got ({col},{row})"
+            );
+        };
+
+        check("Advm", 0, 2);
+        check("Afak", 1, 2);
+        check("Aabs", 3, 2);
+    }
+
+    #[test]
     fn resolved_default_customkeys_matches_snapshot() {
         // Full-text regression snapshot: normalize() the bundled default
         // CustomKeys.txt, run both cascade phases via resolve_conflicts(), and

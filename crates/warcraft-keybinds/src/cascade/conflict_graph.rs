@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 
-use warcraft_api::WarcraftObjectId;
+use warcraft_api::{WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
 use crate::custom_keys::CustomKeys;
@@ -45,6 +45,11 @@ pub struct ConflictNode {
     grid_role: GridRole,
     current_position: GridCoordinate,
     carrier_unit_ids: Vec<WarcraftObjectId>,
+    /// Minimum index of this ability across all carrier units' `abilList` ordering.
+    /// Lower means the ability appears earlier in some unit's list and should be
+    /// preferred as the fight anchor when carrier counts are equal.
+    /// `usize::MAX` if the ability is not found in any carrier's abilList (e.g. Cmd*).
+    ability_list_priority: usize,
 }
 
 impl ConflictNode {
@@ -66,6 +71,10 @@ impl ConflictNode {
 
     pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
+    }
+
+    pub fn ability_list_priority(&self) -> usize {
+        self.ability_list_priority
     }
 }
 
@@ -102,6 +111,29 @@ pub struct ConflictGraph {
     /// `adjacency[i]` is a sorted list of node indices that conflict with node `i`.
     adjacency: Vec<Vec<usize>>,
     key_to_index: HashMap<AbilityRoleKey, usize>,
+}
+
+/// Returns the minimum index of `ability_lowercase` across all carrier units'
+/// `abilList` ordering, or `usize::MAX` if it is absent from every list.
+fn ability_list_priority(ability_lowercase: &str, carrier_unit_ids: &[WarcraftObjectId]) -> usize {
+    let mut min_priority = usize::MAX;
+    for carrier_id in carrier_unit_ids {
+        let Some(unit_object) = WARCRAFT_DATABASE.by_id(carrier_id.value()) else {
+            continue;
+        };
+        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
+            continue;
+        };
+        let abilities = unit_meta.abilities();
+        for (position, listed_id) in abilities.iter().enumerate() {
+            let listed_lower = listed_id.value().to_ascii_lowercase();
+            if listed_lower == ability_lowercase {
+                min_priority = min_priority.min(position);
+                break;
+            }
+        }
+    }
+    min_priority
 }
 
 impl ConflictGraph {
@@ -166,11 +198,14 @@ impl ConflictGraph {
             let mut carrier_unit_ids: Vec<WarcraftObjectId> =
                 accumulator.carriers.into_iter().collect();
             carrier_unit_ids.sort_by(|left, right| left.value().cmp(right.value()));
+            let ability_list_priority =
+                ability_list_priority(&key.ability_str_lowercase, &carrier_unit_ids);
             nodes.push(ConflictNode {
                 slot_id: accumulator.canonical_slot,
                 grid_role: key.grid_role,
                 current_position: accumulator.position,
                 carrier_unit_ids,
+                ability_list_priority,
             });
         }
 
