@@ -474,11 +474,6 @@ impl CustomKeys {
             request.target_column(),
             request.target_row(),
         );
-        let off_state_in_grid = |id: &str| -> bool {
-            request.slot_ids().iter().any(
-                |s| matches!(s, GridSlotId::AbilityOff(off_id) if off_id.value().eq_ignore_ascii_case(id)),
-            )
-        };
         let off_state_blocks = displaced_slot.is_none()
             && !request.is_research_context()
             && request.slot_ids().iter().any(|slot| {
@@ -501,31 +496,25 @@ impl CustomKeys {
             });
         let moving_off_colocated = !request.prevent_co_move()
             && match (request.moving_slot(), &moving_old_position) {
-                (GridSlotId::Ability(id), Some(old_pos)) => {
-                    off_state_in_grid(id.value())
-                        && self
-                            .position_for_slot(&GridSlotId::AbilityOff(*id), false)
-                            .is_some_and(|off_pos| {
-                                let off_column = u8::from(off_pos.column());
-                                let off_row = u8::from(off_pos.row());
-                                let old_column = u8::from(old_pos.column());
-                                let old_row = u8::from(old_pos.row());
-                                off_column == old_column && off_row == old_row
-                            })
-                }
+                (GridSlotId::Ability(id), Some(old_pos)) => self
+                    .position_for_slot(&GridSlotId::AbilityOff(*id), false)
+                    .is_some_and(|off_pos| {
+                        let off_column = u8::from(off_pos.column());
+                        let off_row = u8::from(off_pos.row());
+                        let old_column = u8::from(old_pos.column());
+                        let old_row = u8::from(old_pos.row());
+                        off_column == old_column && off_row == old_row
+                    }),
                 _ => false,
             };
         let displaced_off_colocated = match &displaced_slot {
-            Some(GridSlotId::Ability(id)) => {
-                off_state_in_grid(id.value())
-                    && self
-                        .position_for_slot(&GridSlotId::AbilityOff(*id), false)
-                        .is_some_and(|off_pos| {
-                            let off_column = u8::from(off_pos.column());
-                            let off_row = u8::from(off_pos.row());
-                            off_column == request.target_column() && off_row == request.target_row()
-                        })
-            }
+            Some(GridSlotId::Ability(id)) => self
+                .position_for_slot(&GridSlotId::AbilityOff(*id), false)
+                .is_some_and(|off_pos| {
+                    let off_column = u8::from(off_pos.column());
+                    let off_row = u8::from(off_pos.row());
+                    off_column == request.target_column() && off_row == request.target_row()
+                }),
             _ => false,
         };
 
@@ -2077,6 +2066,127 @@ mod normalize_tests {
         assert!(
             healing_wave_off.is_none(),
             "AChv has no off-state — normalize must not invent an unbutton_position"
+        );
+    }
+
+    #[test]
+    fn move_slot_co_moves_colocated_offstate_when_slot_ids_lack_abilityoff_variant() {
+        // Regression: move_slot previously required AbilityOff(id) to be present
+        // in slot_ids before co-moving an ability's off-state.  Toggle abilities
+        // (ACsw, ACdm, etc.) always appear as Ability(id) in the command card —
+        // never as AbilityOff(id) — so their Unbuttonpos never followed the move.
+        use crate::command::move_request::MoveRequest;
+        use crate::grid::layout::GridLayout;
+        use crate::identity::slot::GridSlotId;
+        let input = "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=0,0\nUnhotkey=Q\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACsw");
+        let slot_ids = [GridSlotId::ability("ACsw")];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 0, false);
+        keys.move_slot(&request);
+        let binding = keys.binding("ACsw").expect("ACsw must exist");
+        let button_position = binding.button_position().expect("Buttonpos set");
+        let unbutton_position = binding
+            .unbutton_position()
+            .expect("Unbuttonpos must follow");
+        assert_eq!(
+            u8::from(button_position.column()),
+            1,
+            "ability must move to column 1"
+        );
+        assert_eq!(
+            u8::from(button_position.row()),
+            0,
+            "ability must move to row 0"
+        );
+        assert_eq!(
+            unbutton_position, button_position,
+            "Unbuttonpos must co-move with Buttonpos"
+        );
+    }
+
+    #[test]
+    fn move_slot_swaps_both_colocated_offstates_when_two_toggle_abilities_are_swapped() {
+        // When two abilities that both have co-located off-states are swapped via
+        // drag-drop, both Buttonpos AND Unbuttonpos must exchange — not just the
+        // regular hotkey.  slot_ids contains only Ability variants, not AbilityOff.
+        use crate::command::move_request::MoveRequest;
+        use crate::grid::layout::GridLayout;
+        use crate::identity::slot::GridSlotId;
+        let input = concat!(
+            "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=0,0\nUnhotkey=Q\n",
+            "[ACdm]\nButtonpos=1,0\nHotkey=W\nUnbuttonpos=1,0\nUnhotkey=W\n",
+        );
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACsw");
+        let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 0, false);
+        keys.move_slot(&request);
+
+        let acsw = keys.binding("ACsw").expect("ACsw must exist");
+        let acsw_button = acsw.button_position().expect("ACsw Buttonpos set");
+        let acsw_unbutton = acsw
+            .unbutton_position()
+            .expect("ACsw Unbuttonpos must follow");
+        assert_eq!(
+            u8::from(acsw_button.column()),
+            1,
+            "ACsw must move to column 1"
+        );
+        assert_eq!(
+            acsw_unbutton, acsw_button,
+            "ACsw Unbuttonpos must co-move with Buttonpos"
+        );
+
+        let acdm = keys.binding("ACdm").expect("ACdm must exist");
+        let acdm_button = acdm.button_position().expect("ACdm Buttonpos set");
+        let acdm_unbutton = acdm
+            .unbutton_position()
+            .expect("ACdm Unbuttonpos must follow");
+        assert_eq!(
+            u8::from(acdm_button.column()),
+            0,
+            "ACdm must be displaced to column 0"
+        );
+        assert_eq!(
+            acdm_unbutton, acdm_button,
+            "ACdm Unbuttonpos must co-move with Buttonpos"
+        );
+    }
+
+    #[test]
+    fn move_slot_does_not_co_move_offstate_when_not_colocated() {
+        // If Unbuttonpos is at a DIFFERENT cell than Buttonpos, moving the ability
+        // must NOT drag the off-state along — it sits at its own intentional position.
+        use crate::command::move_request::MoveRequest;
+        use crate::grid::layout::GridLayout;
+        use crate::identity::slot::GridSlotId;
+        let input = concat!(
+            "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=2,0\nUnhotkey=E\n",
+            "[ACdm]\nButtonpos=1,0\nHotkey=W\n",
+        );
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACsw");
+        let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 0, false);
+        keys.move_slot(&request);
+
+        let acsw = keys.binding("ACsw").expect("ACsw must exist");
+        let acsw_unbutton = acsw
+            .unbutton_position()
+            .expect("Unbuttonpos must be preserved");
+        assert_eq!(
+            u8::from(acsw_unbutton.column()),
+            2,
+            "non-colocated Unbuttonpos must stay at column 2"
+        );
+        assert_eq!(
+            u8::from(acsw_unbutton.row()),
+            0,
+            "non-colocated Unbuttonpos must stay at row 0"
         );
     }
 
