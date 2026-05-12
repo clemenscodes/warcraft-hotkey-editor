@@ -123,6 +123,7 @@ tasks:
     env:
       STATIC_DIR: "../../target/dx/hotkey-editor/release/web/public"
       STATIC_BASE_PATH: "/warcraft-hotkey-editor"
+      NODE_NO_WARNINGS: "1"
     options:
       outputStyle: stream
       runFromWorkspaceRoot: false
