@@ -1051,7 +1051,7 @@ Researchubertip=Takes permanent control of a target enemy unit. |nCharm pierces 
 
 [ancl]
 Hotkey=E
-Buttonpos=2,1
+Buttonpos=1,1
 Tip=Channel
 Ubertip=Channels powerful warding magic.
 
@@ -2020,6 +2020,10 @@ Hotkey=C
 Buttonpos=2,2
 Tip=Ancestral Spirit
 Ubertip=Raises a fallen non-Hero Tauren from the dead. The Tauren is revived with 100% of its hit points restored.
+
+[aatp]
+Buttonpos=1,1
+Unbuttonpos=1,1
 
 [aave]
 Hotkey=T

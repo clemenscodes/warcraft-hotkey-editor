@@ -361,8 +361,8 @@ mod cross_unit_collision_tests {
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         assert_eq!(
             report.position_groups().len(),
-            5,
-            "normalized default must produce exactly 5 cross-unit collision groups"
+            6,
+            "normalized default must produce exactly 6 cross-unit collision groups"
         );
     }
 

@@ -296,17 +296,28 @@ impl QueueBuildState {
 
     fn relocate_mover_rightward(&mut self, mover_index: usize, from_position: GridCoordinate) {
         let column_value = u8::from(from_position.column());
+        let row_value = u8::from(from_position.row());
         let next_column_value = column_value + 1;
-        if next_column_value >= COMMAND_GRID_COLUMNS {
+        // Within the row: push one column to the right.
+        if next_column_value < COMMAND_GRID_COLUMNS
+            && let Ok(next_column) = ColumnIndex::try_from(next_column_value)
+        {
+            let new_position = GridCoordinate::new(next_column, from_position.row());
+            self.live_positions[mover_index] = new_position;
+            return;
+        }
+        // Row overflow: wrap to the leftmost column of the next row down.
+        let next_row_value = row_value + 1;
+        if next_row_value >= COMMAND_GRID_ROWS {
             self.unresolved.insert(mover_index);
             return;
         }
-        let Ok(next_column) = ColumnIndex::try_from(next_column_value) else {
+        let Ok(next_row) = RowIndex::try_from(next_row_value) else {
             self.unresolved.insert(mover_index);
             return;
         };
-        let new_position = GridCoordinate::new(next_column, from_position.row());
-        self.live_positions[mover_index] = new_position;
+        let wrapped_position = GridCoordinate::new(ColumnIndex::Zero, next_row);
+        self.live_positions[mover_index] = wrapped_position;
     }
 
     fn find_gap_pull_candidate(
@@ -1175,11 +1186,13 @@ mod cascade_queue_tests {
     }
 
     #[test]
-    fn every_fight_mover_stays_in_same_row_unless_later_spilled() {
-        // Fight movers slide rightward within the same row at fight time.
-        // A mover whose fight slot ran out becomes unresolved and may then be
-        // rehomed cross-row by phase 2 (spill).  Those spill-anchored nodes
-        // are exempt — their final row reflects the spill, not the fight.
+    fn every_fight_mover_never_moves_to_an_earlier_row() {
+        // Fight movers slide rightward within the same row, wrapping to the
+        // leftmost column of the next row when they overflow the row's right
+        // edge.  They never move *backward* (to a row earlier than the fight
+        // group's row).  A mover whose final fight slot ran out becomes
+        // unresolved and may then be rehomed by phase 2 (spill); those
+        // spill-anchored nodes are exempt — their final row reflects the spill.
         let queue = default_queue();
         let spilled_anchors: HashSet<usize> = queue
             .groups()
@@ -1198,11 +1211,10 @@ mod cascade_queue_tests {
                 }
                 let final_position = queue.final_position(mover_index);
                 let mover_row_value = u8::from(final_position.row());
-                assert_eq!(
-                    mover_row_value,
-                    group_row_value,
-                    "mover {} ended on row {} but its fight group was on row {} and it was \
-                     not later spilled — cross-row fight-moves are forbidden",
+                assert!(
+                    mover_row_value >= group_row_value,
+                    "mover {} ended on row {} but its fight group was on row {} — \
+                     cascade may wrap forward to a later row, never backward",
                     queue.graph().node(mover_index).slot_id().as_str(),
                     mover_row_value,
                     group_row_value,
