@@ -263,17 +263,16 @@ impl CustomKeys {
                     if binding.unbutton_position().is_none()
                         && !warcraft_object.is_passive_ability()
                     {
-                        let database_off = match warcraft_object.meta() {
-                            WarcraftObjectMeta::Ability(ability_meta) => {
-                                ability_meta.off_button_position()
+                        if let WarcraftObjectMeta::Ability(ability_meta) = warcraft_object.meta() {
+                            if ability_meta.has_off_state() {
+                                let database_off = ability_meta.off_button_position();
+                                if let Some(off_position) = database_off {
+                                    binding.set_unbutton_position(Some(off_position));
+                                } else if let Some(button_position) = binding.button_position() {
+                                    let position_copy = *button_position;
+                                    binding.set_unbutton_position(Some(position_copy));
+                                }
                             }
-                            _ => None,
-                        };
-                        if let Some(off_position) = database_off {
-                            binding.set_unbutton_position(Some(off_position));
-                        } else if let Some(button_position) = binding.button_position() {
-                            let position_copy = *button_position;
-                            binding.set_unbutton_position(Some(position_copy));
                         }
                     }
                 }
@@ -2056,6 +2055,23 @@ mod normalize_tests {
         assert!(
             button_position.is_some(),
             "[ngir] (Goblin Shredder) must have a button_position in the normalized output"
+        );
+    }
+
+    #[test]
+    fn normalize_does_not_invent_off_state_for_one_shot_ability() {
+        // Healing Wave (AChv) is a one-shot cast — it has no toggleable
+        // off-state in the database (with_off_state(None, None, None, None)).
+        // materialize_default_positions must not fabricate an unbutton_position
+        // for it; doing so causes false off_state_blocks when moving other
+        // abilities to the same grid cell.
+        let normalized = CustomKeys::from("").normalize();
+        let healing_wave_off = normalized
+            .binding("AChv")
+            .and_then(|binding| binding.unbutton_position());
+        assert!(
+            healing_wave_off.is_none(),
+            "AChv has no off-state — normalize must not invent an unbutton_position"
         );
     }
 
