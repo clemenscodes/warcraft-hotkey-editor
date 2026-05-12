@@ -14,6 +14,8 @@ pub(super) struct UnitListState {
     active_unit_id: Option<String>,
     collapsed_snapshot: HashSet<UnitKind>,
     category_kinds: Vec<UnitKind>,
+    first_result_id: Option<String>,
+    first_result_kind: Option<UnitKind>,
 }
 
 impl UnitListState {
@@ -34,10 +36,18 @@ impl UnitListState {
         let collapsed_snapshot = collapsed_categories.read().clone();
         let query_str = query_snapshot.as_str();
         let query_option = Some(query_str);
-        let all_entries = UnitCatalog::entries_for(race, mode, None, query_option);
+        let race_option = if search_active { None } else { Some(race) };
+        let mode_option = if search_active { None } else { Some(mode) };
+        let all_entries = UnitCatalog::entries_for(race_option, mode_option, None, query_option);
         let mut seen: Vec<UnitKind> = Vec::new();
+        let mut first_result_id: Option<String> = None;
+        let mut first_result_kind: Option<UnitKind> = None;
         for entry in all_entries {
             let entry_kind = entry.unit_kind();
+            if first_result_id.is_none() {
+                first_result_id = Some(entry.unit_id().to_owned());
+                first_result_kind = Some(entry_kind);
+            }
             if !seen.contains(&entry_kind) {
                 seen.push(entry_kind);
             }
@@ -52,6 +62,8 @@ impl UnitListState {
             active_unit_id,
             collapsed_snapshot,
             category_kinds: seen,
+            first_result_id,
+            first_result_kind,
         }
     }
 
@@ -89,5 +101,13 @@ impl UnitListState {
 
     pub(super) fn category_kinds(&self) -> &[UnitKind] {
         &self.category_kinds
+    }
+
+    pub(super) fn first_result_id(&self) -> Option<&str> {
+        self.first_result_id.as_deref()
+    }
+
+    pub(super) fn first_result_kind(&self) -> Option<UnitKind> {
+        self.first_result_kind
     }
 }

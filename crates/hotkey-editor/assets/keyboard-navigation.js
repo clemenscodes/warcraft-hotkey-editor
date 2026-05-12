@@ -2,6 +2,7 @@ const NAV_SELECTORS = [
     ".upload-button",
     ".mode-toggle-button",
     ".race-tab",
+    'input[type="search"]',
     ".unit-card",
     ".unit-category-heading",
     ".grid-tile.has-ability",
@@ -16,7 +17,7 @@ const NAV_SELECTORS = [
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 3;
+const INSTALL_VERSION = 4;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
 const POINTER_FOCUSABLE_SELECTOR = [NAV_SELECTOR, "button", "[role='button']", "a[href]", "[tabindex]:not([tabindex='-1'])"].join(", ");
 const COARSE_POINTER_MEDIA = "(hover: none), (pointer: coarse)";
@@ -210,6 +211,8 @@ function installPointerFocusSuppression() {
             if (!inPointerModality()) return;
             const target = event.target;
             if (!(target instanceof HTMLElement)) return;
+            const tag = target.tagName;
+            if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
             const navEl = target.closest(NAV_SELECTOR);
             if (navEl) event.preventDefault();
         },

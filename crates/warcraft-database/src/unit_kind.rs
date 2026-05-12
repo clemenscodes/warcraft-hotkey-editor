@@ -25,9 +25,22 @@ impl UnitKindHelpers {
     pub fn category_priority(unit_kind: UnitKind) -> u8 {
         match unit_kind {
             UnitKind::Hero => 0,
-            UnitKind::Soldier => 1,
+            UnitKind::Building => 1,
             UnitKind::Worker => 2,
-            UnitKind::Building => 3,
+            UnitKind::Soldier => 3,
+        }
+    }
+
+    pub fn search_sort_priority(unit_kind: UnitKind, is_campaign: bool) -> u8 {
+        match (is_campaign, unit_kind) {
+            (false, UnitKind::Hero) => 0,
+            (false, UnitKind::Building) => 1,
+            (false, UnitKind::Worker) => 2,
+            (false, UnitKind::Soldier) => 3,
+            (true, UnitKind::Hero) => 4,
+            (true, UnitKind::Building) => 5,
+            (true, UnitKind::Worker) => 6,
+            (true, UnitKind::Soldier) => 7,
         }
     }
 
@@ -42,7 +55,7 @@ impl UnitKindHelpers {
     }
 
     pub fn default_unit_id_for(race: Race, mode: UnitMode) -> Option<String> {
-        let first_entry = UnitCatalog::entries_for(race, mode, None, None)
+        let first_entry = UnitCatalog::entries_for(Some(race), Some(mode), None, None)
             .into_iter()
             .next();
         first_entry.map(|entry| entry.unit_id().to_owned())

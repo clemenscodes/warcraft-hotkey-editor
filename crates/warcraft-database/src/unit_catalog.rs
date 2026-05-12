@@ -4,6 +4,20 @@ use crate::WARCRAFT_DATABASE;
 use crate::unit_kind::UnitKindHelpers;
 use crate::unit_mode::UnitMode;
 
+fn is_subsequence(needle: &str, haystack: &str) -> bool {
+    let mut haystack_chars = haystack.chars();
+    'outer: for needle_char in needle.chars() {
+        loop {
+            match haystack_chars.next() {
+                Some(haystack_char) if haystack_char == needle_char => continue 'outer,
+                Some(_) => continue,
+                None => return false,
+            }
+        }
+    }
+    true
+}
+
 pub struct CatalogEntry {
     unit_id: String,
     warcraft_object: &'static WarcraftObject,
@@ -38,28 +52,46 @@ impl UnitCatalog {
     /// metamorphosis forms, level-summon variants) and any heuristic that
     /// tries to pick a canonical one is going to be wrong somewhere.
     pub fn entries_for(
-        race: Race,
-        mode: UnitMode,
+        race_filter: Option<Race>,
+        mode_filter: Option<UnitMode>,
         kind_filter: Option<UnitKind>,
         search_query: Option<&str>,
     ) -> Vec<CatalogEntry> {
         let lowercase_query = search_query
-            .map(|raw_query| raw_query.trim().to_ascii_lowercase())
-            .filter(|trimmed| !trimmed.is_empty());
+            .map(|raw_query| raw_query.trim_start().to_ascii_lowercase())
+            .filter(|trimmed| !trimmed.trim().is_empty());
 
-        let mut entries: Vec<CatalogEntry> = WARCRAFT_DATABASE
+        // Each candidate is tagged: fuzzy_only=true when it matched only via
+        // subsequence. If any direct match exists we suppress all fuzzy-only
+        // hits, so "water" shows Water Elemental without Draenei Watcher noise,
+        // while "ftma" (no direct hits) still falls through to fuzzy.
+        struct Candidate {
+            entry: CatalogEntry,
+            fuzzy_only: bool,
+        }
+
+        let candidates: Vec<Candidate> = WARCRAFT_DATABASE
             .iter()
             .filter_map(|(object_id, warcraft_object)| {
                 if warcraft_object.kind() != WarcraftObjectKind::Unit {
                     return None;
                 }
-                if warcraft_object.race() != Some(race) {
+                if let Some(race) = race_filter
+                    && warcraft_object.race() != Some(race)
+                {
                     return None;
                 }
                 let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
                     return None;
                 };
-                if !UnitKindHelpers::passes_filter(mode, unit_meta) {
+                let passes_mode = match mode_filter {
+                    Some(mode) => UnitKindHelpers::passes_filter(mode, unit_meta),
+                    None => {
+                        UnitKindHelpers::passes_filter(UnitMode::Melee, unit_meta)
+                            || UnitKindHelpers::passes_filter(UnitMode::Campaign, unit_meta)
+                    }
+                };
+                if !passes_mode {
                     return None;
                 }
                 let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
@@ -69,7 +101,7 @@ impl UnitCatalog {
                     return None;
                 }
                 let unit_id_string = object_id.value().to_string();
-                if let Some(query) = lowercase_query.as_deref() {
+                let fuzzy_only = if let Some(query) = lowercase_query.as_deref() {
                     let id_lower = unit_id_string.to_ascii_lowercase();
                     // Check all names — some units have alternate display names.
                     let names_lower: String = warcraft_object
@@ -78,36 +110,75 @@ impl UnitCatalog {
                         .map(|name| name.to_ascii_lowercase())
                         .collect::<Vec<_>>()
                         .join(" ");
-                    // Match if name/id contains the query OR query contains name/id as a word —
-                    // the latter lets "peasant worker" find a unit named just "Peasant".
-                    let matches_id = id_lower.contains(query) || query.contains(id_lower.as_str());
-                    let matches_name = names_lower.contains(query)
-                        || names_lower
+                    // Direct: name/id contains the query, or a query token (whole
+                    // word, ≥3 chars) exactly matches a name word.
+                    let matches_direct = names_lower.contains(query)
+                        || id_lower.contains(query)
+                        || query.contains(id_lower.as_str())
+                        || query
                             .split_whitespace()
-                            .any(|word| query.contains(word) && word.len() >= 3);
-                    if !matches_id && !matches_name {
+                            .filter(|token| token.len() >= 3)
+                            .any(|token| {
+                                names_lower
+                                    .split_whitespace()
+                                    .any(|name_word| name_word == token)
+                            });
+                    // Fuzzy fallback: every char in the query appears in order in
+                    // the name. Only surfaced when no direct match exists anywhere.
+                    let matches_fuzzy = is_subsequence(query, &names_lower);
+                    if !matches_direct && !matches_fuzzy {
                         return None;
                     }
-                }
+                    !matches_direct
+                } else {
+                    false
+                };
                 let display_name = warcraft_object.names().first().copied().unwrap_or("");
                 if display_name.is_empty() {
                     return None;
                 }
-                Some(CatalogEntry {
+                let entry = CatalogEntry {
                     unit_id: unit_id_string,
                     warcraft_object,
                     unit_kind: effective_kind,
-                })
+                };
+                Some(Candidate { entry, fuzzy_only })
             })
             .collect();
 
+        let has_direct_match = candidates.iter().any(|candidate| !candidate.fuzzy_only);
+        let mut entries: Vec<CatalogEntry> = candidates
+            .into_iter()
+            .filter(|candidate| !has_direct_match || !candidate.fuzzy_only)
+            .map(|candidate| candidate.entry)
+            .collect();
+
+        let is_search = mode_filter.is_none();
         entries.sort_by(|left_entry, right_entry| {
-            let left_priority = UnitKindHelpers::category_priority(left_entry.unit_kind);
-            let right_priority = UnitKindHelpers::category_priority(right_entry.unit_kind);
             let left_object = left_entry.warcraft_object;
             let right_object = right_entry.warcraft_object;
             let left_name = left_object.names().first().copied().unwrap_or("");
             let right_name = right_object.names().first().copied().unwrap_or("");
+            let left_priority = if is_search {
+                let left_campaign = match left_object.meta() {
+                    WarcraftObjectMeta::Unit(unit_meta) => unit_meta.is_campaign(),
+                    _ => false,
+                };
+                let left_kind = left_entry.unit_kind;
+                UnitKindHelpers::search_sort_priority(left_kind, left_campaign)
+            } else {
+                UnitKindHelpers::category_priority(left_entry.unit_kind)
+            };
+            let right_priority = if is_search {
+                let right_campaign = match right_object.meta() {
+                    WarcraftObjectMeta::Unit(unit_meta) => unit_meta.is_campaign(),
+                    _ => false,
+                };
+                let right_kind = right_entry.unit_kind;
+                UnitKindHelpers::search_sort_priority(right_kind, right_campaign)
+            } else {
+                UnitKindHelpers::category_priority(right_entry.unit_kind)
+            };
             left_priority
                 .cmp(&right_priority)
                 .then_with(|| left_name.cmp(right_name))

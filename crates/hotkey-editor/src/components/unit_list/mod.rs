@@ -4,12 +4,15 @@ mod state;
 mod unit_card;
 
 use std::collections::HashSet;
+use std::time::Duration;
 
+use dioxus::document;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{UnitKindHelpers, UnitMode};
 
 use crate::model::grid::GridSlotId;
+use crate::services::focus::modality::FocusModality;
 
 use category::UnitCategorySection;
 use mobile_category_tab::MobileCategoryTab;
@@ -90,10 +93,12 @@ pub(crate) struct UnitListPanelProps {
 pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
     let active_race = props.active_race;
     let unit_mode = props.unit_mode;
-    let selected_unit_id = props.selected_unit_id;
-    let selected_slot = props.selected_slot;
+    let mut selected_unit_id = props.selected_unit_id;
+    let mut selected_slot = props.selected_slot;
     let mut search_query = props.search_query;
     let collapsed_categories = props.collapsed_categories;
+    let mut raw_query = use_signal(|| search_query.read().clone());
+    let mut debounce_gen: Signal<u32> = use_signal(|| 0);
     let state = UnitListState::new(
         active_race,
         unit_mode,
@@ -101,12 +106,59 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
         selected_unit_id,
         collapsed_categories,
     );
-    let active_category_signal = state.active_category();
+    let mut active_category_signal = state.active_category();
     let active_kind = state.active_kind();
     let search_active = state.search_active();
     let race = state.race();
     let mode = state.mode();
-    let handle_search_input = move |event: Event<FormData>| search_query.set(event.value());
+    let first_result_id = state.first_result_id().map(str::to_owned);
+    let first_result_kind = state.first_result_kind();
+    let handle_search_keydown = move |event: Event<KeyboardData>| {
+        let event_data = event.data();
+        let key = event_data.key();
+        let key_string = key.to_string();
+        match key_string.as_str() {
+            "Escape" => {
+                let current_raw = raw_query.read().clone();
+                if current_raw.is_empty() {
+                    let focus_script = "document.body.setAttribute('data-kb-modality', ''); const card = document.querySelector('.unit-card'); if (card) card.focus();";
+                    document::eval(focus_script);
+                } else {
+                    raw_query.set(String::new());
+                    search_query.set(String::new());
+                    let current_gen: u32 = *debounce_gen.read();
+                    let next_gen = current_gen.wrapping_add(1);
+                    debounce_gen.set(next_gen);
+                }
+            }
+            "Enter" => {
+                if let (Some(unit_id), Some(unit_kind)) =
+                    (first_result_id.clone(), first_result_kind)
+                {
+                    selected_unit_id.set(Some(unit_id));
+                    selected_slot.set(None);
+                    active_category_signal.set(unit_kind);
+                    FocusModality::after_render(".unit-card.selected, .unit-card");
+                }
+            }
+            _ => {}
+        }
+    };
+    let handle_search_input = move |event: Event<FormData>| {
+        let value = event.value();
+        raw_query.set(value.clone());
+        let current_gen: u32 = *debounce_gen.read();
+        let next_gen = current_gen.wrapping_add(1);
+        debounce_gen.set(next_gen);
+        spawn(async move {
+            let delay = Duration::from_millis(150);
+            gloo_timers::future::sleep(delay).await;
+            let gen_now: u32 = *debounce_gen.read();
+            if gen_now == next_gen {
+                search_query.set(value);
+            }
+        });
+    };
     let mobile_tab_entries: Vec<MobileTabEntry> = MOBILE_CATEGORY_ORDER
         .iter()
         .map(|&kind| MobileTabEntry {
@@ -136,8 +188,9 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                 input {
                     r#type: "search",
                     placeholder: "Search units…",
-                    value: search_query,
+                    value: raw_query,
                     oninput: handle_search_input,
+                    onkeydown: handle_search_keydown,
                 }
             }
             nav {

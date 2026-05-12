@@ -61,8 +61,11 @@ pub(super) fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let captured_kind = category_kind;
     let query_str = query.as_str();
     let query_option = Some(query_str);
+    let search_active = !query.is_empty();
+    let race_option = if search_active { None } else { Some(race) };
+    let mode_option = if search_active { None } else { Some(mode) };
     let category_option = Some(category_kind);
-    let entries = UnitCatalog::entries_for(race, mode, category_option, query_option);
+    let entries = UnitCatalog::entries_for(race_option, mode_option, category_option, query_option);
     let unit_card_entries: Vec<UnitCardEntry> = entries
         .into_iter()
         .map(|entry| {
