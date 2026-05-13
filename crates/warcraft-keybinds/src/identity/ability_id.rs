@@ -1,6 +1,6 @@
 use warcraft_api::WarcraftObjectId;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct AbilityId {
     object_id: WarcraftObjectId,
 }

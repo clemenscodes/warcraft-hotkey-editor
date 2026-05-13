@@ -15,11 +15,14 @@ use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
 use crate::components::tabs::mode_and_race_tabs::ModeAndRaceTabs;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
+use crate::components::views::collisions_page::CollisionsPage;
+use crate::components::views::resolve_page::ResolvePage;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::persistence::CustomKeysPersistence;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
+use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::url_state::UrlNavigationState;
 use warcraft_api::RaceLabels;
 use warcraft_database::UnitMode;
@@ -76,6 +79,7 @@ pub(crate) fn App() -> Element {
     let initial_mode = initial_nav.unit_mode();
     let initial_unit_id = initial_nav.selected_unit_id().map(|id| id.to_string());
     let initial_search = initial_nav.search_query().to_string();
+    let initial_view = initial_nav.view();
 
     let active_race = use_signal::<Race>(move || initial_race);
     let unit_mode = use_signal::<UnitMode>(move || initial_mode);
@@ -90,14 +94,21 @@ pub(crate) fn App() -> Element {
     let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let search_query = use_signal::<String>(move || initial_search);
+    let mut current_view = use_signal::<AppView>(move || initial_view);
     use_effect(move || {
         let race = *active_race.read();
         let mode = *unit_mode.read();
         let unit_id_option = selected_unit_id.read().clone();
         let query = search_query.read().clone();
+        let view = *current_view.read();
         let unit_id_ref = unit_id_option.as_deref();
         let query_str = query.as_str();
-        UrlNavigationState::push_to_url(race, mode, unit_id_ref, query_str);
+        UrlNavigationState::replace_in_url(race, mode, unit_id_ref, query_str, view);
+    });
+    use_hook(move || {
+        UrlNavigationState::install_popstate_listener(move |nav_state| {
+            current_view.set(nav_state.view());
+        });
     });
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
     let mut preview_open = use_signal::<bool>(|| false);
@@ -228,29 +239,44 @@ pub(crate) fn App() -> Element {
                 editing_layout_cell,
                 dragging_layout_cell,
                 system_hotkeys_open,
+                current_view,
+                active_race,
+                unit_mode,
+                selected_unit_id,
+                search_query,
             }
-            div {
-                class: "flex items-stretch gap-6 flex-none \
-                        min-h-[clamp(9rem,13vh,18rem)] \
-                        max-md:flex-col max-md:min-h-0 max-md:gap-[0.85rem]",
-                ModeAndRaceTabs { unit_mode, active_race, selected_unit_id, selected_slot }
-            }
-            div {
-                class: "main-content",
-                "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
-                UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, collapsed_categories }
-                UnitDetailPanel {
-                    selected_unit_id,
-                    selected_slot,
-                    selected_from_research,
-                    selected_from_uprooted,
-                    tier_overrides,
-                    dragging_slot,
-                    drop_target_cell,
-                    drag_follower,
-                    loaded_keys,
-                    grid_layout,
-                }
+            match *current_view.read() {
+                AppView::Editor => rsx! {
+                    div {
+                        class: "flex items-stretch gap-6 flex-none \
+                                min-h-[clamp(9rem,13vh,18rem)] \
+                                max-md:flex-col max-md:min-h-0 max-md:gap-[0.85rem]",
+                        ModeAndRaceTabs { unit_mode, active_race, selected_unit_id, selected_slot }
+                    }
+                    div {
+                        class: "main-content",
+                        "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
+                        UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, collapsed_categories }
+                        UnitDetailPanel {
+                            selected_unit_id,
+                            selected_slot,
+                            selected_from_research,
+                            selected_from_uprooted,
+                            tier_overrides,
+                            dragging_slot,
+                            drop_target_cell,
+                            drag_follower,
+                            loaded_keys,
+                            grid_layout,
+                        }
+                    }
+                },
+                AppView::Collisions { kind } => rsx! {
+                    CollisionsPage { kind }
+                },
+                AppView::Resolve => rsx! {
+                    ResolvePage {}
+                },
             }
             Footer {}
                 if *preview_open.read() {

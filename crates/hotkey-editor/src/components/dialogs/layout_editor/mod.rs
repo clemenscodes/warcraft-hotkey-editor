@@ -72,6 +72,7 @@ pub(crate) struct LayoutEditorProps {
     pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) layout_dialog_open: Signal<bool>,
 }
 
 #[component]
@@ -80,6 +81,7 @@ pub(crate) fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
     let mut loaded_keys = props.loaded_keys;
+    let mut layout_dialog_open = props.layout_dialog_open;
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();
     let toast_api = use_toast();
@@ -136,6 +138,11 @@ pub(crate) fn LayoutEditor(props: LayoutEditorProps) -> Element {
                 ToastOptions::new().description(message),
             );
         }
+        // Mirror the Resolve dialog: close on successful apply so the
+        // user lands back on the editor with the toast confirming what
+        // happened.  Closes unconditionally — re-opening the dialog
+        // when "nothing changed" would be useless friction.
+        layout_dialog_open.set(false);
     };
     let handle_pick = move |token: HotkeyToken| {
         let Some(active_cell) = *editing_layout_cell.read() else {

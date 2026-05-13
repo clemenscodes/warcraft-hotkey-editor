@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
@@ -12,7 +12,7 @@ use crate::unit::slots::UnitCommandSlots;
 
 const GRID_SLOT_COUNT: usize = 12;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum GridRole {
     MainCommand,
     HeroSkillTree,
@@ -160,7 +160,14 @@ impl UnitGrids {
             }
             let mut cells: [[Option<HotkeyCollisionAtCell>; 4]; 3] =
                 std::array::from_fn(|_| std::array::from_fn(|_| None));
-            for (token, colliding_slots) in slots_by_token {
+            for (token, mut colliding_slots) in slots_by_token {
+                // Deduplicate by `as_str()` so that `Ability(X)` and
+                // `AbilityOff(X)` — the same button's on/off pair, by
+                // design sharing a hotkey — are not double-counted as
+                // a collision.  Cross-unit's report applies the same
+                // dedupe rule (see `collision/cross_unit.rs`).
+                let mut seen: HashSet<&str> = HashSet::new();
+                colliding_slots.retain(|slot| seen.insert(slot.as_str()));
                 if colliding_slots.len() < 2 {
                     continue;
                 }

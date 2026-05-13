@@ -1,15 +1,33 @@
 use dioxus::prelude::*;
 
+use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
+#[derive(Props, Clone, PartialEq)]
+pub(crate) struct HeaderBrandProps {
+    pub(crate) navigation: ViewNavigationContext,
+}
+
 #[component]
-pub(crate) fn HeaderBrand() -> Element {
+pub(crate) fn HeaderBrand(props: HeaderBrandProps) -> Element {
+    let navigation = props.navigation;
+    let go_home = move |_| navigation.apply(AppView::Editor);
     rsx! {
-        div {
+        button {
             class: "flex flex-row items-center justify-start \
                     [gap:calc(1rem_*_var(--hdr-scale))] min-w-0 flex-1 \
+                    bg-transparent border-0 p-0 cursor-pointer text-left \
+                    [transition:filter_0.12s_ease,text-shadow_0.12s_ease] \
+                    [@media(hover:hover)]:hover:[filter:brightness(1.15)] \
+                    focus:outline-none focus-visible:[outline:2px_solid_#fff] focus-visible:[outline-offset:2px] \
                     max-[1099px]:gap-2 max-[1099px]:[flex:1_1_auto] \
                     min-[1500px]:[flex:unset]",
+            r#type: "button",
+            "aria-label": "Warcraft III Hotkey Editor — return to editor",
+            "data-action": "view-editor",
+            onclick: go_home,
             img {
                 class: "[height:calc(2rem_*_var(--hdr-scale))] w-auto flex-none \
                         [filter:drop-shadow(0_1px_0_rgba(0,0,0,0.7))] \
