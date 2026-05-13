@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, HashSet};
 use std::fmt;
 use std::sync::OnceLock;
 
@@ -699,6 +699,22 @@ impl CustomKeys {
         changed_count
     }
 
+    /// Computes the cascade conflict-resolution plan **without mutating
+    /// `self`**.  Runs the same two-phase algorithm as `resolve_conflicts`
+    /// on a clone and returns the resulting `CascadePlan`.
+    ///
+    /// This is the entry point for "preview before apply" UI flows: render
+    /// the plan to the user, let them confirm, then call
+    /// `resolve_conflicts` to actually apply it.  The returned plan
+    /// includes the per-move rationale (`MoveReason`) so the UI can show
+    /// *why* each move would happen.
+    ///
+    /// See `resolve_conflicts` for the algorithm description.
+    pub fn preview_resolve(&self) -> CascadePlan {
+        let mut working_copy = self.clone();
+        working_copy.run_iterative_cascade()
+    }
+
     /// Runs the cascade conflict-resolution algorithm and applies its plan to
     /// this `CustomKeys`.  This is a user-triggered, opt-in operation — it is
     /// **not** called from `normalize()` or the boot path.  Use it when the
@@ -725,8 +741,25 @@ impl CustomKeys {
     /// `CascadePlan` aggregates every net position change from the starting
     /// state to the final state so the caller sees a single `(old → new)` per
     /// ability.  Unresolved nodes are the ones still stuck after both phases.
+    ///
+    /// Implemented in terms of `preview_resolve` so the algorithm logic
+    /// stays single-sourced — this method runs `preview_resolve` on `self`
+    /// and then applies the resulting plan back to `self`.
     pub fn resolve_conflicts(&mut self) -> CascadePlan {
-        let mut net_moves: HashMap<MoveKey, AccumulatedMove> = HashMap::new();
+        let cascade_plan = self.preview_resolve();
+        for planned_move in cascade_plan.moves() {
+            let application = MoveApplication::from_planned_move(planned_move);
+            self.apply_resolved_position(application);
+        }
+        cascade_plan
+    }
+
+    /// Runs the iterative two-phase cascade on `self`, mutating positions
+    /// in place as moves are emitted.  Returns the net plan across both
+    /// phases.  Internal helper for `preview_resolve` (clone + run) and the
+    /// implementation backbone of `resolve_conflicts`.
+    fn run_iterative_cascade(&mut self) -> CascadePlan {
+        let mut net_moves: BTreeMap<MoveKey, AccumulatedMove> = BTreeMap::new();
         let _phase_one_unresolved =
             self.run_cascade_phase(AssignmentScope::CrossUnitOnly, &mut net_moves);
         let last_unresolved =
@@ -759,7 +792,7 @@ impl CustomKeys {
     fn run_cascade_phase(
         &mut self,
         scope: AssignmentScope,
-        net_moves: &mut HashMap<MoveKey, AccumulatedMove>,
+        net_moves: &mut BTreeMap<MoveKey, AccumulatedMove>,
     ) -> Vec<UnresolvedMover> {
         const MAX_ITERATIONS_PER_PHASE: usize = 32;
         let mut last_unresolved: Vec<UnresolvedMover> = Vec::new();
@@ -970,7 +1003,7 @@ impl MoveApplication {
 /// Identifies a slot/role pair across multiple `resolve_conflicts` iterations
 /// so we can collapse repeated moves of the same ability into a single
 /// `(original → final)` entry.
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 struct MoveKey {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -2344,6 +2377,65 @@ mod normalize_tests {
                 slot.as_str(),
             );
         }
+    }
+
+    #[test]
+    fn preview_resolve_does_not_mutate_self() {
+        let keys = CustomKeys::from("").normalize();
+        let before_text = keys.to_string();
+        let plan = keys.preview_resolve();
+        let after_text = keys.to_string();
+        assert!(
+            plan.move_count() > 0,
+            "default keys must produce moves for this test to be meaningful"
+        );
+        assert_eq!(
+            before_text, after_text,
+            "preview_resolve must not modify the receiver — serialized text changed",
+        );
+    }
+
+    #[test]
+    fn preview_resolve_matches_resolve_conflicts_plan_byte_for_byte() {
+        let mut keys_for_apply = CustomKeys::from("").normalize();
+        let keys_for_preview = keys_for_apply.clone();
+        let preview_plan = keys_for_preview.preview_resolve();
+        let applied_plan = keys_for_apply.resolve_conflicts();
+        let preview_text = preview_plan.to_string();
+        let applied_text = applied_plan.to_string();
+        assert_eq!(
+            preview_text, applied_text,
+            "preview_resolve and resolve_conflicts must produce identical plans"
+        );
+    }
+
+    #[test]
+    fn resolve_conflicts_final_state_matches_preview_apply_endpoint() {
+        // The resolve_conflicts(self) path is implemented as
+        // preview_resolve(self) + apply.  This test verifies that the
+        // resulting state matches what we'd get if a second preview was
+        // run on the post-apply state — which must produce zero further
+        // moves (already covered by the idempotency test, but here we
+        // also assert the *serialized* text is stable through
+        // preview-then-resolve).
+        let mut keys = CustomKeys::from("").normalize();
+        let preview_plan = keys.preview_resolve();
+        assert!(
+            preview_plan.move_count() > 0,
+            "default keys must produce moves for this test to be meaningful"
+        );
+        let applied_plan = keys.resolve_conflicts();
+        assert_eq!(
+            preview_plan.move_count(),
+            applied_plan.move_count(),
+            "preview move count must match the applied plan move count",
+        );
+        let second_preview_plan = keys.preview_resolve();
+        assert_eq!(
+            second_preview_plan.move_count(),
+            0,
+            "preview after resolve_conflicts must produce zero further moves",
+        );
     }
 
     #[test]

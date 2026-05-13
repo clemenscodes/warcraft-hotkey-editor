@@ -6,7 +6,7 @@ use crate::display::ability_cell::AbilityCell;
 use crate::identity::ability_id::AbilityId;
 use crate::model::{AbilityBinding, CommandBinding, GridCoordinate};
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum GridSlotId {
     Ability(AbilityId),
     AbilityOff(AbilityId),

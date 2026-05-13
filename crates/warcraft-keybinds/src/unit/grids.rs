@@ -12,7 +12,7 @@ use crate::unit::slots::UnitCommandSlots;
 
 const GRID_SLOT_COUNT: usize = 12;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum GridRole {
     MainCommand,
     HeroSkillTree,
