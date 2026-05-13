@@ -1,9 +1,12 @@
 mod brand;
 mod burger;
+mod collisions_button;
 mod toolbar;
 
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
+use warcraft_api::Race;
+use warcraft_database::UnitMode;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_header::DialogHeader;
@@ -13,9 +16,12 @@ use crate::components::dialogs::templates_dialog::TemplatesDialog;
 use crate::components::shared::icons::ICON_GRID;
 use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 use brand::HeaderBrand;
 use burger::BurgerMenu;
+use collisions_button::CollisionsButton;
 use toolbar::HeaderToolbar;
 
 const APP_HEADER_STYLES: Asset = asset!("/src/components/shell/header/header.css");
@@ -48,6 +54,11 @@ pub(crate) struct HeaderProps {
     pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) system_hotkeys_open: Signal<bool>,
+    pub(crate) current_view: Signal<AppView>,
+    pub(crate) active_race: Signal<Race>,
+    pub(crate) unit_mode: Signal<UnitMode>,
+    pub(crate) selected_unit_id: Signal<Option<String>>,
+    pub(crate) search_query: Signal<String>,
 }
 
 #[component]
@@ -59,6 +70,13 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
     let editing_layout_cell = props.editing_layout_cell;
     let dragging_layout_cell = props.dragging_layout_cell;
     let system_hotkeys_open = props.system_hotkeys_open;
+    let navigation = ViewNavigationContext {
+        current_view: props.current_view,
+        active_race: props.active_race,
+        unit_mode: props.unit_mode,
+        selected_unit_id: props.selected_unit_id,
+        search_query: props.search_query,
+    };
     let mut layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
     let toggle_layout_dialog = move |_| {
@@ -90,7 +108,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     min-[1500px]:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)] \
                     min-[1500px]:[gap:calc(1.5rem_*_var(--hdr-scale))] \
                     min-[1500px]:[padding:0_0_calc(1.75rem_*_var(--hdr-scale))_0]",
-            HeaderBrand {}
+            HeaderBrand { navigation }
             div {
                 class: "hidden min-[1500px]:flex min-[1500px]:items-center min-[1500px]:justify-center",
                 button {
@@ -131,19 +149,25 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     }
                 }
             }
-            HeaderToolbar {
-                loaded_keys,
-                upload_status,
-                preview_open,
-                templates_dialog_open,
-                system_hotkeys_open,
-            }
-            BurgerMenu {
-                loaded_keys,
-                preview_open,
-                layout_dialog_open,
-                templates_dialog_open,
-                system_hotkeys_open,
+            div {
+                class: "flex flex-row items-center justify-end \
+                        [gap:calc(0.65rem_*_var(--hdr-scale))] min-w-0 \
+                        max-[1099px]:gap-2",
+                CollisionsButton { loaded_keys, grid_layout, navigation }
+                HeaderToolbar {
+                    loaded_keys,
+                    upload_status,
+                    preview_open,
+                    templates_dialog_open,
+                    system_hotkeys_open,
+                }
+                BurgerMenu {
+                    loaded_keys,
+                    preview_open,
+                    layout_dialog_open,
+                    templates_dialog_open,
+                    system_hotkeys_open,
+                }
             }
         }
         if templates_dialog_open() {
@@ -173,6 +197,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                             editing_layout_cell,
                             dragging_layout_cell,
                             loaded_keys,
+                            layout_dialog_open,
                         }
                     }
                 }

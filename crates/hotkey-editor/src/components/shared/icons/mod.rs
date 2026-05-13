@@ -14,5 +14,9 @@ pub(crate) const ICON_COG: &str = r##"<svg viewBox="0 0 24 24" fill="none" strok
 
 pub(crate) const ICON_RESOLVE: &str = r##"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>"##;
 
+pub(crate) const ICON_COLLISIONS: &str = r##"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"##;
+
+pub(crate) const ICON_COLLISIONS_CLEAR: &str = r##"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>"##;
+
 pub(crate) const ICON_TIER_PREV: &str = r##"<svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><polygon points="14.7,6 6.7,12 14.7,18" fill="#ffce63"/></svg>"##;
 pub(crate) const ICON_TIER_NEXT: &str = r##"<svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><polygon points="9.3,6 17.3,12 9.3,18" fill="#ffce63"/></svg>"##;

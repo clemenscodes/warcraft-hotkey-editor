@@ -8,3 +8,4 @@ pub(crate) mod tabs;
 pub(crate) mod tile_override;
 pub(crate) mod unit_detail;
 pub(crate) mod unit_list;
+pub(crate) mod views;
