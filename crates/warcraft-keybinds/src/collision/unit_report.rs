@@ -390,6 +390,112 @@ mod unit_collision_report_tests {
         join_handle.join().unwrap();
     }
 
+    #[test]
+    #[ignore = "code generator — run with --ignored to refresh the snapshot in run_default_collision_check after a db.rs regeneration"]
+    fn dump_default_collision_report_as_builder_code() {
+        let join_handle = std::thread::Builder::new()
+            .stack_size(32 * 1024 * 1024)
+            .spawn(dump_default_collision_report)
+            .unwrap();
+        join_handle.join().unwrap();
+    }
+
+    fn dump_default_collision_report() {
+        use crate::identity::hotkey_token::HotkeyToken;
+        use crate::unit::grids::PositionCollisionCard;
+
+        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt");
+        let custom_keys = CustomKeys::from(template_text).normalize();
+        let layout = GridLayout::qwerty_grid();
+        let report = UnitCollisionReport::compute(&custom_keys, layout);
+
+        for entry in report.entries() {
+            let unit_id = entry.unit_id().value();
+            let unit_name = entry.unit_name();
+            let position_cards = entry.position_cards();
+            let hotkey_cards = entry.hotkey_cards();
+            let main_position = position_cards[0];
+            let secondary_position = position_cards[1];
+            let main_hotkey = hotkey_cards[0];
+            let secondary_hotkey = hotkey_cards[1];
+            println!("// {unit_id} ({unit_name})");
+            println!("let entry = {{");
+            if !main_position.is_empty() {
+                emit_position_card_builder("main_pos", &main_position);
+            }
+            if !secondary_position.is_empty() {
+                emit_position_card_builder("secondary_pos", &secondary_position);
+            }
+            if !main_hotkey.is_empty() {
+                emit_hotkey_card_builder("main_hot", &main_hotkey);
+            }
+            if !secondary_hotkey.is_empty() {
+                emit_hotkey_card_builder("secondary_hot", &secondary_hotkey);
+            }
+            println!(
+                "    let eb = UnitCollisionEntryBuilder::new(\"{unit_id}\", \"{unit_name}\", empty_pos, empty_hot);"
+            );
+            if !main_position.is_empty() {
+                println!("    let eb = eb.main_position_card(main_pos);");
+            }
+            if !main_hotkey.is_empty() {
+                println!("    let eb = eb.main_hotkey_card(main_hot);");
+            }
+            if !secondary_hotkey.is_empty() {
+                println!("    let eb = eb.secondary_hotkey_card(secondary_hot);");
+            }
+            println!("    eb.build()");
+            println!("}};");
+            println!("builder = builder.entry(entry);");
+            println!();
+        }
+
+        fn role_expr(role: crate::unit::grids::GridRole) -> &'static str {
+            match role {
+                crate::unit::grids::GridRole::MainCommand => "GridRole::MainCommand",
+                crate::unit::grids::GridRole::HeroSkillTree => "GridRole::HeroSkillTree",
+                crate::unit::grids::GridRole::BuildMenu => "GridRole::BuildMenu",
+                crate::unit::grids::GridRole::UprootedForm => "GridRole::UprootedForm",
+            }
+        }
+
+        fn emit_position_card_builder(name: &str, card: &PositionCollisionCard) {
+            let role_text = role_expr(card.role());
+            println!("    let {name} = PositionCollisionCardBuilder::new({role_text})");
+            for (position, slots) in card.into_iter() {
+                let column_u8 = u8::from(position.column());
+                let row_u8 = u8::from(position.row());
+                let slot_idents: Vec<String> = slots
+                    .iter()
+                    .map(|slot| format!("GridSlotId::ability(\"{}\")", slot.as_str()))
+                    .collect();
+                let slots_array = slot_idents.join(", ");
+                println!("        .collision_at({column_u8}, {row_u8}, &[{slots_array}])");
+            }
+            println!("        .build();");
+        }
+
+        fn emit_hotkey_card_builder(name: &str, card: &crate::unit::grids::HotkeyCollisionCard) {
+            let role_text = role_expr(card.role());
+            println!("    let {name} = HotkeyCollisionCardBuilder::new({role_text}, layout)");
+            for (_position, cell) in card.into_iter() {
+                let token = cell.token();
+                let letter_char = match token {
+                    HotkeyToken::Letter { character } => character,
+                    _ => continue,
+                };
+                let slot_idents: Vec<String> = cell
+                    .slots()
+                    .iter()
+                    .map(|slot| format!("GridSlotId::ability(\"{}\")", slot.as_str()))
+                    .collect();
+                let slots_array = slot_idents.join(", ");
+                println!("        .collision('{letter_char}', &[{slots_array}])");
+            }
+            println!("        .build();");
+        }
+    }
+
     fn run_default_collision_check() {
         let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt");
         let custom_keys = CustomKeys::from(template_text).normalize();
@@ -403,1530 +509,1841 @@ mod unit_collision_report_tests {
 
         let mut builder = UnitCollisionReportBuilder::new();
 
-        // Ancient Hydra (nahy): position (1,2) MainCommand  Awrh, Aspo
-        //                        hotkey X MainCommand  Awrh, Aspo
+        // nahy (Ancient Hydra)
         let entry = {
-            let slot1 = GridSlotId::ability("Awrh");
-            let slot2 = GridSlotId::ability("Aspo");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('X', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("Awrh"), GridSlotId::ability("Aspo")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'X',
+                    &[GridSlotId::ability("Awrh"), GridSlotId::ability("Aspo")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nahy", "Ancient Hydra", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Ancient Sasquatch (nsqa): position (1,2) MainCommand  ACfr, ACtc
-        //                            hotkey X MainCommand  ACfr, ACtc
+        // nsqa (Ancient Sasquatch)
         let entry = {
-            let slot1 = GridSlotId::ability("ACfr");
-            let slot2 = GridSlotId::ability("ACtc");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('X', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("ACfr"), GridSlotId::ability("ACtc")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'X',
+                    &[GridSlotId::ability("ACfr"), GridSlotId::ability("ACtc")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nsqa", "Ancient Sasquatch", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Ancient of Wonders (eden): position (3,2) MainCommand  Anei, Aro1
+        // eden (Ancient of Wonders)
         let entry = {
-            let slot1 = GridSlotId::ability("Anei");
-            let slot2 = GridSlotId::ability("Aro1");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(3, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    3,
+                    2,
+                    &[GridSlotId::ability("Anei"), GridSlotId::ability("Aro1")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("eden", "Ancient of Wonders", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Avatar of Vengeance (espv): hotkey V MainCommand  Avng, ACrk
+        // earc (Archer)
         let entry = {
-            let slot1 = GridSlotId::ability("Avng");
-            let slot2 = GridSlotId::ability("ACrk");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('V', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Aco2"), GridSlotId::ability("Acoa")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("earc", "Archer", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // espv (Avatar of Vengeance)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'V',
+                    &[GridSlotId::ability("Avng"), GridSlotId::ability("ACrk")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("espv", "Avatar of Vengeance", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Beastmaster (Orex): hotkey S MainCommand  CmdStop, Aamk
+        // uban (Banshee)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("Aamk");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("Aps2"), GridSlotId::ability("Apos")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("Acrs"), GridSlotId::ability("Apos")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("uban", "Banshee", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Orex (Beastmaster)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aamk")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Orex", "Beastmaster", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Blue Dragon (nadr): position (0,2) MainCommand  Afrc, ACdv
+        // nadr (Blue Dragon)
         let entry = {
-            let slot1 = GridSlotId::ability("Afrc");
-            let slot2 = GridSlotId::ability("ACdv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Afrc"), GridSlotId::ability("ACdv")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nadr", "Blue Dragon", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Blue Dragonspawn Overseer (nbdo): position (2,2) MainCommand  ACav, ACev
-        //                                    hotkey C MainCommand  ACav, ACev
+        // nbdo (Blue Dragonspawn Overseer)
         let entry = {
-            let slot1 = GridSlotId::ability("ACav");
-            let slot2 = GridSlotId::ability("ACev");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ACav"), GridSlotId::ability("ACev")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACav"), GridSlotId::ability("ACev")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nbdo",
                 "Blue Dragonspawn Overseer",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Brewmaster (Nsjs): hotkey S MainCommand  CmdStop, Aamk
+        // Nsjs (Brewmaster)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("Aamk");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aamk")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Nsjs", "Brewmaster", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Brood Mother (nsbm): position (0,2) MainCommand  ACvs, ACen
-        //                       hotkey Z MainCommand  ACvs, ACen
+        // nsbm (Brood Mother)
         let entry = {
-            let slot1 = GridSlotId::ability("ACvs");
-            let slot2 = GridSlotId::ability("ACen");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACvs")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACvs")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nsbm", "Brood Mother", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Centaur Sorcerer (ncks): position (0,2) MainCommand  ACdm, ACbl
+        // ncks (Centaur Sorcerer)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("ACbl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("ACbl")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("ncks", "Centaur Sorcerer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Chaplain (nchp): position (0,2) MainCommand  Adsm, Anh2
+        // nchp (Chaplain)
         let entry = {
-            let slot1 = GridSlotId::ability("Adsm");
-            let slot2 = GridSlotId::ability("Anh2");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Adsm"), GridSlotId::ability("Anh2")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nchp", "Chaplain", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Corrupted Tree of Ages (ncta): position (0,2) MainCommand  Aeat, ncte
+        // ncta (Corrupted Tree of Ages)
         let entry = {
-            let slot1 = GridSlotId::ability("Aeat");
-            let slot2 = GridSlotId::ability("ncte");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Aeat"), GridSlotId::ability("ncte")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "ncta",
                 "Corrupted Tree of Ages",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Corrupted Tree of Life (nctl): position (0,2) MainCommand  Aeat, ncta
+        // nctl (Corrupted Tree of Life)
         let entry = {
-            let slot1 = GridSlotId::ability("Aeat");
-            let slot2 = GridSlotId::ability("ncta");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Aeat"), GridSlotId::ability("ncta")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nctl",
                 "Corrupted Tree of Life",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dark Troll High Priest (ndth): position (0,2) MainCommand  Anh2, ACdm
+        // ndth (Dark Troll High Priest)
         let entry = {
-            let slot1 = GridSlotId::ability("Anh2");
-            let slot2 = GridSlotId::ability("ACdm");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("Anh2")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "ndth",
                 "Dark Troll High Priest",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dark Wizard (nwzd): position (2,2) MainCommand  ACpy, ACba
-        //                      hotkey C MainCommand  ACpy, ACba
+        // nwzd (Dark Wizard)
         let entry = {
-            let slot1 = GridSlotId::ability("ACpy");
-            let slot2 = GridSlotId::ability("ACba");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ACpy"), GridSlotId::ability("ACba")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACpy"), GridSlotId::ability("ACba")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nwzd", "Dark Wizard", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Death Knight (Udea): hotkey C MainCommand  AUdc, AUau
+        // Udea (Death Knight)
         let entry = {
-            let slot1 = GridSlotId::ability("AUdc");
-            let slot2 = GridSlotId::ability("AUau");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    3,
+                    2,
+                    &[GridSlotId::ability("AUa2"), GridSlotId::ability("AUan")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AUa2"), GridSlotId::ability("AUan")],
+                )
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUdc"), GridSlotId::ability("AUau")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Udea", "Death Knight", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Death Knight (Uear): hotkey C MainCommand  AUdc, AUau
+        // Uear (Death Knight)
         let entry = {
-            let slot1 = GridSlotId::ability("AUdc");
-            let slot2 = GridSlotId::ability("AUau");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    3,
+                    2,
+                    &[GridSlotId::ability("AUa2"), GridSlotId::ability("AUan")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AUa2"), GridSlotId::ability("AUan")],
+                )
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUdc"), GridSlotId::ability("AUau")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Uear", "Death Knight", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Death Revenant (nrvd): position (0,2) MainCommand  ACdc, ACrd
+        // nrvd (Death Revenant)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdc");
-            let slot2 = GridSlotId::ability("ACrd");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdc"), GridSlotId::ability("ACrd")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nrvd", "Death Revenant", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Demigod (Ecen): hotkey S MainCommand  CmdStop, SCc1
+        // Ecen (Demigod)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("SCc1");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("SCc1")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Ecen", "Demigod", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Demon Hunter (Eevi): position (2,0) MainCommand  CmdHoldPos, ANcl
+        // Eevi (Demon Hunter)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdHoldPos");
-            let slot2 = GridSlotId::ability("ANcl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 0, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    0,
+                    &[
+                        GridSlotId::ability("CmdHoldPos"),
+                        GridSlotId::ability("ANcl"),
+                    ],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Eevi", "Demon Hunter", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Demon Hunter (Eevm): position (2,0) MainCommand  CmdHoldPos, ANcl
+        // Eevm (Demon Hunter)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdHoldPos");
-            let slot2 = GridSlotId::ability("ANcl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 0, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    0,
+                    &[
+                        GridSlotId::ability("CmdHoldPos"),
+                        GridSlotId::ability("ANcl"),
+                    ],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Eevm", "Demon Hunter", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Destroyer (ubsp): position (0,2) MainCommand  Aabs, Advm
+        // ubsp (Destroyer)
         let entry = {
-            let slot1 = GridSlotId::ability("Aabs");
-            let slot2 = GridSlotId::ability("Advm");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Aabs"), GridSlotId::ability("Advm")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ubsp", "Destroyer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Doom Guard (nba2): hotkey F MainCommand  ACsk, ACrf
+        // nba2 (Doom Guard)
         let entry = {
-            let slot1 = GridSlotId::ability("ACsk");
-            let slot2 = GridSlotId::ability("ACrf");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('F', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'F',
+                    &[GridSlotId::ability("ACsk"), GridSlotId::ability("ACrf")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nba2", "Doom Guard", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Doom Guard (nbal): hotkey F MainCommand  ACsk, ACrf
+        // nbal (Doom Guard)
         let entry = {
-            let slot1 = GridSlotId::ability("ACsk");
-            let slot2 = GridSlotId::ability("ACrf");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('F', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'F',
+                    &[GridSlotId::ability("ACsk"), GridSlotId::ability("ACrf")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nbal", "Doom Guard", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Draenei Seer (ndrs): position (0,2) MainCommand  AChv, ACsw
+        // ndrs (Draenei Seer)
         let entry = {
-            let slot1 = GridSlotId::ability("AChv");
-            let slot2 = GridSlotId::ability("ACsw");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACsw"), GridSlotId::ability("AChv")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ndrs", "Draenei Seer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Ubal): hotkey E MainCommand  AUsl, AOeq
-        //                    hotkey E HeroSkillTree  AUsl, AOeq
+        // Ubal (Dreadlord)
         let entry = {
-            let slot1 = GridSlotId::ability("AUsl");
-            let slot2 = GridSlotId::ability("AOeq");
-            let slots = [slot1, slot2];
-            let main_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let main_hot_builder = main_hot_builder.collision('E', &slots);
-            let main_hot = main_hot_builder.build();
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('E', &slots);
-            let hero_hot = hero_hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("AUsl"), GridSlotId::ability("AOeq")],
+                )
+                .build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("AUsl"), GridSlotId::ability("AOeq")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Ubal", "Dreadlord", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Udre): hotkey C MainCommand  AUcs, AUav
+        // Udre (Dreadlord)
         let entry = {
-            let slot1 = GridSlotId::ability("AUcs");
-            let slot2 = GridSlotId::ability("AUav");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUcs"), GridSlotId::ability("AUav")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Udre", "Dreadlord", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Udth): hotkey D MainCommand  AEsh, AUdd
-        //                    hotkey D HeroSkillTree  AEsh, AUdd
+        // Udth (Dreadlord)
         let entry = {
-            let slot1 = GridSlotId::ability("AEsh");
-            let slot2 = GridSlotId::ability("AUdd");
-            let slots = [slot1, slot2];
-            let main_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let main_hot_builder = main_hot_builder.collision('D', &slots);
-            let main_hot = main_hot_builder.build();
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('D', &slots);
-            let hero_hot = hero_hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AEsh"), GridSlotId::ability("AUdd")],
+                )
+                .build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AEsh"), GridSlotId::ability("AUdd")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Udth", "Dreadlord", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Umal): hotkey C MainCommand  AUcs, ANdc
-        //                    hotkey E HeroSkillTree  AUsl, ANdc
+        // Umal (Dreadlord)
         let entry = {
-            let slot_aucs = GridSlotId::ability("AUcs");
-            let slot_andc = GridSlotId::ability("ANdc");
-            let main_slots = [slot_aucs, slot_andc];
-            let main_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let main_hot_builder = main_hot_builder.collision('C', &main_slots);
-            let main_hot = main_hot_builder.build();
-            let slot_ausl = GridSlotId::ability("AUsl");
-            let hero_slots = [slot_ausl, slot_andc];
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('E', &hero_slots);
-            let hero_hot = hero_hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUcs"), GridSlotId::ability("ANdc")],
+                )
+                .build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("AUsl"), GridSlotId::ability("ANdc")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Umal", "Dreadlord", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Utic): position (1,2) MainCommand  ANrc, AUsl
+        // Utic (Dreadlord)
         let entry = {
-            let slot1 = GridSlotId::ability("ANrc");
-            let slot2 = GridSlotId::ability("AUsl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("ANrc"), GridSlotId::ability("AUsl")],
+                )
+                .collision_at(
+                    3,
+                    2,
+                    &[GridSlotId::ability("AUin"), GridSlotId::ability("ANfd")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Utic", "Dreadlord", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Dreadlord (Uvng): hotkey C MainCommand  AUcs, AUav
+        // Uvng (Dreadlord)
         let entry = {
-            let slot1 = GridSlotId::ability("AUcs");
-            let slot2 = GridSlotId::ability("AUav");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUcs"), GridSlotId::ability("AUav")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Uvng", "Dreadlord", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Earth (npn3): position (0,2) MainCommand  ANta, ACpv
+        // npn3 (Earth)
         let entry = {
-            let slot1 = GridSlotId::ability("ANta");
-            let slot2 = GridSlotId::ability("ACpv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ANta"), GridSlotId::ability("ACpv")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("npn3", "Earth", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Earth (npn6): position (0,2) MainCommand  ANta, ACpv
+        // npn6 (Earth)
         let entry = {
-            let slot1 = GridSlotId::ability("ANta");
-            let slot2 = GridSlotId::ability("ACpv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ANta"), GridSlotId::ability("ACpv")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("npn6", "Earth", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Elder Voidwalker (nvde): position (0,2) MainCommand  ACde, ACfl
-        //                           hotkey Z MainCommand  ACde, ACfl
+        // nvde (Elder Voidwalker)
         let entry = {
-            let slot1 = GridSlotId::ability("ACde");
-            let slot2 = GridSlotId::ability("ACfl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACde"), GridSlotId::ability("ACfl")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACde"), GridSlotId::ability("ACfl")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nvde", "Elder Voidwalker", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Entangled Gold Mine (egol): position (1,2) MainCommand  Adri, Aenc
+        // egol (Entangled Gold Mine)
         let entry = {
-            let slot1 = GridSlotId::ability("Adri");
-            let slot2 = GridSlotId::ability("Aenc");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("Adri"), GridSlotId::ability("Aenc")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("egol", "Entangled Gold Mine", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Eredar Diabolist (nerd): position (0,2) MainCommand  ANfb, ACpa
-        //                           hotkey Z MainCommand  ANfb, ACpa
+        // nerd (Eredar Diabolist)
         let entry = {
-            let slot1 = GridSlotId::ability("ANfb");
-            let slot2 = GridSlotId::ability("ACpa");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ANfb"), GridSlotId::ability("ACpa")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ANfb"), GridSlotId::ability("ACpa")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nerd", "Eredar Diabolist", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Faceless One Terror (nfot): position (1,2) MainCommand  ACmf, ACsl
-        //                              hotkey X MainCommand  ACmf, ACsl
+        // nfot (Faceless One Terror)
         let entry = {
-            let slot1 = GridSlotId::ability("ACmf");
-            let slot2 = GridSlotId::ability("ACsl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('X', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("ACmf"), GridSlotId::ability("ACsl")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'X',
+                    &[GridSlotId::ability("ACmf"), GridSlotId::ability("ACsl")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nfot", "Faceless One Terror", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Faceless One Trickster (nfor): position (0,2) MainCommand  ACpu, ACcs
+        // nfor (Faceless One Trickster)
         let entry = {
-            let slot1 = GridSlotId::ability("ACpu");
-            let slot2 = GridSlotId::ability("ACcs");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACpu"), GridSlotId::ability("ACcs")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nfor",
                 "Faceless One Trickster",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Fel Ravager (npfm): position (0,2) MainCommand  ACde, ACbk
-        //                      hotkey Z MainCommand  ACde, ACbk
+        // npfm (Fel Ravager)
         let entry = {
-            let slot1 = GridSlotId::ability("ACde");
-            let slot2 = GridSlotId::ability("ACbk");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACde"), GridSlotId::ability("ACbk")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACde"), GridSlotId::ability("ACbk")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("npfm", "Fel Ravager", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Forest Troll Shadow Priest (nfsp): position (0,2) MainCommand  ACdm, Anh1
+        // Nfir (Firelord)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("Anh1");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ANia"), GridSlotId::ability("ANic")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ANia"), GridSlotId::ability("ANic")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Nfir", "Firelord", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nfsh (Forest Troll High Priest)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("Anh2")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new(
+                "nfsh",
+                "Forest Troll High Priest",
+                empty_pos,
+                empty_hot,
+            );
+            let eb = eb.main_position_card(main_pos);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nfsp (Forest Troll Shadow Priest)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("Anh1")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nfsp",
                 "Forest Troll Shadow Priest",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Forgotten One (nfgo): position (0,2) MainCommand  ACtn, ACfb
-        //                        hotkey Z MainCommand  ACtn, ACfb
+        // nfgo (Forgotten One)
         let entry = {
-            let slot1 = GridSlotId::ability("ACtn");
-            let slot2 = GridSlotId::ability("ACfb");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACtn"), GridSlotId::ability("ACfb")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACtn"), GridSlotId::ability("ACfb")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nfgo", "Forgotten One", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Gargoyle (ugar): position (0,0) MainCommand  CmdMove, Aatp
-        // Aatp (Prioritize) has no default Buttonpos in the game data;
-        // materialize_default_positions assigns (0,0), which collides with
-        // CmdMove until cascade resolution moves it.
+        // ugar (Gargoyle)
         let entry = {
-            let slot1 = GridSlotId::command("CmdMove");
-            let slot2 = GridSlotId::ability("Aatp");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 0, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("CmdMove"), GridSlotId::ability("Aatp")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ugar", "Gargoyle", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Giant Spider (nsgt): position (0,2) MainCommand  ACvs, ACen
-        //                       hotkey Z MainCommand  ACvs, ACen
+        // nsgt (Giant Spider)
         let entry = {
-            let slot1 = GridSlotId::ability("ACvs");
-            let slot2 = GridSlotId::ability("ACen");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACvs")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACvs")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nsgt", "Giant Spider", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Gnoll Warlord (ngow): position (0,2) MainCommand  ACro, ACbl
-        //                        hotkey Z MainCommand  ACro, ACbl
+        // ngow (Gnoll Warlord)
         let entry = {
-            let slot1 = GridSlotId::ability("ACro");
-            let slot2 = GridSlotId::ability("ACbl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACro"), GridSlotId::ability("ACbl")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACro"), GridSlotId::ability("ACbl")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ngow", "Gnoll Warlord", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Goblin Laboratory (ngad): position (0,0) MainCommand  ngsp, nzep, Andt
+        // ngad (Goblin Laboratory)
         let entry = {
-            let slot1 = GridSlotId::ability("ngsp");
-            let slot2 = GridSlotId::ability("nzep");
-            let slot3 = GridSlotId::ability("Andt");
-            let slots = [slot1, slot2, slot3];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 0, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[
+                        GridSlotId::ability("ngsp"),
+                        GridSlotId::ability("nzep"),
+                        GridSlotId::ability("Andt"),
+                    ],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("ngad", "Goblin Laboratory", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Goblin Merchant (ngme): hotkey E MainCommand  bspd, stel
+        // ngme (Goblin Merchant)
         let entry = {
-            let slot1 = GridSlotId::ability("bspd");
-            let slot2 = GridSlotId::ability("stel");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('E', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("bspd"), GridSlotId::ability("stel")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("ngme", "Goblin Merchant", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Heretic (nhhr): position (0,2) MainCommand  ACca, ACrd
+        // nhhr (Heretic)
         let entry = {
-            let slot1 = GridSlotId::ability("ACca");
-            let slot2 = GridSlotId::ability("ACrd");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACca"), GridSlotId::ability("ACrd")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nhhr", "Heretic", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // High Elven Barracks (nheb): hotkey D MainCommand  nws1, Rhde
+        // nheb (High Elven Barracks)
         let entry = {
-            let slot1 = GridSlotId::ability("nws1");
-            let slot2 = GridSlotId::ability("Rhde");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('D', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("nws1"), GridSlotId::ability("Rhde")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nheb", "High Elven Barracks", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Ice Troll High Priest (nith): position (1,2) MainCommand  ACd2, ACf2
+        // ehip (Hippogryph)
         let entry = {
-            let slot1 = GridSlotId::ability("ACd2");
-            let slot2 = GridSlotId::ability("ACf2");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(1, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Aco3"), GridSlotId::ability("Acoh")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("ehip", "Hippogryph", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nith (Ice Troll High Priest)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("Anh2")],
+                )
+                .collision_at(
+                    1,
+                    2,
+                    &[
+                        GridSlotId::ability("ACf2"),
+                        GridSlotId::ability("ACd2"),
+                        GridSlotId::ability("ACfu"),
+                    ],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'X',
+                    &[GridSlotId::ability("ACf2"), GridSlotId::ability("ACfu")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nith",
                 "Ice Troll High Priest",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Kobold Geomancer (nkog): position (0,2) MainCommand  ACdm, ACsw
+        // nkog (Kobold Geomancer)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("ACsw");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("ACsw")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nkog", "Kobold Geomancer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Lightning Revenant (nrvl): position (0,2) MainCommand  ACcl, ACpu
+        // nrvl (Lightning Revenant)
         let entry = {
-            let slot1 = GridSlotId::ability("ACcl");
-            let slot2 = GridSlotId::ability("ACpu");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACcl"), GridSlotId::ability("ACpu")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nrvl", "Lightning Revenant", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Meat Wagon (umtw): hotkey C MainCommand  Amel, Apts
+        // umtw (Meat Wagon)
         let entry = {
-            let slot1 = GridSlotId::ability("Amel");
-            let slot2 = GridSlotId::ability("Apts");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("Amel"), GridSlotId::ability("Apts")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("umtw", "Meat Wagon", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Mercenary Camp (nmr4): position (0,0) MainCommand  ncea, ncen
-        //                         hotkey W MainCommand  nhrw, nqbh
+        // nmr4 (Mercenary Camp)
         let entry = {
-            let pos_slot1 = GridSlotId::ability("ncea");
-            let pos_slot2 = GridSlotId::ability("ncen");
-            let pos_slots = [pos_slot1, pos_slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 0, &pos_slots);
-            let pos_card = pos_builder.build();
-            let hot_slot1 = GridSlotId::ability("nhrw");
-            let hot_slot2 = GridSlotId::ability("nqbh");
-            let hot_slots = [hot_slot1, hot_slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('W', &hot_slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("ncea"), GridSlotId::ability("ncen")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'W',
+                    &[GridSlotId::ability("nhrw"), GridSlotId::ability("nqbh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nmr4", "Mercenary Camp", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Mercenary Camp (nmrd): position (0,0) MainCommand  ntkh, nbdw, nubw
+        // nmrd (Mercenary Camp)
         let entry = {
-            let slot1 = GridSlotId::ability("ntkh");
-            let slot2 = GridSlotId::ability("nbdw");
-            let slot3 = GridSlotId::ability("nubw");
-            let slots = [slot1, slot2, slot3];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 0, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[
+                        GridSlotId::ability("ntkh"),
+                        GridSlotId::ability("nbdw"),
+                        GridSlotId::ability("nubw"),
+                    ],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nmrd", "Mercenary Camp", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Mountain King (Hmbr): hotkey C MainCommand  AHtc, AHbh
+        // Hmbr (Mountain King)
         let entry = {
-            let slot1 = GridSlotId::ability("AHtc");
-            let slot2 = GridSlotId::ability("AHbh");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AHtc"), GridSlotId::ability("AHbh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Hmbr", "Mountain King", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Mountain King (Hmkg): hotkey C MainCommand  AHtc, AHbh
+        // Hmkg (Mountain King)
         let entry = {
-            let slot1 = GridSlotId::ability("AHtc");
-            let slot2 = GridSlotId::ability("AHbh");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AHtc"), GridSlotId::ability("AHbh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Hmkg", "Mountain King", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Mur'gul Snarecaster (nmsn): position (0,2) MainCommand  ACdm, ACsw
+        // nmsn (Mur'gul Snarecaster)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("ACsw");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("ACsw")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nmsn", "Mur'gul Snarecaster", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Naga Royal Guard (nnrg): position (0,2) MainCommand  ACcb, ACcv
-        //                           hotkey Z MainCommand  ACcb, ACcv
+        // nnrg (Naga Royal Guard)
         let entry = {
-            let slot1 = GridSlotId::ability("ACcb");
-            let slot2 = GridSlotId::ability("ACcv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACcb"), GridSlotId::ability("ACcv")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACcb"), GridSlotId::ability("ACcv")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nnrg", "Naga Royal Guard", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Nerubian Queen (nnwq): position (0,2) MainCommand  ACrd, ACca
+        // nnwq (Nerubian Queen)
         let entry = {
-            let slot1 = GridSlotId::ability("ACrd");
-            let slot2 = GridSlotId::ability("ACca");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACrd"), GridSlotId::ability("ACca")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nnwq", "Nerubian Queen", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Nerubian Seer (nnwr): position (0,2) MainCommand  ACdm, ACrd
+        // nnwr (Nerubian Seer)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("ACrd");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("ACrd")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nnwr", "Nerubian Seer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Nerubian Webspinner (nnwl): position (0,2) MainCommand  ACrd, ACwb
+        // nnwl (Nerubian Webspinner)
         let entry = {
-            let slot1 = GridSlotId::ability("ACrd");
-            let slot2 = GridSlotId::ability("ACwb");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACrd"), GridSlotId::ability("ACwb")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nnwl", "Nerubian Webspinner", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Nether Dragon (nndr): position (2,2) MainCommand  ACcr, ACmi
-        //                        hotkey C MainCommand  ACcr, ACmi
+        // nndr (Nether Dragon)
         let entry = {
-            let slot1 = GridSlotId::ability("ACcr");
-            let slot2 = GridSlotId::ability("ACmi");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ACcr"), GridSlotId::ability("ACmi")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACcr"), GridSlotId::ability("ACmi")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nndr", "Nether Dragon", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Phoenix (hphx): position (0,2) MainCommand  Ahpe, Apxf
-        //                  hotkey Z MainCommand  Ahpe, Apxf
+        // nomg (Ogre Magi)
         let entry = {
-            let slot1 = GridSlotId::ability("Ahpe");
-            let slot2 = GridSlotId::ability("Apxf");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACbb"), GridSlotId::ability("ACbl")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("nomg", "Ogre Magi", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // hphx (Phoenix)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Ahpe"), GridSlotId::ability("Apxf")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("Ahpe"), GridSlotId::ability("Apxf")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("hphx", "Phoenix", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Pit Lord (Nman): hotkey C MainCommand  AHtc, ANrn
-        //                   hotkey E HeroSkillTree  ANrn, AOeq
+        // Nman (Pit Lord)
         let entry = {
-            let main_slot1 = GridSlotId::ability("AHtc");
-            let main_slot2 = GridSlotId::ability("ANrn");
-            let main_slots = [main_slot1, main_slot2];
-            let main_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let main_hot_builder = main_hot_builder.collision('C', &main_slots);
-            let main_hot = main_hot_builder.build();
-            let hero_slot1 = GridSlotId::ability("ANrn");
-            let hero_slot2 = GridSlotId::ability("AOeq");
-            let hero_slots = [hero_slot1, hero_slot2];
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('E', &hero_slots);
-            let hero_hot = hero_hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AHtc"), GridSlotId::ability("ANrn")],
+                )
+                .build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("ANrn"), GridSlotId::ability("AOeq")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Nman", "Pit Lord", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Pit Lord (Npld): hotkey C MainCommand  AHtc, ANrn
-        //                   hotkey E HeroSkillTree  ANrn, AOeq
+        // Npld (Pit Lord)
         let entry = {
-            let main_slot1 = GridSlotId::ability("AHtc");
-            let main_slot2 = GridSlotId::ability("ANrn");
-            let main_slots = [main_slot1, main_slot2];
-            let main_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let main_hot_builder = main_hot_builder.collision('C', &main_slots);
-            let main_hot = main_hot_builder.build();
-            let hero_slot1 = GridSlotId::ability("ANrn");
-            let hero_slot2 = GridSlotId::ability("AOeq");
-            let hero_slots = [hero_slot1, hero_slot2];
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('E', &hero_slots);
-            let hero_hot = hero_hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AHtc"), GridSlotId::ability("ANrn")],
+                )
+                .build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("ANrn"), GridSlotId::ability("AOeq")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Npld", "Pit Lord", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Polar Furbolg Elder Shaman (nfpe): position (0,2) MainCommand  ACfn, AChv
+        // nenp (Poison Treant)
         let entry = {
-            let slot1 = GridSlotId::ability("ACfn");
-            let slot2 = GridSlotId::ability("AChv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACvs"), GridSlotId::ability("Aenr")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACvs"), GridSlotId::ability("Aenr")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("nenp", "Poison Treant", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nfpe (Polar Furbolg Elder Shaman)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACfn"), GridSlotId::ability("AChv")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nfpe",
                 "Polar Furbolg Elder Shaman",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Priestess of the Moon (Emoo): hotkey C MainCommand  AEst, AEar
+        // Emoo (Priestess of the Moon)
         let entry = {
-            let slot1 = GridSlotId::ability("AEst");
-            let slot2 = GridSlotId::ability("AEar");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AEst"), GridSlotId::ability("AEar")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "Emoo",
                 "Priestess of the Moon",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Priestess of the Moon (Etyr): hotkey C MainCommand  AEst, AEar
+        // Etyr (Priestess of the Moon)
         let entry = {
-            let slot1 = GridSlotId::ability("AEst");
-            let slot2 = GridSlotId::ability("AEar");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AEst"), GridSlotId::ability("AEar")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "Etyr",
                 "Priestess of the Moon",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Ranger (Hvwd): hotkey C MainCommand  AEst, AEar
+        // Hvwd (Ranger)
         let entry = {
-            let slot1 = GridSlotId::ability("AEst");
-            let slot2 = GridSlotId::ability("AEar");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AEst"), GridSlotId::ability("AEar")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Hvwd", "Ranger", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Salamander Vizier (nslv): position (0,2) MainCommand  Ambd, ACdm, ACbl
-        //                            hotkey Z MainCommand  Ambd, ACbl
+        // nwzr (Rogue Wizard)
         let entry = {
-            let slot_ambd = GridSlotId::ability("Ambd");
-            let slot_acdm = GridSlotId::ability("ACdm");
-            let slot_acbl = GridSlotId::ability("ACbl");
-            let pos_slots = [slot_ambd, slot_acdm, slot_acbl];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &pos_slots);
-            let pos_card = pos_builder.build();
-            let hot_slots = [slot_ambd, slot_acbl];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &hot_slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    1,
+                    2,
+                    &[GridSlotId::ability("ACf2"), GridSlotId::ability("ACfu")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'X',
+                    &[GridSlotId::ability("ACf2"), GridSlotId::ability("ACfu")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("nwzr", "Rogue Wizard", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nslv (Salamander Vizier)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[
+                        GridSlotId::ability("Ambd"),
+                        GridSlotId::ability("ACdm"),
+                        GridSlotId::ability("ACbl"),
+                    ],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("Ambd"), GridSlotId::ability("ACbl")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nslv", "Salamander Vizier", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Satyr Soulstealer (nstl): position (0,2) MainCommand  ACrd, Ambd
+        // nstl (Satyr Soulstealer)
         let entry = {
-            let slot1 = GridSlotId::ability("ACrd");
-            let slot2 = GridSlotId::ability("Ambd");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACrd"), GridSlotId::ability("Ambd")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nstl", "Satyr Soulstealer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Sea Giant Behemoth (nsgb): position (0,2) MainCommand  ACtb, ACpv
+        // nsgb (Sea Giant Behemoth)
         let entry = {
-            let slot1 = GridSlotId::ability("ACtb");
-            let slot2 = GridSlotId::ability("ACpv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACtb"), GridSlotId::ability("ACpv")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nsgb", "Sea Giant Behemoth", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Sea Giant Hunter (nsgh): position (0,2) MainCommand  ACen, ACpv
-        //                           hotkey Z MainCommand  ACen, ACpv
+        // nsgh (Sea Giant Hunter)
         let entry = {
-            let slot1 = GridSlotId::ability("ACen");
-            let slot2 = GridSlotId::ability("ACpv");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACpv")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACen"), GridSlotId::ability("ACpv")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("nsgh", "Sea Giant Hunter", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Shadow Hunter (Orkn): hotkey S MainCommand  CmdStop, Aamk
+        // Orkn (Shadow Hunter)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("Aamk");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aamk")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Orkn", "Shadow Hunter", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Skeletal Orc Champion (nsoc): position (2,2) MainCommand  ACvp, ACcr
-        //                                hotkey C MainCommand  ACvp, ACcr
+        // nsoc (Skeletal Orc Champion)
         let entry = {
-            let slot1 = GridSlotId::ability("ACvp");
-            let slot2 = GridSlotId::ability("ACcr");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ACvp"), GridSlotId::ability("ACcr")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACvp"), GridSlotId::ability("ACcr")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nsoc",
                 "Skeletal Orc Champion",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Snarlmane the Bloodgorger (ngos): position (0,2) MainCommand  ACac, ACbl
-        //                                    hotkey Z MainCommand  ACac, ACbl
+        // ngos (Snarlmane the Bloodgorger)
         let entry = {
-            let slot1 = GridSlotId::ability("ACac");
-            let slot2 = GridSlotId::ability("ACbl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACac"), GridSlotId::ability("ACbl")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACac"), GridSlotId::ability("ACbl")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "ngos",
                 "Snarlmane the Bloodgorger",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Spellbreaker (hspt): hotkey C MainCommand  Acmg, Amim
+        // hspt (Spellbreaker)
         let entry = {
-            let slot1 = GridSlotId::ability("Acmg");
-            let slot2 = GridSlotId::ability("Amim");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("Acmg"), GridSlotId::ability("Amim")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("hspt", "Spellbreaker", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Spirit Walker (ospm): hotkey F MainCommand  ACsk, Acpf
+        // ospm (Spirit Walker)
         let entry = {
-            let slot1 = GridSlotId::ability("ACsk");
-            let slot2 = GridSlotId::ability("Acpf");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('F', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'F',
+                    &[GridSlotId::ability("ACsk"), GridSlotId::ability("Acpf")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ospm", "Spirit Walker", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Spirit Walker (ospw): hotkey F MainCommand  ACsk, Acpf
+        // ospw (Spirit Walker)
         let entry = {
-            let slot1 = GridSlotId::ability("ACsk");
-            let slot2 = GridSlotId::ability("Acpf");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('F', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'F',
+                    &[GridSlotId::ability("ACsk"), GridSlotId::ability("Acpf")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ospw", "Spirit Walker", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Stonemaul Warchief (noga): position (2,2) MainCommand  ACbh, SCae
-        //                             hotkey C MainCommand  ACbh, SCae
+        // noga (Stonemaul Warchief)
         let entry = {
-            let slot1 = GridSlotId::ability("ACbh");
-            let slot2 = GridSlotId::ability("SCae");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(2, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    2,
+                    &[GridSlotId::ability("ACbh"), GridSlotId::ability("SCae")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACbh"), GridSlotId::ability("SCae")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("noga", "Stonemaul Warchief", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Storm (npn2): position (0,2) MainCommand  ANwk, Adsm
+        // npn2 (Storm)
         let entry = {
-            let slot1 = GridSlotId::ability("ANwk");
-            let slot2 = GridSlotId::ability("Adsm");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ANwk"), GridSlotId::ability("Adsm")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("npn2", "Storm", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Storm (npn5): position (0,2) MainCommand  ANwk, Adsm
+        // npn5 (Storm)
         let entry = {
-            let slot1 = GridSlotId::ability("ANwk");
-            let slot2 = GridSlotId::ability("Adsm");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ANwk"), GridSlotId::ability("Adsm")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("npn5", "Storm", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Storm Wyrm (nstw): position (0,2) MainCommand  ACdv, ACcl
+        // nstw (Storm Wyrm)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdv");
-            let slot2 = GridSlotId::ability("ACcl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdv"), GridSlotId::ability("ACcl")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nstw", "Storm Wyrm", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Stormreaver Necrolyte (nsrn): position (0,2) MainCommand  ACcl, ACbl
-        //                                hotkey Z MainCommand  ACcl, ACbl
+        // nsrn (Stormreaver Necrolyte)
         let entry = {
-            let slot1 = GridSlotId::ability("ACcl");
-            let slot2 = GridSlotId::ability("ACbl");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('Z', &slots);
-            let hot_card = hot_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACcl"), GridSlotId::ability("ACbl")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Z',
+                    &[GridSlotId::ability("ACcl"), GridSlotId::ability("ACbl")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new(
                 "nsrn",
                 "Stormreaver Necrolyte",
                 empty_pos,
                 empty_hot,
             );
-            let eb = eb.main_position_card(pos_card);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Tauren Chieftain (Ocb2): hotkey S MainCommand  CmdStop, Aamk
+        // Ocb2 (Tauren Chieftain)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("Aamk");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aamk")],
+                )
+                .build();
             let eb =
                 UnitCollisionEntryBuilder::new("Ocb2", "Tauren Chieftain", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Tinker (Nrob): hotkey S MainCommand  CmdStop, ANde
+        // Nrob (Tinker)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("ANde");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("ANde")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Nrob", "Tinker", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Tuskarr Healer (ntkh): position (0,2) MainCommand  Anh1, ACdm
+        // ntkh (Tuskarr Healer)
         let entry = {
-            let slot1 = GridSlotId::ability("Anh1");
-            let slot2 = GridSlotId::ability("ACdm");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Anh1"), GridSlotId::ability("ACdm")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ntkh", "Tuskarr Healer", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Warden (Ewar): hotkey D HeroSkillTree  AIhm, AEsh
+        // Ewar (Warden)
         let entry = {
-            let slot1 = GridSlotId::ability("AIhm");
-            let slot2 = GridSlotId::ability("AEsh");
-            let slots = [slot1, slot2];
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('D', &slots);
-            let hero_hot = hero_hot_builder.build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AIhm"), GridSlotId::ability("AEsh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Ewar", "Warden", empty_pos, empty_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Warden (Ewrd): hotkey D HeroSkillTree  AIhm, AEsh
+        // Ewrd (Warden)
         let entry = {
-            let slot1 = GridSlotId::ability("AIhm");
-            let slot2 = GridSlotId::ability("AEsh");
-            let slots = [slot1, slot2];
-            let hero_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout);
-            let hero_hot_builder = hero_hot_builder.collision('D', &slots);
-            let hero_hot = hero_hot_builder.build();
+            let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
+                .collision(
+                    'D',
+                    &[GridSlotId::ability("AIhm"), GridSlotId::ability("AEsh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Ewrd", "Warden", empty_pos, empty_hot);
-            let eb = eb.secondary_hotkey_card(hero_hot);
+            let eb = eb.secondary_hotkey_card(secondary_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Warlock (Uwar): hotkey S MainCommand  CmdStop, ACm2
+        // Uwar (Warlock)
         let entry = {
-            let slot1 = GridSlotId::ability("CmdStop");
-            let slot2 = GridSlotId::ability("ACm2");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('S', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("ACm2")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("Uwar", "Warlock", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Watery Minion (nsns): position (0,2) MainCommand  ACdm, ACsw
+        // nsns (Watery Minion)
         let entry = {
-            let slot1 = GridSlotId::ability("ACdm");
-            let slot2 = GridSlotId::ability("ACsw");
-            let slots = [slot1, slot2];
-            let pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
-            let pos_builder = pos_builder.collision_at(0, 2, &slots);
-            let pos_card = pos_builder.build();
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("ACdm"), GridSlotId::ability("ACsw")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nsns", "Watery Minion", empty_pos, empty_hot);
-            let eb = eb.main_position_card(pos_card);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
 
-        // Wraith (ngh2): hotkey C MainCommand  ACcs, ACps
+        // ngh2 (Wraith)
         let entry = {
-            let slot1 = GridSlotId::ability("ACcs");
-            let slot2 = GridSlotId::ability("ACps");
-            let slots = [slot1, slot2];
-            let hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
-            let hot_builder = hot_builder.collision('C', &slots);
-            let hot_card = hot_builder.build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("ACcs"), GridSlotId::ability("ACps")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("ngh2", "Wraith", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(hot_card);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);

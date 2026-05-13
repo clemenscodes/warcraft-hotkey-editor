@@ -301,6 +301,31 @@ pub fn casc_filename(path: &str) -> String {
         .to_string()
 }
 
+/// True for any CASC path whose `units/` directory lives under `war3.w3mod:`.
+///
+/// Covers both the base `war3.w3mod:units/...` and the balance overlays at
+/// `war3.w3mod:_balance/<variant>.w3mod:units/...`. All overlays carry the
+/// same set of structural files (`unitabilities.slk`, `abilityfunc.txt`,
+/// etc.) — they're variant data for Custom and Melee balance modes that
+/// supplement the base files with additional ability rows.
+///
+/// Excludes `notused_*.slk` siblings — balance overlays ship abandoned
+/// pre-rebalance SLK tables alongside the live ones with different column
+/// layouts (e.g. `notused_unitui.slk`'s `inEditor` is column 10, the live
+/// `unitui.slk`'s is column 9). Reading them clobbers good rows with stale
+/// data once the extractor's "first wins" merge picks the wrong one.
+pub fn is_war3_units_path(path: &str) -> bool {
+    if !path.starts_with("war3.w3mod:") {
+        return false;
+    }
+    if !path.contains("w3mod:units/") {
+        return false;
+    }
+    let filename = casc_filename(path);
+    let filename_lower = filename.to_ascii_lowercase();
+    !filename_lower.starts_with("notused_")
+}
+
 fn normalize(path: &str) -> String {
     path.replace('\\', "/")
 }

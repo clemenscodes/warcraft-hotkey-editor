@@ -1,3 +1,4 @@
+mod balance_overlay_regression;
 pub mod catalog;
 mod db;
 mod object_lookup;

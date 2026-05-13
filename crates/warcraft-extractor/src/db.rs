@@ -1029,6 +1029,41 @@ impl WarcraftDataAggregation {
                                 || !from_abilities.contains(&ability_id.to_ascii_lowercase())
                         });
                     }
+                    // Rule 3: when a unit has both a code variant (e.g. Aslo) and
+                    // its autocast counterpart (e.g. ACsw whose .code() == "Aslo"),
+                    // remove the code variant only when both occupy the same button
+                    // position — the autocast version supersedes it at that slot.
+                    // Self-references (ability.code == ability itself) are skipped.
+                    let superseded: std::collections::HashSet<String> = combined
+                        .iter()
+                        .filter_map(|ability_id| {
+                            let code_id = self
+                                .ability_metadata
+                                .get(ability_id.as_str())
+                                .and_then(|meta| meta.code())?;
+                            if code_id.eq_ignore_ascii_case(ability_id) {
+                                return None;
+                            }
+                            let main_pos = self
+                                .ability_defaults
+                                .get(ability_id.as_str())
+                                .and_then(|d| d.button_position());
+                            let code_pos = self
+                                .ability_defaults
+                                .get(code_id)
+                                .and_then(|d| d.button_position());
+                            if main_pos.is_some() && main_pos == code_pos {
+                                Some(code_id.to_ascii_lowercase())
+                            } else {
+                                None
+                            }
+                        })
+                        .collect();
+                    if !superseded.is_empty() {
+                        combined.retain(|ability_id| {
+                            !superseded.contains(&ability_id.to_ascii_lowercase())
+                        });
+                    }
                     Self::leak_object_ids(&combined)
                 };
                 let hero_abilities_for_unit: &'static [WarcraftObjectId] = {
@@ -1609,16 +1644,34 @@ impl WarcraftDataAggregation {
         merged
     }
 
-    fn set_heroes(&mut self, heroes: HeroDatabase) {
-        self.heroes = heroes;
+    fn merge_heroes(&mut self, heroes: HeroDatabase) {
+        for (hero_id, incoming_abilities) in heroes {
+            self.heroes
+                .entry(hero_id)
+                .or_default()
+                .extend(incoming_abilities);
+        }
     }
 
-    fn set_units(&mut self, units: UnitDatabase) {
-        self.units = units;
+    fn merge_units(&mut self, units: UnitDatabase) {
+        for (race, kinds) in units {
+            let race_bucket = self.units.entry(race).or_default();
+            for (kind, units_of_kind) in kinds {
+                let kind_bucket = race_bucket.entry(kind).or_default();
+                for (unit_id, definition) in units_of_kind {
+                    kind_bucket.entry(unit_id).or_insert(definition);
+                }
+            }
+        }
     }
 
-    fn set_items(&mut self, items: ItemDatabase) {
-        self.items = items;
+    fn merge_items(&mut self, items: ItemDatabase) {
+        for (item_class, items_of_class) in items {
+            let class_bucket = self.items.entry(item_class).or_default();
+            for (item_id, definition) in items_of_class {
+                class_bucket.entry(item_id).or_insert(definition);
+            }
+        }
     }
 
     pub fn skins(&self) -> &SkinDatabase {
@@ -1633,12 +1686,42 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
         for result in value {
             match result {
                 ExtractResult::IO => (),
-                ExtractResult::Heroes(heroes) => db.set_heroes(heroes),
-                ExtractResult::Units(units) => db.set_units(units),
-                ExtractResult::UnitAbilities(map) => db.unit_abilities.extend(map),
-                ExtractResult::AbilityMetadata(map) => db.ability_metadata.extend(map),
-                ExtractResult::UnitData(map) => db.unit_data.extend(map),
-                ExtractResult::UnitUiFlags(map) => db.unit_ui_flags.extend(map),
+                ExtractResult::Heroes(heroes) => db.merge_heroes(heroes),
+                ExtractResult::Units(units) => db.merge_units(units),
+                ExtractResult::UnitAbilities(map) => {
+                    for (unit_id, incoming) in map {
+                        match db.unit_abilities.get_mut(&unit_id) {
+                            Some(existing) => existing.merge_additive(&incoming),
+                            None => {
+                                db.unit_abilities.insert(unit_id, incoming);
+                            }
+                        }
+                    }
+                }
+                ExtractResult::AbilityMetadata(map) => {
+                    for (alias, incoming) in map {
+                        db.ability_metadata.entry(alias).or_insert(incoming);
+                    }
+                }
+                ExtractResult::UnitData(map) => {
+                    // Union build/train/research/upgrade/sell lists across
+                    // overlays. Variants drop fields rather than override
+                    // them — see `htow`'s `Researches=Rhpm` going missing
+                    // from `_balance/custom_v0/humanunitfunc.txt`.
+                    for (unit_id, incoming) in map {
+                        match db.unit_data.get_mut(&unit_id) {
+                            Some(existing) => existing.merge_additive(&incoming),
+                            None => {
+                                db.unit_data.insert(unit_id, incoming);
+                            }
+                        }
+                    }
+                }
+                ExtractResult::UnitUiFlags(map) => {
+                    for (unit_id, incoming) in map {
+                        db.unit_ui_flags.entry(unit_id).or_insert(incoming);
+                    }
+                }
                 ExtractResult::CommandDefaults(map) => {
                     for (command_id, incoming) in map {
                         let existing = db.command_defaults.entry(command_id).or_default();
@@ -1664,12 +1747,24 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
                         }
                     }
                 }
-                ExtractResult::AbilityDefaults(map) => db.ability_defaults.extend(map),
+                ExtractResult::AbilityDefaults(map) => {
+                    // Same field-merge story as UnitData: a variant may
+                    // drop `Researchbuttonpos` / `Ubertip` lines that the
+                    // base or another overlay set.
+                    for (ability_id, incoming) in map {
+                        match db.ability_defaults.get_mut(&ability_id) {
+                            Some(existing) => existing.merge_additive(&incoming),
+                            None => {
+                                db.ability_defaults.insert(ability_id, incoming);
+                            }
+                        }
+                    }
+                }
                 ExtractResult::DataTables(map) => {
                     for (entity_id, fields) in map {
                         let entry = db.data_tables.entry(entity_id).or_default();
                         for (field_name, value) in fields {
-                            entry.insert(field_name, value);
+                            entry.entry(field_name).or_insert(value);
                         }
                     }
                 }
@@ -1690,7 +1785,7 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
                 ExtractResult::SystemKeybinds(entries) => {
                     db.system_keybinds = entries;
                 }
-                ExtractResult::Items(items) => db.set_items(items),
+                ExtractResult::Items(items) => db.merge_items(items),
                 ExtractResult::HumanUpgradesArt(art) => db.upgrades.human_art = art,
                 ExtractResult::NightelfUpgradesArt(art) => db.upgrades.nightelf_art = art,
                 ExtractResult::OrcUpgradesArt(art) => db.upgrades.orc_art = art,
@@ -1830,6 +1925,7 @@ fn strip_wc3_format_codes(input: &str) -> String {
 fn supplementary_abilities_for(unit_id: &str) -> &'static [&'static str] {
     match unit_id {
         "htow" => &["Amic"],
+        "nane" => &["ACss"],
         _ => &[],
     }
 }
