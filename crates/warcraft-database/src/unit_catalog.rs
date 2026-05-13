@@ -211,3 +211,48 @@ impl UnitCatalog {
         entries
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Both Burrow carriers must surface in Neutral/Melee:
+    /// - `nbnb` (Burrowed Barbed Arachnathid) carries Abu5 in its
+    ///   `unitabilities.slk` row and has `inEditor=1`.
+    /// - `nanm` (Barbed Arachnathid merc) also carries Abu5 but ships
+    ///   with `inEditor=0` — the merc form lives in tavern data, not the
+    ///   World Editor's picker. The relaxed `passes_filter` in
+    ///   `unit_kind.rs` lets it through anyway because the hotkey editor
+    ///   needs to bind Burrow on it.
+    ///
+    /// Regression guard for the "missing arachnathid units" report.
+    #[test]
+    fn neutral_melee_includes_burrow_carriers() {
+        let entries =
+            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
+        for required_id in ["nbnb", "nanm"] {
+            assert!(
+                entry_ids.contains(&required_id),
+                "Neutral/Melee catalog missing {required_id} (Burrow carrier)",
+            );
+        }
+    }
+
+    /// Campaign-flagged units must NOT bleed into Melee mode. After
+    /// dropping the `inEditor` requirement we still rely on `is_campaign`
+    /// to keep map-script-only rows like Naga / Draenei / Blood Elf out
+    /// of the Melee tab.
+    #[test]
+    fn neutral_melee_excludes_campaign_only_units() {
+        let entries =
+            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
+        for campaign_id in ["nmyr", "nnsw", "ndrl", "nbel"] {
+            assert!(
+                !entry_ids.contains(&campaign_id),
+                "Neutral/Melee catalog leaked campaign unit {campaign_id}",
+            );
+        }
+    }
+}

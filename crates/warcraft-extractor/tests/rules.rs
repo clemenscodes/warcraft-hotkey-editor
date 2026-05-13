@@ -11,18 +11,19 @@
 
 use warcraft_api::{ItemClass, Race, UnitKind};
 use warcraft_extractor::{
-    ABILITY_SKINS_EXTRACTION_RULE, CAMPAIGN_ABILITY_STRINGS_EXTRACTION_RULE,
-    CAMPAIGN_UNIT_STRINGS_EXTRACTION_RULE, ExtractResult, HEROES_EXTRACTION_RULE,
-    HUMAN_ABILITY_STRINGS_EXTRACTION_RULE, HUMAN_UNIT_STRINGS_EXTRACTION_RULE,
-    HUMAN_UPGRADES_ART_EXTRACTION_RULE, HUMAN_UPGRADES_NAME_EXTRACTION_RULE,
-    ITEM_ABILITY_STRINGS_EXTRACTION_RULE, ITEM_SKINS_EXTRACTION_RULE,
-    ITEM_UNIT_STRINGS_EXTRACTION_RULE, ITEMS_EXTRACTION_RULE,
+    ABILITY_DEFAULTS_EXTRACTION_RULE, ABILITY_SKINS_EXTRACTION_RULE,
+    CAMPAIGN_ABILITY_STRINGS_EXTRACTION_RULE, CAMPAIGN_UNIT_STRINGS_EXTRACTION_RULE, ExtractResult,
+    HEROES_EXTRACTION_RULE, HUMAN_ABILITY_STRINGS_EXTRACTION_RULE,
+    HUMAN_UNIT_STRINGS_EXTRACTION_RULE, HUMAN_UPGRADES_ART_EXTRACTION_RULE,
+    HUMAN_UPGRADES_NAME_EXTRACTION_RULE, ITEM_ABILITY_STRINGS_EXTRACTION_RULE,
+    ITEM_SKINS_EXTRACTION_RULE, ITEM_UNIT_STRINGS_EXTRACTION_RULE, ITEMS_EXTRACTION_RULE,
     NEUTRAL_ABILITY_STRINGS_EXTRACTION_RULE, NEUTRAL_UNIT_STRINGS_EXTRACTION_RULE,
     NIGHTELF_ABILITY_STRINGS_EXTRACTION_RULE, NIGHTELF_UNIT_STRINGS_EXTRACTION_RULE,
     NIGHTELF_UPGRADES_ART_EXTRACTION_RULE, ORC_ABILITY_STRINGS_EXTRACTION_RULE,
     ORC_UNIT_STRINGS_EXTRACTION_RULE, ORC_UPGRADES_ART_EXTRACTION_RULE,
     UNDEAD_ABILITY_STRINGS_EXTRACTION_RULE, UNDEAD_UNIT_STRINGS_EXTRACTION_RULE,
-    UNDEAD_UPGRADES_ART_EXTRACTION_RULE, UNIT_SKINS_EXTRACTION_RULE, UNITS_EXTRACTION_RULE,
+    UNDEAD_UPGRADES_ART_EXTRACTION_RULE, UNIT_ABILITIES_EXTRACTION_RULE,
+    UNIT_SKINS_EXTRACTION_RULE, UNITS_EXTRACTION_RULE, WarcraftDataAggregation,
 };
 
 const HEROES_CASC_PATH: &str = "war3.w3mod:units/abilitydata.slk";
@@ -653,5 +654,172 @@ mod strings {
         };
         assert_eq!(database.get("hpea").unwrap().value(), "Peasant");
         assert_eq!(database.get("htow").unwrap().value(), "Town Hall");
+    }
+}
+
+/// Reforged ships a base `war3.w3mod:units/<file>` plus three balance
+/// overlays under `war3.w3mod:_balance/<variant>.w3mod:units/<file>` for
+/// melee_v0 and the two custom modes. The overlays add ability rows the
+/// base file is missing (e.g. Shadow Strike on ndqp in custom_v1) — they
+/// must be picked up by the same rules as the base file, and the merge
+/// has to be additive so existing rows never get smaller.
+mod balance_overlays {
+    use super::*;
+
+    const BASE_UNIT_ABILITIES_PATH: &str = "war3.w3mod:units/unitabilities.slk";
+    const CUSTOM_V1_UNIT_ABILITIES_PATH: &str =
+        "war3.w3mod:_balance/custom_v1.w3mod:units/unitabilities.slk";
+    const MELEE_V0_UNIT_ABILITIES_PATH: &str =
+        "war3.w3mod:_balance/melee_v0.w3mod:units/unitabilities.slk";
+    const CUSTOM_V1_ABILITY_FUNC_PATH: &str =
+        "war3.w3mod:_balance/custom_v1.w3mod:units/neutralabilityfunc.txt";
+    const CUSTOM_V1_UNITBALANCE_PATH: &str =
+        "war3.w3mod:_balance/custom_v1.w3mod:units/unitbalance.slk";
+
+    #[test]
+    fn unit_abilities_matcher_accepts_balance_overlay_paths() {
+        assert!(UNIT_ABILITIES_EXTRACTION_RULE.matches(BASE_UNIT_ABILITIES_PATH));
+        assert!(UNIT_ABILITIES_EXTRACTION_RULE.matches(CUSTOM_V1_UNIT_ABILITIES_PATH));
+        assert!(UNIT_ABILITIES_EXTRACTION_RULE.matches(MELEE_V0_UNIT_ABILITIES_PATH));
+    }
+
+    #[test]
+    fn unit_abilities_matcher_rejects_non_war3_namespaces() {
+        let foreign_path = "other.w3mod:_balance/custom_v1.w3mod:units/unitabilities.slk";
+        assert!(!UNIT_ABILITIES_EXTRACTION_RULE.matches(foreign_path));
+    }
+
+    /// `.txt`-based rules (`unitfunc.txt`, `abilityfunc.txt`) deliberately
+    /// do *not* match the balance overlays. The overlays are alternative
+    /// gameplay presets, not strict supersets — e.g. `_balance/melee_v0`'s
+    /// `Goblin Merchant` lists `phea,pman,pinv,...` while the base lists
+    /// `stwp,bspd,...,pinv`. Unioning those across presets pollutes the
+    /// command card with items that don't belong on the base/Reforged
+    /// preset, so for production-unit / training / research / sell-item
+    /// data we read base only.
+    #[test]
+    fn ability_defaults_matcher_rejects_balance_overlay_paths() {
+        assert!(!ABILITY_DEFAULTS_EXTRACTION_RULE.matches(CUSTOM_V1_ABILITY_FUNC_PATH));
+    }
+
+    #[test]
+    fn units_matcher_rejects_balance_overlay_paths() {
+        assert!(!UNITS_EXTRACTION_RULE.matches(CUSTOM_V1_UNITBALANCE_PATH));
+    }
+
+    fn unit_abilities_row(unit_id: &str, ability_list: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitAbilID\"\n\
+             C;X2;Y1;K\"abilList\"\n\
+             C;X3;Y1;K\"heroAbilList\"\n\
+             C;X1;Y2;K\"{unit_id}\"\n\
+             C;X2;Y2;K\"{ability_list}\"\n\
+             E\n"
+        )
+    }
+
+    /// Reproduces the maiden of pain (ndqp) regression: the base file lists
+    /// `ACdr,ACss`, the custom_v1 overlay also lists both. After merging
+    /// both extraction results we still expect ACss on the unit — i.e. the
+    /// second overlay must not wipe out the first one's abilities.
+    #[test]
+    fn aggregator_unions_unit_abilities_across_overlays() {
+        let base_slk = unit_abilities_row("ndqp", "ACdr,ACss");
+        let overlay_slk = unit_abilities_row("ndqp", "ACdr,ACss");
+        let base_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(BASE_UNIT_ABILITIES_PATH, base_slk.as_bytes())
+            .unwrap();
+        let overlay_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(CUSTOM_V1_UNIT_ABILITIES_PATH, overlay_slk.as_bytes())
+            .unwrap();
+        let aggregation = WarcraftDataAggregation::from(vec![base_result, overlay_result]);
+        let ndqp_entry = aggregation
+            .unit_abilities()
+            .get("ndqp")
+            .expect("ndqp entry missing");
+        let abilities = ndqp_entry.abilities();
+        assert_eq!(abilities, &[String::from("ACdr"), String::from("ACss")]);
+    }
+
+    /// When an overlay adds an ability the base file doesn't have (e.g.
+    /// custom_v1's nane row that lists `ACvs,ACss` while the base lists
+    /// only `Acvs`), the merged entry must carry both — that's the whole
+    /// point of expanding the matcher to the balance dirs.
+    #[test]
+    fn aggregator_adds_overlay_only_abilities_to_existing_unit() {
+        let base_slk = unit_abilities_row("nane", "Acvs");
+        let overlay_slk = unit_abilities_row("nane", "ACvs,ACss");
+        let base_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(BASE_UNIT_ABILITIES_PATH, base_slk.as_bytes())
+            .unwrap();
+        let overlay_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(CUSTOM_V1_UNIT_ABILITIES_PATH, overlay_slk.as_bytes())
+            .unwrap();
+        let aggregation = WarcraftDataAggregation::from(vec![base_result, overlay_result]);
+        let nane_entry = aggregation
+            .unit_abilities()
+            .get("nane")
+            .expect("nane entry missing");
+        let abilities = nane_entry.abilities();
+        let acss_present = abilities
+            .iter()
+            .any(|ability| ability.eq_ignore_ascii_case("ACss"));
+        let acvs_present = abilities
+            .iter()
+            .any(|ability| ability.eq_ignore_ascii_case("Acvs"));
+        assert!(acvs_present, "Acvs lost from nane after overlay merge");
+        assert!(acss_present, "ACss missing from nane after overlay merge");
+    }
+
+    /// The hard rule: an overlay must never shrink a unit's ability list.
+    /// Build the base with a superset (Ahar, Amil, Ahrp, Ahlh) and the
+    /// overlay with a subset (Ahar, Amil, Ahrp) — the merged result must
+    /// still contain Ahlh because the base had it.
+    #[test]
+    fn aggregator_never_drops_abilities_present_only_in_base() {
+        let base_slk = unit_abilities_row("Hpal", "Ahar,Amil,Ahrp,Ahlh");
+        let overlay_slk = unit_abilities_row("Hpal", "Ahar,Amil,Ahrp");
+        let base_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(BASE_UNIT_ABILITIES_PATH, base_slk.as_bytes())
+            .unwrap();
+        let overlay_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(CUSTOM_V1_UNIT_ABILITIES_PATH, overlay_slk.as_bytes())
+            .unwrap();
+        let aggregation = WarcraftDataAggregation::from(vec![base_result, overlay_result]);
+        let paladin_entry = aggregation
+            .unit_abilities()
+            .get("Hpal")
+            .expect("Hpal entry missing");
+        let abilities = paladin_entry.abilities();
+        assert!(
+            abilities.iter().any(|ability| ability == "Ahlh"),
+            "base-only ability Ahlh was dropped by overlay merge",
+        );
+    }
+
+    /// Same union behavior when the overlay is processed before the base
+    /// (CASC iteration order isn't guaranteed). Earlier inserts must not
+    /// disappear, later ones must still get added.
+    #[test]
+    fn aggregator_union_is_order_independent() {
+        let base_slk = unit_abilities_row("ndqp", "ACdr,ACss");
+        let overlay_slk = unit_abilities_row("ndqp", "ACdr,Anew");
+        let base_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(BASE_UNIT_ABILITIES_PATH, base_slk.as_bytes())
+            .unwrap();
+        let overlay_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(CUSTOM_V1_UNIT_ABILITIES_PATH, overlay_slk.as_bytes())
+            .unwrap();
+        let overlay_first = WarcraftDataAggregation::from(vec![overlay_result, base_result]);
+        let ndqp_entry = overlay_first
+            .unit_abilities()
+            .get("ndqp")
+            .expect("ndqp entry missing");
+        let abilities = ndqp_entry.abilities();
+        let has_acss = abilities.iter().any(|ability| ability == "ACss");
+        let has_anew = abilities.iter().any(|ability| ability == "Anew");
+        assert!(has_acss);
+        assert!(has_anew);
     }
 }

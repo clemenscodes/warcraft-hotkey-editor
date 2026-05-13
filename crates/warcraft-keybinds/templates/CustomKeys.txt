@@ -625,6 +625,14 @@ Buttonpos=1,2
 Tip=Sleep
 Ubertip=Puts a target enemy unit to sleep for 8 seconds. A sleeping unit can be awoken by attacking it.
 
+[ACss]
+Hotkey=C
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Shadow Strike
+Ubertip=Hurls a poisoned dagger with incredible force at an enemy, dealing 75 initial damage, and 10 damage every 3 seconds for 15.1 seconds. The poison slows the attack rate and movement speed of the enemy for a short duration.
+
 [ACsw]
 Hotkey=W
 Buttonpos=0,2
@@ -2111,6 +2119,12 @@ Tip=Attribute Bonus - [Level 1],Attribute Bonus - [Level 2],Attribute Bonus - [L
 Ubertip=Gives a total of 3 points to Agility, Intelligence, and Strength,Gives a total of 6 points to Agility, Intelligence, and Strength,Gives a total of 9 points to Agility, Intelligence, and Strength,Gives a total of 12 points to Agility, Intelligence, and Strength
 Researchubertip=Gives a permanent bonus to Agility, Intelligence, and Strength. |n|n|cffffcc00Level 1|r - Adds three points to all stats.|n|cffffcc00Level 2|r - Adds three additional points.|n|cffffcc00Level 3|r - Adds three additional points.|n|cffffcc00Level 4|r - Adds three additional points.
 
+[Aams]
+Hotkey=X
+Buttonpos=1,2
+Tip=Anti-magic Shell
+Ubertip=Creates a barrier that stops spells from affecting a target unit. Lasts 90 seconds.
+
 [Aap1]
 Buttonpos=1,2
 Tip=Disease Cloud
@@ -2294,6 +2308,18 @@ Hotkey=U
 Buttonpos=0,2
 Tip=Pick up Archer
 Ubertip=Picks up an Archer so that the Archer can attack from the air. Attacks land and air units.
+
+[Acoa]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Mount Hippogryph
+Ubertip=Mounts a Hippogryph so that the Archer can attack from the air. The mounted unit cannot dismount. Attacks land and air units.
+
+[Acoh]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Pick up Archer
+Ubertip=Picks up an Archer so that the Archer can attack from the air. The mounted unit cannot dismount. Attacks land and air units.
 
 [Acor]
 Buttonpos=0,2
@@ -2940,6 +2966,18 @@ Hotkey=O
 Buttonpos=2,2
 Tip=Polymorph
 Ubertip=Turns a target enemy unit into a sheep. The targeted unit retains its hit points and armor, but cannot attack. Cannot be cast on Heroes. Lasts 60 seconds.
+
+[Apos]
+Hotkey=C
+Buttonpos=2,2
+Tip=Possession
+Ubertip=Displaces the soul of an enemy, giving you permanent control of it, but destroying the caster's body. Possession cannot be used on flying units, Heroes, or creeps above level 5.
+
+[Aprg]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Purge
+Ubertip=Removes all buffs from a target unit, and slows its movement speed by a factor of 5. Purged units will slowly regain their movement speed over 15 seconds. Deals 400 damage to summoned units.
 
 [Aps2]
 Hotkey=O

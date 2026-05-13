@@ -54,6 +54,34 @@ impl UnitDataEntry {
     pub fn is_worker(&self) -> bool {
         !self.builds.is_empty()
     }
+
+    /// Union every id list with `other`'s ids. Balance overlays publish the
+    /// same `unitfunc.txt` sections as the base but routinely *drop* lines
+    /// (e.g. `htow` in `_balance/custom_v0` is missing the `Researches=Rhpm`
+    /// the base file lists). A "first wins" merge would discard Rhpm if
+    /// custom_v0 happened to be processed before the base; this method
+    /// keeps every id from every variant. Case-insensitive so we don't
+    /// double-list the same id with two casings.
+    pub fn merge_additive(&mut self, other: &UnitDataEntry) {
+        Self::append_missing(&mut self.builds, &other.builds);
+        Self::append_missing(&mut self.trains, &other.trains);
+        Self::append_missing(&mut self.researches, &other.researches);
+        Self::append_missing(&mut self.upgrades, &other.upgrades);
+        Self::append_missing(&mut self.sell_items, &other.sell_items);
+        Self::append_missing(&mut self.sell_units, &other.sell_units);
+        Self::append_missing(&mut self.make_items, &other.make_items);
+    }
+
+    fn append_missing(destination: &mut Vec<String>, source: &[String]) {
+        for id in source {
+            let already_present = destination
+                .iter()
+                .any(|existing| existing.eq_ignore_ascii_case(id));
+            if !already_present {
+                destination.push(id.clone());
+            }
+        }
+    }
 }
 
 struct UnitDataExtraction;

@@ -145,6 +145,15 @@ fn flush_ability_string_entry(
     let ubertip = current_ubertip.take();
     let research_ubertip = current_research_ubertip.take();
     if name.trim().is_empty() {
+        let Some(tip_as_name) = tip else {
+            return;
+        };
+        if tip_as_name.trim().is_empty() {
+            return;
+        }
+        let entry =
+            AbilityStringDefinition::with_text(tip_as_name, None, ubertip, research_ubertip);
+        database.insert(id, entry);
         return;
     }
     let entry = AbilityStringDefinition::with_text(name, tip, ubertip, research_ubertip);

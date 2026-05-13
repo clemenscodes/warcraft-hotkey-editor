@@ -2,7 +2,9 @@ use std::{collections::BTreeMap, path::PathBuf};
 
 use warcraft_slk::SlkTable;
 
-use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
+use crate::{
+    ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename, is_war3_units_path,
+};
 
 pub type UnitAbilitiesDatabase = BTreeMap<String, UnitAbilitiesEntry>;
 
@@ -27,6 +29,28 @@ impl UnitAbilitiesEntry {
     pub fn hero_abilities(&self) -> &[String] {
         &self.hero_abilities
     }
+
+    /// Append abilities from `other` that this entry doesn't already list.
+    ///
+    /// Used when merging the base `war3.w3mod:units/unitabilities.slk` with
+    /// the `_balance/*` overlays: existing abilities are kept, new ones are
+    /// added. Case-insensitive — `ACss` and `acss` are treated as the same
+    /// ability so we don't double-list the same id with two casings.
+    pub fn merge_additive(&mut self, other: &UnitAbilitiesEntry) {
+        Self::append_missing(&mut self.abilities, &other.abilities);
+        Self::append_missing(&mut self.hero_abilities, &other.hero_abilities);
+    }
+
+    fn append_missing(destination: &mut Vec<String>, source: &[String]) {
+        for ability_id in source {
+            let already_present = destination
+                .iter()
+                .any(|existing_id| existing_id.eq_ignore_ascii_case(ability_id));
+            if !already_present {
+                destination.push(ability_id.clone());
+            }
+        }
+    }
 }
 
 struct UnitAbilitiesExtraction;
@@ -34,7 +58,7 @@ struct UnitAbilitiesExtraction;
 impl UnitAbilitiesExtraction {
     fn matches(path: &str) -> bool {
         let filename = casc_filename(path);
-        path.starts_with("war3.w3mod:units") && filename.ends_with("unitabilities.slk")
+        is_war3_units_path(path) && filename.ends_with("unitabilities.slk")
     }
 
     fn process(_: &str, bytes: &[u8]) -> Result<ExtractResult, ExtractError> {

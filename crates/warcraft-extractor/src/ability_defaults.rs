@@ -59,6 +59,41 @@ impl AbilityDefaultsEntry {
     pub fn requires(&self) -> Option<&str> {
         self.requires.as_deref()
     }
+
+    /// Fill in fields from `other` that this entry left empty. Balance
+    /// overlays publish the same `[Axxx]` sections as the base but
+    /// sometimes drop individual lines (`Researchbuttonpos`, `Ubertip`,
+    /// off-state art, etc.). A "first wins" merge would lose those
+    /// drops; this preserves whichever variant published the field.
+    pub fn merge_additive(&mut self, other: &AbilityDefaultsEntry) {
+        if self.button_position.is_none() {
+            self.button_position = other.button_position;
+        }
+        if self.research_button_position.is_none() {
+            self.research_button_position = other.research_button_position;
+        }
+        if self.off_button_position.is_none() {
+            self.off_button_position = other.off_button_position;
+        }
+        if self.ubertip.is_none() {
+            self.ubertip = other.ubertip.clone();
+        }
+        if self.research_ubertip.is_none() {
+            self.research_ubertip = other.research_ubertip.clone();
+        }
+        if self.off_ubertip.is_none() {
+            self.off_ubertip = other.off_ubertip.clone();
+        }
+        if self.off_tip.is_none() {
+            self.off_tip = other.off_tip.clone();
+        }
+        if self.off_icon.is_none() {
+            self.off_icon = other.off_icon.clone();
+        }
+        if self.requires.is_none() {
+            self.requires = other.requires.clone();
+        }
+    }
 }
 
 pub static ABILITY_DEFAULTS_EXTRACTION_RULE: ExtractionRule = ExtractionRule {

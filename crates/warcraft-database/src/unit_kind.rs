@@ -44,12 +44,22 @@ impl UnitKindHelpers {
         }
     }
 
+    /// `inEditor=1` in `unitui.slk` is Blizzard's flag for "show in the
+    /// World Editor's unit picker". Tavern mercenaries with bindable
+    /// abilities — Barbed Arachnathid (merc) `nanm` carrying Burrow,
+    /// Watcher Ward `nwad`, Entangled Gold Mine `egol` — ship with
+    /// `inEditor=0` because they aren't placed in the world editor, but
+    /// they still need to surface in the hotkey editor's catalog.
+    /// The downstream `has_visible_ability || has_production` check in
+    /// `UnitCatalog::entries_for` still drops the placeholder rows
+    /// (Barbed Arachnathid `nanb`, Crystal Arachnathid `nanc`, Warrior
+    /// Arachnathid `nanw`) that have neither.
     pub fn passes_filter(mode: UnitMode, unit_meta: &UnitMeta) -> bool {
         if unit_meta.is_hidden_in_editor() {
             return false;
         }
         match mode {
-            UnitMode::Melee => !unit_meta.is_campaign() && unit_meta.is_in_editor(),
+            UnitMode::Melee => !unit_meta.is_campaign(),
             UnitMode::Campaign => unit_meta.is_campaign(),
         }
     }

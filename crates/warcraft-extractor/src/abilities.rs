@@ -2,7 +2,9 @@ use std::{collections::BTreeMap, path::PathBuf};
 
 use warcraft_slk::SlkTable;
 
-use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
+use crate::{
+    ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename, is_war3_units_path,
+};
 
 pub type AbilityMetadataDatabase = BTreeMap<String, AbilityMetadataEntry>;
 
@@ -58,7 +60,7 @@ struct AbilityMetadataExtraction;
 impl AbilityMetadataExtraction {
     fn matches(path: &str) -> bool {
         let filename = casc_filename(path);
-        path.starts_with("war3.w3mod:units") && filename.ends_with("abilitydata.slk")
+        is_war3_units_path(path) && filename.ends_with("abilitydata.slk")
     }
 
     fn process(_: &str, bytes: &[u8]) -> Result<ExtractResult, ExtractError> {
