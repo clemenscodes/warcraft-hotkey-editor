@@ -17,14 +17,17 @@ pub enum GroupKind {
     Fight,
     /// The cell was empty on a unit with a left-gap and a non-conflicting
     /// rightward neighbor was pulled in.  Anchor = the puller, no movers.
-    GapPull,
-    /// An ability that could not stay in its original row (every column there
-    /// was claimed by a higher-priority conflict) was rehomed to a non-
-    /// conflicting cell on a different row.  Anchor = the rehomed ability,
-    /// no movers.  This is the last-resort fallback before unresolved — a
-    /// cross-row spill is considered less bad than leaving the ability
-    /// stacked on top of another at the same cell.
-    Spill,
+    /// `source_position` records where the puller came from before the pull.
+    GapPull { source_position: GridCoordinate },
+    /// An ability that could not stay at its phase-1 final cell (every
+    /// candidate there was claimed by a higher-priority conflict) was rehomed
+    /// to a different cell by phase 2.  Anchor = the rehomed ability;
+    /// movers (if any) are the incumbents of the new cell that were swapped
+    /// back to the anchor's stuck cell.  `stuck_position` records the
+    /// anchor's pre-spill cell.  A cross-row spill is the last-resort
+    /// fallback before unresolved — better than leaving the ability stacked
+    /// on top of another at the same cell.
+    Spill { stuck_position: GridCoordinate },
 }
 
 /// One anchor decision at a single grid cell.  See [`GroupKind`] for the
@@ -69,11 +72,25 @@ impl PositionAssignmentGroup {
     }
 
     pub fn is_gap_pull(&self) -> bool {
-        matches!(self.kind, GroupKind::GapPull)
+        matches!(self.kind, GroupKind::GapPull { .. })
     }
 
     pub fn is_spill(&self) -> bool {
-        matches!(self.kind, GroupKind::Spill)
+        matches!(self.kind, GroupKind::Spill { .. })
+    }
+
+    pub fn gap_pull_source_position(&self) -> Option<GridCoordinate> {
+        match self.kind {
+            GroupKind::GapPull { source_position } => Some(source_position),
+            _ => None,
+        }
+    }
+
+    pub fn spill_stuck_position(&self) -> Option<GridCoordinate> {
+        match self.kind {
+            GroupKind::Spill { stuck_position } => Some(stuck_position),
+            _ => None,
+        }
     }
 }
 
@@ -261,13 +278,15 @@ impl QueueBuildState {
         }
 
         if let Some(candidate_index) = self.find_gap_pull_candidate(position, grid_role, graph) {
+            let source_position = self.live_positions[candidate_index];
             self.live_positions[candidate_index] = position;
+            let kind = GroupKind::GapPull { source_position };
             let gap_pull_group = PositionAssignmentGroup {
                 position,
                 grid_role,
                 anchor_index: candidate_index,
                 mover_indices: Vec::new(),
-                kind: GroupKind::GapPull,
+                kind,
             };
             self.groups.push(gap_pull_group);
         }
@@ -619,12 +638,13 @@ impl QueueBuildState {
         for &incumbent_index in &decision.incumbents {
             self.live_positions[incumbent_index] = stuck_position;
         }
+        let kind = GroupKind::Spill { stuck_position };
         let spill_group = PositionAssignmentGroup {
             position: decision.destination,
             grid_role: role,
             anchor_index: node_index,
             mover_indices: decision.incumbents,
-            kind: GroupKind::Spill,
+            kind,
         };
         self.groups.push(spill_group);
     }
@@ -919,8 +939,8 @@ impl fmt::Display for AssignmentQueue {
             let role = group.grid_role.label();
             let kind = match group.kind {
                 GroupKind::Fight => "fight",
-                GroupKind::GapPull => "gap-pull",
-                GroupKind::Spill => "spill",
+                GroupKind::GapPull { .. } => "gap-pull",
+                GroupKind::Spill { .. } => "spill",
             };
             writeln!(
                 formatter,

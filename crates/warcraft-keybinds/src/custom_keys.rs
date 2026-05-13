@@ -6,7 +6,7 @@ use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 
 use crate::cascade::conflict_graph::ConflictGraph;
-use crate::cascade::planner::{CascadePlan, PlannedMove, UnresolvedMover};
+use crate::cascade::planner::{CascadePlan, MoveReason, PlannedMove, UnresolvedMover};
 use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
 use crate::command::move_request::MoveRequest;
 use crate::grid::layout::GridLayout;
@@ -743,6 +743,7 @@ impl CustomKeys {
                 accumulated.old_position,
                 accumulated.new_position,
                 accumulated.carrier_unit_ids,
+                accumulated.reason,
             );
             combined_moves.push(planned_move);
         }
@@ -778,13 +779,19 @@ impl CustomKeys {
                 let new_position = planned_move.new_position();
                 let carrier_unit_ids: Vec<WarcraftObjectId> =
                     planned_move.carrier_unit_ids().to_vec();
+                let move_reason: MoveReason = planned_move.reason().clone();
+                let fresh_reason = move_reason.clone();
                 net_moves
                     .entry(key)
-                    .and_modify(|accumulated| accumulated.new_position = new_position)
+                    .and_modify(|accumulated| {
+                        accumulated.new_position = new_position;
+                        accumulated.reason = move_reason;
+                    })
                     .or_insert_with(|| AccumulatedMove {
                         old_position: planned_move.old_position(),
                         new_position,
                         carrier_unit_ids,
+                        reason: fresh_reason,
                     });
                 let application = MoveApplication::from_planned_move(planned_move);
                 self.apply_resolved_position(application);
@@ -972,11 +979,14 @@ struct MoveKey {
 /// Net movement of a single slot accumulated across iterations.  The
 /// `old_position` is the first one we saw (before any mutation), the
 /// `new_position` is updated on each subsequent move so the final value
-/// reflects where the slot ended up.
+/// reflects where the slot ended up.  `reason` is overwritten on each
+/// update so it always reflects the *last* event that placed the slot —
+/// earlier iterations were superseded by the most recent move.
 struct AccumulatedMove {
     old_position: GridCoordinate,
     new_position: GridCoordinate,
     carrier_unit_ids: Vec<WarcraftObjectId>,
+    reason: MoveReason,
 }
 
 impl fmt::Display for CustomKeys {

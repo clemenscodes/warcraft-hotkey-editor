@@ -2,10 +2,41 @@ use std::fmt;
 
 use warcraft_api::WarcraftObjectId;
 
-use crate::cascade::queue::AssignmentQueue;
+use crate::cascade::queue::{AssignmentQueue, GroupKind, PositionAssignmentGroup};
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
 use crate::unit::grids::GridRole;
+
+/// Why a particular `PlannedMove` happened.
+///
+/// Every move emitted by the cascade falls into exactly one of these four
+/// categories.  The variant data points back at the conflict or anchor that
+/// caused the move so the UI can render per-move rationale (tooltips,
+/// journal lines, preview list).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MoveReason {
+    /// Phase 1: lost a same-cell fight to a higher-carrier ability.
+    /// `anchor_slot` is the winning ability that stayed in the cell;
+    /// `anchor_carrier_count` is how many units it ties together (the
+    /// number that caused it to outrank the mover).
+    Fight {
+        anchor_slot: GridSlotId,
+        anchor_carrier_count: usize,
+    },
+    /// Phase 2: cross-row spill from a stuck cell.  `from_position` is the
+    /// stuck cell the ability was sitting on before being rehomed.  Used
+    /// when no swap partner was needed (clean move into a non-conflicting
+    /// cell) or when the destination row differs from the stuck row.
+    Spill { from_position: GridCoordinate },
+    /// Phase 2: same-row swap during the spill phase.  `swapped_with` is
+    /// the slot the move displaced: for a spill anchor that's the
+    /// incumbent it pushed back to its old cell; for an incumbent that's
+    /// the spilling ability now occupying its old cell.
+    Swap { swapped_with: GridSlotId },
+    /// Phase 1: pulled leftward to fill a row gap left by an earlier
+    /// cascade.  `source_position` is the ability's pre-pull cell.
+    GapPull { source_position: GridCoordinate },
+}
 
 /// One ability successfully relocated by the cascade solver.
 #[derive(Clone)]
@@ -15,6 +46,7 @@ pub struct PlannedMove {
     old_position: GridCoordinate,
     new_position: GridCoordinate,
     carrier_unit_ids: Vec<WarcraftObjectId>,
+    reason: MoveReason,
 }
 
 impl PlannedMove {
@@ -24,6 +56,7 @@ impl PlannedMove {
         old_position: GridCoordinate,
         new_position: GridCoordinate,
         carrier_unit_ids: Vec<WarcraftObjectId>,
+        reason: MoveReason,
     ) -> Self {
         Self {
             slot_id,
@@ -31,6 +64,7 @@ impl PlannedMove {
             old_position,
             new_position,
             carrier_unit_ids,
+            reason,
         }
     }
 
@@ -56,6 +90,10 @@ impl PlannedMove {
 
     pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
+    }
+
+    pub fn reason(&self) -> &MoveReason {
+        &self.reason
     }
 }
 
@@ -159,19 +197,129 @@ impl From<&AssignmentQueue> for CascadePlan {
                 continue;
             }
 
-            if original_position != final_position {
-                let planned_move = PlannedMove {
-                    slot_id,
-                    grid_role,
-                    old_position: original_position,
-                    new_position: final_position,
-                    carrier_unit_ids,
-                };
-                moves.push(planned_move);
+            if original_position == final_position {
+                continue;
             }
+
+            let reason = move_reason_for_node(queue, node_index)
+                .expect("a node whose position changed must have a queue event explaining it");
+            let planned_move = PlannedMove {
+                slot_id,
+                grid_role,
+                old_position: original_position,
+                new_position: final_position,
+                carrier_unit_ids,
+                reason,
+            };
+            moves.push(planned_move);
         }
 
         CascadePlan { moves, unresolved }
+    }
+}
+
+/// Walk the queue's groups in reverse order to find the last event that
+/// determined this node's final position, and translate it into a
+/// `MoveReason`.
+///
+/// A node may pass through multiple groups (a phase-1 fight mover may later
+/// be spill-relocated, etc.).  The *latest* group that touched the node is
+/// the one that placed it where it ended up — earlier events were
+/// superseded by it.
+fn move_reason_for_node(queue: &AssignmentQueue, node_index: usize) -> Option<MoveReason> {
+    let groups = queue.groups();
+    for group in groups.iter().rev() {
+        if let Some(reason) = move_reason_from_group(queue, group, node_index) {
+            return Some(reason);
+        }
+    }
+    None
+}
+
+fn move_reason_from_group(
+    queue: &AssignmentQueue,
+    group: &PositionAssignmentGroup,
+    node_index: usize,
+) -> Option<MoveReason> {
+    let graph = queue.graph();
+    let is_anchor = group.anchor_index() == node_index;
+    let is_mover = group.mover_indices().contains(&node_index);
+    if !is_anchor && !is_mover {
+        return None;
+    }
+    match group.kind() {
+        GroupKind::Fight => {
+            if !is_mover {
+                return None;
+            }
+            let anchor_node = graph.node(group.anchor_index());
+            let anchor_slot = anchor_node.slot_id();
+            let anchor_carrier_count = anchor_node.carrier_count();
+            let reason = MoveReason::Fight {
+                anchor_slot,
+                anchor_carrier_count,
+            };
+            Some(reason)
+        }
+        GroupKind::GapPull { source_position } => {
+            if !is_anchor {
+                return None;
+            }
+            let reason = MoveReason::GapPull { source_position };
+            Some(reason)
+        }
+        GroupKind::Spill { stuck_position } => {
+            if is_anchor {
+                let stays_in_row = group.position().row() == stuck_position.row();
+                let has_swap_partner = !group.mover_indices().is_empty();
+                if stays_in_row && has_swap_partner {
+                    let first_incumbent = group.mover_indices()[0];
+                    let swapped_with = graph.node(first_incumbent).slot_id();
+                    let reason = MoveReason::Swap { swapped_with };
+                    return Some(reason);
+                }
+                let reason = MoveReason::Spill {
+                    from_position: stuck_position,
+                };
+                return Some(reason);
+            }
+            let anchor_slot = graph.node(group.anchor_index()).slot_id();
+            let reason = MoveReason::Swap {
+                swapped_with: anchor_slot,
+            };
+            Some(reason)
+        }
+    }
+}
+
+impl fmt::Display for MoveReason {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Fight {
+                anchor_slot,
+                anchor_carrier_count,
+            } => {
+                let anchor_id = anchor_slot.as_str();
+                write!(
+                    formatter,
+                    "lost fight to {anchor_id} ({anchor_carrier_count} carriers)"
+                )
+            }
+            Self::Spill { from_position } => {
+                let column = u8::from(from_position.column());
+                let row = u8::from(from_position.row());
+                write!(formatter, "spilled from stuck cell ({column},{row})")
+            }
+            Self::Swap { swapped_with } => {
+                let swap_id = swapped_with.as_str();
+                write!(formatter, "swapped with {swap_id}")
+            }
+            Self::GapPull { source_position } => {
+                let column = u8::from(source_position.column());
+                let row = u8::from(source_position.row());
+                write!(formatter, "gap-pulled from ({column},{row})")
+            }
+        }
     }
 }
 
@@ -205,10 +353,11 @@ impl fmt::Display for CascadePlan {
                     .map(|carrier_id| carrier_id.value())
                     .collect::<Vec<_>>()
                     .join(", ");
+                let reason = &planned_move.reason;
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  ({old_col},{old_row}) → ({new_col},{new_row})  \
-                     [{carrier_count} carriers: {carrier_ids}]"
+                     [{carrier_count} carriers: {carrier_ids}]  — {reason}"
                 )?;
             }
         }
@@ -415,6 +564,52 @@ mod cascade_planner_tests {
                 original_row_value,
             );
         }
+    }
+
+    #[test]
+    fn every_move_has_a_documented_reason() {
+        let plan = default_plan();
+        assert!(
+            plan.move_count() > 0,
+            "default keys must produce moves for this test to be meaningful"
+        );
+        for planned_move in plan.moves() {
+            match planned_move.reason() {
+                MoveReason::Fight {
+                    anchor_carrier_count,
+                    ..
+                } => {
+                    assert!(
+                        *anchor_carrier_count >= 1,
+                        "Fight anchor must carry at least one unit, got {anchor_carrier_count}",
+                    );
+                }
+                MoveReason::Spill { .. } | MoveReason::Swap { .. } | MoveReason::GapPull { .. } => {
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn fight_mover_reason_points_at_winning_anchor() {
+        let collision_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let binding = AbilityBinding::builder()
+            .button_position(collision_position)
+            .build();
+        let mut custom_keys = CustomKeys::from("").normalize();
+        custom_keys.put_ability("AHhb", binding.clone());
+        custom_keys.put_ability("AHds", binding);
+        let graph = ConflictGraph::build(&custom_keys);
+        let queue = AssignmentQueue::build(graph);
+        let plan = CascadePlan::from(&queue);
+        let any_fight_reason = plan
+            .moves()
+            .iter()
+            .any(|planned_move| matches!(planned_move.reason(), MoveReason::Fight { .. }));
+        assert!(
+            any_fight_reason,
+            "a same-cell Paladin collision must produce at least one Fight-reason move"
+        );
     }
 
     #[test]
