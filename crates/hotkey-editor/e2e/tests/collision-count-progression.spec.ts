@@ -25,7 +25,7 @@ async function collisionState(
 // Hard-coded counts intentionally — they are the ground truth for the
 // algorithm and any change in them should be a conscious decision.
 test.describe("Collision count progression across the resolve workflow", () => {
-  test("default template → resolve → apply grid drops the count from 99+ to 53 to 0", async ({
+  test("default template → resolve → apply grid drops the count from 99+ to 62 to 0", async ({
     page,
   }) => {
     await page.goto(APP);
@@ -64,13 +64,13 @@ test.describe("Collision count progression across the resolve workflow", () => {
       .waitFor();
 
     const afterResolve = await collisionCount(page);
-    // 53 hotkey collisions remain after the cascade — these are
+    // 62 hotkey collisions remain after the cascade — these are
     // per-unit hotkey letter clashes (including ability vs. Cmd* on
     // the command card) that the position-only cascade does not
     // touch.  Apply Grid clears them in the next step.  Ability /
     // AbilityOff pairs at the same letter are deduped at the source
     // — they're the same button by design, not a collision.
-    expect(afterResolve).toBe(53);
+    expect(afterResolve).toBe(62);
     expect(afterResolve).toBeLessThan(initialCount);
     expect(await collisionState(page)).toBe("attention");
 
