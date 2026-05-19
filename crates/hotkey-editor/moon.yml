@@ -142,7 +142,7 @@ tasks:
     toolchain: system
     command: playwright test
     env:
-      STATIC_DIR: "../../result"
+      STATIC_DIR: "$workspaceRoot/result"
       STATIC_BASE_PATH: "/warcraft-hotkey-editor"
     options:
       outputStyle: stream

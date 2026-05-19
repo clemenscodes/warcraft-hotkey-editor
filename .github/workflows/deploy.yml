@@ -84,6 +84,13 @@ jobs:
           nix build .#cargoClippyWasm --no-link --accept-flake-config --print-build-logs
           nix build .#warcraft-hotkey-editor --accept-flake-config --print-build-logs
 
+      - name: Verify result symlink
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "PWD=$(pwd)"
+          ls -la result || echo "result symlink missing"
+          ls result/index.html 2>/dev/null && echo "index.html present" || echo "index.html missing"
+
       - name: Run e2e tests
         run: >
           nix shell .#ci-cache-tools
