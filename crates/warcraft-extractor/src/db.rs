@@ -1064,6 +1064,58 @@ impl WarcraftDataAggregation {
                             !superseded.contains(&ability_id.to_ascii_lowercase())
                         });
                     }
+                    // Rule 4: among abilities sharing the same `.code` field, keep
+                    // the LAST occurrence and drop earlier ones.  CASC alphabetical
+                    // order processes `_balance/custom_v0` and `_balance/melee_v0`
+                    // before `_balance/custom_v1` and `units/`, so the
+                    // competitive-balance variants (e.g. ACd2, ACf2) appear later
+                    // in the merged list and win.  Earlier alternative-mode entries
+                    // (e.g. ACdm, ACfu from custom_v0/melee_v0) are superseded.
+                    // Self-references (ability.code == ability itself) are skipped.
+                    {
+                        let mut last_seen_codes: std::collections::HashMap<String, String> =
+                            std::collections::HashMap::new();
+                        for ability_id in combined.iter().rev() {
+                            let code_option = self
+                                .ability_metadata
+                                .get(ability_id.as_str())
+                                .and_then(|meta| meta.code());
+                            if let Some(code_id) = code_option {
+                                if code_id.eq_ignore_ascii_case(ability_id) {
+                                    continue;
+                                }
+                                let code_lower = code_id.to_ascii_lowercase();
+                                last_seen_codes
+                                    .entry(code_lower)
+                                    .or_insert_with(|| ability_id.to_ascii_lowercase());
+                            }
+                        }
+                        let superseded_by_last: std::collections::HashSet<String> = combined
+                            .iter()
+                            .filter_map(|ability_id| {
+                                let code_option = self
+                                    .ability_metadata
+                                    .get(ability_id.as_str())
+                                    .and_then(|meta| meta.code());
+                                if let Some(code_id) = code_option {
+                                    if code_id.eq_ignore_ascii_case(ability_id) {
+                                        return None;
+                                    }
+                                    let code_lower = code_id.to_ascii_lowercase();
+                                    let last = last_seen_codes.get(&code_lower)?;
+                                    if !last.eq_ignore_ascii_case(ability_id) {
+                                        return Some(ability_id.to_ascii_lowercase());
+                                    }
+                                }
+                                None
+                            })
+                            .collect();
+                        if !superseded_by_last.is_empty() {
+                            combined.retain(|ability_id| {
+                                !superseded_by_last.contains(&ability_id.to_ascii_lowercase())
+                            });
+                        }
+                    }
                     Self::leak_object_ids(&combined)
                 };
                 let hero_abilities_for_unit: &'static [WarcraftObjectId] = {

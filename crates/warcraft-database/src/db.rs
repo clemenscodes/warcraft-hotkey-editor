@@ -57129,7 +57129,6 @@ const EARC_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Aco2"),
     WarcraftObjectId::new("Aien"),
     WarcraftObjectId::new("Aegr"),
-    WarcraftObjectId::new("Aeib"),
     WarcraftObjectId::new("Aemk"),
 ];
 const EARC_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -57432,7 +57431,6 @@ const EHIP_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const EHPR_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Ault"),
     WarcraftObjectId::new("Adec"),
-    WarcraftObjectId::new("Aeib"),
     WarcraftObjectId::new("Aemk"),
 ];
 const EHPR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -60417,7 +60415,6 @@ const NFRT_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NFSH_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Anh2"),
     WarcraftObjectId::new("ACif"),
-    WarcraftObjectId::new("ACdm"),
     WarcraftObjectId::new("ACd2"),
 ];
 const NFSH_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -61070,8 +61067,6 @@ const NITB_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NITB_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NITH_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Anh2"),
-    WarcraftObjectId::new("ACfu"),
-    WarcraftObjectId::new("ACdm"),
     WarcraftObjectId::new("ACf2"),
     WarcraftObjectId::new("ACd2"),
 ];
@@ -62012,8 +62007,7 @@ const NOGR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NOGR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NOGR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NOGR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const NOMG_UNIT_ABILITIES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("ACbl"), WarcraftObjectId::new("ACbb")];
+const NOMG_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ACbb")];
 const NOMG_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const NOMG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const NOMG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -63516,8 +63510,7 @@ const NWZG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NWZG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NWZG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NWZG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const NWZR_UNIT_ABILITIES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("ACfu"), WarcraftObjectId::new("ACf2")];
+const NWZR_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ACf2")];
 const NWZR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const NWZR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const NWZR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -64155,7 +64148,6 @@ const OTAU_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const OTBK_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Absk"),
     WarcraftObjectId::new("Aion"),
-    WarcraftObjectId::new("Aobk"),
     WarcraftObjectId::new("Aotr"),
 ];
 const OTBK_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -64840,11 +64832,8 @@ const UGHO_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UGHO_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UGHO_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UGHO_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const UGOL_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Abgl"),
-    WarcraftObjectId::new("Abgm"),
-    WarcraftObjectId::new("Abgs"),
-];
+const UGOL_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Abgm"), WarcraftObjectId::new("Abgs")];
 const UGOL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UGOL_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const UGOL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
