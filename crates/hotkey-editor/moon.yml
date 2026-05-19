@@ -141,6 +141,8 @@ tasks:
   playwright/ci:
     toolchain: system
     command: playwright test
+    deps:
+      - nix/bundle
     env:
       STATIC_DIR: "$workspaceRoot/result"
       STATIC_BASE_PATH: "/warcraft-hotkey-editor"
