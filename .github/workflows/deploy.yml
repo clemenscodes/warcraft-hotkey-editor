@@ -19,15 +19,11 @@ concurrency:
 
 jobs:
   # Nix-based Rust checks — fmt, clippy (native), tests.
-  # All derivations reuse cargoArtifactsNative from Cachix so there is
-  # no second Rust compilation step; a warm Cachix hit is nearly instant.
+  # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
   nix-checks:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
         uses: cachix/cachix-action@v17
@@ -53,11 +49,10 @@ jobs:
           --print-build-logs
 
   # Nix-based build: produces the static bundle then runs playwright e2e
-  # tests against it. Runs in parallel with rust-checks.
-  # Slow on first run (cold Nix store) but subsequent runs are fast once
-  # Cachix is warm.
+  # tests against it. Runs in parallel with nix-checks.
+  # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
 
@@ -67,9 +62,6 @@ jobs:
           if ! git show-ref --verify --quiet refs/heads/main; then
             git branch main FETCH_HEAD
           fi
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
 
       - name: Use Cachix
         uses: cachix/cachix-action@v17
