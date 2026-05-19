@@ -28,7 +28,13 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1600, height: 900 } },
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1600, height: 900 },
+        launchOptions: {
+          args: process.env["CI"] ? ["--no-sandbox", "--disable-setuid-sandbox"] : [],
+        },
+      },
     },
   ],
   webServer: staticDir
