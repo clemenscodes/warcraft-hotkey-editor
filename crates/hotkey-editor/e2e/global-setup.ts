@@ -4,7 +4,9 @@ const COMPILE_TIMEOUT = 10 * 60 * 1000;
 
 export default async function globalSetup(): Promise<void> {
   const baseUrl = process.env["BASE_URL"] ?? "http://localhost:8080";
-  const noSandboxArgs = process.env["CI"] ? ["--no-sandbox", "--disable-setuid-sandbox"] : [];
+  const noSandboxArgs = process.env["CI"]
+    ? ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--no-zygote"]
+    : [];
   const browser = await chromium.launch({ args: noSandboxArgs });
   const page = await browser.newPage();
   await page.goto(`${baseUrl}/warcraft-hotkey-editor/`, { timeout: COMPILE_TIMEOUT });
