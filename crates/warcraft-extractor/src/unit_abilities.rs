@@ -36,6 +36,11 @@ impl UnitAbilitiesEntry {
     /// the `_balance/*` overlays: existing abilities are kept, new ones are
     /// added. Case-insensitive — `ACss` and `acss` are treated as the same
     /// ability so we don't double-list the same id with two casings.
+    ///
+    /// Note: this deduplicates by ability ID only.  Abilities that share the
+    /// same `.code` field but have different IDs (e.g. `ACdm` and `ACd2`,
+    /// both with code `Aadm`) are NOT deduplicated here; that is handled by
+    /// Rule 4 in `WarcraftDataAggregation::unit_abilities_for_unit`.
     pub fn merge_additive(&mut self, other: &UnitAbilitiesEntry) {
         Self::append_missing(&mut self.abilities, &other.abilities);
         Self::append_missing(&mut self.hero_abilities, &other.hero_abilities);

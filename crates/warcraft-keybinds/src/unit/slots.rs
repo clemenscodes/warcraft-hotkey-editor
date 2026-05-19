@@ -639,4 +639,109 @@ mod unit_slots_tests {
             "Gargoyle command card must contain Prioritize (Aatp)"
         );
     }
+
+    #[test]
+    fn forest_troll_high_priest_command_card_contains_exactly_one_abolish_magic() {
+        let unit_id = WarcraftObjectId::new("nfsh");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let abolish_count = card
+            .filled_slots()
+            .filter(|slot| {
+                slot.id().value().eq_ignore_ascii_case("ACdm")
+                    || slot.id().value().eq_ignore_ascii_case("ACd2")
+            })
+            .count();
+        assert_eq!(
+            abolish_count, 1,
+            "Forest Troll High Priest (nfsh) must have exactly one Abolish Magic ability, not both ACdm and ACd2"
+        );
+    }
+
+    #[test]
+    fn forest_troll_high_priest_command_card_uses_competitive_abolish_magic() {
+        let unit_id = WarcraftObjectId::new("nfsh");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_acd2 = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACd2"));
+        let has_acdm = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACdm"));
+        assert!(
+            has_acd2,
+            "Forest Troll High Priest (nfsh) must have ACd2 (competitive balance Abolish Magic)"
+        );
+        assert!(
+            !has_acdm,
+            "Forest Troll High Priest (nfsh) must not have ACdm (alternative mode variant)"
+        );
+    }
+
+    #[test]
+    fn ice_troll_high_priest_command_card_contains_exactly_one_abolish_magic() {
+        let unit_id = WarcraftObjectId::new("nith");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let abolish_count = card
+            .filled_slots()
+            .filter(|slot| {
+                slot.id().value().eq_ignore_ascii_case("ACdm")
+                    || slot.id().value().eq_ignore_ascii_case("ACd2")
+            })
+            .count();
+        assert_eq!(
+            abolish_count, 1,
+            "Ice Troll High Priest (nith) must have exactly one Abolish Magic ability, not both ACdm and ACd2"
+        );
+    }
+
+    #[test]
+    fn ice_troll_high_priest_command_card_contains_exactly_one_frost_armor() {
+        let unit_id = WarcraftObjectId::new("nith");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let frost_armor_count = card
+            .filled_slots()
+            .filter(|slot| {
+                slot.id().value().eq_ignore_ascii_case("ACfu")
+                    || slot.id().value().eq_ignore_ascii_case("ACf2")
+            })
+            .count();
+        assert_eq!(
+            frost_armor_count, 1,
+            "Ice Troll High Priest (nith) must have exactly one Frost Armor ability, not both ACfu and ACf2"
+        );
+    }
+
+    #[test]
+    fn ice_troll_high_priest_command_card_uses_competitive_abilities() {
+        let unit_id = WarcraftObjectId::new("nith");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_acd2 = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACd2"));
+        let has_acf2 = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACf2"));
+        let has_acdm = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACdm"));
+        let has_acfu = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("ACfu"));
+        assert!(
+            has_acd2,
+            "Ice Troll High Priest (nith) must have ACd2 (competitive balance Abolish Magic)"
+        );
+        assert!(
+            has_acf2,
+            "Ice Troll High Priest (nith) must have ACf2 (competitive balance Frost Armor)"
+        );
+        assert!(
+            !has_acdm,
+            "Ice Troll High Priest (nith) must not have ACdm (alternative mode variant)"
+        );
+        assert!(
+            !has_acfu,
+            "Ice Troll High Priest (nith) must not have ACfu (alternative mode variant)"
+        );
+    }
 }
