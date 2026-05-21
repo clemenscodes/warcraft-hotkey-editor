@@ -9,7 +9,9 @@
 //! mapping shape so a patch that changes the SLK schema or a file move inside
 //! CASC fails loudly here before downstream crates rot.
 
-use warcraft_api::{ItemClass, Race, UnitKind, WarcraftDatabase, WarcraftObjectMeta};
+use warcraft_api::{
+    GridCoordinate, ItemClass, Race, UnitKind, WarcraftDatabase, WarcraftObjectMeta,
+};
 use warcraft_extractor::{
     ABILITY_DEFAULTS_EXTRACTION_RULE, ABILITY_METADATA_EXTRACTION_RULE,
     ABILITY_SKINS_EXTRACTION_RULE, CAMPAIGN_ABILITY_STRINGS_EXTRACTION_RULE,
@@ -909,9 +911,12 @@ mod rule_5_same_slot_dedup {
         column: u8,
         row: u8,
     ) -> String {
+        // id_with_off: autocast toggle — command card only after split
+        // id_without_off: passive indicator — research panel only after split; give it a
+        // Researchbuttonpos so it remains visible somewhere after its Buttonpos is cleared
         format!(
             "[{id_with_off}]\nButtonpos={column},{row}\nUnButtonpos={column},{row}\n\
-             [{id_without_off}]\nButtonpos={column},{row}\n"
+             [{id_without_off}]\nButtonpos={column},{row}\nResearchbuttonpos={column},0\n"
         )
     }
 
@@ -957,6 +962,17 @@ mod rule_5_same_slot_dedup {
             .iter()
             .map(|ability_id| ability_id.value().to_string())
             .collect()
+    }
+
+    fn ability_default_button_position(
+        database: &WarcraftDatabase,
+        ability_id: &str,
+    ) -> Option<GridCoordinate> {
+        let object = database.by_id(ability_id)?;
+        let WarcraftObjectMeta::Ability(ability_meta) = object.meta() else {
+            return None;
+        };
+        ability_meta.default_button_position()
     }
 
     /// Two self-referential abilities at the same position with the same name:
@@ -1011,15 +1027,19 @@ mod rule_5_same_slot_dedup {
         );
     }
 
-    /// When only one of the two same-slot abilities has an off-state button
-    /// (toggle passive), that one is the old form and must be suppressed
-    /// regardless of list order.  This covers the Fire Lord scenario where
-    /// the toggle passive appears LAST in the merged list but is the wrong one.
+    /// When exactly one of two same-slot, same-name abilities has an off-state button
+    /// (autocast toggle), both must be kept in the unit's ability list — they serve
+    /// different UI sections.  The toggle appears on the command card; the passive
+    /// indicator appears in the research panel.  `split_toggle_passive_positions`
+    /// clears the passive's `button_position` (so it doesn't show on the command card)
+    /// and the toggle's `research_button_position` (so it doesn't show in research).
+    /// This covers Fire Lord (ANia toggle + ANic passive, both named "Incinerate").
+    /// Order of abilities in the list does not affect the outcome.
     #[test]
-    fn toggle_passive_dropped_in_favour_of_auto_passive_regardless_of_order() {
+    fn toggle_and_passive_both_kept_with_positions_split() {
         let unit_slk_text = unit_slk("htst");
-        // Note: toggle passive (TglAb) is LAST — "last wins" alone would keep it.
-        // Rule 5 must prefer the auto-passive (AtoAb) because it has no off-state.
+        // TglAb (toggle) is LAST so "last wins" alone would keep it — but the
+        // split must also keep AtoAb (passive) regardless of order.
         let abilities_slk_text = unit_abilities_slk("htst", "AtoAb,TglAb");
         let meta_slk_text = ability_metadata_slk("TglAb", "AtoAb");
         let defaults_txt = ability_defaults_with_off_state_txt("TglAb", "AtoAb", 2, 2);
@@ -1055,14 +1075,27 @@ mod rule_5_same_slot_dedup {
         ]);
         let abilities = unit_ability_ids(&database, "htst");
         let has_toggle = abilities.iter().any(|id| id.eq_ignore_ascii_case("TglAb"));
-        let has_auto = abilities.iter().any(|id| id.eq_ignore_ascii_case("AtoAb"));
+        let has_passive = abilities.iter().any(|id| id.eq_ignore_ascii_case("AtoAb"));
         assert!(
-            !has_toggle,
-            "TglAb (toggle passive) must be suppressed in favour of AtoAb (abilities: {abilities:?})",
+            has_toggle,
+            "TglAb (autocast toggle) must be in the ability list (abilities: {abilities:?})",
         );
         assert!(
-            has_auto,
-            "AtoAb (auto-passive) must be retained (abilities: {abilities:?})",
+            has_passive,
+            "AtoAb (passive) must be in the ability list — it is not suppressed, \
+             only its button_position is cleared (abilities: {abilities:?})",
+        );
+        // Verify the position split: toggle has a command-card button_position;
+        // passive does not (its button_position was cleared by split_toggle_passive_positions).
+        let toggle_button_pos = ability_default_button_position(&database, "TglAb");
+        let passive_button_pos = ability_default_button_position(&database, "AtoAb");
+        assert!(
+            toggle_button_pos.is_some(),
+            "TglAb must retain its button_position (command card) after the split",
+        );
+        assert!(
+            passive_button_pos.is_none(),
+            "AtoAb must have its button_position cleared (research-panel only) after the split",
         );
     }
 

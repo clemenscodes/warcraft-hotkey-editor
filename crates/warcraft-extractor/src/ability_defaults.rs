@@ -59,6 +59,14 @@ impl AbilityDefaultsEntry {
         self.requires.as_deref()
     }
 
+    pub fn clear_button_position(&mut self) {
+        self.button_position = None;
+    }
+
+    pub fn clear_research_button_position(&mut self) {
+        self.research_button_position = None;
+    }
+
     /// Fill in fields from `other` that this entry left empty. Balance
     /// overlays publish the same `[Axxx]` sections as the base but
     /// sometimes drop individual lines (`Researchbuttonpos`, `Ubertip`,

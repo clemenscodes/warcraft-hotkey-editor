@@ -1406,8 +1406,6 @@ Researchubertip=Transforms an enemy unit into a random critter, disabling specia
 [ANia]
 Hotkey=C
 Buttonpos=2,2
-ResearchHotkey=C
-ResearchButtonpos=2,0
 Unhotkey=C
 Unbuttonpos=2,2
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
@@ -1417,7 +1415,6 @@ Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 Researchubertip=Each attack made is enhanced with living flames that cling to the target. These flames add a small amount of damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing significant damage to all nearby hostile units.|n|n|cffffcc00Level 1|r - 2 bonus damage, 30 incineration damage.|n|cffffcc00Level 2|r - 3 bonus damage, 45 incineration damage.|n|cffffcc00Level 3|r - 4 bonus damage, 60 incineration damage.
 
 [ANic]
-Buttonpos=2,2
 ResearchHotkey=C
 ResearchButtonpos=2,0
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
