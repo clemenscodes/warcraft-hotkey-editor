@@ -23,6 +23,8 @@ jobs:
   nix-checks:
     runs-on: self-hosted
     steps:
+      - name: Fix stale workspace permissions
+        run: chmod -R u+w . || true
       - uses: actions/checkout@v6
 
       - name: Use Cachix
@@ -54,6 +56,8 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Fix stale workspace permissions
+        run: chmod -R u+w . || true
       - uses: actions/checkout@v6
 
       - name: Prepare Moon base ref
@@ -102,6 +106,7 @@ jobs:
         run: |
           mkdir -p ./pages-out
           cp -RL ./result/. ./pages-out/
+          chmod -R u+w ./pages-out/
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
