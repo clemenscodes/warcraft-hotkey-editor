@@ -765,7 +765,7 @@ fn insert_objects_chunk_0(
             ACHV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, None, None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACHV_TIP_LEVELS, ACHV_UBERTIP_LEVELS),
         ),
     );
@@ -2722,7 +2722,7 @@ fn insert_objects_chunk_0(
             ANIA_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANIA_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Each attack made is enhanced with living flames that cling to the target. These flames add 2 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing up to 30 damage to all nearby hostile units."), Some("Each attack made is enhanced with living flames that cling to the target. These flames add a small amount of damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing significant damage to all nearby hostile units.|n|n|cffffcc00Level 1|r - 2 bonus damage, 30 incineration damage.|n|cffffcc00Level 2|r - 3 bonus damage, 45 incineration damage.|n|cffffcc00Level 3|r - 4 bonus damage, 60 incineration damage.")).with_code(Some("ANia")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, None, Some("commandbuttons/btnincinerateoff.blp"))),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANIA_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, Some("Each attack made is enhanced with living flames that cling to the target. These flames add 2 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing up to 30 damage to all nearby hostile units."), Some("Each attack made is enhanced with living flames that cling to the target. These flames add a small amount of damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing significant damage to all nearby hostile units.|n|n|cffffcc00Level 1|r - 2 bonus damage, 30 incineration damage.|n|cffffcc00Level 2|r - 3 bonus damage, 45 incineration damage.|n|cffffcc00Level 3|r - 4 bonus damage, 60 incineration damage.")).with_code(Some("ANia")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, None, Some("commandbuttons/btnincinerateoff.blp"))),
             WarcraftObjectText::with_alt(ANIA_TIP_LEVELS, ANIA_UBERTIP_LEVELS, Some("|cffc3dbffRight-click to activate auto-casting.|r"), Some("|cffc3dbffRight-click to deactivate auto-casting.|r")),
         ),
     );
@@ -2735,7 +2735,7 @@ fn insert_objects_chunk_0(
             ANIC_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANIC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Each attack made is enhanced with living flames that cling to the target. These flames add 2 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing up to 30 damage to all nearby hostile units."), Some("Each attack made is enhanced with living flames that cling to the target. These flames add a small amount of damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing significant damage to all nearby hostile units.|n|n|cffffcc00Level 1|r - 2 bonus damage, 30 incineration damage.|n|cffffcc00Level 2|r - 3 bonus damage, 45 incineration damage.|n|cffffcc00Level 3|r - 4 bonus damage, 60 incineration damage.")).with_code(Some("ANic")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANIC_COOLDOWNS, None, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Each attack made is enhanced with living flames that cling to the target. These flames add 2 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing up to 30 damage to all nearby hostile units."), Some("Each attack made is enhanced with living flames that cling to the target. These flames add a small amount of damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc.|n|nIf a unit dies while under this effect, it is incinerated, causing significant damage to all nearby hostile units.|n|n|cffffcc00Level 1|r - 2 bonus damage, 30 incineration damage.|n|cffffcc00Level 2|r - 3 bonus damage, 45 incineration damage.|n|cffffcc00Level 3|r - 4 bonus damage, 60 incineration damage.")).with_code(Some("ANic")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ANIC_TIP_LEVELS, ANIC_UBERTIP_LEVELS),
         ),
     );
@@ -57123,7 +57123,6 @@ const EAOW_UNIT_TRAINS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("efdr"),
 ];
 const EARC_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Acoa"),
     WarcraftObjectId::new("Ashm"),
     WarcraftObjectId::new("Ault"),
     WarcraftObjectId::new("Aco2"),
@@ -57420,8 +57419,7 @@ const EGOL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const EHIP_UNIT_ABILITIES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("Acoh"), WarcraftObjectId::new("Aco3")];
+const EHIP_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aco3")];
 const EHIP_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const EHIP_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const EHIP_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -64604,7 +64602,6 @@ const UBAL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UBAL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UBAN_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Acrs"),
-    WarcraftObjectId::new("Apos"),
     WarcraftObjectId::new("Aiun"),
     WarcraftObjectId::new("Aam2"),
     WarcraftObjectId::new("Aps2"),
@@ -64749,7 +64746,6 @@ const UDEA_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AUdc"),
     WarcraftObjectId::new("AUdp"),
     WarcraftObjectId::new("AUau"),
-    WarcraftObjectId::new("AUan"),
     WarcraftObjectId::new("AUa2"),
 ];
 const UDEA_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -64793,7 +64789,6 @@ const UEAR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AUdc"),
     WarcraftObjectId::new("AUdp"),
     WarcraftObjectId::new("AUau"),
-    WarcraftObjectId::new("AUan"),
     WarcraftObjectId::new("AUa2"),
 ];
 const UEAR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];

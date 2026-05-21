@@ -1308,10 +1308,8 @@ Researchubertip=Transforms an enemy unit into a random critter, disabling specia
 [ania]
 Hotkey=C
 Unhotkey=C
-Buttonpos=2,1
-Unbuttonpos=2,1
-Researchhotkey=C
-Researchbuttonpos=2,0
+Buttonpos=2,2
+Unbuttonpos=2,2
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Each attack made is enhanced with living flames that cling to the target. These flames add 2 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc. If a unit dies while under this effect, it is incinerated, causing up to 30 damage to all nearby hostile units.,Each attack made is enhanced with living flames that cling to the target. These flames add 3 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc. If a unit dies while under this effect, it is incinerated, causing up to 45 damage to all nearby hostile units.,Each attack made is enhanced with living flames that cling to the target. These flames add 4 damage on the first attack, twice as much on the second attack, three times as much on the third attack, etc. If a unit dies while under this effect, it is incinerated, causing up to 60 damage to all nearby hostile units.
@@ -1319,7 +1317,6 @@ Researchubertip=Each attack made is enhanced with living flames that cling to th
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [anic]
-Buttonpos=2,2
 Researchhotkey=C
 Researchbuttonpos=2,0
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
@@ -1804,7 +1801,7 @@ Researchubertip=Raises 6 dead units in an area to fight for the Death Knight for
 
 [auan]
 Hotkey=D
-Buttonpos=2,1
+Buttonpos=3,2
 Researchhotkey=D
 Researchbuttonpos=3,0
 Tip=Animate Dead
@@ -2197,13 +2194,13 @@ Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it una
 
 [aco2]
 Hotkey=U
-Buttonpos=1,2
+Buttonpos=0,2
 Tip=Mount Hippogryph
 Ubertip=Mounts a Hippogryph so that the Archer can attack from the air. Attacks land and air units.
 
 [aco3]
 Hotkey=U
-Buttonpos=1,2
+Buttonpos=0,2
 Tip=Pick up Archer
 Ubertip=Picks up an Archer so that the Archer can attack from the air. Attacks land and air units.
 
@@ -2341,7 +2338,7 @@ Tip=Eat Tree
 Ubertip=Consume a tree to restore 500 hit points over 30 seconds.
 
 [aegr]
-Buttonpos=2,2
+Buttonpos=1,2
 Tip=Elune's Grace
 Ubertip=Reduces the damage taken from Piercing attacks to 65%, and spells and Magic attacks to 80%.
 
@@ -2883,7 +2880,7 @@ Ubertip=Removes all buffs from a target unit, and slows its movement speed by a 
 
 [aps2]
 Hotkey=O
-Buttonpos=3,2
+Buttonpos=2,2
 Tip=Possession
 Ubertip=Stuns a target unit and the Banshee for 4.5 seconds, during which the Banshee takes extra damage from attacks. She then displaces the soul of the enemy, giving you permanent control of it, but destroying the caster's body. Possession cannot be used on flying units, Heroes, or creeps above level 5.
 

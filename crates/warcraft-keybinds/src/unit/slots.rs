@@ -62,6 +62,14 @@ fn slot_position_from_database(
     database_object.default_button_position()
 }
 
+fn research_slot_position_from_database(
+    database: &WarcraftDatabase,
+    object_id: &str,
+) -> Option<GridCoordinate> {
+    let database_object = database.by_id(object_id)?;
+    database_object.default_research_button_position()
+}
+
 impl UnitCommandSlots for WarcraftDatabase {
     fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard {
         let unit_id_str = unit_id.value();
@@ -343,7 +351,8 @@ impl UnitCommandSlots for WarcraftDatabase {
             if !ability_has_icon {
                 continue;
             }
-            let Some(slot_position) = slot_position_from_database(self, ability_str) else {
+            let Some(slot_position) = research_slot_position_from_database(self, ability_str)
+            else {
                 continue;
             };
             let ability_slot = GridSlotId::ability(ability_str);

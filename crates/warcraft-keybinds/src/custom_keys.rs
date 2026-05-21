@@ -2920,7 +2920,10 @@ mod template_generation_tests {
 
     /// Regenerates CustomKeys.txt from the database. Run this whenever
     /// warcraft-database changes to keep the default template in sync.
+    /// Ignored in CI: this is a regeneration tool, not a spec.
+    /// After running, inspect the diff before committing the new template.
     #[test]
+    #[ignore]
     fn regenerate_default_template() {
         let content = build_text(&GridLayout::qwerty_grid());
         let path = concat!(env!("CARGO_MANIFEST_DIR"), "/templates/CustomKeys.txt");

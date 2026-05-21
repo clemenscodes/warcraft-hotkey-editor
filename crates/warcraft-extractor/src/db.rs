@@ -1,9 +1,9 @@
 use warcraft_api::{
     AbilityMeta, AttackType, AttributeBase, AttributeGrowth, CommandMeta, DefenseType,
-    GameplayConstants, HeroAttributes, ItemMeta, ManaPool, ObjectMap, PrimaryAttribute, Race,
-    RegenType, UnitAttack, UnitCombat, UnitFlags, UnitKind, UnitMeta, UnitProduction, UpgradeMeta,
-    WarcraftDatabase, WarcraftObject, WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta,
-    WarcraftObjectText,
+    GameplayConstants, GridCoordinate, HeroAttributes, ItemMeta, ManaPool, ObjectMap,
+    PrimaryAttribute, Race, RegenType, UnitAttack, UnitCombat, UnitFlags, UnitKind, UnitMeta,
+    UnitProduction, UpgradeMeta, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
+    WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText,
 };
 
 struct WarcraftObjectIdentity {
@@ -48,7 +48,8 @@ use crate::{
 };
 
 impl From<WarcraftDataAggregation> for WarcraftDatabase {
-    fn from(value: WarcraftDataAggregation) -> Self {
+    fn from(mut value: WarcraftDataAggregation) -> Self {
+        value.split_toggle_passive_positions();
         let objects = value.get_ids();
         Self::new(objects)
     }
@@ -1116,6 +1117,11 @@ impl WarcraftDataAggregation {
                             });
                         }
                     }
+                    // Rule 5: suppress balance-patch duplicate abilities — same slot,
+                    // same name, "last wins".  Toggle+passive pairs were already split
+                    // by split_toggle_passive_positions() (passive has no button_position
+                    // after that step, so it is invisible here).
+                    Self::suppress_same_slot_duplicates(&mut combined, self, *race);
                     Self::leak_object_ids(&combined)
                 };
                 let hero_abilities_for_unit: &'static [WarcraftObjectId] = {
@@ -1137,6 +1143,9 @@ impl WarcraftDataAggregation {
                             }
                         }
                     }
+                    // Rule 5 (hero abilities): same same-slot deduplication as for
+                    // regular abilities above.
+                    Self::suppress_same_slot_duplicates(&mut hero_combined, self, *race);
                     Self::leak_object_ids(&hero_combined)
                 };
                 let ui_flags = self.unit_ui_flags.get(id);
@@ -1728,6 +1737,172 @@ impl WarcraftDataAggregation {
 
     pub fn skins(&self) -> &SkinDatabase {
         &self.skins
+    }
+
+    /// Preprocessing step for balance-patch toggle+passive pairs.
+    ///
+    /// Some balance patches introduce two ability IDs for the same spell where one
+    /// is an autocast toggle (has `off_button_position`) and the other is a plain
+    /// passive indicator (no off-state).  Both share the same `button_position` and
+    /// display name.  They are not duplicates — they serve different sections of the
+    /// UI: the toggle appears on the command card, the passive appears in the research
+    /// (passive ability) panel.
+    ///
+    /// This method splits their positions before `suppress_same_slot_duplicates` runs:
+    /// - Clears the toggle's `research_button_position` (command card only).
+    /// - Clears the passive's `button_position` (research panel only).
+    ///
+    /// After this step the two abilities no longer conflict in `suppress_same_slot_duplicates`
+    /// (the passive has no `button_position`, so it is invisible to Rule 5).
+    fn split_toggle_passive_positions(&mut self) {
+        struct AbilityButtonEntry {
+            ability_id: String,
+            button_position: GridCoordinate,
+            has_off_state: bool,
+        }
+
+        let button_entries: Vec<AbilityButtonEntry> = self
+            .ability_defaults
+            .iter()
+            .filter_map(|(ability_id, entry)| {
+                let button_position = entry.button_position()?;
+                let has_off_state = entry.off_button_position().is_some();
+                let ability_entry = AbilityButtonEntry {
+                    ability_id: ability_id.clone(),
+                    button_position,
+                    has_off_state,
+                };
+                Some(ability_entry)
+            })
+            .collect();
+
+        let mut slot_to_ability_ids: std::collections::HashMap<String, Vec<String>> =
+            std::collections::HashMap::new();
+        let mut ability_has_off_state: std::collections::HashMap<String, bool> =
+            std::collections::HashMap::new();
+
+        for button_entry in &button_entries {
+            let Some(name) = self.resolve_ability_name(None, &button_entry.ability_id) else {
+                continue;
+            };
+            let button_position = button_entry.button_position;
+            let slot_key = format!("{button_position}|{name}");
+            let ability_id = button_entry.ability_id.clone();
+            let ability_ids = slot_to_ability_ids.entry(slot_key).or_default();
+            ability_ids.push(ability_id);
+            let ability_lower = button_entry.ability_id.to_ascii_lowercase();
+            ability_has_off_state.insert(ability_lower, button_entry.has_off_state);
+        }
+
+        let mut clear_button_position: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+        let mut clear_research_button_position: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+
+        for slot_abilities in slot_to_ability_ids.values() {
+            if slot_abilities.len() != 2 {
+                continue;
+            }
+            let toggle_count = slot_abilities
+                .iter()
+                .filter(|ability_id| {
+                    let ability_lower = ability_id.to_ascii_lowercase();
+                    ability_has_off_state
+                        .get(&ability_lower)
+                        .copied()
+                        .unwrap_or(false)
+                })
+                .count();
+            if toggle_count != 1 {
+                continue;
+            }
+            for ability_id in slot_abilities {
+                let ability_lower = ability_id.to_ascii_lowercase();
+                let has_off_state = ability_has_off_state
+                    .get(&ability_lower)
+                    .copied()
+                    .unwrap_or(false);
+                if has_off_state {
+                    clear_research_button_position.insert(ability_lower);
+                } else {
+                    clear_button_position.insert(ability_lower);
+                }
+            }
+        }
+
+        for (ability_id, entry) in &mut self.ability_defaults {
+            let ability_lower = ability_id.to_ascii_lowercase();
+            if clear_button_position.contains(&ability_lower) {
+                entry.clear_button_position();
+            }
+            if clear_research_button_position.contains(&ability_lower) {
+                entry.clear_research_button_position();
+            }
+        }
+    }
+
+    /// Rule 5 helper: remove abilities that are balance-patch duplicates occupying
+    /// the same default button slot with the same display name.
+    ///
+    /// The CASC additive merge accumulates both the original ability ID (from the
+    /// base war3.w3mod) and its replacement (from a balance overlay) on the same
+    /// unit.  Two abilities are considered balance-patch duplicates when they share
+    /// the same default button position AND the same resolved display name — regardless
+    /// of whether either ability is self-referential.
+    ///
+    /// Toggle+passive pairs (exactly one has off-state) are handled upstream by
+    /// `split_toggle_passive_positions` before this function runs: the passive has
+    /// its `button_position` cleared, so it does not appear in `slot_to_abilities`
+    /// and is never a candidate for suppression here.
+    ///
+    /// For all remaining same-slot same-name pairs the earlier occurrence is
+    /// suppressed — the CASC overlay appears later in the merged list and is the
+    /// newer version.
+    fn suppress_same_slot_duplicates(
+        abilities: &mut Vec<String>,
+        aggregation: &WarcraftDataAggregation,
+        race: Race,
+    ) {
+        let mut slot_to_abilities: std::collections::HashMap<String, Vec<String>> =
+            std::collections::HashMap::new();
+
+        for ability_id in abilities.iter() {
+            let defaults = aggregation.ability_defaults.get(ability_id.as_str());
+            let Some(position) = defaults.and_then(|entry| entry.button_position()) else {
+                continue;
+            };
+            let Some(name) = aggregation.resolve_ability_name(Some(race), ability_id) else {
+                continue;
+            };
+            let slot_key = format!("{position}|{name}");
+            slot_to_abilities
+                .entry(slot_key)
+                .or_default()
+                .push(ability_id.clone());
+        }
+
+        let mut patch_superseded: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+
+        for slot_abilities in slot_to_abilities.values() {
+            if slot_abilities.len() < 2 {
+                continue;
+            }
+            let last_ability = slot_abilities.last().unwrap();
+            for ability_id in slot_abilities.iter() {
+                if !ability_id.eq_ignore_ascii_case(last_ability) {
+                    let ability_lower = ability_id.to_ascii_lowercase();
+                    patch_superseded.insert(ability_lower);
+                }
+            }
+        }
+
+        if !patch_superseded.is_empty() {
+            abilities.retain(|ability_id| {
+                let ability_lower = ability_id.to_ascii_lowercase();
+                !patch_superseded.contains(&ability_lower)
+            });
+        }
     }
 }
 
