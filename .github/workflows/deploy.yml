@@ -22,6 +22,7 @@ jobs:
   # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
   nix-checks:
     runs-on: self-hosted
+    environment: self-hosted
     steps:
       - name: Fix stale workspace permissions
         run: chmod -R u+w . || true
@@ -55,6 +56,7 @@ jobs:
   # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
   build:
     runs-on: self-hosted
+    environment: self-hosted
     steps:
       - name: Fix stale workspace permissions
         run: chmod -R u+w . || true
