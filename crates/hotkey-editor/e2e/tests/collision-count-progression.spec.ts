@@ -25,7 +25,7 @@ async function collisionState(
 // Hard-coded counts intentionally — they are the ground truth for the
 // algorithm and any change in them should be a conscious decision.
 test.describe("Collision count progression across the resolve workflow", () => {
-  test("default template → resolve → apply grid drops the count from 99+ to 60 to 0", async ({
+  test("default template → resolve → apply grid drops the count from 99+ to 56 to 0", async ({
     page,
   }) => {
     await page.goto(APP);
@@ -64,15 +64,17 @@ test.describe("Collision count progression across the resolve workflow", () => {
       .waitFor();
 
     const afterResolve = await collisionCount(page);
-    // 60 hotkey collisions remain after the cascade — these are
+    // 56 hotkey collisions remain after the cascade — these are
     // per-unit hotkey letter clashes (including ability vs. Cmd* on
     // the command card) that the position-only cascade does not
     // touch.  Apply Grid clears them in the next step.  Ability /
     // AbilityOff pairs at the same letter are deduped at the source
     // — they're the same button by design, not a collision.
     // (Was 62 before the balance-overlay dedup fix removed ACdm/ACfu
-    // from troll high priests, dropping 2 hotkey clashes.)
-    expect(afterResolve).toBe(60);
+    // from troll high priests; 60 before the balance-patch dedup fix
+    // removed duplicate abilities from Death Knight/Banshee/Archer/
+    // Hippogryph/Fire Lord, dropping 4 more hotkey clashes.)
+    expect(afterResolve).toBe(56);
     expect(afterResolve).toBeLessThan(initialCount);
     expect(await collisionState(page)).toBe("attention");
 

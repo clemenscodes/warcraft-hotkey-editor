@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use warcraft_api::GridCoordinate;
-use warcraft_keybinds::CustomKeys;
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename};
 
@@ -117,71 +116,105 @@ impl AbilityDefaultsExtraction {
     fn process(_: &str, bytes: &[u8]) -> Result<ExtractResult, ExtractError> {
         let text = std::str::from_utf8(bytes)
             .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidData, "invalid UTF-8"))?;
-        let parsed = CustomKeys::from(text);
-        let requires_map = Self::extract_requires(text);
-
-        let mut database = AbilityDefaultsDatabase::new();
-        for entry in parsed.bindings_in_order() {
-            let ability_id = entry.ability_id();
-            let binding = entry.binding();
-            let regular_position = binding.button_position();
-            let research_position = binding.research_button_position();
-            let off_position = binding.unbutton_position();
-            let ubertip = binding.ubertip().map(str::to_owned);
-            let research_ubertip = binding.research_ubertip().map(str::to_owned);
-            let off_ubertip = binding.un_ubertip().map(str::to_owned);
-            let off_tip = binding.un_tip().map(str::to_owned);
-            let off_icon = binding.un_icon().map(str::to_owned);
-            let requires = requires_map.get(ability_id.value()).cloned();
-
-            if regular_position.is_none()
-                && research_position.is_none()
-                && off_position.is_none()
-                && ubertip.is_none()
-                && research_ubertip.is_none()
-                && off_ubertip.is_none()
-                && off_tip.is_none()
-                && off_icon.is_none()
-                && requires.is_none()
-            {
-                continue;
-            }
-
-            let entry_data = AbilityDefaultsEntry {
-                button_position: regular_position.copied(),
-                research_button_position: research_position.copied(),
-                off_button_position: off_position.copied(),
-                ubertip,
-                research_ubertip,
-                off_ubertip,
-                off_tip,
-                off_icon,
-                requires,
-            };
-            database.insert(ability_id.value().to_string(), entry_data);
-        }
+        let database = Self::parse_all_sections(text);
         Ok(ExtractResult::AbilityDefaults(database))
     }
 
-    /// Scan the raw func file text for `Requires=` entries per ability section.
-    /// The `CustomKeys` parser doesn't expose this field, so we scan directly.
-    fn extract_requires(text: &str) -> std::collections::HashMap<String, String> {
-        let mut result = std::collections::HashMap::new();
-        let mut current_id: Option<&str> = None;
-        for line in text.lines() {
-            let line = line.trim();
+    /// Parse every `[SectionId]` block in the func file directly.
+    ///
+    /// The previous implementation routed through `CustomKeys::from`, which
+    /// silently drops sections whose ID is not in the compiled game database.
+    /// That caused synthetic test IDs and any ability added after the last
+    /// database regeneration to be skipped.  This parser accepts every
+    /// section header without filtering.
+    fn parse_all_sections(text: &str) -> AbilityDefaultsDatabase {
+        let mut database = AbilityDefaultsDatabase::new();
+        let mut current_id: Option<String> = None;
+        let mut pending = AbilityDefaultsEntry::default();
+
+        for raw_line in text.lines() {
+            let line = raw_line.trim();
+
             if line.starts_with('[') && line.ends_with(']') {
-                current_id = Some(&line[1..line.len() - 1]);
-            } else if let Some(id) = current_id {
-                let lower = line.to_ascii_lowercase();
-                if let Some(rest) = lower.strip_prefix("requires=") {
-                    let value = rest.trim();
-                    if !value.is_empty() {
-                        result.insert(id.to_string(), value.to_string());
-                    }
+                if let Some(finished_id) = current_id.take() {
+                    Self::commit_section(&mut database, finished_id, pending);
+                    pending = AbilityDefaultsEntry::default();
                 }
+                let section_id = line[1..line.len() - 1].trim();
+                if !section_id.is_empty() {
+                    current_id = Some(section_id.to_string());
+                }
+                continue;
             }
+
+            if current_id.is_none() {
+                continue;
+            }
+
+            let Some(equals_pos) = line.find('=') else {
+                continue;
+            };
+            let lowercase_key = line[..equals_pos].trim().to_ascii_lowercase();
+            let value = line[equals_pos + 1..].trim();
+            Self::apply_section_field(&lowercase_key, value, &mut pending);
         }
-        result
+
+        if let Some(last_id) = current_id {
+            Self::commit_section(&mut database, last_id, pending);
+        }
+
+        database
+    }
+
+    fn commit_section(
+        database: &mut AbilityDefaultsDatabase,
+        section_id: String,
+        entry: AbilityDefaultsEntry,
+    ) {
+        let has_data = entry.button_position.is_some()
+            || entry.research_button_position.is_some()
+            || entry.off_button_position.is_some()
+            || entry.ubertip.is_some()
+            || entry.research_ubertip.is_some()
+            || entry.off_ubertip.is_some()
+            || entry.off_tip.is_some()
+            || entry.off_icon.is_some()
+            || entry.requires.is_some();
+        if has_data {
+            database.insert(section_id, entry);
+        }
+    }
+
+    fn apply_section_field(lowercase_key: &str, value: &str, entry: &mut AbilityDefaultsEntry) {
+        match lowercase_key {
+            "buttonpos" if entry.button_position.is_none() => {
+                entry.button_position = GridCoordinate::try_from(value).ok();
+            }
+            "unbuttonpos" if entry.off_button_position.is_none() => {
+                entry.off_button_position = GridCoordinate::try_from(value).ok();
+            }
+            "researchbuttonpos" if entry.research_button_position.is_none() => {
+                entry.research_button_position = GridCoordinate::try_from(value).ok();
+            }
+            "ubertip" if entry.ubertip.is_none() && !value.is_empty() => {
+                entry.ubertip = Some(value.to_string());
+            }
+            "researchubertip" if entry.research_ubertip.is_none() && !value.is_empty() => {
+                entry.research_ubertip = Some(value.to_string());
+            }
+            "unubertip" if entry.off_ubertip.is_none() && !value.is_empty() => {
+                entry.off_ubertip = Some(value.to_string());
+            }
+            "untip" if entry.off_tip.is_none() && !value.is_empty() => {
+                entry.off_tip = Some(value.to_string());
+            }
+            "unart" | "unicon" if entry.off_icon.is_none() && !value.is_empty() => {
+                entry.off_icon = Some(value.to_string());
+            }
+            "requires" if entry.requires.is_none() && !value.is_empty() => {
+                entry.requires = Some(value.to_string());
+            }
+            _ => {}
+        }
     }
 }

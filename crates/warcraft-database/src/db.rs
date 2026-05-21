@@ -765,7 +765,7 @@ fn insert_objects_chunk_0(
             ACHV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, None, None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACHV_TIP_LEVELS, ACHV_UBERTIP_LEVELS),
         ),
     );
@@ -57123,7 +57123,6 @@ const EAOW_UNIT_TRAINS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("efdr"),
 ];
 const EARC_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Acoa"),
     WarcraftObjectId::new("Ashm"),
     WarcraftObjectId::new("Ault"),
     WarcraftObjectId::new("Aco2"),
@@ -57420,8 +57419,7 @@ const EGOL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const EGOL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const EHIP_UNIT_ABILITIES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("Acoh"), WarcraftObjectId::new("Aco3")];
+const EHIP_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aco3")];
 const EHIP_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const EHIP_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const EHIP_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -60220,7 +60218,6 @@ const NFIR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANso"),
     WarcraftObjectId::new("ANlm"),
     WarcraftObjectId::new("ANvc"),
-    WarcraftObjectId::new("ANia"),
 ];
 const NFIR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NFIR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64604,7 +64601,6 @@ const UBAL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UBAL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UBAN_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Acrs"),
-    WarcraftObjectId::new("Apos"),
     WarcraftObjectId::new("Aiun"),
     WarcraftObjectId::new("Aam2"),
     WarcraftObjectId::new("Aps2"),
@@ -64749,7 +64745,6 @@ const UDEA_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AUdc"),
     WarcraftObjectId::new("AUdp"),
     WarcraftObjectId::new("AUau"),
-    WarcraftObjectId::new("AUan"),
     WarcraftObjectId::new("AUa2"),
 ];
 const UDEA_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -64793,7 +64788,6 @@ const UEAR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AUdc"),
     WarcraftObjectId::new("AUdp"),
     WarcraftObjectId::new("AUau"),
-    WarcraftObjectId::new("AUan"),
     WarcraftObjectId::new("AUa2"),
 ];
 const UEAR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];

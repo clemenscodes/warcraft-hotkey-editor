@@ -9,14 +9,15 @@
 //! mapping shape so a patch that changes the SLK schema or a file move inside
 //! CASC fails loudly here before downstream crates rot.
 
-use warcraft_api::{ItemClass, Race, UnitKind};
+use warcraft_api::{ItemClass, Race, UnitKind, WarcraftDatabase, WarcraftObjectMeta};
 use warcraft_extractor::{
-    ABILITY_DEFAULTS_EXTRACTION_RULE, ABILITY_SKINS_EXTRACTION_RULE,
-    CAMPAIGN_ABILITY_STRINGS_EXTRACTION_RULE, CAMPAIGN_UNIT_STRINGS_EXTRACTION_RULE, ExtractResult,
-    HEROES_EXTRACTION_RULE, HUMAN_ABILITY_STRINGS_EXTRACTION_RULE,
-    HUMAN_UNIT_STRINGS_EXTRACTION_RULE, HUMAN_UPGRADES_ART_EXTRACTION_RULE,
-    HUMAN_UPGRADES_NAME_EXTRACTION_RULE, ITEM_ABILITY_STRINGS_EXTRACTION_RULE,
-    ITEM_SKINS_EXTRACTION_RULE, ITEM_UNIT_STRINGS_EXTRACTION_RULE, ITEMS_EXTRACTION_RULE,
+    ABILITY_DEFAULTS_EXTRACTION_RULE, ABILITY_METADATA_EXTRACTION_RULE,
+    ABILITY_SKINS_EXTRACTION_RULE, CAMPAIGN_ABILITY_STRINGS_EXTRACTION_RULE,
+    CAMPAIGN_UNIT_STRINGS_EXTRACTION_RULE, ExtractResult, HEROES_EXTRACTION_RULE,
+    HUMAN_ABILITY_STRINGS_EXTRACTION_RULE, HUMAN_UNIT_STRINGS_EXTRACTION_RULE,
+    HUMAN_UPGRADES_ART_EXTRACTION_RULE, HUMAN_UPGRADES_NAME_EXTRACTION_RULE,
+    ITEM_ABILITY_STRINGS_EXTRACTION_RULE, ITEM_SKINS_EXTRACTION_RULE,
+    ITEM_UNIT_STRINGS_EXTRACTION_RULE, ITEMS_EXTRACTION_RULE,
     NEUTRAL_ABILITY_STRINGS_EXTRACTION_RULE, NEUTRAL_UNIT_STRINGS_EXTRACTION_RULE,
     NIGHTELF_ABILITY_STRINGS_EXTRACTION_RULE, NIGHTELF_UNIT_STRINGS_EXTRACTION_RULE,
     NIGHTELF_UPGRADES_ART_EXTRACTION_RULE, ORC_ABILITY_STRINGS_EXTRACTION_RULE,
@@ -821,5 +822,432 @@ mod balance_overlays {
         let has_anew = abilities.iter().any(|ability| ability == "Anew");
         assert!(has_acss);
         assert!(has_anew);
+    }
+}
+
+/// Rule 5: when two self-referential abilities share the same default button
+/// position and the same display name on a unit, one is a balance-patch
+/// replacement of the other.  The superseded ability must be dropped when
+/// the database is built from the aggregation.
+///
+/// Tests use a synthetic human unit (`htst`) with a minimal SLK/TXT set that
+/// covers only the fields the build path reads.  The paths must match the
+/// relevant extraction rule matchers.
+mod rule_5_same_slot_dedup {
+    use super::*;
+
+    const UNIT_PATH: &str = "war3.w3mod:units/unitbalance.slk";
+    const UNIT_ABILITIES_PATH: &str = "war3.w3mod:units/unitabilities.slk";
+    const ABILITY_METADATA_PATH: &str = "war3.w3mod:units/abilitydata.slk";
+    const ABILITY_DEFAULTS_PATH: &str = "war3.w3mod:units/humanabilityfunc.txt";
+    const UNIT_STRINGS_PATH: &str = "x/enus.w3mod:units/humanunitstrings.txt";
+    const ABILITY_STRINGS_PATH: &str = "x/enus.w3mod:units/humanabilitystrings.txt";
+
+    fn unit_slk(unit_id: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitBalanceID\"\n\
+             C;X2;Y1;K\"defType\"\n\
+             C;X3;Y1;K\"isbldg\"\n\
+             C;X4;Y1;K\"bldtm\"\n\
+             C;X1;Y2;K\"{unit_id}\"\n\
+             C;X2;Y2;K\"normal\"\n\
+             C;X3;Y2;K\"0\"\n\
+             C;X4;Y2;K\"30\"\n\
+             E\n"
+        )
+    }
+
+    fn unit_abilities_slk(unit_id: &str, ability_list: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitAbilID\"\n\
+             C;X2;Y1;K\"abilList\"\n\
+             C;X3;Y1;K\"heroAbilList\"\n\
+             C;X1;Y2;K\"{unit_id}\"\n\
+             C;X2;Y2;K\"{ability_list}\"\n\
+             E\n"
+        )
+    }
+
+    fn unit_abilities_slk_hero(unit_id: &str, hero_list: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitAbilID\"\n\
+             C;X2;Y1;K\"abilList\"\n\
+             C;X3;Y1;K\"heroAbilList\"\n\
+             C;X1;Y2;K\"{unit_id}\"\n\
+             C;X2;Y2;K\"\"\n\
+             C;X3;Y2;K\"{hero_list}\"\n\
+             E\n"
+        )
+    }
+
+    fn ability_metadata_slk(id_a: &str, id_b: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X1;Y2;K\"{id_a}\"\n\
+             C;X2;Y2;K\"{id_a}\"\n\
+             C;X1;Y3;K\"{id_b}\"\n\
+             C;X2;Y3;K\"{id_b}\"\n\
+             E\n"
+        )
+    }
+
+    fn ability_defaults_txt(id_a: &str, id_b: &str, column: u8, row: u8) -> String {
+        format!(
+            "[{id_a}]\nButtonpos={column},{row}\n\
+             [{id_b}]\nButtonpos={column},{row}\n"
+        )
+    }
+
+    fn ability_defaults_with_off_state_txt(
+        id_with_off: &str,
+        id_without_off: &str,
+        column: u8,
+        row: u8,
+    ) -> String {
+        format!(
+            "[{id_with_off}]\nButtonpos={column},{row}\nUnButtonpos={column},{row}\n\
+             [{id_without_off}]\nButtonpos={column},{row}\n"
+        )
+    }
+
+    fn unit_strings_txt(unit_id: &str) -> String {
+        format!("[{unit_id}]\nName=Test Unit\n")
+    }
+
+    fn ability_strings_txt(id_a: &str, id_b: &str, shared_name: &str) -> String {
+        format!(
+            "[{id_a}]\nName={shared_name}\n\
+             [{id_b}]\nName={shared_name}\n"
+        )
+    }
+
+    fn build_database(results: Vec<ExtractResult>) -> WarcraftDatabase {
+        let aggregation = WarcraftDataAggregation::from(results);
+        WarcraftDatabase::from(aggregation)
+    }
+
+    fn unit_ability_ids(database: &WarcraftDatabase, unit_id: &str) -> Vec<String> {
+        let object = database
+            .by_id(unit_id)
+            .unwrap_or_else(|| panic!("unit {unit_id} missing from database"));
+        let WarcraftObjectMeta::Unit(unit_meta) = object.meta() else {
+            panic!("{unit_id} is not a Unit");
+        };
+        unit_meta
+            .abilities()
+            .iter()
+            .map(|ability_id| ability_id.value().to_string())
+            .collect()
+    }
+
+    fn unit_hero_ability_ids(database: &WarcraftDatabase, unit_id: &str) -> Vec<String> {
+        let object = database
+            .by_id(unit_id)
+            .unwrap_or_else(|| panic!("unit {unit_id} missing from database"));
+        let WarcraftObjectMeta::Unit(unit_meta) = object.meta() else {
+            panic!("{unit_id} is not a Unit");
+        };
+        unit_meta
+            .hero_abilities()
+            .iter()
+            .map(|ability_id| ability_id.value().to_string())
+            .collect()
+    }
+
+    /// Two self-referential abilities at the same position with the same name:
+    /// the earlier one is the base ability, the later one is the overlay
+    /// replacement.  Rule 5 must keep only the last (OldAb is dropped).
+    #[test]
+    fn earlier_ability_dropped_when_same_slot_and_name() {
+        let unit_slk_text = unit_slk("htst");
+        let abilities_slk_text = unit_abilities_slk("htst", "OldAb,NewAb");
+        let meta_slk_text = ability_metadata_slk("OldAb", "NewAb");
+        let defaults_txt = ability_defaults_txt("OldAb", "NewAb", 2, 2);
+        let unit_strings_text = unit_strings_txt("htst");
+        let ability_strings_text = ability_strings_txt("OldAb", "NewAb", "Test Ability");
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk_text.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let abilities = unit_ability_ids(&database, "htst");
+        let has_old = abilities.iter().any(|id| id.eq_ignore_ascii_case("OldAb"));
+        let has_new = abilities.iter().any(|id| id.eq_ignore_ascii_case("NewAb"));
+        assert!(
+            !has_old,
+            "OldAb must be suppressed when NewAb is at the same slot (abilities: {abilities:?})",
+        );
+        assert!(
+            has_new,
+            "NewAb must be retained as the replacement (abilities: {abilities:?})",
+        );
+    }
+
+    /// When only one of the two same-slot abilities has an off-state button
+    /// (toggle passive), that one is the old form and must be suppressed
+    /// regardless of list order.  This covers the Fire Lord scenario where
+    /// the toggle passive appears LAST in the merged list but is the wrong one.
+    #[test]
+    fn toggle_passive_dropped_in_favour_of_auto_passive_regardless_of_order() {
+        let unit_slk_text = unit_slk("htst");
+        // Note: toggle passive (TglAb) is LAST — "last wins" alone would keep it.
+        // Rule 5 must prefer the auto-passive (AtoAb) because it has no off-state.
+        let abilities_slk_text = unit_abilities_slk("htst", "AtoAb,TglAb");
+        let meta_slk_text = ability_metadata_slk("TglAb", "AtoAb");
+        let defaults_txt = ability_defaults_with_off_state_txt("TglAb", "AtoAb", 2, 2);
+        let unit_strings_text = unit_strings_txt("htst");
+        let ability_strings_text = ability_strings_txt("AtoAb", "TglAb", "Test Passive");
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk_text.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let abilities = unit_ability_ids(&database, "htst");
+        let has_toggle = abilities.iter().any(|id| id.eq_ignore_ascii_case("TglAb"));
+        let has_auto = abilities.iter().any(|id| id.eq_ignore_ascii_case("AtoAb"));
+        assert!(
+            !has_toggle,
+            "TglAb (toggle passive) must be suppressed in favour of AtoAb (abilities: {abilities:?})",
+        );
+        assert!(
+            has_auto,
+            "AtoAb (auto-passive) must be retained (abilities: {abilities:?})",
+        );
+    }
+
+    /// Abilities at the same position but with DIFFERENT names must NOT be
+    /// deduplicated — they serve different purposes (like cascade conflicts
+    /// where two abilities happen to share a default slot).
+    #[test]
+    fn different_names_at_same_position_are_not_deduplicated() {
+        let unit_slk_text = unit_slk("htst");
+        let abilities_slk_text = unit_abilities_slk("htst", "AbilA,AbilB");
+        let meta_slk_text = ability_metadata_slk("AbilA", "AbilB");
+        let defaults_txt = ability_defaults_txt("AbilA", "AbilB", 0, 2);
+        let unit_strings_text = unit_strings_txt("htst");
+        let ability_strings_text =
+            "[AbilA]\nName=Devour Magic\n[AbilB]\nName=Absorb Mana\n".to_string();
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk_text.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let abilities = unit_ability_ids(&database, "htst");
+        let has_a = abilities.iter().any(|id| id.eq_ignore_ascii_case("AbilA"));
+        let has_b = abilities.iter().any(|id| id.eq_ignore_ascii_case("AbilB"));
+        assert!(
+            has_a && has_b,
+            "both abilities must survive when they have different names (abilities: {abilities:?})",
+        );
+    }
+
+    /// Abilities don't need to be self-referential (code == alias) for Rule 5
+    /// to apply.  The Archer/Hippogryph case: `OldSelf` is self-referential
+    /// (`code=OldSelf`) and `NewAlias` is an alias of a different base mechanic
+    /// (`code=BaseMec`).  Both occupy the same default position with the same
+    /// display name.  Rule 5 must suppress `OldSelf` because `NewAlias` is the
+    /// last occurrence in the CASC-merged list (base before overlay).
+    #[test]
+    fn self_ref_dropped_in_favour_of_non_self_ref_alias_at_same_slot() {
+        let unit_slk_text = unit_slk("htst");
+        // OldSelf (base) listed before NewAlias (overlay) — CASC order.
+        let abilities_slk_text = unit_abilities_slk("htst", "OldSelf,NewAlias");
+        // OldSelf is self-referential; NewAlias has a different base mechanic code.
+        let meta_slk_text = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X1;Y2;K\"OldSelf\"\n\
+             C;X2;Y2;K\"OldSelf\"\n\
+             C;X1;Y3;K\"NewAlias\"\n\
+             C;X2;Y3;K\"BaseMec\"\n\
+             E\n"
+        .to_string();
+        let defaults_txt = ability_defaults_txt("OldSelf", "NewAlias", 0, 2);
+        let unit_strings_text = unit_strings_txt("htst");
+        let ability_strings_text = ability_strings_txt("OldSelf", "NewAlias", "Mount Test");
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk_text.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let abilities = unit_ability_ids(&database, "htst");
+        let has_old = abilities
+            .iter()
+            .any(|id| id.eq_ignore_ascii_case("OldSelf"));
+        let has_new = abilities
+            .iter()
+            .any(|id| id.eq_ignore_ascii_case("NewAlias"));
+        assert!(
+            !has_old,
+            "OldSelf must be suppressed when NewAlias occupies the same slot (abilities: {abilities:?})",
+        );
+        assert!(
+            has_new,
+            "NewAlias must be retained as the balance-patch replacement (abilities: {abilities:?})",
+        );
+    }
+
+    /// Rule 5 applies to hero abilities (heroAbilList) too.  Same-slot
+    /// same-name pair in the hero list: the earlier one is dropped.
+    #[test]
+    fn hero_ability_earlier_dropped_when_same_slot_and_name() {
+        // Use a hero unit so hero abilities are populated
+        let hero_unit_slk = "ID;P\n\
+             C;X1;Y1;K\"unitBalanceID\"\n\
+             C;X2;Y1;K\"defType\"\n\
+             C;X3;Y1;K\"isbldg\"\n\
+             C;X4;Y1;K\"bldtm\"\n\
+             C;X1;Y2;K\"Htst\"\n\
+             C;X2;Y2;K\"hero\"\n\
+             C;X3;Y2;K\"0\"\n\
+             C;X4;Y2;K\"55\"\n\
+             E\n"
+        .to_string();
+        let abilities_slk_text = unit_abilities_slk_hero("Htst", "OldHeroAb,NewHeroAb");
+        let meta_slk_text = ability_metadata_slk("OldHeroAb", "NewHeroAb");
+        let defaults_txt = ability_defaults_txt("OldHeroAb", "NewHeroAb", 3, 2);
+        let unit_strings_text = unit_strings_txt("Htst");
+        let ability_strings_text =
+            ability_strings_txt("OldHeroAb", "NewHeroAb", "Hero Test Ability");
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, hero_unit_slk.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let hero_abilities = unit_hero_ability_ids(&database, "Htst");
+        let has_old = hero_abilities
+            .iter()
+            .any(|id| id.eq_ignore_ascii_case("OldHeroAb"));
+        let has_new = hero_abilities
+            .iter()
+            .any(|id| id.eq_ignore_ascii_case("NewHeroAb"));
+        assert!(
+            !has_old,
+            "OldHeroAb must be suppressed in hero abilities (hero_abilities: {hero_abilities:?})",
+        );
+        assert!(
+            has_new,
+            "NewHeroAb must be retained in hero abilities (hero_abilities: {hero_abilities:?})",
+        );
     }
 }

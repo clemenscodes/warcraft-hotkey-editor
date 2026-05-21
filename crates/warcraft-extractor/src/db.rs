@@ -1116,6 +1116,14 @@ impl WarcraftDataAggregation {
                             });
                         }
                     }
+                    // Rule 5: when two self-referential abilities occupy the same
+                    // default button position and share the same display name, one is
+                    // a balance-patch replacement of the other (the CASC additive merge
+                    // kept both the base and overlay IDs).  Suppress the superseded one:
+                    //   (a) if exactly one has an off-state button (toggle passive),
+                    //       suppress it — the auto-passive form is the replacement;
+                    //   (b) otherwise keep the last occurrence — the overlay is newer.
+                    Self::suppress_same_slot_duplicates(&mut combined, self, *race);
                     Self::leak_object_ids(&combined)
                 };
                 let hero_abilities_for_unit: &'static [WarcraftObjectId] = {
@@ -1137,6 +1145,9 @@ impl WarcraftDataAggregation {
                             }
                         }
                     }
+                    // Rule 5 (hero abilities): same same-slot deduplication as for
+                    // regular abilities above.
+                    Self::suppress_same_slot_duplicates(&mut hero_combined, self, *race);
                     Self::leak_object_ids(&hero_combined)
                 };
                 let ui_flags = self.unit_ui_flags.get(id);
@@ -1728,6 +1739,96 @@ impl WarcraftDataAggregation {
 
     pub fn skins(&self) -> &SkinDatabase {
         &self.skins
+    }
+
+    /// Rule 5 helper: remove abilities that are balance-patch duplicates occupying
+    /// the same default button slot with the same display name.
+    ///
+    /// The CASC additive merge accumulates both the original ability ID (from the
+    /// base war3.w3mod) and its replacement (from a balance overlay) on the same
+    /// unit.  Two abilities are considered balance-patch duplicates when they share
+    /// the same default button position AND the same resolved display name — regardless
+    /// of whether either ability is self-referential.
+    ///
+    /// Tiebreaker:
+    /// - If exactly one of the two has an off-state button (toggle passive), that
+    ///   one is suppressed — the auto-passive form is the intended replacement.
+    /// - Otherwise the earlier occurrence is suppressed — the CASC overlay appears
+    ///   later in the merged list and is the newer version.
+    fn suppress_same_slot_duplicates(
+        abilities: &mut Vec<String>,
+        aggregation: &WarcraftDataAggregation,
+        race: Race,
+    ) {
+        let mut slot_to_abilities: std::collections::HashMap<String, Vec<String>> =
+            std::collections::HashMap::new();
+        let mut ability_has_off_state: std::collections::HashMap<String, bool> =
+            std::collections::HashMap::new();
+
+        for ability_id in abilities.iter() {
+            let defaults = aggregation.ability_defaults.get(ability_id.as_str());
+            let Some(position) = defaults.and_then(|entry| entry.button_position()) else {
+                continue;
+            };
+            let Some(name) = aggregation.resolve_ability_name(Some(race), ability_id) else {
+                continue;
+            };
+            let slot_key = format!("{position}|{name}");
+            let has_off_state = defaults.and_then(|d| d.off_button_position()).is_some();
+            let ability_lower = ability_id.to_ascii_lowercase();
+            slot_to_abilities
+                .entry(slot_key)
+                .or_default()
+                .push(ability_id.clone());
+            ability_has_off_state.insert(ability_lower, has_off_state);
+        }
+
+        let mut patch_superseded: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+
+        for slot_abilities in slot_to_abilities.values() {
+            if slot_abilities.len() < 2 {
+                continue;
+            }
+            let toggle_passive_count = slot_abilities
+                .iter()
+                .filter(|ability_id| {
+                    let ability_lower = ability_id.to_ascii_lowercase();
+                    ability_has_off_state
+                        .get(&ability_lower)
+                        .copied()
+                        .unwrap_or(false)
+                })
+                .count();
+            let exactly_one_toggle = toggle_passive_count == 1 && slot_abilities.len() == 2;
+            if exactly_one_toggle {
+                for ability_id in slot_abilities.iter() {
+                    let ability_lower = ability_id.to_ascii_lowercase();
+                    let has_off_state = ability_has_off_state
+                        .get(&ability_lower)
+                        .copied()
+                        .unwrap_or(false);
+                    if has_off_state {
+                        patch_superseded.insert(ability_lower);
+                    }
+                }
+            } else {
+                let last_ability = slot_abilities.last().unwrap();
+                for ability_id in slot_abilities.iter() {
+                    if !ability_id.eq_ignore_ascii_case(last_ability) {
+                        let ability_lower = ability_id.to_ascii_lowercase();
+                        patch_superseded.insert(ability_lower);
+                    }
+                }
+            }
+        }
+
+        if !patch_superseded.is_empty() {
+            abilities.retain(|ability_id| {
+                let ability_lower = ability_id.to_ascii_lowercase();
+                !patch_superseded.contains(&ability_lower)
+            });
+        }
     }
 }
 
