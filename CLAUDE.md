@@ -116,6 +116,18 @@ Full rules: `docs/RUST_STYLE.md`. Headlines (every one is enforced):
   Make the noun a struct and the verb a method.
 - **No `as` casts outside `From`/`TryFrom` impl bodies.** Use `From`,
   `Into`, or `TryFrom` everywhere else.
+- **Use idiomatic standard traits — highest priority.** If a standard
+  trait covers what you are doing (`Display`, `From`, `TryFrom`,
+  `Default`, `Iterator`, `FromStr`, `Error`, `Index`, etc.), implement
+  it. Never invent a parallel convention. See `docs/RUST_STYLE.md`.
+- **Derive every trait the type qualifies for.** Always derive
+  `Clone`, `Debug`, `PartialEq`, `Eq`, `Hash`, `PartialOrd`, `Ord`,
+  `Copy`, `Default` whenever the type mechanically supports them. `Copy`
+  must be derived (not skipped) for any type that is cheaply bitwise-
+  copyable (small value types, ids, enums without heap data). Do not
+  leave these off because writing them out feels like effort.
+- **Use `Self` inside `impl` blocks.** Never repeat the concrete struct
+  name — return types, construction, associated calls all use `Self`.
 
 These apply to every line of new Rust. They also apply to existing code
 you edit — if you touch a function, leave it conformant on the way out

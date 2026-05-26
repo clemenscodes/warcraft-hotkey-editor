@@ -210,6 +210,123 @@ impl Icon {
 }
 ```
 
+## Derive every trait the type qualifies for
+
+Every struct and enum must derive all standard traits it mechanically
+supports. Do not omit derives because writing them feels like overhead.
+
+Always attempt to derive, in this order: `Clone`, `Debug`, `PartialEq`,
+`Eq`, `Hash`, `PartialOrd`, `Ord`, `Copy`, `Default`.
+
+- `Copy` must be derived for any type that is cheaply bitwise-copyable:
+  small value types, identifier wrappers, enums with no heap-allocated
+  fields. If it compiles with `Copy`, it gets `Copy`.
+- `Default` must be derived whenever the type has a meaningful zero/empty
+  state (which is most types). If `derive(Default)` does not produce the
+  right default, implement the trait manually — but do not skip it.
+- `Hash` must always accompany `Eq`.
+
+```rust
+// WRONG — missing derives the type qualifies for
+#[derive(Debug)]
+struct AbilityId { value: u32 }
+
+// CORRECT
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
+struct AbilityId { value: u32 }
+```
+
+If a type cannot derive a trait (e.g. it contains a field that does not
+implement the trait), do not silently skip it — either implement the
+trait manually or surface it in review.
+
+## Use `Self` inside `impl` blocks — never repeat the struct name
+
+Inside any `impl` block, refer to the implementing type as `Self`, not
+by its concrete name. This applies to return types, construction
+expressions, associated function calls, and pattern matches.
+
+```rust
+// WRONG — struct name repeated inside the impl
+impl AbilityId {
+    fn new(value: u32) -> AbilityId { AbilityId { value } }
+    fn zero() -> AbilityId { AbilityId { value: 0 } }
+}
+
+impl From<u32> for AbilityId {
+    fn from(raw: u32) -> AbilityId { AbilityId { value: raw } }
+}
+
+// CORRECT
+impl AbilityId {
+    fn new(value: u32) -> Self { Self { value } }
+    fn zero() -> Self { Self { value: 0 } }
+}
+
+impl From<u32> for AbilityId {
+    fn from(raw: u32) -> Self { Self { value: raw } }
+}
+```
+
+No exceptions. If you are inside an `impl` block, the type is `Self`.
+
+## Use idiomatic Rust traits — this is non-negotiable
+
+This is the highest-priority rule in this file. If a standard Rust trait
+exists for what you are doing, implement it. Do not invent a parallel
+convention. The compiler, tooling, and every reader of this code expects
+standard traits; anything else is sabotage.
+
+Mandatory traits — implement these whenever the concept applies:
+
+| Concept | Trait(s) to implement |
+|---|---|
+| Human-readable text | `std::fmt::Display` |
+| Infallible conversion from another type | `From<T>` / `Into<T>` |
+| Fallible conversion from another type | `TryFrom<T>` / `TryInto<T>` |
+| Sensible zero/empty value | `Default` |
+| Equality comparison | `PartialEq`, `Eq` |
+| Ordering | `PartialOrd`, `Ord` |
+| Cheap copy semantics | `Copy` (only when truly cheap) |
+| Cloning | `Clone` |
+| Hashing | `Hash` (whenever `Eq` is derived) |
+| Iteration | `Iterator`, `IntoIterator` |
+| String parsing | `FromStr` |
+| Error types | `std::error::Error` |
+| Indexing | `Index` / `IndexMut` |
+
+```rust
+// WRONG — inventing a parallel convention instead of using the trait
+fn to_string(&self) -> String { format!("{}", self.name) }
+fn from_raw(raw: u32) -> Self { Self { value: raw } }
+fn try_from_str(s: &str) -> Result<Self, ParseError> { ... }
+fn default_config() -> Config { Config { ... } }
+
+// CORRECT
+impl fmt::Display for Ability {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(formatter, "{}", self.name)
+    }
+}
+
+impl From<u32> for AbilityId {
+    fn from(raw: u32) -> AbilityId { AbilityId { value: raw } }
+}
+
+impl TryFrom<&str> for HotkeyBinding {
+    type Error = ParseError;
+    fn try_from(source: &str) -> Result<HotkeyBinding, ParseError> { ... }
+}
+
+impl Default for Config {
+    fn default() -> Config { Config { ... } }
+}
+```
+
+If you are writing a method that converts, parses, or produces a default
+and a standard trait covers it, implement the trait. There are no
+exceptions.
+
 ## No `as` casts outside `From`/`TryFrom` impls
 
 Never use `as` to cast between numeric types in ordinary code. Use `From`,
