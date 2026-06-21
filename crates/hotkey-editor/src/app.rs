@@ -24,6 +24,7 @@ use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::url_state::UrlNavigationState;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 use warcraft_api::RaceLabels;
 use warcraft_database::UnitMode;
 
@@ -271,8 +272,17 @@ pub(crate) fn App() -> Element {
                         }
                     }
                 },
-                AppView::Collisions { kind } => rsx! {
-                    CollisionsPage { kind }
+                AppView::Collisions { kind } => {
+                    let view_navigation = ViewNavigationContext {
+                        current_view,
+                        active_race,
+                        unit_mode,
+                        selected_unit_id,
+                        search_query,
+                    };
+                    rsx! {
+                        CollisionsPage { kind, loaded_keys, view_navigation }
+                    }
                 },
                 AppView::Resolve => rsx! {
                     ResolvePage {}
