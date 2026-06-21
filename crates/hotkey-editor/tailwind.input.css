@@ -24,7 +24,10 @@ body {
 }
 
 :root {
-  --sidebar-column-width: 27rem;
+  /* Wide enough that a collision island card (empty 4x3 grid + "Column · Row"
+     on one line) fits without clipping. The editor's unit cards share this
+     width, so island cards and unit cards stay identical at every viewport. */
+  --sidebar-column-width: 34rem;
 }
 
 @media (min-width: 1800px) {
@@ -64,6 +67,7 @@ body {
 @import "./src/components/dialogs/dialogs.css" layer(components);
 @import "./src/components/tile_override/tile_override.css";
 @import "./src/components/system_hotkeys/system_hotkeys.css";
+@import "./src/components/views/collisions_page/collisions_page.css";
 @import "./styles/mobile-foundation.css" layer(mobile);
 
 @source "./src/**/*.rs";
