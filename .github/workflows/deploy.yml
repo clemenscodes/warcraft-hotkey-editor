@@ -62,11 +62,19 @@ jobs:
         run: chmod -R u+w . || true
       - uses: actions/checkout@v6
 
-      - name: Prepare Moon base ref
+      - name: Prepare Moon git refs
+        # The checkout is always detached (a SHA on push, a merge ref on
+        # pull_request), so Moon resolves branches from the CI env vars
+        # GITHUB_BASE_REF / GITHUB_HEAD_REF. Those refs don't exist in a
+        # detached checkout, which is what makes Moon's touched-files diff
+        # die with "ambiguous argument 'develop'". Materialize them here.
+        # -f keeps them correct across the reused self-hosted workspace.
         run: |
-          git fetch origin main
-          if ! git show-ref --verify --quiet refs/heads/main; then
-            git branch main FETCH_HEAD
+          base_ref="${GITHUB_BASE_REF:-main}"
+          git fetch origin "$base_ref"
+          git branch -f "$base_ref" FETCH_HEAD
+          if [ -n "$GITHUB_HEAD_REF" ]; then
+            git branch -f "$GITHUB_HEAD_REF" HEAD
           fi
 
       - name: Use Cachix
