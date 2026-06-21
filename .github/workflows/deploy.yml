@@ -63,17 +63,21 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Prepare Moon git refs
-        # The checkout is always detached (a SHA on push, a merge ref on
-        # pull_request), so Moon resolves branches from the CI env vars
-        # GITHUB_BASE_REF / GITHUB_HEAD_REF. Those refs don't exist in a
-        # detached checkout, which is what makes Moon's touched-files diff
-        # die with "ambiguous argument 'develop'". Materialize them here.
-        # -f keeps them correct across the reused self-hosted workspace.
+        # On pull_request the checkout is a detached merge ref, so the
+        # branches Moon reads from GITHUB_BASE_REF / GITHUB_HEAD_REF have
+        # no local ref and Moon's touched-files diff dies with
+        # "ambiguous argument 'develop'". Materialize them here. On a push
+        # the branch is already checked out, so skip it — git refuses to
+        # force-update the branch in use. -f keeps the others correct
+        # across the reused self-hosted workspace.
         run: |
           base_ref="${GITHUB_BASE_REF:-main}"
+          current="$(git branch --show-current)"
           git fetch origin "$base_ref"
-          git branch -f "$base_ref" FETCH_HEAD
-          if [ -n "$GITHUB_HEAD_REF" ]; then
+          if [ "$base_ref" != "$current" ]; then
+            git branch -f "$base_ref" FETCH_HEAD
+          fi
+          if [ -n "$GITHUB_HEAD_REF" ] && [ "$GITHUB_HEAD_REF" != "$current" ]; then
             git branch -f "$GITHUB_HEAD_REF" HEAD
           fi
 
