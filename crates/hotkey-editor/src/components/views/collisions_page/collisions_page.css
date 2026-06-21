@@ -1,0 +1,339 @@
+@layer components {
+
+/* Sidebar island card: reuses .unit-card so its size and mobile carousel
+   behaviour are identical to the unit list. The portrait is replaced by a
+   small empty 4x3 command grid with only the conflicting button highlighted. */
+.island-mini-grid {
+    height: 92px;
+    width: calc(92px / 3 * 4);
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    padding: 3px;
+    background: rgba(20, 35, 60, 0.7);
+    border: 1px solid #2a5085;
+    border-radius: 3px;
+}
+
+.island-mini-cell {
+    background: rgba(13, 31, 61, 0.65);
+    border: 1px solid #24406a;
+    border-radius: 2px;
+}
+
+.island-mini-cell.collision {
+    border-color: var(--race-color, #ffce63);
+    background: rgba(255, 206, 99, 0.2);
+    box-shadow: 0 0 6px var(--race-color-soft, rgba(255, 206, 99, 0.5));
+}
+
+/* Island card text. Balanced spacing: the gap between Column and Row equals
+   the gap to the collisions line. Mobile (carousel, ≤1099): fully stacked.
+   ≥1100: "Column · Row" on one line, collisions below — a single layout that
+   scales linearly with the root font from 1080p to 4K. */
+.island-row-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 0.35rem 0.5rem;
+}
+
+.island-coord-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex: 0 0 auto;
+}
+
+.island-coord-sep {
+    display: none;
+    color: #b8a86a;
+    font-size: 1.95rem;
+    line-height: 1;
+}
+
+.island-coord {
+    font-family: "Friz Quadrata", serif;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: #e0d8c8;
+    white-space: nowrap;
+}
+
+.island-row.selected .island-coord {
+    color: var(--race-color, #ffce63);
+}
+
+.island-collision-count {
+    font-size: 1.5rem;
+    color: #ffce63;
+    text-shadow: 1px 1px 0 #000;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+/* ≥1100: the single two-pane layout. "Column · Row" on one line, collisions
+   below. Everything is rem-based so the whole view scales linearly with the
+   root font (identical layout from 1080p to 4K). The island sidebar shares
+   the editor's --sidebar-column-width, so island cards match unit-card width. */
+@media (min-width: 1100px) {
+    /* Match the unit-card icon height (80px) so island cards are exactly as
+       tall as the editor's unit cards. */
+    .island-mini-grid {
+        height: 80px;
+        width: calc(80px / 3 * 4);
+        gap: 2px;
+        padding: 3px;
+    }
+    .island-coord-group {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.6rem;
+    }
+    .island-coord-sep {
+        display: inline;
+    }
+    .island-coord {
+        font-size: 1.55rem;
+    }
+    .island-collision-count {
+        font-size: 1.55rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .island-mini-grid {
+        height: 66px;
+        width: calc(66px / 3 * 4);
+        gap: 2px;
+        padding: 2px;
+    }
+}
+
+/* Detail header — mirrors the island card so the user keeps their bearings
+   while scrolling the conflict list: the same mini grid plus "Column · Row"
+   and the collision count. */
+.island-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: none;
+    padding-bottom: 0.85rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(255, 206, 99, 0.25);
+}
+
+/* The conflicts are laid out as a 2-up grid of tall cards (1-up on narrow),
+   mirroring the templates dialog. The grid scrolls inside the detail pane. */
+.conflict-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    align-content: start;
+    padding: 1rem 0.75rem 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
+}
+
+@media (max-width: 1099px) {
+    .conflict-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* One conflict card. Row 1 = the two unit headers (left & right). Row 2 = the
+   two abilities flanking the centered ✕ (icon ✕ icon, name + "+N more" below
+   each). Both halves are identical, so the card reads symmetric. */
+.conflict-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "unitL unitR"
+        "abrow abrow";
+    column-gap: 16px;
+    row-gap: 24px;
+    align-items: start;
+    justify-items: center;
+    padding: 28px 20px;
+    background: rgba(13, 31, 61, 0.45);
+    border: 1px solid #24406a;
+    border-radius: 10px;
+}
+
+.conflict-unit-left {
+    grid-area: unitL;
+}
+
+.conflict-unit-right {
+    grid-area: unitR;
+}
+
+/* The two abilities cluster around the ✕ (they do not stretch to the edges). */
+.conflict-ability-row {
+    grid-area: abrow;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 18px;
+    width: 100%;
+}
+
+.conflict-separator {
+    flex: 0 0 auto;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    color: #b8a86a;
+    font-size: 34px;
+    line-height: 1;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* The unit header is a content-width button (icon + name + id stacked) so its
+   hover/click area hugs the content rather than the whole grid cell. */
+.conflict-unit {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    max-width: 100%;
+}
+
+/* An ability column: a clickable icon (the only hover/hit target) with the
+   name, object id, and optional "+N more" below it. Both columns are the same
+   fixed width so their centered icons sit equidistant from the ✕. */
+.conflict-ability {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 150px;
+}
+
+.conflict-ability-trigger {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    line-height: 0;
+}
+
+.conflict-unit-icon {
+    width: 112px;
+    height: 112px;
+    border: 1px solid #2a5085;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.conflict-ability-icon {
+    width: 72px;
+    height: 72px;
+    border: 1px solid #2a5085;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.conflict-unit-icon:hover,
+.conflict-ability-trigger:hover .conflict-ability-icon {
+    border-color: var(--race-color, #ffce63);
+    box-shadow: 0 0 8px var(--race-color-soft, rgba(255, 206, 99, 0.5));
+}
+
+.conflict-unit-name {
+    font-family: "Friz Quadrata", serif;
+    font-size: 19px;
+    color: #e0d8c8;
+    text-align: center;
+    max-width: 100%;
+}
+
+.conflict-ability-name {
+    font-size: 17px;
+    color: #ffce63;
+    text-align: center;
+    max-width: 100%;
+}
+
+/* Object id — both can share an icon/name yet be distinct, so the id shows. */
+.conflict-object-id {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: #7b818d;
+}
+
+.conflict-more {
+    font-size: 14px;
+    color: #9aa3b2;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Carriers dialog — a responsive scrollable grid of big unit cards. */
+.carriers-dialog-body {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 24px 28px 28px;
+}
+
+.carriers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.carrier-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin: 0;
+    padding: 30px 20px;
+    background: rgba(13, 31, 61, 0.5);
+    border: 1px solid #24406a;
+    border-radius: 8px;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.carrier-card:hover {
+    border-color: var(--race-color, #ffce63);
+    box-shadow: 0 0 8px var(--race-color-soft, rgba(255, 206, 99, 0.45));
+}
+
+.carrier-card-icon {
+    width: 168px;
+    height: 168px;
+    border: 1px solid #2a5085;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.carrier-card-name {
+    font-size: 22px;
+    line-height: 1.3;
+    color: #e0d8c8;
+    text-align: center;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+}
