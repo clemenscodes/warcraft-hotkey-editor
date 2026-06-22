@@ -144,6 +144,21 @@
     scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
 }
 
+/* Mobile/stacked (< 1100px): the detail pane is not a height-bounded scroll
+   container here (it flows and the page scrolls), so the grid must NOT clamp
+   itself to the pane's collapsed height — that hid every card. Drop the
+   flex/scroll behaviour, take natural height, and stack a single full-width
+   column (the 450px floor would force horizontal overflow on phones). */
+@media (max-width: 1099px) {
+    .conflict-grid {
+        grid-template-columns: minmax(0, 1fr);
+        flex: none;
+        min-height: auto;
+        overflow-y: visible;
+        padding: 1rem 0;
+    }
+}
+
 /* One conflict card. The affected unit is centered on top; below it the unit's
    two clashing abilities flank the centered ✕ (icon ✕ icon, name + "+N more"
    below each). Clicking an ability opens the carriers dialog. */
