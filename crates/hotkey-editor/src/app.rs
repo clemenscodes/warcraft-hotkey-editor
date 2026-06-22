@@ -104,6 +104,10 @@ pub(crate) fn App() -> Element {
         } => initial_entry.clone(),
         _ => None,
     };
+    let initial_selected_move_category = match initial_view {
+        AppView::Resolve => initial_entry.clone(),
+        _ => None,
+    };
 
     let active_race = use_signal::<Race>(move || initial_race);
     let unit_mode = use_signal::<UnitMode>(move || initial_mode);
@@ -124,6 +128,8 @@ pub(crate) fn App() -> Element {
         use_signal::<Option<String>>(move || initial_selected_hotkey_unit);
     let mut selected_unit_position =
         use_signal::<Option<String>>(move || initial_selected_unit_position);
+    let mut selected_move_category =
+        use_signal::<Option<String>>(move || initial_selected_move_category);
     use_effect(move || {
         let race = *active_race.read();
         let mode = *unit_mode.read();
@@ -141,6 +147,9 @@ pub(crate) fn App() -> Element {
             AppView::Collisions {
                 kind: CollisionKind::UnitPositions,
             } => selected_unit_position.read().clone(),
+            // On the Resolve view the same `entry` slot carries the selected
+            // move-category breadcrumb (Fights/Gap pulls/Spills/Swaps).
+            AppView::Resolve => selected_move_category.read().clone(),
             _ => None,
         };
         let unit_id_ref = unit_id_option.as_deref();
@@ -165,6 +174,7 @@ pub(crate) fn App() -> Element {
                 AppView::Collisions {
                     kind: CollisionKind::UnitPositions,
                 } => selected_unit_position.set(entry),
+                AppView::Resolve => selected_move_category.set(entry),
                 _ => {}
             }
         });
@@ -383,7 +393,7 @@ pub(crate) fn App() -> Element {
                         search_query,
                     };
                     rsx! {
-                        ResolvePage { loaded_keys, view_navigation }
+                        ResolvePage { loaded_keys, view_navigation, selected_move_category }
                     }
                 },
             }

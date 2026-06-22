@@ -99,6 +99,19 @@ impl MoveCategory {
             Self::Swap => "swaps",
         }
     }
+
+    /// Parses the `data_breadcrumb` slug back into a category — used to restore
+    /// the selected move section from the `?entry=` URL parameter. Unknown slugs
+    /// yield `None` (the page then falls back to the first section).
+    fn from_data_breadcrumb(slug: &str) -> Option<Self> {
+        match slug {
+            "fights" => Some(Self::Fight),
+            "gap-pulls" => Some(Self::GapPull),
+            "spills" => Some(Self::Spill),
+            "swaps" => Some(Self::Swap),
+            _ => None,
+        }
+    }
 }
 
 /// The display-ready pieces of a move's rationale: a short badge label + colour
@@ -705,6 +718,10 @@ const CENTERED_STATE_CLASS: &str = "resolve-page flex flex-col items-center just
 pub(crate) struct ResolvePageProps {
     pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
     pub(crate) view_navigation: ViewNavigationContext,
+    /// The selected move-category breadcrumb, backed by the `?entry=` URL
+    /// parameter (its `data_breadcrumb` slug) so the viewed section deep-links
+    /// and survives browser back/forward — mirroring the collisions page.
+    pub(crate) selected_move_category: Signal<Option<String>>,
 }
 
 /// The Resolve page: a transparent preview of the cascade plan — every move the
@@ -717,7 +734,7 @@ pub(crate) fn ResolvePage(props: ResolvePageProps) -> Element {
     let toast_api = use_toast();
     let mut is_running = use_signal(|| false);
     let carriers_dialog = use_signal(|| None::<CarriersDialogData>);
-    let mut selected_category = use_signal(|| None::<MoveCategory>);
+    let mut selected_move_category = props.selected_move_category;
 
     let plan_memo = use_memo(move || {
         let guard = loaded_keys.read();
@@ -794,8 +811,12 @@ pub(crate) fn ResolvePage(props: ResolvePageProps) -> Element {
     let plan = plan.expect("plan present when a file is loaded");
 
     // The selected breadcrumb, falling back to the first section when nothing is
-    // chosen yet or the chosen category has no moves in the current plan.
-    let selected = *selected_category.read();
+    // chosen yet or the chosen category has no moves in the current plan. The
+    // selection is restored from the `?entry=` URL slug.
+    let selected_slug = selected_move_category.read().clone();
+    let selected = selected_slug
+        .as_deref()
+        .and_then(MoveCategory::from_data_breadcrumb);
     let selected_exists = selected
         .map(|category| {
             plan.sections
@@ -853,7 +874,8 @@ pub(crate) fn ResolvePage(props: ResolvePageProps) -> Element {
                         let title = section.title;
                         let count = section.moves.len();
                         let select = move |_| {
-                            selected_category.set(Some(category));
+                            let slug = category.data_breadcrumb().to_owned();
+                            selected_move_category.set(Some(slug));
                         };
                         rsx! {
                             if section_index > 0 {
