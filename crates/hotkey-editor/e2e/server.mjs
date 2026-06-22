@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
-const [dir, port = "8080", basePath = ""] = process.argv.slice(2);
+const [dir, port = "8123", basePath = ""] = process.argv.slice(2);
 
 const mime = {
   ".html": "text/html; charset=utf-8",

@@ -35,7 +35,7 @@ impl ViewNavigationContext {
         let query = self.search_query.read().clone();
         let unit_id_ref = unit_id_option.as_deref();
         let query_str = query.as_str();
-        UrlNavigationState::push_view_to_url(race, mode, unit_id_ref, query_str, target);
+        UrlNavigationState::push_view_to_url(race, mode, unit_id_ref, query_str, target, None);
     }
 
     /// Deep-link into the editor focused on `unit_id`.  Resolves the

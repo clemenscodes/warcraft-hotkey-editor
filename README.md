@@ -91,7 +91,7 @@ moon run :nix/bundle # nix build .#warcraft-hotkey-editor
 The dev server usually prints:
 
 ```text
-http://127.0.0.1:8080/warcraft-hotkey-editor/
+http://127.0.0.1:8123/warcraft-hotkey-editor/
 ```
 
 ### With Docker (Windows / no Nix)
@@ -101,7 +101,7 @@ not available. You need [Docker Desktop](https://www.docker.com/products/docker-
 (or Docker Engine on Linux) and [moon](https://moonrepo.dev/moon) installed.
 
 ```bash
-# Start the dev server (accessible at http://localhost:8080/warcraft-hotkey-editor/)
+# Start the dev server (accessible at http://localhost:8123/warcraft-hotkey-editor/)
 moon run :docker/up
 
 # Run the e2e tests
@@ -131,14 +131,14 @@ The image pins the same tool versions as the Nix dev shell:
 Nix, no dev server, no Rust toolchain at runtime.
 
 ```bash
-# Build prod image and serve on http://localhost:8080/warcraft-hotkey-editor/
+# Build prod image and serve on http://localhost:8123/warcraft-hotkey-editor/
 moon run hotkey-editor:docker/serve
 
 # Stop the prod container
 moon run hotkey-editor:docker/down
 ```
 
-The app is served at `http://localhost:8080/warcraft-hotkey-editor/`.
+The app is served at `http://localhost:8123/warcraft-hotkey-editor/`.
 
 ### Without Nix or Docker
 
@@ -171,7 +171,7 @@ moon run :docker/e2e
 `e2e/run.mjs` manages the server lifecycle: it starts `dx serve`, waits
 for the build to finish (watching stdout for `"launching app"`), runs
 the tests, then kills the server. If a dev server is already running on
-port 8080, it reuses it and skips the startup entirely.
+port 8123, it reuses it and skips the startup entirely.
 
 E2e tests are part of `moon run :ci` and run on every pull request.
 

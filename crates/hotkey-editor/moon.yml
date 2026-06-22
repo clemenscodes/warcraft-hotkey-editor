@@ -58,7 +58,7 @@ tasks:
 
   dx/serve:
     toolchain: system
-    command: dx serve --package hotkey-editor --platform web
+    command: dx serve --package hotkey-editor --platform web --port 8123
     options:
       outputStyle: stream
       interactive: true
@@ -69,7 +69,7 @@ tasks:
 
   dx/serve-container:
     toolchain: system
-    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0
+    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0 --port 8123
     options:
       outputStyle: stream
       interactive: false
@@ -169,7 +169,7 @@ tasks:
     toolchain: system
     script: >
       docker build --target production --progress plain -t warcraft-hotkey-editor . &&
-      docker run --rm --name warcraft-hotkey-editor -p 8080:80 warcraft-hotkey-editor
+      docker run --rm --name warcraft-hotkey-editor -p 8123:80 warcraft-hotkey-editor
     env:
       FORCE_COLOR: "1"
     options:

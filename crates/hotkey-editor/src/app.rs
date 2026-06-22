@@ -22,7 +22,7 @@ use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::persistence::CustomKeysPersistence;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
-use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::url_state::UrlNavigationState;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use warcraft_api::RaceLabels;
@@ -82,6 +82,29 @@ pub(crate) fn App() -> Element {
     let initial_search = initial_nav.search_query().to_string();
     let initial_view = initial_nav.view();
 
+    // The selected collisions entry is restored into whichever kind's signal the
+    // booted view names; the other two start empty (their validation effects
+    // pick a first entry on demand).
+    let initial_entry = initial_nav.selected_entry().map(|entry| entry.to_string());
+    let initial_selected_island = match initial_view {
+        AppView::Collisions {
+            kind: CollisionKind::Positions,
+        } => initial_entry.clone(),
+        _ => None,
+    };
+    let initial_selected_hotkey_unit = match initial_view {
+        AppView::Collisions {
+            kind: CollisionKind::Hotkeys,
+        } => initial_entry.clone(),
+        _ => None,
+    };
+    let initial_selected_unit_position = match initial_view {
+        AppView::Collisions {
+            kind: CollisionKind::UnitPositions,
+        } => initial_entry.clone(),
+        _ => None,
+    };
+
     let active_race = use_signal::<Race>(move || initial_race);
     let unit_mode = use_signal::<UnitMode>(move || initial_mode);
     let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id);
@@ -96,19 +119,54 @@ pub(crate) fn App() -> Element {
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let search_query = use_signal::<String>(move || initial_search);
     let mut current_view = use_signal::<AppView>(move || initial_view);
+    let mut selected_island = use_signal::<Option<String>>(move || initial_selected_island);
+    let mut selected_hotkey_unit =
+        use_signal::<Option<String>>(move || initial_selected_hotkey_unit);
+    let mut selected_unit_position =
+        use_signal::<Option<String>>(move || initial_selected_unit_position);
     use_effect(move || {
         let race = *active_race.read();
         let mode = *unit_mode.read();
         let unit_id_option = selected_unit_id.read().clone();
         let query = search_query.read().clone();
         let view = *current_view.read();
+        // Only the active collisions kind's selection rides in the URL.
+        let entry_option = match view {
+            AppView::Collisions {
+                kind: CollisionKind::Positions,
+            } => selected_island.read().clone(),
+            AppView::Collisions {
+                kind: CollisionKind::Hotkeys,
+            } => selected_hotkey_unit.read().clone(),
+            AppView::Collisions {
+                kind: CollisionKind::UnitPositions,
+            } => selected_unit_position.read().clone(),
+            _ => None,
+        };
         let unit_id_ref = unit_id_option.as_deref();
         let query_str = query.as_str();
-        UrlNavigationState::replace_in_url(race, mode, unit_id_ref, query_str, view);
+        let entry_ref = entry_option.as_deref();
+        UrlNavigationState::replace_in_url(race, mode, unit_id_ref, query_str, view, entry_ref);
     });
     use_hook(move || {
         UrlNavigationState::install_popstate_listener(move |nav_state| {
-            current_view.set(nav_state.view());
+            let view = nav_state.view();
+            current_view.set(view);
+            // Restore the active kind's selection from the URL; leave the other
+            // kinds' in-memory selections untouched (per-tab memory).
+            let entry = nav_state.selected_entry().map(|entry| entry.to_string());
+            match view {
+                AppView::Collisions {
+                    kind: CollisionKind::Positions,
+                } => selected_island.set(entry),
+                AppView::Collisions {
+                    kind: CollisionKind::Hotkeys,
+                } => selected_hotkey_unit.set(entry),
+                AppView::Collisions {
+                    kind: CollisionKind::UnitPositions,
+                } => selected_unit_position.set(entry),
+                _ => {}
+            }
         });
     });
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
@@ -281,7 +339,15 @@ pub(crate) fn App() -> Element {
                         search_query,
                     };
                     rsx! {
-                        CollisionsPage { kind, loaded_keys, view_navigation }
+                        CollisionsPage {
+                            kind,
+                            loaded_keys,
+                            grid_layout,
+                            view_navigation,
+                            selected_island,
+                            selected_hotkey_unit,
+                            selected_unit_position,
+                        }
                     }
                 },
                 AppView::Resolve => rsx! {

@@ -20,7 +20,7 @@ services:
       - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
       - moon-home:/root/.moon
     ports:
-      - "8080:8080"
+      - "8123:8123"
 
 volumes:
   cargo-registry:

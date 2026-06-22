@@ -332,16 +332,16 @@ browser.
 
 ```bash
 # Local (Nix dev shell)
-moon run :dev                           # tailwind/build → dx serve (localhost:8080)
+moon run :dev                           # tailwind/build → dx serve (localhost:8123)
 moon run :bundle                        # tailwind/build → dx build --release
 moon run hotkey-editor:playwright/test  # tailwind/build → e2e (starts own server)
 moon run :ci                            # fmt + clippy + tests + wasm build + e2e
 
 # Docker
-moon run :docker/up                     # dev server in container (localhost:8080)
+moon run :docker/up                     # dev server in container (localhost:8123)
 moon run :docker/down                   # stop docker compose
 moon run :docker/e2e                    # e2e tests in container
-moon run hotkey-editor:docker/serve     # build prod image + serve on localhost:8080
+moon run hotkey-editor:docker/serve     # build prod image + serve on localhost:8123
 moon run hotkey-editor:docker/down      # stop the prod container
 ```
 
@@ -365,12 +365,12 @@ those files change.
 ### End-to-end tests
 
 Tests live in `crates/hotkey-editor/e2e/tests/` and run with
-[Playwright](https://playwright.dev) against a live dev server on port 8080.
+[Playwright](https://playwright.dev) against a live dev server on port 8123.
 
 `moon run hotkey-editor:playwright/test` runs `tailwind/build` first, then
 hands off to `e2e/run.mjs`, which owns the server lifecycle:
 
-1. Check whether port 8080 is already open. If so, reuse it.
+1. Check whether port 8123 is already open. If so, reuse it.
 2. Otherwise spawn `dx serve`, stream stdout/stderr, and wait until
    `"launching app"` appears (compilation done, server live).
 3. Run `playwright test`.
@@ -412,7 +412,7 @@ moon run hotkey-editor:dev/docker
 
 That task first runs `tailwind/build`, then starts
 `dx serve --platform web --addr 0.0.0.0` from `crates/hotkey-editor/` so
-the server is reachable from the host on port 8080.
+the server is reachable from the host on port 8123.
 
 #### E2e tests (`Dockerfile` — root)
 
@@ -433,7 +433,7 @@ inside the container and runs the Playwright suite against it.
 #### Production image (`crates/hotkey-editor/Dockerfile`)
 
 ```bash
-moon run hotkey-editor:docker/serve   # build prod image → serve on localhost:8080
+moon run hotkey-editor:docker/serve   # build prod image → serve on localhost:8123
 moon run hotkey-editor:docker/down    # stop the prod container
 ```
 

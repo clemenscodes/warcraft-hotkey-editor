@@ -359,4 +359,241 @@
     white-space: nowrap;
 }
 
+/* Hotkey collisions reuse the position-collision sidebar/detail/card shells.
+   The differences: the sidebar leads with the unit's real icon (not a mini
+   grid), the detail header names the unit, and each card's centre is the
+   shared hotkey letter (a key badge) instead of the ✕ separator. */
+
+.hotkey-unit-row-icon {
+    height: 92px;
+    width: 92px;
+    flex-shrink: 0;
+    border: 1px solid #2a5085;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Unit names wrap (unlike the "Column · Row" coordinate, which never does). */
+.hotkey-unit-name {
+    white-space: normal;
+    line-height: 1.15;
+}
+
+.hotkey-detail-unit {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 0;
+    flex: none;
+}
+
+.hotkey-detail-unit-icon {
+    height: 80px;
+    width: 80px;
+    border: 1px solid #2a5085;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.hotkey-detail-unit-icon:hover {
+    border-color: var(--race-color, #ffce63);
+    box-shadow: 0 0 8px var(--race-color-soft, rgba(255, 206, 99, 0.5));
+}
+
+/* The shared hotkey letter as a big key cap. The outer badge is a 72px-tall
+   zone (same as the ability icon) so the cap auto-centres on the icon, exactly
+   like .conflict-separator does for the ✕. */
+.conflict-hotkey-badge {
+    align-self: start;
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conflict-hotkey-key {
+    box-sizing: border-box;
+    min-width: 60px;
+    height: 60px;
+    padding: 0 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Friz Quadrata", serif;
+    font-size: 34px;
+    line-height: 1;
+    color: #ffce63;
+    background: rgba(255, 206, 99, 0.12);
+    border: 2px solid var(--race-color, #ffce63);
+    border-radius: 8px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* A 3+ way clash stacks the badge above a centred, wrapping row of abilities. */
+.conflict-hotkey-badge-top {
+    align-self: center;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* Per-unit position conflicts put a mini command grid (the colliding cell
+   flagged) where the hotkey key badge sits. The 72px zone centres it on the
+   ability icons, exactly like the badge / ✕. */
+.conflict-position-cell {
+    align-self: start;
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conflict-position-cell .island-mini-grid {
+    height: 60px;
+    width: calc(60px / 3 * 4);
+}
+
+.conflict-position-cell-top {
+    align-self: center;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.conflict-ability-row-multi {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+/* Small caption naming the command card the clash lives on. */
+.conflict-card-caption {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7b818d;
+}
+
+@media (min-width: 1100px) {
+    .hotkey-unit-row-icon {
+        height: 80px;
+        width: 80px;
+    }
+}
+
+@media (max-width: 700px) {
+    .hotkey-unit-row-icon {
+        height: 66px;
+        width: 66px;
+    }
+}
+
+/* Mobile: the hotkey key cap must stay a perfect square (fixed width == height)
+   rather than widening to its min-width box. */
+@media (max-width: 1099px) {
+    .conflict-hotkey-key {
+        width: 56px;
+        min-width: 0;
+        height: 56px;
+        padding: 0;
+        font-size: 30px;
+    }
+}
+
+/* The collisions page stacks a breadcrumb bar above the two-pane content. The
+   shell fills the view height so the content pane keeps its own scroll. */
+.collisions-shell {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.collision-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: none;
+    padding: 0.5rem 0 0.85rem;
+    border-bottom: 1px solid rgba(255, 206, 99, 0.25);
+}
+
+.collision-breadcrumb {
+    margin: 0;
+    padding: 0.25rem 0.15rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    font-family: "Friz Quadrata", serif;
+    color: #9aa3b2;
+    transition: color 0.12s ease;
+}
+
+.collision-breadcrumb-label {
+    font-size: 1.4rem;
+    white-space: nowrap;
+}
+
+.collision-breadcrumb:hover {
+    color: #e0d8c8;
+}
+
+.collision-breadcrumb.active {
+    color: #ffce63;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.collision-breadcrumb-count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1.05rem;
+    opacity: 0.8;
+}
+
+.collision-breadcrumb-count::before {
+    content: "(";
+}
+
+.collision-breadcrumb-count::after {
+    content: ")";
+}
+
+.collision-breadcrumb.active .collision-breadcrumb-count {
+    opacity: 1;
+}
+
+.collision-breadcrumb-separator {
+    color: #3a5277;
+    font-size: 1.3rem;
+}
+
+/* Mobile: the breadcrumbs become a horizontally swipeable carousel, with the
+   exact same scroll mechanics as the unit-list sidebar carousel (mobile-
+   foundation.css): a no-wrap row that pans left/right with touch momentum and
+   mandatory snap onto each tab. Scales as more algorithm-UI pages join the
+   strip. */
+@media (max-width: 1099px) {
+    .collision-breadcrumbs {
+        gap: 0.85rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+    .collision-breadcrumbs::-webkit-scrollbar {
+        display: none;
+    }
+    .collision-breadcrumb {
+        flex: none;
+        scroll-snap-align: start;
+    }
+}
+
 }
