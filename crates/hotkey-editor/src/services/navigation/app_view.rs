@@ -20,6 +20,7 @@ pub(crate) enum AppView {
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub(crate) enum CollisionKind {
     Positions,
+    UnitPositions,
     Hotkeys,
 }
 
@@ -70,6 +71,7 @@ impl CollisionKind {
     fn from_query_param(kind_param: Option<&str>) -> Self {
         match kind_param.unwrap_or("positions") {
             "hotkeys" => Self::Hotkeys,
+            "unit-positions" => Self::UnitPositions,
             _ => Self::Positions,
         }
     }
@@ -78,6 +80,7 @@ impl CollisionKind {
     fn kind_param(self) -> &'static str {
         match self {
             Self::Positions => "positions",
+            Self::UnitPositions => "unit-positions",
             Self::Hotkeys => "hotkeys",
         }
     }

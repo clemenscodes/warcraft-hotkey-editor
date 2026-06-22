@@ -11,6 +11,7 @@ pub(crate) struct UrlNavigationState {
     selected_unit_id: Option<String>,
     search_query: String,
     view: AppView,
+    selected_entry: Option<String>,
 }
 
 impl UrlNavigationState {
@@ -32,6 +33,12 @@ impl UrlNavigationState {
 
     pub(crate) fn view(&self) -> AppView {
         self.view
+    }
+
+    /// The selected list entry's key for the active collisions kind, read from
+    /// the `?entry=` URL parameter. `None` outside the collisions view.
+    pub(crate) fn selected_entry(&self) -> Option<&str> {
+        self.selected_entry.as_deref()
     }
 
     #[cfg(not(target_arch = "wasm32"))]
@@ -73,12 +80,16 @@ impl UrlNavigationState {
         let kind_param = params.get("kind");
         let view = AppView::from_query_params(view_param.as_deref(), kind_param.as_deref());
 
+        let entry_param = params.get("entry");
+        let selected_entry = entry_param.filter(|entry| !entry.is_empty());
+
         Self {
             race,
             unit_mode,
             selected_unit_id,
             search_query,
             view,
+            selected_entry,
         }
     }
 
@@ -89,11 +100,13 @@ impl UrlNavigationState {
         _unit_id: Option<&str>,
         _query: &str,
         _view: AppView,
+        _entry: Option<&str>,
     ) {
     }
 
     /// Update the URL in place (no history entry) — used for editor
-    /// navigation like switching race/mode/unit/search.
+    /// navigation like switching race/mode/unit/search, and for selecting a
+    /// collision list entry (so picking entries doesn't spam history).
     #[cfg(target_arch = "wasm32")]
     pub(crate) fn replace_in_url(
         race: Race,
@@ -101,8 +114,9 @@ impl UrlNavigationState {
         unit_id: Option<&str>,
         query: &str,
         view: AppView,
+        entry: Option<&str>,
     ) {
-        let url = build_url(race, unit_mode, unit_id, query, view);
+        let url = build_url(race, unit_mode, unit_id, query, view, entry);
         let Some(window) = web_sys::window() else {
             return;
         };
@@ -119,6 +133,7 @@ impl UrlNavigationState {
         _unit_id: Option<&str>,
         _query: &str,
         _view: AppView,
+        _entry: Option<&str>,
     ) {
     }
 
@@ -132,8 +147,9 @@ impl UrlNavigationState {
         unit_id: Option<&str>,
         query: &str,
         view: AppView,
+        entry: Option<&str>,
     ) {
-        let url = build_url(race, unit_mode, unit_id, query, view);
+        let url = build_url(race, unit_mode, unit_id, query, view, entry);
         let Some(window) = web_sys::window() else {
             return;
         };
@@ -185,6 +201,7 @@ impl UrlNavigationState {
             selected_unit_id,
             search_query: String::new(),
             view: AppView::default_view(),
+            selected_entry: None,
         }
     }
 }
@@ -196,6 +213,7 @@ fn build_url(
     unit_id: Option<&str>,
     query: &str,
     view: AppView,
+    entry: Option<&str>,
 ) -> String {
     let race_param = RaceLabels::data_attribute(race);
     let mut url = format!("?race={race_param}&mode={unit_mode}");
@@ -219,6 +237,14 @@ fn build_url(
         if let Some(kind_param) = view.kind_param() {
             url.push_str("&kind=");
             url.push_str(kind_param);
+        }
+        // The selected list entry only belongs to the collisions view; its key
+        // can contain ':' (island keys), so encode it.
+        if let Some(entry_key) = entry {
+            let encoded = js_sys::encode_uri_component(entry_key);
+            let encoded_str = encoded.as_string().unwrap_or_default();
+            url.push_str("&entry=");
+            url.push_str(&encoded_str);
         }
     }
 

@@ -20,7 +20,7 @@ export default defineConfig({
     ["html", { open: "never", outputFolder: "./dist/playwright-report" }],
   ],
   use: {
-    baseURL: process.env["BASE_URL"] ?? "http://localhost:8080",
+    baseURL: process.env["BASE_URL"] ?? "http://localhost:8123",
     actionTimeout: process.env["CI"] ? 1000 : 5000,
     navigationTimeout: 10_000,
     trace: "on-first-retry",
@@ -41,15 +41,19 @@ export default defineConfig({
   ],
   webServer: staticDir
     ? {
-        command: `node ${serverScript} ${staticDir} 8080 ${staticBasePath}`,
-        port: 8080,
+        command: `node ${serverScript} ${staticDir} 8123 ${staticBasePath}`,
+        port: 8123,
         timeout: 10_000,
+        // Reuse a server already on 8123 (e.g. a running dev server) so the CI
+        // playwright flow can be exercised locally without a port conflict. In
+        // real CI nothing else holds 8123, so the static server still starts.
+        reuseExistingServer: true,
         stdout: "ignore",
         stderr: "pipe",
       }
     : {
-        command: "dx serve --package hotkey-editor --platform web",
-        port: 8080,
+        command: "dx serve --package hotkey-editor --platform web --port 8123",
+        port: 8123,
         timeout: 10 * 60 * 1000,
         reuseExistingServer: true,
         stdout: "ignore",
