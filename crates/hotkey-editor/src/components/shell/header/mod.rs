@@ -160,6 +160,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     preview_open,
                     templates_dialog_open,
                     system_hotkeys_open,
+                    navigation,
                 }
                 BurgerMenu {
                     loaded_keys,
@@ -167,6 +168,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     layout_dialog_open,
                     templates_dialog_open,
                     system_hotkeys_open,
+                    navigation,
                 }
             }
         }

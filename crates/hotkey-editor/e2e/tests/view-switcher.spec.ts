@@ -69,12 +69,13 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     // remain, so the count drops but stays > 0.  The button must still
     // reflect that state ("attention" with a strictly lower count).
     await page.locator('[aria-label="Resolve conflicts"]').click();
-    await page.locator(".resolve-info-dialog").waitFor();
-    await page.locator(".resolve-info-dialog button", { hasText: "Apply" }).click();
+    await page.locator('[data-action="apply-cascade"]').click();
     await page
       .locator('[role="alertdialog"]')
       .filter({ hasText: "Cascade applied" })
       .waitFor();
+    await page.goto(APP);
+    await page.locator(".unit-card").first().waitFor();
 
     const afterResolveText = await collisionsButton.getAttribute("data-collision-count");
     const afterResolve = Number(afterResolveText);
@@ -89,12 +90,13 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
 
     // Step 1: resolve cross-unit position collisions.
     await page.locator('[aria-label="Resolve conflicts"]').click();
-    await page.locator(".resolve-info-dialog").waitFor();
-    await page.locator(".resolve-info-dialog button", { hasText: "Apply" }).click();
+    await page.locator('[data-action="apply-cascade"]').click();
     await page
       .locator('[role="alertdialog"]')
       .filter({ hasText: "Cascade applied" })
       .waitFor();
+    await page.goto(APP);
+    await page.locator(".unit-card").first().waitFor();
 
     // Step 2: rewrite every hotkey to match the now-deconflicted grid.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();

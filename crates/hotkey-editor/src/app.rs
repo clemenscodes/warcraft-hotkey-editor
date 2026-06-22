@@ -350,8 +350,17 @@ pub(crate) fn App() -> Element {
                         }
                     }
                 },
-                AppView::Resolve => rsx! {
-                    ResolvePage {}
+                AppView::Resolve => {
+                    let view_navigation = ViewNavigationContext {
+                        current_view,
+                        active_race,
+                        unit_mode,
+                        selected_unit_id,
+                        search_query,
+                    };
+                    rsx! {
+                        ResolvePage { loaded_keys, view_navigation }
+                    }
                 },
             }
             Footer {}

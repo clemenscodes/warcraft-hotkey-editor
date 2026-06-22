@@ -56,12 +56,13 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // Step 1 — Resolve cascade.  Cross-unit + intra-unit position
     // collisions go away, hotkey collisions remain.
     await page.locator('[aria-label="Resolve conflicts"]').click();
-    await page.locator(".resolve-info-dialog").waitFor();
-    await page.locator(".resolve-info-dialog button", { hasText: "Apply" }).click();
+    await page.locator('[data-action="apply-cascade"]').click();
     await page
       .locator('[role="alertdialog"]')
       .filter({ hasText: "Cascade applied" })
       .waitFor();
+    await page.goto(APP);
+    await page.locator(".unit-card").first().waitFor();
 
     const afterResolve = await collisionCount(page);
     // 56 hotkey collisions remain after the cascade — these are

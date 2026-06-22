@@ -1,5 +1,15 @@
 /* Scoped to .dx-toast-container to avoid bleeding onto Dioxus devserver toasts. */
 
+/* The Dioxus devserver injects its own hot-reload/connection toast (#__dx-toast)
+   only under `dx serve`; it is absent in the static production bundle. Left as-is
+   it overlays the header and intercepts pointer events, so clicks land on it
+   instead of the real UI — flaking e2e runs that reuse a dev server. Make it
+   click-through (still visible) so it can never swallow a click. Dead rule in
+   the static build where the element does not exist. */
+#__dx-toast {
+    pointer-events: none !important;
+}
+
 .dx-toast-container {
     position: fixed !important;
     bottom: 1.5rem;

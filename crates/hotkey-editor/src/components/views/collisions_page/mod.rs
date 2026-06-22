@@ -387,7 +387,7 @@ pub(super) fn scroll_entry_into_view(attribute: &str, key: &str) {
         return;
     };
     let options = web_sys::ScrollIntoViewOptions::new();
-    options.set_block(web_sys::ScrollLogicalPosition::Nearest);
+    options.set_block(web_sys::ScrollLogicalPosition::Center);
     options.set_inline(web_sys::ScrollLogicalPosition::Nearest);
     element.scroll_into_view_with_scroll_into_view_options(&options);
 }
