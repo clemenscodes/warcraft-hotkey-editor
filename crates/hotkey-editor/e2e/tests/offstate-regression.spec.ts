@@ -13,12 +13,13 @@ async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator(".resolve-info-dialog").waitFor();
-  await page.locator(".resolve-info-dialog button", { hasText: "Apply" }).click();
+  await page.locator('[data-action="apply-cascade"]').click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
     .waitFor();
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
 }
 
 test.describe("Off-state regression: Healing Wave drag after cascade", () => {

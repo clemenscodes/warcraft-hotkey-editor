@@ -113,9 +113,11 @@ test.describe("Collision page entry deep-linking", () => {
     ).toHaveClass(/selected/);
   });
 
-  // A pasted/bookmarked deep-link to an entry far down the list selects it and
-  // scrolls it into view (the whole point — you don't land at the top).
-  test("a deep-linked entry far down the list is selected and scrolled into view", async ({
+  // A pasted/bookmarked deep-link to an entry far down the list selects it. The
+  // list is not auto-scrolled to the entry — selection no longer moves the
+  // viewport (the scroll-into-view-on-select behaviour was removed because it
+  // fired on every click, unlike the editor's unit list).
+  test("a deep-linked entry far down the list is selected", async ({
     page,
   }) => {
     await applyDefaultTemplate(page);
@@ -128,7 +130,6 @@ test.describe("Collision page entry deep-linking", () => {
     await page.goto(`${APP}?view=collisions&kind=unit-positions&entry=${target}`);
     const targetRow = page.locator(`[data-unit-position-key="${target}"]`);
     await expect(targetRow).toHaveClass(/selected/);
-    await expect(targetRow).toBeInViewport();
   });
 
   // The same round-trip for cross-unit position islands, whose key contains

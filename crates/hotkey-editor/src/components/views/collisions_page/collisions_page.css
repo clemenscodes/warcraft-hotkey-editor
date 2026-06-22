@@ -144,17 +144,14 @@
     scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
 }
 
-/* Mobile/stacked (< 1100px): the detail pane is not a height-bounded scroll
-   container here (it flows and the page scrolls), so the grid must NOT clamp
-   itself to the pane's collapsed height — that hid every card. Drop the
-   flex/scroll behaviour, take natural height, and stack a single full-width
-   column (the 450px floor would force horizontal overflow on phones). */
+/* Mobile/stacked (< 1100px): a single full-width column (the 450px floor would
+   force horizontal overflow on phones). The shell that keeps this grid scrolling
+   internally — so the page itself doesn't scroll and the footer stays pinned —
+   lives in mobile-foundation.css, whose `mobile` cascade layer outranks this one
+   for the shared `.main-content`/`.unit-detail` shell classes. */
 @media (max-width: 1099px) {
     .conflict-grid {
         grid-template-columns: minmax(0, 1fr);
-        flex: none;
-        min-height: auto;
-        overflow-y: visible;
         padding: 1rem 0;
     }
 }
@@ -516,7 +513,7 @@
     align-items: center;
     gap: 0.75rem;
     flex: none;
-    padding: 0.5rem 0 0.85rem;
+    padding: 1.2rem 0;
     border-bottom: 1px solid rgba(255, 206, 99, 0.25);
 }
 
@@ -527,7 +524,10 @@
     border: none;
     cursor: pointer;
     display: inline-flex;
-    align-items: baseline;
+    /* Center label + count vertically (not baseline): baseline alignment
+       collapses the label's effective box so the breadcrumb bar can't centre it,
+       leaving the text hanging off-centre. */
+    align-items: center;
     gap: 0.45rem;
     font-family: "Friz Quadrata", serif;
     color: #9aa3b2;
@@ -535,8 +535,9 @@
 }
 
 .collision-breadcrumb-label {
-    font-size: 1.4rem;
+    font-size: 2.1rem;
     white-space: nowrap;
+    line-height: 1.1;
 }
 
 .collision-breadcrumb:hover {
@@ -550,7 +551,7 @@
 
 .collision-breadcrumb-count {
     font-family: "JetBrains Mono", monospace;
-    font-size: 1.05rem;
+    font-size: 1.6rem;
     opacity: 0.8;
 }
 
@@ -596,4 +597,17 @@
     }
 }
 
+}
+
+/* The generic `.app` flex layout puts a responsive gap (0.6rem–2rem depending on
+   viewport) between the header and the page content. On the collisions view that
+   gap sits *above* the breadcrumb bar, while the bar's own border-bottom is the
+   golden line *below* it — so the band between the two golden lines is asymmetric
+   and the labels read as biased downward. Collapse just that one gap on this view
+   so the bar sits flush under the header divider and its symmetric vertical
+   padding centers the labels between the two lines. Kept unlayered (and the
+   `:has` adds specificity) so it outranks the layered, responsive `.app` gap at
+   every breakpoint; the shell is `flex: 1`, so the footer does not move. */
+.app:has(.collisions-shell) {
+    gap: 0;
 }

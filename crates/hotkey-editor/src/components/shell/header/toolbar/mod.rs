@@ -6,6 +6,7 @@ use crate::components::actions::resolve_button::ResolveButton;
 use crate::components::actions::upload_button::UploadButton;
 use crate::components::shared::icons::{ICON_COG, ICON_TEMPLATES};
 use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 #[derive(Props, Clone, PartialEq)]
 pub(crate) struct HeaderToolbarProps {
@@ -14,6 +15,7 @@ pub(crate) struct HeaderToolbarProps {
     pub(crate) preview_open: Signal<bool>,
     pub(crate) templates_dialog_open: Signal<bool>,
     pub(crate) system_hotkeys_open: Signal<bool>,
+    pub(crate) navigation: ViewNavigationContext,
 }
 
 #[component]
@@ -21,6 +23,7 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let upload_status = props.upload_status;
     let preview_open = props.preview_open;
+    let navigation = props.navigation;
     let mut templates_dialog_open = props.templates_dialog_open;
     let mut system_hotkeys_open = props.system_hotkeys_open;
     let toggle_templates = move |_| {
@@ -65,7 +68,7 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
                     dangerous_inner_html: ICON_COG,
                 }
             }
-            ResolveButton { loaded_keys }
+            ResolveButton { loaded_keys, navigation }
             ExportButtons { loaded_keys, preview_open }
         }
     }

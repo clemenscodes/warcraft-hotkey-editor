@@ -1725,3 +1725,43 @@ html, body {
         width: min(9.4vw, calc((90vw - 6rem) / 17 * 2));
     }
 }
+
+/*  ───────────────────────────────────────────────────────────────────────────
+    Algorithm-UI pages (Resolve, Collisions): internal-scroll shell on mobile.
+    The page itself does not scroll, the header and footer stay pinned, and only
+    the inner pane (resolve card list / conflict grid) scrolls. The Editor keeps
+    its natural-height, page-scrolling mobile layout — its command grids use
+    overflow:visible and don't fit a forced scroll container.
+
+    These overrides MUST live here in the `mobile` layer: the layer outranks the
+    `components` layer, so `.app { overflow: visible }` and `.main-content {
+    flex: 0 0 auto }` above would otherwise beat any component-layer rule no
+    matter how specific.
+    ──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1099px) {
+    /* `.app-bounded` (added in app.rs for these views) makes the app exactly
+       viewport-tall with hidden overflow, giving its flex children real height. */
+    .app.app-bounded {
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    /* Collisions two-pane stays a bounded flex child. On phones it stacks the
+       sidebar carousel above the scrolling detail pane in a single full-width
+       column. */
+    .main-content.collisions-content {
+        flex: 1 1 0;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    /* The detail pane fills the row and clips, so its conflict grid scrolls
+       internally instead of the whole page. */
+    .collisions-content .island-detail {
+        align-self: stretch;
+        min-height: 0;
+        overflow: hidden;
+    }
+}

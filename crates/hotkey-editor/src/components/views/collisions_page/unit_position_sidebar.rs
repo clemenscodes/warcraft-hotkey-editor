@@ -17,15 +17,6 @@ pub(super) fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
     let units = props.units;
     let mut selected_unit = props.selected_unit;
 
-    use_effect(move || {
-        if let Some(key) = selected_unit.read().clone() {
-            spawn(async move {
-                gloo_timers::future::TimeoutFuture::new(50).await;
-                super::scroll_entry_into_view("data-unit-position-key", &key);
-            });
-        }
-    });
-
     let selected_key = selected_unit.read().clone();
 
     rsx! {

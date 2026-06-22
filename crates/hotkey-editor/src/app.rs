@@ -32,6 +32,19 @@ const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
 const FAVICON: Asset = asset!("/assets/favicon.svg");
 
+/// The history-significant slice of editor navigation state: race, mode,
+/// selected unit, and search query. Changing any of these pushes a new browser
+/// history entry (so the back button steps through editor selections), whereas
+/// an entry-only change (a collision/cascade breadcrumb) merely replaces. Used
+/// only to decide push-vs-replace when syncing the URL — it is not reactive.
+#[derive(Clone, PartialEq, Eq)]
+struct EditorNavKey {
+    race: Race,
+    unit_mode: UnitMode,
+    unit_id: Option<String>,
+    query: String,
+}
+
 #[component]
 pub(crate) fn App() -> Element {
     // Boot path: localStorage is the source of truth. If an entry
@@ -81,6 +94,12 @@ pub(crate) fn App() -> Element {
     let initial_unit_id = initial_nav.selected_unit_id().map(|id| id.to_string());
     let initial_search = initial_nav.search_query().to_string();
     let initial_view = initial_nav.view();
+    let initial_editor_key = EditorNavKey {
+        race: initial_race,
+        unit_mode: initial_mode,
+        unit_id: initial_unit_id.clone(),
+        query: initial_search.clone(),
+    };
 
     // The selected collisions entry is restored into whichever kind's signal the
     // booted view names; the other two start empty (their validation effects
@@ -104,10 +123,14 @@ pub(crate) fn App() -> Element {
         } => initial_entry.clone(),
         _ => None,
     };
+    let initial_selected_move_category = match initial_view {
+        AppView::Resolve => initial_entry.clone(),
+        _ => None,
+    };
 
-    let active_race = use_signal::<Race>(move || initial_race);
-    let unit_mode = use_signal::<UnitMode>(move || initial_mode);
-    let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id);
+    let mut active_race = use_signal::<Race>(move || initial_race);
+    let mut unit_mode = use_signal::<UnitMode>(move || initial_mode);
+    let mut selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id);
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
@@ -117,13 +140,32 @@ pub(crate) fn App() -> Element {
     let mut drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
-    let search_query = use_signal::<String>(move || initial_search);
+    let mut search_query = use_signal::<String>(move || initial_search);
     let mut current_view = use_signal::<AppView>(move || initial_view);
     let mut selected_island = use_signal::<Option<String>>(move || initial_selected_island);
     let mut selected_hotkey_unit =
         use_signal::<Option<String>>(move || initial_selected_hotkey_unit);
     let mut selected_unit_position =
         use_signal::<Option<String>>(move || initial_selected_unit_position);
+    let mut selected_move_category =
+        use_signal::<Option<String>>(move || initial_selected_move_category);
+    // Tracks the last editor nav key written to the URL so the sync effect can
+    // tell a history-significant change (race/mode/unit/search → push) from an
+    // entry-only refinement (→ replace). Read via `peek` so the effect does not
+    // subscribe to its own writes.
+    let mut previous_editor_key = use_signal(move || initial_editor_key);
+    // Tracks the last view written to the URL. A view switch is already pushed by
+    // ViewNavigationContext::apply, so when the view also changed this effect must
+    // not push again (that would double-stack history, e.g. when opening a unit
+    // from a collision card moves both the view and the selected unit at once).
+    let mut previous_view = use_signal(move || initial_view);
+    // Search typing is coalesced into ONE history entry per session: the first
+    // query change pushes a boundary entry, subsequent changes only replace it,
+    // and the session ends after a short idle so a later search becomes its own
+    // entry. This keeps the back button stepping through searches without adding
+    // an entry per keystroke. `gen` cancels a stale session-end timer.
+    let mut search_session_active = use_signal(|| false);
+    let mut search_session_gen = use_signal::<u32>(|| 0);
     use_effect(move || {
         let race = *active_race.read();
         let mode = *unit_mode.read();
@@ -141,17 +183,127 @@ pub(crate) fn App() -> Element {
             AppView::Collisions {
                 kind: CollisionKind::UnitPositions,
             } => selected_unit_position.read().clone(),
+            // On the Resolve view the same `entry` slot carries the selected
+            // move-category breadcrumb (Fights/Gap pulls/Spills/Swaps).
+            AppView::Resolve => selected_move_category.read().clone(),
             _ => None,
         };
         let unit_id_ref = unit_id_option.as_deref();
         let query_str = query.as_str();
         let entry_ref = entry_option.as_deref();
-        UrlNavigationState::replace_in_url(race, mode, unit_id_ref, query_str, view, entry_ref);
+        // Race/mode/unit/search are history-significant: changing any of them
+        // pushes a new entry so the browser back button steps through editor
+        // selections. An entry-only change (a collision/cascade breadcrumb) keeps
+        // the same editor key and only replaces, so picking entries doesn't flood
+        // history. (View switches are pushed by ViewNavigationContext::apply; this
+        // effect then sees an unchanged editor key and replaces to refine that
+        // just-pushed URL.)
+        let current_editor_key = EditorNavKey {
+            race,
+            unit_mode: mode,
+            unit_id: unit_id_option.clone(),
+            query: query.clone(),
+        };
+        let previous_key = previous_editor_key.peek().clone();
+        let editor_key_changed = previous_key != current_editor_key;
+        let view_changed = *previous_view.peek() != view;
+        // A change that touches only the search query (race/mode/unit/view all
+        // unchanged) is a search-typing event and is coalesced into one history
+        // entry; anything else is a discrete navigation.
+        let only_query_changed = !view_changed
+            && previous_key.race == race
+            && previous_key.unit_mode == mode
+            && previous_key.unit_id == unit_id_option
+            && previous_key.query != query;
+        previous_editor_key.set(current_editor_key);
+        previous_view.set(view);
+        if only_query_changed {
+            let session_was_active = *search_session_active.peek();
+            if session_was_active {
+                UrlNavigationState::replace_in_url(
+                    race,
+                    mode,
+                    unit_id_ref,
+                    query_str,
+                    view,
+                    entry_ref,
+                );
+            } else {
+                UrlNavigationState::push_view_to_url(
+                    race,
+                    mode,
+                    unit_id_ref,
+                    query_str,
+                    view,
+                    entry_ref,
+                );
+                search_session_active.set(true);
+            }
+            let next_gen = search_session_gen.peek().wrapping_add(1);
+            search_session_gen.set(next_gen);
+            spawn(async move {
+                gloo_timers::future::TimeoutFuture::new(500).await;
+                if *search_session_gen.peek() == next_gen {
+                    search_session_active.set(false);
+                }
+            });
+        } else {
+            // Any non-search change ends an in-progress search session.
+            if *search_session_active.peek() {
+                search_session_active.set(false);
+                let next_gen = search_session_gen.peek().wrapping_add(1);
+                search_session_gen.set(next_gen);
+            }
+            if editor_key_changed && !view_changed {
+                UrlNavigationState::push_view_to_url(
+                    race,
+                    mode,
+                    unit_id_ref,
+                    query_str,
+                    view,
+                    entry_ref,
+                );
+            } else {
+                UrlNavigationState::replace_in_url(
+                    race,
+                    mode,
+                    unit_id_ref,
+                    query_str,
+                    view,
+                    entry_ref,
+                );
+            }
+        }
     });
     use_hook(move || {
         UrlNavigationState::install_popstate_listener(move |nav_state| {
             let view = nav_state.view();
             current_view.set(view);
+            // Race/mode/unit/search are pushed into history, so back/forward must
+            // restore them from the popped URL. Sync the push/replace tracker to
+            // the restored values too, so the URL-writing effect that re-runs from
+            // these signal changes replaces (no new entry) instead of pushing.
+            let restored_race = nav_state.race();
+            let restored_mode = nav_state.unit_mode();
+            let restored_unit_id = nav_state.selected_unit_id().map(|id| id.to_string());
+            let restored_query = nav_state.search_query().to_string();
+            active_race.set(restored_race);
+            unit_mode.set(restored_mode);
+            selected_unit_id.set(restored_unit_id.clone());
+            search_query.set(restored_query.clone());
+            let restored_editor_key = EditorNavKey {
+                race: restored_race,
+                unit_mode: restored_mode,
+                unit_id: restored_unit_id,
+                query: restored_query,
+            };
+            previous_editor_key.set(restored_editor_key);
+            previous_view.set(view);
+            // A back/forward navigation ends any in-progress search session and
+            // cancels its pending session-end timer.
+            search_session_active.set(false);
+            let next_gen = search_session_gen.peek().wrapping_add(1);
+            search_session_gen.set(next_gen);
             // Restore the active kind's selection from the URL; leave the other
             // kinds' in-memory selections untouched (per-tab memory).
             let entry = nav_state.selected_entry().map(|entry| entry.to_string());
@@ -165,6 +317,7 @@ pub(crate) fn App() -> Element {
                 AppView::Collisions {
                     kind: CollisionKind::UnitPositions,
                 } => selected_unit_position.set(entry),
+                AppView::Resolve => selected_move_category.set(entry),
                 _ => {}
             }
         });
@@ -253,6 +406,36 @@ pub(crate) fn App() -> Element {
         }
     };
 
+    // The algorithm-UI pages (Resolve, Collisions) own their internal scroll and
+    // pin the footer below; on mobile the app stays viewport-bounded (the
+    // `.app-bounded` rule in mobile-foundation.css) so those panes scroll inside
+    // instead of the whole page scrolling. The Editor keeps its natural-height,
+    // page-scrolling mobile layout.
+    let scroll_contained_view = matches!(
+        *current_view.read(),
+        AppView::Resolve | AppView::Collisions { .. }
+    );
+    let app_mobile_class = if scroll_contained_view {
+        "app-bounded"
+    } else {
+        "max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible"
+    };
+    // The collisions breadcrumb is the first thing in its view, so it must sit
+    // flush under the header divider for its text to centre in the band between
+    // that divider and the bar's own border — drop the app's header-to-view gap
+    // for this view. The editor and resolve keep the normal gap (their first
+    // child is not a bordered bar tied to the divider).
+    let is_collisions_view = matches!(*current_view.read(), AppView::Collisions { .. });
+    let app_gap_class = if is_collisions_view {
+        "gap-0"
+    } else {
+        "gap-8 max-[2000px]:gap-4 max-[700px]:gap-4 max-[480px]:gap-3"
+    };
+    let app_class = format!(
+        "app mx-auto pt-7 pb-12 px-14 flex flex-col min-h-[100dvh] {app_gap_class} \
+         max-[1500px]:pt-0 {app_mobile_class} max-[700px]:px-4 max-[480px]:px-2"
+    );
+
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
@@ -282,13 +465,7 @@ pub(crate) fn App() -> Element {
         TooltipMount {}
         ToastMount {
             div {
-                class: "app mx-auto pt-7 pb-12 px-14 flex flex-col gap-8 \
-                        min-h-[100dvh] \
-                        max-[2000px]:gap-4 \
-                        max-[1500px]:pt-0 \
-                        max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible \
-                        max-[700px]:px-4 max-[700px]:gap-4 \
-                        max-[480px]:px-2 max-[480px]:gap-3",
+                class: app_class,
             onkeydown: handle_keydown,
             Header {
                 loaded_keys,
@@ -350,8 +527,17 @@ pub(crate) fn App() -> Element {
                         }
                     }
                 },
-                AppView::Resolve => rsx! {
-                    ResolvePage {}
+                AppView::Resolve => {
+                    let view_navigation = ViewNavigationContext {
+                        current_view,
+                        active_race,
+                        unit_mode,
+                        selected_unit_id,
+                        search_query,
+                    };
+                    rsx! {
+                        ResolvePage { loaded_keys, view_navigation, selected_move_category }
+                    }
                 },
             }
             Footer {}

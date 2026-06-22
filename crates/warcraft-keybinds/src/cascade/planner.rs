@@ -17,11 +17,12 @@ use crate::unit::grids::GridRole;
 pub enum MoveReason {
     /// Phase 1: lost a same-cell fight to a higher-carrier ability.
     /// `anchor_slot` is the winning ability that stayed in the cell;
-    /// `anchor_carrier_count` is how many units it ties together (the
-    /// number that caused it to outrank the mover).
+    /// `anchor_carrier_unit_ids` are the units it ties together — the count
+    /// of them is what caused it to outrank the mover, and the ids let the UI
+    /// list exactly which units carry the winning ability.
     Fight {
         anchor_slot: GridSlotId,
-        anchor_carrier_count: usize,
+        anchor_carrier_unit_ids: Vec<WarcraftObjectId>,
     },
     /// Phase 2: cross-row spill from a stuck cell.  `from_position` is the
     /// stuck cell the ability was sitting on before being rehomed.  Used
@@ -254,10 +255,10 @@ fn move_reason_from_group(
             }
             let anchor_node = graph.node(group.anchor_index());
             let anchor_slot = anchor_node.slot_id();
-            let anchor_carrier_count = anchor_node.carrier_count();
+            let anchor_carrier_unit_ids = anchor_node.carrier_unit_ids().to_vec();
             let reason = MoveReason::Fight {
                 anchor_slot,
-                anchor_carrier_count,
+                anchor_carrier_unit_ids,
             };
             Some(reason)
         }
@@ -297,9 +298,10 @@ impl fmt::Display for MoveReason {
         match self {
             Self::Fight {
                 anchor_slot,
-                anchor_carrier_count,
+                anchor_carrier_unit_ids,
             } => {
                 let anchor_id = anchor_slot.as_str();
+                let anchor_carrier_count = anchor_carrier_unit_ids.len();
                 write!(
                     formatter,
                     "lost fight to {anchor_id} ({anchor_carrier_count} carriers)"
@@ -576,11 +578,12 @@ mod cascade_planner_tests {
         for planned_move in plan.moves() {
             match planned_move.reason() {
                 MoveReason::Fight {
-                    anchor_carrier_count,
+                    anchor_carrier_unit_ids,
                     ..
                 } => {
+                    let anchor_carrier_count = anchor_carrier_unit_ids.len();
                     assert!(
-                        *anchor_carrier_count >= 1,
+                        anchor_carrier_count >= 1,
                         "Fight anchor must carry at least one unit, got {anchor_carrier_count}",
                     );
                 }
@@ -602,13 +605,21 @@ mod cascade_planner_tests {
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
         let plan = CascadePlan::from(&queue);
-        let any_fight_reason = plan
+        let fight_reason = plan
             .moves()
             .iter()
-            .any(|planned_move| matches!(planned_move.reason(), MoveReason::Fight { .. }));
+            .map(|planned_move| planned_move.reason())
+            .find(|reason| matches!(reason, MoveReason::Fight { .. }));
+        let Some(MoveReason::Fight {
+            anchor_carrier_unit_ids,
+            ..
+        }) = fight_reason
+        else {
+            panic!("a same-cell Paladin collision must produce at least one Fight-reason move");
+        };
         assert!(
-            any_fight_reason,
-            "a same-cell Paladin collision must produce at least one Fight-reason move"
+            !anchor_carrier_unit_ids.is_empty(),
+            "the winning anchor must expose the units that carry it, not just a count"
         );
     }
 

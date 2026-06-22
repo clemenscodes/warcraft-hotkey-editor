@@ -20,9 +20,10 @@ async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
   await page.locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "Default" }).click();
   await page.locator('[role="alertdialog"]').first().waitFor();
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator(".resolve-info-dialog").waitFor();
-  await page.locator(".resolve-info-dialog button", { hasText: "Apply" }).click();
+  await page.locator('[data-action="apply-cascade"]').click();
   await page.locator('[role="alertdialog"]').filter({ hasText: "Cascade applied" }).waitFor();
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
 }
 
 test.describe("Drag and drop on command grid", () => {

@@ -68,6 +68,7 @@ body {
 @import "./src/components/tile_override/tile_override.css";
 @import "./src/components/system_hotkeys/system_hotkeys.css";
 @import "./src/components/views/collisions_page/collisions_page.css";
+@import "./src/components/views/resolve_page.css";
 @import "./styles/mobile-foundation.css" layer(mobile);
 
 @source "./src/**/*.rs";

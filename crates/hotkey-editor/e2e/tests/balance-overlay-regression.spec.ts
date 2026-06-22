@@ -19,14 +19,13 @@ async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator(".resolve-info-dialog").waitFor();
-  await page
-    .locator(".resolve-info-dialog button", { hasText: "Apply" })
-    .click();
+  await page.locator('[data-action="apply-cascade"]').click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
     .waitFor();
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
 }
 
 // Pick a unit from a given race + search query, then click it. Returns once
