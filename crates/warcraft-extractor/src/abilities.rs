@@ -36,6 +36,11 @@ pub struct AbilityMetadataEntry {
     transform_from_unit: Option<String>,
     transform_to_unit: Option<String>,
     evasion_chance_per_level: [f32; 4],
+    /// For a leveled summon ability, the distinct unit summoned at each level
+    /// (`UnitID1..UnitIDN`) in level order — e.g. `[osw1, osw2, osw3]`. These are
+    /// the tiers of one summoned unit; empty unless the ability summons two or
+    /// more distinct units across its levels.
+    tiered_summon_units: Vec<String>,
 }
 
 impl AbilityMetadataEntry {
@@ -60,6 +65,10 @@ impl AbilityMetadataEntry {
 
     pub fn transform_to_unit(&self) -> Option<&str> {
         self.transform_to_unit.as_deref()
+    }
+
+    pub fn tiered_summon_units(&self) -> &[String] {
+        &self.tiered_summon_units
     }
 }
 
@@ -115,12 +124,15 @@ impl AbilityMetadataExtraction {
                 None
             };
 
+            let tiered_summon_units = Self::tiered_summon_units(&row, level_count);
+
             let has_evasion = evasion_chance_per_level.iter().any(|chance| *chance > 0.0);
             if code.is_none()
                 && morph_target_unit.is_none()
                 && transform_from_unit.is_none()
                 && transform_to_unit.is_none()
                 && !has_evasion
+                && tiered_summon_units.is_empty()
             {
                 continue;
             }
@@ -131,6 +143,7 @@ impl AbilityMetadataExtraction {
                 transform_from_unit,
                 transform_to_unit,
                 evasion_chance_per_level,
+                tiered_summon_units,
             };
             database.insert(alias.to_string(), entry);
         }
@@ -165,6 +178,34 @@ impl AbilityMetadataExtraction {
             level_index += 1;
         }
         chances
+    }
+
+    /// The distinct unit summoned at each level of a leveled summon ability,
+    /// read from `UnitID1..UnitID{level_count}` in level order. Returns the
+    /// ordered distinct unit ids only when two or more distinct units appear
+    /// (i.e. the summon has real tiers, like `osw1`/`osw2`/`osw3`); otherwise
+    /// empty. Transform/morph abilities carry a single `UnitID1`, so they yield
+    /// fewer than two and are excluded.
+    fn tiered_summon_units(row: &RowView, level_count: usize) -> Vec<String> {
+        let mut ordered_distinct: Vec<String> = Vec::new();
+        let mut level_index = 0;
+        while level_index < level_count {
+            let column_number = level_index + 1;
+            let column_name = format!("UnitID{column_number}");
+            let raw_value = row.get(&column_name).unwrap_or("").trim();
+            if Self::looks_like_unit_id(raw_value) {
+                let value = raw_value.to_string();
+                if !ordered_distinct.contains(&value) {
+                    ordered_distinct.push(value);
+                }
+            }
+            level_index += 1;
+        }
+        if ordered_distinct.len() >= 2 {
+            ordered_distinct
+        } else {
+            Vec::new()
+        }
     }
 
     /// `UnitID1` is overloaded — for non-morph abilities it can hold area

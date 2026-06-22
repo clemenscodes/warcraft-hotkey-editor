@@ -3,7 +3,7 @@ use std::fmt;
 use std::sync::OnceLock;
 
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
+use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
 
 use crate::cascade::conflict_graph::ConflictGraph;
 use crate::cascade::planner::{CascadePlan, MoveReason, PlannedMove, UnresolvedMover};
@@ -600,6 +600,39 @@ impl CustomKeys {
                 );
             }
         }
+
+        if let GridSlotId::Ability(moving_id) = request.moving_slot() {
+            let moving_ability_id = *moving_id;
+            self.fan_out_position(moving_ability_id);
+        }
+        if let Some(GridSlotId::Ability(displaced_id)) = &displaced_slot {
+            let displaced_ability_id = *displaced_id;
+            self.fan_out_position(displaced_ability_id);
+        }
+    }
+
+    fn fan_out_position(&mut self, ability_id: AbilityId) {
+        let source_object_value = ability_id.value();
+        let siblings = VariantUnits::fanout_siblings(source_object_value);
+        if siblings.is_empty() {
+            return;
+        }
+        let Some(source_binding) = self.binding(ability_id) else {
+            return;
+        };
+        let button_position = source_binding.button_position().copied();
+        let unbutton_position = source_binding.unbutton_position().copied();
+        let research_button_position = source_binding.research_button_position().copied();
+        for sibling_value in siblings.iter().copied() {
+            let sibling_object_id = WarcraftObjectId::new(sibling_value);
+            let sibling_ability_id = AbilityId::from(sibling_object_id);
+            let Some(sibling_binding) = self.binding_or_default_mut(sibling_ability_id) else {
+                continue;
+            };
+            sibling_binding.set_button_position(button_position);
+            sibling_binding.set_unbutton_position(unbutton_position);
+            sibling_binding.set_research_button_position(research_button_position);
+        }
     }
 
     pub fn apply_grid_to_all_bindings(&mut self, layout: GridLayout) -> usize {
@@ -871,6 +904,36 @@ impl CustomKeys {
     }
 
     pub fn set_hotkey(&mut self, target: HotkeyTarget, new_token: Option<HotkeyToken>) {
+        self.apply_hotkey(target, new_token);
+        let fan_out_ability_id = match target {
+            HotkeyTarget::Ability(ability_id)
+            | HotkeyTarget::AbilityResearch(ability_id)
+            | HotkeyTarget::AbilityOffState(ability_id) => Some(ability_id),
+            HotkeyTarget::Command(_) => None,
+        };
+        let Some(ability_id) = fan_out_ability_id else {
+            return;
+        };
+        let source_object_value = ability_id.value();
+        let siblings = VariantUnits::fanout_siblings(source_object_value);
+        for sibling_value in siblings.iter().copied() {
+            let sibling_object_id = WarcraftObjectId::new(sibling_value);
+            let sibling_ability_id = AbilityId::from(sibling_object_id);
+            let sibling_target = match target {
+                HotkeyTarget::Ability(_) => HotkeyTarget::Ability(sibling_ability_id),
+                HotkeyTarget::AbilityResearch(_) => {
+                    HotkeyTarget::AbilityResearch(sibling_ability_id)
+                }
+                HotkeyTarget::AbilityOffState(_) => {
+                    HotkeyTarget::AbilityOffState(sibling_ability_id)
+                }
+                HotkeyTarget::Command(_) => continue,
+            };
+            self.apply_hotkey(sibling_target, new_token);
+        }
+    }
+
+    fn apply_hotkey(&mut self, target: HotkeyTarget, new_token: Option<HotkeyToken>) {
         match target {
             HotkeyTarget::Ability(ability_id) => {
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
@@ -1783,6 +1846,113 @@ mod tests {
             baseline_unique, output_unique,
             "round-trip preserves the set of unique section headers",
         );
+    }
+
+    #[test]
+    fn set_hotkey_fans_out_to_tiered_sibling_ability() {
+        let hotkey_q_strong = Hotkey::from('Q');
+        let binding_abu3 = AbilityBinding::builder().hotkey(hotkey_q_strong).build();
+        let hotkey_q_weak = Hotkey::from('Q');
+        let binding_abu2 = AbilityBinding::builder().hotkey(hotkey_q_weak).build();
+        let mut keys = CustomKeys::builder()
+            .ability("Abu3", binding_abu3)
+            .ability("Abu2", binding_abu2)
+            .build();
+        let new_token = HotkeyToken::from('Y');
+        let target = HotkeyTarget::ability("Abu3");
+        keys.set_hotkey(target, Some(new_token));
+        let sibling_binding = keys.binding("Abu2").expect("Abu2 exists");
+        let sibling_hotkey = sibling_binding.hotkey().expect("Abu2 hotkey set");
+        assert_eq!(sibling_hotkey.first_token(), Some(new_token));
+    }
+
+    #[test]
+    fn set_hotkey_fan_out_is_symmetric_from_weaker_tier() {
+        let hotkey_q_strong = Hotkey::from('Q');
+        let binding_abu3 = AbilityBinding::builder().hotkey(hotkey_q_strong).build();
+        let hotkey_q_weak = Hotkey::from('Q');
+        let binding_abu2 = AbilityBinding::builder().hotkey(hotkey_q_weak).build();
+        let mut keys = CustomKeys::builder()
+            .ability("Abu3", binding_abu3)
+            .ability("Abu2", binding_abu2)
+            .build();
+        let new_token = HotkeyToken::from('Z');
+        let target = HotkeyTarget::ability("Abu2");
+        keys.set_hotkey(target, Some(new_token));
+        let sibling_binding = keys.binding("Abu3").expect("Abu3 exists");
+        let sibling_hotkey = sibling_binding.hotkey().expect("Abu3 hotkey set");
+        assert_eq!(sibling_hotkey.first_token(), Some(new_token));
+    }
+
+    #[test]
+    fn set_hotkey_off_state_fans_out_to_tiered_sibling() {
+        let unhotkey_q_strong = Hotkey::from('Q');
+        let binding_abu3 = AbilityBinding::builder()
+            .unhotkey(unhotkey_q_strong)
+            .build();
+        let unhotkey_q_weak = Hotkey::from('Q');
+        let binding_abu2 = AbilityBinding::builder().unhotkey(unhotkey_q_weak).build();
+        let mut keys = CustomKeys::builder()
+            .ability("Abu3", binding_abu3)
+            .ability("Abu2", binding_abu2)
+            .build();
+        let new_token = HotkeyToken::from('D');
+        let target = HotkeyTarget::ability_off_state("Abu3");
+        keys.set_hotkey(target, Some(new_token));
+        let sibling_binding = keys.binding("Abu2").expect("Abu2 exists");
+        let sibling_unhotkey = sibling_binding.unhotkey().expect("Abu2 unhotkey set");
+        assert_eq!(sibling_unhotkey.first_token(), Some(new_token));
+    }
+
+    #[test]
+    fn set_hotkey_on_ability_without_siblings_does_not_touch_unrelated_binding() {
+        let hotkey_q = Hotkey::from('Q');
+        let binding_ahbz = AbilityBinding::builder().hotkey(hotkey_q).build();
+        let hotkey_w = Hotkey::from('W');
+        let binding_ahhb = AbilityBinding::builder().hotkey(hotkey_w).build();
+        let mut keys = CustomKeys::builder()
+            .ability("AHbz", binding_ahbz)
+            .ability("AHhb", binding_ahhb)
+            .build();
+        let new_token = HotkeyToken::from('Y');
+        let target = HotkeyTarget::ability("AHbz");
+        keys.set_hotkey(target, Some(new_token));
+        let unrelated_binding = keys.binding("AHhb").expect("AHhb exists");
+        let unrelated_hotkey = unrelated_binding.hotkey().expect("AHhb hotkey set");
+        let expected_token = HotkeyToken::from('W');
+        assert_eq!(unrelated_hotkey.first_token(), Some(expected_token));
+    }
+
+    #[test]
+    fn move_slot_fans_out_position_to_tiered_sibling() {
+        use crate::command::move_request::MoveRequest;
+        use crate::grid::layout::GridLayout;
+        let position_origin = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let hotkey_q_strong = Hotkey::from('Q');
+        let binding_abu3 = AbilityBinding::builder()
+            .button_position(position_origin)
+            .hotkey(hotkey_q_strong)
+            .build();
+        let hotkey_q_weak = Hotkey::from('Q');
+        let binding_abu2 = AbilityBinding::builder()
+            .button_position(position_origin)
+            .hotkey(hotkey_q_weak)
+            .build();
+        let mut keys = CustomKeys::builder()
+            .ability("Abu3", binding_abu3)
+            .ability("Abu2", binding_abu2)
+            .build();
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("Abu3");
+        let slot_ids = [GridSlotId::ability("Abu3")];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 2, 1, false);
+        keys.move_slot(&request);
+        let sibling_binding = keys.binding("Abu2").expect("Abu2 exists");
+        let sibling_button = sibling_binding
+            .button_position()
+            .expect("Abu2 Buttonpos set");
+        assert_eq!(u8::from(sibling_button.column()), 2);
+        assert_eq!(u8::from(sibling_button.row()), 1);
     }
 }
 

@@ -9,8 +9,9 @@ use std::time::Duration;
 use dioxus::document;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{UnitKindHelpers, UnitMode};
+use warcraft_database::{SearchField, UnitKindHelpers, UnitMode};
 
+use crate::components::tabs::mode_and_race_tabs::ModeButtonClass;
 use crate::model::grid::GridSlotId;
 use crate::services::focus::modality::FocusModality;
 
@@ -54,6 +55,7 @@ struct CategorySectionEntry {
     label: String,
     is_collapsed: bool,
     query: String,
+    search_field: SearchField,
     active_unit_id: Option<String>,
 }
 
@@ -74,6 +76,10 @@ impl CategorySectionEntry {
         self.query.clone()
     }
 
+    fn search_field(&self) -> SearchField {
+        self.search_field
+    }
+
     fn active_unit_id(&self) -> Option<String> {
         self.active_unit_id.clone()
     }
@@ -86,6 +92,7 @@ pub(crate) struct UnitListPanelProps {
     pub(crate) selected_unit_id: Signal<Option<String>>,
     pub(crate) selected_slot: Signal<Option<GridSlotId>>,
     pub(crate) search_query: Signal<String>,
+    pub(crate) search_field: Signal<SearchField>,
     pub(crate) collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
@@ -96,6 +103,15 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
     let mut search_query = props.search_query;
+    let mut search_field = props.search_field;
+    let current_search_field = *search_field.read();
+    let search_placeholder = match current_search_field {
+        SearchField::UnitName => "Search units…",
+        SearchField::Ability => "Search by ability…",
+    };
+    // Reuse the exact Melee/Campaign button styling so the search-field toggle
+    // matches their size and width.
+    let search_field_button_class = ModeButtonClass::get();
     let collapsed_categories = props.collapsed_categories;
     let mut raw_query = use_signal(|| search_query.read().clone());
     let mut debounce_gen: Signal<u32> = use_signal(|| 0);
@@ -115,6 +131,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
         active_race,
         unit_mode,
         search_query,
+        current_search_field,
         selected_unit_id,
         collapsed_categories,
     );
@@ -186,6 +203,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
             label: UnitKindHelpers::category_label(kind).to_owned(),
             is_collapsed: state.collapsed_snapshot().contains(&kind),
             query: state.query_snapshot().to_owned(),
+            search_field: current_search_field,
             active_unit_id: state.active_unit_id().map(str::to_owned),
         })
         .collect();
@@ -196,10 +214,31 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
             "data-active-category": "{unit_kind_data_attr(active_kind)}",
             "data-search-active": search_active,
             div {
+                class: "flex flex-col gap-2 mb-2 max-[700px]:flex-row [&>button]:min-h-[6.7rem]! max-[700px]:[&>button]:min-h-[3.5rem]!",
+                role: "group",
+                aria_label: "Search by",
+                button {
+                    r#type: "button",
+                    class: search_field_button_class,
+                    "data-active": current_search_field == SearchField::UnitName,
+                    aria_pressed: current_search_field == SearchField::UnitName,
+                    onclick: move |_| search_field.set(SearchField::UnitName),
+                    "Unit"
+                }
+                button {
+                    r#type: "button",
+                    class: search_field_button_class,
+                    "data-active": current_search_field == SearchField::Ability,
+                    aria_pressed: current_search_field == SearchField::Ability,
+                    onclick: move |_| search_field.set(SearchField::Ability),
+                    "Ability"
+                }
+            }
+            div {
                 class: "unit-list-search",
                 input {
                     r#type: "search",
-                    placeholder: "Search units…",
+                    placeholder: search_placeholder,
                     value: raw_query,
                     oninput: handle_search_input,
                     onkeydown: handle_search_keydown,
@@ -231,6 +270,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                             race,
                             mode,
                             query: section.query(),
+                            search_field: section.search_field(),
                             active_unit_id: section.active_unit_id(),
                             selected_unit_id,
                             selected_slot,

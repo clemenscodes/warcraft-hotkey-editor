@@ -15,6 +15,7 @@ mod unit_abilities;
 mod unit_data;
 mod unit_ui_flags;
 mod units;
+mod upgrade_swaps;
 mod upgrades;
 
 mod image;
@@ -37,6 +38,7 @@ pub use unit_abilities::*;
 pub use unit_data::*;
 pub use unit_ui_flags::*;
 pub use units::*;
+pub use upgrade_swaps::*;
 pub use upgrades::*;
 
 pub use game::GAME_EXTRACTION_RULE;
@@ -62,6 +64,7 @@ pub enum ExtractResult {
     Units(UnitDatabase),
     UnitAbilities(UnitAbilitiesDatabase),
     AbilityMetadata(AbilityMetadataDatabase),
+    UpgradeSwaps(UpgradeSwapDatabase),
     UnitData(UnitDataDatabase),
     UnitUiFlags(UnitUiFlagsDatabase),
     CommandDefaults(CommandDefaultsDatabase),

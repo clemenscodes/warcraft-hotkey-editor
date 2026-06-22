@@ -27,7 +27,7 @@ use crate::services::navigation::url_state::UrlNavigationState;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::undo::{EditorSnapshot, UndoHistory};
 use warcraft_api::RaceLabels;
-use warcraft_database::UnitMode;
+use warcraft_database::{SearchField, UnitMode};
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
@@ -164,6 +164,9 @@ pub(crate) fn App() -> Element {
     let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
     let mut search_query = use_signal::<String>(move || initial_search);
+    // What the search query matches against — unit name (default) or ability.
+    // The sidebar toggles it; held in memory (not yet a URL param).
+    let search_field = use_signal::<SearchField>(SearchField::default);
     let mut current_view = use_signal::<AppView>(move || initial_view);
     let mut selected_island = use_signal::<Option<String>>(move || initial_selected_island);
     let mut selected_hotkey_unit =
@@ -515,7 +518,7 @@ pub(crate) fn App() -> Element {
                     div {
                         class: "main-content",
                         "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
-                        UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, collapsed_categories }
+                        UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, search_field, collapsed_categories }
                         UnitDetailPanel {
                             selected_unit_id,
                             selected_slot,

@@ -27,7 +27,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{UnitCatalog, UnitMode, WARCRAFT_DATABASE};
+    use crate::{SearchField, UnitCatalog, UnitMode, WARCRAFT_DATABASE};
     use warcraft_api::{Race, WarcraftObjectMeta};
 
     fn unit_abilities(unit_id: &str) -> Vec<String> {
@@ -154,8 +154,13 @@ mod tests {
     /// keeps it in the Melee catalog so users can bind Burrow on it.
     #[test]
     fn barbed_arachnathid_merc_is_in_melee_catalog() {
-        let entries =
-            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Neutral),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+        );
         let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         assert!(
             ids.contains(&"nanm"),
@@ -322,7 +327,13 @@ mod tests {
             Race::Undead,
             Race::Neutral,
         ] {
-            let entries = UnitCatalog::entries_for(Some(race), Some(UnitMode::Melee), None, None);
+            let entries = UnitCatalog::entries_for(
+                Some(race),
+                Some(UnitMode::Melee),
+                None,
+                None,
+                SearchField::UnitName,
+            );
             for entry in &entries {
                 let WarcraftObjectMeta::Unit(unit_meta) = entry.warcraft_object().meta() else {
                     continue;
@@ -342,8 +353,13 @@ mod tests {
     /// they'd be dead entries in the unit list.
     #[test]
     fn ability_less_placeholders_stay_filtered() {
-        let entries =
-            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Neutral),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+        );
         let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for placeholder in ["nanc", "nanw"] {
             assert!(

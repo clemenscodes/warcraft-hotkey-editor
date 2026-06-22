@@ -17,8 +17,8 @@ pub use meta::{
 };
 pub use object::{
     ColumnIndex, GridCoordinate, ItemClass, ObjectMap, ParseGridCoordinateError, Race, RowIndex,
-    UnitKind, WarcraftDatabase, WarcraftObject, WarcraftObjectId, WarcraftObjectKind,
-    WarcraftObjectMeta, WarcraftObjectText,
+    UnitKind, UnitUpgradeSwap, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
+    WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText,
 };
 pub use player::{
     AiDifficultyPreference, CampaignMatchType, CustomMatchType, MatchType, MeleeMatchType,

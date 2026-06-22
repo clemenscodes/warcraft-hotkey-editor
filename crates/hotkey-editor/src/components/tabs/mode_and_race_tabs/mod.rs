@@ -8,7 +8,7 @@ use crate::components::tabs::race_tabs::RaceTabs;
 use crate::model::grid::GridSlotId;
 use crate::services::focus::modality::FocusModality;
 
-use state::ModeButtonClass;
+pub(crate) use state::ModeButtonClass;
 
 #[derive(Props, Clone, PartialEq)]
 pub(crate) struct ModeAndRaceTabsProps {

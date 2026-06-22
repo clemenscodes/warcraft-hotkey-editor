@@ -49398,6 +49398,98 @@ pub static WARCRAFT_SYSTEM_KEYBINDS: &[SystemKeybind] = &[
     ),
 ];
 
+pub const TIERED_UNIT_GROUPS: &[&[WarcraftObjectId]] = &[
+    &[
+        WarcraftObjectId::new("Nalm"),
+        WarcraftObjectId::new("Nal2"),
+        WarcraftObjectId::new("Nal3"),
+    ],
+    &[WarcraftObjectId::new("Rguv"), WarcraftObjectId::new("Reuv")],
+    &[
+        WarcraftObjectId::new("hwat"),
+        WarcraftObjectId::new("hwt2"),
+        WarcraftObjectId::new("hwt3"),
+    ],
+    &[
+        WarcraftObjectId::new("ncfs"),
+        WarcraftObjectId::new("ntws"),
+        WarcraftObjectId::new("nsns"),
+    ],
+    &[
+        WarcraftObjectId::new("ndr1"),
+        WarcraftObjectId::new("ndr2"),
+        WarcraftObjectId::new("ndr3"),
+    ],
+    &[
+        WarcraftObjectId::new("nfac"),
+        WarcraftObjectId::new("nfa1"),
+        WarcraftObjectId::new("nfa2"),
+    ],
+    &[
+        WarcraftObjectId::new("ngz1"),
+        WarcraftObjectId::new("ngz2"),
+        WarcraftObjectId::new("ngz3"),
+    ],
+    &[
+        WarcraftObjectId::new("ngzc"),
+        WarcraftObjectId::new("ngzd"),
+        WarcraftObjectId::new("ngza"),
+        WarcraftObjectId::new("ngz4"),
+    ],
+    &[
+        WarcraftObjectId::new("nlv1"),
+        WarcraftObjectId::new("nlv2"),
+        WarcraftObjectId::new("nlv3"),
+    ],
+    &[
+        WarcraftObjectId::new("nowl"),
+        WarcraftObjectId::new("now2"),
+        WarcraftObjectId::new("now3"),
+    ],
+    &[
+        WarcraftObjectId::new("nqb1"),
+        WarcraftObjectId::new("nqb2"),
+        WarcraftObjectId::new("nqb3"),
+    ],
+    &[
+        WarcraftObjectId::new("nqb1"),
+        WarcraftObjectId::new("nqb2"),
+        WarcraftObjectId::new("nqb3"),
+        WarcraftObjectId::new("nqb4"),
+    ],
+    &[
+        WarcraftObjectId::new("nsw1"),
+        WarcraftObjectId::new("nsw2"),
+        WarcraftObjectId::new("nsw3"),
+    ],
+    &[
+        WarcraftObjectId::new("nwe1"),
+        WarcraftObjectId::new("nwe2"),
+        WarcraftObjectId::new("nwe3"),
+    ],
+    &[
+        WarcraftObjectId::new("osp1"),
+        WarcraftObjectId::new("osp2"),
+        WarcraftObjectId::new("osp3"),
+    ],
+    &[
+        WarcraftObjectId::new("osp1"),
+        WarcraftObjectId::new("osp2"),
+        WarcraftObjectId::new("osp3"),
+        WarcraftObjectId::new("osp4"),
+    ],
+    &[
+        WarcraftObjectId::new("osw1"),
+        WarcraftObjectId::new("osw2"),
+        WarcraftObjectId::new("osw3"),
+    ],
+];
+
+pub const UNIT_UPGRADE_SWAPS: &[UnitUpgradeSwap] = &[
+    UnitUpgradeSwap::new("hmtt", "hrtt"),
+    UnitUpgradeSwap::new("ohun", "otbk"),
+];
+
 const AABS_ICONS: &[&str] = &["commandbuttons/btnabsorbmagic.blp"];
 const AABS_NAMES: &[&str] = &["Absorb Mana"];
 const AABS_TIP_LEVELS: &[&str] = &["Absorb Mana"];
