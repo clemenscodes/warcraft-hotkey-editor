@@ -11,6 +11,7 @@ mod stat_icon;
 use dioxus::prelude::*;
 use warcraft_api::{HeroAttributes, PrimaryAttribute, RegenType, UnitCombat};
 
+use super::derived_stats::DerivedStats;
 use leveled_stats::LeveledStats;
 use stat_icon::StatIcon;
 
@@ -23,6 +24,9 @@ pub(crate) struct UnitStatsPanelProps {
     pub(crate) combat: UnitCombat,
     pub(crate) hero_attributes: Option<HeroAttributes>,
     pub(crate) selected_hero_level: Signal<u32>,
+    /// Resolved per-unit chance to evade an attack (0.0..=1.0), already taken
+    /// across the unit's abilities. `0.0` for units without evasion.
+    pub(crate) evasion_chance: f32,
 }
 
 #[component]
@@ -30,6 +34,7 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
     let combat = props.combat;
     let hero_attributes = props.hero_attributes;
     let selected_hero_level = props.selected_hero_level;
+    let evasion_chance = props.evasion_chance;
     let current_level = if hero_attributes.is_some() {
         selected_hero_level()
     } else {
@@ -54,6 +59,12 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
         .as_ref()
         .map(LeveledStats::armor)
         .unwrap_or_else(|| combat.armor());
+    let effective_hit_points =
+        DerivedStats::effective_hit_points(display_hp, display_armor, evasion_chance);
+    let effective_hit_points_text = format!("{effective_hit_points:.0}");
+    let has_evasion = evasion_chance > 0.0;
+    let evasion_percent = evasion_chance * 100.0;
+    let evasion_text = format!("{evasion_percent:.0}%");
     let leveled_damage_min = leveled_stats.as_ref().map(LeveledStats::damage_min);
     let leveled_damage_max = leveled_stats.as_ref().map(LeveledStats::damage_max);
     let armor_text = format!("{display_armor:.0}");
@@ -109,16 +120,21 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
     let attack_display: Option<AttackDisplayData> = combat.attack().map(|unit_attack| {
         let damage_min = leveled_damage_min.unwrap_or_else(|| unit_attack.damage_min());
         let damage_max = leveled_damage_max.unwrap_or_else(|| unit_attack.damage_max());
+        let damage_text = format!("{damage_min}\u{2013}{damage_max}");
         let attack_range = unit_attack.range();
-        let speed_text = format!("{:.2}s", unit_attack.cooldown_seconds());
+        let cooldown_seconds = unit_attack.cooldown_seconds();
+        let speed_text = format!("{cooldown_seconds:.2}s");
+        let damage_per_second =
+            DerivedStats::damage_per_second(damage_min, damage_max, cooldown_seconds);
+        let damage_per_second_text = damage_per_second.map(|value| format!("{value:.1}"));
         let attack_type = unit_attack.attack_type();
         let type_label = attack_type.to_string();
         let type_icon = StatIcon::from(attack_type).asset();
         AttackDisplayData::new(
-            damage_min,
-            damage_max,
+            damage_text,
             attack_range,
             speed_text,
+            damage_per_second_text,
             attack_type,
             type_label,
             type_icon,
@@ -203,8 +219,16 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
                         span { class: "stat-row-label", "Defense Type" }
                         span { class: "stat-row-value", {defense_label} }
                     }
-                    if !has_attack {
-                        div { class: "stat-row", "\u{00a0}" }
+                    div { class: "stat-row",
+                        span { class: "stat-row-label", "Effective Hit Points" }
+                        span { class: "stat-row-value", {effective_hit_points_text} }
+                    }
+                    if has_evasion {
+                        div { class: "stat-row",
+                            span { class: "stat-row-label", "Evasion" }
+                            span { class: "stat-row-value", {evasion_text} }
+                        }
+                    } else if !has_attack {
                         div { class: "stat-row", "\u{00a0}" }
                     }
                     DefenseMatchupRow { defense_type }

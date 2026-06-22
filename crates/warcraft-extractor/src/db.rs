@@ -963,6 +963,8 @@ impl WarcraftDataAggregation {
                 let names = Self::leak_slice(&[leaked_name]);
                 let icons = Self::leak_slice(&[leaked_icon]);
                 let build_time = unit.build_time();
+                let level = unit.level();
+                let gold_cost = unit.gold_cost();
                 let abilities_for_unit: &'static [WarcraftObjectId] = {
                     let mut combined: Vec<String> = match self.unit_abilities.get(id) {
                         Some(entry) => entry.abilities().to_vec(),
@@ -1227,7 +1229,9 @@ impl WarcraftDataAggregation {
                     production,
                     flags,
                 )
-                .with_combat(combat);
+                .with_combat(combat)
+                .with_level(level)
+                .with_gold_cost(gold_cost);
                 if let Some(hero_attributes) = self.build_hero_attributes(id) {
                     unit_meta = unit_meta.with_hero_attributes(hero_attributes);
                 }
@@ -1289,6 +1293,9 @@ impl WarcraftDataAggregation {
                     .map(|text| Self::leak(&text));
                 let metadata = self.ability_metadata.get(hero_id);
                 let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
+                let evasion_chances = metadata
+                    .map(|entry| entry.evasion_chance_per_level())
+                    .unwrap_or([0.0; 4]);
                 let morph_target = metadata
                     .and_then(|entry| entry.morph_target_unit())
                     .map(Self::leak)
@@ -1321,6 +1328,7 @@ impl WarcraftDataAggregation {
                 )
                 .with_code(code_static)
                 .with_morph_target(morph_target)
+                .with_evasion_chances(evasion_chances)
                 .with_off_state(
                     off_button_position,
                     off_tip_static,
@@ -1422,6 +1430,9 @@ impl WarcraftDataAggregation {
                 let zero_cooldowns: [u32; 4] = [0, 0, 0, 0];
                 let metadata = self.ability_metadata.get(ability_string_id);
                 let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
+                let evasion_chances = metadata
+                    .map(|entry| entry.evasion_chance_per_level())
+                    .unwrap_or([0.0; 4]);
                 let morph_target = metadata
                     .and_then(|entry| entry.morph_target_unit())
                     .map(Self::leak)
@@ -1454,6 +1465,7 @@ impl WarcraftDataAggregation {
                 )
                 .with_code(code_static)
                 .with_morph_target(morph_target)
+                .with_evasion_chances(evasion_chances)
                 .with_off_state(
                     off_button_position,
                     off_tip_static,
@@ -1531,6 +1543,9 @@ impl WarcraftDataAggregation {
                 .map(|text| Self::leak(&text));
             let metadata = self.ability_metadata.get(ability_id_str.as_str());
             let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
+            let evasion_chances = metadata
+                .map(|entry| entry.evasion_chance_per_level())
+                .unwrap_or([0.0; 4]);
             let morph_target = metadata
                 .and_then(|entry| entry.morph_target_unit())
                 .map(Self::leak)
@@ -1570,6 +1585,7 @@ impl WarcraftDataAggregation {
             )
             .with_code(code_static)
             .with_morph_target(morph_target)
+            .with_evasion_chances(evasion_chances)
             .with_off_state(
                 off_button_position,
                 off_tip_static,

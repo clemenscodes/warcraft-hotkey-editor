@@ -19,15 +19,29 @@ pub static UNITS_EXTRACTION_RULE: ExtractionRule = ExtractionRule {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnitDefinition {
     build_time: u32,
+    level: u32,
+    gold_cost: u32,
 }
 
 impl UnitDefinition {
-    pub fn new(build_time: u32) -> Self {
-        Self { build_time }
+    pub fn new(build_time: u32, level: u32, gold_cost: u32) -> Self {
+        Self {
+            build_time,
+            level,
+            gold_cost,
+        }
     }
 
     pub fn build_time(&self) -> u32 {
         self.build_time
+    }
+
+    pub fn level(&self) -> u32 {
+        self.level
+    }
+
+    pub fn gold_cost(&self) -> u32 {
+        self.gold_cost
     }
 }
 
@@ -74,6 +88,13 @@ impl UnitsExtraction {
             let def_type = row.get("defType").unwrap_or("");
             let isbldg = row.get("isbldg").unwrap_or("");
             let build_time: u32 = row.get("bldtm").unwrap_or("0").trim().parse().unwrap_or(0);
+            let level: u32 = row.get("level").unwrap_or("0").trim().parse().unwrap_or(0);
+            let gold_cost: u32 = row
+                .get("goldcost")
+                .unwrap_or("0")
+                .trim()
+                .parse()
+                .unwrap_or(0);
 
             if id.is_empty() {
                 continue;
@@ -90,7 +111,10 @@ impl UnitsExtraction {
                 .or_default()
                 .entry(kind)
                 .or_default()
-                .insert(id.to_string(), UnitDefinition::new(build_time));
+                .insert(
+                    id.to_string(),
+                    UnitDefinition::new(build_time, level, gold_cost),
+                );
         }
 
         unit_database

@@ -545,6 +545,8 @@ impl CodegenContext {
             WarcraftObjectMeta::Unit(unit_meta) => {
                 let unit_kind = unit_meta.unit_kind();
                 let build_time = unit_meta.build_time();
+                let level = unit_meta.level();
+                let gold_cost = unit_meta.gold_cost();
                 let unit_abilities = unit_meta.abilities();
                 let abilities_const = self.intern_id_slice_named(
                     format!("{id_normalized}_UNIT_ABILITIES"),
@@ -641,7 +643,7 @@ impl CodegenContext {
                      UnitProduction::new({researches_const}, {builds_const}, {trains_const}, \
                      {sell_items_const}, {sell_units_const}), \
                      UnitFlags::new({is_campaign}, {is_in_editor}, {is_hidden_in_editor}, {is_special}))\
-                     .with_combat({combat_expression}){hero_attributes_chain}),\n"
+                     .with_combat({combat_expression}).with_level({level}).with_gold_cost({gold_cost}){hero_attributes_chain}),\n"
                 ));
             }
 
@@ -668,12 +670,28 @@ impl CodegenContext {
                 let off_tip_literal = format_static_str_option(ability_meta.off_tip());
                 let off_ubertip_literal = format_static_str_option(ability_meta.off_ubertip());
                 let off_icon_literal = format_static_str_option(ability_meta.off_icon());
+                let evasion_chances = ability_meta.evasion_chances();
+                let has_evasion = evasion_chances.iter().any(|chance| *chance > 0.0);
+                let evasion_call = if has_evasion {
+                    // `{:?}` keeps the decimal point so the slot stays an f32
+                    // literal (`0.0`, not `0`) — and round-trips the value.
+                    format!(
+                        ".with_evasion_chances([{:?}, {:?}, {:?}, {:?}])",
+                        evasion_chances[0],
+                        evasion_chances[1],
+                        evasion_chances[2],
+                        evasion_chances[3]
+                    )
+                } else {
+                    String::new()
+                };
 
                 output.push_str(&format!(
                     "            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips({max_level}, {is_ultimate}, \
                      {cooldown_const}, {default_button}, {default_research_button}, \
                      {ubertip_literal}, {research_ubertip_literal}).with_code({code_literal})\
                      .with_morph_target({morph_target_literal})\
+                     {evasion_call}\
                      .with_off_state({off_button_literal}, {off_tip_literal}, {off_ubertip_literal}, {off_icon_literal})),\n"
                 ));
             }

@@ -587,6 +587,12 @@ impl HeroAttributes {
 pub struct UnitMeta {
     unit_kind: UnitKind,
     build_time: u32,
+    /// In-game tech tier (`level` column of `unitbalance.slk`); lower = available
+    /// earlier. Used to order the unit list by in-game availability.
+    level: u32,
+    /// Gold cost (`goldcost` column of `unitbalance.slk`). Used to order
+    /// buildings by tier (the chain base's cost groups upgrade chains).
+    gold_cost: u32,
     abilities: &'static [WarcraftObjectId],
     hero_abilities: &'static [WarcraftObjectId],
     researches: &'static [WarcraftObjectId],
@@ -607,6 +613,8 @@ impl UnitMeta {
         Self {
             unit_kind,
             build_time,
+            level: 0,
+            gold_cost: 0,
             abilities: &[],
             hero_abilities: &[],
             researches: &[],
@@ -632,6 +640,8 @@ impl UnitMeta {
         Self {
             unit_kind,
             build_time,
+            level: 0,
+            gold_cost: 0,
             abilities,
             hero_abilities,
             researches: &[],
@@ -660,6 +670,8 @@ impl UnitMeta {
         Self {
             unit_kind,
             build_time,
+            level: 0,
+            gold_cost: 0,
             abilities,
             hero_abilities,
             researches: &[],
@@ -687,6 +699,8 @@ impl UnitMeta {
         Self {
             unit_kind,
             build_time,
+            level: 0,
+            gold_cost: 0,
             abilities,
             hero_abilities,
             researches: production.researches,
@@ -713,12 +727,30 @@ impl UnitMeta {
         self
     }
 
+    pub const fn with_level(mut self, level: u32) -> Self {
+        self.level = level;
+        self
+    }
+
+    pub const fn with_gold_cost(mut self, gold_cost: u32) -> Self {
+        self.gold_cost = gold_cost;
+        self
+    }
+
     pub fn unit_kind(&self) -> UnitKind {
         self.unit_kind
     }
 
     pub fn build_time(&self) -> u32 {
         self.build_time
+    }
+
+    pub fn level(&self) -> u32 {
+        self.level
+    }
+
+    pub fn gold_cost(&self) -> u32 {
+        self.gold_cost
     }
 
     pub fn abilities(&self) -> &'static [WarcraftObjectId] {
@@ -1091,6 +1123,11 @@ pub struct AbilityMeta {
     max_level: usize,
     is_ultimate: bool,
     cooldowns: [u32; 4],
+    /// Per-level chance to evade an attack (0.0..=1.0), one slot per ability
+    /// level. Non-zero only for evasion abilities (Evasion `AEev`, Drunken
+    /// Brawler `ANdb`); every other ability leaves this `[0.0; 4]`. Sourced
+    /// from the real `abilitydata.slk` data field, not the tooltip text.
+    evasion_chances: [f32; 4],
     default_button_position: Option<GridCoordinate>,
     default_research_button_position: Option<GridCoordinate>,
     ubertip: Option<&'static str>,
@@ -1109,6 +1146,7 @@ impl AbilityMeta {
             max_level,
             is_ultimate,
             cooldowns,
+            evasion_chances: [0.0; 4],
             default_button_position: None,
             default_research_button_position: None,
             ubertip: None,
@@ -1133,6 +1171,7 @@ impl AbilityMeta {
             max_level,
             is_ultimate,
             cooldowns,
+            evasion_chances: [0.0; 4],
             default_button_position,
             default_research_button_position,
             ubertip: None,
@@ -1159,6 +1198,7 @@ impl AbilityMeta {
             max_level,
             is_ultimate,
             cooldowns,
+            evasion_chances: [0.0; 4],
             default_button_position,
             default_research_button_position,
             ubertip,
@@ -1179,6 +1219,11 @@ impl AbilityMeta {
 
     pub const fn with_morph_target(mut self, target: Option<WarcraftObjectId>) -> Self {
         self.morph_target_unit = target;
+        self
+    }
+
+    pub const fn with_evasion_chances(mut self, evasion_chances: [f32; 4]) -> Self {
+        self.evasion_chances = evasion_chances;
         self
     }
 
@@ -1286,6 +1331,27 @@ impl AbilityMeta {
 
     pub fn cooldowns(&self) -> [u32; 4] {
         self.cooldowns
+    }
+
+    /// Per-level chance to evade an attack (0.0..=1.0). `[0.0; 4]` for any
+    /// ability that is not an evasion ability.
+    pub fn evasion_chances(&self) -> [f32; 4] {
+        self.evasion_chances
+    }
+
+    /// Chance to evade at a given ability level (1-based), or `None` when the
+    /// level is out of range. Levels beyond `max_level` are not real.
+    pub fn evasion_chance_for_level(&self, level: usize) -> Option<f32> {
+        if level == 0 || level > self.max_level {
+            None
+        } else {
+            Some(self.evasion_chances[level - 1])
+        }
+    }
+
+    /// True if the ability grants any evasion at any level.
+    pub fn has_evasion(&self) -> bool {
+        self.evasion_chances.iter().any(|chance| *chance > 0.0)
     }
 }
 

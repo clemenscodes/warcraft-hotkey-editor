@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, path::PathBuf};
 
-use warcraft_slk::SlkTable;
+use warcraft_slk::{RowView, SlkTable};
 
 use crate::{
     ExtractError, ExtractResult, ExtractTarget, ExtractionRule, casc_filename, is_war3_units_path,
@@ -35,11 +35,19 @@ pub struct AbilityMetadataEntry {
     morph_target_unit: Option<String>,
     transform_from_unit: Option<String>,
     transform_to_unit: Option<String>,
+    evasion_chance_per_level: [f32; 4],
 }
 
 impl AbilityMetadataEntry {
     pub fn code(&self) -> Option<&str> {
         self.code.as_deref()
+    }
+
+    /// Per-level chance to evade an attack (0.0..=1.0). `[0.0; 4]` unless the
+    /// ability is an evasion ability. Read from the real numeric data field
+    /// (`DataA`/`DataD`), never from the tooltip text.
+    pub fn evasion_chance_per_level(&self) -> [f32; 4] {
+        self.evasion_chance_per_level
     }
 
     pub fn morph_target_unit(&self) -> Option<&str> {
@@ -82,6 +90,9 @@ impl AbilityMetadataExtraction {
             let raw_morph_target = row.get("UnitID1").unwrap_or("").trim();
             let raw_data_a1 = row.get("DataA1").unwrap_or("").trim();
             let raw_data_b1 = row.get("DataB1").unwrap_or("").trim();
+            let raw_levels = row.get("levels").unwrap_or("").trim();
+            let level_count = raw_levels.parse::<usize>().unwrap_or(0);
+            let evasion_chance_per_level = Self::evasion_chances(raw_code, &row, level_count);
 
             let code = if raw_code.is_empty() {
                 None
@@ -104,10 +115,12 @@ impl AbilityMetadataExtraction {
                 None
             };
 
+            let has_evasion = evasion_chance_per_level.iter().any(|chance| *chance > 0.0);
             if code.is_none()
                 && morph_target_unit.is_none()
                 && transform_from_unit.is_none()
                 && transform_to_unit.is_none()
+                && !has_evasion
             {
                 continue;
             }
@@ -117,10 +130,41 @@ impl AbilityMetadataExtraction {
                 morph_target_unit,
                 transform_from_unit,
                 transform_to_unit,
+                evasion_chance_per_level,
             };
             database.insert(alias.to_string(), entry);
         }
         database
+    }
+
+    /// Per-level chance to evade an attack, read from the real numeric data
+    /// field — never parsed out of the tooltip. The column that holds the
+    /// dodge chance depends on the ability's base mechanic `code`:
+    ///
+    /// - `AEev` (Evasion — Demon Hunter, creep, Talisman of Evasion): `DataA`
+    /// - `ANdb` (Drunken Brawler — Brewmaster, Chen): `DataD` (here `DataA`
+    ///   and `DataB` hold the critical-strike chance and multiplier).
+    ///
+    /// Only the first `level_count` levels are real; `DataA4`/`DataD4` carry
+    /// filler values past a 3-level ability, so anything beyond stays `0.0`.
+    fn evasion_chances(code: &str, row: &RowView, level_count: usize) -> [f32; 4] {
+        let column_prefix = match code {
+            "AEev" => "DataA",
+            "ANdb" => "DataD",
+            _ => return [0.0; 4],
+        };
+        let mut chances: [f32; 4] = [0.0; 4];
+        let usable_levels = level_count.min(chances.len());
+        let mut level_index = 0;
+        while level_index < usable_levels {
+            let column_number = level_index + 1;
+            let column_name = format!("{column_prefix}{column_number}");
+            let raw_cell = row.get(&column_name).unwrap_or("").trim();
+            let parsed_chance = raw_cell.parse::<f32>().unwrap_or(0.0);
+            chances[level_index] = parsed_chance;
+            level_index += 1;
+        }
+        chances
     }
 
     /// `UnitID1` is overloaded — for non-morph abilities it can hold area

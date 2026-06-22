@@ -595,6 +595,7 @@ fn insert_objects_chunk_0(
                 )
                 .with_code(Some("AEev"))
                 .with_morph_target(None)
+                .with_evasion_chances([0.15, 0.0, 0.0, 0.0])
                 .with_off_state(None, None, None, None),
             ),
             WarcraftObjectText::new(ACEV_TIP_LEVELS, ACEV_UBERTIP_LEVELS),
@@ -1569,7 +1570,7 @@ fn insert_objects_chunk_0(
             AEEV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AEEV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 10% chance to avoid an attack."), Some("Gives a percent chance to avoid attacks. |n|n|cffffcc00Level 1|r - 10% chance that an opponent misses. |n|cffffcc00Level 2|r - 20% chance that an opponent misses. |n|cffffcc00Level 3|r - 30% chance that an opponent misses.")).with_code(Some("AEev")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AEEV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 10% chance to avoid an attack."), Some("Gives a percent chance to avoid attacks. |n|n|cffffcc00Level 1|r - 10% chance that an opponent misses. |n|cffffcc00Level 2|r - 20% chance that an opponent misses. |n|cffffcc00Level 3|r - 30% chance that an opponent misses.")).with_code(Some("AEev")).with_morph_target(None).with_evasion_chances([0.1, 0.2, 0.3, 0.0]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AEEV_TIP_LEVELS, AEEV_UBERTIP_LEVELS),
         ),
     );
@@ -2357,7 +2358,7 @@ fn insert_objects_chunk_0(
             ANDB_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times total damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times total damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times total damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times total damage.")).with_code(Some("ANdb")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times total damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times total damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times total damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times total damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.0]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ANDB_TIP_LEVELS, ANDB_UBERTIP_LEVELS),
         ),
     );
@@ -4444,7 +4445,7 @@ fn insert_objects_chunk_1(
             ACDB_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(4, false, ACDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times normal damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times normal damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times normal damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times normal damage. |n|cffffcc00Level 4|r - 30% dodge, 6 times normal damage.")).with_code(Some("ANdb")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(4, false, ACDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times normal damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times normal damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times normal damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times normal damage. |n|cffffcc00Level 4|r - 30% dodge, 6 times normal damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.3]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACDB_TIP_LEVELS, ACDB_UBERTIP_LEVELS),
         ),
     );
@@ -8940,6 +8941,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(325, 2.0)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 2.0),
                     AttributeBase::new(17, 15, 18),
@@ -8984,6 +8987,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(19, 21, 16),
@@ -9030,6 +9035,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(26, 20, 16),
@@ -9076,6 +9083,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(21, 22, 16),
@@ -9121,6 +9130,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(26, 20, 16),
@@ -9166,6 +9177,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(17, 15, 18),
@@ -9211,6 +9224,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(26, 20, 16),
@@ -9256,6 +9271,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(21, 22, 16),
@@ -9301,6 +9318,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(26, 20, 16),
@@ -9346,6 +9365,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(16, 15, 18),
@@ -9392,6 +9413,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(16, 15, 18),
@@ -9437,6 +9460,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(17, 15, 18),
@@ -9482,6 +9507,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(17, 15, 18),
@@ -9527,6 +9554,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 19, 15),
@@ -9573,6 +9602,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 19, 15),
@@ -9618,6 +9649,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(18, 20, 16),
@@ -9664,6 +9697,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 20, 15),
@@ -9710,6 +9745,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(14, 17, 19),
@@ -9756,6 +9793,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(15, 17, 19),
@@ -9802,6 +9841,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -9847,6 +9888,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -9892,6 +9935,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -9937,6 +9982,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(18, 14, 19),
@@ -9983,6 +10030,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10028,6 +10077,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(14, 17, 19),
@@ -10074,6 +10125,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10119,6 +10172,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(15, 17, 19),
@@ -10164,6 +10219,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(16, 15, 19),
@@ -10210,6 +10267,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10255,6 +10314,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(24, 11, 15),
@@ -10300,6 +10361,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10345,6 +10408,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(24, 11, 15),
@@ -10391,6 +10456,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10437,6 +10504,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10482,6 +10551,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10527,6 +10598,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -10572,6 +10645,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(15, 14, 20),
@@ -10618,6 +10693,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 19, 15),
@@ -10662,6 +10739,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(15, 20, 19),
@@ -10707,6 +10786,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(25, 10, 18),
@@ -10753,6 +10834,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(25, 10, 18),
@@ -10799,6 +10882,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(25, 10, 18),
@@ -10845,6 +10930,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(25, 10, 18),
@@ -10891,6 +10978,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(19, 23, 16),
@@ -10936,6 +11025,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 21, 15),
@@ -10982,6 +11073,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(24, 14, 15),
@@ -11028,6 +11121,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(15, 20, 18),
@@ -11074,6 +11169,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -11118,6 +11215,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -11162,6 +11261,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(25, 13, 16),
@@ -11207,6 +11308,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(30, 17, 20),
@@ -11251,6 +11354,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(27000, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(500)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(14, 17, 19),
@@ -11297,6 +11402,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(330, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(330, 0.01),
                     AttributeBase::new(15, 16, 22),
@@ -11343,6 +11450,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(23, 14, 16),
@@ -11389,6 +11498,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(30, 17, 20),
@@ -11433,6 +11544,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(28, 16, 14),
@@ -11479,6 +11592,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(22, 15, 20),
@@ -11525,6 +11640,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(23, 12, 15),
@@ -11571,6 +11688,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(27000, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(500)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(14, 17, 19),
@@ -11617,6 +11736,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(22, 15, 20),
@@ -11663,6 +11784,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(18, 22, 16),
@@ -11709,6 +11832,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(25, 10, 14),
@@ -11754,6 +11879,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(25, 10, 14),
@@ -11799,6 +11926,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(15, 18, 19),
@@ -11845,6 +11974,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(15, 18, 19),
@@ -11891,6 +12022,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(22, 13, 17),
@@ -11937,6 +12070,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(19, 23, 16),
@@ -11982,6 +12117,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(19, 23, 16),
@@ -12027,6 +12164,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(25, 14, 18),
@@ -12073,6 +12212,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(15, 20, 18),
@@ -12119,6 +12260,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(240, 0.01),
                     AttributeBase::new(18, 23, 16),
@@ -12165,6 +12308,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(15, 20, 17),
@@ -12211,6 +12356,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(25, 10, 14),
@@ -12256,6 +12403,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(25, 10, 15),
@@ -12302,6 +12451,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(16, 18, 19),
@@ -12347,6 +12498,8 @@ fn insert_objects_chunk_2(
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(285, 0.01),
                     AttributeBase::new(16, 18, 19),
@@ -13781,6 +13934,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(26, 14, 14),
@@ -13827,6 +13982,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -13872,6 +14029,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(14, 14, 20),
@@ -13917,6 +14076,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(210, 0.01),
                     AttributeBase::new(26, 14, 14),
@@ -13963,6 +14124,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(23, 12, 17),
@@ -14009,6 +14172,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14055,6 +14220,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14100,6 +14267,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(255, 0.01),
                     AttributeBase::new(23, 12, 17),
@@ -14145,6 +14314,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(14, 14, 20),
@@ -14190,6 +14361,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(400)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 0.01),
                     AttributeBase::new(15, 14, 20),
@@ -14236,6 +14409,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14281,6 +14456,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(225, 0.01),
                     AttributeBase::new(18, 19, 15),
@@ -14327,6 +14504,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14372,6 +14551,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14417,6 +14598,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(270, 0.01),
                     AttributeBase::new(20, 16, 18),
@@ -14462,6 +14645,8 @@ fn insert_objects_chunk_3(
                     )
                     .with_mana_pool(ManaPool::new(300, 2.0)),
                 )
+                .with_level(5)
+                .with_gold_cost(425)
                 .with_hero_attributes(HeroAttributes::new(
                     ManaPool::new(300, 2.0),
                     AttributeBase::new(21, 17, 20),
@@ -15134,7 +15319,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(EAOE_TIP_LEVELS, EAOE_UBERTIP_LEVELS),
         )
@@ -15171,7 +15358,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(37, 47, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(EAOM_TIP_LEVELS, EAOM_UBERTIP_LEVELS),
         )
@@ -15208,7 +15397,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(38, 46, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(EAOW_TIP_LEVELS, EAOW_UBERTIP_LEVELS),
         )
@@ -15245,7 +15436,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(16, 18, 500, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(EARC_TIP_LEVELS, EARC_UBERTIP_LEVELS),
         )
@@ -15282,7 +15475,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(EATE_TIP_LEVELS, EATE_UBERTIP_LEVELS),
         )
@@ -15319,7 +15514,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(45, 62, 1150, 3.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(210),
             ),
             WarcraftObjectText::new(EBAL_TIP_LEVELS, EBAL_UBERTIP_LEVELS),
         )
@@ -15356,7 +15553,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(500),
             ),
             WarcraftObjectText::new(EBSH_TIP_LEVELS, EBSH_UBERTIP_LEVELS),
         )
@@ -15393,7 +15592,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(45, 55, 850, 2.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(330),
             ),
             WarcraftObjectText::new(ECHM_TIP_LEVELS, ECHM_UBERTIP_LEVELS),
         )
@@ -15433,7 +15634,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(26, 31, 100, 1.5, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.33333334)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(EDCM_TIP_LEVELS, EDCM_UBERTIP_LEVELS),
         )
@@ -15470,7 +15673,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 25, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(90),
             ),
             WarcraftObjectText::new(EDEN_TIP_LEVELS, EDEN_UBERTIP_LEVELS),
         )
@@ -15507,7 +15712,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(250),
             ),
             WarcraftObjectText::new(EDES_TIP_LEVELS, EDES_UBERTIP_LEVELS),
         )
@@ -15544,7 +15751,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(210),
             ),
             WarcraftObjectText::new(EDOB_TIP_LEVELS, EDOB_UBERTIP_LEVELS),
         )
@@ -15584,7 +15793,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(19, 22, 100, 1.5, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(EDOC_TIP_LEVELS, EDOC_UBERTIP_LEVELS),
         )
@@ -15621,7 +15832,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(EDOS_TIP_LEVELS, EDOS_UBERTIP_LEVELS),
         )
@@ -15661,7 +15874,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(11, 13, 600, 1.6, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(EDOT_TIP_LEVELS, EDOT_UBERTIP_LEVELS),
         )
@@ -15701,7 +15916,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(17, 19, 500, 2.0, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(EDRY_TIP_LEVELS, EDRY_UBERTIP_LEVELS),
         )
@@ -15741,7 +15958,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(27, 33, 600, 1.75, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(EDTM_TIP_LEVELS, EDTM_UBERTIP_LEVELS),
         )
@@ -15781,7 +16000,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(13, 15, 300, 1.75, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(EFDR_TIP_LEVELS, EFDR_UBERTIP_LEVELS),
         )
@@ -15818,7 +16039,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(15, 17, 100, 1.65, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -15854,7 +16077,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(EGOL_TIP_LEVELS, EGOL_UBERTIP_LEVELS),
         ),
@@ -15890,7 +16115,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Unarmored,
                     Some(UnitAttack::new(50, 57, 128, 1.05, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(160),
             ),
             WarcraftObjectText::new(EHIP_TIP_LEVELS, EHIP_UBERTIP_LEVELS),
         )
@@ -15927,7 +16154,9 @@ fn insert_objects_chunk_3(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(16, 18, 400, 1.1, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(290),
             ),
             WarcraftObjectText::new(EHPR_TIP_LEVELS, EHPR_UBERTIP_LEVELS),
         )
@@ -15964,7 +16193,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -15995,7 +16226,9 @@ fn insert_objects_chunk_3(
                 .with_combat(
                     UnitCombat::new(600, 0.0, RegenType::None, 5.0, DefenseType::Fortified, None)
                         .with_mana_pool(ManaPool::new(300, 1.45)),
-                ),
+                )
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(EMOW_TIP_LEVELS, EMOW_UBERTIP_LEVELS),
         )
@@ -16032,7 +16265,9 @@ fn insert_objects_chunk_3(
                     6.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 40, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(350),
             ),
             WarcraftObjectText::new(EMTG_TIP_LEVELS, EMTG_UBERTIP_LEVELS),
         )
@@ -16069,7 +16304,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -16134,7 +16371,9 @@ fn insert_objects_chunk_3(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(27, 31, 225, 1.8, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
@@ -16204,7 +16443,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Unarmored,
                     Some(UnitAttack::new(16, 18, 225, 1.8, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(ESEN_TIP_LEVELS, ESEN_UBERTIP_LEVELS),
         )
@@ -16241,7 +16482,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(27, 32, 600, 1.3, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(215),
             ),
         ),
     );
@@ -16276,7 +16519,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(ESHY_TIP_LEVELS, ESHY_UBERTIP_LEVELS),
         ),
@@ -16315,7 +16560,9 @@ fn insert_objects_chunk_3(
                         Some(UnitAttack::new(25, 36, 450, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 2.0)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -16351,7 +16598,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(49, 60, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(660),
             ),
             WarcraftObjectText::new(ETOA_TIP_LEVELS, ETOA_UBERTIP_LEVELS),
         )
@@ -16388,7 +16637,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(60, 74, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(990),
             ),
             WarcraftObjectText::new(ETOE_TIP_LEVELS, ETOE_UBERTIP_LEVELS),
         )
@@ -16425,7 +16676,9 @@ fn insert_objects_chunk_3(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(340),
             ),
             WarcraftObjectText::new(ETOL_TIP_LEVELS, ETOL_UBERTIP_LEVELS),
         )
@@ -16462,7 +16715,9 @@ fn insert_objects_chunk_3(
                     1.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(26, 33, 128, 1.4, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(ETRP_TIP_LEVELS, ETRP_UBERTIP_LEVELS),
         )
@@ -16502,7 +16757,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(ETRS_TIP_LEVELS, ETRS_UBERTIP_LEVELS),
         ),
@@ -16538,7 +16795,9 @@ fn insert_objects_chunk_3(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 21, 450, 1.35, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -16591,7 +16850,9 @@ fn insert_objects_chunk_3(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(60),
             ),
             WarcraftObjectText::new(EWSP_TIP_LEVELS, EWSP_UBERTIP_LEVELS),
         )
@@ -17041,7 +17302,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(HALT_TIP_LEVELS, HALT_UBERTIP_LEVELS),
         )
@@ -17078,7 +17341,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(HARM_TIP_LEVELS, HARM_UBERTIP_LEVELS),
         )
@@ -17115,7 +17380,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(HARO_TIP_LEVELS, HARO_UBERTIP_LEVELS),
         )
@@ -17152,7 +17419,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(HARS_TIP_LEVELS, HARS_UBERTIP_LEVELS),
         )
@@ -17189,7 +17458,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(8, 10, 800, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(100),
             ),
             WarcraftObjectText::new(HATW_TIP_LEVELS, HATW_UBERTIP_LEVELS),
         )
@@ -17226,7 +17497,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(160),
             ),
             WarcraftObjectText::new(HBAR_TIP_LEVELS, HBAR_UBERTIP_LEVELS),
         )
@@ -17263,7 +17536,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -17298,7 +17573,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(HBLA_TIP_LEVELS, HBLA_UBERTIP_LEVELS),
         )
@@ -17338,7 +17615,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(HBOT_TIP_LEVELS, HBOT_UBERTIP_LEVELS),
         )
@@ -17375,7 +17654,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(500),
             ),
             WarcraftObjectText::new(HBSH_TIP_LEVELS, HBSH_UBERTIP_LEVELS),
         )
@@ -17429,7 +17710,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(1025),
             ),
             WarcraftObjectText::new(HCAS_TIP_LEVELS, HCAS_UBERTIP_LEVELS),
         )
@@ -17466,7 +17749,9 @@ fn insert_objects_chunk_4(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(20, 21, 100, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(130),
             ),
         ),
     );
@@ -17501,7 +17786,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(HCTW_TIP_LEVELS, HCTW_UBERTIP_LEVELS),
         )
@@ -17555,7 +17842,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(250),
             ),
             WarcraftObjectText::new(HDES_TIP_LEVELS, HDES_UBERTIP_LEVELS),
         )
@@ -17595,7 +17884,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(20, 22, 300, 1.75, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(HDHW_TIP_LEVELS, HDHW_UBERTIP_LEVELS),
         )
@@ -17632,7 +17923,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 90, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(HFOO_TIP_LEVELS, HFOO_UBERTIP_LEVELS),
         )
@@ -17669,7 +17962,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(HGRA_TIP_LEVELS, HGRA_UBERTIP_LEVELS),
         )
@@ -17706,7 +18001,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(45, 55, 450, 2.2, AttackType::Magic)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(280),
             ),
             WarcraftObjectText::new(HGRY_TIP_LEVELS, HGRY_UBERTIP_LEVELS),
         )
@@ -17743,7 +18040,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 27, 700, 0.9, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(100),
             ),
             WarcraftObjectText::new(HGTW_TIP_LEVELS, HGTW_UBERTIP_LEVELS),
         )
@@ -17780,7 +18079,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 19, 500, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(100),
             ),
             WarcraftObjectText::new(HGYR_TIP_LEVELS, HGYR_UBERTIP_LEVELS),
         )
@@ -17817,7 +18118,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(240),
             ),
         ),
     );
@@ -17852,7 +18155,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 90, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(HHES_TIP_LEVELS, HHES_UBERTIP_LEVELS),
         ),
@@ -17888,7 +18193,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(80),
             ),
             WarcraftObjectText::new(HHOU_TIP_LEVELS, HHOU_UBERTIP_LEVELS),
         )
@@ -17925,7 +18232,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(705),
             ),
             WarcraftObjectText::new(HKEE_TIP_LEVELS, HKEE_UBERTIP_LEVELS),
         )
@@ -17962,7 +18271,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(30, 38, 100, 1.4, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(245),
             ),
             WarcraftObjectText::new(HKNI_TIP_LEVELS, HKNI_UBERTIP_LEVELS),
         )
@@ -18016,7 +18327,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(HLUM_TIP_LEVELS, HLUM_UBERTIP_LEVELS),
         )
@@ -18053,7 +18366,9 @@ fn insert_objects_chunk_4(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 90, 1.2, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
         ),
     );
@@ -18091,7 +18406,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(8, 9, 600, 2.0, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(HMPR_TIP_LEVELS, HMPR_UBERTIP_LEVELS),
         )
@@ -18128,7 +18445,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(52, 64, 1150, 3.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(HMTM_TIP_LEVELS, HMTM_UBERTIP_LEVELS),
         )
@@ -18165,7 +18484,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(HMTT_TIP_LEVELS, HMTT_UBERTIP_LEVELS),
         )
@@ -18219,7 +18540,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(5, 6, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(HPEA_TIP_LEVELS, HPEA_UBERTIP_LEVELS),
         )
@@ -18256,7 +18579,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(61, 75, 600, 1.4, AttackType::Magic)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -18292,7 +18617,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(HPRT_TIP_LEVELS, HPRT_UBERTIP_LEVELS),
         ),
@@ -18328,7 +18655,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -18363,7 +18692,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(240),
             ),
         ),
     );
@@ -18398,7 +18729,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(18, 24, 400, 1.4, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(205),
             ),
             WarcraftObjectText::new(HRIF_TIP_LEVELS, HRIF_UBERTIP_LEVELS),
         )
@@ -18435,7 +18768,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(HRTT_TIP_LEVELS, HRTT_UBERTIP_LEVELS),
         )
@@ -18472,7 +18807,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(HSHY_TIP_LEVELS, HSHY_UBERTIP_LEVELS),
         ),
@@ -18529,7 +18866,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(10, 12, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(HSOR_TIP_LEVELS, HSOR_UBERTIP_LEVELS),
         )
@@ -18569,7 +18908,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(13, 15, 250, 1.9, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.8)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(HSPT_TIP_LEVELS, HSPT_UBERTIP_LEVELS),
         )
@@ -18606,7 +18947,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(385),
             ),
             WarcraftObjectText::new(HTOW_TIP_LEVELS, HTOW_UBERTIP_LEVELS),
         )
@@ -18660,7 +19003,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(HVLT_TIP_LEVELS, HVLT_UBERTIP_LEVELS),
         )
@@ -18697,7 +19042,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(19, 23, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -18732,7 +19079,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(32, 40, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -18767,7 +19116,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(44, 52, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -18802,7 +19153,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(30),
             ),
             WarcraftObjectText::new(HWTW_TIP_LEVELS, HWTW_UBERTIP_LEVELS),
         )
@@ -19337,7 +19690,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(31, 42, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NADK_TIP_LEVELS, NADK_UBERTIP_LEVELS),
         ),
@@ -19373,7 +19728,9 @@ fn insert_objects_chunk_4(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(45, 78, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NADR_TIP_LEVELS, NADR_UBERTIP_LEVELS),
         ),
@@ -19409,7 +19766,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 30, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NADW_TIP_LEVELS, NADW_UBERTIP_LEVELS),
         ),
@@ -19448,7 +19807,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(77, 97, 500, 1.5, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NAHY_TIP_LEVELS, NAHY_UBERTIP_LEVELS),
         )
@@ -19485,7 +19846,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NALB_TIP_LEVELS, NALB_UBERTIP_LEVELS),
         )
@@ -19522,7 +19885,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(13, 15, 600, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(95),
             ),
             WarcraftObjectText::new(NANB_TIP_LEVELS, NANB_UBERTIP_LEVELS),
         )
@@ -19559,7 +19924,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NANC_TIP_LEVELS, NANC_UBERTIP_LEVELS),
         )
@@ -19596,7 +19963,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(24, 29, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NANE_TIP_LEVELS, NANE_UBERTIP_LEVELS),
         )
@@ -19633,7 +20002,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(13, 15, 600, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(95),
             ),
             WarcraftObjectText::new(NANM_TIP_LEVELS, NANM_UBERTIP_LEVELS),
         )
@@ -19670,7 +20041,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NANO_TIP_LEVELS, NANO_UBERTIP_LEVELS),
         )
@@ -19707,7 +20080,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NANW_TIP_LEVELS, NANW_UBERTIP_LEVELS),
         )
@@ -19744,7 +20119,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(11, 12, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NARG_TIP_LEVELS, NARG_UBERTIP_LEVELS),
         ),
@@ -19780,7 +20157,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(25, 30, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(260),
             ),
             WarcraftObjectText::new(NASS_TIP_LEVELS, NASS_UBERTIP_LEVELS),
         )
@@ -19820,7 +20199,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(41, 48, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NBA2_TIP_LEVELS, NBA2_UBERTIP_LEVELS),
         ),
@@ -19859,7 +20240,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(41, 48, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NBAL_TIP_LEVELS, NBAL_UBERTIP_LEVELS),
         ),
@@ -19895,7 +20278,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NBAN_TIP_LEVELS, NBAN_UBERTIP_LEVELS),
         ),
@@ -19934,7 +20319,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(28, 34, 100, 1.8, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.625)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NBDA_TIP_LEVELS, NBDA_UBERTIP_LEVELS),
         )
@@ -19971,7 +20358,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NBDK_TIP_LEVELS, NBDK_UBERTIP_LEVELS),
         ),
@@ -20007,7 +20396,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(NBDM_TIP_LEVELS, NBDM_UBERTIP_LEVELS),
         )
@@ -20047,7 +20438,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NBDO_TIP_LEVELS, NBDO_UBERTIP_LEVELS),
         )
@@ -20084,7 +20477,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NBDR_TIP_LEVELS, NBDR_UBERTIP_LEVELS),
         ),
@@ -20123,7 +20518,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(29, 34, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NBDS_TIP_LEVELS, NBDS_UBERTIP_LEVELS),
         )
@@ -20160,7 +20557,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NBDW_TIP_LEVELS, NBDW_UBERTIP_LEVELS),
         )
@@ -20197,7 +20596,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(NBEE_TIP_LEVELS, NBEE_UBERTIP_LEVELS),
         )
@@ -20237,7 +20638,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(37, 47, 200, 1.9, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.625)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(NBEL_TIP_LEVELS, NBEL_UBERTIP_LEVELS),
         )
@@ -20274,7 +20677,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -20312,7 +20717,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NBLD_TIP_LEVELS, NBLD_UBERTIP_LEVELS),
         ),
@@ -20348,7 +20755,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(95),
             ),
             WarcraftObjectText::new(NBNB_TIP_LEVELS, NBNB_UBERTIP_LEVELS),
         )
@@ -20385,7 +20794,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NBOT_TIP_LEVELS, NBOT_UBERTIP_LEVELS),
         )
@@ -20422,7 +20833,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NBRG_TIP_LEVELS, NBRG_UBERTIP_LEVELS),
         ),
@@ -20458,7 +20871,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NBSE_TIP_LEVELS, NBSE_UBERTIP_LEVELS),
         ),
@@ -20494,7 +20909,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -20529,7 +20946,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -20564,7 +20983,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NBSW_TIP_LEVELS, NBSW_UBERTIP_LEVELS),
         ),
@@ -20600,7 +21021,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NBT1_TIP_LEVELS, NBT1_UBERTIP_LEVELS),
         )
@@ -20637,7 +21060,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NBT2_TIP_LEVELS, NBT2_UBERTIP_LEVELS),
         )
@@ -20674,7 +21099,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(210),
             ),
         ),
     );
@@ -20709,7 +21136,9 @@ fn insert_objects_chunk_4(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NBWM_TIP_LEVELS, NBWM_UBERTIP_LEVELS),
         ),
@@ -20745,7 +21174,9 @@ fn insert_objects_chunk_4(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NBZD_TIP_LEVELS, NBZD_UBERTIP_LEVELS),
         ),
@@ -20781,7 +21212,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NBZK_TIP_LEVELS, NBZK_UBERTIP_LEVELS),
         ),
@@ -20817,7 +21250,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NBZW_TIP_LEVELS, NBZW_UBERTIP_LEVELS),
         ),
@@ -20853,7 +21288,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(34, 41, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(NCAP_TIP_LEVELS, NCAP_UBERTIP_LEVELS),
         )
@@ -20893,7 +21330,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(84, 144, 1150, 4.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(220),
             ),
             WarcraftObjectText::new(NCAT_TIP_LEVELS, NCAT_UBERTIP_LEVELS),
         )
@@ -20930,7 +21369,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(45, 55, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NCAW_TIP_LEVELS, NCAW_UBERTIP_LEVELS),
         ),
@@ -20966,7 +21407,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB0_TIP_LEVELS, NCB0_UBERTIP_LEVELS),
         ),
@@ -21002,7 +21445,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB1_TIP_LEVELS, NCB1_UBERTIP_LEVELS),
         ),
@@ -21038,7 +21483,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB2_TIP_LEVELS, NCB2_UBERTIP_LEVELS),
         ),
@@ -21074,7 +21521,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB3_TIP_LEVELS, NCB3_UBERTIP_LEVELS),
         ),
@@ -21110,7 +21559,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB4_TIP_LEVELS, NCB4_UBERTIP_LEVELS),
         ),
@@ -21146,7 +21597,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB5_TIP_LEVELS, NCB5_UBERTIP_LEVELS),
         ),
@@ -21182,7 +21635,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB6_TIP_LEVELS, NCB6_UBERTIP_LEVELS),
         ),
@@ -21218,7 +21673,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB7_TIP_LEVELS, NCB7_UBERTIP_LEVELS),
         ),
@@ -21254,7 +21711,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB8_TIP_LEVELS, NCB8_UBERTIP_LEVELS),
         ),
@@ -21290,7 +21749,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCB9_TIP_LEVELS, NCB9_UBERTIP_LEVELS),
         ),
@@ -21326,7 +21787,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBA_TIP_LEVELS, NCBA_UBERTIP_LEVELS),
         ),
@@ -21362,7 +21825,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBB_TIP_LEVELS, NCBB_UBERTIP_LEVELS),
         ),
@@ -21398,7 +21863,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBC_TIP_LEVELS, NCBC_UBERTIP_LEVELS),
         ),
@@ -21434,7 +21901,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBD_TIP_LEVELS, NCBD_UBERTIP_LEVELS),
         ),
@@ -21470,7 +21939,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBE_TIP_LEVELS, NCBE_UBERTIP_LEVELS),
         ),
@@ -21506,7 +21977,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCBF_TIP_LEVELS, NCBF_UBERTIP_LEVELS),
         ),
@@ -21542,7 +22015,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
@@ -21578,7 +22053,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
@@ -21614,7 +22091,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
@@ -21650,7 +22129,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
@@ -21686,7 +22167,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NCEA_TIP_LEVELS, NCEA_UBERTIP_LEVELS),
         )
@@ -21723,7 +22206,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NCEN_TIP_LEVELS, NCEN_UBERTIP_LEVELS),
         )
@@ -21760,7 +22245,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NCER_TIP_LEVELS, NCER_UBERTIP_LEVELS),
         ),
@@ -21796,7 +22283,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NCFS_TIP_LEVELS, NCFS_UBERTIP_LEVELS),
         )
@@ -21833,7 +22322,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCG1_TIP_LEVELS, NCG1_UBERTIP_LEVELS),
         ),
@@ -21869,7 +22360,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCG2_TIP_LEVELS, NCG2_UBERTIP_LEVELS),
         ),
@@ -21905,7 +22398,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCG3_TIP_LEVELS, NCG3_UBERTIP_LEVELS),
         ),
@@ -21941,7 +22436,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCGB_TIP_LEVELS, NCGB_UBERTIP_LEVELS),
         ),
@@ -21977,7 +22474,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 27, 100, 1.2, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NCHG_TIP_LEVELS, NCHG_UBERTIP_LEVELS),
         ),
@@ -22016,7 +22515,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(8, 9, 600, 2.0, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.3333334)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(NCHP_TIP_LEVELS, NCHP_UBERTIP_LEVELS),
         )
@@ -22053,7 +22554,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(23, 27, 100, 1.65, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(NCHR_TIP_LEVELS, NCHR_UBERTIP_LEVELS),
         ),
@@ -22092,7 +22595,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(21, 29, 600, 1.75, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(220),
             ),
             WarcraftObjectText::new(NCHW_TIP_LEVELS, NCHW_UBERTIP_LEVELS),
         ),
@@ -22131,7 +22636,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(25, 30, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NCIM_TIP_LEVELS, NCIM_UBERTIP_LEVELS),
         )
@@ -22168,7 +22675,9 @@ fn insert_objects_chunk_4(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(16, 20, 500, 1.2, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NCKB_TIP_LEVELS, NCKB_UBERTIP_LEVELS),
         )
@@ -22208,7 +22717,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NCKS_TIP_LEVELS, NCKS_UBERTIP_LEVELS),
         ),
@@ -22240,7 +22751,9 @@ fn insert_objects_chunk_4(
                 .with_combat(
                     UnitCombat::new(600, 0.0, RegenType::None, 2.0, DefenseType::Fortified, None)
                         .with_mana_pool(ManaPool::new(300, 1.25)),
-                ),
+                )
+                .with_level(0)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(NCMW_TIP_LEVELS, NCMW_UBERTIP_LEVELS),
         )
@@ -22280,7 +22793,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NCNK_TIP_LEVELS, NCNK_UBERTIP_LEVELS),
         ),
@@ -22316,7 +22831,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCNT_TIP_LEVELS, NCNT_UBERTIP_LEVELS),
         ),
@@ -22352,7 +22869,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCOP_TIP_LEVELS, NCOP_UBERTIP_LEVELS),
         ),
@@ -22388,7 +22907,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCP2_TIP_LEVELS, NCP2_UBERTIP_LEVELS),
         ),
@@ -22424,7 +22945,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCP3_TIP_LEVELS, NCP3_UBERTIP_LEVELS),
         ),
@@ -22460,7 +22983,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(70),
             ),
             WarcraftObjectText::new(NCPN_TIP_LEVELS, NCPN_UBERTIP_LEVELS),
         )
@@ -22497,7 +23022,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCRB_TIP_LEVELS, NCRB_UBERTIP_LEVELS),
         )
@@ -22534,7 +23061,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCT1_TIP_LEVELS, NCT1_UBERTIP_LEVELS),
         ),
@@ -22570,7 +23099,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NCT2_TIP_LEVELS, NCT2_UBERTIP_LEVELS),
         ),
@@ -22606,7 +23137,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(49, 60, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(270),
             ),
             WarcraftObjectText::new(NCTA_TIP_LEVELS, NCTA_UBERTIP_LEVELS),
         )
@@ -22643,7 +23176,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(60, 74, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(995),
             ),
             WarcraftObjectText::new(NCTE_TIP_LEVELS, NCTE_UBERTIP_LEVELS),
         )
@@ -22680,7 +23215,9 @@ fn insert_objects_chunk_4(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(385),
             ),
             WarcraftObjectText::new(NCTL_TIP_LEVELS, NCTL_UBERTIP_LEVELS),
         )
@@ -22717,7 +23254,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDCH_TIP_LEVELS, NDCH_UBERTIP_LEVELS),
         ),
@@ -22753,7 +23292,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDER_TIP_LEVELS, NDER_UBERTIP_LEVELS),
         ),
@@ -22789,7 +23330,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -22824,7 +23367,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
         ),
     );
@@ -22859,7 +23404,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDH0_TIP_LEVELS, NDH0_UBERTIP_LEVELS),
         ),
@@ -22895,7 +23442,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDH1_TIP_LEVELS, NDH1_UBERTIP_LEVELS),
         ),
@@ -22931,7 +23480,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(400),
             ),
             WarcraftObjectText::new(NDH2_TIP_LEVELS, NDH2_UBERTIP_LEVELS),
         ),
@@ -22967,7 +23518,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NDH3_TIP_LEVELS, NDH3_UBERTIP_LEVELS),
         ),
@@ -23003,7 +23556,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(100),
             ),
             WarcraftObjectText::new(NDH4_TIP_LEVELS, NDH4_UBERTIP_LEVELS),
         ),
@@ -23039,7 +23594,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -23074,7 +23631,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -23109,7 +23668,9 @@ fn insert_objects_chunk_4(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -23144,7 +23705,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 90, 1.3, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(120),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -23180,7 +23743,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDOG_TIP_LEVELS, NDOG_UBERTIP_LEVELS),
         ),
@@ -23216,7 +23781,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(15, 17, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NDQN_TIP_LEVELS, NDQN_UBERTIP_LEVELS),
         ),
@@ -23255,7 +23822,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(54, 60, 500, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NDQP_TIP_LEVELS, NDQP_UBERTIP_LEVELS),
         ),
@@ -23294,7 +23863,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(69, 77, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NDQS_TIP_LEVELS, NDQS_UBERTIP_LEVELS),
         ),
@@ -23330,7 +23901,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NDQT_TIP_LEVELS, NDQT_UBERTIP_LEVELS),
         ),
@@ -23369,7 +23942,9 @@ fn insert_objects_chunk_4(
                         Some(UnitAttack::new(31, 37, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NDQV_TIP_LEVELS, NDQV_UBERTIP_LEVELS),
         ),
@@ -23405,7 +23980,9 @@ fn insert_objects_chunk_4(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(9, 10, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDR1_TIP_LEVELS, NDR1_UBERTIP_LEVELS),
         ),
@@ -23445,7 +24022,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(15, 17, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDR2_TIP_LEVELS, NDR2_UBERTIP_LEVELS),
         ),
@@ -23481,7 +24060,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(16, 19, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDR3_TIP_LEVELS, NDR3_UBERTIP_LEVELS),
         ),
@@ -23517,7 +24098,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRB_TIP_LEVELS, NDRB_UBERTIP_LEVELS),
         ),
@@ -23556,7 +24139,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(19, 21, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(260),
             ),
             WarcraftObjectText::new(NDRD_TIP_LEVELS, NDRD_UBERTIP_LEVELS),
         )
@@ -23596,7 +24181,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(85),
             ),
             WarcraftObjectText::new(NDRF_TIP_LEVELS, NDRF_UBERTIP_LEVELS),
         )
@@ -23633,7 +24220,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRG_TIP_LEVELS, NDRG_UBERTIP_LEVELS),
         ),
@@ -23672,7 +24261,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 34, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(165),
             ),
             WarcraftObjectText::new(NDRH_TIP_LEVELS, NDRH_UBERTIP_LEVELS),
         )
@@ -23709,7 +24300,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(85),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -23745,7 +24338,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRK_TIP_LEVELS, NDRK_UBERTIP_LEVELS),
         ),
@@ -23781,7 +24376,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(6, 7, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(NDRL_TIP_LEVELS, NDRL_UBERTIP_LEVELS),
         )
@@ -23821,7 +24418,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(22, 26, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.8)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NDRM_TIP_LEVELS, NDRM_UBERTIP_LEVELS),
         )
@@ -23858,7 +24457,9 @@ fn insert_objects_chunk_5(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NDRN_TIP_LEVELS, NDRN_UBERTIP_LEVELS),
         )
@@ -23895,7 +24496,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRO_TIP_LEVELS, NDRO_UBERTIP_LEVELS),
         ),
@@ -23931,7 +24534,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(NDRP_TIP_LEVELS, NDRP_UBERTIP_LEVELS),
         )
@@ -23968,7 +24573,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRR_TIP_LEVELS, NDRR_UBERTIP_LEVELS),
         ),
@@ -24007,7 +24614,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(36, 42, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.5)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(210),
             ),
             WarcraftObjectText::new(NDRS_TIP_LEVELS, NDRS_UBERTIP_LEVELS),
         )
@@ -24044,7 +24653,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(32, 42, 100, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(270),
             ),
             WarcraftObjectText::new(NDRT_TIP_LEVELS, NDRT_UBERTIP_LEVELS),
         )
@@ -24081,7 +24692,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRU_TIP_LEVELS, NDRU_UBERTIP_LEVELS),
         ),
@@ -24120,7 +24733,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NDRV_TIP_LEVELS, NDRV_UBERTIP_LEVELS),
         )
@@ -24157,7 +24772,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(NDRW_TIP_LEVELS, NDRW_UBERTIP_LEVELS),
         )
@@ -24194,7 +24811,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NDRZ_TIP_LEVELS, NDRZ_UBERTIP_LEVELS),
         ),
@@ -24230,7 +24849,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(33, 40, 500, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NDSA_TIP_LEVELS, NDSA_UBERTIP_LEVELS),
         ),
@@ -24266,7 +24887,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NDT1_TIP_LEVELS, NDT1_UBERTIP_LEVELS),
         )
@@ -24303,7 +24926,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NDT2_TIP_LEVELS, NDT2_UBERTIP_LEVELS),
         )
@@ -24340,7 +24965,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(245),
             ),
             WarcraftObjectText::new(NDTB_TIP_LEVELS, NDTB_UBERTIP_LEVELS),
         ),
@@ -24379,7 +25006,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NDTH_TIP_LEVELS, NDTH_UBERTIP_LEVELS),
         ),
@@ -24418,7 +25047,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(175),
             ),
             WarcraftObjectText::new(NDTP_TIP_LEVELS, NDTP_UBERTIP_LEVELS),
         ),
@@ -24454,7 +25085,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NDTR_TIP_LEVELS, NDTR_UBERTIP_LEVELS),
         ),
@@ -24490,7 +25123,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NDTT_TIP_LEVELS, NDTT_UBERTIP_LEVELS),
         ),
@@ -24526,7 +25161,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NDTW_TIP_LEVELS, NDTW_UBERTIP_LEVELS),
         ),
@@ -24562,7 +25199,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NDWM_TIP_LEVELS, NDWM_UBERTIP_LEVELS),
         )
@@ -24599,7 +25238,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NECH_TIP_LEVELS, NECH_UBERTIP_LEVELS),
         )
@@ -24636,7 +25277,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NECR_TIP_LEVELS, NECR_UBERTIP_LEVELS),
         )
@@ -24673,7 +25316,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24708,7 +25353,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24743,7 +25390,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24778,7 +25427,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24813,7 +25464,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24848,7 +25501,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24883,7 +25538,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24918,7 +25575,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24953,7 +25612,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(70),
             ),
         ),
     );
@@ -24988,7 +25649,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
         ),
     );
@@ -25023,7 +25686,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 700, 1.2, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
         ),
     );
@@ -25058,7 +25723,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NEGT_TIP_LEVELS, NEGT_UBERTIP_LEVELS),
         ),
@@ -25094,7 +25761,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(215),
             ),
         ),
     );
@@ -25132,7 +25801,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(35, 44, 600, 1.6, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NEHY_TIP_LEVELS, NEHY_UBERTIP_LEVELS),
         )
@@ -25172,7 +25843,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(39, 47, 300, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NELB_TIP_LEVELS, NELB_UBERTIP_LEVELS),
         ),
@@ -25208,7 +25881,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 25, 300, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NELE_TIP_LEVELS, NELE_UBERTIP_LEVELS),
         ),
@@ -25247,7 +25922,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(8, 13, 600, 2.0, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(205),
             ),
         ),
     );
@@ -25282,7 +25959,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NENC_TIP_LEVELS, NENC_UBERTIP_LEVELS),
         ),
@@ -25318,7 +25997,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 34, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NENF_TIP_LEVELS, NENF_UBERTIP_LEVELS),
         ),
@@ -25354,7 +26035,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NENP_TIP_LEVELS, NENP_UBERTIP_LEVELS),
         ),
@@ -25393,7 +26076,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(32, 36, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NEPL_TIP_LEVELS, NEPL_UBERTIP_LEVELS),
         ),
@@ -25432,7 +26117,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(28, 34, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NERD_TIP_LEVELS, NERD_UBERTIP_LEVELS),
         ),
@@ -25471,7 +26158,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(21, 24, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NERS_TIP_LEVELS, NERS_UBERTIP_LEVELS),
         ),
@@ -25510,7 +26199,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(49, 55, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NERW_TIP_LEVELS, NERW_UBERTIP_LEVELS),
         ),
@@ -25546,7 +26237,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NET1_TIP_LEVELS, NET1_UBERTIP_LEVELS),
         )
@@ -25583,7 +26276,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NET2_TIP_LEVELS, NET2_UBERTIP_LEVELS),
         )
@@ -25620,7 +26315,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFA1_TIP_LEVELS, NFA1_UBERTIP_LEVELS),
         ),
@@ -25656,7 +26353,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFA2_TIP_LEVELS, NFA2_UBERTIP_LEVELS),
         ),
@@ -25692,7 +26391,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFAC_TIP_LEVELS, NFAC_UBERTIP_LEVELS),
         ),
@@ -25728,7 +26429,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFBR_TIP_LEVELS, NFBR_UBERTIP_LEVELS),
         )
@@ -25768,7 +26471,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NFEL_TIP_LEVELS, NFEL_UBERTIP_LEVELS),
         ),
@@ -25804,7 +26509,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 26, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(NFGB_TIP_LEVELS, NFGB_UBERTIP_LEVELS),
         )
@@ -25844,7 +26551,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(39, 60, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(11)
+                .with_gold_cost(500),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -25883,7 +26592,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(170, 70, 600, 2.0, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(1000, 5.0)),
-                ),
+                )
+                .with_level(15)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NFGO_TIP_LEVELS, NFGO_UBERTIP_LEVELS),
         )
@@ -25920,7 +26631,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(26, 30, 180, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFGT_TIP_LEVELS, NFGT_UBERTIP_LEVELS),
         ),
@@ -25956,7 +26669,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(11, 12, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NFGU_TIP_LEVELS, NFGU_UBERTIP_LEVELS),
         ),
@@ -25992,7 +26707,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFH0_TIP_LEVELS, NFH0_UBERTIP_LEVELS),
         ),
@@ -26028,7 +26745,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFH1_TIP_LEVELS, NFH1_UBERTIP_LEVELS),
         ),
@@ -26077,7 +26796,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -26115,7 +26836,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NFOD_TIP_LEVELS, NFOD_UBERTIP_LEVELS),
         )
@@ -26152,7 +26875,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NFOH_TIP_LEVELS, NFOH_UBERTIP_LEVELS),
         ),
@@ -26191,7 +26916,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NFOR_TIP_LEVELS, NFOR_UBERTIP_LEVELS),
         )
@@ -26231,7 +26958,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(41, 48, 500, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NFOT_TIP_LEVELS, NFOT_UBERTIP_LEVELS),
         )
@@ -26271,7 +27000,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(26, 29, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NFOV_TIP_LEVELS, NFOV_UBERTIP_LEVELS),
         ),
@@ -26307,7 +27038,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NFPC_TIP_LEVELS, NFPC_UBERTIP_LEVELS),
         )
@@ -26347,7 +27080,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NFPE_TIP_LEVELS, NFPE_UBERTIP_LEVELS),
         )
@@ -26384,7 +27119,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NFPL_TIP_LEVELS, NFPL_UBERTIP_LEVELS),
         )
@@ -26424,7 +27161,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(275),
             ),
             WarcraftObjectText::new(NFPS_TIP_LEVELS, NFPS_UBERTIP_LEVELS),
         )
@@ -26464,7 +27203,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NFPT_TIP_LEVELS, NFPT_UBERTIP_LEVELS),
         )
@@ -26504,7 +27245,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NFPU_TIP_LEVELS, NFPU_UBERTIP_LEVELS),
         )
@@ -26541,7 +27284,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFR1_TIP_LEVELS, NFR1_UBERTIP_LEVELS),
         ),
@@ -26577,7 +27322,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFR2_TIP_LEVELS, NFR2_UBERTIP_LEVELS),
         ),
@@ -26616,7 +27363,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NFRA_TIP_LEVELS, NFRA_UBERTIP_LEVELS),
         )
@@ -26656,7 +27405,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NFRB_TIP_LEVELS, NFRB_UBERTIP_LEVELS),
         )
@@ -26696,7 +27447,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NFRE_TIP_LEVELS, NFRE_UBERTIP_LEVELS),
         )
@@ -26733,7 +27486,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NFRG_TIP_LEVELS, NFRG_UBERTIP_LEVELS),
         )
@@ -26770,7 +27525,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NFRL_TIP_LEVELS, NFRL_UBERTIP_LEVELS),
         )
@@ -26807,7 +27564,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -26842,7 +27601,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NFRO_TIP_LEVELS, NFRO_UBERTIP_LEVELS),
         )
@@ -26879,7 +27640,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NFRP_TIP_LEVELS, NFRP_UBERTIP_LEVELS),
         ),
@@ -26918,7 +27681,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NFRS_TIP_LEVELS, NFRS_UBERTIP_LEVELS),
         )
@@ -26955,7 +27720,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NFRT_TIP_LEVELS, NFRT_UBERTIP_LEVELS),
         ),
@@ -26994,7 +27761,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(305),
             ),
             WarcraftObjectText::new(NFSH_TIP_LEVELS, NFSH_UBERTIP_LEVELS),
         ),
@@ -27033,7 +27802,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NFSP_TIP_LEVELS, NFSP_UBERTIP_LEVELS),
         )
@@ -27070,7 +27841,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NFT1_TIP_LEVELS, NFT1_UBERTIP_LEVELS),
         )
@@ -27107,7 +27880,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NFT2_TIP_LEVELS, NFT2_UBERTIP_LEVELS),
         )
@@ -27144,7 +27919,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(245),
             ),
             WarcraftObjectText::new(NFTB_TIP_LEVELS, NFTB_UBERTIP_LEVELS),
         )
@@ -27181,7 +27958,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NFTK_TIP_LEVELS, NFTK_UBERTIP_LEVELS),
         ),
@@ -27217,7 +27996,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NFTR_TIP_LEVELS, NFTR_UBERTIP_LEVELS),
         ),
@@ -27253,7 +28034,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NFTT_TIP_LEVELS, NFTT_UBERTIP_LEVELS),
         ),
@@ -27289,7 +28072,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -27324,7 +28109,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -27359,7 +28146,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -27394,7 +28183,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -27429,7 +28220,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -27464,7 +28257,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NGAD_TIP_LEVELS, NGAD_UBERTIP_LEVELS),
         ),
@@ -27500,7 +28295,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 61, 200, 1.4, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(375),
             ),
         ),
     );
@@ -27535,7 +28332,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NGDK_TIP_LEVELS, NGDK_UBERTIP_LEVELS),
         ),
@@ -27574,7 +28373,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -27613,7 +28414,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -27652,7 +28455,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -27691,7 +28496,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NGGR_TIP_LEVELS, NGGR_UBERTIP_LEVELS),
         ),
@@ -27730,7 +28537,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(23, 27, 400, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NGH1_TIP_LEVELS, NGH1_UBERTIP_LEVELS),
         ),
@@ -27769,7 +28578,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(31, 41, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NGH2_TIP_LEVELS, NGH2_UBERTIP_LEVELS),
         ),
@@ -27805,7 +28616,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 61, 128, 1.4, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(375),
             ),
             WarcraftObjectText::new(NGIR_TIP_LEVELS, NGIR_UBERTIP_LEVELS),
         ),
@@ -27841,7 +28654,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -27876,7 +28691,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NGME_TIP_LEVELS, NGME_UBERTIP_LEVELS),
         ),
@@ -27912,7 +28729,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NGNA_TIP_LEVELS, NGNA_UBERTIP_LEVELS),
         )
@@ -27949,7 +28768,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(NGNB_TIP_LEVELS, NGNB_UBERTIP_LEVELS),
         )
@@ -27986,7 +28807,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NGNH_TIP_LEVELS, NGNH_UBERTIP_LEVELS),
         ),
@@ -28022,7 +28845,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NGNI_TIP_LEVELS, NGNI_UBERTIP_LEVELS),
         ),
@@ -28058,7 +28883,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NGNO_TIP_LEVELS, NGNO_UBERTIP_LEVELS),
         )
@@ -28095,7 +28922,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NGNS_TIP_LEVELS, NGNS_UBERTIP_LEVELS),
         )
@@ -28132,7 +28961,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(305),
             ),
             WarcraftObjectText::new(NGNV_TIP_LEVELS, NGNV_UBERTIP_LEVELS),
         )
@@ -28175,7 +29006,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(NGNW_TIP_LEVELS, NGNW_UBERTIP_LEVELS),
         )
@@ -28212,7 +29045,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -28247,7 +29082,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -28283,7 +29120,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NGOL_TIP_LEVELS, NGOL_UBERTIP_LEVELS),
         ),
@@ -28319,7 +29158,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(11)
+                .with_gold_cost(305),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(
@@ -28358,7 +29199,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(305),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(
@@ -28397,7 +29240,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NGRD_TIP_LEVELS, NGRD_UBERTIP_LEVELS),
         ),
@@ -28436,7 +29281,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(NGRK_TIP_LEVELS, NGRK_UBERTIP_LEVELS),
         )
@@ -28473,7 +29320,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NGRW_TIP_LEVELS, NGRW_UBERTIP_LEVELS),
         ),
@@ -28509,7 +29358,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NGSP_TIP_LEVELS, NGSP_UBERTIP_LEVELS),
         )
@@ -28549,7 +29400,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NGST_TIP_LEVELS, NGST_UBERTIP_LEVELS),
         ),
@@ -28585,7 +29438,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NGT2_TIP_LEVELS, NGT2_UBERTIP_LEVELS),
         ),
@@ -28621,7 +29476,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NGWR_TIP_LEVELS, NGWR_UBERTIP_LEVELS),
         ),
@@ -28657,7 +29514,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(19, 21, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28692,7 +29551,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(28, 30, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28727,7 +29588,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(38, 40, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28762,7 +29625,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(59, 69, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28797,7 +29662,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(46, 49, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28832,7 +29699,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(28, 31, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28867,7 +29736,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(38, 41, 128, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -28902,7 +29773,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(7, 10, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NHAR_TIP_LEVELS, NHAR_UBERTIP_LEVELS),
         )
@@ -28939,7 +29812,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -28977,7 +29852,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NHDC_TIP_LEVELS, NHDC_UBERTIP_LEVELS),
         ),
@@ -29013,7 +29890,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(16, 18, 500, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(NHEA_TIP_LEVELS, NHEA_UBERTIP_LEVELS),
         ),
@@ -29049,7 +29928,9 @@ fn insert_objects_chunk_5(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NHEB_TIP_LEVELS, NHEB_UBERTIP_LEVELS),
         ),
@@ -29085,7 +29966,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -29120,7 +30003,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -29155,7 +30040,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(NHEW_TIP_LEVELS, NHEW_UBERTIP_LEVELS),
         ),
@@ -29191,7 +30078,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NHFP_TIP_LEVELS, NHFP_UBERTIP_LEVELS),
         ),
@@ -29230,7 +30119,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NHHR_TIP_LEVELS, NHHR_UBERTIP_LEVELS),
         ),
@@ -29266,7 +30157,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NHMC_TIP_LEVELS, NHMC_UBERTIP_LEVELS),
         )
@@ -29303,7 +30196,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -29339,7 +30234,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NHNS_TIP_LEVELS, NHNS_UBERTIP_LEVELS),
         ),
@@ -29378,7 +30275,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(28, 37, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NHRH_TIP_LEVELS, NHRH_UBERTIP_LEVELS),
         ),
@@ -29417,7 +30316,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(24, 32, 500, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NHRQ_TIP_LEVELS, NHRQ_UBERTIP_LEVELS),
         ),
@@ -29453,7 +30354,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NHRR_TIP_LEVELS, NHRR_UBERTIP_LEVELS),
         )
@@ -29493,7 +30396,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(NHRW_TIP_LEVELS, NHRW_UBERTIP_LEVELS),
         )
@@ -29530,7 +30435,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 26, 480, 1.75, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NHYC_TIP_LEVELS, NHYC_UBERTIP_LEVELS),
         )
@@ -29567,7 +30474,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(26, 31, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NHYD_TIP_LEVELS, NHYD_UBERTIP_LEVELS),
         )
@@ -29604,7 +30513,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NHYH_TIP_LEVELS, NHYH_UBERTIP_LEVELS),
         )
@@ -29644,7 +30555,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(8, 10, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.3333334)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(NHYM_TIP_LEVELS, NHYM_UBERTIP_LEVELS),
         ),
@@ -29680,7 +30593,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -29718,7 +30633,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(61, 69, 600, 1.6, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(275),
             ),
             WarcraftObjectText::new(NINA_TIP_LEVELS, NINA_UBERTIP_LEVELS),
         ),
@@ -29754,7 +30671,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(28, 33, 600, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(275),
             ),
             WarcraftObjectText::new(NINC_TIP_LEVELS, NINC_UBERTIP_LEVELS),
         ),
@@ -29790,7 +30709,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(49, 60, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NINF_TIP_LEVELS, NINF_UBERTIP_LEVELS),
         ),
@@ -29829,7 +30750,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(36, 43, 600, 1.6, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(275),
             ),
             WarcraftObjectText::new(NINM_TIP_LEVELS, NINM_UBERTIP_LEVELS),
         ),
@@ -29865,7 +30788,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NITB_TIP_LEVELS, NITB_UBERTIP_LEVELS),
         ),
@@ -29904,7 +30829,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NITH_TIP_LEVELS, NITH_UBERTIP_LEVELS),
         ),
@@ -29943,7 +30870,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(175),
             ),
             WarcraftObjectText::new(NITP_TIP_LEVELS, NITP_UBERTIP_LEVELS),
         ),
@@ -29979,7 +30908,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NITR_TIP_LEVELS, NITR_UBERTIP_LEVELS),
         ),
@@ -30015,7 +30946,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(245),
             ),
             WarcraftObjectText::new(NITS_TIP_LEVELS, NITS_UBERTIP_LEVELS),
         )
@@ -30052,7 +30985,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NITT_TIP_LEVELS, NITT_UBERTIP_LEVELS),
         )
@@ -30089,7 +31024,9 @@ fn insert_objects_chunk_5(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NITW_TIP_LEVELS, NITW_UBERTIP_LEVELS),
         ),
@@ -30125,7 +31062,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NJG1_TIP_LEVELS, NJG1_UBERTIP_LEVELS),
         ),
@@ -30161,7 +31100,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(36, 40, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(375),
             ),
             WarcraftObjectText::new(NJGA_TIP_LEVELS, NJGA_UBERTIP_LEVELS),
         ),
@@ -30200,7 +31141,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NJGB_TIP_LEVELS, NJGB_UBERTIP_LEVELS),
         ),
@@ -30236,7 +31179,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(85),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -30272,7 +31217,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(90),
             ),
             WarcraftObjectText::new(NKOB_TIP_LEVELS, NKOB_UBERTIP_LEVELS),
         ),
@@ -30311,7 +31258,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NKOG_TIP_LEVELS, NKOG_UBERTIP_LEVELS),
         )
@@ -30348,7 +31297,9 @@ fn insert_objects_chunk_5(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NKOL_TIP_LEVELS, NKOL_UBERTIP_LEVELS),
         ),
@@ -30384,7 +31335,9 @@ fn insert_objects_chunk_5(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NKOT_TIP_LEVELS, NKOT_UBERTIP_LEVELS),
         )
@@ -30424,7 +31377,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(500),
             ),
             WarcraftObjectText::new(NLDS_TIP_LEVELS, NLDS_UBERTIP_LEVELS),
         )
@@ -30464,7 +31419,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NLKL_TIP_LEVELS, NLKL_UBERTIP_LEVELS),
         )
@@ -30501,7 +31458,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(8, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NLPD_TIP_LEVELS, NLPD_UBERTIP_LEVELS),
         )
@@ -30538,7 +31497,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NLPR_TIP_LEVELS, NLPR_UBERTIP_LEVELS),
         )
@@ -30575,7 +31536,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NLPS_TIP_LEVELS, NLPS_UBERTIP_LEVELS),
         )
@@ -30615,7 +31578,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(69, 77, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NLRV_TIP_LEVELS, NLRV_UBERTIP_LEVELS),
         )
@@ -30652,7 +31617,9 @@ fn insert_objects_chunk_5(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(26, 30, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(315),
             ),
             WarcraftObjectText::new(NLSN_TIP_LEVELS, NLSN_UBERTIP_LEVELS),
         )
@@ -30692,7 +31659,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NLTC_TIP_LEVELS, NLTC_UBERTIP_LEVELS),
         )
@@ -30732,7 +31701,9 @@ fn insert_objects_chunk_5(
                         Some(UnitAttack::new(15, 16, 600, 1.5, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NLTL_TIP_LEVELS, NLTL_UBERTIP_LEVELS),
         ),
@@ -30768,7 +31739,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NLUR_TIP_LEVELS, NLUR_UBERTIP_LEVELS),
         ),
@@ -30804,7 +31777,9 @@ fn insert_objects_chunk_5(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(11, 27, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -30843,7 +31818,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 45, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -30878,7 +31855,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(32, 56, 300, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -30913,7 +31892,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 16, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NMAM_TIP_LEVELS, NMAM_UBERTIP_LEVELS),
         )
@@ -30953,7 +31934,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NMBG_TIP_LEVELS, NMBG_UBERTIP_LEVELS),
         )
@@ -30990,7 +31973,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMCF_TIP_LEVELS, NMCF_UBERTIP_LEVELS),
         )
@@ -31030,7 +32015,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(9, 24, 600, 1.1, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(185),
             ),
         ),
     );
@@ -31065,7 +32052,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(61, 69, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NMDR_TIP_LEVELS, NMDR_UBERTIP_LEVELS),
         )
@@ -31105,7 +32094,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(9, 24, 600, 1.1, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(185),
             ),
         ),
     );
@@ -31140,7 +32131,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMER_TIP_LEVELS, NMER_UBERTIP_LEVELS),
         ),
@@ -31176,7 +32169,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(13, 14, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(NMFS_TIP_LEVELS, NMFS_UBERTIP_LEVELS),
         )
@@ -31213,7 +32208,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NMG0_TIP_LEVELS, NMG0_UBERTIP_LEVELS),
         ),
@@ -31249,7 +32246,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NMG1_TIP_LEVELS, NMG1_UBERTIP_LEVELS),
         ),
@@ -31285,7 +32284,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -31324,7 +32325,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(76, 85, 100, 1.5, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NMGD_TIP_LEVELS, NMGD_UBERTIP_LEVELS),
         )
@@ -31364,7 +32367,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(54, 61, 100, 1.5, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NMGR_TIP_LEVELS, NMGR_UBERTIP_LEVELS),
         )
@@ -31401,7 +32406,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMGV_TIP_LEVELS, NMGV_UBERTIP_LEVELS),
         ),
@@ -31437,7 +32444,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(27, 30, 100, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(340),
             ),
             WarcraftObjectText::new(NMGW_TIP_LEVELS, NMGW_UBERTIP_LEVELS),
         )
@@ -31477,7 +32486,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NMH0_TIP_LEVELS, NMH0_UBERTIP_LEVELS),
         ),
@@ -31513,7 +32524,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NMH1_TIP_LEVELS, NMH1_UBERTIP_LEVELS),
         ),
@@ -31549,7 +32562,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NMIT_TIP_LEVELS, NMIT_UBERTIP_LEVELS),
         )
@@ -31589,7 +32604,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(25, 29, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NMMU_TIP_LEVELS, NMMU_UBERTIP_LEVELS),
         ),
@@ -31625,7 +32642,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMOO_TIP_LEVELS, NMOO_UBERTIP_LEVELS),
         ),
@@ -31661,7 +32680,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Unarmored,
                     Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(NMPE_TIP_LEVELS, NMPE_UBERTIP_LEVELS),
         )
@@ -31698,7 +32719,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMPG_TIP_LEVELS, NMPG_UBERTIP_LEVELS),
         ),
@@ -31734,7 +32757,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR0_TIP_LEVELS, NMR0_UBERTIP_LEVELS),
         ),
@@ -31770,7 +32795,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR2_TIP_LEVELS, NMR2_UBERTIP_LEVELS),
         ),
@@ -31806,7 +32833,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR3_TIP_LEVELS, NMR3_UBERTIP_LEVELS),
         ),
@@ -31842,7 +32871,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR4_TIP_LEVELS, NMR4_UBERTIP_LEVELS),
         ),
@@ -31878,7 +32909,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR5_TIP_LEVELS, NMR5_UBERTIP_LEVELS),
         ),
@@ -31914,7 +32947,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR6_TIP_LEVELS, NMR6_UBERTIP_LEVELS),
         ),
@@ -31950,7 +32985,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR7_TIP_LEVELS, NMR7_UBERTIP_LEVELS),
         ),
@@ -31986,7 +33023,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR8_TIP_LEVELS, NMR8_UBERTIP_LEVELS),
         ),
@@ -32022,7 +33061,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMR9_TIP_LEVELS, NMR9_UBERTIP_LEVELS),
         ),
@@ -32058,7 +33099,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRA_TIP_LEVELS, NMRA_UBERTIP_LEVELS),
         ),
@@ -32094,7 +33137,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRB_TIP_LEVELS, NMRB_UBERTIP_LEVELS),
         ),
@@ -32130,7 +33175,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRC_TIP_LEVELS, NMRC_UBERTIP_LEVELS),
         ),
@@ -32166,7 +33213,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRD_TIP_LEVELS, NMRD_UBERTIP_LEVELS),
         ),
@@ -32202,7 +33251,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRE_TIP_LEVELS, NMRE_UBERTIP_LEVELS),
         ),
@@ -32238,7 +33289,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRF_TIP_LEVELS, NMRF_UBERTIP_LEVELS),
         ),
@@ -32274,7 +33327,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NMRK_TIP_LEVELS, NMRK_UBERTIP_LEVELS),
         ),
@@ -32310,7 +33365,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(9, 10, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMRL_TIP_LEVELS, NMRL_UBERTIP_LEVELS),
         ),
@@ -32346,7 +33403,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NMRM_TIP_LEVELS, NMRM_UBERTIP_LEVELS),
         ),
@@ -32382,7 +33441,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(6, 10, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NMRR_TIP_LEVELS, NMRR_UBERTIP_LEVELS),
         ),
@@ -32418,7 +33479,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMRV_TIP_LEVELS, NMRV_UBERTIP_LEVELS),
         )
@@ -32458,7 +33521,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMSC_TIP_LEVELS, NMSC_UBERTIP_LEVELS),
         )
@@ -32495,7 +33560,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 25, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(155),
             ),
         ),
     );
@@ -32533,7 +33600,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(27, 36, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(265),
             ),
             WarcraftObjectText::new(NMSN_TIP_LEVELS, NMSN_UBERTIP_LEVELS),
         )
@@ -32570,7 +33639,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NMTW_TIP_LEVELS, NMTW_UBERTIP_LEVELS),
         )
@@ -32607,7 +33678,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(33, 39, 128, 1.9, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NMYR_TIP_LEVELS, NMYR_UBERTIP_LEVELS),
         )
@@ -32644,7 +33717,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NMYS_TIP_LEVELS, NMYS_UBERTIP_LEVELS),
         )
@@ -32681,7 +33756,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NNAD_TIP_LEVELS, NNAD_UBERTIP_LEVELS),
         )
@@ -32718,7 +33795,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NNDK_TIP_LEVELS, NNDK_UBERTIP_LEVELS),
         ),
@@ -32757,7 +33836,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NNDR_TIP_LEVELS, NNDR_UBERTIP_LEVELS),
         ),
@@ -32793,7 +33874,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(115),
             ),
             WarcraftObjectText::new(NNFM_TIP_LEVELS, NNFM_UBERTIP_LEVELS),
         )
@@ -32830,7 +33913,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NNHT_TIP_LEVELS, NNHT_UBERTIP_LEVELS),
         ),
@@ -32866,7 +33951,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NNMG_TIP_LEVELS, NNMG_UBERTIP_LEVELS),
         )
@@ -32906,7 +33993,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(47, 59, 128, 1.7, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NNRG_TIP_LEVELS, NNRG_UBERTIP_LEVELS),
         )
@@ -32939,7 +34028,9 @@ fn insert_objects_chunk_6(
                 .with_combat(
                     UnitCombat::new(1350, 1.0, RegenType::Always, 5.0, DefenseType::Heavy, None)
                         .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NNRS_TIP_LEVELS, NNRS_UBERTIP_LEVELS),
         )
@@ -32976,7 +34067,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(NNSA_TIP_LEVELS, NNSA_UBERTIP_LEVELS),
         )
@@ -33013,7 +34106,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(205),
             ),
             WarcraftObjectText::new(NNSG_TIP_LEVELS, NNSG_UBERTIP_LEVELS),
         )
@@ -33053,7 +34148,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(9, 12, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(NNSU_TIP_LEVELS, NNSU_UBERTIP_LEVELS),
         )
@@ -33093,7 +34190,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(9, 12, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(NNSW_TIP_LEVELS, NNSW_UBERTIP_LEVELS),
         )
@@ -33130,7 +34229,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(33, 45, 700, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(NNTG_TIP_LEVELS, NNTG_UBERTIP_LEVELS),
         )
@@ -33170,7 +34271,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(385),
             ),
             WarcraftObjectText::new(NNTT_TIP_LEVELS, NNTT_UBERTIP_LEVELS),
         )
@@ -33207,7 +34310,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(205),
             ),
             WarcraftObjectText::new(NNWA_TIP_LEVELS, NNWA_UBERTIP_LEVELS),
         )
@@ -33247,7 +34352,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(21, 25, 600, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NNWL_TIP_LEVELS, NNWL_UBERTIP_LEVELS),
         )
@@ -33287,7 +34394,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(31, 40, 600, 1.6, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NNWQ_TIP_LEVELS, NNWQ_UBERTIP_LEVELS),
         ),
@@ -33326,7 +34435,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(30, 36, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NNWR_TIP_LEVELS, NNWR_UBERTIP_LEVELS),
         ),
@@ -33362,7 +34473,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NNWS_TIP_LEVELS, NNWS_UBERTIP_LEVELS),
         ),
@@ -33398,7 +34511,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NNZG_TIP_LEVELS, NNZG_UBERTIP_LEVELS),
         ),
@@ -33434,7 +34549,9 @@ fn insert_objects_chunk_6(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(96, 114, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(11)
+                .with_gold_cost(750),
             ),
             WarcraftObjectText::new(NOGA_TIP_LEVELS, NOGA_UBERTIP_LEVELS),
         ),
@@ -33473,7 +34590,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NOGL_TIP_LEVELS, NOGL_UBERTIP_LEVELS),
         )
@@ -33510,7 +34629,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NOGM_TIP_LEVELS, NOGM_UBERTIP_LEVELS),
         )
@@ -33553,7 +34674,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(450),
             ),
             WarcraftObjectText::new(NOGN_TIP_LEVELS, NOGN_UBERTIP_LEVELS),
         ),
@@ -33589,7 +34712,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(375),
             ),
             WarcraftObjectText::new(NOGO_TIP_LEVELS, NOGO_UBERTIP_LEVELS),
         ),
@@ -33625,7 +34750,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NOGR_TIP_LEVELS, NOGR_UBERTIP_LEVELS),
         )
@@ -33665,7 +34792,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NOMG_TIP_LEVELS, NOMG_UBERTIP_LEVELS),
         )
@@ -33705,7 +34834,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -33740,7 +34871,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -33775,7 +34908,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(19, 22, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NOWB_TIP_LEVELS, NOWB_UBERTIP_LEVELS),
         )
@@ -33812,7 +34947,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NOWE_TIP_LEVELS, NOWE_UBERTIP_LEVELS),
         ),
@@ -33851,7 +34988,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(49, 55, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NOWK_TIP_LEVELS, NOWK_UBERTIP_LEVELS),
         ),
@@ -33887,7 +35026,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -33922,7 +35063,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(NPFL_TIP_LEVELS, NPFL_UBERTIP_LEVELS),
         )
@@ -33962,7 +35105,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NPFM_TIP_LEVELS, NPFM_UBERTIP_LEVELS),
         ),
@@ -33998,7 +35143,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(115),
             ),
             WarcraftObjectText::new(NPGF_TIP_LEVELS, NPGF_UBERTIP_LEVELS),
         ),
@@ -34034,7 +35181,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -34069,7 +35218,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPIG_TIP_LEVELS, NPIG_UBERTIP_LEVELS),
         ),
@@ -34105,7 +35256,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 25, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NPLB_TIP_LEVELS, NPLB_UBERTIP_LEVELS),
         )
@@ -34142,7 +35295,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 38, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NPLG_TIP_LEVELS, NPLG_UBERTIP_LEVELS),
         )
@@ -34179,7 +35334,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(68, 82, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN1_TIP_LEVELS, NPN1_UBERTIP_LEVELS),
         ),
@@ -34218,7 +35375,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(49, 57, 500, 1.5, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.5)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN2_TIP_LEVELS, NPN2_UBERTIP_LEVELS),
         ),
@@ -34254,7 +35413,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(49, 57, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN3_TIP_LEVELS, NPN3_UBERTIP_LEVELS),
         ),
@@ -34290,7 +35451,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(78, 93, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN4_TIP_LEVELS, NPN4_UBERTIP_LEVELS),
         ),
@@ -34329,7 +35492,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(55, 64, 500, 1.5, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(750, 1.5)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN5_TIP_LEVELS, NPN5_UBERTIP_LEVELS),
         ),
@@ -34365,7 +35530,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(55, 64, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPN6_TIP_LEVELS, NPN6_UBERTIP_LEVELS),
         ),
@@ -34401,7 +35568,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPNG_TIP_LEVELS, NPNG_UBERTIP_LEVELS),
         ),
@@ -34437,7 +35606,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NPNW_TIP_LEVELS, NPNW_UBERTIP_LEVELS),
         ),
@@ -34473,7 +35644,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(13, 15, 550, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -34508,7 +35681,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(26, 30, 550, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -34543,7 +35718,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(39, 45, 550, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -34578,7 +35755,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(52, 60, 550, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -34613,7 +35792,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NQBH_TIP_LEVELS, NQBH_UBERTIP_LEVELS),
         ),
@@ -34649,7 +35830,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NRAC_TIP_LEVELS, NRAC_UBERTIP_LEVELS),
         )
@@ -34686,7 +35869,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NRAT_TIP_LEVELS, NRAT_UBERTIP_LEVELS),
         ),
@@ -34722,7 +35907,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NRDK_TIP_LEVELS, NRDK_UBERTIP_LEVELS),
         ),
@@ -34758,7 +35945,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(36, 47, 400, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NRDR_TIP_LEVELS, NRDR_UBERTIP_LEVELS),
         ),
@@ -34794,7 +35983,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NREL_TIP_LEVELS, NREL_UBERTIP_LEVELS),
         ),
@@ -34830,7 +36021,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NROG_TIP_LEVELS, NROG_UBERTIP_LEVELS),
         ),
@@ -34869,7 +36062,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NRVD_TIP_LEVELS, NRVD_UBERTIP_LEVELS),
         ),
@@ -34908,7 +36103,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NRVF_TIP_LEVELS, NRVF_UBERTIP_LEVELS),
         ),
@@ -34947,7 +36144,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(49, 55, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NRVI_TIP_LEVELS, NRVI_UBERTIP_LEVELS),
         ),
@@ -34986,7 +36185,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NRVL_TIP_LEVELS, NRVL_UBERTIP_LEVELS),
         ),
@@ -35025,7 +36226,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(18, 20, 128, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NRVS_TIP_LEVELS, NRVS_UBERTIP_LEVELS),
         )
@@ -35065,7 +36268,9 @@ fn insert_objects_chunk_6(
                     6.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NRWM_TIP_LEVELS, NRWM_UBERTIP_LEVELS),
         ),
@@ -35101,7 +36306,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NRZB_TIP_LEVELS, NRZB_UBERTIP_LEVELS),
         ),
@@ -35140,7 +36347,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NRZG_TIP_LEVELS, NRZG_UBERTIP_LEVELS),
         ),
@@ -35179,7 +36388,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(350),
             ),
             WarcraftObjectText::new(NRZM_TIP_LEVELS, NRZM_UBERTIP_LEVELS),
         )
@@ -35219,7 +36430,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NRZS_TIP_LEVELS, NRZS_UBERTIP_LEVELS),
         ),
@@ -35255,7 +36468,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NRZT_TIP_LEVELS, NRZT_UBERTIP_LEVELS),
         ),
@@ -35294,7 +36509,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(7, 10, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSAT_TIP_LEVELS, NSAT_UBERTIP_LEVELS),
         ),
@@ -35330,7 +36547,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NSBM_TIP_LEVELS, NSBM_UBERTIP_LEVELS),
         ),
@@ -35366,7 +36585,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NSBS_TIP_LEVELS, NSBS_UBERTIP_LEVELS),
         )
@@ -35403,7 +36624,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NSC2_TIP_LEVELS, NSC2_UBERTIP_LEVELS),
         )
@@ -35440,7 +36663,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NSC3_TIP_LEVELS, NSC3_UBERTIP_LEVELS),
         )
@@ -35477,7 +36702,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(13, 15, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSCA_TIP_LEVELS, NSCA_UBERTIP_LEVELS),
         ),
@@ -35513,7 +36740,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSCB_TIP_LEVELS, NSCB_UBERTIP_LEVELS),
         )
@@ -35550,7 +36779,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSCE_TIP_LEVELS, NSCE_UBERTIP_LEVELS),
         ),
@@ -35586,7 +36817,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSEA_TIP_LEVELS, NSEA_UBERTIP_LEVELS),
         ),
@@ -35622,7 +36855,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NSEL_TIP_LEVELS, NSEL_UBERTIP_LEVELS),
         ),
@@ -35658,7 +36893,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(25, 100, 500, 1.1, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(510),
             ),
         ),
     );
@@ -35696,7 +36933,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(43, 49, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(265),
             ),
             WarcraftObjectText::new(NSGB_TIP_LEVELS, NSGB_UBERTIP_LEVELS),
         )
@@ -35733,7 +36972,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NSGG_TIP_LEVELS, NSGG_UBERTIP_LEVELS),
         ),
@@ -35769,7 +37010,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(20, 23, 100, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(265),
             ),
             WarcraftObjectText::new(NSGH_TIP_LEVELS, NSGH_UBERTIP_LEVELS),
         )
@@ -35806,7 +37049,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(265),
             ),
             WarcraftObjectText::new(NSGN_TIP_LEVELS, NSGN_UBERTIP_LEVELS),
         )
@@ -35843,7 +37088,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NSGT_TIP_LEVELS, NSGT_UBERTIP_LEVELS),
         ),
@@ -35879,7 +37126,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSHA_TIP_LEVELS, NSHA_UBERTIP_LEVELS),
         ),
@@ -35915,7 +37164,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSHE_TIP_LEVELS, NSHE_UBERTIP_LEVELS),
         ),
@@ -35951,7 +37202,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSHF_TIP_LEVELS, NSHF_UBERTIP_LEVELS),
         ),
@@ -35987,7 +37240,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NSHP_TIP_LEVELS, NSHP_UBERTIP_LEVELS),
         ),
@@ -36023,7 +37278,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -36058,7 +37315,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSHW_TIP_LEVELS, NSHW_UBERTIP_LEVELS),
         ),
@@ -36094,7 +37353,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(13, 15, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSKA_TIP_LEVELS, NSKA_UBERTIP_LEVELS),
         ),
@@ -36130,7 +37391,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSKE_TIP_LEVELS, NSKE_UBERTIP_LEVELS),
         ),
@@ -36169,7 +37432,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(NSKF_TIP_LEVELS, NSKF_UBERTIP_LEVELS),
         )
@@ -36206,7 +37471,9 @@ fn insert_objects_chunk_6(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 18, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(165),
             ),
             WarcraftObjectText::new(NSKG_TIP_LEVELS, NSKG_UBERTIP_LEVELS),
         ),
@@ -36242,7 +37509,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSKK_TIP_LEVELS, NSKK_UBERTIP_LEVELS),
         )
@@ -36282,7 +37551,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NSKM_TIP_LEVELS, NSKM_UBERTIP_LEVELS),
         ),
@@ -36318,7 +37589,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(90),
             ),
             WarcraftObjectText::new(NSKO_TIP_LEVELS, NSKO_UBERTIP_LEVELS),
         )
@@ -36358,7 +37631,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NSLF_TIP_LEVELS, NSLF_UBERTIP_LEVELS),
         )
@@ -36395,7 +37670,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(20, 27, 400, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NSLH_TIP_LEVELS, NSLH_UBERTIP_LEVELS),
         ),
@@ -36434,7 +37711,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(46, 67, 500, 1.4, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(700, 1.75)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NSLL_TIP_LEVELS, NSLL_UBERTIP_LEVELS),
         ),
@@ -36473,7 +37752,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSLM_TIP_LEVELS, NSLM_UBERTIP_LEVELS),
         ),
@@ -36512,7 +37793,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NSLN_TIP_LEVELS, NSLN_UBERTIP_LEVELS),
         )
@@ -36552,7 +37835,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(30, 39, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NSLR_TIP_LEVELS, NSLR_UBERTIP_LEVELS),
         ),
@@ -36591,7 +37876,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(31, 39, 500, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NSLV_TIP_LEVELS, NSLV_UBERTIP_LEVELS),
         ),
@@ -36627,7 +37914,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NSNO_TIP_LEVELS, NSNO_UBERTIP_LEVELS),
         )
@@ -36664,7 +37953,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(25, 29, 550, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NSNP_TIP_LEVELS, NSNP_UBERTIP_LEVELS),
         )
@@ -36704,7 +37995,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(28, 37, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NSNS_TIP_LEVELS, NSNS_UBERTIP_LEVELS),
         )
@@ -36744,7 +38037,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(90),
             ),
             WarcraftObjectText::new(NSOC_TIP_LEVELS, NSOC_UBERTIP_LEVELS),
         )
@@ -36781,7 +38076,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NSOG_TIP_LEVELS, NSOG_UBERTIP_LEVELS),
         )
@@ -36821,7 +38118,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSPB_TIP_LEVELS, NSPB_UBERTIP_LEVELS),
         ),
@@ -36857,7 +38156,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -36892,7 +38193,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSPD_TIP_LEVELS, NSPD_UBERTIP_LEVELS),
         ),
@@ -36928,7 +38231,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSPG_TIP_LEVELS, NSPG_UBERTIP_LEVELS),
         ),
@@ -36981,7 +38286,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -37016,7 +38323,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSPR_TIP_LEVELS, NSPR_UBERTIP_LEVELS),
         ),
@@ -37055,7 +38364,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NSQA_TIP_LEVELS, NSQA_UBERTIP_LEVELS),
         ),
@@ -37094,7 +38405,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NSQE_TIP_LEVELS, NSQE_UBERTIP_LEVELS),
         ),
@@ -37133,7 +38446,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(39, 44, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NSQO_TIP_LEVELS, NSQO_UBERTIP_LEVELS),
         ),
@@ -37169,7 +38484,9 @@ fn insert_objects_chunk_6(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NSQT_TIP_LEVELS, NSQT_UBERTIP_LEVELS),
         ),
@@ -37205,7 +38522,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(17, 20, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSRA_TIP_LEVELS, NSRA_UBERTIP_LEVELS),
         )
@@ -37245,7 +38564,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(21, 25, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(190),
             ),
             WarcraftObjectText::new(NSRH_TIP_LEVELS, NSRH_UBERTIP_LEVELS),
         )
@@ -37285,7 +38606,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(36, 43, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(NSRN_TIP_LEVELS, NSRN_UBERTIP_LEVELS),
         )
@@ -37322,7 +38645,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NSRV_TIP_LEVELS, NSRV_UBERTIP_LEVELS),
         )
@@ -37362,7 +38687,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(75, 89, 600, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NSRW_TIP_LEVELS, NSRW_UBERTIP_LEVELS),
         )
@@ -37399,7 +38726,9 @@ fn insert_objects_chunk_6(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(9, 16, 650, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -37434,7 +38763,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(235),
             ),
             WarcraftObjectText::new(NSSP_TIP_LEVELS, NSSP_UBERTIP_LEVELS),
         )
@@ -37474,7 +38805,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NSTH_TIP_LEVELS, NSTH_UBERTIP_LEVELS),
         ),
@@ -37513,7 +38846,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NSTL_TIP_LEVELS, NSTL_UBERTIP_LEVELS),
         )
@@ -37553,7 +38888,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(NSTS_TIP_LEVELS, NSTS_UBERTIP_LEVELS),
         )
@@ -37596,7 +38933,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(46, 55, 500, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NSTW_TIP_LEVELS, NSTW_UBERTIP_LEVELS),
         ),
@@ -37632,7 +38971,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NSTY_TIP_LEVELS, NSTY_UBERTIP_LEVELS),
         ),
@@ -37668,7 +39009,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -37703,7 +39046,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(16, 17, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -37741,7 +39086,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(21, 22, 90, 1.0, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(150, 0.375)),
-                ),
+                )
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -37776,7 +39123,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NTAV_TIP_LEVELS, NTAV_UBERTIP_LEVELS),
         ),
@@ -37812,7 +39161,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTEN_TIP_LEVELS, NTEN_UBERTIP_LEVELS),
         ),
@@ -37848,7 +39199,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTH0_TIP_LEVELS, NTH0_UBERTIP_LEVELS),
         ),
@@ -37884,7 +39237,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTH1_TIP_LEVELS, NTH1_UBERTIP_LEVELS),
         ),
@@ -37923,7 +39278,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(27, 34, 500, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NTHL_TIP_LEVELS, NTHL_UBERTIP_LEVELS),
         ),
@@ -37959,7 +39316,9 @@ fn insert_objects_chunk_6(
                     5.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(54, 93, 500, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(8)
+                .with_gold_cost(510),
             ),
         ),
     );
@@ -37994,7 +39353,9 @@ fn insert_objects_chunk_6(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 27, 500, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NTKA_TIP_LEVELS, NTKA_UBERTIP_LEVELS),
         )
@@ -38031,7 +39392,9 @@ fn insert_objects_chunk_6(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(44, 49, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NTKC_TIP_LEVELS, NTKC_UBERTIP_LEVELS),
         )
@@ -38068,7 +39431,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(NTKF_TIP_LEVELS, NTKF_UBERTIP_LEVELS),
         )
@@ -38108,7 +39473,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(23, 27, 125, 1.8, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NTKH_TIP_LEVELS, NTKH_UBERTIP_LEVELS),
         )
@@ -38148,7 +39515,9 @@ fn insert_objects_chunk_6(
                         Some(UnitAttack::new(34, 40, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(NTKS_TIP_LEVELS, NTKS_UBERTIP_LEVELS),
         )
@@ -38185,7 +39554,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 34, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(280),
             ),
             WarcraftObjectText::new(NTKT_TIP_LEVELS, NTKT_UBERTIP_LEVELS),
         )
@@ -38222,7 +39593,9 @@ fn insert_objects_chunk_6(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 25, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NTKW_TIP_LEVELS, NTKW_UBERTIP_LEVELS),
         )
@@ -38263,7 +39636,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTN2_TIP_LEVELS, NTN2_UBERTIP_LEVELS),
         ),
@@ -38299,7 +39674,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -38335,7 +39712,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTNT_TIP_LEVELS, NTNT_UBERTIP_LEVELS),
         ),
@@ -38371,7 +39750,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -38409,7 +39790,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(65, 83, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(10)
+                .with_gold_cost(745),
             ),
             WarcraftObjectText::new(NTRD_TIP_LEVELS, NTRD_UBERTIP_LEVELS),
         )
@@ -38446,7 +39829,9 @@ fn insert_objects_chunk_7(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(39, 46, 100, 1.35, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(7)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NTRG_TIP_LEVELS, NTRG_UBERTIP_LEVELS),
         )
@@ -38483,7 +39868,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NTRH_TIP_LEVELS, NTRH_UBERTIP_LEVELS),
         )
@@ -38520,7 +39907,9 @@ fn insert_objects_chunk_7(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(6, 10, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NTRS_TIP_LEVELS, NTRS_UBERTIP_LEVELS),
         )
@@ -38557,7 +39946,9 @@ fn insert_objects_chunk_7(
                     4.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(295),
             ),
             WarcraftObjectText::new(NTRT_TIP_LEVELS, NTRT_UBERTIP_LEVELS),
         )
@@ -38594,7 +39985,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NTRV_TIP_LEVELS, NTRV_UBERTIP_LEVELS),
         )
@@ -38631,7 +40024,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NTT1_TIP_LEVELS, NTT1_UBERTIP_LEVELS),
         )
@@ -38668,7 +40063,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NTT2_TIP_LEVELS, NTT2_UBERTIP_LEVELS),
         ),
@@ -38704,7 +40101,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NTWS_TIP_LEVELS, NTWS_UBERTIP_LEVELS),
         )
@@ -38741,7 +40140,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(NTX2_TIP_LEVELS, NTX2_UBERTIP_LEVELS),
         )
@@ -38778,7 +40179,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NUBK_TIP_LEVELS, NUBK_UBERTIP_LEVELS),
         )
@@ -38815,7 +40218,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 25, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NUBR_TIP_LEVELS, NUBR_UBERTIP_LEVELS),
         )
@@ -38855,7 +40260,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NUBW_TIP_LEVELS, NUBW_UBERTIP_LEVELS),
         )
@@ -38895,7 +40302,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(68, 75, 450, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NVDE_TIP_LEVELS, NVDE_UBERTIP_LEVELS),
         ),
@@ -38934,7 +40343,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(36, 43, 450, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(NVDG_TIP_LEVELS, NVDG_UBERTIP_LEVELS),
         )
@@ -38974,7 +40385,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(13, 15, 450, 1.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NVDL_TIP_LEVELS, NVDL_UBERTIP_LEVELS),
         ),
@@ -39013,7 +40426,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(23, 27, 450, 1.6, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(245),
             ),
             WarcraftObjectText::new(NVDW_TIP_LEVELS, NVDW_UBERTIP_LEVELS),
         )
@@ -39050,7 +40465,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVIL_TIP_LEVELS, NVIL_UBERTIP_LEVELS),
         ),
@@ -39086,7 +40503,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVK2_TIP_LEVELS, NVK2_UBERTIP_LEVELS),
         ),
@@ -39122,7 +40541,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVL2_TIP_LEVELS, NVL2_UBERTIP_LEVELS),
         ),
@@ -39158,7 +40579,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVLK_TIP_LEVELS, NVLK_UBERTIP_LEVELS),
         ),
@@ -39194,7 +40617,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVLW_TIP_LEVELS, NVLW_UBERTIP_LEVELS),
         ),
@@ -39230,7 +40655,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -39265,7 +40692,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -39300,7 +40729,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
         ),
     );
@@ -39335,7 +40766,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NVUL_TIP_LEVELS, NVUL_UBERTIP_LEVELS),
         ),
@@ -39374,7 +40807,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(16, 20, 600, 1.75, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NW2W_TIP_LEVELS, NW2W_UBERTIP_LEVELS),
         ),
@@ -39410,7 +40845,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -39445,7 +40882,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(195),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
@@ -39484,7 +40923,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(10, 11, 100, 1.6, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(140),
             ),
         ),
     );
@@ -39519,7 +40960,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NWC1_TIP_LEVELS, NWC1_UBERTIP_LEVELS),
         ),
@@ -39555,7 +40998,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NWC2_TIP_LEVELS, NWC2_UBERTIP_LEVELS),
         ),
@@ -39591,7 +41036,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NWC3_TIP_LEVELS, NWC3_UBERTIP_LEVELS),
         ),
@@ -39627,7 +41074,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NWC4_TIP_LEVELS, NWC4_UBERTIP_LEVELS),
         ),
@@ -39663,7 +41112,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -39698,7 +41149,9 @@ fn insert_objects_chunk_7(
                     3.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(21, 25, 300, 1.5, AttackType::Magic)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -39733,7 +41186,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(48, 57, 300, 1.5, AttackType::Magic)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -39768,7 +41223,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NWEN_TIP_LEVELS, NWEN_UBERTIP_LEVELS),
         ),
@@ -39807,7 +41264,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(42, 50, 450, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(235),
             ),
             WarcraftObjectText::new(NWGS_TIP_LEVELS, NWGS_UBERTIP_LEVELS),
         )
@@ -39844,7 +41303,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NWGT_TIP_LEVELS, NWGT_UBERTIP_LEVELS),
         ),
@@ -39880,7 +41341,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(105),
             ),
             WarcraftObjectText::new(NWIZ_TIP_LEVELS, NWIZ_UBERTIP_LEVELS),
         ),
@@ -39919,7 +41382,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(29, 33, 90, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NWLD_TIP_LEVELS, NWLD_UBERTIP_LEVELS),
         ),
@@ -39955,7 +41420,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 90, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NWLG_TIP_LEVELS, NWLG_UBERTIP_LEVELS),
         ),
@@ -39991,7 +41458,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NWLT_TIP_LEVELS, NWLT_UBERTIP_LEVELS),
         ),
@@ -40030,7 +41499,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(9)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(NWNA_TIP_LEVELS, NWNA_UBERTIP_LEVELS),
         ),
@@ -40066,7 +41537,9 @@ fn insert_objects_chunk_7(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NWNR_TIP_LEVELS, NWNR_UBERTIP_LEVELS),
         ),
@@ -40105,7 +41578,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(39, 44, 128, 1.35, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(7)
+                .with_gold_cost(425),
             ),
             WarcraftObjectText::new(NWNS_TIP_LEVELS, NWNS_UBERTIP_LEVELS),
         ),
@@ -40141,7 +41616,9 @@ fn insert_objects_chunk_7(
                     4.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NWRG_TIP_LEVELS, NWRG_UBERTIP_LEVELS),
         ),
@@ -40177,7 +41654,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(41, 50, 600, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(350),
             ),
             WarcraftObjectText::new(NWS1_TIP_LEVELS, NWS1_UBERTIP_LEVELS),
         )
@@ -40217,7 +41696,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(29, 33, 90, 1.35, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NWWD_TIP_LEVELS, NWWD_UBERTIP_LEVELS),
         ),
@@ -40253,7 +41734,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(NWWF_TIP_LEVELS, NWWF_UBERTIP_LEVELS),
         ),
@@ -40289,7 +41772,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 90, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(NWWG_TIP_LEVELS, NWWG_UBERTIP_LEVELS),
         ),
@@ -40328,7 +41813,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(39, 47, 500, 1.8, AttackType::Chaos)),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
-                ),
+                )
+                .with_level(8)
+                .with_gold_cost(480),
             ),
             WarcraftObjectText::new(NWZD_TIP_LEVELS, NWZD_UBERTIP_LEVELS),
         ),
@@ -40367,7 +41854,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(30, 39, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(320),
             ),
             WarcraftObjectText::new(NWZG_TIP_LEVELS, NWZG_UBERTIP_LEVELS),
         ),
@@ -40406,7 +41895,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(NWZR_TIP_LEVELS, NWZR_UBERTIP_LEVELS),
         ),
@@ -40445,7 +41936,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(215),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -40481,7 +41974,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(NZEP_TIP_LEVELS, NZEP_UBERTIP_LEVELS),
         )
@@ -40518,7 +42013,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(NZIN_TIP_LEVELS, NZIN_UBERTIP_LEVELS),
         ),
@@ -40554,7 +42051,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(NZLC_TIP_LEVELS, NZLC_UBERTIP_LEVELS),
         ),
@@ -40590,7 +42089,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(85),
             ),
             WarcraftObjectText::new(NZOF_TIP_LEVELS, NZOF_UBERTIP_LEVELS),
         ),
@@ -40626,7 +42127,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(85),
             ),
             WarcraftObjectText::new(NZOM_TIP_LEVELS, NZOM_UBERTIP_LEVELS),
         ),
@@ -40662,7 +42165,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(OALT_TIP_LEVELS, OALT_UBERTIP_LEVELS),
         )
@@ -40699,7 +42204,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(OBAR_TIP_LEVELS, OBAR_UBERTIP_LEVELS),
         )
@@ -40736,7 +42243,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(OBEA_TIP_LEVELS, OBEA_UBERTIP_LEVELS),
         )
@@ -40773,7 +42282,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(OBOT_TIP_LEVELS, OBOT_UBERTIP_LEVELS),
         )
@@ -40810,7 +42321,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(72, 89, 1150, 4.5, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(220),
             ),
             WarcraftObjectText::new(OCAT_TIP_LEVELS, OCAT_UBERTIP_LEVELS),
         )
@@ -40847,7 +42360,9 @@ fn insert_objects_chunk_7(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(34, 41, 700, 4.0, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(160),
             ),
             WarcraftObjectText::new(OCBW_TIP_LEVELS, OCBW_UBERTIP_LEVELS),
         )
@@ -40919,7 +42434,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(250),
             ),
             WarcraftObjectText::new(ODES_TIP_LEVELS, ODES_UBERTIP_LEVELS),
         )
@@ -40959,7 +42476,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
-                ),
+                )
+                .with_level(6)
+                .with_gold_cost(145),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -40998,7 +42517,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(10, 14, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(ODOC_TIP_LEVELS, ODOC_UBERTIP_LEVELS),
         )
@@ -41035,7 +42556,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41101,7 +42624,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(205),
             ),
             WarcraftObjectText::new(OFOR_TIP_LEVELS, OFOR_UBERTIP_LEVELS),
         )
@@ -41173,7 +42698,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(1025),
             ),
             WarcraftObjectText::new(OFRT_TIP_LEVELS, OFRT_UBERTIP_LEVELS),
         )
@@ -41210,7 +42737,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(385),
             ),
             WarcraftObjectText::new(OGRE_TIP_LEVELS, OGRE_UBERTIP_LEVELS),
         )
@@ -41247,7 +42776,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(200),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -41283,7 +42814,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(OGRU_TIP_LEVELS, OGRU_UBERTIP_LEVELS),
         )
@@ -41320,7 +42853,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(23, 27, 550, 2.31, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(OHUN_TIP_LEVELS, OHUN_UBERTIP_LEVELS),
         )
@@ -41357,7 +42892,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41392,7 +42929,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(500),
             ),
             WarcraftObjectText::new(OJGN_TIP_LEVELS, OJGN_UBERTIP_LEVELS),
         ),
@@ -41428,7 +42967,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Unarmored,
                     Some(UnitAttack::new(16, 20, 500, 1.44, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(255),
             ),
             WarcraftObjectText::new(OKOD_TIP_LEVELS, OKOD_UBERTIP_LEVELS),
         )
@@ -41501,7 +43042,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(4, 18, 100, 1.1, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(130),
             ),
         ),
     );
@@ -41536,7 +43079,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(23, 27, 100, 1.85, AttackType::Siege)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(180),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -41572,7 +43117,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -41607,7 +43154,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(OPEO_TIP_LEVELS, OPEO_UBERTIP_LEVELS),
         )
@@ -41644,7 +43193,9 @@ fn insert_objects_chunk_7(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(23, 27, 100, 1.85, AttackType::Siege)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(ORAI_TIP_LEVELS, ORAI_UBERTIP_LEVELS),
         )
@@ -41684,7 +43235,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(10, 11, 600, 2.1, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(OSHM_TIP_LEVELS, OSHM_UBERTIP_LEVELS),
         )
@@ -41721,7 +43274,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(OSHY_TIP_LEVELS, OSHY_UBERTIP_LEVELS),
         ),
@@ -41757,7 +43312,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(OSLD_TIP_LEVELS, OSLD_UBERTIP_LEVELS),
         )
@@ -41812,7 +43369,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 16, 600, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41847,7 +43406,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(27, 30, 600, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41882,7 +43443,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(46, 50, 600, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41917,7 +43480,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(41, 45, 600, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -41955,7 +43520,9 @@ fn insert_objects_chunk_7(
                         None,
                     )
                     .with_mana_pool(ManaPool::new(300, 1.0)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(OSPM_TIP_LEVELS, OSPM_UBERTIP_LEVELS),
         )
@@ -41995,7 +43562,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(17, 22, 400, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(300, 1.0)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(195),
             ),
             WarcraftObjectText::new(OSPW_TIP_LEVELS, OSPW_UBERTIP_LEVELS),
         )
@@ -42032,7 +43601,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(700),
             ),
             WarcraftObjectText::new(OSTR_TIP_LEVELS, OSTR_UBERTIP_LEVELS),
         )
@@ -42069,7 +43640,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -42104,7 +43677,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(16, 17, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -42139,7 +43714,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(21, 22, 90, 1.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -42174,7 +43751,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(130),
             ),
         ),
     );
@@ -42209,7 +43788,9 @@ fn insert_objects_chunk_7(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(30, 36, 100, 1.9, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(OTAU_TIP_LEVELS, OTAU_UBERTIP_LEVELS),
         )
@@ -42246,7 +43827,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(23, 27, 550, 2.31, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(OTBK_TIP_LEVELS, OTBK_UBERTIP_LEVELS),
         )
@@ -42283,7 +43866,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(16, 18, 300, 1.8, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(160),
             ),
             WarcraftObjectText::new(OTBR_TIP_LEVELS, OTBR_UBERTIP_LEVELS),
         )
@@ -42323,7 +43908,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -42358,7 +43945,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(23, 27, 700, 4.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(160),
             ),
             WarcraftObjectText::new(OTRB_TIP_LEVELS, OTRB_UBERTIP_LEVELS),
         )
@@ -42395,7 +43984,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(135),
             ),
             WarcraftObjectText::new(OTTO_TIP_LEVELS, OTTO_UBERTIP_LEVELS),
         )
@@ -42453,7 +44044,9 @@ fn insert_objects_chunk_7(
                         Some(UnitAttack::new(10, 14, 600, 1.75, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(145),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
@@ -42489,7 +44082,9 @@ fn insert_objects_chunk_7(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(OVLN_TIP_LEVELS, OVLN_UBERTIP_LEVELS),
         )
@@ -42526,7 +44121,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(4, 18, 100, 1.1, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(130),
             ),
         ),
     );
@@ -42561,7 +44158,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(38, 42, 128, 1.2, AttackType::Normal)),
-                )),
+                ))
+                .with_level(5)
+                .with_gold_cost(130),
             ),
         ),
     );
@@ -42596,7 +44195,9 @@ fn insert_objects_chunk_7(
                     3.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(16, 18, 800, 0.6, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(110),
             ),
             WarcraftObjectText::new(OWTW_TIP_LEVELS, OWTW_UBERTIP_LEVELS),
         )
@@ -42636,7 +44237,9 @@ fn insert_objects_chunk_7(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(36, 44, 450, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(265),
             ),
             WarcraftObjectText::new(OWYV_TIP_LEVELS, OWYV_UBERTIP_LEVELS),
         )
@@ -45144,7 +46747,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(33, 39, 128, 1.9, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(UABC_TIP_LEVELS, UABC_UBERTIP_LEVELS),
         )
@@ -45181,7 +46786,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(35, 41, 128, 1.9, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(UABO_TIP_LEVELS, UABO_UBERTIP_LEVELS),
         )
@@ -45218,7 +46825,9 @@ fn insert_objects_chunk_8(
                     1.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(9, 10, 90, 2.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(UACO_TIP_LEVELS, UACO_UBERTIP_LEVELS),
         )
@@ -45255,7 +46864,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(180),
             ),
             WarcraftObjectText::new(UAOD_TIP_LEVELS, UAOD_UBERTIP_LEVELS),
         )
@@ -45292,7 +46903,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Light,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(240),
             ),
             WarcraftObjectText::new(UARB_TIP_LEVELS, UARB_UBERTIP_LEVELS),
         )
@@ -45332,7 +46945,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(9, 13, 600, 1.5, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(UBAN_TIP_LEVELS, UBAN_UBERTIP_LEVELS),
         )
@@ -45369,7 +46984,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(85, 105, 300, 3.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(385),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
@@ -45405,7 +47022,9 @@ fn insert_objects_chunk_8(
                     6.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
-                )),
+                ))
+                .with_level(10)
+                .with_gold_cost(595),
             ),
         ),
     );
@@ -45440,7 +47059,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(UBON_TIP_LEVELS, UBON_UBERTIP_LEVELS),
         )
@@ -45477,7 +47098,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(170),
             ),
             WarcraftObjectText::new(UBOT_TIP_LEVELS, UBOT_UBERTIP_LEVELS),
         )
@@ -45517,7 +47140,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(19, 21, 450, 1.35, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(400, -3.0)),
-                ),
+                )
+                .with_level(5)
+                .with_gold_cost(300),
             ),
             WarcraftObjectText::new(UBSP_TIP_LEVELS, UBSP_UBERTIP_LEVELS),
         ),
@@ -45553,7 +47178,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(UCRM_TIP_LEVELS, UCRM_UBERTIP_LEVELS),
         )
@@ -45590,7 +47217,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(26, 31, 550, 2.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(UCRY_TIP_LEVELS, UCRY_UBERTIP_LEVELS),
         )
@@ -45627,7 +47256,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(8, 9, 90, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -45662,7 +47293,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(15, 18, 90, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -45697,7 +47330,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(22, 27, 90, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -45732,7 +47367,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -45767,7 +47404,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     None,
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -45802,7 +47441,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
-                )),
+                ))
+                .with_level(4)
+                .with_gold_cost(250),
             ),
             WarcraftObjectText::new(UDES_TIP_LEVELS, UDES_UBERTIP_LEVELS),
         )
@@ -45852,7 +47493,9 @@ fn insert_objects_chunk_8(
                     1.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(93, 115, 375, 3.0, AttackType::Magic)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(385),
             ),
             WarcraftObjectText::new(UFRO_TIP_LEVELS, UFRO_UBERTIP_LEVELS),
         )
@@ -45889,7 +47532,9 @@ fn insert_objects_chunk_8(
                     3.0,
                     DefenseType::Unarmored,
                     Some(UnitAttack::new(61, 70, 128, 1.4, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(175),
             ),
             WarcraftObjectText::new(UGAR_TIP_LEVELS, UGAR_UBERTIP_LEVELS),
         )
@@ -45926,7 +47571,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(12, 14, 90, 1.35, AttackType::Normal)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(120),
             ),
             WarcraftObjectText::new(UGHO_TIP_LEVELS, UGHO_UBERTIP_LEVELS),
         )
@@ -45963,7 +47610,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(UGOL_TIP_LEVELS, UGOL_UBERTIP_LEVELS),
         )
@@ -46000,7 +47649,9 @@ fn insert_objects_chunk_8(
                     15.0,
                     DefenseType::Unarmored,
                     None,
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(185),
             ),
             WarcraftObjectText::new(UGRM_TIP_LEVELS, UGRM_UBERTIP_LEVELS),
         )
@@ -46037,7 +47688,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(215),
             ),
             WarcraftObjectText::new(UGRV_TIP_LEVELS, UGRV_UBERTIP_LEVELS),
         )
@@ -46073,7 +47726,9 @@ fn insert_objects_chunk_8(
                 .with_combat(
                     UnitCombat::new(280, 0.5, RegenType::Night, 0.0, DefenseType::Heavy, None)
                         .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -46111,7 +47766,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(195),
             ),
         ),
     );
@@ -46146,7 +47803,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Light,
                     Some(UnitAttack::new(13, 14, 10, 1.0, AttackType::Spells)),
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -46181,7 +47840,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(71, 88, 1150, 4.0, AttackType::Siege)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(230),
             ),
             WarcraftObjectText::new(UMTW_TIP_LEVELS, UMTW_UBERTIP_LEVELS),
         )
@@ -46221,7 +47882,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(10, 11, 600, 1.8, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
-                ),
+                )
+                .with_level(2)
+                .with_gold_cost(145),
             ),
             WarcraftObjectText::new(UNEC_TIP_LEVELS, UNEC_UBERTIP_LEVELS),
         )
@@ -46258,7 +47921,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(11, 12, 800, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(2)
+                .with_gold_cost(545),
             ),
             WarcraftObjectText::new(UNP1_TIP_LEVELS, UNP1_UBERTIP_LEVELS),
         )
@@ -46295,7 +47960,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(13, 15, 800, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(3)
+                .with_gold_cost(870),
             ),
             WarcraftObjectText::new(UNP2_TIP_LEVELS, UNP2_UBERTIP_LEVELS),
         )
@@ -46332,7 +47999,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(225),
             ),
             WarcraftObjectText::new(UNPL_TIP_LEVELS, UNPL_UBERTIP_LEVELS),
         )
@@ -46372,7 +48041,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(7, 8, 575, 2.1, AttackType::Magic)),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(UOBS_TIP_LEVELS, UOBS_UBERTIP_LEVELS),
         )
@@ -46409,7 +48080,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
             ),
         ),
     );
@@ -46444,7 +48117,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(75),
             ),
             WarcraftObjectText::new(USAP_TIP_LEVELS, USAP_UBERTIP_LEVELS),
         )
@@ -46481,7 +48156,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(200),
             ),
             WarcraftObjectText::new(USEP_TIP_LEVELS, USEP_UBERTIP_LEVELS),
         )
@@ -46518,7 +48195,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Medium,
                     None,
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(USHD_TIP_LEVELS, USHD_UBERTIP_LEVELS),
         ),
@@ -46554,7 +48233,9 @@ fn insert_objects_chunk_8(
                     2.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(50),
             ),
             WarcraftObjectText::new(USHP_TIP_LEVELS, USHP_UBERTIP_LEVELS),
         ),
@@ -46590,7 +48271,9 @@ fn insert_objects_chunk_8(
                     1.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(USKE_TIP_LEVELS, USKE_UBERTIP_LEVELS),
         ),
@@ -46626,7 +48309,9 @@ fn insert_objects_chunk_8(
                     0.0,
                     DefenseType::Medium,
                     Some(UnitAttack::new(11, 12, 500, 1.5, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
             ),
             WarcraftObjectText::new(USKM_TIP_LEVELS, USKM_UBERTIP_LEVELS),
         ),
@@ -46662,7 +48347,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(140),
             ),
             WarcraftObjectText::new(USLH_TIP_LEVELS, USLH_UBERTIP_LEVELS),
         )
@@ -46702,7 +48389,9 @@ fn insert_objects_chunk_8(
                         Some(UnitAttack::new(21, 29, 500, 1.4, AttackType::Normal)),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.8)),
-                ),
+                )
+                .with_level(3)
+                .with_gold_cost(225),
             ),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
@@ -46738,7 +48427,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(155),
             ),
             WarcraftObjectText::new(UTOD_TIP_LEVELS, UTOD_UBERTIP_LEVELS),
         )
@@ -46775,7 +48466,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(130),
             ),
             WarcraftObjectText::new(UTOM_TIP_LEVELS, UTOM_UBERTIP_LEVELS),
         )
@@ -46812,7 +48505,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Heavy,
                     Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
-                )),
+                ))
+                .with_level(6)
+                .with_gold_cost(500),
             ),
             WarcraftObjectText::new(UUBS_TIP_LEVELS, UUBS_UBERTIP_LEVELS),
         )
@@ -46849,7 +48544,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(27, 32, 700, 1.0, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(295),
             ),
             WarcraftObjectText::new(UZG1_TIP_LEVELS, UZG1_UBERTIP_LEVELS),
         )
@@ -46886,7 +48583,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     Some(UnitAttack::new(9, 10, 700, 1.15, AttackType::Pierce)),
-                )),
+                ))
+                .with_level(1)
+                .with_gold_cost(250),
             ),
             WarcraftObjectText::new(UZG2_TIP_LEVELS, UZG2_UBERTIP_LEVELS),
         )
@@ -46923,7 +48622,9 @@ fn insert_objects_chunk_8(
                     5.0,
                     DefenseType::Fortified,
                     None,
-                )),
+                ))
+                .with_level(0)
+                .with_gold_cost(150),
             ),
             WarcraftObjectText::new(UZIG_TIP_LEVELS, UZIG_UBERTIP_LEVELS),
         )
