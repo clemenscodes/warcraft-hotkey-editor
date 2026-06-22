@@ -387,36 +387,50 @@ mod tests {
         );
     }
 
-    /// Buildings list by the upgrade-chain + gold-cost rank: the main-building
-    /// chain Town Hall → Keep → Castle stays grouped and in tier order (and
-    /// adjacent), even though alphabetically Castle and Keep precede Town Hall.
+    /// Every race's three-tier main-building chain stays grouped and in tier
+    /// order (adjacent), driven purely by the upgrade graph in the data — not a
+    /// human-specific rule. Human Town Hall→Keep→Castle, Orc Great Hall→
+    /// Stronghold→Fortress, Night Elf Tree of Life→Ages→Eternity, Undead
+    /// Necropolis→Halls of the Dead→Black Citadel.
     #[test]
-    fn buildings_group_main_hall_upgrade_chain() {
-        let entries = UnitCatalog::entries_for(
-            Some(Race::Human),
-            Some(UnitMode::Melee),
-            Some(UnitKind::Building),
-            None,
-        );
-        let position = |unit_id: &str| {
-            entries
-                .iter()
-                .position(|entry| entry.unit_id() == unit_id)
-                .unwrap_or_else(|| panic!("Human/Melee buildings missing {unit_id}"))
-        };
-        let town_hall = position("htow");
-        let keep = position("hkee");
-        let castle = position("hcas");
-        assert!(
-            town_hall < keep && keep < castle,
-            "expected Town Hall({town_hall}) < Keep({keep}) < Castle({castle}) grouped in tier order",
-        );
-        assert_eq!(
-            keep,
-            town_hall + 1,
-            "Keep must be adjacent to Town Hall (chain grouped)"
-        );
-        assert_eq!(castle, keep + 1, "Castle must be adjacent to Keep");
+    fn main_hall_upgrade_chains_group_for_all_races() {
+        let chains = [
+            (Race::Human, ["htow", "hkee", "hcas"]),
+            (Race::Orc, ["ogre", "ostr", "ofrt"]),
+            (Race::Nightelf, ["etol", "etoa", "etoe"]),
+            (Race::Undead, ["unpl", "unp1", "unp2"]),
+        ];
+        for (race, chain) in chains {
+            let entries = UnitCatalog::entries_for(
+                Some(race),
+                Some(UnitMode::Melee),
+                Some(UnitKind::Building),
+                None,
+            );
+            let position = |unit_id: &str| {
+                entries
+                    .iter()
+                    .position(|entry| entry.unit_id() == unit_id)
+                    .unwrap_or_else(|| panic!("{race:?} buildings missing {unit_id}"))
+            };
+            let tier_one = position(chain[0]);
+            let tier_two = position(chain[1]);
+            let tier_three = position(chain[2]);
+            assert_eq!(
+                tier_two,
+                tier_one + 1,
+                "{race:?}: {} must immediately follow {}",
+                chain[1],
+                chain[0],
+            );
+            assert_eq!(
+                tier_three,
+                tier_two + 1,
+                "{race:?}: {} must immediately follow {}",
+                chain[2],
+                chain[1],
+            );
+        }
     }
 
     /// Campaign-flagged units must NOT bleed into Melee mode. After
