@@ -99,6 +99,18 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
     let collapsed_categories = props.collapsed_categories;
     let mut raw_query = use_signal(|| search_query.read().clone());
     let mut debounce_gen: Signal<u32> = use_signal(|| 0);
+    // Keep the visible input text in sync when `search_query` changes from
+    // outside this component — e.g. browser back/forward restoring a previous
+    // query. Typing updates `raw_query` first and the debounce commits the same
+    // value, so for ordinary input this is a no-op; `peek` avoids subscribing to
+    // `raw_query` (and thus self-triggering) so it only reacts to external
+    // `search_query` changes.
+    use_effect(move || {
+        let committed = search_query.read().clone();
+        if *raw_query.peek() != committed {
+            raw_query.set(committed);
+        }
+    });
     let state = UnitListState::new(
         active_race,
         unit_mode,
