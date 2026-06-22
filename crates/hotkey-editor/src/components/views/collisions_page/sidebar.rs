@@ -17,15 +17,6 @@ pub(super) fn IslandSidebar(props: IslandSidebarProps) -> Element {
     let islands = props.islands;
     let mut selected_island = props.selected_island;
 
-    use_effect(move || {
-        if let Some(key) = selected_island.read().clone() {
-            spawn(async move {
-                gloo_timers::future::TimeoutFuture::new(50).await;
-                super::scroll_entry_into_view("data-island-key", &key);
-            });
-        }
-    });
-
     let selected_key = selected_island.read().clone();
 
     rsx! {

@@ -370,31 +370,6 @@ impl CollisionPageModel {
     }
 }
 
-/// Scrolls the selected sidebar entry into view, matched by its `data-…-key`
-/// attribute. `nearest` alignment means an already-visible entry is left in
-/// place — only an off-screen restore (e.g. returning from the editor) actually
-/// scrolls. No-op on native builds.
-#[cfg(target_arch = "wasm32")]
-pub(super) fn scroll_entry_into_view(attribute: &str, key: &str) {
-    let Some(window) = web_sys::window() else {
-        return;
-    };
-    let Some(document) = window.document() else {
-        return;
-    };
-    let selector = format!("[{attribute}=\"{key}\"]");
-    let Ok(Some(element)) = document.query_selector(&selector) else {
-        return;
-    };
-    let options = web_sys::ScrollIntoViewOptions::new();
-    options.set_block(web_sys::ScrollLogicalPosition::Center);
-    options.set_inline(web_sys::ScrollLogicalPosition::Nearest);
-    element.scroll_into_view_with_scroll_into_view_options(&options);
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-pub(super) fn scroll_entry_into_view(_attribute: &str, _key: &str) {}
-
 /// One hotkey conflict on a unit's command card: a hotkey letter shared by two
 /// or more abilities on the same card, resolved to display-ready icons.
 #[derive(Clone, PartialEq)]
