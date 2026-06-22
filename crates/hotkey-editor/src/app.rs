@@ -253,6 +253,36 @@ pub(crate) fn App() -> Element {
         }
     };
 
+    // The algorithm-UI pages (Resolve, Collisions) own their internal scroll and
+    // pin the footer below; on mobile the app stays viewport-bounded (the
+    // `.app-bounded` rule in mobile-foundation.css) so those panes scroll inside
+    // instead of the whole page scrolling. The Editor keeps its natural-height,
+    // page-scrolling mobile layout.
+    let scroll_contained_view = matches!(
+        *current_view.read(),
+        AppView::Resolve | AppView::Collisions { .. }
+    );
+    let app_mobile_class = if scroll_contained_view {
+        "app-bounded"
+    } else {
+        "max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible"
+    };
+    // The collisions breadcrumb is the first thing in its view, so it must sit
+    // flush under the header divider for its text to centre in the band between
+    // that divider and the bar's own border — drop the app's header-to-view gap
+    // for this view. The editor and resolve keep the normal gap (their first
+    // child is not a bordered bar tied to the divider).
+    let is_collisions_view = matches!(*current_view.read(), AppView::Collisions { .. });
+    let app_gap_class = if is_collisions_view {
+        "gap-0"
+    } else {
+        "gap-8 max-[2000px]:gap-4 max-[700px]:gap-4 max-[480px]:gap-3"
+    };
+    let app_class = format!(
+        "app mx-auto pt-7 pb-12 px-14 flex flex-col min-h-[100dvh] {app_gap_class} \
+         max-[1500px]:pt-0 {app_mobile_class} max-[700px]:px-4 max-[480px]:px-2"
+    );
+
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
@@ -282,13 +312,7 @@ pub(crate) fn App() -> Element {
         TooltipMount {}
         ToastMount {
             div {
-                class: "app mx-auto pt-7 pb-12 px-14 flex flex-col gap-8 \
-                        min-h-[100dvh] \
-                        max-[2000px]:gap-4 \
-                        max-[1500px]:pt-0 \
-                        max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible \
-                        max-[700px]:px-4 max-[700px]:gap-4 \
-                        max-[480px]:px-2 max-[480px]:gap-3",
+                class: app_class,
             onkeydown: handle_keydown,
             Header {
                 loaded_keys,
