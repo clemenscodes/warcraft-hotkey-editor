@@ -3,6 +3,7 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::actions::export_buttons::ExportButtons;
 use crate::components::actions::resolve_button::ResolveButton;
+use crate::components::actions::undo_redo_buttons::UndoRedoButtons;
 use crate::components::actions::upload_button::UploadButton;
 use crate::components::shared::icons::{ICON_COG, ICON_TEMPLATES};
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -41,6 +42,7 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
                     min-[1500px]:flex",
             role: "toolbar",
             aria_label: "File actions",
+            UndoRedoButtons {}
             UploadButton { loaded_keys, upload_status }
             button {
                 class: super::TOOLBAR_BTN_CLASS,
