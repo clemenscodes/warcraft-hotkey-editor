@@ -25,6 +25,7 @@ use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::url_state::UrlNavigationState;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::undo::{EditorSnapshot, UndoHistory};
 use warcraft_api::RaceLabels;
 use warcraft_database::UnitMode;
 
@@ -88,6 +89,28 @@ pub(crate) fn App() -> Element {
         let snapshot = *grid_layout.read();
         CustomKeysPersistence::save_grid_layout(snapshot);
     });
+    // Undo/redo: one global timeline of full-state snapshots. The capture effect
+    // records one entry per committed action (deduped against the present state,
+    // so undo/redo restores don't re-record). Provided via context so the
+    // toolbar/burger buttons can reach it; Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z are
+    // installed as a window-level shortcut.
+    let undo_history = UndoHistory::use_history(loaded_keys, grid_layout);
+    use_context_provider(|| undo_history);
+    use_effect(move || {
+        let keys_text = loaded_keys
+            .read()
+            .as_ref()
+            .map(|file| file.normalize().to_string())
+            .unwrap_or_default();
+        let grid_layout_text = grid_layout.read().to_storage_string();
+        let snapshot = EditorSnapshot::new(keys_text, grid_layout_text);
+        undo_history.record(snapshot);
+    });
+    use_hook(move || undo_history.install_keyboard_shortcuts());
+    // The window keydown listener only writes a request signal (signal reads from
+    // outside the Dioxus runtime are unreliable); this reactive effect performs
+    // the actual undo/redo where reads/writes are valid.
+    use_effect(move || undo_history.handle_keyboard_request());
     let initial_nav = UrlNavigationState::from_url();
     let initial_race = initial_nav.race();
     let initial_mode = initial_nav.unit_mode();

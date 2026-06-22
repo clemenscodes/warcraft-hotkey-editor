@@ -4,12 +4,13 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use crate::components::shared::icons::{
-    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_RESOLVE, ICON_TEMPLATES,
-    ICON_UPLOAD,
+    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_REDO, ICON_RESOLVE,
+    ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
 use crate::services::files::download::BlobDownload;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::undo::UndoHistory;
 
 const BURGER_MENU_ITEM_CLASS: &str = "flex items-center gap-[0.85rem] w-full min-h-12 py-[0.65rem] px-[0.9rem] \
      [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
@@ -114,6 +115,17 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
     let open_resolve = move |_| {
         burger_open.set(false);
         navigation.apply(AppView::Resolve);
+    };
+    let history = use_context::<UndoHistory>();
+    let can_undo = history.can_undo();
+    let can_redo = history.can_redo();
+    let trigger_undo = move |_| {
+        burger_open.set(false);
+        history.undo();
+    };
+    let trigger_redo = move |_| {
+        burger_open.set(false);
+        history.redo();
     };
 
     rsx! {
@@ -226,6 +238,34 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
                                 border-t border-t-[rgba(255,206,99,0.12)]",
                         role: "menu",
                         aria_label: "File actions",
+                        button {
+                            class: BURGER_MENU_ITEM_CLASS,
+                            r#type: "button",
+                            role: "menuitem",
+                            "data-action": "undo",
+                            disabled: !can_undo,
+                            onclick: trigger_undo,
+                            span {
+                                class: BURGER_MENU_ITEM_ICON_CLASS,
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_UNDO,
+                            }
+                            span { class: BURGER_MENU_ITEM_LABEL_CLASS, "Undo" }
+                        }
+                        button {
+                            class: BURGER_MENU_ITEM_CLASS,
+                            r#type: "button",
+                            role: "menuitem",
+                            "data-action": "redo",
+                            disabled: !can_redo,
+                            onclick: trigger_redo,
+                            span {
+                                class: BURGER_MENU_ITEM_ICON_CLASS,
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_REDO,
+                            }
+                            span { class: BURGER_MENU_ITEM_LABEL_CLASS, "Redo" }
+                        }
                         button {
                             class: BURGER_MENU_ITEM_CLASS,
                             r#type: "button",

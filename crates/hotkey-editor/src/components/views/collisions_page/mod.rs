@@ -6,7 +6,7 @@ mod sidebar;
 mod unit_position_detail;
 mod unit_position_sidebar;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use dioxus::prelude::*;
 use warcraft_database::ObjectLookup;
@@ -178,6 +178,16 @@ impl CarrierDialogData {
     }
 }
 
+/// Identity of a conflict by the two abilities that clash. Within one island
+/// the same mover/anchor pair can appear on many units (every unit that
+/// carries both abilities at the cell); they are the same collision with the
+/// same fix, so the display collapses them to a single card keyed by this.
+#[derive(Clone, PartialEq, Eq, Hash)]
+struct AbilityPairKey {
+    mover_object_id: String,
+    anchor_object_id: String,
+}
+
 /// A single cross-unit collision island, flattened into display-ready data.
 /// All collision facts come from the domain crate; this only formats them.
 #[derive(Clone, PartialEq)]
@@ -301,7 +311,21 @@ impl IslandView {
             let combined_carrier_weight = mover_carrier_count + anchor_carrier_count;
             std::cmp::Reverse(combined_carrier_weight)
         });
-        let collision_count = affected_entries.len();
+        // Collapse identical conflicts: the same mover/anchor ability pair on
+        // several units in this island is one collision with one fix, so it
+        // shows as a single card. The heaviest sorts first, so the retained
+        // representative is the most-relevant unit.
+        let mut seen_ability_pairs: HashSet<AbilityPairKey> = HashSet::new();
+        conflicts.retain(|conflict| {
+            let mover_object_id = conflict.own_ability.ability.object_id.clone();
+            let anchor_object_id = conflict.shared_ability.ability.object_id.clone();
+            let pair_key = AbilityPairKey {
+                mover_object_id,
+                anchor_object_id,
+            };
+            seen_ability_pairs.insert(pair_key)
+        });
+        let collision_count = conflicts.len();
 
         let first_shared_str = shared_entries
             .first()
