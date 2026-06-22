@@ -898,6 +898,71 @@ mod rule_5_same_slot_dedup {
         )
     }
 
+    /// Dodge chance is read from the real numeric data field, gated on the
+    /// ability's base mechanic `code`: Evasion (`AEev`) keeps it in `DataA`,
+    /// Drunken Brawler (`ANdb`) in `DataD` (its `DataA`/`DataB` are the
+    /// critical-strike chance/multiplier). Only the real `levels` count is
+    /// read, so the filler `DataA4`/`DataD4` past a 3-level ability stays 0.
+    /// Non-evasion abilities get `[0.0; 4]`. Tooltip text is never consulted.
+    #[test]
+    fn evasion_chance_comes_from_real_data_field_per_base_code() {
+        let meta_slk_text = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X3;Y1;K\"levels\"\n\
+             C;X4;Y1;K\"DataA1\"\n\
+             C;X5;Y1;K\"DataA2\"\n\
+             C;X6;Y1;K\"DataA3\"\n\
+             C;X7;Y1;K\"DataD1\"\n\
+             C;X8;Y1;K\"DataD2\"\n\
+             C;X9;Y1;K\"DataD3\"\n\
+             C;X1;Y2;K\"AEev\"\n\
+             C;X2;Y2;K\"AEev\"\n\
+             C;X3;Y2;K\"3\"\n\
+             C;X4;Y2;K\"0.1\"\n\
+             C;X5;Y2;K\"0.2\"\n\
+             C;X6;Y2;K\"0.3\"\n\
+             C;X1;Y3;K\"Acdb\"\n\
+             C;X2;Y3;K\"ANdb\"\n\
+             C;X3;Y3;K\"3\"\n\
+             C;X4;Y3;K\"10\"\n\
+             C;X5;Y3;K\"10\"\n\
+             C;X6;Y3;K\"10\"\n\
+             C;X7;Y3;K\"0.07\"\n\
+             C;X8;Y3;K\"0.14\"\n\
+             C;X9;Y3;K\"0.21\"\n\
+             C;X1;Y4;K\"Shop\"\n\
+             C;X2;Y4;K\"Apit\"\n\
+             C;X3;Y4;K\"1\"\n\
+             E\n"
+        .to_string();
+
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let ExtractResult::AbilityMetadata(database) = meta_result else {
+            panic!("expected an AbilityMetadata extraction result");
+        };
+
+        let evasion = database
+            .get("AEev")
+            .expect("AEev present")
+            .evasion_chance_per_level();
+        assert_eq!(evasion, [0.1, 0.2, 0.3, 0.0]);
+
+        let drunken_brawler = database
+            .get("Acdb")
+            .expect("Acdb present")
+            .evasion_chance_per_level();
+        assert_eq!(drunken_brawler, [0.07, 0.14, 0.21, 0.0]);
+
+        let shop = database
+            .get("Shop")
+            .expect("Shop present")
+            .evasion_chance_per_level();
+        assert_eq!(shop, [0.0, 0.0, 0.0, 0.0]);
+    }
+
     fn ability_defaults_txt(id_a: &str, id_b: &str, column: u8, row: u8) -> String {
         format!(
             "[{id_a}]\nButtonpos={column},{row}\n\

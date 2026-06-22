@@ -1,3 +1,4 @@
+mod derived_stats;
 mod grids;
 mod header;
 mod stats_panel;
@@ -15,6 +16,7 @@ use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::model::icons::IconUrl;
 
+use derived_stats::DerivedStats;
 use grids::UnitCommandGrids;
 use header::UnitDetailHeader;
 use stats_panel::UnitStatsPanel;
@@ -169,6 +171,7 @@ pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
     let unit_description = unit_object.ubertip();
     let unit_combat = *unit_meta.combat();
     let hero_attributes_option = unit_meta.hero_attributes().copied();
+    let unit_evasion_chance = DerivedStats::unit_evasion_chance(unit_meta);
 
     rsx! {
         section { class: "unit-detail",
@@ -185,6 +188,7 @@ pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                 combat: unit_combat,
                 hero_attributes: hero_attributes_option,
                 selected_hero_level,
+                evasion_chance: unit_evasion_chance,
             }
             div { class: "unit-detail-body",
                 div { class: "unit-detail-row",

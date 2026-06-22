@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::sync::LazyLock;
 
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
@@ -26,6 +26,74 @@ static SOLD_UNIT_IDS: LazyLock<HashSet<&'static str>> = LazyLock::new(|| {
     }
     sold_unit_ids
 });
+
+/// Per-building sort key encoding in-game availability: `chain_base_gold_cost *
+/// 1000 + upgrade_depth`. A building "upgrades into" another when the target
+/// building's id appears in its `researches` list (the `R…`-prefixed research
+/// ids are tech, not buildings). Walking up to the chain base gives every member
+/// of a main-building chain (Town Hall → Keep → Castle) the same base cost, so
+/// they group together and order by depth; whole chains then order by the base's
+/// gold cost. Built once; the database is static.
+static BUILDING_RANKS: LazyLock<HashMap<&'static str, u32>> = LazyLock::new(|| {
+    let mut gold_cost: HashMap<&'static str, u32> = HashMap::new();
+    let mut upgrade_parent: HashMap<&'static str, &'static str> = HashMap::new();
+    for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            continue;
+        };
+        if unit_meta.unit_kind() != UnitKind::Building {
+            continue;
+        }
+        let source_id = object_id.value();
+        gold_cost.insert(source_id, unit_meta.gold_cost());
+        for research_id in unit_meta.researches() {
+            let target_id = research_id.value();
+            let target_is_building = WARCRAFT_DATABASE.by_id(target_id).is_some_and(|object| {
+                matches!(
+                    object.meta(),
+                    WarcraftObjectMeta::Unit(target_meta)
+                        if target_meta.unit_kind() == UnitKind::Building
+                )
+            });
+            if target_is_building {
+                upgrade_parent.insert(target_id, source_id);
+            }
+        }
+    }
+    let mut ranks: HashMap<&'static str, u32> = HashMap::new();
+    for building_id in gold_cost.keys().copied() {
+        let mut base_id = building_id;
+        let mut upgrade_depth: u32 = 0;
+        while let Some(parent_id) = upgrade_parent.get(base_id).copied() {
+            base_id = parent_id;
+            upgrade_depth += 1;
+            if upgrade_depth > 16 {
+                break;
+            }
+        }
+        let base_gold_cost = gold_cost.get(base_id).copied().unwrap_or(0);
+        let key = base_gold_cost
+            .saturating_mul(1000)
+            .saturating_add(upgrade_depth);
+        ranks.insert(building_id, key);
+    }
+    ranks
+});
+
+/// The within-category sort key (lower lists first). Buildings use the
+/// upgrade-chain + gold-cost rank; everything else uses the unit's tech tier.
+fn availability_key(entry: &CatalogEntry) -> u32 {
+    if entry.unit_kind == UnitKind::Building {
+        return BUILDING_RANKS
+            .get(entry.unit_id.as_str())
+            .copied()
+            .unwrap_or(0);
+    }
+    match entry.warcraft_object.meta() {
+        WarcraftObjectMeta::Unit(unit_meta) => unit_meta.level(),
+        _ => 0,
+    }
+}
 
 fn is_subsequence(needle: &str, haystack: &str) -> bool {
     let mut haystack_chars = haystack.chars();
@@ -212,6 +280,11 @@ impl UnitCatalog {
             let right_object = right_entry.warcraft_object;
             let left_name = left_object.names().first().copied().unwrap_or("");
             let right_name = right_object.names().first().copied().unwrap_or("");
+            // Within a category, order by in-game availability rather than
+            // alphabetically: units by their tech tier (`level`), buildings by
+            // the upgrade-chain + gold-cost rank (see `availability_key`).
+            let left_key = availability_key(left_entry);
+            let right_key = availability_key(right_entry);
             let left_priority = if is_search {
                 let left_campaign = match left_object.meta() {
                     WarcraftObjectMeta::Unit(unit_meta) => unit_meta.is_campaign(),
@@ -234,6 +307,7 @@ impl UnitCatalog {
             };
             left_priority
                 .cmp(&right_priority)
+                .then_with(|| left_key.cmp(&right_key))
                 .then_with(|| left_name.cmp(right_name))
                 .then_with(|| left_entry.unit_id.cmp(&right_entry.unit_id))
         });
@@ -284,6 +358,65 @@ mod tests {
             entry_ids.contains(&"nogm"),
             "search for 'Ogre Mauler' missing nogm (purchasable mercenary unit)",
         );
+    }
+
+    /// Within a category, units list by in-game tech tier (`unitbalance.slk`
+    /// `level`), not alphabetically: Footman (level 2) < Rifleman (level 3) <
+    /// Knight (level 4), even though alphabetically Knight sorts first. Covers
+    /// the "order by in-game availability" requirement.
+    #[test]
+    fn soldiers_sort_by_in_game_availability_level() {
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Human),
+            Some(UnitMode::Melee),
+            Some(UnitKind::Soldier),
+            None,
+        );
+        let position = |unit_id: &str| {
+            entries
+                .iter()
+                .position(|entry| entry.unit_id() == unit_id)
+                .unwrap_or_else(|| panic!("Human/Melee soldiers missing {unit_id}"))
+        };
+        let footman = position("hfoo");
+        let rifleman = position("hrif");
+        let knight = position("hkni");
+        assert!(
+            footman < rifleman && rifleman < knight,
+            "expected Footman({footman}) < Rifleman({rifleman}) < Knight({knight}) by tech tier",
+        );
+    }
+
+    /// Buildings list by the upgrade-chain + gold-cost rank: the main-building
+    /// chain Town Hall → Keep → Castle stays grouped and in tier order (and
+    /// adjacent), even though alphabetically Castle and Keep precede Town Hall.
+    #[test]
+    fn buildings_group_main_hall_upgrade_chain() {
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Human),
+            Some(UnitMode::Melee),
+            Some(UnitKind::Building),
+            None,
+        );
+        let position = |unit_id: &str| {
+            entries
+                .iter()
+                .position(|entry| entry.unit_id() == unit_id)
+                .unwrap_or_else(|| panic!("Human/Melee buildings missing {unit_id}"))
+        };
+        let town_hall = position("htow");
+        let keep = position("hkee");
+        let castle = position("hcas");
+        assert!(
+            town_hall < keep && keep < castle,
+            "expected Town Hall({town_hall}) < Keep({keep}) < Castle({castle}) grouped in tier order",
+        );
+        assert_eq!(
+            keep,
+            town_hall + 1,
+            "Keep must be adjacent to Town Hall (chain grouped)"
+        );
+        assert_eq!(castle, keep + 1, "Castle must be adjacent to Keep");
     }
 
     /// Campaign-flagged units must NOT bleed into Melee mode. After
