@@ -7,13 +7,17 @@ mod test;
 mod unit_catalog;
 mod unit_kind;
 mod unit_mode;
+mod variant_groups;
 
 pub use catalog::{BuildingTraits, CommandCatalog};
+pub use db::TIERED_UNIT_GROUPS;
+pub use db::UNIT_UPGRADE_SWAPS;
 pub use db::WARCRAFT_DATABASE;
 pub use db::WARCRAFT_GAMEPLAY_CONSTANTS;
 pub use db::WARCRAFT_SYSTEM_KEYBINDS;
 pub use object_lookup::ObjectLookup;
 pub use system_hotkeys_category::SystemHotkeysCategory;
-pub use unit_catalog::{CatalogEntry, UnitCatalog};
+pub use unit_catalog::{CatalogEntry, SearchField, UnitCatalog};
 pub use unit_kind::UnitKindHelpers;
 pub use unit_mode::UnitMode;
+pub use variant_groups::{VariantGroup, VariantUnits};

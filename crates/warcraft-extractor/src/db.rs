@@ -44,7 +44,7 @@ use crate::{
     OrcUnitStringsDatabase, OrcUpgradeArtDatabase, OrcUpgradeNameDatabase, SystemKeybindsDatabase,
     UndeadAbilityStringsDatabase, UndeadUnitStringsDatabase, UndeadUpgradeArtDatabase,
     UndeadUpgradeNameDatabase, UnitAbilitiesDatabase, UnitDataDatabase, UnitDatabase, UnitSkins,
-    UnitUiFlagsDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
+    UnitUiFlagsDatabase, UpgradeSwapDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
 };
 
 impl From<WarcraftDataAggregation> for WarcraftDatabase {
@@ -61,6 +61,7 @@ pub struct WarcraftDataAggregation {
     units: UnitDatabase,
     unit_abilities: UnitAbilitiesDatabase,
     ability_metadata: AbilityMetadataDatabase,
+    upgrade_swaps: UpgradeSwapDatabase,
     unit_data: UnitDataDatabase,
     unit_ui_flags: UnitUiFlagsDatabase,
     command_defaults: CommandDefaultsDatabase,
@@ -111,6 +112,14 @@ impl WarcraftDataAggregation {
 
     pub fn system_keybinds(&self) -> &SystemKeybindsDatabase {
         &self.system_keybinds
+    }
+
+    pub fn ability_metadata(&self) -> &AbilityMetadataDatabase {
+        &self.ability_metadata
+    }
+
+    pub fn upgrade_swaps(&self) -> &UpgradeSwapDatabase {
+        &self.upgrade_swaps
     }
 
     fn object_text_lookup(&self, id: &str) -> Option<&crate::ObjectText> {
@@ -1944,6 +1953,11 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
                 ExtractResult::AbilityMetadata(map) => {
                     for (alias, incoming) in map {
                         db.ability_metadata.entry(alias).or_insert(incoming);
+                    }
+                }
+                ExtractResult::UpgradeSwaps(swaps) => {
+                    for incoming in swaps {
+                        db.upgrade_swaps.insert(incoming);
                     }
                 }
                 ExtractResult::UnitData(map) => {

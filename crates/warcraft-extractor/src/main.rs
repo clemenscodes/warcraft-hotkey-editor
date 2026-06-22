@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 use clap::Parser;
@@ -238,11 +238,12 @@ impl Preflight {
     }
 }
 
-const EXTRACTION_RULES: [ExtractionRule; 41] = [
+const EXTRACTION_RULES: [ExtractionRule; 42] = [
     HEROES_EXTRACTION_RULE,
     UNITS_EXTRACTION_RULE,
     UNIT_ABILITIES_EXTRACTION_RULE,
     ABILITY_METADATA_EXTRACTION_RULE,
+    UPGRADE_SWAPS_EXTRACTION_RULE,
     UNIT_DATA_EXTRACTION_RULE,
     UNIT_UI_FLAGS_EXTRACTION_RULE,
     ABILITY_DEFAULTS_EXTRACTION_RULE,
@@ -300,6 +301,15 @@ impl CodegenContext {
     fn render_database(aggregated_data: WarcraftDataAggregation) -> String {
         let system_keybinds_source = aggregated_data.system_keybinds().clone();
         let gameplay_constants = *aggregated_data.gameplay_constants();
+        // The distinct, deduplicated tiered summon groups (each an ordered list
+        // of unit ids, lowest tier first) gathered from every summon ability.
+        let tiered_unit_groups: BTreeSet<Vec<String>> = aggregated_data
+            .ability_metadata()
+            .values()
+            .filter(|entry| entry.tiered_summon_units().len() >= 2)
+            .map(|entry| entry.tiered_summon_units().to_vec())
+            .collect();
+        let unit_upgrade_swaps = aggregated_data.upgrade_swaps().clone();
         let database: WarcraftDatabase = aggregated_data.into();
 
         let mut context = CodegenContext::new();
@@ -369,6 +379,10 @@ impl CodegenContext {
         emit_gameplay_constants(&mut output, &gameplay_constants);
         output.push('\n');
         emit_system_keybinds(&mut output, &system_keybinds_source);
+        output.push('\n');
+        emit_tiered_unit_groups(&mut output, &tiered_unit_groups);
+        output.push('\n');
+        emit_unit_upgrade_swaps(&mut output, &unit_upgrade_swaps);
         output.push('\n');
         context.emit_consts(&mut output);
 
@@ -778,6 +792,39 @@ fn row_index_variant(index: warcraft_api::RowIndex) -> &'static str {
         warcraft_api::RowIndex::One => "One",
         warcraft_api::RowIndex::Two => "Two",
     }
+}
+
+/// Emits the `TIERED_UNIT_GROUPS` table: each entry is one summoned unit's tiers
+/// (lowest first), so consumers can collapse the variants into a single editor
+/// entry and fan ability edits across the tiers.
+fn emit_tiered_unit_groups(output: &mut String, groups: &BTreeSet<Vec<String>>) {
+    output.push_str("pub const TIERED_UNIT_GROUPS: &[&[WarcraftObjectId]] = &[\n");
+    for group in groups {
+        output.push_str("    &[");
+        for (index, unit_id) in group.iter().enumerate() {
+            if index > 0 {
+                output.push_str(", ");
+            }
+            output.push_str(&format!("WarcraftObjectId::new({unit_id:?})"));
+        }
+        output.push_str("],\n");
+    }
+    output.push_str("];\n");
+}
+
+/// Emits the `UNIT_UPGRADE_SWAPS` table: each entry is an upgrade that replaces
+/// one trained unit with another (`from` → `to`), parsed from the `rtma`
+/// effect rows of `units/upgradedata.slk`. Ordered by from-id for stable regen.
+fn emit_unit_upgrade_swaps(output: &mut String, swaps: &BTreeSet<UnitUpgradeSwapEntry>) {
+    output.push_str("pub const UNIT_UPGRADE_SWAPS: &[UnitUpgradeSwap] = &[\n");
+    for swap in swaps {
+        let from_unit_id = swap.from_unit_id();
+        let to_unit_id = swap.to_unit_id();
+        output.push_str(&format!(
+            "    UnitUpgradeSwap::new({from_unit_id:?}, {to_unit_id:?}),\n"
+        ));
+    }
+    output.push_str("];\n");
 }
 
 fn emit_gameplay_constants(output: &mut String, constants: &warcraft_api::GameplayConstants) {

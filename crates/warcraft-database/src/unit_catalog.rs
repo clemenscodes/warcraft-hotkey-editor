@@ -6,6 +6,18 @@ use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftO
 use crate::WARCRAFT_DATABASE;
 use crate::unit_kind::UnitKindHelpers;
 use crate::unit_mode::UnitMode;
+use crate::variant_groups::VariantUnits;
+
+/// What a search query is matched against. The sidebar exposes this as a
+/// toggle: search units by their own name/id (default), or by the abilities
+/// they carry — the latter answers "which units have this ability?" (issue #30,
+/// the collision-resolution lookup).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum SearchField {
+    #[default]
+    UnitName,
+    Ability,
+}
 
 /// Unit ids that some shop offers for sale (anything appearing in a
 /// `sell_units` list). A purchasable unit such as the Ogre Mauler `nogm`
@@ -25,6 +37,55 @@ static SOLD_UNIT_IDS: LazyLock<HashSet<&'static str>> = LazyLock::new(|| {
         }
     }
     sold_unit_ids
+});
+
+/// Per-unit lowercase search text built from the names and ids of the abilities
+/// the unit carries on a command button (`abilities()` + `hero_abilities()`,
+/// kept only when the ability has a `default_button_position` — the same
+/// "button-positioned" notion as the catalog's `has_visible_ability` gate, so a
+/// unit that produces a haystack always survives that gate). Lets the search
+/// match a unit by the abilities it carries (issue #30). The button-positioned
+/// list is a deliberate approximation of the exact command card, which lives in
+/// `warcraft-keybinds` and cannot be reached from here. Built once; the database
+/// is static, so per-keystroke matching is one lookup plus a `contains`.
+static UNIT_ABILITY_HAYSTACK: LazyLock<HashMap<&'static str, String>> = LazyLock::new(|| {
+    let mut unit_ability_haystack: HashMap<&'static str, String> = HashMap::new();
+    for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            continue;
+        };
+        let ability_ids = unit_meta
+            .abilities()
+            .iter()
+            .chain(unit_meta.hero_abilities().iter());
+        let mut haystack = String::new();
+        for ability_id in ability_ids {
+            let ability_id_value = ability_id.value();
+            let Some(ability_object) = WARCRAFT_DATABASE.by_id(ability_id_value) else {
+                continue;
+            };
+            let WarcraftObjectMeta::Ability(ability_meta) = ability_object.meta() else {
+                continue;
+            };
+            if ability_meta.default_button_position().is_none() {
+                continue;
+            }
+            for ability_name in ability_object.names() {
+                let ability_name_lower = ability_name.to_ascii_lowercase();
+                haystack.push(' ');
+                haystack.push_str(&ability_name_lower);
+            }
+            let ability_id_lower = ability_id_value.to_ascii_lowercase();
+            haystack.push(' ');
+            haystack.push_str(&ability_id_lower);
+        }
+        if !haystack.is_empty() {
+            haystack.push(' ');
+            let unit_id_value = object_id.value();
+            unit_ability_haystack.insert(unit_id_value, haystack);
+        }
+    }
+    unit_ability_haystack
 });
 
 /// Per-building sort key encoding in-game availability: `chain_base_gold_cost *
@@ -127,6 +188,24 @@ impl CatalogEntry {
     pub fn unit_kind(&self) -> UnitKind {
         self.unit_kind
     }
+
+    /// Builds the entry for a canonical variant unit looked up fresh from the
+    /// database. Used when a weaker variant collapses onto its strongest
+    /// sibling, which may not itself have matched the active filter or query.
+    fn canonical_entry(unit_id: &'static str) -> Option<Self> {
+        let warcraft_object = WARCRAFT_DATABASE.by_id(unit_id)?;
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            return None;
+        };
+        let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
+        let unit_id_string = unit_id.to_string();
+        let entry = Self {
+            unit_id: unit_id_string,
+            warcraft_object,
+            unit_kind: effective_kind,
+        };
+        Some(entry)
+    }
 }
 
 pub struct UnitCatalog;
@@ -134,19 +213,23 @@ pub struct UnitCatalog;
 impl UnitCatalog {
     /// The single source of truth for "which units belong in a list view".
     /// Walks `WARCRAFT_DATABASE`, applies race/mode/kind/search filters, and
-    /// sorts by category priority then display name. Does *not* dedupe by
-    /// name — same-name internal-id variants (Demon Hunter `Eevi`/`Eevm`/
-    /// `Eidm`/`Eill`/`Eilm`, Alchemist `Nal2`/`Nal3`/`Nalc`/`Nalm`, Tinker
-    /// `Ntin`/`Nrob`, Druid of the Claw `edoc`/`edcm`, Carrion Beetle
-    /// `ucs1`/`ucs2`/`ucs3`) all surface as distinct entries with their unit
-    /// id visible. The game ships these IDs deliberately (campaign variants,
-    /// metamorphosis forms, level-summon variants) and any heuristic that
-    /// tries to pick a canonical one is going to be wrong somewhere.
+    /// sorts by category priority then display name.
+    ///
+    /// Variant groups collapse to a single entry (see `VariantUnits`): leveled
+    /// summon tiers (Feral Spirit `osw1`/`osw2`/`osw3`) fold into their
+    /// strongest member, upgrade-swaps (Headhunter `ohun` → Berserker `otbk`)
+    /// into the upgraded unit, and a hero's duplicate campaign/form ids
+    /// (Alchemist `Nal2`/`Nal3`/`Nalm`, Tinker `Nrob`) into the produced
+    /// (trained/sold) hero. Tiers and swaps come straight from the game data;
+    /// heroes group by shared name with the produced id as the data-driven
+    /// canonical. A query that matches a weaker variant (searching "Headhunter")
+    /// surfaces the canonical (Berserker) rather than vanishing.
     pub fn entries_for(
         race_filter: Option<Race>,
         mode_filter: Option<UnitMode>,
         kind_filter: Option<UnitKind>,
         search_query: Option<&str>,
+        search_field: SearchField,
     ) -> Vec<CatalogEntry> {
         let lowercase_query = search_query
             .map(|raw_query| raw_query.trim_start().to_ascii_lowercase())
@@ -159,6 +242,11 @@ impl UnitCatalog {
         struct Candidate {
             entry: CatalogEntry,
             fuzzy_only: bool,
+        }
+
+        struct QueryMatch {
+            is_direct: bool,
+            is_fuzzy: bool,
         }
 
         let candidates: Vec<Candidate> = WARCRAFT_DATABASE
@@ -223,34 +311,66 @@ impl UnitCatalog {
                 }
                 let unit_id_string = object_id.value().to_string();
                 let fuzzy_only = if let Some(query) = lowercase_query.as_deref() {
-                    let id_lower = unit_id_string.to_ascii_lowercase();
-                    // Check all names — some units have alternate display names.
-                    let names_lower: String = warcraft_object
-                        .names()
-                        .iter()
-                        .map(|name| name.to_ascii_lowercase())
-                        .collect::<Vec<_>>()
-                        .join(" ");
-                    // Direct: name/id contains the query, or a query token (whole
-                    // word, ≥3 chars) exactly matches a name word.
-                    let matches_direct = names_lower.contains(query)
-                        || id_lower.contains(query)
-                        || query.contains(id_lower.as_str())
-                        || query
-                            .split_whitespace()
-                            .filter(|token| token.len() >= 3)
-                            .any(|token| {
-                                names_lower
+                    let query_match = match search_field {
+                        SearchField::UnitName => {
+                            let id_lower = unit_id_string.to_ascii_lowercase();
+                            // Check all names — some units have alternate display
+                            // names.
+                            let names_lower: String = warcraft_object
+                                .names()
+                                .iter()
+                                .map(|name| name.to_ascii_lowercase())
+                                .collect::<Vec<_>>()
+                                .join(" ");
+                            // Direct: name/id contains the query, or a query token
+                            // (whole word, ≥3 chars) exactly matches a name word.
+                            let is_direct = names_lower.contains(query)
+                                || id_lower.contains(query)
+                                || query.contains(id_lower.as_str())
+                                || query
                                     .split_whitespace()
-                                    .any(|name_word| name_word == token)
-                            });
-                    // Fuzzy fallback: every char in the query appears in order in
-                    // the name. Only surfaced when no direct match exists anywhere.
-                    let matches_fuzzy = is_subsequence(query, &names_lower);
-                    if !matches_direct && !matches_fuzzy {
+                                    .filter(|token| token.len() >= 3)
+                                    .any(|token| {
+                                        names_lower
+                                            .split_whitespace()
+                                            .any(|name_word| name_word == token)
+                                    });
+                            // Fuzzy fallback: every char in the query appears in
+                            // order in the name. Only surfaced when no direct match
+                            // exists anywhere.
+                            let is_fuzzy = is_subsequence(query, &names_lower);
+                            QueryMatch {
+                                is_direct,
+                                is_fuzzy,
+                            }
+                        }
+                        SearchField::Ability => {
+                            // Match the names/ids of the unit's button-positioned
+                            // abilities. No fuzzy fallback: subsequence over the
+                            // concatenated haystack would match almost anything.
+                            let ability_haystack = UNIT_ABILITY_HAYSTACK
+                                .get(unit_id_string.as_str())
+                                .map(String::as_str)
+                                .unwrap_or("");
+                            let is_direct = ability_haystack.contains(query)
+                                || query
+                                    .split_whitespace()
+                                    .filter(|token| token.len() >= 3)
+                                    .any(|token| {
+                                        ability_haystack
+                                            .split_whitespace()
+                                            .any(|ability_word| ability_word == token)
+                                    });
+                            QueryMatch {
+                                is_direct,
+                                is_fuzzy: false,
+                            }
+                        }
+                    };
+                    if !query_match.is_direct && !query_match.is_fuzzy {
                         return None;
                     }
-                    !matches_direct
+                    !query_match.is_direct
                 } else {
                     false
                 };
@@ -268,11 +388,38 @@ impl UnitCatalog {
             .collect();
 
         let has_direct_match = candidates.iter().any(|candidate| !candidate.fuzzy_only);
-        let mut entries: Vec<CatalogEntry> = candidates
+        let visible_entries = candidates
             .into_iter()
             .filter(|candidate| !has_direct_match || !candidate.fuzzy_only)
-            .map(|candidate| candidate.entry)
-            .collect();
+            .map(|candidate| candidate.entry);
+
+        // Collapse each variant group to its canonical (strongest) member so a
+        // group surfaces as one entry. A weaker variant is replaced by its
+        // canonical — looked up fresh, since the canonical may not have matched
+        // the query itself — and deduped so the canonical appears once even
+        // when several siblings (or the canonical itself) reach this point.
+        let mut seen_display_ids: HashSet<String> = HashSet::new();
+        let mut entries: Vec<CatalogEntry> = Vec::new();
+        for entry in visible_entries {
+            let canonical_lookup = VariantUnits::canonical_for(&entry.unit_id);
+            if let Some(canonical) = canonical_lookup
+                && entry.unit_id != canonical
+            {
+                let canonical_id = canonical.to_string();
+                if !seen_display_ids.insert(canonical_id) {
+                    continue;
+                }
+                if let Some(canonical_entry) = CatalogEntry::canonical_entry(canonical) {
+                    entries.push(canonical_entry);
+                }
+            } else {
+                let entry_id = entry.unit_id.clone();
+                if !seen_display_ids.insert(entry_id) {
+                    continue;
+                }
+                entries.push(entry);
+            }
+        }
 
         let is_search = mode_filter.is_none();
         entries.sort_by(|left_entry, right_entry| {
@@ -320,6 +467,123 @@ impl UnitCatalog {
 mod tests {
     use super::*;
 
+    fn melee_ids(race: Race) -> Vec<String> {
+        UnitCatalog::entries_for(
+            Some(race),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+        )
+        .iter()
+        .map(|entry| entry.unit_id().to_string())
+        .collect()
+    }
+
+    /// An upgrade-swap browses as the upgraded unit only: Headhunter `ohun`
+    /// folds into Berserker `otbk`, Siege Engine `hmtt` into the barrage-capable
+    /// `hrtt`. The weaker form never appears as its own list entry.
+    #[test]
+    fn browse_collapses_upgrade_swaps_to_upgraded_unit() {
+        let orc_ids = melee_ids(Race::Orc);
+        assert!(orc_ids.iter().any(|id| id == "otbk"), "Berserker must list");
+        assert!(
+            !orc_ids.iter().any(|id| id == "ohun"),
+            "Headhunter must be hidden"
+        );
+
+        let human_ids = melee_ids(Race::Human);
+        assert!(
+            human_ids.iter().any(|id| id == "hrtt"),
+            "Barrage Siege Engine must list"
+        );
+        assert!(
+            !human_ids.iter().any(|id| id == "hmtt"),
+            "base Siege Engine must be hidden"
+        );
+    }
+
+    /// Leveled summon tiers browse as their strongest tier only. Feral Spirit
+    /// wolves `osw1`/`osw2`/`osw3` collapse to `osw3` (the user's reference
+    /// case); the Neutral Spiderlings `osp1..osp4` collapse to `osp4`.
+    #[test]
+    fn browse_collapses_summon_tiers_to_strongest() {
+        let orc_ids = melee_ids(Race::Orc);
+        assert!(
+            orc_ids.iter().any(|id| id == "osw3"),
+            "strongest wolf must list"
+        );
+        assert!(
+            !orc_ids.iter().any(|id| id == "osw1" || id == "osw2"),
+            "weaker wolves hidden"
+        );
+        assert!(
+            orc_ids.iter().any(|id| id == "osp4"),
+            "strongest spiderling must list"
+        );
+        assert!(
+            !orc_ids
+                .iter()
+                .any(|id| id == "osp1" || id == "osp2" || id == "osp3"),
+            "weaker spiderlings hidden",
+        );
+    }
+
+    /// Heroes with duplicate campaign/form ids list once, as the produced hero:
+    /// the neutral Alchemist shows `Nalc` (not `Nal2`/`Nal3`/`Nalm`) and the
+    /// Tinker shows `Ntin` (not `Nrob`); the Human Paladin shows `Hpal` (not its
+    /// campaign variants like `Huth`).
+    #[test]
+    fn heroes_collapse_to_a_single_catalog_entry() {
+        let neutral_ids = melee_ids(Race::Neutral);
+        assert!(
+            neutral_ids.iter().any(|id| id == "Nalc"),
+            "Alchemist Nalc must list"
+        );
+        assert!(
+            !neutral_ids
+                .iter()
+                .any(|id| id == "Nal2" || id == "Nal3" || id == "Nalm"),
+            "Alchemist variants must be hidden",
+        );
+        assert!(
+            neutral_ids.iter().any(|id| id == "Ntin"),
+            "Tinker Ntin must list"
+        );
+        assert!(
+            !neutral_ids.iter().any(|id| id == "Nrob"),
+            "Tinker Robo form must be hidden"
+        );
+
+        let human_ids = melee_ids(Race::Human);
+        assert!(
+            human_ids.iter().any(|id| id == "Hpal"),
+            "Paladin Hpal must list"
+        );
+        assert!(
+            !human_ids.iter().any(|id| id == "Huth"),
+            "Paladin variant Huth must be hidden"
+        );
+    }
+
+    /// A query that matches a weaker variant which carries its own card must
+    /// surface the canonical rather than the weaker form: searching the
+    /// Spiderling tier `osp1` surfaces `osp4`, never `osp1` itself.
+    #[test]
+    fn search_for_weaker_variant_surfaces_canonical() {
+        let entries =
+            UnitCatalog::entries_for(None, None, None, Some("osp1"), SearchField::UnitName);
+        let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
+        assert!(
+            ids.contains(&"osp4"),
+            "searching osp1 must surface canonical osp4"
+        );
+        assert!(
+            !ids.contains(&"osp1"),
+            "the weaker variant osp1 must not appear"
+        );
+    }
+
     /// Both Burrow carriers must surface in Neutral/Melee:
     /// - `nbnb` (Burrowed Barbed Arachnathid) carries Abu5 in its
     ///   `unitabilities.slk` row and has `inEditor=1`.
@@ -332,8 +596,13 @@ mod tests {
     /// Regression guard for the "missing arachnathid units" report.
     #[test]
     fn neutral_melee_includes_burrow_carriers() {
-        let entries =
-            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Neutral),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+        );
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for required_id in ["nbnb", "nanm"] {
             assert!(
@@ -352,7 +621,8 @@ mod tests {
     /// Regression guard for the "can't find Ogre Mauler in search" report.
     #[test]
     fn search_includes_purchasable_units() {
-        let entries = UnitCatalog::entries_for(None, None, None, Some("Ogre Mauler"));
+        let entries =
+            UnitCatalog::entries_for(None, None, None, Some("Ogre Mauler"), SearchField::UnitName);
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         assert!(
             entry_ids.contains(&"nogm"),
@@ -371,6 +641,7 @@ mod tests {
             Some(UnitMode::Melee),
             Some(UnitKind::Soldier),
             None,
+            SearchField::UnitName,
         );
         let position = |unit_id: &str| {
             entries
@@ -406,6 +677,7 @@ mod tests {
                 Some(UnitMode::Melee),
                 Some(UnitKind::Building),
                 None,
+                SearchField::UnitName,
             );
             let position = |unit_id: &str| {
                 entries
@@ -439,8 +711,13 @@ mod tests {
     /// of the Melee tab.
     #[test]
     fn neutral_melee_excludes_campaign_only_units() {
-        let entries =
-            UnitCatalog::entries_for(Some(Race::Neutral), Some(UnitMode::Melee), None, None);
+        let entries = UnitCatalog::entries_for(
+            Some(Race::Neutral),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+        );
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for campaign_id in ["nmyr", "nnsw", "ndrl", "nbel"] {
             assert!(
@@ -448,5 +725,52 @@ mod tests {
                 "Neutral/Melee catalog leaked campaign unit {campaign_id}",
             );
         }
+    }
+
+    /// Issue #30: searching by ability surfaces every unit that carries it,
+    /// matched by ability name *or* id. Slow `ACsw` is carried by Kobold
+    /// Geomancer `nkog`, Mur'gul Snarecaster `nmsn`, and Watery Minion `nsns`
+    /// (all show it on a command button); the Footman has no Slow.
+    #[test]
+    fn ability_search_lists_carrier_units_by_name_and_id() {
+        for query in ["Slow", "ACsw"] {
+            let entries =
+                UnitCatalog::entries_for(None, None, None, Some(query), SearchField::Ability);
+            let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
+            for carrier_id in ["nkog", "nmsn", "nsns"] {
+                assert!(
+                    entry_ids.contains(&carrier_id),
+                    "ability search '{query}' missing Slow carrier {carrier_id}",
+                );
+            }
+            assert!(
+                !entry_ids.contains(&"hfoo"),
+                "ability search '{query}' wrongly included the Footman (no Slow)",
+            );
+        }
+    }
+
+    /// The toggle is exclusive: in unit-name mode an ability name must not pull
+    /// in its carriers (no unit is named "Slow"), while a real unit name still
+    /// resolves.
+    #[test]
+    fn unit_name_search_ignores_abilities() {
+        let by_ability_name =
+            UnitCatalog::entries_for(None, None, None, Some("Slow"), SearchField::UnitName);
+        let ability_name_ids: Vec<&str> = by_ability_name
+            .iter()
+            .map(|entry| entry.unit_id())
+            .collect();
+        assert!(
+            !ability_name_ids.contains(&"nkog"),
+            "unit-name search 'Slow' must not surface ability carriers",
+        );
+        let by_unit_name =
+            UnitCatalog::entries_for(None, None, None, Some("Footman"), SearchField::UnitName);
+        let unit_name_ids: Vec<&str> = by_unit_name.iter().map(|entry| entry.unit_id()).collect();
+        assert!(
+            unit_name_ids.contains(&"hfoo"),
+            "unit-name search 'Footman' should still find the Footman",
+        );
     }
 }

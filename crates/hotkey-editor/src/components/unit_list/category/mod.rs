@@ -4,7 +4,7 @@ use std::collections::HashSet;
 
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{UnitCatalog, UnitMode};
+use warcraft_database::{SearchField, UnitCatalog, UnitMode};
 
 use crate::model::grid::GridSlotId;
 use crate::model::icons::IconUrl;
@@ -37,6 +37,7 @@ pub(super) struct UnitCategorySectionProps {
     pub(super) race: Race,
     pub(super) mode: UnitMode,
     pub(super) query: String,
+    pub(super) search_field: SearchField,
     pub(super) active_unit_id: Option<String>,
     pub(super) selected_unit_id: Signal<Option<String>>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
@@ -52,6 +53,7 @@ pub(super) fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let race = props.race;
     let mode = props.mode;
     let query = props.query;
+    let search_field = props.search_field;
     let active_unit_id = props.active_unit_id;
     let selected_unit_id = props.selected_unit_id;
     let selected_slot = props.selected_slot;
@@ -65,7 +67,13 @@ pub(super) fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let race_option = if search_active { None } else { Some(race) };
     let mode_option = if search_active { None } else { Some(mode) };
     let category_option = Some(category_kind);
-    let entries = UnitCatalog::entries_for(race_option, mode_option, category_option, query_option);
+    let entries = UnitCatalog::entries_for(
+        race_option,
+        mode_option,
+        category_option,
+        query_option,
+        search_field,
+    );
     let unit_card_entries: Vec<UnitCardEntry> = entries
         .into_iter()
         .map(|entry| {
