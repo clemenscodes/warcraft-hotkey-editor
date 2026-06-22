@@ -530,6 +530,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsqa (Ancient Sasquatch)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -552,6 +553,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // eden (Ancient of Wonders)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -567,6 +569,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // espv (Avatar of Vengeance)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -581,6 +584,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Orex (Beastmaster)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -594,6 +598,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nadr (Blue Dragon)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -608,6 +613,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nbdo (Blue Dragonspawn Overseer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -634,6 +640,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Nsjs (Brewmaster)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -647,6 +654,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsbm (Brood Mother)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -668,6 +676,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ncks (Centaur Sorcerer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -683,6 +692,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nchp (Chaplain)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -697,44 +707,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-        // ncta (Corrupted Tree of Ages)
-        let entry = {
-            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
-                .collision_at(
-                    0,
-                    2,
-                    &[GridSlotId::ability("Aeat"), GridSlotId::ability("ncte")],
-                )
-                .build();
-            let eb = UnitCollisionEntryBuilder::new(
-                "ncta",
-                "Corrupted Tree of Ages",
-                empty_pos,
-                empty_hot,
-            );
-            let eb = eb.main_position_card(main_pos);
-            eb.build()
-        };
-        builder = builder.entry(entry);
-        // nctl (Corrupted Tree of Life)
-        let entry = {
-            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
-                .collision_at(
-                    0,
-                    2,
-                    &[GridSlotId::ability("Aeat"), GridSlotId::ability("ncta")],
-                )
-                .build();
-            let eb = UnitCollisionEntryBuilder::new(
-                "nctl",
-                "Corrupted Tree of Life",
-                empty_pos,
-                empty_hot,
-            );
-            let eb = eb.main_position_card(main_pos);
-            eb.build()
-        };
-        builder = builder.entry(entry);
+
         // ndth (Dark Troll High Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -754,6 +727,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nwzd (Dark Wizard)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -775,6 +749,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Udea (Death Knight)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -788,6 +763,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Uear (Death Knight)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -801,6 +777,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nrvd (Death Revenant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -815,6 +792,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Ecen (Demigod)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -828,6 +806,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Eevi (Demon Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -845,6 +824,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Eevm (Demon Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -862,6 +842,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ubsp (Destroyer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -876,6 +857,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nba2 (Doom Guard)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -889,6 +871,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nbal (Doom Guard)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -902,6 +885,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ndrs (Draenei Seer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -916,6 +900,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Ubal (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -936,6 +921,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Udre (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -949,6 +935,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Udth (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -969,6 +956,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Umal (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -989,6 +977,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Utic (Dreadlord)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1008,6 +997,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Uvng (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1021,6 +1011,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // npn3 (Earth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1035,6 +1026,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // npn6 (Earth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1049,6 +1041,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nvde (Elder Voidwalker)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1071,6 +1064,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // egol (Entangled Gold Mine)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1086,6 +1080,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nerd (Eredar Diabolist)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1108,6 +1103,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nfot (Faceless One Terror)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1130,6 +1126,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nfor (Faceless One Trickster)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1149,6 +1146,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // npfm (Fel Ravager)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1170,6 +1168,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nfsp (Forest Troll Shadow Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1189,6 +1188,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nfgo (Forgotten One)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1210,6 +1210,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ugar (Gargoyle)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1224,6 +1225,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsgt (Giant Spider)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1245,6 +1247,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ngow (Gnoll Warlord)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1266,6 +1269,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ngad (Goblin Laboratory)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1285,6 +1289,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ngme (Goblin Merchant)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1299,6 +1304,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nhhr (Heretic)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1313,6 +1319,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nheb (High Elven Barracks)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1327,6 +1334,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nith (Ice Troll High Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1346,6 +1354,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nkog (Kobold Geomancer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1361,6 +1370,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nrvl (Lightning Revenant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1376,6 +1386,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // umtw (Meat Wagon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1389,6 +1400,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nmr4 (Mercenary Camp)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1410,6 +1422,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nmrd (Mercenary Camp)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1428,6 +1441,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Hmbr (Mountain King)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1441,6 +1455,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Hmkg (Mountain King)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1454,6 +1469,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nmsn (Mur'gul Snarecaster)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1469,6 +1485,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nnrg (Naga Royal Guard)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1491,6 +1508,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nnwq (Nerubian Queen)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1505,6 +1523,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nnwr (Nerubian Seer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1519,6 +1538,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nnwl (Nerubian Webspinner)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1534,6 +1554,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nndr (Nether Dragon)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1555,6 +1576,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // hphx (Phoenix)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1576,6 +1598,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Nman (Pit Lord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1596,6 +1619,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Npld (Pit Lord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1616,6 +1640,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nenp (Poison Treant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1637,6 +1662,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nfpe (Polar Furbolg Elder Shaman)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1656,6 +1682,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Emoo (Priestess of the Moon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1674,6 +1701,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Etyr (Priestess of the Moon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1692,6 +1720,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Hvwd (Ranger)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1705,6 +1734,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nslv (Salamander Vizier)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1731,6 +1761,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nstl (Satyr Soulstealer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1746,6 +1777,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsgb (Sea Giant Behemoth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1761,6 +1793,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsgh (Sea Giant Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1783,6 +1816,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Orkn (Shadow Hunter)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1796,6 +1830,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsoc (Skeletal Orc Champion)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1822,6 +1857,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ngos (Snarlmane the Bloodgorger)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1848,6 +1884,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // hspt (Spellbreaker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1861,6 +1898,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ospm (Spirit Walker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1874,6 +1912,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ospw (Spirit Walker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1887,6 +1926,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // noga (Stonemaul Warchief)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1909,6 +1949,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // npn2 (Storm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1923,6 +1964,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // npn5 (Storm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1937,6 +1979,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nstw (Storm Wyrm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1951,6 +1994,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsrn (Stormreaver Necrolyte)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1977,6 +2021,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Ocb2 (Tauren Chieftain)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1991,6 +2036,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Nrob (Tinker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -2004,6 +2050,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ntkh (Tuskarr Healer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -2018,6 +2065,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Ewar (Warden)
         let entry = {
             let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
@@ -2031,6 +2079,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Ewrd (Warden)
         let entry = {
             let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
@@ -2044,6 +2093,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // Uwar (Warlock)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -2057,6 +2107,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // nsns (Watery Minion)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -2071,6 +2122,7 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
+
         // ngh2 (Wraith)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)

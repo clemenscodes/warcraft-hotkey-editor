@@ -30,6 +30,15 @@ const UPROOTABLE_BUILDING_IDS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("eaom"),
     WarcraftObjectId::new("etrp"),
     WarcraftObjectId::new("eden"),
+    // Corrupted Night Elf variants: the same uprootable buildings (each carries
+    // an uproot ability + Aeat "Eat Tree", which only exists in the uprooted
+    // form). Without these, can_uproot is false, so Eat Tree wrongly lands on the
+    // rooted command card and falsely collides with the upgrade ability.
+    WarcraftObjectId::new("nctl"),
+    WarcraftObjectId::new("ncta"),
+    WarcraftObjectId::new("ncte"),
+    WarcraftObjectId::new("ncaw"),
+    WarcraftObjectId::new("ncap"),
 ];
 
 pub struct BuildingTraits;
@@ -252,6 +261,16 @@ mod catalog_tests {
     #[test]
     fn can_uproot_returns_false_for_barracks() {
         assert!(!BuildingTraits::can_uproot("hbar"));
+    }
+
+    #[test]
+    fn can_uproot_returns_true_for_corrupted_night_elf_buildings() {
+        for corrupted_id in ["nctl", "ncta", "ncte", "ncaw", "ncap"] {
+            assert!(
+                BuildingTraits::can_uproot(corrupted_id),
+                "corrupted building {corrupted_id} must be uprootable"
+            );
+        }
     }
 
     #[test]

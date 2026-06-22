@@ -577,6 +577,38 @@ mod unit_slots_tests {
         assert!(has_move, "uprooted Tree of Life must have CmdMove");
     }
 
+    // Regression: the Corrupted Tree of Ages is an uprootable building, so its
+    // "Eat Tree" (Aeat) ability belongs to the uprooted form only. If the unit is
+    // not recognised as uprootable, Aeat lands on the rooted command card and
+    // falsely collides with the upgrade ability (causing wrong cascades).
+    #[test]
+    fn corrupted_tree_rooted_card_excludes_eat_tree() {
+        let unit_id = WarcraftObjectId::new("ncta");
+        let rooted_card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_eat_tree = rooted_card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Aeat"));
+        assert!(
+            !has_eat_tree,
+            "rooted Corrupted Tree of Ages must not contain Eat Tree (it is uprooted-only)"
+        );
+    }
+
+    #[test]
+    fn corrupted_tree_uprooted_menu_contains_eat_tree() {
+        let unit_id = WarcraftObjectId::new("ncta");
+        let uprooted_card = WARCRAFT_DATABASE
+            .uprooted_menu(unit_id)
+            .expect("Corrupted Tree of Ages must have an uprooted form");
+        let has_eat_tree = uprooted_card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Aeat"));
+        assert!(
+            has_eat_tree,
+            "uprooted Corrupted Tree of Ages must contain Eat Tree"
+        );
+    }
+
     #[test]
     fn all_unit_ids_is_non_empty() {
         let count = WARCRAFT_DATABASE.all_unit_ids().count();

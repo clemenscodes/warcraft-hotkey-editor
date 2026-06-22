@@ -481,9 +481,9 @@ mod cross_unit_collision_tests {
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         assert_eq!(
             report.position_groups().len(),
-            19,
-            "normalized default decomposes into exactly 19 cross-unit collision \
-             islands (the raw colliding cells split into 19 independent components)"
+            18,
+            "normalized default decomposes into exactly 18 cross-unit collision \
+             islands (the raw colliding cells split into 18 independent components)"
         );
     }
 

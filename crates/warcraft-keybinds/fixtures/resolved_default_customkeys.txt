@@ -5096,13 +5096,13 @@ Ubertip=Call upon the spirit of Crab to save you.
 
 [ncta]
 Hotkey=U
-Buttonpos=2,2
+Buttonpos=0,2
 Tip=Upgrade to Corrupted Tree of Ages
 Ubertip=Upgrade to Corrupted Tree of Ages to enable the production of additional types of structures and units.
 
 [ncte]
 Hotkey=U
-Buttonpos=2,2
+Buttonpos=0,2
 Tip=Upgrade to Corrupted Tree of Eternity
 Ubertip=Upgrade to Corrupted Tree of Eternity to enable the production of additional types of structures and units.
 
