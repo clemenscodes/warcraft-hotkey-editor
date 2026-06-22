@@ -670,7 +670,7 @@ fn CollisionBreadcrumbs(props: CollisionBreadcrumbsProps) -> Element {
     rsx! {
         nav { class: "collision-breadcrumbs", aria_label: "Collision categories",
             CollisionBreadcrumb {
-                label: "Position Collisions",
+                label: "Cross Collisions",
                 count: position_count,
                 target_kind: CollisionKind::Positions,
                 data_breadcrumb: "positions",
@@ -679,7 +679,7 @@ fn CollisionBreadcrumbs(props: CollisionBreadcrumbsProps) -> Element {
             }
             span { class: "collision-breadcrumb-separator", aria_hidden: "true", "|" }
             CollisionBreadcrumb {
-                label: "Unit Position Collisions",
+                label: "Intra Collisions",
                 count: unit_position_count,
                 target_kind: CollisionKind::UnitPositions,
                 data_breadcrumb: "unit-positions",
