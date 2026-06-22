@@ -127,11 +127,12 @@
     border-bottom: 1px solid rgba(255, 206, 99, 0.25);
 }
 
-/* The conflicts are laid out as a 2-up grid of tall cards (1-up on narrow),
-   mirroring the templates dialog. The grid scrolls inside the detail pane. */
+/* The conflicts pack into as many narrow columns as fit (auto-fill collapses
+   to fewer columns on smaller panes, down to 1 on mobile). The grid scrolls
+   inside the detail pane. */
 .conflict-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     flex: 1 1 0;
     min-height: 0;
@@ -142,46 +143,26 @@
     scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
 }
 
-@media (max-width: 1099px) {
-    .conflict-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-}
-
-/* One conflict card. Row 1 = the two unit headers (left & right). Row 2 = the
-   two abilities flanking the centered ✕ (icon ✕ icon, name + "+N more" below
-   each). Both halves are identical, so the card reads symmetric. */
+/* One conflict card. The affected unit is centered on top; below it the unit's
+   two clashing abilities flank the centered ✕ (icon ✕ icon, name + "+N more"
+   below each). Clicking an ability opens the carriers dialog. */
 .conflict-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-        "unitL unitR"
-        "abrow abrow";
-    column-gap: 16px;
-    row-gap: 24px;
-    align-items: start;
-    justify-items: center;
-    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 24px 16px;
     background: rgba(13, 31, 61, 0.45);
     border: 1px solid #24406a;
     border-radius: 10px;
 }
 
-.conflict-unit-left {
-    grid-area: unitL;
-}
-
-.conflict-unit-right {
-    grid-area: unitR;
-}
-
 /* The two abilities cluster around the ✕ (they do not stretch to the edges). */
 .conflict-ability-row {
-    grid-area: abrow;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 18px;
+    gap: 12px;
     width: 100%;
 }
 
@@ -221,7 +202,11 @@
     flex-direction: column;
     align-items: center;
     gap: 7px;
-    flex: 0 0 150px;
+    flex: 0 0 112px;
+    /* Keep both columns exactly 112px even when a name is wider than the box,
+       so the two icons stay equidistant from the ✕ and the id + "+N more"
+       lines sit at the same height on both sides. */
+    min-width: 0;
 }
 
 .conflict-ability-trigger {
@@ -268,7 +253,10 @@
     font-size: 17px;
     color: #ffce63;
     text-align: center;
-    max-width: 100%;
+    /* Never wrap: a wrapped name would push this side's id and "+N more" down
+       and break the symmetry with the other ability. A name wider than the
+       column overflows centered instead. */
+    white-space: nowrap;
 }
 
 /* Object id — both can share an icon/name yet be distinct, so the id shows. */
@@ -278,11 +266,23 @@
     color: #7b818d;
 }
 
+/* "+N more" is a link button that opens the same carriers dialog as the icon,
+   so it gets the same gold hover treatment. */
 .conflict-more {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font: inherit;
+    cursor: pointer;
     font-size: 14px;
     color: #9aa3b2;
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+
+.conflict-more:hover {
+    color: var(--race-color, #ffce63);
 }
 
 /* Carriers dialog — a responsive scrollable grid of big unit cards. */
