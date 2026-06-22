@@ -291,6 +291,16 @@ impl IslandView {
             };
             conflicts.push(conflict);
         }
+        // Heaviest conflicts first: a conflict whose mover ability and anchor
+        // ability are carried by the most units combined affects the most of
+        // the roster, so it renders at the top. Stable, so equally-heavy
+        // conflicts keep their unit-name order.
+        conflicts.sort_by_key(|conflict| {
+            let mover_carrier_count = conflict.own_ability.carrier_count;
+            let anchor_carrier_count = conflict.shared_ability.carrier_count;
+            let combined_carrier_weight = mover_carrier_count + anchor_carrier_count;
+            std::cmp::Reverse(combined_carrier_weight)
+        });
         let collision_count = affected_entries.len();
 
         let first_shared_str = shared_entries
@@ -461,6 +471,9 @@ impl HotkeyCollisionPageModel {
             if conflicts.is_empty() {
                 continue;
             }
+            // Heaviest clashes first: a hotkey letter shared by more abilities
+            // is the harder collision to resolve, so it renders at the top.
+            conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();
@@ -575,6 +588,10 @@ impl UnitPositionPageModel {
             if conflicts.is_empty() {
                 continue;
             }
+            // Heaviest clashes first: a command-card cell shared by more of the
+            // unit's own abilities is the harder collision to resolve, so it
+            // renders at the top.
+            conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();

@@ -1,8 +1,31 @@
+use std::collections::HashSet;
+use std::sync::LazyLock;
+
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
 
 use crate::WARCRAFT_DATABASE;
 use crate::unit_kind::UnitKindHelpers;
 use crate::unit_mode::UnitMode;
+
+/// Unit ids that some shop offers for sale (anything appearing in a
+/// `sell_units` list). A purchasable unit such as the Ogre Mauler `nogm`
+/// carries no abilities and no production of its own — it only ever
+/// appears as a buy-button on a Mercenary Camp — so the catalog needs
+/// this reverse lookup to keep it instead of mistaking it for a dead
+/// placeholder. Built once; the database is static.
+static SOLD_UNIT_IDS: LazyLock<HashSet<&'static str>> = LazyLock::new(|| {
+    let mut sold_unit_ids = HashSet::new();
+    for (_seller_object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            continue;
+        };
+        for sold_unit_id in unit_meta.sell_units() {
+            let sold_unit_value = sold_unit_id.value();
+            sold_unit_ids.insert(sold_unit_value);
+        }
+    }
+    sold_unit_ids
+});
 
 fn is_subsequence(needle: &str, haystack: &str) -> bool {
     let mut haystack_chars = haystack.chars();
@@ -114,7 +137,14 @@ impl UnitCatalog {
                     let button_position = ability_meta.default_button_position();
                     button_position.is_some()
                 });
-                if !has_production && !has_visible_ability {
+                // Purchasable units (e.g. mercenaries) carry no abilities
+                // and no production of their own — they are only ever sold
+                // at a shop, which renders their buy-button and exposes a
+                // rebindable hotkey. Keep them; ability-less placeholders
+                // that no shop sells stay filtered out.
+                let object_id_value = object_id.value();
+                let is_purchasable = SOLD_UNIT_IDS.contains(object_id_value);
+                if !has_production && !has_visible_ability && !is_purchasable {
                     return None;
                 }
                 let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
@@ -237,6 +267,23 @@ mod tests {
                 "Neutral/Melee catalog missing {required_id} (Burrow carrier)",
             );
         }
+    }
+
+    /// Purchasable units must be findable in search. `nogm` (Ogre
+    /// Mauler) has no abilities and no production — it is only ever sold
+    /// at a Mercenary Camp — but it carries its own buy-button slot via
+    /// `default_button_position` (column 3, row 0). The catalog must keep
+    /// such units so the hotkey on their shop slot can be rebound.
+    ///
+    /// Regression guard for the "can't find Ogre Mauler in search" report.
+    #[test]
+    fn search_includes_purchasable_units() {
+        let entries = UnitCatalog::entries_for(None, None, None, Some("Ogre Mauler"));
+        let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
+        assert!(
+            entry_ids.contains(&"nogm"),
+            "search for 'Ogre Mauler' missing nogm (purchasable mercenary unit)",
+        );
     }
 
     /// Campaign-flagged units must NOT bleed into Melee mode. After
