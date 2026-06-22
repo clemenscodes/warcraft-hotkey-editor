@@ -90,21 +90,17 @@ impl UnitIconView {
     }
 }
 
-/// One side of a conflict: an ability, the unit shown as its header, and the
-/// full list of units that carry it (resolved lazily for the carriers dialog).
+/// One ability participating in a conflict: the ability resolved to an icon,
+/// plus the full list of units that carry it (for the carriers dialog) and how
+/// many, used for the "+N more" hint.
 #[derive(Clone, PartialEq)]
-pub(super) struct ConflictSide {
-    unit: UnitIconView,
+pub(super) struct ConflictAbilityView {
     ability: AbilityIconView,
     carrier_unit_ids: Vec<String>,
     carrier_count: usize,
 }
 
-impl ConflictSide {
-    pub(super) fn unit(&self) -> &UnitIconView {
-        &self.unit
-    }
-
+impl ConflictAbilityView {
     pub(super) fn ability(&self) -> &AbilityIconView {
         &self.ability
     }
@@ -113,28 +109,32 @@ impl ConflictSide {
         &self.carrier_unit_ids
     }
 
-    /// Other carriers beyond the one shown as this side's header.
+    /// Carriers beyond the affected unit already shown on the conflict card.
     pub(super) fn extra_count(&self) -> usize {
         self.carrier_count.saturating_sub(1)
     }
 }
 
-/// One conflict: two symmetric sides whose abilities land on the same cell.
-/// Left is the affected unit's own ability; right is the shared ability it
-/// clashes with (with a sample carrier as that side's header).
+/// One conflict: a single affected unit whose two abilities land on the same
+/// cell — its own ability and the shared ability it clashes with.
 #[derive(Clone, PartialEq)]
 pub(super) struct ConflictView {
-    left: ConflictSide,
-    right: ConflictSide,
+    unit: UnitIconView,
+    own_ability: ConflictAbilityView,
+    shared_ability: ConflictAbilityView,
 }
 
 impl ConflictView {
-    pub(super) fn left(&self) -> &ConflictSide {
-        &self.left
+    pub(super) fn unit(&self) -> &UnitIconView {
+        &self.unit
     }
 
-    pub(super) fn right(&self) -> &ConflictSide {
-        &self.right
+    pub(super) fn own_ability(&self) -> &ConflictAbilityView {
+        &self.own_ability
+    }
+
+    pub(super) fn shared_ability(&self) -> &ConflictAbilityView {
+        &self.shared_ability
     }
 }
 
@@ -228,13 +228,14 @@ impl IslandView {
                 .find(|slot_id| *slot_id != shared_slot)
                 .unwrap_or(shared_slot);
 
-            let own_ability = AbilityIconView::resolve(own_slot);
-            let shared_ability = AbilityIconView::resolve(shared_slot);
+            let own_ability_icon = AbilityIconView::resolve(own_slot);
+            let shared_ability_icon = AbilityIconView::resolve(shared_slot);
 
             let affected_unit_id_value = affected.unit_id().value();
             let affected_unit = UnitIconView::resolve(affected_unit_id_value);
 
-            // The shared (right) side: its carriers come from the domain entry.
+            // The shared ability: its carriers come straight from the domain
+            // entry. Clicking it lists every unit that carries the ability.
             let mut shared_carrier_unit_ids: Vec<String> =
                 Vec::with_capacity(shared_entry.unit_ids().len());
             for carrier_object in shared_entry.unit_ids() {
@@ -242,23 +243,14 @@ impl IslandView {
                 shared_carrier_unit_ids.push(carrier_value);
             }
             let shared_carrier_count = shared_entry.unit_count();
-            let sample_carrier_id_option = shared_carrier_unit_ids
-                .iter()
-                .find(|carrier_id| carrier_id.as_str() != affected_unit_id_value)
-                .or_else(|| shared_carrier_unit_ids.first());
-            let sample_carrier = sample_carrier_id_option
-                .map(|carrier_id| UnitIconView::resolve(carrier_id.as_str()))
-                .unwrap_or_else(|| affected_unit.clone());
-            let right = ConflictSide {
-                unit: sample_carrier,
-                ability: shared_ability,
+            let shared_ability = ConflictAbilityView {
+                ability: shared_ability_icon,
                 carrier_unit_ids: shared_carrier_unit_ids,
                 carrier_count: shared_carrier_count,
             };
 
-            // The own (left) side: the affected unit heads it. If the own
-            // ability is itself shared, list all its carriers; otherwise it is
-            // carried only by this unit at this position.
+            // The unit's own ability. If it is itself shared, list all its
+            // carriers; otherwise it is carried only by this unit at this cell.
             let own_slot_key = own_slot.as_str();
             let own_shared_entry_option = shared_map.get(own_slot_key).copied();
             let own_carrier_unit_ids: Vec<String> = match own_shared_entry_option {
@@ -276,14 +268,17 @@ impl IslandView {
                 Some(entry) => entry.unit_count(),
                 None => 1,
             };
-            let left = ConflictSide {
-                unit: affected_unit,
-                ability: own_ability,
+            let own_ability = ConflictAbilityView {
+                ability: own_ability_icon,
                 carrier_unit_ids: own_carrier_unit_ids,
                 carrier_count: own_carrier_count,
             };
 
-            let conflict = ConflictView { left, right };
+            let conflict = ConflictView {
+                unit: affected_unit,
+                own_ability,
+                shared_ability,
+            };
             conflicts.push(conflict);
         }
         let collision_count = affected_entries.len();

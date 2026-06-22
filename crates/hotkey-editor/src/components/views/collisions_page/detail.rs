@@ -12,25 +12,22 @@ struct ConflictUnitProps {
     unit_id: String,
     icon_url: Option<String>,
     name: String,
-    extra_class: &'static str,
     view_navigation: ViewNavigationContext,
 }
 
-/// One unit header of a conflict card: a big icon + name + object id that
-/// deep-links into the editor focused on that unit.
+/// The affected unit heading a conflict card: a big icon + name + object id
+/// that deep-links into the editor focused on that unit.
 #[component]
 fn ConflictUnit(props: ConflictUnitProps) -> Element {
     let unit_id = props.unit_id;
     let icon_url = props.icon_url;
     let name = props.name;
-    let extra_class = props.extra_class;
     let view_navigation = props.view_navigation;
-    let class_name = format!("conflict-unit {extra_class}");
     let unit_id_label = unit_id.clone();
 
     rsx! {
         button {
-            class: "{class_name}",
+            class: "conflict-unit",
             r#type: "button",
             onclick: move |_| view_navigation.open_unit(&unit_id),
             if let Some(url) = icon_url {
@@ -59,8 +56,8 @@ struct ConflictAbilityProps {
 }
 
 /// One ability of a conflict: a big icon with the name + object id below and,
-/// when carried by more units, a "+N more" line. The icon is a button that
-/// opens the carriers dialog for this ability.
+/// when carried by more units, a "+N more" link. Both the icon and the "+N
+/// more" link open the same carriers dialog for this ability.
 #[component]
 fn ConflictAbility(props: ConflictAbilityProps) -> Element {
     let ability_name = props.ability_name;
@@ -69,17 +66,30 @@ fn ConflictAbility(props: ConflictAbilityProps) -> Element {
     let extra_count = props.extra_count;
     let carrier_unit_ids = props.carrier_unit_ids;
     let mut carrier_dialog = props.carrier_dialog;
-    let dialog_name = ability_name.clone();
+
+    let open_from_icon = {
+        let dialog_name = ability_name.clone();
+        let dialog_carrier_unit_ids = carrier_unit_ids.clone();
+        move |_| {
+            let data = CarrierDialogData::new(dialog_name.clone(), &dialog_carrier_unit_ids);
+            carrier_dialog.set(Some(data));
+        }
+    };
+    let open_from_more = {
+        let dialog_name = ability_name.clone();
+        let dialog_carrier_unit_ids = carrier_unit_ids.clone();
+        move |_| {
+            let data = CarrierDialogData::new(dialog_name.clone(), &dialog_carrier_unit_ids);
+            carrier_dialog.set(Some(data));
+        }
+    };
 
     rsx! {
         div { class: "conflict-ability",
             button {
                 class: "conflict-ability-trigger",
                 r#type: "button",
-                onclick: move |_| {
-                    let data = CarrierDialogData::new(dialog_name.clone(), &carrier_unit_ids);
-                    carrier_dialog.set(Some(data));
-                },
+                onclick: open_from_icon,
                 if let Some(url) = icon_url {
                     img {
                         class: "conflict-ability-icon",
@@ -93,7 +103,12 @@ fn ConflictAbility(props: ConflictAbilityProps) -> Element {
             span { class: "conflict-ability-name", "{ability_name}" }
             code { class: "conflict-object-id", "{ability_id}" }
             if extra_count > 0 {
-                span { class: "conflict-more", "+{extra_count} more" }
+                button {
+                    class: "conflict-more",
+                    r#type: "button",
+                    onclick: open_from_more,
+                    "+{extra_count} more"
+                }
             }
         }
     }
@@ -108,8 +123,8 @@ pub(super) struct IslandDetailProps {
 
 /// Island detail pane: a header that mirrors the island card (the mini grid,
 /// the coordinate, the collision count), then a scrollable list of conflicts —
-/// one row per affected unit, each clashing with the shared ability it lands
-/// on, with a sample carrier and a button into the full carriers dialog.
+/// one card per affected unit, showing the two abilities of that unit which
+/// land on the same cell, each a button into the full carriers dialog.
 #[component]
 pub(super) fn IslandDetail(props: IslandDetailProps) -> Element {
     let islands = props.islands;
@@ -159,35 +174,27 @@ pub(super) fn IslandDetail(props: IslandDetailProps) -> Element {
                 for (conflict_index, conflict) in island.conflicts().iter().enumerate() {
                     div { key: "conflict-{conflict_index}", class: "conflict-card",
                         ConflictUnit {
-                            unit_id: conflict.left().unit().unit_id().to_owned(),
-                            icon_url: conflict.left().unit().icon_url().map(str::to_owned),
-                            name: conflict.left().unit().name().to_owned(),
-                            extra_class: "conflict-unit-left",
-                            view_navigation,
-                        }
-                        ConflictUnit {
-                            unit_id: conflict.right().unit().unit_id().to_owned(),
-                            icon_url: conflict.right().unit().icon_url().map(str::to_owned),
-                            name: conflict.right().unit().name().to_owned(),
-                            extra_class: "conflict-unit-right",
+                            unit_id: conflict.unit().unit_id().to_owned(),
+                            icon_url: conflict.unit().icon_url().map(str::to_owned),
+                            name: conflict.unit().name().to_owned(),
                             view_navigation,
                         }
                         div { class: "conflict-ability-row",
                             ConflictAbility {
-                                ability_name: conflict.left().ability().name().to_owned(),
-                                ability_id: conflict.left().ability().object_id().to_owned(),
-                                icon_url: conflict.left().ability().icon_url().map(str::to_owned),
-                                extra_count: conflict.left().extra_count(),
-                                carrier_unit_ids: conflict.left().carrier_unit_ids().to_vec(),
+                                ability_name: conflict.own_ability().ability().name().to_owned(),
+                                ability_id: conflict.own_ability().ability().object_id().to_owned(),
+                                icon_url: conflict.own_ability().ability().icon_url().map(str::to_owned),
+                                extra_count: conflict.own_ability().extra_count(),
+                                carrier_unit_ids: conflict.own_ability().carrier_unit_ids().to_vec(),
                                 carrier_dialog,
                             }
                             span { class: "conflict-separator", aria_hidden: "true", "\u{2715}" }
                             ConflictAbility {
-                                ability_name: conflict.right().ability().name().to_owned(),
-                                ability_id: conflict.right().ability().object_id().to_owned(),
-                                icon_url: conflict.right().ability().icon_url().map(str::to_owned),
-                                extra_count: conflict.right().extra_count(),
-                                carrier_unit_ids: conflict.right().carrier_unit_ids().to_vec(),
+                                ability_name: conflict.shared_ability().ability().name().to_owned(),
+                                ability_id: conflict.shared_ability().ability().object_id().to_owned(),
+                                icon_url: conflict.shared_ability().ability().icon_url().map(str::to_owned),
+                                extra_count: conflict.shared_ability().extra_count(),
+                                carrier_unit_ids: conflict.shared_ability().carrier_unit_ids().to_vec(),
                                 carrier_dialog,
                             }
                         }
