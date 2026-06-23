@@ -4,8 +4,8 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use crate::components::shared::icons::{
-    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_PREVIEW, ICON_REDO, ICON_RESOLVE,
-    ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
+    ICON_BURGER, ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_HELP, ICON_PREVIEW, ICON_REDO,
+    ICON_RESOLVE, ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
 use crate::services::files::download::BlobDownload;
 use crate::services::navigation::app_view::AppView;
@@ -52,6 +52,7 @@ pub(crate) struct BurgerMenuProps {
     pub(crate) layout_dialog_open: Signal<bool>,
     pub(crate) templates_dialog_open: Signal<bool>,
     pub(crate) system_hotkeys_open: Signal<bool>,
+    pub(crate) help_open: Signal<bool>,
     pub(crate) navigation: ViewNavigationContext,
 }
 
@@ -59,6 +60,7 @@ pub(crate) struct BurgerMenuProps {
 pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let mut system_hotkeys_open = props.system_hotkeys_open;
+    let mut help_open = props.help_open;
     let mut layout_dialog_open = props.layout_dialog_open;
     let mut templates_dialog_open = props.templates_dialog_open;
     let navigation = props.navigation;
@@ -91,6 +93,10 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
     let toggle_system_hotkeys = move |_| {
         let next = !*system_hotkeys_open.read();
         system_hotkeys_open.set(next);
+        burger_open.set(false);
+    };
+    let open_help = move |_| {
+        help_open.set(true);
         burger_open.set(false);
     };
     let toggle_preview = move |_| {
@@ -348,6 +354,20 @@ pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
                                 }
                                 span { class: BURGER_MENU_ITEM_LABEL_CLASS, "Download" }
                             }
+                        }
+                        button {
+                            class: BURGER_MENU_ITEM_CLASS,
+                            r#type: "button",
+                            role: "menuitem",
+                            aria_haspopup: "dialog",
+                            aria_expanded: "{help_open()}",
+                            onclick: open_help,
+                            span {
+                                class: BURGER_MENU_ITEM_ICON_CLASS,
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_HELP,
+                            }
+                            span { class: BURGER_MENU_ITEM_LABEL_CLASS, "Help" }
                         }
                     }
                 }

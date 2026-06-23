@@ -5,7 +5,7 @@ use crate::components::actions::export_buttons::ExportButtons;
 use crate::components::actions::resolve_button::ResolveButton;
 use crate::components::actions::undo_redo_buttons::UndoRedoButtons;
 use crate::components::actions::upload_button::UploadButton;
-use crate::components::shared::icons::{ICON_COG, ICON_TEMPLATES};
+use crate::components::shared::icons::{ICON_COG, ICON_HELP, ICON_TEMPLATES};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
@@ -16,6 +16,7 @@ pub(crate) struct HeaderToolbarProps {
     pub(crate) preview_open: Signal<bool>,
     pub(crate) templates_dialog_open: Signal<bool>,
     pub(crate) system_hotkeys_open: Signal<bool>,
+    pub(crate) help_open: Signal<bool>,
     pub(crate) navigation: ViewNavigationContext,
 }
 
@@ -27,6 +28,8 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
     let navigation = props.navigation;
     let mut templates_dialog_open = props.templates_dialog_open;
     let mut system_hotkeys_open = props.system_hotkeys_open;
+    let mut help_open = props.help_open;
+    let open_help = move |_| help_open.set(true);
     let toggle_templates = move |_| {
         let next = !*templates_dialog_open.read();
         templates_dialog_open.set(next);
@@ -72,6 +75,19 @@ pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
             }
             ResolveButton { loaded_keys, navigation }
             ExportButtons { loaded_keys, preview_open }
+            button {
+                class: super::TOOLBAR_BTN_CLASS,
+                r#type: "button",
+                aria_label: "How to use this editor",
+                aria_haspopup: "dialog",
+                aria_expanded: "{help_open()}",
+                onclick: open_help,
+                span {
+                    class: super::TOOLBAR_ICON_CLASS,
+                    aria_hidden: "true",
+                    dangerous_inner_html: ICON_HELP,
+                }
+            }
         }
     }
 }

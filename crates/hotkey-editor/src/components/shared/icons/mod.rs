@@ -24,3 +24,5 @@ pub(crate) const ICON_REDO: &str = r##"<svg viewBox="0 0 24 24" fill="none" stro
 
 pub(crate) const ICON_TIER_PREV: &str = r##"<svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><polygon points="14.7,6 6.7,12 14.7,18" fill="#ffce63"/></svg>"##;
 pub(crate) const ICON_TIER_NEXT: &str = r##"<svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><polygon points="9.3,6 17.3,12 9.3,18" fill="#ffce63"/></svg>"##;
+
+pub(crate) const ICON_HELP: &str = r##"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"##;

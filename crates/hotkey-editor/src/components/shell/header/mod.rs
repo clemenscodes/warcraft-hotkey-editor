@@ -54,6 +54,7 @@ pub(crate) struct HeaderProps {
     pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
     pub(crate) system_hotkeys_open: Signal<bool>,
+    pub(crate) help_open: Signal<bool>,
     pub(crate) current_view: Signal<AppView>,
     pub(crate) active_race: Signal<Race>,
     pub(crate) unit_mode: Signal<UnitMode>,
@@ -70,6 +71,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
     let editing_layout_cell = props.editing_layout_cell;
     let dragging_layout_cell = props.dragging_layout_cell;
     let system_hotkeys_open = props.system_hotkeys_open;
+    let help_open = props.help_open;
     let navigation = ViewNavigationContext {
         current_view: props.current_view,
         active_race: props.active_race,
@@ -160,6 +162,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     preview_open,
                     templates_dialog_open,
                     system_hotkeys_open,
+                    help_open,
                     navigation,
                 }
                 BurgerMenu {
@@ -168,6 +171,7 @@ pub(crate) fn Header(props: HeaderProps) -> Element {
                     layout_dialog_open,
                     templates_dialog_open,
                     system_hotkeys_open,
+                    help_open,
                     navigation,
                 }
             }
