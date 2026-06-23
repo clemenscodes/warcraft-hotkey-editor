@@ -19,6 +19,40 @@ pub enum SearchField {
     Ability,
 }
 
+/// Two independent simplifications the sidebar applies while browsing, each
+/// separately toggleable. Both default to off (curated browsing — the
+/// historical behaviour).
+///
+/// `include_abilityless_units`: when true, keep units that carry no
+/// production, no button-positioned ability, and no shop slot — normally
+/// dropped as dead placeholders, but useful for reading a unit's raw stats.
+///
+/// `expand_variants`: when true, list every member of a variant group
+/// (leveled summon tiers, upgrade-swaps, hero duplicates) as its own entry
+/// instead of collapsing the group to its strongest canonical member.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub struct CatalogVisibility {
+    include_abilityless_units: bool,
+    expand_variants: bool,
+}
+
+impl CatalogVisibility {
+    pub fn new(include_abilityless_units: bool, expand_variants: bool) -> Self {
+        Self {
+            include_abilityless_units,
+            expand_variants,
+        }
+    }
+
+    pub fn include_abilityless_units(&self) -> bool {
+        self.include_abilityless_units
+    }
+
+    pub fn expand_variants(&self) -> bool {
+        self.expand_variants
+    }
+}
+
 /// Unit ids that some shop offers for sale (anything appearing in a
 /// `sell_units` list). A purchasable unit such as the Ogre Mauler `nogm`
 /// carries no abilities and no production of its own — it only ever
@@ -230,6 +264,7 @@ impl UnitCatalog {
         kind_filter: Option<UnitKind>,
         search_query: Option<&str>,
         search_field: SearchField,
+        visibility: CatalogVisibility,
     ) -> Vec<CatalogEntry> {
         let lowercase_query = search_query
             .map(|raw_query| raw_query.trim_start().to_ascii_lowercase())
@@ -300,7 +335,16 @@ impl UnitCatalog {
                 // that no shop sells stay filtered out.
                 let object_id_value = object_id.value();
                 let is_purchasable = SOLD_UNIT_IDS.contains(object_id_value);
-                if !has_production && !has_visible_ability && !is_purchasable {
+                let is_dead_placeholder =
+                    !has_production && !has_visible_ability && !is_purchasable;
+                // `include_abilityless_units` is the sole gate for ability-less
+                // units, variant members included: an ability-less summon tier
+                // (Water Elemental) or upgrade base (Headhunter `ohun`) only
+                // surfaces when this is on. `expand_variants` controls *only*
+                // whether a group collapses to its canonical, never whether an
+                // ability-less member is kept — the two toggles stay orthogonal.
+                let keep_abilityless_units = visibility.include_abilityless_units();
+                if is_dead_placeholder && !keep_abilityless_units {
                     return None;
                 }
                 let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
@@ -398,9 +442,20 @@ impl UnitCatalog {
         // canonical — looked up fresh, since the canonical may not have matched
         // the query itself — and deduped so the canonical appears once even
         // when several siblings (or the canonical itself) reach this point.
+        // With `expand_variants` on, the collapse is skipped: every member
+        // lists as its own entry, deduped only by its own id.
+        let expand_variants = visibility.expand_variants();
         let mut seen_display_ids: HashSet<String> = HashSet::new();
         let mut entries: Vec<CatalogEntry> = Vec::new();
         for entry in visible_entries {
+            if expand_variants {
+                let entry_id = entry.unit_id.clone();
+                if !seen_display_ids.insert(entry_id) {
+                    continue;
+                }
+                entries.push(entry);
+                continue;
+            }
             let canonical_lookup = VariantUnits::canonical_for(&entry.unit_id);
             if let Some(canonical) = canonical_lookup
                 && entry.unit_id != canonical
@@ -468,16 +523,130 @@ mod tests {
     use super::*;
 
     fn melee_ids(race: Race) -> Vec<String> {
+        let curated = CatalogVisibility::default();
         UnitCatalog::entries_for(
             Some(race),
             Some(UnitMode::Melee),
             None,
             None,
             SearchField::UnitName,
+            curated,
         )
         .iter()
         .map(|entry| entry.unit_id().to_string())
         .collect()
+    }
+
+    fn melee_ids_with(race: Race, visibility: CatalogVisibility) -> Vec<String> {
+        UnitCatalog::entries_for(
+            Some(race),
+            Some(UnitMode::Melee),
+            None,
+            None,
+            SearchField::UnitName,
+            visibility,
+        )
+        .iter()
+        .map(|entry| entry.unit_id().to_string())
+        .collect()
+    }
+
+    /// With `expand_variants` on, a group stops collapsing to its canonical:
+    /// every member that *independently* passes the ability-less gate lists as
+    /// its own entry. The Feral Spirit wolves `osw1`/`osw2`/`osw3` each carry a
+    /// command ability, so all three surface even with `include_abilityless`
+    /// off.
+    #[test]
+    fn expand_variants_lists_ability_bearing_members() {
+        let expanded = CatalogVisibility::new(false, true);
+        let orc_ids = melee_ids_with(Race::Orc, expanded);
+        for required_id in ["osw1", "osw2", "osw3"] {
+            assert!(
+                orc_ids.iter().any(|id| id == required_id),
+                "expanded Orc list missing wolf tier {required_id}",
+            );
+        }
+    }
+
+    /// The two toggles are orthogonal: `expand_variants` alone never reveals an
+    /// ability-less member. The upgrade base Headhunter `ohun` carries no
+    /// command button of its own, so expanding still hides it (only the upgraded
+    /// Berserker `otbk` lists) until `include_abilityless_units` is also on.
+    #[test]
+    fn expand_alone_keeps_abilityless_members_gated() {
+        let expand_only = CatalogVisibility::new(false, true);
+        let expand_ids = melee_ids_with(Race::Orc, expand_only);
+        assert!(
+            expand_ids.iter().any(|id| id == "otbk"),
+            "Berserker otbk must list when expanding",
+        );
+        assert!(
+            !expand_ids.iter().any(|id| id == "ohun"),
+            "ability-less Headhunter ohun must stay gated until ability-less is on",
+        );
+
+        let both_on = CatalogVisibility::new(true, true);
+        let both_ids = melee_ids_with(Race::Orc, both_on);
+        assert!(
+            both_ids.iter().any(|id| id == "ohun"),
+            "Headhunter ohun must surface once both toggles are on",
+        );
+    }
+
+    /// `expand_variants` is independent of curated collapsing: with it off the
+    /// weaker tiers stay hidden (the existing browse behaviour is unchanged).
+    #[test]
+    fn curated_browsing_still_collapses_when_expand_off() {
+        let curated = CatalogVisibility::default();
+        let orc_ids = melee_ids_with(Race::Orc, curated);
+        assert!(
+            orc_ids.iter().any(|id| id == "osw3"),
+            "canonical wolf lists"
+        );
+        assert!(
+            !orc_ids.iter().any(|id| id == "osw1" || id == "osw2"),
+            "weaker wolves stay hidden when expand_variants is off",
+        );
+    }
+
+    /// With `include_abilityless_units` on, the catalog stops dropping units
+    /// that carry no production, no button-positioned ability, and no shop
+    /// slot. The toggled set is a superset of the curated set, and the known
+    /// Neutral placeholders (Crystal Arachnathid `nanc`, Warrior Arachnathid
+    /// `nanw`) — hidden by default — surface only once the toggle is on.
+    #[test]
+    fn show_abilityless_units_is_a_superset_revealing_placeholders() {
+        let curated = CatalogVisibility::default();
+        let with_abilityless = CatalogVisibility::new(true, false);
+        for race in [
+            Race::Human,
+            Race::Orc,
+            Race::Nightelf,
+            Race::Undead,
+            Race::Neutral,
+        ] {
+            let curated_ids = melee_ids_with(race, curated);
+            let revealed_ids = melee_ids_with(race, with_abilityless);
+            for curated_id in &curated_ids {
+                assert!(
+                    revealed_ids.contains(curated_id),
+                    "{race:?}: revealing ability-less units dropped {curated_id}",
+                );
+            }
+        }
+        let curated_neutral = melee_ids_with(Race::Neutral, curated);
+        let revealed_neutral = melee_ids_with(Race::Neutral, with_abilityless);
+        for placeholder in ["nanc", "nanw"] {
+            let placeholder_id = placeholder.to_string();
+            assert!(
+                !curated_neutral.contains(&placeholder_id),
+                "{placeholder} must stay hidden in curated browsing",
+            );
+            assert!(
+                revealed_neutral.contains(&placeholder_id),
+                "{placeholder} must surface once ability-less units are shown",
+            );
+        }
     }
 
     /// An upgrade-swap browses as the upgraded unit only: Headhunter `ohun`
@@ -571,8 +740,14 @@ mod tests {
     /// Spiderling tier `osp1` surfaces `osp4`, never `osp1` itself.
     #[test]
     fn search_for_weaker_variant_surfaces_canonical() {
-        let entries =
-            UnitCatalog::entries_for(None, None, None, Some("osp1"), SearchField::UnitName);
+        let entries = UnitCatalog::entries_for(
+            None,
+            None,
+            None,
+            Some("osp1"),
+            SearchField::UnitName,
+            CatalogVisibility::default(),
+        );
         let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         assert!(
             ids.contains(&"osp4"),
@@ -602,6 +777,7 @@ mod tests {
             None,
             None,
             SearchField::UnitName,
+            CatalogVisibility::default(),
         );
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for required_id in ["nbnb", "nanm"] {
@@ -621,8 +797,14 @@ mod tests {
     /// Regression guard for the "can't find Ogre Mauler in search" report.
     #[test]
     fn search_includes_purchasable_units() {
-        let entries =
-            UnitCatalog::entries_for(None, None, None, Some("Ogre Mauler"), SearchField::UnitName);
+        let entries = UnitCatalog::entries_for(
+            None,
+            None,
+            None,
+            Some("Ogre Mauler"),
+            SearchField::UnitName,
+            CatalogVisibility::default(),
+        );
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         assert!(
             entry_ids.contains(&"nogm"),
@@ -642,6 +824,7 @@ mod tests {
             Some(UnitKind::Soldier),
             None,
             SearchField::UnitName,
+            CatalogVisibility::default(),
         );
         let position = |unit_id: &str| {
             entries
@@ -678,6 +861,7 @@ mod tests {
                 Some(UnitKind::Building),
                 None,
                 SearchField::UnitName,
+                CatalogVisibility::default(),
             );
             let position = |unit_id: &str| {
                 entries
@@ -717,6 +901,7 @@ mod tests {
             None,
             None,
             SearchField::UnitName,
+            CatalogVisibility::default(),
         );
         let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for campaign_id in ["nmyr", "nnsw", "ndrl", "nbel"] {
@@ -734,8 +919,14 @@ mod tests {
     #[test]
     fn ability_search_lists_carrier_units_by_name_and_id() {
         for query in ["Slow", "ACsw"] {
-            let entries =
-                UnitCatalog::entries_for(None, None, None, Some(query), SearchField::Ability);
+            let entries = UnitCatalog::entries_for(
+                None,
+                None,
+                None,
+                Some(query),
+                SearchField::Ability,
+                CatalogVisibility::default(),
+            );
             let entry_ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
             for carrier_id in ["nkog", "nmsn", "nsns"] {
                 assert!(
@@ -755,8 +946,14 @@ mod tests {
     /// resolves.
     #[test]
     fn unit_name_search_ignores_abilities() {
-        let by_ability_name =
-            UnitCatalog::entries_for(None, None, None, Some("Slow"), SearchField::UnitName);
+        let by_ability_name = UnitCatalog::entries_for(
+            None,
+            None,
+            None,
+            Some("Slow"),
+            SearchField::UnitName,
+            CatalogVisibility::default(),
+        );
         let ability_name_ids: Vec<&str> = by_ability_name
             .iter()
             .map(|entry| entry.unit_id())
@@ -765,8 +962,14 @@ mod tests {
             !ability_name_ids.contains(&"nkog"),
             "unit-name search 'Slow' must not surface ability carriers",
         );
-        let by_unit_name =
-            UnitCatalog::entries_for(None, None, None, Some("Footman"), SearchField::UnitName);
+        let by_unit_name = UnitCatalog::entries_for(
+            None,
+            None,
+            None,
+            Some("Footman"),
+            SearchField::UnitName,
+            CatalogVisibility::default(),
+        );
         let unit_name_ids: Vec<&str> = by_unit_name.iter().map(|entry| entry.unit_id()).collect();
         assert!(
             unit_name_ids.contains(&"hfoo"),

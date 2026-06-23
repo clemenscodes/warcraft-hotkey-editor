@@ -394,12 +394,17 @@
     text-shadow: 1px 1px 0 #000;
 }
 
-/* Mobile keeps the same internal-scroll model as desktop: the header and
-   breadcrumbs stay pinned (flex: none) and only the card list scrolls, so the
-   footer below the page stays visible. The app shell is viewport-bounded on
-   mobile for these pages (see app.rs), which gives this flex child real height. */
+/* Mobile: one card per row (auto-fill collapses the grid), and the section takes
+   its natural height so the whole page scrolls with the footer below. */
 @media (max-width: 1099px) {
+    .resolve-page.resolve-plan {
+        flex: 0 0 auto;
+        min-height: 0;
+    }
     .resolve-plan-body {
+        flex: none;
+        min-height: auto;
+        overflow-y: visible;
         padding: 0.75rem 0;
     }
 }

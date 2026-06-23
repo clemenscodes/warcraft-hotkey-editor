@@ -2764,6 +2764,66 @@ mod normalize_tests {
             );
         }
     }
+
+    #[test]
+    fn canonical_text_round_trips_through_parser() {
+        // Parser/serializer symmetry on real-world-shaped data. The fixture is
+        // already canonical resolved output, so parsing it and serializing the
+        // result must be a fixed point: from(canonical).to_string() ==
+        // canonical. If serialization can emit anything the parser cannot read
+        // back (an asymmetry), the re-serialized text diverges here. This is the
+        // silent-data-loss guard the *_round_trip tests above never gave us —
+        // they only assert .contains(), not equality.
+        let canonical = include_str!("../fixtures/resolved_default_customkeys.txt");
+        let reparsed = CustomKeys::from(canonical);
+        let serialized = reparsed.to_string();
+        if serialized != canonical {
+            let serialized_bytes = serialized.len();
+            let canonical_bytes = canonical.len();
+            let mut first_difference_offset: Option<usize> = None;
+            for (offset, (serialized_char, canonical_char)) in
+                serialized.chars().zip(canonical.chars()).enumerate()
+            {
+                if serialized_char != canonical_char {
+                    first_difference_offset = Some(offset);
+                    break;
+                }
+            }
+            let difference_offset = first_difference_offset.unwrap_or(0);
+            let window_start = difference_offset.saturating_sub(60);
+            let serialized_window: String =
+                serialized.chars().skip(window_start).take(160).collect();
+            let canonical_window: String = canonical.chars().skip(window_start).take(160).collect();
+            panic!(
+                "canonical CustomKeys did not survive a parse/serialize round trip \
+                 (serialized={serialized_bytes}B, canonical={canonical_bytes}B, \
+                 first diff at char {first_difference_offset:?}).\n\
+                 canonical near diff:\n{canonical_window}\n\
+                 serialized near diff:\n{serialized_window}"
+            );
+        }
+    }
+
+    #[test]
+    fn canonical_form_is_idempotent() {
+        // The general property behind the fixture test, stated directly:
+        // canon(t) = from(t).to_string() must satisfy canon(canon(t)) ==
+        // canon(t) for arbitrary input, not just the bundled fixture. Drives an
+        // edited overlay through one canonicalization, then proves a second pass
+        // changes nothing.
+        let edited_overlay = "[acad]\nHotkey=Q\nButtonpos=0,0\n";
+        let overlay_keys = CustomKeys::from(edited_overlay).normalize();
+        let mut resolved_keys = overlay_keys;
+        let _plan = resolved_keys.resolve_conflicts();
+        let canonical_once = resolved_keys.to_string();
+        let reparsed_keys = CustomKeys::from(canonical_once.as_str());
+        let canonical_twice = reparsed_keys.to_string();
+        assert_eq!(
+            canonical_once, canonical_twice,
+            "canonical form is not a fixed point: re-parsing canonical output \
+             and re-serializing produced different bytes"
+        );
+    }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]

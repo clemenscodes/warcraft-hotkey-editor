@@ -144,14 +144,17 @@
     scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
 }
 
-/* Mobile/stacked (< 1100px): a single full-width column (the 450px floor would
-   force horizontal overflow on phones). The shell that keeps this grid scrolling
-   internally — so the page itself doesn't scroll and the footer stays pinned —
-   lives in mobile-foundation.css, whose `mobile` cascade layer outranks this one
-   for the shared `.main-content`/`.unit-detail` shell classes. */
+/* Mobile/stacked (< 1100px): the detail pane is not a height-bounded scroll
+   container here (it flows and the page scrolls), so the grid must NOT clamp
+   itself to the pane's collapsed height — that hid every card. Drop the
+   flex/scroll behaviour, take natural height, and stack a single full-width
+   column (the 450px floor would force horizontal overflow on phones). */
 @media (max-width: 1099px) {
     .conflict-grid {
         grid-template-columns: minmax(0, 1fr);
+        flex: none;
+        min-height: auto;
+        overflow-y: visible;
         padding: 1rem 0;
     }
 }
