@@ -219,6 +219,65 @@ impl std::fmt::Display for AttackType {
     }
 }
 
+// Mirrors the `weapTp1` column in `unitweapons.slk`. This is distinct from
+// `AttackType` (the damage type): the weapon type controls attack behavior, and
+// the two artillery variants are the ones that grant a unit the Attack Ground
+// command in-game.
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WeaponType {
+    Normal,
+    Instant,
+    Artillery,
+    ArtilleryLine,
+    Missile,
+    MissileSplash,
+    MissileBounce,
+    MissileLine,
+    None,
+    #[default]
+    Unknown,
+}
+
+impl WeaponType {
+    pub fn parse(raw: &str) -> WeaponType {
+        let normalized = raw.trim().to_ascii_lowercase();
+        match normalized.as_str() {
+            "normal" => WeaponType::Normal,
+            "instant" => WeaponType::Instant,
+            "artillery" => WeaponType::Artillery,
+            "aline" => WeaponType::ArtilleryLine,
+            "missile" => WeaponType::Missile,
+            "msplash" => WeaponType::MissileSplash,
+            "mbounce" => WeaponType::MissileBounce,
+            "mline" => WeaponType::MissileLine,
+            "none" => WeaponType::None,
+            _ => WeaponType::Unknown,
+        }
+    }
+
+    pub fn targets_ground(&self) -> bool {
+        matches!(self, WeaponType::Artillery | WeaponType::ArtilleryLine)
+    }
+}
+
+impl std::fmt::Display for WeaponType {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let label = match self {
+            WeaponType::Normal => "Normal",
+            WeaponType::Instant => "Instant",
+            WeaponType::Artillery => "Artillery (Targets Ground)",
+            WeaponType::ArtilleryLine => "Artillery (Line)",
+            WeaponType::Missile => "Missile",
+            WeaponType::MissileSplash => "Missile (Splash)",
+            WeaponType::MissileBounce => "Missile (Bounce)",
+            WeaponType::MissileLine => "Missile (Line)",
+            WeaponType::None => "None",
+            WeaponType::Unknown => "Unknown",
+        };
+        formatter.write_str(label)
+    }
+}
+
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DefenseType {
     Light,
@@ -284,6 +343,7 @@ pub struct UnitAttack {
     range: u32,
     cooldown_seconds: f32,
     attack_type: AttackType,
+    weapon_type: WeaponType,
 }
 
 impl UnitAttack {
@@ -293,6 +353,7 @@ impl UnitAttack {
         range: u32,
         cooldown_seconds: f32,
         attack_type: AttackType,
+        weapon_type: WeaponType,
     ) -> Self {
         Self {
             damage_min,
@@ -300,6 +361,7 @@ impl UnitAttack {
             range,
             cooldown_seconds,
             attack_type,
+            weapon_type,
         }
     }
 
@@ -321,6 +383,14 @@ impl UnitAttack {
 
     pub fn attack_type(&self) -> AttackType {
         self.attack_type
+    }
+
+    pub fn weapon_type(&self) -> WeaponType {
+        self.weapon_type
+    }
+
+    pub fn targets_ground(&self) -> bool {
+        self.weapon_type.targets_ground()
     }
 }
 
@@ -1407,6 +1477,34 @@ impl ItemMeta {
 mod tests {
     use super::*;
     use crate::object::{ColumnIndex, GridCoordinate, RowIndex, WarcraftObjectId};
+
+    // WeaponType
+
+    #[test]
+    fn weapon_type_parse_artillery_variants() {
+        assert_eq!(WeaponType::parse("artillery"), WeaponType::Artillery);
+        assert_eq!(WeaponType::parse("aline"), WeaponType::ArtilleryLine);
+        assert_eq!(WeaponType::parse("MISSILE"), WeaponType::Missile);
+        assert_eq!(WeaponType::parse("nonsense"), WeaponType::Unknown);
+    }
+
+    #[test]
+    fn weapon_type_targets_ground_only_for_artillery() {
+        assert!(WeaponType::Artillery.targets_ground());
+        assert!(WeaponType::ArtilleryLine.targets_ground());
+        assert!(!WeaponType::Missile.targets_ground());
+        assert!(!WeaponType::Normal.targets_ground());
+    }
+
+    #[test]
+    fn unit_attack_targets_ground_reflects_weapon_type() {
+        let artillery_attack =
+            UnitAttack::new(50, 60, 1000, 2.0, AttackType::Siege, WeaponType::Artillery);
+        let normal_attack =
+            UnitAttack::new(10, 12, 90, 1.5, AttackType::Normal, WeaponType::Normal);
+        assert!(artillery_attack.targets_ground());
+        assert!(!normal_attack.targets_ground());
+    }
 
     // DefenseType
 

@@ -585,6 +585,21 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // obar (Barracks)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("ogru"), GridSlotId::ability("ocat")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("obar", "Barracks", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // Orex (Beastmaster)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -595,6 +610,24 @@ mod unit_collision_report_tests {
                 .build();
             let eb = UnitCollisionEntryBuilder::new("Orex", "Beastmaster", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // unp2 (Black Citadel)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    3,
+                    0,
+                    &[
+                        GridSlotId::ability("Rupm"),
+                        GridSlotId::ability("CmdAttack"),
+                    ],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("unp2", "Black Citadel", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
@@ -886,6 +919,29 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // ndh3 (Draenei Barracks)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    2,
+                    0,
+                    &[GridSlotId::ability("ndrt"), GridSlotId::ability("ndrn")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("ndrt"), GridSlotId::ability("ndrn")],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("ndh3", "Draenei Barracks", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // ndrs (Draenei Seer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1068,6 +1124,11 @@ mod unit_collision_report_tests {
         // egol (Entangled Gold Mine)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    2,
+                    &[GridSlotId::ability("Slo2"), GridSlotId::ability("Aenc")],
+                )
                 .collision_at(
                     1,
                     2,
@@ -1301,6 +1362,25 @@ mod unit_collision_report_tests {
             let eb =
                 UnitCollisionEntryBuilder::new("ngme", "Goblin Merchant", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // unp1 (Halls of the Dead)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    3,
+                    0,
+                    &[
+                        GridSlotId::ability("Rupm"),
+                        GridSlotId::ability("CmdAttack"),
+                    ],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("unp1", "Halls of the Dead", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
@@ -1817,6 +1897,28 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // ndh4 (Seer's Den)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("ndrs"), GridSlotId::ability("ndrh")],
+                )
+                .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'Q',
+                    &[GridSlotId::ability("ndrs"), GridSlotId::ability("ndrh")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("ndh4", "Seer's Den", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // Orkn (Shadow Hunter)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
@@ -1827,6 +1929,22 @@ mod unit_collision_report_tests {
                 .build();
             let eb = UnitCollisionEntryBuilder::new("Orkn", "Shadow Hunter", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nnsa (Shrine of Azshara)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("nnsw"), GridSlotId::ability("nwgs")],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("nnsa", "Shrine of Azshara", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
@@ -1881,6 +1999,26 @@ mod unit_collision_report_tests {
             );
             let eb = eb.main_position_card(main_pos);
             let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nnsg (Spawning Grounds)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[
+                        GridSlotId::ability("nmyr"),
+                        GridSlotId::ability("nsnp"),
+                        GridSlotId::ability("nhyc"),
+                    ],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("nnsg", "Spawning Grounds", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);
@@ -2033,6 +2171,22 @@ mod unit_collision_report_tests {
             let eb =
                 UnitCollisionEntryBuilder::new("Ocb2", "Tauren Chieftain", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // nntt (Temple of Tides)
+        let entry = {
+            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
+                .collision_at(
+                    0,
+                    0,
+                    &[GridSlotId::ability("nmpe"), GridSlotId::ability("nnmg")],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("nntt", "Temple of Tides", empty_pos, empty_hot);
+            let eb = eb.main_position_card(main_pos);
             eb.build()
         };
         builder = builder.entry(entry);

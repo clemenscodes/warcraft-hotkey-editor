@@ -363,8 +363,7 @@ impl AbilityBinding {
         id: WarcraftObjectId,
     ) -> fmt::Result {
         let id_str = id.value();
-        let id_lowercase = id_str.to_ascii_lowercase();
-        writeln!(formatter, "[{id_lowercase}]")?;
+        writeln!(formatter, "[{id_str}]")?;
         if let Some(hotkey) = self.hotkey() {
             let hotkey_string = hotkey.to_string();
             writeln!(formatter, "Hotkey={hotkey_string}")?;
@@ -478,8 +477,7 @@ impl CommandBinding {
         id: WarcraftObjectId,
     ) -> fmt::Result {
         let id_str = id.value();
-        let id_lowercase = id_str.to_ascii_lowercase();
-        writeln!(formatter, "[{id_lowercase}]")?;
+        writeln!(formatter, "[{id_str}]")?;
         if let Some(hotkey) = self.hotkey() {
             let hotkey_string = hotkey.to_string();
             writeln!(formatter, "Hotkey={hotkey_string}")?;
@@ -547,8 +545,7 @@ impl SystemBinding {
         id: WarcraftObjectId,
     ) -> fmt::Result {
         let id_str = id.value();
-        let id_lowercase = id_str.to_ascii_lowercase();
-        writeln!(formatter, "[{id_lowercase}]")?;
+        writeln!(formatter, "[{id_str}]")?;
         let hotkey = self.hotkey();
         writeln!(formatter, "Hotkey={hotkey}")?;
         let binding_class = self.class();
@@ -1906,8 +1903,8 @@ mod builder_tests {
         let file = CustomKeys::builder().ability("AHhb", binding).build();
         let serialized = file.to_string();
         assert!(
-            serialized.contains("[ahhb]"),
-            "section header must appear in output"
+            serialized.contains("[AHhb]"),
+            "section header must appear in output with its canonical id case"
         );
     }
 
@@ -1917,8 +1914,8 @@ mod builder_tests {
         let file = CustomKeys::builder().command("CmdMove", binding).build();
         let serialized = file.to_string();
         assert!(
-            serialized.contains("[cmdmove]"),
-            "command section header must appear in output"
+            serialized.contains("[CmdMove]"),
+            "command section header must appear in output with its canonical id case"
         );
     }
 

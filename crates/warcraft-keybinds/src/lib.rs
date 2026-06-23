@@ -42,3 +42,4 @@ pub use unit::grids::{
 pub use unit::keyed::{UnitAbilityGroup, UnitAbilitySlot, UnitKeyedCustomKeys};
 pub use unit::slots::UnitCommandSlots;
 pub use warcraft_database::{BuildingTraits, CommandCatalog};
+pub mod zz_probe;

@@ -1550,6 +1550,31 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AEbu"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AEbu"),
+            AEBU_NAMES,
+            AEBU_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(
+                    1,
+                    false,
+                    AEBU_COOLDOWNS,
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    None,
+                )
+                .with_code(Some("AEbu"))
+                .with_morph_target(None)
+                .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AEer"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AEer"),
@@ -1806,6 +1831,31 @@ fn insert_objects_chunk_0(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHBN_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Turns a non-mechanical unit ethereal and slows its movement speed by 50% for 12 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect."), Some("Turns a non-mechanical unit ethereal and slows its movement speed by 50% for a short duration. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect. |n|n|cffffcc00Level 1|r - 75 mana, lasts 12 seconds. |n|cffffcc00Level 2|r - 60 mana, lasts 15 seconds. |n|cffffcc00Level 3|r - 50 mana, lasts 18 seconds.")).with_code(Some("AHbn")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AHBN_TIP_LEVELS, AHBN_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHbu"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AHbu"),
+            AHBU_NAMES,
+            AHBU_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(
+                    1,
+                    false,
+                    AHBU_COOLDOWNS,
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    None,
+                )
+                .with_code(Some("AHbu"))
+                .with_morph_target(None)
+                .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -3160,7 +3210,11 @@ fn insert_objects_chunk_0(
             WarcraftObjectText::new(ANTA_TIP_LEVELS, ANTA_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_1(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("ANth"),
         WarcraftObject::with_text(
@@ -3186,11 +3240,7 @@ fn insert_objects_chunk_0(
             WarcraftObjectText::new(ANTM_TIP_LEVELS, ANTM_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_1(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ANto"),
         WarcraftObject::with_text(
@@ -3266,6 +3316,31 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AOAE_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Increases nearby friendly units' movement speed by 10% and attack rate by 5%."), Some("Increases the movement speed and attack rate of nearby friendly units. |n|n|cffffcc00Level 1|r - 10% movement, 5% attack. |n|cffffcc00Level 2|r - 15% movement, 10% attack. |n|cffffcc00Level 3|r - 20% movement, 15% attack.")).with_code(Some("AOae")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AOAE_TIP_LEVELS, AOAE_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AObu"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AObu"),
+            AOBU_NAMES,
+            AOBU_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(
+                    1,
+                    false,
+                    AOBU_COOLDOWNS,
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    None,
+                )
+                .with_code(Some("AObu"))
+                .with_morph_target(None)
+                .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -3603,6 +3678,31 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AUAV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Nearby friendly melee units gain 20% of their attack damage when they hit enemy units."), Some("Nearby friendly melee units gain hit points when they hit enemy units. |n|n|cffffcc00Level 1|r - Gains 20% of attack damage. |n|cffffcc00Level 2|r - Gains 35% of attack damage. |n|cffffcc00Level 3|r - Gains 50% of attack damage.")).with_code(Some("AUav")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AUAV_TIP_LEVELS, AUAV_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUbu"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AUbu"),
+            AUBU_NAMES,
+            AUBU_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(
+                    1,
+                    false,
+                    AUBU_COOLDOWNS,
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    None,
+                )
+                .with_code(Some("AUbu"))
+                .with_morph_target(None)
+                .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -6691,7 +6791,11 @@ fn insert_objects_chunk_1(
             WarcraftObjectText::new(ANSK_TIP_LEVELS, ANSK_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_2(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("Aoar"),
         WarcraftObject::new(
@@ -6760,11 +6864,7 @@ fn insert_objects_chunk_1(
             WarcraftObjectText::new(AORB_TIP_LEVELS, AORB_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_2(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("Aosp"),
         WarcraftObject::with_text(
@@ -8937,7 +9037,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.5,
                         DefenseType::Divine,
-                        Some(UnitAttack::new(66, 122, 1000, 2.0, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            66,
+                            122,
+                            1000,
+                            2.0,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(325, 2.0)),
                 )
@@ -8983,7 +9090,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.3,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(23, 45, 100, 1.7, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            23,
+                            45,
+                            100,
+                            1.7,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9031,7 +9145,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 44, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            22,
+                            44,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9079,7 +9200,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 46, 100, 1.7, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            46,
+                            100,
+                            1.7,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9126,7 +9254,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(34, 56, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            34,
+                            56,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9173,7 +9308,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(20, 26, 600, 2.18, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            20,
+                            26,
+                            600,
+                            2.18,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -9220,7 +9362,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(34, 56, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            34,
+                            56,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9267,7 +9416,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 46, 100, 1.7, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            46,
+                            100,
+                            1.7,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9314,7 +9470,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(34, 56, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            34,
+                            56,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9361,7 +9524,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         2.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(20, 26, 600, 2.18, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            20,
+                            26,
+                            600,
+                            2.18,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -9409,7 +9579,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         2.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(20, 26, 600, 2.18, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            20,
+                            26,
+                            600,
+                            2.18,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -9456,7 +9633,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(20, 26, 600, 2.18, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            20,
+                            26,
+                            600,
+                            2.18,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -9503,7 +9687,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(20, 26, 600, 2.18, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            20,
+                            26,
+                            600,
+                            2.18,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -9550,7 +9741,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         3.7,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 2.33, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -9598,7 +9796,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         3.7,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 2.46, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            2.46,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -9645,7 +9850,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 42, 100, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            42,
+                            100,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -9693,7 +9905,14 @@ fn insert_objects_chunk_2(
                         RegenType::Night,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 42, 100, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            42,
+                            100,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -9741,7 +9960,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.13, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -9789,7 +10015,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.13, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -9837,7 +10070,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(46, 56, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            46,
+                            56,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -9884,7 +10124,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(46, 56, 100, 2.2, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            46,
+                            56,
+                            100,
+                            2.2,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -9931,7 +10178,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -9978,7 +10232,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 1.64, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            1.64,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -10026,7 +10287,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10073,7 +10341,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.13, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -10121,7 +10396,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10168,7 +10450,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.13, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -10215,7 +10504,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.13, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -10263,7 +10559,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10310,7 +10613,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.3,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(26, 36, 100, 2.22, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            26,
+                            36,
+                            100,
+                            2.22,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -10357,7 +10667,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10404,7 +10721,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.3,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(26, 36, 100, 2.22, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            26,
+                            36,
+                            100,
+                            2.22,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -10452,7 +10776,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.0, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10500,7 +10831,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10547,7 +10885,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10594,7 +10939,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 100, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -10641,7 +10993,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -10689,7 +11048,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.7,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 2.46, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            2.46,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -10735,7 +11101,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         5.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 35, 128, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            35,
+                            128,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -10782,7 +11155,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         1.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 55, 100, 1.42, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            55,
+                            100,
+                            1.42,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -10830,7 +11210,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         1.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 55, 100, 1.11, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            55,
+                            100,
+                            1.11,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -10878,7 +11265,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         1.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 55, 100, 2.5, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            55,
+                            100,
+                            2.5,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -10926,7 +11320,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         1.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 55, 100, 2.0, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            55,
+                            100,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -10974,7 +11375,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 47, 100, 1.77, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            47,
+                            100,
+                            1.77,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -11021,7 +11429,14 @@ fn insert_objects_chunk_2(
                         RegenType::Blight,
                         4.3,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(23, 33, 600, 2.42, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            23,
+                            33,
+                            600,
+                            2.42,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -11069,7 +11484,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(26, 36, 128, 2.2, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            26,
+                            36,
+                            128,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -11117,7 +11539,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 550, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            550,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -11165,7 +11594,14 @@ fn insert_objects_chunk_2(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -11211,7 +11647,14 @@ fn insert_objects_chunk_2(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -11257,7 +11700,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         1.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(27, 37, 200, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            27,
+                            37,
+                            200,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -11304,7 +11754,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(45, 52, 200, 1.3, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            45,
+                            52,
+                            200,
+                            1.3,
+                            AttackType::Pierce,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -11350,7 +11807,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         238.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(27000, 0.01)),
                 )
@@ -11398,7 +11862,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 34, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(330, 0.01)),
                 )
@@ -11446,7 +11917,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 35, 100, 2.22, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.22,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -11494,7 +11972,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.1,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(42, 52, 128, 2.05, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            42,
+                            52,
+                            128,
+                            2.05,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -11540,7 +12025,14 @@ fn insert_objects_chunk_2(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(30, 40, 100, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            30,
+                            40,
+                            100,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -11588,7 +12080,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 128, 2.0, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            128,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -11636,7 +12135,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 35, 100, 2.22, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.22,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -11684,7 +12190,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         238.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(27000, 0.01)),
                 )
@@ -11732,7 +12245,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.5,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 128, 2.0, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            128,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -11780,7 +12300,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(24, 46, 100, 1.77, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            24,
+                            46,
+                            100,
+                            1.77,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -11828,7 +12355,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(27, 37, 128, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            27,
+                            37,
+                            128,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -11875,7 +12409,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(27, 37, 128, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            27,
+                            37,
+                            128,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -11922,7 +12463,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.4,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -11970,7 +12518,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.4,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -12018,7 +12573,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(106, 182, 1500, 2.28, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            106,
+                            182,
+                            1500,
+                            2.28,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -12066,7 +12628,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 47, 100, 1.77, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            47,
+                            100,
+                            1.77,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -12113,7 +12682,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(37, 59, 100, 1.77, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            37,
+                            59,
+                            100,
+                            1.77,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -12160,7 +12736,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(37, 47, 128, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            37,
+                            47,
+                            128,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -12208,7 +12791,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -12256,7 +12846,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.9,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 47, 100, 1.77, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            47,
+                            100,
+                            1.77,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(240, 0.01)),
                 )
@@ -12304,7 +12901,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         4.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -12352,7 +12956,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(27, 37, 128, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            27,
+                            37,
+                            128,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -12399,7 +13010,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         2.0,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(27, 37, 128, 2.05, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            27,
+                            37,
+                            128,
+                            2.05,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -12447,7 +13065,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.4,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -12494,7 +13119,14 @@ fn insert_objects_chunk_2(
                         RegenType::Always,
                         3.4,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 27, 600, 2.28, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.28,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(285, 0.01)),
                 )
@@ -12650,7 +13282,11 @@ fn insert_objects_chunk_2(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::One))),
     );
+}
 
+fn insert_objects_chunk_3(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("Remk"),
         WarcraftObject::with_text(
@@ -12709,11 +13345,7 @@ fn insert_objects_chunk_2(
             RowIndex::Zero,
         ))),
     );
-}
 
-fn insert_objects_chunk_3(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("Rerh"),
         WarcraftObject::with_text(
@@ -13930,7 +14562,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 34, 128, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            34,
+                            128,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -13978,7 +14617,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14025,7 +14671,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -14072,7 +14725,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(28, 34, 128, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            28,
+                            34,
+                            128,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(210, 0.01)),
                 )
@@ -14120,7 +14780,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 35, 100, 2.33, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -14168,7 +14835,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14216,7 +14890,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14263,7 +14944,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         3.6,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(25, 35, 100, 2.33, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(255, 0.01)),
                 )
@@ -14310,7 +14998,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -14357,7 +15052,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.2,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 28, 600, 1.9, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.01)),
                 )
@@ -14405,7 +15107,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14452,7 +15161,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         3.7,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(21, 31, 600, 2.46, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            2.46,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(225, 0.01)),
                 )
@@ -14500,7 +15216,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Divine,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14547,7 +15270,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14594,7 +15324,14 @@ fn insert_objects_chunk_3(
                         RegenType::Blight,
                         2.8,
                         DefenseType::Hero,
-                        Some(UnitAttack::new(22, 32, 100, 1.8, AttackType::Hero)),
+                        Some(UnitAttack::new(
+                            22,
+                            32,
+                            100,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(270, 0.01)),
                 )
@@ -14641,7 +15378,14 @@ fn insert_objects_chunk_3(
                         RegenType::Always,
                         3.1,
                         DefenseType::Divine,
-                        Some(UnitAttack::new(26, 140, 600, 2.0, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            26,
+                            140,
+                            600,
+                            2.0,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 2.0)),
                 )
@@ -15318,7 +16062,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        41,
+                        50,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(155),
@@ -15357,7 +16108,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(37, 47, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        37,
+                        47,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(150),
@@ -15396,7 +16154,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(38, 46, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        38,
+                        46,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(150),
@@ -15435,7 +16200,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(16, 18, 500, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        500,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(130),
@@ -15513,7 +16285,14 @@ fn insert_objects_chunk_3(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(45, 62, 1150, 3.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        45,
+                        62,
+                        1150,
+                        3.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(210),
@@ -15552,7 +16331,14 @@ fn insert_objects_chunk_3(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        78,
+                        105,
+                        900,
+                        2.0,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(500),
@@ -15591,7 +16377,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(45, 55, 850, 2.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        850,
+                        2.5,
+                        AttackType::Siege,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(330),
@@ -15631,7 +16424,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(26, 31, 100, 1.5, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            26,
+                            31,
+                            100,
+                            1.5,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.33333334)),
                 )
@@ -15672,7 +16472,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 25, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(90),
@@ -15711,7 +16518,14 @@ fn insert_objects_chunk_3(
                     RegenType::None,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        55,
+                        69,
+                        600,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(250),
@@ -15790,7 +16604,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(19, 22, 100, 1.5, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            19,
+                            22,
+                            100,
+                            1.5,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -15871,7 +16692,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(11, 13, 600, 1.6, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            11,
+                            13,
+                            600,
+                            1.6,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -15913,7 +16741,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(17, 19, 500, 2.0, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            19,
+                            500,
+                            2.0,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.75)),
                 )
@@ -15955,7 +16790,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(27, 33, 600, 1.75, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            27,
+                            33,
+                            600,
+                            1.75,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -15997,7 +16839,14 @@ fn insert_objects_chunk_3(
                         RegenType::Night,
                         0.0,
                         DefenseType::Light,
-                        Some(UnitAttack::new(13, 15, 300, 1.75, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            13,
+                            15,
+                            300,
+                            1.75,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.75)),
                 )
@@ -16038,7 +16887,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(15, 17, 100, 1.65, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        15,
+                        17,
+                        100,
+                        1.65,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -16114,7 +16970,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     0.0,
                     DefenseType::Unarmored,
-                    Some(UnitAttack::new(50, 57, 128, 1.05, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        50,
+                        57,
+                        128,
+                        1.05,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(160),
@@ -16153,7 +17016,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(16, 18, 400, 1.1, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        400,
+                        1.1,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(290),
@@ -16264,7 +17134,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     6.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 40, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        28,
+                        40,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(350),
@@ -16370,7 +17247,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(27, 31, 225, 1.8, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        27,
+                        31,
+                        225,
+                        1.8,
+                        AttackType::Normal,
+                        WeaponType::MissileBounce,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(195),
@@ -16442,7 +17326,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Unarmored,
-                    Some(UnitAttack::new(16, 18, 225, 1.8, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        225,
+                        1.8,
+                        AttackType::Normal,
+                        WeaponType::MissileBounce,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(195),
@@ -16481,7 +17372,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(27, 32, 600, 1.3, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        27,
+                        32,
+                        600,
+                        1.3,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(215),
@@ -16557,7 +17455,14 @@ fn insert_objects_chunk_3(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(25, 36, 450, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            25,
+                            36,
+                            450,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 2.0)),
                 )
@@ -16597,7 +17502,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(49, 60, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        49,
+                        60,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(660),
@@ -16636,7 +17548,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(60, 74, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        60,
+                        74,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(990),
@@ -16675,7 +17594,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        41,
+                        50,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(340),
@@ -16714,7 +17640,14 @@ fn insert_objects_chunk_3(
                     RegenType::Night,
                     1.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(26, 33, 128, 1.4, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        26,
+                        33,
+                        128,
+                        1.4,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(135),
@@ -16794,7 +17727,14 @@ fn insert_objects_chunk_3(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 21, 450, 1.35, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        21,
+                        450,
+                        1.35,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -17135,7 +18075,11 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(GMFR_TIP_LEVELS, GMFR_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_4(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("gobm"),
         WarcraftObject::with_text(
@@ -17199,11 +18143,7 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(GOPR_TIP_LEVELS, GOPR_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_4(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("grsl"),
         WarcraftObject::with_text(
@@ -17457,7 +18397,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(8, 10, 800, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        8,
+                        10,
+                        800,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(100),
@@ -17653,7 +18600,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        78,
+                        105,
+                        900,
+                        2.0,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(500),
@@ -17748,7 +18702,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(20, 21, 100, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        20,
+                        21,
+                        100,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(130),
@@ -17785,7 +18746,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        90,
+                        111,
+                        800,
+                        2.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(150),
@@ -17841,7 +18809,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        55,
+                        69,
+                        600,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(250),
@@ -17881,7 +18856,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         1.0,
                         DefenseType::Light,
-                        Some(UnitAttack::new(20, 22, 300, 1.75, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            20,
+                            22,
+                            300,
+                            1.75,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -17922,7 +18904,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 90, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(135),
@@ -18000,7 +18989,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(45, 55, 450, 2.2, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        450,
+                        2.2,
+                        AttackType::Magic,
+                        WeaponType::MissileLine,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(280),
@@ -18039,7 +19035,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 27, 700, 0.9, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        700,
+                        0.9,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(100),
@@ -18078,7 +19081,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 19, 500, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        18,
+                        19,
+                        500,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::Instant,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(100),
@@ -18154,7 +19164,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 90, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(135),
@@ -18270,7 +19287,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(30, 38, 100, 1.4, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        30,
+                        38,
+                        100,
+                        1.4,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(245),
@@ -18365,7 +19389,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 90, 1.2, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        90,
+                        1.2,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -18403,7 +19434,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(8, 9, 600, 2.0, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            8,
+                            9,
+                            600,
+                            2.0,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
                 )
@@ -18444,7 +19482,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(52, 64, 1150, 3.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        52,
+                        64,
+                        1150,
+                        3.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(180),
@@ -18483,7 +19528,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        192,
+                        2.1,
+                        AttackType::Siege,
+                        WeaponType::Instant,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(195),
@@ -18539,7 +19591,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(5, 6, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        5,
+                        6,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -18578,7 +19637,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(61, 75, 600, 1.4, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        61,
+                        75,
+                        600,
+                        1.4,
+                        AttackType::Magic,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -18728,7 +19794,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(18, 24, 400, 1.4, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        18,
+                        24,
+                        400,
+                        1.4,
+                        AttackType::Pierce,
+                        WeaponType::Instant,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(205),
@@ -18767,7 +19840,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        192,
+                        2.1,
+                        AttackType::Siege,
+                        WeaponType::Instant,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(195),
@@ -18863,7 +19943,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(10, 12, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            10,
+                            12,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -18905,7 +19992,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         3.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(13, 15, 250, 1.9, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            13,
+                            15,
+                            250,
+                            1.9,
+                            AttackType::Normal,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.8)),
                 )
@@ -19041,7 +20135,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(19, 23, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        19,
+                        23,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -19078,7 +20179,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(32, 40, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        32,
+                        40,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -19115,7 +20223,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(44, 52, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        44,
+                        52,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -19689,7 +20804,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(31, 42, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        31,
+                        42,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -19727,7 +20849,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(45, 78, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        45,
+                        78,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(745),
@@ -19765,7 +20894,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 30, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        30,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -19804,7 +20940,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(77, 97, 500, 1.5, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            77,
+                            97,
+                            500,
+                            1.5,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -19884,7 +21027,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(13, 15, 600, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        600,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(95),
@@ -19923,7 +21073,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -19962,7 +21119,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(24, 29, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        24,
+                        29,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(150),
@@ -20001,7 +21165,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(13, 15, 600, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        600,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(95),
@@ -20040,7 +21211,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(255),
@@ -20079,7 +21257,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -20118,7 +21303,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(11, 12, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(195),
@@ -20156,7 +21348,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(25, 30, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        30,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(260),
@@ -20196,7 +21395,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(41, 48, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            41,
+                            48,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -20237,7 +21443,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(41, 48, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            41,
+                            48,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -20277,7 +21490,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -20316,7 +21536,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(28, 34, 100, 1.8, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            28,
+                            34,
+                            100,
+                            1.8,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.625)),
                 )
@@ -20357,7 +21584,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        34,
+                        45,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -20395,7 +21629,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(145),
@@ -20435,7 +21676,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -20476,7 +21724,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -20515,7 +21770,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(29, 34, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            34,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -20556,7 +21818,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(300),
@@ -20595,7 +21864,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        7,
+                        8,
+                        90,
+                        3.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -20635,7 +21911,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(37, 47, 200, 1.9, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            37,
+                            47,
+                            200,
+                            1.9,
+                            AttackType::Normal,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(250, 0.625)),
                 )
@@ -20714,7 +21997,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -20832,7 +22122,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -21020,7 +22317,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        90,
+                        111,
+                        800,
+                        2.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -21059,7 +22363,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(90, 111, 800, 2.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        90,
+                        111,
+                        800,
+                        2.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -21135,7 +22446,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        48,
+                        81,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(745),
@@ -21173,7 +22491,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        48,
+                        81,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(745),
@@ -21211,7 +22536,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        34,
+                        45,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -21249,7 +22581,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -21287,7 +22626,14 @@ fn insert_objects_chunk_4(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(34, 41, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        34,
+                        41,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(240),
@@ -21329,7 +22675,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(84, 144, 1150, 4.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        84,
+                        144,
+                        1150,
+                        4.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(220),
@@ -21368,7 +22721,14 @@ fn insert_objects_chunk_4(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(45, 55, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(255),
@@ -22166,7 +23526,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -22205,7 +23572,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(195),
@@ -22244,7 +23618,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -22282,7 +23663,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(105),
@@ -22321,7 +23709,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        60,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -22359,7 +23754,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        60,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -22397,7 +23799,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        60,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -22435,7 +23844,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 60, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        60,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -22473,7 +23889,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 27, 100, 1.2, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        100,
+                        1.2,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(200),
@@ -22512,7 +23935,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(8, 9, 600, 2.0, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            8,
+                            9,
+                            600,
+                            2.0,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.3333334)),
                 )
@@ -22553,7 +23983,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(23, 27, 100, 1.65, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        100,
+                        1.65,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(180),
@@ -22592,7 +24029,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(21, 29, 600, 1.75, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            21,
+                            29,
+                            600,
+                            1.75,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -22633,7 +24077,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         1.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 30, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            30,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -22674,7 +24125,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(16, 20, 500, 1.2, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        16,
+                        20,
+                        500,
+                        1.2,
+                        AttackType::Chaos,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -22714,7 +24172,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         1.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -22790,7 +24255,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -22982,7 +24454,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        7,
+                        8,
+                        90,
+                        3.0,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(70),
@@ -23136,7 +24615,14 @@ fn insert_objects_chunk_4(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(49, 60, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        49,
+                        60,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(270),
@@ -23175,7 +24661,14 @@ fn insert_objects_chunk_4(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(60, 74, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        60,
+                        74,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(995),
@@ -23214,7 +24707,14 @@ fn insert_objects_chunk_4(
                     RegenType::Night,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(41, 50, 128, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        41,
+                        50,
+                        128,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(385),
@@ -23366,7 +24866,14 @@ fn insert_objects_chunk_4(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -23704,7 +25211,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 90, 1.3, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        90,
+                        1.3,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(120),
@@ -23780,7 +25294,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(15, 17, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        15,
+                        17,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(225),
@@ -23819,7 +25340,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(54, 60, 500, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            54,
+                            60,
+                            500,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -23829,7 +25357,11 @@ fn insert_objects_chunk_4(
             WarcraftObjectText::new(NDQP_TIP_LEVELS, NDQP_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_5(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("ndqs"),
         WarcraftObject::with_text(
@@ -23860,7 +25392,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(69, 77, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            69,
+                            77,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -23900,7 +25439,14 @@ fn insert_objects_chunk_4(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(225),
@@ -23939,7 +25485,14 @@ fn insert_objects_chunk_4(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(31, 37, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            31,
+                            37,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -23979,7 +25532,14 @@ fn insert_objects_chunk_4(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(9, 10, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        9,
+                        10,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -23987,11 +25547,7 @@ fn insert_objects_chunk_4(
             WarcraftObjectText::new(NDR1_TIP_LEVELS, NDR1_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_5(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ndr2"),
         WarcraftObject::with_text(
@@ -24021,7 +25577,14 @@ fn insert_objects_chunk_5(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(15, 17, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        15,
+                        17,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -24059,7 +25622,14 @@ fn insert_objects_chunk_5(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(16, 19, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        16,
+                        19,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -24136,7 +25706,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(19, 21, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            19,
+                            21,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -24180,7 +25757,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(85),
@@ -24258,7 +25842,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(29, 34, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            29,
+                            34,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -24299,7 +25890,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(85),
@@ -24375,7 +25973,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(6, 7, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        6,
+                        7,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -24415,7 +26020,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(22, 26, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            22,
+                            26,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.8)),
                 )
@@ -24456,7 +26068,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(225),
@@ -24533,7 +26152,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(135),
@@ -24611,7 +26237,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(36, 42, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            36,
+                            42,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.5)),
                 )
@@ -24652,7 +26285,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(32, 42, 100, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        32,
+                        42,
+                        100,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(270),
@@ -24730,7 +26370,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -24771,7 +26418,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(135),
@@ -24848,7 +26502,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(33, 40, 500, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        33,
+                        40,
+                        500,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -24886,7 +26547,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -24925,7 +26593,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -24964,7 +26639,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        37,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(245),
@@ -25003,7 +26685,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            32,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -25044,7 +26733,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            24,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -25084,7 +26780,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -25122,7 +26825,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -25160,7 +26870,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        36,
+                        43,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -25648,7 +27365,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -25685,7 +27409,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 700, 1.2, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        700,
+                        1.2,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -25722,7 +27453,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -25798,7 +27536,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(35, 44, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            35,
+                            44,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -25840,7 +27585,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 47, 300, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            47,
+                            300,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -25880,7 +27632,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 25, 300, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        25,
+                        300,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -25919,7 +27678,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(8, 13, 600, 2.0, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            8,
+                            13,
+                            600,
+                            2.0,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -25958,7 +27724,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -25996,7 +27769,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 34, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        34,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(215),
@@ -26034,7 +27814,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -26073,7 +27860,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(32, 36, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            32,
+                            36,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -26114,7 +27908,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(28, 34, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            28,
+                            34,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -26155,7 +27956,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(21, 24, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            21,
+                            24,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -26196,7 +28004,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -26236,7 +28051,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -26275,7 +28097,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -26468,7 +28297,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -26508,7 +28344,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 26, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        23,
+                        26,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(240),
@@ -26548,7 +28391,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(39, 60, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            39,
+                            60,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -26589,7 +28439,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(170, 70, 600, 2.0, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            170,
+                            70,
+                            600,
+                            2.0,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(1000, 5.0)),
                 )
@@ -26630,7 +28487,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(26, 30, 180, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        26,
+                        30,
+                        180,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(0),
@@ -26668,7 +28532,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(11, 12, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(170),
@@ -26833,7 +28704,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            48,
+                            81,
+                            500,
+                            1.5,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -26913,7 +28791,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -26955,7 +28840,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(41, 48, 500, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            41,
+                            48,
+                            500,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -26997,7 +28889,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(26, 29, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            26,
+                            29,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -27037,7 +28936,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        39,
+                        44,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(425),
@@ -27077,7 +28983,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            31,
+                            39,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -27118,7 +29031,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -27158,7 +29078,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            32,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -27200,7 +29127,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -27242,7 +29176,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -27360,7 +29301,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -27402,7 +29350,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -27444,7 +29399,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            31,
+                            39,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -27485,7 +29447,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        39,
+                        44,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(425),
@@ -27524,7 +29493,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -27639,7 +29615,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -27678,7 +29661,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            32,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -27758,7 +29748,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            32,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -27799,7 +29796,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            24,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -27840,7 +29844,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -27879,7 +29890,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -27918,7 +29936,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        37,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(245),
@@ -27957,7 +29982,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        36,
+                        43,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -27995,7 +30027,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -28033,7 +30072,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -28294,7 +30340,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 61, 200, 1.4, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        34,
+                        61,
+                        200,
+                        1.4,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(375),
@@ -28331,7 +30384,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        34,
+                        45,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -28370,7 +30430,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -28411,7 +30478,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -28452,7 +30526,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -28493,7 +30574,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -28534,7 +30622,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 400, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            400,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -28575,7 +30670,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 41, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            31,
+                            41,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -28615,7 +30717,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 61, 128, 1.4, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        34,
+                        61,
+                        128,
+                        1.4,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(375),
@@ -28728,7 +30837,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -28767,7 +30883,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(140),
@@ -28882,7 +31005,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -28921,7 +31051,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -28960,7 +31097,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(305),
@@ -29003,7 +31147,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            21,
+                            29,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -29157,7 +31308,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(11)
                 .with_gold_cost(305),
@@ -29198,7 +31356,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(305),
@@ -29239,7 +31404,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        48,
+                        81,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(745),
@@ -29278,7 +31450,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            12,
+                            13,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -29319,7 +31498,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -29397,7 +31583,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -29513,7 +31706,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(19, 21, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        19,
+                        21,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -29550,7 +31750,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(28, 30, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        28,
+                        30,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -29587,7 +31794,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(38, 40, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        38,
+                        40,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -29624,7 +31838,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(59, 69, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        59,
+                        69,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(0),
@@ -29661,7 +31882,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(46, 49, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        46,
+                        49,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -29698,7 +31926,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(28, 31, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        28,
+                        31,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -29735,7 +31970,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(38, 41, 128, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        38,
+                        41,
+                        128,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -29772,7 +32014,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(7, 10, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        7,
+                        10,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(150),
@@ -29849,7 +32098,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -29889,7 +32145,14 @@ fn insert_objects_chunk_5(
                     RegenType::Night,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(16, 18, 500, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        500,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(130),
@@ -30039,7 +32302,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        7,
+                        8,
+                        90,
+                        3.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -30077,7 +32347,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        9,
+                        12,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -30116,7 +32393,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -30272,7 +32556,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(28, 37, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -30313,7 +32604,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 32, 500, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            24,
+                            32,
+                            500,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -30353,7 +32651,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -30393,7 +32698,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Light,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -30434,7 +32746,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 26, 480, 1.75, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        26,
+                        480,
+                        1.75,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(320),
@@ -30473,7 +32792,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(26, 31, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        26,
+                        31,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(255),
@@ -30512,7 +32838,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(255),
@@ -30552,7 +32885,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(8, 10, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            8,
+                            10,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.3333334)),
                 )
@@ -30630,7 +32970,14 @@ fn insert_objects_chunk_5(
                         RegenType::None,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 69, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            69,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -30670,7 +33017,14 @@ fn insert_objects_chunk_5(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(28, 33, 600, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        33,
+                        600,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(275),
@@ -30708,7 +33062,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(49, 60, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        49,
+                        60,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(480),
@@ -30747,7 +33108,14 @@ fn insert_objects_chunk_5(
                         RegenType::None,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(36, 43, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            36,
+                            43,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
                 )
@@ -30826,7 +33194,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            25,
+                            32,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -30867,7 +33242,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(17, 24, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            24,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -30907,7 +33289,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -30945,7 +33334,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        37,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(245),
@@ -30984,7 +33380,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(200),
@@ -31023,7 +33426,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(36, 43, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        36,
+                        43,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -31061,7 +33471,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -31099,7 +33516,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(36, 40, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        36,
+                        40,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(375),
@@ -31138,7 +33562,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -31178,7 +33609,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        39,
+                        44,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(85),
@@ -31216,7 +33654,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(90),
@@ -31255,7 +33700,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -31296,7 +33748,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(320),
@@ -31334,7 +33793,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(150),
@@ -31374,7 +33840,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         6.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -31418,7 +33891,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        39,
+                        44,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(105),
@@ -31457,7 +33937,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(8, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        8,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(105),
@@ -31496,7 +33983,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -31535,7 +34029,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -31575,7 +34076,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(69, 77, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            69,
+                            77,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -31616,7 +34124,14 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(26, 30, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        26,
+                        30,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(315),
@@ -31625,7 +34140,11 @@ fn insert_objects_chunk_5(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
     );
+}
 
+fn insert_objects_chunk_6(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("nltc"),
         WarcraftObject::with_text(
@@ -31656,7 +34175,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         6.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            20,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -31698,7 +34224,14 @@ fn insert_objects_chunk_5(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(15, 16, 600, 1.5, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            15,
+                            16,
+                            600,
+                            1.5,
+                            AttackType::Pierce,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -31776,18 +34309,21 @@ fn insert_objects_chunk_5(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(11, 27, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        11,
+                        27,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
             ),
         ),
     );
-}
 
-fn insert_objects_chunk_6(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("nlv2"),
         WarcraftObject::new(
@@ -31817,7 +34353,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 45, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        45,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -31854,7 +34397,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(32, 56, 300, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        32,
+                        56,
+                        300,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -31891,7 +34441,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 16, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        16,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(255),
@@ -31931,7 +34488,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            17,
+                            20,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -31972,7 +34536,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -32012,7 +34583,14 @@ fn insert_objects_chunk_6(
                         RegenType::Night,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(9, 24, 600, 1.1, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            9,
+                            24,
+                            600,
+                            1.1,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -32051,7 +34629,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(61, 69, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        61,
+                        69,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(480),
@@ -32091,7 +34676,14 @@ fn insert_objects_chunk_6(
                         RegenType::Night,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(9, 24, 600, 1.1, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            9,
+                            24,
+                            600,
+                            1.1,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -32168,7 +34760,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(13, 14, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        13,
+                        14,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(140),
@@ -32322,7 +34921,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(76, 85, 100, 1.5, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            76,
+                            85,
+                            100,
+                            1.5,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -32364,7 +34970,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(54, 61, 100, 1.5, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            54,
+                            61,
+                            100,
+                            1.5,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
                 )
@@ -32443,7 +35056,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(27, 30, 100, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        27,
+                        30,
+                        100,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(340),
@@ -32561,7 +35181,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(255),
@@ -32601,7 +35228,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(25, 29, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            25,
+                            29,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -32679,7 +35313,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Unarmored,
-                    Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        7,
+                        8,
+                        90,
+                        3.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -32718,7 +35359,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(105),
@@ -33364,7 +36012,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(9, 10, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        9,
+                        10,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -33402,7 +36057,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -33440,7 +36102,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(6, 10, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        6,
+                        10,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -33478,7 +36147,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(105),
@@ -33518,7 +36194,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 39, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            31,
+                            39,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -33559,7 +36242,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 25, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(155),
@@ -33597,7 +36287,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(27, 36, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            27,
+                            36,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -33638,7 +36335,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(105),
@@ -33677,7 +36381,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(33, 39, 128, 1.9, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        33,
+                        39,
+                        128,
+                        1.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(225),
@@ -33794,7 +36505,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 45, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        34,
+                        45,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -33833,7 +36551,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         6.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            48,
+                            81,
+                            500,
+                            1.5,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -33912,7 +36637,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -33950,7 +36682,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.6,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(120),
@@ -33990,7 +36729,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(47, 59, 128, 1.7, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            47,
+                            59,
+                            128,
+                            1.7,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -34145,7 +36891,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(9, 12, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            9,
+                            12,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -34187,7 +36940,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(9, 12, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            9,
+                            12,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -34228,7 +36988,14 @@ fn insert_objects_chunk_6(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(33, 45, 700, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        33,
+                        45,
+                        700,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(130),
@@ -34309,7 +37076,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(205),
@@ -34349,7 +37123,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(21, 25, 600, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            21,
+                            25,
+                            600,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -34391,7 +37172,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 40, 600, 1.6, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            31,
+                            40,
+                            600,
+                            1.6,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -34432,7 +37220,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(30, 36, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            30,
+                            36,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -34472,7 +37267,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(320),
@@ -34548,7 +37350,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(96, 114, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        96,
+                        114,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(11)
                 .with_gold_cost(750),
@@ -34587,7 +37396,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -34628,7 +37444,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(300),
@@ -34671,7 +37494,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -34711,7 +37541,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(375),
@@ -34749,7 +37586,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(150),
@@ -34789,7 +37633,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -34907,7 +37758,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(19, 22, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        19,
+                        22,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(195),
@@ -34946,7 +37804,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -34985,7 +37850,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -35062,7 +37934,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(155),
@@ -35102,7 +37981,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -35255,7 +38141,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 25, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(195),
@@ -35294,7 +38187,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 38, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        34,
+                        38,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -35333,7 +38233,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(68, 82, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        68,
+                        82,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -35372,7 +38279,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 57, 500, 1.5, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            49,
+                            57,
+                            500,
+                            1.5,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.5)),
                 )
@@ -35412,7 +38326,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(49, 57, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        49,
+                        57,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -35450,7 +38371,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(78, 93, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        78,
+                        93,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(0),
@@ -35489,7 +38417,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(55, 64, 500, 1.5, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            55,
+                            64,
+                            500,
+                            1.5,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(750, 1.5)),
                 )
@@ -35529,7 +38464,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(55, 64, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        55,
+                        64,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(0),
@@ -35643,7 +38585,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(13, 15, 550, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        550,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -35680,7 +38629,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(26, 30, 550, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        26,
+                        30,
+                        550,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -35717,7 +38673,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(39, 45, 550, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        39,
+                        45,
+                        550,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -35754,7 +38717,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(52, 60, 550, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        52,
+                        60,
+                        550,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -35791,7 +38761,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(21, 25, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -35906,7 +38883,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -35944,7 +38928,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(36, 47, 400, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        36,
+                        47,
+                        400,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -35982,7 +38973,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(17, 20, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(170),
@@ -36020,7 +39018,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(150),
@@ -36059,7 +39064,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -36100,7 +39112,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            14,
+                            15,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -36141,7 +39160,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -36182,7 +39208,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            128,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -36223,7 +39256,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(18, 20, 128, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            18,
+                            20,
+                            128,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -36267,7 +39307,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     6.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        48,
+                        81,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(745),
@@ -36305,7 +39352,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -36344,7 +39398,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -36385,7 +39446,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -36429,7 +39497,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -36467,7 +39542,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -36506,7 +39588,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(7, 10, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            7,
+                            10,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -36546,7 +39635,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -36623,7 +39719,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(150),
@@ -36662,7 +39765,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(300),
@@ -36701,7 +39811,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(13, 15, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -36739,7 +39856,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -36778,7 +39902,14 @@ fn insert_objects_chunk_6(
                     RegenType::Blight,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -36854,7 +39985,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        37,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(170),
@@ -36892,7 +40030,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(25, 100, 500, 1.1, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        100,
+                        500,
+                        1.1,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(510),
@@ -36930,7 +40075,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(43, 49, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            43,
+                            49,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -36971,7 +40123,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(9)
                 .with_gold_cost(545),
@@ -37009,7 +40168,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(20, 23, 100, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        20,
+                        23,
+                        100,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(265),
@@ -37048,7 +40214,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(265),
@@ -37087,7 +40260,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -37352,7 +40532,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(13, 15, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -37390,7 +40577,14 @@ fn insert_objects_chunk_6(
                     RegenType::Blight,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -37429,7 +40623,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            21,
+                            29,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -37470,7 +40671,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 18, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        18,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(165),
@@ -37548,7 +40756,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(21, 29, 500, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            21,
+                            29,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -37588,7 +40803,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(90),
@@ -37628,7 +40850,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -37669,7 +40898,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(20, 27, 400, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        20,
+                        27,
+                        400,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -37708,7 +40944,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         6.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(46, 67, 500, 1.4, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            46,
+                            67,
+                            500,
+                            1.4,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(700, 1.75)),
                 )
@@ -37749,7 +40992,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            10,
+                            11,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -37790,7 +41040,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -37832,7 +41089,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(30, 39, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            30,
+                            39,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -37873,7 +41137,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(31, 39, 500, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            31,
+                            39,
+                            500,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -37952,7 +41223,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(25, 29, 550, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        29,
+                        550,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(200),
@@ -37992,7 +41270,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(28, 37, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -38034,7 +41319,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -38075,7 +41367,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(300),
@@ -38117,7 +41416,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -38192,7 +41498,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -38230,7 +41543,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -38285,7 +41605,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -38322,7 +41649,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -38361,7 +41695,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -38402,7 +41743,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            128,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -38443,7 +41791,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -38483,7 +41838,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(320),
@@ -38521,7 +41883,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(17, 20, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        17,
+                        20,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -38561,7 +41930,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(21, 25, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            21,
+                            25,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -38603,7 +41979,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(36, 43, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            36,
+                            43,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
                 )
@@ -38644,7 +42027,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        24,
+                        27,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(255),
@@ -38684,7 +42074,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(75, 89, 600, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            75,
+                            89,
+                            600,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -38725,7 +42122,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(9, 16, 650, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        9,
+                        16,
+                        650,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(195),
@@ -38762,7 +42166,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(25, 32, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(235),
@@ -38802,7 +42213,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(49, 55, 100, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            49,
+                            55,
+                            100,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -38843,7 +42261,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -38885,7 +42310,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -38930,7 +42362,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(46, 55, 500, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            46,
+                            55,
+                            500,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -38970,7 +42409,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -39008,7 +42454,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -39045,7 +42498,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(16, 17, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        16,
+                        17,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -39083,7 +42543,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(21, 22, 90, 1.0, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            21,
+                            22,
+                            90,
+                            1.0,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(150, 0.375)),
                 )
@@ -39275,7 +42742,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(27, 34, 500, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            27,
+                            34,
+                            500,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -39315,7 +42789,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     5.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(54, 93, 500, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        54,
+                        93,
+                        500,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(8)
                 .with_gold_cost(510),
@@ -39352,7 +42833,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 27, 500, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        500,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -39391,7 +42879,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(44, 49, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        44,
+                        49,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(425),
@@ -39430,7 +42925,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(170),
@@ -39439,7 +42941,11 @@ fn insert_objects_chunk_6(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
     );
+}
 
+fn insert_objects_chunk_7(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("ntkh"),
         WarcraftObject::with_text(
@@ -39470,7 +42976,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 125, 1.8, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            125,
+                            1.8,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -39512,7 +43025,14 @@ fn insert_objects_chunk_6(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(34, 40, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            34,
+                            40,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -39553,7 +43073,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 34, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        34,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(280),
@@ -39592,7 +43119,14 @@ fn insert_objects_chunk_6(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 25, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -39601,11 +43135,7 @@ fn insert_objects_chunk_6(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
     );
-}
 
-fn insert_objects_chunk_7(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ntn2"),
         WarcraftObject::with_text(
@@ -39787,7 +43317,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(65, 83, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            65,
+                            83,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -39828,7 +43365,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(39, 46, 100, 1.35, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        39,
+                        46,
+                        100,
+                        1.35,
+                        AttackType::Chaos,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(7)
                 .with_gold_cost(255),
@@ -39867,7 +43411,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(13, 15, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -39906,7 +43457,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(6, 10, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        6,
+                        10,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(255),
@@ -39945,7 +43503,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     4.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(28, 37, 500, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        28,
+                        37,
+                        500,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(295),
@@ -39984,7 +43549,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(255),
@@ -40023,7 +43595,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Chaos,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -40100,7 +43679,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(105),
@@ -40139,7 +43725,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(21, 29, 600, 1.0, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        21,
+                        29,
+                        600,
+                        1.0,
+                        AttackType::Chaos,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(120),
@@ -40178,7 +43771,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -40217,7 +43817,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 25, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -40257,7 +43864,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(24, 27, 100, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            24,
+                            27,
+                            100,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -40299,7 +43913,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(68, 75, 450, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            68,
+                            75,
+                            450,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -40340,7 +43961,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(36, 43, 450, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            36,
+                            43,
+                            450,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -40384,7 +44012,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(13, 15, 450, 1.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        450,
+                        1.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -40423,7 +44058,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 450, 1.6, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            450,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -40804,7 +44446,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(16, 20, 600, 1.75, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            16,
+                            20,
+                            600,
+                            1.75,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -40881,7 +44530,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     2.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(45, 55, 192, 2.1, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        45,
+                        55,
+                        192,
+                        2.1,
+                        AttackType::Siege,
+                        WeaponType::Instant,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(195),
@@ -40920,7 +44576,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         1.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(10, 11, 100, 1.6, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            10,
+                            11,
+                            100,
+                            1.6,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.5)),
                 )
@@ -41148,7 +44811,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     3.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(21, 25, 300, 1.5, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        21,
+                        25,
+                        300,
+                        1.5,
+                        AttackType::Magic,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(0),
@@ -41185,7 +44855,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     5.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(48, 57, 300, 1.5, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        48,
+                        57,
+                        300,
+                        1.5,
+                        AttackType::Magic,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(0),
@@ -41222,7 +44899,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -41261,7 +44945,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         3.0,
                         DefenseType::Light,
-                        Some(UnitAttack::new(42, 50, 450, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            42,
+                            50,
+                            450,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -41340,7 +45031,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        9,
+                        12,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(105),
@@ -41379,7 +45077,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 90, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            90,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -41419,7 +45124,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 90, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(215),
@@ -41457,7 +45169,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -41496,7 +45215,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         5.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(61, 68, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            61,
+                            68,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -41536,7 +45262,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 128, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        128,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -41575,7 +45308,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         3.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 44, 128, 1.35, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            44,
+                            128,
+                            1.35,
+                            AttackType::Chaos,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -41615,7 +45355,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     4.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(29, 33, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        29,
+                        33,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(365),
@@ -41653,7 +45400,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(41, 50, 600, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        41,
+                        50,
+                        600,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(350),
@@ -41693,7 +45447,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         2.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(29, 33, 90, 1.35, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            29,
+                            33,
+                            90,
+                            1.35,
+                            AttackType::Normal,
+                            WeaponType::Normal,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -41733,7 +45494,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 13, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(150),
@@ -41771,7 +45539,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 90, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -41810,7 +45585,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(39, 47, 500, 1.8, AttackType::Chaos)),
+                        Some(UnitAttack::new(
+                            39,
+                            47,
+                            500,
+                            1.8,
+                            AttackType::Chaos,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(500, 1.25)),
                 )
@@ -41851,7 +45633,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         1.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(30, 39, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            30,
+                            39,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, 1.0)),
                 )
@@ -41892,7 +45681,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -41933,7 +45729,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(23, 27, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            23,
+                            27,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.75)),
                 )
@@ -42088,7 +45891,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(85),
@@ -42126,7 +45936,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(10, 11, 100, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        100,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(85),
@@ -42320,7 +46137,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(72, 89, 1150, 4.5, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        72,
+                        89,
+                        1150,
+                        4.5,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(220),
@@ -42359,7 +46183,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(34, 41, 700, 4.0, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        34,
+                        41,
+                        700,
+                        4.0,
+                        AttackType::Chaos,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(160),
@@ -42433,7 +46264,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        55,
+                        69,
+                        600,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(250),
@@ -42473,7 +46311,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         2.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(28, 37, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            28,
+                            37,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(350, 0.875)),
                 )
@@ -42514,7 +46359,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(10, 14, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            10,
+                            14,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
                 )
@@ -42775,7 +46627,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.6,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(200),
@@ -42813,7 +46672,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(18, 21, 100, 1.6, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        18,
+                        21,
+                        100,
+                        1.6,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(200),
@@ -42852,7 +46718,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(23, 27, 550, 2.31, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        550,
+                        2.31,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(140),
@@ -42928,7 +46801,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        78,
+                        105,
+                        900,
+                        2.0,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(500),
@@ -42966,7 +46846,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Unarmored,
-                    Some(UnitAttack::new(16, 20, 500, 1.44, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        16,
+                        20,
+                        500,
+                        1.44,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(255),
@@ -43041,7 +46928,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(4, 18, 100, 1.1, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        4,
+                        18,
+                        100,
+                        1.1,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(130),
@@ -43078,7 +46972,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(23, 27, 100, 1.85, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        100,
+                        1.85,
+                        AttackType::Siege,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(180),
@@ -43153,7 +47054,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(7, 8, 90, 3.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        7,
+                        8,
+                        90,
+                        3.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -43192,7 +47100,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(23, 27, 100, 1.85, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        100,
+                        1.85,
+                        AttackType::Siege,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(180),
@@ -43232,7 +47147,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(10, 11, 600, 2.1, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            10,
+                            11,
+                            600,
+                            2.1,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.72)),
                 )
@@ -43368,7 +47290,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 16, 600, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        14,
+                        16,
+                        600,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(0),
@@ -43405,7 +47334,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(27, 30, 600, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        27,
+                        30,
+                        600,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -43442,7 +47378,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(46, 50, 600, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        46,
+                        50,
+                        600,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -43479,7 +47422,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(41, 45, 600, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        41,
+                        45,
+                        600,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -43559,7 +47509,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(17, 22, 400, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            17,
+                            22,
+                            400,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 1.0)),
                 )
@@ -43639,7 +47596,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(11, 12, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -43676,7 +47640,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(16, 17, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        16,
+                        17,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -43713,7 +47684,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(21, 22, 90, 1.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        21,
+                        22,
+                        90,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(0),
@@ -43787,7 +47765,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(30, 36, 100, 1.9, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        30,
+                        36,
+                        100,
+                        1.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(300),
@@ -43826,7 +47811,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(23, 27, 550, 2.31, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        550,
+                        2.31,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(140),
@@ -43865,7 +47857,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(16, 18, 300, 1.8, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        300,
+                        1.8,
+                        AttackType::Siege,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(160),
@@ -43944,7 +47943,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(23, 27, 700, 4.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        23,
+                        27,
+                        700,
+                        4.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(160),
@@ -44041,7 +48047,14 @@ fn insert_objects_chunk_7(
                         RegenType::Always,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(10, 14, 600, 1.75, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            10,
+                            14,
+                            600,
+                            1.75,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -44120,7 +48133,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(4, 18, 100, 1.1, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        4,
+                        18,
+                        100,
+                        1.1,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(130),
@@ -44157,7 +48177,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(38, 42, 128, 1.2, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        38,
+                        42,
+                        128,
+                        1.2,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(5)
                 .with_gold_cost(130),
@@ -44194,7 +48221,14 @@ fn insert_objects_chunk_7(
                     RegenType::None,
                     3.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(16, 18, 800, 0.6, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        16,
+                        18,
+                        800,
+                        0.6,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(110),
@@ -44236,7 +48270,14 @@ fn insert_objects_chunk_7(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(36, 44, 450, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        36,
+                        44,
+                        450,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(265),
@@ -45458,7 +49499,11 @@ fn insert_objects_chunk_7(
             WarcraftObjectText::new(SCHL_TIP_LEVELS, SCHL_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_8(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("sclp"),
         WarcraftObject::with_text(
@@ -45518,11 +49563,7 @@ fn insert_objects_chunk_7(
             WarcraftObjectText::new(SFOG_TIP_LEVELS, SFOG_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_8(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("shar"),
         WarcraftObject::with_text(
@@ -46746,7 +50787,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     2.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(33, 39, 128, 1.9, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        33,
+                        39,
+                        128,
+                        1.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(240),
@@ -46785,7 +50833,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(35, 41, 128, 1.9, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        35,
+                        41,
+                        128,
+                        1.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(240),
@@ -46824,7 +50879,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     1.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(9, 10, 90, 2.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        9,
+                        10,
+                        90,
+                        2.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(75),
@@ -46942,7 +51004,14 @@ fn insert_objects_chunk_8(
                         RegenType::Blight,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(9, 13, 600, 1.5, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            9,
+                            13,
+                            600,
+                            1.5,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -46983,7 +51052,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(85, 105, 300, 3.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        85,
+                        105,
+                        300,
+                        3.0,
+                        AttackType::Pierce,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(385),
@@ -47021,7 +51097,14 @@ fn insert_objects_chunk_8(
                     RegenType::Always,
                     6.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(48, 81, 500, 1.5, AttackType::Chaos)),
+                    Some(UnitAttack::new(
+                        48,
+                        81,
+                        500,
+                        1.5,
+                        AttackType::Chaos,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(10)
                 .with_gold_cost(595),
@@ -47137,7 +51220,14 @@ fn insert_objects_chunk_8(
                         RegenType::Blight,
                         3.0,
                         DefenseType::Light,
-                        Some(UnitAttack::new(19, 21, 450, 1.35, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            19,
+                            21,
+                            450,
+                            1.35,
+                            AttackType::Magic,
+                            WeaponType::MissileSplash,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(400, -3.0)),
                 )
@@ -47216,7 +51306,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(26, 31, 550, 2.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        26,
+                        31,
+                        550,
+                        2.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(215),
@@ -47255,7 +51352,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(8, 9, 90, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        8,
+                        9,
+                        90,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(0),
@@ -47292,7 +51396,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(15, 18, 90, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        15,
+                        18,
+                        90,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(0),
@@ -47329,7 +51440,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(22, 27, 90, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        22,
+                        27,
+                        90,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(0),
@@ -47440,7 +51558,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(55, 69, 600, 1.5, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        55,
+                        69,
+                        600,
+                        1.5,
+                        AttackType::Normal,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(4)
                 .with_gold_cost(250),
@@ -47492,7 +51617,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     1.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(93, 115, 375, 3.0, AttackType::Magic)),
+                    Some(UnitAttack::new(
+                        93,
+                        115,
+                        375,
+                        3.0,
+                        AttackType::Magic,
+                        WeaponType::MissileSplash,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(385),
@@ -47531,7 +51663,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     3.0,
                     DefenseType::Unarmored,
-                    Some(UnitAttack::new(61, 70, 128, 1.4, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        61,
+                        70,
+                        128,
+                        1.4,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(175),
@@ -47570,7 +51709,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(12, 14, 90, 1.35, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        12,
+                        14,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(120),
@@ -47763,7 +51909,14 @@ fn insert_objects_chunk_8(
                         RegenType::Night,
                         0.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(9, 12, 600, 1.8, AttackType::Pierce)),
+                        Some(UnitAttack::new(
+                            9,
+                            12,
+                            600,
+                            1.8,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.5)),
                 )
@@ -47802,7 +51955,14 @@ fn insert_objects_chunk_8(
                     RegenType::Always,
                     0.0,
                     DefenseType::Light,
-                    Some(UnitAttack::new(13, 14, 10, 1.0, AttackType::Spells)),
+                    Some(UnitAttack::new(
+                        13,
+                        14,
+                        10,
+                        1.0,
+                        AttackType::Spells,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(0)
                 .with_gold_cost(0),
@@ -47839,7 +51999,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     2.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(71, 88, 1150, 4.0, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        71,
+                        88,
+                        1150,
+                        4.0,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(230),
@@ -47879,7 +52046,14 @@ fn insert_objects_chunk_8(
                         RegenType::Blight,
                         0.0,
                         DefenseType::Unarmored,
-                        Some(UnitAttack::new(10, 11, 600, 1.8, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            10,
+                            11,
+                            600,
+                            1.8,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(200, 0.6666667)),
                 )
@@ -47920,7 +52094,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(11, 12, 800, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        800,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(2)
                 .with_gold_cost(545),
@@ -47959,7 +52140,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(13, 15, 800, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        13,
+                        15,
+                        800,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(3)
                 .with_gold_cost(870),
@@ -48038,7 +52226,14 @@ fn insert_objects_chunk_8(
                         RegenType::None,
                         4.0,
                         DefenseType::Heavy,
-                        Some(UnitAttack::new(7, 8, 575, 2.1, AttackType::Magic)),
+                        Some(UnitAttack::new(
+                            7,
+                            8,
+                            575,
+                            2.1,
+                            AttackType::Magic,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(600, 1.5)),
                 )
@@ -48270,7 +52465,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     1.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(14, 15, 90, 2.0, AttackType::Normal)),
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(0),
@@ -48308,7 +52510,14 @@ fn insert_objects_chunk_8(
                     RegenType::Blight,
                     0.0,
                     DefenseType::Medium,
-                    Some(UnitAttack::new(11, 12, 500, 1.5, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        11,
+                        12,
+                        500,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(0),
@@ -48386,7 +52595,14 @@ fn insert_objects_chunk_8(
                         RegenType::Always,
                         3.0,
                         DefenseType::Medium,
-                        Some(UnitAttack::new(21, 29, 500, 1.4, AttackType::Normal)),
+                        Some(UnitAttack::new(
+                            21,
+                            29,
+                            500,
+                            1.4,
+                            AttackType::Normal,
+                            WeaponType::Missile,
+                        )),
                     )
                     .with_mana_pool(ManaPool::new(300, 0.8)),
                 )
@@ -48504,7 +52720,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     5.0,
                     DefenseType::Heavy,
-                    Some(UnitAttack::new(78, 105, 900, 2.0, AttackType::Siege)),
+                    Some(UnitAttack::new(
+                        78,
+                        105,
+                        900,
+                        2.0,
+                        AttackType::Siege,
+                        WeaponType::Artillery,
+                    )),
                 ))
                 .with_level(6)
                 .with_gold_cost(500),
@@ -48543,7 +52766,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(27, 32, 700, 1.0, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        27,
+                        32,
+                        700,
+                        1.0,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(295),
@@ -48582,7 +52812,14 @@ fn insert_objects_chunk_8(
                     RegenType::None,
                     5.0,
                     DefenseType::Fortified,
-                    Some(UnitAttack::new(9, 10, 700, 1.15, AttackType::Pierce)),
+                    Some(UnitAttack::new(
+                        9,
+                        10,
+                        700,
+                        1.15,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
                 ))
                 .with_level(1)
                 .with_gold_cost(250),
@@ -50358,6 +54595,8 @@ const AEBL_UBERTIP_LEVELS: &[&str] = &[
     "Teleports the Warden a short distance, allowing her to move in and out of combat.",
     "Teleports the Warden a short distance, allowing her to move in and out of combat.",
 ];
+const AEBU_ICONS: &[&str] = &["commandbuttons/btnnightelfbuild.blp"];
+const AEBU_NAMES: &[&str] = &["Build (Night Elf)"];
 const AEER_ICONS: &[&str] = &["commandbuttons/btnentanglingroots.blp"];
 const AEER_NAMES: &[&str] = &["Entangling Roots"];
 const AEER_TIP_LEVELS: &[&str] = &[
@@ -50728,6 +54967,8 @@ const AHBN_UBERTIP_LEVELS: &[&str] = &[
     "Turns a unit ethereal and slows its movement speed by 50% for 15 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect.",
     "Turns a unit ethereal and slows its movement speed by 50% for 18 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect.",
 ];
+const AHBU_ICONS: &[&str] = &["commandbuttons/btnhumanbuild.blp"];
+const AHBU_NAMES: &[&str] = &["Build (Human)"];
 const AHBZ_ICONS: &[&str] = &["commandbuttons/btnblizzard.blp"];
 const AHBZ_NAMES: &[&str] = &["Blizzard"];
 const AHBZ_TIP_LEVELS: &[&str] = &[
@@ -51818,6 +56059,8 @@ const AOBS_TIP_LEVELS: &[&str] = &["Brute Strength"];
 const AOBS_UBERTIP_LEVELS: &[&str] = &[
     "Improves the fighting capabilities of Grunts with a 125 hit point increase, and 3 bonus attack damage.",
 ];
+const AOBU_ICONS: &[&str] = &["commandbuttons/btnbasicstruct.blp"];
+const AOBU_NAMES: &[&str] = &["Build (Orc)"];
 const AOCL_ICONS: &[&str] = &["commandbuttons/btnchainlightning.blp"];
 const AOCL_NAMES: &[&str] = &["Chain Lightning"];
 const AOCL_TIP_LEVELS: &[&str] = &[
@@ -52441,6 +56684,8 @@ const AUAV_UBERTIP_LEVELS: &[&str] = &[
     "Nearby friendly melee units gain 35% of their attack damage when they hit enemy units.",
     "Nearby friendly melee units gain 50% of their attack damage when they hit enemy units.",
 ];
+const AUBU_ICONS: &[&str] = &["commandbuttons/btnscourgebuild.blp"];
+const AUBU_NAMES: &[&str] = &["Build (Undead)"];
 const AUCB_ICONS: &[&str] = &["commandbuttons/btncarrionscarabson.blp"];
 const AUCB_NAMES: &[&str] = &["Carrion Beetles"];
 const AUCB_TIP_LEVELS: &[&str] = &[
@@ -52772,7 +57017,7 @@ const CMDATTACK_TIP_LEVELS: &[&str] = &["Attack"];
 const CMDATTACK_UBERTIP_LEVELS: &[&str] = &[
     "Orders your units to move to the target area and attack any enemy units they see on the way. If you order them to attack a specific unit, your units will ignore other enemy units and will attack the targeted unit until it is destroyed.",
 ];
-const CMDBUILDHUMAN_ICONS: &[&str] = &["commandbuttons/btnbasicstruct.blp"];
+const CMDBUILDHUMAN_ICONS: &[&str] = &["commandbuttons/btnhumanbuild.blp"];
 const CMDBUILDHUMAN_NAMES: &[&str] = &["Build Human"];
 const CMDBUILDHUMAN_TIP_LEVELS: &[&str] = &["Build Structure"];
 const CMDBUILDHUMAN_UBERTIP_LEVELS: &[&str] =
@@ -52782,7 +57027,7 @@ const CMDBUILDNAGA_NAMES: &[&str] = &["Build Naga"];
 const CMDBUILDNAGA_TIP_LEVELS: &[&str] = &["Build Structure"];
 const CMDBUILDNAGA_UBERTIP_LEVELS: &[&str] =
     &["Brings up a list of the available buildings that you may choose to construct."];
-const CMDBUILDNIGHTELF_ICONS: &[&str] = &["commandbuttons/btnbasicstruct.blp"];
+const CMDBUILDNIGHTELF_ICONS: &[&str] = &["commandbuttons/btnnightelfbuild.blp"];
 const CMDBUILDNIGHTELF_NAMES: &[&str] = &["Build Night Elf"];
 const CMDBUILDNIGHTELF_TIP_LEVELS: &[&str] = &["Create Building"];
 const CMDBUILDNIGHTELF_UBERTIP_LEVELS: &[&str] =
@@ -52792,7 +57037,7 @@ const CMDBUILDORC_NAMES: &[&str] = &["Build Orc"];
 const CMDBUILDORC_TIP_LEVELS: &[&str] = &["Build Structure"];
 const CMDBUILDORC_UBERTIP_LEVELS: &[&str] =
     &["Brings up a list of the available buildings that you may choose to construct."];
-const CMDBUILDUNDEAD_ICONS: &[&str] = &["commandbuttons/btnbasicstruct.blp"];
+const CMDBUILDUNDEAD_ICONS: &[&str] = &["commandbuttons/btnscourgebuild.blp"];
 const CMDBUILDUNDEAD_NAMES: &[&str] = &["Build Undead"];
 const CMDBUILDUNDEAD_TIP_LEVELS: &[&str] = &["Summon Building"];
 const CMDBUILDUNDEAD_UBERTIP_LEVELS: &[&str] =
@@ -67171,6 +71416,7 @@ const AEAH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AEAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AEAT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AEBL_COOLDOWNS: [u32; 4] = [10000, 5000, 2500, 4000];
+const AEBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AEER_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
 const AEEV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AEFK_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
@@ -67229,6 +71475,7 @@ const AHAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AHAV_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
 const AHBH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AHBN_COOLDOWNS: [u32; 4] = [4000, 2000, 0, 1000];
+const AHBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AHBZ_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
 const AHCA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AHDR_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 6000];
@@ -67374,6 +71621,7 @@ const AOAE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AOAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AOBK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AOBS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
+const AOBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AOCL_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
 const AOCR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AOEQ_COOLDOWNS: [u32; 4] = [90000, 90000, 90000, 90000];
@@ -67473,6 +71721,7 @@ const AUA2_COOLDOWNS: [u32; 4] = [180000, 240000, 240000, 240000];
 const AUAN_COOLDOWNS: [u32; 4] = [180000, 240000, 240000, 240000];
 const AUAU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AUAV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
+const AUBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AUCB_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
 const AUCO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
 const AUCS_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
