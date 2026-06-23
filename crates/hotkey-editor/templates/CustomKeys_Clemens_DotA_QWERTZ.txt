@@ -111,8 +111,8 @@ Tip=Carrion Swarm
 Ubertip=Sends a horde of bats to deal 75 damage to each enemy land unit in a line, up to 300 max damage.
 
 [accb]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=R
+Buttonpos=3,0
 Tip=Frost Bolt
 Ubertip=Throws a magical shard of ice at a target enemy unit, dealing 100 damage and stunning the target for 5 seconds.
 
@@ -379,7 +379,7 @@ UnTip=Deactivate Mana Shield
 Ubertip=Activates a shield that absorbs 2 damage per point of mana.
 
 [acmi]
-Buttonpos=3,2
+Buttonpos=2,0
 Tip=Spell Immunity
 Ubertip=Renders this unit immune to magic and most spells.
 
@@ -556,8 +556,8 @@ Tip=Slam
 Ubertip=Slams the ground, dealing 70 points of damage and slowing the movement and attack rate of nearby enemy units.
 
 [actn]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=Q
+Buttonpos=0,0
 Tip=Spawn Tentacle
 Ubertip=Unleashes a mighty tentacle upon the enemy.
 
@@ -593,8 +593,8 @@ Ubertip=Binds a target enemy air unit in webbing, forcing it to the ground. Webb
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 
 [acwe]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=F
+Buttonpos=3,1
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Sea Elemental
@@ -2032,8 +2032,8 @@ Tip=Disease Cloud
 Ubertip=Infects nearby enemy living units with Disease Cloud. Disease Cloud deals 1 damage per second. Lasts 75 seconds.
 
 [aast]
-Hotkey=W
-Buttonpos=1,0
+Hotkey=Q
+Buttonpos=0,0
 Tip=Ancestral Spirit
 Ubertip=Raises a fallen non-Hero Tauren from the dead. The Tauren is revived with 100% of its hit points restored.
 
@@ -2170,14 +2170,14 @@ Tip=Howl of Terror
 Ubertip=Emits a terrifying howl that reduces nearby enemy units' attack damage by 25% for 10 seconds.
 
 [aclf]
-Hotkey=C
-Buttonpos=2,2
+Hotkey=Q
+Buttonpos=0,0
 Tip=Cloud
 Ubertip=Cast on enemy buildings with ranged attacks to stop the buildings from attacking. Lasts 30 seconds.
 
 [acmg]
-Hotkey=V
-Buttonpos=3,2
+Hotkey=W
+Buttonpos=1,0
 Tip=Control Magic
 Ubertip=Takes control of an enemy summoned unit. The mana cost is 35% of the summoned unit's current hit points.
 
@@ -2223,10 +2223,10 @@ Tip=Corrosive Breath
 Ubertip=Hurls a ball of corrosive bile that is effective against buildings.
 
 [acpf]
-Hotkey=Q
+Hotkey=R
 Unhotkey=F
-Buttonpos=0,0
-Unbuttonpos=0,0
+Buttonpos=3,0
+Unbuttonpos=3,0
 Tip=Corporeal Form
 UnTip=Ethereal Form
 Ubertip=Turns the Spirit Walker corporeal, allowing him to attack and take physical damage.
@@ -2255,8 +2255,8 @@ Tip=Cyclone
 Ubertip=Tosses a target non-mechanical enemy unit into the air, rendering it unable to move, attack or cast spells, and stopping others from attacking or casting on it. Lasts 20 seconds.
 
 [adcn]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=E
+Buttonpos=2,0
 Tip=Disenchant
 Ubertip=Removes all buffs from units in a target area. Deals 250 damage to hostile summoned units.
 
@@ -2523,7 +2523,7 @@ Tip=True Sight
 Ubertip=Reveals nearby invisible units.
 
 [ahan]
-Buttonpos=3,1
+Buttonpos=2,0
 Tip=Animal War Training
 Ubertip=Increases the maximum hit points of this unit by 100.
 
@@ -2580,7 +2580,7 @@ Ubertip=Harvests lumber from trees.
 Unubertip=Return the carried lumber to the nearest building capable of receiving it.
 
 [ahri]
-Buttonpos=3,1
+Buttonpos=0,0
 Tip=Long Rifles
 Ubertip=Increases attack range.
 
@@ -2605,7 +2605,7 @@ Ubertip=Repairs mechanical units and structures at the cost of resources.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [ahsb]
-Buttonpos=2,2
+Buttonpos=0,0
 Tip=Sundering Blades
 Ubertip=Increases damage dealt to enemy targets with Medium armor by 10%.
 
@@ -2734,7 +2734,7 @@ Unubertip=Call all nearby Militia to the Town Hall to be converted to Peasants.
 Hotkey=E
 Unhotkey=W
 Buttonpos=2,0
-Unbuttonpos=2,0
+Unbuttonpos=2,2
 Tip=Call to Arms
 UnTip=Back to Work
 Ubertip=Run to the nearest Keep, Castle or starting Town Hall to arm the Peasant, converting him into Militia. Lasts 42.5 seconds.
@@ -2746,8 +2746,8 @@ Tip=Spell Immunity
 Ubertip=Renders this unit immune to magic and most spells.
 
 [amls]
-Hotkey=V
-Buttonpos=3,2
+Hotkey=W
+Buttonpos=1,0
 Tip=Aerial Shackles
 Ubertip=Magically binds a target enemy air unit, so that it cannot move or attack and takes 30 damage per second. Lasts 40 seconds.
 
@@ -2841,7 +2841,7 @@ Tip=Reinforced Defenses
 Ubertip=Upgrades Burrows and Watch Towers so that they have Fortified armor.
 
 [aosp]
-Buttonpos=3,2
+Buttonpos=3,0
 Tip=Spiked Barricades,Spiked Barricades,Improved Spiked Barricades
 Ubertip=Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.
 
@@ -2985,7 +2985,7 @@ Tip=Roar
 Ubertip=Gives friendly nearby units a 25% bonus to damage. Lasts 45 seconds.
 
 [aroc]
-Buttonpos=3,1
+Buttonpos=0,0
 Tip=Barrage
 Ubertip=Allows Siege Engines to fire powerful rockets at nearby enemy air units.
 
@@ -3168,10 +3168,10 @@ Tip=Summon Prawns
 Ubertip=Summons 2 Makrura Prawns to do their master's bidding. Lasts 60 seconds.
 
 [aspl]
-Hotkey=E
+Hotkey=W
 Unhotkey=Z
-Buttonpos=2,0
-Unbuttonpos=2,0
+Buttonpos=1,0
+Unbuttonpos=1,0
 Tip=Spirit Link
 Ubertip=Links 4 units together in a chain. All units with Spirit Link on them will live longer, by distributing 50% of the damage they take across other Spirit Linked units. Lasts 75 seconds.
 
@@ -3208,7 +3208,7 @@ Tip=Stand Down
 Ubertip=Causes Peons within the Burrow to return to work.
 
 [asth]
-Buttonpos=2,2
+Buttonpos=0,0
 Tip=Storm Hammers
 Ubertip=Causes a Gryphon Rider's attacks to damage multiple units.
 
@@ -3495,14 +3495,14 @@ Tip=Summon Keeper of the Grove
 Ubertip=Mystical Hero, adept at using nature spells. Can learn Entangling Roots, Force of Nature, Thorns Aura, and Tranquility. Attacks land and air units.
 
 [emoo]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=R
+Buttonpos=3,0
 Tip=Summon Priestess of the Moon
 Ubertip=Warrior Hero, adept at enhancing ranged attacks and slaying enemies from afar. Can learn Scout, Searing Arrows, Trueshot Aura, and Starfall. Attacks land and air units.
 
 [ewar]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=E
+Buttonpos=2,0
 Tip=Summon Warden
 Ubertip=Cunning Hero, adept at entering and escaping combat. Can learn Blink, Fan of Knives, Shadow Strike and Vengeance. Attacks land units.
 
@@ -3954,8 +3954,8 @@ Tip=Upgrade to Iron Forged Swords,Upgrade to Steel Forged Swords,Upgrade to Mith
 Ubertip=Increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.,Further increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.,Further increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.
 
 [rhpm]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=D
+Buttonpos=2,1
 Tip=Research Backpack
 Ubertip=Gives specific Human ground units the ability to carry items.
 
@@ -4056,8 +4056,8 @@ Tip=Pillage
 Ubertip=Causes Peons', Grunts', and Raiders' attacks to gain resources when hitting enemy buildings.
 
 [ropm]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=D
+Buttonpos=2,1
 Tip=Research Backpack
 Ubertip=Gives specific Orc ground units the ability to carry items.
 
@@ -4182,8 +4182,8 @@ Tip=Research Disease Cloud
 Ubertip=Gives Abominations a Disease Cloud aura that deals 2 damage per second for 75 seconds to nearby enemy units. Meat Wagons will cause Disease Clouds wherever they attack that deal 2 damage per second for 75 seconds to nearby enemy units. Undead are immune to Disease Cloud.
 
 [rupm]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=D
+Buttonpos=2,1
 Tip=Research Backpack
 Ubertip=Gives specific Undead ground units the ability to carry items.
 
@@ -4592,14 +4592,14 @@ Hotkey=Q
 Buttonpos=0,0
 
 [etoa]
-Hotkey=Y
-Buttonpos=0,2
+Hotkey=W
+Buttonpos=1,0
 Tip=Upgrade to Tree of Ages
 Ubertip=Upgrade to Tree of Ages to enable the production of additional types of structures and units. Attacks land units.
 
 [etoe]
-Hotkey=Y
-Buttonpos=0,2
+Hotkey=W
+Buttonpos=1,0
 Tip=Upgrade to Tree of Eternity
 Ubertip=Upgrade to Tree of Eternity to enable the production of additional types of structures and units. Attacks land units.
 
@@ -4749,8 +4749,8 @@ Tip=Train Flying Machine
 Ubertip=Fast moving flying machine. Excellent at scouting, and effective against air units. Can learn the Flying Machine Bombs and Flak Cannons upgrades. Can see invisible units. Attacks air units.
 
 [hhou]
-Hotkey=A
-Buttonpos=0,1
+Hotkey=Q
+Buttonpos=0,0
 Tip=Build Farm
 Ubertip=Provides food, which increases the maximum number of units that can be trained.
 
@@ -4831,8 +4831,8 @@ Tip=Train Spellbreaker
 Ubertip=Elven warrior trained to destroy spellcasters. Initially has Spell Steal, which manipulates buffs to your advantage, Spell Immunity and Feedback. Can also learn Control Magic. Attacks land units.
 
 [htow]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=A
+Buttonpos=0,1
 Tip=Build Town Hall
 Ubertip=Primary structure, used to train Peasants and receive gathered resources. Can be upgraded to Keep and then Castle to enable the production of additional types of structures and units.
 
