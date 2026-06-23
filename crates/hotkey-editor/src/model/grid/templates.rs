@@ -36,6 +36,26 @@ impl BundledTemplate {
 
 pub(crate) const TEMPLATES: &[BundledTemplate] = &[
     BundledTemplate {
+        name: "Default",
+        description: "Stock Warcraft III hotkeys, exactly what the game ships with",
+        content: || warcraft_keybinds::DEFAULT_CUSTOM_KEYS,
+    },
+    BundledTemplate {
+        name: "Clemens (QWERTY)",
+        description: "Clemens' DotA-like layout for QWERTY keyboards",
+        content: || include_str!("../../../templates/CustomKeys_Clemens_DotA_QWERTY.txt"),
+    },
+    BundledTemplate {
+        name: "Clemens (QWERTZ)",
+        description: "Clemens' DotA-like layout for QWERTZ keyboards",
+        content: || include_str!("../../../templates/CustomKeys_Clemens_DotA_QWERTZ.txt"),
+    },
+    BundledTemplate {
+        name: "Clemens (AZERTY)",
+        description: "Clemens' DotA-like layout for AZERTY keyboards",
+        content: || include_str!("../../../templates/CustomKeys_Clemens_DotA_AZERTY.txt"),
+    },
+    BundledTemplate {
         name: "NEO (QWERTY)",
         description: "Neo's (Back2Warcraft) optimized layout adapted for QWERTY keyboards",
         content: || include_str!("../../../templates/CustomKeys_Neo_QWERTY.txt"),
@@ -49,11 +69,6 @@ pub(crate) const TEMPLATES: &[BundledTemplate] = &[
         name: "NEO (AZERTY)",
         description: "Neo's (Back2Warcraft) optimized layout converted for AZERTY keyboards",
         content: || include_str!("../../../templates/CustomKeys_Neo_AZERTY.txt"),
-    },
-    BundledTemplate {
-        name: "Default",
-        description: "Stock Warcraft III hotkeys, exactly what the game ships with",
-        content: || warcraft_keybinds::DEFAULT_CUSTOM_KEYS,
     },
 ];
 
