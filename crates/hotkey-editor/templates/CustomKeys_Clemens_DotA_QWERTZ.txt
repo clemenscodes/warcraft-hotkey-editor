@@ -509,7 +509,7 @@ Tip=Silence
 Ubertip=Stops all enemies in a target area from casting spells for 40 seconds.
 
 [acsk]
-Buttonpos=3,2
+Buttonpos=3,1
 Tip=Resistant Skin
 Ubertip=Reduces the duration of negative spells and renders the unit immune to certain spells.
 
@@ -593,8 +593,8 @@ Ubertip=Binds a target enemy air unit in webbing, forcing it to the ground. Webb
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 
 [acwe]
-Hotkey=F
-Buttonpos=3,1
+Hotkey=E
+Buttonpos=2,0
 Researchhotkey=W
 Researchbuttonpos=1,0
 Tip=Summon Sea Elemental
@@ -2959,20 +2959,20 @@ Ubertip=Repairs mechanical units and structures at the cost of resources.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [aro1]
-Hotkey=V
+Hotkey=R
 Unhotkey=R
-Buttonpos=3,2
-Unbuttonpos=3,2
+Buttonpos=3,0
+Unbuttonpos=3,0
 Tip=Root
 UnTip=Uproot
 Ubertip=Burrows the Ancient's roots into the ground, rendering it immobile, but allowing it to build units. For the Ancient Protector, this allows it to hurl enormous rocks through the air to damage enemy units. Also gives the Ancient Fortified armor.
 Unubertip=Allows the Ancient to pull itself up out of the ground so that it can move and engage units in melee combat. Also gives the Ancient Heavy armor.
 
 [aro2]
-Hotkey=V
+Hotkey=R
 Unhotkey=R
-Buttonpos=3,2
-Unbuttonpos=3,2
+Buttonpos=3,0
+Unbuttonpos=3,0
 Tip=Root
 UnTip=Uproot
 Ubertip=Burrows the Ancient's roots into the ground, rendering it immobile, but allowing it to build units. For the Ancient Protector, this allows it to hurl enormous rocks through the air to damage enemy units. Also gives the Ancient Fortified armor.
@@ -4454,8 +4454,8 @@ Tip=Create Ancient of War
 Ubertip=Keeper of primary assault troops. Trains Archers, Huntresses, and Glaive Throwers. Also contains Archer, Huntress, and Glaive Thrower upgrades. Attacks land units.
 
 [eaow]
-Hotkey=Y
-Buttonpos=0,2
+Hotkey=F
+Buttonpos=3,1
 Tip=Create Ancient of Wind
 Ubertip=Keeper of aerial assault units and spellcasters. Trains Hippogryphs, Druids of the Talon, and Faerie Dragons. Also contains the upgrades for Druids of the Talon and Mark of the Talon. Attacks land units.
 
@@ -4496,8 +4496,8 @@ Tip=Train Druid of the Claw
 Ubertip=Melee spellcaster. Can initially cast Roar, which increases attack damage. Can also learn Rejuvenation, Bear Form and Mark of the Claw. Attacks land units.
 
 [eden]
-Hotkey=C
-Buttonpos=2,2
+Hotkey=R
+Buttonpos=3,0
 Tip=Build Ancient of Wonders
 Ubertip=Creates a shop with purchasable items. The items available depend upon what level of upgrade your Tree of Life has (Tree of Life, Tree of Ages, or Tree of Eternity) and which buildings you have. Attacks land units.
 
@@ -4566,8 +4566,8 @@ Tip=Ride Hippogryph
 Ubertip=Archer mounted Hippogryph. Attacks land and air units.
 
 [emow]
-Hotkey=A
-Buttonpos=0,1
+Hotkey=Q
+Buttonpos=0,0
 Tip=Create Moon Well
 Ubertip=Provides food, which increases the maximum number of units that can be trained. Has the Replenish Mana and Life ability. Can gain the Well Spring upgrade. Regenerates mana at night.
 
@@ -4604,14 +4604,14 @@ Tip=Upgrade to Tree of Eternity
 Ubertip=Upgrade to Tree of Eternity to enable the production of additional types of structures and units. Attacks land units.
 
 [etol]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=A
+Buttonpos=0,1
 Tip=Create Tree of Life
 Ubertip=Primary structure, used to train Wisps and entangle gold mines. Can be upgraded to Tree of Ages and then Tree of Eternity to enable the production of additional types of structures and units. Attacks land units.
 
 [etrp]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=Y
+Buttonpos=0,2
 Tip=Create Ancient Protector
 Ubertip=Defensive Ancient. When rooted in the ground, can hurl enormous rocks at nearby enemy units. Attacks land and air units.
 
@@ -4665,8 +4665,8 @@ Tip=Build Barracks
 Ubertip=Primary troop production building. Trains Footmen, Riflemen and Knights. Also contains the Defend, Long Rifles, Animal War Training, and Sundering Blades upgrades.
 
 [hbla]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=C
+Buttonpos=2,2
 Tip=Build Blacksmith
 Ubertip=Contains upgrades for improved armor, weaponry and gunpowder.
 
@@ -4837,8 +4837,8 @@ Tip=Build Town Hall
 Ubertip=Primary structure, used to train Peasants and receive gathered resources. Can be upgraded to Keep and then Castle to enable the production of additional types of structures and units.
 
 [hvlt]
-Hotkey=C
-Buttonpos=2,2
+Hotkey=R
+Buttonpos=3,0
 Tip=Build Arcane Vault
 Ubertip=Creates a shop with purchasable items. The items available depend upon what level of upgrade your Town Hall has (Town Hall, Keep, or Castle) and which buildings you have.
 
@@ -6258,8 +6258,8 @@ Tip=Build Barracks
 Ubertip=Primary troop production building. Trains Grunts, Headhunters and Demolishers. Also contains the Brute Strength, Berserker, Troll Regeneration, and Burning Oil upgrades.
 
 [obea]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=F
+Buttonpos=3,1
 Tip=Build Beastiary
 Ubertip=Trains Raiders, Kodo Beasts, Batriders, and Wind Riders. Also contains the Ensnare, Envenomed Spears, Liquid Fire and War Drums upgrades.
 
@@ -6309,8 +6309,8 @@ Tip=Purchase Orb of Fire
 Ubertip=Adds 5 bonus fire damage to the attack of a Hero when carried. The Hero's attacks also become ranged when attacking air and do splash damage to nearby enemy units.
 
 [ofor]
-Hotkey=D
-Buttonpos=2,1
+Hotkey=E
+Buttonpos=2,0
 Tip=Build War Mill
 Ubertip=Serves as a drop-off point for harvested lumber. Also contains upgrades for improved armor, melee weapons, ranged weapons, Reinforced Defenses, and Spiked Barricades.
 
@@ -6327,8 +6327,8 @@ Tip=Upgrade to Fortress
 Ubertip=Upgrade to Fortress to enable the production of additional types of structures and units.
 
 [ogre]
-Hotkey=Y
-Buttonpos=0,2
+Hotkey=A
+Buttonpos=0,1
 Tip=Build Great Hall
 Ubertip=Primary structure, used to train Peons and receive gathered resources. Can be upgraded to Stronghold and then Fortress to enable the production of additional types of structures and units.
 
@@ -6389,8 +6389,8 @@ Tip=Train Shaman
 Ubertip=Primary spellcaster. Can initially cast Purge, which dispels magical buffs and can immobilize enemies. Can also learn Lightning Shield and Bloodlust. Attacks land and air units.
 
 [osld]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=D
+Buttonpos=2,1
 Tip=Build Spirit Lodge
 Ubertip=Spellcaster production building. Trains Shaman and Witch Doctors. Also contains spell upgrades for Shaman and Witch Doctors.
 
@@ -6443,8 +6443,8 @@ Tip=Build Burrow
 Ubertip=Provides food, which increases the maximum number of units that can be trained. Peons can garrison inside to attack enemy units. Can learn the Reinforced Defenses upgrade. Attacks land and air units.
 
 [otto]
-Hotkey=A
-Buttonpos=0,1
+Hotkey=X
+Buttonpos=1,2
 Tip=Build Tauren Totem
 Ubertip=Trains Spirit Walkers and Tauren. Also contains upgrades for Spirit Walkers and Tauren.
 
@@ -6459,14 +6459,14 @@ Hotkey=W
 Buttonpos=1,0
 
 [ovln]
-Hotkey=X
-Buttonpos=1,2
+Hotkey=R
+Buttonpos=3,0
 Tip=Build Voodoo Lounge
 Ubertip=Creates a shop with purchasable items. The items available depend upon what level of upgrade your Great Hall has (Great Hall, Stronghold, or Fortress) and which buildings you have.
 
 [owtw]
-Hotkey=F
-Buttonpos=3,1
+Hotkey=Y
+Buttonpos=0,2
 Tip=Build Watch Tower
 Ubertip=Defensive structure. Can learn the Reinforced Defenses upgrade. Attacks land and air units.
 
@@ -6723,8 +6723,8 @@ Tip=Train Ghoul
 Ubertip=Basic attack unit and lumber harvester. Can learn Cannibalize and Ghoul Frenzy. Attacks land units and trees.
 
 [ugol]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=Y
+Buttonpos=0,2
 Tip=Haunt Gold Mine
 Ubertip=Haunts a gold mine so that Acolytes can mine. Use on gold mines to corrupt them.
 
@@ -6735,8 +6735,8 @@ Tip=Train Gargoyle
 Ubertip=Flying attack creature. Attacks land and air units.
 
 [ugrv]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=E
+Buttonpos=2,0
 Tip=Summon Graveyard
 Ubertip=Provides attack and armor upgrades for Undead units. Also produces corpses and serves as a drop-off point for harvested lumber.
 
@@ -6765,8 +6765,8 @@ Tip=Upgrade to Black Citadel
 Ubertip=Upgrade to Black Citadel to enable the production of additional types of structures and units. Attacks land and air units.
 
 [unpl]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=A
+Buttonpos=0,1
 Tip=Summon Necropolis
 Ubertip=Primary structure, used to train Acolytes and receive lumber gathered by Ghouls. Can be upgraded to Halls of the Dead and then Black Citadel to enable the production of additional types of structures and units.
 
@@ -6777,8 +6777,8 @@ Tip=Create Obsidian Statue
 Ubertip=Fortified statue that can help replenish the life and mana of your army. Can initially cast Spirit Touch and Essence of Blight, and learn the Destroyer Form ability. Attacks land and air units.
 
 [usap]
-Hotkey=Y
-Buttonpos=0,2
+Hotkey=C
+Buttonpos=2,2
 Tip=Summon Sacrificial Pit
 Ubertip=Has the Sacrifice ability for turning Acolytes into Shades. Shades are invisible spirits that can see invisible units, but cannot attack.
 
@@ -6805,8 +6805,8 @@ Tip=Summon Temple of the Damned
 Ubertip=Spellcaster production building. Trains Necromancers and Banshees. Also contains upgrades for Necromancers, Banshees, and Skeletal Mastery.
 
 [utom]
-Hotkey=C
-Buttonpos=2,2
+Hotkey=R
+Buttonpos=3,0
 Tip=Summon Tomb of Relics
 Ubertip=Creates a shop with purchasable items. The items available depend upon what level of upgrade your Necropolis has (Necropolis, Halls of the Dead, or Black Citadel) and which buildings you have.
 
@@ -6829,8 +6829,8 @@ Tip=Upgrade to Nerubian Tower
 Ubertip=Upgrade to create a defensive structure that deals cold damage and slows enemy units. Attacks land and air units.
 
 [uzig]
-Hotkey=A
-Buttonpos=0,1
+Hotkey=Q
+Buttonpos=0,0
 Tip=Summon Ziggurat
 Ubertip=Provides food, which increases the maximum number of units that can be trained. Can be upgraded to a defensive structure that attacks land and air units.
 
