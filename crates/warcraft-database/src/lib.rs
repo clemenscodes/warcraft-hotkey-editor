@@ -17,7 +17,7 @@ pub use db::WARCRAFT_GAMEPLAY_CONSTANTS;
 pub use db::WARCRAFT_SYSTEM_KEYBINDS;
 pub use object_lookup::ObjectLookup;
 pub use system_hotkeys_category::SystemHotkeysCategory;
-pub use unit_catalog::{CatalogEntry, SearchField, UnitCatalog};
+pub use unit_catalog::{CatalogEntry, CatalogVisibility, SearchField, UnitCatalog};
 pub use unit_kind::UnitKindHelpers;
 pub use unit_mode::UnitMode;
 pub use variant_groups::{VariantGroup, VariantUnits};

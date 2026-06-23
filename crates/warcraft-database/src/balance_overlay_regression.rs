@@ -27,7 +27,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{SearchField, UnitCatalog, UnitMode, WARCRAFT_DATABASE};
+    use crate::{CatalogVisibility, SearchField, UnitCatalog, UnitMode, WARCRAFT_DATABASE};
     use warcraft_api::{Race, WarcraftObjectMeta};
 
     fn unit_abilities(unit_id: &str) -> Vec<String> {
@@ -160,6 +160,7 @@ mod tests {
             None,
             None,
             SearchField::UnitName,
+            CatalogVisibility::default(),
         );
         let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         assert!(
@@ -333,6 +334,7 @@ mod tests {
                 None,
                 None,
                 SearchField::UnitName,
+                CatalogVisibility::default(),
             );
             for entry in &entries {
                 let WarcraftObjectMeta::Unit(unit_meta) = entry.warcraft_object().meta() else {
@@ -359,6 +361,7 @@ mod tests {
             None,
             None,
             SearchField::UnitName,
+            CatalogVisibility::default(),
         );
         let ids: Vec<&str> = entries.iter().map(|entry| entry.unit_id()).collect();
         for placeholder in ["nanc", "nanw"] {

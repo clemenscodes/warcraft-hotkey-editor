@@ -9,7 +9,7 @@ use std::time::Duration;
 use dioxus::document;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{SearchField, UnitKindHelpers, UnitMode};
+use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
 
 use crate::components::tabs::mode_and_race_tabs::ModeButtonClass;
 use crate::model::grid::GridSlotId;
@@ -35,6 +35,14 @@ pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
     }
 }
 
+struct VisibilityToggleClass;
+
+impl VisibilityToggleClass {
+    fn get() -> &'static str {
+        "flex-1 min-h-[2.4rem] px-3 whitespace-nowrap bg-[linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] border border-[#6c5a1f] rounded-[8px] text-[#c0c8da] font-friz-quadrata text-[1.1rem] uppercase tracking-[0.08em] [text-shadow:1px_1px_0_#000] transition-[border-color,color,box-shadow] duration-150 hover:border-warcraft-gold hover:text-warcraft-gold focus:outline-none [body[data-kb-modality]_&]:focus:outline-none [body[data-kb-modality]_&]:focus:border-white [body[data-kb-modality]_&]:focus:text-white [body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)] data-[active=true]:bg-[linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] data-[active=true]:border-warcraft-gold data-[active=true]:text-warcraft-gold data-[active=true]:shadow-[0_0_12px_rgba(255,206,99,0.3)] min-[701px]:max-[2000px]:text-[clamp(0.8rem,0.45vw+0.55rem,1.05rem)] min-[701px]:max-[2000px]:px-2 max-[700px]:text-[0.95rem] max-[480px]:text-[0.85rem] max-[480px]:px-[0.5rem]"
+    }
+}
+
 struct MobileTabEntry {
     kind: UnitKind,
     is_active: bool,
@@ -56,6 +64,7 @@ struct CategorySectionEntry {
     is_collapsed: bool,
     query: String,
     search_field: SearchField,
+    visibility: CatalogVisibility,
     active_unit_id: Option<String>,
 }
 
@@ -80,6 +89,10 @@ impl CategorySectionEntry {
         self.search_field
     }
 
+    fn visibility(&self) -> CatalogVisibility {
+        self.visibility
+    }
+
     fn active_unit_id(&self) -> Option<String> {
         self.active_unit_id.clone()
     }
@@ -93,6 +106,8 @@ pub(crate) struct UnitListPanelProps {
     pub(crate) selected_slot: Signal<Option<GridSlotId>>,
     pub(crate) search_query: Signal<String>,
     pub(crate) search_field: Signal<SearchField>,
+    pub(crate) show_abilityless_units: Signal<bool>,
+    pub(crate) expand_variants: Signal<bool>,
     pub(crate) collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
@@ -104,7 +119,12 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
     let mut selected_slot = props.selected_slot;
     let mut search_query = props.search_query;
     let mut search_field = props.search_field;
+    let mut show_abilityless_units = props.show_abilityless_units;
+    let mut expand_variants = props.expand_variants;
     let current_search_field = *search_field.read();
+    let show_abilityless_active = *show_abilityless_units.read();
+    let expand_variants_active = *expand_variants.read();
+    let visibility = CatalogVisibility::new(show_abilityless_active, expand_variants_active);
     let search_placeholder = match current_search_field {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
@@ -112,6 +132,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
     // Reuse the exact Melee/Campaign button styling so the search-field toggle
     // matches their size and width.
     let search_field_button_class = ModeButtonClass::get();
+    let visibility_toggle_class = VisibilityToggleClass::get();
     let collapsed_categories = props.collapsed_categories;
     let mut raw_query = use_signal(|| search_query.read().clone());
     let mut debounce_gen: Signal<u32> = use_signal(|| 0);
@@ -134,6 +155,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
         current_search_field,
         selected_unit_id,
         collapsed_categories,
+        visibility,
     );
     let mut active_category_signal = state.active_category();
     let active_kind = state.active_kind();
@@ -204,6 +226,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
             is_collapsed: state.collapsed_snapshot().contains(&kind),
             query: state.query_snapshot().to_owned(),
             search_field: current_search_field,
+            visibility,
             active_unit_id: state.active_unit_id().map(str::to_owned),
         })
         .collect();
@@ -232,6 +255,29 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                     aria_pressed: current_search_field == SearchField::Ability,
                     onclick: move |_| search_field.set(SearchField::Ability),
                     "Ability"
+                }
+            }
+            div {
+                class: "flex flex-row gap-2 mb-2 [&>button]:min-h-[6.7rem]! max-[700px]:[&>button]:min-h-[3.5rem]!",
+                role: "group",
+                aria_label: "Catalog visibility",
+                button {
+                    r#type: "button",
+                    class: visibility_toggle_class,
+                    "data-active": show_abilityless_active,
+                    aria_pressed: show_abilityless_active,
+                    title: "Show units without abilities (for stats)",
+                    onclick: move |_| show_abilityless_units.set(!show_abilityless_active),
+                    "No abilities"
+                }
+                button {
+                    r#type: "button",
+                    class: visibility_toggle_class,
+                    "data-active": expand_variants_active,
+                    aria_pressed: expand_variants_active,
+                    title: "List every tier / upgrade variant separately",
+                    onclick: move |_| expand_variants.set(!expand_variants_active),
+                    "All variants"
                 }
             }
             div {
@@ -271,6 +317,7 @@ pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
                             mode,
                             query: section.query(),
                             search_field: section.search_field(),
+                            visibility: section.visibility(),
                             active_unit_id: section.active_unit_id(),
                             selected_unit_id,
                             selected_slot,

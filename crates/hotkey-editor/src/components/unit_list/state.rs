@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{SearchField, UnitCatalog, UnitMode};
+use warcraft_database::{CatalogVisibility, SearchField, UnitCatalog, UnitMode};
 
 pub(super) struct UnitListState {
     active_category: Signal<UnitKind>,
@@ -26,6 +26,7 @@ impl UnitListState {
         search_field: SearchField,
         selected_unit_id: Signal<Option<String>>,
         collapsed_categories: Signal<HashSet<UnitKind>>,
+        visibility: CatalogVisibility,
     ) -> Self {
         let active_category = use_signal::<UnitKind>(|| UnitKind::Soldier);
         let race = *active_race.read();
@@ -39,8 +40,14 @@ impl UnitListState {
         let query_option = Some(query_str);
         let race_option = if search_active { None } else { Some(race) };
         let mode_option = if search_active { None } else { Some(mode) };
-        let all_entries =
-            UnitCatalog::entries_for(race_option, mode_option, None, query_option, search_field);
+        let all_entries = UnitCatalog::entries_for(
+            race_option,
+            mode_option,
+            None,
+            query_option,
+            search_field,
+            visibility,
+        );
         let mut seen: Vec<UnitKind> = Vec::new();
         let mut first_result_id: Option<String> = None;
         let mut first_result_kind: Option<UnitKind> = None;

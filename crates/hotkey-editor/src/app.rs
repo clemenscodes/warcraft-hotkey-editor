@@ -352,6 +352,8 @@ pub(crate) fn App() -> Element {
     let mut preview_open = use_signal::<bool>(|| false);
     let mut system_hotkeys_open = use_signal::<bool>(|| false);
     let collapsed_categories = use_signal::<HashSet<UnitKind>>(HashSet::new);
+    let show_abilityless_units = use_signal::<bool>(|| false);
+    let expand_variants = use_signal::<bool>(|| false);
 
     let handle_keydown = move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
@@ -432,20 +434,6 @@ pub(crate) fn App() -> Element {
         }
     };
 
-    // The algorithm-UI pages (Resolve, Collisions) own their internal scroll and
-    // pin the footer below; on mobile the app stays viewport-bounded (the
-    // `.app-bounded` rule in mobile-foundation.css) so those panes scroll inside
-    // instead of the whole page scrolling. The Editor keeps its natural-height,
-    // page-scrolling mobile layout.
-    let scroll_contained_view = matches!(
-        *current_view.read(),
-        AppView::Resolve | AppView::Collisions { .. }
-    );
-    let app_mobile_class = if scroll_contained_view {
-        "app-bounded"
-    } else {
-        "max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible"
-    };
     // The collisions breadcrumb is the first thing in its view, so it must sit
     // flush under the header divider for its text to centre in the band between
     // that divider and the bar's own border — drop the app's header-to-view gap
@@ -459,7 +447,9 @@ pub(crate) fn App() -> Element {
     };
     let app_class = format!(
         "app mx-auto pt-7 pb-12 px-14 flex flex-col min-h-[100dvh] {app_gap_class} \
-         max-[1500px]:pt-0 {app_mobile_class} max-[700px]:px-4 max-[480px]:px-2"
+         max-[1500px]:pt-0 \
+         max-[1024px]:h-auto max-[1024px]:min-h-screen max-[1024px]:overflow-visible \
+         max-[700px]:px-4 max-[480px]:px-2"
     );
 
     rsx! {
@@ -518,7 +508,7 @@ pub(crate) fn App() -> Element {
                     div {
                         class: "main-content",
                         "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
-                        UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, search_field, collapsed_categories }
+                        UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, search_field, show_abilityless_units, expand_variants, collapsed_categories }
                         UnitDetailPanel {
                             selected_unit_id,
                             selected_slot,
