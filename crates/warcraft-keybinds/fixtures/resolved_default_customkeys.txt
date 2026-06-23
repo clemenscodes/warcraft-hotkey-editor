@@ -4259,7 +4259,7 @@ Ubertip=Unloads all carried units at a target location.
 
 [Slo2]
 Hotkey=L
-Buttonpos=1,2
+Buttonpos=0,2
 Tip=Load Wisp
 Ubertip=Loads a targeted friendly Wisp.
 

@@ -259,6 +259,13 @@ impl UnitCommandSlots for WarcraftDatabase {
         let host_is_burrowed = BuildingTraits::is_burrowed_form(unit_id_str);
         let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(unit_id_str);
 
+        let mut occupied_on_positions: Vec<GridCoordinate> = Vec::new();
+        for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
+            if let Some(on_position) = slot_position_from_database(self, ability_id.value()) {
+                occupied_on_positions.push(on_position);
+            }
+        }
+
         let mut unplaced_ability_slots: Vec<GridSlotId> = Vec::new();
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
             let ability_str = ability_id.value();
@@ -322,10 +329,17 @@ impl UnitCommandSlots for WarcraftDatabase {
                     // To Work lives on the Militia's card, not the Peasant's — a
                     // worker must show only the on-state button. Morph/alt-state
                     // toggles already chose the off-state slot above.
+                    //
+                    // Never drop the off-state button onto a cell another of this
+                    // unit's abilities already owns. Some buildings (e.g. the
+                    // Entangled Gold Mine's Aenc) carry a stray off-position that
+                    // lands on a real ability, which would manufacture an
+                    // unresolvable collision out of two pinned siblings.
                     if !use_off_state
                         && unit_kind == UnitKind::Building
                         && let Some(off_position) = off_state_position
                         && off_position != ability_position
+                        && !occupied_on_positions.contains(&off_position)
                     {
                         let off_state_slot = GridSlotId::ability_off(ability_str);
                         if !card.place(off_position, off_state_slot) {

@@ -508,7 +508,6 @@ mod unit_collision_report_tests {
         let empty_hot = empty_hot_builder.build();
 
         let mut builder = UnitCollisionReportBuilder::new();
-
         // nahy (Ancient Hydra)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1124,11 +1123,6 @@ mod unit_collision_report_tests {
         // egol (Entangled Gold Mine)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
-                .collision_at(
-                    0,
-                    2,
-                    &[GridSlotId::ability("Slo2"), GridSlotId::ability("Aenc")],
-                )
                 .collision_at(
                     1,
                     2,
