@@ -18,6 +18,15 @@
     background: #ffce63;
 }
 
+/* The Help guide uses a two-column desktop layout (explanations on the left,
+   glossary and legend on the right), so it wants a wide shell like the other
+   dialogs. The phone and tablet rules below still apply because they come
+   later in this layer. */
+.dialog-shell.help-dialog {
+    width: min(1900px, 95vw);
+    height: 86vh;
+}
+
 /* ───────────────────────── Dialogs: full-screen sheet on phone (A8) ─────────────────────────
    Phone (≤ 480 px): every dialog (templates, preview, system hotkeys, layout
    editor) becomes a full-screen sheet — overlay padding drops to zero so the
@@ -34,6 +43,7 @@
     .dialog-shell.wc3-dialog,
     .dialog-shell.system-hotkeys-dialog,
     .dialog-shell.preview-dialog,
+    .dialog-shell.help-dialog,
     .dialog-shell.key-picker-shell,
     .dialog-shell.sys-key-picker-shell,
     .dialog-shell.upload-info-dialog,

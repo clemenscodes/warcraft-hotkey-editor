@@ -5,6 +5,26 @@ const staticDir = process.env["STATIC_DIR"];
 const staticBasePath = process.env["STATIC_BASE_PATH"] ?? "";
 const serverScript = join(__dirname, "e2e", "server.mjs");
 
+const baseUrl = process.env["BASE_URL"] ?? "http://localhost:8123";
+
+// Suppress the first-visit onboarding Help dialog for the whole suite by
+// seeding its "already seen" flag. The dialog is correct production behavior
+// for fresh visitors, but as a modal overlay it would intercept the clicks
+// every interacting test relies on. Tests that exercise onboarding itself
+// override this with an empty storageState. Seeded against the same origin the
+// suite navigates to, so a BASE_URL override stays consistent.
+const onboardingSuppressedState = {
+  cookies: [],
+  origins: [
+    {
+      origin: baseUrl,
+      localStorage: [
+        { name: "warcraft-hotkey-editor.onboarding-seen", value: "true" },
+      ],
+    },
+  ],
+};
+
 export default defineConfig({
   globalSetup: "./e2e/global-setup.ts",
   testDir: "./e2e/tests",
@@ -20,7 +40,8 @@ export default defineConfig({
     ["html", { open: "never", outputFolder: "./dist/playwright-report" }],
   ],
   use: {
-    baseURL: process.env["BASE_URL"] ?? "http://localhost:8123",
+    baseURL: baseUrl,
+    storageState: onboardingSuppressedState,
     actionTimeout: process.env["CI"] ? 1000 : 5000,
     navigationTimeout: 10_000,
     trace: "on-first-retry",

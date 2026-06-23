@@ -5,6 +5,7 @@ use warcraft_api::{Race, UnitKind};
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
+use crate::components::dialogs::help_dialog::HelpDialog;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
 use crate::components::shell::drag_follower_overlay::DragFollowerOverlay;
 use crate::components::shell::footer::Footer;
@@ -19,7 +20,7 @@ use crate::components::views::collisions_page::CollisionsPage;
 use crate::components::views::resolve_page::ResolvePage;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::model::grid::{EditingCell, GridLayout};
-use crate::services::customkeys::persistence::CustomKeysPersistence;
+use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
@@ -351,6 +352,7 @@ pub(crate) fn App() -> Element {
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
     let mut preview_open = use_signal::<bool>(|| false);
     let mut system_hotkeys_open = use_signal::<bool>(|| false);
+    let help_open = use_signal::<bool>(|| !OnboardingPersistence::has_been_seen());
     let collapsed_categories = use_signal::<HashSet<UnitKind>>(HashSet::new);
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
@@ -491,6 +493,7 @@ pub(crate) fn App() -> Element {
                 editing_layout_cell,
                 dragging_layout_cell,
                 system_hotkeys_open,
+                help_open,
                 current_view,
                 active_race,
                 unit_mode,
@@ -562,6 +565,9 @@ pub(crate) fn App() -> Element {
                 }
                 if *system_hotkeys_open.read() {
                     SystemHotkeysDialog { loaded_keys, system_hotkeys_open }
+                }
+                if *help_open.read() {
+                    HelpDialog { help_open }
                 }
                 DragFollowerOverlay { drag_follower, active_race }
             }
