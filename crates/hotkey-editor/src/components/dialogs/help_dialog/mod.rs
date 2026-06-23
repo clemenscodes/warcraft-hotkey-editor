@@ -38,32 +38,29 @@ const CONFLICT_KINDS: [GlossaryEntry; 3] = [
     },
 ];
 
-const RESOLVER_INTRO_TEXT: &str = "You never arrange any of this by hand. The moment you press apply, the resolver page settles every clash at once. Here is the short version of how it works, with each term spelled out below.";
-
-const RESOLVER_WALKTHROUGH: [&str; 2] = [
-    "The whole clash is modeled as a conflict graph. Every ability is a node, and two of them share an edge whenever a single unit carries both. The tangled clusters those edges form are the islands. Each island is solved on its own. Within one, an anchor is crowned at every contested button, the ability the most units carry, while the losers slide aside.",
-    "A slide can land on another taken button and spark a fresh fight, so the moves cascade across the row. When a row runs out of room, the stranded ability spills onto another row or swaps with what sits there, and gap pulls tidy the holes left behind. The board is swept round after round until that island settles. Every island found is resolved the same way, so the whole grid lands in one go.",
+const RESOLVER_WALKTHROUGH: [&str; 1] = [
+    "The whole clash is modeled as a conflict graph. Every ability is a node, and two of them share an edge whenever a single unit carries both. The tangled clusters those edges form are the islands. Each island is solved on its own. Within one, an anchor is crowned at every contested button, the ability the most units carry, while the losers slide aside. A slide can land on another taken button and spark a fresh fight, so the moves cascade across the row. When a row runs out of room, the stranded ability spills onto another row or swaps with what sits there, and gap pulls tidy the holes left behind. The board is swept round after round until that island settles. Every island found is resolved the same way, so the whole grid lands in one go.",
 ];
 
 const RESOLVER_PARTS: [GlossaryEntry; 3] = [
     GlossaryEntry {
         term: "Island",
-        description: "A connected cluster of abilities that collide on one button. Two abilities are linked when a single unit carries both, and the links can chain from one ability to the next across several units. In graph terms it is a connected component of the conflict graph, and the editor untangles one island at a time.",
+        description: "A connected cluster of abilities that collide on one button. Two abilities are linked when a single unit carries both, and the links can chain from one ability to the next across several units.",
     },
     GlossaryEntry {
         term: "Anchor",
-        description: "The ability that wins a contested button and stays put. The editor keeps the ability that the most units carry, because moving it would disturb the most cards, so the rarer ability gives way instead. An island is finished once every ability in it has become an anchor and nothing moves.",
+        description: "The ability that wins a contested button and stays put. The editor keeps the ability that the most units carry, because moving it would disturb the most cards, so the rarer ability gives way instead.",
     },
     GlossaryEntry {
         term: "Mover",
-        description: "An ability that steps aside so the anchor can keep the button. It slides one button to the right whether or not that button is taken. If something already sits there, the move sparks another fight that can push that ability onward as well. A mover may win its new button and become an anchor itself.",
+        description: "An ability that steps aside so the anchor can keep the button. It slides one button to the right.",
     },
 ];
 
 const RESOLVER_MOVES: [GlossaryEntry; 4] = [
     GlossaryEntry {
         term: "Fights",
-        description: "Two or more abilities want the same button. The most shared one stays, and the others slide one button to the right.",
+        description: "Two or more abilities want the same button. The most shared one stays, the others slide to the right.",
     },
     GlossaryEntry {
         term: "Gap pulls",
@@ -71,11 +68,11 @@ const RESOLVER_MOVES: [GlossaryEntry; 4] = [
     },
     GlossaryEntry {
         term: "Spills",
-        description: "If an ability still has nowhere to go in its own row, the editor rehomes it to a free button in another row. This is the last resort.",
+        description: "If an ability still has nowhere to go in its own row, the editor rehomes it to a free button in another row.",
     },
     GlossaryEntry {
         term: "Swaps",
-        description: "Sometimes the neatest fix is for two abilities to trade buttons. They switch places in a single move.",
+        description: "Two abilities swap positions in a single move.",
     },
 ];
 
@@ -290,14 +287,12 @@ pub(crate) fn HelpDialog(props: HelpDialogProps) -> Element {
                     section { class: "flex flex-col gap-[1.4rem]",
                         h3 { class: "help-section-title", "What the resolver is doing" }
                         div { class: "help-resolver-prose flex flex-col gap-[1.2rem]",
-                            p { class: "help-body-text m-0", "{RESOLVER_INTRO_TEXT}" }
                             for paragraph in RESOLVER_WALKTHROUGH.iter() {
                                 p { class: "help-body-text m-0", "{paragraph}" }
                             }
                         }
                         div { class: "help-glossary-columns flex flex-col gap-[2.6rem]",
                             div { class: "help-glossary-col flex flex-col gap-[1.4rem]",
-                                h4 { class: "help-term", "The three kinds of conflict" }
                                 for kind in CONFLICT_KINDS.iter() {
                                     div { class: "flex flex-col gap-[0.4rem]",
                                         p { class: "help-step-number m-0", "{kind.term}" }
@@ -306,7 +301,6 @@ pub(crate) fn HelpDialog(props: HelpDialogProps) -> Element {
                                 }
                             }
                             div { class: "help-glossary-col flex flex-col gap-[1.4rem]",
-                                h4 { class: "help-term", "The pieces" }
                                 for part in RESOLVER_PARTS.iter() {
                                     div { class: "flex flex-col gap-[0.4rem]",
                                         p { class: "help-step-number m-0", "{part.term}" }
@@ -315,7 +309,6 @@ pub(crate) fn HelpDialog(props: HelpDialogProps) -> Element {
                                 }
                             }
                             div { class: "help-glossary-col flex flex-col gap-[1.4rem]",
-                                h4 { class: "help-term", "The kinds of move" }
                                 for resolver_move in RESOLVER_MOVES.iter() {
                                     div { class: "flex flex-col gap-[0.4rem]",
                                         p { class: "help-step-number m-0", "{resolver_move.term}" }
