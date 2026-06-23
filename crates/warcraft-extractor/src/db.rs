@@ -3,7 +3,7 @@ use warcraft_api::{
     GameplayConstants, GridCoordinate, HeroAttributes, ItemMeta, ManaPool, ObjectMap,
     PrimaryAttribute, Race, RegenType, UnitAttack, UnitCombat, UnitFlags, UnitKind, UnitMeta,
     UnitProduction, UpgradeMeta, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
-    WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText,
+    WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText, WeaponType,
 };
 
 struct WarcraftObjectIdentity {
@@ -702,12 +702,17 @@ impl WarcraftDataAggregation {
             .data_table_lookup(id, "atkType1")
             .map(|raw_value| AttackType::parse(&raw_value))
             .unwrap_or_default();
+        let weapon_type = self
+            .data_table_lookup(id, "weapTp1")
+            .map(|raw_value| WeaponType::parse(&raw_value))
+            .unwrap_or_default();
         let unit_attack = UnitAttack::new(
             damage_min,
             damage_max,
             attack_range,
             cooldown_seconds,
             attack_type,
+            weapon_type,
         );
         Some(unit_attack)
     }
@@ -875,7 +880,15 @@ impl WarcraftDataAggregation {
             let object_id = WarcraftObjectId::new(leaked_id);
             let pretty_name = Self::leak(&Self::pretty_command_name(command_id));
             let names = Self::leak_slice(&[pretty_name]);
-            let icon_path = entry.art().map(Self::resolve_command_icon);
+            // Worker build commands all carry the generic "basic structure"
+            // art, but in game the build button is the race build ability, whose
+            // icon is race specific. Prefer the build ability's icon so the
+            // editor shows the same per-race button the game renders.
+            let build_ability_icon = Self::build_ability_for_command(command_id)
+                .and_then(|ability_id| self.get_ability_icon_by_id(ability_id))
+                .map(|raw_icon| self.normalize_icon_path(&raw_icon));
+            let icon_path =
+                build_ability_icon.or_else(|| entry.art().map(Self::resolve_command_icon));
             let icons: &'static [&'static str] = match icon_path {
                 Some(path) => Self::leak_slice(&[Self::leak(path.as_str())]),
                 None => &[],
@@ -903,6 +916,19 @@ impl WarcraftDataAggregation {
             map.insert(object_id, warcraft_object);
         }
         map
+    }
+
+    /// Maps a worker build command to the race build ability whose icon the
+    /// live game renders for that button. Returns `None` for non-build commands.
+    fn build_ability_for_command(command_id: &str) -> Option<&'static str> {
+        let lowered = command_id.to_ascii_lowercase();
+        match lowered.as_str() {
+            "cmdbuildhuman" => Some("AHbu"),
+            "cmdbuildorc" => Some("AObu"),
+            "cmdbuildundead" => Some("AUbu"),
+            "cmdbuildnightelf" => Some("AEbu"),
+            _ => None,
+        }
     }
 
     fn resolve_command_icon(art: &str) -> String {
@@ -1521,6 +1547,54 @@ impl WarcraftDataAggregation {
                 }
             }
         }
+        // The four worker build abilities (AHbu/AObu/AUbu/AEbu) are real
+        // command-card buttons the live game renders, and the game reads their
+        // grid position from the ability. No unit's abilList references them and
+        // they carry no name string, so the passes above skip them. Add them
+        // explicitly for every race that fields a worker; their icon comes from
+        // abilityskin.txt and their Buttonpos (0,2) from the ability defaults.
+        struct BuildAbilityInfo {
+            race: Race,
+            ability_id: &'static str,
+            fallback_name: &'static str,
+        }
+        const BUILD_ABILITIES: &[BuildAbilityInfo] = &[
+            BuildAbilityInfo {
+                race: Race::Human,
+                ability_id: "AHbu",
+                fallback_name: "Build Structure",
+            },
+            BuildAbilityInfo {
+                race: Race::Orc,
+                ability_id: "AObu",
+                fallback_name: "Build Structure",
+            },
+            BuildAbilityInfo {
+                race: Race::Nightelf,
+                ability_id: "AEbu",
+                fallback_name: "Create Building",
+            },
+            BuildAbilityInfo {
+                race: Race::Undead,
+                ability_id: "AUbu",
+                fallback_name: "Summon Building",
+            },
+        ];
+        for build_ability in BUILD_ABILITIES {
+            let race_units = self.units.get(&build_ability.race);
+            let has_worker = race_units.is_some_and(|kinds| {
+                let worker_units = kinds.get(&UnitKind::Worker);
+                worker_units.is_some_and(|units| !units.is_empty())
+            });
+            if !has_worker {
+                continue;
+            }
+            let ability_key = build_ability.ability_id.to_string();
+            inferred
+                .entry(ability_key)
+                .or_insert(Some(build_ability.race));
+        }
+
         for (ability_id_str, race) in &inferred {
             if map.contains_key(ability_id_str.as_str()) {
                 continue;
@@ -1529,8 +1603,17 @@ impl WarcraftDataAggregation {
                 .get_ability_icon_by_id(ability_id_str)
                 .unwrap_or_default();
             let icon = self.normalize_icon_path(&icon);
-            let Some(resolved_name) = self.resolve_ability_name(*race, ability_id_str) else {
-                continue;
+            let resolved_name = match self.resolve_ability_name(*race, ability_id_str) {
+                Some(name) => name,
+                None => {
+                    let build_ability = BUILD_ABILITIES
+                        .iter()
+                        .find(|info| info.ability_id == ability_id_str.as_str());
+                    let Some(build_ability) = build_ability else {
+                        continue;
+                    };
+                    build_ability.fallback_name
+                }
             };
             let leaked_id = Self::leak(ability_id_str);
             let ability_id = WarcraftObjectId::new(leaked_id);

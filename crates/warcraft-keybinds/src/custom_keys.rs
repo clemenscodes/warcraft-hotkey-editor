@@ -37,6 +37,35 @@ impl HotkeyConflict {
 const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
 
+/// Pairs a worker build command with the build ability the live game actually
+/// renders for it. In game the command card shows the build ability (`AHbu`,
+/// `AObu`, `AUbu`, `AEbu`) and reads its position and hotkey from there; the
+/// `CmdBuild*` command only drives the in-game hotkey editor. Moving the build
+/// command in the editor must write both, so the live game honors the position.
+struct BuildCommandMirror {
+    command_id: WarcraftObjectId,
+    ability_id: WarcraftObjectId,
+}
+
+const BUILD_COMMAND_MIRRORS: &[BuildCommandMirror] = &[
+    BuildCommandMirror {
+        command_id: WarcraftObjectId::new("CmdBuildHuman"),
+        ability_id: WarcraftObjectId::new("AHbu"),
+    },
+    BuildCommandMirror {
+        command_id: WarcraftObjectId::new("CmdBuildOrc"),
+        ability_id: WarcraftObjectId::new("AObu"),
+    },
+    BuildCommandMirror {
+        command_id: WarcraftObjectId::new("CmdBuildUndead"),
+        ability_id: WarcraftObjectId::new("AUbu"),
+    },
+    BuildCommandMirror {
+        command_id: WarcraftObjectId::new("CmdBuildNightElf"),
+        ability_id: WarcraftObjectId::new("AEbu"),
+    },
+];
+
 #[derive(Clone, Default)]
 pub struct CustomKeys {
     entries: BTreeMap<WarcraftObjectId, WarcraftKeybinding>,
@@ -213,7 +242,61 @@ impl CustomKeys {
         let mut result = Self::materialized_baseline().clone();
         let overlay_clone = self.clone();
         result.extend(overlay_clone);
+        result.prune_non_button_abilities();
+        result.mirror_build_commands_to_abilities();
         result
+    }
+
+    /// Copies each worker build command's position and hotkey onto the build
+    /// ability the live game renders for it (see [`BuildCommandMirror`]). The
+    /// game ignores the command's position in a live match and reads the
+    /// ability instead, so without this mirror it falls back to the ability's
+    /// default cell and slides it on collision.
+    fn mirror_build_commands_to_abilities(&mut self) {
+        for mirror in BUILD_COMMAND_MIRRORS {
+            let command_id = mirror.command_id;
+            let command_name = command_id.value();
+            let Some(command_binding) = self.command(command_name) else {
+                continue;
+            };
+            let position_ref = command_binding.button_position();
+            let button_position = position_ref.copied();
+            let hotkey_ref = command_binding.hotkey();
+            let hotkey = hotkey_ref.cloned();
+            if button_position.is_none() && hotkey.is_none() {
+                continue;
+            }
+            let ability_id = mirror.ability_id;
+            let existing_binding = self.binding(ability_id).cloned();
+            let mut ability_binding = existing_binding.unwrap_or_default();
+            ability_binding.set_button_position(button_position);
+            ability_binding.set_hotkey(hotkey);
+            self.put_ability(ability_id, ability_binding);
+        }
+    }
+
+    /// Drops ability bindings that never render as a real command button —
+    /// internal shop/selection mechanics (Shop Sharing, Select Hero/Unit) and
+    /// the Detector passive. The shipped baseline ships these as `[Aall]` etc.
+    /// at `Buttonpos=0,0` with the Q hotkey, so without this prune every shop
+    /// carries a phantom Q binding that collides with its real button in-game
+    /// even though no command card displays it. A binding is removed only when
+    /// its database object is an ability with no displayable icon, so genuine
+    /// buttons such as Select User (`Anei`) are kept.
+    fn prune_non_button_abilities(&mut self) {
+        self.entries.retain(|object_id, binding| {
+            if !matches!(binding, WarcraftKeybinding::Ability(_)) {
+                return true;
+            }
+            let object_option = WARCRAFT_DATABASE.by_id(object_id.value());
+            let Some(warcraft_object) = object_option else {
+                return true;
+            };
+            if warcraft_object.kind() != WarcraftObjectKind::Ability {
+                return true;
+            }
+            warcraft_object.has_displayable_icon()
+        });
     }
 
     fn materialized_baseline() -> &'static Self {
@@ -232,6 +315,7 @@ impl CustomKeys {
         export_file.extend(overlay_clone);
         export_file.materialize_default_positions();
         export_file.materialize_shop_item_positions();
+        export_file.prune_non_button_abilities();
         export_file.to_string()
     }
 
@@ -243,6 +327,16 @@ impl CustomKeys {
             match warcraft_object.kind() {
                 WarcraftObjectKind::Command => continue,
                 WarcraftObjectKind::Ability => {
+                    // Only materialize abilities that render as a real command
+                    // button. Internal shop/selection mechanics (Shop Sharing,
+                    // Select Hero/Unit) and the Detector passive carry a default
+                    // Buttonpos but a blacklisted or absent icon, so no command
+                    // card ever shows them. Without this filter they leak into
+                    // the file as phantom (0,0) bindings that take the Q hotkey
+                    // on every shop and collide with the real button in-game.
+                    if !warcraft_object.has_displayable_icon() {
+                        continue;
+                    }
                     // Toggle ability with no Buttonpos in the game data (e.g.
                     // Prioritize / Aatp on the Gargoyle).  Without a fallback
                     // the renderer skips it entirely; place it at origin and
@@ -1132,6 +1226,10 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                         let hotkey_clone = *hotkey;
                         target_binding.set_hotkey(Some(hotkey_clone));
                     }
+                    if let Some(hotkey) = source_binding.unhotkey() {
+                        let hotkey_clone = *hotkey;
+                        target_binding.set_unhotkey(Some(hotkey_clone));
+                    }
                     if let Some(position) = source_binding.button_position().copied() {
                         target_binding.set_button_position(Some(position));
                     }
@@ -1387,10 +1485,10 @@ mod tests {
     }
 
     #[test]
-    fn round_trip_outputs_lowercase_section_id() {
+    fn round_trip_preserves_section_id_case() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,0\n\n";
         let file = CustomKeys::from(input);
-        assert!(file.to_string().contains("[ahhb]"));
+        assert!(file.to_string().contains("[AHhb]"));
     }
 
     #[test]
@@ -1409,9 +1507,9 @@ mod tests {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n//inline comment\nIcon=ReplaceableTextures\\CommandButtons\\BTNAvatar.blp\n\n[AHbz]\nHotkey=W\nButtonpos=1,2\n\n";
         let file = CustomKeys::from(input);
         let output = file.to_string();
-        assert!(output.contains("[ahhb]"));
+        assert!(output.contains("[AHhb]"));
         assert!(output.contains("BTNAvatar.blp"));
-        assert!(output.contains("[ahbz]"));
+        assert!(output.contains("[AHbz]"));
     }
 
     #[test]
@@ -1811,15 +1909,15 @@ mod tests {
         let file = CustomKeys::from(baseline);
         let output = file.to_string();
         let known_sections = [
-            "[cmdattack]",
-            "[cmdmove]",
-            "[cmdrally]",
-            "[cmdcancel]",
-            "[cmdbuildhuman]",
-            "[hpal]",
+            "[CmdAttack]",
+            "[CmdMove]",
+            "[CmdRally]",
+            "[CmdCancel]",
+            "[CmdBuildHuman]",
+            "[Hpal]",
             "[hkee]",
-            "[rhpm]",
-            "[ahhb]",
+            "[Rhpm]",
+            "[AHhb]",
         ];
         for section_marker in known_sections {
             assert!(
@@ -1983,6 +2081,30 @@ mod extend_tests {
     }
 
     #[test]
+    fn extend_copies_unhotkey_from_source_to_target() {
+        let target_unhotkey = Hotkey::from('W');
+        let uploaded_unhotkey = Hotkey::from('C');
+        let target_binding = AbilityBinding::builder().unhotkey(target_unhotkey).build();
+        let uploaded_binding = AbilityBinding::builder()
+            .unhotkey(uploaded_unhotkey)
+            .build();
+        let mut target = CustomKeys::builder()
+            .ability("Amil", target_binding)
+            .build();
+        let uploaded = CustomKeys::builder()
+            .ability("Amil", uploaded_binding)
+            .build();
+        target.extend(uploaded);
+        let expected_unhotkey = Hotkey::Letter('C');
+        assert_eq!(
+            target
+                .binding("Amil")
+                .and_then(|binding| binding.unhotkey()),
+            Some(&expected_unhotkey)
+        );
+    }
+
+    #[test]
     fn extend_copies_button_position() {
         let target_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let uploaded_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::One);
@@ -2106,7 +2228,7 @@ mod export_tests {
         let loaded = CustomKeys::from("");
         let output = loaded.serialize(baseline);
         assert!(
-            output.contains("[ahrl]"),
+            output.contains("[Ahrl]"),
             "baseline section should be present in output"
         );
         assert!(output.contains("Hotkey=Q"));
@@ -2125,7 +2247,7 @@ mod export_tests {
         let baseline = include_str!("../templates/CustomKeys.txt");
         let loaded = CustomKeys::from("");
         let output = loaded.serialize(baseline);
-        for section in &["[hpal]", "[cmdattack]", "[cmdmove]"] {
+        for section in &["[Hpal]", "[CmdAttack]", "[CmdMove]"] {
             assert!(output.contains(section), "export should contain {section}");
         }
     }
@@ -2139,9 +2261,9 @@ mod export_tests {
         let output = loaded.serialize(baseline);
         // Find the [Ahrl] section and check Buttonpos is present.
         let after_ahrl = output
-            .split("[ahrl]")
+            .split("[Ahrl]")
             .nth(1)
-            .expect("[ahrl] must be in output");
+            .expect("[Ahrl] must be in output");
         let next_section = after_ahrl.split('[').next().unwrap_or(after_ahrl);
         assert!(
             next_section.contains("Buttonpos="),
@@ -2210,8 +2332,41 @@ mod normalize_tests {
     fn normalize_includes_known_baseline_sections() {
         let normalized = CustomKeys::from("").normalize();
         let normalized_text = normalized.to_string();
-        assert!(normalized_text.contains("[hpal]"));
-        assert!(normalized_text.contains("[cmdattack]"));
+        assert!(normalized_text.contains("[Hpal]"));
+        assert!(normalized_text.contains("[CmdAttack]"));
+    }
+
+    // Regression (phantom shop Q conflict): the shipped baseline carries the
+    // internal shop/selection mechanics Shop Sharing (Aall), Select Hero (Aneu)
+    // and Select Unit (Ane2) at Buttonpos=0,0 with the Q hotkey. They are never
+    // command buttons, so normalize must prune them — otherwise every shop has a
+    // phantom Q binding that collides with its real button in-game. Select User
+    // (Anei) is a genuine button and must survive.
+    #[test]
+    fn normalize_prunes_non_button_shop_mechanics() {
+        let normalized = CustomKeys::from("").normalize();
+        for phantom_id in ["Aall", "Aneu", "Ane2", "Adt1"] {
+            assert!(
+                normalized.binding(phantom_id).is_none(),
+                "normalize must prune non-button mechanic {phantom_id}"
+            );
+        }
+        assert!(
+            normalized.binding("Anei").is_some(),
+            "normalize must keep Select User (Anei), a real shop button"
+        );
+    }
+
+    // Pruning also cleans an already-stored file (the user's localStorage may
+    // have been written by an older build that materialized the phantom).
+    #[test]
+    fn normalize_prunes_phantom_from_uploaded_file() {
+        let uploaded = "[Aall]\nHotkey=Q\nButtonpos=0,0\n";
+        let normalized = CustomKeys::from(uploaded).normalize();
+        assert!(
+            normalized.binding("Aall").is_none(),
+            "normalize must strip a phantom [Aall] carried in over an upload"
+        );
     }
 
     #[test]
@@ -2244,10 +2399,10 @@ mod normalize_tests {
     fn normalize_materializes_button_position_for_known_ability() {
         let normalized = CustomKeys::from("").normalize();
         let normalized_text = normalized.to_string();
-        let ahrl_marker = "[ahrl]";
+        let ahrl_marker = "[Ahrl]";
         let ahrl_section_start = normalized_text
             .find(ahrl_marker)
-            .expect("baseline must contain [ahrl]");
+            .expect("baseline must contain [Ahrl]");
         let after_ahrl = &normalized_text[ahrl_section_start + ahrl_marker.len()..];
         let next_section_length = after_ahrl.find('[').unwrap_or(after_ahrl.len());
         let ahrl_section = &after_ahrl[..next_section_length];
@@ -2268,6 +2423,70 @@ mod normalize_tests {
                 "[{item_id}] must have a button_position in the normalized output"
             );
         }
+    }
+
+    // The in-game command card renders the build *ability* (AHbu, AObu, AUbu,
+    // AEbu), and the game reads its position and hotkey from that ability. The
+    // CmdBuild* command only drives the in-game hotkey editor. So moving the
+    // build command in the editor must also write the matching build ability,
+    // or the live game falls back to the ability's default and slides it.
+    #[test]
+    fn normalize_mirrors_build_command_position_and_hotkey_to_build_ability() {
+        let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
+        let normalized = CustomKeys::from(uploaded).normalize();
+        let ability_binding = normalized
+            .binding("AHbu")
+            .expect("build ability AHbu must exist after normalize");
+        let mirrored_position = ability_binding.button_position();
+        let expected_position = GridCoordinate::new(ColumnIndex::Three, RowIndex::One);
+        assert_eq!(
+            mirrored_position,
+            Some(&expected_position),
+            "AHbu must mirror the build command's Buttonpos"
+        );
+        let mirrored_hotkey = ability_binding.hotkey();
+        let expected_hotkey = Hotkey::Letter('Q');
+        assert_eq!(
+            mirrored_hotkey,
+            Some(&expected_hotkey),
+            "AHbu must mirror the build command's Hotkey"
+        );
+    }
+
+    #[test]
+    fn normalize_mirrors_build_command_to_ability_for_every_race() {
+        let uploaded = "[CmdBuildOrc]\nButtonpos=2,1\n\n[CmdBuildUndead]\nButtonpos=2,1\n\n[CmdBuildNightElf]\nButtonpos=2,1\n";
+        let normalized = CustomKeys::from(uploaded).normalize();
+        let expected_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::One);
+        for ability_id in &["AObu", "AUbu", "AEbu"] {
+            let ability_binding = normalized
+                .binding(*ability_id)
+                .unwrap_or_else(|| panic!("build ability {ability_id} must exist after normalize"));
+            let mirrored_position = ability_binding.button_position();
+            assert_eq!(
+                mirrored_position,
+                Some(&expected_position),
+                "{ability_id} must mirror its build command's Buttonpos"
+            );
+        }
+    }
+
+    // A written [AHbu] section must survive a parse round trip now that the
+    // build abilities are real database objects, otherwise the mirror would be
+    // dropped on the next read (boot, preview, export).
+    #[test]
+    fn build_ability_section_survives_parse_round_trip() {
+        let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
+        let canonical_once = CustomKeys::from(uploaded).normalize().to_string();
+        let canonical_twice = CustomKeys::from(canonical_once.as_str()).to_string();
+        assert!(
+            canonical_once.contains("[AHbu]"),
+            "normalized output must contain the mirrored [AHbu] section"
+        );
+        assert_eq!(
+            canonical_once, canonical_twice,
+            "the mirrored build ability must survive a parse/serialize round trip"
+        );
     }
 
     #[test]

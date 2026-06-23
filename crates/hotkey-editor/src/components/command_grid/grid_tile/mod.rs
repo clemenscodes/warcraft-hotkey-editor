@@ -33,7 +33,6 @@ pub(super) struct GridTileProps {
     pub(super) prevent_swap_on_drop: bool,
     pub(super) restrict_draggable_to: Rc<[GridSlotId]>,
     pub(super) host_unit_id: String,
-    pub(super) host_is_alt_form: bool,
 }
 
 #[component]
@@ -44,7 +43,6 @@ pub(super) fn GridTile(props: GridTileProps) -> Element {
     let is_research_grid = props.is_research_grid;
     let is_uprooted_grid = props.is_uprooted_grid;
     let prevent_swap_on_drop = props.prevent_swap_on_drop;
-    let host_is_alt_form = props.host_is_alt_form;
     let host_unit_id: &str = &props.host_unit_id;
     let selected_slot = props.selected_slot;
     let selected_from_research = props.selected_from_research;
@@ -256,19 +254,21 @@ pub(super) fn GridTile(props: GridTileProps) -> Element {
         "hotkey-overlay"
     };
 
-    let is_morph_on_alt_form = matches!(occupant_slot, Some(GridSlotId::Ability(_)))
+    // Lock only the morph toggle that flips the host into its other form (an
+    // ability whose morph target is the host unit itself, e.g. Unburrow). An
+    // ability that morphs an *external* target stays draggable — Entangle Gold
+    // Mine (Aent) morphs the gold mine (egol), not the tree, so the rooted tree
+    // must be able to reposition it.
+    let is_morph_back_to_host = matches!(occupant_slot, Some(GridSlotId::Ability(_)))
         && occupant_slot
             .as_ref()
             .map(|slot| {
                 let target_option = ObjectLookup::morph_target_unit(slot.as_str());
-                let morphs_to_host =
-                    target_option.is_some_and(|target| target.eq_ignore_ascii_case(host_unit_id));
-                let alt_form_morph = host_is_alt_form && target_option.is_some();
-                morphs_to_host || alt_form_morph
+                target_option.is_some_and(|target| target.eq_ignore_ascii_case(host_unit_id))
             })
             .unwrap_or(false);
 
-    let tile_is_draggable = !is_morph_on_alt_form
+    let tile_is_draggable = !is_morph_back_to_host
         && (restrict_draggable_to.is_empty()
             || occupant_slot
                 .as_ref()

@@ -610,9 +610,11 @@ impl CodegenContext {
                         let attack_range = unit_attack.range();
                         let cooldown_seconds = unit_attack.cooldown_seconds();
                         let attack_type = unit_attack.attack_type();
+                        let weapon_type = unit_attack.weapon_type();
                         format!(
                             "Some(UnitAttack::new({damage_min}, {damage_max}, {attack_range}, \
-                             {cooldown_seconds:?}, AttackType::{attack_type:?}))"
+                             {cooldown_seconds:?}, AttackType::{attack_type:?}, \
+                             WeaponType::{weapon_type:?}))"
                         )
                     }
                     None => String::from("None"),

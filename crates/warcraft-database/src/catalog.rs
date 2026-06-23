@@ -21,25 +21,11 @@ const ATTACKING_BUILDING_IDS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ntt1"),
 ];
 
-const UPROOTABLE_BUILDING_IDS: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("etol"),
-    WarcraftObjectId::new("etoa"),
-    WarcraftObjectId::new("etoe"),
-    WarcraftObjectId::new("eaow"),
-    WarcraftObjectId::new("eaoe"),
-    WarcraftObjectId::new("eaom"),
-    WarcraftObjectId::new("etrp"),
-    WarcraftObjectId::new("eden"),
-    // Corrupted Night Elf variants: the same uprootable buildings (each carries
-    // an uproot ability + Aeat "Eat Tree", which only exists in the uprooted
-    // form). Without these, can_uproot is false, so Eat Tree wrongly lands on the
-    // rooted command card and falsely collides with the upgrade ability.
-    WarcraftObjectId::new("nctl"),
-    WarcraftObjectId::new("ncta"),
-    WarcraftObjectId::new("ncte"),
-    WarcraftObjectId::new("ncaw"),
-    WarcraftObjectId::new("ncap"),
-];
+// Root and Uproot are the two states of one ability. Every uprootable Night Elf
+// building carries a root ability object (Aro1 or Aro2), and both share this
+// base ability code. Detecting the code is the 100% signal for "this building
+// uproots", so no hand-maintained id list is needed.
+const ROOT_ABILITY_CODE: WarcraftObjectId = WarcraftObjectId::new("Aroo");
 
 pub struct BuildingTraits;
 
@@ -51,9 +37,26 @@ impl BuildingTraits {
     }
 
     pub fn can_uproot(object_id: &str) -> bool {
-        UPROOTABLE_BUILDING_IDS
+        let Some(warcraft_object) = WARCRAFT_DATABASE.by_id(object_id) else {
+            return false;
+        };
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            return false;
+        };
+        unit_meta
+            .abilities()
             .iter()
-            .any(|uprootable_id| uprootable_id.value().eq_ignore_ascii_case(object_id))
+            .any(|ability_id| Self::ability_is_root(ability_id.value()))
+    }
+
+    fn ability_is_root(ability_id: &str) -> bool {
+        let Some(ability_object) = WARCRAFT_DATABASE.by_id(ability_id) else {
+            return false;
+        };
+        let Some(ability_code) = ability_object.ability_code() else {
+            return false;
+        };
+        ROOT_ABILITY_CODE.value().eq_ignore_ascii_case(ability_code)
     }
 
     pub fn unit_starts_in_toggle_alt_state(unit_id: &str) -> bool {
@@ -195,6 +198,15 @@ impl CommandCatalog {
                 for command_name in MOBILE_COMMAND_IDS.iter().copied() {
                     commands.push(command_name);
                 }
+                let attack_targets_ground = unit_meta
+                    .combat()
+                    .attack()
+                    .is_some_and(|unit_attack| unit_attack.targets_ground());
+                if attack_targets_ground
+                    && let Some(attack_ground_command) = Self::known_command("CmdAttackGround")
+                {
+                    commands.push(attack_ground_command);
+                }
                 if has_builds
                     && unit_kind == UnitKind::Worker
                     && let Some(build_command) = Self::build_command_for_race(race)
@@ -263,6 +275,16 @@ mod catalog_tests {
         assert!(!BuildingTraits::can_uproot("hbar"));
     }
 
+    // The signal for "this building uproots" is the presence of the Root/Uproot
+    // ability, not a hand-maintained id list. etrp and ncap carry the Aro2 root
+    // variant (a different ability object id than Aro1, but the same "Aroo"
+    // ability code), so detection must be driven by the ability code.
+    #[test]
+    fn can_uproot_detects_root_via_ability_code() {
+        assert!(BuildingTraits::can_uproot("etrp"));
+        assert!(BuildingTraits::can_uproot("ncap"));
+    }
+
     #[test]
     fn can_uproot_returns_true_for_corrupted_night_elf_buildings() {
         for corrupted_id in ["nctl", "ncta", "ncte", "ncaw", "ncap"] {
@@ -316,6 +338,60 @@ mod catalog_tests {
         let has_move = ids.iter().any(|id| id.eq_ignore_ascii_case("CmdMove"));
         assert!(has_attack, "mobile commands must include CmdAttack");
         assert!(has_move, "mobile commands must include CmdMove");
+    }
+
+    fn primary_commands_for_unit(unit_id: &str) -> Vec<&'static str> {
+        let warcraft_object = WARCRAFT_DATABASE.by_id(unit_id).expect("unit exists");
+        let WarcraftObjectMeta::Unit(unit_meta) = warcraft_object.meta() else {
+            panic!("{unit_id} is not a unit");
+        };
+        let race = warcraft_object.race();
+        CommandCatalog::primary_commands_for(unit_meta, race, unit_id)
+    }
+
+    #[test]
+    fn mortar_team_command_card_includes_attack_ground() {
+        let commands = primary_commands_for_unit("hmtm");
+        let has_attack_ground = commands
+            .iter()
+            .any(|command_name| command_name.eq_ignore_ascii_case("CmdAttackGround"));
+        assert!(
+            has_attack_ground,
+            "the Mortar Team has an artillery weapon and must show Attack Ground, got {commands:?}"
+        );
+    }
+
+    #[test]
+    fn demolisher_command_card_includes_attack_ground() {
+        let commands = primary_commands_for_unit("ocat");
+        let has_attack_ground = commands
+            .iter()
+            .any(|command_name| command_name.eq_ignore_ascii_case("CmdAttackGround"));
+        assert!(has_attack_ground, "the Demolisher must show Attack Ground");
+    }
+
+    #[test]
+    fn footman_command_card_omits_attack_ground() {
+        let commands = primary_commands_for_unit("hfoo");
+        let has_attack_ground = commands
+            .iter()
+            .any(|command_name| command_name.eq_ignore_ascii_case("CmdAttackGround"));
+        assert!(
+            !has_attack_ground,
+            "the Footman has a normal weapon and must not show Attack Ground, got {commands:?}"
+        );
+    }
+
+    #[test]
+    fn cannon_tower_command_card_omits_attack_ground() {
+        let commands = primary_commands_for_unit("hctw");
+        let has_attack_ground = commands
+            .iter()
+            .any(|command_name| command_name.eq_ignore_ascii_case("CmdAttackGround"));
+        assert!(
+            !has_attack_ground,
+            "the Cannon Tower is a building and must not show Attack Ground, got {commands:?}"
+        );
     }
 
     #[test]

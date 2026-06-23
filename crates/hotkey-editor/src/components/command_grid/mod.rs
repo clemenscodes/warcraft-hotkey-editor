@@ -7,7 +7,6 @@ use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 use dioxus::prelude::*;
-use warcraft_database::BuildingTraits;
 use warcraft_keybinds::CustomKeys;
 
 use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
@@ -73,8 +72,6 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let prevent_swap_on_drop = props.prevent_swap_on_drop;
     let restrict_draggable_to: Rc<[GridSlotId]> = props.restrict_draggable_to.clone().into();
     let host_unit_id = props.host_unit_id.clone();
-    let host_is_alt_form =
-        !host_unit_id.is_empty() && BuildingTraits::unit_starts_in_toggle_alt_state(&host_unit_id);
 
     let conflicting_hotkeys: Rc<HashSet<String>> = {
         let mut counts: HashMap<String, u32> = HashMap::new();
@@ -136,7 +133,6 @@ pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             prevent_swap_on_drop,
                             restrict_draggable_to: restrict_draggable_to.clone(),
                             host_unit_id: host_unit_id.clone(),
-                            host_is_alt_form,
                         }
                     }
                 }

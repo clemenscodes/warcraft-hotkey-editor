@@ -13,7 +13,7 @@ pub use meta::{
     AbilityMeta, AgilityBonuses, AttackType, AttributeBase, AttributeGrowth, CommandMeta,
     DamageEffectiveness, DamageMatrix, DefenseType, GameplayConstants, HeroAttributes,
     IntelligenceBonuses, ItemMeta, ManaPool, PrimaryAttribute, RegenType, StrengthBonuses,
-    UnitAttack, UnitCombat, UnitFlags, UnitMeta, UnitProduction, UpgradeMeta,
+    UnitAttack, UnitCombat, UnitFlags, UnitMeta, UnitProduction, UpgradeMeta, WeaponType,
 };
 pub use object::{
     ColumnIndex, GridCoordinate, ItemClass, ObjectMap, ParseGridCoordinateError, Race, RowIndex,

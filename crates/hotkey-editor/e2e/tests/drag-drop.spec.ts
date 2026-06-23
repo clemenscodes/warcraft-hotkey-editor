@@ -4,12 +4,15 @@ const APP = "/warcraft-hotkey-editor/";
 const LS_KEY = "warcraft-hotkey-editor.custom-keys";
 
 // Extract the value of a field inside a [section] from a CustomKeys.txt string.
+// Section ids are case-insensitive in CustomKeys.txt, and the serializer emits
+// them in their canonical case (e.g. [ACdm]), so match without regard to case.
 function fieldInSection(content: string, section: string, field: string): string | null {
-  const start = content.indexOf(`[${section}]`);
+  const lower = content.toLowerCase();
+  const start = lower.indexOf(`[${section.toLowerCase()}]`);
   if (start === -1) return null;
-  const end = content.indexOf("[", start + 1);
+  const end = lower.indexOf("[", start + 1);
   const chunk = end === -1 ? content.slice(start) : content.slice(start, end);
-  const match = chunk.match(new RegExp(`${field}=([^\\r\\n]+)`));
+  const match = chunk.match(new RegExp(`${field}=([^\\r\\n]+)`, "i"));
   return match ? match[1].trim() : null;
 }
 
@@ -81,9 +84,9 @@ test.describe("Drag and drop on command grid", () => {
     expect(stored).not.toBeNull();
 
     // ACdm dragged from (0,2) to (1,2) — its Unbuttonpos must follow.
-    expect(fieldInSection(stored!, "acdm", "Unbuttonpos")).toBe("1,2");
+    expect(fieldInSection(stored!, "ACdm", "Unbuttonpos")).toBe("1,2");
     // ACsw displaced from (1,2) to (0,2) — its Unbuttonpos must follow.
-    expect(fieldInSection(stored!, "acsw", "Unbuttonpos")).toBe("0,2");
+    expect(fieldInSection(stored!, "ACsw", "Unbuttonpos")).toBe("0,2");
   });
 
   test("pressing Escape during a drag cancels it and tile count is unchanged", async ({ page }) => {
