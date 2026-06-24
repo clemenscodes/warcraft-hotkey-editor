@@ -1651,27 +1651,8 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
-        // hphx (Phoenix)
-        let entry = {
-            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
-                .collision_at(
-                    0,
-                    2,
-                    &[GridSlotId::ability("Ahpe"), GridSlotId::ability("Apxf")],
-                )
-                .build();
-            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
-                .collision(
-                    'Z',
-                    &[GridSlotId::ability("Ahpe"), GridSlotId::ability("Apxf")],
-                )
-                .build();
-            let eb = UnitCollisionEntryBuilder::new("hphx", "Phoenix", empty_pos, empty_hot);
-            let eb = eb.main_position_card(main_pos);
-            let eb = eb.main_hotkey_card(main_hot);
-            eb.build()
-        };
-        builder = builder.entry(entry);
+        // hphx (Phoenix) no longer collides: Phoenix Fire (Apxf) is hidden from
+        // the command card to match the in-game client, leaving only Ahpe.
 
         // Nman (Pit Lord)
         let entry = {

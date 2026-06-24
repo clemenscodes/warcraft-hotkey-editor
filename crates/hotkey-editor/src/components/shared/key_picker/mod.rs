@@ -59,18 +59,71 @@ pub(crate) fn KeyPicker(props: KeyPickerProps) -> Element {
     let on_pick = props.on_pick;
     let on_close = props.on_close;
     let dialog_title = title.clone();
+    // The keydown handler below only fires while focus sits inside this dialog.
+    // `autofocus` and Dioxus `set_focus` both proved unreliable for the portal-
+    // mounted content: the dialog resets focus to `document.body` on a later
+    // tick after mount, so the keyboard went dead after the first reopen. Defer
+    // one tick past that reset, then focus the body element ourselves so every
+    // reopen stays keyboard-ready.
+    #[cfg(target_arch = "wasm32")]
+    use_effect(move || {
+        spawn(async move {
+            use wasm_bindgen::JsCast;
+            gloo_timers::future::TimeoutFuture::new(0).await;
+            let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+                return;
+            };
+            let Some(node) = document.query_selector(".key-picker-body").ok().flatten() else {
+                return;
+            };
+            if let Some(focusable) = node.dyn_ref::<web_sys::HtmlElement>() {
+                let _ = focusable.focus();
+            }
+        });
+    });
     let handle_open_change = move |next_open: bool| {
         if !next_open {
             on_close.call(());
         }
     };
+    let rows_for_keydown = rows.clone();
     let handle_keydown = move |event: Event<KeyboardData>| {
         event.stop_propagation();
         let key_value = event.data().key().to_string();
         if key_value == "Escape" {
             event.prevent_default();
             on_close.call(());
+            return;
         }
+        // Only single ASCII letters map to a board key. These are exactly the
+        // keys the picker already offers via click; digits, the mouse-only
+        // tokens, and any other physical key are ignored so the keyboard can
+        // never select a hotkey the game cannot bind.
+        let mut key_characters = key_value.chars();
+        let Some(first_character) = key_characters.next() else {
+            return;
+        };
+        let is_single_character = key_characters.next().is_none();
+        if !is_single_character || !first_character.is_ascii_alphabetic() {
+            return;
+        }
+        let pressed_token = HotkeyToken::from(first_character);
+        let matching_cell = rows_for_keydown
+            .iter()
+            .flatten()
+            .find(|cell| cell.token() == pressed_token);
+        let Some(cell) = matching_cell else {
+            return;
+        };
+        // Apply the same selectability rule as a click: a conflict cell is only
+        // pickable when conflict swaps are allowed (the grid layout editor).
+        let is_conflict = matches!(cell.state(), KeyPickerCellState::Conflict { .. });
+        let is_pickable = !is_conflict || allow_conflict_pick;
+        if !is_pickable {
+            return;
+        }
+        event.prevent_default();
+        on_pick.call(pressed_token);
     };
     let handle_close = move |_| on_close.call(());
     rsx! {
@@ -89,7 +142,6 @@ pub(crate) fn KeyPicker(props: KeyPickerProps) -> Element {
                     div {
                         class: "wc3-dialog-body key-picker-body",
                         tabindex: "-1",
-                        autofocus: true,
                         div { class: "key-picker-board", role: "group", aria_label: "Available hotkeys",
                             for (row_index, row_cells) in rows.iter().enumerate() {
                                 div {

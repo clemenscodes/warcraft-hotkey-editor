@@ -2574,7 +2574,7 @@ Tip=Summoning Ritual
 Ubertip=Summons energies from the twisting nether.
 
 [Ahpe]
-Buttonpos=1,2
+Buttonpos=0,2
 Tip=Phoenix
 Ubertip=The Phoenix spreads enchanted flames to nearby enemies, dealing 20 damage on impact and burning them for 2 per second over 10 seconds. Its flames burn with such intensity that the Phoenix damages itself as well. When it dies, it creates an egg that will hatch into a Phoenix.
 
