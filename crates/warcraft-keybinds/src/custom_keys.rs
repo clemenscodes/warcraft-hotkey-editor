@@ -18,7 +18,8 @@ use crate::model::{
     AbilityBinding, BindingEntry, ColumnIndex, CommandBinding, CommandEntry, GridCoordinate,
     Hotkey, RowIndex, SectionAccumulator, SectionResolution, SystemBinding, WarcraftKeybinding,
 };
-use crate::unit::grids::GridRole;
+use crate::unit::grids::{GridRole, UnitGrids};
+use crate::unit::slots::UnitCommandSlots;
 
 pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../templates/CustomKeys.txt");
 
@@ -244,7 +245,38 @@ impl CustomKeys {
         result.extend(overlay_clone);
         result.prune_non_button_abilities();
         result.mirror_build_commands_to_abilities();
+        result.sync_mirrored_off_states();
         result
+    }
+
+    /// Collapses every toggle that does not get a second command card slot onto
+    /// a single cell. Such a toggle keeps both states on one unit's grid, but a
+    /// cell can render only one of them: the editor shows the off-state in the
+    /// grid (`Buttonpos`) and edits the on-state (`Unbuttonpos`) only through a
+    /// separate dialog. If that dialog-only on-state drifts off the grid cell
+    /// (e.g. an overlay that set only `Buttonpos` — templates rarely carry an
+    /// `Unbuttonpos`), it becomes an invisible blocker: the cascade collides
+    /// with it but nothing in the grid shows why. Morph toggles (states on
+    /// separate unit grids) and building alt-state toggles (two buttons on the
+    /// building's grid) render both states, so they keep their own positions.
+    fn sync_mirrored_off_states(&mut self) {
+        let independent_off_slots = Self::abilities_with_independent_off_slot();
+        for (object_id, keybinding) in self.entries.iter_mut() {
+            let WarcraftKeybinding::Ability(ability_binding) = keybinding else {
+                continue;
+            };
+            if ability_binding.unbutton_position().is_none() {
+                continue;
+            }
+            let ability_lowercase = object_id.value().to_ascii_lowercase();
+            if independent_off_slots.contains(&ability_lowercase) {
+                continue;
+            }
+            let Some(button_position) = ability_binding.button_position().copied() else {
+                continue;
+            };
+            ability_binding.set_unbutton_position(Some(button_position));
+        }
     }
 
     /// Copies each worker build command's position and hotkey onto the build
@@ -317,6 +349,34 @@ impl CustomKeys {
         export_file.materialize_shop_item_positions();
         export_file.prune_non_button_abilities();
         export_file.to_string()
+    }
+
+    /// Ability ids (lowercase) whose two toggle states each get their own
+    /// command card slot, so both stay independently visible and positionable.
+    /// Two cases qualify: morph toggles, where morphing swaps in a separate unit
+    /// id that has its own command grid, and building alt-state toggles (Call To
+    /// Arms / Back To Work), which sit on the building's grid as two distinct
+    /// buttons. Every other toggle keeps both states on one unit's grid, where a
+    /// cell can render only one of them — the editor shows the off-state in the
+    /// grid and edits the on-state in a separate dialog — so its dialog-only
+    /// state must track the one shown in the grid.
+    fn abilities_with_independent_off_slot() -> &'static HashSet<String> {
+        static CACHE: OnceLock<HashSet<String>> = OnceLock::new();
+        CACHE.get_or_init(|| {
+            let mut independent: HashSet<String> = HashSet::new();
+            for unit_id in WARCRAFT_DATABASE.all_unit_ids() {
+                let unit_grids = UnitGrids::for_unit(unit_id);
+                for named_grid in unit_grids.grids() {
+                    for slot in named_grid.card().filled_slots() {
+                        if let GridSlotId::AbilityOff(ability_id) = slot {
+                            let lowercase = ability_id.value().to_ascii_lowercase();
+                            independent.insert(lowercase);
+                        }
+                    }
+                }
+            }
+            independent
+        })
     }
 
     fn materialize_default_positions(&mut self) {
@@ -2326,6 +2386,59 @@ mod normalize_tests {
         let normalized = CustomKeys::from("").normalize();
         let normalized_text = normalized.to_string();
         assert!(!normalized_text.is_empty());
+    }
+
+    #[test]
+    fn normalize_syncs_single_button_toggle_offstate_to_onstate() {
+        use crate::identity::slot::GridSlotId;
+        use crate::model::AbilityBinding;
+        // Frost Armor (ACf2) is a non-morph toggle: both states live on one unit
+        // grid where a cell shows only one of them, so the editor renders the
+        // off-state (Buttonpos) in the grid and edits the on-state (Unbuttonpos)
+        // in a separate dialog. An overlay that moves only the grid position
+        // leaves the dialog-only on-state on a stale cell — an invisible
+        // blocker. Normalize must pull it onto the grid position.
+        let on_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::Two);
+        let off_position = GridCoordinate::new(ColumnIndex::One, RowIndex::Two);
+        let binding = AbilityBinding::builder()
+            .button_position(on_position)
+            .unbutton_position(off_position)
+            .build();
+        let mut overlay = CustomKeys::from("");
+        overlay.put_ability("ACf2", binding);
+        let normalized = overlay.normalize();
+        let resolved_on = normalized.position_for_slot(&GridSlotId::ability("ACf2"), false);
+        let resolved_off = normalized.position_for_slot(&GridSlotId::ability_off("ACf2"), false);
+        assert_eq!(resolved_on, Some(on_position));
+        assert_eq!(
+            resolved_off, resolved_on,
+            "autocast Frost Armor off-state must mirror its on-state after normalize"
+        );
+    }
+
+    #[test]
+    fn normalize_keeps_independent_offstate_separate() {
+        use crate::identity::slot::GridSlotId;
+        use crate::model::AbilityBinding;
+        // Burrow (Abur) is a morph toggle: burrowing swaps to a separate unit id
+        // whose own grid renders the second state, so both states are
+        // independently visible and positionable. Normalize must NOT collapse
+        // them onto a single cell.
+        let on_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::Two);
+        let off_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::One);
+        let binding = AbilityBinding::builder()
+            .button_position(on_position)
+            .unbutton_position(off_position)
+            .build();
+        let mut overlay = CustomKeys::from("");
+        overlay.put_ability("Abur", binding);
+        let normalized = overlay.normalize();
+        let resolved_off = normalized.position_for_slot(&GridSlotId::ability_off("Abur"), false);
+        assert_eq!(
+            resolved_off,
+            Some(off_position),
+            "morph Burrow off-state is a separate button and must keep its own position"
+        );
     }
 
     #[test]

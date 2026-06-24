@@ -2370,9 +2370,9 @@ Ubertip=Increases damage of Archers and Hippogryph Riders by 4.
 
 [Aenc]
 Hotkey=W
-Unhotkey=R
+Unhotkey=W
 Buttonpos=1,0
-Unbuttonpos=3,0
+Unbuttonpos=1,0
 Tip=Load
 UnTip=Unload All
 Ubertip=Orders a Wisp to enter the gold mine.
@@ -2580,7 +2580,7 @@ Tip=Summoning Ritual
 Ubertip=Summons energies from the twisting nether.
 
 [Ahpe]
-Buttonpos=3,0
+Buttonpos=0,0
 Tip=Phoenix
 Ubertip=The Phoenix spreads enchanted flames to nearby enemies, dealing 20 damage on impact and burning them for 2 per second over 10 seconds. Its flames burn with such intensity that the Phoenix damages itself as well. When it dies, it creates an egg that will hatch into a Phoenix.
 
