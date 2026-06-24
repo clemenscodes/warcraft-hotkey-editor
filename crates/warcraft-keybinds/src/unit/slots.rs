@@ -23,10 +23,20 @@ struct HiddenUnitAbility {
 // Phoenix Fire (Apxf) is a permanent self-damaging aura on the Phoenix (hphx).
 // The game data lists it as an ability of the unit, but the in-game command card
 // never renders a button for it, so hide it explicitly to match the live client.
-const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[HiddenUnitAbility {
-    unit_id: WarcraftObjectId::new("hphx"),
-    ability_id: WarcraftObjectId::new("Apxf"),
-}];
+//
+// Load (Aenc) is listed on the Entangled Gold Mine (egol), but the in-game command
+// card never renders a button for it; the mine only shows Unload All (Adri) once a
+// Wisp is inside. Hide it explicitly to match the live client.
+const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[
+    HiddenUnitAbility {
+        unit_id: WarcraftObjectId::new("hphx"),
+        ability_id: WarcraftObjectId::new("Apxf"),
+    },
+    HiddenUnitAbility {
+        unit_id: WarcraftObjectId::new("egol"),
+        ability_id: WarcraftObjectId::new("Aenc"),
+    },
+];
 
 pub trait UnitCommandSlots {
     fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard;
@@ -844,6 +854,26 @@ mod unit_slots_tests {
         assert!(
             has_phoenix_summon,
             "Phoenix (hphx) command card must still contain its remaining ability Ahpe"
+        );
+    }
+
+    #[test]
+    fn entangled_gold_mine_command_card_hides_load() {
+        let unit_id = WarcraftObjectId::new("egol");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_load = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Aenc"));
+        assert!(
+            !has_load,
+            "Entangled Gold Mine (egol) command card must hide Load (Aenc); the in-game client only shows Unload All when a Wisp is inside"
+        );
+        let has_unload_all = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Adri"));
+        assert!(
+            has_unload_all,
+            "Entangled Gold Mine (egol) command card must still contain Unload All (Adri)"
         );
     }
 

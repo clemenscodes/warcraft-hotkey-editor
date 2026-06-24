@@ -1120,22 +1120,6 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
-        // egol (Entangled Gold Mine)
-        let entry = {
-            let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
-                .collision_at(
-                    1,
-                    2,
-                    &[GridSlotId::ability("Adri"), GridSlotId::ability("Aenc")],
-                )
-                .build();
-            let eb =
-                UnitCollisionEntryBuilder::new("egol", "Entangled Gold Mine", empty_pos, empty_hot);
-            let eb = eb.main_position_card(main_pos);
-            eb.build()
-        };
-        builder = builder.entry(entry);
-
         // nerd (Eredar Diabolist)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -2026,19 +2010,10 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
-        // ospw (Spirit Walker)
-        let entry = {
-            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
-                .collision(
-                    'F',
-                    &[GridSlotId::ability("ACsk"), GridSlotId::ability("Acpf")],
-                )
-                .build();
-            let eb = UnitCollisionEntryBuilder::new("ospw", "Spirit Walker", empty_pos, empty_hot);
-            let eb = eb.main_hotkey_card(main_hot);
-            eb.build()
-        };
-        builder = builder.entry(entry);
+        // ospw (Spirit Walker, corporeal form) no longer collides: its only
+        // ability is now the Corporeal/Ethereal Form toggle. The caster spells
+        // (Spirit Link, Disenchant, Ancestral Spirit) belong to the ethereal
+        // form (ospm) and are suppressed on the corporeal form by Rule 2.
 
         // noga (Stonemaul Warchief)
         let entry = {

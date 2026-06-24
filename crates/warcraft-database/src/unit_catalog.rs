@@ -4,6 +4,7 @@ use std::sync::LazyLock;
 use warcraft_api::{Race, UnitKind, WarcraftObject, WarcraftObjectKind, WarcraftObjectMeta};
 
 use crate::WARCRAFT_DATABASE;
+use crate::catalog::CommandCatalog;
 use crate::unit_kind::UnitKindHelpers;
 use crate::unit_mode::UnitMode;
 use crate::variant_groups::VariantUnits;
@@ -26,6 +27,9 @@ pub enum SearchField {
 /// `include_abilityless_units`: when true, keep units that carry no
 /// production, no button-positioned ability, and no shop slot — normally
 /// dropped as dead placeholders, but useful for reading a unit's raw stats.
+/// This also keeps rally-only buildings (a building with no ability of its
+/// own whose only command is the rally point, such as the Demon Gate), which
+/// are dead placeholders for hotkey editing for the same reason.
 ///
 /// `expand_variants`: when true, list every member of a variant group
 /// (leveled summon tiers, upgrade-swaps, hero duplicates) as its own entry
@@ -337,14 +341,35 @@ impl UnitCatalog {
                 let is_purchasable = SOLD_UNIT_IDS.contains(object_id_value);
                 let is_dead_placeholder =
                     !has_production && !has_visible_ability && !is_purchasable;
+                // A building that carries no ability of its own and whose only
+                // command is the rally point (Demon Gate `ndmg`, the Dimensional
+                // Gates, the campaign barracks) is a dead placeholder for hotkey
+                // editing too: production hands it a rally point, but there is
+                // nothing else to rebind. Only buildings can reach a rally-only
+                // command set, so the lookup is gated on kind first — that keeps
+                // the per-unit `primary_commands_for` scan off the common path.
+                let has_own_abilities =
+                    !unit_meta.abilities().is_empty() || !unit_meta.hero_abilities().is_empty();
+                let is_building = unit_meta.unit_kind() == UnitKind::Building;
+                let is_rally_only_placeholder = is_building && !has_own_abilities && {
+                    let unit_race = warcraft_object.race();
+                    let primary_commands =
+                        CommandCatalog::primary_commands_for(unit_meta, unit_race, object_id_value);
+                    let only_command = primary_commands.first();
+                    primary_commands.len() == 1
+                        && only_command.is_some_and(|command_name| {
+                            command_name.eq_ignore_ascii_case("CmdRally")
+                        })
+                };
                 // `include_abilityless_units` is the sole gate for ability-less
                 // units, variant members included: an ability-less summon tier
                 // (Water Elemental) or upgrade base (Headhunter `ohun`) only
                 // surfaces when this is on. `expand_variants` controls *only*
                 // whether a group collapses to its canonical, never whether an
                 // ability-less member is kept — the two toggles stay orthogonal.
+                let is_placeholder = is_dead_placeholder || is_rally_only_placeholder;
                 let keep_abilityless_units = visibility.include_abilityless_units();
-                if is_dead_placeholder && !keep_abilityless_units {
+                if is_placeholder && !keep_abilityless_units {
                     return None;
                 }
                 let effective_kind = UnitKindHelpers::effective_kind(unit_meta);
@@ -549,6 +574,74 @@ mod tests {
         .iter()
         .map(|entry| entry.unit_id().to_string())
         .collect()
+    }
+
+    fn neutral_campaign_ids(visibility: CatalogVisibility) -> Vec<String> {
+        UnitCatalog::entries_for(
+            Some(Race::Neutral),
+            Some(UnitMode::Campaign),
+            None,
+            None,
+            SearchField::UnitName,
+            visibility,
+        )
+        .iter()
+        .map(|entry| entry.unit_id().to_string())
+        .collect()
+    }
+
+    /// Buildings whose rendered command card carries no ability of their own and
+    /// whose only command is the rally point (Demon Gate `ndmg`, the two
+    /// Dimensional Gates `ndke`/`ndkw`, Dragon Roost `ndrb`, Draenei Barracks
+    /// `ndh3`, Seer's Den `ndh4`, High Elven Barracks `nheb`) are dead
+    /// placeholders for hotkey editing: there is nothing to rebind but the rally
+    /// point. They stay hidden in curated browsing and surface only once
+    /// `include_abilityless_units` is on, exactly like the other placeholders.
+    const RALLY_ONLY_BUILDINGS: [&str; 7] =
+        ["ndmg", "ndke", "ndkw", "ndrb", "ndh3", "ndh4", "nheb"];
+
+    #[test]
+    fn rally_only_buildings_hidden_in_curated_browsing() {
+        let curated = CatalogVisibility::default();
+        let visible = neutral_campaign_ids(curated);
+        for placeholder in RALLY_ONLY_BUILDINGS {
+            let placeholder_id = placeholder.to_string();
+            assert!(
+                !visible.contains(&placeholder_id),
+                "{placeholder} (rally-only building) must be hidden by default",
+            );
+        }
+    }
+
+    #[test]
+    fn rally_only_buildings_surface_with_abilityless_units() {
+        let with_abilityless = CatalogVisibility::new(true, false);
+        let visible = neutral_campaign_ids(with_abilityless);
+        for placeholder in RALLY_ONLY_BUILDINGS {
+            let placeholder_id = placeholder.to_string();
+            assert!(
+                visible.contains(&placeholder_id),
+                "{placeholder} (rally-only building) must surface once ability-less units are shown",
+            );
+        }
+    }
+
+    /// The rally-only gate must never hide a real production building. Standard
+    /// race barracks carry an own ability (`Abds`), so they keep listing in
+    /// curated browsing even though their only command is also the rally point.
+    #[test]
+    fn rally_only_gate_keeps_standard_barracks() {
+        let curated = CatalogVisibility::default();
+        let human_ids = melee_ids_with(Race::Human, curated);
+        assert!(
+            human_ids.iter().any(|id| id == "hbar"),
+            "Human Barracks (hbar) must stay listed; it is a real production building",
+        );
+        let orc_ids = melee_ids_with(Race::Orc, curated);
+        assert!(
+            orc_ids.iter().any(|id| id == "obar"),
+            "Orc Barracks (obar) must stay listed; it is a real production building",
+        );
     }
 
     /// With `expand_variants` on, a group stops collapsing to its canonical:

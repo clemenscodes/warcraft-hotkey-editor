@@ -2787,8 +2787,8 @@ Ubertip=Dispels positive buffs from enemy units, and negative buffs from friendl
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Andt]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=R
+Buttonpos=3,0
 Tip=Reveal
 Ubertip=Reveals an area of the map. Detects invisible units. Lasts 6 seconds.
 
@@ -5455,8 +5455,8 @@ Hotkey=Q
 Buttonpos=0,0
 
 [ngir]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=Q
+Buttonpos=0,0
 
 [ngna]
 Hotkey=Q
@@ -6736,8 +6736,8 @@ Tip=Train Gargoyle
 Ubertip=Flying attack creature. Attacks land and air units.
 
 [ugrv]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=E
+Buttonpos=2,0
 Tip=Summon Graveyard
 Ubertip=Provides attack and armor upgrades for Undead units. Also produces corpses and serves as a drop-off point for harvested lumber.
 
@@ -6806,8 +6806,8 @@ Tip=Summon Temple of the Damned
 Ubertip=Spellcaster production building. Trains Necromancers and Banshees. Also contains upgrades for Necromancers, Banshees, and Skeletal Mastery.
 
 [utom]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=R
+Buttonpos=3,0
 Tip=Summon Tomb of Relics
 Ubertip=Creates a shop with purchasable items. The items available depend upon what level of upgrade your Necropolis has (Necropolis, Halls of the Dead, or Black Citadel) and which buildings you have.
 

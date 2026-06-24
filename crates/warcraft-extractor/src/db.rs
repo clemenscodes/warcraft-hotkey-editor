@@ -55,6 +55,25 @@ impl From<WarcraftDataAggregation> for WarcraftDatabase {
     }
 }
 
+/// A source-form ability suppression that Rule 2 applies to a transformed unit:
+/// every ability the base form (`base_unit_id`) carries is dropped from the
+/// transformed unit, except the transform ability itself (`transform_ability_id`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct TransformSuppression {
+    transform_ability_id: String,
+    base_unit_id: String,
+}
+
+impl TransformSuppression {
+    fn transform_ability_id(&self) -> &str {
+        &self.transform_ability_id
+    }
+
+    fn base_unit_id(&self) -> &str {
+        &self.base_unit_id
+    }
+}
+
 #[derive(Default, Debug, Clone)]
 pub struct WarcraftDataAggregation {
     heroes: HeroDatabase,
@@ -973,6 +992,72 @@ impl WarcraftDataAggregation {
         ])
     }
 
+    /// Finds the source-form suppression that applies to `target_unit_id`, if
+    /// any (Rule 2). Two SLK shapes reach a transformed unit:
+    ///   - "Call to Arms" abilities name the base unit in `DataA1` and the
+    ///     transformed unit in `DataB1` (peasant → militia).
+    ///   - toggle-morph abilities (Bear Form, Raven Form) name the morphed unit
+    ///     in `UnitID1` and carry no `DataB1`. `UnitID1` is overloaded — summon
+    ///     abilities name their summoned unit there too — so a morph is only
+    ///     recognized when the target unit carries the ability in its own list
+    ///     (the toggle it uses to revert). A summoned unit never lists the
+    ///     ability that summons it.
+    fn transform_suppression_for(&self, target_unit_id: &str) -> Option<TransformSuppression> {
+        for (ability_id, meta) in &self.ability_metadata {
+            if let Some(to_unit) = meta.transform_to_unit()
+                && to_unit.eq_ignore_ascii_case(target_unit_id)
+                && let Some(from_unit) = meta.transform_from_unit()
+            {
+                let suppression = TransformSuppression {
+                    transform_ability_id: ability_id.clone(),
+                    base_unit_id: from_unit.to_string(),
+                };
+                return Some(suppression);
+            }
+            if let Some(morph_target) = meta.morph_target_unit()
+                && morph_target.eq_ignore_ascii_case(target_unit_id)
+                && self.unit_lists_ability(target_unit_id, ability_id)
+                && let Some(base_unit_id) = self.base_form_for_morph(ability_id, target_unit_id)
+            {
+                let suppression = TransformSuppression {
+                    transform_ability_id: ability_id.clone(),
+                    base_unit_id,
+                };
+                return Some(suppression);
+            }
+        }
+        None
+    }
+
+    /// The base form of a toggle morph: the unit other than the morphed target
+    /// whose ability list also carries the morph ability.
+    fn base_form_for_morph(&self, morph_ability_id: &str, target_unit_id: &str) -> Option<String> {
+        self.unit_abilities.iter().find_map(|(unit_id, entry)| {
+            if unit_id.eq_ignore_ascii_case(target_unit_id) {
+                return None;
+            }
+            let lists_morph = entry
+                .abilities()
+                .iter()
+                .any(|ability_id| ability_id.eq_ignore_ascii_case(morph_ability_id));
+            if lists_morph {
+                Some(unit_id.clone())
+            } else {
+                None
+            }
+        })
+    }
+
+    fn unit_lists_ability(&self, unit_id: &str, ability_id: &str) -> bool {
+        let Some(entry) = self.unit_abilities.get(unit_id) else {
+            return false;
+        };
+        entry
+            .abilities()
+            .iter()
+            .any(|listed_id| listed_id.eq_ignore_ascii_case(ability_id))
+    }
+
     fn get_unit_ids_from_race(&self, race: &Race) -> ObjectMap {
         let mut map = ObjectMap::new();
 
@@ -1043,27 +1128,24 @@ impl WarcraftDataAggregation {
                     // E.g. militia (hmil) is the DataB1 target of the Amil ability whose
                     // DataA1 is the peasant (hpea). Militia's SLK list inherits Harvest
                     // and Repair from the peasant, but those abilities belong to the
-                    // base form and should not appear on the transformed unit.
-                    let transform_info: Option<(String, String)> =
-                        self.ability_metadata.iter().find_map(|(ability_id, meta)| {
-                            let to_unit = meta.transform_to_unit()?;
-                            if !to_unit.eq_ignore_ascii_case(id) {
-                                return None;
-                            }
-                            let from_unit = meta.transform_from_unit()?.to_string();
-                            Some((ability_id.clone(), from_unit))
-                        });
-                    if let Some((transform_ability_id, from_unit_id)) = transform_info
-                        && let Some(from_entry) = self.unit_abilities.get(from_unit_id.as_str())
+                    // base form and should not appear on the transformed unit. Toggle
+                    // morphs (Bear Form, Raven Form) encode the morphed unit in UnitID1
+                    // instead, so the Druid's bear/crow form inherits the caster form's
+                    // Rejuvenation/Cyclone the same way — see transform_suppression_for.
+                    let suppression = self.transform_suppression_for(id);
+                    if let Some(suppression) = suppression
+                        && let Some(from_entry) =
+                            self.unit_abilities.get(suppression.base_unit_id())
                     {
                         let from_abilities: std::collections::HashSet<String> = from_entry
                             .abilities()
                             .iter()
-                            .map(|s| s.to_ascii_lowercase())
+                            .map(|ability_id| ability_id.to_ascii_lowercase())
                             .collect();
+                        let transform_ability_id = suppression.transform_ability_id();
                         combined.retain(|ability_id| {
                             // Always keep the transform ability itself.
-                            ability_id.eq_ignore_ascii_case(&transform_ability_id)
+                            ability_id.eq_ignore_ascii_case(transform_ability_id)
                                 || !from_abilities.contains(&ability_id.to_ascii_lowercase())
                         });
                     }

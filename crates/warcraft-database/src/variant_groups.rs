@@ -302,7 +302,16 @@ fn is_mergeable_variant_unit(unit_id: &str) -> bool {
 /// - Burrowed Carrion Beetle (`ucsB`/`ucsC`): the burrowed forms of the tier-2
 ///   and tier-3 beetles, listed separately too. They carry the same `Abu2`/
 ///   `Abu3` ids, so the existing fan-out covers them.
-const CURATED_TIER_GROUPS: &[&[&str]] = &[&["ucs1", "ucs2", "ucs3"], &["ucsB", "ucsC"]];
+/// - Clockwerk Goblin (`ncg1`/`ncg2`/`ncg3`/`ncgb`): the Goblin Tinker's Pocket
+///   Factory ships one logical unit as four stat-identical ids whose only
+///   difference is the Self Destruct id (`Asd2`/`Asd3`/`Asdg`). Nothing in the
+///   data links them, so they are curated. The Self Destruct abilities share the
+///   `Asds` code and the same cell, so the existing fan-out reaches every form.
+const CURATED_TIER_GROUPS: &[&[&str]] = &[
+    &["ucs1", "ucs2", "ucs3"],
+    &["ucsB", "ucsC"],
+    &["ncg1", "ncg2", "ncg3", "ncgb"],
+];
 
 static VARIANT_REGISTRY: LazyLock<VariantRegistry> = LazyLock::new(|| {
     let mut builder = VariantGraphBuilder::default();
@@ -550,6 +559,32 @@ mod tests {
         assert_eq!(burrowed.canonical(), "ucsC");
         assert!(VariantUnits::is_hidden_variant("ucsB"));
         assert!(!VariantUnits::is_hidden_variant("ucsC"));
+    }
+
+    /// The hand-curated Clockwerk Goblin group collapses its four stat-identical
+    /// ids to `ncgb` as canonical, hiding `ncg1`/`ncg2`/`ncg3`. Nothing in the
+    /// game data links them, so the group must come from the curated list.
+    #[test]
+    fn curated_clockwerk_goblin_group_collapses() {
+        let group = VariantUnits::group_for("ncg1").expect("ncg1 is a curated tier member");
+        assert_eq!(group.members(), ["ncg1", "ncg2", "ncg3", "ncgb"]);
+        assert_eq!(group.canonical(), "ncgb");
+        assert!(VariantUnits::is_hidden_variant("ncg1"));
+        assert!(VariantUnits::is_hidden_variant("ncg2"));
+        assert!(VariantUnits::is_hidden_variant("ncg3"));
+        assert!(!VariantUnits::is_hidden_variant("ncgb"));
+    }
+
+    /// The Clockwerk Goblin tiers carry the Self Destruct ability under three
+    /// different ids (`Asd2`/`Asd3`/`Asdg`), all sharing the `Asds` code and the
+    /// same default cell, so editing one must fan out to the others.
+    #[test]
+    fn clockwerk_goblin_self_destruct_abilities_fan_out() {
+        let siblings = VariantUnits::fanout_siblings("Asdg");
+        assert!(siblings.contains(&"Asd2"), "Asdg must fan out to Asd2");
+        assert!(siblings.contains(&"Asd3"), "Asdg must fan out to Asd3");
+        let from_low = VariantUnits::fanout_siblings("Asd2");
+        assert!(from_low.contains(&"Asdg"), "Asd2 must fan out to Asdg");
     }
 
     /// The Burrow ability uses a different id per beetle tier (`Abu2` on `ucs2`,

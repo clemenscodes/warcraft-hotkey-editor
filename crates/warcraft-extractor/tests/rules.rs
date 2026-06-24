@@ -1349,3 +1349,258 @@ mod rule_5_same_slot_dedup {
         );
     }
 }
+
+/// Rule 2: a unit reached by transforming from another unit inherits the base
+/// form's spells through its own SLK ability list, but those spells belong to
+/// the base form and must not appear on the transformed unit.
+///
+/// Two SLK shapes encode the transform:
+///   - "Call to Arms" style: `DataA1` = base unit, `DataB1` = transformed unit
+///     (e.g. peasant `hpea` → militia `hmil`).
+///   - toggle-morph style: `UnitID1` = morphed unit, no `DataB1` (e.g. Bear
+///     Form, Raven Form). The morphed Druid's command card must not show the
+///     caster form's Rejuvenation / Cyclone.
+///
+/// The toggle-morph signal is overloaded — summon abilities also name their
+/// summoned unit in `UnitID1`. The distinguishing trait of a real toggle is
+/// that the morphed unit carries the morph ability in its own list (to revert);
+/// a summoned unit never lists the ability that summons it.
+mod rule_2_transform_and_morph_suppression {
+    use super::*;
+
+    const UNIT_PATH: &str = "war3.w3mod:units/unitbalance.slk";
+    const UNIT_ABILITIES_PATH: &str = "war3.w3mod:units/unitabilities.slk";
+    const ABILITY_METADATA_PATH: &str = "war3.w3mod:units/abilitydata.slk";
+    const ABILITY_DEFAULTS_PATH: &str = "war3.w3mod:units/humanabilityfunc.txt";
+    const UNIT_STRINGS_PATH: &str = "x/enus.w3mod:units/humanunitstrings.txt";
+    const ABILITY_STRINGS_PATH: &str = "x/enus.w3mod:units/humanabilitystrings.txt";
+
+    fn build_database(results: Vec<ExtractResult>) -> WarcraftDatabase {
+        let aggregation = WarcraftDataAggregation::from(results);
+        WarcraftDatabase::from(aggregation)
+    }
+
+    fn unit_ability_ids(database: &WarcraftDatabase, unit_id: &str) -> Vec<String> {
+        let object = database
+            .by_id(unit_id)
+            .unwrap_or_else(|| panic!("unit {unit_id} missing from database"));
+        let WarcraftObjectMeta::Unit(unit_meta) = object.meta() else {
+            panic!("{unit_id} is not a Unit");
+        };
+        unit_meta
+            .abilities()
+            .iter()
+            .map(|ability_id| ability_id.value().to_string())
+            .collect()
+    }
+
+    fn unit_balance_two(first_id: &str, second_id: &str) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitBalanceID\"\n\
+             C;X2;Y1;K\"defType\"\n\
+             C;X3;Y1;K\"isbldg\"\n\
+             C;X4;Y1;K\"bldtm\"\n\
+             C;X1;Y2;K\"{first_id}\"\n\
+             C;X2;Y2;K\"normal\"\n\
+             C;X3;Y2;K\"0\"\n\
+             C;X4;Y2;K\"30\"\n\
+             C;X1;Y3;K\"{second_id}\"\n\
+             C;X2;Y3;K\"normal\"\n\
+             C;X3;Y3;K\"0\"\n\
+             C;X4;Y3;K\"30\"\n\
+             E\n"
+        )
+    }
+
+    fn unit_abilities_two(
+        first_id: &str,
+        first_list: &str,
+        second_id: &str,
+        second_list: &str,
+    ) -> String {
+        format!(
+            "ID;P\n\
+             C;X1;Y1;K\"unitAbilID\"\n\
+             C;X2;Y1;K\"abilList\"\n\
+             C;X3;Y1;K\"heroAbilList\"\n\
+             C;X1;Y2;K\"{first_id}\"\n\
+             C;X2;Y2;K\"{first_list}\"\n\
+             C;X1;Y3;K\"{second_id}\"\n\
+             C;X2;Y3;K\"{second_list}\"\n\
+             E\n"
+        )
+    }
+
+    fn process_all(
+        unit_slk: &str,
+        abilities_slk: &str,
+        meta_slk: &str,
+        defaults_txt: &str,
+        unit_strings_txt: &str,
+        ability_strings_txt: &str,
+    ) -> WarcraftDatabase {
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_txt.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_txt.as_bytes())
+            .unwrap();
+        build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ])
+    }
+
+    /// Bear/Raven Form analogue: `hmrp` is the morphed form. Its SLK list
+    /// inherits the base spell `Asrc` from the caster form `hbas`, but `Asrc`
+    /// belongs to the base form. After suppression the morphed unit keeps the
+    /// morph toggle (`Amrp`) and its own form-specific spell (`Adst`), and drops
+    /// the inherited `Asrc`.
+    #[test]
+    fn morph_form_drops_inherited_base_ability() {
+        let unit_slk = unit_balance_two("hbas", "hmrp");
+        let abilities_slk = unit_abilities_two("hbas", "Amrp,Asrc", "hmrp", "Amrp,Asrc,Adst");
+        let meta_slk = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X3;Y1;K\"UnitID1\"\n\
+             C;X1;Y2;K\"Amrp\"\n\
+             C;X2;Y2;K\"Amrp\"\n\
+             C;X3;Y2;K\"hmrp\"\n\
+             C;X1;Y3;K\"Asrc\"\n\
+             C;X2;Y3;K\"Asrc\"\n\
+             C;X1;Y4;K\"Adst\"\n\
+             C;X2;Y4;K\"Adst\"\n\
+             E\n";
+        let defaults_txt = "[Amrp]\nButtonpos=3,2\n[Asrc]\nButtonpos=0,0\n[Adst]\nButtonpos=1,0\n";
+        let unit_strings_txt = "[hbas]\nName=Caster Form\n[hmrp]\nName=Morphed Form\n";
+        let ability_strings_txt =
+            "[Amrp]\nName=Morph Form\n[Asrc]\nName=Source Spell\n[Adst]\nName=Morph Spell\n";
+
+        let database = process_all(
+            &unit_slk,
+            &abilities_slk,
+            meta_slk,
+            defaults_txt,
+            unit_strings_txt,
+            ability_strings_txt,
+        );
+        let abilities = unit_ability_ids(&database, "hmrp");
+        let has_inherited = abilities.iter().any(|id| id.eq_ignore_ascii_case("Asrc"));
+        let has_toggle = abilities.iter().any(|id| id.eq_ignore_ascii_case("Amrp"));
+        let has_form_spell = abilities.iter().any(|id| id.eq_ignore_ascii_case("Adst"));
+        assert!(
+            !has_inherited,
+            "morphed unit must drop the base form's spell Asrc (abilities: {abilities:?})",
+        );
+        assert!(
+            has_toggle,
+            "morphed unit must keep the morph toggle Amrp (abilities: {abilities:?})",
+        );
+        assert!(
+            has_form_spell,
+            "morphed unit must keep its own spell Adst (abilities: {abilities:?})",
+        );
+    }
+
+    /// A summoned unit also names itself in the summon ability's `UnitID1`, but
+    /// it does not carry that ability in its own list. Suppression must not fire,
+    /// so a spell the summoned unit genuinely shares with the summoner survives.
+    #[test]
+    fn summoned_unit_keeps_shared_ability() {
+        let unit_slk = unit_balance_two("hsmn", "hwat");
+        let abilities_slk = unit_abilities_two("hsmn", "Asum,Asrc", "hwat", "Asrc");
+        let meta_slk = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X3;Y1;K\"UnitID1\"\n\
+             C;X1;Y2;K\"Asum\"\n\
+             C;X2;Y2;K\"Asum\"\n\
+             C;X3;Y2;K\"hwat\"\n\
+             C;X1;Y3;K\"Asrc\"\n\
+             C;X2;Y3;K\"Asrc\"\n\
+             E\n";
+        let defaults_txt = "[Asum]\nButtonpos=3,2\n[Asrc]\nButtonpos=0,0\n";
+        let unit_strings_txt = "[hsmn]\nName=Summoner\n[hwat]\nName=Summoned\n";
+        let ability_strings_txt = "[Asum]\nName=Summon\n[Asrc]\nName=Shared Spell\n";
+
+        let database = process_all(
+            &unit_slk,
+            &abilities_slk,
+            meta_slk,
+            defaults_txt,
+            unit_strings_txt,
+            ability_strings_txt,
+        );
+        let abilities = unit_ability_ids(&database, "hwat");
+        let has_shared = abilities.iter().any(|id| id.eq_ignore_ascii_case("Asrc"));
+        assert!(
+            has_shared,
+            "summoned unit must keep its shared spell Asrc — it is not a morph (abilities: {abilities:?})",
+        );
+    }
+
+    /// Existing "Call to Arms" path (`DataA1` base, `DataB1` transformed): the
+    /// transformed unit `htrn` inherits the base spell `Ahrv` from `hbse` and
+    /// must drop it, keeping only its own spell `Aown`.
+    #[test]
+    fn call_to_arms_target_drops_inherited_base_ability() {
+        let unit_slk = unit_balance_two("hbse", "htrn");
+        let abilities_slk = unit_abilities_two("hbse", "Acta,Ahrv", "htrn", "Ahrv,Aown");
+        let meta_slk = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X3;Y1;K\"DataA1\"\n\
+             C;X4;Y1;K\"DataB1\"\n\
+             C;X1;Y2;K\"Acta\"\n\
+             C;X2;Y2;K\"Acta\"\n\
+             C;X3;Y2;K\"hbse\"\n\
+             C;X4;Y2;K\"htrn\"\n\
+             C;X1;Y3;K\"Ahrv\"\n\
+             C;X2;Y3;K\"Ahrv\"\n\
+             C;X1;Y4;K\"Aown\"\n\
+             C;X2;Y4;K\"Aown\"\n\
+             E\n";
+        let defaults_txt = "[Acta]\nButtonpos=3,2\n[Ahrv]\nButtonpos=0,0\n[Aown]\nButtonpos=1,0\n";
+        let unit_strings_txt = "[hbse]\nName=Base Form\n[htrn]\nName=Transformed Form\n";
+        let ability_strings_txt =
+            "[Acta]\nName=Call To Arms\n[Ahrv]\nName=Harvest\n[Aown]\nName=Own Spell\n";
+
+        let database = process_all(
+            &unit_slk,
+            &abilities_slk,
+            meta_slk,
+            defaults_txt,
+            unit_strings_txt,
+            ability_strings_txt,
+        );
+        let abilities = unit_ability_ids(&database, "htrn");
+        let has_inherited = abilities.iter().any(|id| id.eq_ignore_ascii_case("Ahrv"));
+        let has_own = abilities.iter().any(|id| id.eq_ignore_ascii_case("Aown"));
+        assert!(
+            !has_inherited,
+            "transformed unit must drop the base form's spell Ahrv (abilities: {abilities:?})",
+        );
+        assert!(
+            has_own,
+            "transformed unit must keep its own spell Aown (abilities: {abilities:?})",
+        );
+    }
+}

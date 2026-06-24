@@ -71,6 +71,35 @@ test.describe("Variant unit dedup (#27 upgrade-swaps + #28 tiers)", () => {
     await expect(alchemistCards).toHaveCount(1);
   });
 
+  test("Clockwerk Goblin variants collapse to a single entry (ncgb), hiding ncg1/ncg2/ncg3", async ({
+    page,
+  }) => {
+    await browseRace(page, "neutral");
+    const ids = await visibleUnitIds(page);
+    expect(ids).toContain("ncgb");
+    expect(ids).not.toContain("ncg1");
+    expect(ids).not.toContain("ncg2");
+    expect(ids).not.toContain("ncg3");
+    // Exactly one "Clockwerk Goblin" card remains in curated browsing.
+    const clockwerkCards = page.locator(".unit-card", { hasText: "Clockwerk Goblin" });
+    await expect(clockwerkCards).toHaveCount(1);
+  });
+
+  test("'All variants' expands the Clockwerk Goblin group to all four ids", async ({ page }) => {
+    await browseRace(page, "neutral");
+    const allVariants = page.getByRole("button", { name: "All variants" });
+    await allVariants.click();
+    await expect(allVariants).toHaveAttribute("data-active", "true");
+    const ids = await visibleUnitIds(page);
+    expect(ids).toContain("ncg1");
+    expect(ids).toContain("ncg2");
+    expect(ids).toContain("ncg3");
+    expect(ids).toContain("ncgb");
+    // All four "Clockwerk Goblin" cards list once the group is expanded.
+    const clockwerkCards = page.locator(".unit-card", { hasText: "Clockwerk Goblin" });
+    await expect(clockwerkCards).toHaveCount(4);
+  });
+
   test("searching a weaker variant surfaces its canonical, never the weaker id", async ({
     page,
   }) => {
