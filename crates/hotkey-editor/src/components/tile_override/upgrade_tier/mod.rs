@@ -47,27 +47,27 @@ pub(crate) fn UpgradeTierSelector(props: UpgradeTierSelectorProps) -> Element {
         writable_guard.insert(id_key, next);
     };
     rsx! {
-        div { class: "mt-auto flex items-center justify-center gap-[0.85rem] pt-4",
+        div { class: "tile-override-tier-footer",
             button {
-                class: "tile-override-tier-button w-[2.4rem] h-[2.4rem] p-0 bg-[rgba(40,30,8,0.55)] border border-[#6c5a1f] rounded cursor-pointer flex items-center justify-center transition-[border-color,background] duration-[120ms] hover:border-warcraft-gold hover:bg-[rgba(255,206,99,0.12)] max-[1099px]:w-[34px] max-[1099px]:h-[34px] max-[1099px]:min-w-[34px] max-[1099px]:min-h-[34px]",
+                class: "tile-override-tier-button",
                 aria_label: "Previous level",
                 onclick: handle_prev,
                 span {
-                    class: "block w-[1.7rem] h-[1.7rem] max-[1099px]:w-[22px] max-[1099px]:h-[22px]",
+                    class: "tile-override-tier-icon",
                     aria_hidden: "true",
                     dangerous_inner_html: ICON_TIER_PREV,
                 }
             }
             span {
-                class: "font-friz-quadrata uppercase tracking-[0.06em] text-[1.3rem] text-warcraft-text-secondary",
+                class: "tile-override-tier-label",
                 {tier_label_text}
             }
             button {
-                class: "tile-override-tier-button w-[2.4rem] h-[2.4rem] p-0 bg-[rgba(40,30,8,0.55)] border border-[#6c5a1f] rounded cursor-pointer flex items-center justify-center transition-[border-color,background] duration-[120ms] hover:border-warcraft-gold hover:bg-[rgba(255,206,99,0.12)] max-[1099px]:w-[34px] max-[1099px]:h-[34px] max-[1099px]:min-w-[34px] max-[1099px]:min-h-[34px]",
+                class: "tile-override-tier-button",
                 aria_label: "Next level",
                 onclick: handle_next,
                 span {
-                    class: "block w-[1.7rem] h-[1.7rem] max-[1099px]:w-[22px] max-[1099px]:h-[22px]",
+                    class: "tile-override-tier-icon",
                     aria_hidden: "true",
                     dangerous_inner_html: ICON_TIER_NEXT,
                 }

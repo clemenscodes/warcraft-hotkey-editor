@@ -1,5 +1,11 @@
 @layer components {
-/* ── Base layout ── */
+/* ════════════════════════════════════════════════════════════════════════
+   COSMETIC + STRUCTURAL BASE — viewport-independent
+   Colours, borders, fonts, interaction/drag states, and the fallback
+   geometry every band inherits. Layout deltas live in the band blocks below.
+   See docs/CSS_VIEWPORTS.md.
+   ════════════════════════════════════════════════════════════════════════ */
+
 .unit-detail-body {
     display: flex;
     flex-direction: column;
@@ -23,12 +29,6 @@
 
 .unit-detail-row > .unit-detail-grids   { grid-area: grids; }
 .unit-detail-row > .tile-override-panel { grid-area: override; width: 100%; }
-
-/* ── Base component rules ──────────────────────────────────────────────────
-   These MUST appear before the @media (min-width: 1100px) block below so
-   that the responsive tile-size formula wins on source order at ≥1100px.
-   Equal specificity → later in source wins; putting base rules first
-   ensures the media-query overrides take precedence. */
 
 .unit-detail-grids {
     display: flex;
@@ -405,179 +405,6 @@ body:has(.grid-tile.dragging-source) .grid-tile {
     color: #ffce63;
 }
 
-/* ─── Wide layout (≥ 1100 px): readable grids above compact override. ───
-   Placed AFTER all base rules so these overrides win on source order at
-   ≥1100 px. The tile-size formula is the critical path: it replaces the
-   10rem base values defined above. */
-@media (min-width: 1100px) {
-    /* The body can grow to the card bottom, but never shrink below its
-       content. Short viewports scroll inside .unit-detail instead of
-       compressing sections until they overlap following content. */
-    .unit-detail-body {
-        flex: 1 0 auto;
-        min-height: 0;
-        gap: clamp(1rem, 1.3vh, 1.4rem);
-    }
-
-    .unit-detail-row {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        padding-inline: 0;
-        margin-top: 0;
-        padding-top: 0;
-        flex: 1 0 auto;
-        min-height: 0;
-        gap: clamp(1rem, 1.4vh, 1.5rem);
-    }
-
-    .unit-detail-row > .unit-detail-grids {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: clamp(1rem, 1.2vh, 1.35rem) clamp(1.5rem, 1.4vw, 2rem);
-        align-items: start;
-        flex: 0 0 auto;
-    }
-
-    .unit-detail-row > .tile-override-panel {
-        flex: 1 0 auto;
-        min-height: clamp(13rem, 18vh, 22rem);
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    .unit-detail-row > .tile-override-panel > .tile-override-card,
-    .unit-detail-row > .tile-override-panel > .tile-override-empty {
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
-        flex: 1 0 auto;
-        height: auto;
-        overflow: visible;
-    }
-
-    /* Desktop tiles: scale with column width, but stay clearly readable. */
-    .command-section {
-        container-type: inline-size;
-        min-width: 0;
-    }
-    .command-section-heading {
-        font-size: clamp(1.45rem, 0.55vw + 0.95rem, 1.95rem);
-        margin: 0.45rem 0 0.8rem;
-    }
-    .grid-tiles {
-        --tile-size: clamp(
-            4.6rem,
-            calc((100cqi - 2.1rem) / 4),
-            8rem
-        );
-        grid-template-columns: repeat(4, var(--tile-size));
-        grid-auto-rows: var(--tile-size);
-        gap: 0.7rem;
-    }
-    .grid-tile,
-    .command-tile-wrapper {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
-    .hotkey-overlay {
-        top: 3px;
-        right: 3px;
-        min-width: 1.6rem;
-        height: 1.6rem;
-        padding: 0 0.3rem;
-        border-radius: 4px;
-        font-size: 1.1rem;
-    }
-    .command-label {
-        font-size: 0.72rem;
-        letter-spacing: 0.03em;
-        line-height: 1.08;
-    }
-}
-
-
-/* ───────────────────────── Command grids (A5) ─────────────────────────
-   Phone (≤ 480 px): the four command grids (command card / build menu /
-   research menu / uprooted) stack vertically. Cells stay finger-sized
-   (clamp lower bound 4.5rem ≈ 57 px at the project's base font size, well
-   above the 44 px touch target floor).
-   Tablet (481–1024 px): grids pair two-up via wrap on the parent flex
-   container. Cells get a moderate clamp so two grids fit beside each
-   other comfortably. */
-
-@media (max-width: 480px) {
-    .unit-detail-row {
-        gap: 1rem;
-    }
-    /* Stack grids vertically, one per row. */
-    .unit-detail-grids {
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5rem;
-    }
-    .grid-tiles {
-        --tile-size: clamp(4.5rem, calc((100vw - 5rem) / 4), 7rem);
-        grid-template-columns: repeat(4, var(--tile-size));
-        grid-auto-rows: var(--tile-size);
-        gap: 0.4rem;
-    }
-    .command-tile-wrapper,
-    .grid-tile {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
-}
-
-@media (min-width: 481px) and (max-width: 1099px) {
-    /* CSS grid guarantees each section gets exactly 1fr = 50%, so the
-       Research Menu always starts at the same x as the stats panel's
-       right column. Flex-basis percentages with wrapping weren't reliable. */
-    .unit-detail-grids {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.75rem 2.5rem;
-        align-items: start;
-    }
-    .command-section {
-        container-type: inline-size;
-        min-width: 0;
-    }
-    /* 100cqi = column width; 4 tiles + 3×0.5rem gaps = 1.5rem total gap.
-       Tiles fill the column without overflow, capped at 9rem. */
-    .grid-tiles {
-        --tile-size: clamp(5rem, calc((100cqi - 1.5rem) / 4), 9rem);
-        grid-template-columns: repeat(4, var(--tile-size));
-        grid-auto-rows: var(--tile-size);
-        gap: 0.5rem;
-    }
-    .command-tile-wrapper,
-    .grid-tile {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
-}
-
-/* ── 4K (≥ 2000 px): grow tiles and overlay badge to fill the excess space
-   that would otherwise stay in the override panel. ── */
-@media (min-width: 2000px) {
-    .grid-tiles {
-        --tile-size: clamp(4.6rem, calc((100cqi - 2.1rem) / 4), 12rem);
-    }
-    .grid-tile,
-    .command-tile-wrapper {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
-    .hotkey-overlay {
-        min-width: 2.2rem;
-        height: 2.2rem;
-        font-size: 1.5rem;
-    }
-}
-
 .drag-follower {
     position: fixed;
     pointer-events: none;
@@ -609,5 +436,185 @@ body:has(.grid-tile.dragging-source) .grid-tile {
 
 .drag-follower .hotkey-overlay {
     pointer-events: none;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   LAYOUT: phone (max-width: 480px)
+   The four command grids stack vertically. Cells stay finger-sized
+   (clamp lower bound 4.5rem ≈ 57 px, above the 44 px touch-target floor).
+   ════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .unit-detail-row {
+        gap: 1rem;
+    }
+    /* Stack grids vertically, one per row. */
+    .unit-detail-grids {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .grid-tiles {
+        --tile-size: clamp(4.5rem, calc((100vw - 5rem) / 4), 7rem);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.4rem;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   LAYOUT: large-phone + tablet (481px – 1099px)
+   Grids pair two-up via CSS grid (each section gets exactly 1fr = 50%, so the
+   Research Menu always starts at the same x as the stats panel's right
+   column). command_grid has no rule that differs between large-phone and
+   tablet, so the two bands share this one block.
+   ════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 481px) and (max-width: 1099px) {
+    .unit-detail-grids {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem 2.5rem;
+        align-items: start;
+    }
+    .command-section {
+        container-type: inline-size;
+        min-width: 0;
+    }
+    /* 100cqi = column width; 4 tiles + 3×0.5rem gaps = 1.5rem total gap.
+       Tiles fill the column without overflow, capped at 9rem. */
+    .grid-tiles {
+        --tile-size: clamp(5rem, calc((100cqi - 1.5rem) / 4), 9rem);
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.5rem;
+    }
+    .command-tile-wrapper,
+    .grid-tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   LAYOUT: desktop base (min-width: 1100px)
+   Readable grids above a compact override. The tile-size formula replaces the
+   10rem base values; the override card must NOT stretch to absorb leftover
+   vertical space (that made it balloon on tall windows) — any unused height
+   simply stays empty at the bottom; short viewports scroll inside .unit-detail.
+   ════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 1100px) {
+    .unit-detail-body {
+        flex: 0 0 auto;
+        min-height: 0;
+    }
+
+    .unit-detail-row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding-inline: 0;
+        margin-top: 0;
+        padding-top: 0;
+        flex: 0 0 auto;
+        min-height: 0;
+        /* Matches the .unit-detail section gap so grids→override has the same
+           breathing room as the other components. */
+        gap: clamp(0.95rem, 1.6vh, 1.5rem);
+    }
+
+    .unit-detail-row > .unit-detail-grids {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(1rem, 1.2vh, 1.35rem) clamp(1.5rem, 1.4vw, 2rem);
+        align-items: start;
+        flex: 0 0 auto;
+    }
+
+    .unit-detail-row > .tile-override-panel {
+        flex: 0 0 auto;
+        min-height: 0;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .unit-detail-row > .tile-override-panel > .tile-override-card,
+    .unit-detail-row > .tile-override-panel > .tile-override-empty {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex: 0 0 auto;
+        height: auto;
+        overflow: visible;
+    }
+
+    /* Desktop tiles: scale with column width, but stay clearly readable. */
+    .command-section {
+        container-type: inline-size;
+        min-width: 0;
+    }
+    .command-section-heading {
+        font-size: clamp(1.35rem, 0.5vw + 0.9rem, 1.75rem);
+        margin: 0.15rem 0 0.4rem;
+    }
+    .grid-tiles {
+        --tile-size: clamp(
+            4.6rem,
+            calc((100cqi - 2.1rem) / 4),
+            5.5rem
+        );
+        grid-template-columns: repeat(4, var(--tile-size));
+        grid-auto-rows: var(--tile-size);
+        gap: 0.7rem;
+    }
+    .grid-tile,
+    .command-tile-wrapper {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+    .hotkey-overlay {
+        top: 3px;
+        right: 3px;
+        min-width: 1.6rem;
+        height: 1.6rem;
+        padding: 0 0.3rem;
+        border-radius: 4px;
+        font-size: 1.1rem;
+    }
+    .command-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        line-height: 1.08;
+    }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   LAYOUT: desktop · wide-tall / 4K (min-width: 2000px)
+   Grow tiles and the overlay badge to fill space that would otherwise stay
+   empty in the override panel. Layers on the desktop base above.
+   ════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 2000px) {
+    .grid-tiles {
+        --tile-size: clamp(4.6rem, calc((100cqi - 2.1rem) / 4), 12rem);
+    }
+    .grid-tile,
+    .command-tile-wrapper {
+        width: var(--tile-size);
+        height: var(--tile-size);
+    }
+    .hotkey-overlay {
+        min-width: 2.2rem;
+        height: 2.2rem;
+        font-size: 1.5rem;
+    }
 }
 }
