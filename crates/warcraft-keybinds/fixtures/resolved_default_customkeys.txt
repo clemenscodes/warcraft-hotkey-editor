@@ -2303,7 +2303,7 @@ Ubertip=Removes all buffs from units in a target area. Deals 200 damage to summo
 
 [Adri]
 Hotkey=U
-Buttonpos=2,2
+Buttonpos=1,2
 Tip=Unload All
 Ubertip=Unloads all units.
 

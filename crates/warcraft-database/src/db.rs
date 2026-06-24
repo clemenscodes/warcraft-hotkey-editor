@@ -63228,13 +63228,8 @@ const ECHM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const ECHM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const ECHM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const ECHM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const EDCM_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Abrf"),
-    WarcraftObjectId::new("Arej"),
-    WarcraftObjectId::new("Ault"),
-    WarcraftObjectId::new("Ara2"),
-    WarcraftObjectId::new("Aien"),
-];
+const EDCM_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Abrf"), WarcraftObjectId::new("Ara2")];
 const EDCM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const EDCM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const EDCM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -63362,12 +63357,8 @@ const EDRY_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const EDRY_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const EDRY_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const EDRY_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const EDTM_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Acyc"),
-    WarcraftObjectId::new("Arav"),
-    WarcraftObjectId::new("Ault"),
-    WarcraftObjectId::new("Afa2"),
-];
+const EDTM_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Arav"), WarcraftObjectId::new("Afa2")];
 const EDTM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const EDTM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const EDTM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -64456,11 +64447,7 @@ const HPRT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HPRT_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HPRT_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HPRT_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const HPXE_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Aphx"),
-    WarcraftObjectId::new("ACrk"),
-    WarcraftObjectId::new("ACmi"),
-];
+const HPXE_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aphx")];
 const HPXE_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const HPXE_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const HPXE_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -70106,14 +70093,7 @@ const OSPM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const OSPM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const OSPM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const OSPM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const OSPW_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Acpf"),
-    WarcraftObjectId::new("Aspl"),
-    WarcraftObjectId::new("Adcn"),
-    WarcraftObjectId::new("Aast"),
-    WarcraftObjectId::new("Aion"),
-    WarcraftObjectId::new("ACsk"),
-];
+const OSPW_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Acpf")];
 const OSPW_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const OSPW_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const OSPW_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
@@ -70719,12 +70699,7 @@ const UCRL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UCRL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UCRL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UCRL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
-const UCRM_UNIT_ABILITIES: &[WarcraftObjectId] = &[
-    WarcraftObjectId::new("Aweb"),
-    WarcraftObjectId::new("Aspa"),
-    WarcraftObjectId::new("Abur"),
-    WarcraftObjectId::new("Aiun"),
-];
+const UCRM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Abur")];
 const UCRM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UCRM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
 const UCRM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];

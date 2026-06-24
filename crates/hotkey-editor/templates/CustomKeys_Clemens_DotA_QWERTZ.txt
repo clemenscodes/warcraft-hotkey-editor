@@ -2787,8 +2787,8 @@ Ubertip=Dispels positive buffs from enemy units, and negative buffs from friendl
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Andt]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=R
+Buttonpos=3,0
 Tip=Reveal
 Ubertip=Reveals an area of the map. Detects invisible units. Lasts 6 seconds.
 
@@ -5455,8 +5455,8 @@ Hotkey=Q
 Buttonpos=0,0
 
 [ngir]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=Q
+Buttonpos=0,0
 
 [ngna]
 Hotkey=Q
