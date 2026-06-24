@@ -145,6 +145,10 @@ function installSpatialNavigation() {
         (event) => {
             if (!isNavigationViewport()) return;
             if (event.ctrlKey || event.metaKey || event.altKey) return;
+            // While a hotkey picker is open, H/J/K/L and the arrows are hotkey
+            // candidates the picker must receive — don't hijack them for spatial
+            // navigation.
+            if (document.querySelector(".dialog-key-scope")) return;
             const target = event.target;
             if (target instanceof HTMLElement) {
                 const tag = target.tagName;

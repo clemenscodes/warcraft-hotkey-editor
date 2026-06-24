@@ -477,10 +477,15 @@ impl QueueBuildState {
                 .then_with(|| left.cmp(&right))
         });
 
+        // Pinned slots (system commands, Ancient root/uproot) normally win
+        // every fight and never reach this list. They only land here when the
+        // user has manually dragged commands so that two pinned slots collide
+        // and one overflows its row. When that happens the overflowed pinned
+        // slot still needs a real home, so it gets the same full-grid best-fit
+        // search as everything else. `is_swap_safe` keeps it from displacing
+        // another pinned slot, so a pinned spill can only take a free cell or
+        // swap with a movable ability — never shuffle another command.
         for node_index in spill_order {
-            if graph.node(node_index).slot_id().is_pinned() {
-                continue;
-            }
             let decision = self.find_spill_decision(node_index, graph);
             if let Some(spill_decision) = decision {
                 self.apply_spill_decision(node_index, spill_decision, graph);
@@ -1012,7 +1017,25 @@ mod cascade_queue_tests {
     use crate::cascade::conflict_graph::ConflictGraph;
     use crate::custom_keys::CustomKeys;
     use crate::identity::slot::GridSlotId;
-    use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
+    use crate::model::{AbilityBinding, ColumnIndex, CommandBinding, GridCoordinate, RowIndex};
+
+    /// Replays the global-command half of the QWER/ASDF/YXCV drag-drop
+    /// rearrange on top of the default keys: the four bottom-row cells fill up
+    /// with pinned, high-carrier system commands.
+    fn rearranged_default_keys() -> CustomKeys {
+        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut put_command_at = |command_id: &'static str, column: ColumnIndex, row: RowIndex| {
+            let position = GridCoordinate::new(column, row);
+            let binding = CommandBinding::builder().button_position(position).build();
+            custom_keys.put_command(command_id, binding);
+        };
+        put_command_at("CmdMove", ColumnIndex::Three, RowIndex::Two);
+        put_command_at("CmdStop", ColumnIndex::Zero, RowIndex::Two);
+        put_command_at("CmdHoldPos", ColumnIndex::One, RowIndex::Two);
+        put_command_at("CmdPatrol", ColumnIndex::Two, RowIndex::Two);
+        put_command_at("CmdAttack", ColumnIndex::Zero, RowIndex::One);
+        custom_keys
+    }
 
     fn default_queue() -> AssignmentQueue {
         let custom_keys = CustomKeys::from("").normalize();
@@ -1468,6 +1491,68 @@ mod cascade_queue_tests {
             final_column >= original_column,
             "Arav must not be gap-pulled leftward: started at column {original_column}, \
              ended at column {final_column}"
+        );
+    }
+
+    #[test]
+    fn resolving_rearranged_keys_leaves_no_position_collisions() {
+        // After the QWER/ASDF/YXCV rearrange, several toggle abilities (Burrow,
+        // Bear/Crow form, Submerge, Robo-Goblin, Web, Call to Arms) have an
+        // on-state or off-state sitting on top of a moved command. The conflict
+        // graph used to collapse an ability's on-state and off-state into one
+        // node tracking a single position, so the cascade only ever resolved one
+        // of the two and left the other colliding. Resolving must clear every
+        // position collision the collision reports can see, on-state and
+        // off-state alike.
+        use crate::collision::cross_unit::CrossUnitCollisionReport;
+        use crate::collision::unit_report::UnitCollisionReport;
+        use crate::grid::layout::GridLayout;
+
+        let mut custom_keys = rearranged_default_keys();
+        custom_keys.resolve_conflicts();
+
+        let cross = CrossUnitCollisionReport::compute(&custom_keys);
+        assert!(
+            cross.is_empty(),
+            "cross-unit position collisions remain after resolve: {} group(s)",
+            cross.position_groups().len(),
+        );
+
+        let layout = GridLayout::qwerty_grid();
+        let intra = UnitCollisionReport::compute(&custom_keys, layout);
+        let units_with_position_collisions: Vec<&str> = intra
+            .entries()
+            .iter()
+            .filter(|entry| entry.position_cards().iter().any(|card| !card.is_empty()))
+            .map(|entry| entry.unit_name())
+            .collect();
+        assert!(
+            units_with_position_collisions.is_empty(),
+            "intra-unit position collisions remain after resolve on: {units_with_position_collisions:?}",
+        );
+    }
+
+    #[test]
+    fn pinned_command_overflowing_a_full_row_is_rehomed_not_left_unresolved() {
+        // After the QWER/ASDF/YXCV rearrange the bottom row is full of pinned
+        // high-carrier commands. On a worker the pinned build command CmdBuild
+        // (default 0,2) loses every fight down that row, overflows at 3,2, and
+        // used to be left unresolved because phase 2 skipped pinned nodes. It
+        // must instead keep searching the grid and land somewhere free.
+        let custom_keys = rearranged_default_keys();
+        let graph = ConflictGraph::build(&custom_keys);
+        let queue = AssignmentQueue::build(graph);
+        let graph_ref = queue.graph();
+        let build_index = graph_ref
+            .find_node("CmdBuild", GridRole::MainCommand)
+            .expect("CmdBuild must exist as a node on the main command card");
+        let final_position = queue.final_position(build_index);
+        assert!(
+            !queue.is_unresolved(build_index),
+            "CmdBuild overflowed the full bottom row and was left unresolved at ({},{}) — \
+             it must be rehomed to a free cell elsewhere in the grid",
+            u8::from(final_position.column()),
+            u8::from(final_position.row()),
         );
     }
 }

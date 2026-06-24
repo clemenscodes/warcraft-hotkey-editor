@@ -118,6 +118,31 @@ pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Elemen
     let on_pick = props.on_pick;
     let on_close = props.on_close;
     let dialog_title = title.clone();
+    // The keydown handler only fires while focus sits inside this dialog, but the
+    // portal-mounted content has its focus reset to `document.body` a tick after
+    // mount, so `autofocus` only ever worked on the first open. Defer past that
+    // reset and focus the body element ourselves so every reopen stays keyboard-
+    // ready. See the matching effect in the shared `KeyPicker`.
+    #[cfg(target_arch = "wasm32")]
+    use_effect(move || {
+        spawn(async move {
+            use wasm_bindgen::JsCast;
+            gloo_timers::future::TimeoutFuture::new(0).await;
+            let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+                return;
+            };
+            let Some(node) = document
+                .query_selector(".sys-key-picker-body")
+                .ok()
+                .flatten()
+            else {
+                return;
+            };
+            if let Some(focusable) = node.dyn_ref::<web_sys::HtmlElement>() {
+                let _ = focusable.focus();
+            }
+        });
+    });
     let handle_open_change = move |next_open: bool| {
         if !next_open {
             on_close.call(());
@@ -135,6 +160,18 @@ pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Elemen
         let Some(code) = KeyCodes::from_event(&key_val, &code_val) else {
             return;
         };
+        // Only accept keys the board actually offers (the same cells shown and
+        // clickable). `KeyCodes::from_event` also maps Tab/Backspace/Enter and
+        // similar keys the game does not bind, so reject anything not on the
+        // board to keep keyboard input in step with what the UI presents.
+        let is_offered = KEYBOARD_ROWS
+            .iter()
+            .chain(NUMPAD_ROWS.iter())
+            .flat_map(|row| row.iter())
+            .any(|entry| entry.0 == code);
+        if !is_offered {
+            return;
+        }
         event.prevent_default();
         on_pick.call(code);
     };
@@ -155,7 +192,6 @@ pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Elemen
                     div {
                         class: "wc3-dialog-body sys-key-picker-body",
                         tabindex: "-1",
-                        autofocus: true,
                         div { class: "sys-key-picker-board",
                             div { class: "sys-key-picker-main",
                                 for (row_idx, row) in KEYBOARD_ROWS.iter().enumerate() {

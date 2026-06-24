@@ -272,11 +272,23 @@ fn move_reason_from_group(
         GroupKind::Spill { stuck_position } => {
             if is_anchor {
                 let stays_in_row = group.position().row() == stuck_position.row();
-                let has_swap_partner = !group.mover_indices().is_empty();
-                if stays_in_row && has_swap_partner {
-                    let first_incumbent = group.mover_indices()[0];
-                    let swapped_with = graph.node(first_incumbent).slot_id();
-                    let reason = MoveReason::Swap { swapped_with };
+                if stays_in_row {
+                    // A phase-2 rehoming that never leaves its row is a
+                    // same-row reflow, not a cross-row spill.  With a swap
+                    // partner it traded cells with an incumbent (a swap);
+                    // without one it simply slid back into a freed cell to
+                    // its left, which is a gap pull.  "Spill" is reserved for
+                    // the genuine cross-row fallback below.
+                    let has_swap_partner = !group.mover_indices().is_empty();
+                    if has_swap_partner {
+                        let first_incumbent = group.mover_indices()[0];
+                        let swapped_with = graph.node(first_incumbent).slot_id();
+                        let reason = MoveReason::Swap { swapped_with };
+                        return Some(reason);
+                    }
+                    let reason = MoveReason::GapPull {
+                        source_position: stuck_position,
+                    };
                     return Some(reason);
                 }
                 let reason = MoveReason::Spill {
@@ -484,6 +496,48 @@ mod cascade_planner_tests {
                     u8::from(first_pos.column()),
                     u8::from(first_pos.row()),
                     first_node.grid_role().label(),
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn same_row_reflow_is_classified_as_gap_pull_not_spill() {
+        // Force of Nature (ACfr) is pushed off the right end of row 2 during
+        // phase 1, becomes unresolved, then phase 2 rehomes it into a freed
+        // cell in the SAME row.  A move that never leaves its row is a gap
+        // pull, not a cross-row spill.
+        let plan = default_plan();
+        let acfr_move = plan
+            .moves()
+            .iter()
+            .find(|planned_move| planned_move.slot_id().as_str() == "ACfr")
+            .expect("ACfr must be moved in the default plan");
+        assert_eq!(
+            acfr_move.old_position().row(),
+            acfr_move.new_position().row(),
+            "precondition: ACfr never leaves its row",
+        );
+        let reason = acfr_move.reason();
+        assert!(
+            matches!(reason, MoveReason::GapPull { .. }),
+            "a same-row reflow must be a GapPull, got {reason:?}",
+        );
+    }
+
+    #[test]
+    fn every_spill_move_changes_row() {
+        let plan = default_plan();
+        for planned_move in plan.moves() {
+            let reason = planned_move.reason();
+            if matches!(reason, MoveReason::Spill { .. }) {
+                let old_row = u8::from(planned_move.old_position().row());
+                let new_row = u8::from(planned_move.new_position().row());
+                assert_ne!(
+                    old_row,
+                    new_row,
+                    "{} is labeled Spill but stays in row {old_row}",
+                    planned_move.slot_id().as_str(),
                 );
             }
         }

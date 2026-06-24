@@ -15,6 +15,19 @@ const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
 const ROOTED_ONLY_ABILITY_IDS: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Anei"), WarcraftObjectId::new("Aent")];
 
+struct HiddenUnitAbility {
+    unit_id: WarcraftObjectId,
+    ability_id: WarcraftObjectId,
+}
+
+// Phoenix Fire (Apxf) is a permanent self-damaging aura on the Phoenix (hphx).
+// The game data lists it as an ability of the unit, but the in-game command card
+// never renders a button for it, so hide it explicitly to match the live client.
+const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[HiddenUnitAbility {
+    unit_id: WarcraftObjectId::new("hphx"),
+    ability_id: WarcraftObjectId::new("Apxf"),
+}];
+
 pub trait UnitCommandSlots {
     fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard;
     fn build_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
@@ -40,6 +53,13 @@ fn ability_reverts_to_host(
         return false;
     }
     !BuildingTraits::ability_has_alt_state(ability_id)
+}
+
+fn ability_is_hidden_for_unit(unit_id: &str, ability_id: &str) -> bool {
+    HIDDEN_UNIT_ABILITIES.iter().any(|hidden| {
+        hidden.unit_id.value().eq_ignore_ascii_case(unit_id)
+            && hidden.ability_id.value().eq_ignore_ascii_case(ability_id)
+    })
 }
 
 fn ability_requires_rooted_form(database: &WarcraftDatabase, ability_id: &str) -> bool {
@@ -282,6 +302,9 @@ impl UnitCommandSlots for WarcraftDatabase {
                 if !is_levelable {
                     continue;
                 }
+            }
+            if ability_is_hidden_for_unit(unit_id_str, ability_str) {
+                continue;
             }
             if is_uprootable && ability_str.eq_ignore_ascii_case("Aeat") {
                 continue;
@@ -801,6 +824,26 @@ mod unit_slots_tests {
         assert!(
             has_prioritize,
             "Gargoyle command card must contain Prioritize (Aatp)"
+        );
+    }
+
+    #[test]
+    fn phoenix_command_card_hides_phoenix_fire() {
+        let unit_id = WarcraftObjectId::new("hphx");
+        let card = WARCRAFT_DATABASE.command_card(unit_id);
+        let has_phoenix_fire = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Apxf"));
+        assert!(
+            !has_phoenix_fire,
+            "Phoenix (hphx) command card must hide Phoenix Fire (Apxf); the in-game client never shows it"
+        );
+        let has_phoenix_summon = card
+            .filled_slots()
+            .any(|slot| slot.id().value().eq_ignore_ascii_case("Ahpe"));
+        assert!(
+            has_phoenix_summon,
+            "Phoenix (hphx) command card must still contain its remaining ability Ahpe"
         );
     }
 
