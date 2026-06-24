@@ -10,11 +10,16 @@ use crate::model::GridCoordinate;
 use crate::unit::grids::{GridRole, UnitGrids};
 use crate::unit::slots::UnitCommandSlots;
 
-/// Canonical identifier for one ability on one command card page type.
+/// Canonical identifier for one ability state on one command card page type.
 ///
-/// `Ability(X)` and `AbilityOff(X)` share the same `as_str()` and therefore
-/// map to the same key — they are two toggle states of one button, not
-/// two competing slots.
+/// An ability's on-state (`Ability(X)`) and off-state (`AbilityOff(X)`) are
+/// distinct buttons that occupy distinct cells: the on-state sits on the base
+/// unit's card at `Buttonpos`, while the off-state sits at `Unbuttonpos` —
+/// often on a different card entirely (a morphed form's unit) or, for some
+/// buildings, on the same card at a second cell (Town Hall's Call To Arms vs
+/// Back To Work).  Keying them apart via `is_off_state` lets the cascade see
+/// and resolve each state's collisions independently; collapsing them would
+/// leave whichever state the cascade did not track sitting on its collision.
 ///
 /// The `ability_str_lowercase` field collapses casing variants together: the
 /// auto-generated database contains some abilities registered under two
@@ -26,6 +31,7 @@ use crate::unit::slots::UnitCommandSlots;
 struct AbilityRoleKey {
     ability_str_lowercase: String,
     grid_role: GridRole,
+    is_off_state: bool,
 }
 
 /// Intermediate accumulator used during graph construction.
@@ -155,9 +161,11 @@ impl ConflictGraph {
                         continue;
                     };
                     let ability_str_lowercase = slot.as_str().to_ascii_lowercase();
+                    let is_off_state = matches!(slot, GridSlotId::AbilityOff(_));
                     let key = AbilityRoleKey {
                         ability_str_lowercase,
                         grid_role,
+                        is_off_state,
                     };
                     let accumulator =
                         node_accumulators
@@ -268,13 +276,16 @@ impl ConflictGraph {
         self.adjacency[index].len()
     }
 
-    /// Looks up a node by its ability string and grid role.  The lookup is
-    /// case-insensitive — the conflict graph keys nodes by the lowercase form
-    /// of the ability string so casing variants in the database are merged.
+    /// Looks up an ability's on-state node by its ability string and grid role.
+    /// The lookup is case-insensitive — the conflict graph keys nodes by the
+    /// lowercase form of the ability string so casing variants in the database
+    /// are merged.  Off-state nodes are keyed separately; this returns the
+    /// on-state (`Buttonpos`) node, which is what every caller wants.
     pub fn find_node(&self, ability_str: &str, grid_role: GridRole) -> Option<usize> {
         let key = AbilityRoleKey {
             ability_str_lowercase: ability_str.to_ascii_lowercase(),
             grid_role,
+            is_off_state: false,
         };
         self.key_to_index.get(&key).copied()
     }
