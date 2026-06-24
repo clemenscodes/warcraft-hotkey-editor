@@ -637,6 +637,7 @@ Researchubertip=Short distance teleportation that allows the Warden to move in a
 [AEbu]
 Hotkey=Q
 Buttonpos=0,0
+Researchhotkey=Y
 Researchbuttonpos=0,2
 
 [AEer]
@@ -816,6 +817,7 @@ Researchubertip=Turns a non-mechanical unit ethereal and slows its movement spee
 [AHbu]
 Hotkey=Q
 Buttonpos=0,0
+Researchhotkey=Y
 Researchbuttonpos=0,2
 
 [AHbz]
@@ -953,7 +955,7 @@ Ubertip=Summons a water elemental to attack the Archmage's enemies. Has 500 hit 
 Researchubertip=Summons a water elemental to attack the Archmage's enemies. |nLasts 60 seconds. |n|n|cffffcc00Attacks land and air units.|r |n|n|cffffcc00Level 1|r - 500 hit points, 19 - 23 damage. |n|cffffcc00Level 2|r - 625 hit points, 32 - 40 damage. |n|cffffcc00Level 3|r - 825 hit points, 44 - 52 damage.
 
 [AIhm]
-Hotkey=C
+Hotkey=D
 Buttonpos=2,1
 Researchhotkey=D
 Researchbuttonpos=2,1
@@ -1623,6 +1625,7 @@ Researchubertip=Increases the movement speed and attack rate of nearby friendly 
 [AObu]
 Hotkey=Q
 Buttonpos=0,0
+Researchhotkey=Y
 Researchbuttonpos=0,2
 
 [AOcl]
@@ -1842,6 +1845,7 @@ Researchubertip=Nearby friendly melee units gain hit points when they hit enemy 
 [AUbu]
 Hotkey=Q
 Buttonpos=0,0
+Researchhotkey=Y
 Researchbuttonpos=0,2
 
 [AUcb]
@@ -1996,10 +2000,10 @@ Ubertip=Dispels positive buffs from enemy units, and negative buffs from friendl
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Aaha]
-Hotkey=F
-Unhotkey=F
-Buttonpos=3,1
-Unbuttonpos=3,1
+Hotkey=R
+Unhotkey=R
+Buttonpos=3,0
+Unbuttonpos=3,0
 Tip=Gather
 UnTip=Return Resources
 Ubertip=Mines gold from Haunted Gold Mines.
@@ -2155,7 +2159,7 @@ Ubertip=Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times no
 Researchubertip=Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times normal damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times normal damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times normal damage. |n|cffffcc00Level 4|r - 30% dodge, 6 times normal damage.
 
 [Acdh]
-Hotkey=R
+Hotkey=W
 Buttonpos=1,0
 Researchhotkey=W
 Researchbuttonpos=1,0
@@ -2164,7 +2168,7 @@ Ubertip=Drenches enemy units in alcohol, causing their movement speed to be redu
 Researchubertip=Drenches enemy units in alcohol, causing their movement speed to be reduced, and have a chance to miss on attacks. When units with Drunken Haze cast on them are hit by Breath of Fire, they will ignite and take burn damage over time. |nLasts 12 seconds |n|n|cffffcc00Level 1|r - 50% movement speed, 45% miss chance. |n|cffffcc00Level 2|r - 50% movement speed, 65% miss chance. |n|cffffcc00Level 3|r - 50% movement speed, 80% miss chance.|n|cffffcc00Level 4|r - 50% movement speed, 95% miss chance.
 
 [Acef]
-Hotkey=W
+Hotkey=R
 Buttonpos=3,0
 Researchhotkey=R
 Researchbuttonpos=3,0
@@ -2789,8 +2793,8 @@ Tip=Reveal
 Ubertip=Reveals an area of the map. Detects invisible units. Lasts 6 seconds.
 
 [Anei]
-Hotkey=C
-Buttonpos=2,2
+Hotkey=V
+Buttonpos=3,2
 Researchhotkey=V
 Researchbuttonpos=3,2
 Tip=Select User
@@ -3139,7 +3143,7 @@ Unubertip=|cffc3dbff|cffc3dbffRight-click to deactivate auto-casting.|r|r
 [Ashm]
 Hotkey=D
 Buttonpos=2,1
-Researchhotkey=C
+Researchhotkey=D
 Researchbuttonpos=2,1
 Tip=Hide
 Ubertip=Stops the unit from auto-acquiring enemies, allowing it to Shadowmeld and remain unseen at night.
@@ -3255,8 +3259,8 @@ Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
 [Auns]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=F
+Buttonpos=3,1
 Tip=Unsummon Building
 Ubertip=Unsummons your building to regain 50% of the spent resources.
 
@@ -6507,8 +6511,8 @@ Tip=Purchase Potion of Mana
 Ubertip=Restores 125 mana when used.
 
 [pnvl]
-Hotkey=V
-Buttonpos=3,2
+Hotkey=C
+Buttonpos=2,2
 Tip=Purchase Potion of Lesser Invulnerability
 Ubertip=Makes the Hero invulnerable to damage for 7 seconds when used. An invulnerable Hero may not be the target of spells or effects.
 
