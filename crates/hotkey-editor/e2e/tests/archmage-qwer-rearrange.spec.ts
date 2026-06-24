@@ -287,3 +287,35 @@ test("applying the cascade clears every position collision, including toggle off
   await expect(crossCount).toHaveText("0");
   await expect(intraCount).toHaveText("0");
 });
+
+// A non-morph toggle (Frost Armor, ACf2) keeps both states on one grid where
+// only the off-state is drawn; the on-state lives in a separate dialog. The NEO
+// (QWERTZ) template moves the grid position (Buttonpos) but not the dialog-only
+// one (Unbuttonpos), so the hidden state used to drift and later haunt the
+// cascade as an invisible blocker that blocked Heal. Normalizing the imported
+// template must already pull the two positions together.
+test("a non-morph toggle's two positions coincide after applying a template", async ({ page }) => {
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+  const helpDialog = page.locator(".help-dialog");
+  if (await helpDialog.isVisible()) {
+    await helpDialog.getByRole("button", { name: "Got it, don't show this again" }).click();
+    await expect(helpDialog).toBeHidden();
+  }
+
+  await page.locator('[aria-label="Browse layout templates"]').click();
+  await page
+    .locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "NEO (QWERTZ)" })
+    .click();
+  await page.locator('[role="alertdialog"]').first().waitFor();
+
+  const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
+  expect(stored).not.toBeNull();
+  const buttonpos = fieldInSection(stored!, "ACf2", "Buttonpos");
+  const unbuttonpos = fieldInSection(stored!, "ACf2", "Unbuttonpos");
+  expect(buttonpos).not.toBeNull();
+  expect(
+    unbuttonpos,
+    `Frost Armor on-state (${unbuttonpos}) must coincide with its off-state (${buttonpos})`,
+  ).toBe(buttonpos);
+});
