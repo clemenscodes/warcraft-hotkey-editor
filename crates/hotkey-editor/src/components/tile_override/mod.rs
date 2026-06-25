@@ -111,22 +111,29 @@ pub(crate) fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
     // research hotkey for a command. Surface the regular hotkey field for
     // commands even in research context so the cancel button is bindable.
     let show_hotkey_field = !detail.is_passive() && (!is_research_context || detail.is_command());
+    let show_research_field = !detail.is_command() && is_research_context && !detail.info_only();
     let mut hotkey_assign_request = props.hotkey_assign_request;
     // A grid-cell double-click sets `select_slot` and `hotkey_assign_request` in
-    // the same event. Dioxus batches those writes, re-renders this panel (so
-    // `show_hotkey_field` is recomputed for the newly selected slot), then fires
-    // effects — hence this captured value is current when the effect runs.
+    // the same event. Dioxus batches those writes, re-renders this panel (so the
+    // field flags are recomputed for the newly selected slot), then fires
+    // effects — hence these captured values are current when the effect runs.
+    // Open whichever hotkey field is actually shown for the selected slot: the
+    // research hotkey in research context (where the primary Hotkey field is
+    // hidden), otherwise the primary Hotkey field. A slot with neither (passive,
+    // info-only) just stays selected.
     let hotkey_field_available = show_hotkey_field;
+    let research_field_available = show_research_field;
     use_effect(move || {
         if !*hotkey_assign_request.read() {
             return;
         }
         if hotkey_field_available {
             editing_target.set(Some(OverrideEditTarget::Hotkey));
+        } else if research_field_available {
+            editing_target.set(Some(OverrideEditTarget::ResearchHotkey));
         }
         hotkey_assign_request.set(false);
     });
-    let show_research_field = !detail.is_command() && is_research_context && !detail.info_only();
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);
     let research_is_editing = editing_snapshot == Some(OverrideEditTarget::ResearchHotkey);
