@@ -58,6 +58,7 @@ pub(crate) struct TileOverridePanelProps {
     pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
     pub(crate) drag_follower: Signal<Option<DragFollower>>,
     pub(crate) active_container_slots: Rc<[GridSlotId]>,
+    pub(crate) hotkey_assign_request: Signal<bool>,
 }
 
 #[component]
@@ -110,6 +111,21 @@ pub(crate) fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
     // research hotkey for a command. Surface the regular hotkey field for
     // commands even in research context so the cancel button is bindable.
     let show_hotkey_field = !detail.is_passive() && (!is_research_context || detail.is_command());
+    let mut hotkey_assign_request = props.hotkey_assign_request;
+    // A grid-cell double-click sets `select_slot` and `hotkey_assign_request` in
+    // the same event. Dioxus batches those writes, re-renders this panel (so
+    // `show_hotkey_field` is recomputed for the newly selected slot), then fires
+    // effects — hence this captured value is current when the effect runs.
+    let hotkey_field_available = show_hotkey_field;
+    use_effect(move || {
+        if !*hotkey_assign_request.read() {
+            return;
+        }
+        if hotkey_field_available {
+            editing_target.set(Some(OverrideEditTarget::Hotkey));
+        }
+        hotkey_assign_request.set(false);
+    });
     let show_research_field = !detail.is_command() && is_research_context && !detail.info_only();
     let editing_snapshot = *editing_target.read();
     let hotkey_is_editing = editing_snapshot == Some(OverrideEditTarget::Hotkey);

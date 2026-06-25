@@ -10,6 +10,7 @@ pub struct MoveRequest<'a> {
     is_research_context: bool,
     prevent_swap: bool,
     prevent_co_move: bool,
+    assign_hotkey_on_move: bool,
 }
 
 impl<'a> MoveRequest<'a> {
@@ -30,6 +31,7 @@ impl<'a> MoveRequest<'a> {
             is_research_context,
             prevent_swap: false,
             prevent_co_move: false,
+            assign_hotkey_on_move: true,
         }
     }
 
@@ -40,6 +42,11 @@ impl<'a> MoveRequest<'a> {
 
     pub fn with_prevent_co_move(mut self, prevent: bool) -> Self {
         self.prevent_co_move = prevent;
+        self
+    }
+
+    pub fn with_assign_hotkey_on_move(mut self, assign_hotkey: bool) -> Self {
+        self.assign_hotkey_on_move = assign_hotkey;
         self
     }
 
@@ -73,5 +80,9 @@ impl<'a> MoveRequest<'a> {
 
     pub fn prevent_co_move(&self) -> bool {
         self.prevent_co_move
+    }
+
+    pub fn assign_hotkey_on_move(&self) -> bool {
+        self.assign_hotkey_on_move
     }
 }

@@ -47,6 +47,8 @@ pub(super) fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let dialog_title = format!("Position: {display_name}");
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(object_id)];
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     let grid_props = CommandGridSectionProps {
         heading: "Off-state position",
         slot_ids: picker_slots,
@@ -59,6 +61,8 @@ pub(super) fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
         drop_target_cell,
         drag_follower,
         grid_layout,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
         is_research_grid: false,
         is_uprooted_grid: false,
         prevent_swap_on_drop: true,

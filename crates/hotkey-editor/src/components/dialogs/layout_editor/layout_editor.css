@@ -2,3 +2,63 @@
     from { box-shadow: 0 0 12px rgba(255, 206, 99, 0.45), inset 0 0 12px rgba(255, 206, 99, 0.2); }
     to   { box-shadow: 0 0 18px rgba(255, 206, 99, 0.85), inset 0 0 14px rgba(255, 206, 99, 0.35); }
 }
+
+/* Custom checkbox styled to match the grid cells (gold check on a dark,
+   gold-bordered tile) instead of the browser default. */
+.layout-move-hotkey-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(40, 30, 8, 0.75);
+    border: 2px solid #ffce63;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.layout-move-hotkey-checkbox:hover {
+    background: rgba(255, 206, 99, 0.12);
+    box-shadow: 0 0 8px rgba(255, 206, 99, 0.5);
+}
+
+.layout-move-hotkey-checkbox:checked {
+    background: rgba(255, 206, 99, 0.18);
+    box-shadow: inset 0 0 8px rgba(255, 206, 99, 0.25);
+}
+
+.layout-move-hotkey-checkbox:checked::after {
+    content: "";
+    width: 0.6rem;
+    height: 1.05rem;
+    margin-top: -0.18rem;
+    border: solid #ffce63;
+    border-width: 0 0.3rem 0.3rem 0;
+    transform: rotate(45deg);
+    filter: drop-shadow(1px 1px 0 #000);
+}
+
+.layout-move-hotkey-checkbox:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px #fff, 0 0 16px rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 1099px) {
+    .layout-move-hotkey-checkbox {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+    }
+    .layout-move-hotkey-checkbox:checked::after {
+        width: 6px;
+        height: 11px;
+        margin-top: -2px;
+        border-width: 0 3px 3px 0;
+    }
+}

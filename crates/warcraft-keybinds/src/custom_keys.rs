@@ -697,6 +697,7 @@ impl CustomKeys {
         column: u8,
         row: u8,
         is_research_context: bool,
+        assign_hotkey: bool,
     ) {
         let Ok(column_index) = ColumnIndex::try_from(column) else {
             return;
@@ -715,10 +716,12 @@ impl CustomKeys {
                 if let Some(binding) = self.binding_or_default_mut(*ability_id) {
                     if is_research_context {
                         binding.set_research_button_position(Some(new_position));
-                        binding.set_research_hotkey(Some(grid_hotkey));
+                        if assign_hotkey {
+                            binding.set_research_hotkey(Some(grid_hotkey));
+                        }
                     } else {
                         binding.set_button_position(Some(new_position));
-                        if !is_passive {
+                        if assign_hotkey && !is_passive {
                             binding.set_hotkey(Some(grid_hotkey));
                         }
                     }
@@ -727,15 +730,19 @@ impl CustomKeys {
             GridSlotId::AbilityOff(ability_id) => {
                 if let Some(binding) = self.binding_or_default_mut(*ability_id) {
                     binding.set_unbutton_position(Some(new_position));
-                    let unhotkey = Hotkey::from(letter);
-                    binding.set_unhotkey(Some(unhotkey));
+                    if assign_hotkey {
+                        let unhotkey = Hotkey::from(letter);
+                        binding.set_unhotkey(Some(unhotkey));
+                    }
                 }
             }
             GridSlotId::Command(command_name) => {
                 if let Some(binding) = self.command_or_default_mut(*command_name) {
                     binding.set_button_position(Some(new_position));
-                    let command_hotkey = Hotkey::from(letter);
-                    binding.set_hotkey(Some(command_hotkey));
+                    if assign_hotkey {
+                        let command_hotkey = Hotkey::from(letter);
+                        binding.set_hotkey(Some(command_hotkey));
+                    }
                     binding.set_unbutton_position(Some(new_position));
                 }
             }
@@ -828,6 +835,7 @@ impl CustomKeys {
             request.target_column(),
             request.target_row(),
             request.is_research_context(),
+            request.assign_hotkey_on_move(),
         );
         if moving_off_colocated && let GridSlotId::Ability(moving_id) = request.moving_slot() {
             self.assign_position(
@@ -836,6 +844,7 @@ impl CustomKeys {
                 request.target_column(),
                 request.target_row(),
                 false,
+                request.assign_hotkey_on_move(),
             );
         }
         if !request.prevent_swap()
@@ -850,6 +859,7 @@ impl CustomKeys {
                 old_column,
                 old_row,
                 request.is_research_context(),
+                request.assign_hotkey_on_move(),
             );
             if displaced_off_colocated && let GridSlotId::Ability(displaced_id) = &displaced {
                 self.assign_position(
@@ -858,6 +868,7 @@ impl CustomKeys {
                     old_column,
                     old_row,
                     false,
+                    request.assign_hotkey_on_move(),
                 );
             }
         }
@@ -2330,11 +2341,88 @@ mod tests {
         let mut keys = CustomKeys::from(input);
         let layout = GridLayout::qwerty_grid();
         let slot = GridSlotId::ability("Rume");
-        keys.assign_position(layout, &slot, 1, 1, false);
+        keys.assign_position(layout, &slot, 1, 1, false, true);
         let binding = keys.binding("Rume").expect("Rume exists");
         let hotkey = binding.hotkey().expect("hotkey set");
         let expected = Hotkey::try_from("S,S,S").expect("valid hotkey");
         assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn move_slot_keeps_hotkey_when_reassignment_disabled() {
+        // Position-only move: dragging ACad from (2,2) to (1,1) with
+        // assign_hotkey_on_move=false must move Buttonpos but keep the
+        // manually-set hotkey P (instead of snapping to (1,1)'s grid letter).
+        use crate::command::move_request::MoveRequest;
+        use crate::identity::slot::GridSlotId;
+        let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACad");
+        let slot_ids = [moving];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 1, false)
+            .with_assign_hotkey_on_move(false);
+        keys.move_slot(&request);
+        let binding = keys.binding("ACad").expect("ACad exists");
+        let position = binding.button_position().expect("position set");
+        assert_eq!(u8::from(position.column()), 1);
+        assert_eq!(u8::from(position.row()), 1);
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("P").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn move_slot_reassigns_hotkey_by_default() {
+        // Default behavior (assign_hotkey_on_move=true): moving ACad to (1,1)
+        // rebinds its hotkey to that cell's grid letter (S on QWERTY).
+        use crate::command::move_request::MoveRequest;
+        use crate::identity::slot::GridSlotId;
+        let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACad");
+        let slot_ids = [moving];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 1, false);
+        keys.move_slot(&request);
+        let binding = keys.binding("ACad").expect("ACad exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("S").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn move_slot_swap_keeps_both_hotkeys_when_reassignment_disabled() {
+        // Swapping ACad (at (0,0), hotkey P) with AHbz (at (1,1), hotkey K)
+        // with assign_hotkey_on_move=false swaps both positions but leaves
+        // both hotkeys untouched.
+        use crate::command::move_request::MoveRequest;
+        use crate::identity::slot::GridSlotId;
+        let input = "[ACad]\nHotkey=P\nButtonpos=0,0\n[AHbz]\nHotkey=K\nButtonpos=1,1\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let moving = GridSlotId::ability("ACad");
+        let displaced = GridSlotId::ability("AHbz");
+        let slot_ids = [moving, displaced];
+        let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 1, false)
+            .with_assign_hotkey_on_move(false);
+        keys.move_slot(&request);
+
+        let moving_binding = keys.binding("ACad").expect("ACad exists");
+        let moving_position = moving_binding.button_position().expect("position set");
+        assert_eq!(u8::from(moving_position.column()), 1);
+        assert_eq!(u8::from(moving_position.row()), 1);
+        let moving_hotkey = moving_binding.hotkey().expect("hotkey set");
+        let expected_moving = Hotkey::try_from("P").expect("valid hotkey");
+        assert_eq!(moving_hotkey, &expected_moving);
+
+        let displaced_binding = keys.binding("AHbz").expect("AHbz exists");
+        let displaced_position = displaced_binding.button_position().expect("position set");
+        assert_eq!(u8::from(displaced_position.column()), 0);
+        assert_eq!(u8::from(displaced_position.row()), 0);
+        let displaced_hotkey = displaced_binding.hotkey().expect("hotkey set");
+        let expected_displaced = Hotkey::try_from("K").expect("valid hotkey");
+        assert_eq!(displaced_hotkey, &expected_displaced);
     }
 
     #[test]

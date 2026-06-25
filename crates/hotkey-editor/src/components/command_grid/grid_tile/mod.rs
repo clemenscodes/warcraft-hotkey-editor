@@ -27,6 +27,8 @@ pub(super) struct GridTileProps {
     pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
     pub(super) drag_follower: Signal<Option<DragFollower>>,
     pub(super) grid_layout: Signal<GridLayout>,
+    pub(super) update_hotkeys_on_move: Signal<bool>,
+    pub(super) hotkey_assign_request: Signal<bool>,
     pub(super) conflicting_hotkeys: Rc<HashSet<String>>,
     pub(super) is_research_grid: bool,
     pub(super) is_uprooted_grid: bool,
@@ -302,6 +304,8 @@ pub(super) fn GridTile(props: GridTileProps) -> Element {
         drop_target_cell,
         drag_follower,
         keys_signal,
+        update_hotkeys_on_move: props.update_hotkeys_on_move,
+        hotkey_assign_request: props.hotkey_assign_request,
         slot_ids_for_drop,
         occupant_slot,
     };
