@@ -67,6 +67,34 @@ const BUILD_COMMAND_MIRRORS: &[BuildCommandMirror] = &[
     },
 ];
 
+/// Pairs a permanent one-way morph ability with the produced-unit section the
+/// live game reads its keybind from. The Obsidian Statue's Transform (`Aave`)
+/// is irreversible — a Destroyer (`ubsp`) can never become a Statue again — so
+/// the morph is a one-time command whose keybind lives in a section keyed by
+/// the produced unit id, separate from the `Aave` ability the editor's grid
+/// button edits. Editing the button only touches `Aave`, so without this mirror
+/// the produced-unit section keeps its stale default hotkey and the morph binds
+/// the wrong key in game.
+///
+/// This is why the list is a single entry and is not derived from the database:
+/// every *other* morph is a reversible toggle whose second state is the base
+/// unit's off-state (`Unhotkey`/`Unbuttonpos`, handled by
+/// `sync_mirrored_off_states` and the independent-off-slot logic), so it has no
+/// orphaned produced-unit command section to sync. The
+/// `morph_target_unit` database field cannot distinguish these — it is also set
+/// for reversible toggles, summon spells, and mount actions, several of whose
+/// targets are ordinary train/sell units that this mirror would clobber, the
+/// same invariant that makes [`BuildCommandMirror`] safe.
+struct MorphAbilityMirror {
+    ability_id: WarcraftObjectId,
+    produced_unit_id: WarcraftObjectId,
+}
+
+const MORPH_ABILITY_MIRRORS: &[MorphAbilityMirror] = &[MorphAbilityMirror {
+    ability_id: WarcraftObjectId::new("Aave"),
+    produced_unit_id: WarcraftObjectId::new("ubsp"),
+}];
+
 #[derive(Clone, Default)]
 pub struct CustomKeys {
     entries: BTreeMap<WarcraftObjectId, WarcraftKeybinding>,
@@ -245,8 +273,61 @@ impl CustomKeys {
         result.extend(overlay_clone);
         result.prune_non_button_abilities();
         result.mirror_build_commands_to_abilities();
+        result.mirror_morph_abilities_to_unit_commands();
         result.sync_mirrored_off_states();
+        result.materialize_upgrade_hotkey_tiers();
         result
+    }
+
+    /// Restores one hotkey token per tier for every multi-level upgrade. The
+    /// live game binds each research tier from a comma-separated list
+    /// (`Hotkey=F,F,F`); a single token binds only tier 1, silently dropping the
+    /// follow-up upgrades' hotkeys. Templates and older files routinely store a
+    /// single token, and `extend` overlays it onto the baseline, so normalize is
+    /// the one place every flow (template apply, import, boot) passes through and
+    /// must re-materialize the per-tier list. Leveled abilities are left alone —
+    /// only [`WarcraftObject::upgrade_max_level`] objects replicate.
+    fn materialize_upgrade_hotkey_tiers(&mut self) {
+        for (object_id, keybinding) in self.entries.iter_mut() {
+            let WarcraftKeybinding::Ability(ability_binding) = keybinding else {
+                continue;
+            };
+            let object_value = object_id.value();
+            let object_option = WARCRAFT_DATABASE.by_id(object_value);
+            let Some(warcraft_object) = object_option else {
+                continue;
+            };
+            let Some(tier_count) = warcraft_object.upgrade_max_level() else {
+                continue;
+            };
+            if tier_count < 2 {
+                continue;
+            }
+            let existing_main = ability_binding.hotkey();
+            let main_replicated = Self::replicate_existing_hotkey(existing_main, tier_count);
+            if let Some(new_hotkey) = main_replicated {
+                ability_binding.set_hotkey(Some(new_hotkey));
+            }
+            let existing_research = ability_binding.research_hotkey();
+            let research_replicated =
+                Self::replicate_existing_hotkey(existing_research, tier_count);
+            if let Some(new_hotkey) = research_replicated {
+                ability_binding.set_research_hotkey(Some(new_hotkey));
+            }
+        }
+    }
+
+    /// Returns the per-tier replication of an existing hotkey's first token, or
+    /// `None` when there is nothing to change (no hotkey, or already the right
+    /// number of tiers).
+    fn replicate_existing_hotkey(existing: Option<&Hotkey>, tier_count: usize) -> Option<Hotkey> {
+        let hotkey = existing?;
+        let token = hotkey.first_token()?;
+        if hotkey.level_count() == tier_count {
+            return None;
+        }
+        let replicated = Hotkey::replicated(token, tier_count);
+        Some(replicated)
     }
 
     /// Collapses every toggle that does not get a second command card slot onto
@@ -304,6 +385,33 @@ impl CustomKeys {
             ability_binding.set_button_position(button_position);
             ability_binding.set_hotkey(hotkey);
             self.put_ability(ability_id, ability_binding);
+        }
+    }
+
+    /// Copies each transform morph ability's hotkey and position onto the
+    /// produced-unit section the live game reads (see [`MorphAbilityMirror`]).
+    /// Without it the produced unit keeps its stale default hotkey, so the morph
+    /// button binds the wrong key in game even though its rendered position
+    /// follows the edited morph ability.
+    fn mirror_morph_abilities_to_unit_commands(&mut self) {
+        for mirror in MORPH_ABILITY_MIRRORS {
+            let ability_id = mirror.ability_id;
+            let Some(ability_binding) = self.binding(ability_id) else {
+                continue;
+            };
+            let position_ref = ability_binding.button_position();
+            let button_position = position_ref.copied();
+            let hotkey_ref = ability_binding.hotkey();
+            let hotkey = hotkey_ref.cloned();
+            if button_position.is_none() && hotkey.is_none() {
+                continue;
+            }
+            let produced_unit_id = mirror.produced_unit_id;
+            let existing_binding = self.binding(produced_unit_id).cloned();
+            let mut produced_binding = existing_binding.unwrap_or_default();
+            produced_binding.set_button_position(button_position);
+            produced_binding.set_hotkey(hotkey);
+            self.put_ability(produced_unit_id, produced_binding);
         }
     }
 
@@ -603,16 +711,15 @@ impl CustomKeys {
         match slot {
             GridSlotId::Ability(ability_id) => {
                 let is_passive = ObjectLookup::is_passive_ability(ability_id.value());
+                let grid_hotkey = Self::grid_hotkey_for(*ability_id, letter);
                 if let Some(binding) = self.binding_or_default_mut(*ability_id) {
                     if is_research_context {
                         binding.set_research_button_position(Some(new_position));
-                        let research_hotkey = Hotkey::from(letter);
-                        binding.set_research_hotkey(Some(research_hotkey));
+                        binding.set_research_hotkey(Some(grid_hotkey));
                     } else {
                         binding.set_button_position(Some(new_position));
                         if !is_passive {
-                            let ability_hotkey = Hotkey::from(letter);
-                            binding.set_hotkey(Some(ability_hotkey));
+                            binding.set_hotkey(Some(grid_hotkey));
                         }
                     }
                 }
@@ -830,7 +937,7 @@ impl CustomKeys {
                 && let Some(letter) = layout.letter_at(position.column(), position.row())
                 && binding.hotkey().is_none_or(|h| h.accepts_grid_letter())
             {
-                let new_hotkey = Hotkey::from(letter);
+                let new_hotkey = Self::grid_hotkey_for(bound_id, letter);
                 if binding.hotkey() != Some(&new_hotkey) {
                     binding.set_hotkey(Some(new_hotkey));
                     changed_count += 1;
@@ -842,7 +949,7 @@ impl CustomKeys {
                     .research_hotkey()
                     .is_none_or(|h| h.accepts_grid_letter())
             {
-                let new_hotkey = Hotkey::from(letter);
+                let new_hotkey = Self::grid_hotkey_for(bound_id, letter);
                 if binding.research_hotkey() != Some(&new_hotkey) {
                     binding.set_research_hotkey(Some(new_hotkey));
                     changed_count += 1;
@@ -1087,21 +1194,49 @@ impl CustomKeys {
         }
     }
 
+    /// The number of hotkey tiers the live game expects for an upgrade, read
+    /// from the game database. Multi-level upgrades (graveyard attack/armor,
+    /// Necromancer/Banshee training) bind one comma-separated token per tier;
+    /// replicating to fewer tiers leaves the follow-up levels without a working
+    /// hotkey. Leveled abilities are excluded — they bind a single hotkey shared
+    /// across levels (see [`WarcraftObject::upgrade_max_level`]). Non-upgrades
+    /// yield `0`.
+    fn upgrade_tier_count(ability_id: AbilityId) -> usize {
+        let object_id = ability_id.object_id();
+        let object_value = object_id.value();
+        let object_option = WARCRAFT_DATABASE.by_id(object_value);
+        object_option
+            .and_then(|warcraft_object| warcraft_object.upgrade_max_level())
+            .unwrap_or(0)
+    }
+
+    /// Builds the hotkey to assign when a grid letter lands on a binding. For a
+    /// multi-level upgrade the letter is replicated to one token per tier
+    /// (`Hotkey=F,F,F`); every other binding gets a single-letter hotkey.
+    fn grid_hotkey_for(ability_id: AbilityId, letter: char) -> Hotkey {
+        let token = HotkeyToken::from(letter);
+        let upgrade_levels = Self::upgrade_tier_count(ability_id);
+        let tier_count = upgrade_levels.max(1);
+        Hotkey::replicated(token, tier_count)
+    }
+
     fn apply_hotkey(&mut self, target: HotkeyTarget, new_token: Option<HotkeyToken>) {
         match target {
             HotkeyTarget::Ability(ability_id) => {
+                let upgrade_levels = Self::upgrade_tier_count(ability_id);
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
                     let existing_levels = binding.hotkey().map_or(0, |h| h.level_count());
-                    let replicated =
-                        new_token.map(|token| Hotkey::replicated(token, existing_levels));
+                    let tier_count = existing_levels.max(upgrade_levels).max(1);
+                    let replicated = new_token.map(|token| Hotkey::replicated(token, tier_count));
                     binding.set_hotkey(replicated);
                 }
             }
             HotkeyTarget::AbilityResearch(ability_id) => {
+                let upgrade_levels = Self::upgrade_tier_count(ability_id);
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
                     let research_levels = binding.research_hotkey().map_or(0, |h| h.level_count());
-                    let replicated =
-                        new_token.map(|token| Hotkey::replicated(token, research_levels));
+                    let tier_count = research_levels.max(upgrade_levels).max(1);
+                    let replicated = new_token.map(|token| Hotkey::replicated(token, tier_count));
                     binding.set_research_hotkey(replicated);
                 }
             }
@@ -2007,6 +2142,202 @@ mod tests {
     }
 
     #[test]
+    fn set_hotkey_replicates_to_two_tier_upgrade() {
+        // Banshee Adept/Master Training (`Ruba`) is a 2-level upgrade. Upgrades
+        // store one hotkey token per tier in the main Hotkey field
+        // (`Hotkey=F,F`); a single token binds only tier 1, so the master
+        // upgrade loses its hotkey in game.
+        let binding_ruba = AbilityBinding::default();
+        let mut keys = CustomKeys::builder().ability("Ruba", binding_ruba).build();
+        let new_token = HotkeyToken::from('F');
+        let target = HotkeyTarget::ability("Ruba");
+        keys.set_hotkey(target, Some(new_token));
+        let binding = keys.binding("Ruba").expect("Ruba exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        assert_eq!(hotkey.level_count(), 2);
+    }
+
+    #[test]
+    fn set_hotkey_replicates_to_three_tier_upgrade() {
+        // A graveyard attack/armor upgrade (`Rume`) has three levels, so its
+        // hotkey must replicate to three tiers (`Hotkey=F,F,F`).
+        let binding_rume = AbilityBinding::default();
+        let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
+        let new_token = HotkeyToken::from('F');
+        let target = HotkeyTarget::ability("Rume");
+        keys.set_hotkey(target, Some(new_token));
+        let binding = keys.binding("Rume").expect("Rume exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        assert_eq!(hotkey.level_count(), 3);
+    }
+
+    #[test]
+    fn set_hotkey_keeps_leveled_ability_single_tier() {
+        // A leveled hero/unit ABILITY (here `AEah`, an aura with three levels)
+        // is not an upgrade: its command-card button is shared across levels and
+        // binds a single hotkey. Only upgrades replicate one token per tier, so
+        // editing an ability's hotkey must stay single — otherwise we would emit
+        // `Hotkey=F,F,F` for things the game expects as `Hotkey=F`.
+        let binding_aeah = AbilityBinding::default();
+        let mut keys = CustomKeys::builder().ability("AEah", binding_aeah).build();
+        let new_token = HotkeyToken::from('F');
+        let target = HotkeyTarget::ability("AEah");
+        keys.set_hotkey(target, Some(new_token));
+        let binding = keys.binding("AEah").expect("AEah exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        assert_eq!(hotkey.level_count(), 1);
+    }
+
+    #[test]
+    fn set_hotkey_serializes_upgrade_hotkey_per_tier() {
+        // End-to-end: the serialized section the game reads must carry the
+        // comma-separated per-tier list, not a single token.
+        let binding_rume = AbilityBinding::default();
+        let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
+        let new_token = HotkeyToken::from('F');
+        let target = HotkeyTarget::ability("Rume");
+        keys.set_hotkey(target, Some(new_token));
+        let serialized = keys.to_string();
+        assert!(
+            serialized.contains("Hotkey=F,F,F"),
+            "expected three-tier upgrade hotkey, got:\n{serialized}"
+        );
+    }
+
+    #[test]
+    fn apply_grid_preserves_three_tier_upgrade_hotkey() {
+        // Applying a grid layout (e.g. a template) rebinds every button to its
+        // cell's letter. For a 3-level upgrade (`Rume` at the top-left cell) it
+        // must rebind all three tiers, not collapse `Hotkey=S,S,S` to a single
+        // token — the structural bug that silently dropped the follow-up
+        // upgrades' hotkeys.
+        let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        keys.apply_grid_to_all_bindings(layout);
+        let binding = keys.binding("Rume").expect("Rume exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("Q,Q,Q").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn apply_grid_preserves_two_tier_upgrade_hotkey() {
+        // `Ruba` (Banshee training) has two levels at cell (1,2). Applying the
+        // grid must keep both tiers bound.
+        let input = "[Ruba]\nHotkey=A,A\nButtonpos=1,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        keys.apply_grid_to_all_bindings(layout);
+        let binding = keys.binding("Ruba").expect("Ruba exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("X,X").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn apply_grid_keeps_leveled_ability_single_tier() {
+        // The same grid application over a leveled ABILITY (`AEah`, 3 levels)
+        // must keep its hotkey single — abilities are not upgrades.
+        let input = "[AEah]\nHotkey=D\nButtonpos=2,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        keys.apply_grid_to_all_bindings(layout);
+        let binding = keys.binding("AEah").expect("AEah exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        assert_eq!(hotkey.level_count(), 1);
+    }
+
+    #[test]
+    fn normalize_restores_upgrade_hotkey_tiers_after_template_overlay() {
+        // A template overlays single-token upgrade hotkeys (e.g. `[Rume]
+        // Hotkey=Q`) onto the baseline. The template-apply flow is
+        // baseline.extend(template) then normalize(); normalize must restore one
+        // token per tier so the follow-up upgrade levels keep their hotkey on
+        // export. This is the path the bug report actually hit.
+        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
+        let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
+        baseline.extend(template);
+        let normalized = baseline.normalize();
+        let binding = normalized.binding("Rume").expect("Rume exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("Q,Q,Q").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
+    fn cascade_preserves_upgrade_hotkey_tiers() {
+        // The cascade (resolve_conflicts) settles position collisions; it must
+        // not collapse an upgrade's per-tier hotkeys while doing so.
+        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
+        let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
+        baseline.extend(template);
+        let mut normalized = baseline.normalize();
+        let _plan = normalized.resolve_conflicts();
+        let binding = normalized.binding("Rume").expect("Rume exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        assert_eq!(hotkey.level_count(), 3);
+    }
+
+    #[test]
+    fn apply_grid_over_default_keeps_every_multi_level_upgrade_tiered() {
+        // End-to-end over the bundled default, reproducing the user's flow:
+        // applying a grid layout (what a template does) must keep one hotkey
+        // token per tier for EVERY multi-level upgrade — the structural export
+        // bug, not just the two upgrades named in the report.
+        let mut keys = CustomKeys::from(DEFAULT_CUSTOM_KEYS).normalize();
+        let layout = GridLayout::qwerty_grid();
+        keys.apply_grid_to_all_bindings(layout);
+        let mut checked: usize = 0;
+        for entry in keys.bindings_in_order() {
+            let ability_id = entry.ability_id();
+            let object_value = ability_id.value();
+            let Some(object) = WARCRAFT_DATABASE.by_id(object_value) else {
+                continue;
+            };
+            let Some(max_level) = object.upgrade_max_level() else {
+                continue;
+            };
+            if max_level < 2 {
+                continue;
+            }
+            let binding = entry.binding();
+            if binding.button_position().is_none() {
+                continue;
+            }
+            let Some(hotkey) = binding.hotkey() else {
+                continue;
+            };
+            let level_count = hotkey.level_count();
+            assert_eq!(
+                level_count, max_level,
+                "upgrade {object_value} lost tiers after apply_grid: \
+                 `{hotkey}` has {level_count} level(s), expected {max_level}"
+            );
+            checked += 1;
+        }
+        assert!(
+            checked >= 10,
+            "expected to verify many multi-level upgrades, only checked {checked}"
+        );
+    }
+
+    #[test]
+    fn assign_position_replicates_upgrade_hotkey_per_tier() {
+        // Dragging an upgrade button to a new cell must rebind every tier too.
+        use crate::identity::slot::GridSlotId;
+        let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let slot = GridSlotId::ability("Rume");
+        keys.assign_position(layout, &slot, 1, 1, false);
+        let binding = keys.binding("Rume").expect("Rume exists");
+        let hotkey = binding.hotkey().expect("hotkey set");
+        let expected = Hotkey::try_from("S,S,S").expect("valid hotkey");
+        assert_eq!(hotkey, &expected);
+    }
+
+    #[test]
     fn set_hotkey_fans_out_to_tiered_sibling_ability() {
         let hotkey_q_strong = Hotkey::from('Q');
         let binding_abu3 = AbilityBinding::builder().hotkey(hotkey_q_strong).build();
@@ -2414,6 +2745,36 @@ mod normalize_tests {
             resolved_off, resolved_on,
             "autocast Frost Armor off-state must mirror its on-state after normalize"
         );
+    }
+
+    #[test]
+    fn normalize_mirrors_morph_ability_onto_produced_unit_command() {
+        use crate::model::AbilityBinding;
+        // The Obsidian Statue's Transform morph is stored twice: the morph
+        // ability `Aave` (the grid button the editor edits) and a section keyed
+        // by the produced Destroyer unit id `ubsp` (what the live game reads).
+        // Editing the button only touches `Aave`, so without a mirror `ubsp`
+        // keeps its stale default hotkey and the morph binds the wrong key in
+        // game. Normalize must copy the morph ability's hotkey and position onto
+        // the produced unit.
+        let morph_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::One);
+        let aave_binding = AbilityBinding::builder()
+            .hotkey(Hotkey::Letter('R'))
+            .button_position(morph_position)
+            .build();
+        let stale_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let ubsp_binding = AbilityBinding::builder()
+            .hotkey(Hotkey::Letter('T'))
+            .button_position(stale_position)
+            .build();
+        let mut overlay = CustomKeys::from("");
+        overlay.put_ability("Aave", aave_binding);
+        overlay.put_ability("ubsp", ubsp_binding);
+        let normalized = overlay.normalize();
+        let produced_unit = normalized.binding("ubsp").expect("ubsp section exists");
+        let expected_hotkey = Hotkey::Letter('R');
+        assert_eq!(produced_unit.hotkey(), Some(&expected_hotkey));
+        assert_eq!(produced_unit.button_position(), Some(&morph_position));
     }
 
     #[test]

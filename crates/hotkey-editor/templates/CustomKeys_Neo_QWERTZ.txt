@@ -3941,13 +3941,13 @@ Tip=Research Corrosive Breath (|cffffcc00Y|r)
 Ubertip=Gives Chimaeras the ability to hurl corrosive bile onto enemy buildings.
 
 [Redc]
-Hotkey=X
+Hotkey=X,X
 Buttonpos=1,2
 Tip=Druid of the Claw Adept Training (|cffffcc00X|r),Druid of the Claw Master Training (|cffffcc00X|r)
 Ubertip=Increases their Night Elf Form's mana capacity, mana regeneration rate, hit points, attack damage and gives them the ability Rejuvenation.,Increases their Night Elf Form's mana capacity, mana regeneration rate, hit points, attack damage and gives them the ability Bear Form.
 
 [Redt]
-Hotkey=X
+Hotkey=X,X
 Buttonpos=1,2
 Tip=Druid of the Talon Adept Training (|cffffcc00X|r),Druid of the Talon Master Training (|cffffcc00X|r)
 Ubertip=Increases their Night Elf Form's mana capacity, mana regeneration rate, hit points, and gives them the ability Storm Crow Form.,Increases their Night Elf Form's mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Cyclone.
@@ -3983,7 +3983,7 @@ Tip=Research Improved Bows (|cffffcc00A|r)
 Ubertip=Increases the Archer's and Hippogryph Rider's attack range.
 
 [Rema]
-Hotkey=A
+Hotkey=A,A,A
 Buttonpos=0,1
 Tip=Upgrade to Moon Armor (|cffffcc00A|r),Upgrade to Improved Moon Armor (|cffffcc00A|r),Upgrade to Advanced Moon Armor (|cffffcc00A|r)
 Ubertip=Increases the armor of Archers, Huntresses, and Hippogryph Riders.,Further increases the armor of Archers, Huntresses, and Hippogryph Riders.,Further increases the armor of Archers, Huntresses, and Hippogryph Riders.
@@ -4019,7 +4019,7 @@ Tip=Research Backpack (|cffffcc00R|r)
 Ubertip=Gives specific Night Elf ground units the ability to carry items.
 
 [Rerh]
-Hotkey=S
+Hotkey=S,S,S
 Buttonpos=1,1
 Tip=Upgrade to Reinforced Hides (|cffffcc00S|r),Upgrade to Improved Reinforced Hides (|cffffcc00S|r),Upgrade to Advanced Reinforced Hides (|cffffcc00S|r)
 Ubertip=Increases the armor of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.,Further increases the armor of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.,Further increases the armor of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.
@@ -4043,13 +4043,13 @@ Tip=Research Abolish Magic (|cffffcc00Y|r)
 Ubertip=Gives the Dryad the ability to dispel positive buffs from enemy units, and negative buffs from friendly units. Damages summoned units.
 
 [Resm]
-Hotkey=Q
+Hotkey=Q,Q,Q
 Buttonpos=0,0
 Tip=Upgrade to Strength of the Moon (|cffffcc00Q|r),Upgrade to Improved Strength of the Moon (|cffffcc00Q|r),Upgrade to Advanced Strength of the Moon (|cffffcc00Q|r)
 Ubertip=Increases the damage of Archers, Huntresses, Glaive Throwers, and Hippogryph Riders.,Further increases the damage of Archers, Huntresses, Glaive Throwers, and Hippogryph Riders.,Further increases the damage of Archers, Huntresses, Glaive Throwers, and Hippogryph Riders.
 
 [Resw]
-Hotkey=W
+Hotkey=W,W,W
 Buttonpos=1,0
 Tip=Upgrade to Strength of the Wild (|cffffcc00W|r),Upgrade to Improved Strength of the Wild (|cffffcc00W|r),Upgrade to Advanced Strength of the Wild (|cffffcc00W|r)
 Ubertip=Increases the damage of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.,Further increases the damage of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.,Further increases the damage of Druids of the Claw in Bear Form, Druids of the Talon in Storm Crow Form, Dryads, Mountain Giants, Faerie Dragons, Hippogryphs, and Chimaeras.
@@ -4067,7 +4067,7 @@ Tip=Research Well Spring (|cffffcc00R|r)
 Ubertip=Increases the amount of mana that can be stored in Moon Wells by 100, and their rate of mana regeneration by 52%.
 
 [Rhac]
-Hotkey=W
+Hotkey=W,W,W
 Buttonpos=1,0
 Tip=Upgrade to Improved Masonry (|cffffcc00W|r),Upgrade to Advanced Masonry (|cffffcc00W|r),Upgrade to Imbued Masonry (|cffffcc00W|r)
 Ubertip=Increases the armor and hit points of Human buildings.,Further increases the armor and hit points of Human buildings.,Further increases the armor and hit points of Human buildings.
@@ -4079,7 +4079,7 @@ Tip=Research Animal War Training (|cffffcc00C|r)
 Ubertip=Increases the maximum hit points of Knights, Dragonhawk Riders, and Gryphon Riders by 100.
 
 [Rhar]
-Hotkey=A
+Hotkey=A,A,A
 Buttonpos=0,1
 Tip=Upgrade to Iron Plating (|cffffcc00A|r),Upgrade to Steel Plating (|cffffcc00A|r),Upgrade to Mithril Plating (|cffffcc00A|r)
 Ubertip=Increases the armor of Militia, Footmen, Spellbreakers, Knights, Flying Machines and Siege Engines.,Further increases the armor of Militia, Footmen, Spellbreakers, Knights, Flying Machines and Siege Engines.,Further increases the armor of Militia, Footmen, Spellbreakers, Knights, Flying Machines and Siege Engines.
@@ -4127,19 +4127,19 @@ Tip=Research Storm Hammers (|cffffcc00X|r)
 Ubertip=Causes a Gryphon Rider's attacks to damage multiple units.
 
 [Rhla]
-Hotkey=S
+Hotkey=S,S,S
 Buttonpos=1,1
 Tip=Upgrade to Studded Leather Armor (|cffffcc00S|r),Upgrade to Reinforced Leather Armor (|cffffcc00S|r),Upgrade to Dragonhide Armor (|cffffcc00S|r)
 Ubertip=Increases the armor of Riflemen, Mortar Teams, Dragonhawk Riders and Gryphon Riders.,Further increases the armor of Riflemen, Mortar Teams, Dragonhawk Riders and Gryphon Riders.,Further increases the armor of Riflemen, Mortar Teams, Dragonhawk Riders and Gryphon Riders.
 
 [Rhlh]
-Hotkey=Q
+Hotkey=Q,Q
 Buttonpos=0,0
 Tip=Improved Lumber Harvesting (|cffffcc00Q|r),Advanced Lumber Harvesting (|cffffcc00Q|r)
 Ubertip=Increases the amount of lumber that Peasants can carry by 10.,Further increases the amount of lumber that Peasants can carry by 10.
 
 [Rhme]
-Hotkey=Q
+Hotkey=Q,Q,Q
 Buttonpos=0,0
 Tip=Upgrade to Iron Forged Swords (|cffffcc00Q|r),Upgrade to Steel Forged Swords (|cffffcc00Q|r),Upgrade to Mithril Forged Swords (|cffffcc00Q|r)
 Ubertip=Increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.,Further increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.,Further increases the attack damage of Militia, Footmen, Spellbreakers, Dragonhawk Riders, Gryphon Riders and Knights.
@@ -4151,13 +4151,13 @@ Tip=Research Backpack (|cffffcc00R|r)
 Ubertip=Gives specific Human ground units the ability to carry items.
 
 [Rhpt]
-Hotkey=X
+Hotkey=X,X
 Buttonpos=1,2
 Tip=Priest Adept Training (|cffffcc00X|r),Priest Master Training (|cffffcc00X|r)
 Ubertip=Increases Priests' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Dispel Magic.,Increases Priests' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Inner Fire.
 
 [Rhra]
-Hotkey=W
+Hotkey=W,W,W
 Buttonpos=1,0
 Tip=Upgrade to Black Gunpowder (|cffffcc00W|r),Upgrade to Refined Gunpowder (|cffffcc00W|r),Upgrade to Imbued Gunpowder (|cffffcc00W|r)
 Ubertip=Increases the ranged attack damage of Riflemen, Mortar Teams, Siege Engines and Flying Machines.,Further increases the ranged attack damage of Riflemen, Mortar Teams, Siege Engines and Flying Machines.,Further increases the ranged attack damage of Riflemen, Mortar Teams, Siege Engines and Flying Machines.
@@ -4193,13 +4193,13 @@ Tip=Research Control Magic (|cffffcc00D|r)
 Ubertip=Gives Spellbreakers the ability to take control of enemy summoned units.
 
 [Rhst]
-Hotkey=Y
+Hotkey=Y,Y
 Buttonpos=0,2
 Tip=Sorceress Adept Training (|cffffcc00Y|r),Sorceress Master Training (|cffffcc00Y|r)
 Ubertip=Increases Sorceresses' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Invisibility.,Increases Sorceresses' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Polymorph.
 
 [Roar]
-Hotkey=A
+Hotkey=A,A,A
 Buttonpos=0,1
 Tip=Upgrade to Steel Unit Armor (|cffffcc00A|r),Upgrade to Thorium Unit Armor (|cffffcc00A|r),Upgrade to Arcanite Unit Armor (|cffffcc00A|r)
 Ubertip=Increases the armor of Grunts, Raiders, Batriders, Tauren, Headhunters, Wind Riders and Demolishers.,Further increases the armor of Grunts, Raiders, Batriders, Tauren, Headhunters, Wind Riders and Demolishers.,Further increases the armor of Grunts, Raiders, Batriders, Tauren, Headhunters, Wind Riders and Demolishers.
@@ -4235,7 +4235,7 @@ Tip=Research Liquid Fire (|cffffcc00D|r)
 Ubertip=Gives Batriders the Liquid Fire attack, which deals damage over time to enemy buildings, reduces the repaired rate and the attack rate of enemy buildings.
 
 [Rome]
-Hotkey=Q
+Hotkey=Q,Q,Q
 Buttonpos=0,0
 Tip=Upgrade to Steel Melee Weapons (|cffffcc00Q|r),Upgrade to Thorium Melee Weapons (|cffffcc00Q|r),Upgrade to Arcanite Melee Weapons (|cffffcc00Q|r)
 Ubertip=Increases the melee attack damage of Grunts, Raiders and Tauren.,Further increases the melee attack damage of Grunts, Raiders and Tauren.,Further increases the melee attack damage of Grunts, Raiders and Tauren.
@@ -4253,7 +4253,7 @@ Tip=Research Backpack (|cffffcc00R|r)
 Ubertip=Gives specific Orc ground units the ability to carry items.
 
 [Rora]
-Hotkey=W
+Hotkey=W,W,W
 Buttonpos=1,0
 Tip=Upgrade to Steel Ranged Weapons (|cffffcc00W|r),Upgrade to Thorium Ranged Weapons (|cffffcc00W|r),Upgrade to Arcanite Ranged Weapons (|cffffcc00W|r)
 Ubertip=Increases the ranged attack damage of Headhunters, Wind Riders, Batriders and Demolishers.,Further increases the ranged attack damage of Headhunters, Wind Riders, Batriders and Demolishers.,Further increases the ranged attack damage of Headhunters, Wind Riders, Batriders and Demolishers.
@@ -4265,13 +4265,13 @@ Tip=Reinforced Defenses (|cffffcc00D|r)
 Ubertip=Upgrades Burrows and Watch Towers so that they have Fortified armor.
 
 [Rosp]
-Hotkey=E
+Hotkey=E,E,E
 Buttonpos=2,0
 Tip=Upgrade to Spiked Barricades (|cffffcc00E|r),Upgrade to Improved Spiked Barricades (|cffffcc00E|r),Upgrade to Advanced Spiked Barricades (|cffffcc00E|r)
 Ubertip=Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Increases the additional damage by 30% of the attacker's damage.,Further increases the amount of damage inflicted on melee attackers by 0.
 
 [Rost]
-Hotkey=Y
+Hotkey=Y,Y
 Buttonpos=0,2
 Tip=Shaman Adept Training (|cffffcc00Y|r),Shaman Master Training (|cffffcc00Y|r)
 Ubertip=Increases Shaman mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Lightning Shield.,Increases Shaman mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Bloodlust.
@@ -4289,7 +4289,7 @@ Tip=Research Envenomed Spears (|cffffcc00E|r)
 Ubertip=Adds an additional poison effect to Wind Riders' attacks. A unit poisoned by Envenomed Spears takes damage over time.
 
 [Rowd]
-Hotkey=X
+Hotkey=X,X
 Buttonpos=1,2
 Tip=Witch Doctor Adept Training (|cffffcc00X|r),Witch Doctor Master Training (|cffffcc00X|r)
 Ubertip=Increases Witch Doctors' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Stasis Trap.,Increases Witch Doctors' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Healing Ward.
@@ -4301,7 +4301,7 @@ Tip=Upgrade Pulverize (|cffffcc00X|r)
 Ubertip=Upgrades the totem carried by Tauren, increasing the damage of their Pulverize ability.
 
 [Rowt]
-Hotkey=Y
+Hotkey=Y,Y
 Buttonpos=0,2
 Tip=Spirit Walker Adept Training (|cffffcc00Y|r),Spirit Walker Master Training (|cffffcc00Y|r)
 Ubertip=Increases Spirit Walkers' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Disenchant.,Increases Spirit Walkers' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Ancestral Spirit.
@@ -4313,13 +4313,13 @@ Tip=Research Cannibalize (|cffffcc00Y|r)
 Ubertip=Enables Ghouls and Abominations to use the Cannibalize ability. Cannibalize consumes a nearby corpse to restore health.
 
 [Ruar]
-Hotkey=A
+Hotkey=A,A,A
 Buttonpos=0,1
 Tip=Upgrade to Unholy Armor (|cffffcc00A|r),Upgrade to Improved Unholy Armor (|cffffcc00A|r),Upgrade to Advanced Unholy Armor (|cffffcc00A|r)
 Ubertip=Increases the armor of Ghouls, Abominations, Skeleton Warriors, and Skeletal Mages.,Further increases the armor of Ghouls, Abominations, Skeleton Warriors, and Skeletal Mages.,Further increases the armor of Ghouls, Abominations, Skeleton Warriors, and Skeletal Mages.
 
 [Ruba]
-Hotkey=X
+Hotkey=X,X
 Buttonpos=1,2
 Tip=Banshee Adept Training (|cffffcc00X|r),Banshee Master Training (|cffffcc00X|r)
 Ubertip=Increases Banshees' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Anti-magic Shell.,Increases Banshees' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Possession.
@@ -4331,7 +4331,7 @@ Tip=Research Burrow (|cffffcc00S|r)
 Ubertip=Crypt Fiends gain the ability to burrow. Burrowed Crypt Fiends are invisible and gain increased hit point regeneration, but cannot attack.
 
 [Rucr]
-Hotkey=S
+Hotkey=S,S,S
 Buttonpos=1,1
 Tip=Upgrade to Creature Carapace (|cffffcc00S|r),Upgrade to Improved Creature Carapace (|cffffcc00S|r),Upgrade to Advanced Creature Carapace (|cffffcc00S|r)
 Ubertip=Increases the armor of Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.,Further increases the armor of Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.,Further increases the armor of the Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.
@@ -4355,13 +4355,13 @@ Tip=Research Ghoul Frenzy (|cffffcc00A|r)
 Ubertip=Increases the attack rate of Ghouls by 35%, and increases their movement speed.
 
 [Rume]
-Hotkey=Q
+Hotkey=Q,Q,Q
 Buttonpos=0,0
 Tip=Upgrade to Unholy Strength (|cffffcc00Q|r),Upgrade to Improved Unholy Strength (|cffffcc00Q|r),Upgrade to Advanced Unholy Strength (|cffffcc00Q|r)
 Ubertip=Increases the attack damage of Ghouls, Meat Wagons, Abominations, Skeleton Warriors, and Skeletal Mages.,Further increases the attack damage of Ghouls, Meat Wagons, Abominations, Skeleton Warriors, and Skeletal Mages.,Further increases the attack damage of Ghouls, Meat Wagons, Abominations, Skeleton Warriors, and Skeletal Mages.
 
 [Rune]
-Hotkey=Y
+Hotkey=Y,Y
 Buttonpos=0,2
 Tip=Necromancer Adept Training (|cffffcc00Y|r),Necromancer Master Training (|cffffcc00Y|r)
 Ubertip=Increases Necromancers' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Unholy Frenzy.,Increases Necromancers' mana capacity, mana regeneration rate, hit points, and gives them the ability to cast Cripple.
@@ -4379,7 +4379,7 @@ Tip=Research Backpack (|cffffcc00R|r)
 Ubertip=Gives specific Undead ground units the ability to carry items.
 
 [Rura]
-Hotkey=W
+Hotkey=W,W,W
 Buttonpos=1,0
 Tip=Upgrade to Creature Attack (|cffffcc00W|r),Upgrade to Improved Creature Attack (|cffffcc00W|r),Upgrade to Advanced Creature Attack (|cffffcc00W|r)
 Ubertip=Increases the attack damage of Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.,Further increases the attack damage of Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.,Further increases the attack damage of Crypt Fiends, Gargoyles, Destroyers, and Frost Wyrms.
@@ -6955,6 +6955,7 @@ Ubertip=A sturdy transport ship capable of carrying units over the sea.
 
 [ubsp]
 Hotkey=V
+Buttonpos=3,2
 Tip=Morph into Destroyer (|cffffcc00V|r)
 
 [ucrm]
