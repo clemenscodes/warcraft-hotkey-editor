@@ -79,6 +79,7 @@ static KEYBOARD_ROWS: &[&[(u32, &str)]] = &[
     ],
     &[
         (32, "Space"),
+        (8, "Backspace"),
         (45, "Ins"),
         (46, "Del"),
         (36, "Home"),
@@ -161,9 +162,9 @@ pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Elemen
             return;
         };
         // Only accept keys the board actually offers (the same cells shown and
-        // clickable). `KeyCodes::from_event` also maps Tab/Backspace/Enter and
-        // similar keys the game does not bind, so reject anything not on the
-        // board to keep keyboard input in step with what the UI presents.
+        // clickable). `KeyCodes::from_event` also maps Tab/Enter and similar
+        // keys the game does not bind, so reject anything not on the board to
+        // keep keyboard input in step with what the UI presents.
         let is_offered = KEYBOARD_ROWS
             .iter()
             .chain(NUMPAD_ROWS.iter())
@@ -207,7 +208,7 @@ pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Elemen
                                                         let code = entry.0;
                                                         let label = entry.1;
                                                         let is_current = code == current_code;
-                                                        let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5");
+                                                        let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5" | "Backspace");
                                                         let conflict_names = conflicts.get(&code);
                                                         let is_conflict = conflict_names.is_some();
                                                         let cls = if is_current {
