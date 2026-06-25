@@ -10,13 +10,13 @@ use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UploadButtonProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) upload_status: Signal<UploadStatus>,
+pub struct UploadButtonProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub upload_status: Signal<UploadStatus>,
 }
 
 #[component]
-pub(crate) fn UploadButton(props: UploadButtonProps) -> Element {
+pub fn UploadButton(props: UploadButtonProps) -> Element {
     let mut loaded_keys = props.loaded_keys;
     let mut upload_status = props.upload_status;
     let toast_api = use_toast();

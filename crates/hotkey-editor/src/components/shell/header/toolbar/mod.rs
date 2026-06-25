@@ -10,18 +10,18 @@ use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct HeaderToolbarProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) upload_status: Signal<UploadStatus>,
-    pub(crate) preview_open: Signal<bool>,
-    pub(crate) templates_dialog_open: Signal<bool>,
-    pub(crate) system_hotkeys_open: Signal<bool>,
-    pub(crate) help_open: Signal<bool>,
-    pub(crate) navigation: ViewNavigationContext,
+pub struct HeaderToolbarProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub upload_status: Signal<UploadStatus>,
+    pub preview_open: Signal<bool>,
+    pub templates_dialog_open: Signal<bool>,
+    pub system_hotkeys_open: Signal<bool>,
+    pub help_open: Signal<bool>,
+    pub navigation: ViewNavigationContext,
 }
 
 #[component]
-pub(crate) fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
+pub fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let upload_status = props.upload_status;
     let preview_open = props.preview_open;

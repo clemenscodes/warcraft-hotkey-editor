@@ -1,9 +1,4 @@
-mod app;
-mod components;
-mod model;
-mod services;
-
-use crate::app::App;
+use hotkey_editor::App;
 
 fn main() {
     dioxus::launch(App);

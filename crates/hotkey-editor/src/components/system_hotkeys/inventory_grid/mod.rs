@@ -1,12 +1,12 @@
 mod inventory_cell;
 
+pub use inventory_cell::InventoryCell;
+
 use std::cell::Cell;
 
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, SystemBindingMap};
-
-use inventory_cell::InventoryCell;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
 const INVENTORY_COLUMNS: usize = 2;
@@ -27,7 +27,7 @@ thread_local! {
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
 #[derive(Clone, PartialEq, Debug)]
-pub(crate) struct InventoryDragFollower {
+pub struct InventoryDragFollower {
     pub(super) section_id: String,
     pub(super) label: String,
     pub(super) click_offset_horizontal: f64,
@@ -61,19 +61,19 @@ impl InventoryDragFollower {
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
-pub(super) struct InventoryDragSource {
-    pub(super) section_id: String,
+pub struct InventoryDragSource {
+    pub(crate) section_id: String,
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct InventoryGridProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) editing_section: Signal<Option<String>>,
-    pub(crate) drag_follower: Signal<Option<InventoryDragFollower>>,
+pub struct InventoryGridProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
+    pub drag_follower: Signal<Option<InventoryDragFollower>>,
 }
 
 #[component]
-pub(crate) fn InventoryGrid(props: InventoryGridProps) -> Element {
+pub fn InventoryGrid(props: InventoryGridProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;
     let drag_follower = props.drag_follower;

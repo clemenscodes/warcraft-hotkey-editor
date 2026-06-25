@@ -1,12 +1,12 @@
-mod attack_matchup_cell;
-mod attribute_row;
-mod attributes_column;
-mod combat_column;
-mod damage_matchup_row;
-mod defense_matchup_cell;
-mod defense_matchup_row;
+pub(crate) mod attack_matchup_cell;
+pub(crate) mod attribute_row;
+pub mod attributes_column;
+pub mod combat_column;
+pub(crate) mod damage_matchup_row;
+pub(crate) mod defense_matchup_cell;
+pub(crate) mod defense_matchup_row;
 mod leveled_stats;
-mod stat_icon;
+pub mod stat_icon;
 
 use dioxus::prelude::*;
 use warcraft_api::{HeroAttributes, PrimaryAttribute, RegenType, UnitCombat};
@@ -20,17 +20,17 @@ use combat_column::{AttackDisplayData, CombatColumn};
 use defense_matchup_row::DefenseMatchupRow;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UnitStatsPanelProps {
-    pub(crate) combat: UnitCombat,
-    pub(crate) hero_attributes: Option<HeroAttributes>,
-    pub(crate) selected_hero_level: Signal<u32>,
+pub struct UnitStatsPanelProps {
+    pub combat: UnitCombat,
+    pub hero_attributes: Option<HeroAttributes>,
+    pub selected_hero_level: Signal<u32>,
     /// Resolved per-unit chance to evade an attack (0.0..=1.0), already taken
     /// across the unit's abilities. `0.0` for units without evasion.
-    pub(crate) evasion_chance: f32,
+    pub evasion_chance: f32,
 }
 
 #[component]
-pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
+pub fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
     let combat = props.combat;
     let hero_attributes = props.hero_attributes;
     let selected_hero_level = props.selected_hero_level;
@@ -156,10 +156,10 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
             let agility_per_level = attributes.agility_per_level();
             let intelligence_value = stats.intelligence();
             let intelligence_per_level = attributes.intelligence_per_level();
-            HeroDisplayData {
-                primary_is_strength: primary == PrimaryAttribute::Strength,
-                primary_is_agility: primary == PrimaryAttribute::Agility,
-                primary_is_intelligence: primary == PrimaryAttribute::Intelligence,
+            let primary_is_strength = primary == PrimaryAttribute::Strength;
+            let primary_is_agility = primary == PrimaryAttribute::Agility;
+            let primary_is_intelligence = primary == PrimaryAttribute::Intelligence;
+            HeroDisplayData::new(
                 primary_icon,
                 primary_label,
                 strength_value,
@@ -168,7 +168,10 @@ pub(crate) fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
                 agility_per_level,
                 intelligence_value,
                 intelligence_per_level,
-            }
+                primary_is_strength,
+                primary_is_agility,
+                primary_is_intelligence,
+            )
         });
     rsx! {
         div { class: "unit-stats-panel",

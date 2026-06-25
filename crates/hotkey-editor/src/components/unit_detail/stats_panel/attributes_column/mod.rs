@@ -3,27 +3,58 @@ use dioxus::prelude::*;
 use super::attribute_row::AttributeRow;
 
 #[derive(Clone, PartialEq)]
-pub(super) struct HeroDisplayData {
-    pub(super) primary_icon: Asset,
-    pub(super) primary_label: String,
-    pub(super) strength_value: u32,
-    pub(super) strength_per_level: f32,
-    pub(super) agility_value: u32,
-    pub(super) agility_per_level: f32,
-    pub(super) intelligence_value: u32,
-    pub(super) intelligence_per_level: f32,
-    pub(super) primary_is_strength: bool,
-    pub(super) primary_is_agility: bool,
-    pub(super) primary_is_intelligence: bool,
+pub struct HeroDisplayData {
+    primary_icon: Asset,
+    primary_label: String,
+    strength_value: u32,
+    strength_per_level: f32,
+    agility_value: u32,
+    agility_per_level: f32,
+    intelligence_value: u32,
+    intelligence_per_level: f32,
+    primary_is_strength: bool,
+    primary_is_agility: bool,
+    primary_is_intelligence: bool,
+}
+
+impl HeroDisplayData {
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        primary_icon: Asset,
+        primary_label: String,
+        strength_value: u32,
+        strength_per_level: f32,
+        agility_value: u32,
+        agility_per_level: f32,
+        intelligence_value: u32,
+        intelligence_per_level: f32,
+        primary_is_strength: bool,
+        primary_is_agility: bool,
+        primary_is_intelligence: bool,
+    ) -> Self {
+        Self {
+            primary_icon,
+            primary_label,
+            strength_value,
+            strength_per_level,
+            agility_value,
+            agility_per_level,
+            intelligence_value,
+            intelligence_per_level,
+            primary_is_strength,
+            primary_is_agility,
+            primary_is_intelligence,
+        }
+    }
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct AttributesColumnProps {
-    pub(super) hero: HeroDisplayData,
+pub struct AttributesColumnProps {
+    pub hero: HeroDisplayData,
 }
 
 #[component]
-pub(super) fn AttributesColumn(props: AttributesColumnProps) -> Element {
+pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
     let hero = props.hero;
     rsx! {
         div { class: "stat-column attributes-column with-icon",

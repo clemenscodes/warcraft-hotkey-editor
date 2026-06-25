@@ -3,12 +3,12 @@ use dioxus::prelude::*;
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct SystemHotkeysHeaderProps {
-    pub(super) on_close: EventHandler<()>,
+pub struct SystemHotkeysHeaderProps {
+    pub on_close: EventHandler<()>,
 }
 
 #[component]
-pub(super) fn SystemHotkeysHeader(props: SystemHotkeysHeaderProps) -> Element {
+pub fn SystemHotkeysHeader(props: SystemHotkeysHeaderProps) -> Element {
     let on_close = props.on_close;
     let handle_close = move |_| on_close.call(());
     rsx! {

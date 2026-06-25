@@ -19,21 +19,21 @@ use super::{
 };
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct InventoryCellProps {
-    pub(super) slot_index: usize,
-    pub(super) section_id: String,
-    pub(super) default_hotkey: u32,
-    pub(super) default_modifier: SystemKeybindModifier,
-    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(super) editing_section: Signal<Option<String>>,
-    pub(super) dragging_source: Signal<Option<InventoryDragSource>>,
-    pub(super) drop_target: Signal<Option<String>>,
-    pub(super) drag_follower: Signal<Option<InventoryDragFollower>>,
-    pub(super) binding_map: ReadSignal<SystemBindingMap>,
+pub struct InventoryCellProps {
+    pub slot_index: usize,
+    pub section_id: String,
+    pub default_hotkey: u32,
+    pub default_modifier: SystemKeybindModifier,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
+    pub dragging_source: Signal<Option<InventoryDragSource>>,
+    pub drop_target: Signal<Option<String>>,
+    pub drag_follower: Signal<Option<InventoryDragFollower>>,
+    pub binding_map: ReadSignal<SystemBindingMap>,
 }
 
 #[component]
-pub(super) fn InventoryCell(props: InventoryCellProps) -> Element {
+pub fn InventoryCell(props: InventoryCellProps) -> Element {
     let slot_index = props.slot_index;
     let section_id = props.section_id;
     let default_hotkey = props.default_hotkey;

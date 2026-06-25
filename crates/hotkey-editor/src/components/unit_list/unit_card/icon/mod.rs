@@ -3,13 +3,13 @@ use dioxus::prelude::*;
 use crate::model::icons::IconUrl;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitCardIconProps {
-    pub(super) icon_path: Option<IconUrl>,
-    pub(super) display_name: String,
+pub struct UnitCardIconProps {
+    pub icon_path: Option<IconUrl>,
+    pub display_name: String,
 }
 
 #[component]
-pub(super) fn UnitCardIcon(props: UnitCardIconProps) -> Element {
+pub fn UnitCardIcon(props: UnitCardIconProps) -> Element {
     let icon_path = props.icon_path;
     let display_name = props.display_name;
     let icon_url = icon_path.map(|url| url.to_string());

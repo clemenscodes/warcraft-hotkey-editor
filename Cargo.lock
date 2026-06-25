@@ -1588,6 +1588,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "gallery"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
+ "hotkey-editor",
+ "warcraft-api",
+ "warcraft-database",
+ "warcraft-keybinds",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "generational-box"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1743,6 +1756,7 @@ version = "0.1.0"
 dependencies = [
  "base64",
  "dioxus",
+ "dioxus-cli-config",
  "dioxus-primitives",
  "flate2",
  "gloo-timers",

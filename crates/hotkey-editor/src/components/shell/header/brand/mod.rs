@@ -6,12 +6,12 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct HeaderBrandProps {
-    pub(crate) navigation: ViewNavigationContext,
+pub struct HeaderBrandProps {
+    pub navigation: ViewNavigationContext,
 }
 
 #[component]
-pub(crate) fn HeaderBrand(props: HeaderBrandProps) -> Element {
+pub fn HeaderBrand(props: HeaderBrandProps) -> Element {
     let navigation = props.navigation;
     let go_home = move |_| navigation.apply(AppView::Editor);
     rsx! {

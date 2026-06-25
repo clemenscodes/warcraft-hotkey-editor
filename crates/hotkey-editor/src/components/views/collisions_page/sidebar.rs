@@ -4,16 +4,16 @@ use super::IslandView;
 use super::mini_grid::IslandMiniGrid;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct IslandSidebarProps {
-    pub(super) islands: Vec<IslandView>,
-    pub(super) selected_island: Signal<Option<String>>,
+pub struct IslandSidebarProps {
+    pub islands: Vec<IslandView>,
+    pub selected_island: Signal<Option<String>>,
 }
 
 /// Island sidebar: a flat list of islands sized exactly like the unit cards.
 /// Each card carries a tiny empty command grid with only the island's
 /// conflicting button highlighted, plus the cell letter and unit count.
 #[component]
-pub(super) fn IslandSidebar(props: IslandSidebarProps) -> Element {
+pub fn IslandSidebar(props: IslandSidebarProps) -> Element {
     let islands = props.islands;
     let mut selected_island = props.selected_island;
 

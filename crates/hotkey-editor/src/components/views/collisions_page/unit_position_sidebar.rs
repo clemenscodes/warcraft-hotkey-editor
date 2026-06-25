@@ -3,9 +3,9 @@ use dioxus::prelude::*;
 use super::UnitPositionUnitView;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitPositionSidebarProps {
-    pub(super) units: Vec<UnitPositionUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
+pub struct UnitPositionSidebarProps {
+    pub units: Vec<UnitPositionUnitView>,
+    pub selected_unit: Signal<Option<String>>,
 }
 
 /// Unit sidebar for per-unit position collisions: a flat list of units whose
@@ -13,7 +13,7 @@ pub(super) struct UnitPositionSidebarProps {
 /// cards. Each card shows the unit's icon, name and object id, and how many
 /// cell clashes it has. Sorted by clash count descending.
 #[component]
-pub(super) fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
+pub fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
     let units = props.units;
     let mut selected_unit = props.selected_unit;
 

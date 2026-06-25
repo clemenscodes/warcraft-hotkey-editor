@@ -715,20 +715,20 @@ const CENTERED_STATE_CLASS: &str = "resolve-page flex flex-col items-center just
     gap-[1.25rem] [flex:1_1_0] [min-height:0] text-center p-[2rem] text-warcraft-text-secondary";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct ResolvePageProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) view_navigation: ViewNavigationContext,
+pub struct ResolvePageProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub view_navigation: ViewNavigationContext,
     /// The selected move-category breadcrumb, backed by the `?entry=` URL
     /// parameter (its `data_breadcrumb` slug) so the viewed section deep-links
     /// and survives browser back/forward — mirroring the collisions page.
-    pub(crate) selected_move_category: Signal<Option<String>>,
+    pub selected_move_category: Signal<Option<String>>,
 }
 
 /// The Resolve page: a transparent preview of the cascade plan — every move the
 /// algorithm would make (from → to cell + the fighting abilities) and any
 /// unresolved abilities — with an Apply button that runs the cascade.
 #[component]
-pub(crate) fn ResolvePage(props: ResolvePageProps) -> Element {
+pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let mut loaded_keys = props.loaded_keys;
     let view_navigation = props.view_navigation;
     let toast_api = use_toast();

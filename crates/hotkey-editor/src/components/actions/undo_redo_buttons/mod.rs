@@ -8,7 +8,7 @@ use crate::services::undo::UndoHistory;
 /// each button disables itself when its stack is empty. The keyboard shortcuts
 /// (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z) drive the same history.
 #[component]
-pub(crate) fn UndoRedoButtons() -> Element {
+pub fn UndoRedoButtons() -> Element {
     let history = use_context::<UndoHistory>();
     let can_undo = history.can_undo();
     let can_redo = history.can_redo();

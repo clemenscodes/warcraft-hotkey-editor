@@ -3,17 +3,17 @@ use dioxus::prelude::*;
 use super::key_field::OverrideKeyField;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UpgradeSectionProps {
-    pub(super) upgrade_hotkey_label: String,
-    pub(super) upgrade_is_editing: bool,
-    pub(super) upgrade_hotkey_is_special: bool,
-    pub(super) is_research_context: bool,
-    pub(super) on_position_click: EventHandler<()>,
-    pub(super) on_hotkey_activate: EventHandler<()>,
+pub struct UpgradeSectionProps {
+    pub upgrade_hotkey_label: String,
+    pub upgrade_is_editing: bool,
+    pub upgrade_hotkey_is_special: bool,
+    pub is_research_context: bool,
+    pub on_position_click: EventHandler<()>,
+    pub on_hotkey_activate: EventHandler<()>,
 }
 
 #[component]
-pub(super) fn UpgradeSection(props: UpgradeSectionProps) -> Element {
+pub fn UpgradeSection(props: UpgradeSectionProps) -> Element {
     let upgrade_hotkey_label = props.upgrade_hotkey_label;
     let upgrade_is_editing = props.upgrade_is_editing;
     let upgrade_hotkey_is_special = props.upgrade_hotkey_is_special;

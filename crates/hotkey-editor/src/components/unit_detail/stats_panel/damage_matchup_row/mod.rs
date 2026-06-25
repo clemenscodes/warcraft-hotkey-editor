@@ -14,12 +14,12 @@ const DISPLAYED_DEFENSE_TYPES: [DefenseType; 7] = [
 ];
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct DamageMatchupRowProps {
-    pub(super) attack_type: AttackType,
+pub struct DamageMatchupRowProps {
+    pub attack_type: AttackType,
 }
 
 #[component]
-pub(super) fn DamageMatchupRow(props: DamageMatchupRowProps) -> Element {
+pub fn DamageMatchupRow(props: DamageMatchupRowProps) -> Element {
     let attack_type = props.attack_type;
     rsx! {
         div { class: "damage-matchup",

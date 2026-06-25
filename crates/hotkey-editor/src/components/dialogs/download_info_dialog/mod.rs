@@ -20,13 +20,13 @@ const BTN_PRIMARY: &str = "inline-flex items-center justify-center px-14 py-6 \
     hover:[box-shadow:0_0_12px_rgba(255,206,99,0.4)]";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct DownloadInfoDialogProps {
-    pub(crate) open: Signal<bool>,
-    pub(crate) on_confirm: EventHandler<()>,
+pub struct DownloadInfoDialogProps {
+    pub open: Signal<bool>,
+    pub on_confirm: EventHandler<()>,
 }
 
 #[component]
-pub(crate) fn DownloadInfoDialog(props: DownloadInfoDialogProps) -> Element {
+pub fn DownloadInfoDialog(props: DownloadInfoDialogProps) -> Element {
     let mut open = props.open;
     let on_confirm = props.on_confirm;
     let handle_open_change = move |is_open| open.set(is_open);

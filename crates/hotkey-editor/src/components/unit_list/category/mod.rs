@@ -29,24 +29,24 @@ impl UnitCardEntry {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitCategorySectionProps {
-    pub(super) category_kind: UnitKind,
-    pub(super) category_label: String,
-    pub(super) is_collapsed: bool,
-    pub(super) collapsed_categories: Signal<HashSet<UnitKind>>,
-    pub(super) race: Race,
-    pub(super) mode: UnitMode,
-    pub(super) query: String,
-    pub(super) search_field: SearchField,
-    pub(super) visibility: CatalogVisibility,
-    pub(super) active_unit_id: Option<String>,
-    pub(super) selected_unit_id: Signal<Option<String>>,
-    pub(super) selected_slot: Signal<Option<GridSlotId>>,
-    pub(super) active_category: Signal<UnitKind>,
+pub struct UnitCategorySectionProps {
+    pub category_kind: UnitKind,
+    pub category_label: String,
+    pub is_collapsed: bool,
+    pub collapsed_categories: Signal<HashSet<UnitKind>>,
+    pub race: Race,
+    pub mode: UnitMode,
+    pub query: String,
+    pub search_field: SearchField,
+    pub visibility: CatalogVisibility,
+    pub active_unit_id: Option<String>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub active_category: Signal<UnitKind>,
 }
 
 #[component]
-pub(super) fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
+pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let category_kind = props.category_kind;
     let category_label = props.category_label;
     let is_collapsed = props.is_collapsed;

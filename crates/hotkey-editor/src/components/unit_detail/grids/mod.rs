@@ -9,25 +9,25 @@ use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UnitCommandGridsProps {
-    pub(crate) unit_id: String,
-    pub(crate) command_card_slots: Rc<[GridSlotId]>,
-    pub(crate) build_menu_slots: Option<Rc<[GridSlotId]>>,
-    pub(crate) uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
-    pub(crate) research_menu_slots: Option<Rc<[GridSlotId]>>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
-    pub(crate) selected_from_research: Signal<bool>,
-    pub(crate) selected_from_uprooted: Signal<bool>,
-    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
-    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
+pub struct UnitCommandGridsProps {
+    pub unit_id: String,
+    pub command_card_slots: Rc<[GridSlotId]>,
+    pub build_menu_slots: Option<Rc<[GridSlotId]>>,
+    pub uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
+    pub research_menu_slots: Option<Rc<[GridSlotId]>>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub grid_layout: Signal<GridLayout>,
 }
 
 #[component]
-pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
+pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let unit_id = props.unit_id;
     let command_card_slots = props.command_card_slots;
     let build_menu_slots = props.build_menu_slots;

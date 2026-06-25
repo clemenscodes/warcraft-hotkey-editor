@@ -11,7 +11,7 @@ const DISCLAIMER_URL: &str =
     "https://github.com/clemenscodes/warcraft-hotkey-editor/blob/main/DISCLAIMER.md";
 
 #[component]
-pub(crate) fn Footer() -> Element {
+pub fn Footer() -> Element {
     rsx! {
         footer {
             class: "flex-none flex flex-wrap items-center justify-center gap-x-3 gap-y-1 \

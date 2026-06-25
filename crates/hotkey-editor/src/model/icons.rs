@@ -2,35 +2,47 @@ use std::fmt;
 
 use warcraft_keybinds::AbilityIconPath;
 
-// Must match the `base_path` value in `Dioxus.toml`. The Dioxus
-// `asset!()` macro injects this prefix automatically, but URLs we
-// hand-build for `public/`-served files (BTN command-button icons,
-// unit portraits) bypass that machinery and need it spelled out.
-//
-// Keep the leading slash so the URL is anchored to the document root —
-// without it, a deep route like `/warcraft-hotkey-editor/foo/bar`
-// would resolve `icons/...` against `/warcraft-hotkey-editor/foo/`
-// and 404.
-const ICON_URL_PREFIX: &str = "/warcraft-hotkey-editor/icons/";
 const REPLACEABLE_TEXTURES_PREFIX: &str = "replaceabletextures/";
 
 #[derive(Clone, PartialEq, Debug)]
-pub(crate) struct IconUrl {
+pub struct IconUrl {
     url: String,
 }
 
 impl IconUrl {
-    pub(crate) fn from_database_path(database_icon_path: &str) -> Self {
+    // `public/`-served icons (BTN command-button icons, unit portraits) are
+    // hand-built URLs that bypass the `asset!()` macro, so they don't get the
+    // build's base path injected automatically. Derive it from the runtime
+    // base path so the same code serves the editor (base path
+    // `warcraft-hotkey-editor`) and any other host (e.g. the component gallery,
+    // served at the document root). The leading slash anchors the URL to the
+    // document root so deep routes don't resolve it relatively and 404.
+    fn prefix() -> String {
+        match dioxus_cli_config::base_path() {
+            Some(base) => {
+                let trimmed = base.trim_matches('/');
+                if trimmed.is_empty() {
+                    String::from("/icons/")
+                } else {
+                    format!("/{trimmed}/icons/")
+                }
+            }
+            None => String::from("/icons/"),
+        }
+    }
+
+    pub fn from_database_path(database_icon_path: &str) -> Self {
         let lowered_path = database_icon_path.to_ascii_lowercase();
         let png_path = match lowered_path.strip_suffix(".blp") {
             Some(stem_without_extension) => format!("{stem_without_extension}.png"),
             None => lowered_path,
         };
-        let url = format!("{ICON_URL_PREFIX}{png_path}");
+        let prefix = Self::prefix();
+        let url = format!("{prefix}{png_path}");
         Self { url }
     }
 
-    pub(crate) fn from_binding_path(raw_binding_icon: &str) -> Self {
+    pub fn from_binding_path(raw_binding_icon: &str) -> Self {
         let unified_separators = raw_binding_icon.replace('\\', "/").to_ascii_lowercase();
         let trimmed_prefix = unified_separators
             .strip_prefix(REPLACEABLE_TEXTURES_PREFIX)
@@ -39,18 +51,19 @@ impl IconUrl {
             Some(stem_without_extension) => format!("{stem_without_extension}.png"),
             None => trimmed_prefix.to_string(),
         };
-        let url = format!("{ICON_URL_PREFIX}{png_path}");
+        let prefix = Self::prefix();
+        let url = format!("{prefix}{png_path}");
         Self { url }
     }
 
-    pub(crate) fn from_icon_path(icon_path: &AbilityIconPath) -> Self {
+    pub fn from_icon_path(icon_path: &AbilityIconPath) -> Self {
         match icon_path {
             AbilityIconPath::Database(path) => Self::from_database_path(path),
             AbilityIconPath::Binding(path) => Self::from_binding_path(path),
         }
     }
 
-    pub(crate) fn url(&self) -> &str {
+    pub fn url(&self) -> &str {
         &self.url
     }
 }

@@ -9,16 +9,16 @@ use crate::components::shared::icons::{ICON_TIER_NEXT, ICON_TIER_PREV};
 /// ubertip/name text per level). Shows a prev/next button and a "Level N of M"
 /// label.
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UpgradeTierSelectorProps {
-    pub(crate) object_id: WarcraftObjectId,
-    pub(crate) active_tier_index: usize,
-    pub(crate) total_tier_count: usize,
-    pub(crate) tier_label_text: String,
-    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
+pub struct UpgradeTierSelectorProps {
+    pub object_id: WarcraftObjectId,
+    pub active_tier_index: usize,
+    pub total_tier_count: usize,
+    pub tier_label_text: String,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
 }
 
 #[component]
-pub(crate) fn UpgradeTierSelector(props: UpgradeTierSelectorProps) -> Element {
+pub fn UpgradeTierSelector(props: UpgradeTierSelectorProps) -> Element {
     let object_id = props.object_id;
     let _active_tier_index = props.active_tier_index;
     let total_tier_count = props.total_tier_count;

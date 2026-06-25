@@ -26,37 +26,37 @@ use super::drag_state::{
 };
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct GridCellProps {
-    pub(super) class_name: String,
-    pub(super) column: u8,
-    pub(super) row: u8,
-    pub(super) heading_text: &'static str,
-    pub(super) icon_src_option: Option<IconUrl>,
-    pub(super) label_text: String,
-    pub(super) displayed_letter: Option<String>,
-    pub(super) hotkey_overlay_class: &'static str,
-    pub(super) is_focusable: bool,
-    pub(super) tile_is_draggable: bool,
-    pub(super) is_research_grid: bool,
-    pub(super) is_uprooted_grid: bool,
-    pub(super) is_passive_on_command_grid: bool,
-    pub(super) is_command_cell: bool,
-    pub(super) prevent_swap_on_drop: bool,
-    pub(super) layout_snapshot: GridLayout,
-    pub(super) restrict_draggable_to: Rc<[GridSlotId]>,
-    pub(super) selected_slot: Signal<Option<GridSlotId>>,
-    pub(super) selected_from_research: Signal<bool>,
-    pub(super) selected_from_uprooted: Signal<bool>,
-    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(super) drag_follower: Signal<Option<DragFollower>>,
-    pub(super) keys_signal: Signal<Option<CustomKeys>>,
-    pub(super) slot_ids_for_drop: Rc<[GridSlotId]>,
-    pub(super) occupant_slot: Option<GridSlotId>,
+pub struct GridCellProps {
+    pub class_name: String,
+    pub column: u8,
+    pub row: u8,
+    pub heading_text: &'static str,
+    pub icon_src_option: Option<IconUrl>,
+    pub label_text: String,
+    pub displayed_letter: Option<String>,
+    pub hotkey_overlay_class: &'static str,
+    pub is_focusable: bool,
+    pub tile_is_draggable: bool,
+    pub is_research_grid: bool,
+    pub is_uprooted_grid: bool,
+    pub is_passive_on_command_grid: bool,
+    pub is_command_cell: bool,
+    pub prevent_swap_on_drop: bool,
+    pub layout_snapshot: GridLayout,
+    pub restrict_draggable_to: Rc<[GridSlotId]>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub keys_signal: Signal<Option<CustomKeys>>,
+    pub slot_ids_for_drop: Rc<[GridSlotId]>,
+    pub occupant_slot: Option<GridSlotId>,
 }
 
 #[component]
-pub(super) fn GridCell(props: GridCellProps) -> Element {
+pub fn GridCell(props: GridCellProps) -> Element {
     let toast_api = use_toast();
 
     let column = props.column;

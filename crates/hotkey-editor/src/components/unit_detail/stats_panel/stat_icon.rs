@@ -32,7 +32,7 @@ const ICON_ARMOR_UNARMORED: Asset =
 const ICON_ARMOR_HERO: Asset = asset!("/assets/webui/infocard/infocard-armor-hero.png");
 
 #[derive(Clone, Copy)]
-pub(crate) struct StatIcon {
+pub struct StatIcon {
     asset: Asset,
 }
 
@@ -41,7 +41,7 @@ impl StatIcon {
         Self { asset }
     }
 
-    pub(crate) fn asset(&self) -> Asset {
+    pub fn asset(&self) -> Asset {
         self.asset
     }
 }

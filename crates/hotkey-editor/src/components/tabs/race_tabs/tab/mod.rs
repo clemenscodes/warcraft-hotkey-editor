@@ -8,17 +8,17 @@ use crate::services::focus::modality::FocusModality;
 use super::state::RaceTabClasses;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct RaceTabProps {
-    pub(super) race: Race,
-    pub(super) is_active: bool,
-    pub(super) active_race: Signal<Race>,
-    pub(super) unit_mode: Signal<UnitMode>,
-    pub(super) selected_unit_id: Signal<Option<String>>,
-    pub(super) selected_slot: Signal<Option<GridSlotId>>,
+pub struct RaceTabProps {
+    pub race: Race,
+    pub is_active: bool,
+    pub active_race: Signal<Race>,
+    pub unit_mode: Signal<UnitMode>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
 }
 
 #[component]
-pub(super) fn RaceTab(props: RaceTabProps) -> Element {
+pub fn RaceTab(props: RaceTabProps) -> Element {
     let race = props.race;
     let is_active = props.is_active;
     let mut active_race = props.active_race;

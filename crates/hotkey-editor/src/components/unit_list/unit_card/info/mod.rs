@@ -1,14 +1,14 @@
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitCardInfoProps {
-    pub(super) display_name: String,
-    pub(super) unit_id: String,
-    pub(super) id_class: &'static str,
+pub struct UnitCardInfoProps {
+    pub display_name: String,
+    pub unit_id: String,
+    pub id_class: &'static str,
 }
 
 #[component]
-pub(super) fn UnitCardInfo(props: UnitCardInfoProps) -> Element {
+pub fn UnitCardInfo(props: UnitCardInfoProps) -> Element {
     let display_name = props.display_name;
     let unit_id = props.unit_id;
     let id_class = props.id_class;

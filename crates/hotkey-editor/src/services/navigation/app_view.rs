@@ -7,7 +7,7 @@
 /// - `Collisions { kind }` → `?view=collisions&kind=positions|hotkeys`
 /// - `Resolve`         → `?view=resolve`
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub(crate) enum AppView {
+pub enum AppView {
     Editor,
     Collisions { kind: CollisionKind },
     Resolve,
@@ -18,7 +18,7 @@ pub(crate) enum AppView {
 /// Read from the `?kind=` URL parameter.  Defaults to `Positions` when
 /// `kind` is missing or unrecognized.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub(crate) enum CollisionKind {
+pub enum CollisionKind {
     Positions,
     UnitPositions,
     Hotkeys,
@@ -26,14 +26,14 @@ pub(crate) enum CollisionKind {
 
 impl AppView {
     /// Canonical default when no view is selected.
-    pub(crate) fn default_view() -> Self {
+    pub fn default_view() -> Self {
         Self::Editor
     }
 
     /// Builds an `AppView` from the raw `view` and `kind` query strings.
     /// Unknown values fall back to the editor.
     #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
-    pub(crate) fn from_query_params(view_param: Option<&str>, kind_param: Option<&str>) -> Self {
+    pub fn from_query_params(view_param: Option<&str>, kind_param: Option<&str>) -> Self {
         let view_value = view_param.unwrap_or("editor");
         match view_value {
             "collisions" => {
@@ -47,7 +47,7 @@ impl AppView {
 
     /// The string written to the `view` URL parameter.
     #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
-    pub(crate) fn view_param(&self) -> &'static str {
+    pub fn view_param(&self) -> &'static str {
         match self {
             Self::Editor => "editor",
             Self::Collisions { .. } => "collisions",
@@ -58,7 +58,7 @@ impl AppView {
     /// The string written to the `kind` URL parameter, if applicable.
     /// `None` for views without a sub-kind.
     #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
-    pub(crate) fn kind_param(&self) -> Option<&'static str> {
+    pub fn kind_param(&self) -> Option<&'static str> {
         match self {
             Self::Collisions { kind } => Some(kind.kind_param()),
             Self::Editor | Self::Resolve => None,

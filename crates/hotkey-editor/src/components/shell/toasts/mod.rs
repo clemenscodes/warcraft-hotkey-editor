@@ -4,7 +4,7 @@ use dioxus_primitives::toast::ToastProvider;
 const TOAST_STYLES: Asset = asset!("/src/components/shell/toasts/toasts.css");
 
 #[derive(Props, Clone)]
-pub(crate) struct ToastMountProps {
+pub struct ToastMountProps {
     pub children: Element,
 }
 
@@ -15,7 +15,7 @@ impl PartialEq for ToastMountProps {
 }
 
 #[component]
-pub(crate) fn ToastMount(props: ToastMountProps) -> Element {
+pub fn ToastMount(props: ToastMountProps) -> Element {
     let children = props.children;
     rsx! {
         document::Stylesheet { href: TOAST_STYLES }

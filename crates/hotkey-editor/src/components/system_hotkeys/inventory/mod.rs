@@ -4,14 +4,14 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::system_hotkeys::inventory_grid::{InventoryDragFollower, InventoryGrid};
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct InventoryHotkeysViewProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) editing_section: Signal<Option<String>>,
-    pub(crate) drag_follower: Signal<Option<InventoryDragFollower>>,
+pub struct InventoryHotkeysViewProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
+    pub drag_follower: Signal<Option<InventoryDragFollower>>,
 }
 
 #[component]
-pub(crate) fn InventoryHotkeysView(props: InventoryHotkeysViewProps) -> Element {
+pub fn InventoryHotkeysView(props: InventoryHotkeysViewProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;
     let drag_follower = props.drag_follower;

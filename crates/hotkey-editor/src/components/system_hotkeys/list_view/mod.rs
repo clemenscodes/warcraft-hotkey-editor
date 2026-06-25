@@ -1,20 +1,20 @@
 mod entry;
 
+pub use entry::SystemHotkeysListEntry;
+
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, SystemBindingMap};
 
-use entry::SystemHotkeysListEntry;
-
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct SystemHotkeysListViewProps {
-    pub(crate) category: SystemHotkeysCategory,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) editing_section: Signal<Option<String>>,
+pub struct SystemHotkeysListViewProps {
+    pub category: SystemHotkeysCategory,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
 }
 
 #[component]
-pub(crate) fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
+pub fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
     let category = props.category;
     let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;

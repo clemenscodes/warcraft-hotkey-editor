@@ -4,13 +4,13 @@ use warcraft_api::{Race, RaceLabels};
 use crate::model::grid::DragFollower;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct DragFollowerOverlayProps {
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) active_race: Signal<Race>,
+pub struct DragFollowerOverlayProps {
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub active_race: Signal<Race>,
 }
 
 #[component]
-pub(crate) fn DragFollowerOverlay(props: DragFollowerOverlayProps) -> Element {
+pub fn DragFollowerOverlay(props: DragFollowerOverlayProps) -> Element {
     let drag_follower = props.drag_follower;
     let active_race = props.active_race;
     let follower_option = drag_follower.read().clone();

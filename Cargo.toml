@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/gallery",
     "crates/hotkey-editor",
     "crates/warcraft-api",
     "crates/warcraft-cli",
@@ -18,6 +19,7 @@ members = [
 #   cargo run -p warcraft-extractor -- --casc <PATH>
 #   cargo test -p warcraft-extractor
 default-members = [
+    "crates/gallery",
     "crates/hotkey-editor",
     "crates/warcraft-api",
     "crates/warcraft-database",

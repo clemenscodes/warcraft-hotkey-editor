@@ -1,6 +1,9 @@
 mod template_card;
 mod template_card_grid;
 
+pub use template_card::TemplateCard;
+pub use template_card_grid::TemplateCardGrid;
+
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use dioxus_primitives::toast::{ToastOptions, use_toast};
@@ -11,17 +14,15 @@ use crate::components::dialogs::dialog_header::DialogHeader;
 use crate::model::grid::ResolvedTemplate;
 use crate::services::customkeys::upload_status::UploadStatus;
 
-use template_card::TemplateCard;
-
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct TemplatesDialogProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) upload_status: Signal<UploadStatus>,
-    pub(crate) templates_dialog_open: Signal<bool>,
+pub struct TemplatesDialogProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub upload_status: Signal<UploadStatus>,
+    pub templates_dialog_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
+pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
     let mut loaded_keys = props.loaded_keys;
     let mut upload_status = props.upload_status;
     let mut templates_dialog_open = props.templates_dialog_open;

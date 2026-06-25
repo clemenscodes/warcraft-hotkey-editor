@@ -1,0 +1,13 @@
+[application]
+name = "gallery"
+# Serve the editor's public assets (BTN icons, portraits, fonts) so mounted
+# components render their runtime-built image URLs. Referencing the editor's
+# directory directly avoids committing a non-portable symlink.
+public_dir = "../hotkey-editor/public"
+
+[web.app]
+title = "Component Gallery"
+
+[web.watcher]
+reload_html = true
+watch_path = ["src"]

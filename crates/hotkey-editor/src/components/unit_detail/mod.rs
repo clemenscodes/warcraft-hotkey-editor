@@ -1,7 +1,7 @@
 mod derived_stats;
-mod grids;
-mod header;
-mod stats_panel;
+pub mod grids;
+pub(crate) mod header;
+pub(crate) mod stats_panel;
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -22,21 +22,21 @@ use header::UnitDetailHeader;
 use stats_panel::UnitStatsPanel;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UnitDetailPanelProps {
-    pub(crate) selected_unit_id: Signal<Option<String>>,
-    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
-    pub(crate) selected_from_research: Signal<bool>,
-    pub(crate) selected_from_uprooted: Signal<bool>,
-    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
-    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
+pub struct UnitDetailPanelProps {
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
 }
 
 #[component]
-pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
+pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
     let selected_unit_id = props.selected_unit_id;
     let selected_slot = props.selected_slot;
     let selected_from_research = props.selected_from_research;

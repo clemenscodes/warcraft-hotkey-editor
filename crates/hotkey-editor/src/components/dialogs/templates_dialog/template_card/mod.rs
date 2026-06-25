@@ -23,16 +23,16 @@ const TEMPLATE_CARD_NAME: &str = "m-0 font-friz-quadrata text-[2.75rem] uppercas
 const TEMPLATE_CARD_DESCRIPTION: &str = "m-0 text-[1.6rem] leading-[1.45] opacity-80 max-[1099px]:text-[13px] max-[1099px]:leading-[1.35] max-[1099px]:text-[#c0c8da] max-[1099px]:opacity-90";
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct TemplateCardProps {
-    pub(super) template_name: String,
-    pub(super) template_description: String,
-    pub(super) template_content: &'static str,
-    pub(super) template_resolved: ResolvedTemplate,
-    pub(super) on_apply: EventHandler<()>,
+pub struct TemplateCardProps {
+    pub template_name: String,
+    pub template_description: String,
+    pub template_content: &'static str,
+    pub template_resolved: ResolvedTemplate,
+    pub on_apply: EventHandler<()>,
 }
 
 #[component]
-pub(super) fn TemplateCard(props: TemplateCardProps) -> Element {
+pub fn TemplateCard(props: TemplateCardProps) -> Element {
     let template_name = props.template_name;
     let template_description = props.template_description;
     let template_content = props.template_content;

@@ -7,13 +7,13 @@ const TITLE_CLASS: &str = "m-0 font-friz-quadrata uppercase tracking-[0.08em] te
 const CLOSE_BUTTON_CLASS: &str = "close-button absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-[1.5rem] font-friz-quadrata cursor-pointer transition-[color,text-shadow] duration-150 bg-transparent border-0 text-warcraft-text-secondary [text-shadow:1px_1px_0_#000] hover:text-warcraft-gold hover:[text-shadow:1px_1px_0_#000,0_0_12px_rgba(255,206,99,0.55)] focus:outline-none [body[data-kb-modality]_&]:focus:text-white [body[data-kb-modality]_&]:focus:[text-shadow:1px_1px_0_#000,0_0_16px_rgba(255,255,255,0.7)]";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct DialogHeaderProps {
-    pub(crate) title: String,
-    pub(crate) on_close: EventHandler<()>,
+pub struct DialogHeaderProps {
+    pub title: String,
+    pub on_close: EventHandler<()>,
 }
 
 #[component]
-pub(crate) fn DialogHeader(props: DialogHeaderProps) -> Element {
+pub fn DialogHeader(props: DialogHeaderProps) -> Element {
     let title = props.title;
     let on_close = props.on_close;
     let handle_close = move |_| on_close.call(());

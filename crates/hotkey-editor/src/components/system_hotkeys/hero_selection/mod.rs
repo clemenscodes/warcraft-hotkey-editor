@@ -8,13 +8,13 @@ use warcraft_keybinds::SystemBindingMap;
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct HeroSelectionHotkeysViewProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) editing_section: Signal<Option<String>>,
+pub struct HeroSelectionHotkeysViewProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
 }
 
 #[component]
-pub(crate) fn HeroSelectionHotkeysView(props: HeroSelectionHotkeysViewProps) -> Element {
+pub fn HeroSelectionHotkeysView(props: HeroSelectionHotkeysViewProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;
     let entries = SystemHotkeysCategory::HeroSelection.entries();

@@ -21,17 +21,18 @@ use crate::model::icons::IconUrl;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
-use detail::IslandDetail;
-use hotkey_detail::HotkeyUnitDetail;
-use hotkey_sidebar::HotkeyUnitSidebar;
-use sidebar::IslandSidebar;
-use unit_position_detail::UnitPositionDetail;
-use unit_position_sidebar::UnitPositionSidebar;
+pub use detail::IslandDetail;
+pub use hotkey_detail::HotkeyUnitDetail;
+pub use hotkey_sidebar::HotkeyUnitSidebar;
+pub use mini_grid::IslandMiniGrid;
+pub use sidebar::IslandSidebar;
+pub use unit_position_detail::UnitPositionDetail;
+pub use unit_position_sidebar::UnitPositionSidebar;
 
 /// One ability resolved to an icon, display name, and object id. Two abilities
 /// can share an icon and name yet be distinct objects, so the id is shown too.
 #[derive(Clone, PartialEq)]
-pub(super) struct AbilityIconView {
+pub struct AbilityIconView {
     object_id: String,
     icon_url: Option<String>,
     name: String,
@@ -48,15 +49,15 @@ impl AbilityIconView {
         }
     }
 
-    pub(super) fn object_id(&self) -> &str {
+    pub fn object_id(&self) -> &str {
         &self.object_id
     }
 
-    pub(super) fn icon_url(&self) -> Option<&str> {
+    pub fn icon_url(&self) -> Option<&str> {
         self.icon_url.as_deref()
     }
 
-    pub(super) fn name(&self) -> &str {
+    pub fn name(&self) -> &str {
         &self.name
     }
 }
@@ -64,14 +65,14 @@ impl AbilityIconView {
 /// One unit resolved to its id, display name, and icon.  The id is kept so an
 /// icon click can deep-link into the editor focused on that unit.
 #[derive(Clone, PartialEq)]
-pub(super) struct UnitIconView {
+pub struct UnitIconView {
     unit_id: String,
     name: String,
     icon_url: Option<String>,
 }
 
 impl UnitIconView {
-    pub(super) fn resolve(unit_id_value: &str) -> Self {
+    pub fn resolve(unit_id_value: &str) -> Self {
         let object_option = ObjectLookup::by_id(unit_id_value);
         let icon_url = object_option
             .and_then(|object| object.icons().first().copied())
@@ -87,15 +88,15 @@ impl UnitIconView {
         }
     }
 
-    pub(super) fn unit_id(&self) -> &str {
+    pub fn unit_id(&self) -> &str {
         &self.unit_id
     }
 
-    pub(super) fn name(&self) -> &str {
+    pub fn name(&self) -> &str {
         &self.name
     }
 
-    pub(super) fn icon_url(&self) -> Option<&str> {
+    pub fn icon_url(&self) -> Option<&str> {
         self.icon_url.as_deref()
     }
 }
@@ -104,23 +105,23 @@ impl UnitIconView {
 /// plus the full list of units that carry it (for the carriers dialog) and how
 /// many, used for the "+N more" hint.
 #[derive(Clone, PartialEq)]
-pub(super) struct ConflictAbilityView {
+pub struct ConflictAbilityView {
     ability: AbilityIconView,
     carrier_unit_ids: Vec<String>,
     carrier_count: usize,
 }
 
 impl ConflictAbilityView {
-    pub(super) fn ability(&self) -> &AbilityIconView {
+    pub fn ability(&self) -> &AbilityIconView {
         &self.ability
     }
 
-    pub(super) fn carrier_unit_ids(&self) -> &[String] {
+    pub fn carrier_unit_ids(&self) -> &[String] {
         &self.carrier_unit_ids
     }
 
     /// Carriers beyond the affected unit already shown on the conflict card.
-    pub(super) fn extra_count(&self) -> usize {
+    pub fn extra_count(&self) -> usize {
         self.carrier_count.saturating_sub(1)
     }
 }
@@ -128,22 +129,22 @@ impl ConflictAbilityView {
 /// One conflict: a single affected unit whose two abilities land on the same
 /// cell — its own ability and the shared ability it clashes with.
 #[derive(Clone, PartialEq)]
-pub(super) struct ConflictView {
+pub struct ConflictView {
     unit: UnitIconView,
     own_ability: ConflictAbilityView,
     shared_ability: ConflictAbilityView,
 }
 
 impl ConflictView {
-    pub(super) fn unit(&self) -> &UnitIconView {
+    pub fn unit(&self) -> &UnitIconView {
         &self.unit
     }
 
-    pub(super) fn own_ability(&self) -> &ConflictAbilityView {
+    pub fn own_ability(&self) -> &ConflictAbilityView {
         &self.own_ability
     }
 
-    pub(super) fn shared_ability(&self) -> &ConflictAbilityView {
+    pub fn shared_ability(&self) -> &ConflictAbilityView {
         &self.shared_ability
     }
 }
@@ -151,13 +152,13 @@ impl ConflictView {
 /// The data backing the carriers dialog: the shared ability's name and every
 /// unit that carries it, resolved to icons and names when the dialog opens.
 #[derive(Clone, PartialEq)]
-pub(super) struct CarrierDialogData {
+pub(crate) struct CarrierDialogData {
     ability_name: String,
     carriers: Vec<UnitIconView>,
 }
 
 impl CarrierDialogData {
-    pub(super) fn new(ability_name: String, carrier_unit_ids: &[String]) -> Self {
+    pub(crate) fn new(ability_name: String, carrier_unit_ids: &[String]) -> Self {
         let mut carriers: Vec<UnitIconView> = Vec::with_capacity(carrier_unit_ids.len());
         for carrier_unit_id in carrier_unit_ids {
             let carrier = UnitIconView::resolve(carrier_unit_id);
@@ -169,11 +170,11 @@ impl CarrierDialogData {
         }
     }
 
-    pub(super) fn ability_name(&self) -> &str {
+    pub(crate) fn ability_name(&self) -> &str {
         &self.ability_name
     }
 
-    pub(super) fn carriers(&self) -> &[UnitIconView] {
+    pub(crate) fn carriers(&self) -> &[UnitIconView] {
         &self.carriers
     }
 }
@@ -191,7 +192,7 @@ struct AbilityPairKey {
 /// A single cross-unit collision island, flattened into display-ready data.
 /// All collision facts come from the domain crate; this only formats them.
 #[derive(Clone, PartialEq)]
-pub(super) struct IslandView {
+pub struct IslandView {
     key: String,
     position_column: u8,
     position_row: u8,
@@ -342,23 +343,23 @@ impl IslandView {
         }
     }
 
-    pub(super) fn key(&self) -> &str {
+    pub fn key(&self) -> &str {
         &self.key
     }
 
-    pub(super) fn position_column(&self) -> u8 {
+    pub fn position_column(&self) -> u8 {
         self.position_column
     }
 
-    pub(super) fn position_row(&self) -> u8 {
+    pub fn position_row(&self) -> u8 {
         self.position_row
     }
 
-    pub(super) fn conflicts(&self) -> &[ConflictView] {
+    pub fn conflicts(&self) -> &[ConflictView] {
         &self.conflicts
     }
 
-    pub(super) fn collision_count(&self) -> usize {
+    pub fn collision_count(&self) -> usize {
         self.collision_count
     }
 }
@@ -407,22 +408,22 @@ impl CollisionPageModel {
 /// One hotkey conflict on a unit's command card: a hotkey letter shared by two
 /// or more abilities on the same card, resolved to display-ready icons.
 #[derive(Clone, PartialEq)]
-pub(super) struct HotkeyConflictView {
+pub struct HotkeyConflictView {
     hotkey_label: String,
     role_label: String,
     abilities: Vec<AbilityIconView>,
 }
 
 impl HotkeyConflictView {
-    pub(super) fn hotkey_label(&self) -> &str {
+    pub fn hotkey_label(&self) -> &str {
         &self.hotkey_label
     }
 
-    pub(super) fn role_label(&self) -> &str {
+    pub fn role_label(&self) -> &str {
         &self.role_label
     }
 
-    pub(super) fn abilities(&self) -> &[AbilityIconView] {
+    pub fn abilities(&self) -> &[AbilityIconView] {
         &self.abilities
     }
 }
@@ -430,7 +431,7 @@ impl HotkeyConflictView {
 /// One unit that has hotkey collisions, flattened into display-ready data: the
 /// unit header plus every shared-letter conflict across its command cards.
 #[derive(Clone, PartialEq)]
-pub(super) struct HotkeyUnitView {
+pub struct HotkeyUnitView {
     key: String,
     unit: UnitIconView,
     collision_count: usize,
@@ -438,19 +439,19 @@ pub(super) struct HotkeyUnitView {
 }
 
 impl HotkeyUnitView {
-    pub(super) fn key(&self) -> &str {
+    pub fn key(&self) -> &str {
         &self.key
     }
 
-    pub(super) fn unit(&self) -> &UnitIconView {
+    pub fn unit(&self) -> &UnitIconView {
         &self.unit
     }
 
-    pub(super) fn collision_count(&self) -> usize {
+    pub fn collision_count(&self) -> usize {
         self.collision_count
     }
 
-    pub(super) fn conflicts(&self) -> &[HotkeyConflictView] {
+    pub fn conflicts(&self) -> &[HotkeyConflictView] {
         &self.conflicts
     }
 }
@@ -519,7 +520,7 @@ impl HotkeyCollisionPageModel {
 /// One per-unit position conflict: a command-card cell where two or more of a
 /// single unit's own abilities land on the same slot, resolved to icons.
 #[derive(Clone, PartialEq)]
-pub(super) struct UnitPositionConflictView {
+pub struct UnitPositionConflictView {
     position_column: u8,
     position_row: u8,
     role_label: String,
@@ -527,19 +528,19 @@ pub(super) struct UnitPositionConflictView {
 }
 
 impl UnitPositionConflictView {
-    pub(super) fn position_column(&self) -> u8 {
+    pub fn position_column(&self) -> u8 {
         self.position_column
     }
 
-    pub(super) fn position_row(&self) -> u8 {
+    pub fn position_row(&self) -> u8 {
         self.position_row
     }
 
-    pub(super) fn role_label(&self) -> &str {
+    pub fn role_label(&self) -> &str {
         &self.role_label
     }
 
-    pub(super) fn abilities(&self) -> &[AbilityIconView] {
+    pub fn abilities(&self) -> &[AbilityIconView] {
         &self.abilities
     }
 }
@@ -547,7 +548,7 @@ impl UnitPositionConflictView {
 /// One unit with per-unit position collisions: the unit header plus each cell
 /// where its own abilities clash on the same slot.
 #[derive(Clone, PartialEq)]
-pub(super) struct UnitPositionUnitView {
+pub struct UnitPositionUnitView {
     key: String,
     unit: UnitIconView,
     collision_count: usize,
@@ -555,19 +556,19 @@ pub(super) struct UnitPositionUnitView {
 }
 
 impl UnitPositionUnitView {
-    pub(super) fn key(&self) -> &str {
+    pub fn key(&self) -> &str {
         &self.key
     }
 
-    pub(super) fn unit(&self) -> &UnitIconView {
+    pub fn unit(&self) -> &UnitIconView {
         &self.unit
     }
 
-    pub(super) fn collision_count(&self) -> usize {
+    pub fn collision_count(&self) -> usize {
         self.collision_count
     }
 
-    pub(super) fn conflicts(&self) -> &[UnitPositionConflictView] {
+    pub fn conflicts(&self) -> &[UnitPositionConflictView] {
         &self.conflicts
     }
 }
@@ -741,17 +742,17 @@ fn CollisionBreadcrumbs(props: CollisionBreadcrumbsProps) -> Element {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct CollisionsPageProps {
-    pub(crate) kind: CollisionKind,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) view_navigation: ViewNavigationContext,
+pub struct CollisionsPageProps {
+    pub kind: CollisionKind,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub view_navigation: ViewNavigationContext,
     /// Selection signals live in `app.rs` so they survive leaving the page (a
     /// unit click → editor) and ride in the `?entry=` URL param. One per kind,
     /// for per-tab memory.
-    pub(crate) selected_island: Signal<Option<String>>,
-    pub(crate) selected_hotkey_unit: Signal<Option<String>>,
-    pub(crate) selected_unit_position: Signal<Option<String>>,
+    pub selected_island: Signal<Option<String>>,
+    pub selected_hotkey_unit: Signal<Option<String>>,
+    pub selected_unit_position: Signal<Option<String>>,
 }
 
 /// Top-level Collisions page. `Positions` renders an island sidebar (each
@@ -759,7 +760,7 @@ pub(crate) struct CollisionsPageProps {
 /// pane listing every cross-unit conflict. `Hotkeys` renders a sidebar of units
 /// whose command cards share a hotkey letter and a detail pane of those clashes.
 #[component]
-pub(crate) fn CollisionsPage(props: CollisionsPageProps) -> Element {
+pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     let kind = props.kind;
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;

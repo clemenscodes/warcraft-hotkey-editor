@@ -17,14 +17,14 @@ const TEMPLATE_CELL_HOTKEY_NORMAL: &str =
 const TEMPLATE_CELL_HOTKEY_PASSIVE: &str = "text-[#b8bcc4] bg-[#1a1f29] border-[#4a5160]";
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct TemplateCardGridProps {
-    pub(super) label: String,
-    pub(super) resolved: ResolvedTemplate,
-    pub(super) is_research: bool,
+pub struct TemplateCardGridProps {
+    pub label: String,
+    pub resolved: ResolvedTemplate,
+    pub is_research: bool,
 }
 
 #[component]
-pub(super) fn TemplateCardGrid(props: TemplateCardGridProps) -> Element {
+pub fn TemplateCardGrid(props: TemplateCardGridProps) -> Element {
     let label = props.label;
     let resolved = props.resolved;
     let is_research = props.is_research;

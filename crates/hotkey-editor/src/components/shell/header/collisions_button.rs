@@ -7,10 +7,10 @@ use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct CollisionsButtonProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) navigation: ViewNavigationContext,
+pub struct CollisionsButtonProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub navigation: ViewNavigationContext,
 }
 
 /// Toolbar icon that surfaces collision health and routes to the
@@ -25,7 +25,7 @@ pub(crate) struct CollisionsButtonProps {
 /// - **All clear** — circled checkmark glowing gold.  Rewards the user
 ///   for a clean config.
 #[component]
-pub(crate) fn CollisionsButton(props: CollisionsButtonProps) -> Element {
+pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
     let navigation = props.navigation;

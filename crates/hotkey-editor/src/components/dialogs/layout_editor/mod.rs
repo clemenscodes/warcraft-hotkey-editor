@@ -67,16 +67,16 @@ const LAYOUT_APPLY_BUTTON: &str = "mt-[0.85rem] px-[3rem] py-[1.4rem] \
     max-[1099px]:py-[12px] max-[1099px]:px-[24px]";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct LayoutEditorProps {
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
-    pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) layout_dialog_open: Signal<bool>,
+pub struct LayoutEditorProps {
+    pub grid_layout: Signal<GridLayout>,
+    pub editing_layout_cell: Signal<Option<EditingCell>>,
+    pub dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub layout_dialog_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn LayoutEditor(props: LayoutEditorProps) -> Element {
+pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let mut grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;

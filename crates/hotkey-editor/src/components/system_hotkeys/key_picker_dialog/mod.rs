@@ -100,17 +100,17 @@ static NUMPAD_ROWS: &[&[(u32, &str)]] = &[
 ];
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct SystemKeyPickerDialogProps {
-    pub(crate) title: String,
-    pub(crate) current_code: u32,
-    pub(crate) conflicts: HashMap<u32, Vec<String>>,
-    pub(crate) open: bool,
-    pub(crate) on_pick: EventHandler<u32>,
-    pub(crate) on_close: EventHandler<()>,
+pub struct SystemKeyPickerDialogProps {
+    pub title: String,
+    pub current_code: u32,
+    pub conflicts: HashMap<u32, Vec<String>>,
+    pub open: bool,
+    pub on_pick: EventHandler<u32>,
+    pub on_close: EventHandler<()>,
 }
 
 #[component]
-pub(crate) fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
+pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
     let title = props.title;
     let current_code = props.current_code;
     let conflicts = props.conflicts;

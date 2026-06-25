@@ -112,17 +112,17 @@ fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct HotkeyUnitDetailProps {
-    pub(super) units: Vec<HotkeyUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
+pub struct HotkeyUnitDetailProps {
+    pub units: Vec<HotkeyUnitView>,
+    pub selected_unit: Signal<Option<String>>,
+    pub view_navigation: ViewNavigationContext,
 }
 
 /// Hotkey-collision detail pane: a header naming the selected unit (a button
 /// into the editor) with its clash count, then one card per shared-letter
 /// conflict on that unit's command cards.
 #[component]
-pub(super) fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
+pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let units = props.units;
     let selected_unit = props.selected_unit;
     let view_navigation = props.view_navigation;

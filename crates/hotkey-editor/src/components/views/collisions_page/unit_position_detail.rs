@@ -120,17 +120,17 @@ fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitPositionDetailProps {
-    pub(super) units: Vec<UnitPositionUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
+pub struct UnitPositionDetailProps {
+    pub units: Vec<UnitPositionUnitView>,
+    pub selected_unit: Signal<Option<String>>,
+    pub view_navigation: ViewNavigationContext,
 }
 
 /// Per-unit position-collision detail pane: a header naming the selected unit
 /// (a button into the editor) with its clash count, then one card per cell where
 /// the unit's own abilities collide.
 #[component]
-pub(super) fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
+pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
     let units = props.units;
     let selected_unit = props.selected_unit;
     let view_navigation = props.view_navigation;

@@ -3,6 +3,9 @@ mod grid_cell;
 mod grid_tile;
 mod tile_class;
 
+pub use grid_cell::{GridCell, GridCellProps};
+pub use grid_tile::{GridTile, GridTileProps};
+
 use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
@@ -13,47 +16,45 @@ use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 use crate::services::customkeys::positions::Positions;
 
-use grid_tile::GridTile;
-
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct CommandGridSectionProps {
-    pub(crate) heading: &'static str,
-    pub(crate) slot_ids: Rc<[GridSlotId]>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
-    pub(crate) selected_from_research: Signal<bool>,
-    pub(crate) selected_from_uprooted: Signal<bool>,
-    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
-    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
+pub struct CommandGridSectionProps {
+    pub heading: &'static str,
+    pub slot_ids: Rc<[GridSlotId]>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub grid_layout: Signal<GridLayout>,
     #[props(default = false)]
-    pub(crate) is_research_grid: bool,
+    pub is_research_grid: bool,
     #[props(default = false)]
-    pub(crate) is_uprooted_grid: bool,
+    pub is_uprooted_grid: bool,
     /// When true, drops onto cells already occupied by another slot are
     /// rejected outright instead of swapping. The off-state position
     /// picker uses this so dragging the toggle's off half can't displace
     /// another ability's on-state on the unit's command card.
     #[props(default = false)]
-    pub(crate) prevent_swap_on_drop: bool,
+    pub prevent_swap_on_drop: bool,
     /// When non-empty, only slots whose `as_str()` matches one of these
     /// ids start a drag — other slots render in their cells but are
     /// display-only. Used by the off-state picker to keep the player from
     /// accidentally rearranging the unit's primary command card while
     /// editing one toggle's off position.
     #[props(default)]
-    pub(crate) restrict_draggable_to: Vec<GridSlotId>,
+    pub restrict_draggable_to: Vec<GridSlotId>,
     /// Unit ID of the host — used to block dragging of morph abilities on
     /// alternate-form units (e.g. Burrowed Crypt Fiend). Empty string
     /// disables the check (off-state picker, build menus without a unit).
     #[props(default)]
-    pub(crate) host_unit_id: String,
+    pub host_unit_id: String,
 }
 
 #[component]
-pub(crate) fn CommandGridSection(props: CommandGridSectionProps) -> Element {
+pub fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let read_guard = props.loaded_keys.read();
     let custom_keys_option = read_guard.as_ref();
     let is_research_grid = props.is_research_grid;

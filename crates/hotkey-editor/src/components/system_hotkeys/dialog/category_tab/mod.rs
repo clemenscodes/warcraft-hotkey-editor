@@ -14,16 +14,16 @@ const TAB_BASE: &str = "font-friz-quadrata uppercase tracking-[0.1em] text-[2rem
     group-data-[open=true]:whitespace-normal";
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct SystemHotkeysCategoryTabProps {
-    pub(super) category: SystemHotkeysCategory,
-    pub(super) is_active: bool,
-    pub(super) has_separator: bool,
-    pub(super) active_category: Signal<SystemHotkeysCategory>,
-    pub(super) picker_open: Signal<bool>,
+pub struct SystemHotkeysCategoryTabProps {
+    pub category: SystemHotkeysCategory,
+    pub is_active: bool,
+    pub has_separator: bool,
+    pub active_category: Signal<SystemHotkeysCategory>,
+    pub picker_open: Signal<bool>,
 }
 
 #[component]
-pub(super) fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabProps) -> Element {
+pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabProps) -> Element {
     let category = props.category;
     let is_active = props.is_active;
     let has_separator = props.has_separator;

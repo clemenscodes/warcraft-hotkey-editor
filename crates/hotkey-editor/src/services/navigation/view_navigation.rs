@@ -11,19 +11,19 @@ use crate::services::navigation::url_state::UrlNavigationState;
 /// `Copy` struct so onclick closures can capture it cheaply and call
 /// `apply` to dispatch the navigation.
 #[derive(Clone, Copy, PartialEq)]
-pub(crate) struct ViewNavigationContext {
-    pub(crate) current_view: Signal<AppView>,
-    pub(crate) active_race: Signal<Race>,
-    pub(crate) unit_mode: Signal<UnitMode>,
-    pub(crate) selected_unit_id: Signal<Option<String>>,
-    pub(crate) search_query: Signal<String>,
+pub struct ViewNavigationContext {
+    pub current_view: Signal<AppView>,
+    pub active_race: Signal<Race>,
+    pub unit_mode: Signal<UnitMode>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub search_query: Signal<String>,
 }
 
 impl ViewNavigationContext {
     /// Switch to `target` and push a history entry so browser
     /// back/forward navigates between views.  No-op when `target`
     /// already matches the current view.
-    pub(crate) fn apply(self, target: AppView) {
+    pub fn apply(self, target: AppView) {
         let mut current_view = self.current_view;
         if target == *current_view.read() {
             return;
@@ -44,7 +44,7 @@ impl ViewNavigationContext {
     /// switches to the editor view.  When the unit cannot be resolved
     /// it falls back to selecting the id alone — the editor detail still
     /// shows the unit regardless.
-    pub(crate) fn open_unit(self, unit_id: &str) {
+    pub fn open_unit(self, unit_id: &str) {
         let object_option = ObjectLookup::by_id(unit_id);
         if let Some(object) = object_option {
             if let Some(race) = object.race() {

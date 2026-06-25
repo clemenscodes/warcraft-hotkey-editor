@@ -48,7 +48,7 @@ struct EditorNavKey {
 }
 
 #[component]
-pub(crate) fn App() -> Element {
+pub fn App() -> Element {
     // Boot path: localStorage is the source of truth. If an entry
     // exists, route it through the canonical normalize pipeline; if
     // not, build the default. Either way, write the normalized text

@@ -115,10 +115,10 @@ fn ConflictAbility(props: ConflictAbilityProps) -> Element {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct IslandDetailProps {
-    pub(super) islands: Vec<IslandView>,
-    pub(super) selected_island: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
+pub struct IslandDetailProps {
+    pub islands: Vec<IslandView>,
+    pub selected_island: Signal<Option<String>>,
+    pub view_navigation: ViewNavigationContext,
 }
 
 /// Island detail pane: a header that mirrors the island card (the mini grid,
@@ -126,7 +126,7 @@ pub(super) struct IslandDetailProps {
 /// one card per affected unit, showing the two abilities of that unit which
 /// land on the same cell, each a button into the full carriers dialog.
 #[component]
-pub(super) fn IslandDetail(props: IslandDetailProps) -> Element {
+pub fn IslandDetail(props: IslandDetailProps) -> Element {
     let islands = props.islands;
     let selected_island = props.selected_island;
     let view_navigation = props.view_navigation;

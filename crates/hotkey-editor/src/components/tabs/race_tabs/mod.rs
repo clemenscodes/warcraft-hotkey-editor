@@ -1,5 +1,5 @@
 mod state;
-mod tab;
+pub(crate) mod tab;
 
 use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};
@@ -10,15 +10,15 @@ use crate::model::grid::GridSlotId;
 use tab::RaceTab;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct RaceTabsProps {
-    pub(crate) active_race: Signal<Race>,
-    pub(crate) unit_mode: Signal<UnitMode>,
-    pub(crate) selected_unit_id: Signal<Option<String>>,
-    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
+pub struct RaceTabsProps {
+    pub active_race: Signal<Race>,
+    pub unit_mode: Signal<UnitMode>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
 }
 
 #[component]
-pub(crate) fn RaceTabs(props: RaceTabsProps) -> Element {
+pub fn RaceTabs(props: RaceTabsProps) -> Element {
     let active_race = props.active_race;
     let unit_mode = props.unit_mode;
     let selected_unit_id = props.selected_unit_id;

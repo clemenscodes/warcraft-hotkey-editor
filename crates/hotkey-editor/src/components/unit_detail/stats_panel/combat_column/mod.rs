@@ -4,7 +4,7 @@ use warcraft_api::AttackType;
 use super::damage_matchup_row::DamageMatchupRow;
 
 #[derive(Clone, PartialEq)]
-pub(super) struct AttackDisplayData {
+pub struct AttackDisplayData {
     damage_text: String,
     attack_range: u32,
     speed_text: String,
@@ -15,7 +15,7 @@ pub(super) struct AttackDisplayData {
 }
 
 impl AttackDisplayData {
-    pub(super) fn new(
+    pub fn new(
         damage_text: String,
         attack_range: u32,
         speed_text: String,
@@ -35,42 +35,42 @@ impl AttackDisplayData {
         }
     }
 
-    pub(super) fn damage_per_second_text(&self) -> Option<&str> {
+    pub fn damage_per_second_text(&self) -> Option<&str> {
         self.damage_per_second_text.as_deref()
     }
 
-    pub(super) fn damage_text(&self) -> &str {
+    pub fn damage_text(&self) -> &str {
         &self.damage_text
     }
 
-    pub(super) fn attack_range(&self) -> u32 {
+    pub fn attack_range(&self) -> u32 {
         self.attack_range
     }
 
-    pub(super) fn speed_text(&self) -> &str {
+    pub fn speed_text(&self) -> &str {
         &self.speed_text
     }
 
-    pub(super) fn attack_type(&self) -> AttackType {
+    pub fn attack_type(&self) -> AttackType {
         self.attack_type
     }
 
-    pub(super) fn type_label(&self) -> &str {
+    pub fn type_label(&self) -> &str {
         &self.type_label
     }
 
-    pub(super) fn type_icon(&self) -> Asset {
+    pub fn type_icon(&self) -> Asset {
         self.type_icon
     }
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct CombatColumnProps {
-    pub(super) attack: AttackDisplayData,
+pub struct CombatColumnProps {
+    pub attack: AttackDisplayData,
 }
 
 #[component]
-pub(super) fn CombatColumn(props: CombatColumnProps) -> Element {
+pub fn CombatColumn(props: CombatColumnProps) -> Element {
     let attack = props.attack;
     let damage_text = attack.damage_text().to_owned();
     let attack_range = attack.attack_range();

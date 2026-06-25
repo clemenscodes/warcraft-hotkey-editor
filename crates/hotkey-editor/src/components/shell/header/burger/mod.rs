@@ -46,18 +46,18 @@ const BURGER_MENU_ITEM_LABEL_CLASS: &str =
     "flex-1 leading-[1.25] [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct BurgerMenuProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) preview_open: Signal<bool>,
-    pub(crate) layout_dialog_open: Signal<bool>,
-    pub(crate) templates_dialog_open: Signal<bool>,
-    pub(crate) system_hotkeys_open: Signal<bool>,
-    pub(crate) help_open: Signal<bool>,
-    pub(crate) navigation: ViewNavigationContext,
+pub struct BurgerMenuProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub preview_open: Signal<bool>,
+    pub layout_dialog_open: Signal<bool>,
+    pub templates_dialog_open: Signal<bool>,
+    pub system_hotkeys_open: Signal<bool>,
+    pub help_open: Signal<bool>,
+    pub navigation: ViewNavigationContext,
 }
 
 #[component]
-pub(crate) fn BurgerMenu(props: BurgerMenuProps) -> Element {
+pub fn BurgerMenu(props: BurgerMenuProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let mut system_hotkeys_open = props.system_hotkeys_open;
     let mut help_open = props.help_open;

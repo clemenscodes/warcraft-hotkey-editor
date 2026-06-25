@@ -13,30 +13,30 @@ use super::grid_cell::{GridCell, GridCellProps};
 use super::tile_class::tile_class;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct GridTileProps {
-    pub(super) column: u8,
-    pub(super) row: u8,
-    pub(super) heading: &'static str,
-    pub(super) slot_ids: Rc<[GridSlotId]>,
-    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(super) selected_slot: Signal<Option<GridSlotId>>,
-    pub(super) selected_from_research: Signal<bool>,
-    pub(super) selected_from_uprooted: Signal<bool>,
-    pub(super) tier_overrides: Signal<HashMap<String, usize>>,
-    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(super) drag_follower: Signal<Option<DragFollower>>,
-    pub(super) grid_layout: Signal<GridLayout>,
-    pub(super) conflicting_hotkeys: Rc<HashSet<String>>,
-    pub(super) is_research_grid: bool,
-    pub(super) is_uprooted_grid: bool,
-    pub(super) prevent_swap_on_drop: bool,
-    pub(super) restrict_draggable_to: Rc<[GridSlotId]>,
-    pub(super) host_unit_id: String,
+pub struct GridTileProps {
+    pub column: u8,
+    pub row: u8,
+    pub heading: &'static str,
+    pub slot_ids: Rc<[GridSlotId]>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub conflicting_hotkeys: Rc<HashSet<String>>,
+    pub is_research_grid: bool,
+    pub is_uprooted_grid: bool,
+    pub prevent_swap_on_drop: bool,
+    pub restrict_draggable_to: Rc<[GridSlotId]>,
+    pub host_unit_id: String,
 }
 
 #[component]
-pub(super) fn GridTile(props: GridTileProps) -> Element {
+pub fn GridTile(props: GridTileProps) -> Element {
     let column = props.column;
     let row = props.row;
     let heading_text = props.heading;

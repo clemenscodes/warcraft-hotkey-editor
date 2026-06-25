@@ -9,49 +9,49 @@ use crate::components::dialogs::dialog_header::DialogHeader;
 use warcraft_keybinds::HotkeyToken;
 
 #[derive(Clone, PartialEq, Eq)]
-pub(crate) enum KeyPickerCellState {
+pub enum KeyPickerCellState {
     Available,
     Current,
     Conflict { display_name: String },
 }
 
 #[derive(Clone, PartialEq, Eq)]
-pub(crate) struct KeyPickerCell {
+pub struct KeyPickerCell {
     token: HotkeyToken,
     state: KeyPickerCellState,
 }
 
 impl KeyPickerCell {
-    pub(crate) fn new(token: HotkeyToken, state: KeyPickerCellState) -> Self {
+    pub fn new(token: HotkeyToken, state: KeyPickerCellState) -> Self {
         Self { token, state }
     }
 
-    pub(crate) fn token(&self) -> HotkeyToken {
+    pub fn token(&self) -> HotkeyToken {
         self.token
     }
 
-    pub(crate) fn state(&self) -> &KeyPickerCellState {
+    pub fn state(&self) -> &KeyPickerCellState {
         &self.state
     }
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct KeyPickerProps {
-    pub(crate) title: String,
-    pub(crate) rows: Vec<Vec<KeyPickerCell>>,
-    pub(crate) open: bool,
+pub struct KeyPickerProps {
+    pub title: String,
+    pub rows: Vec<Vec<KeyPickerCell>>,
+    pub open: bool,
     // When true, conflict cells stay clickable and forward `on_pick` — used
     // by the grid layout editor where clicking a conflict swaps the two
     // cells. The spell hotkey picker leaves this off so a binding collision
     // is visually flagged but cannot be selected.
     #[props(default = false)]
-    pub(crate) allow_conflict_pick: bool,
-    pub(crate) on_pick: EventHandler<HotkeyToken>,
-    pub(crate) on_close: EventHandler<()>,
+    pub allow_conflict_pick: bool,
+    pub on_pick: EventHandler<HotkeyToken>,
+    pub on_close: EventHandler<()>,
 }
 
 #[component]
-pub(crate) fn KeyPicker(props: KeyPickerProps) -> Element {
+pub fn KeyPicker(props: KeyPickerProps) -> Element {
     let title = props.title;
     let rows = props.rows;
     let open = props.open;

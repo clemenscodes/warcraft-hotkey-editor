@@ -4,13 +4,13 @@ use warcraft_api::{AttackType, DefenseType};
 use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct DefenseMatchupCellProps {
-    pub(super) attack_type: AttackType,
-    pub(super) defense_type: DefenseType,
+pub struct DefenseMatchupCellProps {
+    pub attack_type: AttackType,
+    pub defense_type: DefenseType,
 }
 
 #[component]
-pub(super) fn DefenseMatchupCell(props: DefenseMatchupCellProps) -> Element {
+pub fn DefenseMatchupCell(props: DefenseMatchupCellProps) -> Element {
     let attack_type = props.attack_type;
     let defense_type = props.defense_type;
     let effectiveness = WARCRAFT_GAMEPLAY_CONSTANTS.damage_effectiveness(attack_type);

@@ -4,12 +4,12 @@ use warcraft_database::SystemHotkeysCategory;
 use super::category_tab::SystemHotkeysCategoryTab;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct SystemHotkeysBreadcrumbsProps {
-    pub(super) active_category: Signal<SystemHotkeysCategory>,
+pub struct SystemHotkeysBreadcrumbsProps {
+    pub active_category: Signal<SystemHotkeysCategory>,
 }
 
 #[component]
-pub(super) fn SystemHotkeysBreadcrumbs(props: SystemHotkeysBreadcrumbsProps) -> Element {
+pub fn SystemHotkeysBreadcrumbs(props: SystemHotkeysBreadcrumbsProps) -> Element {
     let active_category = props.active_category;
     let active = *active_category.read();
     let mut picker_open = use_signal::<bool>(|| false);

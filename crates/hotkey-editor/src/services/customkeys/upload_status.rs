@@ -1,5 +1,5 @@
 #[derive(Clone, PartialEq)]
-pub(crate) enum UploadStatus {
+pub enum UploadStatus {
     Idle,
     Loading,
     Loaded {

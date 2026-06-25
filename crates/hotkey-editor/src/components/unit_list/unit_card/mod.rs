@@ -1,5 +1,5 @@
-mod icon;
-mod info;
+pub mod icon;
+pub(crate) mod info;
 mod state;
 
 use dioxus::prelude::*;
@@ -15,20 +15,20 @@ use info::UnitCardInfo;
 use state::UnitCardClasses;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct UnitCardProps {
-    pub(super) unit_id: String,
-    pub(super) display_name: String,
-    pub(super) icon_path: Option<IconUrl>,
-    pub(super) unit_kind: UnitKind,
-    pub(super) race: Race,
-    pub(super) is_selected: bool,
-    pub(super) selected_unit_id: Signal<Option<String>>,
-    pub(super) selected_slot: Signal<Option<GridSlotId>>,
-    pub(super) active_category: Signal<UnitKind>,
+pub struct UnitCardProps {
+    pub unit_id: String,
+    pub display_name: String,
+    pub icon_path: Option<IconUrl>,
+    pub unit_kind: UnitKind,
+    pub race: Race,
+    pub is_selected: bool,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub active_category: Signal<UnitKind>,
 }
 
 #[component]
-pub(super) fn UnitCard(props: UnitCardProps) -> Element {
+pub fn UnitCard(props: UnitCardProps) -> Element {
     let unit_id = props.unit_id;
     let display_name = props.display_name;
     let icon_path = props.icon_path;

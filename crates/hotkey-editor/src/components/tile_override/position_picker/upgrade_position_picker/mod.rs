@@ -13,20 +13,20 @@ use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UpgradePositionPickerProps {
-    pub(crate) upgrade_unit_id: WarcraftObjectId,
-    pub(crate) display_name: String,
-    pub(crate) picker_slots: Rc<[GridSlotId]>,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) upgrade_position_picker_open: Signal<bool>,
+pub struct UpgradePositionPickerProps {
+    pub upgrade_unit_id: WarcraftObjectId,
+    pub display_name: String,
+    pub picker_slots: Rc<[GridSlotId]>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub upgrade_position_picker_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
+pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
     let upgrade_unit_id = props.upgrade_unit_id;
     let display_name = props.display_name;
     let picker_slots = props.picker_slots;

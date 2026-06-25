@@ -73,7 +73,7 @@ pub(crate) const TEMPLATES: &[BundledTemplate] = &[
 ];
 
 #[derive(Clone, PartialEq)]
-pub(crate) struct ResolvedTemplate {
+pub struct ResolvedTemplate {
     template: &'static BundledTemplate,
     grid: GridLayout,
     command_card_cells: Vec<Vec<Option<AbilityCell>>>,
@@ -103,7 +103,7 @@ impl ResolvedTemplate {
         row_slot.get(column_index)?.as_ref()
     }
 
-    pub(crate) fn resolve_all() -> Vec<ResolvedTemplate> {
+    pub fn resolve_all() -> Vec<ResolvedTemplate> {
         static CACHE: OnceLock<Vec<ResolvedTemplate>> = OnceLock::new();
         CACHE.get_or_init(Self::compute_all).clone()
     }

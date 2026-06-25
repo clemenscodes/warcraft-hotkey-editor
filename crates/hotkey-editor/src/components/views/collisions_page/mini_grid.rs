@@ -2,16 +2,16 @@ use dioxus::prelude::*;
 use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct IslandMiniGridProps {
-    pub(super) collision_column: u8,
-    pub(super) collision_row: u8,
+pub struct IslandMiniGridProps {
+    pub collision_column: u8,
+    pub collision_row: u8,
 }
 
 /// A tiny empty 4x3 command grid with only the island's conflicting button
 /// highlighted.  Shared by the sidebar island cards and the detail header so
 /// both render the exact same shape from the exact same markup.
 #[component]
-pub(super) fn IslandMiniGrid(props: IslandMiniGridProps) -> Element {
+pub fn IslandMiniGrid(props: IslandMiniGridProps) -> Element {
     let collision_column = props.collision_column;
     let collision_row = props.collision_row;
 

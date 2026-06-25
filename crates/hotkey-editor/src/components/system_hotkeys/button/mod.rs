@@ -1,12 +1,12 @@
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct SystemHotkeysButtonProps {
-    pub(crate) system_hotkeys_open: Signal<bool>,
+pub struct SystemHotkeysButtonProps {
+    pub system_hotkeys_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn SystemHotkeysButton(props: SystemHotkeysButtonProps) -> Element {
+pub fn SystemHotkeysButton(props: SystemHotkeysButtonProps) -> Element {
     let mut system_hotkeys_open = props.system_hotkeys_open;
     let handle_click = move |_| {
         let next_value = !*system_hotkeys_open.read();

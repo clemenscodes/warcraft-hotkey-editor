@@ -6,6 +6,9 @@ license.workspace = true
 version.workspace = true
 description = "Web-based Warcraft III CustomKeys.txt editor."
 
+[lib]
+path = "src/lib.rs"
+
 [[bin]]
 name = "hotkey-editor"
 path = "src/main.rs"
@@ -13,6 +16,7 @@ path = "src/main.rs"
 [dependencies]
 dioxus = { workspace = true, features = ["web", "router", "launch", "macro"] }
 dioxus-primitives = { workspace = true }
+dioxus-cli-config = { version = "0.7.9", features = ["web"] }
 wasm-bindgen = "0.2"
 web-sys = { version = "0.3", features = [
     "AddEventListenerOptions", "Event",

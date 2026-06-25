@@ -7,15 +7,15 @@ use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct ResolveButtonProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) navigation: ViewNavigationContext,
+pub struct ResolveButtonProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub navigation: ViewNavigationContext,
 }
 
 /// Toolbar button that navigates to the Resolve page, where the cascade plan is
 /// previewed and applied. (Replaces the old confirm dialog.)
 #[component]
-pub(crate) fn ResolveButton(props: ResolveButtonProps) -> Element {
+pub fn ResolveButton(props: ResolveButtonProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let navigation = props.navigation;
     let has_loaded_file = loaded_keys.read().is_some();

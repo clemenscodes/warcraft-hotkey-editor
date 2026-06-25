@@ -1,15 +1,15 @@
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct AttributeRowProps {
-    pub(super) label: &'static str,
-    pub(super) value: u32,
-    pub(super) per_level: f32,
-    pub(super) is_primary: bool,
+pub struct AttributeRowProps {
+    pub label: &'static str,
+    pub value: u32,
+    pub per_level: f32,
+    pub is_primary: bool,
 }
 
 #[component]
-pub(super) fn AttributeRow(props: AttributeRowProps) -> Element {
+pub fn AttributeRow(props: AttributeRowProps) -> Element {
     let label = props.label;
     let value = props.value;
     let per_level = props.per_level;

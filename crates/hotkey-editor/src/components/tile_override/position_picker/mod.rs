@@ -1,6 +1,6 @@
 mod upgrade_position_picker;
 
-pub(super) use upgrade_position_picker::UpgradePositionPicker;
+pub use upgrade_position_picker::UpgradePositionPicker;
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -17,20 +17,20 @@ use crate::model::grid::GridLayout;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct AltPositionPickerProps {
-    pub(super) object_id: WarcraftObjectId,
-    pub(super) display_name: String,
-    pub(super) picker_slots: Rc<[GridSlotId]>,
-    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(super) grid_layout: Signal<GridLayout>,
-    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(super) drag_follower: Signal<Option<DragFollower>>,
-    pub(super) alt_position_picker_open: Signal<bool>,
+pub struct AltPositionPickerProps {
+    pub object_id: WarcraftObjectId,
+    pub display_name: String,
+    pub picker_slots: Rc<[GridSlotId]>,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub alt_position_picker_open: Signal<bool>,
 }
 
 #[component]
-pub(super) fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
+pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let object_id = props.object_id;
     let display_name = props.display_name;
     let picker_slots = props.picker_slots;

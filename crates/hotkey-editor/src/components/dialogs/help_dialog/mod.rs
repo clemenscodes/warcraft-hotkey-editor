@@ -135,12 +135,12 @@ const LEGEND_ENTRIES: [LegendEntry; 11] = [
 ];
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct HelpDialogProps {
-    pub(crate) help_open: Signal<bool>,
+pub struct HelpDialogProps {
+    pub help_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn HelpDialog(props: HelpDialogProps) -> Element {
+pub fn HelpDialog(props: HelpDialogProps) -> Element {
     let mut help_open = props.help_open;
     let handle_open_change = move |is_open| help_open.set(is_open);
     let handle_close = move |_| help_open.set(false);

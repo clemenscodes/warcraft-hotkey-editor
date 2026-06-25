@@ -1,7 +1,7 @@
-mod category;
-mod mobile_category_tab;
+pub mod category;
+pub(crate) mod mobile_category_tab;
 mod state;
-mod unit_card;
+pub mod unit_card;
 
 use std::collections::HashSet;
 use std::time::Duration;
@@ -99,20 +99,20 @@ impl CategorySectionEntry {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UnitListPanelProps {
-    pub(crate) active_race: Signal<Race>,
-    pub(crate) unit_mode: Signal<UnitMode>,
-    pub(crate) selected_unit_id: Signal<Option<String>>,
-    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
-    pub(crate) search_query: Signal<String>,
-    pub(crate) search_field: Signal<SearchField>,
-    pub(crate) show_abilityless_units: Signal<bool>,
-    pub(crate) expand_variants: Signal<bool>,
-    pub(crate) collapsed_categories: Signal<HashSet<UnitKind>>,
+pub struct UnitListPanelProps {
+    pub active_race: Signal<Race>,
+    pub unit_mode: Signal<UnitMode>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_slot: Signal<Option<GridSlotId>>,
+    pub search_query: Signal<String>,
+    pub search_field: Signal<SearchField>,
+    pub show_abilityless_units: Signal<bool>,
+    pub expand_variants: Signal<bool>,
+    pub collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
 #[component]
-pub(crate) fn UnitListPanel(props: UnitListPanelProps) -> Element {
+pub fn UnitListPanel(props: UnitListPanelProps) -> Element {
     let active_race = props.active_race;
     let unit_mode = props.unit_mode;
     let mut selected_unit_id = props.selected_unit_id;

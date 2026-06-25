@@ -79,7 +79,7 @@ struct KeyboardUndoRequest {
 /// records one snapshot per action; undo/redo restore a snapshot by writing it
 /// back to those signals (which re-persists through the normal storage effects).
 #[derive(Clone, Copy)]
-pub(crate) struct UndoHistory {
+pub struct UndoHistory {
     keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
     undo_stack: Signal<Vec<EditorSnapshot>>,
@@ -94,10 +94,7 @@ impl UndoHistory {
     /// Custom hook: creates the history signals (restoring any persisted stacks)
     /// seeded with the current boot state as `present`, so the first capture-
     /// effect run is a no-op rather than a spurious entry.
-    pub(crate) fn use_history(
-        keys: Signal<Option<CustomKeys>>,
-        grid_layout: Signal<GridLayout>,
-    ) -> Self {
+    pub fn use_history(keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) -> Self {
         let boot_snapshot = snapshot_from_state(&keys, &grid_layout);
         let persisted_stacks = load_persisted_stacks();
         let undo_entries = persisted_stacks.undo_entries;

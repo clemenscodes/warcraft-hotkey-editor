@@ -1,9 +1,12 @@
-mod alt_state_section;
-mod description;
-mod key_field;
-mod position_picker;
-mod upgrade_section;
-mod upgrade_tier;
+pub(crate) mod alt_state_section;
+pub(crate) mod description;
+pub(crate) mod key_field;
+pub(crate) mod position_picker;
+pub(crate) mod upgrade_section;
+pub(crate) mod upgrade_tier;
+
+pub use position_picker::AltPositionPicker;
+pub use position_picker::UpgradePositionPicker;
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -25,7 +28,6 @@ use crate::services::customkeys::hotkey_override::HotkeyOverride;
 use alt_state_section::AltStateSection;
 use description::AbilityDescription;
 use key_field::OverrideKeyField;
-use position_picker::{AltPositionPicker, UpgradePositionPicker};
 use upgrade_section::UpgradeSection;
 use upgrade_tier::UpgradeTierSelector;
 
@@ -43,25 +45,25 @@ enum OverrideEditTarget {
 }
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct TileOverridePanelProps {
-    pub(crate) detail: InspectorDetail,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) selected_from_research: Signal<bool>,
-    pub(crate) selected_from_uprooted: Signal<bool>,
-    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
+pub struct TileOverridePanelProps {
+    pub detail: InspectorDetail,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub grid_layout: Signal<GridLayout>,
+    pub selected_from_research: Signal<bool>,
+    pub selected_from_uprooted: Signal<bool>,
+    pub tier_overrides: Signal<HashMap<String, usize>>,
     // Threaded from the app-level state so the off-state picker dialog
     // can drive the same `DragFollowerOverlay` that's already mounted at
     // the app root. Without this, dragging inside the picker hides the
     // source cell but never paints the floating follower.
-    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) active_container_slots: Rc<[GridSlotId]>,
+    pub dragging_slot: Signal<Option<DraggingSlot>>,
+    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drag_follower: Signal<Option<DragFollower>>,
+    pub active_container_slots: Rc<[GridSlotId]>,
 }
 
 #[component]
-pub(crate) fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
+pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
     let detail = props.detail;
     let mut loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;

@@ -7,13 +7,13 @@ use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
 use crate::services::files::download::BlobDownload;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct ExportButtonsProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) preview_open: Signal<bool>,
+pub struct ExportButtonsProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub preview_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn ExportButtons(props: ExportButtonsProps) -> Element {
+pub fn ExportButtons(props: ExportButtonsProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let mut preview_open = props.preview_open;
     let has_loaded_file = loaded_keys.read().is_some();

@@ -5,18 +5,18 @@ use warcraft_keybinds::{CustomKeys, SystemBindingMap};
 use crate::components::system_hotkeys::key_cell::KeyCaptureCell;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct SystemHotkeysListEntryProps {
-    pub(super) section_id: String,
-    pub(super) comment: String,
-    pub(super) default_hotkey: u32,
-    pub(super) default_modifier: SystemKeybindModifier,
-    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(super) editing_section: Signal<Option<String>>,
-    pub(super) binding_map: ReadSignal<SystemBindingMap>,
+pub struct SystemHotkeysListEntryProps {
+    pub section_id: String,
+    pub comment: String,
+    pub default_hotkey: u32,
+    pub default_modifier: SystemKeybindModifier,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
+    pub binding_map: ReadSignal<SystemBindingMap>,
 }
 
 #[component]
-pub(super) fn SystemHotkeysListEntry(props: SystemHotkeysListEntryProps) -> Element {
+pub fn SystemHotkeysListEntry(props: SystemHotkeysListEntryProps) -> Element {
     let section_id = props.section_id;
     let comment = props.comment;
     let default_hotkey = props.default_hotkey;

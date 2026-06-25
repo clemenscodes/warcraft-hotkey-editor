@@ -3,9 +3,9 @@ use dioxus::prelude::*;
 use super::HotkeyUnitView;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct HotkeyUnitSidebarProps {
-    pub(super) units: Vec<HotkeyUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
+pub struct HotkeyUnitSidebarProps {
+    pub units: Vec<HotkeyUnitView>,
+    pub selected_unit: Signal<Option<String>>,
 }
 
 /// Unit sidebar for hotkey collisions: a flat list of units whose command cards
@@ -13,7 +13,7 @@ pub(super) struct HotkeyUnitSidebarProps {
 /// the unit's icon, its name and object id, and how many shared-letter clashes
 /// it has. Sorted by clash count descending.
 #[component]
-pub(super) fn HotkeyUnitSidebar(props: HotkeyUnitSidebarProps) -> Element {
+pub fn HotkeyUnitSidebar(props: HotkeyUnitSidebarProps) -> Element {
     let units = props.units;
     let mut selected_unit = props.selected_unit;
 

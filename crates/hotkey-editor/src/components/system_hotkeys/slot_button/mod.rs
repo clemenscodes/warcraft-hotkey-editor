@@ -10,18 +10,18 @@ use warcraft_keybinds::SystemBindingMap;
 /// control groups). Same gold-frame visuals as the inventory cell minus the
 /// pointer-event drag — those views aren't reorderable, just edit-on-click.
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct SlotButtonProps {
-    pub(crate) slot_label: String,
-    pub(crate) section_id: String,
-    pub(crate) default_hotkey: u32,
-    pub(crate) default_modifier: SystemKeybindModifier,
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) editing_section: Signal<Option<String>>,
-    pub(crate) binding_map: ReadSignal<SystemBindingMap>,
+pub struct SlotButtonProps {
+    pub slot_label: String,
+    pub section_id: String,
+    pub default_hotkey: u32,
+    pub default_modifier: SystemKeybindModifier,
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub editing_section: Signal<Option<String>>,
+    pub binding_map: ReadSignal<SystemBindingMap>,
 }
 
 #[component]
-pub(crate) fn SlotButton(props: SlotButtonProps) -> Element {
+pub fn SlotButton(props: SlotButtonProps) -> Element {
     let slot_label = props.slot_label;
     let section_id = props.section_id;
     let default_hotkey = props.default_hotkey;

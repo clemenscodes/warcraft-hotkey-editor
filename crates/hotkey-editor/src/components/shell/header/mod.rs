@@ -19,10 +19,10 @@ use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
-use brand::HeaderBrand;
-use burger::BurgerMenu;
-use collisions_button::CollisionsButton;
-use toolbar::HeaderToolbar;
+pub use brand::HeaderBrand;
+pub use burger::BurgerMenu;
+pub use collisions_button::CollisionsButton;
+pub use toolbar::HeaderToolbar;
 
 const APP_HEADER_STYLES: Asset = asset!("/src/components/shell/header/header.css");
 
@@ -46,24 +46,24 @@ pub(crate) const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
      leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full";
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct HeaderProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) upload_status: Signal<UploadStatus>,
-    pub(crate) preview_open: Signal<bool>,
-    pub(crate) grid_layout: Signal<GridLayout>,
-    pub(crate) editing_layout_cell: Signal<Option<EditingCell>>,
-    pub(crate) dragging_layout_cell: Signal<Option<EditingCell>>,
-    pub(crate) system_hotkeys_open: Signal<bool>,
-    pub(crate) help_open: Signal<bool>,
-    pub(crate) current_view: Signal<AppView>,
-    pub(crate) active_race: Signal<Race>,
-    pub(crate) unit_mode: Signal<UnitMode>,
-    pub(crate) selected_unit_id: Signal<Option<String>>,
-    pub(crate) search_query: Signal<String>,
+pub struct HeaderProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub upload_status: Signal<UploadStatus>,
+    pub preview_open: Signal<bool>,
+    pub grid_layout: Signal<GridLayout>,
+    pub editing_layout_cell: Signal<Option<EditingCell>>,
+    pub dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub system_hotkeys_open: Signal<bool>,
+    pub help_open: Signal<bool>,
+    pub current_view: Signal<AppView>,
+    pub active_race: Signal<Race>,
+    pub unit_mode: Signal<UnitMode>,
+    pub selected_unit_id: Signal<Option<String>>,
+    pub search_query: Signal<String>,
 }
 
 #[component]
-pub(crate) fn Header(props: HeaderProps) -> Element {
+pub fn Header(props: HeaderProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let upload_status = props.upload_status;
     let preview_open = props.preview_open;

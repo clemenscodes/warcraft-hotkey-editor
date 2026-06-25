@@ -7,13 +7,13 @@ use crate::components::dialogs::dialog_header::DialogHeader;
 const PREVIEW_STYLES: Asset = asset!("/src/components/dialogs/preview_dialog/preview_dialog.css");
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct PreviewDialogProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) preview_open: Signal<bool>,
+pub struct PreviewDialogProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub preview_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn PreviewDialog(props: PreviewDialogProps) -> Element {
+pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let mut preview_open = props.preview_open;
     let preview_text = use_memo(move || {

@@ -1,4 +1,4 @@
-mod hero_level_option;
+pub(crate) mod hero_level_option;
 
 use dioxus::prelude::*;
 
@@ -7,17 +7,17 @@ use hero_level_option::HeroLevelOption;
 const MAX_HERO_LEVEL_DISPLAY: u32 = 10;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct UnitDetailHeaderProps {
-    pub(crate) unit_name: &'static str,
-    pub(crate) unit_id: String,
-    pub(crate) portrait_url: Option<String>,
-    pub(crate) has_hero_attributes: bool,
-    pub(crate) selected_hero_level: Signal<u32>,
-    pub(crate) level_picker_open: Signal<bool>,
+pub struct UnitDetailHeaderProps {
+    pub unit_name: &'static str,
+    pub unit_id: String,
+    pub portrait_url: Option<String>,
+    pub has_hero_attributes: bool,
+    pub selected_hero_level: Signal<u32>,
+    pub level_picker_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
+pub fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
     let unit_name = props.unit_name;
     let unit_id = props.unit_id;
     let portrait_url = props.portrait_url;

@@ -1,7 +1,7 @@
-mod breadcrumbs;
-mod category_tab;
-mod dialog_header;
-mod inventory_drag_overlay;
+pub(crate) mod breadcrumbs;
+pub(crate) mod category_tab;
+pub(crate) mod dialog_header;
+pub(crate) mod inventory_drag_overlay;
 
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
@@ -20,13 +20,13 @@ use dialog_header::SystemHotkeysHeader;
 use inventory_drag_overlay::InventoryDragOverlay;
 
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct SystemHotkeysDialogProps {
-    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
-    pub(crate) system_hotkeys_open: Signal<bool>,
+pub struct SystemHotkeysDialogProps {
+    pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub system_hotkeys_open: Signal<bool>,
 }
 
 #[component]
-pub(crate) fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
+pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let mut system_hotkeys_open = props.system_hotkeys_open;
     let editing_section = use_signal::<Option<String>>(|| None);

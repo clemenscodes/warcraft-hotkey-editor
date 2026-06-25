@@ -5,14 +5,14 @@ use warcraft_database::UnitKindHelpers;
 use super::unit_kind_data_attr;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct MobileCategoryTabProps {
-    pub(super) kind: UnitKind,
-    pub(super) is_active: bool,
-    pub(super) active_category: Signal<UnitKind>,
+pub struct MobileCategoryTabProps {
+    pub kind: UnitKind,
+    pub is_active: bool,
+    pub active_category: Signal<UnitKind>,
 }
 
 #[component]
-pub(super) fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
+pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
     let kind = props.kind;
     let is_active = props.is_active;
     let mut active_category = props.active_category;

@@ -3,19 +3,19 @@ use dioxus::prelude::*;
 use super::key_field::OverrideKeyField;
 
 #[derive(Props, Clone, PartialEq)]
-pub(super) struct AltStateSectionProps {
-    pub(super) alt_name_text: Option<String>,
-    pub(super) alt_description_lines: Vec<String>,
-    pub(super) show_alt_controls: bool,
-    pub(super) alt_hotkey_label: String,
-    pub(super) alt_hotkey_is_editing: bool,
-    pub(super) alt_hotkey_is_special_token: bool,
-    pub(super) on_position_click: EventHandler<()>,
-    pub(super) on_hotkey_activate: EventHandler<()>,
+pub struct AltStateSectionProps {
+    pub alt_name_text: Option<String>,
+    pub alt_description_lines: Vec<String>,
+    pub show_alt_controls: bool,
+    pub alt_hotkey_label: String,
+    pub alt_hotkey_is_editing: bool,
+    pub alt_hotkey_is_special_token: bool,
+    pub on_position_click: EventHandler<()>,
+    pub on_hotkey_activate: EventHandler<()>,
 }
 
 #[component]
-pub(super) fn AltStateSection(props: AltStateSectionProps) -> Element {
+pub fn AltStateSection(props: AltStateSectionProps) -> Element {
     let alt_name_text = props.alt_name_text;
     let alt_description_lines = props.alt_description_lines;
     let show_alt_controls = props.show_alt_controls;

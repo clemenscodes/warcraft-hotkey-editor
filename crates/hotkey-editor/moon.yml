@@ -1,6 +1,6 @@
 id: hotkey-editor
 stack: frontend
-layer: application
+layer: library
 tags:
   - rust
   - app
