@@ -39,6 +39,13 @@ thread_local! {
     /// `pointerup` does not also re-select the source tile.
     pub(super) static SUPPRESS_NEXT_CLICK: Cell<bool> = const { Cell::new(false) };
 
+    /// Set on a drag-end so the native `dblclick` that fires when the drag's
+    /// trailing click lands within the double-click window of a prior click does
+    /// not open the hotkey picker. Initiating a drag resets the double-click
+    /// trigger: cleared on every `pointerdown`, set when a drag actually moved,
+    /// consumed by the double-click handler.
+    pub(super) static SUPPRESS_NEXT_DOUBLE_CLICK: Cell<bool> = const { Cell::new(false) };
+
     /// Cursor position at `pointerdown`. Used to decide whether the user
     /// actually dragged (vs. just clicked) so we know whether to suppress the
     /// trailing click.
