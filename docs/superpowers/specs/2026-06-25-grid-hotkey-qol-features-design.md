@@ -120,27 +120,30 @@ domain change.
 
 ### Wiring (`hotkey-editor`)
 
-- Lift the `editing_target` signal out of `TileOverridePanel`
-  (`crates/hotkey-editor/src/components/tile_override/mod.rs`) up to `app.rs`,
-  alongside `selected_slot`. Make the `OverrideEditTarget` enum `pub(crate)`.
-  The panel reads `editing_target` from props instead of owning it; all of its
-  existing internal sets and selection-change resets continue to operate on the
-  same lifted signal.
-- Thread `editing_target` through the existing 5-layer path
+Implementation note: the wiring uses an **intent flag**, not the originally
+sketched "lift `editing_target` + make the enum `pub(crate)`" approach. That
+sketch had a stuck-state edge case (double-clicking a passive would leave
+`editing_target == Hotkey` set, popping the picker on the next normal
+selection). The intent flag avoids it, keeps `OverrideEditTarget` private, and
+doesn't move existing state.
+
+- New app-level `Signal<bool>` `hotkey_assign_request`, created in `app.rs`.
+- Threaded to `GridCell` through the existing 5-layer path
   (`UnitDetailPanel → UnitCommandGrids → CommandGridSection → GridTile →
-  GridCell`), the same path `selected_slot` already uses.
+  GridCell`) and, separately, to `TileOverridePanel` (rendered by
+  `UnitDetailPanel`).
 - `GridCell` (`crates/hotkey-editor/src/components/command_grid/grid_cell/mod.rs`)
-  gets a double-click handler (`ondblclick`, or `event.data().detail() == 2` on
-  the existing click handler). On double-click of an occupied cell:
-  1. set `selected_slot` to the occupant (and the research/uprooted selection
-     flags, as the single-click handler does);
-  2. set `editing_target = Some(OverrideEditTarget::Hotkey)`.
-- The panel **guards** opening: the picker only appears when the primary hotkey
-  field actually applies to the selected ability (the panel already computes
-  `show_hotkey_field`). So `picker_open` requires both
-  `editing_target == Some(Hotkey)` **and** the field being shown — a
-  double-click on a passive is a harmless select. This keeps the "is this
-  passive?" domain decision inside the panel, never in the grid cell.
+  gets a double-click handler. On double-click of an occupied cell it: (1) sets
+  `selected_slot` to the occupant (and the research/uprooted selection flags, as
+  the single-click handler does); (2) sets `hotkey_assign_request = true`. The
+  grid cell makes **no** domain decision.
+- `TileOverridePanel` consumes the flag in a `use_effect`: when the flag is set,
+  it opens the picker for the primary hotkey (`editing_target` stays a private
+  local set to `Some(OverrideEditTarget::Hotkey)`) **only if** its existing
+  `show_hotkey_field` is true, and it clears the flag either way. So a
+  double-click on a passive is a harmless select, the "is this passive?" domain
+  decision stays inside the panel, and no stuck state can leak into the next
+  selection.
 
 ### Verification (no pure-Rust unit test applies)
 
@@ -156,6 +159,8 @@ domain change.
 - Single-click-opens-picker and global keyboard capture on selection were
   considered and rejected in favor of double-click (explicit, no accidental
   picker on normal selection/drag).
+- Lifting `editing_target` to `app.rs` and exposing `OverrideEditTarget`
+  publicly — superseded by the intent-flag wiring above (see Feature 2 wiring).
 - Auto-resolving hotkey collisions created by position-only moves (see Feature 1
   "conflicts stay visible").
 - Touch/long-press equivalent of double-click (desktop keyboard workflow).
