@@ -43,6 +43,8 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
     let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let dialog_title = format!("Position: {display_name} (upgraded)");
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(upgrade_unit_id)];
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     let grid_props = CommandGridSectionProps {
         heading: "Upgraded-form position",
         slot_ids: picker_slots,
@@ -55,6 +57,8 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
         drop_target_cell,
         drag_follower,
         grid_layout,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
         is_research_grid: false,
         is_uprooted_grid: false,
         prevent_swap_on_drop: true,

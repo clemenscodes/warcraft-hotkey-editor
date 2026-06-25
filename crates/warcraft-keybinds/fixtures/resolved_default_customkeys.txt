@@ -4054,7 +4054,7 @@ Tip=Reinforced Defenses
 Ubertip=Upgrades Burrows and Watch Towers so that they have Fortified armor.
 
 [Rosp]
-Hotkey=S,S
+Hotkey=S,S,S
 Buttonpos=2,0
 Tip=Upgrade to Spiked Barricades,Upgrade to Improved Spiked Barricades,Upgrade to Advanced Spiked Barricades
 Ubertip=Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Increases the additional damage by 30% of the attacker's damage.,Further increases the amount of damage inflicted on melee attackers by 0.
@@ -6510,6 +6510,10 @@ Hotkey=T
 Buttonpos=0,0
 Tip=Hire Transport Ship
 Ubertip=A sturdy transport ship capable of carrying units over the sea.
+
+[ubsp]
+Hotkey=T
+Buttonpos=3,2
 
 [ucrm]
 Hotkey=F

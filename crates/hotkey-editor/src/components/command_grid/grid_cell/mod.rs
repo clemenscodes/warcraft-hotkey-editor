@@ -51,6 +51,8 @@ pub struct GridCellProps {
     pub drop_target_cell: Signal<Option<DropTargetCell>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub keys_signal: Signal<Option<CustomKeys>>,
+    pub update_hotkeys_on_move: Signal<bool>,
+    pub hotkey_assign_request: Signal<bool>,
     pub slot_ids_for_drop: Rc<[GridSlotId]>,
     pub occupant_slot: Option<GridSlotId>,
 }
@@ -83,12 +85,15 @@ pub fn GridCell(props: GridCellProps) -> Element {
     let mut drop_target_cell = props.drop_target_cell;
     let mut drag_follower = props.drag_follower;
     let mut keys_signal = props.keys_signal;
+    let update_hotkeys_on_move = props.update_hotkeys_on_move;
+    let mut hotkey_assign_request = props.hotkey_assign_request;
     let slot_ids_for_drop = props.slot_ids_for_drop.clone();
     let occupant_slot = props.occupant_slot;
 
     let occupant_for_drag = occupant_slot;
     let occupant_for_click = occupant_slot;
     let occupant_for_keydown = occupant_slot;
+    let occupant_for_dblclick = occupant_slot;
     let restrict_draggable_to_for_drag = Rc::clone(&restrict_draggable_to);
     let icon_src_for_drag = icon_src_option.clone();
     let label_for_drag = label_text.clone();
@@ -498,6 +503,7 @@ pub fn GridCell(props: GridCellProps) -> Element {
                     );
                     fell_back_to_source = true;
                 } else {
+                    let assign_hotkey_on_move = *update_hotkeys_on_move.read();
                     let move_request = MoveRequest::new(
                         layout_snapshot,
                         &slot_ids_for_drop,
@@ -507,7 +513,8 @@ pub fn GridCell(props: GridCellProps) -> Element {
                         is_research_grid,
                     )
                     .with_prevent_swap(prevent_swap_on_drop)
-                    .with_prevent_co_move(is_uprooted_grid);
+                    .with_prevent_co_move(is_uprooted_grid)
+                    .with_assign_hotkey_on_move(assign_hotkey_on_move);
                     Positions::move_or_swap(&mut keys_signal, move_request);
                     let moved_slot = *dragging.slot_id();
                     select_slot.set(Some(moved_slot));
@@ -565,6 +572,16 @@ pub fn GridCell(props: GridCellProps) -> Element {
         select_from_uprooted.set(is_uprooted_grid);
     };
 
+    let handle_double_click = move |_| {
+        let Some(slot) = occupant_for_dblclick else {
+            return;
+        };
+        select_slot.set(Some(slot));
+        select_from_research.set(is_research_grid);
+        select_from_uprooted.set(is_uprooted_grid);
+        hotkey_assign_request.set(true);
+    };
+
     let icon_src_url = icon_src_option.as_ref().map(|url| url.to_string());
     rsx! {
         div { class: "command-tile-wrapper",
@@ -582,6 +599,7 @@ pub fn GridCell(props: GridCellProps) -> Element {
                 onpointercancel: handle_pointer_cancel,
                 onlostpointercapture: handle_lost_pointer_capture,
                 onclick: handle_click,
+                ondoubleclick: handle_double_click,
                 if let Some(source) = icon_src_url {
                     img {
                         src: source,

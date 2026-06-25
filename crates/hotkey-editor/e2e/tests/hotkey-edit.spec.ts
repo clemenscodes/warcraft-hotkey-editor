@@ -37,4 +37,16 @@ test.describe("Hotkey editing", () => {
     const storedAfter = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(storedAfter).toBe(storedBefore);
   });
+
+  test("double-clicking an ability icon opens the key picker and assigns a key", async ({ page }) => {
+    // Reuses Q (proven pickable on this exact target by the click-based test
+    // above) so the assertion exercises the double-click path, not fixture luck.
+    await page.locator(".grid-tile.has-ability").first().dblclick();
+    await page.locator(".key-picker-shell").waitFor();
+    await page.locator('.key-picker-key[data-label="Q"]').click();
+    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".override-key-cell")).toContainText("Q");
+    const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
+    expect(stored).toContain("hotkey=Q");
+  });
 });

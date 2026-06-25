@@ -29,6 +29,8 @@ pub struct CommandGridSectionProps {
     pub drop_target_cell: Signal<Option<DropTargetCell>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub grid_layout: Signal<GridLayout>,
+    pub update_hotkeys_on_move: Signal<bool>,
+    pub hotkey_assign_request: Signal<bool>,
     #[props(default = false)]
     pub is_research_grid: bool,
     #[props(default = false)]
@@ -68,6 +70,8 @@ pub fn CommandGridSection(props: CommandGridSectionProps) -> Element {
     let drop_target_cell = props.drop_target_cell;
     let drag_follower = props.drag_follower;
     let grid_layout = props.grid_layout;
+    let update_hotkeys_on_move = props.update_hotkeys_on_move;
+    let hotkey_assign_request = props.hotkey_assign_request;
     let slot_ids = props.slot_ids.clone();
     let heading_text = props.heading;
     let prevent_swap_on_drop = props.prevent_swap_on_drop;
@@ -128,6 +132,8 @@ pub fn CommandGridSection(props: CommandGridSectionProps) -> Element {
                             drop_target_cell,
                             drag_follower,
                             grid_layout,
+                            update_hotkeys_on_move,
+                            hotkey_assign_request,
                             conflicting_hotkeys: conflicting_hotkeys.clone(),
                             is_research_grid,
                             is_uprooted_grid,

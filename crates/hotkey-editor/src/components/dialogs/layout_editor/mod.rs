@@ -72,6 +72,7 @@ pub struct LayoutEditorProps {
     pub editing_layout_cell: Signal<Option<EditingCell>>,
     pub dragging_layout_cell: Signal<Option<EditingCell>>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
+    pub update_hotkeys_on_move: Signal<bool>,
     pub layout_dialog_open: Signal<bool>,
 }
 
@@ -81,6 +82,7 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
     let mut loaded_keys = props.loaded_keys;
+    let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.layout_dialog_open;
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();
@@ -157,6 +159,10 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
         editing_layout_cell.set(None);
     };
     let handle_picker_close = move |_| editing_layout_cell.set(None);
+    let toggle_update_hotkeys_on_move = move |_| {
+        let current = *update_hotkeys_on_move.read();
+        update_hotkeys_on_move.set(!current);
+    };
 
     rsx! {
         document::Stylesheet { href: LAYOUT_EDITOR_STYLES }
@@ -233,6 +239,25 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            {
+                let is_checked = *update_hotkeys_on_move.read();
+                rsx! {
+                    label {
+                        class: "layout-move-hotkey-toggle flex items-center gap-[0.8rem] \
+                            font-friz-quadrata uppercase tracking-[0.06em] text-warcraft-gold \
+                            text-[1.9rem] cursor-pointer [text-shadow:1px_1px_0_#000] \
+                            max-[1099px]:text-[15px] max-[1099px]:gap-[8px]",
+                        input {
+                            r#type: "checkbox",
+                            class: "layout-move-hotkey-checkbox",
+                            "aria-label": "Update hotkeys when moving abilities",
+                            checked: is_checked,
+                            onchange: toggle_update_hotkeys_on_move,
+                        }
+                        "Update hotkeys when moving abilities"
                     }
                 }
             }

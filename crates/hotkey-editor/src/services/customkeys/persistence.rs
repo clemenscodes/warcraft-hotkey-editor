@@ -3,6 +3,8 @@ use crate::services::storage::local_storage::LocalStorage;
 
 const CUSTOM_KEYS_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.custom-keys");
 const GRID_LAYOUT_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.grid-layout");
+const UPDATE_HOTKEYS_ON_MOVE_STORAGE: LocalStorage =
+    LocalStorage::new("warcraft-hotkey-editor.update-hotkeys-on-move");
 const ONBOARDING_SEEN_STORAGE: LocalStorage =
     LocalStorage::new("warcraft-hotkey-editor.onboarding-seen");
 const ONBOARDING_SEEN_VALUE: &str = "true";
@@ -26,6 +28,21 @@ impl CustomKeysPersistence {
     pub(crate) fn save_grid_layout(layout: GridLayout) {
         let contents = layout.to_storage_string();
         GRID_LAYOUT_STORAGE.set(&contents);
+    }
+
+    pub(crate) fn load_update_hotkeys_on_move() -> bool {
+        let stored = UPDATE_HOTKEYS_ON_MOVE_STORAGE.get();
+        Self::update_hotkeys_on_move_from_stored(stored)
+    }
+
+    pub(crate) fn save_update_hotkeys_on_move(enabled: bool) {
+        let value = if enabled { "true" } else { "false" };
+        UPDATE_HOTKEYS_ON_MOVE_STORAGE.set(value);
+    }
+
+    fn update_hotkeys_on_move_from_stored(stored: Option<String>) -> bool {
+        let stored_value = stored.as_deref();
+        stored_value != Some("false")
     }
 }
 
@@ -71,5 +88,31 @@ mod onboarding_tests {
         let stored = Some(String::from("false"));
         let result = OnboardingPersistence::seen_from_stored(stored);
         assert!(!result);
+    }
+}
+
+#[cfg(test)]
+mod update_hotkeys_on_move_tests {
+    use super::CustomKeysPersistence;
+
+    #[test]
+    fn absent_value_defaults_to_enabled() {
+        let stored = None;
+        let result = CustomKeysPersistence::update_hotkeys_on_move_from_stored(stored);
+        assert!(result);
+    }
+
+    #[test]
+    fn explicit_false_is_disabled() {
+        let stored = Some(String::from("false"));
+        let result = CustomKeysPersistence::update_hotkeys_on_move_from_stored(stored);
+        assert!(!result);
+    }
+
+    #[test]
+    fn explicit_true_is_enabled() {
+        let stored = Some(String::from("true"));
+        let result = CustomKeysPersistence::update_hotkeys_on_move_from_stored(stored);
+        assert!(result);
     }
 }

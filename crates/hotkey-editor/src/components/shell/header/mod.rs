@@ -53,6 +53,7 @@ pub struct HeaderProps {
     pub grid_layout: Signal<GridLayout>,
     pub editing_layout_cell: Signal<Option<EditingCell>>,
     pub dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub update_hotkeys_on_move: Signal<bool>,
     pub system_hotkeys_open: Signal<bool>,
     pub help_open: Signal<bool>,
     pub current_view: Signal<AppView>,
@@ -70,6 +71,7 @@ pub fn Header(props: HeaderProps) -> Element {
     let grid_layout = props.grid_layout;
     let editing_layout_cell = props.editing_layout_cell;
     let dragging_layout_cell = props.dragging_layout_cell;
+    let update_hotkeys_on_move = props.update_hotkeys_on_move;
     let system_hotkeys_open = props.system_hotkeys_open;
     let help_open = props.help_open;
     let navigation = ViewNavigationContext {
@@ -202,6 +204,7 @@ pub fn Header(props: HeaderProps) -> Element {
                             grid_layout,
                             editing_layout_cell,
                             dragging_layout_cell,
+                            update_hotkeys_on_move,
                             loaded_keys,
                             layout_dialog_open,
                         }
