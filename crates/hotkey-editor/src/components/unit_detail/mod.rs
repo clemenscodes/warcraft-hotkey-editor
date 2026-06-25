@@ -33,6 +33,8 @@ pub(crate) struct UnitDetailPanelProps {
     pub(crate) drag_follower: Signal<Option<DragFollower>>,
     pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
     pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) update_hotkeys_on_move: Signal<bool>,
+    pub(crate) hotkey_assign_request: Signal<bool>,
 }
 
 #[component]
@@ -47,6 +49,8 @@ pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
     let drag_follower = props.drag_follower;
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
+    let update_hotkeys_on_move = props.update_hotkeys_on_move;
+    let hotkey_assign_request = props.hotkey_assign_request;
     let mut selected_hero_level = use_signal::<u32>(|| 1);
     let mut level_picker_open = use_signal::<bool>(|| false);
     use_effect(move || {
@@ -207,6 +211,8 @@ pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                         drop_target_cell,
                         drag_follower,
                         grid_layout,
+                        update_hotkeys_on_move,
+                        hotkey_assign_request,
                     }
                     aside { class: "tile-override-panel",
                         h3 { class: "command-section-heading", "Hotkey override" }
@@ -222,6 +228,7 @@ pub(crate) fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                                 drop_target_cell,
                                 drag_follower,
                                 active_container_slots: active_container_slots.clone(),
+                                hotkey_assign_request,
                             }
                         } else {
                             div { class: "tile-override-empty",

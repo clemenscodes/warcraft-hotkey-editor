@@ -90,6 +90,12 @@ pub(crate) fn App() -> Element {
         let snapshot = *grid_layout.read();
         CustomKeysPersistence::save_grid_layout(snapshot);
     });
+    let update_hotkeys_on_move =
+        use_signal::<bool>(CustomKeysPersistence::load_update_hotkeys_on_move);
+    use_effect(move || {
+        let enabled = *update_hotkeys_on_move.read();
+        CustomKeysPersistence::save_update_hotkeys_on_move(enabled);
+    });
     // Undo/redo: one global timeline of full-state snapshots. The capture effect
     // records one entry per committed action (deduped against the present state,
     // so undo/redo restores don't re-record). Provided via context so the
@@ -158,6 +164,7 @@ pub(crate) fn App() -> Element {
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
+    let hotkey_assign_request = use_signal::<bool>(|| false);
     let tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let mut dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
     let mut drop_target_cell = use_signal::<Option<DropTargetCell>>(|| None);
@@ -492,6 +499,7 @@ pub(crate) fn App() -> Element {
                 grid_layout,
                 editing_layout_cell,
                 dragging_layout_cell,
+                update_hotkeys_on_move,
                 system_hotkeys_open,
                 help_open,
                 current_view,
@@ -523,6 +531,8 @@ pub(crate) fn App() -> Element {
                             drag_follower,
                             loaded_keys,
                             grid_layout,
+                            update_hotkeys_on_move,
+                            hotkey_assign_request,
                         }
                     }
                 },

@@ -24,6 +24,8 @@ pub(crate) struct UnitCommandGridsProps {
     pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
     pub(crate) drag_follower: Signal<Option<DragFollower>>,
     pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) update_hotkeys_on_move: Signal<bool>,
+    pub(crate) hotkey_assign_request: Signal<bool>,
 }
 
 #[component]
@@ -42,6 +44,8 @@ pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let drop_target_cell = props.drop_target_cell;
     let drag_follower = props.drag_follower;
     let grid_layout = props.grid_layout;
+    let update_hotkeys_on_move = props.update_hotkeys_on_move;
+    let hotkey_assign_request = props.hotkey_assign_request;
     let command_card_props = CommandGridSectionProps {
         heading: "Command card",
         slot_ids: command_card_slots,
@@ -54,6 +58,8 @@ pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
         drop_target_cell,
         drag_follower,
         grid_layout,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
         is_research_grid: false,
         is_uprooted_grid: false,
         prevent_swap_on_drop: false,
@@ -77,6 +83,8 @@ pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         drop_target_cell,
                         drag_follower,
                         grid_layout,
+                        update_hotkeys_on_move,
+                        hotkey_assign_request,
                         is_research_grid: false,
                         is_uprooted_grid: false,
                         prevent_swap_on_drop: false,
@@ -100,6 +108,8 @@ pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         drop_target_cell,
                         drag_follower,
                         grid_layout,
+                        update_hotkeys_on_move,
+                        hotkey_assign_request,
                         is_research_grid: false,
                         is_uprooted_grid: true,
                         prevent_swap_on_drop: false,
@@ -123,6 +133,8 @@ pub(crate) fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         drop_target_cell,
                         drag_follower,
                         grid_layout,
+                        update_hotkeys_on_move,
+                        hotkey_assign_request,
                         is_research_grid: true,
                         is_uprooted_grid: false,
                         prevent_swap_on_drop: false,
