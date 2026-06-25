@@ -21,7 +21,7 @@ use crate::services::focus::modality::FocusModality;
 
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, DragThreadState,
-    LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK,
+    LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
     TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
 };
 
@@ -114,6 +114,9 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
     };
 
     let handle_pointer_down = move |event: Event<PointerData>| {
+        // A new gesture starts: clear any stale double-click suppression so an
+        // unrelated later double-click still opens the picker.
+        SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.set(false));
         if !tile_is_draggable {
             return;
         }
@@ -539,6 +542,9 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
         }
         if did_move || performed_swap {
             SUPPRESS_NEXT_CLICK.with(|cell| cell.set(true));
+            // A drag happened, so the trailing native `dblclick` (prior click +
+            // this gesture's click) must not open the picker.
+            SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.set(true));
         }
         dragging_slot.set(None);
         drop_target_cell.set(None);
@@ -573,6 +579,12 @@ pub(super) fn GridCell(props: GridCellProps) -> Element {
     };
 
     let handle_double_click = move |_| {
+        // A drag that just ended produces a native dblclick; that must not open
+        // the picker (initiating a drag resets the double-click trigger).
+        let was_suppressed = SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.replace(false));
+        if was_suppressed {
+            return;
+        }
         let Some(slot) = occupant_for_dblclick else {
             return;
         };
