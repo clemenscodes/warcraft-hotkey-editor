@@ -759,6 +759,19 @@ impl WarcraftObject {
         }
     }
 
+    /// The number of research tiers this object has, but only when it is an
+    /// upgrade. Multi-level upgrades store one hotkey token per tier
+    /// (`Hotkey=F,F,F`), so the editor needs this to size that list. Leveled
+    /// abilities (hero spells, auras) are deliberately excluded: their
+    /// command-card button is shared across levels and binds a single hotkey, so
+    /// they must not be replicated. Non-upgrades return `None`.
+    pub fn upgrade_max_level(&self) -> Option<usize> {
+        match &self.meta {
+            WarcraftObjectMeta::Upgrade(upgrade_meta) => Some(upgrade_meta.max_level()),
+            _ => None,
+        }
+    }
+
     pub fn ability_off_icon(&self) -> Option<&'static str> {
         match &self.meta {
             WarcraftObjectMeta::Ability(ability_meta) => ability_meta.off_icon(),
