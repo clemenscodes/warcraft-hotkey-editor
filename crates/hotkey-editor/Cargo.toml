@@ -34,6 +34,6 @@ gloo-timers = { version = "0.3", features = ["futures"] }
 num-traits.workspace = true
 flate2 = "1.1"
 base64 = "0.22"
-warcraft-api = { path = "../warcraft-api" }
-warcraft-database = { path = "../warcraft-database" }
+warcraft-api = { workspace = true }
+warcraft-database = { workspace = true }
 warcraft-keybinds = { path = "../warcraft-keybinds" }

@@ -8,4 +8,3 @@ language: rust
 
 dependsOn:
   - warcraft-keybinds
-  - warcraft-api

@@ -85,6 +85,7 @@ fn layout_editor_default() -> Element {
     let dragging_layout_cell = use_signal(|| None::<EditingCell>);
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let layout_dialog_open = use_signal(|| true);
+    let update_hotkeys_on_move = use_signal(|| true);
     rsx! {
         ToastMount {
             LayoutEditor {
@@ -93,6 +94,7 @@ fn layout_editor_default() -> Element {
                 dragging_layout_cell,
                 loaded_keys,
                 layout_dialog_open,
+                update_hotkeys_on_move,
             }
         }
     }

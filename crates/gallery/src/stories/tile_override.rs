@@ -299,6 +299,7 @@ fn tile_override_panel_archmage_blizzard() -> Element {
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
     let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
+    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         TileOverridePanel {
             detail,
@@ -311,6 +312,7 @@ fn tile_override_panel_archmage_blizzard() -> Element {
             drop_target_cell,
             drag_follower,
             active_container_slots: archmage_slots,
+            hotkey_assign_request,
         }
     }
 }

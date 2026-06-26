@@ -6,10 +6,6 @@ tags:
   - lib
 language: rust
 
-dependsOn:
-  - warcraft-api
-  - warcraft-database
-
 tasks:
   rust/build:
     inputs:

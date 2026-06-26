@@ -237,7 +237,7 @@
           version = "0.1.0";
           strictDeps = true;
           doCheck = false;
-          cargoExtraArgs = "--workspace --exclude hotkey-editor --exclude warcraft-extractor";
+          cargoExtraArgs = "--workspace --exclude hotkey-editor";
         };
 
         # Cache cargo dependencies separately so a code-only change
@@ -331,35 +331,6 @@
               mainProgram = "moon-bundle";
             };
           };
-          # `nix run .#extract -- --casc /path/to/Warcraft\ III/Data`
-          # rebuilds crates/warcraft-database/src/db.rs from CASC. Native
-          # only — needs cmake + zlib + the CascLib source pinned in the
-          # overlay above. The wrapper delegates to `nix develop` so
-          # build-time linker flags (zlib, libstdc++) are wired up the
-          # same way they are inside the interactive shell.
-          extract = let
-            extractApp = pkgs.writeShellApplication {
-              name = "warcraft-extract";
-              runtimeInputs = [pkgs.nix];
-              text = ''
-                # Re-enter the project's dev shell so build-time linker
-                # flags (zlib, libstdc++) are wired up exactly the way
-                # they are inside `nix develop`. Resolves the flake from
-                # the user's current working directory, so this works
-                # whether invoked as `nix run .#extract` from the repo
-                # root or `nix run /path/to/repo#extract` from anywhere.
-                exec nix develop . --command \
-                  cargo run -p warcraft-extractor -- "$@"
-              '';
-            };
-          in {
-            type = "app";
-            program = "${extractApp}/bin/warcraft-extract";
-            meta = {
-              description = "Regenerate db.rs from a Warcraft III CASC archive";
-              mainProgram = "warcraft-extract";
-            };
-          };
         };
 
         devShells.default = pkgs.mkShell {
@@ -414,36 +385,10 @@
             echo "    nix run .#bundle     — same as moon run :bundle"
             echo "    nix build .#warcraft-hotkey-editor   — reproducible bundle"
             echo ""
-            echo "  Native data extraction (regenerates db.rs):"
-            echo "    cargo run -p warcraft-extractor -- --casc \"\$W3_CASC\""
-            echo "    cargo test -p warcraft-extractor"
-            echo "    cargo run -p warcraft-extractor --example inspect_slk -- \"\$W3_CASC\" units/abilitydata.slk"
+            echo "  Game data (warcraft-api/database) is pinned from"
+            echo "  https://github.com/clemenscodes/warcraft-data — regenerate"
+            echo "  db.rs there and bump the tag in Cargo.toml to update it."
             echo ""
-            echo "  Set W3_CASC to your Warcraft III install's Data/ dir."
-            echo "  Typical Wine layout (auto-detected if present):"
-            echo "    \$WINEPREFIX/drive_c/Program Files (x86)/Warcraft III/Data"
-            echo ""
-
-            # Convenience: if W3_CASC is unset and a likely Wine install
-            # is on disk, point at it. Mirrors vk-overlay's discovery
-            # behavior without hardcoding a specific WINEPREFIX layout.
-            if [ -z "''${W3_CASC:-}" ]; then
-              for candidate in \
-                "''${WINEPREFIX:-$HOME/.wine}/drive_c/Program Files (x86)/Warcraft III/Data" \
-                "$HOME/Games/W3Champions/drive_c/Program Files (x86)/Warcraft III/Data" \
-                "$HOME/.wine/drive_c/Program Files (x86)/Warcraft III/Data" \
-                "$HOME/Library/Application Support/Blizzard/Warcraft III/Data"; do
-                if [ -d "$candidate" ]; then
-                  export W3_CASC="$candidate"
-                  echo "  W3_CASC auto-detected: $W3_CASC"
-                  echo ""
-                  break
-                fi
-              done
-            else
-              echo "  W3_CASC=$W3_CASC"
-              echo ""
-            fi
           '';
         };
       }

@@ -10,5 +10,5 @@ description = "Parser and serializer for Warcraft III CustomKeys.txt files."
 path = "src/lib.rs"
 
 [dependencies]
-warcraft-api = { path = "../warcraft-api" }
-warcraft-database = { path = "../warcraft-database" }
+warcraft-api = { workspace = true }
+warcraft-database = { workspace = true }

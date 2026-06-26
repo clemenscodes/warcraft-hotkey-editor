@@ -390,6 +390,8 @@ fn unit_command_grids_footman() -> Element {
     let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         UnitCommandGrids {
             unit_id,
@@ -406,6 +408,8 @@ fn unit_command_grids_footman() -> Element {
             drop_target_cell,
             drag_follower,
             grid_layout,
+            update_hotkeys_on_move,
+            hotkey_assign_request,
         }
     }
 }
@@ -421,6 +425,8 @@ fn unit_detail_panel_footman() -> Element {
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let loaded_keys = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         UnitDetailPanel {
             selected_unit_id,
@@ -433,6 +439,8 @@ fn unit_detail_panel_footman() -> Element {
             drag_follower,
             loaded_keys,
             grid_layout,
+            update_hotkeys_on_move,
+            hotkey_assign_request,
         }
     }
 }
@@ -448,6 +456,8 @@ fn unit_detail_panel_archmage() -> Element {
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let loaded_keys = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         UnitDetailPanel {
             selected_unit_id,
@@ -460,6 +470,8 @@ fn unit_detail_panel_archmage() -> Element {
             drag_follower,
             loaded_keys,
             grid_layout,
+            update_hotkeys_on_move,
+            hotkey_assign_request,
         }
     }
 }

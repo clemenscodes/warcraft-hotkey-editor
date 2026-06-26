@@ -12,5 +12,5 @@ path = "src/main.rs"
 
 [dependencies]
 warcraft-keybinds = { path = "../warcraft-keybinds" }
-warcraft-api = { path = "../warcraft-api" }
+warcraft-api = { workspace = true }
 clap = { workspace = true }

@@ -1,7 +1,0 @@
-id: warcraft-slk
-stack: backend
-layer: library
-tags:
-  - rust
-  - lib
-language: rust

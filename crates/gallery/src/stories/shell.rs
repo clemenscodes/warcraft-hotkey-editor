@@ -207,6 +207,7 @@ fn header_default() -> Element {
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let search_query = use_signal(String::new);
+    let update_hotkeys_on_move = use_signal(|| true);
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo);
     rsx! {
@@ -225,6 +226,7 @@ fn header_default() -> Element {
                 unit_mode,
                 selected_unit_id,
                 search_query,
+                update_hotkeys_on_move,
             }
         }
     }

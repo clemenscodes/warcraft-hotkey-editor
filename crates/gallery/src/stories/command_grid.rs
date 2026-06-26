@@ -57,6 +57,8 @@ fn grid_cell_empty() -> Element {
     let empty_drop_ids: Vec<GridSlotId> = Vec::new();
     let slot_ids_for_drop: Rc<[GridSlotId]> = empty_drop_ids.into();
     let occupant_slot: Option<GridSlotId> = None;
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     let cell_props = GridCellProps {
         class_name,
         column,
@@ -84,6 +86,8 @@ fn grid_cell_empty() -> Element {
         keys_signal,
         slot_ids_for_drop,
         occupant_slot,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
     };
     rsx! {
         ToastMount {
@@ -127,6 +131,8 @@ fn grid_tile_footman() -> Element {
     let empty_restrictions: Vec<GridSlotId> = Vec::new();
     let restrict_draggable_to: Rc<[GridSlotId]> = empty_restrictions.into();
     let host_unit_id = fixtures::sample_unit_id();
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     let tile_props = GridTileProps {
         column,
         row,
@@ -147,6 +153,8 @@ fn grid_tile_footman() -> Element {
         prevent_swap_on_drop,
         restrict_draggable_to,
         host_unit_id,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
     };
     rsx! {
         ToastMount {
@@ -167,6 +175,8 @@ fn command_grid_section_footman() -> Element {
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let host_unit_id = fixtures::sample_unit_id();
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         ToastMount {
             CommandGridSection {
@@ -182,6 +192,8 @@ fn command_grid_section_footman() -> Element {
                 drag_follower,
                 grid_layout,
                 host_unit_id,
+                update_hotkeys_on_move,
+                hotkey_assign_request,
             }
         }
     }

@@ -9,8 +9,6 @@ language: rust
 
 dependsOn:
   - warcraft-keybinds
-  - warcraft-api
-  - warcraft-database
 
 tasks:
   rust/build:
@@ -87,8 +85,6 @@ tasks:
     deps:
       - tailwind/build
       - warcraft-keybinds:rust/build
-      - warcraft-api:rust/build
-      - warcraft-database:rust/build
     inputs:
       - "@group(sources)"
       - "@group(configs)"
