@@ -463,6 +463,7 @@ mod unit_grids_tests {
     use super::*;
     use crate::custom_keys::CustomKeys;
     use crate::grid::layout::GridLayout;
+    use crate::identity::ability_id::AbilityId;
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, Hotkey, RowIndex};
 
     fn paladin_id() -> WarcraftObjectId {
@@ -479,6 +480,74 @@ mod unit_grids_tests {
 
     fn tree_of_life_id() -> WarcraftObjectId {
         WarcraftObjectId::new("etol")
+    }
+
+    fn firelord_id() -> WarcraftObjectId {
+        WarcraftObjectId::new("Nfir")
+    }
+
+    /// Sections matching the Firelord (`Nfir`) abilities and Patrol command as
+    /// they appear in a real imported `CustomKeys.txt`.  The decisive detail is
+    /// that `ANic` (the autocast Incinerate companion ability) carries only a
+    /// `Researchbuttonpos` and a leftover `Hotkey=C` — it has no command-card
+    /// `Buttonpos`, so it is never drawn on the main command card.  The
+    /// command-card Incinerate the player sees is `ANia` at `E`.
+    fn firelord_incinerate_sections() -> &'static str {
+        concat!(
+            "[ANso]\nButtonpos=0,0\nHotkey=Q\nResearchbuttonpos=0,0\nResearchhotkey=Q\n\n",
+            "[ANlm]\nButtonpos=1,0\nHotkey=W\nResearchbuttonpos=1,0\nResearchhotkey=W\n\n",
+            "[ANia]\nButtonpos=2,0\nHotkey=E\nResearchhotkey=C\nUnbuttonpos=2,0\nUnhotkey=E\n\n",
+            "[ANic]\nHotkey=C\nResearchbuttonpos=2,0\nResearchhotkey=E\n\n",
+            "[ANvc]\nButtonpos=3,0\nHotkey=R\nResearchbuttonpos=3,0\nResearchhotkey=R\n\n",
+            "[CmdPatrol]\nButtonpos=2,2\nHotkey=C\nUnbuttonpos=2,2\n",
+        )
+    }
+
+    #[test]
+    fn ability_without_command_position_has_no_main_command_token() {
+        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let layout = GridLayout::qwerty_grid();
+        let incinerate_companion = GridSlotId::Ability(AbilityId::new("ANic"));
+        let main_command_token =
+            custom_keys.effective_hotkey_token(&incinerate_companion, layout, false);
+        assert_eq!(
+            main_command_token, None,
+            "ANic has no command-card Buttonpos, so it occupies no main-command \
+             cell and must not contribute a hotkey token there"
+        );
+    }
+
+    #[test]
+    fn ability_with_research_position_keeps_research_token() {
+        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let layout = GridLayout::qwerty_grid();
+        let incinerate_companion = GridSlotId::Ability(AbilityId::new("ANic"));
+        let research_token =
+            custom_keys.effective_hotkey_token(&incinerate_companion, layout, true);
+        let expected = Some(HotkeyToken::Letter { character: 'E' });
+        assert_eq!(
+            research_token, expected,
+            "ANic has a Researchbuttonpos at E and Researchhotkey=E, so it must \
+             still report E in the research context"
+        );
+    }
+
+    #[test]
+    fn firelord_has_no_phantom_incinerate_patrol_collision() {
+        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let unit_grids = UnitGrids::for_unit(firelord_id());
+        let layout = GridLayout::qwerty_grid();
+        let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
+        let main_command_card = cards
+            .iter()
+            .find(|card| card.role() == GridRole::MainCommand)
+            .expect("Firelord has a main command card");
+        let patrol_cell = GridCoordinate::new(ColumnIndex::Two, RowIndex::Two);
+        assert!(
+            main_command_card.collision_at(patrol_cell).is_none(),
+            "CmdPatrol (C) shares no main-command cell with any drawn ability; \
+             ANic is not on the command card and must not collide with it"
+        );
     }
 
     #[test]
@@ -646,8 +715,16 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collisions_detects_two_abilities_with_same_hotkey() {
         let hotkey_q = Hotkey::from('Q');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
-        let divine_shield_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
+        let first_cell = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let second_cell = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
+        let holy_light_binding = AbilityBinding::builder()
+            .button_position(first_cell)
+            .hotkey(hotkey_q)
+            .build();
+        let divine_shield_binding = AbilityBinding::builder()
+            .button_position(second_cell)
+            .hotkey(hotkey_q)
+            .build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
@@ -663,8 +740,16 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collision_reports_colliding_token() {
         let hotkey_w = Hotkey::from('W');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_w).build();
-        let divine_shield_binding = AbilityBinding::builder().hotkey(hotkey_w).build();
+        let first_cell = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let second_cell = GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero);
+        let holy_light_binding = AbilityBinding::builder()
+            .button_position(first_cell)
+            .hotkey(hotkey_w)
+            .build();
+        let divine_shield_binding = AbilityBinding::builder()
+            .button_position(second_cell)
+            .hotkey(hotkey_w)
+            .build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
@@ -686,8 +771,16 @@ mod unit_grids_tests {
     #[test]
     fn hotkey_collisions_are_per_grid_not_cross_grid() {
         let hotkey_q = Hotkey::from('Q');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
-        let divine_shield_research = AbilityBinding::builder().research_hotkey(hotkey_q).build();
+        let main_grid_cell = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let research_cell = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let holy_light_binding = AbilityBinding::builder()
+            .button_position(main_grid_cell)
+            .hotkey(hotkey_q)
+            .build();
+        let divine_shield_research = AbilityBinding::builder()
+            .research_button_position(research_cell)
+            .research_hotkey(hotkey_q)
+            .build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_research);

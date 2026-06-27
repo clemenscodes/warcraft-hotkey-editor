@@ -312,8 +312,16 @@ mod unit_collision_report_tests {
     #[test]
     fn detects_hotkey_collision_across_all_units() {
         let hotkey_q = Hotkey::Letter('Q');
-        let holy_light_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
-        let divine_shield_binding = AbilityBinding::builder().hotkey(hotkey_q).build();
+        let first_cell = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+        let second_cell = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
+        let holy_light_binding = AbilityBinding::builder()
+            .button_position(first_cell)
+            .hotkey(hotkey_q)
+            .build();
+        let divine_shield_binding = AbilityBinding::builder()
+            .button_position(second_cell)
+            .hotkey(hotkey_q)
+            .build();
         let mut custom_keys = CustomKeys::from("").normalize();
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
