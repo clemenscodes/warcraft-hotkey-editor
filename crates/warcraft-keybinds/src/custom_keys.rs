@@ -1315,6 +1315,14 @@ impl CustomKeys {
         layout: GridLayout,
         is_research_context: bool,
     ) -> Option<HotkeyToken> {
+        // A slot only participates in this grid's hotkey collisions when it
+        // actually occupies a cell there.  An ability that carries a stray
+        // `Hotkey=` but no `Buttonpos` for this context (e.g. `ANic`, the
+        // autocast Incinerate companion, which has only a `Researchbuttonpos`)
+        // is never drawn on the command card, so it cannot collide with the
+        // commands shown there.  This mirrors the renderer, which only paints a
+        // cell when `position_for_slot` resolves a position.
+        let resolved_position = self.position_for_slot(slot, is_research_context)?;
         let override_hotkey: Option<&Hotkey> = match slot {
             GridSlotId::Ability(ability_id) => {
                 let bound_id = *ability_id;
@@ -1338,7 +1346,6 @@ impl CustomKeys {
         if let Some(hotkey) = override_hotkey {
             return hotkey.first_token();
         }
-        let resolved_position = self.position_for_slot(slot, is_research_context)?;
         let layout_letter =
             layout.letter_at(resolved_position.column(), resolved_position.row())?;
         Some(HotkeyToken::from(layout_letter))
@@ -1489,7 +1496,14 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                         target_binding.set_un_tip(Some(tip_string));
                     }
                 }
-                WarcraftKeybinding::System(_) => {}
+                WarcraftKeybinding::System(source_binding) => {
+                    // System sections (inventory slots, control groups, hero
+                    // selection, …) classify by section id, so a parsed import
+                    // already carries the correct class.  Replacing the baseline
+                    // entry preserves the imported hotkey and modifier — without
+                    // this, customized system hotkeys were silently dropped.
+                    self.put_system(object_id, source_binding);
+                }
             }
         }
     }
@@ -2556,6 +2570,58 @@ mod extend_tests {
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
             Some(&expected_hotkey)
+        );
+    }
+
+    #[test]
+    fn extend_copies_system_hotkey_from_source_to_target() {
+        let default_binding = SystemBinding::new(
+            Hotkey::VirtualKey(49),
+            SystemKeybindClass::ControlGroup,
+            None,
+        );
+        let imported_binding = SystemBinding::new(
+            Hotkey::VirtualKey(186),
+            SystemKeybindClass::ControlGroup,
+            None,
+        );
+        let mut target = CustomKeys::builder()
+            .system("Ctr1", default_binding)
+            .build();
+        let uploaded = CustomKeys::builder()
+            .system("Ctr1", imported_binding)
+            .build();
+        target.extend(uploaded);
+        let expected_hotkey = Hotkey::VirtualKey(186);
+        let actual_hotkey = target.system("Ctr1").map(|binding| *binding.hotkey());
+        assert_eq!(
+            actual_hotkey,
+            Some(expected_hotkey),
+            "an imported system hotkey must overwrite the default during extend"
+        );
+    }
+
+    #[test]
+    fn imported_system_hotkeys_survive_normalize() {
+        let imported_text = concat!(
+            "[Ctr1]\nCtrlGroupCommand=1,1\nHotkey=186\n\n",
+            "[itm1]\nGameCommand=1,1\nHotkey=222\n\n",
+        );
+        let uploaded = CustomKeys::from(imported_text);
+        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
+        baseline.extend(uploaded);
+        let normalized = baseline.normalize();
+        let control_group_hotkey = normalized.system("Ctr1").map(|binding| *binding.hotkey());
+        let inventory_hotkey = normalized.system("itm1").map(|binding| *binding.hotkey());
+        assert_eq!(
+            control_group_hotkey,
+            Some(Hotkey::VirtualKey(186)),
+            "customized control-group hotkey must persist through the import normalize step"
+        );
+        assert_eq!(
+            inventory_hotkey,
+            Some(Hotkey::VirtualKey(222)),
+            "customized inventory hotkey must persist through the import normalize step"
         );
     }
 
