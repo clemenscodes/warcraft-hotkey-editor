@@ -13,7 +13,7 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::{CustomKeys, HotkeyTarget, HotkeyToken};
+use warcraft_keybinds::{CustomKeys, HotkeyTarget, HotkeyToken, Letter};
 use wasm_bindgen::JsCast;
 
 use crate::components::shared::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
@@ -21,9 +21,10 @@ use warcraft_keybinds::InspectorDetail;
 use warcraft_keybinds::text::description::Description;
 use warcraft_keybinds::text::tip::Tip;
 
-use crate::model::grid::GridLayout;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
 
 use alt_state_section::AltStateSection;
 use description::AbilityDescription;
@@ -57,7 +58,7 @@ pub struct TileOverridePanelProps {
     // the app root. Without this, dragging inside the picker hides the
     // source cell but never paints the floating follower.
     pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub active_container_slots: Rc<[GridSlotId]>,
     pub hotkey_assign_request: Signal<bool>,
@@ -72,7 +73,7 @@ pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
     let selected_from_uprooted = props.selected_from_uprooted;
     let tier_overrides = props.tier_overrides;
     let dragging_slot = props.dragging_slot;
-    let drop_target_cell = props.drop_target_cell;
+    let drop_target_tile = props.drop_target_tile;
     let drag_follower = props.drag_follower;
     let active_container_slots = props.active_container_slots;
     let _ = selected_from_uprooted;
@@ -91,12 +92,12 @@ pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
     let layout_derived_hotkey_token = detail
         .button_position()
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
-        .map(HotkeyToken::from);
+        .and_then(|character| HotkeyToken::try_from(character).ok());
     let layout_derived_research_token = detail
         .research_button_position()
         .or(detail.button_position())
         .and_then(|position| layout_snapshot.letter_at(position.column(), position.row()))
-        .map(HotkeyToken::from);
+        .and_then(|character| HotkeyToken::try_from(character).ok());
     let hotkey_token_display = detail.hotkey_token().or(layout_derived_hotkey_token);
     let research_hotkey_token_display = detail
         .research_hotkey_token()
@@ -515,7 +516,7 @@ pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
                 loaded_keys,
                 grid_layout,
                 dragging_slot,
-                drop_target_cell,
+                drop_target_tile,
                 drag_follower,
                 alt_position_picker_open,
             }
@@ -529,7 +530,7 @@ pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
                     loaded_keys,
                     grid_layout,
                     dragging_slot,
-                    drop_target_cell,
+                    drop_target_tile,
                     drag_follower,
                     upgrade_position_picker_open,
                 }
@@ -540,36 +541,36 @@ pub fn TileOverridePanel(props: TileOverridePanelProps) -> Element {
 
 const PICKER_ROWS: &[&[HotkeyToken]] = &[
     &[
-        HotkeyToken::Letter { character: 'Q' },
-        HotkeyToken::Letter { character: 'W' },
-        HotkeyToken::Letter { character: 'E' },
-        HotkeyToken::Letter { character: 'R' },
-        HotkeyToken::Letter { character: 'T' },
-        HotkeyToken::Letter { character: 'Y' },
-        HotkeyToken::Letter { character: 'U' },
-        HotkeyToken::Letter { character: 'I' },
-        HotkeyToken::Letter { character: 'O' },
-        HotkeyToken::Letter { character: 'P' },
+        HotkeyToken::Letter(Letter::Q),
+        HotkeyToken::Letter(Letter::W),
+        HotkeyToken::Letter(Letter::E),
+        HotkeyToken::Letter(Letter::R),
+        HotkeyToken::Letter(Letter::T),
+        HotkeyToken::Letter(Letter::Y),
+        HotkeyToken::Letter(Letter::U),
+        HotkeyToken::Letter(Letter::I),
+        HotkeyToken::Letter(Letter::O),
+        HotkeyToken::Letter(Letter::P),
     ],
     &[
-        HotkeyToken::Letter { character: 'A' },
-        HotkeyToken::Letter { character: 'S' },
-        HotkeyToken::Letter { character: 'D' },
-        HotkeyToken::Letter { character: 'F' },
-        HotkeyToken::Letter { character: 'G' },
-        HotkeyToken::Letter { character: 'H' },
-        HotkeyToken::Letter { character: 'J' },
-        HotkeyToken::Letter { character: 'K' },
-        HotkeyToken::Letter { character: 'L' },
+        HotkeyToken::Letter(Letter::A),
+        HotkeyToken::Letter(Letter::S),
+        HotkeyToken::Letter(Letter::D),
+        HotkeyToken::Letter(Letter::F),
+        HotkeyToken::Letter(Letter::G),
+        HotkeyToken::Letter(Letter::H),
+        HotkeyToken::Letter(Letter::J),
+        HotkeyToken::Letter(Letter::K),
+        HotkeyToken::Letter(Letter::L),
     ],
     &[
-        HotkeyToken::Letter { character: 'Z' },
-        HotkeyToken::Letter { character: 'X' },
-        HotkeyToken::Letter { character: 'C' },
-        HotkeyToken::Letter { character: 'V' },
-        HotkeyToken::Letter { character: 'B' },
-        HotkeyToken::Letter { character: 'N' },
-        HotkeyToken::Letter { character: 'M' },
+        HotkeyToken::Letter(Letter::Z),
+        HotkeyToken::Letter(Letter::X),
+        HotkeyToken::Letter(Letter::C),
+        HotkeyToken::Letter(Letter::V),
+        HotkeyToken::Letter(Letter::B),
+        HotkeyToken::Letter(Letter::N),
+        HotkeyToken::Letter(Letter::M),
     ],
     &[
         HotkeyToken::Escape,

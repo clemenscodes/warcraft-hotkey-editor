@@ -1,4 +1,4 @@
-.grid-tiles {
+.command-grid {
     display: grid;
     /* Four equal columns capped at the band's tile size (overridden per
        viewport), shrinking together when the container is narrower than four

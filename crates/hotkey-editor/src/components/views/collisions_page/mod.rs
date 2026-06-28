@@ -16,10 +16,10 @@ use warcraft_keybinds::{
 };
 
 use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
-use crate::model::grid::GridLayout;
 use crate::model::icons::IconUrl;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use warcraft_keybinds::GridLayout;
 
 pub use detail::IslandDetail;
 pub use hotkey_detail::HotkeyUnitDetail;

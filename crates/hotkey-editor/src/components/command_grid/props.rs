@@ -5,7 +5,8 @@ use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
 
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridLayout, GridSlotId};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use warcraft_keybinds::{GridLayout, GridSlotId};
 
 #[derive(Props, Clone, PartialEq)]
 pub struct CommandGridSectionProps {
@@ -21,15 +22,11 @@ pub struct CommandGridSectionProps {
     pub selected_from_uprooted: Signal<bool>,
     pub tier_overrides: Signal<HashMap<String, usize>>,
     pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub grid_layout: Signal<GridLayout>,
     pub update_hotkeys_on_move: Signal<bool>,
     pub hotkey_assign_request: Signal<bool>,
-    #[props(default = false)]
-    pub is_research_grid: bool,
-    #[props(default = false)]
-    pub is_uprooted_grid: bool,
     /// When true, drops onto cells already occupied by another slot are
     /// rejected outright instead of swapping. The off-state position
     /// picker uses this so dragging the toggle's off half can't displace

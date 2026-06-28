@@ -23,9 +23,12 @@ pub use components::command_grid::DragFollowerOverlay;
 pub use components::command_grid::GridTile;
 pub use components::command_grid::GridTileProps;
 pub use components::command_grid::GridTileState;
+pub use components::command_grid::GridTileView;
 pub use components::command_grid::HotkeyBadge;
 pub use components::command_grid::HotkeyBadgeProps;
 pub use components::command_grid::HotkeyBadgeState;
+pub use components::command_grid::ResearchGridSection;
+pub use components::command_grid::UprootedGridSection;
 pub use components::dialogs::dialog_header::DialogHeader;
 pub use components::dialogs::download_info_dialog::DownloadInfoDialog;
 pub use components::dialogs::help_dialog::HelpDialog;
@@ -106,10 +109,7 @@ pub use components::views::collisions_page::{
     UnitPositionDetail, UnitPositionSidebar,
 };
 pub use components::views::resolve_page::ResolvePage;
-pub use model::grid::ResolvedTemplate;
-pub use model::grid::{
-    DragFollower, DragFollowerVisual, DraggingSlot, DropTargetCell, EditingCell,
-};
+pub use model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
 pub use model::icons::IconUrl;
 pub use services::customkeys::upload_status::UploadStatus;
 pub use services::navigation::app_view::AppView;

@@ -1,5 +1,5 @@
-use crate::model::grid::GridLayout;
 use crate::services::storage::local_storage::LocalStorage;
+use warcraft_keybinds::GridLayout;
 
 const CUSTOM_KEYS_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.custom-keys");
 const GRID_LAYOUT_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.grid-layout");

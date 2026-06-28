@@ -489,7 +489,7 @@ mod unit_collision_report_tests {
             for (_position, cell) in card.into_iter() {
                 let token = cell.token();
                 let letter_char = match token {
-                    HotkeyToken::Letter { character } => character,
+                    HotkeyToken::Letter(letter) => letter.character(),
                     _ => continue,
                 };
                 let slot_idents: Vec<String> = cell

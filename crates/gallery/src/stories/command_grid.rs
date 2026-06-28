@@ -4,9 +4,9 @@ use std::rc::Rc;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    CommandGrid, CommandGridHeading, CommandGridSection, DragFollower, DragFollowerOverlay,
-    DragFollowerVisual, DraggingSlot, DropTargetCell, GridTile, GridTileState, HotkeyBadge,
-    HotkeyBadgeProps, HotkeyBadgeState, ToastMount,
+    CommandGridHeading, CommandGridSection, DragFollower, DragFollowerOverlay, DragFollowerVisual,
+    DraggingSlot, DropTargetTile, GridTile, GridTileState, HotkeyBadge, HotkeyBadgeProps,
+    HotkeyBadgeState, ToastMount,
 };
 use warcraft_api::Race;
 use warcraft_database::WARCRAFT_DATABASE;
@@ -285,8 +285,9 @@ fn grid_tile_selected_orc() -> Element {
 }
 
 fn drag_follower_with_ability() -> Element {
+    let icon_source = fixtures::sample_icon().map(|icon| icon.to_string());
     let visual = DragFollowerVisual::new(
-        fixtures::sample_icon(),
+        icon_source,
         "Footman".to_string(),
         Some("Q".to_string()),
         false,
@@ -351,7 +352,7 @@ fn command_grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let host_unit_id = fixtures::sample_unit_id();
@@ -359,7 +360,7 @@ fn command_grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
         ToastMount {
-            CommandGrid {
+            CommandGridSection {
                 heading: "Main Commands",
                 race,
                 slot_ids,
@@ -369,7 +370,7 @@ fn command_grid_footman(update_hotkeys: bool, race: Race) -> Element {
                 selected_from_uprooted,
                 tier_overrides,
                 dragging_slot,
-                drop_target_cell,
+                drop_target_tile,
                 drag_follower,
                 grid_layout,
                 host_unit_id,
@@ -388,7 +389,7 @@ fn command_grid_section_footman() -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let host_unit_id = fixtures::sample_unit_id();
@@ -405,7 +406,7 @@ fn command_grid_section_footman() -> Element {
                 selected_from_uprooted,
                 tier_overrides,
                 dragging_slot,
-                drop_target_cell,
+                drop_target_tile,
                 drag_follower,
                 grid_layout,
                 host_unit_id,

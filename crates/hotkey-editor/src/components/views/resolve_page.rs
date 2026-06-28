@@ -9,9 +9,9 @@ use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
 
 use crate::components::dialogs::dialog_header::DialogHeader;
 use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
-use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::model::icons::IconUrl;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, PartialEq)]

@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};
 use warcraft_database::UnitMode;
 
-use crate::model::grid::GridSlotId;
+use warcraft_keybinds::GridSlotId;
 
 use tab::RaceTab;
 

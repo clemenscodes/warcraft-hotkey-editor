@@ -17,8 +17,7 @@ use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
 use crate::components::views::collisions_page::CollisionsPage;
 use crate::components::views::resolve_page::ResolvePage;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
-use crate::model::grid::{EditingCell, GridLayout};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
@@ -28,6 +27,8 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::undo::{EditorSnapshot, UndoHistory};
 use warcraft_api::RaceLabels;
 use warcraft_database::{SearchField, UnitMode};
+use warcraft_keybinds::GridSlotId;
+use warcraft_keybinds::{GridCoordinate, GridLayout};
 
 const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
 const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
@@ -166,10 +167,10 @@ pub fn App() -> Element {
     let hotkey_assign_request = use_signal::<bool>(|| false);
     let tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
     let mut dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
-    let mut drop_target_cell = use_signal::<Option<DropTargetCell>>(|| None);
+    let mut drop_target_tile = use_signal::<Option<DropTargetTile>>(|| None);
     let mut drag_follower = use_signal::<Option<DragFollower>>(|| None);
-    let editing_layout_cell = use_signal::<Option<EditingCell>>(|| None);
-    let dragging_layout_cell = use_signal::<Option<EditingCell>>(|| None);
+    let editing_layout_cell = use_signal::<Option<GridCoordinate>>(|| None);
+    let dragging_layout_cell = use_signal::<Option<GridCoordinate>>(|| None);
     let mut search_query = use_signal::<String>(move || initial_search);
     // What the search query matches against — unit name (default) or ability.
     // The sidebar toggles it; held in memory (not yet a URL param).
@@ -397,7 +398,7 @@ pub fn App() -> Element {
         if dragging_slot.read().is_some() {
             event.prevent_default();
             dragging_slot.set(None);
-            drop_target_cell.set(None);
+            drop_target_tile.set(None);
             drag_follower.set(None);
             return;
         }
@@ -527,7 +528,7 @@ pub fn App() -> Element {
                             selected_from_uprooted,
                             tier_overrides,
                             dragging_slot,
-                            drop_target_cell,
+                            drop_target_tile,
                             drag_follower,
                             loaded_keys,
                             grid_layout,

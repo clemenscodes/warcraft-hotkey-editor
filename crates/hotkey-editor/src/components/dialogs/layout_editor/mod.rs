@@ -8,8 +8,8 @@ use warcraft_keybinds::{ColumnIndex, CustomKeys, RowIndex};
 use crate::components::shared::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
 
-use crate::model::grid::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, EditingCell, GridLayout};
 use crate::services::customkeys::positions::Positions;
+use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridCoordinate, GridLayout};
 
 const QWERTY_ROWS: &[&[char]] = &[
     &['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -69,8 +69,8 @@ const LAYOUT_APPLY_BUTTON: &str = "mt-[0.85rem] px-[3rem] py-[1.4rem] \
 #[derive(Props, Clone, PartialEq)]
 pub struct LayoutEditorProps {
     pub grid_layout: Signal<GridLayout>,
-    pub editing_layout_cell: Signal<Option<EditingCell>>,
-    pub dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub editing_layout_cell: Signal<Option<GridCoordinate>>,
+    pub dragging_layout_cell: Signal<Option<GridCoordinate>>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub update_hotkeys_on_move: Signal<bool>,
     pub layout_dialog_open: Signal<bool>,
@@ -90,18 +90,16 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
 
     let picker_open = editing_snapshot.is_some();
     let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
-        let active_column = ColumnIndex::try_from(active_cell.column()).ok();
-        let active_row = RowIndex::try_from(active_cell.row()).ok();
-        let current_letter = active_column
-            .zip(active_row)
-            .and_then(|(col, row)| layout_snapshot.letter_at(col, row))
+        let current_letter = layout_snapshot
+            .letter_at(active_cell.column(), active_cell.row())
             .map(|character| character.to_ascii_uppercase());
         QWERTY_ROWS
             .iter()
             .map(|row| {
                 row.iter()
                     .map(|&letter| {
-                        let token = HotkeyToken::from(letter);
+                        let token = HotkeyToken::try_from(letter)
+                            .expect("QWERTY layout letters are A to Z");
                         let upper_letter = letter.to_ascii_uppercase();
                         let state = if Some(upper_letter) == current_letter {
                             KeyPickerCellState::Current
@@ -154,7 +152,9 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
             return;
         };
         let mut next_layout = *grid_layout.read();
-        next_layout.assign_unique(active_cell.column(), active_cell.row(), letter);
+        let active_column = u8::from(active_cell.column());
+        let active_row = u8::from(active_cell.row());
+        next_layout.assign_unique(active_column, active_row, letter);
         grid_layout.set(next_layout);
         editing_layout_cell.set(None);
     };
@@ -173,13 +173,16 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
                         {
                             let column_index = ColumnIndex::try_from(column).ok();
                             let row_index = RowIndex::try_from(row).ok();
-                            let current_letter = column_index
+                            let coordinate_option = column_index
                                 .zip(row_index)
-                                .and_then(|(col, row_idx)| layout_snapshot.letter_at(col, row_idx))
+                                .map(|(col, row_idx)| GridCoordinate::new(col, row_idx));
+                            let current_letter = coordinate_option
+                                .and_then(|coordinate| {
+                                    layout_snapshot.letter_at(coordinate.column(), coordinate.row())
+                                })
                                 .map(|letter| letter.to_string())
                                 .unwrap_or_default();
-                            let is_editing = editing_snapshot
-                                == Some(EditingCell::new(column, row));
+                            let is_editing = editing_snapshot == coordinate_option;
                             let cell_class = if is_editing {
                                 format!("{LAYOUT_CELL} {LAYOUT_CELL_EDITING}")
                             } else {
@@ -191,8 +194,9 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
                                 current_letter.clone()
                             };
                             let handle_drag_start = move |_| {
-                                let cell = EditingCell::new(column, row);
-                                dragging_layout_cell.set(Some(cell));
+                                if let Some(coordinate) = coordinate_option {
+                                    dragging_layout_cell.set(Some(coordinate));
+                                }
                             };
                             let handle_drag_end = move |_| {
                                 dragging_layout_cell.set(None);
@@ -206,23 +210,21 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
                                 let Some(source_cell) = source_option else {
                                     return;
                                 };
-                                if source_cell.column() == column && source_cell.row() == row {
+                                let source_column = u8::from(source_cell.column());
+                                let source_row = u8::from(source_cell.row());
+                                if source_column == column && source_row == row {
                                     dragging_layout_cell.set(None);
                                     return;
                                 }
                                 let mut next_layout = *grid_layout.read();
-                                next_layout.swap_cells(
-                                    source_cell.column(),
-                                    source_cell.row(),
-                                    column,
-                                    row,
-                                );
+                                next_layout.swap_cells(source_column, source_row, column, row);
                                 grid_layout.set(next_layout);
                                 dragging_layout_cell.set(None);
                             };
                             let handle_click = move |_| {
-                                let cell = EditingCell::new(column, row);
-                                editing_layout_cell.set(Some(cell));
+                                if let Some(coordinate) = coordinate_option {
+                                    editing_layout_cell.set(Some(coordinate));
+                                }
                             };
                             rsx! {
                                 button {

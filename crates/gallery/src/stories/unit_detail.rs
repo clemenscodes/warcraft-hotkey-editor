@@ -6,7 +6,7 @@ use gallery::Story;
 use hotkey_editor::{
     AttackDisplayData, AttackMatchupCell, AttributeRow, AttributesColumn, CombatColumn,
     DamageMatchupRow, DefenseMatchupCell, DefenseMatchupRow, DragFollower, DraggingSlot,
-    DropTargetCell, HeroDisplayData, HeroLevelOption, StatIcon, UnitCommandGrids, UnitDetailHeader,
+    DropTargetTile, HeroDisplayData, HeroLevelOption, StatIcon, UnitCommandGrids, UnitDetailHeader,
     UnitDetailPanel, UnitStatsPanel,
 };
 use warcraft_api::{
@@ -396,7 +396,7 @@ fn unit_command_grids_footman() -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let update_hotkeys_on_move = use_signal(|| true);
@@ -415,7 +415,7 @@ fn unit_command_grids_footman() -> Element {
             selected_from_uprooted,
             tier_overrides,
             dragging_slot,
-            drop_target_cell,
+            drop_target_tile,
             drag_follower,
             grid_layout,
             update_hotkeys_on_move,
@@ -431,7 +431,7 @@ fn unit_detail_panel_footman() -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let loaded_keys = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
@@ -447,7 +447,7 @@ fn unit_detail_panel_footman() -> Element {
             selected_from_uprooted,
             tier_overrides,
             dragging_slot,
-            drop_target_cell,
+            drop_target_tile,
             drag_follower,
             loaded_keys,
             grid_layout,
@@ -464,7 +464,7 @@ fn unit_detail_panel_archmage() -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let loaded_keys = use_signal(|| None);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
@@ -480,7 +480,7 @@ fn unit_detail_panel_archmage() -> Element {
             selected_from_uprooted,
             tier_overrides,
             dragging_slot,
-            drop_target_cell,
+            drop_target_tile,
             drag_follower,
             loaded_keys,
             grid_layout,

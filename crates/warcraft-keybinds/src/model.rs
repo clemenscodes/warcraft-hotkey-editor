@@ -933,6 +933,7 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
 #[cfg(test)]
 mod model_tests {
     use super::*;
+    use crate::identity::keycode::Letter;
 
     #[test]
     fn hotkey_letter_is_normalized_to_uppercase() {
@@ -971,9 +972,9 @@ mod model_tests {
         let hotkey = Hotkey::try_from("Q,W,E").unwrap();
         let expected = Hotkey::MultiLevel {
             tokens: [
-                Some(HotkeyToken::Letter { character: 'Q' }),
-                Some(HotkeyToken::Letter { character: 'W' }),
-                Some(HotkeyToken::Letter { character: 'E' }),
+                Some(HotkeyToken::Letter(Letter::Q)),
+                Some(HotkeyToken::Letter(Letter::W)),
+                Some(HotkeyToken::Letter(Letter::E)),
                 None,
             ],
         };
@@ -1003,8 +1004,8 @@ mod model_tests {
         use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::MultiLevel {
             tokens: [
-                Some(HotkeyToken::Letter { character: 'Q' }),
-                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter(Letter::Q)),
+                Some(HotkeyToken::Letter(Letter::Q)),
                 None,
                 None,
             ],
@@ -1325,6 +1326,7 @@ impl From<CustomKeysBuilder> for CustomKeys {
 #[cfg(test)]
 mod builder_tests {
     use super::*;
+    use crate::identity::keycode::Letter;
     use warcraft_api::{SystemKeybindClass, SystemKeybindModifier};
 
     #[test]
@@ -1406,9 +1408,9 @@ mod builder_tests {
         let hotkey = Hotkey::try_from("Q,Q,Q").unwrap();
         let expected = Hotkey::MultiLevel {
             tokens: [
-                Some(HotkeyToken::Letter { character: 'Q' }),
-                Some(HotkeyToken::Letter { character: 'Q' }),
-                Some(HotkeyToken::Letter { character: 'Q' }),
+                Some(HotkeyToken::Letter(Letter::Q)),
+                Some(HotkeyToken::Letter(Letter::Q)),
+                Some(HotkeyToken::Letter(Letter::Q)),
                 None,
             ],
         };
@@ -1420,8 +1422,8 @@ mod builder_tests {
         use crate::identity::hotkey_token::HotkeyToken;
         let hotkey = Hotkey::MultiLevel {
             tokens: [
-                Some(HotkeyToken::Letter { character: 'Q' }),
-                Some(HotkeyToken::Letter { character: 'W' }),
+                Some(HotkeyToken::Letter(Letter::Q)),
+                Some(HotkeyToken::Letter(Letter::W)),
                 None,
                 None,
             ],

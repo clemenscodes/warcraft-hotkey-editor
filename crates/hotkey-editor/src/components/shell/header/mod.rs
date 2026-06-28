@@ -14,10 +14,10 @@ use crate::components::dialogs::dialog_header::DialogHeader;
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::templates_dialog::TemplatesDialog;
-use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use warcraft_keybinds::{GridCoordinate, GridLayout};
 
 pub use brand::HeaderBrand;
 pub use burger::BurgerMenu;
@@ -32,8 +32,8 @@ pub struct HeaderProps {
     pub upload_status: Signal<UploadStatus>,
     pub preview_open: Signal<bool>,
     pub grid_layout: Signal<GridLayout>,
-    pub editing_layout_cell: Signal<Option<EditingCell>>,
-    pub dragging_layout_cell: Signal<Option<EditingCell>>,
+    pub editing_layout_cell: Signal<Option<GridCoordinate>>,
+    pub dragging_layout_cell: Signal<Option<GridCoordinate>>,
     pub update_hotkeys_on_move: Signal<bool>,
     pub system_hotkeys_open: Signal<bool>,
     pub help_open: Signal<bool>,

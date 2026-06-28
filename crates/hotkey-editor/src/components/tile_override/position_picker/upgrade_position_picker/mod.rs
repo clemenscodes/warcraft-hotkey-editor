@@ -9,8 +9,9 @@ use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::dialogs::dialog_header::DialogHeader;
-use crate::model::grid::GridLayout;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UpgradePositionPickerProps {
@@ -20,7 +21,7 @@ pub struct UpgradePositionPickerProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub grid_layout: Signal<GridLayout>,
     pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub upgrade_position_picker_open: Signal<bool>,
 }
@@ -33,7 +34,7 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
     let dragging_slot = props.dragging_slot;
-    let drop_target_cell = props.drop_target_cell;
+    let drop_target_tile = props.drop_target_tile;
     let drag_follower = props.drag_follower;
     let mut upgrade_position_picker_open = props.upgrade_position_picker_open;
     let picker_selected_slot =
@@ -55,13 +56,11 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
         selected_from_uprooted: picker_selected_uprooted,
         tier_overrides: picker_tier_overrides,
         dragging_slot,
-        drop_target_cell,
+        drop_target_tile,
         drag_follower,
         grid_layout,
         update_hotkeys_on_move,
         hotkey_assign_request,
-        is_research_grid: false,
-        is_uprooted_grid: false,
         prevent_swap_on_drop: true,
         restrict_draggable_to: restrict_draggable,
         host_unit_id: String::new(),

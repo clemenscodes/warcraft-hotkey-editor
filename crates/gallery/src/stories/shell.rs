@@ -1,11 +1,12 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    AppView, BurgerMenu, EditingCell, Footer, Header, HeaderBrand, HeaderToolbar, ToastMount,
-    TooltipMount, UndoHistory, UploadStatus, ViewNavigationContext,
+    AppView, BurgerMenu, Footer, Header, HeaderBrand, HeaderToolbar, ToastMount, TooltipMount,
+    UndoHistory, UploadStatus, ViewNavigationContext,
 };
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
+use warcraft_keybinds::GridCoordinate;
 
 use crate::stories::fixtures;
 
@@ -136,8 +137,8 @@ fn header_default() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
     let preview_open = use_signal(|| false);
-    let editing_layout_cell = use_signal(|| None::<EditingCell>);
-    let dragging_layout_cell = use_signal(|| None::<EditingCell>);
+    let editing_layout_cell = use_signal(|| None::<GridCoordinate>);
+    let dragging_layout_cell = use_signal(|| None::<GridCoordinate>);
     let system_hotkeys_open = use_signal(|| false);
     let help_open = use_signal(|| false);
     let current_view = use_signal(|| AppView::Editor);

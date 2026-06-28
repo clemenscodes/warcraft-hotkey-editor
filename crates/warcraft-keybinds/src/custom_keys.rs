@@ -1225,7 +1225,7 @@ impl CustomKeys {
     /// multi-level upgrade the letter is replicated to one token per tier
     /// (`Hotkey=F,F,F`); every other binding gets a single-letter hotkey.
     fn grid_hotkey_for(ability_id: AbilityId, letter: char) -> Hotkey {
-        let token = HotkeyToken::from(letter);
+        let token = HotkeyToken::try_from(letter).expect("grid layout letters are A to Z");
         let upgrade_levels = Self::upgrade_tier_count(ability_id);
         let tier_count = upgrade_levels.max(1);
         Hotkey::replicated(token, tier_count)
@@ -1348,7 +1348,7 @@ impl CustomKeys {
         }
         let layout_letter =
             layout.letter_at(resolved_position.column(), resolved_position.row())?;
-        Some(HotkeyToken::from(layout_letter))
+        HotkeyToken::try_from(layout_letter).ok()
     }
 }
 
@@ -2174,7 +2174,7 @@ mod tests {
         // upgrade loses its hotkey in game.
         let binding_ruba = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Ruba", binding_ruba).build();
-        let new_token = HotkeyToken::from('F');
+        let new_token = HotkeyToken::try_from('F').expect("letter");
         let target = HotkeyTarget::ability("Ruba");
         keys.set_hotkey(target, Some(new_token));
         let binding = keys.binding("Ruba").expect("Ruba exists");
@@ -2188,7 +2188,7 @@ mod tests {
         // hotkey must replicate to three tiers (`Hotkey=F,F,F`).
         let binding_rume = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
-        let new_token = HotkeyToken::from('F');
+        let new_token = HotkeyToken::try_from('F').expect("letter");
         let target = HotkeyTarget::ability("Rume");
         keys.set_hotkey(target, Some(new_token));
         let binding = keys.binding("Rume").expect("Rume exists");
@@ -2205,7 +2205,7 @@ mod tests {
         // `Hotkey=F,F,F` for things the game expects as `Hotkey=F`.
         let binding_aeah = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("AEah", binding_aeah).build();
-        let new_token = HotkeyToken::from('F');
+        let new_token = HotkeyToken::try_from('F').expect("letter");
         let target = HotkeyTarget::ability("AEah");
         keys.set_hotkey(target, Some(new_token));
         let binding = keys.binding("AEah").expect("AEah exists");
@@ -2219,7 +2219,7 @@ mod tests {
         // comma-separated per-tier list, not a single token.
         let binding_rume = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
-        let new_token = HotkeyToken::from('F');
+        let new_token = HotkeyToken::try_from('F').expect("letter");
         let target = HotkeyTarget::ability("Rume");
         keys.set_hotkey(target, Some(new_token));
         let serialized = keys.to_string();
@@ -2476,7 +2476,7 @@ mod tests {
             .ability("Abu3", binding_abu3)
             .ability("Abu2", binding_abu2)
             .build();
-        let new_token = HotkeyToken::from('Y');
+        let new_token = HotkeyToken::try_from('Y').expect("letter");
         let target = HotkeyTarget::ability("Abu3");
         keys.set_hotkey(target, Some(new_token));
         let sibling_binding = keys.binding("Abu2").expect("Abu2 exists");
@@ -2494,7 +2494,7 @@ mod tests {
             .ability("Abu3", binding_abu3)
             .ability("Abu2", binding_abu2)
             .build();
-        let new_token = HotkeyToken::from('Z');
+        let new_token = HotkeyToken::try_from('Z').expect("letter");
         let target = HotkeyTarget::ability("Abu2");
         keys.set_hotkey(target, Some(new_token));
         let sibling_binding = keys.binding("Abu3").expect("Abu3 exists");
@@ -2514,7 +2514,7 @@ mod tests {
             .ability("Abu3", binding_abu3)
             .ability("Abu2", binding_abu2)
             .build();
-        let new_token = HotkeyToken::from('D');
+        let new_token = HotkeyToken::try_from('D').expect("letter");
         let target = HotkeyTarget::ability_off_state("Abu3");
         keys.set_hotkey(target, Some(new_token));
         let sibling_binding = keys.binding("Abu2").expect("Abu2 exists");
@@ -2532,12 +2532,12 @@ mod tests {
             .ability("AHbz", binding_ahbz)
             .ability("AHhb", binding_ahhb)
             .build();
-        let new_token = HotkeyToken::from('Y');
+        let new_token = HotkeyToken::try_from('Y').expect("letter");
         let target = HotkeyTarget::ability("AHbz");
         keys.set_hotkey(target, Some(new_token));
         let unrelated_binding = keys.binding("AHhb").expect("AHhb exists");
         let unrelated_hotkey = unrelated_binding.hotkey().expect("AHhb hotkey set");
-        let expected_token = HotkeyToken::from('W');
+        let expected_token = HotkeyToken::try_from('W').expect("letter");
         assert_eq!(unrelated_hotkey.first_token(), Some(expected_token));
     }
 

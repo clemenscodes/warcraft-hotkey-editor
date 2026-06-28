@@ -165,7 +165,7 @@ body:has(.grid-tile.dragging-source) .grid-tile {
     transition: none !important;
 }
 
-.command-label {
+.grid-tile-label {
     position: absolute;
     inset: 0;
     display: flex;

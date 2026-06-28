@@ -22,11 +22,20 @@ pub use collision::unit_report::{UnitCollisionEntry, UnitCollisionReport};
 pub use command::move_request::MoveRequest;
 pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict};
 pub use display::ability_cell::{AbilityCell, AbilityIconPath};
+pub use display::grid_behavior::{
+    AlternateFormBehavior, CommandBehavior, GridBehavior, ResearchBehavior,
+};
 pub use display::inspector_detail::InspectorDetail;
+pub use display::rendered_grid::{CommandGridRenderInput, RenderedTile};
+pub use display::templates::{BundledTemplate, ResolvedTemplate};
 pub use grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 pub use identity::ability_id::AbilityId;
 pub use identity::hotkey_target::HotkeyTarget;
 pub use identity::hotkey_token::{HotkeyToken, HotkeyTokenIsNotLetter, HotkeyTokenParseError};
+pub use identity::keycode::{
+    Digit, FunctionKey, KeyCode, KeyCodeOutOfRange, Letter, MouseButton, NotALetter, NumpadKey,
+    Punctuation,
+};
 pub use identity::slot::{CommandCard, GridSlotId};
 pub use model::{
     AbilityBinding, AbilityBindingBuilder, AbilityModifier, BindingEntry, ColumnIndex,

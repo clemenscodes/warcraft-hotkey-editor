@@ -13,13 +13,12 @@ pub(crate) struct DragOrigin {
     pub(crate) cursor_vertical_position: f64,
 }
 
-use crate::model::grid::{DragFollowerVisual, GridSlotId};
+use crate::model::grid::DragFollowerVisual;
+use warcraft_keybinds::GridCoordinate;
 
 pub(crate) struct PendingDragData {
-    pub(crate) source_slot: GridSlotId,
-    pub(crate) section: &'static str,
-    pub(crate) column: u8,
-    pub(crate) row: u8,
+    pub(crate) grid_id: &'static str,
+    pub(crate) coordinate: GridCoordinate,
     pub(crate) visual: DragFollowerVisual,
     pub(crate) click_offset_horizontal: f64,
     pub(crate) click_offset_vertical: f64,

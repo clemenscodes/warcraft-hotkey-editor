@@ -644,12 +644,12 @@ body[data-kb-modality] .override-key-cell:focus {
     width: 100%;
 }
 
-.alt-position-picker-grid-anchor .command-section {
+.alt-position-picker-grid-anchor .grid-section {
     container-type: normal;
     width: max-content;
 }
 
-.alt-position-picker-grid-anchor .grid-tiles {
+.alt-position-picker-grid-anchor .command-grid {
     --tile-size: 8rem;
     grid-template-columns: repeat(4, var(--tile-size));
     grid-auto-rows: var(--tile-size);

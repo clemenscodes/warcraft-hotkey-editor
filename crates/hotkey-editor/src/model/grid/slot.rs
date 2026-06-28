@@ -1,62 +1,57 @@
-use crate::model::icons::IconUrl;
+use warcraft_keybinds::GridCoordinate;
 
-pub use warcraft_keybinds::GridSlotId;
-
-#[derive(Clone, PartialEq, Eq, Debug)]
+/// The in-progress drag's source cell. The grid is generic, so it tracks only
+/// where the drag started (the opaque grid id and the domain coordinate), never
+/// which domain slot occupies it.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct DraggingSlot {
-    slot_id: GridSlotId,
-    source_section: &'static str,
+    grid_id: &'static str,
+    coordinate: GridCoordinate,
 }
 
 impl DraggingSlot {
-    pub fn new(slot_id: GridSlotId, source_section: &'static str) -> Self {
+    pub fn new(grid_id: &'static str, coordinate: GridCoordinate) -> Self {
         Self {
-            slot_id,
-            source_section,
+            grid_id,
+            coordinate,
         }
     }
 
-    pub fn slot_id(&self) -> &GridSlotId {
-        &self.slot_id
+    pub fn grid_id(&self) -> &'static str {
+        self.grid_id
     }
 
-    pub fn source_section(&self) -> &'static str {
-        self.source_section
+    pub fn coordinate(&self) -> GridCoordinate {
+        self.coordinate
     }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub struct DropTargetCell {
-    section: &'static str,
-    column: u8,
-    row: u8,
+pub struct DropTargetTile {
+    grid_id: &'static str,
+    coordinate: GridCoordinate,
 }
 
-impl DropTargetCell {
-    pub fn new(section: &'static str, column: u8, row: u8) -> Self {
+impl DropTargetTile {
+    pub fn new(grid_id: &'static str, coordinate: GridCoordinate) -> Self {
         Self {
-            section,
-            column,
-            row,
+            grid_id,
+            coordinate,
         }
     }
 
-    pub fn section(&self) -> &'static str {
-        self.section
+    pub fn grid_id(&self) -> &'static str {
+        self.grid_id
     }
 
-    pub fn column(&self) -> u8 {
-        self.column
-    }
-
-    pub fn row(&self) -> u8 {
-        self.row
+    pub fn coordinate(&self) -> GridCoordinate {
+        self.coordinate
     }
 }
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct DragFollowerVisual {
-    icon_source: Option<IconUrl>,
+    icon_source: Option<String>,
     label_text: String,
     displayed_letter: Option<String>,
     is_passive_command: bool,
@@ -65,7 +60,7 @@ pub struct DragFollowerVisual {
 
 impl DragFollowerVisual {
     pub fn new(
-        icon_source: Option<IconUrl>,
+        icon_source: Option<String>,
         label_text: String,
         displayed_letter: Option<String>,
         is_passive_command: bool,
@@ -81,7 +76,7 @@ impl DragFollowerVisual {
     }
 
     pub fn icon_source(&self) -> Option<&str> {
-        self.icon_source.as_ref().map(|icon| icon.url())
+        self.icon_source.as_deref()
     }
 
     pub fn label_text(&self) -> &str {

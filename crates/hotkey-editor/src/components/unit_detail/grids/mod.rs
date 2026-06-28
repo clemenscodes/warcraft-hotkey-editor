@@ -5,9 +5,12 @@ use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
-use crate::model::grid::GridLayout;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::components::command_grid::{
+    CommandGridSection, CommandGridSectionProps, ResearchGridSection, UprootedGridSection,
+};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCommandGridsProps {
@@ -23,7 +26,7 @@ pub struct UnitCommandGridsProps {
     pub selected_from_uprooted: Signal<bool>,
     pub tier_overrides: Signal<HashMap<String, usize>>,
     pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub grid_layout: Signal<GridLayout>,
     pub update_hotkeys_on_move: Signal<bool>,
@@ -44,7 +47,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let selected_from_uprooted = props.selected_from_uprooted;
     let tier_overrides = props.tier_overrides;
     let dragging_slot = props.dragging_slot;
-    let drop_target_cell = props.drop_target_cell;
+    let drop_target_tile = props.drop_target_tile;
     let drag_follower = props.drag_follower;
     let grid_layout = props.grid_layout;
     let update_hotkeys_on_move = props.update_hotkeys_on_move;
@@ -59,13 +62,11 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
         selected_from_uprooted,
         tier_overrides,
         dragging_slot,
-        drop_target_cell,
+        drop_target_tile,
         drag_follower,
         grid_layout,
         update_hotkeys_on_move,
         hotkey_assign_request,
-        is_research_grid: false,
-        is_uprooted_grid: false,
         prevent_swap_on_drop: false,
         restrict_draggable_to: Vec::new(),
         host_unit_id: unit_id.clone(),
@@ -77,7 +78,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                 {
                     let build_menu_props = CommandGridSectionProps {
                         heading: "Build menu",
-            race,
+                        race,
                         slot_ids: build_menu_ids,
                         loaded_keys,
                         selected_slot,
@@ -85,13 +86,11 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         selected_from_uprooted,
                         tier_overrides,
                         dragging_slot,
-                        drop_target_cell,
+                        drop_target_tile,
                         drag_follower,
                         grid_layout,
                         update_hotkeys_on_move,
                         hotkey_assign_request,
-                        is_research_grid: false,
-                        is_uprooted_grid: false,
                         prevent_swap_on_drop: false,
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
@@ -103,7 +102,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                 {
                     let uprooted_props = CommandGridSectionProps {
                         heading: "Uprooted",
-            race,
+                        race,
                         slot_ids: uprooted_menu_ids,
                         loaded_keys,
                         selected_slot,
@@ -111,25 +110,23 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         selected_from_uprooted,
                         tier_overrides,
                         dragging_slot,
-                        drop_target_cell,
+                        drop_target_tile,
                         drag_follower,
                         grid_layout,
                         update_hotkeys_on_move,
                         hotkey_assign_request,
-                        is_research_grid: false,
-                        is_uprooted_grid: true,
                         prevent_swap_on_drop: false,
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { CommandGridSection { ..uprooted_props } }
+                    rsx! { UprootedGridSection { ..uprooted_props } }
                 }
             }
             if let Some(research_menu_ids) = research_menu_slots {
                 {
                     let research_props = CommandGridSectionProps {
                         heading: "Research menu",
-            race,
+                        race,
                         slot_ids: research_menu_ids,
                         loaded_keys,
                         selected_slot,
@@ -137,18 +134,16 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         selected_from_uprooted,
                         tier_overrides,
                         dragging_slot,
-                        drop_target_cell,
+                        drop_target_tile,
                         drag_follower,
                         grid_layout,
                         update_hotkeys_on_move,
                         hotkey_assign_request,
-                        is_research_grid: true,
-                        is_uprooted_grid: false,
                         prevent_swap_on_drop: false,
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { CommandGridSection { ..research_props } }
+                    rsx! { ResearchGridSection { ..research_props } }
                 }
             }
         }

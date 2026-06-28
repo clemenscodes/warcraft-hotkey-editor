@@ -171,10 +171,10 @@ impl UnitGrids {
                 if colliding_slots.len() < 2 {
                     continue;
                 }
-                let HotkeyToken::Letter { character } = token else {
+                let HotkeyToken::Letter(letter) = token else {
                     continue;
                 };
-                let Some(position) = layout.position_for_letter(character) else {
+                let Some(position) = layout.position_for_letter(letter.character()) else {
                     continue;
                 };
                 let row = usize::from(position.row());
@@ -436,7 +436,9 @@ impl HotkeyCollisionCardBuilder {
 
     pub(crate) fn collision(mut self, letter: char, slots: &[GridSlotId]) -> Self {
         let upper = letter.to_ascii_uppercase();
-        let token = HotkeyToken::Letter { character: upper };
+        let Ok(token) = HotkeyToken::try_from(upper) else {
+            return self;
+        };
         let Some(position) = self.layout.position_for_letter(upper) else {
             return self;
         };
@@ -464,6 +466,7 @@ mod unit_grids_tests {
     use crate::custom_keys::CustomKeys;
     use crate::grid::layout::GridLayout;
     use crate::identity::ability_id::AbilityId;
+    use crate::identity::keycode::Letter;
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, Hotkey, RowIndex};
 
     fn paladin_id() -> WarcraftObjectId {
@@ -524,7 +527,7 @@ mod unit_grids_tests {
         let incinerate_companion = GridSlotId::Ability(AbilityId::new("ANic"));
         let research_token =
             custom_keys.effective_hotkey_token(&incinerate_companion, layout, true);
-        let expected = Some(HotkeyToken::Letter { character: 'E' });
+        let expected = Some(HotkeyToken::Letter(Letter::E));
         assert_eq!(
             research_token, expected,
             "ANic has a Researchbuttonpos at E and Researchhotkey=E, so it must \
@@ -763,7 +766,7 @@ mod unit_grids_tests {
             .expect("collision at W position must be found");
         assert_eq!(w_entry.slots().len(), 2);
         assert!(
-            matches!(w_entry.token(), HotkeyToken::Letter { character } if character == 'W'),
+            matches!(w_entry.token(), HotkeyToken::Letter(Letter::W)),
             "collision token must be W"
         );
     }

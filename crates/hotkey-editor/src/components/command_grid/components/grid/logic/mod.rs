@@ -1,5 +1,5 @@
 mod drag_state;
-mod handlers;
-mod resolve;
+mod mechanics;
+mod render;
 
-pub(super) use resolve::{TileInputs, resolve_tile};
+pub(super) use render::{GridRender, PreparedTile};

@@ -2,9 +2,9 @@ use dioxus::prelude::*;
 use warcraft_keybinds::{CrossUnitCollisionReport, CustomKeys, UnitCollisionReport};
 
 use crate::components::shared::icons::{ICON_COLLISIONS, ICON_COLLISIONS_CLEAR};
-use crate::model::grid::GridLayout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use warcraft_keybinds::GridLayout;
 
 const COLLISIONS_BUTTON_STYLES: Asset =
     asset!("/src/components/shell/header/collisions_button.css");

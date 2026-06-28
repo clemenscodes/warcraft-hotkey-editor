@@ -11,8 +11,8 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_header::DialogHeader;
 
-use crate::model::grid::ResolvedTemplate;
 use crate::services::customkeys::upload_status::UploadStatus;
+use warcraft_keybinds::ResolvedTemplate;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplatesDialogProps {
@@ -45,9 +45,9 @@ pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
                     div { class: "grid grid-cols-2 gap-[2.25rem] w-full max-[1099px]:grid-cols-1 max-[1099px]:gap-[10px]",
                         for resolved in resolved_templates.iter() {
                             {
-                                let template_name: &'static str = resolved.template().name();
-                                let template_description: &'static str = resolved.template().description();
-                                let template_content: &'static str = resolved.template().content();
+                                let template_name: &'static str = resolved.name();
+                                let template_description: &'static str = resolved.description();
+                                let template_content: &'static str = resolved.content();
                                 let template_resolved = resolved.clone();
                                 let apply_template = move |_| {
                                     let parsed_template = CustomKeys::from(template_content);

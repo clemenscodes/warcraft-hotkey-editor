@@ -12,9 +12,10 @@ use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 use warcraft_keybinds::{CustomKeys, InspectorDetail, UnitCommandSlots};
 
 use crate::components::tile_override::TileOverridePanel;
-use crate::model::grid::GridLayout;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId};
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::model::icons::IconUrl;
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
 
 use derived_stats::DerivedStats;
 use grids::UnitCommandGrids;
@@ -30,7 +31,7 @@ pub struct UnitDetailPanelProps {
     pub selected_from_uprooted: Signal<bool>,
     pub tier_overrides: Signal<HashMap<String, usize>>,
     pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub grid_layout: Signal<GridLayout>,
@@ -47,7 +48,7 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
     let selected_from_uprooted = props.selected_from_uprooted;
     let tier_overrides = props.tier_overrides;
     let dragging_slot = props.dragging_slot;
-    let drop_target_cell = props.drop_target_cell;
+    let drop_target_tile = props.drop_target_tile;
     let drag_follower = props.drag_follower;
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
@@ -211,14 +212,14 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                         selected_from_uprooted,
                         tier_overrides,
                         dragging_slot,
-                        drop_target_cell,
+                        drop_target_tile,
                         drag_follower,
                         grid_layout,
                         update_hotkeys_on_move,
                         hotkey_assign_request,
                     }
                     aside { class: "tile-override-panel",
-                        h3 { class: "command-section-heading", "Hotkey override" }
+                        h3 { class: "command-grid-heading", "Hotkey override" }
                         if let Some(detail) = inspector_panel.clone() {
                             TileOverridePanel {
                                 detail,
@@ -228,7 +229,7 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                                 selected_from_uprooted,
                                 tier_overrides,
                                 dragging_slot,
-                                drop_target_cell,
+                                drop_target_tile,
                                 drag_follower,
                                 active_container_slots: active_container_slots.clone(),
                                 hotkey_assign_request,

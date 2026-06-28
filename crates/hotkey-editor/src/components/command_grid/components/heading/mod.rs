@@ -8,10 +8,11 @@ use style::COMMAND_GRID_HEADING_STYLE_SHEETS;
 
 #[component]
 pub fn CommandGridHeading(props: CommandGridHeadingProps) -> Element {
+    let CommandGridHeadingProps { heading } = props;
     rsx! {
         for style_sheet in COMMAND_GRID_HEADING_STYLE_SHEETS {
             document::Stylesheet { href: style_sheet }
         }
-        h3 { class: "command-section-heading", {props.heading} }
+        h3 { class: "command-grid-heading", {heading} }
     }
 }

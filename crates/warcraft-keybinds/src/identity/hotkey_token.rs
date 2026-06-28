@@ -1,5 +1,6 @@
 use std::fmt;
 
+use crate::identity::keycode::Letter;
 use crate::model::Hotkey;
 
 // CustomKeys.txt uses numeric Windows Virtual-Key codes for keys that aren't
@@ -9,9 +10,12 @@ const ESCAPE_VK: u32 = 27;
 const MOUSE_BACK_VK: u32 = 5;
 const MOUSE_FORWARD_VK: u32 = 6;
 
+/// A key bindable to an ability hotkey. Far narrower than a full keyboard: only
+/// a letter, Escape, or a mouse side button. The letter is the precise [`Letter`]
+/// enum, so a non-letter character cannot be represented.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum HotkeyToken {
-    Letter { character: char },
+    Letter(Letter),
     Escape,
     MouseForward,
     MouseBack,
@@ -20,7 +24,7 @@ pub enum HotkeyToken {
 impl HotkeyToken {
     pub fn display_label(self) -> String {
         match self {
-            Self::Letter { character } => character.to_string(),
+            Self::Letter(letter) => letter.character().to_string(),
             Self::Escape => String::from("Esc"),
             Self::MouseForward => String::from("Mouse5"),
             Self::MouseBack => String::from("Mouse4"),
@@ -28,12 +32,18 @@ impl HotkeyToken {
     }
 }
 
-impl From<char> for HotkeyToken {
-    fn from(character: char) -> Self {
-        let upper_character = character.to_ascii_uppercase();
-        Self::Letter {
-            character: upper_character,
-        }
+impl From<Letter> for HotkeyToken {
+    fn from(letter: Letter) -> Self {
+        Self::Letter(letter)
+    }
+}
+
+impl TryFrom<char> for HotkeyToken {
+    type Error = HotkeyTokenParseError;
+
+    fn try_from(character: char) -> Result<Self, Self::Error> {
+        let letter = Letter::try_from(character).map_err(|_| HotkeyTokenParseError)?;
+        Ok(Self::Letter(letter))
     }
 }
 
@@ -42,7 +52,7 @@ impl TryFrom<HotkeyToken> for char {
 
     fn try_from(token: HotkeyToken) -> Result<Self, Self::Error> {
         match token {
-            HotkeyToken::Letter { character } => Ok(character),
+            HotkeyToken::Letter(letter) => Ok(letter.character()),
             _ => Err(HotkeyTokenIsNotLetter),
         }
     }
@@ -58,7 +68,7 @@ impl fmt::Display for HotkeyToken {
 impl From<HotkeyToken> for Hotkey {
     fn from(token: HotkeyToken) -> Self {
         match token {
-            HotkeyToken::Letter { character } => Self::Letter(character),
+            HotkeyToken::Letter(letter) => Self::Letter(letter.character()),
             HotkeyToken::Escape => Self::VirtualKey(ESCAPE_VK),
             HotkeyToken::MouseForward => Self::VirtualKey(MOUSE_FORWARD_VK),
             HotkeyToken::MouseBack => Self::VirtualKey(MOUSE_BACK_VK),
@@ -71,9 +81,10 @@ impl TryFrom<&Hotkey> for HotkeyToken {
 
     fn try_from(hotkey: &Hotkey) -> Result<Self, ()> {
         match hotkey {
-            Hotkey::Letter(character) => Ok(Self::Letter {
-                character: *character,
-            }),
+            Hotkey::Letter(character) => {
+                let letter = Letter::try_from(*character).map_err(|_| ())?;
+                Ok(Self::Letter(letter))
+            }
             Hotkey::VirtualKey(ESCAPE_VK) => Ok(Self::Escape),
             Hotkey::VirtualKey(MOUSE_BACK_VK) => Ok(Self::MouseBack),
             Hotkey::VirtualKey(MOUSE_FORWARD_VK) => Ok(Self::MouseForward),
@@ -100,7 +111,7 @@ impl TryFrom<&str> for HotkeyToken {
         let first_character = characters.next().ok_or(HotkeyTokenParseError)?;
         let is_single_character = characters.next().is_none();
         if is_single_character && first_character.is_ascii_alphabetic() {
-            return Ok(HotkeyToken::from(first_character));
+            return HotkeyToken::try_from(first_character);
         }
         if let Ok(code) = trimmed_value.parse::<u32>() {
             return match code {

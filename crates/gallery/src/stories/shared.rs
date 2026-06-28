@@ -28,15 +28,15 @@ fn key_picker_closed() -> Element {
 fn key_picker_open() -> Element {
     let title = "Pick a hotkey".to_string();
 
-    let q_token = HotkeyToken::from('Q');
+    let q_token = HotkeyToken::try_from('Q').expect("letter");
     let q_state = KeyPickerCellState::Available;
     let q_cell = KeyPickerCell::new(q_token, q_state);
 
-    let w_token = HotkeyToken::from('W');
+    let w_token = HotkeyToken::try_from('W').expect("letter");
     let w_state = KeyPickerCellState::Current;
     let w_cell = KeyPickerCell::new(w_token, w_state);
 
-    let e_token = HotkeyToken::from('E');
+    let e_token = HotkeyToken::try_from('E').expect("letter");
     let conflict_name = "Some Other Ability".to_string();
     let e_state = KeyPickerCellState::Conflict {
         display_name: conflict_name,

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::model::grid::ResolvedTemplate;
+use warcraft_keybinds::ResolvedTemplate;
 
 use super::template_card_grid::TemplateCardGrid;
 

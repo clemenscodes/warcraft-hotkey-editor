@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
-use crate::model::grid::GridLayout;
 use crate::services::storage::local_storage::LocalStorage;
+use warcraft_keybinds::GridLayout;
 
 const UNDO_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.undo-history");
 

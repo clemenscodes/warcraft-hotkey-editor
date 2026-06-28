@@ -1,11 +1,10 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    DialogHeader, DownloadInfoDialog, EditingCell, HelpDialog, LayoutEditor, PreviewDialog,
-    ResolvedTemplate, TemplateCard, TemplateCardGrid, TemplatesDialog, ToastMount,
-    UploadInfoDialog, UploadStatus,
+    DialogHeader, DownloadInfoDialog, HelpDialog, LayoutEditor, PreviewDialog, TemplateCard,
+    TemplateCardGrid, TemplatesDialog, ToastMount, UploadInfoDialog, UploadStatus,
 };
-use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::{CustomKeys, GridCoordinate, ResolvedTemplate};
 
 use crate::stories::fixtures;
 
@@ -71,8 +70,8 @@ fn preview_dialog_open() -> Element {
 
 fn layout_editor_default() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let editing_layout_cell = use_signal(|| None::<EditingCell>);
-    let dragging_layout_cell = use_signal(|| None::<EditingCell>);
+    let editing_layout_cell = use_signal(|| None::<GridCoordinate>);
+    let dragging_layout_cell = use_signal(|| None::<GridCoordinate>);
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let layout_dialog_open = use_signal(|| true);
     let update_hotkeys_on_move = use_signal(|| true);

@@ -107,7 +107,9 @@ pub fn KeyPicker(props: KeyPickerProps) -> Element {
         if !is_single_character || !first_character.is_ascii_alphabetic() {
             return;
         }
-        let pressed_token = HotkeyToken::from(first_character);
+        let Ok(pressed_token) = HotkeyToken::try_from(first_character) else {
+            return;
+        };
         let matching_cell = rows_for_keydown
             .iter()
             .flatten()

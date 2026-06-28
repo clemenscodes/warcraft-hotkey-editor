@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
     AbilityDescription, AltPositionPicker, AltStateSection, DragFollower, DraggingSlot,
-    DropTargetCell, OverrideKeyField, TileOverridePanel, ToastMount, UpgradePositionPicker,
+    DropTargetTile, OverrideKeyField, TileOverridePanel, ToastMount, UpgradePositionPicker,
     UpgradeSection, UpgradeTierSelector,
 };
 use warcraft_api::WarcraftObjectId;
@@ -218,7 +218,7 @@ fn alt_position_picker_open() -> Element {
     let loaded_keys = use_signal(|| None::<CustomKeys>);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let alt_position_picker_open = use_signal(|| true);
     rsx! {
@@ -230,7 +230,7 @@ fn alt_position_picker_open() -> Element {
                 loaded_keys,
                 grid_layout,
                 dragging_slot,
-                drop_target_cell,
+                drop_target_tile,
                 drag_follower,
                 alt_position_picker_open,
             }
@@ -247,7 +247,7 @@ fn upgrade_position_picker_open() -> Element {
     let loaded_keys = use_signal(|| None::<CustomKeys>);
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let upgrade_position_picker_open = use_signal(|| true);
     rsx! {
@@ -259,7 +259,7 @@ fn upgrade_position_picker_open() -> Element {
                 loaded_keys,
                 grid_layout,
                 dragging_slot,
-                drop_target_cell,
+                drop_target_tile,
                 drag_follower,
                 upgrade_position_picker_open,
             }
@@ -298,7 +298,7 @@ fn tile_override_panel_archmage_blizzard() -> Element {
     let selected_from_uprooted = use_signal(|| false);
     let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_cell: Signal<Option<DropTargetCell>> = use_signal(|| None);
+    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
@@ -310,7 +310,7 @@ fn tile_override_panel_archmage_blizzard() -> Element {
             selected_from_uprooted,
             tier_overrides,
             dragging_slot,
-            drop_target_cell,
+            drop_target_tile,
             drag_follower,
             active_container_slots: archmage_slots,
             hotkey_assign_request,

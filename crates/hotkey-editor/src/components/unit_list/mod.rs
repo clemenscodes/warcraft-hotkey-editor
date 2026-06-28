@@ -12,8 +12,8 @@ use warcraft_api::{Race, UnitKind};
 use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
 
 use crate::components::tabs::mode_and_race_tabs::ModeButtonClass;
-use crate::model::grid::GridSlotId;
 use crate::services::focus::modality::FocusModality;
+use warcraft_keybinds::GridSlotId;
 
 use category::UnitCategorySection;
 use mobile_category_tab::MobileCategoryTab;

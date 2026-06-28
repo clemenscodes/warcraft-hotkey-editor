@@ -7,7 +7,7 @@ use crate::model::{AbilityBinding, CommandBinding, Hotkey};
 use crate::text::command_label::CommandLabel;
 use crate::text::tip::Tip;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum AbilityIconPath {
     Database(&'static str),
     Binding(String),
