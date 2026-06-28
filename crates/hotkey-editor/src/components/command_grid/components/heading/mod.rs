@@ -3,8 +3,9 @@ mod style;
 
 use dioxus::prelude::*;
 
-use props::CommandGridHeadingProps;
 use style::COMMAND_GRID_HEADING_STYLE_SHEETS;
+
+pub use props::CommandGridHeadingProps;
 
 #[component]
 pub fn CommandGridHeading(props: CommandGridHeadingProps) -> Element {

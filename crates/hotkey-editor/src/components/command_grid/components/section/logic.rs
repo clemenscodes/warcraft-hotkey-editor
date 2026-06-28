@@ -2,45 +2,40 @@ use std::ops::Range;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, Toasts};
-use warcraft_api::Race;
+use dioxus_primitives::toast::{ToastOptions, Toasts, consume_toast};
 use warcraft_keybinds::{
     CommandGridRenderInput, CustomKeys, GridBehavior, GridCoordinate, RenderedTile,
 };
 
-use crate::components::command_grid::CommandGridSectionProps;
-use crate::components::command_grid::components::{GridTileFlags, GridTileView};
+use crate::components::command_grid::components::{
+    CommandGridHeadingProps, CommandGridProps, GridTileFlags, GridTileView,
+};
 use crate::components::command_grid::{GridTileState, HotkeyBadgeState};
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::model::icons::IconUrl;
 use crate::services::customkeys::positions::{MoveRequest, Positions};
 use crate::services::focus::modality::FocusModality;
 use warcraft_keybinds::{GridLayout, GridSlotId};
 
-/// Everything the section body renders: the views the domain resolved and the
-/// callbacks that send the user's gestures back to the domain. This file makes no
-/// domain decision; it reads state, sends state, receives state, and hands display
-/// values to the components.
-pub(super) struct SectionRender {
-    pub(super) heading: &'static str,
-    pub(super) race: Race,
-    pub(super) views: Rc<[GridTileView]>,
-    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
-    pub(super) drop_target_tile: Signal<Option<DropTargetTile>>,
-    pub(super) drag_follower: Signal<Option<DragFollower>>,
-    pub(super) on_select: EventHandler<GridCoordinate>,
-    pub(super) on_activate: EventHandler<GridCoordinate>,
-    pub(super) on_move: EventHandler<Range<GridCoordinate>>,
-    pub(super) drop_blocked: Callback<Range<GridCoordinate>, bool>,
+use super::props::GridSectionProps;
+
+impl<B: GridBehavior> From<&GridSectionProps<B>> for CommandGridHeadingProps {
+    fn from(props: &GridSectionProps<B>) -> Self {
+        let heading = props.section.heading;
+        Self { heading }
+    }
 }
 
-impl SectionRender {
-    pub(super) fn new<B: GridBehavior>(
-        behavior: B,
-        section: &CommandGridSectionProps,
-        toast: Toasts,
-    ) -> Self {
-        let heading = section.heading;
+/// Resolves the section into the generic grid engine's props: the views the domain
+/// rendered plus the callbacks that send the user's gestures back to the domain.
+/// This makes no domain decision; it reads state, sends state, receives state, and
+/// hands display values to the grid. The toast handle comes from context, used only
+/// to warn when a move is refused.
+impl<B: GridBehavior> From<&GridSectionProps<B>> for CommandGridProps {
+    fn from(props: &GridSectionProps<B>) -> Self {
+        let behavior = props.behavior.clone();
+        let section = &props.section;
+        let toast = consume_toast();
+        let grid_id = section.heading;
         let race = section.race;
         let loaded_keys = section.loaded_keys;
         let grid_layout = section.grid_layout;
@@ -106,13 +101,16 @@ impl SectionRender {
         let on_move = move_handler(move_args);
         let drop_blocked = drop_blocked_callback(behavior, loaded_keys, slot_ids);
 
+        let dragging_slot = section.dragging_slot;
+        let drop_target_tile = section.drop_target_tile;
+        let drag_follower = section.drag_follower;
         Self {
-            heading,
-            race,
             views,
-            dragging_slot: section.dragging_slot,
-            drop_target_tile: section.drop_target_tile,
-            drag_follower: section.drag_follower,
+            grid_id,
+            race,
+            dragging_slot,
+            drop_target_tile,
+            drag_follower,
             on_select,
             on_activate,
             on_move,
