@@ -13,9 +13,10 @@ pub(crate) struct GridSectionProps<B: GridBehavior> {
     pub(crate) section: CommandGridSectionProps,
 }
 
-impl<B: GridBehavior> GridSectionProps<B> {
-    pub(crate) fn new(section: CommandGridSectionProps) -> Self {
+impl<B: GridBehavior> From<&CommandGridSectionProps> for GridSectionProps<B> {
+    fn from(section: &CommandGridSectionProps) -> Self {
         let behavior = B::default();
+        let section = section.clone();
         Self { behavior, section }
     }
 }

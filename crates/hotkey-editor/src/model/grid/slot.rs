@@ -1,4 +1,4 @@
-use warcraft_keybinds::GridCoordinate;
+use warcraft_keybinds::{GridCoordinate, HotkeyToken};
 
 /// The in-progress drag's source cell. The grid is generic, so it tracks only
 /// where the drag started (the opaque grid id and the domain coordinate), never
@@ -51,18 +51,18 @@ impl DropTargetTile {
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct DragFollowerVisual {
-    icon_source: Option<String>,
+    icon_source: String,
     label_text: String,
-    displayed_letter: Option<String>,
+    displayed_letter: HotkeyToken,
     is_passive_command: bool,
     is_command_cell: bool,
 }
 
 impl DragFollowerVisual {
     pub fn new(
-        icon_source: Option<String>,
+        icon_source: String,
         label_text: String,
-        displayed_letter: Option<String>,
+        displayed_letter: HotkeyToken,
         is_passive_command: bool,
         is_command_cell: bool,
     ) -> Self {
@@ -75,16 +75,16 @@ impl DragFollowerVisual {
         }
     }
 
-    pub fn icon_source(&self) -> Option<&str> {
-        self.icon_source.as_deref()
+    pub fn icon_source(&self) -> &str {
+        &self.icon_source
     }
 
     pub fn label_text(&self) -> &str {
         &self.label_text
     }
 
-    pub fn displayed_letter(&self) -> Option<&str> {
-        self.displayed_letter.as_deref()
+    pub fn displayed_letter(&self) -> HotkeyToken {
+        self.displayed_letter
     }
 
     pub fn is_passive_command(&self) -> bool {

@@ -6,6 +6,7 @@ mod style;
 
 use dioxus::prelude::*;
 
+use components::{TileBadge, TileBadgeProps, TileFigure, TileFigureProps};
 use logic::GridTilePresentation;
 use style::GRID_TILE_STYLE_SHEETS;
 
@@ -15,17 +16,15 @@ pub use state::GridTileState;
 
 #[component]
 pub fn GridTile(props: GridTileProps) -> Element {
-    let GridTileProps {
-        race,
-        icon,
-        label,
-        hotkey,
-        badge_state,
-        state,
-        is_dragging_source,
-        is_drag_over,
-        is_focusable,
-        draggable,
+    let figure = TileFigureProps::from(&props);
+    let badge = TileBadgeProps::from(&props);
+    let GridTilePresentation {
+        class,
+        tabindex,
+        draggable_attribute,
+        race_attribute,
+        row,
+        column,
         onkeydown,
         onpointerdown,
         onpointermove,
@@ -34,32 +33,18 @@ pub fn GridTile(props: GridTileProps) -> Element {
         onlostpointercapture,
         onclick,
         ondoubleclick,
-        attributes,
-    } = props;
-
-    let GridTilePresentation {
-        class_name,
-        tabindex,
-        draggable_attribute,
-        race_attribute,
-    } = GridTilePresentation::new(
-        state,
-        is_dragging_source,
-        is_drag_over,
-        is_focusable,
-        draggable,
-        race,
-    );
-
+    } = GridTilePresentation::from(&props);
     rsx! {
-        for style_sheet in GRID_TILE_STYLE_SHEETS {
-            document::Stylesheet { href: style_sheet }
+        for href in GRID_TILE_STYLE_SHEETS {
+            document::Stylesheet { href }
         }
         div {
-            class: class_name,
+            class,
             tabindex,
             "data-race": race_attribute,
             "data-draggable": draggable_attribute,
+            "data-grid-row": row,
+            "data-grid-col": column,
             onkeydown,
             onpointerdown,
             onpointermove,
@@ -68,23 +53,8 @@ pub fn GridTile(props: GridTileProps) -> Element {
             onlostpointercapture,
             onclick,
             ondoubleclick,
-            ..attributes,
-            if let Some(source) = icon {
-                img {
-                    src: source,
-                    alt: label,
-                    draggable: "false",
-                    loading: "lazy",
-                    decoding: "async",
-                }
-            } else if is_focusable {
-                span { class: "grid-tile-label", {label} }
-            }
-            if let Some(letter_text) = hotkey {
-                div { class: "grid-tile-badge",
-                    HotkeyBadge { letter: letter_text, state: badge_state }
-                }
-            }
+            TileFigure { ..figure }
+            TileBadge { ..badge }
         }
     }
 }

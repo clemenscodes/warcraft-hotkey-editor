@@ -36,7 +36,7 @@ pub(crate) struct PointerDownArgs {
     pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
     pub(crate) drop_target_tile: Signal<Option<DropTargetTile>>,
     pub(crate) drag_follower: Signal<Option<DragFollower>>,
-    pub(crate) visual: DragFollowerVisual,
+    pub(crate) visual: Option<DragFollowerVisual>,
     pub(crate) grid_id: &'static str,
     pub(crate) coordinate: GridCoordinate,
 }
@@ -58,6 +58,9 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         if !draggable {
             return;
         }
+        let Some(visual) = visual.clone() else {
+            return;
+        };
         if event.data().trigger_button() != Some(MouseButton::Primary) {
             return;
         }
@@ -113,7 +116,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         let pending = PendingDragData {
             grid_id,
             coordinate,
-            visual: visual.clone(),
+            visual,
             click_offset_horizontal,
             click_offset_vertical,
             tile_width,

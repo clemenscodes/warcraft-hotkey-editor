@@ -70,20 +70,6 @@ body[data-kb-modality] .grid-tile.has-ability:focus {
     background: rgba(255, 206, 99, 0.08);
 }
 
-.grid-tile img {
-    width: 100%;
-    height: 100%;
-    image-rendering: auto;
-    object-fit: cover;
-    color: transparent;
-    font-size: 0;
-    line-height: 0;
-    background:
-        radial-gradient(circle at center,
-            rgba(255, 206, 99, 0.08) 0%,
-            rgba(255, 206, 99, 0.0) 65%);
-}
-
 .grid-tile.is-command {
     background: linear-gradient(135deg, rgba(40, 50, 80, 0.95) 0%, rgba(15, 22, 45, 0.95) 100%);
     border-color: #5b6f9c;
@@ -165,28 +151,3 @@ body:has(.grid-tile.dragging-source) .grid-tile {
     transition: none !important;
 }
 
-.grid-tile-label {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4%;
-    font-family: 'Friz Quadrata', serif;
-    /* Sized relative to the slot (its container) so the label keeps the same
-       proportion at every viewport. */
-    font-size: 13cqi;
-    color: #ffce63;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
-    line-height: 1.1;
-}
-
-/* The tile decides where the hotkey badge sits; the badge only styles itself. */
-.grid-tile-badge {
-    position: absolute;
-    top: 4%;
-    right: 4%;
-}

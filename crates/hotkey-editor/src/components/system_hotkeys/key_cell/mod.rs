@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, SystemBindingMap};
+use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode, SystemBindingMap};
 
 use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
 
@@ -33,8 +33,7 @@ pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
     );
     drop(read_guard);
     let map_guard = binding_map.read();
-    let collisions =
-        map_guard.collisions_for(&lookup_id, effective.hotkey_code(), effective.modifier());
+    let collisions = map_guard.collisions_for(&lookup_id, effective.key(), effective.modifier());
     let is_in_conflict = !collisions.is_empty();
     let conflict_title = if is_in_conflict {
         let names: Vec<String> = collisions
@@ -80,7 +79,7 @@ pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
     let section_id_for_click = lookup_id.clone();
     let section_id_for_pick = lookup_id.clone();
     let handle_click = move |_| editing_section.set(Some(section_id_for_click.clone()));
-    let handle_pick = move |code: u32| {
+    let handle_pick = move |code: KeyCode| {
         let mut guard = loaded_keys.write();
         let file = guard.get_or_insert_with(|| CustomKeys::from(""));
         file.set_system_hotkey(&section_id_for_pick, code);
@@ -100,7 +99,7 @@ pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
         if is_editing {
             SystemKeyPickerDialog {
                 title: String::from("Pick a hotkey"),
-                current_code: effective.hotkey_code(),
+                current_code: effective.key(),
                 conflicts: picker_conflicts,
                 open: true,
                 on_pick: handle_pick,

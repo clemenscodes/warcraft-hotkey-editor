@@ -131,7 +131,7 @@ fn tile_view(rendered: &RenderedTile) -> GridTileView {
         .map(IconUrl::from_icon_path)
         .map(|url| url.to_string());
     let label = rendered.display_name().to_string();
-    let hotkey = rendered.hotkey().map(|letter| letter.to_string());
+    let hotkey = rendered.hotkey();
     let badge_state = if rendered.is_conflict() {
         HotkeyBadgeState::Conflict
     } else if rendered.is_passive() {

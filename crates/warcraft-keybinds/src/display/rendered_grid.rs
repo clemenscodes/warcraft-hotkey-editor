@@ -11,6 +11,7 @@ use crate::custom_keys::CustomKeys;
 use crate::display::ability_cell::{AbilityCell, AbilityIconPath};
 use crate::display::grid_behavior::GridBehavior;
 use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+use crate::identity::hotkey_token::HotkeyToken;
 use crate::identity::slot::GridSlotId;
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
 
@@ -22,7 +23,7 @@ pub struct RenderedTile {
     occupant: Option<GridSlotId>,
     display_name: String,
     icon: Option<AbilityIconPath>,
-    hotkey: Option<String>,
+    hotkey: HotkeyToken,
     is_selected: bool,
     is_conflict: bool,
     is_passive: bool,
@@ -47,8 +48,8 @@ impl RenderedTile {
         self.icon.as_ref()
     }
 
-    pub fn hotkey(&self) -> Option<&str> {
-        self.hotkey.as_deref()
+    pub fn hotkey(&self) -> HotkeyToken {
+        self.hotkey
     }
 
     pub fn is_selected(&self) -> bool {
@@ -217,14 +218,13 @@ impl CustomKeys {
 
         let effective_token = occupant_slot
             .and_then(|slot| self.effective_hotkey_token(&slot, input.layout, is_research_context));
-        let hotkey = if occupant_slot.is_some() {
-            effective_token.map(|token| token.display_label())
-        } else {
-            let derived_letter = input
-                .layout
-                .letter_at(coordinate.column(), coordinate.row());
-            derived_letter.map(|character| character.to_string())
-        };
+        let layout_character = input
+            .layout
+            .letter_at(coordinate.column(), coordinate.row())
+            .expect("every grid cell has a layout letter");
+        let layout_token =
+            HotkeyToken::try_from(layout_character).expect("layout letters are always A to Z");
+        let hotkey = effective_token.unwrap_or(layout_token);
 
         let is_passive = behavior.show_passive_badge()
             && object_id_option
@@ -323,7 +323,8 @@ mod tests {
         let tiles = render(&keys, &slots, &[]);
         let occupied = tile_at(&tiles, 0, 0);
         assert_eq!(occupied.occupant(), Some(GridSlotId::ability("ACad")));
-        assert_eq!(occupied.hotkey(), Some("P"));
+        let expected_hotkey = HotkeyToken::try_from('P').expect("letter");
+        assert_eq!(occupied.hotkey(), expected_hotkey);
         assert!(occupied.draggable());
         assert!(!occupied.is_command());
     }
@@ -335,7 +336,8 @@ mod tests {
         let tiles = render(&keys, &slots, &[]);
         let empty = tile_at(&tiles, 1, 0);
         assert_eq!(empty.occupant(), None);
-        assert_eq!(empty.hotkey(), Some("W"));
+        let expected_hotkey = HotkeyToken::try_from('W').expect("letter");
+        assert_eq!(empty.hotkey(), expected_hotkey);
         assert!(!empty.draggable());
     }
 

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use warcraft_api::{ContextSet, KeyCode, SystemKeybindModifier};
+use warcraft_api::{ContextSet, SystemKeybindModifier};
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
 
-use crate::{CustomKeys, Hotkey};
+use crate::{CustomKeys, Hotkey, KeyCode};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct EffectiveBinding {
-    hotkey_code: u32,
+    key: KeyCode,
     modifier: SystemKeybindModifier,
 }
 
@@ -18,25 +18,27 @@ impl EffectiveBinding {
         default_hotkey: u32,
         default_modifier: SystemKeybindModifier,
     ) -> Self {
-        let custom_hotkey = custom_keys
+        let custom_key = custom_keys
             .and_then(|file| file.system(section_id))
             .and_then(|binding| match binding.hotkey() {
-                Hotkey::VirtualKey(code) => Some(*code),
+                Hotkey::VirtualKey(code) => KeyCode::try_from(*code).ok(),
                 _ => None,
             });
-        let hotkey_code = custom_hotkey.unwrap_or(default_hotkey);
+        let fallback_key = KeyCode::Escape;
+        let default_key = KeyCode::try_from(default_hotkey).unwrap_or(fallback_key);
+        let key = custom_key.unwrap_or(default_key);
         // Warcraft III hardcodes the modifier per system hotkey — any
         // `Modifier=` line in CustomKeys.txt is written for transparency but
         // discarded at load time. The editor mirrors that: the effective
         // modifier is always the system default, regardless of the file.
         Self {
-            hotkey_code,
+            key,
             modifier: default_modifier,
         }
     }
 
-    pub fn hotkey_code(&self) -> u32 {
-        self.hotkey_code
+    pub fn key(&self) -> KeyCode {
+        self.key
     }
 
     pub fn modifier(&self) -> SystemKeybindModifier {
@@ -44,8 +46,7 @@ impl EffectiveBinding {
     }
 
     pub fn label(&self) -> String {
-        let code = KeyCode::from(self.hotkey_code);
-        format!("{}{code}", self.modifier)
+        format!("{}{}", self.modifier, self.key)
     }
 }
 
@@ -98,7 +99,7 @@ impl SystemBindingMap {
     pub fn collisions_for(
         &self,
         excluded_section_id: &str,
-        code: u32,
+        key: KeyCode,
         modifier: SystemKeybindModifier,
     ) -> Vec<&ResolvedSystemBinding> {
         let own_context = self
@@ -110,9 +111,7 @@ impl SystemBindingMap {
             .bindings_by_section
             .values()
             .filter(|resolved| resolved.section_id != excluded_section_id)
-            .filter(|resolved| {
-                resolved.binding.hotkey_code == code && resolved.binding.modifier == modifier
-            })
+            .filter(|resolved| resolved.binding.key == key && resolved.binding.modifier == modifier)
             .filter(|resolved| own_context.overlaps(resolved.context_set))
             .collect();
         matches.sort_by(|left, right| left.section_id.cmp(&right.section_id));
@@ -123,13 +122,13 @@ impl SystemBindingMap {
         &self,
         own_section_id: &str,
         own_modifier: SystemKeybindModifier,
-    ) -> HashMap<u32, Vec<String>> {
+    ) -> HashMap<KeyCode, Vec<String>> {
         let own_context = self
             .bindings_by_section
             .get(own_section_id)
             .map(|resolved| resolved.context_set)
             .unwrap_or(ContextSet::ALWAYS);
-        let mut conflicts: HashMap<u32, Vec<String>> = HashMap::new();
+        let mut conflicts: HashMap<KeyCode, Vec<String>> = HashMap::new();
         for resolved in self.bindings_by_section.values() {
             if resolved.section_id == own_section_id {
                 continue;
@@ -140,8 +139,8 @@ impl SystemBindingMap {
             if !own_context.overlaps(resolved.context_set) {
                 continue;
             }
-            let code = resolved.binding.hotkey_code;
-            let names = conflicts.entry(code).or_default();
+            let key = resolved.binding.key;
+            let names = conflicts.entry(key).or_default();
             names.push(resolved.section_comment.clone());
         }
         for names in conflicts.values_mut() {

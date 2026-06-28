@@ -9,7 +9,7 @@ use hotkey_editor::{
     SystemHotkeysHeader, SystemHotkeysListEntry, SystemHotkeysListView, SystemKeyPickerDialog,
 };
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::{CustomKeys, SystemBindingMap};
+use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap};
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -164,8 +164,8 @@ fn inventory_grid() -> Element {
 
 fn key_picker_dialog_open() -> Element {
     let title = "Pick a hotkey".to_string();
-    let current_code: u32 = 65;
-    let conflicts = HashMap::<u32, Vec<String>>::new();
+    let current_code = KeyCode::try_from(65).expect("valid keycode");
+    let conflicts = HashMap::<KeyCode, Vec<String>>::new();
     let open = true;
     rsx! {
         SystemKeyPickerDialog {

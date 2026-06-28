@@ -8,8 +8,7 @@ use super::section::{GridSection, GridSectionProps};
 /// An alternate-form menu (an uprooted Ancient).
 #[component]
 pub fn UprootedGridSection(props: CommandGridSectionProps) -> Element {
-    let grid_section_props = GridSectionProps::<AlternateFormBehavior>::new(props);
     rsx! {
-        GridSection { ..grid_section_props }
+        GridSection { ..GridSectionProps::<AlternateFormBehavior>::from(&props) }
     }
 }

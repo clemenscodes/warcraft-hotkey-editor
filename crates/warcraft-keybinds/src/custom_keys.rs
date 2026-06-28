@@ -13,6 +13,7 @@ use crate::grid::layout::GridLayout;
 use crate::identity::ability_id::AbilityId;
 use crate::identity::hotkey_target::HotkeyTarget;
 use crate::identity::hotkey_token::HotkeyToken;
+use crate::identity::keycode::KeyCode;
 use crate::identity::slot::GridSlotId;
 use crate::model::{
     AbilityBinding, BindingEntry, ColumnIndex, CommandBinding, CommandEntry, GridCoordinate,
@@ -216,7 +217,8 @@ impl CustomKeys {
         self.entries.get_mut(id)?.as_system_mut()
     }
 
-    pub fn set_system_hotkey(&mut self, section_id: &str, hotkey_code: u32) {
+    pub fn set_system_hotkey(&mut self, section_id: &str, key: KeyCode) {
+        let hotkey_code = u32::from(key);
         let hotkey = Hotkey::VirtualKey(hotkey_code);
         if let Some(binding) = self.system_mut(section_id) {
             binding.set_hotkey(hotkey);
@@ -2053,7 +2055,8 @@ mod tests {
         let mut file = CustomKeys::builder()
             .system("QLog", initial_binding)
             .build();
-        file.set_system_hotkey("QLog", 65);
+        let new_key = KeyCode::try_from(65).expect("valid keycode");
+        file.set_system_hotkey("QLog", new_key);
         let expected_hotkey = Hotkey::VirtualKey(65);
         assert_eq!(
             file.system("QLog").map(|binding| *binding.hotkey()),
@@ -2064,7 +2067,8 @@ mod tests {
     #[test]
     fn set_system_hotkey_is_noop_for_missing_section() {
         let mut file = CustomKeys::default();
-        file.set_system_hotkey("nonexistent", 65);
+        let new_key = KeyCode::try_from(65).expect("valid keycode");
+        file.set_system_hotkey("nonexistent", new_key);
         assert!(file.system("nonexistent").is_none());
     }
 

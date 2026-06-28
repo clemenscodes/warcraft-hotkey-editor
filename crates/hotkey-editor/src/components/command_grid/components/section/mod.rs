@@ -31,7 +31,8 @@ pub(crate) fn GridSection<B: GridBehavior>(props: GridSectionProps<B>) -> Elemen
 
     rsx! {
         document::Stylesheet { href: COMMAND_GRID_SECTION_STYLES }
-        div { class: "grid-section",
+        div { 
+            class: "grid-section",
             CommandGridHeading { heading }
             CommandGrid {
                 views,

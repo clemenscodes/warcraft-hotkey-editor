@@ -1,17 +1,34 @@
-pub(crate) struct KeyCodes;
+use warcraft_keybinds::KeyCode;
 
-impl KeyCodes {
-    pub(crate) fn from_event(event_key: &str, event_code: &str) -> Option<u32> {
-        if event_key.len() == 1 {
-            let first_character = event_key.chars().next()?;
+/// A browser `KeyboardEvent`, narrowed to the two fields the picker reads. This
+/// is the only place that knows the shape of a web key event; it translates one
+/// into the domain's [`KeyCode`] and makes no decision beyond that mapping.
+pub(super) struct BrowserKeyEvent<'a> {
+    key: &'a str,
+    code: &'a str,
+}
+
+impl<'a> BrowserKeyEvent<'a> {
+    pub(super) fn new(key: &'a str, code: &'a str) -> Self {
+        Self { key, code }
+    }
+
+    /// The domain key this event names, or `None` when the browser reported a
+    /// key Warcraft III does not accept.
+    pub(super) fn key_code(&self) -> Option<KeyCode> {
+        let raw_code = self.raw_code()?;
+        KeyCode::try_from(raw_code).ok()
+    }
+
+    fn raw_code(&self) -> Option<u32> {
+        if self.key.len() == 1 {
+            let first_character = self.key.chars().next()?;
             if first_character.is_ascii_alphabetic() {
-                let upper_byte =
-                    u8::try_from(u32::from(first_character.to_ascii_uppercase())).ok()?;
-                return Some(u32::from(upper_byte));
+                let upper_character = first_character.to_ascii_uppercase();
+                return Some(u32::from(upper_character));
             }
             if first_character.is_ascii_digit() {
-                let digit_byte = u8::try_from(u32::from(first_character)).ok()?;
-                return Some(u32::from(digit_byte));
+                return Some(u32::from(first_character));
             }
             match first_character {
                 ' ' => return Some(32),
@@ -29,7 +46,7 @@ impl KeyCodes {
                 _ => {}
             }
         }
-        match event_key {
+        match self.key {
             "Tab" => Some(9),
             "Backspace" => Some(8),
             "Enter" => Some(13),
@@ -46,13 +63,13 @@ impl KeyCodes {
             "ArrowDown" => Some(40),
             " " => Some(32),
             _ => {
-                if let Some(rest) = event_key.strip_prefix('F')
+                if let Some(rest) = self.key.strip_prefix('F')
                     && let Ok(number) = rest.parse::<u32>()
                     && (1..=12).contains(&number)
                 {
                     return Some(111 + number);
                 }
-                if let Some(suffix) = event_code.strip_prefix("Numpad")
+                if let Some(suffix) = self.code.strip_prefix("Numpad")
                     && let Ok(number) = suffix.parse::<u32>()
                     && number <= 9
                 {

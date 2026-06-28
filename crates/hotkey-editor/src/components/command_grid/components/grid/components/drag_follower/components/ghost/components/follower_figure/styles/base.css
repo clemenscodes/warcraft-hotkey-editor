@@ -1,0 +1,7 @@
+/* The dragged tile's icon, filling the follower ghost. */
+.follower-figure {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: auto;
+}

@@ -1,4 +1,4 @@
-use warcraft_keybinds::GridCoordinate;
+use warcraft_keybinds::{GridCoordinate, HotkeyToken};
 
 use crate::components::command_grid::{GridTileState, HotkeyBadgeState};
 
@@ -44,7 +44,7 @@ pub struct GridTileView {
     coordinate: GridCoordinate,
     icon: Option<String>,
     label: String,
-    hotkey: Option<String>,
+    hotkey: HotkeyToken,
     badge_state: HotkeyBadgeState,
     state: GridTileState,
     flags: GridTileFlags,
@@ -55,7 +55,7 @@ impl GridTileView {
         coordinate: GridCoordinate,
         icon: Option<String>,
         label: String,
-        hotkey: Option<String>,
+        hotkey: HotkeyToken,
         badge_state: HotkeyBadgeState,
         state: GridTileState,
         flags: GridTileFlags,
@@ -91,8 +91,8 @@ impl GridTileView {
         &self.label
     }
 
-    pub fn hotkey(&self) -> Option<&str> {
-        self.hotkey.as_deref()
+    pub fn hotkey(&self) -> HotkeyToken {
+        self.hotkey
     }
 
     pub fn badge_state(&self) -> HotkeyBadgeState {

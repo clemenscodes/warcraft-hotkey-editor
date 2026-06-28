@@ -1,0 +1,6 @@
+/* The tile decides where the hotkey badge sits; the badge only styles itself. */
+.tile-badge {
+    position: absolute;
+    top: 4%;
+    right: 4%;
+}

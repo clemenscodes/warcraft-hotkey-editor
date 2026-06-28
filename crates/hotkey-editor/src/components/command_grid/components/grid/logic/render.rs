@@ -3,50 +3,27 @@ use std::ops::Range;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
-use crate::components::command_grid::{GridTileState, HotkeyBadgeState};
+use crate::components::command_grid::GridTileProps;
+use crate::components::command_grid::GridTileState;
 use crate::model::grid::DragFollowerVisual;
 
 use super::super::props::CommandGridProps;
 use super::mechanics;
 
-/// One tile, fully prepared for rendering: every value and event handler the
-/// presentational `GridTile` needs. The component file builds none of this; it
-/// destructures each prepared tile and renders.
-pub(crate) struct PreparedTile {
-    pub(crate) column: u8,
-    pub(crate) row: u8,
-    pub(crate) icon: Option<String>,
-    pub(crate) label: String,
-    pub(crate) hotkey: Option<String>,
-    pub(crate) badge_state: HotkeyBadgeState,
-    pub(crate) state: GridTileState,
-    pub(crate) is_dragging_source: bool,
-    pub(crate) is_drag_over: bool,
-    pub(crate) is_focusable: bool,
-    pub(crate) draggable: bool,
-    pub(crate) onkeydown: EventHandler<KeyboardEvent>,
-    pub(crate) onpointerdown: EventHandler<PointerEvent>,
-    pub(crate) onpointermove: EventHandler<PointerEvent>,
-    pub(crate) onpointerup: EventHandler<PointerEvent>,
-    pub(crate) onpointercancel: EventHandler<PointerEvent>,
-    pub(crate) onlostpointercapture: EventHandler<PointerEvent>,
-    pub(crate) onclick: EventHandler<MouseEvent>,
-    pub(crate) ondoubleclick: EventHandler<MouseEvent>,
-}
-
-/// The whole grid prepared for rendering: the tiles and whether the in-progress
-/// drag started in this grid (so the follower shows here).
+/// The whole grid prepared for rendering: one finished `GridTileProps` per tile.
+/// Whether the follower shows here is derived separately by
+/// `DragFollowerOverlayProps::from`.
 pub(crate) struct GridRender {
-    pub(crate) tiles: Vec<PreparedTile>,
-    pub(crate) drag_active_here: bool,
+    pub(crate) tiles: Vec<GridTileProps>,
 }
 
-impl GridRender {
-    /// Builds every tile's visual state and event handlers, overlaying drag states
-    /// onto empty tiles via the `drop_blocked` callback. This is all the grid's
-    /// per-tile logic, kept out of the markup.
-    pub(crate) fn new(props: &CommandGridProps) -> Self {
+impl From<&CommandGridProps> for GridRender {
+    /// Builds every tile's props and event handlers, overlaying drag states onto
+    /// empty tiles via the `drop_blocked` callback. This is all the grid's per-tile
+    /// logic, kept out of the markup.
+    fn from(props: &CommandGridProps) -> Self {
         let grid_id = props.grid_id;
+        let race = props.race;
         let dragging_slot = props.dragging_slot;
         let drop_target_tile = props.drop_target_tile;
         let drag_follower = props.drag_follower;
@@ -65,8 +42,6 @@ impl GridRender {
         let mut tiles = Vec::with_capacity(props.views.len());
         for view in props.views.iter() {
             let coordinate = view.coordinate();
-            let column = view.column();
-            let row = view.row();
             let base_state = view.state();
             let has_occupant = base_state != GridTileState::Empty;
             let is_dragging_source = dragging_source_coordinate == Some(coordinate);
@@ -83,20 +58,26 @@ impl GridRender {
 
             let icon = view.icon().map(|source| source.to_string());
             let label = view.label().to_string();
-            let hotkey = view.hotkey().map(|letter| letter.to_string());
+            let hotkey = view.hotkey();
             let badge_state = view.badge_state();
             let draggable = view.draggable();
 
-            let follower_icon = view.icon().map(|source| source.to_string());
-            let follower_label = view.label().to_string();
-            let follower_letter = view.hotkey().map(|letter| letter.to_string());
-            let visual = DragFollowerVisual::new(
-                follower_icon,
-                follower_label,
-                follower_letter,
-                view.is_passive(),
-                view.is_command(),
-            );
+            // A follower is only ever shown for a draggable tile, which always has
+            // an icon, so the visual exists exactly when the icon does.
+            let visual = view.icon().map(|source| {
+                let icon_source = source.to_string();
+                let label_text = view.label().to_string();
+                let displayed_letter = view.hotkey();
+                let is_passive = view.is_passive();
+                let is_command = view.is_command();
+                DragFollowerVisual::new(
+                    icon_source,
+                    label_text,
+                    displayed_letter,
+                    is_passive,
+                    is_command,
+                )
+            });
 
             let keydown = mechanics::keydown(on_select, coordinate);
             let pointer_down_args = mechanics::PointerDownArgs {
@@ -127,9 +108,9 @@ impl GridRender {
             let click = mechanics::click(on_select, coordinate);
             let double_click = mechanics::double_click(on_activate, coordinate);
 
-            let prepared = PreparedTile {
-                column,
-                row,
+            let tile = GridTileProps {
+                coordinate,
+                race,
                 icon,
                 label,
                 hotkey,
@@ -148,13 +129,10 @@ impl GridRender {
                 onclick: EventHandler::new(click),
                 ondoubleclick: EventHandler::new(double_click),
             };
-            tiles.push(prepared);
+            tiles.push(tile);
         }
 
-        Self {
-            tiles,
-            drag_active_here,
-        }
+        Self { tiles }
     }
 }
 

@@ -1,0 +1,6 @@
+/* The hotkey badge on the dragged tile's ghost, pinned to its top-right. */
+.follower-badge {
+    position: absolute;
+    top: 4%;
+    right: 4%;
+}

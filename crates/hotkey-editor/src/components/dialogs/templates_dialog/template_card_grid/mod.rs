@@ -40,7 +40,7 @@ pub fn TemplateCardGrid(props: TemplateCardGridProps) -> Element {
                             .icon()
                             .map(IconUrl::from_icon_path)
                             .map(|url| url.to_string());
-                        let displayed_letter = tile.hotkey().map(|letter| letter.to_string());
+                        let displayed_letter = tile.hotkey().display_label();
                         let cell_class = if tile.occupant().is_some() {
                             format!("{TEMPLATE_CARD_CELL_BASE} {TEMPLATE_CARD_CELL_FILLED}")
                         } else {
@@ -62,9 +62,7 @@ pub fn TemplateCardGrid(props: TemplateCardGridProps) -> Element {
                                         loading: "lazy",
                                     }
                                 }
-                                if let Some(letter) = displayed_letter {
-                                    span { class: hotkey_class, {letter} }
-                                }
+                                span { class: hotkey_class, {displayed_letter} }
                             }
                         }
                     }
