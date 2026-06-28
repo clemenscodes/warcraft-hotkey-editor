@@ -219,7 +219,7 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                         hotkey_assign_request,
                     }
                     aside { class: "tile-override-panel",
-                        h3 { class: "command-grid-heading", "Hotkey override" }
+                        h3 { class: "grid-heading", "Hotkey override" }
                         if let Some(detail) = inspector_panel.clone() {
                             TileOverridePanel {
                                 detail,

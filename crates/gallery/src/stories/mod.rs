@@ -1,9 +1,9 @@
 use gallery::{Story, StoryRegistry};
 
 mod buttons;
-mod command_grid;
 mod dialogs;
 pub mod fixtures;
+mod grid;
 mod shared;
 mod shell;
 mod system_hotkeys;
@@ -18,7 +18,7 @@ mod views;
 pub fn registry() -> StoryRegistry {
     let mut stories: Vec<Story> = Vec::new();
     stories.extend(buttons::stories());
-    stories.extend(command_grid::stories());
+    stories.extend(grid::stories());
     stories.extend(dialogs::stories());
     stories.extend(shared::stories());
     stories.extend(shell::stories());

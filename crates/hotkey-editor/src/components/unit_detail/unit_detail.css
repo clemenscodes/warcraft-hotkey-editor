@@ -5,7 +5,7 @@
    are each styled by their own component:
      · header/header.css           — portrait, title, hero level picker
      · stats_panel/stats_panel.css — stat columns, rows, matchups, separators
-     · ../command_grid/command_grid.css — grids + the body/row wrappers
+     · ../grid/grid.css — grids + the body/row wrappers
      · ../tile_override/tile_override.css — the override card
    Structure: BASE → SMALL SCREENS (≤1099) → WIDE (≥701). See docs/CSS_VIEWPORTS.md.
    ════════════════════════════════════════════════════════════════════════ */
@@ -224,7 +224,7 @@
    LAYOUT: large-phone + tablet (481px – 1099px)
    Grids pair two-up via CSS grid (each section gets exactly 1fr = 50%, so the
    Research Menu always starts at the same x as the stats panel's right
-   column). command_grid has no rule that differs between large-phone and
+   column). grid has no rule that differs between large-phone and
    tablet, so the two bands share this one block.
    ════════════════════════════════════════════════════════════════════════ */
 @media (min-width: 481px) and (max-width: 1099px) {

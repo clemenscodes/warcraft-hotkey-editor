@@ -649,7 +649,7 @@ body[data-kb-modality] .override-key-cell:focus {
     width: max-content;
 }
 
-.alt-position-picker-grid-anchor .command-grid {
+.alt-position-picker-grid-anchor .grid {
     --tile-size: 8rem;
     grid-template-columns: repeat(4, var(--tile-size));
     grid-auto-rows: var(--tile-size);

@@ -11,8 +11,8 @@ use warcraft_keybinds::CustomKeys;
 
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
-use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
 use crate::components::dialogs::dialog_header::DialogHeader;
+use crate::components::grid_editors::{CommandGridEditor, GridEditorConfig};
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
@@ -50,7 +50,7 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(object_id)];
     let update_hotkeys_on_move = use_signal(|| true);
     let hotkey_assign_request = use_signal(|| false);
-    let grid_props = CommandGridSectionProps {
+    let grid_props = GridEditorConfig {
         heading: "Off-state position",
         race: Race::Neutral,
         slot_ids: picker_slots,
@@ -86,7 +86,7 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
                         "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
                     }
                     div { class: "alt-position-picker-grid-anchor",
-                        CommandGridSection { ..grid_props }
+                        CommandGridEditor { ..grid_props }
                     }
                 }
             }

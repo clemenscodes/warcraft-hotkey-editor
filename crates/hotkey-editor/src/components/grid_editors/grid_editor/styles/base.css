@@ -1,0 +1,12 @@
+.grid-editor {
+    display: flex;
+    flex-direction: column;
+    /* Stack the heading above the grid, centered on the same axis. The heading
+       and grid each own their own sizing; this wrapper only arranges them. */
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    /* Take the full width a flex/grid parent offers instead of shrinking to the
+       grid's content (which would keep the grid from growing to its max-width). */
+    align-self: stretch;
+}

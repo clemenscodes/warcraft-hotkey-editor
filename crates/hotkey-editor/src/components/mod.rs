@@ -1,6 +1,6 @@
 pub(crate) mod actions;
-pub(crate) mod command_grid;
 pub(crate) mod dialogs;
+pub(crate) mod grid_editors;
 pub(crate) mod shared;
 pub(crate) mod shell;
 pub(crate) mod system_hotkeys;

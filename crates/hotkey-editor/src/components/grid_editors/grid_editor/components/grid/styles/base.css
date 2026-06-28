@@ -1,0 +1,14 @@
+.grid {
+    display: grid;
+    /* Four equal columns capped at the band's tile size (overridden per
+       viewport), shrinking together when the container is narrower than four
+       caps. */
+    --command-tile-cap: 140px;
+    grid-template-columns: repeat(4, minmax(0, var(--command-tile-cap)));
+    gap: 6px;
+    /* The grid is exactly as wide as its tiles, never reserving space around
+       itself. Outer spacing and centering are the wrapper's job, not the grid's. */
+    width: fit-content;
+    max-width: 100%;
+    overflow: visible;
+}

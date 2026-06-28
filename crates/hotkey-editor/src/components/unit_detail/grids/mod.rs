@@ -5,8 +5,8 @@ use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::command_grid::{
-    CommandGridSection, CommandGridSectionProps, ResearchGridSection, UprootedGridSection,
+use crate::components::grid_editors::{
+    CommandGridEditor, GridEditorConfig, ResearchGridEditor, UprootedGridEditor,
 };
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_keybinds::GridLayout;
@@ -52,7 +52,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let grid_layout = props.grid_layout;
     let update_hotkeys_on_move = props.update_hotkeys_on_move;
     let hotkey_assign_request = props.hotkey_assign_request;
-    let command_card_props = CommandGridSectionProps {
+    let command_card_props = GridEditorConfig {
         heading: "Command card",
         race,
         slot_ids: command_card_slots,
@@ -73,10 +73,10 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     };
     rsx! {
         div { class: "unit-detail-grids",
-            CommandGridSection { ..command_card_props }
+            CommandGridEditor { ..command_card_props }
             if let Some(build_menu_ids) = build_menu_slots {
                 {
-                    let build_menu_props = CommandGridSectionProps {
+                    let build_menu_props = GridEditorConfig {
                         heading: "Build menu",
                         race,
                         slot_ids: build_menu_ids,
@@ -95,12 +95,12 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { CommandGridSection { ..build_menu_props } }
+                    rsx! { CommandGridEditor { ..build_menu_props } }
                 }
             }
             if let Some(uprooted_menu_ids) = uprooted_menu_slots {
                 {
-                    let uprooted_props = CommandGridSectionProps {
+                    let uprooted_props = GridEditorConfig {
                         heading: "Uprooted",
                         race,
                         slot_ids: uprooted_menu_ids,
@@ -119,12 +119,12 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { UprootedGridSection { ..uprooted_props } }
+                    rsx! { UprootedGridEditor { ..uprooted_props } }
                 }
             }
             if let Some(research_menu_ids) = research_menu_slots {
                 {
-                    let research_props = CommandGridSectionProps {
+                    let research_props = GridEditorConfig {
                         heading: "Research menu",
                         race,
                         slot_ids: research_menu_ids,
@@ -143,7 +143,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { ResearchGridSection { ..research_props } }
+                    rsx! { ResearchGridEditor { ..research_props } }
                 }
             }
         }
