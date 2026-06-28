@@ -34,8 +34,10 @@ impl ViewportPreset {
         let large_phone = Self::new("Large phone", 600, 900);
         let tablet = Self::new("Tablet", 900, 1024);
         let desktop = Self::new("Desktop", 1440, 900);
+        let full_hd = Self::new("Full HD", 1920, 1080);
         let wide = Self::new("Wide", 2200, 1200);
-        vec![phone, large_phone, tablet, desktop, wide]
+        let ultra_4k = Self::new("4K", 3840, 2160);
+        vec![phone, large_phone, tablet, desktop, full_hd, wide, ultra_4k]
     }
 }
 
@@ -47,7 +49,7 @@ mod tests {
     fn defaults_cover_each_band() {
         let presets = ViewportPreset::defaults();
         let widths: Vec<u32> = presets.iter().map(ViewportPreset::width).collect();
-        assert_eq!(widths, vec![390, 600, 900, 1440, 2200]);
+        assert_eq!(widths, vec![390, 600, 900, 1440, 1920, 2200, 3840]);
         assert!(presets[0].width() <= 480);
         assert!(presets[3].width() >= 1100);
     }

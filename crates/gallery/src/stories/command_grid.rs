@@ -14,15 +14,11 @@ use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new("Command grid", "Grid cell — empty", grid_cell_empty),
-        Story::new(
+        Story::single("Command grid", "GridCell", grid_cell_empty),
+        Story::single("Command grid", "GridTile", grid_tile_footman),
+        Story::single(
             "Command grid",
-            "Grid tile — Footman column 0 row 0",
-            grid_tile_footman,
-        ),
-        Story::new(
-            "Command grid",
-            "Command grid section — Footman",
+            "CommandGridSection",
             command_grid_section_footman,
         ),
     ]

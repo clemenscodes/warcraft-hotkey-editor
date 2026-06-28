@@ -5,92 +5,73 @@ use gallery::Story;
 use hotkey_editor::{
     ControlGroupsHotkeysView, HeroSelectionHotkeysView, InventoryCell, InventoryDragFollower,
     InventoryDragOverlay, InventoryDragSource, InventoryGrid, InventoryHotkeysView, KeyCaptureCell,
-    SlotButton, SystemHotkeysBreadcrumbs, SystemHotkeysButton, SystemHotkeysCategoryTab,
-    SystemHotkeysDialog, SystemHotkeysHeader, SystemHotkeysListEntry, SystemHotkeysListView,
-    SystemKeyPickerDialog,
+    SlotButton, SystemHotkeysBreadcrumbs, SystemHotkeysCategoryTab, SystemHotkeysDialog,
+    SystemHotkeysHeader, SystemHotkeysListEntry, SystemHotkeysListView, SystemKeyPickerDialog,
 };
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, SystemBindingMap};
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new(
+        Story::single("System hotkeys", "InventoryCell", inventory_cell_default),
+        Story::single("System hotkeys", "KeyCaptureCell", key_capture_cell_default),
+        Story::single(
             "System hotkeys",
-            "Inventory cell — default",
-            inventory_cell_default,
-        ),
-        Story::new(
-            "System hotkeys",
-            "Key capture cell — default",
-            key_capture_cell_default,
-        ),
-        Story::new(
-            "System hotkeys",
-            "List entry — general command",
+            "SystemHotkeysListEntry",
             system_hotkeys_list_entry_default,
         ),
-        Story::new(
+        Story::single("System hotkeys", "SlotButton", slot_button_default),
+        Story::single("System hotkeys", "SystemHotkeysHeader", header),
+        Story::single(
             "System hotkeys",
-            "Slot button — default",
-            slot_button_default,
-        ),
-        Story::new("System hotkeys", "Button — closed", button_closed),
-        Story::new("System hotkeys", "Button — open", button_open),
-        Story::new("System hotkeys", "Header", header),
-        Story::new(
-            "System hotkeys",
-            "Breadcrumbs — inventory selected",
+            "SystemHotkeysBreadcrumbs",
             breadcrumbs_inventory,
         ),
         Story::new(
             "System hotkeys",
-            "Category tab — active",
+            "SystemHotkeysCategoryTab",
+            "active",
             category_tab_active,
         ),
         Story::new(
             "System hotkeys",
-            "Category tab — inactive",
+            "SystemHotkeysCategoryTab",
+            "inactive",
             category_tab_inactive,
         ),
-        Story::new(
+        Story::single(
             "System hotkeys",
-            "Inventory drag overlay — empty",
+            "InventoryDragOverlay",
             inventory_drag_overlay_empty,
         ),
-        Story::new("System hotkeys", "Control groups view", control_groups_view),
-        Story::new("System hotkeys", "Hero selection view", hero_selection_view),
-        Story::new("System hotkeys", "Inventory view", inventory_view),
-        Story::new("System hotkeys", "Inventory grid", inventory_grid),
-        Story::new(
+        Story::single(
             "System hotkeys",
-            "Key picker dialog — open",
+            "ControlGroupsHotkeysView",
+            control_groups_view,
+        ),
+        Story::single(
+            "System hotkeys",
+            "HeroSelectionHotkeysView",
+            hero_selection_view,
+        ),
+        Story::single("System hotkeys", "InventoryHotkeysView", inventory_view),
+        Story::single("System hotkeys", "InventoryGrid", inventory_grid),
+        Story::single(
+            "System hotkeys",
+            "SystemKeyPickerDialog",
             key_picker_dialog_open,
         ),
-        Story::new(
+        Story::single(
             "System hotkeys",
-            "List view — general commands",
+            "SystemHotkeysListView",
             list_view_general_commands,
         ),
-        Story::new(
+        Story::single(
             "System hotkeys",
-            "Dialog — open",
+            "SystemHotkeysDialog",
             system_hotkeys_dialog_open,
         ),
     ]
-}
-
-fn button_closed() -> Element {
-    let system_hotkeys_open = use_signal(|| false);
-    rsx! {
-        SystemHotkeysButton { system_hotkeys_open }
-    }
-}
-
-fn button_open() -> Element {
-    let system_hotkeys_open = use_signal(|| true);
-    rsx! {
-        SystemHotkeysButton { system_hotkeys_open }
-    }
 }
 
 fn header() -> Element {

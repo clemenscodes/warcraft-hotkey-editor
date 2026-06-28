@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::shared::icons::ICON_RESOLVE;
-use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
+use crate::components::shared::toolbar_button::ToolbarButton;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
@@ -19,24 +19,19 @@ pub fn ResolveButton(props: ResolveButtonProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let navigation = props.navigation;
     let has_loaded_file = loaded_keys.read().is_some();
+    let resolve_disabled = !has_loaded_file;
 
     let go_to_resolve = move |_| {
         navigation.apply(AppView::Resolve);
     };
 
     rsx! {
-        button {
-            class: TOOLBAR_BTN_CLASS,
-            r#type: "button",
+        ToolbarButton {
+            icon: ICON_RESOLVE,
             aria_label: "Resolve conflicts",
             "data-action": "view-resolve",
-            disabled: !has_loaded_file,
+            disabled: resolve_disabled,
             onclick: go_to_resolve,
-            span {
-                class: TOOLBAR_ICON_CLASS,
-                aria_hidden: "true",
-                dangerous_inner_html: ICON_RESOLVE,
-            }
         }
     }
 }

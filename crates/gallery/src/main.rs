@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use gallery::{Gallery, GalleryMode, StoryFrame};
+use gallery::{Gallery, GalleryMode, GalleryView, StoryFrame};
 use hotkey_editor::TAILWIND_STYLES;
 
 mod stories;
@@ -11,17 +11,19 @@ fn main() {
 #[component]
 fn GalleryApp() -> Element {
     let registry = stories::registry();
-    let mode = GalleryLocation::mode().unwrap_or(GalleryMode::Shell { story: None });
+    let default_view = GalleryView::default();
+    let default_mode = GalleryMode::Shell { view: default_view };
+    let mode = GalleryLocation::mode().unwrap_or(default_mode);
     match mode {
-        GalleryMode::Shell { story } => {
+        GalleryMode::Shell { view } => {
             let base_path = GalleryLocation::path();
             rsx! {
                 document::Stylesheet { href: TAILWIND_STYLES }
                 Gallery {
                     registry,
                     base_path,
-                    initial_story: story,
-                    on_select: move |story_id: String| GalleryLocation::set_story(&story_id),
+                    initial_view: view,
+                    on_change: move |view: GalleryView| GalleryLocation::set_view(&view),
                 }
             }
         }
@@ -50,7 +52,7 @@ impl GalleryLocation {
             .unwrap_or_default()
     }
 
-    fn set_story(story_id: &str) {
+    fn set_view(view: &GalleryView) {
         let Some(window) = web_sys::window() else {
             return;
         };
@@ -58,7 +60,8 @@ impl GalleryLocation {
             return;
         };
         let path = Self::path();
-        let url = format!("{path}?gallery&story={story_id}");
+        let body = view.to_query();
+        let url = format!("{path}?{body}");
         let state = wasm_bindgen::JsValue::NULL;
         let _ = history.replace_state_with_url(&state, "", Some(&url));
     }

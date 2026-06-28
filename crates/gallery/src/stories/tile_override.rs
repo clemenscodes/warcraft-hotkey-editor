@@ -16,59 +16,60 @@ use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new(
+        Story::single(
             "Tile override",
-            "Alt position picker — open",
+            "AltPositionPicker",
             alt_position_picker_open,
         ),
-        Story::new(
+        Story::single(
             "Tile override",
-            "Upgrade position picker — open",
+            "UpgradePositionPicker",
             upgrade_position_picker_open,
         ),
-        Story::new(
+        Story::single(
             "Tile override",
-            "Tile override panel — Archmage Blizzard",
+            "TileOverridePanel",
             tile_override_panel_archmage_blizzard,
         ),
-        Story::new(
+        Story::single(
             "Tile override",
-            "Ability description — two lines",
+            "AbilityDescription",
             ability_description_two_lines,
         ),
         Story::new(
             "Tile override",
-            "Override key field — idle",
+            "OverrideKeyField",
+            "idle",
             override_key_field_idle,
         ),
         Story::new(
             "Tile override",
-            "Override key field — editing",
+            "OverrideKeyField",
+            "editing",
             override_key_field_editing,
         ),
         Story::new(
             "Tile override",
-            "Override key field — special token",
+            "OverrideKeyField",
+            "special token",
             override_key_field_special,
         ),
-        Story::new(
+        Story::single(
             "Tile override",
-            "Upgrade tier selector — level 1 of 3",
+            "UpgradeTierSelector",
             upgrade_tier_selector_default,
         ),
+        Story::single("Tile override", "UpgradeSection", upgrade_section_idle),
         Story::new(
             "Tile override",
-            "Upgrade section — idle",
-            upgrade_section_idle,
-        ),
-        Story::new(
-            "Tile override",
-            "Alt state section — with controls",
+            "AltStateSection",
+            "with controls",
             alt_state_section_with_controls,
         ),
         Story::new(
             "Tile override",
-            "Alt state section — no controls",
+            "AltStateSection",
+            "no controls",
             alt_state_section_no_controls,
         ),
     ]

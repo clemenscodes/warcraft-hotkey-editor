@@ -11,34 +11,24 @@ use crate::stories::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new("Dialogs", "Dialog header", dialog_header_default),
+        Story::single("Dialogs", "DialogHeader", dialog_header_default),
+        Story::single("Dialogs", "UploadInfoDialog", upload_info_dialog_open),
+        Story::single("Dialogs", "DownloadInfoDialog", download_info_dialog_open),
+        Story::single("Dialogs", "HelpDialog", help_dialog_open),
+        Story::single("Dialogs", "PreviewDialog", preview_dialog_open),
+        Story::single("Dialogs", "LayoutEditor", layout_editor_default),
+        Story::single("Dialogs", "TemplatesDialog", templates_dialog_open_story),
+        Story::single("Dialogs", "TemplateCard", template_card_default),
         Story::new(
             "Dialogs",
-            "Upload info dialog — open",
-            upload_info_dialog_open,
-        ),
-        Story::new(
-            "Dialogs",
-            "Download info dialog — open",
-            download_info_dialog_open,
-        ),
-        Story::new("Dialogs", "Help dialog — open", help_dialog_open),
-        Story::new("Dialogs", "Preview dialog — open", preview_dialog_open),
-        Story::new("Dialogs", "LayoutEditor", layout_editor_default),
-        Story::new(
-            "Dialogs",
-            "TemplatesDialog — open",
-            templates_dialog_open_story,
-        ),
-        Story::new("Dialogs", "TemplateCard — Default", template_card_default),
-        Story::new(
-            "Dialogs",
-            "TemplateCardGrid — command card",
+            "TemplateCardGrid",
+            "command card",
             template_card_grid_command,
         ),
         Story::new(
             "Dialogs",
-            "TemplateCardGrid — research menu",
+            "TemplateCardGrid",
+            "research menu",
             template_card_grid_research,
         ),
     ]

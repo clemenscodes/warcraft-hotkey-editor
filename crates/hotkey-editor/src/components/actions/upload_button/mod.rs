@@ -4,10 +4,13 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use crate::components::shared::icons::ICON_UPLOAD;
-use crate::components::shell::header::{TOOLBAR_BTN_CLASS, TOOLBAR_ICON_CLASS};
+use crate::components::shared::toolbar_button::ToolbarButton;
 
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
+
+const UPLOAD_BUTTON_STYLES: Asset =
+    asset!("/src/components/actions/upload_button/upload_button.css");
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UploadButtonProps {
@@ -67,24 +70,19 @@ pub fn UploadButton(props: UploadButtonProps) -> Element {
 
     let open_info = move |_| info_open.set(true);
     rsx! {
-        div { class: "contents",
+        document::Stylesheet { href: UPLOAD_BUTTON_STYLES }
+        div { class: "upload-button",
             input {
                 id: UPLOAD_INPUT_ELEMENT_ID,
-                class: "absolute -left-[9999px] w-px h-px opacity-0",
+                class: "upload-button-input",
                 r#type: "file",
                 accept: ".txt,text/plain",
                 onchange: on_file_change,
             }
-            button {
-                class: TOOLBAR_BTN_CLASS,
-                r#type: "button",
+            ToolbarButton {
+                icon: ICON_UPLOAD,
                 aria_label: "Upload CustomKeys.txt",
                 onclick: open_info,
-                span {
-                    class: TOOLBAR_ICON_CLASS,
-                    aria_hidden: "true",
-                    dangerous_inner_html: ICON_UPLOAD,
-                }
             }
             UploadInfoDialog { open: info_open }
         }

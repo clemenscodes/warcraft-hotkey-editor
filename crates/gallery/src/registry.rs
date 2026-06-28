@@ -1,9 +1,32 @@
 use crate::story::Story;
 
+/// One overarching component within a group, holding its stories in
+/// registration order. A component with more than one story is collapsible;
+/// a single-story component renders as a flat leaf.
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct StoryComponent {
+    name: &'static str,
+    stories: Vec<Story>,
+}
+
+impl StoryComponent {
+    pub fn name(&self) -> &'static str {
+        self.name
+    }
+
+    pub fn stories(&self) -> &[Story] {
+        &self.stories
+    }
+
+    pub fn is_collapsible(&self) -> bool {
+        self.stories.len() > 1
+    }
+}
+
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct StoryGroup {
     name: &'static str,
-    stories: Vec<Story>,
+    components: Vec<StoryComponent>,
 }
 
 impl StoryGroup {
@@ -11,8 +34,8 @@ impl StoryGroup {
         self.name
     }
 
-    pub fn stories(&self) -> &[Story] {
-        &self.stories
+    pub fn components(&self) -> &[StoryComponent] {
+        &self.components
     }
 }
 
@@ -42,15 +65,32 @@ impl StoryRegistry {
     pub fn groups(&self) -> Vec<StoryGroup> {
         let mut groups: Vec<StoryGroup> = Vec::new();
         for story in &self.stories {
-            let existing = groups.iter_mut().find(|group| group.name == story.group());
-            match existing {
-                Some(group) => group.stories.push(*story),
+            let group_name = story.group();
+            let group_index = match groups.iter().position(|group| group.name == group_name) {
+                Some(index) => index,
                 None => {
                     let new_group = StoryGroup {
-                        name: story.group(),
-                        stories: vec![*story],
+                        name: group_name,
+                        components: Vec::new(),
                     };
                     groups.push(new_group);
+                    groups.len() - 1
+                }
+            };
+            let group = &mut groups[group_index];
+            let component_name = story.component();
+            let existing = group
+                .components
+                .iter_mut()
+                .find(|component| component.name == component_name);
+            match existing {
+                Some(component) => component.stories.push(*story),
+                None => {
+                    let new_component = StoryComponent {
+                        name: component_name,
+                        stories: vec![*story],
+                    };
+                    group.components.push(new_component);
                 }
             }
         }
@@ -80,25 +120,36 @@ mod tests {
 
     fn registry() -> StoryRegistry {
         StoryRegistry::new()
-            .register(Story::new("Buttons", "Primary", first))
-            .register(Story::new("Buttons", "Disabled", second))
-            .register(Story::new("Cards", "Default", first))
+            .register(Story::new("Buttons", "Export buttons", "loaded", first))
+            .register(Story::new("Buttons", "Export buttons", "no file", second))
+            .register(Story::single("Buttons", "UndoRedoButtons", first))
+            .register(Story::single("Cards", "Default card", first))
     }
 
     #[test]
-    fn groups_preserve_order_and_membership() {
+    fn groups_nest_components_in_registration_order() {
         let groups = registry().groups();
         assert_eq!(groups.len(), 2);
         assert_eq!(groups[0].name(), "Buttons");
-        assert_eq!(groups[0].stories().len(), 2);
+        assert_eq!(groups[0].components().len(), 2);
+        assert_eq!(groups[0].components()[0].name(), "Export buttons");
+        assert_eq!(groups[0].components()[0].stories().len(), 2);
         assert_eq!(groups[1].name(), "Cards");
-        assert_eq!(groups[1].stories().len(), 1);
+    }
+
+    #[test]
+    fn collapsible_only_when_more_than_one_story() {
+        let groups = registry().groups();
+        let export_buttons = &groups[0].components()[0];
+        let undo_redo = &groups[0].components()[1];
+        assert!(export_buttons.is_collapsible());
+        assert!(!undo_redo.is_collapsible());
     }
 
     #[test]
     fn find_resolves_known_id() {
-        let found = registry().find("Buttons/Disabled");
-        assert_eq!(found.map(|story| story.name()), Some("Disabled"));
+        let found = registry().find("Buttons/Export buttons/no file");
+        assert_eq!(found.map(|story| story.label()), Some("no file"));
     }
 
     #[test]
@@ -108,6 +159,9 @@ mod tests {
 
     #[test]
     fn first_id_is_first_registered() {
-        assert_eq!(registry().first_id(), Some("Buttons/Primary".to_string()));
+        assert_eq!(
+            registry().first_id(),
+            Some("Buttons/Export buttons/loaded".to_string())
+        );
     }
 }

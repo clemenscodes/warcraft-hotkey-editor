@@ -9,11 +9,11 @@ use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::CustomKeys;
 
+use crate::components::actions::grid_layout_button::GridLayoutButton;
 use crate::components::dialogs::dialog_header::DialogHeader;
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::templates_dialog::TemplatesDialog;
-use crate::components::shared::icons::ICON_GRID;
 use crate::model::grid::{EditingCell, GridLayout};
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::navigation::app_view::AppView;
@@ -25,25 +25,6 @@ pub use collisions_button::CollisionsButton;
 pub use toolbar::HeaderToolbar;
 
 const APP_HEADER_STYLES: Asset = asset!("/src/components/shell/header/header.css");
-
-// Shared by toolbar.rs, burger.rs, and action components via `super::` or direct path.
-pub(crate) const TOOLBAR_BTN_CLASS: &str = "inline-flex items-center justify-center \
-     [width:calc(5rem_*_var(--hdr-scale))] [height:calc(5rem_*_var(--hdr-scale))] p-0 \
-     [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
-     border border-[#6c5a1f] [border-radius:calc(12px_*_var(--hdr-scale))] \
-     text-warcraft-text-secondary cursor-pointer \
-     [transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease] \
-     [@media(hover:hover)]:hover:border-warcraft-gold \
-     [@media(hover:hover)]:hover:text-warcraft-gold \
-     [@media(hover:hover)]:hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] \
-     [@media(hover:hover)]:hover:[box-shadow:0_0_12px_rgba(255,206,99,0.3)] \
-     focus:outline-none \
-     focus-visible:border-white focus-visible:text-white \
-     focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]";
-
-pub(crate) const TOOLBAR_ICON_CLASS: &str = "flex items-center justify-center \
-     [width:calc(2.2rem_*_var(--hdr-scale))] [height:calc(2.2rem_*_var(--hdr-scale))] \
-     leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full";
 
 #[derive(Props, Clone, PartialEq)]
 pub struct HeaderProps {
@@ -83,10 +64,6 @@ pub fn Header(props: HeaderProps) -> Element {
     };
     let mut layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
-    let toggle_layout_dialog = move |_| {
-        let next = !*layout_dialog_open.read();
-        layout_dialog_open.set(next);
-    };
     let handle_layout_open_change = move |is_open: bool| {
         if !is_open && nested_picker_dialog_is_present() {
             return;
@@ -115,43 +92,7 @@ pub fn Header(props: HeaderProps) -> Element {
             HeaderBrand { navigation }
             div {
                 class: "hidden min-[1500px]:flex min-[1500px]:items-center min-[1500px]:justify-center",
-                button {
-                    class: "inline-flex items-center \
-                            [gap:calc(1rem_*_var(--hdr-scale))] \
-                            [height:calc(6rem_*_var(--hdr-scale))] \
-                            [padding:0_calc(2rem_*_var(--hdr-scale))] \
-                            [background:linear-gradient(135deg,rgba(40,30,8,0.85)_0%,rgba(15,12,4,0.85)_100%)] \
-                            border border-warcraft-gold \
-                            [border-radius:calc(12px_*_var(--hdr-scale))] \
-                            text-warcraft-gold font-mono \
-                            [font-size:calc(2rem_*_var(--hdr-scale))] \
-                            tracking-[0.14em] font-medium cursor-pointer \
-                            [box-shadow:0_0_22px_rgba(255,206,99,0.22)] \
-                            [transition:background_0.12s_ease,box-shadow_0.12s_ease,transform_0.12s_ease] \
-                            focus:outline-none \
-                            [@media(hover:hover)]:hover:[background:linear-gradient(135deg,rgba(255,206,99,0.22)_0%,rgba(60,45,14,0.95)_100%)] \
-                            [@media(hover:hover)]:hover:[box-shadow:0_0_26px_rgba(255,206,99,0.55),inset_0_0_14px_rgba(255,206,99,0.15)] \
-                            focus-visible:border-white focus-visible:text-white \
-                            focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_18px_rgba(255,255,255,0.55)]",
-                    r#type: "button",
-                    aria_label: "Edit global hotkey layout",
-                    aria_haspopup: "dialog",
-                    aria_expanded: "{layout_dialog_open()}",
-                    onclick: toggle_layout_dialog,
-                    span {
-                        class: "inline-flex \
-                                [width:calc(2.2rem_*_var(--hdr-scale))] \
-                                [height:calc(2.2rem_*_var(--hdr-scale))] \
-                                [&_svg]:w-full [&_svg]:h-full",
-                        aria_hidden: "true",
-                        dangerous_inner_html: ICON_GRID,
-                    }
-                    span {
-                        class: "font-friz-quadrata font-normal uppercase tracking-[0.12em] \
-                                [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]",
-                        "GRID LAYOUT"
-                    }
-                }
+                GridLayoutButton { layout_dialog_open }
             }
             div {
                 class: "flex flex-row items-center justify-end \

@@ -16,41 +16,37 @@ pub fn stories() -> Vec<Story> {
     vec![
         Story::new(
             "Unit list",
-            "Unit card info — footman",
+            "UnitCardInfo",
+            "footman",
             unit_card_info_footman,
         ),
-        Story::new("Unit list", "Unit card info — hero", unit_card_info_hero),
+        Story::new("Unit list", "UnitCardInfo", "hero", unit_card_info_hero),
         Story::new(
             "Unit list",
-            "Mobile category tab — active",
+            "MobileCategoryTab",
+            "active",
             mobile_category_tab_active,
         ),
         Story::new(
             "Unit list",
-            "Mobile category tab — inactive",
+            "MobileCategoryTab",
+            "inactive",
             mobile_category_tab_inactive,
         ),
+        Story::single("Unit list", "UnitCardIcon", unit_card_icon_footman),
+        Story::new("Unit list", "UnitCard", "Footman", unit_card_footman),
         Story::new(
             "Unit list",
-            "Unit card icon — Footman (real icon)",
-            unit_card_icon_footman,
-        ),
-        Story::new("Unit list", "Unit card — Footman", unit_card_footman),
-        Story::new(
-            "Unit list",
-            "Unit card — Archmage (selected)",
+            "UnitCard",
+            "Archmage (selected)",
             unit_card_archmage_selected,
         ),
-        Story::new(
+        Story::single(
             "Unit list",
-            "Unit category section — Human Soldiers",
+            "UnitCategorySection",
             unit_category_section_human_soldiers,
         ),
-        Story::new(
-            "Unit list",
-            "Unit list panel — Human Melee",
-            unit_list_panel_human_melee,
-        ),
+        Story::single("Unit list", "UnitListPanel", unit_list_panel_human_melee),
     ]
 }
 

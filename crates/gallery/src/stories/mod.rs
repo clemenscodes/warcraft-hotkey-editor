@@ -1,6 +1,6 @@
 use gallery::{Story, StoryRegistry};
 
-mod actions;
+mod buttons;
 mod command_grid;
 mod dialogs;
 pub mod fixtures;
@@ -17,7 +17,7 @@ mod views;
 /// component group.
 pub fn registry() -> StoryRegistry {
     let mut stories: Vec<Story> = Vec::new();
-    stories.extend(actions::stories());
+    stories.extend(buttons::stories());
     stories.extend(command_grid::stories());
     stories.extend(dialogs::stories());
     stories.extend(shared::stories());

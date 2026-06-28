@@ -6,6 +6,9 @@ use crate::model::grid::GridLayout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
+const COLLISIONS_BUTTON_STYLES: Asset =
+    asset!("/src/components/shell/header/collisions_button.css");
+
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionsButtonProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
@@ -52,9 +55,9 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
         ICON_COLLISIONS_CLEAR
     };
     let button_class = if has_collisions {
-        BUTTON_ATTENTION_CLASS
+        "collisions-button collisions-button--attention"
     } else {
-        BUTTON_CLEAR_CLASS
+        "collisions-button collisions-button--clear"
     };
 
     let go_to_collisions = move |_| {
@@ -65,6 +68,7 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
     };
 
     rsx! {
+        document::Stylesheet { href: COLLISIONS_BUTTON_STYLES }
         button {
             class: button_class,
             r#type: "button",
@@ -76,29 +80,16 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
             "data-collision-per-unit-hotkey": "{per_unit_hotkey_count}",
             "data-collision-state": if has_collisions { "attention" } else { "clear" },
             onclick: go_to_collisions,
-            // Icon centered exactly like every other toolbar button —
-            // matches `TOOLBAR_ICON_CLASS` sizing so the row looks
-            // aligned.  The count rides as a top-right corner overlay
-            // *inside* the button box (absolute-positioned) so the
-            // icon never shifts off-center.
+            // The count rides as a top-right corner overlay inside the button
+            // box (absolute-positioned) so the icon never shifts off-center.
             span {
-                class: "flex items-center justify-center \
-                        [width:calc(2.2rem_*_var(--hdr-scale))] [height:calc(2.2rem_*_var(--hdr-scale))] \
-                        leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full \
-                        max-[1099px]:[width:1.4rem] max-[1099px]:[height:1.4rem]",
+                class: "collisions-button-icon",
                 aria_hidden: "true",
                 dangerous_inner_html: icon_html,
             }
             if has_collisions {
                 span {
-                    class: "absolute top-[calc(0.4rem_*_var(--hdr-scale))] right-[calc(0.45rem_*_var(--hdr-scale))] \
-                            font-mono font-bold leading-none \
-                            text-[#ffe39a] \
-                            [font-size:calc(1rem_*_var(--hdr-scale))] \
-                            [text-shadow:1px_1px_0_rgba(0,0,0,0.95),-1px_1px_0_rgba(0,0,0,0.95),1px_-1px_0_rgba(0,0,0,0.95),-1px_-1px_0_rgba(0,0,0,0.95),0_0_3px_rgba(0,0,0,0.95)] \
-                            pointer-events-none \
-                            max-[1099px]:!top-[5px] max-[1099px]:!right-[6px] \
-                            max-[1099px]:text-[0.9rem]",
+                    class: "collisions-button-badge",
                     "data-collision-badge": "true",
                     aria_hidden: "true",
                     "{count_label}"
@@ -107,46 +98,6 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
         }
     }
 }
-
-/// Attention state — collisions present.  Same chrome as every other
-/// toolbar button (no extra glow, no off-palette colors); the warmer
-/// amber icon + count below it carry the alert.  Mobile sizing matches
-/// the burger menu (44px square, standard touch target).
-const BUTTON_ATTENTION_CLASS: &str = "relative inline-flex items-center justify-center shrink-0 \
-     [width:calc(5rem_*_var(--hdr-scale))] [height:calc(5rem_*_var(--hdr-scale))] p-0 \
-     [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
-     border border-[#6c5a1f] [border-radius:calc(12px_*_var(--hdr-scale))] \
-     text-[#e8a23a] cursor-pointer \
-     [transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease] \
-     [@media(hover:hover)]:hover:border-warcraft-gold \
-     [@media(hover:hover)]:hover:text-warcraft-gold \
-     [@media(hover:hover)]:hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] \
-     [@media(hover:hover)]:hover:[box-shadow:0_0_12px_rgba(255,206,99,0.3)] \
-     focus:outline-none \
-     focus-visible:border-white focus-visible:text-white \
-     focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)] \
-     max-[1099px]:w-[44px] max-[1099px]:h-[44px] \
-     max-[1099px]:min-w-[44px] max-[1099px]:min-h-[44px] \
-     max-[1099px]:rounded-[10px]";
-
-/// Clear state — zero collisions.  Same chrome but the border switches
-/// to full gold and the icon glows gold; reads as the affirmative
-/// "achievement" indicator without any decorative extras.
-const BUTTON_CLEAR_CLASS: &str = "relative inline-flex items-center justify-center shrink-0 \
-     [width:calc(5rem_*_var(--hdr-scale))] [height:calc(5rem_*_var(--hdr-scale))] p-0 \
-     [background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] \
-     border border-warcraft-gold [border-radius:calc(12px_*_var(--hdr-scale))] \
-     text-warcraft-gold cursor-pointer \
-     [box-shadow:0_0_10px_rgba(255,206,99,0.2)] \
-     [transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease] \
-     [@media(hover:hover)]:hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] \
-     [@media(hover:hover)]:hover:[box-shadow:0_0_14px_rgba(255,206,99,0.45)] \
-     focus:outline-none \
-     focus-visible:border-white focus-visible:text-white \
-     focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)] \
-     max-[1099px]:w-[44px] max-[1099px]:h-[44px] \
-     max-[1099px]:min-w-[44px] max-[1099px]:min-h-[44px] \
-     max-[1099px]:rounded-[10px]";
 
 /// Per-class breakdown of every collision the badge surfaces.
 /// Exposed as discrete fields so the renderer can publish each class

@@ -9,17 +9,19 @@ pub fn stories() -> Vec<Story> {
     vec![
         Story::new(
             "Tabs",
-            "Mode and race tabs — melee / human",
+            "ModeAndRaceTabs",
+            "melee / human",
             mode_and_race_tabs_melee_human,
         ),
         Story::new(
             "Tabs",
-            "Mode and race tabs — campaign / orc",
+            "ModeAndRaceTabs",
+            "campaign / orc",
             mode_and_race_tabs_campaign_orc,
         ),
-        Story::new("Tabs", "Race tabs — human active", race_tabs_human_active),
-        Story::new("Tabs", "Race tab — human active", race_tab_human_active),
-        Story::new("Tabs", "Race tab — orc inactive", race_tab_orc_inactive),
+        Story::single("Tabs", "RaceTabs", race_tabs_human_active),
+        Story::new("Tabs", "RaceTab", "human active", race_tab_human_active),
+        Story::new("Tabs", "RaceTab", "orc inactive", race_tab_orc_inactive),
     ]
 }
 

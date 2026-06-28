@@ -1,43 +1,34 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    AppView, BurgerMenu, CollisionsButton, DragFollower, DragFollowerOverlay, DragFollowerVisual,
-    EditingCell, Footer, Header, HeaderBrand, HeaderToolbar, ToastMount, TooltipMount, UndoHistory,
+    AppView, BurgerMenu, DragFollower, DragFollowerOverlay, DragFollowerVisual, EditingCell,
+    Footer, Header, HeaderBrand, HeaderToolbar, ToastMount, TooltipMount, UndoHistory,
     UploadStatus, ViewNavigationContext,
 };
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
-use warcraft_keybinds::CustomKeys;
 
 use crate::stories::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new("Shell", "Footer", footer_default),
-        Story::new("Shell", "TooltipMount", tooltip_mount_default),
-        Story::new("Shell", "ToastMount — with child", toast_mount_with_child),
-        Story::new("Shell", "HeaderBrand", header_brand_default),
+        Story::single("Shell", "Footer", footer_default),
+        Story::single("Shell", "TooltipMount", tooltip_mount_default),
+        Story::single("Shell", "ToastMount", toast_mount_with_child),
+        Story::single("Shell", "HeaderBrand", header_brand_default),
+        Story::single("Shell", "BurgerMenu", burger_menu_default),
+        Story::single("Shell", "HeaderToolbar", header_toolbar_default),
+        Story::single("Shell", "Header", header_default),
         Story::new(
             "Shell",
-            "CollisionsButton — no file",
-            collisions_button_no_file,
-        ),
-        Story::new(
-            "Shell",
-            "CollisionsButton — file loaded",
-            collisions_button_loaded,
-        ),
-        Story::new("Shell", "BurgerMenu", burger_menu_default),
-        Story::new("Shell", "HeaderToolbar", header_toolbar_default),
-        Story::new("Shell", "Header", header_default),
-        Story::new(
-            "Shell",
-            "DragFollowerOverlay — with ability",
+            "DragFollowerOverlay",
+            "with ability",
             drag_follower_overlay_with_ability,
         ),
         Story::new(
             "Shell",
-            "DragFollowerOverlay — empty",
+            "DragFollowerOverlay",
+            "empty",
             drag_follower_overlay_empty,
         ),
     ]
@@ -78,46 +69,6 @@ fn header_brand_default() -> Element {
     };
     rsx! {
         HeaderBrand { navigation }
-    }
-}
-
-fn collisions_button_no_file() -> Element {
-    let loaded_keys = use_signal(|| None::<CustomKeys>);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    rsx! {
-        CollisionsButton { loaded_keys, grid_layout, navigation }
-    }
-}
-
-fn collisions_button_loaded() -> Element {
-    let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    rsx! {
-        CollisionsButton { loaded_keys, grid_layout, navigation }
     }
 }
 

@@ -30,12 +30,65 @@
 .gallery-shell-dragging .gallery-frame {
   pointer-events: none;
 }
+.gallery-search {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: inherit;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+.gallery-search::placeholder {
+  color: rgba(224, 216, 200, 0.5);
+}
 .gallery-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.6;
   margin: 0.75rem 0 0.25rem;
+}
+.gallery-group-title:hover {
+  opacity: 0.9;
+}
+.gallery-chevron {
+  display: inline-block;
+  width: 0.75rem;
+  flex: none;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.gallery-component-header {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.gallery-component-header:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.gallery-component-header.active {
+  color: #ffce63;
 }
 .gallery-item {
   display: block;
@@ -55,6 +108,16 @@
 .gallery-item.selected {
   background: rgba(255, 206, 99, 0.18);
   color: #ffce63;
+}
+.gallery-item.gallery-leaf {
+  padding-left: 1.5rem;
+}
+.gallery-item.gallery-variant {
+  margin-left: 1rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .gallery-main {
   flex: 1;
@@ -106,6 +169,10 @@
   justify-content: center;
   padding: 1.5rem;
   background: repeating-conic-gradient(#0d1424 0% 25%, #0a1020 0% 50%) 50% / 24px 24px;
+}
+.gallery-frame-scaler {
+  flex: none;
+  overflow: hidden;
 }
 .gallery-frame {
   background: #050a1a;

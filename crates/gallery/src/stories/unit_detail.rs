@@ -17,90 +17,97 @@ use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new("Unit detail", "Attribute row", attribute_row_default),
         Story::new(
             "Unit detail",
-            "Attribute row — primary",
+            "AttributeRow",
+            "default",
+            attribute_row_default,
+        ),
+        Story::new(
+            "Unit detail",
+            "AttributeRow",
+            "primary",
             attribute_row_primary,
         ),
-        Story::new(
+        Story::single(
             "Unit detail",
-            "Attack matchup cell — Normal vs Heavy",
+            "AttackMatchupCell",
             attack_matchup_cell_normal_vs_heavy,
         ),
-        Story::new(
+        Story::single(
             "Unit detail",
-            "Defense matchup cell — Heavy armor vs Normal attack",
+            "DefenseMatchupCell",
             defense_matchup_cell_heavy_vs_normal,
         ),
-        Story::new(
+        Story::single("Unit detail", "DamageMatchupRow", damage_matchup_row_normal),
+        Story::single(
             "Unit detail",
-            "Damage matchup row — Normal attack",
-            damage_matchup_row_normal,
-        ),
-        Story::new(
-            "Unit detail",
-            "Defense matchup row — Heavy armor",
+            "DefenseMatchupRow",
             defense_matchup_row_heavy,
         ),
         Story::new(
             "Unit detail",
-            "Hero level option — selected",
+            "HeroLevelOption",
+            "selected",
             hero_level_option_selected,
         ),
         Story::new(
             "Unit detail",
-            "Hero level option — unselected",
+            "HeroLevelOption",
+            "unselected",
             hero_level_option_unselected,
         ),
         Story::new(
             "Unit detail",
-            "Unit detail header — no portrait",
+            "UnitDetailHeader",
+            "no portrait",
             unit_detail_header_no_portrait,
         ),
         Story::new(
             "Unit detail",
-            "Unit detail header — hero level picker",
+            "UnitDetailHeader",
+            "hero level picker",
             unit_detail_header_hero,
         ),
         Story::new(
             "Unit detail",
-            "Unit stats panel — empty unit",
+            "UnitStatsPanel",
+            "empty unit",
             unit_stats_panel_empty,
         ),
         Story::new(
             "Unit detail",
-            "Unit stats panel — Archmage (real hero data)",
+            "UnitStatsPanel",
+            "Archmage (real hero data)",
             unit_stats_panel_archmage,
         ),
         Story::new(
             "Unit detail",
-            "Unit stats panel — Footman (real unit data)",
+            "UnitStatsPanel",
+            "Footman (real unit data)",
             unit_stats_panel_footman,
         ),
-        Story::new(
+        Story::single(
             "Unit detail",
-            "Attributes column — Archmage",
+            "AttributesColumn",
             attributes_column_archmage,
         ),
-        Story::new(
+        Story::single("Unit detail", "CombatColumn", combat_column_footman),
+        Story::single(
             "Unit detail",
-            "Combat column — Footman",
-            combat_column_footman,
-        ),
-        Story::new(
-            "Unit detail",
-            "Unit command grids — Footman",
+            "UnitCommandGrids",
             unit_command_grids_footman,
         ),
         Story::new(
             "Unit detail",
-            "Unit detail panel — Footman",
+            "UnitDetailPanel",
+            "Footman",
             unit_detail_panel_footman,
         ),
         Story::new(
             "Unit detail",
-            "Unit detail panel — Archmage",
+            "UnitDetailPanel",
+            "Archmage",
             unit_detail_panel_archmage,
         ),
     ]

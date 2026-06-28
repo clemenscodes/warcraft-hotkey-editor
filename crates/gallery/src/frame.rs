@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use hotkey_editor::{ToastMount, TooltipMount};
 
 use crate::registry::StoryRegistry;
 
@@ -16,7 +17,10 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         Some(story) => {
             let render = story.render();
             rsx! {
-                div { class: "gallery-frame-root", {render()} }
+                TooltipMount {}
+                ToastMount {
+                    div { class: "gallery-frame-root", {render()} }
+                }
             }
         }
         None => rsx! {

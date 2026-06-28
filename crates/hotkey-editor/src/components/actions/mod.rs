@@ -1,4 +1,10 @@
-pub(crate) mod export_buttons;
+pub(crate) mod export_button;
+pub(crate) mod grid_layout_button;
+pub(crate) mod help_button;
+pub(crate) mod preview_button;
+pub(crate) mod redo_button;
 pub(crate) mod resolve_button;
-pub(crate) mod undo_redo_buttons;
+pub(crate) mod system_hotkeys_button;
+pub(crate) mod templates_button;
+pub(crate) mod undo_button;
 pub(crate) mod upload_button;
