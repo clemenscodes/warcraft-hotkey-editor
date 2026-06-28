@@ -4,7 +4,7 @@ use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
+use dioxus_primitives::toast::{ToastOptions, Toasts};
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::CustomKeys;
 use wasm_bindgen::JsCast;
@@ -25,95 +25,61 @@ use super::drag_state::{
     TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
 };
 
-#[derive(Props, Clone, PartialEq)]
-pub struct GridCellProps {
-    pub class_name: String,
-    pub column: u8,
-    pub row: u8,
-    pub heading_text: &'static str,
-    pub icon_src_option: Option<IconUrl>,
-    pub label_text: String,
-    pub displayed_letter: Option<String>,
-    pub hotkey_overlay_class: &'static str,
-    pub is_focusable: bool,
-    pub tile_is_draggable: bool,
-    pub is_research_grid: bool,
-    pub is_uprooted_grid: bool,
-    pub is_passive_on_command_grid: bool,
-    pub is_command_cell: bool,
-    pub prevent_swap_on_drop: bool,
-    pub layout_snapshot: GridLayout,
-    pub restrict_draggable_to: Rc<[GridSlotId]>,
-    pub selected_slot: Signal<Option<GridSlotId>>,
-    pub selected_from_research: Signal<bool>,
-    pub selected_from_uprooted: Signal<bool>,
-    pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub drag_follower: Signal<Option<DragFollower>>,
-    pub keys_signal: Signal<Option<CustomKeys>>,
-    pub update_hotkeys_on_move: Signal<bool>,
-    pub hotkey_assign_request: Signal<bool>,
-    pub slot_ids_for_drop: Rc<[GridSlotId]>,
-    pub occupant_slot: Option<GridSlotId>,
-}
-
-#[component]
-pub fn GridCell(props: GridCellProps) -> Element {
-    let toast_api = use_toast();
-
-    let column = props.column;
-    let row = props.row;
-    let heading_text = props.heading_text;
-    let class_name = props.class_name.clone();
-    let icon_src_option = props.icon_src_option.clone();
-    let label_text = props.label_text.clone();
-    let displayed_letter = props.displayed_letter.clone();
-    let hotkey_overlay_class = props.hotkey_overlay_class;
-    let is_focusable = props.is_focusable;
-    let tile_is_draggable = props.tile_is_draggable;
-    let is_research_grid = props.is_research_grid;
-    let is_uprooted_grid = props.is_uprooted_grid;
-    let is_passive_on_command_grid = props.is_passive_on_command_grid;
-    let is_command_cell = props.is_command_cell;
-    let prevent_swap_on_drop = props.prevent_swap_on_drop;
-    let layout_snapshot = props.layout_snapshot;
-    let restrict_draggable_to = props.restrict_draggable_to.clone();
-    let mut select_slot = props.selected_slot;
-    let mut select_from_research = props.selected_from_research;
-    let mut select_from_uprooted = props.selected_from_uprooted;
-    let mut dragging_slot = props.dragging_slot;
-    let mut drop_target_cell = props.drop_target_cell;
-    let mut drag_follower = props.drag_follower;
-    let mut keys_signal = props.keys_signal;
-    let update_hotkeys_on_move = props.update_hotkeys_on_move;
-    let mut hotkey_assign_request = props.hotkey_assign_request;
-    let slot_ids_for_drop = props.slot_ids_for_drop.clone();
-    let occupant_slot = props.occupant_slot;
-
-    let occupant_for_drag = occupant_slot;
-    let occupant_for_click = occupant_slot;
-    let occupant_for_keydown = occupant_slot;
-    let occupant_for_dblclick = occupant_slot;
-    let restrict_draggable_to_for_drag = Rc::clone(&restrict_draggable_to);
-    let icon_src_for_drag = icon_src_option.clone();
-    let label_for_drag = label_text.clone();
-    let displayed_letter_for_drag = displayed_letter.clone();
-
-    let tabindex_value = if is_focusable { "0" } else { "-1" };
-    let draggable_attr = if tile_is_draggable { "true" } else { "false" };
-
-    let handle_keydown = move |event: Event<KeyboardData>| {
+pub(super) fn keydown(
+    mut selected_slot: Signal<Option<GridSlotId>>,
+    occupant_for_keydown: Option<GridSlotId>,
+    mut selected_from_research: Signal<bool>,
+    is_research_grid: bool,
+    mut selected_from_uprooted: Signal<bool>,
+    is_uprooted_grid: bool,
+) -> impl FnMut(Event<KeyboardData>) + 'static {
+    move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
         if key_value == " " || key_value == "Enter" {
             event.prevent_default();
-            select_slot.set(occupant_for_keydown);
-            select_from_research.set(is_research_grid);
-            select_from_uprooted.set(is_uprooted_grid);
+            selected_slot.set(occupant_for_keydown);
+            selected_from_research.set(is_research_grid);
+            selected_from_uprooted.set(is_uprooted_grid);
             FocusModality::after_render(".tile-override-card .override-key-cell");
         }
-    };
+    }
+}
 
-    let handle_pointer_down = move |event: Event<PointerData>| {
+pub(super) struct PointerDownArgs {
+    pub(super) tile_is_draggable: bool,
+    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
+    pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub(super) drag_follower: Signal<Option<DragFollower>>,
+    pub(super) occupant_slot: Option<GridSlotId>,
+    pub(super) restrict_draggable_to: Rc<[GridSlotId]>,
+    pub(super) icon_src_option: Option<IconUrl>,
+    pub(super) label_text: String,
+    pub(super) displayed_letter: Option<String>,
+    pub(super) is_passive_on_command_grid: bool,
+    pub(super) is_command_cell: bool,
+    pub(super) heading_text: &'static str,
+    pub(super) column: u8,
+    pub(super) row: u8,
+}
+
+pub(super) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerData>) + 'static {
+    let PointerDownArgs {
+        tile_is_draggable,
+        mut dragging_slot,
+        mut drop_target_cell,
+        mut drag_follower,
+        occupant_slot,
+        restrict_draggable_to,
+        icon_src_option,
+        label_text,
+        displayed_letter,
+        is_passive_on_command_grid,
+        is_command_cell,
+        heading_text,
+        column,
+        row,
+    } = args;
+    move |event: Event<PointerData>| {
         // A new gesture starts: clear any stale double-click suppression so an
         // unrelated later double-click still opens the picker.
         SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.set(false));
@@ -145,7 +111,7 @@ pub fn GridCell(props: GridCellProps) -> Element {
             drop_target_cell.set(None);
             drag_follower.set(None);
         }
-        let Some(source_slot) = occupant_for_drag else {
+        let Some(source_slot) = occupant_slot else {
             return;
         };
         // Picker mode: drag origin must
@@ -154,8 +120,8 @@ pub fn GridCell(props: GridCellProps) -> Element {
         // dialog only lets the player
         // grab the toggle's off half,
         // not the unit's other slots.
-        if !restrict_draggable_to_for_drag.is_empty()
-            && !restrict_draggable_to_for_drag
+        if !restrict_draggable_to.is_empty()
+            && !restrict_draggable_to
                 .iter()
                 .any(|allowed| allowed == &source_slot)
         {
@@ -189,9 +155,9 @@ pub fn GridCell(props: GridCellProps) -> Element {
         DID_DRAG_MOVE.with(|cell| cell.set(false));
 
         let visual = DragFollowerVisual::new(
-            icon_src_for_drag.clone(),
-            label_for_drag.clone(),
-            displayed_letter_for_drag.clone(),
+            icon_src_option.clone(),
+            label_text.clone(),
+            displayed_letter.clone(),
             is_passive_on_command_grid,
             is_command_cell,
         );
@@ -262,9 +228,16 @@ pub fn GridCell(props: GridCellProps) -> Element {
         }
         // For mouse: drag commits in pointermove once the
         // movement threshold is crossed.
-    };
+    }
+}
 
-    let handle_pointer_move = move |event: Event<PointerData>| {
+pub(super) fn pointer_move(
+    mut dragging_slot: Signal<Option<DraggingSlot>>,
+    mut drop_target_cell: Signal<Option<DropTargetCell>>,
+    mut drag_follower: Signal<Option<DragFollower>>,
+    heading_text: &'static str,
+) -> impl FnMut(Event<PointerData>) + 'static {
+    move |event: Event<PointerData>| {
         let has_pending = PENDING_DRAG.with(|cell| cell.borrow().is_some());
         let drag_is_active = dragging_slot.read().is_some();
         if !has_pending && !drag_is_active {
@@ -436,9 +409,50 @@ pub fn GridCell(props: GridCellProps) -> Element {
         if needs_update {
             drop_target_cell.set(Some(new_target));
         }
-    };
+    }
+}
 
-    let handle_pointer_up = move |_event: Event<PointerData>| {
+pub(super) struct PointerUpArgs {
+    pub(super) dragging_slot: Signal<Option<DraggingSlot>>,
+    pub(super) drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub(super) drag_follower: Signal<Option<DragFollower>>,
+    pub(super) heading_text: &'static str,
+    pub(super) column: u8,
+    pub(super) row: u8,
+    pub(super) keys_signal: Signal<Option<CustomKeys>>,
+    pub(super) slot_ids_for_drop: Rc<[GridSlotId]>,
+    pub(super) is_research_grid: bool,
+    pub(super) toast_api: Toasts,
+    pub(super) update_hotkeys_on_move: Signal<bool>,
+    pub(super) layout_snapshot: GridLayout,
+    pub(super) prevent_swap_on_drop: bool,
+    pub(super) is_uprooted_grid: bool,
+    pub(super) selected_slot: Signal<Option<GridSlotId>>,
+    pub(super) selected_from_research: Signal<bool>,
+    pub(super) selected_from_uprooted: Signal<bool>,
+}
+
+pub(super) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) + 'static {
+    let PointerUpArgs {
+        mut dragging_slot,
+        mut drop_target_cell,
+        mut drag_follower,
+        heading_text,
+        column,
+        row,
+        mut keys_signal,
+        slot_ids_for_drop,
+        is_research_grid,
+        toast_api,
+        update_hotkeys_on_move,
+        layout_snapshot,
+        prevent_swap_on_drop,
+        is_uprooted_grid,
+        mut selected_slot,
+        mut selected_from_research,
+        mut selected_from_uprooted,
+    } = args;
+    move |_event: Event<PointerData>| {
         // Cancel pending long-press if the finger lifted before
         // the timer fired (tap → select).
         DragThreadState::cancel_long_press();
@@ -520,7 +534,7 @@ pub fn GridCell(props: GridCellProps) -> Element {
                     .with_assign_hotkey_on_move(assign_hotkey_on_move);
                     Positions::move_or_swap(&mut keys_signal, move_request);
                     let moved_slot = *dragging.slot_id();
-                    select_slot.set(Some(moved_slot));
+                    selected_slot.set(Some(moved_slot));
                     performed_swap = true;
                 }
             } else {
@@ -536,9 +550,9 @@ pub fn GridCell(props: GridCellProps) -> Element {
             && let Some(dragging) = dragging_clone.as_ref()
         {
             let source_slot = *dragging.slot_id();
-            select_slot.set(Some(source_slot));
-            select_from_research.set(is_research_grid);
-            select_from_uprooted.set(is_uprooted_grid);
+            selected_slot.set(Some(source_slot));
+            selected_from_research.set(is_research_grid);
+            selected_from_uprooted.set(is_uprooted_grid);
         }
         if did_move || performed_swap {
             SUPPRESS_NEXT_CLICK.with(|cell| cell.set(true));
@@ -549,16 +563,28 @@ pub fn GridCell(props: GridCellProps) -> Element {
         dragging_slot.set(None);
         drop_target_cell.set(None);
         drag_follower.set(None);
-    };
+    }
+}
 
-    let handle_pointer_cancel = move |_event: Event<PointerData>| {
+pub(super) fn pointer_cancel(
+    mut dragging_slot: Signal<Option<DraggingSlot>>,
+    mut drop_target_cell: Signal<Option<DropTargetCell>>,
+    mut drag_follower: Signal<Option<DragFollower>>,
+) -> impl FnMut(Event<PointerData>) + 'static {
+    move |_event: Event<PointerData>| {
         DragThreadState::reset();
         dragging_slot.set(None);
         drop_target_cell.set(None);
         drag_follower.set(None);
-    };
+    }
+}
 
-    let handle_lost_pointer_capture = move |_event: Event<PointerData>| {
+pub(super) fn lost_pointer_capture(
+    mut dragging_slot: Signal<Option<DraggingSlot>>,
+    mut drop_target_cell: Signal<Option<DropTargetCell>>,
+    mut drag_follower: Signal<Option<DragFollower>>,
+) -> impl FnMut(Event<PointerData>) + 'static {
+    move |_event: Event<PointerData>| {
         // Safety net: fires whenever pointer capture is released
         // (after pointerup, pointercancel, or browser scroll
         // takeover). Ensures drag state never stays stuck.
@@ -566,19 +592,38 @@ pub fn GridCell(props: GridCellProps) -> Element {
         dragging_slot.set(None);
         drop_target_cell.set(None);
         drag_follower.set(None);
-    };
+    }
+}
 
-    let handle_click = move |_| {
+pub(super) fn click(
+    mut selected_slot: Signal<Option<GridSlotId>>,
+    occupant_for_click: Option<GridSlotId>,
+    mut selected_from_research: Signal<bool>,
+    is_research_grid: bool,
+    mut selected_from_uprooted: Signal<bool>,
+    is_uprooted_grid: bool,
+) -> impl FnMut(Event<MouseData>) + 'static {
+    move |_event: Event<MouseData>| {
         let was_suppressed = SUPPRESS_NEXT_CLICK.with(|cell| cell.replace(false));
         if was_suppressed {
             return;
         }
-        select_slot.set(occupant_for_click);
-        select_from_research.set(is_research_grid);
-        select_from_uprooted.set(is_uprooted_grid);
-    };
+        selected_slot.set(occupant_for_click);
+        selected_from_research.set(is_research_grid);
+        selected_from_uprooted.set(is_uprooted_grid);
+    }
+}
 
-    let handle_double_click = move |_| {
+pub(super) fn double_click(
+    mut selected_slot: Signal<Option<GridSlotId>>,
+    occupant_for_dblclick: Option<GridSlotId>,
+    mut selected_from_research: Signal<bool>,
+    is_research_grid: bool,
+    mut selected_from_uprooted: Signal<bool>,
+    is_uprooted_grid: bool,
+    mut hotkey_assign_request: Signal<bool>,
+) -> impl FnMut(Event<MouseData>) + 'static {
+    move |_event: Event<MouseData>| {
         // A drag that just ended produces a native dblclick; that must not open
         // the picker (initiating a drag resets the double-click trigger).
         let was_suppressed = SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.replace(false));
@@ -588,45 +633,9 @@ pub fn GridCell(props: GridCellProps) -> Element {
         let Some(slot) = occupant_for_dblclick else {
             return;
         };
-        select_slot.set(Some(slot));
-        select_from_research.set(is_research_grid);
-        select_from_uprooted.set(is_uprooted_grid);
+        selected_slot.set(Some(slot));
+        selected_from_research.set(is_research_grid);
+        selected_from_uprooted.set(is_uprooted_grid);
         hotkey_assign_request.set(true);
-    };
-
-    let icon_src_url = icon_src_option.as_ref().map(|url| url.to_string());
-    rsx! {
-        div { class: "command-tile-wrapper",
-            div {
-                class: class_name,
-                tabindex: tabindex_value,
-                "data-grid-row": row,
-                "data-grid-col": column,
-                "data-grid-section": heading_text,
-                "data-draggable": draggable_attr,
-                onkeydown: handle_keydown,
-                onpointerdown: handle_pointer_down,
-                onpointermove: handle_pointer_move,
-                onpointerup: handle_pointer_up,
-                onpointercancel: handle_pointer_cancel,
-                onlostpointercapture: handle_lost_pointer_capture,
-                onclick: handle_click,
-                ondoubleclick: handle_double_click,
-                if let Some(source) = icon_src_url {
-                    img {
-                        src: source,
-                        alt: label_text,
-                        draggable: "false",
-                        loading: "lazy",
-                        decoding: "async",
-                    }
-                } else if is_focusable {
-                    span { class: "command-label", {label_text} }
-                }
-                if let Some(letter_text) = displayed_letter.clone() {
-                    span { class: hotkey_overlay_class, {letter_text} }
-                }
-            }
-        }
     }
 }

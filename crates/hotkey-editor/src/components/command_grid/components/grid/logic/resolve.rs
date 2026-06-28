@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 use dioxus::prelude::*;
+use dioxus_primitives::toast::Toasts;
 use warcraft_database::{BuildingTraits, ObjectLookup};
 use warcraft_keybinds::{AbilityCell, ColumnIndex, CustomKeys, RowIndex};
 
@@ -9,59 +10,91 @@ use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridLayout,
 use crate::model::icons::IconUrl;
 use crate::services::customkeys::positions::Positions;
 
-use super::grid_cell::{GridCell, GridCellProps};
-use super::tile_class::tile_class;
+use super::handlers;
+use crate::components::command_grid::{GridTileState, HotkeyBadgeState};
 
-#[derive(Props, Clone, PartialEq)]
-pub struct GridTileProps {
-    pub column: u8,
-    pub row: u8,
-    pub heading: &'static str,
-    pub slot_ids: Rc<[GridSlotId]>,
-    pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub selected_slot: Signal<Option<GridSlotId>>,
-    pub selected_from_research: Signal<bool>,
-    pub selected_from_uprooted: Signal<bool>,
-    pub tier_overrides: Signal<HashMap<String, usize>>,
-    pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_cell: Signal<Option<DropTargetCell>>,
-    pub drag_follower: Signal<Option<DragFollower>>,
-    pub grid_layout: Signal<GridLayout>,
-    pub update_hotkeys_on_move: Signal<bool>,
-    pub hotkey_assign_request: Signal<bool>,
-    pub conflicting_hotkeys: Rc<HashSet<String>>,
-    pub is_research_grid: bool,
-    pub is_uprooted_grid: bool,
-    pub prevent_swap_on_drop: bool,
-    pub restrict_draggable_to: Rc<[GridSlotId]>,
-    pub host_unit_id: String,
+/// The shared, per-grid state every tile resolves against. Built once by the
+/// grid and reused for each position. Signals are `Copy`; the `Rc`/`String`
+/// fields are cloned per tile only where a handler needs to own them.
+pub(crate) struct TileInputs {
+    pub(crate) slot_ids: Rc<[GridSlotId]>,
+    pub(crate) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(crate) selected_slot: Signal<Option<GridSlotId>>,
+    pub(crate) selected_from_research: Signal<bool>,
+    pub(crate) selected_from_uprooted: Signal<bool>,
+    pub(crate) tier_overrides: Signal<HashMap<String, usize>>,
+    pub(crate) dragging_slot: Signal<Option<DraggingSlot>>,
+    pub(crate) drop_target_cell: Signal<Option<DropTargetCell>>,
+    pub(crate) drag_follower: Signal<Option<DragFollower>>,
+    pub(crate) grid_layout: Signal<GridLayout>,
+    pub(crate) update_hotkeys_on_move: Signal<bool>,
+    pub(crate) hotkey_assign_request: Signal<bool>,
+    pub(crate) conflicting_hotkeys: Rc<HashSet<String>>,
+    pub(crate) is_research_grid: bool,
+    pub(crate) is_uprooted_grid: bool,
+    pub(crate) prevent_swap_on_drop: bool,
+    pub(crate) restrict_draggable_to: Rc<[GridSlotId]>,
+    pub(crate) host_unit_id: String,
+    pub(crate) heading: &'static str,
+    pub(crate) toast: Toasts,
 }
 
-#[component]
-pub fn GridTile(props: GridTileProps) -> Element {
-    let column = props.column;
-    let row = props.row;
-    let heading_text = props.heading;
-    let is_research_grid = props.is_research_grid;
-    let is_uprooted_grid = props.is_uprooted_grid;
-    let prevent_swap_on_drop = props.prevent_swap_on_drop;
-    let host_unit_id: &str = &props.host_unit_id;
-    let selected_slot = props.selected_slot;
-    let selected_from_research = props.selected_from_research;
-    let selected_from_uprooted = props.selected_from_uprooted;
-    let tier_overrides = props.tier_overrides;
-    let dragging_slot = props.dragging_slot;
-    let drop_target_cell = props.drop_target_cell;
-    let drag_follower = props.drag_follower;
-    let slot_ids = props.slot_ids;
-    let slot_ids_for_drop = slot_ids.clone();
-    let restrict_draggable_to = props.restrict_draggable_to;
-    let restrict_draggable_to_for_cell = restrict_draggable_to.clone();
-    let keys_signal = props.loaded_keys;
+/// The event handlers for one tile. The grid forwards them straight to the
+/// presentational tile's event props.
+pub(crate) struct TileHandlers {
+    pub(crate) keydown: EventHandler<KeyboardEvent>,
+    pub(crate) pointer_down: EventHandler<PointerEvent>,
+    pub(crate) pointer_move: EventHandler<PointerEvent>,
+    pub(crate) pointer_up: EventHandler<PointerEvent>,
+    pub(crate) pointer_cancel: EventHandler<PointerEvent>,
+    pub(crate) lost_pointer_capture: EventHandler<PointerEvent>,
+    pub(crate) click: EventHandler<MouseEvent>,
+    pub(crate) double_click: EventHandler<MouseEvent>,
+}
 
-    let read_guard = props.loaded_keys.read();
+/// The visual data and handlers for one tile, ready to spread onto the
+/// presentational `GridTile`.
+pub(crate) struct ResolvedTile {
+    pub(crate) icon: Option<String>,
+    pub(crate) label: String,
+    pub(crate) hotkey: Option<String>,
+    pub(crate) badge_state: HotkeyBadgeState,
+    pub(crate) state: GridTileState,
+    pub(crate) is_dragging_source: bool,
+    pub(crate) is_drag_over: bool,
+    pub(crate) is_focusable: bool,
+    pub(crate) draggable: bool,
+    pub(crate) handlers: TileHandlers,
+}
+
+/// Resolves which ability occupies a grid position (handling morph reverse
+/// halves), and computes its icon, label, hotkey, badge state, visual state, and
+/// event handlers. Reads the inputs' signals, so the grid re-renders when state
+/// changes.
+pub(crate) fn resolve_tile(inputs: &TileInputs, column: u8, row: u8) -> ResolvedTile {
+    let heading_text = inputs.heading;
+    let is_research_grid = inputs.is_research_grid;
+    let is_uprooted_grid = inputs.is_uprooted_grid;
+    let prevent_swap_on_drop = inputs.prevent_swap_on_drop;
+    let host_unit_id: &str = &inputs.host_unit_id;
+    let selected_slot = inputs.selected_slot;
+    let selected_from_research = inputs.selected_from_research;
+    let selected_from_uprooted = inputs.selected_from_uprooted;
+    let tier_overrides = inputs.tier_overrides;
+    let dragging_slot = inputs.dragging_slot;
+    let drop_target_cell = inputs.drop_target_cell;
+    let drag_follower = inputs.drag_follower;
+    let slot_ids = inputs.slot_ids.clone();
+    let slot_ids_for_drop = slot_ids.clone();
+    let restrict_draggable_to = inputs.restrict_draggable_to.clone();
+    let keys_signal = inputs.loaded_keys;
+    let update_hotkeys_on_move = inputs.update_hotkeys_on_move;
+    let hotkey_assign_request = inputs.hotkey_assign_request;
+    let toast_api = inputs.toast;
+
+    let read_guard = inputs.loaded_keys.read();
     let custom_keys_option = read_guard.as_ref();
-    let layout_snapshot = *props.grid_layout.read();
+    let layout_snapshot = *inputs.grid_layout.read();
     let active_slot = *selected_slot.read();
     let active_selection_is_research = *selected_from_research.read();
 
@@ -90,9 +123,9 @@ pub fn GridTile(props: GridTileProps) -> Element {
         None
     });
 
-    // Promote to AbilityOff when the tile shows the reverse half of a
-    // toggle (Unburrow, Night Elf Form). This wires drag-and-drop to
-    // write Unbuttonpos and selection to the off-state inspector.
+    // Promote to AbilityOff when the tile shows the reverse half of a toggle
+    // (Unburrow, Night Elf Form). This wires drag-and-drop to write Unbuttonpos
+    // and selection to the off-state inspector.
     let occupant_slot: Option<GridSlotId> = if morph_reverse_cell.is_some() {
         raw_occupant_slot.map(|slot| {
             let slot_object_id = slot.id();
@@ -175,15 +208,23 @@ pub fn GridTile(props: GridTileProps) -> Element {
         });
 
     let has_occupant = cell_option.is_some();
-    let class_name = tile_class(
-        has_occupant,
-        is_selected,
-        drag_in_progress_from_this_section,
-        is_command_cell,
-        is_being_dragged,
-        is_drop_target_cell,
-        is_off_state_blocked,
-    );
+    let state = if has_occupant {
+        if is_selected {
+            GridTileState::Selected
+        } else if is_command_cell {
+            GridTileState::Command
+        } else {
+            GridTileState::Filled
+        }
+    } else if drag_in_progress_from_this_section {
+        if is_off_state_blocked {
+            GridTileState::BlockedDropTarget
+        } else {
+            GridTileState::DropTarget
+        }
+    } else {
+        GridTileState::Empty
+    };
 
     let cell_object_id_option = cell_option.map(|cell| cell.object_id());
     let cell_tier_index = cell_object_id_option
@@ -245,15 +286,15 @@ pub fn GridTile(props: GridTileProps) -> Element {
 
     let is_hotkey_conflict = displayed_letter
         .as_ref()
-        .map(|label| props.conflicting_hotkeys.contains(label.as_str()))
+        .map(|label| inputs.conflicting_hotkeys.contains(label.as_str()))
         .unwrap_or(false);
 
-    let hotkey_overlay_class = if is_hotkey_conflict {
-        "hotkey-overlay conflict"
+    let badge_state = if is_hotkey_conflict {
+        HotkeyBadgeState::Conflict
     } else if is_passive_on_command_grid {
-        "hotkey-overlay passive"
+        HotkeyBadgeState::Passive
     } else {
-        "hotkey-overlay"
+        HotkeyBadgeState::Normal
     };
 
     // Lock only the morph toggle that flips the host into its other form (an
@@ -277,40 +318,98 @@ pub fn GridTile(props: GridTileProps) -> Element {
                 .map(|slot| restrict_draggable_to.iter().any(|allowed| allowed == slot))
                 .unwrap_or(false));
 
-    let is_focusable_cell = cell_option.is_some();
+    let is_focusable = cell_option.is_some();
+    let icon = icon_src_option.as_ref().map(|url| url.to_string());
 
-    let cell_props = GridCellProps {
-        class_name,
-        column,
-        row,
-        heading_text,
-        icon_src_option,
-        label_text,
-        displayed_letter,
-        hotkey_overlay_class,
-        is_focusable: is_focusable_cell,
-        tile_is_draggable,
-        is_research_grid,
-        is_uprooted_grid,
-        is_passive_on_command_grid,
-        is_command_cell,
-        prevent_swap_on_drop,
-        layout_snapshot,
-        restrict_draggable_to: restrict_draggable_to_for_cell,
+    let keydown = handlers::keydown(
         selected_slot,
+        occupant_slot,
         selected_from_research,
+        is_research_grid,
         selected_from_uprooted,
+        is_uprooted_grid,
+    );
+    let pointer_down_args = handlers::PointerDownArgs {
+        tile_is_draggable,
         dragging_slot,
         drop_target_cell,
         drag_follower,
-        keys_signal,
-        update_hotkeys_on_move: props.update_hotkeys_on_move,
-        hotkey_assign_request: props.hotkey_assign_request,
-        slot_ids_for_drop,
         occupant_slot,
+        restrict_draggable_to,
+        icon_src_option,
+        label_text: label_text.clone(),
+        displayed_letter: displayed_letter.clone(),
+        is_passive_on_command_grid,
+        is_command_cell,
+        heading_text,
+        column,
+        row,
+    };
+    let pointer_down = handlers::pointer_down(pointer_down_args);
+    let pointer_move =
+        handlers::pointer_move(dragging_slot, drop_target_cell, drag_follower, heading_text);
+    let pointer_up_args = handlers::PointerUpArgs {
+        dragging_slot,
+        drop_target_cell,
+        drag_follower,
+        heading_text,
+        column,
+        row,
+        keys_signal,
+        slot_ids_for_drop,
+        is_research_grid,
+        toast_api,
+        update_hotkeys_on_move,
+        layout_snapshot,
+        prevent_swap_on_drop,
+        is_uprooted_grid,
+        selected_slot,
+        selected_from_research,
+        selected_from_uprooted,
+    };
+    let pointer_up = handlers::pointer_up(pointer_up_args);
+    let pointer_cancel = handlers::pointer_cancel(dragging_slot, drop_target_cell, drag_follower);
+    let lost_pointer_capture =
+        handlers::lost_pointer_capture(dragging_slot, drop_target_cell, drag_follower);
+    let click = handlers::click(
+        selected_slot,
+        occupant_slot,
+        selected_from_research,
+        is_research_grid,
+        selected_from_uprooted,
+        is_uprooted_grid,
+    );
+    let double_click = handlers::double_click(
+        selected_slot,
+        occupant_slot,
+        selected_from_research,
+        is_research_grid,
+        selected_from_uprooted,
+        is_uprooted_grid,
+        hotkey_assign_request,
+    );
+
+    let tile_handlers = TileHandlers {
+        keydown: EventHandler::new(keydown),
+        pointer_down: EventHandler::new(pointer_down),
+        pointer_move: EventHandler::new(pointer_move),
+        pointer_up: EventHandler::new(pointer_up),
+        pointer_cancel: EventHandler::new(pointer_cancel),
+        lost_pointer_capture: EventHandler::new(lost_pointer_capture),
+        click: EventHandler::new(click),
+        double_click: EventHandler::new(double_click),
     };
 
-    rsx! {
-        GridCell { ..cell_props }
+    ResolvedTile {
+        icon,
+        label: label_text,
+        hotkey: displayed_letter,
+        badge_state,
+        state,
+        is_dragging_source: is_being_dragged,
+        is_drag_over: is_drop_target_cell,
+        is_focusable,
+        draggable: tile_is_draggable,
+        handlers: tile_handlers,
     }
 }

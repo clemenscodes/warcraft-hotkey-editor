@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
-use warcraft_api::WarcraftObjectId;
+use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::CustomKeys;
 
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
@@ -51,6 +51,7 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let hotkey_assign_request = use_signal(|| false);
     let grid_props = CommandGridSectionProps {
         heading: "Off-state position",
+        race: Race::Neutral,
         slot_ids: picker_slots,
         loaded_keys,
         selected_slot: picker_selected_slot,

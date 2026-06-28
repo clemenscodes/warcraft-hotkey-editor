@@ -1052,4 +1052,18 @@ body[data-kb-modality] .override-key-cell:focus {
       width: 13vw;
     }
   }
+
+.key-capture {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    border: none;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+    pointer-events: none;
+}
 }

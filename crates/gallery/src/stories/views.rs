@@ -202,14 +202,14 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Views",
             "IslandMiniGrid",
-            "top-left",
+            "Top-left",
             island_mini_grid_top_left,
         ),
-        Story::new("Views", "IslandMiniGrid", "center", island_mini_grid_center),
+        Story::new("Views", "IslandMiniGrid", "Center", island_mini_grid_center),
         Story::new(
             "Views",
             "IslandMiniGrid",
-            "bottom-right",
+            "Bottom-right",
             island_mini_grid_bottom_right,
         ),
         Story::single("Views", "IslandSidebar", island_sidebar_empty),

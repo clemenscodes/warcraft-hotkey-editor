@@ -22,13 +22,13 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Dialogs",
             "TemplateCardGrid",
-            "command card",
+            "Command card",
             template_card_grid_command,
         ),
         Story::new(
             "Dialogs",
             "TemplateCardGrid",
-            "research menu",
+            "Research menu",
             template_card_grid_research,
         ),
     ]

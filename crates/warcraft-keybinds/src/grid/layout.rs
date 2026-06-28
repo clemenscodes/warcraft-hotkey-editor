@@ -167,6 +167,12 @@ impl GridLayout {
     }
 }
 
+impl Default for GridLayout {
+    fn default() -> Self {
+        Self::qwerty_grid()
+    }
+}
+
 impl TryFrom<&str> for GridLayout {
     type Error = ();
 
@@ -187,5 +193,17 @@ impl TryFrom<&str> for GridLayout {
             }
         }
         Ok(Self::from_letters(letters))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_is_the_qwerty_grid() {
+        let default_layout = GridLayout::default();
+        let qwerty_layout = GridLayout::qwerty_grid();
+        assert_eq!(default_layout, qwerty_layout);
     }
 }

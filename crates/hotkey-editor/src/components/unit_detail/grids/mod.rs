@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
+use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::command_grid::{CommandGridSection, CommandGridSectionProps};
@@ -11,6 +12,7 @@ use crate::model::grid::{DragFollower, DraggingSlot, DropTargetCell, GridSlotId}
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCommandGridsProps {
     pub unit_id: String,
+    pub race: Race,
     pub command_card_slots: Rc<[GridSlotId]>,
     pub build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
@@ -31,6 +33,7 @@ pub struct UnitCommandGridsProps {
 #[component]
 pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let unit_id = props.unit_id;
+    let race = props.race;
     let command_card_slots = props.command_card_slots;
     let build_menu_slots = props.build_menu_slots;
     let uprooted_menu_slots = props.uprooted_menu_slots;
@@ -48,6 +51,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
     let hotkey_assign_request = props.hotkey_assign_request;
     let command_card_props = CommandGridSectionProps {
         heading: "Command card",
+        race,
         slot_ids: command_card_slots,
         loaded_keys,
         selected_slot,
@@ -73,6 +77,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                 {
                     let build_menu_props = CommandGridSectionProps {
                         heading: "Build menu",
+            race,
                         slot_ids: build_menu_ids,
                         loaded_keys,
                         selected_slot,
@@ -98,6 +103,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                 {
                     let uprooted_props = CommandGridSectionProps {
                         heading: "Uprooted",
+            race,
                         slot_ids: uprooted_menu_ids,
                         loaded_keys,
                         selected_slot,
@@ -123,6 +129,7 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                 {
                     let research_props = CommandGridSectionProps {
                         heading: "Research menu",
+            race,
                         slot_ids: research_menu_ids,
                         loaded_keys,
                         selected_slot,

@@ -7,7 +7,6 @@ use warcraft_keybinds::CustomKeys;
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::help_dialog::HelpDialog;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
-use crate::components::shell::drag_follower_overlay::DragFollowerOverlay;
 use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
@@ -521,6 +520,7 @@ pub fn App() -> Element {
                         "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
                         UnitListPanel { active_race, unit_mode, selected_unit_id, selected_slot, search_query, search_field, show_abilityless_units, expand_variants, collapsed_categories }
                         UnitDetailPanel {
+                            active_race,
                             selected_unit_id,
                             selected_slot,
                             selected_from_research,
@@ -579,7 +579,6 @@ pub fn App() -> Element {
                 if *help_open.read() {
                     HelpDialog { help_open }
                 }
-                DragFollowerOverlay { drag_follower, active_race }
             }
         }
     }

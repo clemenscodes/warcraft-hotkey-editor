@@ -65,7 +65,6 @@ body {
 @import "./src/components/unit_detail/unit_detail.css";
 @import "./src/components/unit_detail/header/header.css";
 @import "./src/components/unit_detail/stats_panel/stats_panel.css";
-@import "./src/components/command_grid/command_grid.css";
 @import "./src/components/dialogs/dialogs.css" layer(components);
 @import "./src/components/tile_override/tile_override.css";
 @import "./src/components/system_hotkeys/system_hotkeys.css";

@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
-use warcraft_api::WarcraftObjectMeta;
+use warcraft_api::{Race, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 use warcraft_keybinds::{CustomKeys, InspectorDetail, UnitCommandSlots};
 
@@ -23,6 +23,7 @@ use stats_panel::UnitStatsPanel;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailPanelProps {
+    pub active_race: Signal<Race>,
     pub selected_unit_id: Signal<Option<String>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub selected_from_research: Signal<bool>,
@@ -39,6 +40,7 @@ pub struct UnitDetailPanelProps {
 
 #[component]
 pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
+    let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
     let selected_slot = props.selected_slot;
     let selected_from_research = props.selected_from_research;
@@ -198,6 +200,7 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                 div { class: "unit-detail-row",
                     UnitCommandGrids {
                         unit_id: unit_id.clone(),
+                        race,
                         command_card_slots: command_card_slots_rc,
                         build_menu_slots: build_menu_slots_rc,
                         uprooted_menu_slots: uprooted_menu_slots_rc,

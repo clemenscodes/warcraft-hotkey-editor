@@ -1,0 +1,6 @@
+/* 4K: 3200px and wider. */
+@media (min-width: 3200px) {
+    .grid-tile {
+        --command-tile-cap: 200px;
+    }
+}

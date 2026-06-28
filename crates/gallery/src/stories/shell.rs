@@ -1,9 +1,8 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    AppView, BurgerMenu, DragFollower, DragFollowerOverlay, DragFollowerVisual, EditingCell,
-    Footer, Header, HeaderBrand, HeaderToolbar, ToastMount, TooltipMount, UndoHistory,
-    UploadStatus, ViewNavigationContext,
+    AppView, BurgerMenu, EditingCell, Footer, Header, HeaderBrand, HeaderToolbar, ToastMount,
+    TooltipMount, UndoHistory, UploadStatus, ViewNavigationContext,
 };
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
@@ -19,18 +18,6 @@ pub fn stories() -> Vec<Story> {
         Story::single("Shell", "BurgerMenu", burger_menu_default),
         Story::single("Shell", "HeaderToolbar", header_toolbar_default),
         Story::single("Shell", "Header", header_default),
-        Story::new(
-            "Shell",
-            "DragFollowerOverlay",
-            "with ability",
-            drag_follower_overlay_with_ability,
-        ),
-        Story::new(
-            "Shell",
-            "DragFollowerOverlay",
-            "empty",
-            drag_follower_overlay_empty,
-        ),
     ]
 }
 
@@ -179,34 +166,6 @@ fn header_default() -> Element {
                 search_query,
                 update_hotkeys_on_move,
             }
-        }
-    }
-}
-
-fn drag_follower_overlay_with_ability() -> Element {
-    let visual = DragFollowerVisual::new(
-        None,
-        "Sample Ability".to_string(),
-        Some("Q".to_string()),
-        false,
-        true,
-    );
-    let follower = DragFollower::new(visual, 0.0, 0.0, 80.0, 80.0, 64.0, 64.0);
-    let drag_follower = use_signal(|| Some(follower));
-    let active_race = use_signal(|| Race::Human);
-    rsx! {
-        div { style: "position: relative; width: 200px; height: 200px;",
-            DragFollowerOverlay { drag_follower, active_race }
-        }
-    }
-}
-
-fn drag_follower_overlay_empty() -> Element {
-    let drag_follower = use_signal(|| None::<DragFollower>);
-    let active_race = use_signal(|| Race::Human);
-    rsx! {
-        div { style: "position: relative; width: 200px; height: 200px;",
-            DragFollowerOverlay { drag_follower, active_race }
         }
     }
 }

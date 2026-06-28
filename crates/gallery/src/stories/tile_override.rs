@@ -39,19 +39,19 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Tile override",
             "OverrideKeyField",
-            "idle",
+            "Idle",
             override_key_field_idle,
         ),
         Story::new(
             "Tile override",
             "OverrideKeyField",
-            "editing",
+            "Editing",
             override_key_field_editing,
         ),
         Story::new(
             "Tile override",
             "OverrideKeyField",
-            "special token",
+            "Special token",
             override_key_field_special,
         ),
         Story::single(
@@ -63,13 +63,13 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Tile override",
             "AltStateSection",
-            "with controls",
+            "With controls",
             alt_state_section_with_controls,
         ),
         Story::new(
             "Tile override",
             "AltStateSection",
-            "no controls",
+            "No controls",
             alt_state_section_no_controls,
         ),
     ]

@@ -105,19 +105,7 @@ body {
    handler commits the drag it installs a non-passive touchmove lock, so the
    active drag follower stays aligned with viewport coordinates. */
 
-.grid-tile,
-.grid-tile.has-ability,
-.grid-tile.is-command {
-    touch-action: pan-y;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.grid-tiles,
-.command-tile-wrapper,
-.unit-detail-grids,
-.command-section {
+.unit-detail-grids {
     touch-action: pan-y;
 }
 
@@ -534,69 +522,6 @@ body {
         grid-column: auto;
         width: 100%;
     }
-
-    /* Command sections: full width, centered. Disable container queries
-       on phone — we use a viewport-derived tile size instead. The base
-       command-grid.css:103 sets container-type: inline-size which causes
-       jumpy reflows when the burger drawer overlays. */
-    .command-section {
-        container-type: normal;
-        flex: 1 1 100%;
-        min-width: 0;
-        width: 100%;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .command-section-heading {
-        font-size: 1.1rem;
-        margin: 0.5rem 0 0.6rem;
-        text-align: center;
-    }
-
-    /* Tiles: pure-px clamp because the project sets html font-size to a
-       clamp(9.33px, 0.365vw, 12.6px) (preflight.css:9), so 1rem ≈ 9.33px
-       on phone — rem-based clamps render way too small. We compute the
-       tile size from the viewport directly in px:
-         (100vw - 2 * 12px app-padding - 3 * 6px gap) / 4 = (100vw - 42) / 4
-       At 390px viewport: (390 - 42) / 4 = 87px. Floor 56 (touch target),
-       cap 96 so tiles stay reasonable on tablet-portrait widths. */
-    .grid-tiles {
-        --tile-size: clamp(56px, calc((100vw - 42px) / 4), 96px);
-        grid-template-columns: repeat(4, var(--tile-size));
-        grid-auto-rows: var(--tile-size);
-        gap: 6px;
-        justify-content: center;
-        max-width: 100%;
-        width: 100%;
-    }
-    .command-tile-wrapper,
-    .grid-tile {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
-    .command-tile-caption {
-        display: none;
-    }
-    .grid-tile img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .hotkey-overlay {
-        min-width: 18px;
-        height: 18px;
-        font-size: 11px;
-        padding: 0 4px;
-        top: 2px;
-        right: 2px;
-    }
-    .command-label {
-        font-size: 10px;
-        padding: 0 2px;
-    }
 }
 
 /* ─────────────────────── 8b. TABLET SIDE-BY-SIDE GRIDS (701–1099px) ─────────────────
@@ -612,31 +537,8 @@ body {
         gap: 1.75rem 2rem;
         align-items: start;
     }
-    .command-section {
-        container-type: inline-size;
-        min-width: 0;
-        width: auto;
-        max-width: none;
-        align-items: flex-start;
-    }
-    .command-section-heading {
-        text-align: left;
-    }
-    /* 100cqi = column width; fills tiles to available space, capped at 9rem. */
-    .grid-tiles {
-        --tile-size: clamp(5rem, calc((100cqi - 1.5rem) / 4), 9rem);
-        grid-template-columns: repeat(4, var(--tile-size));
-        grid-auto-rows: var(--tile-size);
-        gap: 6px;
-        justify-content: start;
-        width: auto;
-        max-width: none;
-    }
-    .command-tile-wrapper,
-    .grid-tile {
-        width: var(--tile-size);
-        height: var(--tile-size);
-    }
+    /* Command-grid sizing, layout, and heading alignment are owned entirely by
+       command_grid.css. Nothing here. */
 }
 
 /* ─────────────────────── 9. OVERRIDE PANEL ─────────────────────── */
@@ -822,10 +724,6 @@ body:has(.templates-dialog) {
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
     }
-    .app .grid-tile {
-        -webkit-tap-highlight-color: transparent;
-        touch-action: pan-y;
-    }
 
     /* Hover styles only when device actually supports hover. iOS Safari
        fakes :hover on tap which leaves stuck highlights; gate them all. */
@@ -836,7 +734,6 @@ body:has(.templates-dialog) {
     .app a:hover,
     .app .race-tab:hover,
     .app .unit-card:hover,
-    .app .grid-tile:hover,
     .app .mode-toggle-button:hover {
         /* Force inheritance — overrides component :hover declarations.
            Active state still visible via :active in component CSS. */
@@ -883,12 +780,6 @@ body:has(.templates-dialog) {
         box-shadow: none;
     }
 
-    body[data-kb-modality] .grid-tile.has-ability:focus,
-    body[data-kb-modality] .grid-tile.has-ability:focus-visible {
-        border-color: var(--race-color, #ffce63);
-        box-shadow: none;
-    }
-
     body[data-kb-modality] .override-key-cell:focus,
     body[data-kb-modality] .override-key-cell:focus-visible {
         border-color: #ffce63;
@@ -930,11 +821,6 @@ body:has(.templates-dialog) {
         box-shadow: 0 0 10px var(--race-color-soft, rgba(255, 206, 99, 0.3));
     }
 
-    .grid-tile.selected:focus,
-    .grid-tile.selected:focus-visible {
-        border-color: var(--race-color, #ffce63);
-        box-shadow: 0 0 14px var(--race-color-soft, rgba(255, 206, 99, 0.6));
-    }
 }
 
 
@@ -1237,11 +1123,6 @@ body.body-scroll-locked {
     }
     .unit-detail code {
         font-size: 13px;
-    }
-
-    .command-section-heading {
-        font-size: 16px;
-        margin: 8px 0 8px;
     }
 
     /* Stats panel typography */

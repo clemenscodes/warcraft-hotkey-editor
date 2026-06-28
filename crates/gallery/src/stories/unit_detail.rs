@@ -9,7 +9,9 @@ use hotkey_editor::{
     DropTargetCell, HeroDisplayData, HeroLevelOption, StatIcon, UnitCommandGrids, UnitDetailHeader,
     UnitDetailPanel, UnitStatsPanel,
 };
-use warcraft_api::{AttackType, DefenseType, PrimaryAttribute, UnitCombat, WarcraftObjectMeta};
+use warcraft_api::{
+    AttackType, DefenseType, PrimaryAttribute, Race, UnitCombat, WarcraftObjectMeta,
+};
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 use warcraft_keybinds::{GridSlotId, UnitCommandSlots};
 
@@ -20,13 +22,13 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Unit detail",
             "AttributeRow",
-            "default",
+            "Default",
             attribute_row_default,
         ),
         Story::new(
             "Unit detail",
             "AttributeRow",
-            "primary",
+            "Primary",
             attribute_row_primary,
         ),
         Story::single(
@@ -48,31 +50,31 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "Unit detail",
             "HeroLevelOption",
-            "selected",
+            "Selected",
             hero_level_option_selected,
         ),
         Story::new(
             "Unit detail",
             "HeroLevelOption",
-            "unselected",
+            "Unselected",
             hero_level_option_unselected,
         ),
         Story::new(
             "Unit detail",
             "UnitDetailHeader",
-            "no portrait",
+            "No portrait",
             unit_detail_header_no_portrait,
         ),
         Story::new(
             "Unit detail",
             "UnitDetailHeader",
-            "hero level picker",
+            "Hero level picker",
             unit_detail_header_hero,
         ),
         Story::new(
             "Unit detail",
             "UnitStatsPanel",
-            "empty unit",
+            "Empty unit",
             unit_stats_panel_empty,
         ),
         Story::new(
@@ -402,6 +404,7 @@ fn unit_command_grids_footman() -> Element {
     rsx! {
         UnitCommandGrids {
             unit_id,
+            race: Race::Human,
             command_card_slots,
             build_menu_slots: None,
             uprooted_menu_slots: None,
@@ -434,8 +437,10 @@ fn unit_detail_panel_footman() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let update_hotkeys_on_move = use_signal(|| true);
     let hotkey_assign_request = use_signal(|| false);
+    let active_race = use_signal(|| Race::Human);
     rsx! {
         UnitDetailPanel {
+            active_race,
             selected_unit_id,
             selected_slot,
             selected_from_research,
@@ -465,8 +470,10 @@ fn unit_detail_panel_archmage() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let update_hotkeys_on_move = use_signal(|| true);
     let hotkey_assign_request = use_signal(|| false);
+    let active_race = use_signal(|| Race::Human);
     rsx! {
         UnitDetailPanel {
+            active_race,
             selected_unit_id,
             selected_slot,
             selected_from_research,

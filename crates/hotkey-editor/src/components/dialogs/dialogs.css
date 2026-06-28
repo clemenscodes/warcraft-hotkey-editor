@@ -122,4 +122,101 @@
         gap: 0.4rem;
     }
 }
+
+.selection-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 206, 99, 0.12);
+    border: 1px solid #ffce63;
+    border-radius: 6px;
+    color: #ffce63;
+    font-size: 0.85rem;
+}
+
+.selection-badge strong {
+    color: #fff;
+    font-family: 'Friz Quadrata', serif;
+    font-weight: 400;
+}
+
+.edit-panel {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(20, 40, 70, 0.5);
+    border: 1px solid #ffce63;
+    border-radius: 8px;
+}
+
+.edit-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.edit-panel-header h4 {
+    font-family: 'Friz Quadrata', serif;
+    color: #ffce63;
+    margin: 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.edit-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.edit-panel-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.edit-panel-field label {
+    font-family: 'Friz Quadrata', serif;
+    color: #ffce63;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.edit-panel-field input {
+    padding: 0.5rem 0.75rem;
+    background: rgba(8, 18, 35, 0.8);
+    border: 1px solid #2a5085;
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+}
+
+.edit-panel-field input:focus {
+    outline: none;
+    border-color: #ffce63;
+    box-shadow: 0 0 6px rgba(255, 206, 99, 0.4);
+}
+
+.close-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: rgba(20, 40, 70, 0.7);
+    border: 1px solid #2a5085;
+    border-radius: 6px;
+    color: #9ca8c5;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.close-button:hover {
+    border-color: #ffce63;
+    color: #ffce63;
+}
 }

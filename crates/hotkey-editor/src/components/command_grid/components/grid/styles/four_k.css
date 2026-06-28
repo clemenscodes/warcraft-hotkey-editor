@@ -1,0 +1,5 @@
+@media (min-width: 3200px) {
+    .grid-tiles {
+        --command-tile-cap: 200px;
+    }
+}

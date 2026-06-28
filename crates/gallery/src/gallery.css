@@ -182,6 +182,11 @@
 }
 .gallery-frame-root {
   min-height: 100dvh;
+  /* Center the previewed component horizontally. Components own only their inner
+     shape; the gallery frame (their wrapper here) decides placement. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .gallery-frame-missing {
   padding: 2rem;

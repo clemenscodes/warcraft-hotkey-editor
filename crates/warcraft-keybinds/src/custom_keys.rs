@@ -2406,6 +2406,33 @@ mod tests {
     }
 
     #[test]
+    fn move_slot_swap_is_reversible_when_layout_consistent() {
+        // Layout-consistent start: ACad at (0,0) holds the QWERTY letter Q,
+        // AHbz at (1,1) holds S. With assign_hotkey_on_move=true, swapping and
+        // swapping back must restore the original hotkeys (Q and S).
+        use crate::command::move_request::MoveRequest;
+        use crate::identity::slot::GridSlotId;
+        let input = "[ACad]\nHotkey=Q\nButtonpos=0,0\n[AHbz]\nHotkey=S\nButtonpos=1,1\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let acad = GridSlotId::ability("ACad");
+        let ahbz = GridSlotId::ability("AHbz");
+        let slot_ids = [acad, ahbz];
+
+        let swap = MoveRequest::new(layout, &slot_ids, &acad, 1, 1, false);
+        keys.move_slot(&swap);
+        let swap_back = MoveRequest::new(layout, &slot_ids, &acad, 0, 0, false);
+        keys.move_slot(&swap_back);
+
+        let acad_binding = keys.binding("ACad").expect("ACad exists");
+        let acad_hotkey = acad_binding.hotkey().expect("hotkey set");
+        assert_eq!(acad_hotkey, &Hotkey::try_from("Q").expect("valid"));
+        let ahbz_binding = keys.binding("AHbz").expect("AHbz exists");
+        let ahbz_hotkey = ahbz_binding.hotkey().expect("hotkey set");
+        assert_eq!(ahbz_hotkey, &Hotkey::try_from("S").expect("valid"));
+    }
+
+    #[test]
     fn move_slot_swap_keeps_both_hotkeys_when_reassignment_disabled() {
         // Swapping ACad (at (0,0), hotkey P) with AHbz (at (1,1), hotkey K)
         // with assign_hotkey_on_move=false swaps both positions but leaves

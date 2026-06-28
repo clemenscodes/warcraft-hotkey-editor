@@ -30,13 +30,13 @@ pub fn stories() -> Vec<Story> {
         Story::new(
             "System hotkeys",
             "SystemHotkeysCategoryTab",
-            "active",
+            "Active",
             category_tab_active,
         ),
         Story::new(
             "System hotkeys",
             "SystemHotkeysCategoryTab",
-            "inactive",
+            "Inactive",
             category_tab_inactive,
         ),
         Story::single(

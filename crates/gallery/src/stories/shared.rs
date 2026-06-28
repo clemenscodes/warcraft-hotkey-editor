@@ -5,8 +5,8 @@ use warcraft_keybinds::HotkeyToken;
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new("Shared", "KeyPicker", "closed", key_picker_closed),
-        Story::new("Shared", "KeyPicker", "open, all states", key_picker_open),
+        Story::new("Shared", "KeyPicker", "Closed", key_picker_closed),
+        Story::new("Shared", "KeyPicker", "Open, all states", key_picker_open),
     ]
 }
 

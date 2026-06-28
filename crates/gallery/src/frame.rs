@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 use hotkey_editor::{ToastMount, TooltipMount};
 
+use crate::GALLERY_STYLES;
 use crate::registry::StoryRegistry;
 
 #[derive(Props, Clone, PartialEq)]
@@ -17,6 +18,7 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         Some(story) => {
             let render = story.render();
             rsx! {
+                document::Stylesheet { href: GALLERY_STYLES }
                 TooltipMount {}
                 ToastMount {
                     div { class: "gallery-frame-root", {render()} }

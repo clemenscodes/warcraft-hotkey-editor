@@ -1,0 +1,9 @@
+/* Preview slot for isolated command-grid pieces. Gives a lone cell or badge a
+   size and an inline-size container so its cqi-based label and badge resolve,
+   the way the real GridTile wrapper does inside the app. */
+.command-grid-preview-slot {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    container-type: inline-size;
+}
