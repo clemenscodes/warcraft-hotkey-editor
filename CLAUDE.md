@@ -3,13 +3,17 @@
 This project edits **`CustomKeys.txt`** for Warcraft III: Reforged. It is a
 pure-frontend web app — no server, no database, no cloud.
 
-Two documents define the rules of this project. Both are mandatory reading
+Three documents define the rules of this project. All are mandatory reading
 before any non-trivial change:
 
 - `docs/ARCHITECTURE.md` — *where* code lives (the wall between renderer
   and domain crate, the localStorage source-of-truth model).
 - `docs/RUST_STYLE.md` — *how* Rust code is written (naming, no tuples,
   private fields, no `as` casts, etc.).
+- `docs/COMPONENTS.md` — *how* renderer components are named, laid out on
+  disk, and written (directory equals component equals class, pure-RSX
+  bodies, props via `From<&ParentProps>`, base/variant layout). Distilled
+  from the `grid_editor` subsystem, the worked example for every rule.
 
 If you skip these and "just patch the bug", you will almost certainly
 violate one of the rules below and reintroduce a bug we already fixed.
@@ -138,6 +142,9 @@ respect the rules in the lines you write.
 
 - Re-read `docs/ARCHITECTURE.md` if your change touches state, persistence,
   cascading, or any "what position is this at?" question.
+- Re-read `docs/COMPONENTS.md` if your change adds or refactors a renderer
+  component. Mirror the `grid_editor` shape: directory equals component
+  equals class, pure-RSX body, child props via `From<&ParentProps>`.
 - If the task seems to require breaking a rule, stop and surface it to
   the user. Don't decide unilaterally.
 - If you see a violation while doing unrelated work, say so. Don't expand
@@ -158,3 +165,9 @@ respect the rules in the lines you write.
   for: tuple return types `-> (`, tuple structs `struct \w\+(`, `pub `
   fields, `as ` casts, `print_` function names, single-letter locals,
   inline struct literals at call sites, numeric suffixes like `0u32`.
+- For component changes, re-read your diff against `docs/COMPONENTS.md`.
+  Common slips: a directory whose name differs from its component or CSS
+  class, `let`/logic in a component body, child props passed by hand
+  instead of `From<&ParentProps>` spread, an `Option<T>` prop for a value
+  that is always present, a variant nested inside its base instead of a
+  flat sibling.
