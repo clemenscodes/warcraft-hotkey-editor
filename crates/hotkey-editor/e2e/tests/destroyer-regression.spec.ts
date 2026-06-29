@@ -47,7 +47,7 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
 
     const cell = (col: number, row: number) =>
       page.locator(
-        `[data-grid-section="Command card"][data-grid-col="${col}"][data-grid-row="${row}"]`,
+        `[data-grid-id="Command card"] [data-grid-col="${col}"][data-grid-row="${row}"]`,
       );
 
     await expect(cell(0, 2).locator("img")).toHaveAttribute("alt", "Devour Magic");

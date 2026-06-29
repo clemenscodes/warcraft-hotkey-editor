@@ -66,7 +66,7 @@ const EMPTY_CELLS: GridCoordinate[] = [
 
 function cell(page: Page, coordinate: GridCoordinate): Locator {
   return page.locator(
-    `[data-grid-section="${SECTION}"][data-grid-col="${coordinate.col}"][data-grid-row="${coordinate.row}"]`,
+    `[data-grid-id="${SECTION}"] [data-grid-col="${coordinate.col}"][data-grid-row="${coordinate.row}"]`,
   );
 }
 

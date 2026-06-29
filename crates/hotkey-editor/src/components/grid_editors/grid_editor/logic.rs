@@ -162,9 +162,7 @@ fn occupant_at<B: GridBehavior>(
 ) -> Option<GridSlotId> {
     let read_guard = loaded_keys.read();
     let file = read_guard.as_ref()?;
-    let column = u8::from(coordinate.column());
-    let row = u8::from(coordinate.row());
-    file.slot_at_position(slot_ids, behavior.research_positions(), column, row)
+    file.slot_at(behavior, slot_ids, coordinate)
 }
 
 fn select_handler<B: GridBehavior>(
@@ -250,19 +248,10 @@ fn move_handler<B: GridBehavior>(args: MoveHandlerArgs<B>) -> EventHandler<Range
         }
         let assign_hotkey_on_move = *update_hotkeys_on_move.read();
         let layout_snapshot = *grid_layout.read();
-        let target_column = u8::from(to.column());
-        let target_row = u8::from(to.row());
-        let move_request = MoveRequest::new(
-            layout_snapshot,
-            &slot_ids,
-            &moving_slot,
-            target_column,
-            target_row,
-            behavior.research_positions(),
-        )
-        .with_prevent_swap(prevent_swap_on_drop)
-        .with_prevent_co_move(!behavior.co_move_offstate())
-        .with_assign_hotkey_on_move(assign_hotkey_on_move);
+        let move_request =
+            MoveRequest::for_behavior(&behavior, layout_snapshot, &slot_ids, &moving_slot, to)
+                .with_prevent_swap(prevent_swap_on_drop)
+                .with_assign_hotkey_on_move(assign_hotkey_on_move);
         Positions::move_or_swap(&mut loaded_keys, move_request);
         selected_slot.set(Some(moving_slot));
     })

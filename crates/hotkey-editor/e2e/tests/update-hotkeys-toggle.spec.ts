@@ -59,7 +59,9 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     // Capture the target cell's grid coordinates before the drag so we can
     // locate it by identity after the swap (both tiles have abilities, so
     // .first() after the swap is ambiguous).
-    const targetSection = await tiles.nth(1).getAttribute("data-grid-section");
+    const targetSection = await tiles
+      .nth(1)
+      .evaluate((el) => el.closest("[data-grid-id]")?.getAttribute("data-grid-id"));
     const targetCol = await tiles.nth(1).getAttribute("data-grid-col");
     const targetRow = await tiles.nth(1).getAttribute("data-grid-row");
 
@@ -67,7 +69,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
 
     // After the swap the Q-ability is at the TARGET cell's original position.
     const movedAbilityCell = page.locator(
-      `[data-grid-section="${targetSection}"][data-grid-col="${targetCol}"][data-grid-row="${targetRow}"]`,
+      `[data-grid-id="${targetSection}"] [data-grid-col="${targetCol}"][data-grid-row="${targetRow}"]`,
     );
     await movedAbilityCell.click();
     await page.locator(".override-key-cell").waitFor();

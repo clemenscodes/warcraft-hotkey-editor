@@ -18,12 +18,12 @@ test.describe("Phoenix hides Phoenix Fire", () => {
   });
 
   test("Phoenix command card omits Phoenix Fire (Apxf)", async ({ page }) => {
-    const commandCard = page.locator('[data-grid-section="Command card"]');
+    const commandCard = page.locator('[data-grid-id="Command card"]');
     await expect(commandCard.locator('img[alt="Phoenix Fire"]')).toHaveCount(0);
   });
 
   test("Phoenix command card still shows its Phoenix ability", async ({ page }) => {
-    const commandCard = page.locator('[data-grid-section="Command card"]');
+    const commandCard = page.locator('[data-grid-id="Command card"]');
     await expect(commandCard.locator('img[alt="Phoenix"]')).toHaveCount(1);
   });
 });

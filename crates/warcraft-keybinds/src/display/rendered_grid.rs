@@ -108,6 +108,21 @@ impl CustomKeys {
         tiles
     }
 
+    /// The slot occupying a grid coordinate, resolved in the behavior's position
+    /// namespace. The UI passes a [`GridCoordinate`] and the behavior; every
+    /// integer conversion and namespace choice happens here, never in the renderer.
+    pub fn slot_at<B: GridBehavior>(
+        &self,
+        behavior: &B,
+        slots: &[GridSlotId],
+        coordinate: GridCoordinate,
+    ) -> Option<GridSlotId> {
+        let is_research_context = behavior.research_positions();
+        let column = u8::from(coordinate.column());
+        let row = u8::from(coordinate.row());
+        self.slot_at_position(slots, is_research_context, column, row)
+    }
+
     /// The display name of the ability whose off-state reserves the empty `to`
     /// tile, so a drop there must be refused. `None` when the move is allowed. The
     /// UI uses `Some(_)` both to paint the blocked state and to show the toast.
@@ -371,6 +386,18 @@ mod tests {
         let tiles = render(&keys, &slots, &[]);
         assert!(tile_at(&tiles, 0, 0).is_conflict());
         assert!(tile_at(&tiles, 1, 0).is_conflict());
+    }
+
+    #[test]
+    fn slot_at_resolves_the_occupant_in_the_behavior_namespace() {
+        let keys = CustomKeys::from("[ACad]\nButtonpos=1,0\n");
+        let slots = [GridSlotId::ability("ACad")];
+        let behavior = CommandBehavior;
+        let occupied = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
+        let found = keys.slot_at(&behavior, &slots, occupied);
+        assert_eq!(found, Some(GridSlotId::ability("ACad")));
+        let empty = GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero);
+        assert_eq!(keys.slot_at(&behavior, &slots, empty), None);
     }
 
     #[test]

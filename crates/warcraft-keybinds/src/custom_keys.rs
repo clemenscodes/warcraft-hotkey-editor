@@ -672,7 +672,7 @@ impl CustomKeys {
         }
     }
 
-    pub fn slot_at_position(
+    pub(crate) fn slot_at_position(
         &self,
         slots: &[GridSlotId],
         is_research_context: bool,

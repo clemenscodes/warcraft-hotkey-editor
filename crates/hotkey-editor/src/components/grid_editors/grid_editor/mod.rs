@@ -22,7 +22,7 @@ pub use props::{GridEditorConfig, GridEditorProps};
 pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element {
     rsx! {
         document::Stylesheet { href: GRID_EDITOR_STYLES }
-        div { class: "grid-editor",
+        div { class: "grid-editor", "data-grid-id": props.config.heading,
             GridHeading { ..GridHeadingProps::from(&props) }
             Grid { ..GridProps::from(&props) }
         }

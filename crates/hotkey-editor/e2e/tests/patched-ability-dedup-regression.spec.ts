@@ -71,7 +71,7 @@ function slotImg(
   row: number,
 ): import("@playwright/test").Locator {
   return page.locator(
-    `[data-grid-section="${section}"][data-grid-col="${col}"][data-grid-row="${row}"].has-ability img`,
+    `[data-grid-id="${section}"] [data-grid-col="${col}"][data-grid-row="${row}"].has-ability img`,
   );
 }
 

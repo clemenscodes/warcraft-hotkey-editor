@@ -49,7 +49,7 @@ test.describe("Hotkey editing", () => {
     await page.locator(".unit-card").filter({ hasText: "Archmage" }).first().click();
 
     const researchTile = page
-      .locator('[data-grid-section="Research menu"].grid-tile.has-ability')
+      .locator('[data-grid-id="Research menu"] .grid-tile.has-ability')
       .first();
     await researchTile.waitFor();
     await researchTile.dblclick();

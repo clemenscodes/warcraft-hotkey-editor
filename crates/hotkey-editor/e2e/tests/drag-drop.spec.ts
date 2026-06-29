@@ -69,10 +69,10 @@ test.describe("Drag and drop on command grid", () => {
     await page.locator(".grid-tile.has-ability").first().waitFor();
 
     const sourceCell = page.locator(
-      '[data-grid-section="Command card"][data-grid-col="0"][data-grid-row="2"]',
+      '[data-grid-id="Command card"] [data-grid-col="0"][data-grid-row="2"]',
     );
     const targetCell = page.locator(
-      '[data-grid-section="Command card"][data-grid-col="1"][data-grid-row="2"]',
+      '[data-grid-id="Command card"] [data-grid-col="1"][data-grid-row="2"]',
     );
 
     await expect(sourceCell).toHaveClass(/has-ability/);

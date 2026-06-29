@@ -44,7 +44,7 @@ test.describe("Gargoyle regression: Prioritize renders at (1,1) after cascade", 
 
     const cell = (col: number, row: number) =>
       page.locator(
-        `[data-grid-section="Command card"][data-grid-col="${col}"][data-grid-row="${row}"]`,
+        `[data-grid-id="Command card"] [data-grid-col="${col}"][data-grid-row="${row}"]`,
       );
 
     await expect(cell(1, 1).locator("img")).toHaveAttribute("alt", "Prioritize");

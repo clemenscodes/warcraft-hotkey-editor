@@ -24,7 +24,6 @@ pub fn Grid(props: GridProps) -> Element {
         }
         div {
             class: "grid",
-            "data-grid-id": props.grid_id,
             for tile in GridRender::from(&props).tiles {
                 GridTile { ..tile }
             }

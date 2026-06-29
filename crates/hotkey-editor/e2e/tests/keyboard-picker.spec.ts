@@ -19,7 +19,7 @@ async function openBlizzardPicker(page: Page) {
   await archmage.waitFor();
   await archmage.click();
   const blizzardTile = page
-    .locator('.grid-tile[data-grid-section="Command card"]')
+    .locator('[data-grid-id="Command card"] .grid-tile')
     .filter({ has: page.locator('img[alt="Blizzard"]') });
   await blizzardTile.waitFor();
   await blizzardTile.click();

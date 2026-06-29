@@ -60,13 +60,11 @@ async function pickUnit(
 }
 
 function commandCardSlotAlts(page: Page): Promise<string[]> {
-  // `data-grid-section`, `data-grid-col`, `data-grid-row`, and the
-  // `has-ability` class all live on the same `<div>` (the tile itself) —
-  // see `command_grid/grid_cell/mod.rs::class_name`. A descendant selector
-  // (`[data-grid-section="Command card"] .has-ability`) would never match,
-  // so combine the attribute and the class on a single compound selector.
+  // `data-grid-id` lives on the `GridEditor` wrapper, while `data-grid-col`,
+  // `data-grid-row`, and the `has-ability` class live on each tile `<div>`
+  // inside it. Address tiles as descendants of the identified grid wrapper.
   return page
-    .locator('[data-grid-section="Command card"].has-ability img')
+    .locator('[data-grid-id="Command card"] .has-ability img')
     .evaluateAll((nodes: Element[]) =>
       nodes
         .map((node) => node.getAttribute("alt"))
@@ -76,7 +74,7 @@ function commandCardSlotAlts(page: Page): Promise<string[]> {
 
 function commandCardCell(page: Page, column: number, row: number): Locator {
   return page.locator(
-    `[data-grid-section="Command card"][data-grid-col="${column}"][data-grid-row="${row}"]`,
+    `[data-grid-id="Command card"] [data-grid-col="${column}"][data-grid-row="${row}"]`,
   );
 }
 
@@ -120,10 +118,11 @@ test.describe("Balance overlay regression: undead/neutral abilities", () => {
     expect(alts).toContain("Shadow Strike");
   });
 
-  // Burrowed Barbed Arachnathid (nbnb) carries Burrow (Abu5). It ships with
-  // `inEditor=1` so it has always been visible — guard against the catalog
-  // filter accidentally cutting it.
-  test("Burrowed Barbed Arachnathid command card shows Burrow", async ({
+  // Burrowed Barbed Arachnathid (nbnb) is the already-burrowed form, so its
+  // toggle shows Unburrow (Abu5's off-state): a burrowed unit can only come
+  // back up, it cannot burrow again. It ships with `inEditor=1` and has always
+  // been visible, so this also guards against the catalog filter cutting it.
+  test("Burrowed Barbed Arachnathid command card shows Unburrow", async ({
     page,
   }) => {
     await pickUnit(page, {
@@ -132,7 +131,7 @@ test.describe("Balance overlay regression: undead/neutral abilities", () => {
       cardText: "Burrowed Barbed Arachnathid",
     });
     const alts = await commandCardSlotAlts(page);
-    expect(alts).toContain("Burrow");
+    expect(alts).toContain("Unburrow");
   });
 
   // Tavern mercenaries ship with `unitui.slk::inEditor=0` because they're

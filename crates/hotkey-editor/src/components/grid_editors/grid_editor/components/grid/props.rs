@@ -13,8 +13,8 @@ use super::view::GridTileView;
 /// owns the drag mechanics, and reports gestures through plain callbacks. It
 /// carries no domain type: it never knows which ability a cell holds, what a move
 /// means, or why a drop is blocked, nor that a heading exists. The `grid_id` is an
-/// opaque identifier used only to scope drag hit-testing between sibling grids and
-/// as the `data-grid-id` attribute.
+/// opaque token used only to scope drag hit-testing between sibling grids; the
+/// owning `GridEditor` emits it as the `data-grid-id` attribute on its wrapper.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridProps {
     pub views: Rc<[GridTileView]>,

@@ -62,7 +62,7 @@ async function pickUnit(
 
 function commandCardSlotAlts(page: Page): Promise<string[]> {
   return page
-    .locator('[data-grid-section="Command card"].has-ability img')
+    .locator('[data-grid-id="Command card"] .has-ability img')
     .evaluateAll((nodes: Element[]) =>
       nodes
         .map((node) => node.getAttribute("alt"))
