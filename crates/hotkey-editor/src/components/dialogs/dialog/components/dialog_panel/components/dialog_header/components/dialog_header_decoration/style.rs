@@ -1,15 +1,17 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The decoration's stylesheets: the desktop base plus the two viewport bands
-/// that shrink its width on smaller screens.
-pub(super) const DIALOG_HEADER_DECORATION_STYLE_SHEETS: [Asset; 3] = [
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_header_decoration/styles/base.css"
-    ),
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_header_decoration/styles/tablet.css"
-    ),
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_header_decoration/styles/phone.css"
-    ),
+const BASE: &[&str] = &[
+    "block",
+    "h-decoration-h",
+    "w-auto",
+    "flex-none",
+    "decoration-flourish",
 ];
+const MOBILE: &[&str] = &["mobile:w-decoration-phone-w"];
+const TABLET: &[&str] = &["tablet:w-decoration-tablet-w"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

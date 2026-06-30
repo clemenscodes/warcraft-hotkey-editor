@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
 
+mod styling;
+
 mod app;
 mod components;
 mod model;

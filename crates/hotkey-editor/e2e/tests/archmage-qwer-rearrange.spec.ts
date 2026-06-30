@@ -114,7 +114,7 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 
   // Defensive: the suite seeds the onboarding-seen flag, but close the Help
   // dialog if it is open anyway so this spec also runs from a fresh profile.
-  const helpDialog = page.locator(".help-dialog");
+  const helpDialog = page.getByRole("dialog");
   if (await helpDialog.isVisible()) {
     await helpDialog.getByRole("button", { name: "Got it, don't show this again" }).click();
     await expect(helpDialog).toBeHidden();
@@ -297,7 +297,7 @@ test("applying the cascade clears every position collision, including toggle off
 test("a non-morph toggle's two positions coincide after applying a template", async ({ page }) => {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
-  const helpDialog = page.locator(".help-dialog");
+  const helpDialog = page.getByRole("dialog");
   if (await helpDialog.isVisible()) {
     await helpDialog.getByRole("button", { name: "Got it, don't show this again" }).click();
     await expect(helpDialog).toBeHidden();

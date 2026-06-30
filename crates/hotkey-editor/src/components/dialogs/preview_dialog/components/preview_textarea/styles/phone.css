@@ -1,8 +1,0 @@
-/* Phone band: the monospace text shrinks so more of each line fits the narrow
-   full-screen sheet before it scrolls. */
-
-@media (max-width: 480px) {
-    .preview-textarea {
-        font-size: 1.4rem;
-    }
-}

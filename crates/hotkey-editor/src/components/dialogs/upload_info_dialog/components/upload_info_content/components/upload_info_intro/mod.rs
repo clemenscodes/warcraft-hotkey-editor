@@ -2,15 +2,17 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::UPLOAD_INFO_INTRO_STYLES;
+use crate::assert_component;
+use style::CLASS;
 
-/// The import dialog's lead-in line. Owns `.upload-info-intro`.
+assert_component!(UploadInfoIntro);
+
+/// The import dialog's lead-in line.
 #[component]
 pub fn UploadInfoIntro() -> Element {
     rsx! {
-        document::Stylesheet { href: UPLOAD_INFO_INTRO_STYLES }
         p {
-            class: "upload-info-intro",
+            class: CLASS,
             "Open your Documents folder, navigate to Warcraft III, then CustomKeyBindings, and select this file:"
         }
     }

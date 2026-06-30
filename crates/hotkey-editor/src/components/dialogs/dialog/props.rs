@@ -1,18 +1,18 @@
 use dioxus::prelude::*;
 
-/// What a dialog variant hands the shell: the open signal it drives, the title
-/// the header shows, the variant's own panel class for size overrides, and the
-/// body to render. The shell owns everything else.
+/// What a dialog composes the shell with: the open signal it drives, the title
+/// the header shows, and the body to render. The shell owns everything else. A
+/// dialog is just a component that fills these in; it injects no class.
 #[derive(Props, Clone, PartialEq)]
 pub struct DialogProps {
     pub open: Signal<bool>,
     #[props(into)]
     pub title: String,
-    /// The variant's own class, appended to `dialog-panel`. Empty when the
-    /// variant needs no size override beyond the shell default.
-    #[props(into, default)]
-    pub panel_class: String,
     pub children: Element,
+    /// An optional pinned footer below the scrolling body, for dialogs with an
+    /// action bar. `None` for dialogs without one, where nothing is rendered.
+    #[props(default)]
+    pub footer: Option<Element>,
 }
 
 /// The backdrop's derived inputs: the current open value and the change handler

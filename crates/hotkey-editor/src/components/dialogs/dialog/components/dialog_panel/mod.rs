@@ -5,28 +5,30 @@ mod style;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
 
+use crate::assert_component;
 use components::dialog_body::{DialogBody, DialogBodyProps};
+use components::dialog_footer::{DialogFooter, DialogFooterProps};
 use components::dialog_header::{DialogHeader, DialogHeaderProps};
-use style::DIALOG_PANEL_STYLE_SHEETS;
+use style::CLASS;
 
 pub use props::DialogPanelProps;
 
+assert_component!(DialogPanel);
+
 /// The dialog panel: the bordered, sized box that holds the header above the
-/// scrolling body. Owns `.dialog-panel`. The header and body are children built
-/// by `From`.
+/// scrolling body. Owns `.dialog-panel` on the library `DialogContent` (the
+/// role=dialog element), which takes a `String` class, hence the bridge.
 #[component]
 pub fn DialogPanel(props: DialogPanelProps) -> Element {
     let header = DialogHeaderProps::from(&props);
     let body = DialogBodyProps::from(&props);
-    let panel_class = props.panel_class.clone();
+    let footer = DialogFooterProps::from(&props);
     rsx! {
-        for href in DIALOG_PANEL_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         DialogContent {
-            class: panel_class,
+            class: CLASS.to_library_class(),
             DialogHeader { ..header }
             DialogBody { ..body }
+            DialogFooter { ..footer }
         }
     }
 }

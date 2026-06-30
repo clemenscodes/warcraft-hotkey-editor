@@ -3,21 +3,23 @@ mod style;
 
 use dioxus::prelude::*;
 
+use crate::assert_component;
 use crate::components::shared::button::{Button, ButtonVariant};
-use style::UPLOAD_INFO_ACTIONS_STYLES;
+use style::CLASS;
 
 pub use props::UploadInfoActionsProps;
 
-/// The import dialog's right-aligned action row. Owns `.upload-info-actions` and
-/// holds the cancel and choose-file buttons.
+assert_component!(UploadInfoActions);
+
+/// The import dialog's right-aligned action row: the cancel and choose-file
+/// buttons.
 #[component]
 pub fn UploadInfoActions(props: UploadInfoActionsProps) -> Element {
     let on_cancel = props.on_cancel;
     let on_choose_file = props.on_choose_file;
     rsx! {
-        document::Stylesheet { href: UPLOAD_INFO_ACTIONS_STYLES }
         div {
-            class: "upload-info-actions",
+            class: CLASS,
             Button {
                 variant: ButtonVariant::Secondary,
                 onclick: on_cancel,

@@ -3,18 +3,20 @@ mod style;
 
 use dioxus::prelude::*;
 
+use crate::assert_component;
 use components::upload_info_filename::UploadInfoFilename;
 use components::upload_info_intro::UploadInfoIntro;
-use style::UPLOAD_INFO_CONTENT_STYLES;
+use style::CLASS;
 
-/// The import dialog's centered instruction block. Owns `.upload-info-content`
-/// and stacks the intro and the filename chip.
+assert_component!(UploadInfoContent);
+
+/// The import dialog's centered instruction block: the intro and the filename
+/// chip.
 #[component]
 pub fn UploadInfoContent() -> Element {
     rsx! {
-        document::Stylesheet { href: UPLOAD_INFO_CONTENT_STYLES }
         div {
-            class: "upload-info-content",
+            class: CLASS,
             UploadInfoIntro {}
             UploadInfoFilename {}
         }

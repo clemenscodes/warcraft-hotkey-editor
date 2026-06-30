@@ -1,15 +1,35 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The title's stylesheets: the desktop base plus the two viewport bands that
-/// shrink and truncate it so a long heading never wraps or overflows.
-pub(super) const DIALOG_TITLE_STYLE_SHEETS: [Asset; 3] = [
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_title/styles/base.css"
-    ),
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_title/styles/tablet.css"
-    ),
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_header/components/dialog_title/styles/phone.css"
-    ),
+const BASE: &[&str] = &[
+    "m-0",
+    "font-friz-quadrata",
+    "uppercase",
+    "tracking-title",
+    "text-dialog-title",
+    "text-warcraft-gold",
+    "text-shadow-title",
 ];
+const MOBILE: &[&str] = &[
+    "mobile:text-dialog-title-sm",
+    "mobile:tracking-title-sm",
+    "mobile:whitespace-nowrap",
+    "mobile:overflow-hidden",
+    "mobile:text-ellipsis",
+    "mobile:min-w-0",
+    "mobile:max-w-full",
+];
+const TABLET: &[&str] = &[
+    "tablet:text-dialog-title-sm",
+    "tablet:tracking-title-sm",
+    "tablet:whitespace-nowrap",
+    "tablet:overflow-hidden",
+    "tablet:text-ellipsis",
+    "tablet:min-w-0",
+    "tablet:max-w-full",
+];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

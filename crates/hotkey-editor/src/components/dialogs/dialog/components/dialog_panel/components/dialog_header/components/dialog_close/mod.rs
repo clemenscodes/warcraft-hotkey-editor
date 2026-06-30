@@ -3,18 +3,20 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::DIALOG_CLOSE_STYLES;
+use crate::assert_component;
+use style::CLASS;
 
 pub use props::DialogCloseProps;
 
-/// The close glyph in a dialog header. Owns `.dialog-close`; forwards one click.
+assert_component!(DialogClose);
+
+/// The close glyph in a dialog header; forwards one click.
 #[component]
 pub fn DialogClose(props: DialogCloseProps) -> Element {
     let onclick = props.onclick;
     rsx! {
-        document::Stylesheet { href: DIALOG_CLOSE_STYLES }
         button {
-            class: "dialog-close",
+            class: CLASS,
             r#type: "button",
             aria_label: "Close",
             onclick,

@@ -1,7 +1,0 @@
-/* Phone band: the decoration narrows further. */
-
-@media (max-width: 480px) {
-    .dialog-header-decoration {
-        width: 32px;
-    }
-}

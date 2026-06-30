@@ -1,25 +1,22 @@
+mod props;
 mod style;
 
 use dioxus::prelude::*;
 
-use style::DIALOG_TITLE_STYLE_SHEETS;
+use crate::assert_component;
+use style::CLASS;
 
-/// The dialog's heading text. Owns `.dialog-title`. A leaf: the header passes the
-/// title as children.
-#[derive(Props, Clone, PartialEq)]
-pub struct DialogTitleProps {
-    pub children: Element,
-}
+pub use props::DialogTitleProps;
 
+assert_component!(DialogTitle);
+
+/// The dialog's heading text. A leaf: the header passes the title as children.
 #[component]
 pub fn DialogTitle(props: DialogTitleProps) -> Element {
     let title = props.children.clone();
     rsx! {
-        for href in DIALOG_TITLE_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         h2 {
-            class: "dialog-title",
+            class: CLASS,
             {title}
         }
     }

@@ -2,16 +2,17 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::DOWNLOAD_INFO_FILENAME_STYLES;
+use crate::assert_component;
+use style::CLASS;
 
-/// The required filename shown as a boxed monospace chip. Owns
-/// `.download-info-filename`.
+assert_component!(DownloadInfoFilename);
+
+/// The required filename shown as a boxed monospace chip.
 #[component]
 pub fn DownloadInfoFilename() -> Element {
     rsx! {
-        document::Stylesheet { href: DOWNLOAD_INFO_FILENAME_STYLES }
         div {
-            class: "download-info-filename",
+            class: CLASS,
             "CustomKeys.txt"
         }
     }

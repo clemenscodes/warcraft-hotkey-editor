@@ -1,12 +1,26 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The body's stylesheets: the base scroll region plus the phone band that
-/// tightens the gutter.
-pub(super) const DIALOG_BODY_STYLE_SHEETS: [Asset; 2] = [
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_body/styles/base.css"
-    ),
-    asset!(
-        "/src/components/dialogs/dialog/components/dialog_panel/components/dialog_body/styles/phone.css"
-    ),
+const BASE: &[&str] = &[
+    "flex-1",
+    "min-h-0",
+    "flex",
+    "flex-col",
+    "gap-6",
+    "pt-body-pt",
+    "px-body-px",
+    "pb-body-pb",
+    "overflow-y-auto",
+    "scrollbar-gold",
 ];
+const MOBILE: &[&str] = &[
+    "mobile:pt-body-phone-pt",
+    "mobile:px-body-phone-px",
+    "mobile:pb-body-phone-pb",
+];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

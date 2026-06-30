@@ -1,8 +1,20 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The backdrop's stylesheets: the desktop base plus the phone band that drops
-/// the padding. The panel, body, and header own their own sizing.
-pub(super) const DIALOG_STYLE_SHEETS: [Asset; 2] = [
-    asset!("/src/components/dialogs/dialog/styles/base.css"),
-    asset!("/src/components/dialogs/dialog/styles/phone.css"),
+const BASE: &[&str] = &[
+    "fixed",
+    "inset-0",
+    "z-dialog",
+    "flex",
+    "items-center",
+    "justify-center",
+    "p-8",
+    "bg-dialog-backdrop",
 ];
+const MOBILE: &[&str] = &["mobile:p-0"];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

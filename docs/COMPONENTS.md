@@ -72,19 +72,19 @@ So `GridHeading` lives in `grid_heading/`, and its markup carries
 name, fix it. Prefer renaming the directory when the component name is public
 API, otherwise rename the component. Fix the CSS class to match in the same pass.
 
-This rule governs our own components. Library components are exempt: things like
-`document::Stylesheet` and the `dioxus_primitives` dialog parts (`DialogRoot`,
-`DialogContent`) are external building blocks, not project code, so they have no
-directory here and may appear in a body the same way `Stylesheet` already does.
-A project class we put on a library component is still ours and still belongs in
-the owning component's stylesheet.
+This rule governs our own components. Library components are exempt: the
+`dioxus_primitives` dialog parts (`DialogRoot`, `DialogContent`) are external
+building blocks, not project code, so they have no directory here and may appear
+in a body directly. A project class we put on a library component is still ours:
+it is that element's identity, and its styling is the named utilities beside it,
+exactly as for our own elements.
 
 ## One class per component
 
 A class is a component boundary. If you give an element a class, that element is
 a component. It follows that a component's markup carries exactly one classed
 element: its own root. Every other element that needs a class is a child
-component, with its own directory, its own one class, and its own stylesheet.
+component, with its own directory, its own one class, and its own `style.rs`.
 
 Two classed elements in one markup file is the signal that the file is doing the
 work of two components. Split it. Keep splitting until each markup file names
@@ -108,33 +108,210 @@ one-class component.
 There is no such thing as too many components. There is only too few. A single
 styled paragraph with its own class is a component. When in doubt, split.
 
-## Each component owns its style
+### The one class is an identity, not a style hook
 
-Every component that has any styling owns its own stylesheet inside its own
-directory. The class it defines is the class it renders. Never define a child's
-class in a parent's stylesheet.
+That single class is the component's **identity class**: a stable, semantic,
+prefixed name (`help-legend-row`) that matches the directory and component name.
+It exists only for selectability — e2e selectors, debugging, finding the element
+in the DOM. It is **never a Tailwind utility**, so Tailwind generates no rule for
+it and it carries **no styling, ever**. All styling is the named utilities beside
+it. The identity is its own const in `style.rs`, listed first, ahead of the band
+arrays. e2e decides whether it bothers to select a component, never whether the
+component gets an identity — every component is selectable.
 
-The one allowed exception: a parent that is always mounted may keep emitting a
-stylesheet that a conditionally rendered child uses, when mounting it with the
-child would cause a first paint flicker. The drag follower overlay does this for
-the ghost on purpose.
+## Styling: named Tailwind utilities, never arbitrary values
 
-### Nothing global styles a component
+A component is styled with Tailwind utility classes and nothing else. There are
+no per-component CSS files, no `asset!` stylesheets, no `styles/` directories,
+no `document::Stylesheet` for project styling.
 
-The only rules allowed in a global stylesheet are the design system tokens:
-font families and the custom color palette, the kind of thing Tailwind's theme
-layer holds. Everything else, every layout rule, every size, every border and
-shadow that paints a component, lives in that component's own `styles/`
-directory and nowhere else.
+The hard rule: **no arbitrary values, ever. Not a single bracket in a
+component's class list.** No `min-[1100px]:`, no `w-[min(1900px,95vw)]`, no
+`[background:linear-gradient(...)]`, no `text-[1.6rem]`, no `!important`. A
+bracket in a component class is inline CSS in disguise and is forbidden.
 
-There is no shared component stylesheet. If two components want the same look,
-they do not reach for a common class in a global file, and they do not import
-one component's stylesheet into the other. They each carry their own copy of the
-rule, or the shared look becomes its own leaf component that both compose.
-Duplicating a handful of CSS lines is the correct trade. The thing being bought
-is isolation by construction: editing one component's style cannot reach another
-component, and fixing a component's style is a focused edit of one `styles/`
-directory, never a hunt through the whole CSS codebase.
+Every value a component references is a named token or a named composite that
+lives once in the global layer (`crates/hotkey-editor/tailwind.input.css`):
+
+- **Scalars** — breakpoints, spacing, type sizes — are `@theme` tokens:
+  `--breakpoint-*`, `--spacing-*`, `--text-*`. Tailwind turns each into a named
+  utility (`gap-section`, `text-heading`) and a named variant (`laptop:`).
+- **Composite surfaces** — gradients, multi-layer shadows, an embossed
+  text-shadow, a bordered chip — are named `@utility` rules: `surface-callout`,
+  `chip-gold`, `text-shadow-emboss`. The raw `rgba(...)`, gradient, and shadow
+  literals live inside that one `@utility` definition and nowhere else.
+
+Raw px / rem / rgba / gradients appear **only** in `@theme` and `@utility`. A
+component never names a literal value. If a component needs a value that has no
+token, add the token to the global layer first, then use it by name.
+
+The global layer is the single source of every value; components are pure
+compositions of named utilities. Changing the gold, a gap, or a breakpoint is
+one edit in `@theme`/`@utility`, never a hunt through components.
+
+## Responsive bands
+
+Layout uses six named bands plus an always-on `BASE`, defined once in
+`tailwind.input.css`. The names are honest device/resolution classes, not
+marketing terms — there is no `wide` or `ultrawide` width band, because those are
+aspect ratios (21:9 / 32:9), not widths:
+
+| band | width range | what it is |
+|------|-------------|------------|
+| *(BASE)* | all widths | always-on, unprefixed |
+| `mobile` | `< 768px` | phones |
+| `tablet` | `768–1279px` | portrait tablets |
+| `laptop` | `1280–1919px` | laptops |
+| `desktop` | `1920–2559px` | FHD desktops |
+| `qhd` | `2560–3839px` | 1440p |
+| `uhd` | `≥ 3840px` | 4K |
+
+The six bands are **disjoint width ranges** (`@custom-variant` in
+`tailwind.input.css`), not min-width breakpoints: **nothing inherits across
+bands**. A `mobile:` style never leaks up to desktop, and a `laptop:` style never
+leaks down to a phone — each band paints only its own range.
+
+Because nothing cascades, a style that should apply everywhere goes in **`BASE`**
+(unprefixed, always-on): `flex`, `m-0`, `text-warcraft-gold`. The six bands carry
+only the **width-specific deltas** — a component sets `BASE` to its common
+appearance and overrides per band only where the width genuinely changes
+something (`mobile:text-body-sm` vs the `BASE` `text-body`). `BASE` must never
+carry a band-prefixed class (the macro rejects it); a band must carry only its
+own prefix (the macro rejects `uhd:flex` in `MOBILE`).
+
+A component declares **all seven** lists (`BASE` + the six bands); an unused one
+is an explicit empty `&[]`, so a band is never silently missing. Within one list
+the property order is layout → sizing → spacing → border → typography → color →
+effects → state.
+
+## style.rs and the `classes!` macro
+
+Tailwind's scanner reads source as plain text and never evaluates code, so a
+class name assembled at runtime (`format!`, a join, concatenation) is invisible
+to it and its CSS is never generated. Every class token must therefore appear as
+a literal in the source.
+
+Each component declares a `BASE` and one **`&[&str]` per band** of single-class
+literals in its own `style.rs`; `classes!` then derives the identity from the
+directory and joins everything at compile time into a
+`pub(super) const CLASS: ClassList`:
+
+```rust
+// help_top_row/style.rs — wide layout in BASE, the phone override per band
+use crate::classes;
+
+const BASE: &[&str] = &["flex", "flex-row", "items-start", "gap-columns"];
+const MOBILE: &[&str] = &["mobile:flex-col", "mobile:gap-section"];
+const TABLET: &[&str] = &["tablet:flex-col", "tablet:gap-section"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+// CLASS starts with the derived identity "help-top-row" (from the directory).
+```
+
+```rust
+// help_top_row/mod.rs — body just names CLASS; assert_component! binds the name
+use crate::assert_component;
+use style::CLASS;
+
+assert_component!(HelpTopRow);
+
+#[component]
+pub fn HelpTopRow() -> Element {
+    rsx! {
+        div {
+            class: CLASS,
+            HelpWorkflowSection {}
+            HelpLegendSection {}
+        }
+    }
+}
+```
+
+Why this shape:
+
+- **The identity is derived, not written.** `classes!` reads the component
+  directory from `module_path!()` and emits the kebab identity (`help_top_row` →
+  `help-top-row`), so the class always equals the directory and the caller only
+  thinks about band styles.
+- **The component name is bound too.** `assert_component!(HelpTopRow)` in
+  `mod.rs` asserts the PascalCase function name equals the directory
+  (capitalization included), closing the triangle `component == directory ==
+  class` at compile time. A `HelpTopRow` living in `top_row/` fails the build.
+- **`BASE` plus all six bands are mandatory and named.** Every component spells
+  out `BASE MOBILE TABLET LAPTOP DESKTOP QHD UHD`, an unused one being an explicit
+  `&[]`. A band is never silently missing, and `grep MOBILE` lists every
+  component's mobile styles.
+- The macro guards the whole contract at compile time: its fixed arity rejects a
+  missing list, `assert_named` rejects a misnamed const, `assert_base` rejects a
+  band-prefixed class in `BASE`, and `assert_band` rejects a class whose prefix
+  does not match its band — `uhd:flex` inside `MOBILE` fails the build.
+- Each utility is a separate literal in a `&[&str]`, so rustfmt lays them one per
+  line (no line-width fights) and Tailwind's scanner sees every token verbatim.
+- `classes!` joins them in a `const fn` into one string at **compile time** —
+  zero runtime cost; the body only names `CLASS`.
+- `CLASS` is a `pub(super)` **`ClassList`**, not a `&str`. `mod style;` is
+  private, so no other component can name the path; and `ClassList` implements no
+  `Display` and no accessor, so a component cannot interpolate or append to it
+  (`class: "{CLASS} other-class"` does not compile). A component can only ever
+  wear exactly its own class — styling coupling is impossible to express.
+
+The macro lives once at the crate root (`crate::classes!`); its `const fn`
+helpers are in `src/styling.rs`.
+
+## Stateful components and the `states!` macro
+
+Some components have mutually-exclusive visual states on one element: a grid tile
+is idle **xor** the drag source **xor** a drop target. A `ClassList` is opaque,
+so the body cannot conditionally swap classes — and wrappers do not fit, because
+the state is runtime and N-way on the *same* element (wrapping would re-render
+the whole subtree per state). These use `states!` alongside `classes!`.
+
+`classes!` produces the base look; `states!` layers one **flat (non-responsive)
+overlay** per state on top of it. State overlays carry no band prefix (the
+macro rejects one): a state's appearance is the same at every width, while the
+element's *sizing* lives in the base bands. The component's state enum lives in
+`state.rs`; the match is exhaustive, so every state must be styled.
+
+```rust
+// grid_tile/state.rs
+#[derive(Clone, Copy, PartialEq)]
+pub enum TileState { Idle, DragSource, DropTarget }
+
+// grid_tile/style.rs
+use crate::{classes, states};
+
+const BASE: &[&str] = &["relative", "flex", "items-center"];
+// ... the six bands (the tile's sizing) ...
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+
+const IDLE: &[&str] = &[];
+const DRAG_SOURCE: &[&str] = &["opacity-40", "ring-2", "ring-warcraft-gold"];
+const DROP_TARGET: &[&str] = &["bg-warcraft-gold-dim"];
+
+states! { TileState, Idle => IDLE, DragSource => DRAG_SOURCE, DropTarget => DROP_TARGET }
+// → pub(super) fn class(state: TileState) -> ClassList
+```
+
+The state is chosen in `From<&Props>` (logic stays out of the body); the body
+just places the result:
+
+```rust
+// grid_tile/mod.rs
+let presentation = GridTilePresentation::from(&props);  // computes style::class(state)
+rsx! { div { class: presentation.class, /* ... */ } }
+```
+
+The joined class per state is built at compile time, so the selector is a plain
+match returning a precomputed `ClassList`. The body never branches, `ClassList`
+stays opaque, and every token stays a literal for the scanner — the same
+guarantees as `classes!`.
+
+Both macros live at the crate root (`crate::classes!`, `crate::states!`); their
+`const fn` helpers are in `src/styling.rs`.
 
 ---
 
@@ -150,8 +327,7 @@ grid_tile/
   hooks.rs          the component's composed hook, wiring primitive hooks together (optional)
   logic.rs          everything the body is not allowed to do (optional)
   state.rs          component-local enums, e.g. visual state (optional)
-  style.rs          the asset! stylesheet constants
-  styles/           the CSS, base.css plus disjoint viewport bands
+  style.rs          the identity const + per-band class arrays, via classes!
   components/        child components, each its own directory of this same shape
 ```
 
@@ -175,9 +351,6 @@ pub fn GridTile(props: GridTileProps) -> Element {
     let GridTilePresentation { class, tabindex, row, column, onclick, .. } =
         GridTilePresentation::from(&props);
     rsx! {
-        for href in GRID_TILE_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         div {
             class, 
             tabindex, 
@@ -367,5 +540,8 @@ nix develop -c cargo test -p warcraft-keybinds
 nix develop -c cargo fmt --check
 ```
 
-Also confirm every `asset!` path resolves to a real file, since a renamed or
-moved directory silently breaks them and clippy alone may not catch it.
+Also confirm no component class list contains a bracket (no arbitrary values and
+no `!important`), every utility resolves to a `@theme` token or an `@utility`
+composite, and any value with no token was added to the global layer first. A
+class assembled outside a literal is invisible to Tailwind's scanner, so its CSS
+will silently never generate — keep every token a literal in a `style.rs` array.

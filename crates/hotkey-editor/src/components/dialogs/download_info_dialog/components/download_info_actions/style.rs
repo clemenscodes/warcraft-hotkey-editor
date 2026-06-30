@@ -1,6 +1,18 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The action row's stylesheet.
-pub(super) const DOWNLOAD_INFO_ACTIONS_STYLES: Asset = asset!(
-    "/src/components/dialogs/download_info_dialog/components/download_info_actions/styles/base.css"
-);
+const BASE: &[&str] = &[
+    "flex",
+    "flex-wrap",
+    "justify-end",
+    "gap-4",
+    "flex-none",
+    "pt-4",
+];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -3,19 +3,21 @@ mod style;
 
 use dioxus::prelude::*;
 
+use crate::assert_component;
 use components::download_info_filename::DownloadInfoFilename;
 use components::download_info_intro::DownloadInfoIntro;
 use components::download_info_warning::DownloadInfoWarning;
-use style::DOWNLOAD_INFO_CONTENT_STYLES;
+use style::CLASS;
 
-/// The download dialog's centered instruction block. Owns `.download-info-content`
-/// and stacks the intro, the filename chip, and the warning.
+assert_component!(DownloadInfoContent);
+
+/// The download dialog's centered instruction block: the intro, the filename
+/// chip, and the warning.
 #[component]
 pub fn DownloadInfoContent() -> Element {
     rsx! {
-        document::Stylesheet { href: DOWNLOAD_INFO_CONTENT_STYLES }
         div {
-            class: "download-info-content",
+            class: CLASS,
             DownloadInfoIntro {}
             DownloadInfoFilename {}
             DownloadInfoWarning {}

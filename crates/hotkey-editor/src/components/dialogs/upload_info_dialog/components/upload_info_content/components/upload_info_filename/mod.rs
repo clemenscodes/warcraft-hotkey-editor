@@ -2,16 +2,17 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::UPLOAD_INFO_FILENAME_STYLES;
+use crate::assert_component;
+use style::CLASS;
 
-/// The filename to select, shown as a boxed monospace chip. Owns
-/// `.upload-info-filename`.
+assert_component!(UploadInfoFilename);
+
+/// The filename to select, shown as a boxed monospace chip.
 #[component]
 pub fn UploadInfoFilename() -> Element {
     rsx! {
-        document::Stylesheet { href: UPLOAD_INFO_FILENAME_STYLES }
         div {
-            class: "upload-info-filename",
+            class: CLASS,
             "CustomKeys.txt"
         }
     }

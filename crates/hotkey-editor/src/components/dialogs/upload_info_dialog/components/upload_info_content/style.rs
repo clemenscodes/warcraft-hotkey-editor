@@ -1,6 +1,21 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The content block's stylesheet.
-pub(super) const UPLOAD_INFO_CONTENT_STYLES: Asset = asset!(
-    "/src/components/dialogs/upload_info_dialog/components/upload_info_content/styles/base.css"
-);
+const BASE: &[&str] = &[
+    "flex",
+    "flex-col",
+    "items-center",
+    "justify-center",
+    "gap-8",
+    "flex-1",
+    "w-full",
+    "max-w-content",
+    "mx-auto",
+];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

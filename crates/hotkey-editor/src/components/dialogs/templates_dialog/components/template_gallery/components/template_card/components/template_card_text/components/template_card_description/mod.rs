@@ -1,15 +1,13 @@
+mod props;
 mod style;
 
 use dioxus::prelude::*;
 
 use style::TEMPLATE_CARD_DESCRIPTION_STYLE_SHEETS;
 
-/// A template card's description line. Owns `.template-card-description`.
-#[derive(Props, Clone, PartialEq)]
-pub struct TemplateCardDescriptionProps {
-    pub children: Element,
-}
+pub use props::TemplateCardDescriptionProps;
 
+/// A template card's description line. Owns `.template-card-description`.
 #[component]
 pub fn TemplateCardDescription(props: TemplateCardDescriptionProps) -> Element {
     let description = props.children.clone();

@@ -1,6 +1,21 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The intro line's stylesheet.
-pub(super) const UPLOAD_INFO_INTRO_STYLES: Asset = asset!(
-    "/src/components/dialogs/upload_info_dialog/components/upload_info_content/components/upload_info_intro/styles/base.css"
-);
+const BASE: &[&str] = &[
+    "m-0",
+    "max-w-intro",
+    "text-center",
+    "font-friz-quadrata",
+    "uppercase",
+    "tracking-widest",
+    "text-info-lg",
+    "text-warcraft-gold-muted",
+    "text-shadow-emboss",
+];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -1,0 +1,29 @@
+pub mod components;
+mod props;
+mod style;
+
+use dioxus::prelude::*;
+
+use crate::assert_component;
+use components::help_resolver_section::{HelpResolverSection, HelpResolverSectionProps};
+use components::help_top_row::{HelpTopRow, HelpTopRowProps};
+use style::CLASS;
+
+pub use props::HelpBodyProps;
+
+assert_component!(HelpBody);
+
+/// The help guide's scrolling content: the split top row above the full-width
+/// resolver explanation. Pure layout; it threads the content down.
+#[component]
+pub fn HelpBody(props: HelpBodyProps) -> Element {
+    let top_row = HelpTopRowProps::from(&props);
+    let resolver = HelpResolverSectionProps::from(&props);
+    rsx! {
+        div {
+            class: CLASS,
+            HelpTopRow { ..top_row }
+            HelpResolverSection { ..resolver }
+        }
+    }
+}

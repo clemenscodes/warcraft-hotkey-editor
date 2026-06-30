@@ -6,16 +6,19 @@ mod style;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 
+use crate::assert_component;
 use components::dialog_panel::{DialogPanel, DialogPanelProps};
 use hooks::use_body_scroll_lock;
 use props::DialogChrome;
-use style::DIALOG_STYLE_SHEETS;
+use style::CLASS;
 
 pub use props::DialogProps;
 
+assert_component!(Dialog);
+
 /// The dialog backdrop. Owns `.dialog`, locks body scroll while open, and hands
-/// the panel everything below. Every concrete dialog is a variant that hands
-/// this its open signal, title, and body.
+/// the panel everything below. Every concrete dialog is a component that composes
+/// this with its open signal, title, and body.
 #[component]
 pub fn Dialog(props: DialogProps) -> Element {
     use_body_scroll_lock(props.open);
@@ -25,11 +28,8 @@ pub fn Dialog(props: DialogProps) -> Element {
     } = DialogChrome::from(&props);
     let panel = DialogPanelProps::from(&props);
     rsx! {
-        for href in DIALOG_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         DialogRoot {
-            class: "dialog",
+            class: CLASS,
             open,
             on_open_change,
             DialogPanel { ..panel }

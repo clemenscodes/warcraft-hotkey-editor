@@ -7,16 +7,15 @@ const SEEN_KEY = "warcraft-hotkey-editor.onboarding-seen";
 // storage instead of the suite-wide seeded "already seen" flag.
 test.use({ storageState: { cookies: [], origins: [] } });
 
+// The onboarding guide is the only dialog open in these flows, so the dialog
+// role identifies it; the dismiss button confirms it is the help dialog.
 test.describe("Onboarding Help dialog", () => {
   test("auto-opens on first visit, and the button dismisses it for good", async ({ page }) => {
     await page.goto(APP);
-    const dialog = page.locator(".help-dialog");
+    const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
 
-    await page
-      .locator(".help-dialog")
-      .getByRole("button", { name: "Got it, don't show this again" })
-      .click();
+    await dialog.getByRole("button", { name: "Got it, don't show this again" }).click();
     await expect(dialog).toBeHidden();
 
     const flag = await page.evaluate((key) => localStorage.getItem(key), SEEN_KEY);
@@ -24,15 +23,15 @@ test.describe("Onboarding Help dialog", () => {
 
     await page.reload();
     await page.locator(".unit-card").first().waitFor();
-    await expect(page.locator(".help-dialog")).toBeHidden();
+    await expect(page.getByRole("dialog")).toBeHidden();
 
     await page.getByRole("button", { name: "How to use this editor" }).click();
-    await expect(page.locator(".help-dialog")).toBeVisible();
+    await expect(page.getByRole("dialog")).toBeVisible();
   });
 
   test("closing without the button leaves it to reopen next visit", async ({ page }) => {
     await page.goto(APP);
-    const dialog = page.locator(".help-dialog");
+    const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
 
     await dialog.getByRole("button", { name: "Close" }).click();
@@ -42,6 +41,6 @@ test.describe("Onboarding Help dialog", () => {
     expect(flag).toBeNull();
 
     await page.reload();
-    await expect(page.locator(".help-dialog")).toBeVisible();
+    await expect(page.getByRole("dialog")).toBeVisible();
   });
 });

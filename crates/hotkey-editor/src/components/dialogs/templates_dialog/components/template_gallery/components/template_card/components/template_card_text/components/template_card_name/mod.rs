@@ -1,15 +1,13 @@
+mod props;
 mod style;
 
 use dioxus::prelude::*;
 
 use style::TEMPLATE_CARD_NAME_STYLE_SHEETS;
 
-/// A template card's name heading. Owns `.template-card-name`.
-#[derive(Props, Clone, PartialEq)]
-pub struct TemplateCardNameProps {
-    pub children: Element,
-}
+pub use props::TemplateCardNameProps;
 
+/// A template card's name heading. Owns `.template-card-name`.
 #[component]
 pub fn TemplateCardName(props: TemplateCardNameProps) -> Element {
     let name = props.children.clone();
