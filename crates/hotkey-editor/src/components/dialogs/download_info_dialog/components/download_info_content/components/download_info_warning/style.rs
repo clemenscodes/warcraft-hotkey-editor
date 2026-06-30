@@ -7,15 +7,15 @@ const BASE: &[&str] = &[
     "py-5",
     "rounded-md",
     "border",
-    "border-amber-border",
-    "bg-amber-bg",
+    "border-[rgba(255,180,0,0.45)]",
+    "bg-[rgba(60,40,0,0.45)]",
     "text-center",
     "font-friz-quadrata",
     "uppercase",
-    "tracking-title",
-    "text-info",
-    "text-warcraft-gold-bright",
-    "text-shadow-emboss",
+    "tracking-[0.08em]",
+    "text-[1.75rem]/[1.625]",
+    "text-warcraft-gold/85",
+    "[text-shadow:1px_1px_0_#000]",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::dialogs::help_dialog::components::help_body::components::help_top_row::HelpTopRowProps;
-use crate::components::dialogs::help_dialog::content::HelpSegment;
+use crate::components::dialogs::help_dialog::data::HelpSegment;
 
 /// The workflow column's input: the steps, each a sequence of text/icon segments.
 #[derive(Props, Clone, PartialEq)]

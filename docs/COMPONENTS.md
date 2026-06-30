@@ -119,35 +119,47 @@ it. The identity is its own const in `style.rs`, listed first, ahead of the band
 arrays. e2e decides whether it bothers to select a component, never whether the
 component gets an identity — every component is selectable.
 
-## Styling: named Tailwind utilities, never arbitrary values
+## Styling: Tailwind utilities, with the global layer kept to the design system
 
 A component is styled with Tailwind utility classes and nothing else. There are
 no per-component CSS files, no `asset!` stylesheets, no `styles/` directories,
 no `document::Stylesheet` for project styling.
 
-The hard rule: **no arbitrary values, ever. Not a single bracket in a
-component's class list.** No `min-[1100px]:`, no `w-[min(1900px,95vw)]`, no
-`[background:linear-gradient(...)]`, no `text-[1.6rem]`, no `!important`. A
-bracket in a component class is inline CSS in disguise and is forbidden.
+The line that matters is **what is allowed to be global**:
 
-Every value a component references is a named token or a named composite that
-lives once in the global layer (`crates/hotkey-editor/tailwind.input.css`):
+- **The design system is global, on purpose.** The `@theme` block in
+  `crates/hotkey-editor/tailwind.input.css` holds only the shared design
+  vocabulary: the warcraft and race color palettes, the fonts. Plus the six
+  responsive bands (`@custom-variant`) and the `kb-focus` variant. These are
+  *meant* to be used anywhere — `text-warcraft-gold` shared across components is
+  the design system working, not a leak. App-wide treatments that aren't
+  utilities at all (the gold scrollbar) live as global base rules, also by
+  design.
+- **A component's look is never global.** It is the list of utilities in that
+  component's own `style.rs`, nothing more. There is no `surface-callout`,
+  `chip-gold`, `button-dismiss` — promoting one component's appearance into a
+  shared `@utility` is exactly the leak we forbid: another component could wear
+  it, and editing it would reach across components. If two components look alike,
+  they each list the utilities (duplication over coupling, the same trade the
+  one-class-per-component rule makes).
 
-- **Scalars** — breakpoints, spacing, type sizes — are `@theme` tokens:
-  `--breakpoint-*`, `--spacing-*`, `--text-*`. Tailwind turns each into a named
-  utility (`gap-section`, `text-heading`) and a named variant (`laptop:`).
-- **Composite surfaces** — gradients, multi-layer shadows, an embossed
-  text-shadow, a bordered chip — are named `@utility` rules: `surface-callout`,
-  `chip-gold`, `text-shadow-emboss`. The raw `rgba(...)`, gradient, and shadow
-  literals live inside that one `@utility` definition and nowhere else.
+**Arbitrary values are allowed, and are how bespoke styling stays local.** A
+one-off value a component needs — `min-w-[24cqi]`, `text-[1.6rem]/[1.6]`,
+`bg-[linear-gradient(135deg,#0c1932,#060c1c)]`, `[&_svg]:size-8`,
+`[text-shadow:1px_1px_0_#000]` — goes inline in that component's `style.rs`. It
+is a literal in the component's own `CLASS`, so it is private by construction:
+nothing global, nobody else can reach it. This is *better* isolation than a
+bespoke global token, which would sit in a shared namespace for anyone to use.
 
-Raw px / rem / rgba / gradients appear **only** in `@theme` and `@utility`. A
-component never names a literal value. If a component needs a value that has no
-token, add the token to the global layer first, then use it by name.
+So the rule is the inverse of a blanket ban: **a value goes in `@theme` only if
+it is genuine shared design vocabulary** (a palette color, a font). Everything
+component-specific — a one-off size, a gradient, a shadow, a descendant selector
+— is an arbitrary value inline. When in doubt, inline it; the global layer earns
+new entries only by being shared design, never by being one component's detail.
 
-The global layer is the single source of every value; components are pure
-compositions of named utilities. Changing the gold, a gap, or a breakpoint is
-one edit in `@theme`/`@utility`, never a hunt through components.
+Use the design tokens where they apply: `text-warcraft-gold`, and opacity
+modifiers on them (`border-warcraft-gold/35`, `text-warcraft-gold/75`) instead of
+a fresh rgba. Reach for an arbitrary value for the genuinely bespoke.
 
 ## Responsive bands
 
@@ -197,12 +209,13 @@ directory and joins everything at compile time into a
 `pub(super) const CLASS: ClassList`:
 
 ```rust
-// help_top_row/style.rs — wide layout in BASE, the phone override per band
+// help_top_row/style.rs — wide layout in BASE, the phone override per band.
+// Bespoke values are arbitrary and inline (component-local); the gold is a token.
 use crate::classes;
 
-const BASE: &[&str] = &["flex", "flex-row", "items-start", "gap-columns"];
-const MOBILE: &[&str] = &["mobile:flex-col", "mobile:gap-section"];
-const TABLET: &[&str] = &["tablet:flex-col", "tablet:gap-section"];
+const BASE: &[&str] = &["flex", "flex-row", "items-start", "gap-[3.2rem]"];
+const MOBILE: &[&str] = &["mobile:flex-col", "mobile:gap-[2.6rem]"];
+const TABLET: &[&str] = &["tablet:flex-col", "tablet:gap-[2.6rem]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
@@ -324,10 +337,11 @@ example:
 grid_tile/
   mod.rs            the component function, flat hooks then pure RSX, plus the pub use re-exports
   props.rs          the Props struct and its From conversions
+  data.rs           the static content/data this component sources (optional)
   hooks.rs          the component's composed hook, wiring primitive hooks together (optional)
   logic.rs          everything the body is not allowed to do (optional)
   state.rs          component-local enums, e.g. visual state (optional)
-  style.rs          the identity const + per-band class arrays, via classes!
+  style.rs          the per-band class arrays, via classes!
   components/        child components, each its own directory of this same shape
 ```
 
@@ -335,6 +349,22 @@ A component with children nests them under `components/`. A leaf component omits
 `components/`. A component with no logic beyond `From` conversions omits
 `logic.rs`. A component that reaches the domain, `localStorage`, or a web API
 carries a `hooks.rs` with its one composed hook, and omits it otherwise.
+
+## Data and content are props, sourced from `data.rs`
+
+A component renders; it does not own content. Copy, lists, labels, the entries of
+a menu — none of it is baked into markup. Data is **a prop, strictly**, threaded
+in from the parent, so a renderer is a pure loop over what it is handed and never
+hard-codes a sentence or an entry.
+
+The static content itself lives in a **`data.rs` next to the markup** of the
+component that sources it — the top of a subtree owns the `data.rs`, builds the
+content value, and passes it down as props; every component below renders it.
+A `HelpWorkflow` does not contain its fourteen steps; the steps are a
+`&'static [&'static [HelpSegment]]` in `help_dialog/data.rs`, handed down and
+looped over. This keeps content out of the render path: changing a label is an
+edit to `data.rs`, never to a component body, and the same renderer serves any
+data of its shape.
 
 ---
 
@@ -540,8 +570,8 @@ nix develop -c cargo test -p warcraft-keybinds
 nix develop -c cargo fmt --check
 ```
 
-Also confirm no component class list contains a bracket (no arbitrary values and
-no `!important`), every utility resolves to a `@theme` token or an `@utility`
-composite, and any value with no token was added to the global layer first. A
-class assembled outside a literal is invisible to Tailwind's scanner, so its CSS
-will silently never generate — keep every token a literal in a `style.rs` array.
+Also confirm the global layer stayed clean: no new `@utility` for a component's
+look, and `@theme` gained nothing that is not shared design vocabulary — bespoke
+values are arbitrary and inline in the component's `style.rs`. A class assembled
+outside a literal is invisible to Tailwind's scanner, so its CSS will silently
+never generate — keep every utility a literal in a `style.rs` array.

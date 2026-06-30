@@ -4,12 +4,12 @@ const BASE: &[&str] = &[
     "m-0",
     "uppercase",
     "tracking-widest",
-    "text-heading",
+    "text-[2.2rem]/[1.2]",
     "text-warcraft-gold",
-    "text-shadow-emboss",
+    "[text-shadow:1px_1px_0_#000]",
 ];
-const MOBILE: &[&str] = &["mobile:text-heading-sm", "mobile:text-center"];
-const TABLET: &[&str] = &["tablet:text-heading-sm", "tablet:text-center"];
+const MOBILE: &[&str] = &["mobile:text-[1.9rem]/[1.2]", "mobile:text-center"];
+const TABLET: &[&str] = &["tablet:text-[1.9rem]/[1.2]", "tablet:text-center"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

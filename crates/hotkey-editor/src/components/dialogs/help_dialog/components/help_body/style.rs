@@ -3,7 +3,7 @@ use crate::classes;
 const BASE: &[&str] = &[
     "flex",
     "flex-col",
-    "gap-section",
+    "gap-[2.6rem]",
     "text-left",
     "font-friz-quadrata",
 ];

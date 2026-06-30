@@ -6,16 +6,15 @@ const BASE: &[&str] = &[
     "flex",
     "flex-col",
     "gap-6",
-    "pt-body-pt",
-    "px-body-px",
-    "pb-body-pb",
+    "pt-[2.4rem]",
+    "px-[3rem]",
+    "pb-[2.6rem]",
     "overflow-y-auto",
-    "scrollbar-gold",
 ];
 const MOBILE: &[&str] = &[
-    "mobile:pt-body-phone-pt",
-    "mobile:px-body-phone-px",
-    "mobile:pb-body-phone-pb",
+    "mobile:pt-[1.25rem]",
+    "mobile:px-[1rem]",
+    "mobile:pb-[1.5rem]",
 ];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

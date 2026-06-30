@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 
 use crate::assert_component;
 use crate::components::dialogs::help_dialog::components::help_inline_icon::HelpInlineIcon;
-use crate::components::dialogs::help_dialog::content::HelpSegment;
+use crate::components::dialogs::help_dialog::data::HelpSegment;
 use style::CLASS;
 
 pub use props::HelpWorkflowStepProps;

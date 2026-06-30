@@ -5,10 +5,10 @@ const BASE: &[&str] = &[
     "py-4",
     "rounded-md",
     "border",
-    "border-warcraft-gold-faint",
-    "bg-warcraft-bg-deep",
+    "border-warcraft-gold/35",
+    "bg-[rgba(8,18,35,0.85)]",
     "font-mono",
-    "text-chip",
+    "text-[2rem]",
     "text-warcraft-gold",
 ];
 const MOBILE: &[&str] = &[];

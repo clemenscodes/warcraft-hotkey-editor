@@ -8,7 +8,7 @@ const BASE: &[&str] = &[
     "gap-10",
     "flex-1",
     "w-full",
-    "max-w-content",
+    "max-w-[70rem]",
     "mx-auto",
 ];
 const MOBILE: &[&str] = &[];

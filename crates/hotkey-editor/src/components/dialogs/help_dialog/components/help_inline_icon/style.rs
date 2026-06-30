@@ -1,6 +1,16 @@
 use crate::classes;
 
-const BASE: &[&str] = &["icon-inline"];
+const BASE: &[&str] = &[
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "w-[1.7rem]",
+    "h-[1.7rem]",
+    "align-[-0.3em]",
+    "text-warcraft-gold",
+    "[&_svg]:w-full",
+    "[&_svg]:h-full",
+];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

@@ -1,6 +1,6 @@
 use crate::classes;
 
-const BASE: &[&str] = &["flex", "items-center", "gap-snug"];
+const BASE: &[&str] = &["flex", "items-center", "gap-[1.2rem]"];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

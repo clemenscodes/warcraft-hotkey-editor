@@ -2,12 +2,12 @@ use crate::classes;
 
 const BASE: &[&str] = &[
     "m-0",
-    "text-term",
+    "text-[1.8rem]/[1.3]",
     "text-warcraft-gold",
-    "text-shadow-emboss",
+    "[text-shadow:1px_1px_0_#000]",
 ];
-const MOBILE: &[&str] = &["mobile:text-term-sm"];
-const TABLET: &[&str] = &["tablet:text-term-sm"];
+const MOBILE: &[&str] = &["mobile:text-[1.5rem]/[1.3]"];
+const TABLET: &[&str] = &["tablet:text-[1.5rem]/[1.3]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

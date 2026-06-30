@@ -2,13 +2,13 @@ use crate::classes;
 
 const BASE: &[&str] = &[
     "block",
-    "h-decoration-h",
+    "h-[2.4rem]",
     "w-auto",
     "flex-none",
-    "decoration-flourish",
+    "[filter:drop-shadow(0_1px_0_rgba(0,0,0,0.7))]",
 ];
-const MOBILE: &[&str] = &["mobile:w-decoration-phone-w"];
-const TABLET: &[&str] = &["tablet:w-decoration-tablet-w"];
+const MOBILE: &[&str] = &["mobile:w-[2rem]"];
+const TABLET: &[&str] = &["tablet:w-[2.75rem]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

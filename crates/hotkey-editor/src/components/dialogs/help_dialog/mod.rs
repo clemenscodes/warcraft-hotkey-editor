@@ -1,5 +1,5 @@
 pub mod components;
-pub mod content;
+pub mod data;
 mod props;
 
 use dioxus::prelude::*;
@@ -8,7 +8,7 @@ use super::dialog::Dialog;
 use crate::assert_component;
 use components::help_body::{HelpBody, HelpBodyProps};
 use components::help_dismiss::{HelpDismiss, HelpDismissProps};
-use content::HELP_CONTENT;
+use data::HELP_CONTENT;
 
 pub use props::HelpDialogProps;
 

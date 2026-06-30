@@ -3,12 +3,12 @@ use crate::classes;
 const BASE: &[&str] = &[
     "fixed",
     "inset-0",
-    "z-dialog",
+    "z-[1000]",
     "flex",
     "items-center",
     "justify-center",
     "p-8",
-    "bg-dialog-backdrop",
+    "bg-black/70",
 ];
 const MOBILE: &[&str] = &["mobile:p-0"];
 const TABLET: &[&str] = &[];

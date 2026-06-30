@@ -2,14 +2,14 @@ use crate::classes;
 
 const BASE: &[&str] = &[
     "m-0",
-    "max-w-intro",
+    "max-w-[90rem]",
     "text-center",
     "font-friz-quadrata",
     "uppercase",
     "tracking-widest",
-    "text-info-lg",
-    "text-warcraft-gold-muted",
-    "text-shadow-emboss",
+    "text-[2rem]/[1.375]",
+    "text-warcraft-gold/75",
+    "[text-shadow:1px_1px_0_#000]",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
