@@ -1,0 +1,9 @@
+/* Phone band: tightest header gutters. */
+
+@media (max-width: 480px) {
+    .dialog-header {
+        gap: 0.5rem;
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+    }
+}

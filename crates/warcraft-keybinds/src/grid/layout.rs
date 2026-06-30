@@ -6,6 +6,12 @@ use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
 pub const COMMAND_GRID_COLUMNS: u8 = 4;
 pub const COMMAND_GRID_ROWS: u8 = 3;
 
+/// Every command grid is exactly this many tiles, always: `COMMAND_GRID_COLUMNS`
+/// times `COMMAND_GRID_ROWS`. A hard domain invariant with no exceptions, so the
+/// renderer carries the tiles as a fixed-size array rather than a slice.
+pub const COMMAND_GRID_TILE_COUNT: usize =
+    COMMAND_GRID_COLUMNS as usize * COMMAND_GRID_ROWS as usize;
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct GridLayout {
     letters: [[char; 4]; 3],
@@ -205,5 +211,12 @@ mod tests {
         let default_layout = GridLayout::default();
         let qwerty_layout = GridLayout::qwerty_grid();
         assert_eq!(default_layout, qwerty_layout);
+    }
+
+    #[test]
+    fn command_grid_is_always_three_by_four_twelve_tiles() {
+        assert_eq!(COMMAND_GRID_COLUMNS, 4);
+        assert_eq!(COMMAND_GRID_ROWS, 3);
+        assert_eq!(COMMAND_GRID_TILE_COUNT, 12);
     }
 }

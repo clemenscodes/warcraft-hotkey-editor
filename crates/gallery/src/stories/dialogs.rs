@@ -1,10 +1,12 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::{
-    DialogHeader, DownloadInfoDialog, HelpDialog, LayoutEditor, PreviewDialog, TemplateCard,
-    TemplateCardGrid, TemplatesDialog, ToastMount, UploadInfoDialog, UploadStatus,
+    DialogHeader, DownloadInfoDialog, GridTileProps, HeadedGrid, HelpDialog, LayoutEditor,
+    PreviewDialog, TemplateCard, TemplatesDialog, ToastMount, UploadInfoDialog, UploadStatus,
 };
-use warcraft_keybinds::{CustomKeys, GridCoordinate, ResolvedTemplate};
+use warcraft_keybinds::{
+    COMMAND_GRID_TILE_COUNT, CustomKeys, GridCoordinate, RenderedTile, ResolvedTemplate,
+};
 
 use crate::stories::fixtures;
 
@@ -18,17 +20,12 @@ pub fn stories() -> Vec<Story> {
         Story::single("Dialogs", "LayoutEditor", layout_editor_default),
         Story::single("Dialogs", "TemplatesDialog", templates_dialog_open_story),
         Story::single("Dialogs", "TemplateCard", template_card_default),
+        Story::new("Dialogs", "HeadedGrid", "Command card", headed_grid_command),
         Story::new(
             "Dialogs",
-            "TemplateCardGrid",
-            "Command card",
-            template_card_grid_command,
-        ),
-        Story::new(
-            "Dialogs",
-            "TemplateCardGrid",
+            "HeadedGrid",
             "Research menu",
-            template_card_grid_research,
+            headed_grid_research,
         ),
     ]
 }
@@ -108,41 +105,43 @@ fn template_card_default() -> Element {
         .clone();
     rsx! {
         TemplateCard {
-            template_name: "Default".to_string(),
-            template_description: "Stock Warcraft III hotkeys".to_string(),
-            template_content: "",
-            template_resolved: resolved,
+            name: "Default".to_string(),
+            description: "Stock Warcraft III hotkeys".to_string(),
+            resolved,
             on_apply: move |_| {},
         }
     }
 }
 
-fn template_card_grid_command() -> Element {
+fn headed_grid_command() -> Element {
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
     let resolved = resolved_templates
         .first()
         .expect("at least one bundled template")
         .clone();
+    let tiles = headed_grid_tiles(resolved.command_tiles());
     rsx! {
-        TemplateCardGrid {
-            label: "Command card".to_string(),
-            resolved,
-            is_research: false,
-        }
+        HeadedGrid { heading: "Command card", tiles }
     }
 }
 
-fn template_card_grid_research() -> Element {
+fn headed_grid_research() -> Element {
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
     let resolved = resolved_templates
         .first()
         .expect("at least one bundled template")
         .clone();
+    let tiles = headed_grid_tiles(resolved.research_tiles());
     rsx! {
-        TemplateCardGrid {
-            label: "Research menu".to_string(),
-            resolved,
-            is_research: true,
-        }
+        HeadedGrid { heading: "Research menu", tiles }
     }
+}
+
+fn headed_grid_tiles(source: &[RenderedTile]) -> [GridTileProps; COMMAND_GRID_TILE_COUNT] {
+    source
+        .iter()
+        .map(GridTileProps::from)
+        .collect::<Vec<_>>()
+        .try_into()
+        .unwrap_or_else(|_| panic!("command grid is always {COMMAND_GRID_TILE_COUNT} tiles"))
 }

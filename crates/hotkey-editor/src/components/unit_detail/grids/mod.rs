@@ -5,9 +5,10 @@ use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::grid_editors::{
-    CommandGridEditor, GridEditorConfig, ResearchGridEditor, UprootedGridEditor,
-};
+use crate::components::grid_editors::command_grid_editor::CommandGridEditor;
+use crate::components::grid_editors::grid_editor::GridEditorConfig;
+use crate::components::grid_editors::research_grid_editor::ResearchGridEditor;
+use crate::components::grid_editors::uprooted_grid_editor::UprootedGridEditor;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;

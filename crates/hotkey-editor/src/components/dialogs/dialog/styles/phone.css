@@ -1,0 +1,7 @@
+/* Phone band: the backdrop padding goes so the panel meets the viewport edges. */
+
+@media (max-width: 480px) {
+    .dialog {
+        padding: 0;
+    }
+}

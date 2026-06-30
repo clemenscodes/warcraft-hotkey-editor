@@ -125,7 +125,7 @@ test.describe("Upgrade hotkey tiers", () => {
 
     await page.locator('[aria-label="Browse layout templates"]').click();
     await page
-      .locator(".templates-dialog-shell .wc3-dialog-body button", {
+      .locator(".template-card", {
         hasText: "Clemens (QWERTZ)",
       })
       .click();

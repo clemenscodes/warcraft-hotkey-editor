@@ -1,3 +1,4 @@
+pub(crate) mod dialog;
 pub(crate) mod dialog_header;
 pub(crate) mod dialog_stack;
 pub(crate) mod download_info_dialog;

@@ -1,0 +1,7 @@
+/* Phone band: tighter body gutter on the full-screen sheet. */
+
+@media (max-width: 480px) {
+    .dialog-body {
+        padding: 1.25rem 1rem 1.5rem;
+    }
+}

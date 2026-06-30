@@ -37,7 +37,7 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // template-then-resolve pattern.
     await page.locator('[aria-label="Browse layout templates"]').click();
     await page
-      .locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "Default" })
+      .locator(".template-card", { hasText: "Default" })
       .click();
     await page.locator('[role="alertdialog"]').first().waitFor();
 

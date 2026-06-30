@@ -1,0 +1,11 @@
+/* The previews row: the command card and research menu grids laid side by side.
+   Each grid grows to take half the row and shrinks its tiles to fit, so the two
+   always sit on one line and never overflow the card. */
+
+.template-card-previews {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    align-items: flex-start;
+}

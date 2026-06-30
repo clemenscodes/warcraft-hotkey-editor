@@ -1,0 +1,9 @@
+/* Tablet band: tighter header gutters. */
+
+@media (min-width: 481px) and (max-width: 1099px) {
+    .dialog-header {
+        gap: 0.5rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}

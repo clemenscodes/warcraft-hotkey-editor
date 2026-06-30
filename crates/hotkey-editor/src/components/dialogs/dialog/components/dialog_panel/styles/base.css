@@ -1,0 +1,16 @@
+/* The dialog panel: a chromeless bordered box, 80vw by 80vh on desktop, with the
+   gradient fill and gold frame. Padding is zero so the body owns its own gutter. */
+
+.dialog-panel {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    height: 80vh;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid #ffce63;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, rgba(12, 25, 50, 0.98) 0%, rgba(6, 12, 28, 0.98) 100%);
+    box-shadow: 0 0 40px rgba(255, 206, 99, 0.25), 0 8px 32px rgba(0, 0, 0, 0.6);
+}

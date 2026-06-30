@@ -1,0 +1,7 @@
+/* Mobile band: tighter gap between name and description. */
+
+@media (max-width: 1099px) {
+    .template-card-text {
+        gap: 4px;
+    }
+}

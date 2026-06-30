@@ -1,0 +1,7 @@
+/* Tablet band: the decoration narrows to a fixed pixel width. */
+
+@media (min-width: 481px) and (max-width: 1099px) {
+    .dialog-header-decoration {
+        width: 44px;
+    }
+}

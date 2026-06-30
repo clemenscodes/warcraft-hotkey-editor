@@ -19,12 +19,42 @@ below.
 
 **A component renders. It does not compute.**
 
-The body of a component is pure RSX. No `let` bindings, no destructuring of
-work, no conditionals that build values, no domain calls. Everything the markup
-needs arrives already shaped, and the body only places it.
+The body of a component is a flat list of hook invocations followed by pure
+RSX. The hooks come first, one per line, each returning already shaped data.
+The RSX comes second and only places that data in the tree.
 
-Anything that is not "place this value in the tree" lives in a sibling file, not
-in the component body.
+What is allowed at the top of the body is a flat hook call and nothing more:
+`let preview = use_preview_dialog(props);`. What is never allowed is work. No
+destructuring that does work, no chaining off a hook result, no conditionals
+that build values, no inline domain calls, no `.read()` / `.map()` / `.collect()`
+ladders. If a line does anything other than name the result of a hook, it does
+not belong in the body.
+
+Everything the markup needs arrives already shaped through a hook. Anything that
+is not "call a hook" or "place this value in the tree" lives in a sibling file,
+not in the component body.
+
+## Logic composes through hooks, the way markup composes through components
+
+Domain logic, `localStorage`, and web APIs are reached only through hooks, never
+inline in a body. The hook layer mirrors the component layer exactly.
+
+- **Primitive hooks are the leaves.** Each owns one concern and is reused across
+  components: `use_custom_keys` for the domain facade, `use_dialog_open` for
+  shell open state, `use_local_storage` for persistence, `use_upload_picker`
+  for the picker web API. A primitive hook is to logic what `HotkeyBadge` is to
+  markup.
+- **One composed hook per component is the parent.** It calls the primitive
+  hooks, wires them together, and hands the body a single already shaped result.
+  `use_preview_dialog(props)` calls `use_custom_keys` and `use_dialog_open`
+  inside it, the way a parent component composes its leaf children. The body
+  sees one flat line, not the wiring.
+- A body never reaches a primitive hook directly when a composed result reads
+  more clearly. Push the wiring down into the component's own hook so the body
+  stays a single declarative line.
+
+Reading a component must tell the story immediately and never require following
+a logical calculus. The composed hook is where the calculus lives.
 
 ---
 
@@ -42,6 +72,42 @@ So `GridHeading` lives in `grid_heading/`, and its markup carries
 name, fix it. Prefer renaming the directory when the component name is public
 API, otherwise rename the component. Fix the CSS class to match in the same pass.
 
+This rule governs our own components. Library components are exempt: things like
+`document::Stylesheet` and the `dioxus_primitives` dialog parts (`DialogRoot`,
+`DialogContent`) are external building blocks, not project code, so they have no
+directory here and may appear in a body the same way `Stylesheet` already does.
+A project class we put on a library component is still ours and still belongs in
+the owning component's stylesheet.
+
+## One class per component
+
+A class is a component boundary. If you give an element a class, that element is
+a component. It follows that a component's markup carries exactly one classed
+element: its own root. Every other element that needs a class is a child
+component, with its own directory, its own one class, and its own stylesheet.
+
+Two classed elements in one markup file is the signal that the file is doing the
+work of two components. Split it. Keep splitting until each markup file names
+exactly one class.
+
+The root's class string may still carry variant or state modifiers, since those
+describe the same component, not another one. `grid-tile dragging-source` is one
+component. `button button-primary` is one component. What is not allowed is a
+second, structurally distinct classed element in the same file, like a title and
+a decoration both classed inside a header. Those become `DialogTitle` and
+`DialogHeaderDecoration`, each its own leaf.
+
+Unclassed structural elements are tolerated but suspect. A bare wrapper `div`
+with no class is fine as pure layout glue, but the moment it wants styling it
+wants a class, and then it wants to be a component.
+
+The `grid_editor` subsystem already embodies this: `grid_tile` holds only
+`.grid-tile`, and `tile_figure`, `tile_badge`, `hotkey_badge` are each their own
+one-class component.
+
+There is no such thing as too many components. There is only too few. A single
+styled paragraph with its own class is a component. When in doubt, split.
+
 ## Each component owns its style
 
 Every component that has any styling owns its own stylesheet inside its own
@@ -53,6 +119,23 @@ stylesheet that a conditionally rendered child uses, when mounting it with the
 child would cause a first paint flicker. The drag follower overlay does this for
 the ghost on purpose.
 
+### Nothing global styles a component
+
+The only rules allowed in a global stylesheet are the design system tokens:
+font families and the custom color palette, the kind of thing Tailwind's theme
+layer holds. Everything else, every layout rule, every size, every border and
+shadow that paints a component, lives in that component's own `styles/`
+directory and nowhere else.
+
+There is no shared component stylesheet. If two components want the same look,
+they do not reach for a common class in a global file, and they do not import
+one component's stylesheet into the other. They each carry their own copy of the
+rule, or the shared look becomes its own leaf component that both compose.
+Duplicating a handful of CSS lines is the correct trade. The thing being bought
+is isolation by construction: editing one component's style cannot reach another
+component, and fixing a component's style is a focused edit of one `styles/`
+directory, never a hunt through the whole CSS codebase.
+
 ---
 
 ## The directory layout
@@ -62,8 +145,9 @@ example:
 
 ```
 grid_tile/
-  mod.rs            the component function, pure RSX, plus the pub use re-exports
+  mod.rs            the component function, flat hooks then pure RSX, plus the pub use re-exports
   props.rs          the Props struct and its From conversions
+  hooks.rs          the component's composed hook, wiring primitive hooks together (optional)
   logic.rs          everything the body is not allowed to do (optional)
   state.rs          component-local enums, e.g. visual state (optional)
   style.rs          the asset! stylesheet constants
@@ -73,7 +157,8 @@ grid_tile/
 
 A component with children nests them under `components/`. A leaf component omits
 `components/`. A component with no logic beyond `From` conversions omits
-`logic.rs`.
+`logic.rs`. A component that reaches the domain, `localStorage`, or a web API
+carries a `hooks.rs` with its one composed hook, and omits it otherwise.
 
 ---
 
@@ -128,6 +213,29 @@ piece into its own leaf component that early returns, or render a guarded child.
 The body stays a flat list of children with no nesting beyond the natural tree.
 Loops over a collection in the markup are fine. Reaching for a deep `if/else`
 ladder is the signal to extract a child.
+
+## One attribute per line
+
+Prefer one attribute per line in RSX. When an element or component carries more
+than one attribute, each attribute goes on its own line, and the trailing child
+or text starts a fresh line too. It costs more lines, but the structure reads at
+a glance: the attribute list is a vertical column the eye scans, not a sentence
+it has to parse.
+
+```rust
+// no
+div { class: "dialog-body", role: "group", {body} }
+
+// yes
+div {
+    class: "dialog-body",
+    role: "group",
+    {body}
+}
+```
+
+A single attribute with no child may stay on one line (`img { src }`). The rule
+bites the moment there are two attributes, or an attribute plus a child.
 
 ---
 
@@ -189,7 +297,46 @@ re-exports the public surface. Prefer the flattest layout that still keeps
 directory equals component. Do not add grouping layers like `base/` or
 `extensions/` that would break that equality.
 
+## Two kinds of reuse: extend a base, or compose a leaf
+
+The variant pattern above is for a base that is generic over a behavior, where
+variants bind the type parameter. A `Dialog` base owns the dialog shell and its
+chrome CSS, and each concrete dialog is a variant that fills the body, the way
+`CommandGridEditor` wraps `GridEditor`. Shell sizing, scrollbar, and backdrop
+rules live once on the base, never copied per dialog.
+
+A small shared piece that is not generic over a behavior is not a variant. A
+close button, a primary button, an edit panel are plain leaf components. They
+live once, own their class and CSS, and parents reuse them by nesting them in
+the tree, the way `Grid` drops in `HotkeyBadge`. Do not force a behavior
+parameter onto a button to make it look like a variant. Extend a base when there
+is a behavior to bind, compose a leaf when there is not.
+
 ---
+
+## Modules are public; imports carry the full path
+
+A component is reached by its module path, not by a re-export chain. Make every
+module on a public path `pub mod`, and import a component through its full
+semantic path: `...::headed_grid::components::grid::Grid`. The path itself tells
+you exactly where the component lives.
+
+Do not re-export descendants up the tree. A `mod.rs` that lists
+`pub use child::{A, B, C, ...}` to surface a grandchild forces every new layer to
+copy that list into yet another file. It does not scale, and it erases where each
+name actually lives, the import path loses all ordering. The only re-export a
+component may carry is its own public surface from its own sibling files:
+`pub use props::XProps;`, and `pub use state::XState;` when it has visual state.
+Children are reached by traversing `pub mod`, never through a flattened list.
+
+So a component's `mod.rs` carries exactly: the `pub` component function, its own
+`pub use props::XProps` (and `state`), `pub mod components` for its children, and
+private `use` imports of the specific children it renders. Nothing is re-exported
+that the component does not itself own.
+
+The crate root may still expose a curated public surface for an external consumer
+(the `gallery` showcase), but it does so with full-path `pub use`s, and the
+intermediate modules stay free of flattening.
 
 ## Types at the props boundary
 

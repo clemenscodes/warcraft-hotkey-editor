@@ -7,8 +7,8 @@ test("clicking Preview opens a dialog whose textarea contains CustomKeys.txt for
   await page.locator(".unit-card").first().waitFor();
 
   await page.locator('[aria-label="Preview"]').click();
-  await page.locator(".preview-dialog").waitFor();
+  await page.locator(".preview-textarea").waitFor();
 
-  const content = await page.locator(".preview-dialog textarea").inputValue();
+  const content = await page.locator(".preview-textarea").inputValue();
   expect(content).toMatch(/\[.*\]|hotkey=/i);
 });

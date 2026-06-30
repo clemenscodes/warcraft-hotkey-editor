@@ -1,0 +1,8 @@
+/* The template gallery: two equal columns of cards on desktop. */
+
+.template-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.25rem;
+    width: 100%;
+}

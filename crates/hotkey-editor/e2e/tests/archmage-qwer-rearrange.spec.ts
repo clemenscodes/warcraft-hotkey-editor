@@ -122,7 +122,7 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 
   await page.locator('[aria-label="Browse layout templates"]').click();
   await page
-    .locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "Default" })
+    .locator(".template-card", { hasText: "Default" })
     .click();
   // Applying the template writes the new layout to localStorage and raises a
   // conflict prompt. The collisions are the resolver page's concern, so this
@@ -305,7 +305,7 @@ test("a non-morph toggle's two positions coincide after applying a template", as
 
   await page.locator('[aria-label="Browse layout templates"]').click();
   await page
-    .locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "NEO (QWERTZ)" })
+    .locator(".template-card", { hasText: "NEO (QWERTZ)" })
     .click();
   await page.locator('[role="alertdialog"]').first().waitFor();
 

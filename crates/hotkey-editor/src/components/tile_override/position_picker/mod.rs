@@ -12,7 +12,8 @@ use warcraft_keybinds::CustomKeys;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::components::dialogs::dialog_header::DialogHeader;
-use crate::components::grid_editors::{CommandGridEditor, GridEditorConfig};
+use crate::components::grid_editors::command_grid_editor::CommandGridEditor;
+use crate::components::grid_editors::grid_editor::GridEditorConfig;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;

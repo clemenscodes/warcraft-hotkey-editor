@@ -1,0 +1,14 @@
+/* The captioned grid: heading above the grid, centered on the same axis. The
+   heading and grid each own their own sizing; this wrapper only arranges them.
+   It grows to fill the share its flex parent offers (the editor gives it the
+   whole width, the previews row splits it between two), and never forces its
+   own width, so the grid inside shrinks to fit a narrow share. */
+
+.headed-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 0;
+    min-width: 0;
+    align-self: stretch;
+}

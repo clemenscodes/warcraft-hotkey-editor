@@ -1,0 +1,11 @@
+/* The import dialog's action row: buttons pushed to the right, wrapping on
+   narrow widths. */
+
+.upload-info-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex: none;
+    padding-top: 1rem;
+}

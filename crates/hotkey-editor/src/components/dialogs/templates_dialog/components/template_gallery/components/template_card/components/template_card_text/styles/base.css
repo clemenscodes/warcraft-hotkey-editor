@@ -1,0 +1,7 @@
+/* The card's text block: name stacked above description. */
+
+.template-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

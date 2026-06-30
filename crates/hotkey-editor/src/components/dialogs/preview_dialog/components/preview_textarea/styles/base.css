@@ -1,0 +1,50 @@
+/* The serialized CustomKeys.txt view: a read-only textarea, monospaced, with
+   long lines scrolling horizontally instead of wrapping. */
+
+.preview-textarea {
+    width: 100%;
+    flex: 1;
+    min-height: 20rem;
+    padding: 1.5rem 2rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-warcraft-blue);
+    background: rgba(8, 18, 35, 0.85);
+    color: var(--color-warcraft-text-primary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 1.8rem;
+    line-height: 1.45;
+    white-space: pre;
+    overflow: auto;
+    resize: vertical;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 206, 99, 0.45) transparent;
+}
+
+.preview-textarea:focus {
+    outline: none;
+    border-color: var(--color-warcraft-gold);
+    box-shadow: 0 0 8px rgba(255, 206, 99, 0.4);
+}
+
+.preview-textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.preview-textarea::-webkit-scrollbar-track {
+    background: rgba(8, 18, 35, 0.45);
+    border-radius: 4px;
+}
+
+.preview-textarea::-webkit-scrollbar-thumb {
+    background: rgba(255, 206, 99, 0.45);
+    border-radius: 4px;
+}
+
+.preview-textarea::-webkit-scrollbar-thumb:hover {
+    background: #ffce63;
+}
+
+.preview-textarea::-webkit-scrollbar-corner {
+    background: rgba(8, 18, 35, 0.45);
+}

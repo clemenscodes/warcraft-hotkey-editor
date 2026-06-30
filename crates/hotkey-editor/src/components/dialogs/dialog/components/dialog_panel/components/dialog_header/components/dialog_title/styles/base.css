@@ -1,0 +1,13 @@
+/* The dialog title: gold Friz Quadrata, uppercase, with a black drop shadow and
+   a soft glow. */
+
+.dialog-title {
+    margin: 0;
+    font-family: var(--font-friz-quadrata);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--color-warcraft-gold);
+    text-shadow: 1px 1px 0 #000, 0 0 18px rgba(255, 206, 99, 0.35);
+}

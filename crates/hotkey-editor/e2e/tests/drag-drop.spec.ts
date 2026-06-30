@@ -20,7 +20,7 @@ async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
   await page.locator('[aria-label="Browse layout templates"]').click();
-  await page.locator(".templates-dialog-shell .wc3-dialog-body button", { hasText: "Default" }).click();
+  await page.locator(".template-card", { hasText: "Default" }).click();
   await page.locator('[role="alertdialog"]').first().waitFor();
   await page.locator('[aria-label="Resolve conflicts"]').click();
   await page.locator('[data-action="apply-cascade"]').click();

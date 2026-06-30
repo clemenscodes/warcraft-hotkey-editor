@@ -28,7 +28,9 @@ pub use display::grid_behavior::{
 pub use display::inspector_detail::InspectorDetail;
 pub use display::rendered_grid::{CommandGridRenderInput, RenderedTile};
 pub use display::templates::{BundledTemplate, ResolvedTemplate};
-pub use grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
+pub use grid::layout::{
+    COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, COMMAND_GRID_TILE_COUNT, GridLayout,
+};
 pub use identity::ability_id::AbilityId;
 pub use identity::hotkey_target::HotkeyTarget;
 pub use identity::hotkey_token::{HotkeyToken, HotkeyTokenIsNotLetter, HotkeyTokenParseError};
