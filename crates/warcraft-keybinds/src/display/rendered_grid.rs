@@ -3,7 +3,7 @@
 //! (occupant, hotkey, conflict, passive, command, selected, draggable, tier
 //! preview) is made here, in the domain, never in the UI.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use warcraft_database::ObjectLookup;
 
@@ -91,6 +91,9 @@ impl CustomKeys {
         behavior: &B,
         input: &CommandGridRenderInput,
     ) -> Vec<RenderedTile> {
+        let is_research_context = behavior.research_positions();
+        let conflicting_tokens =
+            self.conflicting_tokens(input.slots, input.layout, is_research_context);
         let mut tiles: Vec<RenderedTile> = Vec::new();
         for row in 0..COMMAND_GRID_ROWS {
             for column in 0..COMMAND_GRID_COLUMNS {
@@ -101,11 +104,41 @@ impl CustomKeys {
                     continue;
                 };
                 let coordinate = GridCoordinate::new(column_index, row_index);
-                let tile = self.resolved_tile(behavior, input, coordinate);
+                let tile = self.resolved_tile(behavior, input, &conflicting_tokens, coordinate);
                 tiles.push(tile);
             }
         }
         tiles
+    }
+
+    /// The set of hotkey tokens that collide within this grid, computed once per
+    /// render. A token collides when two or more distinct objects occupying a
+    /// cell in this context resolve to it. This mirrors the per-tile
+    /// [`Self::find_hotkey_conflict`] check but evaluates each slot's token a
+    /// single time, so the whole grid's conflict marking is linear in the slot
+    /// count rather than quadratic.
+    fn conflicting_tokens(
+        &self,
+        slots: &[GridSlotId],
+        layout: GridLayout,
+        is_research_context: bool,
+    ) -> HashSet<HotkeyToken> {
+        let mut ids_by_token: HashMap<HotkeyToken, HashSet<String>> = HashMap::new();
+        for slot in slots {
+            let Some(token) = self.effective_hotkey_token(slot, layout, is_research_context) else {
+                continue;
+            };
+            let slot_id = slot.as_str().to_ascii_lowercase();
+            let ids = ids_by_token.entry(token).or_default();
+            ids.insert(slot_id);
+        }
+        let mut conflicting: HashSet<HotkeyToken> = HashSet::new();
+        for (token, ids) in ids_by_token {
+            if ids.len() >= 2 {
+                conflicting.insert(token);
+            }
+        }
+        conflicting
     }
 
     /// The slot occupying a grid coordinate, resolved in the behavior's position
@@ -177,6 +210,7 @@ impl CustomKeys {
         &self,
         behavior: &B,
         input: &CommandGridRenderInput,
+        conflicting_tokens: &HashSet<HotkeyToken>,
         coordinate: GridCoordinate,
     ) -> RenderedTile {
         let is_research_context = behavior.research_positions();
@@ -246,20 +280,9 @@ impl CustomKeys {
                 .map(|id| ObjectLookup::is_passive_ability(id.value()))
                 .unwrap_or(false);
 
-        let mut is_conflict = false;
-        if let Some(slot) = occupant_slot
-            && let Some(token) = effective_token
-        {
-            let target_id = slot.as_str();
-            let conflict = self.find_hotkey_conflict(
-                input.slots,
-                target_id,
-                token,
-                input.layout,
-                is_research_context,
-            );
-            is_conflict = conflict.is_some();
-        }
+        let is_conflict = effective_token
+            .map(|token| conflicting_tokens.contains(&token))
+            .unwrap_or(false);
 
         let draggable = has_occupant
             && (input.restrict_draggable_to.is_empty()
