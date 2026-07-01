@@ -1,14 +1,12 @@
 pub mod components;
 mod hooks;
+mod logic;
 mod props;
 
-use super::dialog::Dialog;
-use crate::assert_component;
-use components::key_picker_board::KeyPickerBoard;
+use super::dialog::{Dialog, DialogProps};
 use dioxus::prelude::*;
 use hooks::use_key_picker;
 pub use props::{KeyPickerCell, KeyPickerCellState, KeyPickerProps};
-assert_component!(KeyPicker);
 
 /// Assigns a hotkey from an on-screen keyboard. A variant of the `Dialog` base:
 /// the hook shapes the open signal and the board, and the body composes the shell
@@ -16,10 +14,7 @@ assert_component!(KeyPicker);
 #[component]
 pub fn KeyPicker(props: KeyPickerProps) -> Element {
     let model = use_key_picker(&props);
-    let title = props.title.clone();
     rsx! {
-        Dialog { open: model.open, title,
-            KeyPickerBoard { ..model.board }
-        }
+        Dialog { ..DialogProps::from(&model) }
     }
 }

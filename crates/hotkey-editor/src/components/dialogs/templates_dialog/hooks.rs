@@ -1,3 +1,4 @@
+use super::components::template_gallery::TemplateGalleryProps;
 use super::components::template_gallery::components::template_card::TemplateCardProps;
 use super::props::TemplatesDialogProps;
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -5,17 +6,25 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{CustomKeys, DEFAULT_CUSTOM_KEYS, ResolvedTemplate};
 
+/// The templates dialog's shaped view: the open signal driving the shell and the
+/// gallery of resolved template cards, each with its apply handler.
+pub(super) struct TemplatesDialogView {
+    pub(super) open: Signal<bool>,
+    pub(super) gallery: TemplateGalleryProps,
+}
+
 /// Composes the templates dialog's cards. Resolves every bundled template and,
 /// for each, builds the apply handler that overwrites the loaded keys: parse the
 /// template, extend the default baseline, normalize, write the signals, toast,
 /// and close. All of that domain work lives here, never in the markup.
-pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> Vec<TemplateCardProps> {
+pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> TemplatesDialogView {
+    let open = props.open;
     let mut loaded_keys = props.loaded_keys;
     let mut upload_status = props.upload_status;
     let mut dialog_open = props.open;
     let toast_api = use_toast();
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
-    resolved_templates
+    let cards: Vec<TemplateCardProps> = resolved_templates
         .iter()
         .map(|resolved| {
             let name = resolved.name().to_string();
@@ -51,5 +60,7 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> Vec<Template
                 on_apply,
             }
         })
-        .collect()
+        .collect();
+    let gallery = TemplateGalleryProps { cards };
+    TemplatesDialogView { open, gallery }
 }

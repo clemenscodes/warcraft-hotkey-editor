@@ -1,3 +1,5 @@
+use super::components::system_hotkeys_list_entry_label::SystemHotkeysListEntryLabelProps;
+use crate::components::dialogs::system_hotkeys_dialog::components::key_capture_cell::KeyCaptureCellProps;
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, SystemBindingMap};
@@ -13,4 +15,30 @@ pub struct SystemHotkeysListEntryProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub editing_section: Signal<Option<String>>,
     pub binding_map: ReadSignal<SystemBindingMap>,
+}
+
+impl From<&SystemHotkeysListEntryProps> for SystemHotkeysListEntryLabelProps {
+    fn from(props: &SystemHotkeysListEntryProps) -> Self {
+        let text = props.comment.clone();
+        Self { text }
+    }
+}
+
+impl From<&SystemHotkeysListEntryProps> for KeyCaptureCellProps {
+    fn from(props: &SystemHotkeysListEntryProps) -> Self {
+        let section_id = props.section_id.clone();
+        let default_hotkey = props.default_hotkey;
+        let default_modifier = props.default_modifier;
+        let loaded_keys = props.loaded_keys;
+        let editing_section = props.editing_section;
+        let binding_map = props.binding_map;
+        Self {
+            section_id,
+            default_hotkey,
+            default_modifier,
+            loaded_keys,
+            editing_section,
+            binding_map,
+        }
+    }
 }

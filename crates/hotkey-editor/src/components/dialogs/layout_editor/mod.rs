@@ -1,20 +1,14 @@
 pub mod components;
 mod data;
 mod hooks;
+mod logic;
 mod props;
 
-use super::dialog::Dialog;
-use crate::assert_component;
-use crate::components::dialogs::key_picker::KeyPicker;
-use components::apply_button::ApplyButton;
-use components::layout_editor_content::LayoutEditorContent;
-use components::layout_grid::LayoutGrid;
-use components::layout_intro::LayoutIntro;
-use components::move_hotkey_toggle::MoveHotkeyToggle;
+use super::dialog::{Dialog, DialogProps};
+use crate::components::dialogs::key_picker::{KeyPicker, KeyPickerProps};
 use dioxus::prelude::*;
 use hooks::use_layout_editor;
 pub use props::LayoutEditorProps;
-assert_component!(LayoutEditor);
 
 /// The global hotkey layout editor. A variant of the `Dialog` base: the hook
 /// resolves the grid cells, picker state, and handlers; the body composes the
@@ -23,33 +17,14 @@ assert_component!(LayoutEditor);
 #[component]
 pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let model = use_layout_editor(&props);
-    let open = props.open;
+    let open = model.open;
     if !open() {
         return rsx! {};
     }
     rsx! {
-        Dialog {
-            open,
-            title: "Global Hotkey Layout",
-            footer: Some(rsx! {
-                ApplyButton { on_apply: model.on_apply }
-            }),
-            LayoutEditorContent {
-                LayoutIntro {}
-                LayoutGrid { cells: model.cells }
-                MoveHotkeyToggle { checked: model.toggle_checked, on_toggle: model.on_toggle }
-            }
-        }
+        Dialog { ..DialogProps::from(&model) }
         if model.picker_open {
-            KeyPicker {
-                title: "Pick a grid key".to_string(),
-                rows: model.picker_rows,
-                open: true,
-                allow_conflict_pick: true,
-                on_pick: model.on_pick,
-                on_close: model
-                        .on_picker_close,
-            }
+            KeyPicker { ..KeyPickerProps::from(&model) }
         }
     }
 }

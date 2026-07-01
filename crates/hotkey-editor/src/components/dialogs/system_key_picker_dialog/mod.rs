@@ -2,15 +2,13 @@ mod browser_event;
 pub mod components;
 mod data;
 mod hooks;
+mod logic;
 mod props;
 
-use super::dialog::Dialog;
-use crate::assert_component;
-use components::system_key_picker_board::SystemKeyPickerBoard;
+use super::dialog::{Dialog, DialogProps};
 use dioxus::prelude::*;
 use hooks::use_system_key_picker;
 pub use props::SystemKeyPickerDialogProps;
-assert_component!(SystemKeyPickerDialog);
 
 /// Assigns a system or menu hotkey from a full on-screen keyboard (including keys
 /// the shared `KeyPicker` does not offer, like function keys and the numpad). A
@@ -19,10 +17,7 @@ assert_component!(SystemKeyPickerDialog);
 #[component]
 pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
     let model = use_system_key_picker(&props);
-    let title = props.title.clone();
     rsx! {
-        Dialog { open: model.open, title,
-            SystemKeyPickerBoard { ..model.board }
-        }
+        Dialog { ..DialogProps::from(&model) }
     }
 }

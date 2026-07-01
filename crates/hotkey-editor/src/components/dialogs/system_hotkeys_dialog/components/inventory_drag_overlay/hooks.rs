@@ -1,3 +1,4 @@
+use super::components::inventory_drag_key::InventoryDragKeyProps;
 use super::props::InventoryDragOverlayProps;
 use dioxus::prelude::*;
 
@@ -8,6 +9,13 @@ const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item
 pub(super) struct DragFollowerView {
     pub(super) placement: String,
     pub(super) label: String,
+}
+
+impl From<&DragFollowerView> for InventoryDragKeyProps {
+    fn from(view: &DragFollowerView) -> Self {
+        let label = view.label.clone();
+        Self { label }
+    }
 }
 
 /// Shapes the drag follower for rendering, or returns `None` when nothing is being

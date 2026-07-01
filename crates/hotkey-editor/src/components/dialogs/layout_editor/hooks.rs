@@ -14,6 +14,7 @@ use warcraft_keybinds::{
 /// the key-picker state, the toggle state, and every handler. The body only
 /// places these; all the work happens here.
 pub(super) struct LayoutEditorModel {
+    pub(super) open: Signal<bool>,
     pub(super) cells: Vec<LayoutCellProps>,
     pub(super) picker_open: bool,
     pub(super) picker_rows: Vec<Vec<KeyPickerCell>>,
@@ -28,6 +29,7 @@ pub(super) struct LayoutEditorModel {
 /// with their drag/click handlers, resolves the key-picker rows from the current
 /// layout, and wires the apply, pick, toggle, and guarded open-change handlers.
 pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel {
+    let open = props.open;
     let mut grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
@@ -180,6 +182,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         update_hotkeys_on_move.set(!current);
     });
     LayoutEditorModel {
+        open,
         cells,
         picker_open,
         picker_rows,

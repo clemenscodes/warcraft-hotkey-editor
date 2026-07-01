@@ -4,7 +4,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use components::inventory_drag_key::InventoryDragKey;
+use components::inventory_drag_key::{InventoryDragKey, InventoryDragKeyProps};
 use dioxus::prelude::*;
 use hooks::use_inventory_drag_overlay;
 pub use props::InventoryDragOverlayProps;
@@ -19,10 +19,12 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
     let Some(view) = use_inventory_drag_overlay(&props) else {
         return rsx! {};
     };
+    let key = InventoryDragKeyProps::from(&view);
     rsx! {
-        div { class: CLASS, style: view.placement,
-            InventoryDragKey { label: view
-                        .label }
+        div {
+            class: CLASS,
+            style: view.placement,
+            InventoryDragKey { ..key }
         }
     }
 }

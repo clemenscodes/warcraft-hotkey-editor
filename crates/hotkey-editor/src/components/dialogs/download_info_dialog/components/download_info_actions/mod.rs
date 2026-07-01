@@ -1,9 +1,11 @@
+mod logic;
 mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::shared::button::{Button, ButtonVariant};
+use crate::components::shared::button::Button;
 use dioxus::prelude::*;
+use logic::DownloadInfoActionsButtons;
 pub use props::DownloadInfoActionsProps;
 use style::CLASS;
 assert_component!(DownloadInfoActions);
@@ -12,12 +14,12 @@ assert_component!(DownloadInfoActions);
 /// buttons.
 #[component]
 pub fn DownloadInfoActions(props: DownloadInfoActionsProps) -> Element {
-    let on_cancel = props.on_cancel;
-    let on_download = props.on_download;
+    let DownloadInfoActionsButtons { cancel, download } = DownloadInfoActionsButtons::from(&props);
     rsx! {
-        div { class: CLASS,
-            Button { variant: ButtonVariant::Secondary, onclick: on_cancel, "Cancel" }
-            Button { variant: ButtonVariant::Primary, onclick: on_download, "Download" }
+        div {
+            class: CLASS,
+            Button { ..cancel }
+            Button { ..download }
         }
     }
 }

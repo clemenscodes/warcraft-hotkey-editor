@@ -1,9 +1,9 @@
 pub mod components;
 mod hooks;
+mod logic;
 mod props;
 
-use super::dialog::Dialog;
-use components::template_gallery::TemplateGallery;
+use super::dialog::{Dialog, DialogProps};
 use dioxus::prelude::*;
 use hooks::use_templates_dialog;
 pub use props::TemplatesDialogProps;
@@ -13,14 +13,12 @@ pub use props::TemplatesDialogProps;
 /// renders them.
 #[component]
 pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
-    let cards = use_templates_dialog(&props);
-    let open = props.open;
+    let view = use_templates_dialog(&props);
+    let open = view.open;
     if !open() {
         return rsx! {};
     }
     rsx! {
-        Dialog { open, title: "Layout Templates",
-            TemplateGallery { cards }
-        }
+        Dialog { ..DialogProps::from(&view) }
     }
 }

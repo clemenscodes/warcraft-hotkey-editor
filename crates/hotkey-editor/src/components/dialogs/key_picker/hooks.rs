@@ -10,6 +10,7 @@ use warcraft_keybinds::HotkeyToken;
 /// places these; every derivation the body may not do happens here.
 pub(super) struct KeyPickerModel {
     pub(super) open: Signal<bool>,
+    pub(super) title: String,
     pub(super) board: KeyPickerBoardProps,
 }
 
@@ -18,6 +19,7 @@ pub(super) struct KeyPickerModel {
 /// that maps a pressed letter to a pick, and shapes the raw cells into the board's
 /// per-key props.
 pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
+    let title = props.title.clone();
     let rows = props.rows.clone();
     let allow_conflict_pick = props.allow_conflict_pick;
     let on_pick = props.on_pick;
@@ -81,5 +83,5 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
         rows: board_rows,
         onkeydown,
     };
-    KeyPickerModel { open, board }
+    KeyPickerModel { open, title, board }
 }

@@ -1,9 +1,11 @@
+mod logic;
 mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::shared::button::{Button, ButtonVariant};
+use crate::components::shared::button::Button;
 use dioxus::prelude::*;
+use logic::UploadInfoActionsButtons;
 pub use props::UploadInfoActionsProps;
 use style::CLASS;
 assert_component!(UploadInfoActions);
@@ -12,12 +14,15 @@ assert_component!(UploadInfoActions);
 /// buttons.
 #[component]
 pub fn UploadInfoActions(props: UploadInfoActionsProps) -> Element {
-    let on_cancel = props.on_cancel;
-    let on_choose_file = props.on_choose_file;
+    let UploadInfoActionsButtons {
+        cancel,
+        choose_file,
+    } = UploadInfoActionsButtons::from(&props);
     rsx! {
-        div { class: CLASS,
-            Button { variant: ButtonVariant::Secondary, onclick: on_cancel, "Cancel" }
-            Button { variant: ButtonVariant::Primary, onclick: on_choose_file, "Choose File" }
+        div {
+            class: CLASS,
+            Button { ..cancel }
+            Button { ..choose_file }
         }
     }
 }

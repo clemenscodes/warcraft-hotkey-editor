@@ -1,0 +1,30 @@
+use super::props::InventoryHotkeysViewProps;
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::{
+    InventoryGrid, InventoryGridProps,
+};
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_section::SystemHotkeysSectionProps;
+use dioxus::prelude::*;
+
+impl From<&InventoryHotkeysViewProps> for InventoryGridProps {
+    fn from(props: &InventoryHotkeysViewProps) -> Self {
+        let loaded_keys = props.loaded_keys;
+        let editing_section = props.editing_section;
+        let drag_follower = props.drag_follower;
+        Self {
+            loaded_keys,
+            editing_section,
+            drag_follower,
+        }
+    }
+}
+
+impl From<&InventoryHotkeysViewProps> for SystemHotkeysSectionProps {
+    fn from(props: &InventoryHotkeysViewProps) -> Self {
+        let intro = String::from("Drag a slot onto another to swap their keys.");
+        let grid = InventoryGridProps::from(props);
+        let children = rsx! {
+            InventoryGrid { ..grid }
+        };
+        Self { intro, children }
+    }
+}

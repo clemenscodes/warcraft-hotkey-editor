@@ -15,6 +15,7 @@ use super::props::SystemKeyPickerDialogProps;
 /// the fully built board (both columns of keys plus the keydown handler).
 pub(super) struct SystemKeyPickerModel {
     pub(super) open: Signal<bool>,
+    pub(super) title: String,
     pub(super) board: SystemKeyPickerBoardProps,
 }
 
@@ -23,6 +24,7 @@ pub(super) struct SystemKeyPickerModel {
 /// that maps a physical keypress to a pick, and shapes both boards' keys with their
 /// state, tooltip, anchor, and wide flags.
 pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> SystemKeyPickerModel {
+    let title = props.title.clone();
     let current_code = props.current_code;
     let conflicts = props.conflicts.clone();
     let on_pick = props.on_pick;
@@ -145,5 +147,5 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
     let numpad_column = SystemKeyPickerColumnProps { rows: numpad_rows };
     columns.push(numpad_column);
     let board = SystemKeyPickerBoardProps { columns, onkeydown };
-    SystemKeyPickerModel { open, board }
+    SystemKeyPickerModel { open, title, board }
 }
