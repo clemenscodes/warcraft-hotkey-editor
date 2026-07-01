@@ -1,1 +1,2 @@
-pub mod system_hotkeys_category_tab;
+pub mod system_hotkeys_breadcrumbs_menu;
+pub mod system_hotkeys_breadcrumbs_trigger;

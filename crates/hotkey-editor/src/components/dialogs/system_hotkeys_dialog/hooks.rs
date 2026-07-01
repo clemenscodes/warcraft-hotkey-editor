@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
 
-use crate::components::system_hotkeys::inventory_grid::InventoryDragFollower;
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 
 use super::props::SystemHotkeysDialogProps;
 

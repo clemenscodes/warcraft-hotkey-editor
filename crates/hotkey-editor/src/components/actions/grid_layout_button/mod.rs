@@ -1,38 +1,32 @@
+pub mod components;
+mod hooks;
+mod style;
+
 use dioxus::prelude::*;
 
-use crate::components::shared::icons::ICON_GRID;
-use crate::services::overlay_state::OverlayState;
+use crate::assert_component;
+use components::grid_layout_button_icon::GridLayoutButtonIcon;
+use components::grid_layout_button_label::GridLayoutButtonLabel;
+use hooks::use_grid_layout_button;
+use style::CLASS;
 
-const GRID_LAYOUT_BUTTON_STYLES: Asset =
-    asset!("/src/components/actions/grid_layout_button/grid_layout_button.css");
+assert_component!(GridLayoutButton);
 
 /// Prominent header call-to-action that opens the global grid-layout editor.
-/// Deliberately styled apart from the icon-only toolbar buttons; its styling
-/// lives in `grid_layout_button.css` under the `.grid-layout-button` class.
+/// Deliberately styled apart from the icon-only toolbar buttons.
 #[component]
 pub fn GridLayoutButton() -> Element {
-    let overlay = use_context::<OverlayState>();
-    let mut layout_dialog_open = overlay.layout_dialog_open;
-    let is_open = layout_dialog_open();
-    let toggle_layout_dialog = move |_| {
-        let next = !*layout_dialog_open.read();
-        layout_dialog_open.set(next);
-    };
+    let model = use_grid_layout_button();
     rsx! {
-        document::Stylesheet { href: GRID_LAYOUT_BUTTON_STYLES }
         button {
-            class: "grid-layout-button",
+            class: CLASS,
             r#type: "button",
             aria_label: "Edit global hotkey layout",
             aria_haspopup: "dialog",
-            aria_expanded: is_open,
-            onclick: toggle_layout_dialog,
-            span {
-                class: "grid-layout-button-icon",
-                aria_hidden: "true",
-                dangerous_inner_html: ICON_GRID,
-            }
-            span { class: "grid-layout-button-label", "GRID LAYOUT" }
+            aria_expanded: model.is_open,
+            onclick: model.on_toggle,
+            GridLayoutButtonIcon {}
+            GridLayoutButtonLabel {}
         }
     }
 }

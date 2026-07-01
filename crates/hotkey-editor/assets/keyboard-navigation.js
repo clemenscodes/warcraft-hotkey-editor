@@ -9,15 +9,16 @@ const NAV_SELECTORS = [
     ".override-key-cell",
     ".tile-override-tier-button",
     ".layout-cell",
-    ".system-key-cell",
-    ".wc3-slot",
+    ".key-capture-cell",
+    ".inventory-cell",
+    ".slot-button",
     ".close-button",
 ];
 
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 6;
+const INSTALL_VERSION = 7;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
 const POINTER_FOCUSABLE_SELECTOR = [NAV_SELECTOR, "button", "[role='button']", "a[href]", "[tabindex]:not([tabindex='-1'])"].join(", ");
 const COARSE_POINTER_MEDIA = "(hover: none), (pointer: coarse)";

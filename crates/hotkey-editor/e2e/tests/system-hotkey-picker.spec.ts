@@ -24,7 +24,7 @@ test.describe("System hotkey picker keyboard input", () => {
   });
 
   test("pressing a board key assigns it to the slot", async ({ page }) => {
-    const slotKey = page.locator('[data-inventory-slot]').first().locator(".wc3-slot-key");
+    const slotKey = page.locator('[data-inventory-slot]').first().locator(".system-slot-key");
     await openFirstSlotPicker(page);
     await page.keyboard.press("g");
     await expect(page.locator(".system-key-picker-board")).not.toBeVisible();
@@ -32,7 +32,7 @@ test.describe("System hotkey picker keyboard input", () => {
   });
 
   test("keyboard selection still works after reopening the picker", async ({ page }) => {
-    const slotKey = page.locator('[data-inventory-slot]').first().locator(".wc3-slot-key");
+    const slotKey = page.locator('[data-inventory-slot]').first().locator(".system-slot-key");
     await openFirstSlotPicker(page);
     await page.keyboard.press("g");
     await expect(slotKey).toHaveText("G");
@@ -51,7 +51,7 @@ test.describe("System hotkey picker keyboard input", () => {
     // was not accepted as a hotkey.
     await expect(page.locator(".system-key-picker-board")).toBeVisible();
     await expect(
-      page.locator('[data-inventory-slot]').first().locator(".wc3-slot-key"),
+      page.locator('[data-inventory-slot]').first().locator(".system-slot-key"),
     ).toHaveText("…");
   });
 });

@@ -1,34 +1,32 @@
+pub mod components;
+mod hooks;
+mod props;
+mod style;
+
 use dioxus::prelude::*;
 
-use crate::components::system_hotkeys::inventory_grid::InventoryDragFollower;
+use crate::assert_component;
+use components::inventory_drag_key::InventoryDragKey;
+use hooks::use_inventory_drag_overlay;
+use style::CLASS;
 
-const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
+pub use props::InventoryDragOverlayProps;
 
-#[derive(Props, Clone, PartialEq)]
-pub struct InventoryDragOverlayProps {
-    pub drag_follower: Signal<Option<InventoryDragFollower>>,
-}
+assert_component!(InventoryDragOverlay);
 
+/// The card that follows the cursor while an inventory slot is dragged. Renders
+/// nothing when no drag is in progress; otherwise a framed card at the cursor
+/// showing the dragged slot's key.
 #[component]
 pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
-    let drag_follower = props.drag_follower;
-    let follower_option = drag_follower.read().clone();
-    let Some(follower) = follower_option else {
+    let Some(view) = use_inventory_drag_overlay(&props) else {
         return rsx! {};
     };
-    let frame_url = SLOT_FRAME_GOLD;
-    let style_value = format!(
-        "left: {left}px; top: {top}px; width: {width}px; height: {height}px; \
-         --wc3-slot-frame: url('{frame_url}');",
-        left = follower.left(),
-        top = follower.top(),
-        width = follower.width(),
-        height = follower.height(),
-    );
-    let label_text = follower.label().to_string();
     rsx! {
-        div { class: "wc3-inventory-drag-follower", style: style_value,
-            div { class: "wc3-slot-key", {label_text} }
+        div {
+            class: CLASS,
+            style: view.placement,
+            InventoryDragKey { label: view.label }
         }
     }
 }

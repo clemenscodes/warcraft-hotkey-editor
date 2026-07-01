@@ -4,10 +4,10 @@ use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
 
 use crate::assert_component;
-use crate::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
-use crate::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
-use crate::components::system_hotkeys::inventory::InventoryHotkeysView;
-use crate::components::system_hotkeys::list_view::SystemHotkeysListView;
+use crate::components::dialogs::system_hotkeys_dialog::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_hotkeys_view::InventoryHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::SystemHotkeysListView;
 
 pub use props::SystemHotkeysBodyProps;
 

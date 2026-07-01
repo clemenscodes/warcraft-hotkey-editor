@@ -1,3 +1,13 @@
+pub mod control_groups_hotkeys_view;
+pub mod hero_selection_hotkeys_view;
 pub mod inventory_drag_overlay;
+pub mod inventory_grid;
+pub mod inventory_hotkeys_view;
+pub mod key_capture_cell;
+pub mod slot_button;
 pub mod system_hotkeys_body;
 pub mod system_hotkeys_breadcrumbs;
+pub mod system_hotkeys_list_view;
+pub mod system_hotkeys_section;
+pub mod system_slot_key;
+pub mod system_slot_label;
