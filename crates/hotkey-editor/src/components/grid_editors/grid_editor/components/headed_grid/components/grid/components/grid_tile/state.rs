@@ -17,18 +17,3 @@ pub enum GridTileState {
     /// Empty but reserved by another ability's off-state, so drops are refused.
     BlockedDropTarget,
 }
-
-impl GridTileState {
-    /// The state-dependent classes, without the invariant `grid-tile` base
-    /// (which the tile always renders). Empty string for an idle empty tile.
-    pub(super) fn base_class(self) -> &'static str {
-        match self {
-            Self::Empty => "",
-            Self::Filled => "has-ability",
-            Self::Command => "has-ability is-command",
-            Self::Selected => "has-ability selected",
-            Self::DropTarget => "drop-target",
-            Self::BlockedDropTarget => "blocked-drop-target",
-        }
-    }
-}

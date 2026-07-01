@@ -3,19 +3,20 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::GRID_HEADING_STYLE_SHEETS;
+use crate::assert_component;
+use style::CLASS;
 
 pub use props::GridHeadingProps;
 
+assert_component!(GridHeading);
+
 #[component]
 pub fn GridHeading(props: GridHeadingProps) -> Element {
+    let heading = props.heading;
     rsx! {
-        for href in GRID_HEADING_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         h3 {
-            class: "grid-heading",
-            { props.heading }
+            class: CLASS,
+            {heading}
         }
     }
 }

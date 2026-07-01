@@ -1,12 +1,11 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The previews row's stylesheets: the base row plus the mobile band that keeps
-/// the two grids side by side without wrapping.
-pub(super) const TEMPLATE_CARD_PREVIEWS_STYLE_SHEETS: [Asset; 2] = [
-    asset!(
-        "/src/components/dialogs/templates_dialog/components/template_gallery/components/template_card/components/template_card_previews/styles/base.css"
-    ),
-    asset!(
-        "/src/components/dialogs/templates_dialog/components/template_gallery/components/template_card/components/template_card_previews/styles/mobile.css"
-    ),
-];
+const BASE: &[&str] = &["flex", "flex-row", "flex-nowrap", "items-start", "gap-8"];
+const MOBILE: &[&str] = &["mobile:gap-[8px]"];
+const TABLET: &[&str] = &["tablet:gap-[8px]"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

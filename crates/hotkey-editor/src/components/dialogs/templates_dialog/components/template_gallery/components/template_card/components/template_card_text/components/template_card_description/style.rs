@@ -1,12 +1,19 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The description line's stylesheets: the base plus the mobile band that
-/// shrinks it.
-pub(super) const TEMPLATE_CARD_DESCRIPTION_STYLE_SHEETS: [Asset; 2] = [
-    asset!(
-        "/src/components/dialogs/templates_dialog/components/template_gallery/components/template_card/components/template_card_text/components/template_card_description/styles/base.css"
-    ),
-    asset!(
-        "/src/components/dialogs/templates_dialog/components/template_gallery/components/template_card/components/template_card_text/components/template_card_description/styles/mobile.css"
-    ),
+const BASE: &[&str] = &["m-0", "text-[1.6rem]/[1.45]", "opacity-80"];
+const MOBILE: &[&str] = &[
+    "mobile:text-[13px]/[1.35]",
+    "mobile:text-[#c0c8da]",
+    "mobile:opacity-90",
 ];
+const TABLET: &[&str] = &[
+    "tablet:text-[13px]/[1.35]",
+    "tablet:text-[#c0c8da]",
+    "tablet:opacity-90",
+];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

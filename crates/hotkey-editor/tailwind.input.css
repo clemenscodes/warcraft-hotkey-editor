@@ -84,6 +84,18 @@ body {
   background: rgba(8, 18, 35, 0.45);
 }
 
+/* The grid-layout editor's actively-editing cell pulses. A @keyframes cannot be
+   expressed as a utility, so its definition lives here; the cell references it
+   with an arbitrary `animate-[...]` utility. */
+@keyframes pulse-editing {
+  from {
+    box-shadow: 0 0 12px rgba(255, 206, 99, 0.45), inset 0 0 12px rgba(255, 206, 99, 0.2);
+  }
+  to {
+    box-shadow: 0 0 18px rgba(255, 206, 99, 0.85), inset 0 0 14px rgba(255, 206, 99, 0.35);
+  }
+}
+
 @import "./styles/primitives.css" layer(components);
 @import "./styles/app-root.css" layer(components);
 @import "./src/components/unit_list/unit_list.css";

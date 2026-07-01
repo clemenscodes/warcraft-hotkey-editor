@@ -45,7 +45,7 @@ test.describe("Off-state regression: Healing Wave drag after cascade", () => {
     await page.locator('input[type="search"]').fill("ndrs");
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
 
     const sourceCell = page.locator(
       '[data-grid-id="Command card"] [data-grid-col="3"][data-grid-row="2"]',
@@ -54,13 +54,13 @@ test.describe("Off-state regression: Healing Wave drag after cascade", () => {
       '[data-grid-id="Command card"] [data-grid-col="0"][data-grid-row="2"]',
     );
 
-    await expect(sourceCell).toHaveClass(/has-ability/);
-    await expect(targetCell).not.toHaveClass(/has-ability/);
+    await expect(sourceCell).toHaveClass(/filled-tile/);
+    await expect(targetCell).not.toHaveClass(/filled-tile/);
 
     await sourceCell.dragTo(targetCell);
 
-    await expect(targetCell).toHaveClass(/has-ability/);
-    await expect(sourceCell).not.toHaveClass(/has-ability/);
+    await expect(targetCell).toHaveClass(/filled-tile/);
+    await expect(sourceCell).not.toHaveClass(/filled-tile/);
 
     await expect(
       page.locator('[role="alertdialog"]').filter({ hasText: /reserved.*off-state/i }),

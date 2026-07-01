@@ -1,8 +1,0 @@
-/* Mobile band: cards stack into a single column with a tighter gap. */
-
-@media (max-width: 1099px) {
-    .template-gallery {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-}

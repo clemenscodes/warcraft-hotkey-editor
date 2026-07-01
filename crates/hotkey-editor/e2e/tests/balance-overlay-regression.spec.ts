@@ -56,15 +56,15 @@ async function pickUnit(
   const card = page.locator(".unit-card").filter({ hasText: options.cardText });
   await card.first().waitFor();
   await card.first().click();
-  await page.locator(".grid-tile.has-ability").first().waitFor();
+  await page.locator(".filled-tile").first().waitFor();
 }
 
 function commandCardSlotAlts(page: Page): Promise<string[]> {
   // `data-grid-id` lives on the `GridEditor` wrapper, while `data-grid-col`,
-  // `data-grid-row`, and the `has-ability` class live on each tile `<div>`
+  // `data-grid-row`, and the `filled-tile` class live on each tile `<div>`
   // inside it. Address tiles as descendants of the identified grid wrapper.
   return page
-    .locator('[data-grid-id="Command card"] .has-ability img')
+    .locator('[data-grid-id="Command card"] .filled-tile img')
     .evaluateAll((nodes: Element[]) =>
       nodes
         .map((node) => node.getAttribute("alt"))
@@ -270,7 +270,7 @@ test.describe("Stale notused_*.slk files stay excluded", () => {
     });
     // Selection successful + at least one ability tile means the unit
     // wasn't filtered out and its abilities resolved correctly.
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
   });
 
   // Destroyer (ubsp) carries five abilities in `unitabilities.slk` —

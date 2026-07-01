@@ -78,10 +78,10 @@ function coordinateKey(coordinate: GridCoordinate): string {
 async function labelAt(page: Page, coordinate: GridCoordinate): Promise<string | null> {
   const target = cell(page, coordinate);
   const className = (await target.getAttribute("class")) ?? "";
-  if (!className.includes("has-ability")) return null;
+  if (!className.includes("filled-tile")) return null;
   const icon = target.locator("img");
   if ((await icon.count()) > 0) return (await icon.getAttribute("alt"))?.trim() ?? null;
-  const label = target.locator(".command-label");
+  const label = target.locator(".tile-label");
   if ((await label.count()) > 0) return (await label.textContent())?.trim() ?? null;
   return null;
 }
@@ -137,7 +137,7 @@ async function selectArchmage(page: Page): Promise<void> {
   const archmage = page.locator(".unit-card").first();
   await expect(archmage).toContainText("Archmage");
   await archmage.click();
-  await page.locator(".grid-tile.has-ability").first().waitFor();
+  await page.locator(".filled-tile").first().waitFor();
 }
 
 async function performSwaps(page: Page): Promise<void> {

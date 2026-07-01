@@ -1,31 +1,18 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// Per-viewport stylesheets for the command grid. `base.css` holds the grid
-/// track and the fallback tile cap; each remaining file scopes one viewport
-/// band's cap behind its own `@media` query. See `docs/CSS_VIEWPORTS.md`.
-pub(super) const GRID_STYLE_SHEETS: [Asset; 8] = [
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/base.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/phone.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/large_phone.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/tablet.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/desktop.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/full_hd.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/wide.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/styles/four_k.css"
-    ),
+const BASE: &[&str] = &[
+    "grid",
+    "grid-cols-[repeat(4,minmax(0,140px))]",
+    "gap-[6px]",
+    "w-fit",
+    "max-w-full",
+    "overflow-visible",
 ];
+const MOBILE: &[&str] = &["mobile:grid-cols-[repeat(4,minmax(0,116px))]"];
+const TABLET: &[&str] = &["tablet:grid-cols-[repeat(4,minmax(0,128px))]"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &["desktop:grid-cols-[repeat(4,minmax(0,156px))]"];
+const QHD: &[&str] = &["qhd:grid-cols-[repeat(4,minmax(0,172px))]"];
+const UHD: &[&str] = &["uhd:grid-cols-[repeat(4,minmax(0,200px))]"];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

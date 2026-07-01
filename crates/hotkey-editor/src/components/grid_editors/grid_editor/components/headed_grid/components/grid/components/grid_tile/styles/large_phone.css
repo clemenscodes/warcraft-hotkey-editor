@@ -1,6 +1,0 @@
-/* Large phone: 481px to 767px. */
-@media (min-width: 481px) and (max-width: 767px) {
-    .grid-tile {
-        --command-tile-cap: 116px;
-    }
-}

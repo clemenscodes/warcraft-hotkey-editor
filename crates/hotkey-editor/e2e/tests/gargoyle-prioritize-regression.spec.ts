@@ -40,7 +40,7 @@ test.describe("Gargoyle regression: Prioritize renders at (1,1) after cascade", 
     const gargoyle = page.locator(".unit-card").filter({ hasText: "ugar" });
     await gargoyle.waitFor();
     await gargoyle.click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
 
     const cell = (col: number, row: number) =>
       page.locator(

@@ -1,9 +1,0 @@
-/* Mobile band: tighter padding and smaller corners. */
-
-@media (max-width: 1099px) {
-    .template-card {
-        padding: 12px 14px;
-        gap: 10px;
-        border-radius: 10px;
-    }
-}

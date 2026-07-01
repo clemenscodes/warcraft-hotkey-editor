@@ -6,11 +6,14 @@ mod style;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridBehavior;
 
+use crate::assert_component;
 use components::drag_follower_overlay::{DragFollowerOverlay, DragFollowerOverlayProps};
 use components::headed_grid::{HeadedGrid, HeadedGridProps};
-use style::GRID_EDITOR_STYLES;
+use style::CLASS;
 
 pub use props::{GridEditorConfig, GridEditorProps};
+
+assert_component!(GridEditor);
 
 /// The grid editor: a labeled, editable grid of a unit's command slots. It wraps
 /// the presentational [`HeadedGrid`] verbatim and adds only behavior: it builds
@@ -21,9 +24,8 @@ pub use props::{GridEditorConfig, GridEditorProps};
 #[component]
 pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element {
     rsx! {
-        document::Stylesheet { href: GRID_EDITOR_STYLES }
         div {
-            class: "grid-editor",
+            class: CLASS,
             "data-grid-id": props.config.heading,
             HeadedGrid { ..HeadedGridProps::from(&props) }
             DragFollowerOverlay { ..DragFollowerOverlayProps::from(&props) }

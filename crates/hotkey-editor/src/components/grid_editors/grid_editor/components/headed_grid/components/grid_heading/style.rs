@@ -1,32 +1,22 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// Per-viewport stylesheets for the heading. `base.css` holds the look and the
-/// fallback size; each remaining file scopes one viewport band's size behind its
-/// own `@media` query, so the heading grows in step with the tiles. See
-/// `docs/CSS_VIEWPORTS.md`.
-pub(super) const GRID_HEADING_STYLE_SHEETS: [Asset; 8] = [
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/base.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/phone.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/large_phone.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/tablet.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/desktop.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/full_hd.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/wide.css"
-    ),
-    asset!(
-        "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid_heading/styles/four_k.css"
-    ),
+const BASE: &[&str] = &[
+    "mx-0",
+    "mt-[0.5rem]",
+    "mb-[0.75rem]",
+    "font-friz-quadrata",
+    "text-[20px]",
+    "font-normal",
+    "uppercase",
+    "tracking-[0.08em]",
+    "text-warcraft-gold",
+    "[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
 ];
+const MOBILE: &[&str] = &["mobile:text-[16px]"];
+const TABLET: &[&str] = &["tablet:text-[18px]"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &["desktop:text-[22px]"];
+const QHD: &[&str] = &["qhd:text-[25px]"];
+const UHD: &[&str] = &["uhd:text-[30px]"];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

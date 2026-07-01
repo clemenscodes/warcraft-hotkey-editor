@@ -1,10 +1,11 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The gallery's stylesheets: the two-column desktop base plus the mobile band
-/// that collapses to a single column.
-pub(super) const TEMPLATE_GALLERY_STYLE_SHEETS: [Asset; 2] = [
-    asset!("/src/components/dialogs/templates_dialog/components/template_gallery/styles/base.css"),
-    asset!(
-        "/src/components/dialogs/templates_dialog/components/template_gallery/styles/mobile.css"
-    ),
-];
+const BASE: &[&str] = &["grid", "grid-cols-2", "gap-9", "w-full"];
+const MOBILE: &[&str] = &["mobile:grid-cols-1", "mobile:gap-[10px]"];
+const TABLET: &[&str] = &["tablet:grid-cols-1", "tablet:gap-[10px]"];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

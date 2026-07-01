@@ -14,7 +14,7 @@ pub struct FollowerBadgeProps {
 impl From<&FollowerPresentation> for FollowerBadgeProps {
     fn from(presentation: &FollowerPresentation) -> Self {
         let letter = presentation.letter;
-        let state = presentation.state;
+        let state = presentation.badge_state;
         Self { letter, state }
     }
 }

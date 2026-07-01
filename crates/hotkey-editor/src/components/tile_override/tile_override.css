@@ -655,16 +655,17 @@ body[data-kb-modality] .override-key-cell:focus {
     grid-auto-rows: var(--tile-size);
 }
 
-.alt-position-picker-grid-anchor .grid-tile,
+.alt-position-picker-grid-anchor .filled-tile,
+.alt-position-picker-grid-anchor .empty-tile,
 .alt-position-picker-grid-anchor .command-tile-wrapper {
     width: var(--tile-size);
     height: var(--tile-size);
 }
 
-.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"],
-.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:hover,
-.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:focus,
-.alt-position-picker-grid-anchor .grid-tile.has-ability[data-draggable="false"]:active {
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="false"],
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="false"]:hover,
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="false"]:focus,
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="false"]:active {
     cursor: default !important;
     opacity: 0.32;
     filter: saturate(0.35) brightness(0.85);
@@ -673,27 +674,27 @@ body[data-kb-modality] .override-key-cell:focus {
     transform: none !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"] {
+.alt-position-picker-grid-anchor .empty-tile[data-draggable="false"] {
     border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
     transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.alt-position-picker-grid-anchor .grid-tile:not(.has-ability)[data-draggable="false"]:hover {
+.alt-position-picker-grid-anchor .empty-tile[data-draggable="false"]:hover {
     border-color: rgba(255, 206, 99, 0.75) !important;
     background: rgba(255, 206, 99, 0.1) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile.drop-target {
+.alt-position-picker-grid-anchor .empty-tile[data-drop-target="true"] {
     border: 2px solid rgba(255, 206, 99, 0.75) !important;
     background: rgba(255, 206, 99, 0.14) !important;
     cursor: pointer !important;
     box-shadow: 0 0 12px rgba(255, 206, 99, 0.25) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile.drag-over,
-.alt-position-picker-grid-anchor .grid-tile.drop-target.drag-over,
-.alt-position-picker-grid-anchor .grid-tile.drop-target:hover {
+.alt-position-picker-grid-anchor .empty-tile[data-drag-over="true"],
+.alt-position-picker-grid-anchor .empty-tile[data-drop-target="true"][data-drag-over="true"],
+.alt-position-picker-grid-anchor .empty-tile[data-drop-target="true"]:hover {
     border: 2px solid #ffce63 !important;
     background:
         linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),
@@ -703,18 +704,18 @@ body[data-kb-modality] .override-key-cell:focus {
         0 0 28px rgba(255, 206, 99, 0.85) !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"],
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:hover {
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="true"],
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="true"]:hover {
     cursor: grab !important;
     border-color: #ffce63 !important;
     transition: none !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"]:active {
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="true"]:active {
     cursor: grabbing !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source {
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="true"][data-dragging-source="true"] {
     border: 2px dashed rgba(255, 206, 99, 0.45) !important;
     background: rgba(255, 206, 99, 0.04) !important;
     box-shadow: none !important;
@@ -723,7 +724,7 @@ body[data-kb-modality] .override-key-cell:focus {
     cursor: grabbing !important;
 }
 
-.alt-position-picker-grid-anchor .grid-tile[data-draggable="true"].dragging-source.drag-over {
+.alt-position-picker-grid-anchor .filled-tile[data-draggable="true"][data-dragging-source="true"][data-drag-over="true"] {
     border: 3px solid #ffce63 !important;
     background:
         linear-gradient(135deg, rgba(255, 206, 99, 0.32) 0%, rgba(255, 206, 99, 0.18) 100%),

@@ -34,18 +34,18 @@ test.describe("Drag and drop on command grid", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator(".unit-card").first().click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
   });
 
   test("dragging one ability tile onto another swaps them without changing tile count", async ({ page }) => {
-    const tiles = page.locator(".grid-tile.has-ability");
+    const tiles = page.locator(".filled-tile");
     const countBefore = await tiles.count();
     if (countBefore < 2) {
       test.skip();
       return;
     }
     await tiles.first().dragTo(tiles.nth(1));
-    const countAfter = await page.locator(".grid-tile.has-ability").count();
+    const countAfter = await page.locator(".filled-tile").count();
     expect(countAfter).toBe(countBefore);
   });
 
@@ -66,7 +66,7 @@ test.describe("Drag and drop on command grid", () => {
     await page.locator('input[type="search"]').fill("nkog");
     await page.locator(".unit-card").filter({ hasText: "Kobold Geomancer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Kobold Geomancer" }).click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
 
     const sourceCell = page.locator(
       '[data-grid-id="Command card"] [data-grid-col="0"][data-grid-row="2"]',
@@ -75,8 +75,8 @@ test.describe("Drag and drop on command grid", () => {
       '[data-grid-id="Command card"] [data-grid-col="1"][data-grid-row="2"]',
     );
 
-    await expect(sourceCell).toHaveClass(/has-ability/);
-    await expect(targetCell).toHaveClass(/has-ability/);
+    await expect(sourceCell).toHaveClass(/filled-tile/);
+    await expect(targetCell).toHaveClass(/filled-tile/);
 
     await sourceCell.dragTo(targetCell);
 
@@ -90,21 +90,21 @@ test.describe("Drag and drop on command grid", () => {
   });
 
   test("pressing Escape during a drag cancels it and tile count is unchanged", async ({ page }) => {
-    const sourceTile = page.locator(".grid-tile.has-ability").first();
+    const sourceTile = page.locator(".filled-tile").first();
     const sourceBox = await sourceTile.boundingBox();
     if (!sourceBox) {
       test.skip();
       return;
     }
 
-    const countBefore = await page.locator(".grid-tile.has-ability").count();
+    const countBefore = await page.locator(".filled-tile").count();
     await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
     await page.mouse.down();
     await page.mouse.move(sourceBox.x + 200, sourceBox.y, { steps: 5 });
     await page.keyboard.press("Escape");
     await page.mouse.up();
 
-    const countAfter = await page.locator(".grid-tile.has-ability").count();
+    const countAfter = await page.locator(".filled-tile").count();
     expect(countAfter).toBe(countBefore);
   });
 });

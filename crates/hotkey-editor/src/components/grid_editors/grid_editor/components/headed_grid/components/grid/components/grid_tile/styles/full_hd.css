@@ -1,6 +1,0 @@
-/* Full HD: 1680px to 2199px. */
-@media (min-width: 1680px) and (max-width: 2199px) {
-    .grid-tile {
-        --command-tile-cap: 156px;
-    }
-}

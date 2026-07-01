@@ -2,59 +2,29 @@ pub mod components;
 mod logic;
 mod props;
 mod state;
-mod style;
 
 use dioxus::prelude::*;
 
-use components::tile_badge::{TileBadge, TileBadgeProps};
-use components::tile_figure::{TileFigure, TileFigureProps};
-use logic::GridTilePresentation;
-use style::GRID_TILE_STYLE_SHEETS;
+use components::empty_tile::{EmptyTile, EmptyTileProps};
+use components::filled_tile::{FilledTile, FilledTileProps};
 
+pub use logic::TileChrome;
 pub use props::GridTileProps;
 pub use state::GridTileState;
 
+/// A command-grid slot. A pure dispatcher: from the slot's state it renders the
+/// occupied tile (`FilledTile`) or the empty one (`EmptyTile`). The occupancy
+/// decision lives in the `TryFrom`/`From` conversions, so the body only guards and
+/// renders — no computation.
 #[component]
 pub fn GridTile(props: GridTileProps) -> Element {
-    let figure = TileFigureProps::from(&props);
-    let badge = TileBadgeProps::from(&props);
-    let GridTilePresentation {
-        class,
-        tabindex,
-        draggable_attribute,
-        race_attribute,
-        row,
-        column,
-        onkeydown,
-        onpointerdown,
-        onpointermove,
-        onpointerup,
-        onpointercancel,
-        onlostpointercapture,
-        onclick,
-        ondoubleclick,
-    } = GridTilePresentation::from(&props);
+    if let Ok(filled) = FilledTileProps::try_from(&props) {
+        return rsx! {
+            FilledTile { ..filled }
+        };
+    }
+    let empty = EmptyTileProps::from(&props);
     rsx! {
-        for href in GRID_TILE_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
-        div {
-            class,
-            tabindex,
-            "data-race": race_attribute,
-            "data-draggable": draggable_attribute,
-            "data-grid-row": row,
-            "data-grid-col": column,
-            onkeydown,
-            onpointerdown,
-            onpointermove,
-            onpointerup,
-            onpointercancel,
-            onlostpointercapture,
-            onclick,
-            ondoubleclick,
-            TileFigure { ..figure }
-            TileBadge { ..badge }
-        }
+        EmptyTile { ..empty }
     }
 }

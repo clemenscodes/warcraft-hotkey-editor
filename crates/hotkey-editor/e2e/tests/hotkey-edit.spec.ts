@@ -8,8 +8,8 @@ test.describe("Hotkey editing", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator(".unit-card").first().click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
-    await page.locator(".grid-tile.has-ability").first().click();
+    await page.locator(".filled-tile").first().waitFor();
+    await page.locator(".filled-tile").first().click();
     await page.locator(".override-key-cell").waitFor();
   });
 
@@ -49,7 +49,7 @@ test.describe("Hotkey editing", () => {
     await page.locator(".unit-card").filter({ hasText: "Archmage" }).first().click();
 
     const researchTile = page
-      .locator('[data-grid-id="Research menu"] .grid-tile.has-ability')
+      .locator('[data-grid-id="Research menu"] .filled-tile')
       .first();
     await researchTile.waitFor();
     await researchTile.dblclick();
@@ -68,7 +68,7 @@ test.describe("Hotkey editing", () => {
   test("double-clicking an ability icon opens the key picker and assigns a key", async ({ page }) => {
     // Reuses Q (proven pickable on this exact target by the click-based test
     // above) so the assertion exercises the double-click path, not fixture luck.
-    await page.locator(".grid-tile.has-ability").first().dblclick();
+    await page.locator(".filled-tile").first().dblclick();
     await page.locator(".key-picker-shell").waitFor();
     await page.locator('.key-picker-key[data-label="Q"]').click();
     await expect(page.locator(".key-picker-shell")).not.toBeVisible();

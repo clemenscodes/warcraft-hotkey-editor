@@ -9,7 +9,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".unit-card").first().waitFor();
 
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-shell").waitFor();
+    await page.locator(".layout-editor-content").waitFor();
 
     const toggle = page.locator('input[aria-label="Update hotkeys when moving abilities"]');
     await expect(toggle).toBeChecked();
@@ -21,7 +21,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-shell").waitFor();
+    await page.locator(".layout-editor-content").waitFor();
     await expect(
       page.locator('input[aria-label="Update hotkeys when moving abilities"]'),
     ).not.toBeChecked();
@@ -31,10 +31,10 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator(".unit-card").first().click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
 
     // Give the first ability a known manual hotkey (Q).
-    await page.locator(".grid-tile.has-ability").first().click();
+    await page.locator(".filled-tile").first().click();
     await page.locator(".override-key-cell").waitFor();
     await page.locator(".override-key-cell").click();
     await page.locator(".key-picker-shell").waitFor();
@@ -43,14 +43,14 @@ test.describe("Update-hotkeys-on-move toggle", () => {
 
     // Turn the toggle off.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-shell").waitFor();
+    await page.locator(".layout-editor-content").waitFor();
     await page.locator('input[aria-label="Update hotkeys when moving abilities"]').uncheck();
-    await page.locator(".layout-editor-shell [aria-label='Close']").click().catch(() => {});
+    await page.locator(".dialog-panel [aria-label='Close']").click().catch(() => {});
     await page.keyboard.press("Escape");
-    await expect(page.locator(".layout-editor-shell")).toHaveCount(0);
+    await expect(page.locator(".layout-editor-content")).toHaveCount(0);
 
     // Move the ability to a different cell.
-    const tiles = page.locator(".grid-tile.has-ability");
+    const tiles = page.locator(".filled-tile");
     if ((await tiles.count()) < 2) {
       test.skip();
       return;

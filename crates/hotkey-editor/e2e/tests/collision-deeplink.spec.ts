@@ -60,7 +60,7 @@ test.describe("Collision page entry deep-linking", () => {
     // Open the affected unit in the editor.
     await page.locator(".hotkey-detail-unit").click();
     await expect(page).not.toHaveURL(/view=collisions/);
-    await expect(page.locator(".grid-tile.has-ability").first()).toBeVisible();
+    await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     // Browser back restores the collisions view on the very same entry.
     await page.goBack();
@@ -151,7 +151,7 @@ test.describe("Collision page entry deep-linking", () => {
 
     // Open one of the affected units from the island detail, then back.
     await page.locator(".conflict-unit").first().click();
-    await expect(page.locator(".grid-tile.has-ability").first()).toBeVisible();
+    await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     await page.goBack();
     await expect(page.locator(`[data-island-key="${target}"]`)).toHaveClass(

@@ -423,8 +423,8 @@ pub fn App() -> Element {
 
         if let Some(info) = active_info {
             let target_selectors: &[&str] = if info.classes().contains("override-key-cell") {
-                &[".grid-tile.has-ability.selected", ".grid-tile.has-ability"]
-            } else if info.classes().contains("grid-tile") {
+                &[".filled-tile[data-selected=\"true\"]", ".filled-tile"]
+            } else if info.classes().contains("filled-tile") {
                 &[".unit-card.selected", ".unit-card"]
             } else if info.classes().contains("unit-card")
                 || info.classes().contains("unit-category-heading")

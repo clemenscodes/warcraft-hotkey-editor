@@ -1,5 +1,11 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-pub(super) const FOLLOWER_FIGURE_STYLES: Asset = asset!(
-    "/src/components/grid_editors/grid_editor/components/drag_follower_overlay/components/drag_follower_ghost/components/follower_figure/styles/base.css"
-);
+const BASE: &[&str] = &["w-full", "h-full", "object-cover"];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

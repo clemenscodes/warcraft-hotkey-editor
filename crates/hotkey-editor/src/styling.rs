@@ -372,6 +372,10 @@ macro_rules! classes {
             ::core::result::Result::Ok(class) => class,
             ::core::result::Result::Err(_) => ::core::panic!("non-utf8 class list"),
         };
+        // A stateful component (one that also invokes `states!`) styles its root
+        // through `class(state)` and never names `CLASS` directly, so allow it to
+        // go unused there.
+        #[allow(dead_code)]
         pub(super) const CLASS: $crate::styling::ClassList =
             $crate::styling::ClassList::new(CLASS_STR);
     };

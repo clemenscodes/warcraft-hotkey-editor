@@ -43,7 +43,7 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
     await page.locator('input[type="search"]').fill("ubsp");
     await page.locator(".unit-card").filter({ hasText: "Destroyer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Destroyer" }).click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
 
     const cell = (col: number, row: number) =>
       page.locator(

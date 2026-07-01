@@ -11,13 +11,13 @@ test.describe("Drag does not trigger the double-click picker", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator(".unit-card").first().click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
   });
 
   test("a click then a drag on the same tile must not open the hotkey picker", async ({
     page,
   }) => {
-    const tile = page.locator(".grid-tile.has-ability").first();
+    const tile = page.locator(".filled-tile").first();
     const box = await tile.boundingBox();
     if (!box) {
       test.skip();
@@ -55,7 +55,7 @@ test.describe("Drag does not trigger the double-click picker", () => {
   }) => {
     // Guard: the fix must only suppress the picker after a real drag, never on
     // an ordinary double-click.
-    await page.locator(".grid-tile.has-ability").first().dblclick();
+    await page.locator(".filled-tile").first().dblclick();
     await page.locator(".key-picker-shell").waitFor();
     await expect(page.locator(".key-picker-shell")).toBeVisible();
   });

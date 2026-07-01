@@ -93,7 +93,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         let Ok(target_element) = target_element_result else {
             return;
         };
-        let tile_lookup = target_element.closest(".grid-tile");
+        let tile_lookup = target_element.closest("[data-grid-row]");
         let Ok(Some(tile_element)) = tile_lookup else {
             return;
         };
@@ -319,7 +319,7 @@ pub(crate) fn pointer_move(
         let hit_test_vertical = hit_test_point.vertical_position();
         let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
         let tile_under_option =
-            elem_under_option.and_then(|elem| elem.closest(".grid-tile").ok().flatten());
+            elem_under_option.and_then(|elem| elem.closest("[data-grid-row]").ok().flatten());
         let Some(tile_under) = tile_under_option else {
             if drop_target_tile.read().is_some() {
                 drop_target_tile.set(None);

@@ -12,5 +12,5 @@ test("selecting a unit shows the command grid", async ({ page }) => {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
   await page.locator(".unit-card").first().click();
-  await page.locator(".grid-tile.has-ability").first().waitFor();
+  await page.locator(".filled-tile").first().waitFor();
 });

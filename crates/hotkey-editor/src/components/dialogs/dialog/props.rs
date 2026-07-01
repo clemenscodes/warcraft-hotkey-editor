@@ -13,6 +13,11 @@ pub struct DialogProps {
     /// action bar. `None` for dialogs without one, where nothing is rendered.
     #[props(default)]
     pub footer: Option<Element>,
+    /// An optional override for the open-change handler. `None` writes the open
+    /// signal directly. A dialog with a nested child dialog passes one that
+    /// guards the close, so dismissing the child does not also dismiss this one.
+    #[props(default)]
+    pub on_open_change: Option<Callback<bool>>,
 }
 
 /// The backdrop's derived inputs: the current open value and the change handler
@@ -26,7 +31,9 @@ impl From<&DialogProps> for DialogChrome {
     fn from(props: &DialogProps) -> Self {
         let mut open_signal = props.open;
         let open = open_signal();
-        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let on_open_change = props
+            .on_open_change
+            .unwrap_or_else(|| Callback::new(move |is_open| open_signal.set(is_open)));
         Self {
             open,
             on_open_change,

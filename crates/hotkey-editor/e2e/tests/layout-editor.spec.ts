@@ -8,14 +8,14 @@ test.describe("Global hotkey layout editor", () => {
     await page.locator(".unit-card").first().waitFor();
 
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-shell").waitFor();
-    await expect(page.locator(".layout-editor-shell")).toBeVisible();
+    await page.locator(".layout-editor-content").waitFor();
+    await expect(page.locator(".layout-editor-content")).toBeVisible();
 
-    await page.locator(".layout-editor-shell button", { hasText: /apply/i }).click();
+    await page.locator(".apply-button", { hasText: /apply/i }).click();
     await page
       .locator('[role="alertdialog"]')
       .filter({ hasText: /grid applied/i })
       .waitFor();
-    await expect(page.locator(".layout-editor-shell")).toHaveCount(0);
+    await expect(page.locator(".layout-editor-content")).toHaveCount(0);
   });
 });

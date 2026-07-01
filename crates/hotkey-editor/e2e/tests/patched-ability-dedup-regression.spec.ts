@@ -61,7 +61,7 @@ async function pickUnit(
   const card = page.locator(".unit-card").filter({ hasText: options.cardText });
   await card.first().waitFor();
   await card.first().click();
-  await page.locator(".grid-tile.has-ability").first().waitFor();
+  await page.locator(".filled-tile").first().waitFor();
 }
 
 function slotImg(
@@ -71,7 +71,7 @@ function slotImg(
   row: number,
 ): import("@playwright/test").Locator {
   return page.locator(
-    `[data-grid-id="${section}"] [data-grid-col="${col}"][data-grid-row="${row}"].has-ability img`,
+    `[data-grid-id="${section}"] [data-grid-col="${col}"][data-grid-row="${row}"].filled-tile img`,
   );
 }
 

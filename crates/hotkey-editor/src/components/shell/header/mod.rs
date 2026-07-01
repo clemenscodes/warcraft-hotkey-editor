@@ -4,14 +4,11 @@ mod collisions_button;
 mod toolbar;
 
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::CustomKeys;
 
 use crate::components::actions::grid_layout_button::GridLayoutButton;
-use crate::components::dialogs::dialog_header::DialogHeader;
-use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::templates_dialog::TemplatesDialog;
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -62,15 +59,8 @@ pub fn Header(props: HeaderProps) -> Element {
         selected_unit_id: props.selected_unit_id,
         search_query: props.search_query,
     };
-    let mut layout_dialog_open = use_signal::<bool>(|| false);
+    let layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
-    let handle_layout_open_change = move |is_open: bool| {
-        if !is_open && nested_picker_dialog_is_present() {
-            return;
-        }
-        layout_dialog_open.set(is_open);
-    };
-    let close_layout_dialog = move |_| layout_dialog_open.set(false);
 
     rsx! {
         document::Stylesheet { href: APP_HEADER_STYLES }
@@ -123,34 +113,13 @@ pub fn Header(props: HeaderProps) -> Element {
             TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
         }
         if layout_dialog_open() {
-            DialogRoot {
-                class: "dialog-overlay",
-                open: layout_dialog_open(),
-                on_open_change: handle_layout_open_change,
-                DialogContent { class: "dialog-shell wc3-dialog layout-editor-shell".to_string(),
-                    DialogHeader {
-                        title: "Global Hotkey Layout".to_string(),
-                        on_close: close_layout_dialog,
-                    }
-                    div { class: "wc3-dialog-body flex flex-col items-center justify-center gap-[4rem] pt-[4rem] pb-[4rem] max-[1099px]:[flex:1_1_0] max-[1099px]:min-h-0 max-[1099px]:overflow-y-auto max-[1099px]:[-webkit-overflow-scrolling:touch] max-[1099px]:[overscroll-behavior:contain] max-[1099px]:justify-start max-[1099px]:gap-[20px] max-[1099px]:pt-[20px] max-[1099px]:pb-[20px]",
-                        div { class: "flex flex-col items-center gap-[0.7rem] m-0 text-center [text-shadow:1px_1px_0_#000]",
-                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.85)] text-[2.1rem] leading-[1.35] max-[1099px]:text-[clamp(13px,3.5vw,16px)] max-[1099px]:tracking-[0.05em]",
-                                "Define a hotkey letter for each button position."
-                            }
-                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.1em] text-[rgba(255,206,99,0.85)] text-[2.1rem] leading-[1.35] max-[1099px]:text-[clamp(13px,3.5vw,16px)] max-[1099px]:tracking-[0.05em]",
-                                "Click apply to rewrite every ability hotkey to match this grid layout."
-                            }
-                        }
-                        LayoutEditor {
-                            grid_layout,
-                            editing_layout_cell,
-                            dragging_layout_cell,
-                            update_hotkeys_on_move,
-                            loaded_keys,
-                            layout_dialog_open,
-                        }
-                    }
-                }
+            LayoutEditor {
+                grid_layout,
+                editing_layout_cell,
+                dragging_layout_cell,
+                update_hotkeys_on_move,
+                loaded_keys,
+                layout_dialog_open,
             }
         }
     }

@@ -1,9 +1,0 @@
-/* Mobile band: the name shrinks fluidly and pins to gold for legibility. */
-
-@media (max-width: 1099px) {
-    .template-card-name {
-        font-size: clamp(17px, 5vw, 24px);
-        letter-spacing: 0.06em;
-        color: var(--color-warcraft-gold);
-    }
-}

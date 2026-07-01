@@ -1,7 +1,11 @@
-use dioxus::prelude::*;
+use crate::classes;
 
-/// The grid editor's own stylesheet: the flex column that stacks the heading
-/// above the grid. The per-viewport sizing lives in the grid and heading
-/// components, so this is a single sheet.
-pub(super) const GRID_EDITOR_STYLES: Asset =
-    asset!("/src/components/grid_editors/grid_editor/styles/base.css");
+const BASE: &[&str] = &["flex", "w-full", "min-w-0", "self-stretch"];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

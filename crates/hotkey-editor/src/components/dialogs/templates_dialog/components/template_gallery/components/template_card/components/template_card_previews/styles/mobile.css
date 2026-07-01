@@ -1,8 +1,0 @@
-/* Mobile band: the two grids stay on one row and share the width. */
-
-@media (max-width: 1099px) {
-    .template-card-previews {
-        flex-wrap: nowrap;
-        gap: 8px;
-    }
-}

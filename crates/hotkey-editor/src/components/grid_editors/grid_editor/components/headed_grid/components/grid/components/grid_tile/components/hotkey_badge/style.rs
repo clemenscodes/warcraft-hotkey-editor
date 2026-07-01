@@ -1,7 +1,41 @@
-use dioxus::prelude::*;
+use crate::{classes, states};
 
-/// The badge sizes itself with container-relative units, so a single stylesheet
-/// covers every viewport. See `docs/CSS_VIEWPORTS.md`.
-pub(super) const HOTKEY_BADGE_STYLES: Asset = asset!(
-    "/src/components/grid_editors/grid_editor/components/headed_grid/components/grid/components/grid_tile/components/hotkey_badge/styles/base.css"
-);
+use super::state::HotkeyBadgeState;
+
+const BASE: &[&str] = &[
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "min-w-[24cqi]",
+    "h-[24cqi]",
+    "px-[5cqi]",
+    "rounded-[5cqi]",
+    "border",
+    "font-friz-quadrata",
+    "text-[17cqi]/[1]",
+    "font-normal",
+    "pointer-events-none",
+    "[text-shadow:1px_1px_0_#000]",
+];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+
+const NORMAL: &[&str] = &[
+    "bg-[rgba(0,0,0,0.78)]",
+    "border-warcraft-gold/55",
+    "text-warcraft-gold",
+];
+const PASSIVE: &[&str] = &["bg-[#1a1f29]", "border-[#4a5160]", "text-[#b8bcc4]"];
+const CONFLICT: &[&str] = &[
+    "bg-[rgba(80,0,0,0.85)]",
+    "border-[#ff4444]",
+    "text-[#ff4444]",
+];
+
+states! { HotkeyBadgeState, Normal => NORMAL, Passive => PASSIVE, Conflict => CONFLICT }

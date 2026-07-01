@@ -3,44 +3,34 @@ use warcraft_api::RaceLabels;
 
 use super::props::GridTileProps;
 
-/// Everything the tile's outer `div` needs: the class list and attributes derived
-/// from the state flags, the grid coordinate as DOM attributes, and the forwarded
-/// event handlers. Field names match the attributes they feed, so the markup uses
-/// RSX shorthand. The component file builds none of this; it destructures this and
-/// renders.
-pub(super) struct GridTilePresentation {
-    pub(super) class: String,
-    pub(super) tabindex: &'static str,
-    pub(super) draggable_attribute: &'static str,
-    pub(super) race_attribute: &'static str,
-    pub(super) row: u8,
-    pub(super) column: u8,
-    pub(super) onkeydown: EventHandler<KeyboardEvent>,
-    pub(super) onpointerdown: EventHandler<PointerEvent>,
-    pub(super) onpointermove: EventHandler<PointerEvent>,
-    pub(super) onpointerup: EventHandler<PointerEvent>,
-    pub(super) onpointercancel: EventHandler<PointerEvent>,
-    pub(super) onlostpointercapture: EventHandler<PointerEvent>,
-    pub(super) onclick: EventHandler<MouseEvent>,
-    pub(super) ondoubleclick: EventHandler<MouseEvent>,
+/// The chrome both the filled and empty tiles render: the focus, draggable, race,
+/// and coordinate attributes, the drag-state markers, and every forwarded event
+/// handler. Field names match the attributes they feed, so each tile spreads them
+/// with RSX shorthand. The dispatcher builds this once from the slot's props and
+/// hands it to whichever tile it renders.
+#[derive(Clone, PartialEq)]
+pub struct TileChrome {
+    pub tabindex: &'static str,
+    pub draggable_attribute: &'static str,
+    pub race_attribute: &'static str,
+    pub row: u8,
+    pub column: u8,
+    pub dragging_source: &'static str,
+    pub drag_over: &'static str,
+    pub onkeydown: EventHandler<KeyboardEvent>,
+    pub onpointerdown: EventHandler<PointerEvent>,
+    pub onpointermove: EventHandler<PointerEvent>,
+    pub onpointerup: EventHandler<PointerEvent>,
+    pub onpointercancel: EventHandler<PointerEvent>,
+    pub onlostpointercapture: EventHandler<PointerEvent>,
+    pub onclick: EventHandler<MouseEvent>,
+    pub ondoubleclick: EventHandler<MouseEvent>,
 }
 
-impl From<&GridTileProps> for GridTilePresentation {
-    /// Derives the tile's class list, focus, draggable, race, and coordinate
-    /// attributes from its state flags and copies its event handlers.
+impl From<&GridTileProps> for TileChrome {
+    /// Derives the focus, draggable, race, coordinate, and drag-marker attributes
+    /// from the slot's state flags and copies its event handlers.
     fn from(props: &GridTileProps) -> Self {
-        let mut class = String::from("grid-tile");
-        let base = props.state.base_class();
-        if !base.is_empty() {
-            class.push(' ');
-            class.push_str(base);
-        }
-        if props.is_dragging_source {
-            class.push_str(" dragging-source");
-        }
-        if props.is_drag_over {
-            class.push_str(" drag-over");
-        }
         let tabindex = if props.is_focusable { "0" } else { "-1" };
         let draggable_attribute = if props.draggable { "true" } else { "false" };
         let race_attribute = RaceLabels::data_attribute(props.race);
@@ -48,6 +38,12 @@ impl From<&GridTileProps> for GridTilePresentation {
         let row_index = props.coordinate.row();
         let column = u8::from(column_index);
         let row = u8::from(row_index);
+        let dragging_source = if props.is_dragging_source {
+            "true"
+        } else {
+            "false"
+        };
+        let drag_over = if props.is_drag_over { "true" } else { "false" };
         let onkeydown = props.onkeydown;
         let onpointerdown = props.onpointerdown;
         let onpointermove = props.onpointermove;
@@ -57,12 +53,13 @@ impl From<&GridTileProps> for GridTilePresentation {
         let onclick = props.onclick;
         let ondoubleclick = props.ondoubleclick;
         Self {
-            class,
             tabindex,
             draggable_attribute,
             race_attribute,
             row,
             column,
+            dragging_source,
+            drag_over,
             onkeydown,
             onpointerdown,
             onpointermove,

@@ -19,7 +19,7 @@ async function openBlizzardPicker(page: Page) {
   await archmage.waitFor();
   await archmage.click();
   const blizzardTile = page
-    .locator('[data-grid-id="Command card"] .grid-tile')
+    .locator('[data-grid-id="Command card"] .filled-tile')
     .filter({ has: page.locator('img[alt="Blizzard"]') });
   await blizzardTile.waitFor();
   await blizzardTile.click();
@@ -89,7 +89,7 @@ test.describe("Global grid layout picker keyboard input", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-shell").waitFor();
+    await page.locator(".layout-editor-content").waitFor();
 
     // First grid cell, keyboard pick. 'H' doubles as a spatial-navigation key,
     // so this also guards that the picker — not the navigation handler — gets it.

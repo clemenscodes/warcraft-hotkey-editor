@@ -4,18 +4,21 @@ mod style;
 
 use dioxus::prelude::*;
 
-use style::HOTKEY_BADGE_STYLES;
+use crate::assert_component;
 
 pub use props::HotkeyBadgeProps;
 pub use state::HotkeyBadgeState;
 
+assert_component!(HotkeyBadge);
+
 #[component]
 pub fn HotkeyBadge(props: HotkeyBadgeProps) -> Element {
-    let HotkeyBadgeProps { letter, state } = props;
-    let class = state.class();
-    let label = letter.display_label();
+    let class = style::class(props.state);
+    let label = props.letter.display_label();
     rsx! {
-        document::Stylesheet { href: HOTKEY_BADGE_STYLES }
-        span { class, {label} }
+        span {
+            class,
+            {label}
+        }
     }
 }

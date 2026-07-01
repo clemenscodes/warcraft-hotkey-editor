@@ -4,10 +4,13 @@ mod style;
 
 use dioxus::prelude::*;
 
+use crate::assert_component;
 use components::grid_tile::GridTile;
-use style::GRID_STYLE_SHEETS;
+use style::CLASS;
 
 pub use props::GridProps;
+
+assert_component!(Grid);
 
 /// The command grid: a pure tile renderer. It lays out the finished tiles it is
 /// handed and draws each one. It owns no behavior and no domain type. The
@@ -17,11 +20,8 @@ pub use props::GridProps;
 pub fn Grid(props: GridProps) -> Element {
     let tiles = props.tiles;
     rsx! {
-        for href in GRID_STYLE_SHEETS {
-            document::Stylesheet { href }
-        }
         div {
-            class: "grid",
+            class: CLASS,
             for tile in tiles {
                 GridTile { ..tile }
             }

@@ -10,7 +10,7 @@ impl FocusedElementInfo {
     pub(crate) fn current() -> Option<Self> {
         let active_element = web_sys::window()?.document()?.active_element()?;
         let classes = active_element.class_name();
-        let is_inside_grid_panel = classes.contains("grid-tile")
+        let is_inside_grid_panel = classes.contains("filled-tile")
             || classes.contains("override-key-cell")
             || classes.contains("tile-override-tier-button");
         let is_inside_system_dialog = active_element
@@ -60,7 +60,7 @@ impl FocusNavigation {
     pub(crate) fn cycle_inside_unit_detail(reverse: bool) {
         Self::cycle_within_container(
             ".unit-detail",
-            ".grid-tile.has-ability, .override-key-cell, .tile-override-tier-button",
+            ".filled-tile, .override-key-cell, .tile-override-tier-button",
             reverse,
         );
     }

@@ -14,7 +14,7 @@ test.describe("Phoenix hides Phoenix Fire", () => {
     const phoenix = page.locator(".unit-card").filter({ hasText: "hphx" });
     await phoenix.waitFor();
     await phoenix.click();
-    await page.locator(".grid-tile.has-ability").first().waitFor();
+    await page.locator(".filled-tile").first().waitFor();
   });
 
   test("Phoenix command card omits Phoenix Fire (Apxf)", async ({ page }) => {

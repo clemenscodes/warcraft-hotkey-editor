@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-use super::super::super::GridTileProps;
+use super::super::empty_tile::EmptyTileProps;
+use super::super::filled_tile::FilledTileProps;
 use super::super::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
 
 #[derive(Props, Clone, PartialEq)]
@@ -10,8 +11,16 @@ pub struct TileBadgeProps {
     pub state: HotkeyBadgeState,
 }
 
-impl From<&GridTileProps> for TileBadgeProps {
-    fn from(props: &GridTileProps) -> Self {
+impl From<&FilledTileProps> for TileBadgeProps {
+    fn from(props: &FilledTileProps) -> Self {
+        let letter = props.hotkey;
+        let state = props.badge_state;
+        Self { letter, state }
+    }
+}
+
+impl From<&EmptyTileProps> for TileBadgeProps {
+    fn from(props: &EmptyTileProps) -> Self {
         let letter = props.hotkey;
         let state = props.badge_state;
         Self { letter, state }

@@ -3,18 +3,24 @@ mod style;
 
 use dioxus::prelude::*;
 
+use crate::assert_component;
+use style::CLASS;
+
 use super::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
-use style::TILE_BADGE_STYLES;
 
 pub use props::TileBadgeProps;
 
+assert_component!(TileBadge);
+
+/// The hotkey badge's placement inside a tile: pinned to the top-right corner.
+/// Shared by both the filled and empty tiles.
 #[component]
 pub fn TileBadge(props: TileBadgeProps) -> Element {
+    let badge = HotkeyBadgeProps::from(&props);
     rsx! {
-        document::Stylesheet { href: TILE_BADGE_STYLES }
         div {
-            class: "tile-badge",
-            HotkeyBadge { ..HotkeyBadgeProps::from(&props) }
+            class: CLASS,
+            HotkeyBadge { ..badge }
         }
     }
 }
