@@ -3,18 +3,24 @@ use std::collections::HashMap;
 use warcraft_api::Race;
 use warcraft_keybinds::GridSlotId;
 
+use super::super::alt_position_picker_explainer::AltPositionPickerExplainerProps;
 use super::props::UpgradePositionPickerProps;
 use crate::components::grid_editors::grid_editor::GridEditorConfig;
 
-/// The upgraded-form picker's shaped view: dialog title and the built grid config.
+/// The upgraded-form picker's shaped view: the open signal, dialog title, explainer
+/// copy, and the built grid config.
 pub(super) struct UpgradePositionPickerModel {
+    pub(super) open: Signal<bool>,
     pub(super) dialog_title: String,
+    pub(super) explainer: AltPositionPickerExplainerProps,
     pub(super) grid_config: GridEditorConfig,
 }
 
 pub(super) fn use_upgrade_position_picker(
     props: &UpgradePositionPickerProps,
 ) -> UpgradePositionPickerModel {
+    let open = props.upgrade_position_picker_open;
+    let explainer = AltPositionPickerExplainerProps::from(props);
     let upgrade_unit_id = props.upgrade_unit_id;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability(upgrade_unit_id)));
@@ -45,7 +51,9 @@ pub(super) fn use_upgrade_position_picker(
         host_unit_id: String::new(),
     };
     UpgradePositionPickerModel {
+        open,
         dialog_title,
+        explainer,
         grid_config,
     }
 }

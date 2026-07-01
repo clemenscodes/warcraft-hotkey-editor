@@ -2,7 +2,7 @@ mod props;
 
 use dioxus::prelude::*;
 
-use super::position_picker::AltPositionPicker;
+use super::position_picker::{AltPositionPicker, AltPositionPickerProps};
 
 pub use props::TileOverrideAltPickerProps;
 
@@ -13,16 +13,6 @@ pub fn TileOverrideAltPicker(props: TileOverrideAltPickerProps) -> Element {
         return rsx! {};
     }
     rsx! {
-        AltPositionPicker {
-            object_id: props.object_id,
-            display_name: props.display_name,
-            picker_slots: props.picker_slots,
-            loaded_keys: props.loaded_keys,
-            grid_layout: props.grid_layout,
-            dragging_slot: props.dragging_slot,
-            drop_target_tile: props.drop_target_tile,
-            drag_follower: props.drag_follower,
-            alt_position_picker_open: props.alt_position_picker_open,
-        }
+        AltPositionPicker { ..AltPositionPickerProps::from(&props) }
     }
 }

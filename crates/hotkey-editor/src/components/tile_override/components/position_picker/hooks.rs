@@ -3,18 +3,23 @@ use std::collections::HashMap;
 use warcraft_api::Race;
 use warcraft_keybinds::GridSlotId;
 
+use super::alt_position_picker_explainer::AltPositionPickerExplainerProps;
 use super::props::AltPositionPickerProps;
 use crate::components::grid_editors::grid_editor::GridEditorConfig;
 
-/// The off-state picker's shaped view: the dialog title and the fully-built grid
-/// editor config (the local picker signals and the config assembly live here, so the
-/// body stays a single hook line plus RSX).
+/// The off-state picker's shaped view: the open signal, the dialog title, the
+/// explainer copy, and the fully-built grid editor config (the local picker signals
+/// and the config assembly live here, so the body stays a single hook line plus RSX).
 pub(super) struct AltPositionPickerModel {
+    pub(super) open: Signal<bool>,
     pub(super) dialog_title: String,
+    pub(super) explainer: AltPositionPickerExplainerProps,
     pub(super) grid_config: GridEditorConfig,
 }
 
 pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPositionPickerModel {
+    let open = props.alt_position_picker_open;
+    let explainer = AltPositionPickerExplainerProps::from(props);
     let object_id = props.object_id;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability_off(object_id)));
@@ -45,7 +50,9 @@ pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPosi
         host_unit_id: String::new(),
     };
     AltPositionPickerModel {
+        open,
         dialog_title,
+        explainer,
         grid_config,
     }
 }

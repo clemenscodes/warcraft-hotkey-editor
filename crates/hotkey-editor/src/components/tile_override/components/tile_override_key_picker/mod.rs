@@ -2,7 +2,7 @@ mod props;
 
 use dioxus::prelude::*;
 
-use crate::components::dialogs::key_picker::KeyPicker;
+use crate::components::dialogs::key_picker::{KeyPicker, KeyPickerProps};
 
 pub use props::TileOverrideKeyPickerProps;
 
@@ -13,12 +13,6 @@ pub fn TileOverrideKeyPicker(props: TileOverrideKeyPickerProps) -> Element {
         return rsx! {};
     }
     rsx! {
-        KeyPicker {
-            title: props.title,
-            rows: props.rows,
-            open: true,
-            on_pick: props.on_pick,
-            on_close: props.on_close,
-        }
+        KeyPicker { ..KeyPickerProps::from(&props) }
     }
 }
