@@ -4,14 +4,11 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::system_hotkeys_category_separator::SystemHotkeysCategorySeparator;
+use dioxus::prelude::*;
 use hooks::use_system_hotkeys_category_tab;
-
 pub use props::SystemHotkeysCategoryTabProps;
-
 assert_component!(SystemHotkeysCategoryTab);
 
 /// One selectable category in the breadcrumbs, with a trailing separator on all but
@@ -26,7 +23,8 @@ pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabProps) -> Element
             class,
             r#type: "button",
             role: "option",
-            aria_selected: model.is_active,
+            aria_selected: model
+                    .is_active,
             aria_current,
             onclick: model.on_click,
             {model.label}

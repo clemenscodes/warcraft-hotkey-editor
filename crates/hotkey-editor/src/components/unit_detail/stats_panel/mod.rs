@@ -8,16 +8,14 @@ pub mod defense_matchup_row;
 mod leveled_stats;
 pub mod stat_icon;
 
-use dioxus::prelude::*;
-use warcraft_api::{HeroAttributes, PrimaryAttribute, RegenType, UnitCombat};
-
 use super::derived_stats::DerivedStats;
-use leveled_stats::LeveledStats;
-use stat_icon::StatIcon;
-
 use attributes_column::{AttributesColumn, HeroDisplayData};
 use combat_column::{AttackDisplayData, CombatColumn};
 use defense_matchup_row::DefenseMatchupRow;
+use dioxus::prelude::*;
+use leveled_stats::LeveledStats;
+use stat_icon::StatIcon;
+use warcraft_api::{HeroAttributes, PrimaryAttribute, RegenType, UnitCombat};
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitStatsPanelProps {

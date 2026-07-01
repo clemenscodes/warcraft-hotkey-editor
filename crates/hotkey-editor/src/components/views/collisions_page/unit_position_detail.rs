@@ -1,9 +1,7 @@
-use dioxus::prelude::*;
-
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-
 use super::mini_grid::IslandMiniGrid;
 use super::{UnitPositionConflictView, UnitPositionUnitView};
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 struct UnitPositionAbilityProps {
@@ -23,7 +21,6 @@ fn UnitPositionAbility(props: UnitPositionAbilityProps) -> Element {
     let icon_url = props.icon_url;
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-
     rsx! {
         div { class: "conflict-ability",
             button {
@@ -62,20 +59,19 @@ fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
     let conflict = props.conflict;
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-
     let role_label = conflict.role_label().to_owned();
     let position_column = conflict.position_column();
     let position_row = conflict.position_row();
     let abilities = conflict.abilities();
     let is_pair = abilities.len() == 2;
-
     rsx! {
         div { class: "conflict-card hotkey-conflict-card",
             span { class: "conflict-card-caption", "{role_label}" }
             if is_pair {
                 div { class: "conflict-ability-row",
                     UnitPositionAbility {
-                        ability_name: abilities[0].name().to_owned(),
+                        ability_name: abilities[0].name()
+                                .to_owned(),
                         ability_id: abilities[0].object_id().to_owned(),
                         icon_url: abilities[0].icon_url().map(str::to_owned),
                         unit_id: unit_id.clone(),
@@ -90,7 +86,8 @@ fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
                     UnitPositionAbility {
                         ability_name: abilities[1].name().to_owned(),
                         ability_id: abilities[1].object_id().to_owned(),
-                        icon_url: abilities[1].icon_url().map(str::to_owned),
+                        icon_url: abilities[1].icon_url()
+                                .map(str::to_owned),
                         unit_id: unit_id.clone(),
                         view_navigation,
                     }
@@ -134,7 +131,6 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
     let units = props.units;
     let selected_unit = props.selected_unit;
     let view_navigation = props.view_navigation;
-
     let selected_key = selected_unit.read().clone();
     let selected = selected_key.as_ref().and_then(|key| {
         units
@@ -142,7 +138,6 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
             .find(|unit_view| unit_view.key() == key)
             .cloned()
     });
-
     let Some(unit_view) = selected else {
         return rsx! {
             section { class: "unit-detail island-detail empty",
@@ -150,7 +145,6 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
             }
         };
     };
-
     let unit = unit_view.unit();
     let unit_name = unit.name().to_owned();
     let unit_id_label = unit.unit_id().to_owned();
@@ -162,7 +156,6 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
     } else {
         "collisions"
     };
-
     rsx! {
         section { class: "unit-detail island-detail",
             header { class: "island-detail-header",

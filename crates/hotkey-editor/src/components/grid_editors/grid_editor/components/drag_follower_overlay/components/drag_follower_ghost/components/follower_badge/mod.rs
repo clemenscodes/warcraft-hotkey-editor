@@ -1,14 +1,15 @@
 mod props;
 mod style;
 
+use crate::assert_component;
 use dioxus::prelude::*;
 
-use crate::assert_component;
-use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
-use style::CLASS;
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{
+    HotkeyBadge, HotkeyBadgeProps,
+};
 
 pub use props::FollowerBadgeProps;
-
+use style::CLASS;
 assert_component!(FollowerBadge);
 
 #[component]

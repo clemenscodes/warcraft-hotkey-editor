@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use dioxus::prelude::*;
+use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
 /// What the system key picker needs: the title the shell shows, the key currently

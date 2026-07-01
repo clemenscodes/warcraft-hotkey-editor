@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::DialogFooterProps;
-
+use style::CLASS;
 assert_component!(DialogFooter);
 
 /// The pinned action bar below the scrolling body. A dialog with an action footer
@@ -18,9 +15,6 @@ pub fn DialogFooter(props: DialogFooterProps) -> Element {
         return rsx! {};
     };
     rsx! {
-        footer {
-            class: CLASS,
-            {content}
-        }
+        footer { class: CLASS, {content} }
     }
 }

@@ -90,7 +90,7 @@ mod tests {
         let view = GalleryView::default();
         assert_eq!(
             GalleryMode::from_query("?gallery"),
-            Some(GalleryMode::Shell { view })
+            Some(GalleryMode::Shell { view }),
         );
     }
 
@@ -105,7 +105,7 @@ mod tests {
         let view = GalleryView::new(story, query, width, height, hidden);
         assert_eq!(
             GalleryMode::from_query("?gallery=1&story=Buttons/Primary"),
-            Some(GalleryMode::Shell { view })
+            Some(GalleryMode::Shell { view }),
         );
     }
 
@@ -115,8 +115,8 @@ mod tests {
         let query = "head".to_string();
         let view = GalleryView::new(story, query, 1920, 1080, true);
         assert_eq!(
-            GalleryMode::from_query("?gallery&story=Shell/Header&q=head&w=1920&h=1080&list=hidden"),
-            Some(GalleryMode::Shell { view })
+            GalleryMode::from_query("?gallery&story=Shell/Header&q=head&w=1920&h=1080&list=hidden",),
+            Some(GalleryMode::Shell { view }),
         );
     }
 
@@ -125,8 +125,8 @@ mod tests {
         assert_eq!(
             GalleryMode::from_query("?gallery=frame&story=Buttons/Primary"),
             Some(GalleryMode::Frame {
-                story: "Buttons/Primary".to_string()
-            })
+                story: "Buttons/Primary".to_string(),
+            }),
         );
         assert_eq!(GalleryMode::from_query("?gallery=frame"), None);
     }
@@ -136,8 +136,8 @@ mod tests {
         assert_eq!(
             GalleryMode::from_query("?gallery=frame&story=Dialog%20header/Default"),
             Some(GalleryMode::Frame {
-                story: "Dialog header/Default".to_string()
-            })
+                story: "Dialog header/Default".to_string(),
+            }),
         );
     }
 }

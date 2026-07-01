@@ -3,8 +3,7 @@ mod data;
 mod hooks;
 mod props;
 
-use dioxus::prelude::*;
-
+use super::dialog::Dialog;
 use crate::assert_component;
 use crate::components::dialogs::key_picker::KeyPicker;
 use components::apply_button::ApplyButton;
@@ -12,12 +11,9 @@ use components::layout_editor_content::LayoutEditorContent;
 use components::layout_grid::LayoutGrid;
 use components::layout_intro::LayoutIntro;
 use components::move_hotkey_toggle::MoveHotkeyToggle;
+use dioxus::prelude::*;
 use hooks::use_layout_editor;
-
-use super::dialog::Dialog;
-
 pub use props::LayoutEditorProps;
-
 assert_component!(LayoutEditor);
 
 /// The global hotkey layout editor. A variant of the `Dialog` base: the hook
@@ -41,10 +37,7 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
             LayoutEditorContent {
                 LayoutIntro {}
                 LayoutGrid { cells: model.cells }
-                MoveHotkeyToggle {
-                    checked: model.toggle_checked,
-                    on_toggle: model.on_toggle,
-                }
+                MoveHotkeyToggle { checked: model.toggle_checked, on_toggle: model.on_toggle }
             }
         }
         if model.picker_open {
@@ -54,7 +47,8 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
                 open: true,
                 allow_conflict_pick: true,
                 on_pick: model.on_pick,
-                on_close: model.on_picker_close,
+                on_close: model
+                        .on_picker_close,
             }
         }
     }

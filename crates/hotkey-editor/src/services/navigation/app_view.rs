@@ -154,12 +154,10 @@ mod app_view_tests {
             kind: CollisionKind::Hotkeys,
         };
         let resolve = AppView::Resolve;
-
         assert_eq!(editor.view_param(), "editor");
         assert_eq!(collisions_positions.view_param(), "collisions");
         assert_eq!(collisions_hotkeys.view_param(), "collisions");
         assert_eq!(resolve.view_param(), "resolve");
-
         assert_eq!(editor.kind_param(), None);
         assert_eq!(collisions_positions.kind_param(), Some("positions"));
         assert_eq!(collisions_hotkeys.kind_param(), Some("hotkeys"));

@@ -1,9 +1,6 @@
+use super::state::SystemHotkeysCategoryTabState;
 use crate::{classes, states};
 
-use super::state::SystemHotkeysCategoryTabState;
-
-// A single category label. On desktop it is an inline gold tab; inside the open
-// mobile popover (`group-data-[open=true]`) it stretches to a full-width menu row.
 const BASE: &[&str] = &[
     "font-friz-quadrata",
     "uppercase",
@@ -35,14 +32,16 @@ const BASE: &[&str] = &[
     "group-data-[open=true]:rounded-[6px]",
     "group-data-[open=true]:whitespace-normal",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
 const ACTIVE: &[&str] = &[
     "text-warcraft-gold",
@@ -50,6 +49,8 @@ const ACTIVE: &[&str] = &[
     "group-data-[open=true]:bg-[rgba(255,206,99,0.14)]",
     "group-data-[open=true]:[box-shadow:inset_0_0_0_1px_rgba(255,206,99,0.4)]",
 ];
-const INACTIVE: &[&str] = &["text-warcraft-gold/55"];
 
-states! { SystemHotkeysCategoryTabState, Active => ACTIVE, Inactive => INACTIVE }
+const INACTIVE: &[&str] = &["text-warcraft-gold/55"];
+states! {
+    SystemHotkeysCategoryTabState, Active => ACTIVE, Inactive => INACTIVE
+}

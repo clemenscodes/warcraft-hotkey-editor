@@ -1,11 +1,9 @@
+use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
-
-use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::CustomKeys;
-
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_keybinds::{GridBehavior, GridLayout, GridSlotId};
 
 /// What the caller wants edited: a unit's slot set, the source-of-truth signal,

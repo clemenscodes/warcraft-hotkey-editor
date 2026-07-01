@@ -1,15 +1,11 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
-use crate::assert_component;
-use style::CLASS;
-
 use super::burger_menu_item::BurgerMenuItem;
-
+use crate::assert_component;
+use dioxus::prelude::*;
 pub use props::BurgerMenuGroupProps;
-
+use style::CLASS;
 assert_component!(BurgerMenuGroup);
 
 /// The scrolling list of file actions inside the drawer.
@@ -17,10 +13,7 @@ assert_component!(BurgerMenuGroup);
 pub fn BurgerMenuGroup(props: BurgerMenuGroupProps) -> Element {
     let items = props.items;
     rsx! {
-        div {
-            class: CLASS,
-            role: "menu",
-            aria_label: "File actions",
+        div { class: CLASS, role: "menu", aria_label: "File actions",
             for item in items.into_iter() {
                 BurgerMenuItem { ..item }
             }

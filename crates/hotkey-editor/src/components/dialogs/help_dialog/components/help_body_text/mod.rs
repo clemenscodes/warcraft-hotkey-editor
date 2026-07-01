@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpBodyTextProps;
-
+use style::CLASS;
 assert_component!(HelpBodyText);
 
 /// A paragraph of explanatory help copy. A leaf reused by the resolver prose and
@@ -15,9 +12,6 @@ assert_component!(HelpBodyText);
 #[component]
 pub fn HelpBodyText(props: HelpBodyTextProps) -> Element {
     rsx! {
-        p {
-            class: CLASS,
-            {props.children}
-        }
+        p { class: CLASS, {props.children} }
     }
 }

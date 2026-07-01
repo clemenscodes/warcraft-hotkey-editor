@@ -1,7 +1,6 @@
+use super::attack_matchup_cell::AttackMatchupCell;
 use dioxus::prelude::*;
 use warcraft_api::{AttackType, DefenseType};
-
-use super::attack_matchup_cell::AttackMatchupCell;
 
 const DISPLAYED_DEFENSE_TYPES: [DefenseType; 7] = [
     DefenseType::Light,

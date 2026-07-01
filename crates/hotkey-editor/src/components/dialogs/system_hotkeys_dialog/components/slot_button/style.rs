@@ -1,11 +1,6 @@
+use super::state::SlotButtonState;
 use crate::{classes, states};
 
-use super::state::SlotButtonState;
-
-// The gold nine-slice slot. The frame image arrives from an ancestor as the
-// `--wc3-slot-frame` variable. Compact (control-group) cells shrink the frame and
-// padding via `data-compact`; the small-viewport sizing lives in the bands. The
-// per-state glow is layered in the overlays below.
 const BASE: &[&str] = &[
     "relative",
     "flex",
@@ -37,6 +32,7 @@ const BASE: &[&str] = &[
     "data-[compact=true]:gap-[0.4rem]",
     "data-[compact=true]:min-h-[11rem]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:border-[8px]",
     "mobile:px-[0.3rem]",
@@ -51,6 +47,7 @@ const MOBILE: &[&str] = &[
     "mobile:data-[compact=true]:min-h-0",
     "mobile:data-[compact=true]:aspect-[1/1]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:border-[8px]",
     "tablet:px-[0.3rem]",
@@ -65,15 +62,18 @@ const TABLET: &[&str] = &[
     "tablet:data-[compact=true]:min-h-0",
     "tablet:data-[compact=true]:aspect-[1/1]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
 const IDLE: &[&str] = &[];
 const EDITING: &[&str] = &["[filter:brightness(1.32)_drop-shadow(0_0_14px_rgba(255,206,99,0.75))]"];
 const CONFLICT: &[&str] = &["[filter:drop-shadow(0_0_12px_rgba(255,90,90,0.55))]"];
-
-states! { SlotButtonState, Idle => IDLE, Editing => EDITING, Conflict => CONFLICT }
+states! {
+    SlotButtonState, Idle => IDLE, Editing => EDITING, Conflict => CONFLICT
+}

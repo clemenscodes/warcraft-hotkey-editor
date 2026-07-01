@@ -1,11 +1,7 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
 use crate::components::actions::export_button::ExportButton;
 use crate::components::actions::help_button::HelpButton;
 use crate::components::actions::preview_button::PreviewButton;
@@ -15,9 +11,9 @@ use crate::components::actions::system_hotkeys_button::SystemHotkeysButton;
 use crate::components::actions::templates_button::TemplatesButton;
 use crate::components::actions::undo_button::UndoButton;
 use crate::components::actions::upload_button::UploadButton;
-
+use dioxus::prelude::*;
 pub use props::HeaderToolbarProps;
-
+use style::CLASS;
 assert_component!(HeaderToolbar);
 
 /// The inline file-action toolbar, shown only in the full header layout. In the
@@ -27,10 +23,7 @@ pub fn HeaderToolbar(props: HeaderToolbarProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let upload_status = props.upload_status;
     rsx! {
-        div {
-            class: CLASS,
-            role: "toolbar",
-            aria_label: "File actions",
+        div { class: CLASS, role: "toolbar", aria_label: "File actions",
             UndoButton {}
             RedoButton {}
             UploadButton { loaded_keys, upload_status }

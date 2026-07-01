@@ -1,21 +1,19 @@
-use std::cell::Cell;
-use std::collections::HashMap;
-
-use dioxus::html::input_data::MouseButton;
-use dioxus::html::point_interaction::PointerInteraction;
-use dioxus::prelude::*;
-use dioxus::web::WebEventExt;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
-use wasm_bindgen::JsCast;
-
-use crate::model::grid::{CursorPoint, HitTestPoint};
-
 use super::super::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, InventoryDragFollower,
     InventoryDragSource, SUPPRESS_NEXT_CLICK,
 };
+
 use super::props::InventoryCellProps;
 use super::state::InventoryCellState;
+use crate::model::grid::{CursorPoint, HitTestPoint};
+use dioxus::html::input_data::MouseButton;
+use dioxus::html::point_interaction::PointerInteraction;
+use dioxus::prelude::*;
+use dioxus::web::WebEventExt;
+use std::cell::Cell;
+use std::collections::HashMap;
+use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
+use wasm_bindgen::JsCast;
 
 /// Everything the cell's markup needs, already shaped: its glow state, drag flag,
 /// caption/key, conflict tooltip, whether its picker is open, and the full set of
@@ -53,7 +51,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
     let slot_index = props.slot_index;
-
     let read_guard = loaded_keys.read();
     let effective = EffectiveBinding::resolve_from_file(
         read_guard.as_ref(),
@@ -91,7 +88,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         .as_deref()
         .map(|target| target == section_id.as_str())
         .unwrap_or(false);
-
     let state = if is_conflict {
         InventoryCellState::Conflict
     } else if is_editing || is_drop_target {
@@ -107,14 +103,12 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     };
     let slot_label = format!("Slot {}", slot_index + 1);
     let current_code = effective.key();
-
     let section_id_for_click = section_id.clone();
     let section_id_for_pick = section_id.clone();
     let section_id_for_pointerdown = section_id.clone();
     let section_id_for_pointermove = section_id.clone();
     let section_id_for_pointerup = section_id.clone();
     let label_for_drag = key_label.clone();
-
     let on_pointerdown = EventHandler::new(move |event: Event<PointerData>| {
         if event.data().trigger_button() != Some(MouseButton::Primary) {
             return;
@@ -167,7 +161,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         };
         drag_follower.set(Some(follower));
     });
-
     let on_pointermove = EventHandler::new(move |event: Event<PointerData>| {
         if dragging_source.read().is_none() {
             return;
@@ -231,7 +224,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
             drop_target.set(Some(target_id_string));
         }
     });
-
     let on_pointerup = EventHandler::new(move |_event: Event<PointerData>| {
         let drop_clone = drop_target.read().clone();
         let mut performed_swap = false;
@@ -253,7 +245,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         drop_target.set(None);
         drag_follower.set(None);
     });
-
     let on_pointercancel = EventHandler::new(move |_event: Event<PointerData>| {
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
@@ -261,14 +252,12 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         drop_target.set(None);
         drag_follower.set(None);
     });
-
     let on_click = EventHandler::new(move |_event: MouseEvent| {
         if SUPPRESS_NEXT_CLICK.with(|cell: &Cell<bool>| cell.replace(false)) {
             return;
         }
         editing_section.set(Some(section_id_for_click.clone()));
     });
-
     let on_pick = EventHandler::new(move |code: KeyCode| {
         let mut guard = keys_signal.write();
         let file = guard.get_or_insert_with(|| CustomKeys::from(""));
@@ -277,7 +266,6 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
-
     InventoryCellModel {
         state,
         dragging_attr,

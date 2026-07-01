@@ -1,7 +1,5 @@
 use crate::classes;
 
-// The dropdown trigger: hidden on desktop (the tab bar shows instead); on small
-// viewports a full-width gold pill showing the active category.
 const BASE: &[&str] = &[
     "hidden",
     "[body[data-kb-modality]_&]:focus-visible:outline-none",
@@ -9,6 +7,7 @@ const BASE: &[&str] = &[
     "[body[data-kb-modality]_&]:focus-visible:text-white",
     "[body[data-kb-modality]_&]:focus-visible:[box-shadow:0_0_0_2px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:flex",
     "mobile:items-center",
@@ -30,6 +29,7 @@ const MOBILE: &[&str] = &[
     "mobile:[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
     "mobile:[box-shadow:0_0_14px_rgba(255,206,99,0.18)]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:flex",
     "tablet:items-center",
@@ -51,9 +51,11 @@ const TABLET: &[&str] = &[
     "tablet:[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
     "tablet:[box-shadow:0_0_14px_rgba(255,206,99,0.18)]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

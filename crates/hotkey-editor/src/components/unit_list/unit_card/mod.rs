@@ -1,18 +1,15 @@
-pub mod unit_card_icon;
-pub mod unit_card_info;
 mod hooks;
 mod props;
 mod style;
-
-use dioxus::prelude::*;
+pub mod unit_card_icon;
+pub mod unit_card_info;
 
 use crate::assert_component;
+use dioxus::prelude::*;
 use hooks::use_unit_card;
+pub use props::UnitCardProps;
 use unit_card_icon::UnitCardIcon;
 use unit_card_info::UnitCardInfo;
-
-pub use props::UnitCardProps;
-
 assert_component!(UnitCard);
 
 /// One selectable unit in the list: portrait plus name and id. Selecting it drives

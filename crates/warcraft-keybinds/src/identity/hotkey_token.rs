@@ -1,11 +1,7 @@
-use std::fmt;
-
 use crate::identity::keycode::Letter;
 use crate::model::Hotkey;
+use std::fmt;
 
-// CustomKeys.txt uses numeric Windows Virtual-Key codes for keys that aren't
-// plain letters: VK_ESCAPE (27), VK_XBUTTON1 (5, "Mouse4"/back), and
-// VK_XBUTTON2 (6, "Mouse5"/forward). Named tokens like "Escape" are not recognized.
 const ESCAPE_VK: u32 = 27;
 const MOUSE_BACK_VK: u32 = 5;
 const MOUSE_FORWARD_VK: u32 = 6;

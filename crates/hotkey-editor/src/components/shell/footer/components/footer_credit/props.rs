@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::components::footer_heart::FooterHeartProps;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct FooterCreditProps {

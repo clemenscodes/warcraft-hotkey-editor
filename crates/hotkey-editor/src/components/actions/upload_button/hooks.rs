@@ -1,9 +1,8 @@
+use super::props::UploadButtonProps;
+use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::CustomKeys;
-
-use super::props::UploadButtonProps;
-use crate::services::customkeys::upload_status::UploadStatus;
 
 /// The upload button's shaped view: the info dialog signal and the two handlers.
 pub(super) struct UploadButtonModel {
@@ -44,7 +43,7 @@ pub(super) fn use_upload_button(props: &UploadButtonProps) -> UploadButtonModel 
                     };
                     upload_status.set(loaded_status);
                     let summary = format!(
-                        "{binding_count} ability bindings, {command_count} command bindings imported"
+                        "{binding_count} ability bindings, {command_count} command bindings imported",
                     );
                     let options = ToastOptions::new().description(summary);
                     toast_api.success("CustomKeys.txt imported".to_string(), options);

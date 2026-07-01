@@ -1,7 +1,6 @@
+use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
-
-use crate::services::customkeys::upload_status::UploadStatus;
 
 /// The upload button owns no state of its own beyond the info dialog; it writes the
 /// imported keys and the upload status back to the app.

@@ -3,17 +3,13 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
+use super::super::TileChrome;
+use super::tile_badge::{TileBadge, TileBadgeProps};
 use crate::assert_component;
 use components::tile_icon::{TileIcon, TileIconProps};
 use components::tile_label::{TileLabel, TileLabelProps};
-
-use super::super::TileChrome;
-use super::tile_badge::{TileBadge, TileBadgeProps};
-
+use dioxus::prelude::*;
 pub use props::FilledTileProps;
-
 assert_component!(FilledTile);
 
 /// An occupied command tile. Draws the ability icon (or its text fallback) and

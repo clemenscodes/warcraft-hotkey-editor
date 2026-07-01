@@ -1,10 +1,8 @@
-use std::fmt;
-
-use warcraft_api::WarcraftObjectId;
-
 use crate::display::ability_cell::AbilityCell;
 use crate::identity::ability_id::AbilityId;
 use crate::model::{AbilityBinding, CommandBinding, GridCoordinate};
+use std::fmt;
+use warcraft_api::WarcraftObjectId;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum GridSlotId {

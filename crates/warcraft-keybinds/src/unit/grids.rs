@@ -1,14 +1,12 @@
-use std::collections::{HashMap, HashSet};
-
-use warcraft_api::WarcraftObjectId;
-use warcraft_database::WARCRAFT_DATABASE;
-
 use crate::custom_keys::CustomKeys;
 use crate::grid::layout::GridLayout;
 use crate::identity::hotkey_token::HotkeyToken;
 use crate::identity::slot::{CommandCard, GridSlotId};
 use crate::model::GridCoordinate;
 use crate::unit::slots::UnitCommandSlots;
+use std::collections::{HashMap, HashSet};
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::WARCRAFT_DATABASE;
 
 const GRID_SLOT_COUNT: usize = 12;
 
@@ -161,11 +159,6 @@ impl UnitGrids {
             let mut cells: [[Option<HotkeyCollisionAtCell>; 4]; 3] =
                 std::array::from_fn(|_| std::array::from_fn(|_| None));
             for (token, mut colliding_slots) in slots_by_token {
-                // Deduplicate by `as_str()` so that `Ability(X)` and
-                // `AbilityOff(X)` — the same button's on/off pair, by
-                // design sharing a hotkey — are not double-counted as
-                // a collision.  Cross-unit's report applies the same
-                // dedupe rule (see `collision/cross_unit.rs`).
                 let mut seen: HashSet<&str> = HashSet::new();
                 colliding_slots.retain(|slot| seen.insert(slot.as_str()));
                 if colliding_slots.len() < 2 {
@@ -516,7 +509,7 @@ mod unit_grids_tests {
         assert_eq!(
             main_command_token, None,
             "ANic has no command-card Buttonpos, so it occupies no main-command \
-             cell and must not contribute a hotkey token there"
+             cell and must not contribute a hotkey token there",
         );
     }
 
@@ -531,7 +524,7 @@ mod unit_grids_tests {
         assert_eq!(
             research_token, expected,
             "ANic has a Researchbuttonpos at E and Researchhotkey=E, so it must \
-             still report E in the research context"
+             still report E in the research context",
         );
     }
 
@@ -549,7 +542,7 @@ mod unit_grids_tests {
         assert!(
             main_command_card.collision_at(patrol_cell).is_none(),
             "CmdPatrol (C) shares no main-command cell with any drawn ability; \
-             ANic is not on the command card and must not collide with it"
+             ANic is not on the command card and must not collide with it",
         );
     }
 
@@ -653,7 +646,7 @@ mod unit_grids_tests {
         let cards = unit_grids.position_collisions(&custom_keys);
         assert!(
             cards.iter().all(|card| card.is_empty()),
-            "normalized default state must have no position collisions for Paladin"
+            "normalized default state must have no position collisions for Paladin",
         );
     }
 
@@ -676,7 +669,7 @@ mod unit_grids_tests {
             .any(|card| card.collision_at(collision_position).is_some());
         assert!(
             has_collision,
-            "placing two Paladin abilities at (0,0) must produce a position collision"
+            "placing two Paladin abilities at (0,0) must produce a position collision",
         );
     }
 
@@ -711,7 +704,7 @@ mod unit_grids_tests {
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
         assert!(
             cards.iter().all(|card| card.is_empty()),
-            "normalized default state must have no hotkey collisions for Paladin"
+            "normalized default state must have no hotkey collisions for Paladin",
         );
     }
 
@@ -736,7 +729,7 @@ mod unit_grids_tests {
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
         assert!(
             cards.iter().any(|card| !card.is_empty()),
-            "two Paladin abilities with hotkey Q must produce a hotkey collision"
+            "two Paladin abilities with hotkey Q must produce a hotkey collision",
         );
     }
 
@@ -767,7 +760,7 @@ mod unit_grids_tests {
         assert_eq!(w_entry.slots().len(), 2);
         assert!(
             matches!(w_entry.token(), HotkeyToken::Letter(Letter::W)),
-            "collision token must be W"
+            "collision token must be W",
         );
     }
 
@@ -799,7 +792,7 @@ mod unit_grids_tests {
         });
         assert!(
             !cross_grid_collision,
-            "same hotkey in main grid and skill tree must not be reported as a collision"
+            "same hotkey in main grid and skill tree must not be reported as a collision",
         );
     }
 }

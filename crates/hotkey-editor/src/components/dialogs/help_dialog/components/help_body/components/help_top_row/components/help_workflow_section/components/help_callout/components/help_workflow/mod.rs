@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::help_workflow_step::HelpWorkflowStep;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpWorkflowProps;
-
+use style::CLASS;
 assert_component!(HelpWorkflow);
 
 /// The ordered list of workflow steps. A pure loop: the steps and their inline
@@ -17,13 +14,9 @@ assert_component!(HelpWorkflow);
 #[component]
 pub fn HelpWorkflow(props: HelpWorkflowProps) -> Element {
     rsx! {
-        ol {
-            class: CLASS,
+        ol { class: CLASS,
             for (index, segments) in props.steps.iter().copied().enumerate() {
-                HelpWorkflowStep {
-                    key: "{index}",
-                    segments,
-                }
+                HelpWorkflowStep { key: "{index}", segments }
             }
         }
     }

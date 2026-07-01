@@ -1,15 +1,14 @@
-use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
-use warcraft_keybinds::{
-    COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, HotkeyToken, RowIndex,
-};
-
-use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
-use crate::services::customkeys::positions::Positions;
-
 use super::components::layout_grid::components::layout_cell::{LayoutCellProps, LayoutCellState};
 use super::data::QWERTY_ROWS;
 use super::props::LayoutEditorProps;
+use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
+use crate::services::customkeys::positions::Positions;
+use dioxus::prelude::*;
+use dioxus_primitives::toast::{ToastOptions, use_toast};
+
+use warcraft_keybinds::{
+    COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, HotkeyToken, RowIndex,
+};
 
 /// Everything the layout editor's markup needs, already shaped: the grid cells,
 /// the key-picker state, the toggle state, and every handler. The body only
@@ -38,7 +37,6 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();
     let toast_api = use_toast();
-
     let mut cells: Vec<LayoutCellProps> = Vec::new();
     for row in 0..COMMAND_GRID_ROWS {
         for column in 0..COMMAND_GRID_COLUMNS {
@@ -111,7 +109,6 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
             cells.push(cell);
         }
     }
-
     let picker_open = editing_snapshot.is_some();
     let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
         let current_letter = layout_snapshot
@@ -146,7 +143,6 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     } else {
         Vec::new()
     };
-
     let on_apply = EventHandler::new(move |_event: MouseEvent| {
         let snapshot = *grid_layout.read();
         let changed_count = Positions::apply_grid_to_all_known_objects(&mut loaded_keys, snapshot);
@@ -161,9 +157,6 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
             let title = "GRID APPLIED".to_string();
             toast_api.success(title, options);
         }
-        // Mirror the Resolve dialog: close on successful apply so the user lands
-        // back on the editor with the toast confirming what happened. Closes
-        // unconditionally — re-opening when "nothing changed" would be friction.
         layout_dialog_open.set(false);
     });
     let on_pick = EventHandler::new(move |token: HotkeyToken| {

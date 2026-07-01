@@ -8,11 +8,13 @@ const BASE: &[&str] = &[
     "gap-[0.65rem]",
     "min-w-0",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &["laptop:flex"];
 const DESKTOP: &[&str] = &["desktop:flex"];
 const QHD: &[&str] = &["qhd:flex"];
 const UHD: &[&str] = &["uhd:flex"];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

@@ -19,11 +19,13 @@ const BASE: &[&str] = &[
     "focus-visible:[outline:2px_solid_#fff]",
     "focus-visible:[outline-offset:2px]",
 ];
+
 const MOBILE: &[&str] = &["mobile:gap-2", "mobile:flex-auto"];
 const TABLET: &[&str] = &["tablet:gap-2", "tablet:flex-auto"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

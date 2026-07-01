@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::dialog::DialogProps;
+use dioxus::prelude::*;
 
 /// A dialog title bar's inputs: the title to show and the handler fired when the
 /// close control is clicked. Built from the dialog props (the close handler

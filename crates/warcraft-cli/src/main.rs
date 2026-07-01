@@ -1,9 +1,9 @@
+use clap::{Parser, Subcommand};
 use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
-
-use clap::{Parser, Subcommand};
 use warcraft_api::WarcraftObjectId;
+
 use warcraft_keybinds::{
     AssignmentQueue, CascadePlan, ColumnIndex, ConflictGraph, CrossUnitCollisionReport, CustomKeys,
     GridCoordinate, GridLayout, NamedCommandGrid, RowIndex, UnitCollisionReport, UnitGrids,
@@ -211,7 +211,7 @@ impl LayoutSpec {
             other => GridLayout::try_from(other).unwrap_or_else(|_| {
                 eprintln!(
                     "error: invalid layout {other:?} — use \"qwerty\" or a 12-character \
-                     row-major string (e.g. \"QWERASDFZXCV\")"
+                     row-major string (e.g. \"QWERASDFZXCV\")",
                 );
                 std::process::exit(1);
             }),
@@ -233,28 +233,22 @@ impl UnitInspection {
         let leaked: &'static mut str = Box::leak(unit_id_string.clone().into_boxed_str());
         let static_id: &'static str = leaked;
         let unit_id = WarcraftObjectId::from(static_id);
-
         let unit_grids = UnitGrids::for_unit(unit_id);
         let layout = GridLayout::qwerty_grid();
-
         println!("Unit: {unit_id_string}");
-
         for (index, named_grid) in unit_grids.grids().iter().enumerate() {
             let display = CommandGridDisplay::new(named_grid, &custom_keys, layout);
             println!("\n[{index}] {:?}", named_grid.role());
             println!("{display}");
         }
-
         let position_cards = unit_grids.position_collisions(&custom_keys);
         let hotkey_cards = unit_grids.hotkey_collisions(&custom_keys, layout);
-
         let no_position_collisions = position_cards.iter().all(|card| card.is_empty());
         let no_hotkey_collisions = hotkey_cards.iter().all(|card| card.is_empty());
         if no_position_collisions && no_hotkey_collisions {
             println!("\nNo collisions.");
             return;
         }
-
         if !no_position_collisions {
             println!("\nPosition collisions:");
             for card in position_cards {
@@ -268,7 +262,6 @@ impl UnitInspection {
                 }
             }
         }
-
         if !no_hotkey_collisions {
             println!("\nHotkey collisions:");
             for card in hotkey_cards {
@@ -308,20 +301,18 @@ impl fmt::Display for CommandGridDisplay<'_> {
             ColumnIndex::Two,
             ColumnIndex::Three,
         ];
+
         const ROWS: [RowIndex; 3] = [RowIndex::Zero, RowIndex::One, RowIndex::Two];
         const CELL: usize = 18;
         const ID_WIDTH: usize = 12;
         const KEY_WIDTH: usize = 3;
-
         let is_research = self.grid.role().is_research_context();
         let card = self.grid.card();
-
         let bar = "─".repeat(CELL);
         let bars: Vec<&str> = vec![bar.as_str(); 4];
         let top = format!("┌{}┐", bars.join("┬"));
         let middle = format!("├{}┤", bars.join("┼"));
         let bottom = format!("└{}┘", bars.join("┴"));
-
         writeln!(formatter, "{top}")?;
         for (row_index, row) in ROWS.iter().enumerate() {
             let cells: Vec<String> = COLUMNS

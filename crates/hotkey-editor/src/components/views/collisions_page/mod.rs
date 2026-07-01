@@ -6,28 +6,26 @@ mod sidebar;
 mod unit_position_detail;
 mod unit_position_sidebar;
 
-use std::collections::{HashMap, HashSet};
-
-use dioxus::prelude::*;
-use warcraft_database::ObjectLookup;
-use warcraft_keybinds::{
-    CrossUnitCollisionReport, CrossUnitPositionGroup, CustomKeys, GridSlotId, SharedAbilityEntry,
-    UnitCollisionReport,
-};
-
 use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use crate::model::icons::IconUrl;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
-use warcraft_keybinds::GridLayout;
-
 pub use detail::IslandDetail;
+use dioxus::prelude::*;
 pub use hotkey_detail::HotkeyUnitDetail;
 pub use hotkey_sidebar::HotkeyUnitSidebar;
 pub use mini_grid::IslandMiniGrid;
 pub use sidebar::IslandSidebar;
+use std::collections::{HashMap, HashSet};
 pub use unit_position_detail::UnitPositionDetail;
 pub use unit_position_sidebar::UnitPositionSidebar;
+use warcraft_database::ObjectLookup;
+use warcraft_keybinds::GridLayout;
+
+use warcraft_keybinds::{
+    CrossUnitCollisionReport, CrossUnitPositionGroup, CustomKeys, GridSlotId, SharedAbilityEntry,
+    UnitCollisionReport,
+};
 
 /// One ability resolved to an icon, display name, and object id. Two abilities
 /// can share an icon and name yet be distinct objects, so the id is shown too.
@@ -205,7 +203,6 @@ impl IslandView {
         let position = group.position();
         let position_column = u8::from(position.column());
         let position_row = u8::from(position.row());
-
         let shared_entries = group.shared_abilities();
         let mut shared_map: HashMap<&'static str, &SharedAbilityEntry> =
             HashMap::with_capacity(shared_entries.len());
@@ -213,12 +210,10 @@ impl IslandView {
             let slot_key = shared.slot_id().as_str();
             shared_map.insert(slot_key, shared);
         }
-
         let affected_entries = group.affected_units();
         let mut conflicts: Vec<ConflictView> = Vec::with_capacity(affected_entries.len());
         for affected in affected_entries {
             let colliding_slot_ids = affected.colliding_slot_ids();
-
             let mut shared_slot_option: Option<GridSlotId> = None;
             let mut shared_entry_option: Option<&SharedAbilityEntry> = None;
             for slot_id in colliding_slot_ids {
@@ -242,21 +237,15 @@ impl IslandView {
             let Some(shared_entry) = shared_entry_option else {
                 continue;
             };
-
             let own_slot = colliding_slot_ids
                 .iter()
                 .copied()
                 .find(|slot_id| *slot_id != shared_slot)
                 .unwrap_or(shared_slot);
-
             let own_ability_icon = AbilityIconView::resolve(own_slot);
             let shared_ability_icon = AbilityIconView::resolve(shared_slot);
-
             let affected_unit_id_value = affected.unit_id().value();
             let affected_unit = UnitIconView::resolve(affected_unit_id_value);
-
-            // The shared ability: its carriers come straight from the domain
-            // entry. Clicking it lists every unit that carries the ability.
             let mut shared_carrier_unit_ids: Vec<String> =
                 Vec::with_capacity(shared_entry.unit_ids().len());
             for carrier_object in shared_entry.unit_ids() {
@@ -269,9 +258,6 @@ impl IslandView {
                 carrier_unit_ids: shared_carrier_unit_ids,
                 carrier_count: shared_carrier_count,
             };
-
-            // The unit's own ability. If it is itself shared, list all its
-            // carriers; otherwise it is carried only by this unit at this cell.
             let own_slot_key = own_slot.as_str();
             let own_shared_entry_option = shared_map.get(own_slot_key).copied();
             let own_carrier_unit_ids: Vec<String> = match own_shared_entry_option {
@@ -294,7 +280,6 @@ impl IslandView {
                 carrier_unit_ids: own_carrier_unit_ids,
                 carrier_count: own_carrier_count,
             };
-
             let conflict = ConflictView {
                 unit: affected_unit,
                 own_ability,
@@ -302,20 +287,12 @@ impl IslandView {
             };
             conflicts.push(conflict);
         }
-        // Heaviest conflicts first: a conflict whose mover ability and anchor
-        // ability are carried by the most units combined affects the most of
-        // the roster, so it renders at the top. Stable, so equally-heavy
-        // conflicts keep their unit-name order.
         conflicts.sort_by_key(|conflict| {
             let mover_carrier_count = conflict.own_ability.carrier_count;
             let anchor_carrier_count = conflict.shared_ability.carrier_count;
             let combined_carrier_weight = mover_carrier_count + anchor_carrier_count;
             std::cmp::Reverse(combined_carrier_weight)
         });
-        // Collapse identical conflicts: the same mover/anchor ability pair on
-        // several units in this island is one collision with one fix, so it
-        // shows as a single card. The heaviest sorts first, so the retained
-        // representative is the most-relevant unit.
         let mut seen_ability_pairs: HashSet<AbilityPairKey> = HashSet::new();
         conflicts.retain(|conflict| {
             let mover_object_id = conflict.own_ability.ability.object_id.clone();
@@ -327,13 +304,11 @@ impl IslandView {
             seen_ability_pairs.insert(pair_key)
         });
         let collision_count = conflicts.len();
-
         let first_shared_str = shared_entries
             .first()
             .map(|shared| shared.slot_id().as_str())
             .unwrap_or("");
         let key = format!("{position_column}:{position_row}:{first_shared_str}");
-
         Self {
             key,
             position_column,
@@ -496,8 +471,6 @@ impl HotkeyCollisionPageModel {
             if conflicts.is_empty() {
                 continue;
             }
-            // Heaviest clashes first: a hotkey letter shared by more abilities
-            // is the harder collision to resolve, so it renders at the top.
             conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
@@ -613,9 +586,6 @@ impl UnitPositionPageModel {
             if conflicts.is_empty() {
                 continue;
             }
-            // Heaviest clashes first: a command-card cell shared by more of the
-            // unit's own abilities is the harder collision to resolve, so it
-            // renders at the top.
             conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
@@ -667,19 +637,16 @@ fn CollisionBreadcrumb(props: CollisionBreadcrumbProps) -> Element {
     let data_breadcrumb = props.data_breadcrumb;
     let active = props.active;
     let view_navigation = props.view_navigation;
-
     let class_name = if active {
         "collision-breadcrumb active"
     } else {
         "collision-breadcrumb"
     };
     let aria_current = if active { "page" } else { "false" };
-
     let go_to_kind = move |_| {
         let target = AppView::Collisions { kind: target_kind };
         view_navigation.apply(target);
     };
-
     rsx! {
         button {
             class: class_name,
@@ -704,13 +671,13 @@ fn CollisionBreadcrumbs(props: CollisionBreadcrumbsProps) -> Element {
     let unit_position_count = props.unit_position_count;
     let hotkey_count = props.hotkey_count;
     let view_navigation = props.view_navigation;
-
     let positions_active = matches!(kind, CollisionKind::Positions);
     let unit_positions_active = matches!(kind, CollisionKind::UnitPositions);
     let hotkeys_active = matches!(kind, CollisionKind::Hotkeys);
-
     rsx! {
-        nav { class: "collision-breadcrumbs", aria_label: "Collision categories",
+        nav {
+            class: "collision-breadcrumbs",
+            aria_label: "Collision categories",
             CollisionBreadcrumb {
                 label: "Cross Collisions",
                 count: position_count,
@@ -764,7 +731,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
     let view_navigation = use_context::<ViewNavigationContext>();
-
     let islands_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {
@@ -772,7 +738,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         };
         CollisionPageModel::compute(custom_keys)
     });
-
     let hotkey_units_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {
@@ -781,7 +746,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         let layout = *grid_layout.read();
         HotkeyCollisionPageModel::compute(custom_keys, layout)
     });
-
     let unit_positions_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {
@@ -790,11 +754,9 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         let layout = *grid_layout.read();
         UnitPositionPageModel::compute(custom_keys, layout)
     });
-
     let mut selected_island = props.selected_island;
     let mut selected_hotkey_unit = props.selected_hotkey_unit;
     let mut selected_unit_position = props.selected_unit_position;
-
     use_effect(move || {
         let islands = islands_memo.read();
         if islands.is_empty() {
@@ -812,7 +774,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
             }
         }
     });
-
     use_effect(move || {
         let hotkey_units = hotkey_units_memo.read();
         if hotkey_units.is_empty() {
@@ -830,7 +791,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
             }
         }
     });
-
     use_effect(move || {
         let unit_positions = unit_positions_memo.read();
         if unit_positions.is_empty() {
@@ -848,12 +808,10 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
             }
         }
     });
-
     let islands = islands_memo();
     let island_count = islands.len();
     let has_file = loaded_keys.read().is_some();
     let sidebar_islands = islands.clone();
-
     let hotkey_units = hotkey_units_memo();
     let hotkey_unit_count = hotkey_units.len();
     let hotkey_collision_count = hotkey_units
@@ -861,7 +819,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         .map(|unit_view| unit_view.collision_count())
         .sum::<usize>();
     let sidebar_hotkey_units = hotkey_units.clone();
-
     let unit_positions = unit_positions_memo();
     let unit_position_unit_count = unit_positions.len();
     let unit_position_collision_count = unit_positions
@@ -869,7 +826,6 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         .map(|unit_view| unit_view.collision_count())
         .sum::<usize>();
     let sidebar_unit_positions = unit_positions.clone();
-
     rsx! {
         div { class: "collisions-shell",
             CollisionBreadcrumbs {
@@ -880,129 +836,116 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
                 view_navigation,
             }
             match kind {
-            CollisionKind::Hotkeys => rsx! {
-                if !has_file {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "hotkeys",
-                        "data-unit-count": "0",
-                        p { class: "m-0", "Upload your CustomKeys.txt to inspect hotkey collisions." }
-                    }
-                } else if hotkey_unit_count == 0 {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "hotkeys",
-                        "data-unit-count": "0",
-                        span {
-                            class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                    [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                            aria_hidden: "true",
-                            dangerous_inner_html: ICON_COLLISIONS_CLEAR,
+                CollisionKind::Hotkeys => rsx! {
+                    if !has_file {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "hotkeys",
+                            "data-unit-count": "0",
+                            p { class: "m-0", "Upload your CustomKeys.txt to inspect hotkey collisions." }
                         }
-                        p {
-                            class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                            "All clear."
+                    } else if hotkey_unit_count == 0 {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "hotkeys",
+                            "data-unit-count": "0",
+                            span {
+                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
+                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
+                            }
+                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
+                                "All clear."
+                            }
                         }
-                    }
-                } else {
-                    div {
-                        class: "main-content collisions-content collisions-page",
-                        "data-collision-kind": "hotkeys",
-                        "data-unit-count": "{hotkey_unit_count}",
-                        HotkeyUnitSidebar {
-                            units: sidebar_hotkey_units,
-                            selected_unit: selected_hotkey_unit,
-                        }
-                        HotkeyUnitDetail {
-                            units: hotkey_units,
-                            selected_unit: selected_hotkey_unit,
-                            view_navigation,
+                    } else {
+                        div {
+                            class: "main-content collisions-content collisions-page",
+                            "data-collision-kind": "hotkeys",
+                            "data-unit-count": "{hotkey_unit_count}",
+                            HotkeyUnitSidebar { units: sidebar_hotkey_units, selected_unit: selected_hotkey_unit }
+                            HotkeyUnitDetail {
+                                units: hotkey_units,
+                                selected_unit: selected_hotkey_unit,
+                                view_navigation,
+                            }
                         }
                     }
-                }
-            },
-            CollisionKind::UnitPositions => rsx! {
-                if !has_file {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "unit-positions",
-                        "data-unit-count": "0",
-                        p { class: "m-0", "Upload your CustomKeys.txt to inspect unit position collisions." }
-                    }
-                } else if unit_position_unit_count == 0 {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "unit-positions",
-                        "data-unit-count": "0",
-                        span {
-                            class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                    [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                            aria_hidden: "true",
-                            dangerous_inner_html: ICON_COLLISIONS_CLEAR,
+                },
+                CollisionKind::UnitPositions => rsx! {
+                    if !has_file {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "unit-positions",
+                            "data-unit-count": "0",
+                            p { class: "m-0", "Upload your CustomKeys.txt to inspect unit position collisions." }
                         }
-                        p {
-                            class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                            "All clear."
+                    } else if unit_position_unit_count == 0 {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "unit-positions",
+                            "data-unit-count": "0",
+                            span {
+                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
+                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
+                            }
+                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
+                                "All clear."
+                            }
                         }
-                    }
-                } else {
-                    div {
-                        class: "main-content collisions-content collisions-page",
-                        "data-collision-kind": "unit-positions",
-                        "data-unit-count": "{unit_position_unit_count}",
-                        UnitPositionSidebar {
-                            units: sidebar_unit_positions,
-                            selected_unit: selected_unit_position,
-                        }
-                        UnitPositionDetail {
-                            units: unit_positions,
-                            selected_unit: selected_unit_position,
-                            view_navigation,
-                        }
-                    }
-                }
-            },
-            CollisionKind::Positions => rsx! {
-                if !has_file {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "positions",
-                        "data-island-count": "0",
-                        p { class: "m-0", "Upload your CustomKeys.txt to inspect position collisions." }
-                    }
-                } else if island_count == 0 {
-                    section {
-                        class: CENTERED_STATE_CLASS,
-                        "data-collision-kind": "positions",
-                        "data-island-count": "0",
-                        span {
-                            class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                    [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                            aria_hidden: "true",
-                            dangerous_inner_html: ICON_COLLISIONS_CLEAR,
-                        }
-                        p {
-                            class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                            "All clear."
+                    } else {
+                        div {
+                            class: "main-content collisions-content collisions-page",
+                            "data-collision-kind": "unit-positions",
+                            "data-unit-count": "{unit_position_unit_count}",
+                            UnitPositionSidebar {
+                                units: sidebar_unit_positions,
+                                selected_unit: selected_unit_position,
+                            }
+                            UnitPositionDetail {
+                                units: unit_positions,
+                                selected_unit: selected_unit_position,
+                                view_navigation,
+                            }
                         }
                     }
-                } else {
-                    div {
-                        class: "main-content collisions-content collisions-page",
-                        "data-collision-kind": "positions",
-                        "data-island-count": "{island_count}",
-                        IslandSidebar {
-                            islands: sidebar_islands,
-                            selected_island,
+                },
+                CollisionKind::Positions => rsx! {
+                    if !has_file {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "positions",
+                            "data-island-count": "0",
+                            p { class: "m-0", "Upload your CustomKeys.txt to inspect position collisions." }
                         }
-                        IslandDetail {
-                            islands,
-                            selected_island,
-                            view_navigation,
+                    } else if island_count == 0 {
+                        section {
+                            class: CENTERED_STATE_CLASS,
+                            "data-collision-kind": "positions",
+                            "data-island-count": "0",
+                            span {
+                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
+                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
+                                aria_hidden: "true",
+                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
+                            }
+                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
+                                "All clear."
+                            }
+                        }
+                    } else {
+                        div {
+                            class: "main-content collisions-content collisions-page",
+                            "data-collision-kind": "positions",
+                            "data-island-count": "{island_count}",
+                            IslandSidebar { islands: sidebar_islands, selected_island }
+                            IslandDetail { islands, selected_island, view_navigation }
                         }
                     }
-                }
-            },
+                },
             }
         }
     }

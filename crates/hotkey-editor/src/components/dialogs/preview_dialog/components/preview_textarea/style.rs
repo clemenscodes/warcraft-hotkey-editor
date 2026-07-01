@@ -20,11 +20,13 @@ const BASE: &[&str] = &[
     "focus:border-warcraft-gold",
     "focus:shadow-[0_0_8px_rgba(255,206,99,0.4)]",
 ];
+
 const MOBILE: &[&str] = &["mobile:text-[1.4rem]/[1.45]"];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

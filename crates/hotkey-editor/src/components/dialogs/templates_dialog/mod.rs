@@ -2,12 +2,10 @@ pub mod components;
 mod hooks;
 mod props;
 
-use dioxus::prelude::*;
-
 use super::dialog::Dialog;
 use components::template_gallery::TemplateGallery;
+use dioxus::prelude::*;
 use hooks::use_templates_dialog;
-
 pub use props::TemplatesDialogProps;
 
 /// Lets the player apply a bundled layout template. A variant of the `Dialog`
@@ -21,9 +19,7 @@ pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
         return rsx! {};
     }
     rsx! {
-        Dialog {
-            open,
-            title: "Layout Templates",
+        Dialog { open, title: "Layout Templates",
             TemplateGallery { cards }
         }
     }

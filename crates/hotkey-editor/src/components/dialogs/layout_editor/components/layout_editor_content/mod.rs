@@ -1,10 +1,8 @@
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
+use dioxus::prelude::*;
 use style::CLASS;
-
 assert_component!(LayoutEditorContent);
 
 /// The centered body column of the layout editor: holds the intro, the grid, and
@@ -12,9 +10,6 @@ assert_component!(LayoutEditorContent);
 #[component]
 pub fn LayoutEditorContent(children: Element) -> Element {
     rsx! {
-        div {
-            class: CLASS,
-            {children}
-        }
+        div { class: CLASS, {children} }
     }
 }

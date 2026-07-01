@@ -1,12 +1,10 @@
-use std::collections::{HashMap, HashSet};
-use std::fmt;
-
-use warcraft_api::WarcraftObjectId;
-
 use crate::cascade::conflict_graph::ConflictGraph;
 use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
 use crate::unit::grids::GridRole;
+use std::collections::{HashMap, HashSet};
+use std::fmt;
+use warcraft_api::WarcraftObjectId;
 
 /// What sort of event produced a `PositionAssignmentGroup`.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -276,7 +274,6 @@ impl QueueBuildState {
                 self.relocate_mover_rightward(mover_index, position);
             }
         }
-
         if let Some(candidate_index) = self.find_gap_pull_candidate(position, grid_role, graph) {
             let source_position = self.live_positions[candidate_index];
             self.live_positions[candidate_index] = position;
@@ -317,7 +314,6 @@ impl QueueBuildState {
         let column_value = u8::from(from_position.column());
         let row_value = u8::from(from_position.row());
         let next_column_value = column_value + 1;
-        // Within the row: push one column to the right.
         if next_column_value < COMMAND_GRID_COLUMNS
             && let Ok(next_column) = ColumnIndex::try_from(next_column_value)
         {
@@ -325,7 +321,6 @@ impl QueueBuildState {
             self.live_positions[mover_index] = new_position;
             return;
         }
-        // Row overflow: wrap to the leftmost column of the next row down.
         let next_row_value = row_value + 1;
         if next_row_value >= COMMAND_GRID_ROWS {
             self.unresolved.insert(mover_index);
@@ -347,17 +342,12 @@ impl QueueBuildState {
     ) -> Option<usize> {
         let column_value = u8::from(position.column());
         let row_value = u8::from(position.row());
-
         let mut units_needing_gap_close: HashSet<WarcraftObjectId> = HashSet::new();
         for (key, node_indices) in &self.unit_carries {
             if key.grid_role != grid_role {
                 continue;
             }
             let mut anyone_at_cell = false;
-            // True only when an ability was originally at ≤ current column but the
-            // cascade displaced it past the current column — a real gap.  An ability
-            // that was always to the right of this cell (intentional design) does not
-            // qualify and must not trigger a gap-pull.
             let mut anyone_displaced_past_here = false;
             for &node_index in node_indices {
                 if self.unresolved.contains(&node_index) {
@@ -385,14 +375,11 @@ impl QueueBuildState {
                 units_needing_gap_close.insert(key.unit_id);
             }
         }
-
         if units_needing_gap_close.is_empty() {
             return None;
         }
-
         let residents = self.residents_at(position, grid_role, graph);
         let residents_set: HashSet<usize> = residents.iter().copied().collect();
-
         let mut candidates: Vec<GapPullCandidate> = Vec::new();
         for (index, node) in graph.nodes().iter().enumerate() {
             if node.grid_role() != grid_role {
@@ -435,11 +422,9 @@ impl QueueBuildState {
             };
             candidates.push(candidate);
         }
-
         if candidates.is_empty() {
             return None;
         }
-
         candidates.sort_by(|left, right| {
             left.source_column
                 .cmp(&right.source_column)
@@ -476,15 +461,6 @@ impl QueueBuildState {
                 .cmp(&left_carriers)
                 .then_with(|| left.cmp(&right))
         });
-
-        // Pinned slots (system commands, Ancient root/uproot) normally win
-        // every fight and never reach this list. They only land here when the
-        // user has manually dragged commands so that two pinned slots collide
-        // and one overflows its row. When that happens the overflowed pinned
-        // slot still needs a real home, so it gets the same full-grid best-fit
-        // search as everything else. `is_swap_safe` keeps it from displacing
-        // another pinned slot, so a pinned spill can only take a free cell or
-        // swap with a movable ability — never shuffle another command.
         for node_index in spill_order {
             let decision = self.find_spill_decision(node_index, graph);
             if let Some(spill_decision) = decision {
@@ -503,9 +479,6 @@ impl QueueBuildState {
         let stuck_position = self.live_positions[node_index];
         let stuck_column = u8::from(stuck_position.column());
         let stuck_row = u8::from(stuck_position.row());
-
-        // Same row first, then other rows in distance order, with stable
-        // tie-break by row number ascending.
         let mut row_order: Vec<u8> = (0..COMMAND_GRID_ROWS).collect();
         let stuck_row_value = i32::from(stuck_row);
         row_order.sort_by(|&left_row, &right_row| {
@@ -517,7 +490,6 @@ impl QueueBuildState {
                 .cmp(&right_distance)
                 .then_with(|| left_row.cmp(&right_row))
         });
-
         for candidate_row_byte in row_order {
             if let Some(decision) =
                 self.best_fit_in_row(node_index, role, candidate_row_byte, stuck_column, graph)
@@ -542,11 +514,9 @@ impl QueueBuildState {
         let stuck_position = self.live_positions[node_index];
         let stuck_row_byte = u8::from(stuck_position.row());
         let stuck_column_byte = u8::from(stuck_position.column());
-
         let mut best: Option<SpillDecision> = None;
         let mut best_occupation_count: usize = usize::MAX;
         let mut best_column_distance: u32 = u32::MAX;
-
         for col_byte in 0..COMMAND_GRID_COLUMNS {
             let Ok(column) = ColumnIndex::try_from(col_byte) else {
                 continue;
@@ -555,7 +525,6 @@ impl QueueBuildState {
             if candidate_row_byte == stuck_row_byte && col_byte == stuck_column_byte {
                 continue;
             }
-
             let mut incumbents: Vec<usize> = Vec::new();
             for &neighbor_index in graph.neighbors(node_index) {
                 if self.live_positions[neighbor_index] != candidate {
@@ -570,14 +539,12 @@ impl QueueBuildState {
             if occupation_count > best_occupation_count {
                 continue;
             }
-
             let all_swappable = incumbents
                 .iter()
                 .all(|&inc| self.is_swap_safe(inc, stuck_position, node_index, graph));
             if !all_swappable {
                 continue;
             }
-
             let col_byte_value = i32::from(col_byte);
             let origin_column_value = i32::from(origin_column);
             let column_distance_signed = col_byte_value - origin_column_value;
@@ -695,7 +662,6 @@ impl PositionAssignmentGroup {
         if !any_edge_in_residents {
             return Vec::new();
         }
-
         let mut groups: Vec<PositionAssignmentGroup> = Vec::new();
         let mut visited: HashSet<usize> = HashSet::new();
         for &start_node in residents {
@@ -747,18 +713,6 @@ impl PositionAssignmentGroup {
         grid_role: GridRole,
         scope: AssignmentScope,
     ) -> Vec<PositionAssignmentGroup> {
-        // Anchor candidates are filtered by the scope passed to
-        // `AssignmentQueue::build`:
-        //
-        //   - `CrossUnitOnly` (phase 1): cross-unit nodes (carriers ≥ 2) plus
-        //     any pinned node.  This is the existing cascade — intra-unit
-        //     collisions (single-carrier abilities competing for one slot on
-        //     one unit) are out of scope and silently ignored.
-        //   - `IncludingIntraUnit` (phase 2): every node in the component is
-        //     a candidate.  Cross-unit abilities still beat intra-unit ones
-        //     via the carrier-count comparator below, but pure single-carrier
-        //     collisions (e.g. two shop items on a Goblin Merchant) finally
-        //     get resolved.
         let anchor_candidates: Vec<usize> = match scope {
             AssignmentScope::CrossUnitOnly => component
                 .iter()
@@ -771,19 +725,9 @@ impl PositionAssignmentGroup {
                 .collect(),
             AssignmentScope::IncludingIntraUnit => component.to_vec(),
         };
-
         if anchor_candidates.len() < 2 {
             return Vec::new();
         }
-
-        // Anchor preference: pinned first, then highest carrier count, then
-        // stable tiebreak.  For intra-unit ties (carrier_count == 1) the
-        // ability that appears earlier in its unit's abilList wins: it is the
-        // game's intended priority order, and the later-list loser cascades
-        // through same-row incumbents without displacing them, keeping the
-        // total count of moved abilities low.  The cross-unit tiebreak
-        // (carrier_count > 1) is unchanged: lower node index (alphabetically
-        // earlier) wins, preserving the existing cascade order.
         let anchor_index = anchor_candidates
             .iter()
             .copied()
@@ -810,20 +754,17 @@ impl PositionAssignmentGroup {
                     })
             })
             .expect("anchor_candidates is non-empty");
-
         let empty_neighbors: Vec<usize> = Vec::new();
         let anchor_position_neighbors: &Vec<usize> = position_adjacency
             .get(&anchor_index)
             .unwrap_or(&empty_neighbors);
         let anchor_neighbor_set: HashSet<usize> =
             anchor_position_neighbors.iter().copied().collect();
-
         let mut direct_mover_indices: Vec<usize> = anchor_candidates
             .iter()
             .copied()
             .filter(|&index| index != anchor_index && anchor_neighbor_set.contains(&index))
             .collect();
-
         if direct_mover_indices.is_empty() {
             let without_anchor: Vec<usize> = component
                 .iter()
@@ -839,7 +780,6 @@ impl PositionAssignmentGroup {
                 scope,
             );
         }
-
         direct_mover_indices.sort_by(|&left, &right| {
             let left_carriers = graph.node(left).carrier_count();
             let right_carriers = graph.node(right).carrier_count();
@@ -847,7 +787,6 @@ impl PositionAssignmentGroup {
                 .cmp(&left_carriers)
                 .then_with(|| left.cmp(&right))
         });
-
         let excluded_from_remaining: HashSet<usize> = std::iter::once(anchor_index)
             .chain(direct_mover_indices.iter().copied())
             .collect();
@@ -859,17 +798,14 @@ impl PositionAssignmentGroup {
             kind: GroupKind::Fight,
         };
         let mut groups: Vec<PositionAssignmentGroup> = vec![first_group];
-
         let remaining_nodes: Vec<usize> = component
             .iter()
             .copied()
             .filter(|&index| !excluded_from_remaining.contains(&index))
             .collect();
-
         if remaining_nodes.is_empty() {
             return groups;
         }
-
         let remaining_node_set: HashSet<usize> = remaining_nodes.iter().copied().collect();
         let mut remaining_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
         for &node in &remaining_nodes {
@@ -887,7 +823,6 @@ impl PositionAssignmentGroup {
                 remaining_adjacency.insert(node, restricted_neighbors);
             }
         }
-
         let mut visited: HashSet<usize> = HashSet::new();
         for &start_node in &remaining_nodes {
             if visited.contains(&start_node) {
@@ -918,7 +853,6 @@ impl PositionAssignmentGroup {
             );
             groups.extend(sub_groups);
         }
-
         groups
     }
 }
@@ -928,7 +862,7 @@ impl fmt::Display for AssignmentQueue {
         if self.groups.is_empty() && self.unresolved.is_empty() {
             return writeln!(
                 formatter,
-                "Assignment queue: empty — no collisions or gaps to resolve."
+                "Assignment queue: empty — no collisions or gaps to resolve.",
             );
         }
         writeln!(
@@ -970,7 +904,7 @@ impl fmt::Display for AssignmentQueue {
             writeln!(
                 formatter,
                 "    ANCHOR  {anchor_name} ({anchor_id})  [{anchor_carriers} carriers: \
-                 {anchor_carrier_ids}]"
+                 {anchor_carrier_ids}]",
             )?;
             for &mover_index in &group.mover_indices {
                 let mover_node = self.graph.node(mover_index);
@@ -986,7 +920,7 @@ impl fmt::Display for AssignmentQueue {
                 writeln!(
                     formatter,
                     "    MOVE    {mover_name} ({mover_id})  [{mover_carriers} carriers: \
-                     {mover_carrier_ids}]"
+                     {mover_carrier_ids}]",
                 )?;
             }
             writeln!(formatter)?;
@@ -1003,7 +937,7 @@ impl fmt::Display for AssignmentQueue {
                 let role = node.grid_role().label();
                 writeln!(
                     formatter,
-                    "  {name} ({id})  [{role}]  stuck at ({column},{row})"
+                    "  {name} ({id})  [{role}]  stuck at ({column},{row})",
                 )?;
             }
         }
@@ -1048,7 +982,7 @@ mod cascade_queue_tests {
         let queue = default_queue();
         assert!(
             !queue.is_empty(),
-            "default keys have known collisions so the queue must be non-empty"
+            "default keys have known collisions so the queue must be non-empty",
         );
     }
 
@@ -1083,9 +1017,6 @@ mod cascade_queue_tests {
 
     #[test]
     fn raster_phase_groups_are_sorted_left_to_right_top_to_bottom() {
-        // Only Fight and GapPull groups belong to phase 1's raster sweep.
-        // Spill groups happen in phase 2 and land at arbitrary cells, so they
-        // are excluded from this ordering invariant.
         let queue = default_queue();
         let positions: Vec<(u8, u8)> = queue
             .groups()
@@ -1101,7 +1032,7 @@ mod cascade_queue_tests {
         sorted.sort();
         assert_eq!(
             positions, sorted,
-            "phase-1 groups must be sorted row-then-column ascending"
+            "phase-1 groups must be sorted row-then-column ascending",
         );
     }
 
@@ -1117,7 +1048,7 @@ mod cascade_queue_tests {
                 let mover_carriers = queue.graph().node(mover_index).carrier_count();
                 assert!(
                     anchor_carriers >= mover_carriers,
-                    "anchor must have at least as many carriers as any mover in the group"
+                    "anchor must have at least as many carriers as any mover in the group",
                 );
             }
         }
@@ -1139,7 +1070,7 @@ mod cascade_queue_tests {
             sorted.sort_by(|left, right| right.cmp(left));
             assert_eq!(
                 mover_counts, sorted,
-                "movers within a fight group must be sorted by carrier count descending"
+                "movers within a fight group must be sorted by carrier count descending",
             );
         }
     }
@@ -1152,18 +1083,13 @@ mod cascade_queue_tests {
             assert_eq!(
                 anchor_final,
                 group.position(),
-                "anchor of every group must end up at the group's position"
+                "anchor of every group must end up at the group's position",
             );
         }
     }
 
     #[test]
     fn every_fight_group_has_at_least_two_members() {
-        // The cascade resolves both cross-unit collisions (carrier_count ≥ 2)
-        // and pure intra-unit collisions (single-carrier abilities competing
-        // for one slot on one unit, e.g. shop items on a Goblin Merchant).
-        // The only invariant left is that a fight group must have an anchor
-        // plus at least one mover — otherwise there's no fight to resolve.
         let queue = default_queue();
         for group in queue.groups() {
             if !group.is_fight() {
@@ -1198,7 +1124,7 @@ mod cascade_queue_tests {
         assert!(
             combined_movers >= 2,
             "three Paladin abilities at the same position must produce at least 2 movers across \
-             groups at (0,0) main command, got {combined_movers}"
+             groups at (0,0) main command, got {combined_movers}",
         );
     }
 
@@ -1224,18 +1150,12 @@ mod cascade_queue_tests {
         assert!(
             combined_movers >= 3,
             "four Paladin abilities at the same position must produce at least 3 movers across \
-             groups at (1,1) main command, got {combined_movers}"
+             groups at (1,1) main command, got {combined_movers}",
         );
     }
 
     #[test]
     fn every_fight_mover_never_moves_to_an_earlier_row() {
-        // Fight movers slide rightward within the same row, wrapping to the
-        // leftmost column of the next row when they overflow the row's right
-        // edge.  They never move *backward* (to a row earlier than the fight
-        // group's row).  A mover whose final fight slot ran out becomes
-        // unresolved and may then be rehomed by phase 2 (spill); those
-        // spill-anchored nodes are exempt — their final row reflects the spill.
         let queue = default_queue();
         let spilled_anchors: HashSet<usize> = queue
             .groups()
@@ -1268,11 +1188,6 @@ mod cascade_queue_tests {
 
     #[test]
     fn no_post_queue_collisions_for_resolved_cross_unit_nodes() {
-        // `default_queue()` uses `AssignmentScope::CrossUnitOnly`.  Intra-unit
-        // collisions (both endpoints have carrier_count == 1) are not the
-        // queue's domain in that scope — they are resolved in phase 2 of
-        // `CustomKeys::resolve_conflicts`.  Here we only check cross-unit
-        // pairs.
         let queue = default_queue();
         let graph = queue.graph();
         for (first_index, first_node) in graph.nodes().iter().enumerate() {
@@ -1311,9 +1226,6 @@ mod cascade_queue_tests {
 
     #[test]
     fn cascade_chain_emits_a_fight_group_at_the_displacement_destination() {
-        // Three Paladin abilities at (0,0) plus one already at (1,0).  After the
-        // (0,0) fight, the two losers slide to (1,0) where another Paladin
-        // ability sits — a second fight must happen there.
         let collision_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let next_position = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
         let binding_collision = AbilityBinding::builder()
@@ -1341,20 +1253,12 @@ mod cascade_queue_tests {
         assert!(
             fight_groups_at_next >= 1,
             "cascade chain must emit at least one fight group at (1,0) when losers from (0,0) \
-             land on an already-occupied Paladin slot, got {fight_groups_at_next}"
+             land on an already-occupied Paladin slot, got {fight_groups_at_next}",
         );
     }
 
     #[test]
     fn paladin_collision_is_resolved_with_no_orphans() {
-        // Four Paladin abilities placed at the same row-0 cell, on top of the
-        // default keys (which already put pinned Cmds at every column of row
-        // 0).  Phase 1 must produce an unresolved overflow because row 0 has
-        // no free cell for Paladin abilities to land in.  Phase 2 spill then
-        // rehomes them — possibly cross-row — so that no Paladin ability
-        // remains unresolved at the end.  Cross-row movement is acceptable
-        // when row 0 is fully occupied by pinned commands; an unresolved
-        // collision would be worse.
         let collision_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let collision_binding = AbilityBinding::builder()
             .button_position(collision_position)
@@ -1374,15 +1278,13 @@ mod cascade_queue_tests {
             assert!(
                 !queue.is_unresolved(node_index),
                 "Paladin ability {ability_id} must end up placed (possibly cross-row) — \
-                 leaving it unresolved is worse than a row change"
+                 leaving it unresolved is worse than a row change",
             );
         }
     }
 
     #[test]
     fn pinned_system_commands_never_move_from_default() {
-        // Cmd* slots are pinned: they should always end up at their original
-        // database position regardless of any cascade rearrangement.
         let queue = default_queue();
         let graph = queue.graph();
         let mut pinned_command_count = 0;
@@ -1411,14 +1313,12 @@ mod cascade_queue_tests {
         }
         assert!(
             pinned_command_count > 0,
-            "default keys must contain at least one Cmd* slot for this test to be meaningful"
+            "default keys must contain at least one Cmd* slot for this test to be meaningful",
         );
     }
 
     #[test]
     fn pinned_ancient_root_never_moves_from_default() {
-        // Aro1 / Aro2 are pinned: the Ancient root/uproot toggle is a structural
-        // building command, not a spell, and players rely on its position.
         let queue = default_queue();
         let graph = queue.graph();
         let mut checked_any = false;
@@ -1447,16 +1347,12 @@ mod cascade_queue_tests {
         }
         assert!(
             checked_any,
-            "default keys must contain at least one Aro1/Aro2 node for this test to be meaningful"
+            "default keys must contain at least one Aro1/Aro2 node for this test to be meaningful",
         );
     }
 
     #[test]
     fn unresolved_node_keeps_its_original_row() {
-        // For any node the queue cannot place, its final position must still be
-        // on its original row.  We don't construct a forced-overflow scenario
-        // here (Warcraft data caps abilities per unit), so we exercise the
-        // invariant on whatever unresolved nodes the default keys may produce.
         let queue = default_queue();
         let graph = queue.graph();
         for &unresolved_index in queue.unresolved_nodes() {
@@ -1475,10 +1371,6 @@ mod cascade_queue_tests {
 
     #[test]
     fn gap_pull_does_not_displace_abilities_with_intentional_gaps() {
-        // Arav (Raven Form, Druid of the Talon) has default position (3,2).
-        // EDOT has Afae at (0,2), Acyc at (1,2), and Arav at (3,2) — column 2 is
-        // intentionally empty.  The gap-pull must not pull Arav leftward to (2,2)
-        // because no ability was ever displaced from (2,2): the gap is by design.
         let queue = default_queue();
         let graph = queue.graph();
         let Some(arav_index) = graph.find_node("Arav", GridRole::MainCommand) else {
@@ -1490,34 +1382,23 @@ mod cascade_queue_tests {
         assert!(
             final_column >= original_column,
             "Arav must not be gap-pulled leftward: started at column {original_column}, \
-             ended at column {final_column}"
+             ended at column {final_column}",
         );
     }
 
     #[test]
     fn resolving_rearranged_keys_leaves_no_position_collisions() {
-        // After the QWER/ASDF/YXCV rearrange, several toggle abilities (Burrow,
-        // Bear/Crow form, Submerge, Robo-Goblin, Web, Call to Arms) have an
-        // on-state or off-state sitting on top of a moved command. The conflict
-        // graph used to collapse an ability's on-state and off-state into one
-        // node tracking a single position, so the cascade only ever resolved one
-        // of the two and left the other colliding. Resolving must clear every
-        // position collision the collision reports can see, on-state and
-        // off-state alike.
         use crate::collision::cross_unit::CrossUnitCollisionReport;
         use crate::collision::unit_report::UnitCollisionReport;
         use crate::grid::layout::GridLayout;
-
         let mut custom_keys = rearranged_default_keys();
         custom_keys.resolve_conflicts();
-
         let cross = CrossUnitCollisionReport::compute(&custom_keys);
         assert!(
             cross.is_empty(),
             "cross-unit position collisions remain after resolve: {} group(s)",
             cross.position_groups().len(),
         );
-
         let layout = GridLayout::qwerty_grid();
         let intra = UnitCollisionReport::compute(&custom_keys, layout);
         let units_with_position_collisions: Vec<&str> = intra
@@ -1534,11 +1415,6 @@ mod cascade_queue_tests {
 
     #[test]
     fn pinned_command_overflowing_a_full_row_is_rehomed_not_left_unresolved() {
-        // After the QWER/ASDF/YXCV rearrange the bottom row is full of pinned
-        // high-carrier commands. On a worker the pinned build command CmdBuild
-        // (default 0,2) loses every fight down that row, overflows at 3,2, and
-        // used to be left unresolved because phase 2 skipped pinned nodes. It
-        // must instead keep searching the grid and land somewhere free.
         let custom_keys = rearranged_default_keys();
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);

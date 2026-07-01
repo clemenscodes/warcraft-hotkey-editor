@@ -3,15 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::inventory_drag_key::InventoryDragKey;
+use dioxus::prelude::*;
 use hooks::use_inventory_drag_overlay;
-use style::CLASS;
-
 pub use props::InventoryDragOverlayProps;
-
+use style::CLASS;
 assert_component!(InventoryDragOverlay);
 
 /// The card that follows the cursor while an inventory slot is dragged. Renders
@@ -23,10 +20,9 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
         return rsx! {};
     };
     rsx! {
-        div {
-            class: CLASS,
-            style: view.placement,
-            InventoryDragKey { label: view.label }
+        div { class: CLASS, style: view.placement,
+            InventoryDragKey { label: view
+                        .label }
         }
     }
 }

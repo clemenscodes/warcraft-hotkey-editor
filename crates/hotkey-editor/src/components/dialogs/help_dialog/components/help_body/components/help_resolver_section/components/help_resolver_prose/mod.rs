@@ -1,14 +1,11 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::help_dialog::components::help_body_text::HelpBodyText;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpResolverProseProps;
-
+use style::CLASS;
 assert_component!(HelpResolverProse);
 
 /// The plain-language walkthrough of how the resolver settles a clash, one
@@ -16,13 +13,9 @@ assert_component!(HelpResolverProse);
 #[component]
 pub fn HelpResolverProse(props: HelpResolverProseProps) -> Element {
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             for (index, paragraph) in props.paragraphs.iter().copied().enumerate() {
-                HelpBodyText {
-                    key: "{index}",
-                    "{paragraph}"
-                }
+                HelpBodyText { key: "{index}", "{paragraph}" }
             }
         }
     }

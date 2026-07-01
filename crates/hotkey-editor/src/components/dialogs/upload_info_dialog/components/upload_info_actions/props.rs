@@ -1,7 +1,6 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialogProps;
 use crate::services::files::upload::UploadPicker;
+use dioxus::prelude::*;
 
 /// The two action handlers, built from the dialog props. Cancel closes the
 /// dialog; choose-file closes it and opens the native file picker.

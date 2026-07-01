@@ -1,9 +1,7 @@
-use dioxus::prelude::*;
-use warcraft_api::UnitKind;
-
 use super::props::UnitCardProps;
 use super::style;
 use crate::services::focus::modality::FocusModality;
+use dioxus::prelude::*;
 
 /// The card's shaped view: its full class string (base plus the mobile carousel
 /// filter for its kind), the kind data attribute, and the select handlers.
@@ -19,7 +17,7 @@ pub(super) struct UnitCardModel {
 pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let unit_kind = props.unit_kind;
     let filter = style::filter_class(unit_kind);
-    let base = style::CLASS;
+    let base = style::CLASS.to_library_class();
     let class = format!("{base} {filter}");
     let kind_attr = super::super::unit_kind_data_attr(unit_kind);
     let mut selected_unit_id = props.selected_unit_id;

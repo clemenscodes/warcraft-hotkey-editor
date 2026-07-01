@@ -1,10 +1,8 @@
-use std::collections::HashMap;
-
-use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
-
 use super::props::SlotButtonProps;
 use super::state::SlotButtonState;
+use dioxus::prelude::*;
+use std::collections::HashMap;
+use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
 
 /// Everything the slot's markup needs, already shaped: its visual state and
 /// compact flag, the key label and conflict tooltip, whether its picker is open
@@ -33,7 +31,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
     let lookup_id = props.section_id.clone();
-
     let read_guard = loaded_keys.read();
     let effective = EffectiveBinding::resolve_from_file(
         read_guard.as_ref(),
@@ -42,7 +39,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
         default_modifier,
     );
     drop(read_guard);
-
     let map_guard = binding_map.read();
     let collisions = map_guard.collisions_for(&lookup_id, effective.key(), effective.modifier());
     let is_conflict = !collisions.is_empty();
@@ -57,7 +53,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     };
     let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier());
     drop(map_guard);
-
     let is_editing = editing_section
         .read()
         .as_deref()
@@ -78,7 +73,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let compact = props.compact;
     let compact_attr = if compact { "true" } else { "false" };
     let current_code = effective.key();
-
     let section_id_for_click = lookup_id.clone();
     let section_id_for_pick = lookup_id.clone();
     let on_click = EventHandler::new(move |_event: MouseEvent| {
@@ -92,7 +86,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
-
     SlotButtonModel {
         state,
         compact,

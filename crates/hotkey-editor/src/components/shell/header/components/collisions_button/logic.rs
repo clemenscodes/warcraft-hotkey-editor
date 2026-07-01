@@ -1,13 +1,11 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::CollisionSummary;
-
+use super::state::CollisionState;
+use super::style;
 use crate::components::shared::icons::{ICON_COLLISIONS, ICON_COLLISIONS_CLEAR};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::styling::ClassList;
-
-use super::state::CollisionState;
-use super::style;
+use dioxus::prelude::*;
+use warcraft_keybinds::CollisionSummary;
 
 /// Everything the button renders, shaped once from the domain-computed collision
 /// summary: the styled class for its state, each collision class's count

@@ -1,11 +1,6 @@
+use crate::classes;
 use warcraft_api::UnitKind;
 
-use crate::classes;
-
-// A selectable unit in the list. On the sidebar it is a full-width row (icon | text);
-// selected takes the inherited race color. In the mobile carousel it becomes a
-// fixed-size snap tile. The race color is inherited from `.main-content[data-race]`
-// via `var(--race-color)`.
 const BASE: &[&str] = &[
     "flex",
     "items-center",
@@ -36,6 +31,7 @@ const BASE: &[&str] = &[
     "data-[selected=true]:text-[color:var(--race-color,#ffce63)]",
     "data-[selected=true]:shadow-[0_0_8px_var(--race-color-soft,rgba(255,206,99,0.3))]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:flex-[1_0_auto]",
     "mobile:flex-row",
@@ -56,6 +52,7 @@ const MOBILE: &[&str] = &[
     "mobile:data-[selected=true]:border-[color:var(--race-color,#ffce63)]",
     "mobile:data-[selected=true]:shadow-[0_0_10px_var(--race-color-soft,rgba(255,206,99,0.3))]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:flex-[1_0_auto]",
     "tablet:flex-row",
@@ -76,17 +73,15 @@ const TABLET: &[&str] = &[
     "tablet:data-[selected=true]:border-[color:var(--race-color,#ffce63)]",
     "tablet:data-[selected=true]:shadow-[0_0_10px_var(--race-color-soft,rgba(255,206,99,0.3))]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
-
-// In the mobile carousel, cards of every category share one strip; when search is
-// inactive only the active category's cards show. Each card hides itself when the
-// container's active category is one of the OTHER three. Keyed off the `.unit-list`
-// group's data attributes.
 const HERO_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=soldier]]:hidden mobile:group-[[data-search-active=false][data-active-category=worker]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=soldier]]:hidden tablet:group-[[data-search-active=false][data-active-category=worker]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";
 const SOLDIER_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=hero]]:hidden mobile:group-[[data-search-active=false][data-active-category=worker]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=hero]]:hidden tablet:group-[[data-search-active=false][data-active-category=worker]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";
 const WORKER_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=hero]]:hidden mobile:group-[[data-search-active=false][data-active-category=soldier]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=hero]]:hidden tablet:group-[[data-search-active=false][data-active-category=soldier]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";

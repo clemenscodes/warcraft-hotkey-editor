@@ -1,11 +1,10 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::HotkeyToken;
-
 use super::super::super::GridTileProps;
 use super::super::super::GridTileState;
 use super::super::super::TileChrome;
 use super::super::hotkey_badge::HotkeyBadgeState;
 use super::state::EmptyTileState;
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
 
 /// An empty command slot: the position's hotkey badge and the shared tile chrome.
 /// During a drag it can become a drop target (or a blocked one).

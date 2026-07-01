@@ -311,8 +311,6 @@ pub(super) static KEYBOARD_ROWS: &[&[BoardKey]] = &[
             label: "→",
         },
     ],
-    // VK_XBUTTON1 (5, back) and VK_XBUTTON2 (6, forward) — confirmed against
-    // a CustomKeys.txt exported by the in-game hotkey editor.
     &[
         BoardKey {
             code: KeyCode::Mouse(MouseButton::Back),

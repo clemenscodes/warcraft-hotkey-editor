@@ -1,7 +1,6 @@
+use super::state::HotkeyBadgeState;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
-
-use super::state::HotkeyBadgeState;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyBadgeProps {

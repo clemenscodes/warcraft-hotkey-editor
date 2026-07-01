@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::state::UnitCardIdState;
+use dioxus::prelude::*;
 
 /// The unit id text plus whether its card is selected (which tints it).
 #[derive(Props, Clone, PartialEq)]

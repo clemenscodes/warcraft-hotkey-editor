@@ -1,18 +1,18 @@
-use dioxus::prelude::*;
+use super::components::burger_drawer::BurgerDrawerProps;
+use super::components::burger_menu_item::{BurgerItemState, BurgerMenuItemProps};
+use super::props::BurgerMenuProps;
 
 use crate::components::shared::icons::{
     ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_HELP, ICON_PREVIEW, ICON_REDO, ICON_RESOLVE,
     ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
+
 use crate::services::files::download::BlobDownload;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::overlay_state::OverlayState;
 use crate::services::undo::UndoHistory;
-
-use super::components::burger_drawer::BurgerDrawerProps;
-use super::components::burger_menu_item::{BurgerItemState, BurgerMenuItemProps};
-use super::props::BurgerMenuProps;
+use dioxus::prelude::*;
 
 /// The already-shaped controller state the body renders: the drawer open flags,
 /// the toggle and download handlers, and the fully-built drawer props (primary
@@ -42,21 +42,17 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
     let mut burger_open = use_signal::<bool>(|| false);
     let mut upload_info_open = use_signal::<bool>(|| false);
     let mut download_info_open = use_signal::<bool>(|| false);
-
     let has_loaded_file = loaded_keys.read().is_some();
     let preview_active = preview_open();
     let system_hotkeys_active = system_hotkeys_open();
-
     let history = use_context::<UndoHistory>();
     let can_undo = history.can_undo();
     let can_redo = history.can_redo();
-
     let toggle = EventHandler::new(move |_event: MouseEvent| {
         let next = !*burger_open.read();
         burger_open.set(next);
     });
     let close = EventHandler::new(move |_event: MouseEvent| burger_open.set(false));
-
     let toggle_layout = EventHandler::new(move |_event: MouseEvent| {
         let next = !*layout_dialog_open.read();
         layout_dialog_open.set(next);
@@ -111,7 +107,6 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
         };
         BlobDownload::trigger("CustomKeys.txt", &serialized);
     });
-
     let layout = BurgerMenuItemProps {
         icon: ICON_GRID,
         label: String::from("Grid Layout"),
@@ -125,7 +120,6 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
         aria_label: Some("Edit global hotkey layout"),
         onclick: toggle_layout,
     };
-
     let mut items: Vec<BurgerMenuItemProps> = Vec::new();
     let undo_item = BurgerMenuItemProps {
         icon: ICON_UNDO,
@@ -260,13 +254,11 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
         onclick: open_help,
     };
     items.push(help_item);
-
     let drawer = BurgerDrawerProps {
         on_close: close,
         layout,
         items,
     };
-
     BurgerMenuView {
         burger_open,
         upload_info_open,

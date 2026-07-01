@@ -1,8 +1,6 @@
-use dioxus::prelude::*;
-
-use warcraft_keybinds::ResearchBehavior;
-
 use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use dioxus::prelude::*;
+use warcraft_keybinds::ResearchBehavior;
 
 /// A research menu: positions and hotkeys live in the secondary namespace.
 #[component]

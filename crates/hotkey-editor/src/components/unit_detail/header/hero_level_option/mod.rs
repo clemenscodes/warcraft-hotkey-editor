@@ -25,11 +25,6 @@ pub fn HeroLevelOption(props: HeroLevelOptionProps) -> Element {
         level_picker_open.set(false);
     };
     rsx! {
-        button {
-            class: option_class,
-            r#type: "button",
-            onclick: handle_select,
-            "Level {level_index}"
-        }
+        button { class: option_class, r#type: "button", onclick: handle_select, "Level {level_index}" }
     }
 }

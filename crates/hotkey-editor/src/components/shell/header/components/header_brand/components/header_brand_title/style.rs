@@ -13,6 +13,7 @@ const BASE: &[&str] = &[
     "text-left",
     "[text-shadow:1px_1px_0_rgba(0,0,0,0.92),0_0_14px_rgba(255,206,99,0.18)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:text-[clamp(15px,4.5vw,22px)]",
     "mobile:leading-[1.15]",
@@ -22,6 +23,7 @@ const MOBILE: &[&str] = &[
     "mobile:text-ellipsis",
     "mobile:whitespace-nowrap",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:text-[clamp(15px,4.5vw,22px)]",
     "tablet:leading-[1.15]",
@@ -31,9 +33,11 @@ const TABLET: &[&str] = &[
     "tablet:text-ellipsis",
     "tablet:whitespace-nowrap",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

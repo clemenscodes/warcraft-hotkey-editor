@@ -1,9 +1,6 @@
+use super::props::ButtonVariant;
 use crate::{classes, states};
 
-use super::props::ButtonVariant;
-
-// A WC3 action button in two weights. The shape is shared; the weight (primary =
-// gold on a blue gradient, secondary = muted until hovered) is a state overlay.
 const BASE: &[&str] = &[
     "inline-flex",
     "items-center",
@@ -18,14 +15,16 @@ const BASE: &[&str] = &[
     "select-none",
     "[transition:all_120ms]",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
 const PRIMARY: &[&str] = &[
     "border",
@@ -36,6 +35,7 @@ const PRIMARY: &[&str] = &[
     "hover:[background:linear-gradient(180deg,#356dac_0%,#1f4a72_100%)]",
     "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.4)]",
 ];
+
 const SECONDARY: &[&str] = &[
     "border",
     "border-warcraft-blue",
@@ -46,5 +46,6 @@ const SECONDARY: &[&str] = &[
     "hover:text-warcraft-gold",
     "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.25)]",
 ];
-
-states! { ButtonVariant, Primary => PRIMARY, Secondary => SECONDARY }
+states! {
+    ButtonVariant, Primary => PRIMARY, Secondary => SECONDARY
+}

@@ -1,7 +1,6 @@
+use super::state::SystemKeyPickerKeyState;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
-
-use super::state::SystemKeyPickerKeyState;
 
 /// One key on the system board, fully shaped by the picker hook: the domain key it
 /// assigns, the label on its cap, its visual state, the tooltip text and its

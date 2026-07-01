@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::props::SystemHotkeysBreadcrumbsProps;
+use dioxus::prelude::*;
 
 /// The breadcrumbs' shaped view: the active category, the dropdown open signal and
 /// its `"true"`/`"false"` attribute string, the trigger caption, and the toggle

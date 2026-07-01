@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::system_key_picker_row::SystemKeyPickerRow;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::SystemKeyPickerColumnProps;
-
+use style::CLASS;
 assert_component!(SystemKeyPickerColumn);
 
 /// One column of the system keyboard board: a stack of key rows. The main keyboard
@@ -18,8 +15,7 @@ assert_component!(SystemKeyPickerColumn);
 pub fn SystemKeyPickerColumn(props: SystemKeyPickerColumnProps) -> Element {
     let rows = props.rows;
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             for row in rows {
                 SystemKeyPickerRow { ..row }
             }

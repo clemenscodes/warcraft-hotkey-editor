@@ -2,16 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::help_legend_description::HelpLegendDescription;
 use components::help_legend_icon::HelpLegendIcon;
 use components::help_legend_label::HelpLegendLabel;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpLegendRowProps;
-
+use style::CLASS;
 assert_component!(HelpLegendRow);
 
 /// One legend entry: a framed glyph beside its label and description.
@@ -21,8 +18,7 @@ pub fn HelpLegendRow(props: HelpLegendRowProps) -> Element {
     let label = props.label;
     let description = props.description;
     rsx! {
-        li {
-            class: CLASS,
+        li { class: CLASS,
             HelpLegendIcon { icon }
             span {
                 HelpLegendLabel { "{label}" }

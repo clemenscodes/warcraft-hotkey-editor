@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile, ResolvedTemplate};
-
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileProps;
 use crate::components::grid_editors::grid_editor::components::headed_grid::HeadedGridProps;
-
 use super::super::super::TemplateCardProps;
 
 /// The previews row's input: the resolved layout both mini-grids read from.
@@ -47,7 +45,7 @@ fn preview_tiles(source: &[RenderedTile]) -> [GridTileProps; COMMAND_GRID_TILE_C
         .unwrap_or_else(|list: Vec<GridTileProps>| {
             panic!(
                 "template preview grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
-                list.len()
+                list.len(),
             )
         })
 }

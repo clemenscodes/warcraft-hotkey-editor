@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::SystemHotkeysBreadcrumbsTriggerLabelProps;
-
+use style::CLASS;
 assert_component!(SystemHotkeysBreadcrumbsTriggerLabel);
 
 /// The active-category caption shown inside the dropdown trigger.

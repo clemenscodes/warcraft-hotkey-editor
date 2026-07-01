@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::components::footer_link_icon::FooterLinkIconProps;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct FooterLinkProps {

@@ -1,13 +1,11 @@
-use std::collections::HashSet;
-
-use dioxus::prelude::*;
-
 use crate::GALLERY_STYLES;
 use crate::frame_path::FramePath;
 use crate::registry::StoryRegistry;
 use crate::story::Story;
 use crate::view::GalleryView;
 use crate::viewport::ViewportPreset;
+use dioxus::prelude::*;
+use std::collections::HashSet;
 
 /// A component and the subset of its stories that pass the current search,
 /// precomputed so a group with no surviving stories can be skipped before its
@@ -32,13 +30,11 @@ pub fn Gallery(props: GalleryProps) -> Element {
     let base_path = props.base_path;
     let on_change = props.on_change;
     let initial_view = props.initial_view;
-
     let initial_story = initial_view.story().map(str::to_string);
     let initial_query = initial_view.query().to_string();
     let initial_width = initial_view.viewport_width();
     let initial_height = initial_view.viewport_height();
     let initial_hidden = initial_view.list_hidden();
-
     let starting = initial_story.or_else(|| registry.first_id());
     let mut selected = use_signal::<Option<String>>(move || starting.clone());
     let mut width = use_signal::<u32>(move || initial_width);
@@ -51,7 +47,6 @@ pub fn Gallery(props: GalleryProps) -> Element {
     let mut query = use_signal::<String>(move || initial_query.clone());
     let mut expanded_components = use_signal::<HashSet<String>>(HashSet::new);
     let mut collapsed_groups = use_signal::<HashSet<String>>(HashSet::new);
-
     use_effect(move || {
         let current_story = selected.read().clone();
         let current_query = query.read().clone();
@@ -67,7 +62,6 @@ pub fn Gallery(props: GalleryProps) -> Element {
         );
         on_change.call(view);
     });
-
     let registry_for_expand = registry.clone();
     use_effect(move || {
         let current_story = selected.read().clone();
@@ -80,19 +74,13 @@ pub fn Gallery(props: GalleryProps) -> Element {
             expanded_components.write().insert(key);
         }
     });
-
     let groups = registry.groups();
     let presets = ViewportPreset::defaults();
     let needle = query().to_lowercase();
-
     rsx! {
         document::Stylesheet { href: GALLERY_STYLES }
         div {
-            class: if dragging() {
-                "gallery-shell gallery-shell-dragging"
-            } else {
-                "gallery-shell"
-            },
+            class: if dragging() { "gallery-shell gallery-shell-dragging" } else { "gallery-shell" },
             onpointermove: move |event| {
                 if dragging() {
                     let position = event.client_coordinates().x;
@@ -101,9 +89,12 @@ pub fn Gallery(props: GalleryProps) -> Element {
                 }
             },
             onpointerup: move |_| dragging.set(false),
-            onpointerleave: move |_| dragging.set(false),
+            onpointerleave: move | _ |
+                    dragging.set(false),
             if !sidebar_hidden() {
-                nav { class: "gallery-sidebar", style: "width: {sidebar_width}px",
+                nav {
+                    class: "gallery-sidebar",
+                    style: "width: {sidebar_width}px",
                     input {
                         class: "gallery-search",
                         r#type: "search",
@@ -125,8 +116,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                             for component in group.components() {
                                 let component_name = component.name();
                                 let component_lower = component_name.to_lowercase();
-                                let component_matches =
-                                    group_matches || component_lower.contains(&needle);
+                                let component_matches = group_matches || component_lower.contains(&needle);
                                 let visible_stories = component
                                     .stories()
                                     .iter()
@@ -178,14 +168,12 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                     let component_name = entry.name;
                                                     let collapsible = entry.collapsible;
                                                     let component_stories = entry.stories;
-                                                    let component_key =
-                                                        format!("{group_name}/{component_name}");
+                                                    let component_key = format!("{group_name}/{component_name}");
                                                     if !collapsible {
                                                         let story = component_stories[0];
                                                         let story_id = story.id();
                                                         let click_id = story_id.clone();
-                                                        let is_selected = selected.read().as_deref()
-                                                            == Some(story_id.as_str());
+                                                        let is_selected = selected.read().as_deref() == Some(story_id.as_str());
                                                         let item_class = if is_selected {
                                                             "gallery-item gallery-leaf selected"
                                                         } else {
@@ -208,15 +196,11 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                             .iter()
                                                             .any(|story| {
                                                                 let id = story.id();
-                                                                selected_now.as_deref()
-                                                                    == Some(id.as_str())
+                                                                selected_now.as_deref() == Some(id.as_str())
                                                             });
-                                                        let in_set = expanded_components
-                                                            .read()
-                                                            .contains(&component_key);
+                                                        let in_set = expanded_components.read().contains(&component_key);
                                                         let component_open = searching || in_set;
-                                                        let chevron =
-                                                            if component_open { "▾" } else { "▸" };
+                                                        let chevron = if component_open { "▾" } else { "▸" };
                                                         let header_class = if has_selected_child {
                                                             "gallery-component-header active"
                                                         } else {
@@ -224,17 +208,13 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                         };
                                                         let toggle_key = component_key.clone();
                                                         let first_story = component_stories.first();
-                                                        let first_id =
-                                                            first_story.map(|story| story.id());
+                                                        let first_id = first_story.map(|story| story.id());
                                                         rsx! {
-                                                            div {
-                                                                key: "{component_key}",
-                                                                class: "gallery-component",
+                                                            div { key: "{component_key}", class: "gallery-component",
                                                                 button {
                                                                     class: header_class,
                                                                     onclick: move |_| {
-                                                                        let mut set =
-                                                                            expanded_components.write();
+                                                                        let mut set = expanded_components.write();
                                                                         if set.contains(&toggle_key) {
                                                                             set.remove(&toggle_key);
                                                                         } else {
@@ -242,48 +222,33 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                                             set.insert(key);
                                                                             drop(set);
                                                                             if let Some(id) = &first_id {
-                                                                                let next =
-                                                                                    Some(id.clone());
+                                                                                let next = Some(id.clone());
                                                                                 selected.set(next);
                                                                             }
                                                                         }
                                                                     },
-                                                                    span {
-                                                                        class: "gallery-chevron",
-                                                                        "{chevron}"
-                                                                    }
+                                                                    span { class: "gallery-chevron", "{chevron}" }
                                                                     "{component_name}"
                                                                 }
                                                                 if component_open {
                                                                     for story in component_stories {
                                                                         {
                                                                             let story_id = story.id();
-                                                                            let click_id =
-                                                                                story_id.clone();
+                                                                            let click_id = story_id.clone();
                                                                             let label = story.label();
-                                                                            let is_selected = selected
-                                                                                .read()
-                                                                                .as_deref()
-                                                                                == Some(
-                                                                                    story_id.as_str(),
-                                                                                );
-                                                                            let item_class =
-                                                                                if is_selected {
-                                                                                    "gallery-item gallery-variant selected"
-                                                                                } else {
-                                                                                    "gallery-item gallery-variant"
-                                                                                };
+                                                                            let is_selected = selected.read().as_deref() == Some(story_id.as_str());
+                                                                            let item_class = if is_selected {
+                                                                                "gallery-item gallery-variant selected"
+                                                                            } else {
+                                                                                "gallery-item gallery-variant"
+                                                                            };
                                                                             rsx! {
                                                                                 button {
                                                                                     key: "{story_id}",
                                                                                     class: item_class,
                                                                                     onclick: move |_| {
-                                                                                        let next = Some(
-                                                                                            click_id
-                                                                                                .clone(),
-                                                                                        );
-                                                                                        selected
-                                                                                            .set(next);
+                                                                                        let next = Some(click_id.clone());
+                                                                                        selected.set(next);
                                                                                     },
                                                                                     "{label}"
                                                                                 }
@@ -387,9 +352,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                             let scale = if unmeasured { 1.0 } else { fitted };
                             let scaled_width = frame_width * scale;
                             let scaled_height = frame_height * scale;
-                            let scaler_style = format!(
-                                "width: {scaled_width}px; height: {scaled_height}px",
-                            );
+                            let scaler_style = format!("width: {scaled_width}px; height: {scaled_height}px");
                             let frame_style = format!(
                                 "transform: scale({scale}); transform-origin: top left",
                             );

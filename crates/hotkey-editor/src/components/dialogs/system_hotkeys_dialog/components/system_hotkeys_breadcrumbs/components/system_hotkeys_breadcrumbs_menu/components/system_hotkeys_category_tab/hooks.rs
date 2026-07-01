@@ -1,7 +1,6 @@
-use dioxus::prelude::*;
-
 use super::props::SystemHotkeysCategoryTabProps;
 use super::state::SystemHotkeysCategoryTabState;
+use dioxus::prelude::*;
 
 /// The tab's shaped view: its state, caption, active flag (for aria), whether a
 /// separator follows, and the select handler.

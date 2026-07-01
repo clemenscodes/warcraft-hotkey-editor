@@ -111,11 +111,15 @@ mod tests {
     use dioxus::prelude::*;
 
     fn first() -> Element {
-        rsx! { div {} }
+        rsx! {
+            div {}
+        }
     }
 
     fn second() -> Element {
-        rsx! { span {} }
+        rsx! {
+            span {}
+        }
     }
 
     fn registry() -> StoryRegistry {
@@ -161,7 +165,7 @@ mod tests {
     fn first_id_is_first_registered() {
         assert_eq!(
             registry().first_id(),
-            Some("Buttons/Export buttons/loaded".to_string())
+            Some("Buttons/Export buttons/loaded".to_string()),
         );
     }
 }

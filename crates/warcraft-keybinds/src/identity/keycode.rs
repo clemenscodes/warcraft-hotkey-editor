@@ -561,7 +561,9 @@ impl fmt::Display for KeyCode {
         match self {
             Self::Letter(letter) => write!(formatter, "{}", letter.character()),
             Self::Digit(digit) => write!(formatter, "{}", digit.value()),
-            Self::Function(function_key) => write!(formatter, "F{}", function_key.number()),
+            Self::Function(function_key) => {
+                write!(formatter, "F{}", function_key.number())
+            }
             Self::Numpad(numpad_key) => formatter.write_str(numpad_key.label()),
             Self::Punctuation(punctuation) => formatter.write_str(punctuation.label()),
             Self::Mouse(MouseButton::Back) => formatter.write_str("Mouse4"),

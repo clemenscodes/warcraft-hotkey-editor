@@ -3,15 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::system_hotkeys_list_entry::SystemHotkeysListEntry;
+use dioxus::prelude::*;
 use hooks::use_system_hotkeys_list_view;
-use style::CLASS;
-
 pub use props::SystemHotkeysListViewProps;
-
+use style::CLASS;
 assert_component!(SystemHotkeysListView);
 
 /// A plain list editor: one row per hotkey in the category, each a binding name
@@ -24,8 +21,7 @@ pub fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
     let binding_map = use_system_hotkeys_list_view(&props);
     let entries = category.entries();
     rsx! {
-        ul {
-            class: CLASS,
+        ul { class: CLASS,
             for entry in entries {
                 SystemHotkeysListEntry {
                     key: "{entry.section_id()}",

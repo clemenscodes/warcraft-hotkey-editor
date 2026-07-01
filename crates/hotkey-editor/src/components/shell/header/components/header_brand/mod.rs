@@ -3,17 +3,13 @@ mod data;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
 use components::header_brand_decoration_leading::HeaderBrandDecorationLeading;
 use components::header_brand_decoration_trailing::HeaderBrandDecorationTrailing;
 use components::header_brand_title::HeaderBrandTitle;
-
+use dioxus::prelude::*;
 pub use props::HeaderBrandProps;
-
+use style::CLASS;
 assert_component!(HeaderBrand);
 
 /// The app's wordmark: the title flanked by mirrored gold flourishes, the whole

@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
@@ -10,9 +9,11 @@ use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::syste
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_breadcrumbs::components::system_hotkeys_breadcrumbs_menu::components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_hotkeys_view::InventoryHotkeysView;
+
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_grid::{
     InventoryCell, InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
+
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::key_capture_cell::KeyCaptureCell;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::SystemHotkeysListView;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
@@ -175,7 +176,8 @@ fn key_picker_dialog_open() -> Element {
             current_code,
             conflicts,
             open,
-            on_pick: move |_| {},
+            on_pick: move | _
+                    | {},
             on_close: move |_| {},
         }
     }

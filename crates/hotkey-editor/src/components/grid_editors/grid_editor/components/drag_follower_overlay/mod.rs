@@ -1,10 +1,8 @@
 pub mod components;
 mod props;
 
-use dioxus::prelude::*;
-
 use components::drag_follower_ghost::{DragFollowerGhost, DragFollowerGhostProps};
-
+use dioxus::prelude::*;
 pub use props::DragFollowerOverlayProps;
 
 #[component]

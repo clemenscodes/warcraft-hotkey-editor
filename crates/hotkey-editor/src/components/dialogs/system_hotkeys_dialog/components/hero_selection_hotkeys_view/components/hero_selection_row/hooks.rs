@@ -1,7 +1,6 @@
+use super::props::HeroSelectionRowProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::SystemBindingMap;
-
-use super::props::HeroSelectionRowProps;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 

@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpTermProps;
-
+use style::CLASS;
 assert_component!(HelpTerm);
 
 /// A glossary term heading. A leaf: the entry passes the term as children.
@@ -15,9 +12,6 @@ assert_component!(HelpTerm);
 pub fn HelpTerm(props: HelpTermProps) -> Element {
     let term = props.children.clone();
     rsx! {
-        p {
-            class: CLASS,
-            {term}
-        }
+        p { class: CLASS, {term} }
     }
 }

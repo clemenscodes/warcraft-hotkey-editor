@@ -15,6 +15,7 @@ const BASE: &[&str] = &[
     "text-white/60",
     "select-none",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:pt-2",
     "mobile:px-[max(0.5rem,env(safe-area-inset-left))]",
@@ -23,6 +24,7 @@ const MOBILE: &[&str] = &[
     "mobile:leading-[1.3]",
     "mobile:text-[11px]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:pt-2",
     "tablet:px-[max(0.5rem,env(safe-area-inset-left))]",
@@ -32,9 +34,11 @@ const TABLET: &[&str] = &[
     "tablet:text-xs",
     "tablet:mt-auto",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

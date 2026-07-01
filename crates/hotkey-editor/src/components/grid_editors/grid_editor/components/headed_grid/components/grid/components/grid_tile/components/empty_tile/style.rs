@@ -1,6 +1,5 @@
-use crate::{classes, states};
-
 use super::state::EmptyTileState;
+use crate::{classes, states};
 
 const BASE: &[&str] = &[
     "relative",
@@ -15,14 +14,16 @@ const BASE: &[&str] = &[
     "outline-none",
     "[body:has([data-dragging-source=true])_&]:transition-none",
 ];
+
 const MOBILE: &[&str] = &["mobile:max-w-[116px]"];
 const TABLET: &[&str] = &["tablet:max-w-[128px]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &["desktop:max-w-[156px]"];
 const QHD: &[&str] = &["qhd:max-w-[172px]"];
 const UHD: &[&str] = &["uhd:max-w-[200px]"];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
 const EMPTY: &[&str] = &[
     "[background:linear-gradient(135deg,rgba(15,30,55,0.85)_0%,rgba(8,14,30,0.85)_100%)]",
@@ -31,6 +32,7 @@ const EMPTY: &[&str] = &[
     "data-[drag-over=true]:border-warcraft-gold",
     "data-[drag-over=true]:border-dashed",
 ];
+
 const DROP_TARGET: &[&str] = &[
     "[background:linear-gradient(135deg,rgba(15,30,55,0.85)_0%,rgba(8,14,30,0.85)_100%)]",
     "border-[#4a7090]",
@@ -42,6 +44,7 @@ const DROP_TARGET: &[&str] = &[
     "data-[drag-over=true]:border-warcraft-gold",
     "data-[drag-over=true]:border-dashed",
 ];
+
 const BLOCKED_DROP_TARGET: &[&str] = &[
     "[background:rgba(200,55,40,0.04)]",
     "border-[rgba(220,70,55,0.55)]",
@@ -51,10 +54,7 @@ const BLOCKED_DROP_TARGET: &[&str] = &[
     "data-[drag-over=true]:border-[rgba(255,95,75,0.85)]",
     "data-[drag-over=true]:[background:rgba(200,55,40,0.1)]",
 ];
-
 states! {
-    EmptyTileState,
-    Empty => EMPTY,
-    DropTarget => DROP_TARGET,
-    BlockedDropTarget => BLOCKED_DROP_TARGET,
+    EmptyTileState, Empty => EMPTY, DropTarget => DROP_TARGET, BlockedDropTarget =>
+    BLOCKED_DROP_TARGET,
 }

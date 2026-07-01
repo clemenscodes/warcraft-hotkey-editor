@@ -31,6 +31,7 @@ const BASE: &[&str] = &[
     "focus-visible:outline-none",
     "focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:w-[22px]",
     "mobile:h-[22px]",
@@ -40,6 +41,7 @@ const MOBILE: &[&str] = &[
     "mobile:checked:after:mt-[-2px]",
     "mobile:checked:after:[border-width:0_3px_3px_0]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:w-[22px]",
     "tablet:h-[22px]",
@@ -49,9 +51,11 @@ const TABLET: &[&str] = &[
     "tablet:checked:after:mt-[-2px]",
     "tablet:checked:after:[border-width:0_3px_3px_0]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

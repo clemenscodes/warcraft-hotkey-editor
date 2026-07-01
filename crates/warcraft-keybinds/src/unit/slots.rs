@@ -1,17 +1,12 @@
-use std::collections::HashMap;
-
-use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectMeta};
-
-use warcraft_database::{BuildingTraits, CommandCatalog, UNIT_UPGRADE_SWAPS};
-
 use crate::GridCoordinate;
 use crate::identity::slot::{CommandCard, GridSlotId};
+use std::collections::HashMap;
+use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_database::{BuildingTraits, CommandCatalog, UNIT_UPGRADE_SWAPS};
 
 const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Apit"), WarcraftObjectId::new("Aall")];
-// Aent is "Entangle Gold Mine": a rooted tree entangles a nearby mine, so the
-// ability only exists in the rooted form and must not appear on the uprooted
-// menu.
+
 const ROOTED_ONLY_ABILITY_IDS: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Anei"), WarcraftObjectId::new("Aent")];
 
@@ -20,13 +15,6 @@ struct HiddenUnitAbility {
     ability_id: WarcraftObjectId,
 }
 
-// Phoenix Fire (Apxf) is a permanent self-damaging aura on the Phoenix (hphx).
-// The game data lists it as an ability of the unit, but the in-game command card
-// never renders a button for it, so hide it explicitly to match the live client.
-//
-// Load (Aenc) is listed on the Entangled Gold Mine (egol), but the in-game command
-// card never renders a button for it; the mine only shows Unload All (Adri) once a
-// Wisp is inside. Hide it explicitly to match the live client.
 const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[
     HiddenUnitAbility {
         unit_id: WarcraftObjectId::new("hphx"),
@@ -40,13 +28,18 @@ const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[
 
 pub trait UnitCommandSlots {
     fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard;
+
     fn build_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+
     fn research_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+
     fn uprooted_menu(&self, unit_id: WarcraftObjectId) -> Option<CommandCard>;
+
     fn train_unit_upgrades(
         &self,
         unit_id: WarcraftObjectId,
     ) -> HashMap<WarcraftObjectId, WarcraftObjectId>;
+
     fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId>;
 }
 
@@ -140,7 +133,6 @@ impl UnitCommandSlots for WarcraftDatabase {
         let unit_kind = CommandCatalog::effective_kind(unit_meta);
         let regular_abilities = unit_meta.abilities();
         let hero_abilities = unit_meta.hero_abilities();
-
         let primary_train_slots = if unit_kind == UnitKind::Building {
             unit_meta.trains()
         } else {
@@ -161,9 +153,7 @@ impl UnitCommandSlots for WarcraftDatabase {
         } else {
             &[]
         };
-
         let mut card = CommandCard::empty();
-
         for command_name in primary_commands {
             let command_object = self.by_id(command_name);
             let command_has_icon =
@@ -177,7 +167,6 @@ impl UnitCommandSlots for WarcraftDatabase {
             let command_slot = GridSlotId::command(command_name);
             card.place(slot_position, command_slot);
         }
-
         let mut unplaced_train_slots: Vec<GridSlotId> = Vec::new();
         for trained_id in primary_train_slots {
             let trained_str = trained_id.value();
@@ -209,7 +198,6 @@ impl UnitCommandSlots for WarcraftDatabase {
         for unplaced_slot in unplaced_train_slots {
             card.place_at_next_empty(unplaced_slot);
         }
-
         let mut unplaced_research_slots: Vec<GridSlotId> = Vec::new();
         for research_id in primary_research_slots {
             let research_str = research_id.value();
@@ -234,7 +222,6 @@ impl UnitCommandSlots for WarcraftDatabase {
         for unplaced_slot in unplaced_research_slots {
             card.place_at_next_empty(unplaced_slot);
         }
-
         let mut unplaced_sell_item_slots: Vec<GridSlotId> = Vec::new();
         for sell_item_id in sell_items {
             let sell_item_str = sell_item_id.value();
@@ -259,7 +246,6 @@ impl UnitCommandSlots for WarcraftDatabase {
         for unplaced_slot in unplaced_sell_item_slots {
             card.place_at_next_empty(unplaced_slot);
         }
-
         let mut unplaced_sell_unit_slots: Vec<GridSlotId> = Vec::new();
         for sell_unit_id in sell_units {
             let sell_unit_str = sell_unit_id.value();
@@ -284,18 +270,15 @@ impl UnitCommandSlots for WarcraftDatabase {
         for unplaced_slot in unplaced_sell_unit_slots {
             card.place_at_next_empty(unplaced_slot);
         }
-
         let is_uprootable = BuildingTraits::can_uproot(unit_id_str);
         let host_is_burrowed = BuildingTraits::is_burrowed_form(unit_id_str);
         let host_is_in_alt_state = BuildingTraits::unit_starts_in_toggle_alt_state(unit_id_str);
-
         let mut occupied_on_positions: Vec<GridCoordinate> = Vec::new();
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
             if let Some(on_position) = slot_position_from_database(self, ability_id.value()) {
                 occupied_on_positions.push(on_position);
             }
         }
-
         let mut unplaced_ability_slots: Vec<GridSlotId> = Vec::new();
         for ability_id in regular_abilities.iter().chain(hero_abilities.iter()) {
             let ability_str = ability_id.value();
@@ -353,21 +336,6 @@ impl UnitCommandSlots for WarcraftDatabase {
                     if !card.place(ability_position, ability_slot) {
                         unplaced_ability_slots.push(ability_slot);
                     }
-                    // A building's militia toggle shows two permanent buttons at
-                    // different cells: the Town Hall's Call To Arms (on) and Back
-                    // To Work (off) are both always present, so emit the off-state
-                    // button alongside the on-state one. This is only true for
-                    // buildings: the Peasant carries the same Amil data, but its
-                    // Call To Arms morphs the worker into a Militia unit, so Back
-                    // To Work lives on the Militia's card, not the Peasant's — a
-                    // worker must show only the on-state button. Morph/alt-state
-                    // toggles already chose the off-state slot above.
-                    //
-                    // Never drop the off-state button onto a cell another of this
-                    // unit's abilities already owns. Some buildings (e.g. the
-                    // Entangled Gold Mine's Aenc) carry a stray off-position that
-                    // lands on a real ability, which would manufacture an
-                    // unresolvable collision out of two pinned siblings.
                     if !use_off_state
                         && unit_kind == UnitKind::Building
                         && let Some(off_position) = off_state_position
@@ -388,7 +356,6 @@ impl UnitCommandSlots for WarcraftDatabase {
         for unplaced_slot in unplaced_ability_slots {
             card.place_at_next_empty(unplaced_slot);
         }
-
         if unit_kind == UnitKind::Hero
             && !hero_abilities.is_empty()
             && let Some(select_skill) = CommandCatalog::known_command("CmdSelectSkill")
@@ -404,7 +371,6 @@ impl UnitCommandSlots for WarcraftDatabase {
                 }
             }
         }
-
         card
     }
 
@@ -702,10 +668,6 @@ mod unit_slots_tests {
         assert!(has_move, "uprooted Tree of Life must have CmdMove");
     }
 
-    // Regression: the Corrupted Tree of Ages is an uprootable building, so its
-    // "Eat Tree" (Aeat) ability belongs to the uprooted form only. If the unit is
-    // not recognised as uprootable, Aeat lands on the rooted command card and
-    // falsely collides with the upgrade ability (causing wrong cascades).
     #[test]
     fn corrupted_tree_rooted_card_excludes_eat_tree() {
         let unit_id = WarcraftObjectId::new("ncta");
@@ -715,13 +677,10 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Aeat"));
         assert!(
             !has_eat_tree,
-            "rooted Corrupted Tree of Ages must not contain Eat Tree (it is uprooted-only)"
+            "rooted Corrupted Tree of Ages must not contain Eat Tree (it is uprooted-only)",
         );
     }
 
-    // Entangle Gold Mine (Aent) lets a *rooted* tree entangle a nearby gold
-    // mine; an uprooted (walking) tree cannot cast it. It must appear on the
-    // rooted command card but never on the uprooted menu.
     #[test]
     fn tree_of_life_rooted_card_contains_entangle_gold_mine() {
         let unit_id = WarcraftObjectId::new("etol");
@@ -731,7 +690,7 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Aent"));
         assert!(
             has_entangle,
-            "rooted Tree of Life must contain Entangle Gold Mine (Aent)"
+            "rooted Tree of Life must contain Entangle Gold Mine (Aent)",
         );
     }
 
@@ -746,7 +705,7 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Aent"));
         assert!(
             !has_entangle,
-            "uprooted Tree of Life must not contain Entangle Gold Mine (it is rooted-only)"
+            "uprooted Tree of Life must not contain Entangle Gold Mine (it is rooted-only)",
         );
     }
 
@@ -798,11 +757,11 @@ mod unit_slots_tests {
         );
         assert!(
             has_zeppelin,
-            "Goblin Lab command card must contain Goblin Zeppelin (nzep)"
+            "Goblin Lab command card must contain Goblin Zeppelin (nzep)",
         );
         assert!(
             has_shredder,
-            "Goblin Lab command card must contain Goblin Shredder (ngir)"
+            "Goblin Lab command card must contain Goblin Shredder (ngir)",
         );
     }
 
@@ -819,7 +778,7 @@ mod unit_slots_tests {
                 .any(|slot| slot.id().value().eq_ignore_ascii_case(sell_item_id));
             assert!(
                 present,
-                "Goblin Merchant command card must contain sell item {sell_item_id}"
+                "Goblin Merchant command card must contain sell item {sell_item_id}",
             );
         }
     }
@@ -846,14 +805,14 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Apxf"));
         assert!(
             !has_phoenix_fire,
-            "Phoenix (hphx) command card must hide Phoenix Fire (Apxf); the in-game client never shows it"
+            "Phoenix (hphx) command card must hide Phoenix Fire (Apxf); the in-game client never shows it",
         );
         let has_phoenix_summon = card
             .filled_slots()
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Ahpe"));
         assert!(
             has_phoenix_summon,
-            "Phoenix (hphx) command card must still contain its remaining ability Ahpe"
+            "Phoenix (hphx) command card must still contain its remaining ability Ahpe",
         );
     }
 
@@ -866,14 +825,14 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Aenc"));
         assert!(
             !has_load,
-            "Entangled Gold Mine (egol) command card must hide Load (Aenc); the in-game client only shows Unload All when a Wisp is inside"
+            "Entangled Gold Mine (egol) command card must hide Load (Aenc); the in-game client only shows Unload All when a Wisp is inside",
         );
         let has_unload_all = card
             .filled_slots()
             .any(|slot| slot.id().value().eq_ignore_ascii_case("Adri"));
         assert!(
             has_unload_all,
-            "Entangled Gold Mine (egol) command card must still contain Unload All (Adri)"
+            "Entangled Gold Mine (egol) command card must still contain Unload All (Adri)",
         );
     }
 
@@ -890,7 +849,7 @@ mod unit_slots_tests {
             .count();
         assert_eq!(
             abolish_count, 1,
-            "Forest Troll High Priest (nfsh) must have exactly one Abolish Magic ability, not both ACdm and ACd2"
+            "Forest Troll High Priest (nfsh) must have exactly one Abolish Magic ability, not both ACdm and ACd2",
         );
     }
 
@@ -906,11 +865,11 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("ACdm"));
         assert!(
             has_acd2,
-            "Forest Troll High Priest (nfsh) must have ACd2 (competitive balance Abolish Magic)"
+            "Forest Troll High Priest (nfsh) must have ACd2 (competitive balance Abolish Magic)",
         );
         assert!(
             !has_acdm,
-            "Forest Troll High Priest (nfsh) must not have ACdm (alternative mode variant)"
+            "Forest Troll High Priest (nfsh) must not have ACdm (alternative mode variant)",
         );
     }
 
@@ -927,7 +886,7 @@ mod unit_slots_tests {
             .count();
         assert_eq!(
             abolish_count, 1,
-            "Ice Troll High Priest (nith) must have exactly one Abolish Magic ability, not both ACdm and ACd2"
+            "Ice Troll High Priest (nith) must have exactly one Abolish Magic ability, not both ACdm and ACd2",
         );
     }
 
@@ -944,15 +903,10 @@ mod unit_slots_tests {
             .count();
         assert_eq!(
             frost_armor_count, 1,
-            "Ice Troll High Priest (nith) must have exactly one Frost Armor ability, not both ACfu and ACf2"
+            "Ice Troll High Priest (nith) must have exactly one Frost Armor ability, not both ACfu and ACf2",
         );
     }
 
-    // Regression (Town Hall / Keep / Castle militia): the Call To Arms toggle
-    // (Amic) places its on-state button ("Call To Arms") at one cell and its
-    // off-state button ("Back To Work") at a *different* cell. Both are
-    // permanent buttons on the building, so the command card must contain the
-    // on-state Ability(Amic) and the off-state AbilityOff(Amic).
     #[test]
     fn human_main_hall_tiers_show_both_militia_buttons() {
         for hall_id in ["htow", "hkee", "hcas"] {
@@ -966,20 +920,15 @@ mod unit_slots_tests {
                 .any(|slot| matches!(slot, GridSlotId::AbilityOff(id) if id.value() == "Amic"));
             assert!(
                 has_call_to_arms,
-                "{hall_id} must show Call To Arms (on-state Amic)"
+                "{hall_id} must show Call To Arms (on-state Amic)",
             );
             assert!(
                 has_back_to_work,
-                "{hall_id} must show Back To Work (off-state Amic)"
+                "{hall_id} must show Back To Work (off-state Amic)",
             );
         }
     }
 
-    // Regression (Peasant militia is one button, not two): the Peasant carries
-    // the same Amil "Call To Arms" data as the Town Hall, but on a worker the
-    // ability morphs the unit into a Militia, so "Back To Work" belongs to the
-    // Militia's card. The Peasant must show exactly one militia button — never a
-    // second off-state slot colliding with the first.
     #[test]
     fn peasant_shows_single_militia_button() {
         let unit_id = WarcraftObjectId::new("hpea");
@@ -990,7 +939,7 @@ mod unit_slots_tests {
             .count();
         assert_eq!(
             militia_slot_count, 1,
-            "Peasant must show exactly one militia button (no off-state second button)"
+            "Peasant must show exactly one militia button (no off-state second button)",
         );
         let has_off_state = card
             .filled_slots()
@@ -1001,11 +950,6 @@ mod unit_slots_tests {
         );
     }
 
-    // Regression (Orc Barracks Demolisher): the Demolisher (ocat) shares its
-    // default button cell (0,0) with the Grunt (ogru), but they are distinct
-    // units, not an upgrade swap. The Demolisher must reflow into a free cell
-    // and stay on the card; the Berserker (otbk), a genuine upgrade swap of the
-    // Headhunter (ohun), must stay collapsed behind it.
     #[test]
     fn orc_barracks_command_card_shows_demolisher() {
         let unit_id = WarcraftObjectId::new("obar");
@@ -1013,12 +957,12 @@ mod unit_slots_tests {
         let has_demolisher = card.filled_slots().any(|slot| slot.id().value() == "ocat");
         assert!(
             has_demolisher,
-            "Orc Barracks (obar) command card must contain the Demolisher (ocat)"
+            "Orc Barracks (obar) command card must contain the Demolisher (ocat)",
         );
         let has_berserker = card.filled_slots().any(|slot| slot.id().value() == "otbk");
         assert!(
             !has_berserker,
-            "Orc Barracks (obar) must keep the Berserker (otbk) collapsed behind the Headhunter"
+            "Orc Barracks (obar) must keep the Berserker (otbk) collapsed behind the Headhunter",
         );
     }
 
@@ -1031,18 +975,14 @@ mod unit_slots_tests {
         assert_eq!(
             upgrades.get(&headhunter).map(|id| id.value()),
             Some("otbk"),
-            "Headhunter (ohun) must be recorded as upgrading to the Berserker (otbk)"
+            "Headhunter (ohun) must be recorded as upgrading to the Berserker (otbk)",
         );
         assert!(
             !upgrades.contains_key(&grunt),
-            "Grunt (ogru) must not be modelled as upgrading to the Demolisher"
+            "Grunt (ogru) must not be modelled as upgrading to the Demolisher",
         );
     }
 
-    // Regression (Undead Halls of the Dead / Black Citadel backpack research):
-    // the Backpack research (Rupm) defaults to cell (3,0), which on the
-    // tier-2/3 Necropolis is taken by the auto-added Attack command. The
-    // research must reflow into a free cell instead of being silently dropped.
     #[test]
     fn necropolis_upgraded_tiers_show_backpack_research() {
         for hall_id in ["unp1", "unp2"] {
@@ -1051,7 +991,7 @@ mod unit_slots_tests {
             let has_backpack = card.filled_slots().any(|slot| slot.id().value() == "Rupm");
             assert!(
                 has_backpack,
-                "{hall_id} command card must contain the Backpack research (Rupm)"
+                "{hall_id} command card must contain the Backpack research (Rupm)",
             );
         }
     }
@@ -1074,19 +1014,19 @@ mod unit_slots_tests {
             .any(|slot| slot.id().value().eq_ignore_ascii_case("ACfu"));
         assert!(
             has_acd2,
-            "Ice Troll High Priest (nith) must have ACd2 (competitive balance Abolish Magic)"
+            "Ice Troll High Priest (nith) must have ACd2 (competitive balance Abolish Magic)",
         );
         assert!(
             has_acf2,
-            "Ice Troll High Priest (nith) must have ACf2 (competitive balance Frost Armor)"
+            "Ice Troll High Priest (nith) must have ACf2 (competitive balance Frost Armor)",
         );
         assert!(
             !has_acdm,
-            "Ice Troll High Priest (nith) must not have ACdm (alternative mode variant)"
+            "Ice Troll High Priest (nith) must not have ACdm (alternative mode variant)",
         );
         assert!(
             !has_acfu,
-            "Ice Troll High Priest (nith) must not have ACfu (alternative mode variant)"
+            "Ice Troll High Priest (nith) must not have ACfu (alternative mode variant)",
         );
     }
 }

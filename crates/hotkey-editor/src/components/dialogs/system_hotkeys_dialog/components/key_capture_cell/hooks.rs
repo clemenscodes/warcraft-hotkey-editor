@@ -1,10 +1,8 @@
-use std::collections::HashMap;
-
-use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
-
 use super::props::KeyCaptureCellProps;
 use super::state::KeyCaptureCellState;
+use dioxus::prelude::*;
+use std::collections::HashMap;
+use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
 
 /// Everything the chip's markup needs: its state, the key label and conflict
 /// tooltip, whether its picker is open (and the picker's inputs), and the edit /
@@ -30,7 +28,6 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
     let lookup_id = props.section_id.clone();
-
     let read_guard = loaded_keys.read();
     let effective = EffectiveBinding::resolve_from_file(
         read_guard.as_ref(),
@@ -65,7 +62,6 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
         KeyCaptureCellState::Normal
     };
     let current_code = effective.key();
-
     let section_id_for_click = lookup_id.clone();
     let section_id_for_pick = lookup_id.clone();
     let on_click = EventHandler::new(move |_event: MouseEvent| {
@@ -79,7 +75,6 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
-
     KeyCaptureCellModel {
         state,
         key_label,

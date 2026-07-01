@@ -20,6 +20,7 @@ const BASE: &[&str] = &[
     "hover:[box-shadow:0_0_10px_rgba(255,206,99,0.35)]",
     "active:translate-y-[1px]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:w-full",
     "mobile:min-h-[44px]",
@@ -27,6 +28,7 @@ const MOBILE: &[&str] = &[
     "mobile:py-[12px]",
     "mobile:text-[16px]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:w-full",
     "tablet:min-h-[44px]",
@@ -34,9 +36,11 @@ const TABLET: &[&str] = &[
     "tablet:py-[12px]",
     "tablet:text-[16px]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

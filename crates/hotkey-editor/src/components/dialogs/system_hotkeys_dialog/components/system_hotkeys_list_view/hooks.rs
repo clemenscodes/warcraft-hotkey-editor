@@ -1,7 +1,6 @@
+use super::props::SystemHotkeysListViewProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::SystemBindingMap;
-
-use super::props::SystemHotkeysListViewProps;
 
 /// Builds the binding map every row reads to flag conflicts.
 pub(super) fn use_system_hotkeys_list_view(

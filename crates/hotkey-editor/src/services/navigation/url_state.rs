@@ -1,9 +1,9 @@
+use crate::services::navigation::app_view::AppView;
 use warcraft_api::Race;
+
 #[cfg(target_arch = "wasm32")]
 use warcraft_api::RaceLabels;
 use warcraft_database::{UnitKindHelpers, UnitMode};
-
-use crate::services::navigation::app_view::AppView;
 
 pub(crate) struct UrlNavigationState {
     race: Race,
@@ -51,38 +51,30 @@ impl UrlNavigationState {
         let search_string = web_sys::window()
             .and_then(|window| window.location().search().ok())
             .unwrap_or_default();
-
         let params = match web_sys::UrlSearchParams::new_with_str(&search_string) {
             Ok(parsed) => parsed,
             Err(_) => return Self::default_state(),
         };
-
         let race_param = params.get("race");
         let race = race_param
             .as_deref()
             .and_then(|param| Race::try_from(param).ok())
             .unwrap_or(Race::Human);
-
         let mode_param = params.get("mode");
         let unit_mode = mode_param
             .as_deref()
             .and_then(|param| UnitMode::try_from(param).ok())
             .unwrap_or(UnitMode::Melee);
-
         let unit_param = params.get("unit");
         let selected_unit_id = unit_param
             .filter(|id| !id.is_empty())
             .or_else(|| UnitKindHelpers::default_unit_id_for(race, unit_mode));
-
         let search_query = params.get("q").unwrap_or_default();
-
         let view_param = params.get("view");
         let kind_param = params.get("kind");
         let view = AppView::from_query_params(view_param.as_deref(), kind_param.as_deref());
-
         let entry_param = params.get("entry");
         let selected_entry = entry_param.filter(|entry| !entry.is_empty());
-
         Self {
             race,
             unit_mode,
@@ -217,19 +209,16 @@ fn build_url(
 ) -> String {
     let race_param = RaceLabels::data_attribute(race);
     let mut url = format!("?race={race_param}&mode={unit_mode}");
-
     if let Some(id) = unit_id {
         url.push_str("&unit=");
         url.push_str(id);
     }
-
     if !query.is_empty() {
         let encoded = js_sys::encode_uri_component(query);
         let encoded_str = encoded.as_string().unwrap_or_default();
         url.push_str("&q=");
         url.push_str(&encoded_str);
     }
-
     let view_param = view.view_param();
     if view_param != "editor" {
         url.push_str("&view=");
@@ -238,8 +227,6 @@ fn build_url(
             url.push_str("&kind=");
             url.push_str(kind_param);
         }
-        // The selected list entry only belongs to the collisions view; its key
-        // can contain ':' (island keys), so encode it.
         if let Some(entry_key) = entry {
             let encoded = js_sys::encode_uri_component(entry_key);
             let encoded_str = encoded.as_string().unwrap_or_default();
@@ -247,6 +234,5 @@ fn build_url(
             url.push_str(&encoded_str);
         }
     }
-
     url
 }

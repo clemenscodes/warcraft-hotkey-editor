@@ -1,14 +1,11 @@
-use std::collections::HashMap;
-use std::fmt;
-
-use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
-
-use crate::unit::slots::UnitCommandSlots;
-
 use crate::custom_keys::CustomKeys;
 use crate::identity::slot::GridSlotId;
 use crate::model::{AbilityBinding, AbilityBindingBuilder, GridCoordinate, Hotkey};
+use crate::unit::slots::UnitCommandSlots;
+use std::collections::HashMap;
+use std::fmt;
+use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
+use warcraft_database::WARCRAFT_DATABASE;
 
 pub struct UnitKeyedCustomKeys {
     groups: Vec<UnitAbilityGroup>,
@@ -83,7 +80,6 @@ impl From<&CustomKeys> for UnitKeyedCustomKeys {
             .bindings_in_order()
             .map(|entry| (entry.ability_id().value(), entry.binding()))
             .collect();
-
         let mut groups: Vec<UnitAbilityGroup> = WARCRAFT_DATABASE
             .iter()
             .filter_map(|(unit_id, warcraft_object)| {
@@ -126,13 +122,11 @@ impl From<&CustomKeys> for UnitKeyedCustomKeys {
                 })
             })
             .collect();
-
         groups.sort_by(|left, right| {
             left.unit_name
                 .cmp(right.unit_name)
                 .then_with(|| left.unit_id.value().cmp(right.unit_id.value()))
         });
-
         Self { groups }
     }
 }
@@ -190,7 +184,7 @@ impl fmt::Display for UnitKeyedCustomKeys {
                     .unwrap_or_default();
                 writeln!(
                     formatter,
-                    "  {id:<12}  hotkey={hotkey:<4}  pos={position:<6}{research}"
+                    "  {id:<12}  hotkey={hotkey:<4}  pos={position:<6}{research}",
                 )?;
             }
         }
@@ -214,10 +208,8 @@ mod unit_keyed_tests {
             .build();
         let mut original = CustomKeys::from("");
         original.put_ability("AHhb", binding);
-
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);
-
         let reconstructed_binding = reconstructed
             .binding("AHhb")
             .expect("AHhb must survive round trip");
@@ -233,10 +225,8 @@ mod unit_keyed_tests {
             .build();
         let mut original = CustomKeys::from("");
         original.put_ability("AHds", binding);
-
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);
-
         let reconstructed_binding = reconstructed
             .binding("AHds")
             .expect("AHds must survive round trip");
@@ -256,7 +246,7 @@ mod unit_keyed_tests {
                 .groups()
                 .iter()
                 .all(|g| g.unit_id().value().eq_ignore_ascii_case("Hpal")),
-            "for_unit must return only groups whose unit_id matches"
+            "for_unit must return only groups whose unit_id matches",
         );
     }
 
@@ -269,7 +259,7 @@ mod unit_keyed_tests {
         assert_eq!(
             upper.groups().len(),
             lower.groups().len(),
-            "for_unit must match regardless of case"
+            "for_unit must match regardless of case",
         );
     }
 
@@ -291,13 +281,11 @@ mod unit_keyed_tests {
             .build();
         let mut original = CustomKeys::from("");
         original.put_ability("ZZZZ", binding);
-
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);
-
         assert!(
             reconstructed.binding("ZZZZ").is_none(),
-            "ability not in any command card must not appear in reconstructed CustomKeys"
+            "ability not in any command card must not appear in reconstructed CustomKeys",
         );
     }
 }

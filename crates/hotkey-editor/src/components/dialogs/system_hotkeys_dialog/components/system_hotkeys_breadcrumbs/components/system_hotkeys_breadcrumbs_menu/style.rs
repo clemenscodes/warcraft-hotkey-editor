@@ -1,7 +1,5 @@
 use crate::classes;
 
-// The category tab list: a centred inline wrap on desktop (`group` so its tabs read
-// the open state); on small viewports it hides, then opens as an absolute popover.
 const BASE: &[&str] = &[
     "group",
     "flex",
@@ -11,6 +9,7 @@ const BASE: &[&str] = &[
     "gap-3",
     "[flex:1_1_auto]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:hidden",
     "mobile:data-[open=true]:flex",
@@ -29,6 +28,7 @@ const MOBILE: &[&str] = &[
     "mobile:data-[open=true]:rounded-[10px]",
     "mobile:data-[open=true]:[box-shadow:0_14px_30px_rgba(0,0,0,0.7),0_0_18px_rgba(255,206,99,0.12)]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:hidden",
     "tablet:data-[open=true]:flex",
@@ -47,9 +47,11 @@ const TABLET: &[&str] = &[
     "tablet:data-[open=true]:rounded-[10px]",
     "tablet:data-[open=true]:[box-shadow:0_14px_30px_rgba(0,0,0,0.7),0_0_18px_rgba(255,206,99,0.12)]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

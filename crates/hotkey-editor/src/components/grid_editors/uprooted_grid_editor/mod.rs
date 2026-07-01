@@ -1,8 +1,6 @@
-use dioxus::prelude::*;
-
-use warcraft_keybinds::AlternateFormBehavior;
-
 use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use dioxus::prelude::*;
+use warcraft_keybinds::AlternateFormBehavior;
 
 /// An alternate-form menu (an uprooted Ancient).
 #[component]

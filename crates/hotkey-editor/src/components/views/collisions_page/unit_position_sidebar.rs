@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::UnitPositionUnitView;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitPositionSidebarProps {
@@ -16,9 +15,7 @@ pub struct UnitPositionSidebarProps {
 pub fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
     let units = props.units;
     let mut selected_unit = props.selected_unit;
-
     let selected_key = selected_unit.read().clone();
-
     rsx! {
         aside { class: "unit-list island-list",
             div { class: "unit-list-scroll",
@@ -47,7 +44,8 @@ pub fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
                                     key: "{unit_view.key()}",
                                     class: row_class,
                                     "data-unit-position-key": "{unit_view.key()}",
-                                    onclick: move |_| selected_unit.set(Some(key.clone())),
+                                    onclick: move | _ |
+                                            selected_unit.set(Some(key.clone())),
                                     if let Some(url) = icon_url {
                                         img {
                                             class: "hotkey-unit-row-icon",
@@ -60,9 +58,7 @@ pub fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
                                     div { class: "island-row-meta",
                                         span { class: "island-coord hotkey-unit-name", "{name}" }
                                         code { class: "conflict-object-id", "{unit_id_label}" }
-                                        span { class: "island-collision-count",
-                                            "{collision_count} {collision_noun}"
-                                        }
+                                        span { class: "island-collision-count", "{collision_count} {collision_noun}" }
                                     }
                                 }
                             }

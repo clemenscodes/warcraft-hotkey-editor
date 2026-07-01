@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-
 use crate::components::shared::icons::ICON_COG;
 use crate::components::shared::toolbar_button::ToolbarButton;
 use crate::services::overlay_state::OverlayState;
+use dioxus::prelude::*;
 
 /// Toolbar button that opens the general (system) hotkeys dialog.
 #[component]

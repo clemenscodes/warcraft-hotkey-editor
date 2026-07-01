@@ -2,15 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::grid::Grid;
 use components::grid_heading::GridHeading;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HeadedGridProps;
-
+use style::CLASS;
 assert_component!(HeadedGrid);
 
 /// A captioned grid: a heading above the reused `Grid`. Owns `.headed-grid`,
@@ -21,8 +18,7 @@ pub fn HeadedGrid(props: HeadedGridProps) -> Element {
     let heading = props.heading;
     let tiles = props.tiles;
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             GridHeading { heading }
             Grid { tiles }
         }

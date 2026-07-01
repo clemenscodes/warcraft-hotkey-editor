@@ -1,7 +1,6 @@
+use crate::services::storage::local_storage::LocalStorage;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
-
-use crate::services::storage::local_storage::LocalStorage;
 use warcraft_keybinds::GridLayout;
 
 const UNDO_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.undo-history");
@@ -300,7 +299,6 @@ fn compress_blob(text: &str) -> String {
     use flate2::Compression;
     use flate2::write::DeflateEncoder;
     use std::io::Write;
-
     let mut encoder = DeflateEncoder::new(Vec::new(), Compression::default());
     let _ = encoder.write_all(text.as_bytes());
     let compressed_bytes = encoder.finish().unwrap_or_default();
@@ -311,7 +309,6 @@ fn decompress_blob(encoded: &str) -> Option<String> {
     use base64::Engine;
     use flate2::read::DeflateDecoder;
     use std::io::Read;
-
     let compressed_bytes = base64::engine::general_purpose::STANDARD
         .decode(encoded)
         .ok()?;
@@ -330,16 +327,11 @@ impl UndoHistory {
     pub(crate) fn install_keyboard_shortcuts(self) {
         use std::cell::Cell;
         use std::rc::Rc;
-
         use wasm_bindgen::JsCast;
         use wasm_bindgen::closure::Closure;
-
         let Some(window) = web_sys::window() else {
             return;
         };
-        // Plain (non-signal) counter owned by the closure, so the listener never
-        // reads a Dioxus signal — only writes `keyboard_request`. The effect
-        // wired in the app then runs the actual undo/redo in a reactive context.
         let request_generation = Rc::new(Cell::new(0_u32));
         let mut keyboard_request = self.keyboard_request;
         let closure = Closure::<dyn FnMut(web_sys::KeyboardEvent)>::new(
@@ -386,7 +378,6 @@ impl UndoHistory {
 #[cfg(target_arch = "wasm32")]
 fn editable_target_is_focused() -> bool {
     use wasm_bindgen::JsCast;
-
     let Some(document) = web_sys::window().and_then(|window| window.document()) else {
         return false;
     };

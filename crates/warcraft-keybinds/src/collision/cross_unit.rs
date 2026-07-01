@@ -1,14 +1,12 @@
-use std::collections::{HashMap, HashSet};
-use std::fmt;
-
-use warcraft_api::WarcraftObjectId;
-use warcraft_database::WARCRAFT_DATABASE;
-
 use crate::custom_keys::CustomKeys;
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
 use crate::unit::grids::{GridRole, UnitGrids};
 use crate::unit::slots::UnitCommandSlots;
+use std::collections::{HashMap, HashSet};
+use std::fmt;
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::WARCRAFT_DATABASE;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct PositionContext {
@@ -121,15 +119,10 @@ pub struct AffectedUnitEntry {
 
 impl CrossUnitCollisionReport {
     pub fn compute(custom_keys: &CustomKeys) -> Self {
-        // Build: (position, grid_role) -> slot_id -> set of unit_ids.
-        // Grid role is the key — MainCommand, BuildMenu, and UprootedForm are
-        // separate pages that are never visible at the same time, so slots on
-        // different pages of the same unit cannot collide.
         let mut entries_by_context: HashMap<
             PositionContext,
             HashMap<GridSlotId, HashSet<WarcraftObjectId>>,
         > = HashMap::new();
-
         for unit_id in WARCRAFT_DATABASE.all_unit_ids() {
             let unit_grids = UnitGrids::for_unit(unit_id);
             for named_grid in unit_grids.grids() {
@@ -153,17 +146,11 @@ impl CrossUnitCollisionReport {
                 }
             }
         }
-
         let mut position_groups: Vec<CrossUnitPositionGroup> = Vec::new();
-
         for (context, slot_to_unit_set) in entries_by_context {
             if slot_to_unit_set.len() < 2 {
                 continue;
             }
-
-            // Build per-unit slot lists, deduplicating by as_str() so that
-            // Ability(X) and AbilityOff(X) at the same position are not counted
-            // as two separate buttons (they are two states of one button).
             let mut unit_to_slot_ids: HashMap<WarcraftObjectId, Vec<GridSlotId>> = HashMap::new();
             for (slot_id, unit_id_set) in &slot_to_unit_set {
                 for unit_id in unit_id_set {
@@ -176,23 +163,15 @@ impl CrossUnitCollisionReport {
                     }
                 }
             }
-
-            // Shared abilities at this position (on 2+ units).
             let shared_str_set: HashSet<&str> = slot_to_unit_set
                 .iter()
                 .filter(|(_, unit_id_set)| unit_id_set.len() >= 2)
                 .map(|(slot_id, _)| slot_id.as_str())
                 .collect();
-
             let context_affected_units: Vec<AffectedUnitEntry> = unit_to_slot_ids
                 .into_iter()
+                .filter(|(_, slot_ids)| slot_ids.len() >= 2)
                 .filter(|(_, slot_ids)| {
-                    // 2+ distinct abilities at this position on this unit.
-                    slot_ids.len() >= 2
-                })
-                .filter(|(_, slot_ids)| {
-                    // At least one of the colliding abilities must be shared across
-                    // multiple units; otherwise this is a pure intra-unit collision.
                     slot_ids
                         .iter()
                         .any(|slot_id| shared_str_set.contains(slot_id.as_str()))
@@ -210,17 +189,9 @@ impl CrossUnitCollisionReport {
                     })
                 })
                 .collect();
-
             if context_affected_units.is_empty() {
                 continue;
             }
-
-            // Decompose this cell into independent collision islands.  Two
-            // abilities here conflict only when some unit carries both of
-            // them, so a unit's colliding slots are all merged into one
-            // component.  Components that never merge share no carrier unit
-            // and never interact — they only happen to land on the same
-            // coordinate.  This mirrors the cascade's conflict-graph edges.
             let mut island_partition = SlotIslandPartition::new();
             for entry in &context_affected_units {
                 let Some(first_slot) = entry.colliding_slot_ids.first() else {
@@ -233,8 +204,6 @@ impl CrossUnitCollisionReport {
                     island_partition.union(first_key, slot_key);
                 }
             }
-
-            // Bucket the affected units by the island their slots belong to.
             let mut units_by_island: HashMap<String, Vec<AffectedUnitEntry>> = HashMap::new();
             for entry in context_affected_units {
                 let Some(first_slot) = entry.colliding_slot_ids.first() else {
@@ -243,19 +212,13 @@ impl CrossUnitCollisionReport {
                 let island_key = island_partition.root(first_slot.as_str());
                 units_by_island.entry(island_key).or_default().push(entry);
             }
-
             for (_island_key, mut island_affected_units) in units_by_island {
-                // Every slot_id that actually participates in a collision
-                // within this island.
                 let mut slots_in_collisions: HashSet<GridSlotId> = HashSet::new();
                 for entry in &island_affected_units {
                     for slot_id in &entry.colliding_slot_ids {
                         slots_in_collisions.insert(*slot_id);
                     }
                 }
-
-                // The island's "cross-unit" abilities: shared across 2+ units
-                // AND part of an actual collision in this island.
                 let mut shared_abilities: Vec<SharedAbilityEntry> = slot_to_unit_set
                     .iter()
                     .filter(|(slot_id, unit_id_set)| {
@@ -271,17 +234,12 @@ impl CrossUnitCollisionReport {
                         }
                     })
                     .collect();
-
-                // Skip islands where every collision is purely intra-unit (no
-                // shared ability involved).
                 if shared_abilities.is_empty() {
                     continue;
                 }
-
                 shared_abilities
                     .sort_by(|left, right| left.slot_id.as_str().cmp(right.slot_id.as_str()));
                 island_affected_units.sort_by(|left, right| left.unit_name.cmp(right.unit_name));
-
                 let island = CrossUnitPositionGroup {
                     position: context.position,
                     grid_role: context.grid_role,
@@ -291,7 +249,6 @@ impl CrossUnitCollisionReport {
                 position_groups.push(island);
             }
         }
-
         position_groups.sort_by(|left, right| {
             let left_row = u8::from(left.position.row());
             let left_col = u8::from(left.position.column());
@@ -307,7 +264,6 @@ impl CrossUnitCollisionReport {
                 .then_with(|| left_role.cmp(&right_role))
                 .then_with(|| left_anchor.cmp(&right_anchor))
         });
-
         Self { position_groups }
     }
 
@@ -419,15 +375,13 @@ impl fmt::Display for CrossUnitPositionGroup {
         let unit_count = self.affected_units.len();
         writeln!(
             formatter,
-            "Position ({column},{row}) [{context}] — {unit_count} unit(s) affected:"
+            "Position ({column},{row}) [{context}] — {unit_count} unit(s) affected:",
         )?;
-
         let unit_count_for_slot: HashMap<&str, usize> = self
             .shared_abilities
             .iter()
             .map(|entry| (entry.slot_id.as_str(), entry.unit_ids.len()))
             .collect();
-
         for affected in &self.affected_units {
             let parts: Vec<String> = affected
                 .colliding_slot_ids
@@ -447,10 +401,9 @@ impl fmt::Display for CrossUnitPositionGroup {
                 "  {} ({}):  {}",
                 affected.unit_name,
                 affected.unit_id.value(),
-                parts.join("  ×  ")
+                parts.join("  ×  "),
             )?;
         }
-
         Ok(())
     }
 }
@@ -471,7 +424,7 @@ mod cross_unit_collision_tests {
         assert!(
             !report.is_empty(),
             "normalized default CustomKeys has known cross-unit collisions \
-             (e.g. CmdMove shares position (0,0) with unit-specific abilities)"
+             (e.g. CmdMove shares position (0,0) with unit-specific abilities)",
         );
     }
 
@@ -485,15 +438,12 @@ mod cross_unit_collision_tests {
             "normalized default decomposes into exactly 19 cross-unit collision \
              islands (the raw colliding cells split into 19 independent components; \
              the Halls of the Dead / Black Citadel Backpack research now shares \
-             cell (3,0) with the Attack command)"
+             cell (3,0) with the Attack command)",
         );
     }
 
     #[test]
     fn islands_at_the_same_cell_never_share_an_affected_unit() {
-        // The defining property of an island: if two groups sit on the same
-        // (position, grid_role), they must have disjoint affected-unit sets —
-        // a shared unit would have linked their abilities into one island.
         let custom_keys = CustomKeys::from("").normalize();
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         let groups = report.position_groups();
@@ -515,7 +465,7 @@ mod cross_unit_collision_tests {
                     .any(|entry| outer_unit_ids.contains(&entry.unit_id()));
                 assert!(
                     !shares_a_unit,
-                    "two islands at the same cell must not share an affected unit"
+                    "two islands at the same cell must not share an affected unit",
                 );
             }
         }
@@ -523,8 +473,6 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn at_least_one_cell_decomposes_into_multiple_islands() {
-        // Proof that decomposition actually happens: at least one
-        // (position, grid_role) must carry more than one independent island.
         let custom_keys = CustomKeys::from("").normalize();
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         let mut island_counts: HashMap<PositionContext, usize> = HashMap::new();
@@ -539,7 +487,7 @@ mod cross_unit_collision_tests {
         assert!(
             has_multi_island_cell,
             "the normalized default has cells whose abilities form several \
-             independent islands; the report must split them"
+             independent islands; the report must split them",
         );
     }
 
@@ -559,7 +507,7 @@ mod cross_unit_collision_tests {
         });
         assert!(
             demon_hunter_affected,
-            "Demon Hunter (Eevi) must appear in an island at (2,0) main command"
+            "Demon Hunter (Eevi) must appear in an island at (2,0) main command",
         );
     }
 
@@ -578,7 +526,7 @@ mod cross_unit_collision_tests {
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         assert!(
             !report.is_empty(),
-            "two Paladin abilities at (0,0) must produce a cross-unit collision"
+            "two Paladin abilities at (0,0) must produce a cross-unit collision",
         );
     }
 
@@ -634,7 +582,7 @@ mod cross_unit_collision_tests {
         });
         assert!(
             paladin_affected,
-            "Paladin must appear in an island when its abilities collide"
+            "Paladin must appear in an island when its abilities collide",
         );
     }
 
@@ -671,21 +619,18 @@ mod cross_unit_collision_tests {
         assert!(
             shared_ids.contains(&"AHhb") || shared_ids.contains(&"AHds"),
             "at least one of AHhb/AHds must appear in shared_abilities \
-             (the one that is on the Paladin and potentially other units)"
+             (the one that is on the Paladin and potentially other units)",
         );
     }
 
     #[test]
     fn pure_intra_unit_collisions_are_excluded() {
-        // If two abilities each appear on exactly one unit and that unit is the same,
-        // the collision is purely intra-unit and must not appear in the cross-unit report.
-        // We verify this by checking that groups with no shared ability are absent.
         let custom_keys = CustomKeys::from("").normalize();
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         for group in report.position_groups() {
             assert!(
                 !group.shared_abilities().is_empty(),
-                "every cross-unit group must contain at least one shared ability"
+                "every cross-unit group must contain at least one shared ability",
             );
         }
     }
@@ -714,7 +659,7 @@ mod cross_unit_collision_tests {
         });
         assert!(
             !false_collision,
-            "abilities at distinct positions must not produce a cross-unit collision"
+            "abilities at distinct positions must not produce a cross-unit collision",
         );
     }
 }

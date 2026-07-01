@@ -3,14 +3,11 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
+use dioxus::prelude::*;
 use hooks::use_key_capture_cell;
-
 pub use props::KeyCaptureCellProps;
-
 assert_component!(KeyCaptureCell);
 
 /// The key chip for a system-hotkey list row: shows the bound key and edits it on

@@ -2,12 +2,9 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-
+use dioxus::prelude::*;
 pub use props::UnitCardIdProps;
-
 assert_component!(UnitCardId);
 
 /// The unit's database id inside a card.

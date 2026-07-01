@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::CollisionsButtonBadgeProps;
-
+use style::CLASS;
 assert_component!(CollisionsButtonBadge);
 
 #[component]

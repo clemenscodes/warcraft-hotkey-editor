@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::DialogTitleProps;
-
+use style::CLASS;
 assert_component!(DialogTitle);
 
 /// The dialog's heading text. A leaf: the header passes the title as children.
@@ -15,9 +12,6 @@ assert_component!(DialogTitle);
 pub fn DialogTitle(props: DialogTitleProps) -> Element {
     let title = props.children.clone();
     rsx! {
-        h2 {
-            class: CLASS,
-            {title}
-        }
+        h2 { class: CLASS, {title} }
     }
 }

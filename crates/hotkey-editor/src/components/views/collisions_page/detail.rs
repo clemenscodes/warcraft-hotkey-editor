@@ -1,10 +1,8 @@
-use dioxus::prelude::*;
-
-use crate::components::dialogs::dialog::Dialog;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-
 use super::mini_grid::IslandMiniGrid;
 use super::{CarrierDialogData, IslandView};
+use crate::components::dialogs::dialog::Dialog;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 struct ConflictUnitProps {
@@ -23,12 +21,12 @@ fn ConflictUnit(props: ConflictUnitProps) -> Element {
     let name = props.name;
     let view_navigation = props.view_navigation;
     let unit_id_label = unit_id.clone();
-
     rsx! {
         button {
             class: "conflict-unit",
             r#type: "button",
-            onclick: move |_| view_navigation.open_unit(&unit_id),
+            onclick: move | _ |
+                    view_navigation.open_unit(& unit_id),
             if let Some(url) = icon_url {
                 img {
                     class: "conflict-unit-icon",
@@ -65,7 +63,6 @@ fn ConflictAbility(props: ConflictAbilityProps) -> Element {
     let extra_count = props.extra_count;
     let carrier_unit_ids = props.carrier_unit_ids;
     let mut carrier_dialog = props.carrier_dialog;
-
     let open_from_icon = {
         let dialog_name = ability_name.clone();
         let dialog_carrier_unit_ids = carrier_unit_ids.clone();
@@ -82,7 +79,6 @@ fn ConflictAbility(props: ConflictAbilityProps) -> Element {
             carrier_dialog.set(Some(data));
         }
     };
-
     rsx! {
         div { class: "conflict-ability",
             button {
@@ -129,14 +125,11 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
     let islands = props.islands;
     let selected_island = props.selected_island;
     let view_navigation = props.view_navigation;
-
     let carrier_dialog = use_signal(|| None::<CarrierDialogData>);
-
     let selected_key = selected_island.read().clone();
     let selected = selected_key
         .as_ref()
         .and_then(|key| islands.iter().find(|island| island.key() == key).cloned());
-
     let Some(island) = selected else {
         return rsx! {
             section { class: "unit-detail island-detail empty",
@@ -144,7 +137,6 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
             }
         };
     };
-
     let position_column = island.position_column();
     let position_row = island.position_row();
     let collision_count = island.collision_count();
@@ -153,13 +145,14 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
     } else {
         "collisions"
     };
-
     let carrier_dialog_state = carrier_dialog.read().clone();
-
     rsx! {
         section { class: "unit-detail island-detail",
             header { class: "island-detail-header",
-                IslandMiniGrid { collision_column: position_column, collision_row: position_row }
+                IslandMiniGrid {
+                    collision_column: position_column,
+                    collision_row: position_row,
+                }
                 div { class: "island-row-meta",
                     div { class: "island-coord-group",
                         span { class: "island-coord", "Column {position_column}" }
@@ -171,29 +164,46 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
             }
             div { class: "conflict-grid",
                 for (conflict_index, conflict) in island.conflicts().iter().enumerate() {
-                    div { key: "conflict-{conflict_index}", class: "conflict-card",
+                    div {
+                        key: "conflict-{conflict_index}",
+                        class: "conflict-card",
                         ConflictUnit {
                             unit_id: conflict.unit().unit_id().to_owned(),
-                            icon_url: conflict.unit().icon_url().map(str::to_owned),
+                            icon_url: conflict.unit().icon_url()
+                                    .map(str::to_owned),
                             name: conflict.unit().name().to_owned(),
                             view_navigation,
                         }
                         div { class: "conflict-ability-row",
                             ConflictAbility {
-                                ability_name: conflict.own_ability().ability().name().to_owned(),
-                                ability_id: conflict.own_ability().ability().object_id().to_owned(),
-                                icon_url: conflict.own_ability().ability().icon_url().map(str::to_owned),
-                                extra_count: conflict.own_ability().extra_count(),
-                                carrier_unit_ids: conflict.own_ability().carrier_unit_ids().to_vec(),
+                                ability_name: conflict
+                                        .own_ability().ability().name().to_owned(),
+                                ability_id: conflict.own_ability()
+                                        .ability().object_id().to_owned(),
+                                icon_url: conflict.own_ability().ability()
+                                        .icon_url().map(str::to_owned),
+                                extra_count: conflict.own_ability()
+                                        .extra_count(),
+                                carrier_unit_ids: conflict.own_ability().carrier_unit_ids()
+                                        .to_vec(),
                                 carrier_dialog,
                             }
-                            span { class: "conflict-separator", aria_hidden: "true", "\u{2715}" }
+                            span {
+                                class: "conflict-separator",
+                                aria_hidden: "true",
+                                "\u{2715}"
+                            }
                             ConflictAbility {
-                                ability_name: conflict.shared_ability().ability().name().to_owned(),
-                                ability_id: conflict.shared_ability().ability().object_id().to_owned(),
-                                icon_url: conflict.shared_ability().ability().icon_url().map(str::to_owned),
-                                extra_count: conflict.shared_ability().extra_count(),
-                                carrier_unit_ids: conflict.shared_ability().carrier_unit_ids().to_vec(),
+                                ability_name: conflict.shared_ability()
+                                        .ability().name().to_owned(),
+                                ability_id: conflict.shared_ability().ability()
+                                        .object_id().to_owned(),
+                                icon_url: conflict.shared_ability().ability()
+                                        .icon_url().map(str::to_owned),
+                                extra_count: conflict.shared_ability()
+                                        .extra_count(),
+                                carrier_unit_ids: conflict.shared_ability().carrier_unit_ids()
+                                        .to_vec(),
                                 carrier_dialog,
                             }
                         }
@@ -221,7 +231,6 @@ fn CarriersDialog(props: CarriersDialogProps) -> Element {
     let dialog_data = props.dialog_data;
     let mut carrier_dialog = props.carrier_dialog;
     let view_navigation = props.view_navigation;
-
     let title = dialog_data.ability_name().to_owned();
     let open = use_signal(|| true);
     use_effect(move || {
@@ -229,11 +238,8 @@ fn CarriersDialog(props: CarriersDialogProps) -> Element {
             carrier_dialog.set(None);
         }
     });
-
     rsx! {
-        Dialog {
-            open,
-            title,
+        Dialog { open, title,
             div { class: "carriers-grid",
                 for (carrier_index, carrier) in dialog_data.carriers().iter().enumerate() {
                     {

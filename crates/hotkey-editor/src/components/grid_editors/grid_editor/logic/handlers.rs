@@ -1,14 +1,13 @@
+use dioxus::prelude::*;
+use dioxus_primitives::toast::{ToastOptions, Toasts};
 use std::ops::Range;
 use std::rc::Rc;
 
-use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, Toasts};
 use warcraft_keybinds::{CustomKeys, GridBehavior, GridCoordinate, GridLayout, GridSlotId};
 
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeadingProps;
 use crate::services::customkeys::positions::{MoveRequest, Positions};
 use crate::services::focus::modality::FocusModality;
-
 use super::super::props::GridEditorProps;
 
 impl<B: GridBehavior> From<&GridEditorProps<B>> for GridHeadingProps {

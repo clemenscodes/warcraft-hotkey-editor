@@ -1,10 +1,9 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::HotkeyToken;
-
 use super::components::key_picker_board::KeyPickerBoardProps;
 use super::components::key_picker_board::components::key_picker_row::KeyPickerRowProps;
 use super::components::key_picker_board::components::key_picker_row::components::key_picker_key::KeyPickerKeyProps;
 use super::props::{KeyPickerCellState, KeyPickerProps};
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
 
 /// The key picker's shaped view: the open signal that drives the shell and the
 /// fully built board (its rows of keys and the keydown handler). The body only
@@ -24,13 +23,11 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
     let on_pick = props.on_pick;
     let on_close = props.on_close;
     let open = use_signal(|| props.open);
-
     use_effect(move || {
         if !open() {
             on_close.call(());
         }
     });
-
     let rows_for_keydown = rows.clone();
     let onkeydown = EventHandler::new(move |event: Event<KeyboardData>| {
         event.stop_propagation();
@@ -40,10 +37,6 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
             on_close.call(());
             return;
         }
-        // Only single ASCII letters map to a board key. These are exactly the keys
-        // the picker already offers via click; digits, the mouse-only tokens, and
-        // any other physical key are ignored so the keyboard can never select a
-        // hotkey the game cannot bind.
         let mut key_characters = key_value.chars();
         let Some(first_character) = key_characters.next() else {
             return;
@@ -62,8 +55,6 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
         let Some(cell) = matching_cell else {
             return;
         };
-        // Apply the same selectability rule as a click: a conflict cell is only
-        // pickable when conflict swaps are allowed (the grid layout editor).
         let is_conflict = matches!(cell.state(), KeyPickerCellState::Conflict { .. });
         let is_pickable = !is_conflict || allow_conflict_pick;
         if !is_pickable {
@@ -72,7 +63,6 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
         event.prevent_default();
         on_pick.call(pressed_token);
     });
-
     let mut board_rows: Vec<KeyPickerRowProps> = Vec::new();
     for row_cells in rows {
         let mut keys: Vec<KeyPickerKeyProps> = Vec::new();
@@ -87,7 +77,6 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
         let row = KeyPickerRowProps { keys };
         board_rows.push(row);
     }
-
     let board = KeyPickerBoardProps {
         rows: board_rows,
         onkeydown,

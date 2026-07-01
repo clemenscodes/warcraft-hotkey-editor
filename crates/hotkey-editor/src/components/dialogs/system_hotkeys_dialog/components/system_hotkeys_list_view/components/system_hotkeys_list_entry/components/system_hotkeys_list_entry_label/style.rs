@@ -1,7 +1,5 @@
 use crate::classes;
 
-// The binding name in a hotkey row: light-slate Friz Quadrata; wraps and takes the
-// available width on small viewports.
 const BASE: &[&str] = &[
     "font-friz-quadrata",
     "uppercase",
@@ -11,6 +9,7 @@ const BASE: &[&str] = &[
     "text-[#d6dcec]",
     "[text-shadow:1px_1px_0_#000]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:[flex:1_1_auto]",
     "mobile:min-w-0",
@@ -21,6 +20,7 @@ const MOBILE: &[&str] = &[
     "mobile:[overflow-wrap:break-word]",
     "mobile:[word-break:break-word]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:[flex:1_1_auto]",
     "tablet:min-w-0",
@@ -31,9 +31,11 @@ const TABLET: &[&str] = &[
     "tablet:[overflow-wrap:break-word]",
     "tablet:[word-break:break-word]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

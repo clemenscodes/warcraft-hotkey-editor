@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::super::burger_close::BurgerCloseProps;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerDrawerHeaderProps {

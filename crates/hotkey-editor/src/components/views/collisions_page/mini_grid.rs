@@ -14,7 +14,6 @@ pub struct IslandMiniGridProps {
 pub fn IslandMiniGrid(props: IslandMiniGridProps) -> Element {
     let collision_column = props.collision_column;
     let collision_row = props.collision_row;
-
     rsx! {
         div { class: "island-mini-grid",
             for row in 0..COMMAND_GRID_ROWS {

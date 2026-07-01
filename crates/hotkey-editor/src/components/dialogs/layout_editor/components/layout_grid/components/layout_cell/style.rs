@@ -1,6 +1,5 @@
-use crate::{classes, states};
-
 use super::state::LayoutCellState;
+use crate::{classes, states};
 
 const BASE: &[&str] = &[
     "w-[clamp(7rem,9vh,12rem)]",
@@ -31,24 +30,29 @@ const BASE: &[&str] = &[
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:[box-shadow:none]",
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:text-warcraft-gold",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:w-[clamp(52px,18vw,72px)]",
     "mobile:h-[clamp(52px,18vw,72px)]",
     "mobile:text-[clamp(22px,7vw,34px)]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:w-[clamp(52px,18vw,72px)]",
     "tablet:h-[clamp(52px,18vw,72px)]",
     "tablet:text-[clamp(22px,7vw,34px)]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}
 
 const IDLE: &[&str] = &[];
+
 const EDITING: &[&str] = &[
     "[background:linear-gradient(135deg,rgba(255,206,99,0.3)_0%,rgba(255,171,1,0.18)_100%)]",
     "border-warcraft-gold",
@@ -56,5 +60,6 @@ const EDITING: &[&str] = &[
     "[box-shadow:0_0_16px_rgba(255,206,99,0.65),inset_0_0_12px_rgba(255,206,99,0.25)]",
     "[animation:pulse-editing_1s_ease-in-out_infinite_alternate]",
 ];
-
-states! { LayoutCellState, Idle => IDLE, Editing => EDITING }
+states! {
+    LayoutCellState, Idle => IDLE, Editing => EDITING
+}

@@ -3,17 +3,14 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_key::SystemSlotKey;
 use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_label::SystemSlotLabel;
 use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
+use dioxus::prelude::*;
 use hooks::use_slot_button;
-
 pub use props::SlotButtonProps;
 pub use state::SlotButtonState;
-
 assert_component!(SlotButton);
 
 /// A big WC3 slot for the hero-selection and control-group layouts: a framed cell
@@ -28,7 +25,8 @@ pub fn SlotButton(props: SlotButtonProps) -> Element {
             class,
             r#type: "button",
             tabindex: "0",
-            "data-compact": model.compact_attr,
+            "data-compact": model
+                    .compact_attr,
             "data-tooltip": model.conflict_title,
             onclick: model.on_click,
             SystemSlotLabel { text: slot_label, compact: model.compact }

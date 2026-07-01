@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::components::key_picker_row::KeyPickerRowProps;
+use dioxus::prelude::*;
 
 /// The board's inputs: its already-shaped rows and the keydown handler that maps a
 /// pressed letter to a pick. Both are built by the picker hook; the board only

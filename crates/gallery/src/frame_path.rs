@@ -27,7 +27,7 @@ mod tests {
         let path = FramePath::new("/warcraft-hotkey-editor/".to_string());
         assert_eq!(
             path.src("Buttons/Primary"),
-            "/warcraft-hotkey-editor/?gallery=frame&story=Buttons/Primary"
+            "/warcraft-hotkey-editor/?gallery=frame&story=Buttons/Primary",
         );
     }
 
@@ -36,7 +36,7 @@ mod tests {
         let path = FramePath::new("/base/".to_string());
         assert_eq!(
             path.src("Dialog header/Default"),
-            "/base/?gallery=frame&story=Dialog%20header/Default"
+            "/base/?gallery=frame&story=Dialog%20header/Default",
         );
     }
 }

@@ -1,17 +1,18 @@
+use super::fixtures::{sample_grid_layout, sample_keys};
 use dioxus::prelude::*;
+use gallery::Story;
 use hotkey_editor::components::shell::toasts::ToastMount;
+
 use hotkey_editor::components::views::collisions_page::{
     CollisionsPage, HotkeyUnitDetail, HotkeyUnitSidebar, IslandDetail, IslandMiniGrid,
     IslandSidebar, UnitPositionDetail, UnitPositionSidebar,
 };
+
 use hotkey_editor::components::views::resolve_page::ResolvePage;
 use hotkey_editor::services::navigation::app_view::{AppView, CollisionKind};
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
-
-use super::fixtures::{sample_grid_layout, sample_keys};
-use gallery::Story;
 
 fn make_view_navigation() -> ViewNavigationContext {
     let current_view = use_signal(|| AppView::Editor);
@@ -94,10 +95,7 @@ fn resolve_page_story() -> Element {
     let selected_move_category = use_signal(|| None::<String>);
     rsx! {
         ToastMount {
-            ResolvePage {
-                loaded_keys,
-                selected_move_category,
-            }
+            ResolvePage { loaded_keys, selected_move_category }
         }
     }
 }

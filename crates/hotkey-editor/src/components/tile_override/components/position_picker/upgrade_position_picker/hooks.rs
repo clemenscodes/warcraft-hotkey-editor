@@ -1,0 +1,51 @@
+use dioxus::prelude::*;
+use std::collections::HashMap;
+use warcraft_api::Race;
+use warcraft_keybinds::GridSlotId;
+
+use super::props::UpgradePositionPickerProps;
+use crate::components::grid_editors::grid_editor::GridEditorConfig;
+
+/// The upgraded-form picker's shaped view: dialog title and the built grid config.
+pub(super) struct UpgradePositionPickerModel {
+    pub(super) dialog_title: String,
+    pub(super) grid_config: GridEditorConfig,
+}
+
+pub(super) fn use_upgrade_position_picker(
+    props: &UpgradePositionPickerProps,
+) -> UpgradePositionPickerModel {
+    let upgrade_unit_id = props.upgrade_unit_id;
+    let picker_selected_slot =
+        use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability(upgrade_unit_id)));
+    let picker_selected_research = use_signal::<bool>(|| false);
+    let picker_selected_uprooted = use_signal::<bool>(|| false);
+    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let update_hotkeys_on_move = use_signal(|| true);
+    let hotkey_assign_request = use_signal(|| false);
+    let dialog_title = format!("Position: {} (upgraded)", props.display_name);
+    let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(upgrade_unit_id)];
+    let grid_config = GridEditorConfig {
+        heading: "Upgraded-form position",
+        race: Race::Neutral,
+        slot_ids: props.picker_slots.clone(),
+        loaded_keys: props.loaded_keys,
+        selected_slot: picker_selected_slot,
+        selected_from_research: picker_selected_research,
+        selected_from_uprooted: picker_selected_uprooted,
+        tier_overrides: picker_tier_overrides,
+        dragging_slot: props.dragging_slot,
+        drop_target_tile: props.drop_target_tile,
+        drag_follower: props.drag_follower,
+        grid_layout: props.grid_layout,
+        update_hotkeys_on_move,
+        hotkey_assign_request,
+        prevent_swap_on_drop: true,
+        restrict_draggable_to: restrict_draggable,
+        host_unit_id: String::new(),
+    };
+    UpgradePositionPickerModel {
+        dialog_title,
+        grid_config,
+    }
+}

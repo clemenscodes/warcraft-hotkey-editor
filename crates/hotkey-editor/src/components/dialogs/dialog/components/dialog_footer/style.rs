@@ -12,11 +12,13 @@ const BASE: &[&str] = &[
     "border-t",
     "border-warcraft-gold-soft",
 ];
+
 const MOBILE: &[&str] = &["mobile:justify-center", "mobile:px-[1.5rem]"];
 const TABLET: &[&str] = &["tablet:justify-center"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

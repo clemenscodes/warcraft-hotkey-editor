@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::SystemBindingMap;
-
 use super::props::InventoryGridProps;
 use super::{InventoryDragSource, SLOT_FRAME_GOLD};
+use dioxus::prelude::*;
+use warcraft_keybinds::SystemBindingMap;
 
 /// The grid's shaped setup: the inline `--wc3-slot-frame` variable that feeds every
 /// slot's border-image, the resolved binding map the cells read, and the drag/drop

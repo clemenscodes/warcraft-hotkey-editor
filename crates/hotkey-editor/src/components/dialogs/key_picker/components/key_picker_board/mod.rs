@@ -3,15 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::key_picker_row::KeyPickerRow;
+use dioxus::prelude::*;
 use hooks::use_board_focus;
-use style::CLASS;
-
 pub use props::KeyPickerBoardProps;
-
+use style::CLASS;
 assert_component!(KeyPickerBoard);
 
 /// The on-screen keyboard the picker offers: a focusable group of key rows. Owns

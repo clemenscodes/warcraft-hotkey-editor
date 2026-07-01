@@ -1,7 +1,6 @@
+use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
-
-use crate::services::customkeys::upload_status::UploadStatus;
 
 /// What the templates dialog needs: the loaded keys to overwrite when a template
 /// is applied, the upload status to update, and the open signal.

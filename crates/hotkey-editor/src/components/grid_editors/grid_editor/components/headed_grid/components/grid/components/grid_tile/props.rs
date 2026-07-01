@@ -1,11 +1,9 @@
+use super::components::hotkey_badge::HotkeyBadgeState;
+use super::state::GridTileState;
+use crate::model::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
-
-use crate::model::icons::IconUrl;
-
-use super::components::hotkey_badge::HotkeyBadgeState;
-use super::state::GridTileState;
 
 /// Everything a command tile needs to render and report events, built by the grid
 /// engine and passed as one value. The tile is purely presentational: it draws an
@@ -18,11 +16,9 @@ pub struct GridTileProps {
     /// hit-testing.
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
     pub coordinate: GridCoordinate,
-
     /// The owning unit's race, theming the hover/selected accent via `data-race`.
     #[props(default = Race::Neutral)]
     pub race: Race,
-
     /// Ability icon URL, drawn filling the tile when present.
     #[props(default)]
     pub icon: Option<String>,
@@ -33,7 +29,6 @@ pub struct GridTileProps {
     pub hotkey: HotkeyToken,
     #[props(default)]
     pub badge_state: HotkeyBadgeState,
-
     #[props(default)]
     pub state: GridTileState,
     #[props(default)]
@@ -44,7 +39,6 @@ pub struct GridTileProps {
     pub is_focusable: bool,
     #[props(default)]
     pub draggable: bool,
-
     #[props(default)]
     pub onkeydown: EventHandler<KeyboardEvent>,
     #[props(default)]

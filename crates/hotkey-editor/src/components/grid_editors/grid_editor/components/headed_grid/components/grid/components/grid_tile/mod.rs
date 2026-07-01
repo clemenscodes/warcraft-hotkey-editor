@@ -3,11 +3,9 @@ mod logic;
 mod props;
 mod state;
 
-use dioxus::prelude::*;
-
 use components::empty_tile::{EmptyTile, EmptyTileProps};
 use components::filled_tile::{FilledTile, FilledTileProps};
-
+use dioxus::prelude::*;
 pub use logic::TileChrome;
 pub use props::GridTileProps;
 pub use state::GridTileState;

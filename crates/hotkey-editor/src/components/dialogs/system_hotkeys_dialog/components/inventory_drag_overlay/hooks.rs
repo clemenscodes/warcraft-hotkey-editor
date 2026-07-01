@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::props::InventoryDragOverlayProps;
+use dioxus::prelude::*;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 

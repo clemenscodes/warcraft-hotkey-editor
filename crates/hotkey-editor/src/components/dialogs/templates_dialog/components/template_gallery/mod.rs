@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::template_card::TemplateCard;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::TemplateGalleryProps;
-
+use style::CLASS;
 assert_component!(TemplateGallery);
 
 /// The two-column grid of template cards. Owns `.template-gallery`.
@@ -17,8 +14,7 @@ assert_component!(TemplateGallery);
 pub fn TemplateGallery(props: TemplateGalleryProps) -> Element {
     let cards = props.cards;
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             for card in cards {
                 TemplateCard { key: "{card.name}", ..card }
             }

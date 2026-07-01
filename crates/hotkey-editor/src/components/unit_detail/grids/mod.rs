@@ -1,15 +1,13 @@
-use std::collections::HashMap;
-use std::rc::Rc;
-
-use dioxus::prelude::*;
-use warcraft_api::Race;
-use warcraft_keybinds::CustomKeys;
-
 use crate::components::grid_editors::command_grid_editor::CommandGridEditor;
 use crate::components::grid_editors::grid_editor::GridEditorConfig;
 use crate::components::grid_editors::research_grid_editor::ResearchGridEditor;
 use crate::components::grid_editors::uprooted_grid_editor::UprootedGridEditor;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use dioxus::prelude::*;
+use std::collections::HashMap;
+use std::rc::Rc;
+use warcraft_api::Race;
+use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 
@@ -96,7 +94,9 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { CommandGridEditor { ..build_menu_props } }
+                    rsx! {
+                        CommandGridEditor { ..build_menu_props }
+                    }
                 }
             }
             if let Some(uprooted_menu_ids) = uprooted_menu_slots {
@@ -120,7 +120,9 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { UprootedGridEditor { ..uprooted_props } }
+                    rsx! {
+                        UprootedGridEditor { ..uprooted_props }
+                    }
                 }
             }
             if let Some(research_menu_ids) = research_menu_slots {
@@ -144,7 +146,9 @@ pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
                         restrict_draggable_to: Vec::new(),
                         host_unit_id: unit_id.clone(),
                     };
-                    rsx! { ResearchGridEditor { ..research_props } }
+                    rsx! {
+                        ResearchGridEditor { ..research_props }
+                    }
                 }
             }
         }

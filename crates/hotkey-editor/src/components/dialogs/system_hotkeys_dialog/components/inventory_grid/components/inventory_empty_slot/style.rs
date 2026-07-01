@@ -1,7 +1,5 @@
 use crate::classes;
 
-// A vacant inventory cell: the slot footprint without the gold frame — a faint
-// dashed outline holding a muted em dash.
 const BASE: &[&str] = &[
     "flex",
     "flex-col",
@@ -18,11 +16,13 @@ const BASE: &[&str] = &[
     "text-[rgba(255,206,99,0.25)]",
     "[background:rgba(8,14,30,0.5)]",
 ];
+
 const MOBILE: &[&str] = &["mobile:aspect-[1/0.85]", "mobile:text-[1.4rem]"];
 const TABLET: &[&str] = &["tablet:aspect-[1/0.85]", "tablet:text-[1.4rem]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

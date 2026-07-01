@@ -1,22 +1,16 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HeaderBrandTitleProps;
-
+use style::CLASS;
 assert_component!(HeaderBrandTitle);
 
 #[component]
 pub fn HeaderBrandTitle(props: HeaderBrandTitleProps) -> Element {
     let title = props.title;
     rsx! {
-        h1 {
-            class: CLASS,
-            {title}
-        }
+        h1 { class: CLASS, {title} }
     }
 }

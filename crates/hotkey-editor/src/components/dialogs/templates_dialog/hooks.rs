@@ -1,11 +1,9 @@
+use super::components::template_gallery::components::template_card::TemplateCardProps;
+use super::props::TemplatesDialogProps;
+use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{CustomKeys, DEFAULT_CUSTOM_KEYS, ResolvedTemplate};
-
-use crate::services::customkeys::upload_status::UploadStatus;
-
-use super::components::template_gallery::components::template_card::TemplateCardProps;
-use super::props::TemplatesDialogProps;
 
 /// Composes the templates dialog's cards. Resolves every bundled template and,
 /// for each, builds the apply handler that overwrites the loaded keys: parse the
@@ -39,7 +37,7 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> Vec<Template
                 };
                 upload_status.set(status);
                 let summary = format!(
-                    "{binding_count} ability bindings, {command_count} command bindings loaded"
+                    "{binding_count} ability bindings, {command_count} command bindings loaded",
                 );
                 let options = ToastOptions::new().description(summary);
                 let title = format!("{toast_name} applied");

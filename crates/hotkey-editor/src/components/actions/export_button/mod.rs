@@ -1,10 +1,9 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeys;
-
 use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
 use crate::components::shared::icons::ICON_DOWNLOAD;
 use crate::components::shared::toolbar_button::ToolbarButton;
 use crate::services::files::download::BlobDownload;
+use dioxus::prelude::*;
+use warcraft_keybinds::CustomKeys;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct ExportButtonProps {
@@ -36,10 +35,7 @@ pub fn ExportButton(props: ExportButtonProps) -> Element {
                 aria_label: "Download CustomKeys.txt",
                 onclick: open_download_info,
             }
-            DownloadInfoDialog {
-                open: download_info_open,
-                on_confirm: handle_download_confirm,
-            }
+            DownloadInfoDialog { open: download_info_open, on_confirm: handle_download_confirm }
         }
     }
 }

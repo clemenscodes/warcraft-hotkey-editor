@@ -2,15 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
 use components::footer_heart::{FooterHeart, FooterHeartProps};
-
+use dioxus::prelude::*;
 pub use props::FooterCreditProps;
-
+use style::CLASS;
 assert_component!(FooterCredit);
 
 #[component]
@@ -19,8 +15,7 @@ pub fn FooterCredit(props: FooterCreditProps) -> Element {
     let lead = props.lead;
     let tail = props.tail;
     rsx! {
-        span {
-            class: CLASS,
+        span { class: CLASS,
             {lead}
             FooterHeart { ..heart }
             {tail}

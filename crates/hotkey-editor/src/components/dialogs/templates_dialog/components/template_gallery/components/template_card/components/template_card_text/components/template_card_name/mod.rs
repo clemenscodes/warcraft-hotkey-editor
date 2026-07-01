@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::TemplateCardNameProps;
-
+use style::CLASS;
 assert_component!(TemplateCardName);
 
 /// A template card's name heading. Owns `.template-card-name`.
@@ -15,9 +12,6 @@ assert_component!(TemplateCardName);
 pub fn TemplateCardName(props: TemplateCardNameProps) -> Element {
     let name = props.children.clone();
     rsx! {
-        h3 {
-            class: CLASS,
-            {name}
-        }
+        h3 { class: CLASS, {name} }
     }
 }

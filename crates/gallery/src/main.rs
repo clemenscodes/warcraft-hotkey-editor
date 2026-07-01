@@ -23,14 +23,17 @@ fn GalleryApp() -> Element {
                     registry,
                     base_path,
                     initial_view: view,
-                    on_change: move |view: GalleryView| GalleryLocation::set_view(&view),
+                    on_change: move | view : GalleryView |
+                                    GalleryLocation::set_view(& view),
                 }
             }
         }
-        GalleryMode::Frame { story } => rsx! {
-            document::Stylesheet { href: TAILWIND_STYLES }
-            StoryFrame { registry, story_id: story }
-        },
+        GalleryMode::Frame { story } => {
+            rsx! {
+                document::Stylesheet { href: TAILWIND_STYLES }
+                StoryFrame { registry, story_id: story }
+            }
+        }
     }
 }
 

@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::PreviewTextareaProps;
-
+use style::CLASS;
 assert_component!(PreviewTextarea);
 
 /// The read-only serialized CustomKeys.txt view: monospaced and horizontally

@@ -2,25 +2,30 @@ mod derived_stats;
 pub mod grids;
 pub mod header;
 pub mod stats_panel;
+pub mod tile_override_empty;
+pub mod tile_override_panel;
+pub mod unit_description;
+pub mod unit_detail_empty;
 
-use std::collections::HashMap;
-use std::rc::Rc;
-
-use dioxus::prelude::*;
-use warcraft_api::{Race, WarcraftObjectMeta};
-use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
-use warcraft_keybinds::{CustomKeys, InspectorDetail, UnitCommandSlots};
-
-use crate::components::tile_override::TileOverridePanel;
+use crate::components::tile_override::TileOverride;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::model::icons::IconUrl;
-use warcraft_keybinds::GridLayout;
-use warcraft_keybinds::GridSlotId;
-
 use derived_stats::DerivedStats;
+use dioxus::prelude::*;
 use grids::UnitCommandGrids;
 use header::UnitDetailHeader;
 use stats_panel::UnitStatsPanel;
+use std::collections::HashMap;
+use std::rc::Rc;
+use tile_override_empty::TileOverrideEmpty;
+use tile_override_panel::TileOverridePanel;
+use unit_description::UnitDescription;
+use unit_detail_empty::UnitDetailEmpty;
+use warcraft_api::{Race, WarcraftObjectMeta};
+use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
+use warcraft_keybinds::{CustomKeys, InspectorDetail, UnitCommandSlots};
 
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailPanelProps {
@@ -90,28 +95,22 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
             train_upgrades,
         )
     });
-
     let unit_id_option = selected_unit_id.read().clone();
     let Some(unit_id) = unit_id_option else {
         return rsx! {
-            section { class: "unit-detail empty",
-                "Select a unit to view its command card."
-            }
+            UnitDetailEmpty { message: "Select a unit to view its command card." }
         };
     };
-
     let Some(unit_object) = ObjectLookup::by_id(&unit_id) else {
         return rsx! {
-            section { class: "unit-detail empty", "Unit not found in database." }
+            UnitDetailEmpty { message: "Unit not found in database." }
         };
     };
-
     let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
         return rsx! {
-            section { class: "unit-detail empty", "Selected object is not a unit." }
+            UnitDetailEmpty { message: "Selected object is not a unit." }
         };
     };
-
     let unit_name = unit_object.names().first().copied().unwrap_or("(unnamed)");
     let portrait_url = unit_object
         .icons()
@@ -119,7 +118,6 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
         .copied()
         .map(IconUrl::from_database_path)
         .map(|url| url.to_string());
-
     let slot_data_guard = slot_data_memo.read();
     let (
         command_card_slots_rc,
@@ -128,7 +126,6 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
         research_menu_slots_rc,
         train_upgrades,
     ) = slot_data_guard.clone();
-
     let inspector_slot = *selected_slot.read();
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
@@ -174,23 +171,22 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
             command_card_slots_rc.clone()
         }
     };
-
     let unit_description = unit_object.ubertip();
     let unit_combat = *unit_meta.combat();
     let hero_attributes_option = unit_meta.hero_attributes().copied();
     let unit_evasion_chance = DerivedStats::unit_evasion_chance(unit_meta);
-
     rsx! {
         section { class: "unit-detail",
             UnitDetailHeader {
                 unit_name,
-                unit_id: unit_id.clone(),
+                unit_id: unit_id
+                        .clone(),
                 portrait_url,
                 has_hero_attributes: hero_attributes_option.is_some(),
                 selected_hero_level,
                 level_picker_open,
             }
-            p { class: "unit-description", "{unit_description.unwrap_or_default()}" }
+            UnitDescription { text: unit_description.unwrap_or_default() }
             UnitStatsPanel {
                 combat: unit_combat,
                 hero_attributes: hero_attributes_option,
@@ -218,10 +214,10 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                         update_hotkeys_on_move,
                         hotkey_assign_request,
                     }
-                    aside { class: "tile-override-panel",
+                    TileOverridePanel {
                         h3 { class: "grid-heading", "Hotkey override" }
                         if let Some(detail) = inspector_panel.clone() {
-                            TileOverridePanel {
+                            TileOverride {
                                 detail,
                                 loaded_keys,
                                 grid_layout,
@@ -235,9 +231,7 @@ pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
                                 hotkey_assign_request,
                             }
                         } else {
-                            div { class: "tile-override-empty",
-                                p { "Select a tile in the grid to override its hotkey." }
-                            }
+                            TileOverrideEmpty { message: "Select a tile in the grid to override its hotkey." }
                         }
                     }
                 }

@@ -1,7 +1,6 @@
+use crate::model::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
-
-use crate::model::icons::IconUrl;
 use warcraft_keybinds::GridSlotId;
 
 #[derive(Props, Clone, PartialEq)]

@@ -1,7 +1,6 @@
+use super::components::grid::components::grid_tile::GridTileProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
-
-use super::components::grid::components::grid_tile::GridTileProps;
 
 /// A heading stacked above a grid of finished tiles. Purely presentational: it
 /// pairs a caption with the reused `Grid` and draws whatever tiles it is handed.

@@ -9,6 +9,7 @@ const BASE: &[&str] = &[
     "text-warcraft-gold",
     "[text-shadow:1px_1px_0_#000,0_0_18px_rgba(255,206,99,0.35)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:text-[clamp(12px,3.2vw,18px)]/[1]",
     "mobile:tracking-[0.02em]",
@@ -18,6 +19,7 @@ const MOBILE: &[&str] = &[
     "mobile:min-w-0",
     "mobile:max-w-full",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:text-[clamp(12px,3.2vw,18px)]/[1]",
     "tablet:tracking-[0.02em]",
@@ -27,9 +29,11 @@ const TABLET: &[&str] = &[
     "tablet:min-w-0",
     "tablet:max-w-full",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::state::BurgerItemState;
+use dioxus::prelude::*;
 
 /// A single drawer row. Its label and icon are content; its visual weight is the
 /// `state`; its behaviour is the click handler; and the accessibility/e2e

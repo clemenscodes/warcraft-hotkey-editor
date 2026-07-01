@@ -3,10 +3,6 @@
 //! (occupant, hotkey, conflict, passive, command, selected, draggable, tier
 //! preview) is made here, in the domain, never in the UI.
 
-use std::collections::{HashMap, HashSet};
-
-use warcraft_database::ObjectLookup;
-
 use crate::custom_keys::CustomKeys;
 use crate::display::ability_cell::{AbilityCell, AbilityIconPath};
 use crate::display::grid_behavior::GridBehavior;
@@ -14,6 +10,8 @@ use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, GridLayout};
 use crate::identity::hotkey_token::HotkeyToken;
 use crate::identity::slot::GridSlotId;
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
+use std::collections::{HashMap, HashSet};
+use warcraft_database::ObjectLookup;
 
 /// One fully resolved tile, ready to paint. Its address is a [`GridCoordinate`],
 /// never a loose integer.
@@ -216,19 +214,16 @@ impl CustomKeys {
         let is_research_context = behavior.research_positions();
         let column = u8::from(coordinate.column());
         let row = u8::from(coordinate.row());
-
         let occupant_slot = self.slot_at_position(input.slots, is_research_context, column, row);
         let occupant_cell = occupant_slot.map(|slot| self.cell_for_slot(slot));
         let is_off_state = matches!(occupant_slot, Some(GridSlotId::AbilityOff(_)));
         let is_command = matches!(occupant_slot, Some(GridSlotId::Command(_)));
         let has_occupant = occupant_cell.is_some();
-
         let is_selected = occupant_slot.is_some_and(|occupant_value| {
             input.selected.is_some_and(|active| {
                 occupant_value == active && input.selected_is_research == is_research_context
             })
         });
-
         let object_id_option = occupant_cell.as_ref().map(|cell| cell.object_id());
         let tier_index = object_id_option
             .and_then(|id| input.tier_overrides.get(id.value()).copied())
@@ -240,7 +235,6 @@ impl CustomKeys {
         let tier_icon = database_object
             .and_then(|object| object.icons().get(tier_index).copied())
             .map(|raw_icon| AbilityIconPath::Database(raw_icon.trim()));
-
         let display_name = if is_off_state {
             occupant_cell
                 .as_ref()
@@ -255,7 +249,6 @@ impl CustomKeys {
                 })
                 .unwrap_or_default()
         };
-
         let cell_icon = occupant_cell
             .as_ref()
             .and_then(|cell| cell.icon_path().cloned());
@@ -264,7 +257,6 @@ impl CustomKeys {
         } else {
             cell_icon.or(tier_icon)
         };
-
         let effective_token = occupant_slot
             .and_then(|slot| self.effective_hotkey_token(&slot, input.layout, is_research_context));
         let layout_character = input
@@ -274,20 +266,16 @@ impl CustomKeys {
         let layout_token =
             HotkeyToken::try_from(layout_character).expect("layout letters are always A to Z");
         let hotkey = effective_token.unwrap_or(layout_token);
-
         let is_passive = behavior.show_passive_badge()
             && object_id_option
                 .map(|id| ObjectLookup::is_passive_ability(id.value()))
                 .unwrap_or(false);
-
         let is_conflict = effective_token
             .map(|token| conflicting_tokens.contains(&token))
             .unwrap_or(false);
-
         let draggable = has_occupant
             && (input.restrict_draggable_to.is_empty()
                 || occupant_slot.is_some_and(|slot| input.restrict_draggable_to.contains(&slot)));
-
         RenderedTile {
             coordinate,
             occupant: occupant_slot,
@@ -381,8 +369,6 @@ mod tests {
 
     #[test]
     fn cascade_pinned_slot_is_still_draggable_in_the_editor() {
-        // `Aro1` is pinned for the cascade (`GridSlotId::is_pinned`), but the
-        // editor must let the player reposition anything that occupies a tile.
         let keys = CustomKeys::from("[Aro1]\nButtonpos=0,0\n");
         let slots = [GridSlotId::ability("Aro1")];
         let tiles = render(&keys, &slots, &[]);
@@ -425,7 +411,6 @@ mod tests {
 
     #[test]
     fn move_blocker_refuses_a_tile_reserved_by_an_off_state() {
-        // AHbz's off-state reserves (1,1); dropping ACad there must be refused.
         let keys =
             CustomKeys::from("[ACad]\nButtonpos=0,0\n[AHbz]\nButtonpos=0,1\nUnbuttonpos=1,1\n");
         let slots = [GridSlotId::ability("ACad"), GridSlotId::ability("AHbz")];

@@ -1,9 +1,8 @@
+use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::url_state::UrlNavigationState;
 use dioxus::prelude::*;
 use warcraft_api::{Race, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, UnitMode};
-
-use crate::services::navigation::app_view::AppView;
-use crate::services::navigation::url_state::UrlNavigationState;
 
 /// Bundles every signal the header needs to write when the user
 /// switches views (clicks the brand to go home, or clicks the

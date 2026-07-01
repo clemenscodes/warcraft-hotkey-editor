@@ -1,9 +1,8 @@
+use crate::components::grid_editors::grid_editor::GridEditorProps;
+use crate::model::grid::DragFollower;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::GridBehavior;
-
-use crate::components::grid_editors::grid_editor::GridEditorProps;
-use crate::model::grid::DragFollower;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct DragFollowerOverlayProps {

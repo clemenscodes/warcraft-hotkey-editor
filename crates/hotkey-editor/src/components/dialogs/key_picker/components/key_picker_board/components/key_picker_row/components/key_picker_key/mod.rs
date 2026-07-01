@@ -3,13 +3,10 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
+use dioxus::prelude::*;
 use logic::KeyPickerKeyPresentation;
-
 pub use props::KeyPickerKeyProps;
-
 assert_component!(KeyPickerKey);
 
 /// A single key on the picker board: an on-screen keyboard button that assigns

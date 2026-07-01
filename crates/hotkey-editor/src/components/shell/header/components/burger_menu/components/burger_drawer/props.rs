@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-
 use super::super::burger_drawer_body::BurgerDrawerBodyProps;
 use super::super::burger_drawer_header::BurgerDrawerHeaderProps;
 use super::super::burger_menu_item::BurgerMenuItemProps;
+use dioxus::prelude::*;
 
 /// The slide-in drawer: everything the drawer subtree needs, threaded from the
 /// controller — the close handler, the primary Grid Layout row, and the grouped

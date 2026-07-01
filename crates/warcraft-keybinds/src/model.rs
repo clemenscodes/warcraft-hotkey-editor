@@ -1,15 +1,16 @@
+use crate::custom_keys::CustomKeys;
+use crate::identity::ability_id::AbilityId;
+use crate::identity::hotkey_token::HotkeyToken;
 use std::fmt;
 use std::ops::Deref;
 use std::str::FromStr;
 pub use warcraft_api::{ColumnIndex, GridCoordinate, RowIndex};
+
 use warcraft_api::{
     SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId, WarcraftObjectKind,
 };
-use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
-use crate::custom_keys::CustomKeys;
-use crate::identity::ability_id::AbilityId;
-use crate::identity::hotkey_token::HotkeyToken;
+use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Hotkey {
@@ -1469,7 +1470,7 @@ mod builder_tests {
         );
         assert_eq!(
             AbilityModifier::try_from("Ctrl_or_Alt").unwrap(),
-            AbilityModifier::CtrlOrAlt
+            AbilityModifier::CtrlOrAlt,
         );
         assert_eq!(
             AbilityModifier::try_from("Shift").unwrap(),
@@ -1536,7 +1537,7 @@ mod builder_tests {
         let binding = AbilityBinding::builder().button_position(position).build();
         assert_eq!(
             binding.button_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::One))
+            Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::One)),
         );
     }
 
@@ -1548,7 +1549,7 @@ mod builder_tests {
             .build();
         assert_eq!(
             binding.unbutton_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two))
+            Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)),
         );
     }
 
@@ -1568,7 +1569,7 @@ mod builder_tests {
             .build();
         assert_eq!(
             binding.research_button_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))
+            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)),
         );
     }
 
@@ -1689,11 +1690,11 @@ mod builder_tests {
         assert_eq!(reparsed_binding.unhotkey(), Some(&Hotkey::Letter('W')));
         assert_eq!(
             reparsed_binding.button_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))
+            Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
         );
         assert_eq!(
             reparsed_binding.unbutton_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two))
+            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)),
         );
         assert_eq!(
             reparsed_binding.research_hotkey(),
@@ -1750,7 +1751,7 @@ mod builder_tests {
         let binding = CommandBinding::builder().button_position(position).build();
         assert_eq!(
             binding.button_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two))
+            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)),
         );
     }
 
@@ -1762,7 +1763,7 @@ mod builder_tests {
             .build();
         assert_eq!(
             binding.unbutton_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))
+            Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One)),
         );
     }
 
@@ -1799,7 +1800,7 @@ mod builder_tests {
         assert_eq!(reparsed_binding.hotkey(), Some(&Hotkey::Letter('M')));
         assert_eq!(
             reparsed_binding.button_position().copied(),
-            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two))
+            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)),
         );
         assert_eq!(
             reparsed_binding.unbutton_position().copied(),
@@ -1906,7 +1907,7 @@ mod builder_tests {
         let serialized = file.to_string();
         assert!(
             serialized.contains("[AHhb]"),
-            "section header must appear in output with its canonical id case"
+            "section header must appear in output with its canonical id case",
         );
     }
 
@@ -1917,7 +1918,7 @@ mod builder_tests {
         let serialized = file.to_string();
         assert!(
             serialized.contains("[CmdMove]"),
-            "command section header must appear in output with its canonical id case"
+            "command section header must appear in output with its canonical id case",
         );
     }
 
@@ -1940,7 +1941,7 @@ mod builder_tests {
         assert_eq!(original_binding.hotkey(), reparsed_binding.hotkey());
         assert_eq!(
             original_binding.button_position(),
-            reparsed_binding.button_position()
+            reparsed_binding.button_position(),
         );
         assert_eq!(original_binding.tip(), reparsed_binding.tip());
     }

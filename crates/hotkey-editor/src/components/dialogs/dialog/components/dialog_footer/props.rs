@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::dialog::DialogProps;
+use dioxus::prelude::*;
 
 /// The footer's only input: the optional action bar content, forwarded from the
 /// dialog. `None` when the dialog has no footer.

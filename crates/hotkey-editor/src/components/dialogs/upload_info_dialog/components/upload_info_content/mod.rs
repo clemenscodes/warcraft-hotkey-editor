@@ -1,13 +1,11 @@
 pub mod components;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::upload_info_filename::UploadInfoFilename;
 use components::upload_info_intro::UploadInfoIntro;
+use dioxus::prelude::*;
 use style::CLASS;
-
 assert_component!(UploadInfoContent);
 
 /// The import dialog's centered instruction block: the intro and the filename
@@ -15,8 +13,7 @@ assert_component!(UploadInfoContent);
 #[component]
 pub fn UploadInfoContent() -> Element {
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             UploadInfoIntro {}
             UploadInfoFilename {}
         }

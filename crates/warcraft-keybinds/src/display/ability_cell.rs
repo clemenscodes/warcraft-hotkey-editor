@@ -1,11 +1,10 @@
-use warcraft_api::WarcraftObjectId;
-use warcraft_database::ObjectLookup;
-
 use crate::identity::ability_id::AbilityId;
 use crate::identity::hotkey_token::HotkeyToken;
 use crate::model::{AbilityBinding, CommandBinding, Hotkey};
 use crate::text::command_label::CommandLabel;
 use crate::text::tip::Tip;
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::ObjectLookup;
 
 #[derive(Clone, PartialEq, Debug)]
 pub enum AbilityIconPath {
@@ -81,9 +80,6 @@ impl AbilityCell {
             .or(database_name)
             .or(tip_name)
             .unwrap_or_else(|| String::from("(unknown)"));
-        // Off icon priority: binding un_icon override → database UnArt
-        // (AbilityMeta::off_icon, parsed from UnArt= in abilityfunc.txt) →
-        // on-state icon as last resort.
         let database_off_icon_path: Option<AbilityIconPath> =
             ObjectLookup::off_icon(id_str).map(AbilityIconPath::Database);
         let database_icon_path: Option<AbilityIconPath> = database_object

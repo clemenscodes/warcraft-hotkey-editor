@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::attribute_row::AttributeRow;
+use dioxus::prelude::*;
 
 #[derive(Clone, PartialEq)]
 pub struct HeroDisplayData {
@@ -69,19 +68,22 @@ pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
                 AttributeRow {
                     label: "Strength",
                     value: hero.strength_value,
-                    per_level: hero.strength_per_level,
+                    per_level: hero
+                            .strength_per_level,
                     is_primary: hero.primary_is_strength,
                 }
                 AttributeRow {
                     label: "Agility",
                     value: hero.agility_value,
-                    per_level: hero.agility_per_level,
+                    per_level: hero
+                            .agility_per_level,
                     is_primary: hero.primary_is_agility,
                 }
                 AttributeRow {
                     label: "Intelligence",
                     value: hero.intelligence_value,
-                    per_level: hero.intelligence_per_level,
+                    per_level: hero
+                            .intelligence_per_level,
                     is_primary: hero.primary_is_intelligence,
                 }
             }

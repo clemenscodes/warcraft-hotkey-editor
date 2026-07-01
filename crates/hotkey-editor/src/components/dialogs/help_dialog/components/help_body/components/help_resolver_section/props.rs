@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-
 use crate::components::dialogs::help_dialog::components::help_body::HelpBodyProps;
 use crate::components::dialogs::help_dialog::components::help_body::components::help_resolver_section::components::help_glossary_columns::components::help_glossary_column::components::help_glossary_entry::HelpGlossaryEntryProps;
 

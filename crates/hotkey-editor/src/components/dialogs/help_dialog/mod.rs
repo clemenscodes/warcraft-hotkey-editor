@@ -2,16 +2,13 @@ pub mod components;
 pub mod data;
 mod props;
 
-use dioxus::prelude::*;
-
 use super::dialog::Dialog;
 use crate::assert_component;
 use components::help_body::{HelpBody, HelpBodyProps};
 use components::help_dismiss::{HelpDismiss, HelpDismissProps};
 use data::HELP_CONTENT;
-
+use dioxus::prelude::*;
 pub use props::HelpDialogProps;
-
 assert_component!(HelpDialog);
 
 /// The onboarding guide. Just a component that composes the `Dialog` base: it

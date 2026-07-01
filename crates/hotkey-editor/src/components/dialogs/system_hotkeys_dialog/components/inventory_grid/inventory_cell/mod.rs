@@ -3,16 +3,13 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_key::SystemSlotKey;
 use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_label::SystemSlotLabel;
 use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
+use dioxus::prelude::*;
 use hooks::use_inventory_cell;
-
 pub use props::InventoryCellProps;
-
 assert_component!(InventoryCell);
 
 /// A single draggable inventory slot: shows its caption and bound key, edits on
@@ -26,7 +23,8 @@ pub fn InventoryCell(props: InventoryCellProps) -> Element {
         div {
             class,
             "data-inventory-slot": section_id,
-            "data-dragging": model.dragging_attr,
+            "data-dragging": model
+                    .dragging_attr,
             tabindex: "0",
             "data-tooltip": model.conflict_title,
             "data-tooltip-placement": "above",

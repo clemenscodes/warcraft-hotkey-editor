@@ -1,7 +1,5 @@
 use crate::classes;
 
-// One category pill in the mobile tab row (shown only on small screens, where the
-// container's nav switches to flex). Active takes the inherited race color.
 const BASE: &[&str] = &[
     "flex-1",
     "min-w-0",
@@ -34,21 +32,25 @@ const BASE: &[&str] = &[
     "data-[active=true]:text-[color:var(--race-color,#ffce63)]",
     "data-[active=true]:shadow-[0_0_6px_var(--race-color-soft,rgba(255,206,99,0.3))]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:text-[clamp(11px,2.8vw,14px)]",
     "mobile:px-[0.35rem]",
     "mobile:h-[44px]",
     "mobile:leading-none",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:text-[clamp(11px,2.8vw,14px)]",
     "tablet:px-[0.35rem]",
     "tablet:h-[44px]",
     "tablet:leading-none",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

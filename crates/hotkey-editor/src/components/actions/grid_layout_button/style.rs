@@ -1,8 +1,5 @@
 use crate::classes;
 
-// The header's prominent "Grid Layout" call-to-action: a gold-bordered gradient
-// pill, distinct from the icon-only toolbar buttons. Brightens on hover and shows a
-// white ring on keyboard focus.
 const BASE: &[&str] = &[
     "inline-flex",
     "items-center",
@@ -28,11 +25,13 @@ const BASE: &[&str] = &[
     "hover:[background:linear-gradient(135deg,rgba(255,206,99,0.22)_0%,rgba(60,45,14,0.95)_100%)]",
     "hover:[box-shadow:0_0_26px_rgba(255,206,99,0.55),inset_0_0_14px_rgba(255,206,99,0.15)]",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

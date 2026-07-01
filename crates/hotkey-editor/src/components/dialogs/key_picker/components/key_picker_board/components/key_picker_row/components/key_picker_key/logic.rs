@@ -1,11 +1,9 @@
-use dioxus::prelude::*;
-
-use crate::components::dialogs::key_picker::KeyPickerCellState;
-use crate::styling::ClassList;
-
 use super::props::KeyPickerKeyProps;
 use super::state::KeyPickerKeyState;
 use super::style;
+use crate::components::dialogs::key_picker::KeyPickerCellState;
+use crate::styling::ClassList;
+use dioxus::prelude::*;
 
 /// A picker key's fully shaped presentation: the state class, the letter it shows,
 /// the hover title, whether it is disabled, the `data-special` flag that widens

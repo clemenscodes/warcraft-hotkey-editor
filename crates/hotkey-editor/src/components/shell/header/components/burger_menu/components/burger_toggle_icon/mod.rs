@@ -1,11 +1,9 @@
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::shared::icons::ICON_BURGER;
+use dioxus::prelude::*;
 use style::CLASS;
-
 assert_component!(BurgerToggleIcon);
 
 #[component]

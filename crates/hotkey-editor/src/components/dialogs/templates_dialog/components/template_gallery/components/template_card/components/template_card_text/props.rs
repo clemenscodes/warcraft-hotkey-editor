@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::super::super::TemplateCardProps;
+use dioxus::prelude::*;
 
 /// The text block's inputs: the card's name and description.
 #[derive(Props, Clone, PartialEq)]

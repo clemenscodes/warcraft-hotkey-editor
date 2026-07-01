@@ -2,15 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::system_hotkeys_dialog::components::key_capture_cell::KeyCaptureCell;
 use components::system_hotkeys_list_entry_label::SystemHotkeysListEntryLabel;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::SystemHotkeysListEntryProps;
-
+use style::CLASS;
 assert_component!(SystemHotkeysListEntry);
 
 /// One hotkey row: the binding name beside its editable key chip.
@@ -24,8 +21,7 @@ pub fn SystemHotkeysListEntry(props: SystemHotkeysListEntryProps) -> Element {
     let editing_section = props.editing_section;
     let binding_map = props.binding_map;
     rsx! {
-        li {
-            class: CLASS,
+        li { class: CLASS,
             SystemHotkeysListEntryLabel { text: comment }
             KeyCaptureCell {
                 section_id,

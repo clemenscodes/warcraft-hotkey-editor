@@ -1,7 +1,7 @@
 use crate::classes;
 
-// The downward caret at the trigger's trailing edge; flips 180deg when open.
 const BASE: &[&str] = &["data-[open=true]:rotate-180"];
+
 const MOBILE: &[&str] = &[
     "mobile:flex-none",
     "mobile:ml-[0.6rem]",
@@ -9,6 +9,7 @@ const MOBILE: &[&str] = &[
     "mobile:leading-none",
     "mobile:[transition:transform_0.18s_ease]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:flex-none",
     "tablet:ml-[0.6rem]",
@@ -16,9 +17,11 @@ const TABLET: &[&str] = &[
     "tablet:leading-none",
     "tablet:[transition:transform_0.18s_ease]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

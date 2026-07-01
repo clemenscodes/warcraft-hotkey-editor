@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::state::LayoutCellState;
+use dioxus::prelude::*;
 
 /// One editable grid cell: its visual state, the letter it shows, its grid
 /// address, and the drag/click handlers the editor wired for it.

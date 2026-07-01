@@ -2,14 +2,11 @@ mod logic;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
+use dioxus::prelude::*;
 use logic::SystemSlotLabelPresentation;
-use style::CLASS;
-
 pub use props::SystemSlotLabelProps;
-
+use style::CLASS;
 assert_component!(SystemSlotLabel);
 
 /// The caption shown above the key on a system hotkey slot.
@@ -17,10 +14,6 @@ assert_component!(SystemSlotLabel);
 pub fn SystemSlotLabel(props: SystemSlotLabelProps) -> Element {
     let SystemSlotLabelPresentation { text, compact } = SystemSlotLabelPresentation::from(&props);
     rsx! {
-        div {
-            class: CLASS,
-            "data-compact": compact,
-            {text}
-        }
+        div { class: CLASS, "data-compact": compact, {text} }
     }
 }

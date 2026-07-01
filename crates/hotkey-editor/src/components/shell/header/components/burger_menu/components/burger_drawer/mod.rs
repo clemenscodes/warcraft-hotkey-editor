@@ -1,16 +1,12 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
-use crate::assert_component;
-use style::CLASS;
-
 use super::burger_drawer_body::{BurgerDrawerBody, BurgerDrawerBodyProps};
 use super::burger_drawer_header::{BurgerDrawerHeader, BurgerDrawerHeaderProps};
-
+use crate::assert_component;
+use dioxus::prelude::*;
 pub use props::BurgerDrawerProps;
-
+use style::CLASS;
 assert_component!(BurgerDrawer);
 
 /// The slide-in navigation drawer. Keeps the `burger-drawer` id/class the global

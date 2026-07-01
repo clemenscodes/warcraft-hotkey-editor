@@ -1,8 +1,6 @@
-use dioxus::prelude::*;
-
-use warcraft_keybinds::CommandBehavior;
-
 use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use dioxus::prelude::*;
+use warcraft_keybinds::CommandBehavior;
 
 /// The ordinary command card, build menus, and off-state position pickers.
 #[component]

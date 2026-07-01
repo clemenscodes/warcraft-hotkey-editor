@@ -1,7 +1,6 @@
+use super::defense_matchup_cell::DefenseMatchupCell;
 use dioxus::prelude::*;
 use warcraft_api::{AttackType, DefenseType};
-
-use super::defense_matchup_cell::DefenseMatchupCell;
 
 const ALL_ATTACK_TYPES: [AttackType; 7] = [
     AttackType::Normal,

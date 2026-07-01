@@ -1,7 +1,6 @@
+use crate::components::dialogs::key_picker::KeyPickerCell;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
-
-use crate::components::dialogs::key_picker::KeyPickerCell;
 
 /// One pickable key: the cell it renders, whether a conflicting cell may still be
 /// chosen, and the handler fired when it is picked. Everything the button shows

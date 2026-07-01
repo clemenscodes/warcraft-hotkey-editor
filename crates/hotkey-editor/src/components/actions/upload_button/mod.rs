@@ -3,18 +3,15 @@ mod hooks;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use crate::components::shared::icons::ICON_UPLOAD;
 use crate::components::shared::toolbar_button::ToolbarButton;
 use components::upload_button_input::UploadButtonInput;
+use dioxus::prelude::*;
 use hooks::use_upload_button;
-use style::CLASS;
-
 pub use props::UploadButtonProps;
-
+use style::CLASS;
 assert_component!(UploadButton);
 
 /// The toolbar's import control: a hidden file input plus the visible upload button
@@ -23,8 +20,7 @@ assert_component!(UploadButton);
 pub fn UploadButton(props: UploadButtonProps) -> Element {
     let model = use_upload_button(&props);
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             UploadButtonInput { on_change: model.on_file_change }
             ToolbarButton {
                 icon: ICON_UPLOAD,

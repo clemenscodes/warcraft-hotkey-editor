@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::FooterLinkIconProps;
-
+use style::CLASS;
 assert_component!(FooterLinkIcon);
 
 /// The inline glyph a footer link may carry. A leaf that early-returns when the
@@ -18,10 +15,6 @@ pub fn FooterLinkIcon(props: FooterLinkIconProps) -> Element {
         return rsx! {};
     };
     rsx! {
-        span {
-            class: CLASS,
-            aria_hidden: "true",
-            dangerous_inner_html: svg,
-        }
+        span { class: CLASS, aria_hidden: "true", dangerous_inner_html: svg }
     }
 }

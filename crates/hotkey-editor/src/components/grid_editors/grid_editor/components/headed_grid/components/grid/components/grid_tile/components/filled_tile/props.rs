@@ -1,11 +1,10 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::HotkeyToken;
-
 use super::super::super::GridTileProps;
 use super::super::super::GridTileState;
 use super::super::super::TileChrome;
 use super::super::hotkey_badge::HotkeyBadgeState;
 use super::state::FilledTileState;
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
 
 /// An occupied command tile: the ability/command icon (or its text fallback), the
 /// hotkey badge, and the shared tile chrome.

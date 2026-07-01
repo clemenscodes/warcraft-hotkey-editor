@@ -1,7 +1,6 @@
 pub mod hero_level_option;
 
 use dioxus::prelude::*;
-
 use hero_level_option::HeroLevelOption;
 
 const MAX_HERO_LEVEL_DISPLAY: u32 = 10;

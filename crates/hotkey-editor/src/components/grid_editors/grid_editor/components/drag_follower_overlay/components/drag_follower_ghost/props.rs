@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-use warcraft_api::RaceLabels;
-
 use super::super::super::DragFollowerOverlayProps;
 use super::logic::FollowerPresentation;
+use dioxus::prelude::*;
+use warcraft_api::RaceLabels;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct DragFollowerGhostProps {

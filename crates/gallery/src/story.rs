@@ -76,7 +76,9 @@ mod tests {
     use super::*;
 
     fn sample() -> Element {
-        rsx! { div {} }
+        rsx! {
+            div {}
+        }
     }
 
     #[test]

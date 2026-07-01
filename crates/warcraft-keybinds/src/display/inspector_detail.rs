@@ -1,11 +1,10 @@
-use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_database::{BuildingTraits, ObjectLookup};
-
 use crate::custom_keys::CustomKeys;
 use crate::display::ability_cell::{AbilityCell, AbilityIconPath};
 use crate::identity::hotkey_token::HotkeyToken;
 use crate::identity::slot::GridSlotId;
 use crate::text::color_codes::WarcraftColorCodes;
+use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_database::{BuildingTraits, ObjectLookup};
 
 #[derive(Clone, PartialEq)]
 pub struct InspectorDetail {
@@ -106,7 +105,13 @@ impl InspectorDetail {
                     .unwrap_or(false);
                 let info_only = from_research
                     && database_object
-                        .map(|object| matches!(object.meta(), WarcraftObjectMeta::Ability(meta) if meta.max_level() == 1 && !meta.is_ultimate()))
+                        .map(|object| {
+                            matches!(
+                                object.meta(),
+                                WarcraftObjectMeta::Ability(meta)
+                                if meta.max_level() == 1 && !meta.is_ultimate()
+                            )
+                        })
                         .unwrap_or(false);
                 let object_has_alt_state = database_object
                     .map(|warcraft_object| {

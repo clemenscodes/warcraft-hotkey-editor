@@ -92,7 +92,6 @@ mod tests {
 
     #[test]
     fn dps_is_mean_damage_over_cooldown() {
-        // Ogre Mauler: 24–27 damage at 1.35s cooldown → 25.5 / 1.35 ≈ 18.89.
         let damage_per_second = DerivedStats::damage_per_second(24, 27, 1.35).unwrap();
         assert!((damage_per_second - 18.888).abs() < 0.01);
     }
@@ -104,14 +103,12 @@ mod tests {
 
     #[test]
     fn ehp_adds_six_percent_per_armor_point() {
-        // 850 HP, 3 armor, no evasion → 850 × (1 + 0.18) = 1003.
         let effective_hit_points = DerivedStats::effective_hit_points(850, 3.0, 0.0);
         assert!((effective_hit_points - 1003.0).abs() < 0.5);
     }
 
     #[test]
     fn ehp_folds_in_evasion() {
-        // 1000 HP, 0 armor, 20% evasion → 1000 / 0.8 = 1250.
         let effective_hit_points = DerivedStats::effective_hit_points(1000, 0.0, 0.2);
         assert!((effective_hit_points - 1250.0).abs() < 0.5);
     }

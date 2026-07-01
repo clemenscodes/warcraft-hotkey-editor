@@ -178,7 +178,6 @@ pub const fn assert_base(classes: &[&str]) {
 
 /// Compile-time guard: a state overlay (see `states!`) is always-on within its
 /// state, so it must NOT carry a band prefix.
-// Used only by `states!`; remains until the first stateful component is converted.
 #[allow(dead_code)]
 pub const fn assert_flat(classes: &[&str]) {
     let mut index = 0;
@@ -308,7 +307,6 @@ pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8
     }
     out
 }
-
 /// Join a component's six per-band utility lists into a compile-time,
 /// component-private `pub(super) const CLASS: &str`. The identity class is
 /// derived from the component directory; the caller passes only the bands.
@@ -332,14 +330,8 @@ pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8
 #[macro_export]
 macro_rules! classes {
     (
-        $base:ident,
-        $mobile:ident,
-        $tablet:ident,
-        $laptop:ident,
-        $desktop:ident,
-        $qhd:ident,
-        $uhd:ident
-        $(,)?
+        $base:ident, $mobile:ident, $tablet:ident, $laptop:ident, $desktop:ident,
+        $qhd:ident, $uhd:ident $(,)?
     ) => {
         const _: () = {
             $crate::styling::assert_named(stringify!($base), "BASE");
@@ -357,30 +349,32 @@ macro_rules! classes {
             $crate::styling::assert_band("qhd", $qhd);
             $crate::styling::assert_band("uhd", $uhd);
         };
+
         const MODULE_PATH: &str = module_path!();
         const IDENTITY_LEN: usize = $crate::styling::identity_len(MODULE_PATH);
+
         const IDENTITY_BYTES: [u8; IDENTITY_LEN] =
             $crate::styling::build_identity::<IDENTITY_LEN>(MODULE_PATH);
+
         const IDENTITY: &str = match ::core::str::from_utf8(&IDENTITY_BYTES) {
             ::core::result::Result::Ok(identity) => identity,
             ::core::result::Result::Err(_) => ::core::panic!("non-utf8 identity"),
         };
+
         const BANDS: &[&[&str]] = &[$base, $mobile, $tablet, $laptop, $desktop, $qhd, $uhd];
         const LEN: usize = $crate::styling::joined_len(IDENTITY, BANDS);
         const BYTES: [u8; LEN] = $crate::styling::join_into::<LEN>(IDENTITY, BANDS);
+
         const CLASS_STR: &str = match ::core::str::from_utf8(&BYTES) {
             ::core::result::Result::Ok(class) => class,
             ::core::result::Result::Err(_) => ::core::panic!("non-utf8 class list"),
         };
-        // A stateful component (one that also invokes `states!`) styles its root
-        // through `class(state)` and never names `CLASS` directly, so allow it to
-        // go unused there.
+
         #[allow(dead_code)]
         pub(super) const CLASS: $crate::styling::ClassList =
             $crate::styling::ClassList::new(CLASS_STR);
     };
 }
-
 /// Select a component's class by its current visual state. Used in the same
 /// `style.rs` as `classes!`, alongside it: `classes!` produces the base look,
 /// `states!` layers a flat (non-responsive) overlay per state on top of it and
@@ -408,31 +402,17 @@ macro_rules! classes {
 /// ```
 #[macro_export]
 macro_rules! states {
-    ( $ty:ty, $( $variant:ident => $overlay:ident ),+ $(,)? ) => {
-        const _: () = { $( $crate::styling::assert_flat($overlay); )+ };
-        pub(super) fn class(state: $ty) -> $crate::styling::ClassList {
-            match state {
-                $(
-                    <$ty>::$variant => {
-                        const LEN: usize =
-                            $crate::styling::joined_len(CLASS_STR, &[$overlay]);
-                        const BYTES: [u8; LEN] =
-                            $crate::styling::join_into::<LEN>(CLASS_STR, &[$overlay]);
-                        const STATE_CLASS: $crate::styling::ClassList =
-                            $crate::styling::ClassList::new(match ::core::str::from_utf8(&BYTES) {
-                                ::core::result::Result::Ok(class) => class,
-                                ::core::result::Result::Err(_) => {
-                                    ::core::panic!("non-utf8 state class")
-                                }
-                            });
-                        STATE_CLASS
-                    }
-                )+
-            }
-        }
+    ($ty:ty, $($variant:ident => $overlay:ident),+ $(,)?) => {
+        const _ : () = { $($crate::styling::assert_flat($overlay);)+ }; pub (super) fn
+        class(state : $ty) -> $crate::styling::ClassList { match state { $(<$ty
+        >::$variant => { const LEN : usize = $crate::styling::joined_len(CLASS_STR, &
+        [$overlay]); const BYTES : [u8; LEN] = $crate::styling::join_into::< LEN >
+        (CLASS_STR, & [$overlay]); const STATE_CLASS : $crate::styling::ClassList =
+        $crate::styling::ClassList::new(match ::core::str::from_utf8(& BYTES) {
+        ::core::result::Result::Ok(class) => class, ::core::result::Result::Err(_) => {
+        ::core::panic!("non-utf8 state class") } }); STATE_CLASS })+ } }
     };
 }
-
 /// Compile-time guard for a component's `mod.rs`: assert the component function
 /// name matches its directory, capitalization included. `classes!` already binds
 /// the class to the directory, so this closes the triangle
@@ -448,7 +428,7 @@ macro_rules! states {
 /// ```
 #[macro_export]
 macro_rules! assert_component {
-    ( $name:ident ) => {
+    ($name:ident) => {
         const _: () = $crate::styling::assert_component_name(stringify!($name), module_path!());
     };
 }

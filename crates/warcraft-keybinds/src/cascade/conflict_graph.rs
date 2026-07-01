@@ -1,14 +1,12 @@
-use std::collections::{HashMap, HashSet};
-use std::fmt;
-
-use warcraft_api::{WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_database::WARCRAFT_DATABASE;
-
 use crate::custom_keys::CustomKeys;
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
 use crate::unit::grids::{GridRole, UnitGrids};
 use crate::unit::slots::UnitCommandSlots;
+use std::collections::{HashMap, HashSet};
+use std::fmt;
+use warcraft_api::{WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_database::WARCRAFT_DATABASE;
 
 /// Canonical identifier for one ability state on one command card page type.
 ///
@@ -145,12 +143,10 @@ fn ability_list_priority(ability_lowercase: &str, carrier_unit_ids: &[WarcraftOb
 impl ConflictGraph {
     pub fn build(custom_keys: &CustomKeys) -> Self {
         let mut node_accumulators: HashMap<AbilityRoleKey, NodeAccumulator> = HashMap::new();
-        // For each unit, which ability keys it carries per grid role.
         let mut unit_role_keys: HashMap<
             WarcraftObjectId,
             HashMap<GridRole, HashSet<AbilityRoleKey>>,
         > = HashMap::new();
-
         for unit_id in WARCRAFT_DATABASE.all_unit_ids() {
             let unit_grids = UnitGrids::for_unit(unit_id);
             for named_grid in unit_grids.grids() {
@@ -185,8 +181,6 @@ impl ConflictGraph {
                 }
             }
         }
-
-        // Assign stable, deterministic node indices sorted by (grid_role, ability_str_lowercase).
         let mut ordered_keys: Vec<AbilityRoleKey> = node_accumulators.keys().cloned().collect();
         ordered_keys.sort_by(|left, right| {
             let left_role_index = left.grid_role.sort_index();
@@ -194,12 +188,10 @@ impl ConflictGraph {
             let role_order = left_role_index.cmp(&right_role_index);
             role_order.then_with(|| left.ability_str_lowercase.cmp(&right.ability_str_lowercase))
         });
-
         let mut key_to_index: HashMap<AbilityRoleKey, usize> = HashMap::new();
         for (index, key) in ordered_keys.iter().enumerate() {
             key_to_index.insert(key.clone(), index);
         }
-
         let mut nodes: Vec<ConflictNode> = Vec::with_capacity(ordered_keys.len());
         for key in &ordered_keys {
             let accumulator = node_accumulators.remove(key).expect("key must be present");
@@ -216,11 +208,7 @@ impl ConflictGraph {
                 ability_list_priority,
             });
         }
-
-        // Build adjacency: for each unit, every pair of its abilities in the same
-        // grid role gets a conflict edge.
         let mut edge_sets: Vec<HashSet<usize>> = (0..nodes.len()).map(|_| HashSet::new()).collect();
-
         for role_map in unit_role_keys.values() {
             for role_key_set in role_map.values() {
                 let role_keys: Vec<AbilityRoleKey> = role_key_set.iter().cloned().collect();
@@ -234,7 +222,6 @@ impl ConflictGraph {
                 }
             }
         }
-
         let adjacency: Vec<Vec<usize>> = edge_sets
             .into_iter()
             .map(|neighbor_set| {
@@ -243,7 +230,6 @@ impl ConflictGraph {
                 neighbors
             })
             .collect();
-
         Self {
             nodes,
             adjacency,
@@ -319,8 +305,6 @@ impl fmt::Display for ConflictGraph {
         writeln!(formatter, "  Nodes:           {}", self.node_count())?;
         writeln!(formatter, "  Edges:           {}", self.edge_count())?;
         writeln!(formatter, "  Colliding pairs: {}", colliding_count)?;
-
-        // Top 5 by carrier count (anchors)
         let mut by_carrier: Vec<usize> = (0..self.nodes.len()).collect();
         by_carrier.sort_by(|&left, &right| {
             let left_count = self.nodes[left].carrier_count();
@@ -348,8 +332,6 @@ impl fmt::Display for ConflictGraph {
                 self.degree(index),
             )?;
         }
-
-        // Top 5 by conflict degree
         let mut by_degree: Vec<usize> = (0..self.nodes.len()).collect();
         by_degree.sort_by_key(|&index| std::cmp::Reverse(self.degree(index)));
         writeln!(
@@ -373,7 +355,6 @@ impl fmt::Display for ConflictGraph {
                 self.degree(index),
             )?;
         }
-
         Ok(())
     }
 }
@@ -393,7 +374,7 @@ mod conflict_graph_tests {
         let graph = default_graph();
         assert!(
             graph.node_count() > 0,
-            "default keys must produce at least one graph node"
+            "default keys must produce at least one graph node",
         );
     }
 
@@ -402,15 +383,12 @@ mod conflict_graph_tests {
         let graph = default_graph();
         assert!(
             graph.edge_count() > 0,
-            "default keys must produce at least one conflict edge"
+            "default keys must produce at least one conflict edge",
         );
     }
 
     #[test]
     fn colliding_pairs_count_matches_cross_unit_report_structure() {
-        // The graph's colliding_pairs count must be >= the number of collision
-        // groups in the cross-unit report (the report aggregates by position,
-        // the graph lists individual pair-wise collisions within each group).
         let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let report = crate::collision::cross_unit::CrossUnitCollisionReport::compute(&custom_keys);
@@ -424,8 +402,6 @@ mod conflict_graph_tests {
 
     #[test]
     fn abilities_sharing_a_unit_have_a_conflict_edge() {
-        // The Paladin has Holy Light (AHhb) and Divine Shield (AHds) on its
-        // main command card.  They must share a conflict edge in the graph.
         let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let holy_light_index = graph
@@ -437,35 +413,30 @@ mod conflict_graph_tests {
         let holy_light_neighbors = graph.neighbors(holy_light_index);
         assert!(
             holy_light_neighbors.contains(&divine_shield_index),
-            "AHhb and AHds must share a conflict edge (both on Paladin main command)"
+            "AHhb and AHds must share a conflict edge (both on Paladin main command)",
         );
     }
 
     #[test]
     fn abilities_on_different_pages_have_no_edge() {
-        // An ability on MainCommand and an ability on HeroSkillTree can never
-        // collide — they are on different pages.  They must have no edge.
         let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
-        // AHhb (Holy Light) is on MainCommand; find any HeroSkillTree node.
         let Some(holy_light_index) = graph.find_node("AHhb", GridRole::MainCommand) else {
-            return; // ability not present in this key set, skip
+            return;
         };
         let Some(holy_light_research_index) = graph.find_node("AHhb", GridRole::HeroSkillTree)
         else {
-            return; // no research variant, skip
+            return;
         };
         let neighbors = graph.neighbors(holy_light_index);
         assert!(
             !neighbors.contains(&holy_light_research_index),
-            "AHhb on MainCommand and AHhb on HeroSkillTree must not share an edge"
+            "AHhb on MainCommand and AHhb on HeroSkillTree must not share an edge",
         );
     }
 
     #[test]
     fn carrier_count_for_hold_position_is_large() {
-        // CmdHoldPos (Hold Position) is on virtually every unit in the game.
-        // Its carrier count must be in the hundreds.
         let graph = default_graph();
         let index = graph
             .find_node("CmdHoldPos", GridRole::MainCommand)
@@ -473,14 +444,12 @@ mod conflict_graph_tests {
         let carrier_count = graph.node(index).carrier_count();
         assert!(
             carrier_count > 100,
-            "CmdHoldPos must have more than 100 carriers, got {carrier_count}"
+            "CmdHoldPos must have more than 100 carriers, got {carrier_count}",
         );
     }
 
     #[test]
     fn carrier_count_for_paladin_specific_ability_is_small() {
-        // Holy Light (AHhb) appears on Paladin unit variants only.
-        // Its carrier count must be far smaller than global commands like CmdHoldPos.
         let graph = default_graph();
         let hold_index = graph
             .find_node("CmdHoldPos", GridRole::MainCommand)
@@ -493,7 +462,7 @@ mod conflict_graph_tests {
         assert!(
             holy_light_carrier_count < hold_carrier_count / 10,
             "AHhb ({holy_light_carrier_count} carriers) should be far less than CmdHoldPos \
-             ({hold_carrier_count} carriers)"
+             ({hold_carrier_count} carriers)",
         );
     }
 
@@ -515,7 +484,7 @@ mod conflict_graph_tests {
         });
         assert!(
             involves_paladin_abilities,
-            "placing AHhb and AHds at the same position must produce a colliding pair"
+            "placing AHhb and AHds at the same position must produce a colliding pair",
         );
     }
 
@@ -540,7 +509,7 @@ mod conflict_graph_tests {
         });
         assert!(
             !false_pair,
-            "abilities at distinct positions must not produce a colliding pair"
+            "abilities at distinct positions must not produce a colliding pair",
         );
     }
 
@@ -550,23 +519,17 @@ mod conflict_graph_tests {
         assert_eq!(
             graph.node_count(),
             graph.node_count(),
-            "node count must be deterministic across two builds"
+            "node count must be deterministic across two builds",
         );
-        // Snapshot: record the count so regressions are visible.
-        // Update this value if the database changes.
         let count = graph.node_count();
         assert!(
             count > 500,
-            "default keys must produce more than 500 graph nodes, got {count}"
+            "default keys must produce more than 500 graph nodes, got {count}",
         );
     }
 
     #[test]
     fn ability_casing_variants_collapse_into_a_single_node() {
-        // The auto-generated database has Envenomed Weapons registered under
-        // both `ACvs` and `Acvs` with disjoint carrier sets.  The conflict
-        // graph must merge them into one node so the cascade sees the union
-        // of carriers and treats them as one ability.
         let custom_keys = CustomKeys::from("").normalize();
         let graph = ConflictGraph::build(&custom_keys);
         let upper_index = graph.find_node("ACvs", GridRole::MainCommand);
@@ -574,15 +537,15 @@ mod conflict_graph_tests {
         let mixed_lower_index = graph.find_node("acvs", GridRole::MainCommand);
         assert!(
             upper_index.is_some(),
-            "expected to find Envenomed Weapons node via uppercase casing"
+            "expected to find Envenomed Weapons node via uppercase casing",
         );
         assert_eq!(
             upper_index, lower_index,
-            "ACvs and Acvs must resolve to the same conflict-graph node"
+            "ACvs and Acvs must resolve to the same conflict-graph node",
         );
         assert_eq!(
             upper_index, mixed_lower_index,
-            "lowercase 'acvs' must also resolve to the same node"
+            "lowercase 'acvs' must also resolve to the same node",
         );
         let merged_node = graph.node(upper_index.expect("node must exist"));
         assert!(

@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::help_workflow::{HelpWorkflow, HelpWorkflowProps};
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpCalloutProps;
-
+use style::CLASS;
 assert_component!(HelpCallout);
 
 /// The framed panel that sets the workflow apart from the surrounding copy.
@@ -17,8 +14,7 @@ assert_component!(HelpCallout);
 pub fn HelpCallout(props: HelpCalloutProps) -> Element {
     let workflow = HelpWorkflowProps::from(&props);
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             HelpWorkflow { ..workflow }
         }
     }

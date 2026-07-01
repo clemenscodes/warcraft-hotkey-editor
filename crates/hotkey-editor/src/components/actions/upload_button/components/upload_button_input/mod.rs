@@ -1,14 +1,11 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::UploadButtonInputProps;
-
+use style::CLASS;
 assert_component!(UploadButtonInput);
 
 /// The visually hidden `<input type="file">` that receives the CustomKeys.txt.

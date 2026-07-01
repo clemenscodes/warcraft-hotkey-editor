@@ -1,10 +1,3 @@
-use std::collections::{BTreeMap, HashSet};
-use std::fmt;
-use std::sync::OnceLock;
-
-use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
-
 use crate::cascade::conflict_graph::ConflictGraph;
 use crate::cascade::planner::{CascadePlan, MoveReason, PlannedMove, UnresolvedMover};
 use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
@@ -15,15 +8,21 @@ use crate::identity::hotkey_target::HotkeyTarget;
 use crate::identity::hotkey_token::HotkeyToken;
 use crate::identity::keycode::KeyCode;
 use crate::identity::slot::GridSlotId;
+
 use crate::model::{
     AbilityBinding, BindingEntry, ColumnIndex, CommandBinding, CommandEntry, GridCoordinate,
     Hotkey, RowIndex, SectionAccumulator, SectionResolution, SystemBinding, WarcraftKeybinding,
 };
+
 use crate::unit::grids::{GridRole, UnitGrids};
 use crate::unit::slots::UnitCommandSlots;
+use std::collections::{BTreeMap, HashSet};
+use std::fmt;
+use std::sync::OnceLock;
+use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
+use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
 
 pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../templates/CustomKeys.txt");
-
 const BUNDLED_BASELINE: &str = DEFAULT_CUSTOM_KEYS;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -36,6 +35,7 @@ impl HotkeyConflict {
         &self.display_name
     }
 }
+
 const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
 
@@ -493,30 +493,20 @@ impl CustomKeys {
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let default_button = warcraft_object.default_button_position();
             let default_research = warcraft_object.default_research_button_position();
-
             match warcraft_object.kind() {
                 WarcraftObjectKind::Command => continue,
                 WarcraftObjectKind::Ability => {
-                    // Only materialize abilities that render as a real command
-                    // button. Internal shop/selection mechanics (Shop Sharing,
-                    // Select Hero/Unit) and the Detector passive carry a default
-                    // Buttonpos but a blacklisted or absent icon, so no command
-                    // card ever shows them. Without this filter they leak into
-                    // the file as phantom (0,0) bindings that take the Q hotkey
-                    // on every shop and collide with the real button in-game.
                     if !warcraft_object.has_displayable_icon() {
                         continue;
                     }
-                    // Toggle ability with no Buttonpos in the game data (e.g.
-                    // Prioritize / Aatp on the Gargoyle).  Without a fallback
-                    // the renderer skips it entirely; place it at origin and
-                    // let the cascade move it to an actually-free cell.
-                    // Passive/inventory abilities are excluded — they're never
-                    // user-clickable buttons and must not enter the grid.
                     let needs_origin_fallback = default_button.is_none()
                         && default_research.is_none()
                         && !warcraft_object.is_passive_ability()
-                        && matches!(warcraft_object.meta(), WarcraftObjectMeta::Ability(meta) if meta.has_off_state());
+                        && matches!(
+                            warcraft_object.meta(),
+                            WarcraftObjectMeta::Ability(meta)
+                            if meta.has_off_state()
+                        );
                     if default_button.is_none()
                         && default_research.is_none()
                         && !needs_origin_fallback
@@ -569,7 +559,6 @@ impl CustomKeys {
             if sell_items.is_empty() && sell_units.is_empty() {
                 continue;
             }
-
             let mut occupied_positions: HashSet<GridCoordinate> = HashSet::new();
             for item_id_object in sell_items {
                 let item_id = item_id_object.value();
@@ -589,7 +578,6 @@ impl CustomKeys {
                     occupied_positions.insert(position);
                 }
             }
-
             for item_id_object in sell_items {
                 let item_id = item_id_object.value();
                 let item_binding = self.binding(item_id);
@@ -803,7 +791,6 @@ impl CustomKeys {
                 }),
             _ => false,
         };
-
         if off_state_blocks {
             return;
         }
@@ -830,7 +817,6 @@ impl CustomKeys {
         {
             return;
         }
-
         self.assign_position(
             request.layout(),
             request.moving_slot(),
@@ -874,7 +860,6 @@ impl CustomKeys {
                 );
             }
         }
-
         if let GridSlotId::Ability(moving_id) = request.moving_slot() {
             let moving_ability_id = *moving_id;
             self.fan_out_position(moving_ability_id);
@@ -917,7 +902,6 @@ impl CustomKeys {
             .collect();
         let command_names: Vec<WarcraftObjectId> =
             self.commands_in_order().map(|entry| entry.name()).collect();
-
         for ability_id in &ability_ids {
             let ability_id_str = ability_id.value();
             let is_passive = ObjectLookup::is_passive_ability(ability_id_str);
@@ -979,7 +963,6 @@ impl CustomKeys {
                 }
             }
         }
-
         for command_name in &command_names {
             let button_position = self
                 .command(command_name.value())
@@ -1002,7 +985,6 @@ impl CustomKeys {
                 }
             }
         }
-
         changed_count
     }
 
@@ -1071,7 +1053,6 @@ impl CustomKeys {
             self.run_cascade_phase(AssignmentScope::CrossUnitOnly, &mut net_moves);
         let last_unresolved =
             self.run_cascade_phase(AssignmentScope::IncludingIntraUnit, &mut net_moves);
-
         let mut combined_moves: Vec<PlannedMove> = Vec::new();
         for (key, accumulated) in net_moves {
             if accumulated.old_position == accumulated.new_position {
@@ -1317,13 +1298,6 @@ impl CustomKeys {
         layout: GridLayout,
         is_research_context: bool,
     ) -> Option<HotkeyToken> {
-        // A slot only participates in this grid's hotkey collisions when it
-        // actually occupies a cell there.  An ability that carries a stray
-        // `Hotkey=` but no `Buttonpos` for this context (e.g. `ANic`, the
-        // autocast Incinerate companion, which has only a `Researchbuttonpos`)
-        // is never drawn on the command card, so it cannot collide with the
-        // commands shown there.  This mirrors the renderer, which only paints a
-        // cell when `position_for_slot` resolves a position.
         let resolved_position = self.position_for_slot(slot, is_research_context)?;
         let override_hotkey: Option<&Hotkey> = match slot {
             GridSlotId::Ability(ability_id) => {
@@ -1499,11 +1473,6 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
                     }
                 }
                 WarcraftKeybinding::System(source_binding) => {
-                    // System sections (inventory slots, control groups, hero
-                    // selection, …) classify by section id, so a parsed import
-                    // already carries the correct class.  Replacing the baseline
-                    // entry preserves the imported hotkey and modifier — without
-                    // this, customized system hotkeys were silently dropped.
                     self.put_system(object_id, source_binding);
                 }
             }
@@ -1551,11 +1520,9 @@ impl CustomKeysParser {
         let trimmed = line.trim();
         let is_blank = trimmed.is_empty();
         let is_comment = trimmed.starts_with("//") || trimmed.starts_with(';');
-
         if is_blank || is_comment {
             return;
         }
-
         if let Some(section_id) = Self::extract_section_id(trimmed) {
             self.flush_pending_section();
             if let Some(resolution) = SectionResolution::from_section_id(&section_id) {
@@ -1613,9 +1580,11 @@ impl TryFrom<&std::path::Path> for CustomKeys {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     use crate::model::{
         AbilityBinding, AbilityModifier, CommandBinding, GridCoordinate, Hotkey, SystemBinding,
     };
+
     use warcraft_api::{SystemKeybindClass, SystemKeybindModifier};
 
     #[test]
@@ -1760,7 +1729,7 @@ mod tests {
         assert!(output.contains("Hotkey=R"), "mutated hotkey must appear");
         assert!(
             output.contains("Hotkey=W"),
-            "untouched section hotkey must still be present"
+            "untouched section hotkey must still be present",
         );
     }
 
@@ -2014,7 +1983,6 @@ mod tests {
             modifier_text: &'static str,
             expected_modifier: SystemKeybindModifier,
         }
-
         let cases = [
             ModifierCase {
                 modifier_text: "Alt",
@@ -2036,7 +2004,7 @@ mod tests {
         for case in &cases {
             let modifier_text = case.modifier_text;
             let input =
-                format!("[Ctr1]\nHotkey=49\nCtrlGroupCommand=1\nModifier={modifier_text}\n");
+                format!("[Ctr1]\nHotkey=49\nCtrlGroupCommand=1\nModifier={modifier_text}\n",);
             let file = CustomKeys::from(input.as_str());
             let sys = file.system("Ctr1").expect("section parsed");
             let expected_modifier = Some(case.expected_modifier);
@@ -2060,7 +2028,7 @@ mod tests {
         let expected_hotkey = Hotkey::VirtualKey(65);
         assert_eq!(
             file.system("QLog").map(|binding| *binding.hotkey()),
-            Some(expected_hotkey)
+            Some(expected_hotkey),
         );
     }
 
@@ -2081,7 +2049,7 @@ mod tests {
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             file.binding("Ahrl").and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 
@@ -2095,7 +2063,7 @@ mod tests {
         assert_eq!(
             file.command("CmdAttack")
                 .and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 
@@ -2107,7 +2075,7 @@ mod tests {
         assert_eq!(
             file.system("IsHeroSelect")
                 .map(|system_binding| *system_binding.hotkey()),
-            Some(Hotkey::VirtualKey(9))
+            Some(Hotkey::VirtualKey(9)),
         );
     }
 
@@ -2123,7 +2091,7 @@ mod tests {
         let expected_hotkey = Hotkey::Letter('W');
         assert_eq!(
             file.binding("Ahrl").and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 
@@ -2149,6 +2117,7 @@ mod tests {
                 "round-trip output is missing section {section_marker:?}",
             );
         }
+
         use std::collections::BTreeSet;
         let collect_unique_sections = |text: &str| -> BTreeSet<String> {
             text.lines()
@@ -2172,10 +2141,6 @@ mod tests {
 
     #[test]
     fn set_hotkey_replicates_to_two_tier_upgrade() {
-        // Banshee Adept/Master Training (`Ruba`) is a 2-level upgrade. Upgrades
-        // store one hotkey token per tier in the main Hotkey field
-        // (`Hotkey=F,F`); a single token binds only tier 1, so the master
-        // upgrade loses its hotkey in game.
         let binding_ruba = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Ruba", binding_ruba).build();
         let new_token = HotkeyToken::try_from('F').expect("letter");
@@ -2188,8 +2153,6 @@ mod tests {
 
     #[test]
     fn set_hotkey_replicates_to_three_tier_upgrade() {
-        // A graveyard attack/armor upgrade (`Rume`) has three levels, so its
-        // hotkey must replicate to three tiers (`Hotkey=F,F,F`).
         let binding_rume = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
         let new_token = HotkeyToken::try_from('F').expect("letter");
@@ -2202,11 +2165,6 @@ mod tests {
 
     #[test]
     fn set_hotkey_keeps_leveled_ability_single_tier() {
-        // A leveled hero/unit ABILITY (here `AEah`, an aura with three levels)
-        // is not an upgrade: its command-card button is shared across levels and
-        // binds a single hotkey. Only upgrades replicate one token per tier, so
-        // editing an ability's hotkey must stay single — otherwise we would emit
-        // `Hotkey=F,F,F` for things the game expects as `Hotkey=F`.
         let binding_aeah = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("AEah", binding_aeah).build();
         let new_token = HotkeyToken::try_from('F').expect("letter");
@@ -2219,8 +2177,6 @@ mod tests {
 
     #[test]
     fn set_hotkey_serializes_upgrade_hotkey_per_tier() {
-        // End-to-end: the serialized section the game reads must carry the
-        // comma-separated per-tier list, not a single token.
         let binding_rume = AbilityBinding::default();
         let mut keys = CustomKeys::builder().ability("Rume", binding_rume).build();
         let new_token = HotkeyToken::try_from('F').expect("letter");
@@ -2229,17 +2185,12 @@ mod tests {
         let serialized = keys.to_string();
         assert!(
             serialized.contains("Hotkey=F,F,F"),
-            "expected three-tier upgrade hotkey, got:\n{serialized}"
+            "expected three-tier upgrade hotkey, got:\n{serialized}",
         );
     }
 
     #[test]
     fn apply_grid_preserves_three_tier_upgrade_hotkey() {
-        // Applying a grid layout (e.g. a template) rebinds every button to its
-        // cell's letter. For a 3-level upgrade (`Rume` at the top-left cell) it
-        // must rebind all three tiers, not collapse `Hotkey=S,S,S` to a single
-        // token — the structural bug that silently dropped the follow-up
-        // upgrades' hotkeys.
         let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
         let mut keys = CustomKeys::from(input);
         let layout = GridLayout::qwerty_grid();
@@ -2252,8 +2203,6 @@ mod tests {
 
     #[test]
     fn apply_grid_preserves_two_tier_upgrade_hotkey() {
-        // `Ruba` (Banshee training) has two levels at cell (1,2). Applying the
-        // grid must keep both tiers bound.
         let input = "[Ruba]\nHotkey=A,A\nButtonpos=1,2\n";
         let mut keys = CustomKeys::from(input);
         let layout = GridLayout::qwerty_grid();
@@ -2266,8 +2215,6 @@ mod tests {
 
     #[test]
     fn apply_grid_keeps_leveled_ability_single_tier() {
-        // The same grid application over a leveled ABILITY (`AEah`, 3 levels)
-        // must keep its hotkey single — abilities are not upgrades.
         let input = "[AEah]\nHotkey=D\nButtonpos=2,2\n";
         let mut keys = CustomKeys::from(input);
         let layout = GridLayout::qwerty_grid();
@@ -2279,11 +2226,6 @@ mod tests {
 
     #[test]
     fn normalize_restores_upgrade_hotkey_tiers_after_template_overlay() {
-        // A template overlays single-token upgrade hotkeys (e.g. `[Rume]
-        // Hotkey=Q`) onto the baseline. The template-apply flow is
-        // baseline.extend(template) then normalize(); normalize must restore one
-        // token per tier so the follow-up upgrade levels keep their hotkey on
-        // export. This is the path the bug report actually hit.
         let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
         let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
         baseline.extend(template);
@@ -2296,8 +2238,6 @@ mod tests {
 
     #[test]
     fn cascade_preserves_upgrade_hotkey_tiers() {
-        // The cascade (resolve_conflicts) settles position collisions; it must
-        // not collapse an upgrade's per-tier hotkeys while doing so.
         let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
         let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
         baseline.extend(template);
@@ -2310,10 +2250,6 @@ mod tests {
 
     #[test]
     fn apply_grid_over_default_keeps_every_multi_level_upgrade_tiered() {
-        // End-to-end over the bundled default, reproducing the user's flow:
-        // applying a grid layout (what a template does) must keep one hotkey
-        // token per tier for EVERY multi-level upgrade — the structural export
-        // bug, not just the two upgrades named in the report.
         let mut keys = CustomKeys::from(DEFAULT_CUSTOM_KEYS).normalize();
         let layout = GridLayout::qwerty_grid();
         keys.apply_grid_to_all_bindings(layout);
@@ -2341,19 +2277,18 @@ mod tests {
             assert_eq!(
                 level_count, max_level,
                 "upgrade {object_value} lost tiers after apply_grid: \
-                 `{hotkey}` has {level_count} level(s), expected {max_level}"
+                 `{hotkey}` has {level_count} level(s), expected {max_level}",
             );
             checked += 1;
         }
         assert!(
             checked >= 10,
-            "expected to verify many multi-level upgrades, only checked {checked}"
+            "expected to verify many multi-level upgrades, only checked {checked}",
         );
     }
 
     #[test]
     fn assign_position_replicates_upgrade_hotkey_per_tier() {
-        // Dragging an upgrade button to a new cell must rebind every tier too.
         use crate::identity::slot::GridSlotId;
         let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
         let mut keys = CustomKeys::from(input);
@@ -2368,9 +2303,6 @@ mod tests {
 
     #[test]
     fn move_slot_keeps_hotkey_when_reassignment_disabled() {
-        // Position-only move: dragging ACad from (2,2) to (1,1) with
-        // assign_hotkey_on_move=false must move Buttonpos but keep the
-        // manually-set hotkey P (instead of snapping to (1,1)'s grid letter).
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
@@ -2392,8 +2324,6 @@ mod tests {
 
     #[test]
     fn move_slot_reassigns_hotkey_by_default() {
-        // Default behavior (assign_hotkey_on_move=true): moving ACad to (1,1)
-        // rebinds its hotkey to that cell's grid letter (S on QWERTY).
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
@@ -2411,9 +2341,6 @@ mod tests {
 
     #[test]
     fn move_slot_swap_is_reversible_when_layout_consistent() {
-        // Layout-consistent start: ACad at (0,0) holds the QWERTY letter Q,
-        // AHbz at (1,1) holds S. With assign_hotkey_on_move=true, swapping and
-        // swapping back must restore the original hotkeys (Q and S).
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=Q\nButtonpos=0,0\n[AHbz]\nHotkey=S\nButtonpos=1,1\n";
@@ -2422,12 +2349,10 @@ mod tests {
         let acad = GridSlotId::ability("ACad");
         let ahbz = GridSlotId::ability("AHbz");
         let slot_ids = [acad, ahbz];
-
         let swap = MoveRequest::new(layout, &slot_ids, &acad, 1, 1, false);
         keys.move_slot(&swap);
         let swap_back = MoveRequest::new(layout, &slot_ids, &acad, 0, 0, false);
         keys.move_slot(&swap_back);
-
         let acad_binding = keys.binding("ACad").expect("ACad exists");
         let acad_hotkey = acad_binding.hotkey().expect("hotkey set");
         assert_eq!(acad_hotkey, &Hotkey::try_from("Q").expect("valid"));
@@ -2438,9 +2363,6 @@ mod tests {
 
     #[test]
     fn move_slot_swap_keeps_both_hotkeys_when_reassignment_disabled() {
-        // Swapping ACad (at (0,0), hotkey P) with AHbz (at (1,1), hotkey K)
-        // with assign_hotkey_on_move=false swaps both positions but leaves
-        // both hotkeys untouched.
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=0,0\n[AHbz]\nHotkey=K\nButtonpos=1,1\n";
@@ -2452,7 +2374,6 @@ mod tests {
         let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 1, false)
             .with_assign_hotkey_on_move(false);
         keys.move_slot(&request);
-
         let moving_binding = keys.binding("ACad").expect("ACad exists");
         let moving_position = moving_binding.button_position().expect("position set");
         assert_eq!(u8::from(moving_position.column()), 1);
@@ -2460,7 +2381,6 @@ mod tests {
         let moving_hotkey = moving_binding.hotkey().expect("hotkey set");
         let expected_moving = Hotkey::try_from("P").expect("valid hotkey");
         assert_eq!(moving_hotkey, &expected_moving);
-
         let displaced_binding = keys.binding("AHbz").expect("AHbz exists");
         let displaced_position = displaced_binding.button_position().expect("position set");
         assert_eq!(u8::from(displaced_position.column()), 0);
@@ -2600,7 +2520,7 @@ mod extend_tests {
         let expected_hotkey = Hotkey::Letter('W');
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 
@@ -2628,7 +2548,7 @@ mod extend_tests {
         assert_eq!(
             actual_hotkey,
             Some(expected_hotkey),
-            "an imported system hotkey must overwrite the default during extend"
+            "an imported system hotkey must overwrite the default during extend",
         );
     }
 
@@ -2647,12 +2567,12 @@ mod extend_tests {
         assert_eq!(
             control_group_hotkey,
             Some(Hotkey::VirtualKey(186)),
-            "customized control-group hotkey must persist through the import normalize step"
+            "customized control-group hotkey must persist through the import normalize step",
         );
         assert_eq!(
             inventory_hotkey,
             Some(Hotkey::VirtualKey(222)),
-            "customized inventory hotkey must persist through the import normalize step"
+            "customized inventory hotkey must persist through the import normalize step",
         );
     }
 
@@ -2676,7 +2596,7 @@ mod extend_tests {
             target
                 .binding("Amil")
                 .and_then(|binding| binding.unhotkey()),
-            Some(&expected_unhotkey)
+            Some(&expected_unhotkey),
         );
     }
 
@@ -2739,7 +2659,7 @@ mod extend_tests {
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
         let position = target
             .binding("Ahrl")
@@ -2747,7 +2667,7 @@ mod extend_tests {
             .copied();
         assert_eq!(
             position,
-            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))
+            Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)),
         );
     }
 
@@ -2769,7 +2689,7 @@ mod extend_tests {
             target
                 .command("CmdAttack")
                 .and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 
@@ -2789,7 +2709,7 @@ mod extend_tests {
         let expected_hotkey = Hotkey::Letter('E');
         assert_eq!(
             target.binding("Ahrl").and_then(|binding| binding.hotkey()),
-            Some(&expected_hotkey)
+            Some(&expected_hotkey),
         );
     }
 }
@@ -2805,7 +2725,7 @@ mod export_tests {
         let output = loaded.serialize(baseline);
         assert!(
             output.contains("[Ahrl]"),
-            "baseline section should be present in output"
+            "baseline section should be present in output",
         );
         assert!(output.contains("Hotkey=Q"));
     }
@@ -2830,12 +2750,9 @@ mod export_tests {
 
     #[test]
     fn export_materializes_default_button_positions() {
-        // Ahrl (Holy Light) has a known default Buttonpos in the database.
-        // Starting from an empty overlay, the export should inject it.
         let baseline = include_str!("../templates/CustomKeys.txt");
         let loaded = CustomKeys::from("");
         let output = loaded.serialize(baseline);
-        // Find the [Ahrl] section and check Buttonpos is present.
         let after_ahrl = output
             .split("[Ahrl]")
             .nth(1)
@@ -2843,19 +2760,15 @@ mod export_tests {
         let next_section = after_ahrl.split('[').next().unwrap_or(after_ahrl);
         assert!(
             next_section.contains("Buttonpos="),
-            "[Ahrl] section must have a Buttonpos after materialization"
+            "[Ahrl] section must have a Buttonpos after materialization",
         );
     }
 
     #[test]
     fn export_assigns_positions_to_goblin_merchant_shop_items_without_db_positions() {
-        // bspd, spro, pinv are sold by the Goblin Merchant (ngme) but have no
-        // default position in the game database. The export pipeline must assign
-        // them positions so they appear in the command grid.
         let baseline = include_str!("../templates/CustomKeys.txt");
         let loaded = CustomKeys::from("");
         let output = loaded.serialize(baseline);
-
         for item_id in &["bspd", "spro", "pinv"] {
             let section_marker = format!("[{item_id}]");
             let after_section = output
@@ -2867,15 +2780,13 @@ mod export_tests {
             let before_next_section = after_section.split('[').next().unwrap_or("").to_string();
             assert!(
                 before_next_section.contains("buttonpos="),
-                "[{item_id}] must have a Buttonpos assigned by shop item materialization"
+                "[{item_id}] must have a Buttonpos assigned by shop item materialization",
             );
         }
     }
 
     #[test]
     fn export_assigns_position_to_goblin_shredder_sell_unit_without_db_position() {
-        // ngir (Goblin Shredder) is sold by the Goblin Laboratory (ngad) as a
-        // sell_unit with no default position in the database or template.
         let baseline = include_str!("../templates/CustomKeys.txt");
         let loaded = CustomKeys::from("");
         let output = loaded.serialize(baseline);
@@ -2887,7 +2798,7 @@ mod export_tests {
         let before_next_section = after_ngir.split('[').next().unwrap_or(after_ngir);
         assert!(
             before_next_section.contains("buttonpos="),
-            "[ngir] must have a Buttonpos assigned by sell_unit materialization"
+            "[ngir] must have a Buttonpos assigned by sell_unit materialization",
         );
     }
 }
@@ -2908,12 +2819,6 @@ mod normalize_tests {
     fn normalize_syncs_single_button_toggle_offstate_to_onstate() {
         use crate::identity::slot::GridSlotId;
         use crate::model::AbilityBinding;
-        // Frost Armor (ACf2) is a non-morph toggle: both states live on one unit
-        // grid where a cell shows only one of them, so the editor renders the
-        // off-state (Buttonpos) in the grid and edits the on-state (Unbuttonpos)
-        // in a separate dialog. An overlay that moves only the grid position
-        // leaves the dialog-only on-state on a stale cell — an invisible
-        // blocker. Normalize must pull it onto the grid position.
         let on_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::Two);
         let off_position = GridCoordinate::new(ColumnIndex::One, RowIndex::Two);
         let binding = AbilityBinding::builder()
@@ -2928,20 +2833,13 @@ mod normalize_tests {
         assert_eq!(resolved_on, Some(on_position));
         assert_eq!(
             resolved_off, resolved_on,
-            "autocast Frost Armor off-state must mirror its on-state after normalize"
+            "autocast Frost Armor off-state must mirror its on-state after normalize",
         );
     }
 
     #[test]
     fn normalize_mirrors_morph_ability_onto_produced_unit_command() {
         use crate::model::AbilityBinding;
-        // The Obsidian Statue's Transform morph is stored twice: the morph
-        // ability `Aave` (the grid button the editor edits) and a section keyed
-        // by the produced Destroyer unit id `ubsp` (what the live game reads).
-        // Editing the button only touches `Aave`, so without a mirror `ubsp`
-        // keeps its stale default hotkey and the morph binds the wrong key in
-        // game. Normalize must copy the morph ability's hotkey and position onto
-        // the produced unit.
         let morph_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::One);
         let aave_binding = AbilityBinding::builder()
             .hotkey(Hotkey::Letter('R'))
@@ -2966,10 +2864,6 @@ mod normalize_tests {
     fn normalize_keeps_independent_offstate_separate() {
         use crate::identity::slot::GridSlotId;
         use crate::model::AbilityBinding;
-        // Burrow (Abur) is a morph toggle: burrowing swaps to a separate unit id
-        // whose own grid renders the second state, so both states are
-        // independently visible and positionable. Normalize must NOT collapse
-        // them onto a single cell.
         let on_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::Two);
         let off_position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::One);
         let binding = AbilityBinding::builder()
@@ -2983,7 +2877,7 @@ mod normalize_tests {
         assert_eq!(
             resolved_off,
             Some(off_position),
-            "morph Burrow off-state is a separate button and must keep its own position"
+            "morph Burrow off-state is a separate button and must keep its own position",
         );
     }
 
@@ -2995,36 +2889,28 @@ mod normalize_tests {
         assert!(normalized_text.contains("[CmdAttack]"));
     }
 
-    // Regression (phantom shop Q conflict): the shipped baseline carries the
-    // internal shop/selection mechanics Shop Sharing (Aall), Select Hero (Aneu)
-    // and Select Unit (Ane2) at Buttonpos=0,0 with the Q hotkey. They are never
-    // command buttons, so normalize must prune them — otherwise every shop has a
-    // phantom Q binding that collides with its real button in-game. Select User
-    // (Anei) is a genuine button and must survive.
     #[test]
     fn normalize_prunes_non_button_shop_mechanics() {
         let normalized = CustomKeys::from("").normalize();
         for phantom_id in ["Aall", "Aneu", "Ane2", "Adt1"] {
             assert!(
                 normalized.binding(phantom_id).is_none(),
-                "normalize must prune non-button mechanic {phantom_id}"
+                "normalize must prune non-button mechanic {phantom_id}",
             );
         }
         assert!(
             normalized.binding("Anei").is_some(),
-            "normalize must keep Select User (Anei), a real shop button"
+            "normalize must keep Select User (Anei), a real shop button",
         );
     }
 
-    // Pruning also cleans an already-stored file (the user's localStorage may
-    // have been written by an older build that materialized the phantom).
     #[test]
     fn normalize_prunes_phantom_from_uploaded_file() {
         let uploaded = "[Aall]\nHotkey=Q\nButtonpos=0,0\n";
         let normalized = CustomKeys::from(uploaded).normalize();
         assert!(
             normalized.binding("Aall").is_none(),
-            "normalize must strip a phantom [Aall] carried in over an upload"
+            "normalize must strip a phantom [Aall] carried in over an upload",
         );
     }
 
@@ -3079,16 +2965,11 @@ mod normalize_tests {
             let button_position = binding.and_then(|binding| binding.button_position());
             assert!(
                 button_position.is_some(),
-                "[{item_id}] must have a button_position in the normalized output"
+                "[{item_id}] must have a button_position in the normalized output",
             );
         }
     }
 
-    // The in-game command card renders the build *ability* (AHbu, AObu, AUbu,
-    // AEbu), and the game reads its position and hotkey from that ability. The
-    // CmdBuild* command only drives the in-game hotkey editor. So moving the
-    // build command in the editor must also write the matching build ability,
-    // or the live game falls back to the ability's default and slides it.
     #[test]
     fn normalize_mirrors_build_command_position_and_hotkey_to_build_ability() {
         let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
@@ -3101,14 +2982,14 @@ mod normalize_tests {
         assert_eq!(
             mirrored_position,
             Some(&expected_position),
-            "AHbu must mirror the build command's Buttonpos"
+            "AHbu must mirror the build command's Buttonpos",
         );
         let mirrored_hotkey = ability_binding.hotkey();
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             mirrored_hotkey,
             Some(&expected_hotkey),
-            "AHbu must mirror the build command's Hotkey"
+            "AHbu must mirror the build command's Hotkey",
         );
     }
 
@@ -3125,14 +3006,11 @@ mod normalize_tests {
             assert_eq!(
                 mirrored_position,
                 Some(&expected_position),
-                "{ability_id} must mirror its build command's Buttonpos"
+                "{ability_id} must mirror its build command's Buttonpos",
             );
         }
     }
 
-    // A written [AHbu] section must survive a parse round trip now that the
-    // build abilities are real database objects, otherwise the mirror would be
-    // dropped on the next read (boot, preview, export).
     #[test]
     fn build_ability_section_survives_parse_round_trip() {
         let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
@@ -3140,11 +3018,11 @@ mod normalize_tests {
         let canonical_twice = CustomKeys::from(canonical_once.as_str()).to_string();
         assert!(
             canonical_once.contains("[AHbu]"),
-            "normalized output must contain the mirrored [AHbu] section"
+            "normalized output must contain the mirrored [AHbu] section",
         );
         assert_eq!(
             canonical_once, canonical_twice,
-            "the mirrored build ability must survive a parse/serialize round trip"
+            "the mirrored build ability must survive a parse/serialize round trip",
         );
     }
 
@@ -3155,16 +3033,12 @@ mod normalize_tests {
         let button_position = binding.and_then(|binding| binding.button_position());
         assert!(
             button_position.is_some(),
-            "[ngir] (Goblin Shredder) must have a button_position in the normalized output"
+            "[ngir] (Goblin Shredder) must have a button_position in the normalized output",
         );
     }
 
     #[test]
     fn normalize_defaults_button_position_to_origin_when_database_has_no_position() {
-        // Prioritize (Aatp) on the Gargoyle has no default Buttonpos or
-        // ResearchButtonpos in the game data, so it would otherwise be skipped
-        // by materialize_default_positions and never render in the command card.
-        // When both defaults are absent, fall back to (0, 0).
         let normalized = CustomKeys::from("").normalize();
         let binding = normalized
             .binding("Aatp")
@@ -3178,27 +3052,18 @@ mod normalize_tests {
 
     #[test]
     fn normalize_does_not_invent_off_state_for_one_shot_ability() {
-        // Healing Wave (AChv) is a one-shot cast — it has no toggleable
-        // off-state in the database (with_off_state(None, None, None, None)).
-        // materialize_default_positions must not fabricate an unbutton_position
-        // for it; doing so causes false off_state_blocks when moving other
-        // abilities to the same grid cell.
         let normalized = CustomKeys::from("").normalize();
         let healing_wave_off = normalized
             .binding("AChv")
             .and_then(|binding| binding.unbutton_position());
         assert!(
             healing_wave_off.is_none(),
-            "AChv has no off-state — normalize must not invent an unbutton_position"
+            "AChv has no off-state — normalize must not invent an unbutton_position",
         );
     }
 
     #[test]
     fn move_slot_co_moves_colocated_offstate_when_slot_ids_lack_abilityoff_variant() {
-        // Regression: move_slot previously required AbilityOff(id) to be present
-        // in slot_ids before co-moving an ability's off-state.  Toggle abilities
-        // (ACsw, ACdm, etc.) always appear as Ability(id) in the command card —
-        // never as AbilityOff(id) — so their Unbuttonpos never followed the move.
         use crate::command::move_request::MoveRequest;
         use crate::grid::layout::GridLayout;
         use crate::identity::slot::GridSlotId;
@@ -3217,7 +3082,7 @@ mod normalize_tests {
         assert_eq!(
             u8::from(button_position.column()),
             1,
-            "ability must move to column 1"
+            "ability must move to column 1",
         );
         assert_eq!(
             u8::from(button_position.row()),
@@ -3226,15 +3091,12 @@ mod normalize_tests {
         );
         assert_eq!(
             unbutton_position, button_position,
-            "Unbuttonpos must co-move with Buttonpos"
+            "Unbuttonpos must co-move with Buttonpos",
         );
     }
 
     #[test]
     fn move_slot_swaps_both_colocated_offstates_when_two_toggle_abilities_are_swapped() {
-        // When two abilities that both have co-located off-states are swapped via
-        // drag-drop, both Buttonpos AND Unbuttonpos must exchange — not just the
-        // regular hotkey.  slot_ids contains only Ability variants, not AbilityOff.
         use crate::command::move_request::MoveRequest;
         use crate::grid::layout::GridLayout;
         use crate::identity::slot::GridSlotId;
@@ -3248,7 +3110,6 @@ mod normalize_tests {
         let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
         let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 0, false);
         keys.move_slot(&request);
-
         let acsw = keys.binding("ACsw").expect("ACsw must exist");
         let acsw_button = acsw.button_position().expect("ACsw Buttonpos set");
         let acsw_unbutton = acsw
@@ -3261,9 +3122,8 @@ mod normalize_tests {
         );
         assert_eq!(
             acsw_unbutton, acsw_button,
-            "ACsw Unbuttonpos must co-move with Buttonpos"
+            "ACsw Unbuttonpos must co-move with Buttonpos",
         );
-
         let acdm = keys.binding("ACdm").expect("ACdm must exist");
         let acdm_button = acdm.button_position().expect("ACdm Buttonpos set");
         let acdm_unbutton = acdm
@@ -3272,18 +3132,16 @@ mod normalize_tests {
         assert_eq!(
             u8::from(acdm_button.column()),
             0,
-            "ACdm must be displaced to column 0"
+            "ACdm must be displaced to column 0",
         );
         assert_eq!(
             acdm_unbutton, acdm_button,
-            "ACdm Unbuttonpos must co-move with Buttonpos"
+            "ACdm Unbuttonpos must co-move with Buttonpos",
         );
     }
 
     #[test]
     fn move_slot_does_not_co_move_offstate_when_not_colocated() {
-        // If Unbuttonpos is at a DIFFERENT cell than Buttonpos, moving the ability
-        // must NOT drag the off-state along — it sits at its own intentional position.
         use crate::command::move_request::MoveRequest;
         use crate::grid::layout::GridLayout;
         use crate::identity::slot::GridSlotId;
@@ -3297,7 +3155,6 @@ mod normalize_tests {
         let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
         let request = MoveRequest::new(layout, &slot_ids, &moving, 1, 0, false);
         keys.move_slot(&request);
-
         let acsw = keys.binding("ACsw").expect("ACsw must exist");
         let acsw_unbutton = acsw
             .unbutton_position()
@@ -3305,22 +3162,17 @@ mod normalize_tests {
         assert_eq!(
             u8::from(acsw_unbutton.column()),
             2,
-            "non-colocated Unbuttonpos must stay at column 2"
+            "non-colocated Unbuttonpos must stay at column 2",
         );
         assert_eq!(
             u8::from(acsw_unbutton.row()),
             0,
-            "non-colocated Unbuttonpos must stay at row 0"
+            "non-colocated Unbuttonpos must stay at row 0",
         );
     }
 
     #[test]
     fn resolve_conflicts_co_moves_off_state_with_ability() {
-        // ACsw (Slow) is a toggle ability whose off-state button sits at the
-        // same grid cell as the on-state button. The cascade moves ACsw to
-        // resolve a cross-unit collision. After resolve_conflicts the
-        // unbutton_position must follow to the new cell — not be left behind
-        // at the pre-cascade position, where it would ghost-block further edits.
         use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
         let mut keys = CustomKeys::from("").normalize();
         let normalized_position = keys
@@ -3331,7 +3183,7 @@ mod normalize_tests {
         assert_eq!(
             normalized_position,
             Some(default_slow_position),
-            "ACsw must start at (0,2) after normalize"
+            "ACsw must start at (0,2) after normalize",
         );
         let _plan = keys.resolve_conflicts();
         let binding = keys
@@ -3342,11 +3194,11 @@ mod normalize_tests {
         assert_ne!(
             button_position,
             Some(default_slow_position),
-            "ACsw must have been moved by the cascade"
+            "ACsw must have been moved by the cascade",
         );
         assert_eq!(
             unbutton_position, button_position,
-            "ACsw off-state must be co-located with on-state after resolve_conflicts"
+            "ACsw off-state must be co-located with on-state after resolve_conflicts",
         );
     }
 
@@ -3356,7 +3208,7 @@ mod normalize_tests {
         let plan = normalized.resolve_conflicts();
         assert!(
             plan.move_count() > 0,
-            "default keys have known collisions so resolve_conflicts must produce moves"
+            "default keys have known collisions so resolve_conflicts must produce moves",
         );
     }
 
@@ -3390,8 +3242,6 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_writes_new_positions_into_bindings() {
-        // After resolve_conflicts, every PlannedMove's slot must read back the
-        // new_position from the bindings map.
         use crate::identity::slot::GridSlotId;
         let mut keys = CustomKeys::from("").normalize();
         let plan = keys.resolve_conflicts();
@@ -3435,7 +3285,7 @@ mod normalize_tests {
         let after_text = keys.to_string();
         assert!(
             plan.move_count() > 0,
-            "default keys must produce moves for this test to be meaningful"
+            "default keys must produce moves for this test to be meaningful",
         );
         assert_eq!(
             before_text, after_text,
@@ -3453,24 +3303,17 @@ mod normalize_tests {
         let applied_text = applied_plan.to_string();
         assert_eq!(
             preview_text, applied_text,
-            "preview_resolve and resolve_conflicts must produce identical plans"
+            "preview_resolve and resolve_conflicts must produce identical plans",
         );
     }
 
     #[test]
     fn resolve_conflicts_final_state_matches_preview_apply_endpoint() {
-        // The resolve_conflicts(self) path is implemented as
-        // preview_resolve(self) + apply.  This test verifies that the
-        // resulting state matches what we'd get if a second preview was
-        // run on the post-apply state — which must produce zero further
-        // moves (already covered by the idempotency test, but here we
-        // also assert the *serialized* text is stable through
-        // preview-then-resolve).
         let mut keys = CustomKeys::from("").normalize();
         let preview_plan = keys.preview_resolve();
         assert!(
             preview_plan.move_count() > 0,
-            "default keys must produce moves for this test to be meaningful"
+            "default keys must produce moves for this test to be meaningful",
         );
         let applied_plan = keys.resolve_conflicts();
         assert_eq!(
@@ -3488,20 +3331,11 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_eliminates_intra_unit_collisions_too() {
-        // Phase 2 of resolve_conflicts must clear any intra-unit collision
-        // (both endpoints single-carrier) that phase 1 deliberately left
-        // alone.  After resolve_conflicts returns, every pair of conflict-
-        // graph neighbors that ended up resolved must occupy distinct cells
-        // on the same role — regardless of carrier count.
         use crate::cascade::conflict_graph::ConflictGraph;
         use crate::cascade::planner::CascadePlan;
         use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
-
         let mut keys = CustomKeys::from("").normalize();
         let _plan = keys.resolve_conflicts();
-
-        // Re-evaluate against the full graph using the IncludingIntraUnit
-        // scope so unresolved bookkeeping reflects every potential collision.
         let graph = ConflictGraph::build(&keys);
         let queue = AssignmentQueue::build_with_scope(graph, AssignmentScope::IncludingIntraUnit);
         let plan = CascadePlan::from(&queue);
@@ -3514,7 +3348,6 @@ mod normalize_tests {
                 })
             })
             .collect();
-
         let graph_ref = queue.graph();
         for (first_index, first_node) in graph_ref.nodes().iter().enumerate() {
             if unresolved.contains(&first_index) {
@@ -3545,19 +3378,12 @@ mod normalize_tests {
 
     #[test]
     fn destroyer_intra_unit_collision_produces_minimal_displacement() {
-        // Aabs and Advm both default to (0,2) on the Destroyer (ubsp).
-        // The WC3-canonical resolution keeps Advm at (0,2) and pushes Aabs
-        // to (3,2), displacing only one ability.  With the old "lower index
-        // wins" tiebreak Aabs won instead, then cascaded Advm into Afak,
-        // displacing two abilities.  The intra-unit tiebreak (carrier_count=1
-        // → higher index wins) restores the minimal-displacement outcome.
         let mut keys = CustomKeys::from("").normalize();
         let _plan = keys.resolve_conflicts();
 
         use crate::cascade::conflict_graph::ConflictGraph;
         use crate::unit::grids::GridRole;
         let graph = ConflictGraph::build(&keys);
-
         let check = |ability: &str, expected_col: u8, expected_row: u8| {
             let index = graph
                 .find_node(ability, GridRole::MainCommand)
@@ -3568,10 +3394,9 @@ mod normalize_tests {
             assert_eq!(
                 (col, row),
                 (expected_col, expected_row),
-                "{ability} expected ({expected_col},{expected_row}), got ({col},{row})"
+                "{ability} expected ({expected_col},{expected_row}), got ({col},{row})",
             );
         };
-
         check("Advm", 0, 2);
         check("Afak", 1, 2);
         check("Aabs", 3, 2);
@@ -3579,13 +3404,6 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_cascades_origin_default_to_leftmost_free_cell() {
-        // Prioritize (Aatp) on the Gargoyle has no default button position;
-        // materialize_default_positions assigns (0,0).  The cascade pushes it
-        // rightward through the pinned command row (Move/Stop/HoldPos/Attack),
-        // then spills into row 1.  Patrol pins (0,1); the leftmost remaining
-        // free cell is (1,1).  The spill must prefer the column closest to the
-        // ability's *original* default column (0) rather than the cascade's
-        // stuck column (3), so Aatp lands at (1,1) — not (3,1).
         let mut keys = CustomKeys::from("").normalize();
         let _plan = keys.resolve_conflicts();
         let binding = keys.binding("Aatp").expect("Aatp must have a binding");
@@ -3597,26 +3415,12 @@ mod normalize_tests {
         assert_eq!(
             (column, row),
             (1, 1),
-            "Aatp expected to cascade to (1,1), got ({column},{row})"
+            "Aatp expected to cascade to (1,1), got ({column},{row})",
         );
     }
 
     #[test]
     fn resolved_default_customkeys_matches_snapshot() {
-        // Full-text regression snapshot: normalize() the bundled default
-        // CustomKeys.txt, run both cascade phases via resolve_conflicts(), and
-        // serialize.  The byte sequence must match the checked-in expected
-        // snapshot.  Any algorithm change (cascade ordering, pinning rules,
-        // spill behavior), database change, or serialization tweak that
-        // shifts the output trips this test.
-        //
-        // To accept a deliberate change: re-run the CLI
-        //
-        //   cargo run -p warcraft-cli -- resolve \
-        //     crates/warcraft-keybinds/templates/CustomKeys.txt \
-        //     --output crates/warcraft-keybinds/fixtures/resolved_default_customkeys.txt
-        //
-        // and inspect the diff before committing.
         let mut keys = CustomKeys::from("").normalize();
         let _plan = keys.resolve_conflicts();
         let actual = keys.to_string();
@@ -3638,20 +3442,13 @@ mod normalize_tests {
                  (actual={actual_bytes}B, expected={expected_bytes}B, \
                  first diff at char {first_difference_offset:?}). \
                  To accept the new output, regenerate the snapshot via the CLI — \
-                 see the test source for the exact command."
+                 see the test source for the exact command.",
             );
         }
     }
 
     #[test]
     fn canonical_text_round_trips_through_parser() {
-        // Parser/serializer symmetry on real-world-shaped data. The fixture is
-        // already canonical resolved output, so parsing it and serializing the
-        // result must be a fixed point: from(canonical).to_string() ==
-        // canonical. If serialization can emit anything the parser cannot read
-        // back (an asymmetry), the re-serialized text diverges here. This is the
-        // silent-data-loss guard the *_round_trip tests above never gave us —
-        // they only assert .contains(), not equality.
         let canonical = include_str!("../fixtures/resolved_default_customkeys.txt");
         let reparsed = CustomKeys::from(canonical);
         let serialized = reparsed.to_string();
@@ -3677,18 +3474,13 @@ mod normalize_tests {
                  (serialized={serialized_bytes}B, canonical={canonical_bytes}B, \
                  first diff at char {first_difference_offset:?}).\n\
                  canonical near diff:\n{canonical_window}\n\
-                 serialized near diff:\n{serialized_window}"
+                 serialized near diff:\n{serialized_window}",
             );
         }
     }
 
     #[test]
     fn canonical_form_is_idempotent() {
-        // The general property behind the fixture test, stated directly:
-        // canon(t) = from(t).to_string() must satisfy canon(canon(t)) ==
-        // canon(t) for arbitrary input, not just the bundled fixture. Drives an
-        // edited overlay through one canonicalization, then proves a second pass
-        // changes nothing.
         let edited_overlay = "[acad]\nHotkey=Q\nButtonpos=0,0\n";
         let overlay_keys = CustomKeys::from(edited_overlay).normalize();
         let mut resolved_keys = overlay_keys;
@@ -3699,19 +3491,18 @@ mod normalize_tests {
         assert_eq!(
             canonical_once, canonical_twice,
             "canonical form is not a fixed point: re-parsing canonical output \
-             and re-serializing produced different bytes"
+             and re-serializing produced different bytes",
         );
     }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod template_generation_tests {
+    use super::CustomKeys;
+    use crate::grid::layout::GridLayout;
     use warcraft_api::WarcraftObjectMeta;
     use warcraft_database::ObjectLookup;
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
-
-    use super::CustomKeys;
-    use crate::grid::layout::GridLayout;
 
     fn join_levels(levels: &[&str]) -> Option<String> {
         if levels.is_empty() {
@@ -3724,7 +3515,6 @@ mod template_generation_tests {
     fn build_text(layout: &GridLayout) -> String {
         let tmpl = CustomKeys::from(super::DEFAULT_CUSTOM_KEYS);
         let mut out = String::new();
-
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id = object_id.value();
             let WarcraftObjectMeta::Command(cmd_meta) = warcraft_object.meta() else {
@@ -3761,7 +3551,6 @@ mod template_generation_tests {
             }
             out.push('\n');
         }
-
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id = object_id.value();
             let WarcraftObjectMeta::Ability(ability_meta) = warcraft_object.meta() else {
@@ -3778,10 +3567,8 @@ mod template_generation_tests {
             }
             let is_passive = ObjectLookup::is_passive_ability(id);
             let existing_binding = tmpl.binding(id);
-
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
-
             if let Some(button_position) = default_button_position {
                 if !is_passive {
                     let hotkey = existing_binding
@@ -3802,7 +3589,6 @@ mod template_generation_tests {
                 let buttonpos_line = format!("Buttonpos={btn_column},{btn_row}\n");
                 out.push_str(&buttonpos_line);
             }
-
             if let Some(research_position) = default_research_position {
                 let research_hotkey = existing_binding
                     .and_then(|binding| binding.research_hotkey())
@@ -3813,15 +3599,16 @@ mod template_generation_tests {
                             .map(|letter| letter.to_string())
                     });
                 if let Some(research_hotkey_string) = research_hotkey {
-                    let research_hotkey_line = format!("ResearchHotkey={research_hotkey_string}\n");
+                    let research_hotkey_line =
+                        format!("ResearchHotkey={research_hotkey_string}\n",);
                     out.push_str(&research_hotkey_line);
                 }
                 let res_column = u8::from(research_position.column());
                 let res_row = u8::from(research_position.row());
-                let research_buttonpos_line = format!("ResearchButtonpos={res_column},{res_row}\n");
+                let research_buttonpos_line =
+                    format!("ResearchButtonpos={res_column},{res_row}\n",);
                 out.push_str(&research_buttonpos_line);
             }
-
             if let Some(off_position) = off_button_position {
                 let un_hotkey = existing_binding
                     .and_then(|binding| binding.unhotkey())
@@ -3840,7 +3627,6 @@ mod template_generation_tests {
                 let unbuttonpos_line = format!("Unbuttonpos={off_column},{off_row}\n");
                 out.push_str(&unbuttonpos_line);
             }
-
             if let Some(tip) = existing_binding
                 .and_then(|binding| binding.tip())
                 .map(str::to_owned)
@@ -3878,13 +3664,11 @@ mod template_generation_tests {
                 .map(str::to_owned)
                 .or_else(|| warcraft_object.research_ubertip().map(str::to_owned))
             {
-                let research_ubertip_line = format!("Researchubertip={research_ubertip}\n");
+                let research_ubertip_line = format!("Researchubertip={research_ubertip}\n",);
                 out.push_str(&research_ubertip_line);
             }
-
             out.push('\n');
         }
-
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id = object_id.value();
             let WarcraftObjectMeta::Unit(_) = warcraft_object.meta() else {
@@ -3925,7 +3709,6 @@ mod template_generation_tests {
             }
             out.push('\n');
         }
-
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id = object_id.value();
             if !matches!(
@@ -3939,10 +3722,8 @@ mod template_generation_tests {
             };
             let research_position = warcraft_object.default_research_button_position();
             let existing_binding = tmpl.binding(id);
-
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
-
             let hotkey = existing_binding
                 .and_then(|binding| binding.hotkey())
                 .map(|hotkey_display| hotkey_display.to_string())
@@ -3959,7 +3740,6 @@ mod template_generation_tests {
             let upg_row = u8::from(default_position.row());
             let buttonpos_line = format!("Buttonpos={upg_column},{upg_row}\n");
             out.push_str(&buttonpos_line);
-
             if let Some(research_button_position) = research_position {
                 let research_hotkey_string = existing_binding
                     .and_then(|binding| binding.research_hotkey())
@@ -3974,16 +3754,15 @@ mod template_generation_tests {
                     });
                 if let Some(research_hotkey_line_value) = research_hotkey_string {
                     let research_hotkey_line =
-                        format!("ResearchHotkey={research_hotkey_line_value}\n");
+                        format!("ResearchHotkey={research_hotkey_line_value}\n",);
                     out.push_str(&research_hotkey_line);
                 }
                 let res_btn_column = u8::from(research_button_position.column());
                 let res_btn_row = u8::from(research_button_position.row());
                 let research_buttonpos_line =
-                    format!("ResearchButtonpos={res_btn_column},{res_btn_row}\n");
+                    format!("ResearchButtonpos={res_btn_column},{res_btn_row}\n",);
                 out.push_str(&research_buttonpos_line);
             }
-
             if let Some(tip) = existing_binding
                 .and_then(|binding| binding.tip())
                 .map(str::to_owned)
@@ -4000,10 +3779,8 @@ mod template_generation_tests {
                 let ubertip_line = format!("Ubertip={ubertip}\n");
                 out.push_str(&ubertip_line);
             }
-
             out.push('\n');
         }
-
         for entry in WARCRAFT_SYSTEM_KEYBINDS.iter() {
             let id = entry.section_id();
             let hotkey_code = tmpl
@@ -4022,7 +3799,6 @@ mod template_generation_tests {
             }
             out.push('\n');
         }
-
         out
     }
 

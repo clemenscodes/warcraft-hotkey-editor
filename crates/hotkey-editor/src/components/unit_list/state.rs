@@ -1,6 +1,5 @@
-use std::collections::HashSet;
-
 use dioxus::prelude::*;
+use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{CatalogVisibility, SearchField, UnitCatalog, UnitMode};
 

@@ -1,19 +1,17 @@
-use std::collections::HashSet;
-
+use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::unit_list::UnitListPanel;
-use hotkey_editor::components::unit_list::category::UnitCategorySection;
+use hotkey_editor::components::unit_list::UnitList;
 use hotkey_editor::components::unit_list::mobile_category_tab::MobileCategoryTab;
 use hotkey_editor::components::unit_list::unit_card::UnitCard;
-use hotkey_editor::components::unit_list::unit_card::icon::UnitCardIcon;
-use hotkey_editor::components::unit_list::unit_card::info::UnitCardInfo;
+use hotkey_editor::components::unit_list::unit_card::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::unit_list::unit_card::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::unit_list::unit_category_section::UnitCategorySection;
 use hotkey_editor::model::icons::IconUrl;
+use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};
 use warcraft_database::{CatalogVisibility, ObjectLookup, SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
-
-use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -49,25 +47,23 @@ pub fn stories() -> Vec<Story> {
             "UnitCategorySection",
             unit_category_section_human_soldiers,
         ),
-        Story::single("Unit list", "UnitListPanel", unit_list_panel_human_melee),
+        Story::single("Unit list", "UnitList", unit_list_panel_human_melee),
     ]
 }
 
 fn unit_card_info_footman() -> Element {
     let display_name = "Footman".to_string();
     let unit_id = "hfoo".to_string();
-    let id_class = "unit-card-id";
     rsx! {
-        UnitCardInfo { display_name, unit_id, id_class }
+        UnitCardInfo { display_name, unit_id, is_selected: false }
     }
 }
 
 fn unit_card_info_hero() -> Element {
     let display_name = "Archmage".to_string();
     let unit_id = "Hamg".to_string();
-    let id_class = "unit-card-id unit-card-id--hero";
     rsx! {
-        UnitCardInfo { display_name, unit_id, id_class }
+        UnitCardInfo { display_name, unit_id, is_selected: true }
     }
 }
 
@@ -229,7 +225,7 @@ fn unit_list_panel_human_melee() -> Element {
     let expand_variants = use_signal(|| false);
     let collapsed_categories = use_signal(HashSet::new);
     rsx! {
-        UnitListPanel {
+        UnitList {
             active_race,
             unit_mode,
             selected_unit_id,

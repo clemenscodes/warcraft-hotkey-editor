@@ -1,16 +1,12 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-use warcraft_database::UnitKindHelpers;
-
-use crate::assert_component;
-use style::CLASS;
-
 use super::unit_kind_data_attr;
-
+use crate::assert_component;
+use dioxus::prelude::*;
 pub use props::MobileCategoryTabProps;
-
+use style::CLASS;
+use warcraft_database::UnitKindHelpers;
 assert_component!(MobileCategoryTab);
 
 /// A single category tab in the mobile unit picker.

@@ -1,23 +1,23 @@
-use std::collections::HashMap;
-use std::rc::Rc;
-
+use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::shell::toasts::ToastMount;
-use hotkey_editor::components::tile_override::alt_state_section::AltStateSection;
-use hotkey_editor::components::tile_override::description::AbilityDescription;
-use hotkey_editor::components::tile_override::key_field::OverrideKeyField;
-use hotkey_editor::components::tile_override::upgrade_section::UpgradeSection;
-use hotkey_editor::components::tile_override::upgrade_tier::UpgradeTierSelector;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCell;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
+
 use hotkey_editor::components::tile_override::{
-    AltPositionPicker, TileOverridePanel, UpgradePositionPicker,
+    AltPositionPicker, TileOverride, UpgradePositionPicker,
 };
+
 use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use std::collections::HashMap;
+use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitCommandSlots};
-
-use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -33,7 +33,7 @@ pub fn stories() -> Vec<Story> {
         ),
         Story::single(
             "Tile override",
-            "TileOverridePanel",
+            "TileOverride",
             tile_override_panel_archmage_blizzard,
         ),
         Story::single(
@@ -43,25 +43,25 @@ pub fn stories() -> Vec<Story> {
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyField",
+            "OverrideKeyCell",
             "Idle",
             override_key_field_idle,
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyField",
+            "OverrideKeyCell",
             "Editing",
             override_key_field_editing,
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyField",
+            "OverrideKeyCell",
             "Special token",
             override_key_field_special,
         ),
         Story::single(
             "Tile override",
-            "UpgradeTierSelector",
+            "UpgradeTier",
             upgrade_tier_selector_default,
         ),
         Story::single("Tile override", "UpgradeSection", upgrade_section_idle),
@@ -96,12 +96,13 @@ fn override_key_field_idle() -> Element {
     let is_special = false;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyField {
+        OverrideKeyCell {
             label,
             is_editing,
             is_special,
             title,
-            on_activate: move |_| {},
+            on_activate: move | _ |
+                    {},
         }
     }
 }
@@ -112,12 +113,13 @@ fn override_key_field_editing() -> Element {
     let is_special = false;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyField {
+        OverrideKeyCell {
             label,
             is_editing,
             is_special,
             title,
-            on_activate: move |_| {},
+            on_activate: move | _ |
+                    {},
         }
     }
 }
@@ -128,12 +130,13 @@ fn override_key_field_special() -> Element {
     let is_special = true;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyField {
+        OverrideKeyCell {
             label,
             is_editing,
             is_special,
             title,
-            on_activate: move |_| {},
+            on_activate: move | _ |
+                    {},
         }
     }
 }
@@ -145,7 +148,7 @@ fn upgrade_tier_selector_default() -> Element {
     let tier_label_text = "Level 1 of 3".to_string();
     let tier_overrides = use_signal(HashMap::<String, usize>::new);
     rsx! {
-        UpgradeTierSelector {
+        UpgradeTier {
             object_id,
             active_tier_index,
             total_tier_count,
@@ -159,13 +162,12 @@ fn upgrade_section_idle() -> Element {
     let upgrade_hotkey_label = "U".to_string();
     let upgrade_is_editing = false;
     let upgrade_hotkey_is_special = false;
-    let is_research_context = false;
     rsx! {
         UpgradeSection {
+            show: true,
             upgrade_hotkey_label,
             upgrade_is_editing,
             upgrade_hotkey_is_special,
-            is_research_context,
             on_position_click: move |_| {},
             on_hotkey_activate: move |_| {},
         }
@@ -307,7 +309,7 @@ fn tile_override_panel_archmage_blizzard() -> Element {
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        TileOverridePanel {
+        TileOverride {
             detail,
             loaded_keys,
             grid_layout,

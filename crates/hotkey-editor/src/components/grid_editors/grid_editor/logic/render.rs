@@ -1,23 +1,26 @@
+use dioxus::prelude::*;
+use dioxus_primitives::toast::consume_toast;
 use std::ops::Range;
 use std::rc::Rc;
 
-use dioxus::prelude::*;
-use dioxus_primitives::toast::consume_toast;
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CommandGridRenderInput, GridBehavior, GridCoordinate, GridSlotId,
     RenderedTile,
 };
 
 use crate::components::grid_editors::grid_editor::components::headed_grid::HeadedGridProps;
+
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
     GridTileProps, GridTileState,
 };
-use crate::model::grid::DragFollowerVisual;
 
 use super::super::props::GridEditorProps;
+use crate::model::grid::DragFollowerVisual;
+
 use super::handlers::{
     MoveHandlerArgs, activate_handler, drop_blocked_callback, move_handler, select_handler,
 };
+
 use super::mechanics;
 
 /// Builds the editor's captioned grid: its heading plus the finished tiles. The
@@ -48,7 +51,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
         let dragging_slot = config.dragging_slot;
         let drop_target_tile = config.drop_target_tile;
         let drag_follower = config.drag_follower;
-
         let on_select = select_handler(
             behavior.clone(),
             loaded_keys,
@@ -78,7 +80,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
         };
         let on_move = move_handler(move_args);
         let drop_blocked = drop_blocked_callback(behavior.clone(), loaded_keys, slot_ids.clone());
-
         let rendered_tiles: Vec<RenderedTile> = {
             let read_guard = loaded_keys.read();
             let file = read_guard
@@ -98,14 +99,12 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
             };
             file.rendered_command_grid(&behavior, &input)
         };
-
         let dragging_value = *dragging_slot.read();
         let drop_target_value = *drop_target_tile.read();
         let dragging_source_coordinate = dragging_value
             .filter(|detail| detail.grid_id() == grid_id)
             .map(|detail| detail.coordinate());
         let drag_active_here = dragging_source_coordinate.is_some();
-
         let mut tile_props_list: Vec<GridTileProps> = Vec::with_capacity(rendered_tiles.len());
         for rendered in rendered_tiles.iter() {
             let mut tile = GridTileProps::from(rendered);
@@ -123,7 +122,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
                 dragging_source_coordinate,
                 drop_blocked,
             );
-
             let visual = tile.icon.clone().map(|icon_source| {
                 let label_text = tile.label.clone();
                 let displayed_letter = tile.hotkey;
@@ -137,7 +135,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
                     is_command,
                 )
             });
-
             let keydown = mechanics::keydown(on_select, coordinate);
             let pointer_down_args = mechanics::PointerDownArgs {
                 draggable,
@@ -166,7 +163,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
                 mechanics::lost_pointer_capture(dragging_slot, drop_target_tile, drag_follower);
             let click = mechanics::click(on_select, coordinate);
             let double_click = mechanics::double_click(on_activate, coordinate);
-
             tile.race = race;
             tile.is_dragging_source = is_dragging_source;
             tile.is_drag_over = is_drag_over;
@@ -181,13 +177,12 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
             tile.ondoubleclick = EventHandler::new(double_click);
             tile_props_list.push(tile);
         }
-
         let tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT] = tile_props_list
             .try_into()
             .unwrap_or_else(|list: Vec<GridTileProps>| {
                 panic!(
                     "command grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
-                    list.len()
+                    list.len(),
                 )
             });
         Self {

@@ -1,6 +1,5 @@
 use crate::classes;
 
-// The muted-gold caption above a category editor.
 const BASE: &[&str] = &[
     "m-0",
     "max-w-[90rem]",
@@ -13,6 +12,7 @@ const BASE: &[&str] = &[
     "text-warcraft-gold/75",
     "[text-shadow:1px_1px_0_#000]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:max-w-full",
     "mobile:px-[0.25rem]",
@@ -20,6 +20,7 @@ const MOBILE: &[&str] = &[
     "mobile:tracking-[0.04em]",
     "mobile:leading-[1.35]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:max-w-full",
     "tablet:px-[0.25rem]",
@@ -27,9 +28,11 @@ const TABLET: &[&str] = &[
     "tablet:tracking-[0.04em]",
     "tablet:leading-[1.35]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

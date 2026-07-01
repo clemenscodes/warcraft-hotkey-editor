@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::TileLabelProps;
-
+use style::CLASS;
 assert_component!(TileLabel);
 
 /// The centered text fallback shown when an occupied tile has no icon.
@@ -17,9 +14,6 @@ pub fn TileLabel(props: TileLabelProps) -> Element {
         return rsx! {};
     };
     rsx! {
-        span {
-            class: CLASS,
-            {text}
-        }
+        span { class: CLASS, {text} }
     }
 }

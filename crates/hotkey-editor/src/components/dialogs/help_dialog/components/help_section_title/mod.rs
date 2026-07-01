@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpSectionTitleProps;
-
+use style::CLASS;
 assert_component!(HelpSectionTitle);
 
 /// A section heading inside the help guide. A leaf: each section passes its
@@ -15,9 +12,6 @@ assert_component!(HelpSectionTitle);
 #[component]
 pub fn HelpSectionTitle(props: HelpSectionTitleProps) -> Element {
     rsx! {
-        h3 {
-            class: CLASS,
-            {props.children}
-        }
+        h3 { class: CLASS, {props.children} }
     }
 }

@@ -1,9 +1,8 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::HotkeyToken;
-
 use super::super::empty_tile::EmptyTileProps;
 use super::super::filled_tile::FilledTileProps;
 use super::super::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct TileBadgeProps {

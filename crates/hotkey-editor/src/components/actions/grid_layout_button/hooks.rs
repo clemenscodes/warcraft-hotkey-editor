@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use crate::services::overlay_state::OverlayState;
+use dioxus::prelude::*;
 
 /// The button's shaped view: whether the layout dialog is open (for aria) and the
 /// toggle handler.

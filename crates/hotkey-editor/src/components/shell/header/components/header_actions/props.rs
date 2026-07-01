@@ -1,11 +1,9 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, GridLayout};
-
-use crate::services::customkeys::upload_status::UploadStatus;
-
 use super::super::burger_menu::BurgerMenuProps;
 use super::super::collisions_button::CollisionsButtonProps;
 use super::super::header_toolbar::HeaderToolbarProps;
+use crate::services::customkeys::upload_status::UploadStatus;
+use dioxus::prelude::*;
+use warcraft_keybinds::{CustomKeys, GridLayout};
 
 /// The right-aligned action cluster: the collisions button (always), and either
 /// the inline toolbar (full layout) or the burger drawer (compact layout).

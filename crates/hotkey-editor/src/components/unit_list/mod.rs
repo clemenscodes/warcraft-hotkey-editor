@@ -1,23 +1,28 @@
-pub mod category;
+pub mod components;
 pub mod mobile_category_tab;
 mod state;
+mod style;
 pub mod unit_card;
+pub mod unit_category_section;
 
-use std::collections::HashSet;
-use std::time::Duration;
-
+use crate::assert_component;
+use crate::services::focus::modality::FocusModality;
+use components::catalog_visibility_toggle::CatalogVisibilityToggle;
+use components::search_field_toggle::SearchFieldToggle;
+use components::unit_category_tabs::UnitCategoryTabs;
+use components::unit_list_scroll::UnitListScroll;
+use components::unit_list_search::UnitListSearch;
 use dioxus::document;
 use dioxus::prelude::*;
-use warcraft_api::{Race, UnitKind};
-use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
-
-use crate::components::tabs::mode_and_race_tabs::ModeButtonClass;
-use crate::services::focus::modality::FocusModality;
-use warcraft_keybinds::GridSlotId;
-
-use category::UnitCategorySection;
 use mobile_category_tab::MobileCategoryTab;
 use state::UnitListState;
+use std::collections::HashSet;
+use std::time::Duration;
+use style::CLASS;
+use unit_category_section::UnitCategorySection;
+use warcraft_api::{Race, UnitKind};
+use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
+use warcraft_keybinds::GridSlotId;
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
@@ -32,14 +37,6 @@ pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
         UnitKind::Soldier => "soldier",
         UnitKind::Worker => "worker",
         UnitKind::Building => "building",
-    }
-}
-
-struct VisibilityToggleClass;
-
-impl VisibilityToggleClass {
-    fn get() -> &'static str {
-        "flex-1 min-h-[2.4rem] px-3 whitespace-nowrap bg-[linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)] border border-[#6c5a1f] rounded-[8px] text-[#c0c8da] font-friz-quadrata text-[1.1rem] uppercase tracking-[0.08em] [text-shadow:1px_1px_0_#000] transition-[border-color,color,box-shadow] duration-150 hover:border-warcraft-gold hover:text-warcraft-gold focus:outline-none [body[data-kb-modality]_&]:focus:outline-none [body[data-kb-modality]_&]:focus:border-white [body[data-kb-modality]_&]:focus:text-white [body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)] data-[active=true]:bg-[linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)] data-[active=true]:border-warcraft-gold data-[active=true]:text-warcraft-gold data-[active=true]:shadow-[0_0_12px_rgba(255,206,99,0.3)] min-[701px]:max-[2000px]:text-[clamp(0.8rem,0.45vw+0.55rem,1.05rem)] min-[701px]:max-[2000px]:px-2 max-[700px]:text-[0.95rem] max-[480px]:text-[0.85rem] max-[480px]:px-[0.5rem]"
     }
 }
 
@@ -97,9 +94,10 @@ impl CategorySectionEntry {
         self.active_unit_id.clone()
     }
 }
+assert_component!(UnitList);
 
 #[derive(Props, Clone, PartialEq)]
-pub struct UnitListPanelProps {
+pub struct UnitListProps {
     pub active_race: Signal<Race>,
     pub unit_mode: Signal<UnitMode>,
     pub selected_unit_id: Signal<Option<String>>,
@@ -112,15 +110,15 @@ pub struct UnitListPanelProps {
 }
 
 #[component]
-pub fn UnitListPanel(props: UnitListPanelProps) -> Element {
+pub fn UnitList(props: UnitListProps) -> Element {
     let active_race = props.active_race;
     let unit_mode = props.unit_mode;
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
     let mut search_query = props.search_query;
-    let mut search_field = props.search_field;
-    let mut show_abilityless_units = props.show_abilityless_units;
-    let mut expand_variants = props.expand_variants;
+    let search_field = props.search_field;
+    let show_abilityless_units = props.show_abilityless_units;
+    let expand_variants = props.expand_variants;
     let current_search_field = *search_field.read();
     let show_abilityless_active = *show_abilityless_units.read();
     let expand_variants_active = *expand_variants.read();
@@ -129,19 +127,9 @@ pub fn UnitListPanel(props: UnitListPanelProps) -> Element {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
     };
-    // Reuse the exact Melee/Campaign button styling so the search-field toggle
-    // matches their size and width.
-    let search_field_button_class = ModeButtonClass::get();
-    let visibility_toggle_class = VisibilityToggleClass::get();
     let collapsed_categories = props.collapsed_categories;
     let mut raw_query = use_signal(|| search_query.read().clone());
     let mut debounce_gen: Signal<u32> = use_signal(|| 0);
-    // Keep the visible input text in sync when `search_query` changes from
-    // outside this component — e.g. browser back/forward restoring a previous
-    // query. Typing updates `raw_query` first and the debounce commits the same
-    // value, so for ordinary input this is a no-op; `peek` avoids subscribing to
-    // `raw_query` (and thus self-triggering) so it only reacts to external
-    // `search_query` changes.
     use_effect(move || {
         let committed = search_query.read().clone();
         if *raw_query.peek() != committed {
@@ -230,70 +218,20 @@ pub fn UnitListPanel(props: UnitListPanelProps) -> Element {
             active_unit_id: state.active_unit_id().map(str::to_owned),
         })
         .collect();
-
     rsx! {
         aside {
-            class: "unit-list",
+            class: CLASS,
             "data-active-category": "{unit_kind_data_attr(active_kind)}",
             "data-search-active": search_active,
-            div {
-                class: "flex flex-col gap-2 mb-2 max-[700px]:flex-row [&>button]:min-h-[6.7rem]! max-[700px]:[&>button]:min-h-[3.5rem]!",
-                role: "group",
-                aria_label: "Search by",
-                button {
-                    r#type: "button",
-                    class: search_field_button_class,
-                    "data-active": current_search_field == SearchField::UnitName,
-                    aria_pressed: current_search_field == SearchField::UnitName,
-                    onclick: move |_| search_field.set(SearchField::UnitName),
-                    "Unit"
-                }
-                button {
-                    r#type: "button",
-                    class: search_field_button_class,
-                    "data-active": current_search_field == SearchField::Ability,
-                    aria_pressed: current_search_field == SearchField::Ability,
-                    onclick: move |_| search_field.set(SearchField::Ability),
-                    "Ability"
-                }
+            SearchFieldToggle { search_field }
+            CatalogVisibilityToggle { show_abilityless_units, expand_variants }
+            UnitListSearch {
+                value: raw_query,
+                placeholder: search_placeholder,
+                on_input: handle_search_input,
+                on_keydown: handle_search_keydown,
             }
-            div {
-                class: "flex flex-row gap-2 mb-2 [&>button]:min-h-[6.7rem]! max-[700px]:[&>button]:min-h-[3.5rem]!",
-                role: "group",
-                aria_label: "Catalog visibility",
-                button {
-                    r#type: "button",
-                    class: visibility_toggle_class,
-                    "data-active": show_abilityless_active,
-                    aria_pressed: show_abilityless_active,
-                    title: "Show units without abilities (for stats)",
-                    onclick: move |_| show_abilityless_units.set(!show_abilityless_active),
-                    "No abilities"
-                }
-                button {
-                    r#type: "button",
-                    class: visibility_toggle_class,
-                    "data-active": expand_variants_active,
-                    aria_pressed: expand_variants_active,
-                    title: "List every tier / upgrade variant separately",
-                    onclick: move |_| expand_variants.set(!expand_variants_active),
-                    "All variants"
-                }
-            }
-            div {
-                class: "unit-list-search",
-                input {
-                    r#type: "search",
-                    placeholder: search_placeholder,
-                    value: raw_query,
-                    oninput: handle_search_input,
-                    onkeydown: handle_search_keydown,
-                }
-            }
-            nav {
-                class: "unit-category-tabs",
-                role: "tablist",
-                aria_label: "Unit categories",
+            UnitCategoryTabs {
                 for tab in mobile_tab_entries {
                     MobileCategoryTab {
                         key: "{unit_kind_data_attr(tab.kind())}",
@@ -303,26 +241,23 @@ pub fn UnitListPanel(props: UnitListPanelProps) -> Element {
                     }
                 }
             }
-            div {
-                class: "unit-list-scroll",
-                div { class: "unit-list-track",
-                    for section in category_section_entries {
-                        UnitCategorySection {
-                            key: "{unit_kind_data_attr(section.kind())}",
-                            category_kind: section.kind(),
-                            category_label: section.label(),
-                            is_collapsed: section.is_collapsed(),
-                            collapsed_categories,
-                            race,
-                            mode,
-                            query: section.query(),
-                            search_field: section.search_field(),
-                            visibility: section.visibility(),
-                            active_unit_id: section.active_unit_id(),
-                            selected_unit_id,
-                            selected_slot,
-                            active_category: active_category_signal,
-                        }
+            UnitListScroll {
+                for section in category_section_entries {
+                    UnitCategorySection {
+                        key: "{unit_kind_data_attr(section.kind())}",
+                        category_kind: section.kind(),
+                        category_label: section.label(),
+                        is_collapsed: section.is_collapsed(),
+                        collapsed_categories,
+                        race,
+                        mode,
+                        query: section.query(),
+                        search_field: section.search_field(),
+                        visibility: section.visibility(),
+                        active_unit_id: section.active_unit_id(),
+                        selected_unit_id,
+                        selected_slot,
+                        active_category: active_category_signal,
                     }
                 }
             }

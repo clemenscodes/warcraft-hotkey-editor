@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
-
 use super::components::system_hotkeys_category_tab::SystemHotkeysCategoryTabProps;
 use super::props::SystemHotkeysBreadcrumbsMenuProps;
+use dioxus::prelude::*;
+use warcraft_database::SystemHotkeysCategory;
 
 /// Builds one tab's props per category, marking the active one and whether a
 /// separator follows it.

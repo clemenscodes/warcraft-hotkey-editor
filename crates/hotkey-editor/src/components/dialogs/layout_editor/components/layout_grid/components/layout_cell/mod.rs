@@ -2,13 +2,10 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-
+use dioxus::prelude::*;
 pub use props::LayoutCellProps;
 pub use state::LayoutCellState;
-
 assert_component!(LayoutCell);
 
 /// A single editable cell in the global hotkey grid. Draggable to swap, clickable

@@ -116,7 +116,7 @@ mod tests {
         let view = GalleryView::new(story, query, 1920, 1080, true);
         assert_eq!(
             view.to_query(),
-            "gallery&story=Shell/Header&q=head&w=1920&h=1080&list=hidden"
+            "gallery&story=Shell/Header&q=head&w=1920&h=1080&list=hidden",
         );
     }
 
@@ -130,7 +130,7 @@ mod tests {
         let view = GalleryView::new(story, query, width, height, false);
         assert_eq!(
             view.to_query(),
-            "gallery&story=Dialog%20header/Default&q=unit%20detail"
+            "gallery&story=Dialog%20header/Default&q=unit%20detail",
         );
     }
 

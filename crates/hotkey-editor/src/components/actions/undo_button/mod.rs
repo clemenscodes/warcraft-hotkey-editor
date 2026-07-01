@@ -1,8 +1,7 @@
-use dioxus::prelude::*;
-
 use crate::components::shared::icons::ICON_UNDO;
 use crate::components::shared::toolbar_button::ToolbarButton;
 use crate::services::undo::UndoHistory;
+use dioxus::prelude::*;
 
 /// Toolbar undo control. Reads the global [`UndoHistory`] from context and
 /// disables itself when the undo stack is empty.

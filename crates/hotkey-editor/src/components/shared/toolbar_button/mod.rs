@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::toolbar_button_icon::ToolbarButtonIcon;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::ToolbarButtonProps;
-
+use style::CLASS;
 assert_component!(ToolbarButton);
 
 /// The single source of truth for how a toolbar action button looks. Consumers swap

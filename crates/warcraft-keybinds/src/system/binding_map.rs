@@ -1,9 +1,7 @@
+use crate::{CustomKeys, Hotkey, KeyCode};
 use std::collections::HashMap;
-
 use warcraft_api::{ContextSet, SystemKeybindModifier};
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
-
-use crate::{CustomKeys, Hotkey, KeyCode};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct EffectiveBinding {
@@ -27,10 +25,6 @@ impl EffectiveBinding {
         let fallback_key = KeyCode::Escape;
         let default_key = KeyCode::try_from(default_hotkey).unwrap_or(fallback_key);
         let key = custom_key.unwrap_or(default_key);
-        // Warcraft III hardcodes the modifier per system hotkey — any
-        // `Modifier=` line in CustomKeys.txt is written for transparency but
-        // discarded at load time. The editor mirrors that: the effective
-        // modifier is always the system default, regardless of the file.
         Self {
             key,
             modifier: default_modifier,

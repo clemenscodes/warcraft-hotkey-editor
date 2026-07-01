@@ -2,15 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
 use components::footer_link_icon::{FooterLinkIcon, FooterLinkIconProps};
-
+use dioxus::prelude::*;
 pub use props::FooterLinkProps;
-
+use style::CLASS;
 assert_component!(FooterLink);
 
 #[component]

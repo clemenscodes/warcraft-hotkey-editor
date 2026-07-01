@@ -1,3 +1,4 @@
+use crate::stories::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::actions::export_button::ExportButton;
@@ -21,8 +22,6 @@ use hotkey_editor::services::undo::UndoHistory;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::CustomKeys;
-
-use crate::stories::fixtures;
 
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
 /// context, so a button can be shown in isolation.

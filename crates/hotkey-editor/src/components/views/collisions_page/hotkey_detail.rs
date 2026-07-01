@@ -1,8 +1,6 @@
-use dioxus::prelude::*;
-
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-
 use super::{HotkeyConflictView, HotkeyUnitView};
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 struct HotkeyAbilityProps {
@@ -22,7 +20,6 @@ fn HotkeyAbility(props: HotkeyAbilityProps) -> Element {
     let icon_url = props.icon_url;
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-
     rsx! {
         div { class: "conflict-ability",
             button {
@@ -61,19 +58,18 @@ fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
     let conflict = props.conflict;
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-
     let hotkey_label = conflict.hotkey_label().to_owned();
     let role_label = conflict.role_label().to_owned();
     let abilities = conflict.abilities();
     let is_pair = abilities.len() == 2;
-
     rsx! {
         div { class: "conflict-card hotkey-conflict-card",
             span { class: "conflict-card-caption", "{role_label}" }
             if is_pair {
                 div { class: "conflict-ability-row",
                     HotkeyAbility {
-                        ability_name: abilities[0].name().to_owned(),
+                        ability_name: abilities[0].name()
+                                .to_owned(),
                         ability_id: abilities[0].object_id().to_owned(),
                         icon_url: abilities[0].icon_url().map(str::to_owned),
                         unit_id: unit_id.clone(),
@@ -98,7 +94,8 @@ fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
                     for ability in abilities.iter() {
                         HotkeyAbility {
                             key: "{ability.object_id()}",
-                            ability_name: ability.name().to_owned(),
+                            ability_name: ability
+                                    .name().to_owned(),
                             ability_id: ability.object_id().to_owned(),
                             icon_url: ability.icon_url().map(str::to_owned),
                             unit_id: unit_id.clone(),
@@ -126,7 +123,6 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let units = props.units;
     let selected_unit = props.selected_unit;
     let view_navigation = props.view_navigation;
-
     let selected_key = selected_unit.read().clone();
     let selected = selected_key.as_ref().and_then(|key| {
         units
@@ -134,7 +130,6 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
             .find(|unit_view| unit_view.key() == key)
             .cloned()
     });
-
     let Some(unit_view) = selected else {
         return rsx! {
             section { class: "unit-detail island-detail empty",
@@ -142,7 +137,6 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
             }
         };
     };
-
     let unit = unit_view.unit();
     let unit_name = unit.name().to_owned();
     let unit_id_label = unit.unit_id().to_owned();
@@ -154,7 +148,6 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     } else {
         "collisions"
     };
-
     rsx! {
         section { class: "unit-detail island-detail",
             header { class: "island-detail-header",

@@ -1,16 +1,14 @@
-use std::collections::{HashMap, HashSet};
-
-use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
-use gloo_timers::future::TimeoutFuture;
-use warcraft_database::ObjectLookup;
-use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
-
 use crate::components::dialogs::dialog::Dialog;
 use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use crate::model::icons::IconUrl;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
+use dioxus_primitives::toast::{ToastOptions, use_toast};
+use gloo_timers::future::TimeoutFuture;
+use std::collections::{HashMap, HashSet};
+use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
+use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, PartialEq)]
@@ -271,9 +269,6 @@ impl ResolvePlanView {
     fn build(custom_keys: &CustomKeys) -> Self {
         let plan = custom_keys.preview_resolve();
         let plan_moves = plan.moves();
-        // A swap emits two reciprocal moves (A→B and B→A). Index moves by slot so
-        // the partner's carriers can be looked up, and track which partner slots
-        // are already represented so each pair renders as a single merged card.
         let mut moves_by_slot = HashMap::new();
         for planned_move in plan_moves {
             let slot_key = planned_move.slot_id().as_str().to_owned();
@@ -463,20 +458,13 @@ fn ResolveAbilityIcon(props: ResolveAbilityIconProps) -> Element {
     let is_winner = props.is_winner;
     let mut carriers_dialog = props.carriers_dialog;
     let dialog_name = name.clone();
-    // An icon is only interactive when its carriers are known: every mover, and
-    // now the Fight winner too (the plan exposes the anchor's carrier units).
-    // Spill/GapPull have no rival icon, so this only ever disables a degenerate
-    // case where an ability somehow has zero carriers.
     let has_carriers = !carrier_unit_ids.is_empty();
-    // The winner is marked only by its gold carrier badge, not a forced border —
-    // leaving the icon unstyled keeps the hover highlight available on every icon.
     let class_name = "resolve-fight-ability";
     let badge_class = if is_winner {
         "resolve-carrier-badge resolve-carrier-badge-win"
     } else {
         "resolve-carrier-badge"
     };
-
     rsx! {
         button {
             class: class_name,
@@ -539,15 +527,11 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
     let from_row = move_view.from_row;
     let to_column = move_view.to_column;
     let to_row = move_view.to_row;
-
     let anchor = reason.other_ability;
     let anchor_carriers = reason.other_carriers.unwrap_or(0);
     let anchor_carrier_unit_ids = reason.other_carrier_unit_ids;
     let is_swap = reason.is_swap;
-    // Only a Fight has a winner (the anchor that kept the contested cell). A swap
-    // is a reciprocal exchange — neither side wins — so no gold winner marking.
     let anchor_is_winner = !is_swap;
-
     let mover_from_placement = MiniGridPlacement {
         column: from_column,
         row: from_row,
@@ -563,8 +547,6 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
     let mut from_placements: Vec<MiniGridPlacement> = vec![mover_from_placement];
     let mut to_placements: Vec<MiniGridPlacement> = vec![mover_to_placement];
     if let Some(anchor_ability) = anchor.as_ref() {
-        // The rival ends up at the mover's old cell — true for a Fight (it stayed
-        // there) and a Swap (it took the cell the mover vacated).
         let anchor_after_placement = MiniGridPlacement {
             column: from_column,
             row: from_row,
@@ -573,8 +555,6 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
         };
         to_placements.push(anchor_after_placement);
         if is_swap {
-            // A swap is a reciprocal pair: before the move the partner sat on the
-            // mover's new cell, so the left grid shows both abilities too.
             let anchor_before_placement = MiniGridPlacement {
                 column: to_column,
                 row: to_row,
@@ -584,13 +564,11 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
             from_placements.push(anchor_before_placement);
         }
     }
-
     let open_mover = move |_| {
         if let Some(unit_id) = mover_unit_id.as_ref() {
             view_navigation.open_unit(unit_id);
         }
     };
-
     rsx! {
         div { class: "resolve-move-row",
             div { class: "resolve-move-reasonrow",
@@ -610,7 +588,8 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
                         name: mover_name.clone(),
                         icon_url: mover_icon.clone(),
                         carrier_count: mover_carriers,
-                        carrier_unit_ids: mover_carrier_unit_ids.clone(),
+                        carrier_unit_ids: mover_carrier_unit_ids
+                                .clone(),
                         is_winner: false,
                         carriers_dialog,
                     }
@@ -622,7 +601,8 @@ fn ResolveMoveRow(props: ResolveMoveRowProps) -> Element {
                             code { class: "conflict-object-id", "{anchor_ability.object_id}" }
                         }
                         ResolveAbilityIcon {
-                            name: anchor_ability.name.clone(),
+                            name: anchor_ability.name
+                                    .clone(),
                             icon_url: anchor_ability.icon_url.clone(),
                             carrier_count: anchor_carriers,
                             carrier_unit_ids: anchor_carrier_unit_ids.clone(),
@@ -666,11 +646,8 @@ fn CarriersDialog(props: CarriersDialogProps) -> Element {
             carriers_dialog.set(None);
         }
     });
-
     rsx! {
-        Dialog {
-            open,
-            title,
+        Dialog { open, title,
             div { class: "carriers-grid",
                 for (carrier_index, carrier) in dialog_data.carriers.iter().enumerate() {
                     {
@@ -727,12 +704,10 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let mut is_running = use_signal(|| false);
     let carriers_dialog = use_signal(|| None::<CarriersDialogData>);
     let mut selected_move_category = props.selected_move_category;
-
     let plan_memo = use_memo(move || {
         let guard = loaded_keys.read();
         guard.as_ref().map(ResolvePlanView::build)
     });
-
     let has_file = loaded_keys.read().is_some();
     let plan = plan_memo();
     let move_count = plan.as_ref().map(|view| view.move_count()).unwrap_or(0);
@@ -740,7 +715,6 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let move_noun = if move_count == 1 { "move" } else { "moves" };
     let running_now = *is_running.read();
     let carriers_dialog_state = carriers_dialog.read().clone();
-
     let handle_apply = move |_| {
         if *is_running.read() {
             return;
@@ -766,7 +740,7 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                 format!("Moved {move_count} ability slot(s). No remaining conflicts.")
             } else {
                 format!(
-                    "Moved {move_count} ability slot(s). {unresolved_count} could not be placed."
+                    "Moved {move_count} ability slot(s). {unresolved_count} could not be placed.",
                 )
             };
             let title = String::from("Cascade applied");
@@ -774,7 +748,6 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             toast_api.success(title, toast_options);
         });
     };
-
     if !has_file {
         return rsx! {
             section { class: CENTERED_STATE_CLASS, "data-resolve-state": "no-file",
@@ -782,7 +755,6 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             }
         };
     }
-
     if move_count == 0 && unresolved_count == 0 {
         return rsx! {
             section { class: CENTERED_STATE_CLASS, "data-resolve-state": "clear",
@@ -792,19 +764,13 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                     aria_hidden: "true",
                     dangerous_inner_html: ICON_COLLISIONS_CLEAR,
                 }
-                p {
-                    class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
+                p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
                     "Nothing to resolve."
                 }
             }
         };
     }
-
     let plan = plan.expect("plan present when a file is loaded");
-
-    // The selected breadcrumb, falling back to the first section when nothing is
-    // chosen yet or the chosen category has no moves in the current plan. The
-    // selection is restored from the `?entry=` URL slug.
     let selected_slug = selected_move_category.read().clone();
     let selected = selected_slug
         .as_deref()
@@ -826,9 +792,10 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             .iter()
             .find(|section| section.category == category)
     });
-
     rsx! {
-        section { class: "resolve-page resolve-plan", "data-resolve-state": "plan",
+        section {
+            class: "resolve-page resolve-plan",
+            "data-resolve-state": "plan",
             "data-move-count": "{move_count}",
             "data-unresolved-count": "{unresolved_count}",
             header { class: "resolve-plan-header",
@@ -848,10 +815,16 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                     disabled: running_now,
                     "data-action": "apply-cascade",
                     onclick: handle_apply,
-                    if running_now { "Applying…" } else { "Apply" }
+                    if running_now {
+                        "Applying…"
+                    } else {
+                        "Apply"
+                    }
                 }
             }
-            nav { class: "collision-breadcrumbs resolve-breadcrumbs", aria_label: "Move categories",
+            nav {
+                class: "collision-breadcrumbs resolve-breadcrumbs",
+                aria_label: "Move categories",
                 for (section_index, section) in plan.sections.iter().enumerate() {
                     {
                         let category = section.category;
@@ -888,11 +861,14 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             }
             div { class: "resolve-plan-body",
                 if let Some(section) = active_section {
-                    div { class: "resolve-move-list", "data-category": "{section.category.data_breadcrumb()}",
+                    div {
+                        class: "resolve-move-list",
+                        "data-category": "{section.category.data_breadcrumb()}",
                         for (move_index, move_view) in section.moves.iter().enumerate() {
                             ResolveMoveRow {
                                 key: "{section.category.data_breadcrumb()}-move-{move_index}",
-                                move_view: move_view.clone(),
+                                move_view: move_view
+                                        .clone(),
                                 view_navigation,
                                 carriers_dialog,
                             }
@@ -913,7 +889,9 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                                     };
                                     let stuck_placements: Vec<MiniGridPlacement> = vec![stuck_placement];
                                     rsx! {
-                                        div { key: "stuck-{stuck_index}", class: "resolve-move-row resolve-move-row-stuck",
+                                        div {
+                                            key: "stuck-{stuck_index}",
+                                            class: "resolve-move-row resolve-move-row-stuck",
                                             div { class: "resolve-move-reasonrow",
                                                 span { class: "resolve-reason resolve-reason-stuck", "Stuck" }
                                             }
@@ -924,9 +902,11 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                                                         code { class: "conflict-object-id", "{stuck.ability.object_id}" }
                                                     }
                                                     ResolveAbilityIcon {
-                                                        name: stuck.ability.name.clone(),
+                                                        name: stuck.ability.name
+                                                                .clone(),
                                                         icon_url: stuck.ability.icon_url.clone(),
-                                                        carrier_count: stuck.carrier_count,
+                                                        carrier_count: stuck
+                                                                .carrier_count,
                                                         carrier_unit_ids: stuck.carrier_unit_ids.clone(),
                                                         is_winner: false,
                                                         carriers_dialog,

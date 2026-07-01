@@ -2,16 +2,13 @@ mod hooks;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
-
 use crate::assert_component;
 use crate::components::dialogs::system_hotkeys_dialog::components::slot_button::SlotButton;
+use dioxus::prelude::*;
 use hooks::use_control_groups_row;
-use style::CLASS;
-
 pub use props::ControlGroupsRowProps;
-
+use style::CLASS;
+use warcraft_database::SystemHotkeysCategory;
 assert_component!(ControlGroupsRow);
 
 /// The ten-cell control-group strip.
@@ -23,9 +20,7 @@ pub fn ControlGroupsRow(props: ControlGroupsRowProps) -> Element {
     let binding_map = model.binding_map;
     let entries = SystemHotkeysCategory::ControlGroups.entries();
     rsx! {
-        div {
-            class: CLASS,
-            style: model.frame,
+        div { class: CLASS, style: model.frame,
             for (slot_index, entry) in entries.iter().enumerate() {
                 SlotButton {
                     compact: true,

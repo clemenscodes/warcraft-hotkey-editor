@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::super::super::logic::FollowerPresentation;
+use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct FollowerFigureProps {

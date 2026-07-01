@@ -33,7 +33,12 @@ fn mode_and_race_tabs_melee_human() -> Element {
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        ModeAndRaceTabs { unit_mode, active_race, selected_unit_id, selected_slot }
+        ModeAndRaceTabs {
+            unit_mode,
+            active_race,
+            selected_unit_id,
+            selected_slot,
+        }
     }
 }
 
@@ -43,7 +48,12 @@ fn mode_and_race_tabs_campaign_orc() -> Element {
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        ModeAndRaceTabs { unit_mode, active_race, selected_unit_id, selected_slot }
+        ModeAndRaceTabs {
+            unit_mode,
+            active_race,
+            selected_unit_id,
+            selected_slot,
+        }
     }
 }
 
@@ -53,7 +63,12 @@ fn race_tabs_human_active() -> Element {
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        RaceTabs { active_race, unit_mode, selected_unit_id, selected_slot }
+        RaceTabs {
+            active_race,
+            unit_mode,
+            selected_unit_id,
+            selected_slot,
+        }
     }
 }
 
@@ -65,7 +80,14 @@ fn race_tab_human_active() -> Element {
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        RaceTab { race, is_active, active_race, unit_mode, selected_unit_id, selected_slot }
+        RaceTab {
+            race,
+            is_active,
+            active_race,
+            unit_mode,
+            selected_unit_id,
+            selected_slot,
+        }
     }
 }
 
@@ -77,6 +99,13 @@ fn race_tab_orc_inactive() -> Element {
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        RaceTab { race, is_active, active_race, unit_mode, selected_unit_id, selected_slot }
+        RaceTab {
+            race,
+            is_active,
+            active_race,
+            unit_mode,
+            selected_unit_id,
+            selected_slot,
+        }
     }
 }

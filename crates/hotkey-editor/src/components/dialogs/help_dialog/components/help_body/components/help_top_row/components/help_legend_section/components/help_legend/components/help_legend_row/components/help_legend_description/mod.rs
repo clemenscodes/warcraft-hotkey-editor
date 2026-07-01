@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpLegendDescriptionProps;
-
+use style::CLASS;
 assert_component!(HelpLegendDescription);
 
 /// The toolbar button's one-line description in a legend row. A leaf: the row
@@ -16,9 +13,6 @@ assert_component!(HelpLegendDescription);
 pub fn HelpLegendDescription(props: HelpLegendDescriptionProps) -> Element {
     let description = props.children.clone();
     rsx! {
-        span {
-            class: CLASS,
-            {description}
-        }
+        span { class: CLASS, {description} }
     }
 }

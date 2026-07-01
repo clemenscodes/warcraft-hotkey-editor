@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::ToolbarButtonIconProps;
-
+use style::CLASS;
 assert_component!(ToolbarButtonIcon);
 
 /// The glyph inside a toolbar button.
@@ -15,10 +12,6 @@ assert_component!(ToolbarButtonIcon);
 pub fn ToolbarButtonIcon(props: ToolbarButtonIconProps) -> Element {
     let icon = props.icon;
     rsx! {
-        span {
-            class: CLASS,
-            aria_hidden: "true",
-            dangerous_inner_html: icon,
-        }
+        span { class: CLASS, aria_hidden: "true", dangerous_inner_html: icon }
     }
 }

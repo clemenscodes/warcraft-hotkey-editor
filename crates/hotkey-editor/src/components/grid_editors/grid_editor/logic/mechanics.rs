@@ -1,22 +1,19 @@
-use dioxus::html::input_data::MouseButton;
-use dioxus::html::point_interaction::PointerInteraction;
-use dioxus::prelude::*;
-use dioxus::web::WebEventExt;
-use wasm_bindgen::JsCast;
-use wasm_bindgen::closure::Closure;
-
-use std::ops::Range;
-
-use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
-
-use crate::model::grid::{CursorPoint, HitTestPoint};
-use crate::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
-
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, DragThreadState,
     LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
     TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
 };
+
+use crate::model::grid::{CursorPoint, HitTestPoint};
+use crate::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+use dioxus::html::input_data::MouseButton;
+use dioxus::html::point_interaction::PointerInteraction;
+use dioxus::prelude::*;
+use dioxus::web::WebEventExt;
+use std::ops::Range;
+use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
+use wasm_bindgen::JsCast;
+use wasm_bindgen::closure::Closure;
 
 pub(crate) fn keydown(
     on_select: EventHandler<GridCoordinate>,
@@ -52,8 +49,6 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         coordinate,
     } = args;
     move |event: Event<PointerData>| {
-        // A new gesture starts: clear any stale double-click suppression so an
-        // unrelated later double-click still opens the picker.
         SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.set(false));
         if !draggable {
             return;
@@ -69,15 +64,10 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         };
         let pointer_type = web_event.pointer_type();
         let is_touch = pointer_type == "touch" || pointer_type == "pen";
-
-        // Discard compat mouse event synthesised after touch.
         if !is_touch && TOUCH_STARTED.with(|c| c.replace(false)) {
             return;
         }
-        // Clean up any stuck drag state from a previous gesture.
         DragThreadState::reset();
-        // Flag so the compat mouse event is suppressed, but
-        // continue handling the touch event itself.
         if is_touch {
             TOUCH_STARTED.with(|c| c.set(true));
         }
@@ -105,14 +95,12 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         let tile_width = tile_rect.width();
         let tile_height = tile_rect.height();
         let pointer_id = web_event.pointer_id();
-
         let drag_origin = DragOrigin {
             cursor_horizontal_position,
             cursor_vertical_position,
         };
         DRAG_ORIGIN.with(|cell| cell.set(Some(drag_origin)));
         DID_DRAG_MOVE.with(|cell| cell.set(false));
-
         let pending = PendingDragData {
             grid_id,
             coordinate,
@@ -128,11 +116,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
             is_touch,
         };
         PENDING_DRAG.with(|cell| *cell.borrow_mut() = Some(pending));
-
         if is_touch {
-            // Long-press: start timer. The closure captures
-            // signal handles (Copy) to commit drag state when
-            // the 300 ms window expires.
             let mut dragging_slot_cb = dragging_slot;
             let mut drop_target_tile_cb = drop_target_tile;
             let mut drag_follower_cb = drag_follower;
@@ -140,7 +124,6 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
                 let Some(pending) = PENDING_DRAG.with(|cell| cell.borrow_mut().take()) else {
                     return;
                 };
-                // If capture fails the finger is already gone.
                 if pending
                     .tile_element
                     .set_pointer_capture(pending.pointer_id)
@@ -175,8 +158,6 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
             }
             cb.forget();
         }
-        // For mouse: drag commits in pointermove once the
-        // movement threshold is crossed.
     }
 }
 
@@ -197,10 +178,7 @@ pub(crate) fn pointer_move(
         };
         let cursor_horizontal_position = f64::from(web_event.client_x());
         let cursor_vertical_position = f64::from(web_event.client_y());
-
         if has_pending {
-            // Reject stale pending from a previous gesture whose
-            // pointerup fired outside a tile (pointer_id mismatch).
             let current_pointer_id = web_event.pointer_id();
             let pending_pointer_id =
                 PENDING_DRAG.with(|cell| cell.borrow().as_ref().map(|pending| pending.pointer_id));
@@ -210,17 +188,13 @@ pub(crate) fn pointer_move(
                 DRAG_ORIGIN.with(|cell| cell.set(None));
                 return;
             }
-
             let pending_is_touch = PENDING_DRAG.with(|cell| {
                 cell.borrow()
                     .as_ref()
                     .map(|pending| pending.is_touch)
                     .unwrap_or(false)
             });
-
             if pending_is_touch {
-                // Touch pending: cancel long-press if the finger
-                // drifted far enough to be a swipe.
                 let origin_option = DRAG_ORIGIN.with(|cell| cell.get());
                 if let Some(origin) = origin_option {
                     let horizontal_delta =
@@ -235,20 +209,16 @@ pub(crate) fn pointer_move(
                         return;
                     }
                 }
-                // Keep last known position fresh so the follower
-                // appears at the right spot when the timer fires.
                 PENDING_DRAG.with(|cell| {
                     if let Some(pending) = cell.borrow_mut().as_mut() {
                         pending.last_cursor_horizontal_position = cursor_horizontal_position;
                         pending.last_cursor_vertical_position = cursor_vertical_position;
                     }
                 });
-                // Drag not yet committed; wait for timer.
                 if !drag_is_active {
                     return;
                 }
             } else {
-                // Mouse pending: commit on movement threshold.
                 let origin_option = DRAG_ORIGIN.with(|cell| cell.get());
                 if let Some(origin) = origin_option {
                     let horizontal_delta =
@@ -301,14 +271,12 @@ pub(crate) fn pointer_move(
                 }
             }
         }
-
         let current_follower_option = drag_follower.read().clone();
         if let Some(mut current_follower) = current_follower_option {
             current_follower
                 .set_cursor_position(cursor_horizontal_position, cursor_vertical_position);
             drag_follower.set(Some(current_follower));
         }
-
         let document_option = web_sys::window().and_then(|window| window.document());
         let Some(document) = document_option else {
             return;
@@ -389,8 +357,6 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
         grid_id,
     } = args;
     move |_event: Event<PointerData>| {
-        // Cancel pending long-press if the finger lifted before
-        // the timer fired (tap selects instead of dragging).
         DragThreadState::cancel_long_press();
         let dragging_clone = *dragging_slot.read();
         let mut committed = false;
@@ -416,8 +382,6 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
         DRAG_ORIGIN.with(|cell| cell.set(None));
         PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
         DragThreadState::remove_scroll_lock();
-        // A drag that lifted without a valid drop keeps the dragged tile
-        // selected, matching a plain click on it.
         if fell_back
             && did_move
             && let Some(dragging) = dragging_clone.as_ref()
@@ -427,8 +391,6 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
         }
         if did_move || committed {
             SUPPRESS_NEXT_CLICK.with(|cell| cell.set(true));
-            // A drag happened, so the trailing native `dblclick` (prior click +
-            // this gesture's click) must not open the picker.
             SUPPRESS_NEXT_DOUBLE_CLICK.with(|cell| cell.set(true));
         }
         dragging_slot.set(None);
@@ -456,9 +418,6 @@ pub(crate) fn lost_pointer_capture(
     mut drag_follower: Signal<Option<DragFollower>>,
 ) -> impl FnMut(Event<PointerData>) + 'static {
     move |_event: Event<PointerData>| {
-        // Safety net: fires whenever pointer capture is released
-        // (after pointerup, pointercancel, or browser scroll
-        // takeover). Ensures drag state never stays stuck.
         DragThreadState::reset();
         dragging_slot.set(None);
         drop_target_tile.set(None);
@@ -484,8 +443,6 @@ pub(crate) fn double_click(
     coordinate: GridCoordinate,
 ) -> impl FnMut(Event<MouseData>) + 'static {
     move |_event: Event<MouseData>| {
-        // A drag that just ended produces a native dblclick; that must not open
-        // the picker (initiating a drag resets the double-click trigger).
         let was_suppressed = SUPPRESS_NEXT_DOUBLE_CLICK.with(|suppress| suppress.replace(false));
         if was_suppressed {
             return;

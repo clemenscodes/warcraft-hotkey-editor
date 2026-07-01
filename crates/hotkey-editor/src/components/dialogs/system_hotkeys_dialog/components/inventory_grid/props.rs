@@ -1,7 +1,6 @@
+use super::InventoryDragFollower;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
-
-use super::InventoryDragFollower;
 
 /// What the inventory grid needs: the loaded keys its cells edit, the shared
 /// editing-section signal, and the drag follower the cells drive.

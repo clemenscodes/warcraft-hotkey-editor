@@ -1,24 +1,27 @@
-use std::collections::HashMap;
-use std::rc::Rc;
-
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::grid_editors::command_grid_editor::CommandGridEditor;
 use hotkey_editor::components::grid_editors::grid_editor::components::drag_follower_overlay::DragFollowerOverlay;
+use std::collections::HashMap;
+use std::rc::Rc;
+
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{
     HotkeyBadge, HotkeyBadgeState,
 };
+
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
     GridTile, GridTileState,
 };
+
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
 use hotkey_editor::components::shell::toasts::ToastMount;
+
 use hotkey_editor::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+
+use super::fixtures;
 use warcraft_api::Race;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{GridSlotId, HotkeyToken, UnitCommandSlots};
-
-use super::fixtures;
 
 const GRID_STORY_STYLES: Asset = asset!("/src/stories/grid.css");
 
@@ -84,15 +87,12 @@ fn hotkey_badge_conflict() -> Element {
     hotkey_badge_demo(HotkeyBadgeState::Conflict)
 }
 
-// The presentational tile sizes itself, so each state story renders it directly.
-// Hover and keyboard-focus styles are exercised by interacting with any filled
-// tile in the browser.
-
 fn grid_tile_empty() -> Element {
     rsx! {
         GridTile {
             state: GridTileState::Empty,
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
         }
     }
 }
@@ -103,7 +103,8 @@ fn grid_tile_filled() -> Element {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             is_focusable: true,
             draggable: true,
         }
@@ -116,7 +117,8 @@ fn grid_tile_selected() -> Element {
             state: GridTileState::Selected,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             is_focusable: true,
             draggable: true,
         }
@@ -129,7 +131,8 @@ fn grid_tile_command() -> Element {
             state: GridTileState::Command,
             icon: fixtures::sample_icon_url(),
             label: "Build".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             is_focusable: true,
         }
     }
@@ -139,7 +142,8 @@ fn grid_tile_drop_target() -> Element {
     rsx! {
         GridTile {
             state: GridTileState::DropTarget,
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
         }
     }
 }
@@ -159,7 +163,8 @@ fn grid_tile_dragging() -> Element {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             is_focusable: true,
             draggable: true,
             is_dragging_source: true,
@@ -173,7 +178,8 @@ fn grid_tile_drag_over() -> Element {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             is_focusable: true,
             draggable: true,
             is_drag_over: true,
@@ -187,7 +193,8 @@ fn grid_tile_conflict() -> Element {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             badge_state: HotkeyBadgeState::Conflict,
             is_focusable: true,
             draggable: true,
@@ -201,7 +208,8 @@ fn grid_tile_passive() -> Element {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Inner Fire".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            hotkey: HotkeyToken::try_from('Q')
+                    .expect("letter"),
             badge_state: HotkeyBadgeState::Passive,
             is_focusable: true,
         }
@@ -287,9 +295,6 @@ fn grid_neutral() -> Element {
     grid_footman(true, Race::Neutral)
 }
 
-// `update_hotkeys` ON: a move/swap rebinds hotkeys to the new cells' layout
-// letters. OFF: positions move but each ability keeps its own hotkey. `race`
-// themes every tile's hover/selected accent.
 fn grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let slot_ids = footman_command_slots();
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys_layout_applied()));

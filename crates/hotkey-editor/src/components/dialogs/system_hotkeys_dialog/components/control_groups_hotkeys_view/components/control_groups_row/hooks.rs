@@ -1,7 +1,6 @@
+use super::props::ControlGroupsRowProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::SystemBindingMap;
-
-use super::props::ControlGroupsRowProps;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 

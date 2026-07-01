@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-use std::rc::Rc;
-
+use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::unit_detail::UnitDetailPanel;
@@ -10,24 +8,29 @@ use hotkey_editor::components::unit_detail::header::hero_level_option::HeroLevel
 use hotkey_editor::components::unit_detail::stats_panel::UnitStatsPanel;
 use hotkey_editor::components::unit_detail::stats_panel::attack_matchup_cell::AttackMatchupCell;
 use hotkey_editor::components::unit_detail::stats_panel::attribute_row::AttributeRow;
+
 use hotkey_editor::components::unit_detail::stats_panel::attributes_column::{
     AttributesColumn, HeroDisplayData,
 };
+
 use hotkey_editor::components::unit_detail::stats_panel::combat_column::{
     AttackDisplayData, CombatColumn,
 };
+
 use hotkey_editor::components::unit_detail::stats_panel::damage_matchup_row::DamageMatchupRow;
 use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_cell::DefenseMatchupCell;
 use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_row::DefenseMatchupRow;
 use hotkey_editor::components::unit_detail::stats_panel::stat_icon::StatIcon;
 use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use std::collections::HashMap;
+use std::rc::Rc;
+
 use warcraft_api::{
     AttackType, DefenseType, PrimaryAttribute, Race, UnitCombat, WarcraftObjectMeta,
 };
+
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
 use warcraft_keybinds::{GridSlotId, UnitCommandSlots};
-
-use super::fixtures;
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -133,7 +136,12 @@ fn attribute_row_default() -> Element {
     let per_level: f32 = 0.0;
     let is_primary = false;
     rsx! {
-        AttributeRow { label, value, per_level, is_primary }
+        AttributeRow {
+            label,
+            value,
+            per_level,
+            is_primary,
+        }
     }
 }
 
@@ -143,7 +151,12 @@ fn attribute_row_primary() -> Element {
     let per_level: f32 = 2.5;
     let is_primary = true;
     rsx! {
-        AttributeRow { label, value, per_level, is_primary }
+        AttributeRow {
+            label,
+            value,
+            per_level,
+            is_primary,
+        }
     }
 }
 

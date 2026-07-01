@@ -27,11 +27,13 @@ const BASE: &[&str] = &[
     "focus-visible:text-white",
     "focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &["laptop:hidden"];
 const DESKTOP: &[&str] = &["desktop:hidden"];
 const QHD: &[&str] = &["qhd:hidden"];
 const UHD: &[&str] = &["uhd:hidden"];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

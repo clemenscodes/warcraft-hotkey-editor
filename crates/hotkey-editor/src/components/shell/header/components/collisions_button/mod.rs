@@ -5,17 +5,13 @@ mod props;
 mod state;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-
 use components::collisions_button_badge::{CollisionsButtonBadge, CollisionsButtonBadgeProps};
 use components::collisions_button_icon::{CollisionsButtonIcon, CollisionsButtonIconProps};
+use dioxus::prelude::*;
 use hooks::use_collisions_button;
 use logic::CollisionsButtonPresentation;
-
 pub use props::CollisionsButtonProps;
-
 assert_component!(CollisionsButton);
 
 /// Toolbar icon that surfaces collision health and routes to the Collisions page

@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use super::props::PreviewDialogProps;
+use dioxus::prelude::*;
 
 /// The preview dialog's shaped view: the serialized CustomKeys.txt the textarea
 /// shows. Recomputed whenever the loaded keys change.

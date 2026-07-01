@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpLegendLabelProps;
-
+use style::CLASS;
 assert_component!(HelpLegendLabel);
 
 /// The toolbar button's name in a legend row. A leaf: the row passes the name as
@@ -16,9 +13,6 @@ assert_component!(HelpLegendLabel);
 pub fn HelpLegendLabel(props: HelpLegendLabelProps) -> Element {
     let label = props.children.clone();
     rsx! {
-        span {
-            class: CLASS,
-            {label}
-        }
+        span { class: CLASS, {label} }
     }
 }

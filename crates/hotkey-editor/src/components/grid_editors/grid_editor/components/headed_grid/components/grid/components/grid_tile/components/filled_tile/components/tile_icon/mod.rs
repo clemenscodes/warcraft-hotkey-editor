@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::TileIconProps;
-
+use style::CLASS;
 assert_component!(TileIcon);
 
 /// The ability icon, filling the tile. Rendered only when the occupant has an

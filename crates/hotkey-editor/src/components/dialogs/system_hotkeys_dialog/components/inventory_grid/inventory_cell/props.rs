@@ -1,8 +1,7 @@
+use super::super::{InventoryDragFollower, InventoryDragSource};
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, SystemBindingMap};
-
-use super::super::{InventoryDragFollower, InventoryDragSource};
 
 /// One inventory slot: its index and section, the loaded keys it edits, the shared
 /// editing/drag signals the grid coordinates, and the resolved binding map.

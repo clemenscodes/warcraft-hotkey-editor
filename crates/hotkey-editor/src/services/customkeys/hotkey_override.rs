@@ -1,8 +1,7 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, HotkeyConflict, HotkeyTarget, HotkeyToken};
-
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
+use warcraft_keybinds::{CustomKeys, HotkeyConflict, HotkeyTarget, HotkeyToken};
 
 pub(crate) struct HotkeyOverride;
 

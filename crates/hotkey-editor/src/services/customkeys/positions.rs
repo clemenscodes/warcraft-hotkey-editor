@@ -1,7 +1,6 @@
 use dioxus::prelude::{Signal, WritableExt};
-use warcraft_keybinds::{CustomKeys, GridLayout};
-
 pub(crate) use warcraft_keybinds::MoveRequest;
+use warcraft_keybinds::{CustomKeys, GridLayout};
 
 pub(crate) struct Positions;
 

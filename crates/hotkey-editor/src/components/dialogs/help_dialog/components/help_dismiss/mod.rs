@@ -1,13 +1,10 @@
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpDismissProps;
-
+use style::CLASS;
 assert_component!(HelpDismiss);
 
 /// The footer button that closes the guide and records that the player has seen
@@ -15,10 +12,7 @@ assert_component!(HelpDismiss);
 #[component]
 pub fn HelpDismiss(props: HelpDismissProps) -> Element {
     rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            onclick: props.on_dismiss,
+        button { class: CLASS, r#type: "button", onclick: props.on_dismiss,
             "Got it, don't show this again"
         }
     }

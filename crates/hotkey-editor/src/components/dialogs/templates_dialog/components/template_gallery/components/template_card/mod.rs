@@ -2,16 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::template_card_previews::{TemplateCardPreviews, TemplateCardPreviewsProps};
 use components::template_card_text::{TemplateCardText, TemplateCardTextProps};
+use dioxus::prelude::*;
 use props::TemplateCardPresentation;
-use style::CLASS;
-
 pub use props::TemplateCardProps;
-
+use style::CLASS;
 assert_component!(TemplateCard);
 
 /// A clickable template card: its name and description above a preview of the
@@ -22,10 +19,7 @@ pub fn TemplateCard(props: TemplateCardProps) -> Element {
     let previews = TemplateCardPreviewsProps::from(&props);
     let TemplateCardPresentation { onclick } = TemplateCardPresentation::from(&props);
     rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            onclick,
+        button { class: CLASS, r#type: "button", onclick,
             TemplateCardText { ..text }
             TemplateCardPreviews { ..previews }
         }

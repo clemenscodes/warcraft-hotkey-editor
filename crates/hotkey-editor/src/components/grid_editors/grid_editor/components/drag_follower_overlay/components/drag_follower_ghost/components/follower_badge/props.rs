@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{
+    HotkeyBadgeProps, HotkeyBadgeState,
+};
 
 use super::super::super::logic::FollowerPresentation;
 

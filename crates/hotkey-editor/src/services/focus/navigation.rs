@@ -13,10 +13,6 @@ impl FocusedElementInfo {
         let is_inside_grid_panel = classes.contains("filled-tile")
             || classes.contains("override-key-cell")
             || classes.contains("tile-override-tier-button");
-        // The system hotkeys dialog shares the base `.dialog` shell with every
-        // other dialog, so it is identified by content it alone carries: a
-        // `.key-capture-cell`. The focused element is inside it when its nearest
-        // enclosing dialog holds one.
         let is_inside_system_dialog = active_element
             .closest(".dialog")
             .ok()

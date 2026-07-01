@@ -1,7 +1,6 @@
+use super::components::grid_tile::GridTileProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
-
-use super::components::grid_tile::GridTileProps;
 
 /// The grid's only input: the finished tiles to draw. Always exactly
 /// `COMMAND_GRID_TILE_COUNT` of them, a hard domain invariant (the command grid

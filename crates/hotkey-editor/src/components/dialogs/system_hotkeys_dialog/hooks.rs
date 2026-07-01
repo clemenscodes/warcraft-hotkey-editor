@@ -1,9 +1,7 @@
+use super::props::SystemHotkeysDialogProps;
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
-
-use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
-
-use super::props::SystemHotkeysDialogProps;
 
 /// The dialog's UI state, all held in signals: the open flag that drives the
 /// shell, the active category tab, which section is being edited, and the current

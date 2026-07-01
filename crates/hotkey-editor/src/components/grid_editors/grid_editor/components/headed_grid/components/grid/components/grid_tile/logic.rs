@@ -1,7 +1,6 @@
+use super::props::GridTileProps;
 use dioxus::prelude::*;
 use warcraft_api::RaceLabels;
-
-use super::props::GridTileProps;
 
 /// The chrome both the filled and empty tiles render: the focus, draggable, race,
 /// and coordinate attributes, the drag-state markers, and every forwarded event

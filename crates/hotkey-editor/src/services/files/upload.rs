@@ -18,11 +18,6 @@ impl UploadPicker {
         let Ok(input_element) = element.dyn_into::<web_sys::HtmlInputElement>() else {
             return;
         };
-        // Clearing the value before opening the picker ensures the change event
-        // fires even when the user re-selects the same file. A file input only
-        // dispatches `change` when the chosen file differs from its current
-        // value, so without this reset a repeat import of the same path is a
-        // silent no-op.
         input_element.set_value("");
         input_element.click();
     }

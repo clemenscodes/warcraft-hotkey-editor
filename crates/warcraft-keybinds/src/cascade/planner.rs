@@ -1,11 +1,9 @@
-use std::fmt;
-
-use warcraft_api::WarcraftObjectId;
-
 use crate::cascade::queue::{AssignmentQueue, GroupKind, PositionAssignmentGroup};
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
 use crate::unit::grids::GridRole;
+use std::fmt;
+use warcraft_api::WarcraftObjectId;
 
 /// Why a particular `PlannedMove` happened.
 ///
@@ -179,14 +177,12 @@ impl From<&AssignmentQueue> for CascadePlan {
         let graph = queue.graph();
         let mut moves: Vec<PlannedMove> = Vec::new();
         let mut unresolved: Vec<UnresolvedMover> = Vec::new();
-
         for (node_index, node) in graph.nodes().iter().enumerate() {
             let slot_id = node.slot_id();
             let grid_role = node.grid_role();
             let carrier_unit_ids: Vec<WarcraftObjectId> = node.carrier_unit_ids().to_vec();
             let original_position = node.current_position();
             let final_position = queue.final_position(node_index);
-
             if queue.is_unresolved(node_index) {
                 let unresolved_mover = UnresolvedMover {
                     slot_id,
@@ -197,11 +193,9 @@ impl From<&AssignmentQueue> for CascadePlan {
                 unresolved.push(unresolved_mover);
                 continue;
             }
-
             if original_position == final_position {
                 continue;
             }
-
             let reason = move_reason_for_node(queue, node_index)
                 .expect("a node whose position changed must have a queue event explaining it");
             let planned_move = PlannedMove {
@@ -214,7 +208,6 @@ impl From<&AssignmentQueue> for CascadePlan {
             };
             moves.push(planned_move);
         }
-
         CascadePlan { moves, unresolved }
     }
 }
@@ -273,12 +266,6 @@ fn move_reason_from_group(
             if is_anchor {
                 let stays_in_row = group.position().row() == stuck_position.row();
                 if stays_in_row {
-                    // A phase-2 rehoming that never leaves its row is a
-                    // same-row reflow, not a cross-row spill.  With a swap
-                    // partner it traded cells with an incumbent (a swap);
-                    // without one it simply slid back into a freed cell to
-                    // its left, which is a gap pull.  "Spill" is reserved for
-                    // the genuine cross-row fallback below.
                     let has_swap_partner = !group.mover_indices().is_empty();
                     if has_swap_partner {
                         let first_incumbent = group.mover_indices()[0];
@@ -316,7 +303,7 @@ impl fmt::Display for MoveReason {
                 let anchor_carrier_count = anchor_carrier_unit_ids.len();
                 write!(
                     formatter,
-                    "lost fight to {anchor_id} ({anchor_carrier_count} carriers)"
+                    "lost fight to {anchor_id} ({anchor_carrier_count} carriers)",
                 )
             }
             Self::Spill { from_position } => {
@@ -342,14 +329,12 @@ impl fmt::Display for CascadePlan {
         if self.moves.is_empty() && self.unresolved.is_empty() {
             return writeln!(formatter, "Cascade plan: no moves — queue was empty.");
         }
-
         writeln!(
             formatter,
             "Cascade plan: {} move(s), {} unresolved\n",
             self.moves.len(),
             self.unresolved.len(),
         )?;
-
         if !self.moves.is_empty() {
             writeln!(formatter, "Moves:")?;
             for planned_move in &self.moves {
@@ -371,11 +356,10 @@ impl fmt::Display for CascadePlan {
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  ({old_col},{old_row}) → ({new_col},{new_row})  \
-                     [{carrier_count} carriers: {carrier_ids}]  — {reason}"
+                     [{carrier_count} carriers: {carrier_ids}]  — {reason}",
                 )?;
             }
         }
-
         if !self.unresolved.is_empty() {
             writeln!(formatter)?;
             writeln!(formatter, "Unresolved (no valid position found):")?;
@@ -395,25 +379,23 @@ impl fmt::Display for CascadePlan {
                 writeln!(
                     formatter,
                     "  {name} ({id})  [{role}]  stayed at ({col},{row})  \
-                     [{carrier_count} carriers: {carrier_ids}]"
+                     [{carrier_count} carriers: {carrier_ids}]",
                 )?;
             }
         }
-
         Ok(())
     }
 }
 
 #[cfg(test)]
 mod cascade_planner_tests {
-    use std::collections::HashSet;
-
     use super::*;
     use crate::cascade::conflict_graph::ConflictGraph;
     use crate::cascade::queue::AssignmentQueue;
     use crate::custom_keys::CustomKeys;
     use crate::grid::layout::{COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS};
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
+    use std::collections::HashSet;
 
     fn default_plan() -> CascadePlan {
         let custom_keys = CustomKeys::from("").normalize();
@@ -427,7 +409,7 @@ mod cascade_planner_tests {
         let plan = default_plan();
         assert!(
             plan.move_count() > 0,
-            "default keys have known collisions so the plan must contain at least one move"
+            "default keys have known collisions so the plan must contain at least one move",
         );
     }
 
@@ -437,7 +419,6 @@ mod cascade_planner_tests {
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
         let plan = CascadePlan::from(&queue);
-
         let mut final_positions: Vec<GridCoordinate> = queue
             .graph()
             .nodes()
@@ -456,7 +437,6 @@ mod cascade_planner_tests {
                 .expect("moved node must exist in graph");
             final_positions[node_index] = planned_move.new_position();
         }
-
         let unresolved_indices: HashSet<usize> = plan
             .unresolved()
             .iter()
@@ -466,18 +446,12 @@ mod cascade_planner_tests {
                 })
             })
             .collect();
-
         for (first_index, first_node) in queue.graph().nodes().iter().enumerate() {
             for &second_index in queue.graph().neighbors(first_index) {
                 if second_index <= first_index {
                     continue;
                 }
                 let second_node = queue.graph().node(second_index);
-                // `AssignmentQueue::build` defaults to `CrossUnitOnly`.  In
-                // that scope the planner only resolves cross-unit collisions
-                // (carrier_count ≥ 2 on both endpoints); intra-unit
-                // collisions are phase 2 of `CustomKeys::resolve_conflicts`
-                // and not visible to a single-pass planner test.
                 if first_node.carrier_count() < 2 || second_node.carrier_count() < 2 {
                     continue;
                 }
@@ -503,10 +477,6 @@ mod cascade_planner_tests {
 
     #[test]
     fn same_row_reflow_is_classified_as_gap_pull_not_spill() {
-        // Force of Nature (ACfr) is pushed off the right end of row 2 during
-        // phase 1, becomes unresolved, then phase 2 rehomes it into a freed
-        // cell in the SAME row.  A move that never leaves its row is a gap
-        // pull, not a cross-row spill.
         let plan = default_plan();
         let acfr_move = plan
             .moves()
@@ -550,7 +520,7 @@ mod cascade_planner_tests {
             assert_ne!(
                 planned_move.old_position(),
                 planned_move.new_position(),
-                "a PlannedMove must move to a different position"
+                "a PlannedMove must move to a different position",
             );
         }
     }
@@ -568,11 +538,6 @@ mod cascade_planner_tests {
 
     #[test]
     fn most_moves_stay_in_their_original_row() {
-        // Same-row is preferred but no longer absolute.  Phase 2 of the queue
-        // rehomes unresolved abilities cross-row when their original row has
-        // no usable cell — a deliberate exception, since a persistent
-        // collision is worse than a hotkey change.  Cross-row should still be
-        // rare, not the norm.
         let plan = default_plan();
         let total_moves = plan.move_count();
         if total_moves == 0 {
@@ -585,8 +550,6 @@ mod cascade_planner_tests {
                 planned_move.old_position().row() != planned_move.new_position().row()
             })
             .count();
-        // Integer comparison instead of floating-point ratio: cross_row / total
-        // < 30/100 ⇔ cross_row * 100 < total * 30.
         let cross_row_share_basis_points = cross_row_moves * 100;
         let allowed_share_basis_points = total_moves * 30;
         assert!(
@@ -627,7 +590,7 @@ mod cascade_planner_tests {
         let plan = default_plan();
         assert!(
             plan.move_count() > 0,
-            "default keys must produce moves for this test to be meaningful"
+            "default keys must produce moves for this test to be meaningful",
         );
         for planned_move in plan.moves() {
             match planned_move.reason() {
@@ -669,11 +632,11 @@ mod cascade_planner_tests {
             ..
         }) = fight_reason
         else {
-            panic!("a same-cell Paladin collision must produce at least one Fight-reason move");
+            panic!("a same-cell Paladin collision must produce at least one Fight-reason move",);
         };
         assert!(
             !anchor_carrier_unit_ids.is_empty(),
-            "the winning anchor must expose the units that carry it, not just a count"
+            "the winning anchor must expose the units that carry it, not just a count",
         );
     }
 
@@ -691,7 +654,7 @@ mod cascade_planner_tests {
         let plan = CascadePlan::from(&queue);
         assert!(
             plan.move_count() >= 1,
-            "a single Paladin collision must produce at least one move"
+            "a single Paladin collision must produce at least one move",
         );
     }
 }

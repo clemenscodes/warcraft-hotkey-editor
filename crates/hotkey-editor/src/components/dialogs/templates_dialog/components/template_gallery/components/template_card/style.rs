@@ -26,21 +26,25 @@ const BASE: &[&str] = &[
     "kb-focus:text-[#fff]",
     "kb-focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:gap-[10px]",
     "mobile:py-[12px]",
     "mobile:px-[14px]",
     "mobile:rounded-[10px]",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:gap-[10px]",
     "tablet:py-[12px]",
     "tablet:px-[14px]",
     "tablet:rounded-[10px]",
 ];
+
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

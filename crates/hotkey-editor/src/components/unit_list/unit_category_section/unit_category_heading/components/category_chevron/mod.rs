@@ -1,0 +1,21 @@
+mod props;
+mod style;
+
+use crate::assert_component;
+use dioxus::prelude::*;
+pub use props::CategoryChevronProps;
+use style::CLASS;
+assert_component!(CategoryChevron);
+
+/// The disclosure triangle beside a category heading.
+#[component]
+pub fn CategoryChevron(props: CategoryChevronProps) -> Element {
+    let glyph = if props.is_collapsed {
+        "\u{25b6}"
+    } else {
+        "\u{25bc}"
+    };
+    rsx! {
+        span { class: CLASS, {glyph} }
+    }
+}

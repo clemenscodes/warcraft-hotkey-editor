@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::custom_keys::CustomKeys;
 use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
+use std::collections::HashMap;
 
 pub const COMMAND_GRID_COLUMNS: u8 = 4;
 pub const COMMAND_GRID_ROWS: u8 = 3;

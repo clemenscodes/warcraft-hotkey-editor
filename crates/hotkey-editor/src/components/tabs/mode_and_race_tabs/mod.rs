@@ -1,14 +1,12 @@
 mod state;
 
-use dioxus::prelude::*;
-use warcraft_api::Race;
-use warcraft_database::{UnitKindHelpers, UnitMode};
-
 use crate::components::tabs::race_tabs::RaceTabs;
 use crate::services::focus::modality::FocusModality;
-use warcraft_keybinds::GridSlotId;
-
+use dioxus::prelude::*;
 pub(crate) use state::ModeButtonClass;
+use warcraft_api::Race;
+use warcraft_database::{UnitKindHelpers, UnitMode};
+use warcraft_keybinds::GridSlotId;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct ModeAndRaceTabsProps {
@@ -68,10 +66,8 @@ pub fn ModeAndRaceTabs(props: ModeAndRaceTabsProps) -> Element {
         }
     };
     rsx! {
-        div {
-            class: "flex items-stretch gap-10 grow min-w-0 max-[700px]:flex-col max-[700px]:gap-[0.6rem]",
-            div {
-                class: "flex flex-col gap-2 self-stretch flex-[0_0_var(--sidebar-column-width)] w-[var(--sidebar-column-width)] max-[1099px]:flex-[0_0_18rem] max-[1099px]:w-72 max-[700px]:flex-row max-[700px]:flex-none max-[700px]:w-full max-[700px]:gap-[0.5rem]",
+        div { class: "flex items-stretch gap-10 grow min-w-0 max-[700px]:flex-col max-[700px]:gap-[0.6rem]",
+            div { class: "flex flex-col gap-2 self-stretch flex-[0_0_var(--sidebar-column-width)] w-[var(--sidebar-column-width)] max-[1099px]:flex-[0_0_18rem] max-[1099px]:w-72 max-[700px]:flex-row max-[700px]:flex-none max-[700px]:w-full max-[700px]:gap-[0.5rem]",
                 button {
                     class: button_class,
                     "data-active": is_melee_active,
@@ -87,7 +83,12 @@ pub fn ModeAndRaceTabs(props: ModeAndRaceTabsProps) -> Element {
                     "Campaign"
                 }
             }
-            RaceTabs { active_race, unit_mode, selected_unit_id, selected_slot }
+            RaceTabs {
+                active_race,
+                unit_mode,
+                selected_unit_id,
+                selected_slot,
+            }
         }
     }
 }

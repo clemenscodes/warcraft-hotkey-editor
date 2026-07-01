@@ -4,18 +4,15 @@ mod inventory_cell;
 mod props;
 mod style;
 
-use std::cell::Cell;
-
-use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
-
 use crate::assert_component;
 use components::inventory_empty_slot::InventoryEmptySlot;
+use dioxus::prelude::*;
 use hooks::use_inventory_grid;
-use style::CLASS;
-
 pub use inventory_cell::InventoryCell;
 pub use props::InventoryGridProps;
+use std::cell::Cell;
+use style::CLASS;
+use warcraft_database::SystemHotkeysCategory;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
 const INVENTORY_COLUMNS: usize = 2;
@@ -26,7 +23,6 @@ pub(super) struct DragOrigin {
     pub(super) cursor_horizontal_position: f64,
     pub(super) cursor_vertical_position: f64,
 }
-
 thread_local! {
     pub(super) static SUPPRESS_NEXT_CLICK: Cell<bool> = const { Cell::new(false) };
     pub(super) static DRAG_ORIGIN: Cell<Option<DragOrigin>> = const { Cell::new(None) };
@@ -73,7 +69,6 @@ impl InventoryDragFollower {
 pub struct InventoryDragSource {
     pub(crate) section_id: String,
 }
-
 assert_component!(InventoryGrid);
 
 /// The two-by-three inventory slot grid. Each filled slot is an editable,
@@ -90,9 +85,7 @@ pub fn InventoryGrid(props: InventoryGridProps) -> Element {
     let binding_map = model.binding_map;
     let entries = SystemHotkeysCategory::Inventory.entries();
     rsx! {
-        div {
-            class: CLASS,
-            style: model.frame,
+        div { class: CLASS, style: model.frame,
             for row in 0..INVENTORY_ROWS {
                 for column in 0..INVENTORY_COLUMNS {
                     {
@@ -102,9 +95,11 @@ pub fn InventoryGrid(props: InventoryGridProps) -> Element {
                             Some(entry) => rsx! {
                                 InventoryCell {
                                     slot_index,
-                                    section_id: entry.section_id().to_string(),
+                                    section_id: entry.section_id()
+                                            .to_string(),
                                     default_hotkey: entry.default_hotkey(),
-                                    default_modifier: entry.default_modifier(),
+                                    default_modifier: entry
+                                            .default_modifier(),
                                     loaded_keys,
                                     editing_section,
                                     dragging_source,

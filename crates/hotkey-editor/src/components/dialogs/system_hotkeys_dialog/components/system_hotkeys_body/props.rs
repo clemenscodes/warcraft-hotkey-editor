@@ -1,8 +1,7 @@
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::CustomKeys;
-
-use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 
 /// What the body needs to render the active category's editor: the current
 /// category, the loaded keys, the editing-section signal the editors share, and

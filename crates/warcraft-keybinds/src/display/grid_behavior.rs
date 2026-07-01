@@ -8,13 +8,17 @@ pub trait GridBehavior: Clone + PartialEq + Default + 'static {
     /// Read and write the secondary (`Researchbuttonpos`) position namespace and
     /// its hotkey field, and scope conflict checks to it.
     fn research_positions(&self) -> bool;
+
     /// Co-move a colocated off-state when its on-state is dragged.
     fn co_move_offstate(&self) -> bool;
+
     /// Treat an empty tile reserved by another ability's off-state as a blocked
     /// drop target.
     fn flag_offstate_collisions(&self) -> bool;
+
     /// Show the passive badge for passive abilities.
     fn show_passive_badge(&self) -> bool;
+
     /// Record selections from this grid as coming from the unit's alternate form.
     fn marks_alternate_form(&self) -> bool;
 }
@@ -27,15 +31,19 @@ impl GridBehavior for CommandBehavior {
     fn research_positions(&self) -> bool {
         false
     }
+
     fn co_move_offstate(&self) -> bool {
         true
     }
+
     fn flag_offstate_collisions(&self) -> bool {
         true
     }
+
     fn show_passive_badge(&self) -> bool {
         true
     }
+
     fn marks_alternate_form(&self) -> bool {
         false
     }
@@ -50,15 +58,19 @@ impl GridBehavior for ResearchBehavior {
     fn research_positions(&self) -> bool {
         true
     }
+
     fn co_move_offstate(&self) -> bool {
         true
     }
+
     fn flag_offstate_collisions(&self) -> bool {
         false
     }
+
     fn show_passive_badge(&self) -> bool {
         false
     }
+
     fn marks_alternate_form(&self) -> bool {
         false
     }
@@ -73,15 +85,19 @@ impl GridBehavior for AlternateFormBehavior {
     fn research_positions(&self) -> bool {
         false
     }
+
     fn co_move_offstate(&self) -> bool {
         false
     }
+
     fn flag_offstate_collisions(&self) -> bool {
         true
     }
+
     fn show_passive_badge(&self) -> bool {
         true
     }
+
     fn marks_alternate_form(&self) -> bool {
         true
     }

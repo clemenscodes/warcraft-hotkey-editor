@@ -1,7 +1,6 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::help_dialog::HelpDialogProps;
 use crate::services::customkeys::persistence::OnboardingPersistence;
+use dioxus::prelude::*;
 
 /// The dismiss button's only input: the click handler. Built from the dialog
 /// props so it both marks the onboarding seen and closes the dialog.

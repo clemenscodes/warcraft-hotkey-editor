@@ -1,12 +1,14 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::components::dialogs::dialog::components::dialog_header::DialogHeader;
 use hotkey_editor::components::dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::components::dialogs::help_dialog::HelpDialog;
+use hotkey_editor::services::customkeys::upload_status::UploadStatus;
+
 use hotkey_editor::components::dialogs::key_picker::{
     KeyPicker, KeyPickerCell, KeyPickerCellState,
 };
+
 use hotkey_editor::components::dialogs::layout_editor::LayoutEditor;
 use hotkey_editor::components::dialogs::preview_dialog::PreviewDialog;
 use hotkey_editor::components::dialogs::templates_dialog::TemplatesDialog;
@@ -15,6 +17,7 @@ use hotkey_editor::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileProps;
 use hotkey_editor::components::shell::toasts::ToastMount;
+
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CustomKeys, GridCoordinate, HotkeyToken, RenderedTile,
     ResolvedTemplate,
@@ -106,7 +109,11 @@ fn templates_dialog_open_story() -> Element {
     let templates_dialog_open = use_signal(|| true);
     rsx! {
         ToastMount {
-            TemplatesDialog { loaded_keys, upload_status, open: templates_dialog_open }
+            TemplatesDialog {
+                loaded_keys,
+                upload_status,
+                open: templates_dialog_open,
+            }
         }
     }
 }
@@ -144,26 +151,21 @@ fn key_picker_closed() -> Element {
 
 fn key_picker_open() -> Element {
     let title = "Pick a hotkey".to_string();
-
     let q_token = HotkeyToken::try_from('Q').expect("letter");
     let q_state = KeyPickerCellState::Available;
     let q_cell = KeyPickerCell::new(q_token, q_state);
-
     let w_token = HotkeyToken::try_from('W').expect("letter");
     let w_state = KeyPickerCellState::Current;
     let w_cell = KeyPickerCell::new(w_token, w_state);
-
     let e_token = HotkeyToken::try_from('E').expect("letter");
     let conflict_name = "Some Other Ability".to_string();
     let e_state = KeyPickerCellState::Conflict {
         display_name: conflict_name,
     };
     let e_cell = KeyPickerCell::new(e_token, e_state);
-
     let first_row = vec![q_cell, w_cell, e_cell];
     let rows = vec![first_row];
     let open = true;
-
     rsx! {
         KeyPicker {
             title,

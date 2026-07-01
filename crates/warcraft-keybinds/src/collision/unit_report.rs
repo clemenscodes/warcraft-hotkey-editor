@@ -1,12 +1,10 @@
-use std::fmt;
-
-use warcraft_api::WarcraftObjectId;
-use warcraft_database::WARCRAFT_DATABASE;
-
 use crate::custom_keys::CustomKeys;
 use crate::grid::layout::GridLayout;
 use crate::unit::grids::{HotkeyCollisionCard, PositionCollisionCard, UnitGrids};
 use crate::unit::slots::UnitCommandSlots;
+use std::fmt;
+use warcraft_api::WarcraftObjectId;
+use warcraft_database::WARCRAFT_DATABASE;
 
 #[derive(Debug)]
 pub struct UnitCollisionReport {
@@ -106,13 +104,11 @@ impl UnitCollisionReport {
                 })
             })
             .collect();
-
         entries.sort_by(|left, right| {
             left.unit_name
                 .cmp(right.unit_name)
                 .then_with(|| left.unit_id.value().cmp(right.unit_id.value()))
         });
-
         Self { entries }
     }
 
@@ -156,7 +152,7 @@ impl fmt::Display for UnitCollisionReport {
                         formatter,
                         "  position ({column},{row}) {:?}  {}",
                         card.role(),
-                        slot_list.join(", ")
+                        slot_list.join(", "),
                     )?;
                 }
             }
@@ -169,7 +165,7 @@ impl fmt::Display for UnitCollisionReport {
                         "  hotkey {} {:?}  {}",
                         entry.token(),
                         card.role(),
-                        slot_list.join(", ")
+                        slot_list.join(", "),
                     )?;
                 }
             }
@@ -268,7 +264,7 @@ mod unit_collision_report_tests {
         let paladin_filtered = report.for_unit("Hpal");
         assert!(
             paladin_filtered.is_empty(),
-            "Paladin must have no collisions in the normalized default on QWERTY"
+            "Paladin must have no collisions in the normalized default on QWERTY",
         );
     }
 
@@ -292,12 +288,12 @@ mod unit_collision_report_tests {
             .find(|entry| entry.unit_id() == paladin_id());
         assert!(
             paladin_entry.is_some(),
-            "Paladin must appear in collision report when two abilities share a position"
+            "Paladin must appear in collision report when two abilities share a position",
         );
         let entry = paladin_entry.unwrap();
         assert!(
             entry.position_cards().iter().any(|card| !card.is_empty()),
-            "position collision card must be present for Paladin"
+            "position collision card must be present for Paladin",
         );
         let has_collision_at_position = entry
             .position_cards()
@@ -305,7 +301,7 @@ mod unit_collision_report_tests {
             .any(|card| card.collision_at(shared_position).is_some());
         assert!(
             has_collision_at_position,
-            "collision must be reported at the shared position"
+            "collision must be reported at the shared position",
         );
     }
 
@@ -333,12 +329,12 @@ mod unit_collision_report_tests {
             .find(|entry| entry.unit_id() == paladin_id());
         assert!(
             paladin_entry.is_some(),
-            "Paladin must appear in collision report when two abilities share a hotkey"
+            "Paladin must appear in collision report when two abilities share a hotkey",
         );
         let entry = paladin_entry.unwrap();
         assert!(
             entry.hotkey_cards().iter().any(|card| !card.is_empty()),
-            "hotkey collision card must be present for Paladin"
+            "hotkey collision card must be present for Paladin",
         );
     }
 
@@ -362,7 +358,7 @@ mod unit_collision_report_tests {
                 .entries()
                 .iter()
                 .all(|entry| entry.unit_id() == paladin_id()),
-            "for_unit must return only entries for the requested unit"
+            "for_unit must return only entries for the requested unit",
         );
     }
 
@@ -411,12 +407,10 @@ mod unit_collision_report_tests {
     fn dump_default_collision_report() {
         use crate::identity::hotkey_token::HotkeyToken;
         use crate::unit::grids::PositionCollisionCard;
-
-        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt");
+        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt",);
         let custom_keys = CustomKeys::from(template_text).normalize();
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
-
         for entry in report.entries() {
             let unit_id = entry.unit_id().value();
             let unit_name = entry.unit_name();
@@ -441,7 +435,7 @@ mod unit_collision_report_tests {
                 emit_hotkey_card_builder("secondary_hot", &secondary_hotkey);
             }
             println!(
-                "    let eb = UnitCollisionEntryBuilder::new(\"{unit_id}\", \"{unit_name}\", empty_pos, empty_hot);"
+                "    let eb = UnitCollisionEntryBuilder::new(\"{unit_id}\", \"{unit_name}\", empty_pos, empty_hot);",
             );
             if !main_position.is_empty() {
                 println!("    let eb = eb.main_position_card(main_pos);");
@@ -478,14 +472,14 @@ mod unit_collision_report_tests {
                     .map(|slot| format!("GridSlotId::ability(\"{}\")", slot.as_str()))
                     .collect();
                 let slots_array = slot_idents.join(", ");
-                println!("        .collision_at({column_u8}, {row_u8}, &[{slots_array}])");
+                println!("        .collision_at({column_u8}, {row_u8}, &[{slots_array}])",);
             }
             println!("        .build();");
         }
 
         fn emit_hotkey_card_builder(name: &str, card: &crate::unit::grids::HotkeyCollisionCard) {
             let role_text = role_expr(card.role());
-            println!("    let {name} = HotkeyCollisionCardBuilder::new({role_text}, layout)");
+            println!("    let {name} = HotkeyCollisionCardBuilder::new({role_text}, layout)",);
             for (_position, cell) in card.into_iter() {
                 let token = cell.token();
                 let letter_char = match token {
@@ -505,18 +499,15 @@ mod unit_collision_report_tests {
     }
 
     fn run_default_collision_check() {
-        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt");
+        let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt",);
         let custom_keys = CustomKeys::from(template_text).normalize();
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
-
         let empty_pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
         let empty_pos = empty_pos_builder.build();
         let empty_hot_builder = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout);
         let empty_hot = empty_hot_builder.build();
-
         let mut builder = UnitCollisionReportBuilder::new();
-        // nahy (Ancient Hydra)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -537,8 +528,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsqa (Ancient Sasquatch)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -560,8 +549,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // eden (Ancient of Wonders)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -576,8 +563,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // espv (Avatar of Vengeance)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -591,8 +576,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // obar (Barracks)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -606,8 +589,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Orex (Beastmaster)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -620,8 +601,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // unp2 (Black Citadel)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -638,8 +617,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nadr (Blue Dragon)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -653,8 +630,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nbdo (Blue Dragonspawn Overseer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -680,8 +655,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Nsjs (Brewmaster)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -694,8 +667,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsbm (Brood Mother)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -716,8 +687,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ncks (Centaur Sorcerer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -732,8 +701,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nchp (Chaplain)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -747,8 +714,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ndth (Dark Troll High Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -767,8 +732,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nwzd (Dark Wizard)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -789,8 +752,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Udea (Death Knight)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -803,8 +764,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Uear (Death Knight)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -817,8 +776,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nrvd (Death Revenant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -832,8 +789,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Ecen (Demigod)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -846,8 +801,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Eevi (Demon Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -864,8 +817,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Eevm (Demon Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -882,8 +833,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ubsp (Destroyer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -897,8 +846,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nba2 (Doom Guard)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -911,8 +858,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nbal (Doom Guard)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -925,8 +870,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ndh3 (Draenei Barracks)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -948,8 +891,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ndrs (Draenei Seer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -963,8 +904,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Ubal (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -984,8 +923,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Udre (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -998,8 +935,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Udth (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1019,8 +954,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Umal (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1040,8 +973,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Utic (Dreadlord)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1060,8 +991,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Uvng (Dreadlord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1074,8 +1003,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // npn3 (Earth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1089,8 +1016,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // npn6 (Earth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1104,8 +1029,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nvde (Elder Voidwalker)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1127,8 +1050,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nerd (Eredar Diabolist)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1150,8 +1071,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nfot (Faceless One Terror)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1173,8 +1092,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nfor (Faceless One Trickster)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1193,8 +1110,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // npfm (Fel Ravager)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1215,8 +1130,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nfsp (Forest Troll Shadow Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1235,8 +1148,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nfgo (Forgotten One)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1257,8 +1168,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ugar (Gargoyle)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1272,8 +1181,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsgt (Giant Spider)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1294,8 +1201,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ngow (Gnoll Warlord)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1316,8 +1221,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ngad (Goblin Laboratory)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1336,8 +1239,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ngme (Goblin Merchant)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1351,8 +1252,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // unp1 (Halls of the Dead)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1370,8 +1269,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nhhr (Heretic)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1385,8 +1282,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nheb (High Elven Barracks)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1400,8 +1295,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nith (Ice Troll High Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1420,8 +1313,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nkog (Kobold Geomancer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1436,8 +1327,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nrvl (Lightning Revenant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1452,8 +1341,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // umtw (Meat Wagon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1466,8 +1353,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nmr4 (Mercenary Camp)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1488,8 +1373,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nmrd (Mercenary Camp)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1507,8 +1390,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Hmbr (Mountain King)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1521,8 +1402,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Hmkg (Mountain King)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1535,8 +1414,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nmsn (Mur'gul Snarecaster)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1551,8 +1428,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnrg (Naga Royal Guard)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1574,8 +1449,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnwq (Nerubian Queen)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1589,8 +1462,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnwr (Nerubian Seer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1604,8 +1475,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnwl (Nerubian Webspinner)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1620,8 +1489,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nndr (Nether Dragon)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1642,11 +1509,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // hphx (Phoenix) no longer collides: Phoenix Fire (Apxf) is hidden from
-        // the command card to match the in-game client, leaving only Ahpe.
-
-        // Nman (Pit Lord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1666,8 +1528,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Npld (Pit Lord)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1687,8 +1547,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nenp (Poison Treant)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1709,8 +1567,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nfpe (Polar Furbolg Elder Shaman)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1729,8 +1585,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Emoo (Priestess of the Moon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1748,8 +1602,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Etyr (Priestess of the Moon)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1767,8 +1619,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Hvwd (Ranger)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1781,8 +1631,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nslv (Salamander Vizier)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1808,8 +1656,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nstl (Satyr Soulstealer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1824,8 +1670,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsgb (Sea Giant Behemoth)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1840,8 +1684,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsgh (Sea Giant Hunter)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1863,8 +1705,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ndh4 (Seer's Den)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1885,8 +1725,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Orkn (Shadow Hunter)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -1899,8 +1737,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnsa (Shrine of Azshara)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1915,8 +1751,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsoc (Skeletal Orc Champion)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1942,8 +1776,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ngos (Snarlmane the Bloodgorger)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1969,8 +1801,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nnsg (Spawning Grounds)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -1989,8 +1819,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // hspt (Spellbreaker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2003,8 +1831,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ospm (Spirit Walker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2017,13 +1843,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ospw (Spirit Walker, corporeal form) no longer collides: its only
-        // ability is now the Corporeal/Ethereal Form toggle. The caster spells
-        // (Spirit Link, Disenchant, Ancestral Spirit) belong to the ethereal
-        // form (ospm) and are suppressed on the corporeal form by Rule 2.
-
-        // noga (Stonemaul Warchief)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2045,8 +1864,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // npn2 (Storm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2060,8 +1877,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // npn5 (Storm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2075,8 +1890,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nstw (Storm Wyrm)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2090,8 +1903,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsrn (Stormreaver Necrolyte)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2117,8 +1928,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Ocb2 (Tauren Chieftain)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2132,8 +1941,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nntt (Temple of Tides)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2148,8 +1955,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Nrob (Tinker)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2162,8 +1967,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ntkh (Tuskarr Healer)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2177,8 +1980,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Ewar (Warden)
         let entry = {
             let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
                 .collision(
@@ -2191,8 +1992,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Ewrd (Warden)
         let entry = {
             let secondary_hot = HotkeyCollisionCardBuilder::new(GridRole::HeroSkillTree, layout)
                 .collision(
@@ -2205,8 +2004,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // Uwar (Warlock)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2219,8 +2016,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // nsns (Watery Minion)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
                 .collision_at(
@@ -2234,8 +2029,6 @@ mod unit_collision_report_tests {
             eb.build()
         };
         builder = builder.entry(entry);
-
-        // ngh2 (Wraith)
         let entry = {
             let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
                 .collision(
@@ -2251,7 +2044,7 @@ mod unit_collision_report_tests {
         let expected = builder.build();
         assert_eq!(
             report, expected,
-            "default CustomKeys.txt collision report changed — update the expected entries if intentional"
+            "default CustomKeys.txt collision report changed — update the expected entries if intentional",
         );
     }
 }

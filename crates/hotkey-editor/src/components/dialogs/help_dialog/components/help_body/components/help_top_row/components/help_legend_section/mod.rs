@@ -2,15 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use crate::components::dialogs::help_dialog::components::help_section_title::HelpSectionTitle;
 use components::help_legend::{HelpLegend, HelpLegendProps};
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::HelpLegendSectionProps;
-
+use style::CLASS;
 assert_component!(HelpLegendSection);
 
 /// The right column of the top row: the heading above the toolbar button legend.
@@ -18,8 +15,7 @@ assert_component!(HelpLegendSection);
 pub fn HelpLegendSection(props: HelpLegendSectionProps) -> Element {
     let legend = HelpLegendProps::from(&props);
     rsx! {
-        section {
-            class: CLASS,
+        section { class: CLASS,
             HelpSectionTitle { "Button legend" }
             HelpLegend { ..legend }
         }

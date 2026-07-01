@@ -3,10 +3,13 @@ use warcraft_keybinds::GridLayout;
 
 const CUSTOM_KEYS_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.custom-keys");
 const GRID_LAYOUT_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.grid-layout");
+
 const UPDATE_HOTKEYS_ON_MOVE_STORAGE: LocalStorage =
     LocalStorage::new("warcraft-hotkey-editor.update-hotkeys-on-move");
+
 const ONBOARDING_SEEN_STORAGE: LocalStorage =
     LocalStorage::new("warcraft-hotkey-editor.onboarding-seen");
+
 const ONBOARDING_SEEN_VALUE: &str = "true";
 
 pub(crate) struct CustomKeysPersistence;

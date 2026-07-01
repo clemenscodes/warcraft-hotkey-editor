@@ -1,10 +1,8 @@
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
+use dioxus::prelude::*;
 use style::CLASS;
-
 assert_component!(SystemHotkeysCategorySeparator);
 
 /// The chevron glyph shown between two category tabs.

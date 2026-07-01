@@ -1,11 +1,9 @@
+use super::state::RaceTabClasses;
+use crate::services::focus::modality::FocusModality;
 use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels};
 use warcraft_database::{UnitKindHelpers, UnitMode};
-
-use crate::services::focus::modality::FocusModality;
 use warcraft_keybinds::GridSlotId;
-
-use super::state::RaceTabClasses;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct RaceTabProps {
@@ -49,7 +47,6 @@ pub fn RaceTab(props: RaceTabProps) -> Element {
             FocusModality::after_render(".unit-card.selected, .unit-card");
         }
     };
-
     rsx! {
         button {
             class: button_class,

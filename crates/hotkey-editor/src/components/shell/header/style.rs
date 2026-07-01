@@ -9,6 +9,7 @@ const BASE: &[&str] = &[
     "border-b-[rgba(255,206,99,0.4)]",
     "[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
 ];
+
 const MOBILE: &[&str] = &[
     "mobile:flex",
     "mobile:flex-row",
@@ -25,6 +26,7 @@ const MOBILE: &[&str] = &[
     "mobile:max-w-full",
     "mobile:w-full",
 ];
+
 const TABLET: &[&str] = &[
     "tablet:flex",
     "tablet:flex-row",
@@ -41,6 +43,7 @@ const TABLET: &[&str] = &[
     "tablet:max-w-full",
     "tablet:w-full",
 ];
+
 const LAPTOP: &[&str] = &[
     "laptop:grid",
     "laptop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
@@ -48,6 +51,7 @@ const LAPTOP: &[&str] = &[
     "laptop:p-0",
     "laptop:pb-[1.75rem]",
 ];
+
 const DESKTOP: &[&str] = &[
     "desktop:grid",
     "desktop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
@@ -55,6 +59,7 @@ const DESKTOP: &[&str] = &[
     "desktop:p-0",
     "desktop:pb-[1.75rem]",
 ];
+
 const QHD: &[&str] = &[
     "qhd:grid",
     "qhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
@@ -62,6 +67,7 @@ const QHD: &[&str] = &[
     "qhd:p-0",
     "qhd:pb-[1.75rem]",
 ];
+
 const UHD: &[&str] = &[
     "uhd:grid",
     "uhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
@@ -69,5 +75,6 @@ const UHD: &[&str] = &[
     "uhd:p-0",
     "uhd:pb-[1.75rem]",
 ];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

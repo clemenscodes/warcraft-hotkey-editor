@@ -1,5 +1,4 @@
 use std::fmt;
-
 use warcraft_keybinds::AbilityIconPath;
 
 const REPLACEABLE_TEXTURES_PREFIX: &str = "replaceabletextures/";
@@ -10,13 +9,6 @@ pub struct IconUrl {
 }
 
 impl IconUrl {
-    // `public/`-served icons (BTN command-button icons, unit portraits) are
-    // hand-built URLs that bypass the `asset!()` macro, so they don't get the
-    // build's base path injected automatically. Derive it from the runtime
-    // base path so the same code serves the editor (base path
-    // `warcraft-hotkey-editor`) and any other host (e.g. the component gallery,
-    // served at the document root). The leading slash anchors the URL to the
-    // document root so deep routes don't resolve it relatively and 404.
     fn prefix() -> String {
         match dioxus_cli_config::base_path() {
             Some(base) => {

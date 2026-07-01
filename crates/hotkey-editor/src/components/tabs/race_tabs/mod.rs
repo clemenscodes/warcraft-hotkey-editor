@@ -2,12 +2,10 @@ mod state;
 pub mod tab;
 
 use dioxus::prelude::*;
+use tab::RaceTab;
 use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};
 use warcraft_database::UnitMode;
-
 use warcraft_keybinds::GridSlotId;
-
-use tab::RaceTab;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct RaceTabsProps {

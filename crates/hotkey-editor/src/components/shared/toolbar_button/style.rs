@@ -1,8 +1,5 @@
 use crate::classes;
 
-// The single source of truth for how a toolbar action button looks: a square
-// bronze-bordered gradient tile, secondary-text by default, gold on hover and a
-// white ring on keyboard focus.
 const BASE: &[&str] = &[
     "inline-flex",
     "items-center",
@@ -26,11 +23,13 @@ const BASE: &[&str] = &[
     "hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)]",
     "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.3)]",
 ];
+
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
 const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

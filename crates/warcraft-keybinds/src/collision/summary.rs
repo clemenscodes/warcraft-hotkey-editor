@@ -22,7 +22,6 @@ impl CollisionSummary {
     pub fn compute(custom_keys: &CustomKeys, layout: GridLayout) -> Self {
         let cross_unit_report = CrossUnitCollisionReport::compute(custom_keys);
         let cross_unit = cross_unit_report.position_groups().len();
-
         let unit_report = UnitCollisionReport::compute(custom_keys, layout);
         let mut per_unit_position: usize = 0;
         let mut per_unit_hotkey: usize = 0;
@@ -34,7 +33,6 @@ impl CollisionSummary {
                 per_unit_hotkey += card.into_iter().count();
             }
         }
-
         Self {
             cross_unit,
             per_unit_position,
@@ -104,20 +102,20 @@ mod tests {
             let summary = CollisionSummary::compute(&custom_keys, layout);
             assert!(
                 !summary.is_clean(),
-                "two Paladin abilities at (0,0) must register as collisions"
+                "two Paladin abilities at (0,0) must register as collisions",
             );
             assert!(
                 summary.cross_unit() >= 1,
-                "the shared position must appear as a cross-unit island"
+                "the shared position must appear as a cross-unit island",
             );
             assert!(
                 summary.per_unit_position() >= 1,
-                "the shared position must appear as a per-unit position collision"
+                "the shared position must appear as a per-unit position collision",
             );
             assert_eq!(
                 summary.total(),
                 summary.cross_unit() + summary.per_unit_position() + summary.per_unit_hotkey(),
-                "total must be the sum of every class"
+                "total must be the sum of every class",
             );
         });
     }
@@ -143,7 +141,7 @@ mod tests {
             let summary = CollisionSummary::compute(&custom_keys, layout);
             assert!(
                 summary.per_unit_hotkey() >= 1,
-                "two Paladin abilities on Q must register as a hotkey collision"
+                "two Paladin abilities on Q must register as a hotkey collision",
             );
         });
     }

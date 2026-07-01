@@ -1,10 +1,9 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeys;
-
 use crate::components::shared::icons::ICON_RESOLVE;
 use crate::components::shared::toolbar_button::ToolbarButton;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
+use warcraft_keybinds::CustomKeys;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolveButtonProps {
@@ -19,11 +18,9 @@ pub fn ResolveButton(props: ResolveButtonProps) -> Element {
     let navigation = use_context::<ViewNavigationContext>();
     let has_loaded_file = loaded_keys.read().is_some();
     let resolve_disabled = !has_loaded_file;
-
     let go_to_resolve = move |_| {
         navigation.apply(AppView::Resolve);
     };
-
     rsx! {
         ToolbarButton {
             icon: ICON_RESOLVE,

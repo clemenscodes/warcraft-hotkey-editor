@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::download_info_dialog::DownloadInfoDialogProps;
+use dioxus::prelude::*;
 
 /// The two action handlers, built from the dialog props. Cancel closes the
 /// dialog; download closes it and forwards the confirm.

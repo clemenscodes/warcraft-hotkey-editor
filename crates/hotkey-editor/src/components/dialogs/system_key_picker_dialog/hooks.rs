@@ -1,12 +1,13 @@
 use dioxus::prelude::*;
-
 use super::browser_event::BrowserKeyEvent;
 use super::components::system_key_picker_board::SystemKeyPickerBoardProps;
 use super::components::system_key_picker_board::components::system_key_picker_column::SystemKeyPickerColumnProps;
 use super::components::system_key_picker_board::components::system_key_picker_column::components::system_key_picker_row::SystemKeyPickerRowProps;
+
 use super::components::system_key_picker_board::components::system_key_picker_column::components::system_key_picker_row::components::system_key_picker_key::{
     SystemKeyPickerKeyProps, SystemKeyPickerKeyState,
 };
+
 use super::data::{KEYBOARD_ROWS, NUMPAD_ROWS};
 use super::props::SystemKeyPickerDialogProps;
 
@@ -27,13 +28,11 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
     let on_pick = props.on_pick;
     let on_close = props.on_close;
     let open = use_signal(|| props.open);
-
     use_effect(move || {
         if !open() {
             on_close.call(());
         }
     });
-
     let onkeydown = EventHandler::new(move |event: Event<KeyboardData>| {
         event.stop_propagation();
         let key_value = event.data().key().to_string();
@@ -47,10 +46,6 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
         let Some(code) = browser_event.key_code() else {
             return;
         };
-        // Only accept keys the board actually offers (the same cells shown and
-        // clickable). `BrowserKeyEvent` also maps Tab/Enter and similar keys the
-        // game does not bind, so reject anything not on the board to keep keyboard
-        // input in step with what the UI presents.
         let is_offered = KEYBOARD_ROWS
             .iter()
             .chain(NUMPAD_ROWS.iter())
@@ -62,9 +57,7 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
         event.prevent_default();
         on_pick.call(code);
     });
-
     let mut columns: Vec<SystemKeyPickerColumnProps> = Vec::new();
-
     let mut main_rows: Vec<SystemKeyPickerRowProps> = Vec::new();
     let keyboard_total = KEYBOARD_ROWS.len();
     for (row_index, row) in KEYBOARD_ROWS.iter().enumerate() {
@@ -112,7 +105,6 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
     }
     let main_column = SystemKeyPickerColumnProps { rows: main_rows };
     columns.push(main_column);
-
     let mut numpad_rows: Vec<SystemKeyPickerRowProps> = Vec::new();
     let numpad_total = NUMPAD_ROWS.len();
     for (row_index, row) in NUMPAD_ROWS.iter().enumerate() {
@@ -152,7 +144,6 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
     }
     let numpad_column = SystemKeyPickerColumnProps { rows: numpad_rows };
     columns.push(numpad_column);
-
     let board = SystemKeyPickerBoardProps { columns, onkeydown };
     SystemKeyPickerModel { open, board }
 }

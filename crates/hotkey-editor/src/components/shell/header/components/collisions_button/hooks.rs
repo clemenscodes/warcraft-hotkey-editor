@@ -1,10 +1,8 @@
-use dioxus::prelude::*;
-use warcraft_keybinds::CollisionSummary;
-
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-
 use super::logic::CollisionsButtonPresentation;
 use super::props::CollisionsButtonProps;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
+use warcraft_keybinds::CollisionSummary;
 
 /// Primitive hook: the one place this component reaches `warcraft-keybinds`. It
 /// reads the live config and grid layout and asks the domain to count the

@@ -1,7 +1,6 @@
+use super::damage_matchup_row::DamageMatchupRow;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
-
-use super::damage_matchup_row::DamageMatchupRow;
 
 #[derive(Clone, PartialEq)]
 pub struct AttackDisplayData {
@@ -84,11 +83,7 @@ pub fn CombatColumn(props: CombatColumnProps) -> Element {
     rsx! {
         div { class: "stat-column combat-column with-icon",
             div { class: "stat-icon-frame",
-                img {
-                    class: "stat-icon",
-                    src: type_icon,
-                    alt: type_icon_alt,
-                }
+                img { class: "stat-icon", src: type_icon, alt: type_icon_alt }
             }
             div { class: "stat-rows",
                 div { class: "stat-row",
@@ -98,7 +93,8 @@ pub fn CombatColumn(props: CombatColumnProps) -> Element {
                 if attack_range > 0 {
                     div { class: "stat-row",
                         span { class: "stat-row-label", "Range" }
-                        span { class: "stat-row-value", {attack_range_text} }
+                        span { class: "stat-row-value", { attack_range_text
+                                } }
                     }
                 }
                 div { class: "stat-row",

@@ -1,5 +1,4 @@
 use std::cell::{Cell, RefCell};
-
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
@@ -32,7 +31,6 @@ pub(crate) struct PendingDragData {
 }
 
 pub(crate) type TouchScrollLock = Closure<dyn FnMut(web_sys::Event)>;
-
 thread_local! {
     /// Set on a successful drag-end so the synthetic `click` that fires after
     /// `pointerup` does not also re-select the source tile.
@@ -43,7 +41,9 @@ thread_local! {
     /// not open the hotkey picker. Initiating a drag resets the double-click
     /// trigger: cleared on every `pointerdown`, set when a drag actually moved,
     /// consumed by the double-click handler.
-    pub(crate) static SUPPRESS_NEXT_DOUBLE_CLICK: Cell<bool> = const { Cell::new(false) };
+    pub(crate) static SUPPRESS_NEXT_DOUBLE_CLICK: Cell<bool> = const {
+        Cell::new(false)
+    };
 
     /// Cursor position at `pointerdown`. Used to decide whether the user
     /// actually dragged (vs. just clicked) so we know whether to suppress the
@@ -54,17 +54,23 @@ thread_local! {
     pub(crate) static DID_DRAG_MOVE: Cell<bool> = const { Cell::new(false) };
 
     /// Drag setup data captured at `pointerdown`, not yet committed to signals.
-    pub(crate) static PENDING_DRAG: RefCell<Option<PendingDragData>> = const { RefCell::new(None) };
+    pub(crate) static PENDING_DRAG: RefCell<Option<PendingDragData>> = const {
+        RefCell::new(None)
+    };
 
     /// Set when a touch/pen `pointerdown` fires so the compatibility `mouse`
     /// `pointerdown` that browsers synthesise afterward is discarded.
     pub(crate) static TOUCH_STARTED: Cell<bool> = const { Cell::new(false) };
 
     /// ID returned by `setTimeout` for the touch long-press timer.
-    pub(crate) static TOUCH_LONG_PRESS_TIMER_ID: Cell<Option<i32>> = const { Cell::new(None) };
+    pub(crate) static TOUCH_LONG_PRESS_TIMER_ID: Cell<Option<i32>> = const {
+        Cell::new(None)
+    };
 
     /// Non-passive `touchmove` listener installed only while a touch drag is active.
-    pub(crate) static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const { RefCell::new(None) };
+    pub(crate) static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const {
+        RefCell::new(None)
+    };
 }
 
 pub(crate) struct DragThreadState;

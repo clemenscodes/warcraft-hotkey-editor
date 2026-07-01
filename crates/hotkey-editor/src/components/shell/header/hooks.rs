@@ -1,11 +1,9 @@
-use dioxus::prelude::*;
-
-use crate::services::navigation::app_view::AppView;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-
 use super::components::header_actions::HeaderActionsProps;
 use super::components::header_brand::HeaderBrandProps;
 use super::props::HeaderProps;
+use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 
 /// The two child prop bundles the header places, shaped once: the brand (with its
 /// click handler already wired) and the action cluster. The centered layout slot
@@ -24,7 +22,6 @@ pub fn use_header(props: &HeaderProps) -> HeaderView {
     let upload_status = props.upload_status;
     let grid_layout = props.grid_layout;
     let navigation = use_context::<ViewNavigationContext>();
-
     let on_home = EventHandler::new(move |_event: MouseEvent| navigation.apply(AppView::Editor));
     let brand = HeaderBrandProps { onclick: on_home };
     let actions = HeaderActionsProps {
@@ -32,6 +29,5 @@ pub fn use_header(props: &HeaderProps) -> HeaderView {
         upload_status,
         grid_layout,
     };
-
     HeaderView { brand, actions }
 }

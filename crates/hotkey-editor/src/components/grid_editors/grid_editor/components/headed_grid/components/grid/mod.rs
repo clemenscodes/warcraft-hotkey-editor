@@ -2,14 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use dioxus::prelude::*;
-
 use crate::assert_component;
 use components::grid_tile::GridTile;
-use style::CLASS;
-
+use dioxus::prelude::*;
 pub use props::GridProps;
-
+use style::CLASS;
 assert_component!(Grid);
 
 /// The command grid: a pure tile renderer. It lays out the finished tiles it is
@@ -20,8 +17,7 @@ assert_component!(Grid);
 pub fn Grid(props: GridProps) -> Element {
     let tiles = props.tiles;
     rsx! {
-        div {
-            class: CLASS,
+        div { class: CLASS,
             for tile in tiles {
                 GridTile { ..tile }
             }

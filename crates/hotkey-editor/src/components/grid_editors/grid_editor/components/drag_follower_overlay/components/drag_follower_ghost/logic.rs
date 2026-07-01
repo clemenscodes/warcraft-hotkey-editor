@@ -1,8 +1,6 @@
 use warcraft_keybinds::HotkeyToken;
-
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::HotkeyBadgeState;
 use crate::model::grid::DragFollower;
-
 use super::state::GhostState;
 
 /// The computed presentation for the follower ghost, derived from one
@@ -27,7 +25,7 @@ impl From<&DragFollower> for FollowerPresentation {
         let top = follower.top();
         let width = follower.tile_width();
         let height = follower.tile_height();
-        let style = format!("left: {left}px; top: {top}px; width: {width}px; height: {height}px;");
+        let style = format!("left: {left}px; top: {top}px; width: {width}px; height: {height}px;",);
         let state = if visual.is_command_cell() {
             GhostState::Command
         } else {

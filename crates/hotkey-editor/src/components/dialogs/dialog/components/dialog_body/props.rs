@@ -1,6 +1,5 @@
-use dioxus::prelude::*;
-
 use crate::components::dialogs::dialog::DialogProps;
+use dioxus::prelude::*;
 
 /// The body's only input: the content to scroll. Forwarded from the dialog.
 #[derive(Props, Clone, PartialEq)]

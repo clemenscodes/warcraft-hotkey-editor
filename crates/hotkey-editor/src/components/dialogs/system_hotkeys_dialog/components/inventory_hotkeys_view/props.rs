@@ -1,7 +1,6 @@
+use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
-
-use crate::components::dialogs::system_hotkeys_dialog::components::inventory_grid::InventoryDragFollower;
 
 /// What the inventory editor needs: the loaded keys it edits, the shared
 /// editing-section signal, and the drag follower its grid drives.
