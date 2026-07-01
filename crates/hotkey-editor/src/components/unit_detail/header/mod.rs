@@ -1,4 +1,4 @@
-pub(crate) mod hero_level_option;
+pub mod hero_level_option;
 
 use dioxus::prelude::*;
 

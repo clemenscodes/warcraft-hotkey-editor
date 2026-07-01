@@ -1,9 +1,9 @@
-pub(crate) mod alt_state_section;
-pub(crate) mod description;
-pub(crate) mod key_field;
-pub(crate) mod position_picker;
-pub(crate) mod upgrade_section;
-pub(crate) mod upgrade_tier;
+pub mod alt_state_section;
+pub mod description;
+pub mod key_field;
+pub mod position_picker;
+pub mod upgrade_section;
+pub mod upgrade_tier;
 
 pub use position_picker::AltPositionPicker;
 pub use position_picker::UpgradePositionPicker;

@@ -1,13 +1,30 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    AppView, BurgerMenu, Footer, Header, HeaderBrand, HeaderToolbar, ToastMount, TooltipMount,
-    UndoHistory, UploadStatus, ViewNavigationContext,
-};
+use hotkey_editor::components::shell::footer::Footer;
+use hotkey_editor::components::shell::header::Header;
+use hotkey_editor::components::shell::header::components::burger_menu::BurgerMenu;
+use hotkey_editor::components::shell::header::components::header_brand::HeaderBrand;
+use hotkey_editor::components::shell::header::components::header_toolbar::HeaderToolbar;
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::shell::tooltips::TooltipMount;
+use hotkey_editor::{AppView, OverlayState, UndoHistory, UploadStatus, ViewNavigationContext};
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 
 use crate::stories::fixtures;
+
+/// Provides the app-wide overlay open state the header, toolbar, and burger read
+/// from context, so those components can be shown in isolation.
+fn provide_overlay_state() {
+    let overlay = OverlayState {
+        preview_open: use_signal(|| false),
+        system_hotkeys_open: use_signal(|| false),
+        help_open: use_signal(|| false),
+        layout_dialog_open: use_signal(|| false),
+        templates_dialog_open: use_signal(|| false),
+    };
+    use_context_provider(|| overlay);
+}
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -63,11 +80,6 @@ fn header_brand_default() -> Element {
 fn burger_menu_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let preview_open = use_signal(|| false);
-    let layout_dialog_open = use_signal(|| false);
-    let templates_dialog_open = use_signal(|| false);
-    let system_hotkeys_open = use_signal(|| false);
-    let help_open = use_signal(|| false);
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
@@ -82,16 +94,10 @@ fn burger_menu_default() -> Element {
     };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo);
+    use_context_provider(|| navigation);
+    provide_overlay_state();
     rsx! {
-        BurgerMenu {
-            loaded_keys,
-            preview_open,
-            layout_dialog_open,
-            templates_dialog_open,
-            system_hotkeys_open,
-            help_open,
-            navigation,
-        }
+        BurgerMenu { loaded_keys }
     }
 }
 
@@ -99,10 +105,6 @@ fn header_toolbar_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
-    let preview_open = use_signal(|| false);
-    let templates_dialog_open = use_signal(|| false);
-    let system_hotkeys_open = use_signal(|| false);
-    let help_open = use_signal(|| false);
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
@@ -117,17 +119,11 @@ fn header_toolbar_default() -> Element {
     };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo);
+    use_context_provider(|| navigation);
+    provide_overlay_state();
     rsx! {
         ToastMount {
-            HeaderToolbar {
-                loaded_keys,
-                upload_status,
-                preview_open,
-                templates_dialog_open,
-                system_hotkeys_open,
-                help_open,
-                navigation,
-            }
+            HeaderToolbar { loaded_keys, upload_status }
         }
     }
 }
@@ -136,34 +132,28 @@ fn header_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
-    let preview_open = use_signal(|| false);
-    let system_hotkeys_open = use_signal(|| false);
-    let help_open = use_signal(|| false);
-    let layout_dialog_open = use_signal(|| false);
-    let templates_dialog_open = use_signal(|| false);
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let search_query = use_signal(String::new);
+    let navigation = ViewNavigationContext {
+        current_view,
+        active_race,
+        unit_mode,
+        selected_unit_id,
+        search_query,
+    };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo);
+    use_context_provider(|| navigation);
+    provide_overlay_state();
     rsx! {
         ToastMount {
             Header {
                 loaded_keys,
                 upload_status,
-                preview_open,
                 grid_layout,
-                system_hotkeys_open,
-                help_open,
-                layout_dialog_open,
-                templates_dialog_open,
-                current_view,
-                active_race,
-                unit_mode,
-                selected_unit_id,
-                search_query,
             }
         }
     }

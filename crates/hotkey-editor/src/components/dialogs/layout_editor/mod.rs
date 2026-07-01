@@ -27,9 +27,13 @@ assert_component!(LayoutEditor);
 #[component]
 pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let model = use_layout_editor(&props);
+    let open = props.open;
+    if !open() {
+        return rsx! {};
+    }
     rsx! {
         Dialog {
-            open: props.layout_dialog_open,
+            open,
             title: "Global Hotkey Layout",
             on_open_change: Some(model.on_open_change),
             footer: Some(rsx! {

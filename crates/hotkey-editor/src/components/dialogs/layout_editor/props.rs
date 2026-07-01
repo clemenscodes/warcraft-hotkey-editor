@@ -11,5 +11,5 @@ pub struct LayoutEditorProps {
     pub dragging_layout_cell: Signal<Option<GridCoordinate>>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub update_hotkeys_on_move: Signal<bool>,
-    pub layout_dialog_open: Signal<bool>,
+    pub open: Signal<bool>,
 }

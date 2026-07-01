@@ -1,6 +1,8 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::CollisionSummary;
 
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+
 use super::logic::CollisionsButtonPresentation;
 use super::props::CollisionsButtonProps;
 
@@ -25,5 +27,6 @@ fn use_collision_summary(props: &CollisionsButtonProps) -> CollisionSummary {
 /// so the body sees a single already-shaped value.
 pub fn use_collisions_button(props: &CollisionsButtonProps) -> CollisionsButtonPresentation {
     let summary = use_collision_summary(props);
-    CollisionsButtonPresentation::build(summary, props)
+    let navigation = use_context::<ViewNavigationContext>();
+    CollisionsButtonPresentation::build(summary, navigation)
 }

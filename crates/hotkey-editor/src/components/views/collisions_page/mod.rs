@@ -746,7 +746,6 @@ pub struct CollisionsPageProps {
     pub kind: CollisionKind,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub grid_layout: Signal<GridLayout>,
-    pub view_navigation: ViewNavigationContext,
     /// Selection signals live in `app.rs` so they survive leaving the page (a
     /// unit click → editor) and ride in the `?entry=` URL param. One per kind,
     /// for per-tab memory.
@@ -764,7 +763,7 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     let kind = props.kind;
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
-    let view_navigation = props.view_navigation;
+    let view_navigation = use_context::<ViewNavigationContext>();
 
     let islands_memo = use_memo(move || {
         let guard = loaded_keys.read();

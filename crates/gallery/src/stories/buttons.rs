@@ -1,15 +1,37 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    AppView, CollisionsButton, ExportButton, GridLayoutButton, HelpButton, PreviewButton,
-    RedoButton, ResolveButton, SystemHotkeysButton, TemplatesButton, ToastMount, ToolbarButton,
-    UndoButton, UndoHistory, UploadButton, UploadStatus, ViewNavigationContext,
-};
+use hotkey_editor::components::actions::export_button::ExportButton;
+use hotkey_editor::components::actions::grid_layout_button::GridLayoutButton;
+use hotkey_editor::components::actions::help_button::HelpButton;
+use hotkey_editor::components::actions::preview_button::PreviewButton;
+use hotkey_editor::components::actions::redo_button::RedoButton;
+use hotkey_editor::components::actions::resolve_button::ResolveButton;
+use hotkey_editor::components::actions::system_hotkeys_button::SystemHotkeysButton;
+use hotkey_editor::components::actions::templates_button::TemplatesButton;
+use hotkey_editor::components::actions::undo_button::UndoButton;
+use hotkey_editor::components::actions::upload_button::UploadButton;
+use hotkey_editor::components::shared::toolbar_button::ToolbarButton;
+use hotkey_editor::components::shell::header::components::collisions_button::CollisionsButton;
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::{AppView, OverlayState, UndoHistory, UploadStatus, ViewNavigationContext};
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::CustomKeys;
 
 use crate::stories::fixtures;
+
+/// Provides the app-wide overlay open state a toolbar/burger button reads from
+/// context, so a button can be shown in isolation.
+fn provide_overlay_state() {
+    let overlay = OverlayState {
+        preview_open: use_signal(|| false),
+        system_hotkeys_open: use_signal(|| false),
+        help_open: use_signal(|| false),
+        layout_dialog_open: use_signal(|| false),
+        templates_dialog_open: use_signal(|| false),
+    };
+    use_context_provider(|| overlay);
+}
 
 /// Placeholder glyph for the base button showcase: a plain rounded square so the
 /// story shows the shared styling without implying a specific action.
@@ -34,30 +56,30 @@ pub fn stories() -> Vec<Story> {
 }
 
 fn templates_button() -> Element {
-    let templates_dialog_open = use_signal(|| false);
+    provide_overlay_state();
     rsx! {
-        TemplatesButton { templates_dialog_open }
+        TemplatesButton {}
     }
 }
 
 fn system_hotkeys_button() -> Element {
-    let system_hotkeys_open = use_signal(|| false);
+    provide_overlay_state();
     rsx! {
-        SystemHotkeysButton { system_hotkeys_open }
+        SystemHotkeysButton {}
     }
 }
 
 fn help_button() -> Element {
-    let help_open = use_signal(|| false);
+    provide_overlay_state();
     rsx! {
-        HelpButton { help_open }
+        HelpButton {}
     }
 }
 
 fn grid_layout_button() -> Element {
-    let layout_dialog_open = use_signal(|| false);
+    provide_overlay_state();
     rsx! {
-        GridLayoutButton { layout_dialog_open }
+        GridLayoutButton {}
     }
 }
 
@@ -69,9 +91,9 @@ fn toolbar_button() -> Element {
 }
 
 fn preview_button() -> Element {
-    let preview_open = use_signal(|| false);
+    provide_overlay_state();
     rsx! {
-        PreviewButton { preview_open }
+        PreviewButton {}
     }
 }
 
@@ -129,8 +151,9 @@ fn resolve_button() -> Element {
         selected_unit_id,
         search_query,
     };
+    use_context_provider(|| navigation);
     rsx! {
-        ResolveButton { loaded_keys, navigation }
+        ResolveButton { loaded_keys }
     }
 }
 
@@ -149,7 +172,8 @@ fn collisions_button() -> Element {
         selected_unit_id,
         search_query,
     };
+    use_context_provider(|| navigation);
     rsx! {
-        CollisionsButton { loaded_keys, grid_layout, navigation }
+        CollisionsButton { loaded_keys, grid_layout }
     }
 }

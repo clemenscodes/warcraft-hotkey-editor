@@ -1,5 +1,5 @@
 pub mod category;
-pub(crate) mod mobile_category_tab;
+pub mod mobile_category_tab;
 mod state;
 pub mod unit_card;
 

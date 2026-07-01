@@ -9,5 +9,5 @@ use crate::services::customkeys::upload_status::UploadStatus;
 pub struct TemplatesDialogProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub upload_status: Signal<UploadStatus>,
-    pub templates_dialog_open: Signal<bool>,
+    pub open: Signal<bool>,
 }

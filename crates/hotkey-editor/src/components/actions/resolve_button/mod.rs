@@ -9,7 +9,6 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolveButtonProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub navigation: ViewNavigationContext,
 }
 
 /// Toolbar button that navigates to the Resolve page, where the cascade plan is
@@ -17,7 +16,7 @@ pub struct ResolveButtonProps {
 #[component]
 pub fn ResolveButton(props: ResolveButtonProps) -> Element {
     let loaded_keys = props.loaded_keys;
-    let navigation = props.navigation;
+    let navigation = use_context::<ViewNavigationContext>();
     let has_loaded_file = loaded_keys.read().is_some();
     let resolve_disabled = !has_loaded_file;
 

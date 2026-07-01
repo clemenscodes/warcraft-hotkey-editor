@@ -2,16 +2,13 @@ use dioxus::prelude::*;
 
 use crate::components::shared::icons::ICON_PREVIEW;
 use crate::components::shared::toolbar_button::ToolbarButton;
-
-#[derive(Props, Clone, PartialEq)]
-pub struct PreviewButtonProps {
-    pub preview_open: Signal<bool>,
-}
+use crate::services::overlay_state::OverlayState;
 
 /// Toolbar button that toggles the export preview pane.
 #[component]
-pub fn PreviewButton(props: PreviewButtonProps) -> Element {
-    let mut preview_open = props.preview_open;
+pub fn PreviewButton() -> Element {
+    let overlay = use_context::<OverlayState>();
+    let mut preview_open = overlay.preview_open;
     let preview_visible = *preview_open.read();
     let preview_label = if preview_visible {
         "Hide preview"

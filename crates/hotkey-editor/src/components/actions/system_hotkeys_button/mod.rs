@@ -2,16 +2,13 @@ use dioxus::prelude::*;
 
 use crate::components::shared::icons::ICON_COG;
 use crate::components::shared::toolbar_button::ToolbarButton;
-
-#[derive(Props, Clone, PartialEq)]
-pub struct SystemHotkeysButtonProps {
-    pub system_hotkeys_open: Signal<bool>,
-}
+use crate::services::overlay_state::OverlayState;
 
 /// Toolbar button that opens the general (system) hotkeys dialog.
 #[component]
-pub fn SystemHotkeysButton(props: SystemHotkeysButtonProps) -> Element {
-    let mut system_hotkeys_open = props.system_hotkeys_open;
+pub fn SystemHotkeysButton() -> Element {
+    let overlay = use_context::<OverlayState>();
+    let mut system_hotkeys_open = overlay.system_hotkeys_open;
     let is_open = system_hotkeys_open();
     let toggle_system_hotkeys = move |_| {
         let next = !*system_hotkeys_open.read();

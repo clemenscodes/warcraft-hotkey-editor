@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{KeyPicker, KeyPickerCell, KeyPickerCellState};
+use hotkey_editor::components::shared::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::HotkeyToken;
 
 pub fn stories() -> Vec<Story> {

@@ -1,2 +1,2 @@
-pub(crate) mod collisions_page;
-pub(crate) mod resolve_page;
+pub mod collisions_page;
+pub mod resolve_page;

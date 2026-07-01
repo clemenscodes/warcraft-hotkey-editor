@@ -3,9 +3,9 @@ use warcraft_keybinds::CollisionSummary;
 
 use crate::components::shared::icons::{ICON_COLLISIONS, ICON_COLLISIONS_CLEAR};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::styling::ClassList;
 
-use super::props::CollisionsButtonProps;
 use super::state::CollisionState;
 use super::style;
 
@@ -31,7 +31,7 @@ impl CollisionsButtonPresentation {
     /// Shape the button from the domain summary and the navigation context. The
     /// counting already happened in `warcraft-keybinds`; this only maps counts to
     /// presentation.
-    pub fn build(summary: CollisionSummary, props: &CollisionsButtonProps) -> Self {
+    pub fn build(summary: CollisionSummary, navigation: ViewNavigationContext) -> Self {
         let collision_count = summary.total();
         let cross_unit_count = summary.cross_unit();
         let per_unit_position_count = summary.per_unit_position();
@@ -59,7 +59,6 @@ impl CollisionsButtonPresentation {
         } else {
             ICON_COLLISIONS_CLEAR
         };
-        let navigation = props.navigation;
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             let target = AppView::Collisions {
                 kind: CollisionKind::Positions,

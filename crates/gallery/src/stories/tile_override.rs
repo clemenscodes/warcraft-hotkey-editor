@@ -3,11 +3,16 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    AbilityDescription, AltPositionPicker, AltStateSection, DragFollower, DraggingSlot,
-    DropTargetTile, OverrideKeyField, TileOverridePanel, ToastMount, UpgradePositionPicker,
-    UpgradeSection, UpgradeTierSelector,
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::tile_override::alt_state_section::AltStateSection;
+use hotkey_editor::components::tile_override::description::AbilityDescription;
+use hotkey_editor::components::tile_override::key_field::OverrideKeyField;
+use hotkey_editor::components::tile_override::upgrade_section::UpgradeSection;
+use hotkey_editor::components::tile_override::upgrade_tier::UpgradeTierSelector;
+use hotkey_editor::components::tile_override::{
+    AltPositionPicker, TileOverridePanel, UpgradePositionPicker,
 };
+use hotkey_editor::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitCommandSlots};

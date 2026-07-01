@@ -1,9 +1,17 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    DialogHeader, DownloadInfoDialog, GridTileProps, HeadedGrid, HelpDialog, LayoutEditor,
-    PreviewDialog, TemplateCard, TemplatesDialog, ToastMount, UploadInfoDialog, UploadStatus,
-};
+use hotkey_editor::UploadStatus;
+use hotkey_editor::components::dialogs::dialog_header::DialogHeader;
+use hotkey_editor::components::dialogs::download_info_dialog::DownloadInfoDialog;
+use hotkey_editor::components::dialogs::help_dialog::HelpDialog;
+use hotkey_editor::components::dialogs::layout_editor::LayoutEditor;
+use hotkey_editor::components::dialogs::preview_dialog::PreviewDialog;
+use hotkey_editor::components::dialogs::templates_dialog::TemplatesDialog;
+use hotkey_editor::components::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
+use hotkey_editor::components::dialogs::upload_info_dialog::UploadInfoDialog;
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileProps;
+use hotkey_editor::components::shell::toasts::ToastMount;
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CustomKeys, GridCoordinate, RenderedTile, ResolvedTemplate,
 };
@@ -79,7 +87,7 @@ fn layout_editor_default() -> Element {
                 editing_layout_cell,
                 dragging_layout_cell,
                 loaded_keys,
-                layout_dialog_open,
+                open: layout_dialog_open,
                 update_hotkeys_on_move,
             }
         }
@@ -92,7 +100,7 @@ fn templates_dialog_open_story() -> Element {
     let templates_dialog_open = use_signal(|| true);
     rsx! {
         ToastMount {
-            TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
+            TemplatesDialog { loaded_keys, upload_status, open: templates_dialog_open }
         }
     }
 }

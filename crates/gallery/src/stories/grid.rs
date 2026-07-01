@@ -3,11 +3,17 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    CommandGridEditor, DragFollower, DragFollowerOverlay, DragFollowerVisual, DraggingSlot,
-    DropTargetTile, GridHeading, GridTile, GridTileState, HotkeyBadge, HotkeyBadgeState,
-    ToastMount,
+use hotkey_editor::components::grid_editors::command_grid_editor::CommandGridEditor;
+use hotkey_editor::components::grid_editors::grid_editor::components::drag_follower_overlay::DragFollowerOverlay;
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{
+    HotkeyBadge, HotkeyBadgeState,
 };
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
+    GridTile, GridTileState,
+};
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
 use warcraft_api::Race;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{GridSlotId, HotkeyToken, UnitCommandSlots};

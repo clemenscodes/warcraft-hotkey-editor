@@ -1,10 +1,10 @@
-pub(crate) mod attack_matchup_cell;
-pub(crate) mod attribute_row;
+pub mod attack_matchup_cell;
+pub mod attribute_row;
 pub mod attributes_column;
 pub mod combat_column;
-pub(crate) mod damage_matchup_row;
-pub(crate) mod defense_matchup_cell;
-pub(crate) mod defense_matchup_row;
+pub mod damage_matchup_row;
+pub mod defense_matchup_cell;
+pub mod defense_matchup_row;
 mod leveled_stats;
 pub mod stat_icon;
 

@@ -14,7 +14,7 @@ use super::props::TemplatesDialogProps;
 pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> Vec<TemplateCardProps> {
     let mut loaded_keys = props.loaded_keys;
     let mut upload_status = props.upload_status;
-    let mut templates_dialog_open = props.templates_dialog_open;
+    let mut dialog_open = props.open;
     let toast_api = use_toast();
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
     resolved_templates
@@ -44,7 +44,7 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> Vec<Template
                 let options = ToastOptions::new().description(summary);
                 let title = format!("{toast_name} applied");
                 toast_api.success(title, options);
-                templates_dialog_open.set(false);
+                dialog_open.set(false);
             });
             TemplateCardProps {
                 name,

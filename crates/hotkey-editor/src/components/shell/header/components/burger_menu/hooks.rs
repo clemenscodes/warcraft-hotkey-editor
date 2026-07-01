@@ -6,6 +6,8 @@ use crate::components::shared::icons::{
 };
 use crate::services::files::download::BlobDownload;
 use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::overlay_state::OverlayState;
 use crate::services::undo::UndoHistory;
 
 use super::components::burger_drawer::BurgerDrawerProps;
@@ -30,12 +32,13 @@ pub struct BurgerMenuView {
 /// names the result.
 pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
     let loaded_keys = props.loaded_keys;
-    let navigation = props.navigation;
-    let mut system_hotkeys_open = props.system_hotkeys_open;
-    let mut help_open = props.help_open;
-    let mut layout_dialog_open = props.layout_dialog_open;
-    let mut templates_dialog_open = props.templates_dialog_open;
-    let mut preview_open = props.preview_open;
+    let navigation = use_context::<ViewNavigationContext>();
+    let overlay = use_context::<OverlayState>();
+    let mut system_hotkeys_open = overlay.system_hotkeys_open;
+    let mut help_open = overlay.help_open;
+    let mut layout_dialog_open = overlay.layout_dialog_open;
+    let mut templates_dialog_open = overlay.templates_dialog_open;
+    let mut preview_open = overlay.preview_open;
     let mut burger_open = use_signal::<bool>(|| false);
     let mut upload_info_open = use_signal::<bool>(|| false);
     let mut download_info_open = use_signal::<bool>(|| false);

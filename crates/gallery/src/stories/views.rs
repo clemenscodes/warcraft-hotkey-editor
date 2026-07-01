@@ -1,9 +1,11 @@
 use dioxus::prelude::*;
-use hotkey_editor::{
-    AppView, CollisionKind, CollisionsPage, HotkeyUnitDetail, HotkeyUnitSidebar, IslandDetail,
-    IslandMiniGrid, IslandSidebar, ResolvePage, ToastMount, UnitPositionDetail,
-    UnitPositionSidebar, ViewNavigationContext,
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::views::collisions_page::{
+    CollisionsPage, HotkeyUnitDetail, HotkeyUnitSidebar, IslandDetail, IslandMiniGrid,
+    IslandSidebar, UnitPositionDetail, UnitPositionSidebar,
 };
+use hotkey_editor::components::views::resolve_page::ResolvePage;
+use hotkey_editor::{AppView, CollisionKind, ViewNavigationContext};
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 
@@ -28,7 +30,7 @@ fn make_view_navigation() -> ViewNavigationContext {
 fn collisions_page_positions() -> Element {
     let loaded_keys = use_signal(|| Some(sample_keys()));
     let grid_layout = use_signal(sample_grid_layout);
-    let view_navigation = make_view_navigation();
+    use_context_provider(make_view_navigation);
     let selected_island = use_signal(|| None::<String>);
     let selected_hotkey_unit = use_signal(|| None::<String>);
     let selected_unit_position = use_signal(|| None::<String>);
@@ -38,7 +40,6 @@ fn collisions_page_positions() -> Element {
             kind,
             loaded_keys,
             grid_layout,
-            view_navigation,
             selected_island,
             selected_hotkey_unit,
             selected_unit_position,
@@ -49,7 +50,7 @@ fn collisions_page_positions() -> Element {
 fn collisions_page_hotkeys() -> Element {
     let loaded_keys = use_signal(|| Some(sample_keys()));
     let grid_layout = use_signal(sample_grid_layout);
-    let view_navigation = make_view_navigation();
+    use_context_provider(make_view_navigation);
     let selected_island = use_signal(|| None::<String>);
     let selected_hotkey_unit = use_signal(|| None::<String>);
     let selected_unit_position = use_signal(|| None::<String>);
@@ -59,7 +60,6 @@ fn collisions_page_hotkeys() -> Element {
             kind,
             loaded_keys,
             grid_layout,
-            view_navigation,
             selected_island,
             selected_hotkey_unit,
             selected_unit_position,
@@ -70,7 +70,7 @@ fn collisions_page_hotkeys() -> Element {
 fn collisions_page_unit_positions() -> Element {
     let loaded_keys = use_signal(|| Some(sample_keys()));
     let grid_layout = use_signal(sample_grid_layout);
-    let view_navigation = make_view_navigation();
+    use_context_provider(make_view_navigation);
     let selected_island = use_signal(|| None::<String>);
     let selected_hotkey_unit = use_signal(|| None::<String>);
     let selected_unit_position = use_signal(|| None::<String>);
@@ -80,7 +80,6 @@ fn collisions_page_unit_positions() -> Element {
             kind,
             loaded_keys,
             grid_layout,
-            view_navigation,
             selected_island,
             selected_hotkey_unit,
             selected_unit_position,
@@ -90,13 +89,12 @@ fn collisions_page_unit_positions() -> Element {
 
 fn resolve_page_story() -> Element {
     let loaded_keys = use_signal(|| Some(sample_keys()));
-    let view_navigation = make_view_navigation();
+    use_context_provider(make_view_navigation);
     let selected_move_category = use_signal(|| None::<String>);
     rsx! {
         ToastMount {
             ResolvePage {
                 loaded_keys,
-                view_navigation,
                 selected_move_category,
             }
         }

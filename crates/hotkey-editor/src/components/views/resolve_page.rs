@@ -717,7 +717,6 @@ const CENTERED_STATE_CLASS: &str = "resolve-page flex flex-col items-center just
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolvePageProps {
     pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub view_navigation: ViewNavigationContext,
     /// The selected move-category breadcrumb, backed by the `?entry=` URL
     /// parameter (its `data_breadcrumb` slug) so the viewed section deep-links
     /// and survives browser back/forward — mirroring the collisions page.
@@ -730,7 +729,7 @@ pub struct ResolvePageProps {
 #[component]
 pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let mut loaded_keys = props.loaded_keys;
-    let view_navigation = props.view_navigation;
+    let view_navigation = use_context::<ViewNavigationContext>();
     let toast_api = use_toast();
     let mut is_running = use_signal(|| false);
     let carriers_dialog = use_signal(|| None::<CarriersDialogData>);

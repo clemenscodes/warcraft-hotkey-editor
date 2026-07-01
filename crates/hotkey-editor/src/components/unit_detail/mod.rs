@@ -1,7 +1,7 @@
 mod derived_stats;
 pub mod grids;
-pub(crate) mod header;
-pub(crate) mod stats_panel;
+pub mod header;
+pub mod stats_panel;
 
 use std::collections::HashMap;
 use std::rc::Rc;

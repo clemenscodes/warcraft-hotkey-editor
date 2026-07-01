@@ -1,7 +1,7 @@
-pub(crate) mod breadcrumbs;
-pub(crate) mod category_tab;
-pub(crate) mod dialog_header;
-pub(crate) mod inventory_drag_overlay;
+pub mod breadcrumbs;
+pub mod category_tab;
+pub mod dialog_header;
+pub mod inventory_drag_overlay;
 
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::{DialogContent, DialogRoot};

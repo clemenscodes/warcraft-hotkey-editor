@@ -36,7 +36,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     let mut dragging_layout_cell = props.dragging_layout_cell;
     let mut loaded_keys = props.loaded_keys;
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
-    let mut layout_dialog_open = props.layout_dialog_open;
+    let mut layout_dialog_open = props.open;
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_cell.read();
     let toast_api = use_toast();

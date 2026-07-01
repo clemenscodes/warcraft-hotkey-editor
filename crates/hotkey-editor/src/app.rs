@@ -26,6 +26,7 @@ use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::url_state::UrlNavigationState;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::overlay_state::OverlayState;
 use crate::services::undo::{EditorSnapshot, UndoHistory};
 use warcraft_api::RaceLabels;
 use warcraft_database::{SearchField, UnitMode};
@@ -465,6 +466,29 @@ pub fn App() -> Element {
          max-[700px]:px-4 max-[480px]:px-2"
     );
 
+    // The view-navigation state is app-wide: the header, the collisions/resolve
+    // pages, and their leaves all dispatch through it. Provide it once here so
+    // consumers read it with `use_context` instead of threading it as a prop.
+    let view_navigation = ViewNavigationContext {
+        current_view,
+        active_race,
+        unit_mode,
+        selected_unit_id,
+        search_query,
+    };
+    use_context_provider(|| view_navigation);
+
+    // The overlay open flags are app-wide too: toggled by the toolbar/burger and
+    // read by the dialogs. Provided once so the header does not thread them.
+    let overlay_state = OverlayState {
+        preview_open,
+        system_hotkeys_open,
+        help_open,
+        layout_dialog_open,
+        templates_dialog_open,
+    };
+    use_context_provider(|| overlay_state);
+
     rsx! {
         document::Stylesheet { href: TAILWIND_STYLES }
         document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
@@ -499,17 +523,7 @@ pub fn App() -> Element {
             Header {
                 loaded_keys,
                 upload_status,
-                preview_open,
                 grid_layout,
-                system_hotkeys_open,
-                help_open,
-                layout_dialog_open,
-                templates_dialog_open,
-                current_view,
-                active_race,
-                unit_mode,
-                selected_unit_id,
-                search_query,
             }
             match *current_view.read() {
                 AppView::Editor => rsx! {
@@ -540,37 +554,18 @@ pub fn App() -> Element {
                         }
                     }
                 },
-                AppView::Collisions { kind } => {
-                    let view_navigation = ViewNavigationContext {
-                        current_view,
-                        active_race,
-                        unit_mode,
-                        selected_unit_id,
-                        search_query,
-                    };
-                    rsx! {
-                        CollisionsPage {
-                            kind,
-                            loaded_keys,
-                            grid_layout,
-                            view_navigation,
-                            selected_island,
-                            selected_hotkey_unit,
-                            selected_unit_position,
-                        }
+                AppView::Collisions { kind } => rsx! {
+                    CollisionsPage {
+                        kind,
+                        loaded_keys,
+                        grid_layout,
+                        selected_island,
+                        selected_hotkey_unit,
+                        selected_unit_position,
                     }
                 },
-                AppView::Resolve => {
-                    let view_navigation = ViewNavigationContext {
-                        current_view,
-                        active_race,
-                        unit_mode,
-                        selected_unit_id,
-                        search_query,
-                    };
-                    rsx! {
-                        ResolvePage { loaded_keys, view_navigation, selected_move_category }
-                    }
+                AppView::Resolve => rsx! {
+                    ResolvePage { loaded_keys, selected_move_category }
                 },
             }
             Footer {}
@@ -583,18 +578,18 @@ pub fn App() -> Element {
                 if *help_open.read() {
                     HelpDialog { help_open }
                 }
-                if templates_dialog_open() {
-                    TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
+                TemplatesDialog {
+                    loaded_keys,
+                    upload_status,
+                    open: templates_dialog_open,
                 }
-                if layout_dialog_open() {
-                    LayoutEditor {
-                        grid_layout,
-                        editing_layout_cell,
-                        dragging_layout_cell,
-                        update_hotkeys_on_move,
-                        loaded_keys,
-                        layout_dialog_open,
-                    }
+                LayoutEditor {
+                    grid_layout,
+                    editing_layout_cell,
+                    dragging_layout_cell,
+                    update_hotkeys_on_move,
+                    loaded_keys,
+                    open: layout_dialog_open,
                 }
             }
         }

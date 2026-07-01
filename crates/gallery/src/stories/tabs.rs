@@ -1,6 +1,8 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{ModeAndRaceTabs, RaceTab, RaceTabs};
+use hotkey_editor::components::tabs::mode_and_race_tabs::ModeAndRaceTabs;
+use hotkey_editor::components::tabs::race_tabs::RaceTabs;
+use hotkey_editor::components::tabs::race_tabs::tab::RaceTab;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::GridSlotId;

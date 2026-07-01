@@ -3,12 +3,24 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    AttackDisplayData, AttackMatchupCell, AttributeRow, AttributesColumn, CombatColumn,
-    DamageMatchupRow, DefenseMatchupCell, DefenseMatchupRow, DragFollower, DraggingSlot,
-    DropTargetTile, HeroDisplayData, HeroLevelOption, StatIcon, UnitCommandGrids, UnitDetailHeader,
-    UnitDetailPanel, UnitStatsPanel,
+use hotkey_editor::components::unit_detail::UnitDetailPanel;
+use hotkey_editor::components::unit_detail::grids::UnitCommandGrids;
+use hotkey_editor::components::unit_detail::header::UnitDetailHeader;
+use hotkey_editor::components::unit_detail::header::hero_level_option::HeroLevelOption;
+use hotkey_editor::components::unit_detail::stats_panel::UnitStatsPanel;
+use hotkey_editor::components::unit_detail::stats_panel::attack_matchup_cell::AttackMatchupCell;
+use hotkey_editor::components::unit_detail::stats_panel::attribute_row::AttributeRow;
+use hotkey_editor::components::unit_detail::stats_panel::attributes_column::{
+    AttributesColumn, HeroDisplayData,
 };
+use hotkey_editor::components::unit_detail::stats_panel::combat_column::{
+    AttackDisplayData, CombatColumn,
+};
+use hotkey_editor::components::unit_detail::stats_panel::damage_matchup_row::DamageMatchupRow;
+use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_cell::DefenseMatchupCell;
+use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_row::DefenseMatchupRow;
+use hotkey_editor::components::unit_detail::stats_panel::stat_icon::StatIcon;
+use hotkey_editor::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_api::{
     AttackType, DefenseType, PrimaryAttribute, Race, UnitCombat, WarcraftObjectMeta,
 };

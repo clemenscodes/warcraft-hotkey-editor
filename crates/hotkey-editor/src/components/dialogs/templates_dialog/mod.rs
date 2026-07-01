@@ -16,9 +16,13 @@ pub use props::TemplatesDialogProps;
 #[component]
 pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
     let cards = use_templates_dialog(&props);
+    let open = props.open;
+    if !open() {
+        return rsx! {};
+    }
     rsx! {
         Dialog {
-            open: props.templates_dialog_open,
+            open,
             title: "Layout Templates",
             TemplateGallery { cards }
         }

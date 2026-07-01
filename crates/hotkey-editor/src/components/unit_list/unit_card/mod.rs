@@ -1,5 +1,5 @@
 pub mod icon;
-pub(crate) mod info;
+pub mod info;
 mod state;
 
 use dioxus::prelude::*;

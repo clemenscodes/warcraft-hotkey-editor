@@ -22,16 +22,12 @@ assert_component!(Header);
 /// (burger) layout below 1280px and the full three-column layout at and above it.
 #[component]
 pub fn Header(props: HeaderProps) -> Element {
-    let HeaderView {
-        brand,
-        layout_slot,
-        actions,
-    } = use_header(&props);
+    let HeaderView { brand, actions } = use_header(&props);
     rsx! {
         header {
             class: CLASS,
             HeaderBrand { ..brand }
-            HeaderLayoutSlot { ..layout_slot }
+            HeaderLayoutSlot {}
             HeaderActions { ..actions }
         }
     }

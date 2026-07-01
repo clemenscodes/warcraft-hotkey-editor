@@ -1,21 +1,18 @@
 use dioxus::prelude::*;
 
 use crate::components::shared::icons::ICON_GRID;
+use crate::services::overlay_state::OverlayState;
 
 const GRID_LAYOUT_BUTTON_STYLES: Asset =
     asset!("/src/components/actions/grid_layout_button/grid_layout_button.css");
-
-#[derive(Props, Clone, PartialEq)]
-pub struct GridLayoutButtonProps {
-    pub layout_dialog_open: Signal<bool>,
-}
 
 /// Prominent header call-to-action that opens the global grid-layout editor.
 /// Deliberately styled apart from the icon-only toolbar buttons; its styling
 /// lives in `grid_layout_button.css` under the `.grid-layout-button` class.
 #[component]
-pub fn GridLayoutButton(props: GridLayoutButtonProps) -> Element {
-    let mut layout_dialog_open = props.layout_dialog_open;
+pub fn GridLayoutButton() -> Element {
+    let overlay = use_context::<OverlayState>();
+    let mut layout_dialog_open = overlay.layout_dialog_open;
     let is_open = layout_dialog_open();
     let toggle_layout_dialog = move |_| {
         let next = !*layout_dialog_open.read();

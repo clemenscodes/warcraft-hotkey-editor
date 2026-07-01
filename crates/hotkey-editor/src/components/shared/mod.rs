@@ -1,4 +1,4 @@
-pub(crate) mod button;
-pub(crate) mod icons;
-pub(crate) mod key_picker;
-pub(crate) mod toolbar_button;
+pub mod button;
+pub mod icons;
+pub mod key_picker;
+pub mod toolbar_button;

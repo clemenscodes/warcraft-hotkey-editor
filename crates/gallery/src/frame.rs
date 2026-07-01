@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
-use hotkey_editor::{ToastMount, TooltipMount};
+use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::shell::tooltips::TooltipMount;
 
 use crate::GALLERY_STYLES;
 use crate::registry::StoryRegistry;

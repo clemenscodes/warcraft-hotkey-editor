@@ -2,16 +2,13 @@ use dioxus::prelude::*;
 
 use crate::components::shared::icons::ICON_HELP;
 use crate::components::shared::toolbar_button::ToolbarButton;
-
-#[derive(Props, Clone, PartialEq)]
-pub struct HelpButtonProps {
-    pub help_open: Signal<bool>,
-}
+use crate::services::overlay_state::OverlayState;
 
 /// Toolbar button that opens the onboarding help dialog.
 #[component]
-pub fn HelpButton(props: HelpButtonProps) -> Element {
-    let mut help_open = props.help_open;
+pub fn HelpButton() -> Element {
+    let overlay = use_context::<OverlayState>();
+    let mut help_open = overlay.help_open;
     let is_open = help_open();
     let open_help = move |_| help_open.set(true);
     rsx! {

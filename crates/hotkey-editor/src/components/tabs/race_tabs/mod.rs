@@ -1,5 +1,5 @@
 mod state;
-pub(crate) mod tab;
+pub mod tab;
 
 use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels, SUPPORTED_RACES};

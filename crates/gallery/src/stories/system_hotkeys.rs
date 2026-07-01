@@ -2,12 +2,23 @@ use std::collections::HashMap;
 
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::{
-    ControlGroupsHotkeysView, HeroSelectionHotkeysView, InventoryCell, InventoryDragFollower,
-    InventoryDragOverlay, InventoryDragSource, InventoryGrid, InventoryHotkeysView, KeyCaptureCell,
-    SlotButton, SystemHotkeysBreadcrumbs, SystemHotkeysCategoryTab, SystemHotkeysDialog,
-    SystemHotkeysHeader, SystemHotkeysListEntry, SystemHotkeysListView, SystemKeyPickerDialog,
+use hotkey_editor::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
+use hotkey_editor::components::system_hotkeys::dialog::SystemHotkeysDialog;
+use hotkey_editor::components::system_hotkeys::dialog::breadcrumbs::SystemHotkeysBreadcrumbs;
+use hotkey_editor::components::system_hotkeys::dialog::category_tab::SystemHotkeysCategoryTab;
+use hotkey_editor::components::system_hotkeys::dialog::dialog_header::SystemHotkeysHeader;
+use hotkey_editor::components::system_hotkeys::dialog::inventory_drag_overlay::InventoryDragOverlay;
+use hotkey_editor::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
+use hotkey_editor::components::system_hotkeys::inventory::InventoryHotkeysView;
+use hotkey_editor::components::system_hotkeys::inventory_grid::{
+    InventoryCell, InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
+use hotkey_editor::components::system_hotkeys::key_cell::KeyCaptureCell;
+use hotkey_editor::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use hotkey_editor::components::system_hotkeys::list_view::{
+    SystemHotkeysListEntry, SystemHotkeysListView,
+};
+use hotkey_editor::components::system_hotkeys::slot_button::SlotButton;
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap};
 
