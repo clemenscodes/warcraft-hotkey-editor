@@ -1,5 +1,9 @@
 use crate::classes;
-const BASE: &[&str] = &["grid", "grid-cols-[repeat(auto-fill,minmax(320px,1fr))]", "gap-6"];
+const BASE: &[&str] = &[
+    "grid",
+    "grid-cols-[repeat(auto-fill,minmax(320px,1fr))]",
+    "gap-6",
+];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

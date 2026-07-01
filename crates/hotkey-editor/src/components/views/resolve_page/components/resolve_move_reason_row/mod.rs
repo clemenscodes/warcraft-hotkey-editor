@@ -1,8 +1,8 @@
 pub mod components;
 mod props;
 mod style;
-use components::resolve_reason_badge::{ResolveReasonBadge, ResolveReasonBadgeProps};
 use crate::assert_component;
+use components::resolve_reason_badge::{ResolveReasonBadge, ResolveReasonBadgeProps};
 use dioxus::prelude::*;
 pub use props::ResolveMoveReasonRowProps;
 use style::CLASS;

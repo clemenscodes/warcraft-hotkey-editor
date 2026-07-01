@@ -1,6 +1,6 @@
 mod style;
-use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use crate::assert_component;
+use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use dioxus::prelude::*;
 use style::CLASS;
 assert_component!(ResolveClearIcon);

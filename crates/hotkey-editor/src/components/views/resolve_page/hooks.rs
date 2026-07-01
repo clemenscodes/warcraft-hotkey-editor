@@ -1,45 +1,67 @@
-use super::components::carriers_dialog::CarriersDialog;
-use super::components::resolve_breadcrumbs::ResolveBreadcrumbs;
+use super::components::carriers_dialog_host::CarriersDialogHostProps;
+use super::components::resolve_breadcrumbs::ResolveBreadcrumbsProps;
 use super::components::resolve_breadcrumbs::components::resolve_breadcrumb::ResolveBreadcrumbProps;
-use super::components::resolve_clear_state::ResolveClearState;
-use super::components::resolve_empty_state::ResolveEmptyState;
 use super::components::resolve_move_row::ResolveMoveRowProps;
-use super::components::resolve_plan_body::{ResolvePlanBody, ResolvePlanBodySection};
-use super::components::resolve_plan_header::{ResolvePlanHeader, ResolvePlanHeaderProps};
+use super::components::resolve_plan_body::{ResolvePlanBodyProps, ResolvePlanBodySection};
+use super::components::resolve_plan_header::ResolvePlanHeaderProps;
 use super::components::resolve_unresolved_row::ResolveUnresolvedRowProps;
-use super::logic::ResolvePlanView;
+use super::logic::{CarriersDialogData, ResolvePlanView};
 use super::props::ResolvePageProps;
-use super::style::CLASS;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use gloo_timers::future::TimeoutFuture;
 use warcraft_keybinds::CustomKeys;
 
+/// The three states the Resolve page renders, each as already shaped data. The
+/// component body matches on this and places the data; the hook never builds
+/// markup.
+pub(super) enum ResolvePageView {
+    /// No CustomKeys.txt is loaded yet — the upload prompt.
+    NoFile,
+    /// A file is loaded but has no conflicts — the all-clear state.
+    Clear,
+    /// A cascade plan to preview and apply.
+    Plan(Box<ResolvePlanPresentation>),
+}
+
+/// Everything the plan state needs, fully shaped: the header, breadcrumb bar, and
+/// body child props, the counts the root element tags itself with, and the
+/// carriers-dialog host props.
+pub(super) struct ResolvePlanPresentation {
+    pub move_count: usize,
+    pub unresolved_count: usize,
+    pub header: ResolvePlanHeaderProps,
+    pub breadcrumbs: ResolveBreadcrumbsProps,
+    pub body: ResolvePlanBodyProps,
+    pub carriers_dialog_host: CarriersDialogHostProps,
+}
+
 /// Computes the cascade preview (memoised on the loaded keys), wires the Apply
-/// handler and carriers dialog, and shapes the active section, breadcrumbs, and
-/// header — returning the fully rendered page for the current state (no-file,
-/// all-clear, or the plan).
-pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
+/// handler and the carriers dialog, and shapes the active section, breadcrumbs,
+/// and header — returning the state's data for the body to render.
+pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let mut loaded_keys = props.loaded_keys;
     let view_navigation = use_context::<ViewNavigationContext>();
     let toast_api = use_toast();
     let mut is_running = use_signal(|| false);
-    let carriers_dialog = use_signal(|| None::<super::logic::CarriersDialogData>);
-    let mut selected_move_category = props.selected_move_category;
+    let carriers_dialog = use_signal(|| None::<CarriersDialogData>);
+    let selected_move_category = props.selected_move_category;
     let plan_memo = use_memo(move || {
         let guard = loaded_keys.read();
         guard.as_ref().map(ResolvePlanView::build)
     });
     let has_file = loaded_keys.read().is_some();
     let plan_option = plan_memo();
-    let move_count = plan_option.as_ref().map(|view| view.move_count()).unwrap_or(0);
+    let move_count = plan_option
+        .as_ref()
+        .map(|view| view.move_count())
+        .unwrap_or(0);
     let unresolved_count = plan_option
         .as_ref()
         .map(|view| view.unresolved.len())
         .unwrap_or(0);
     let running_now = *is_running.read();
-    let dialog_state = carriers_dialog.read().clone();
     let handle_apply = move |_event: MouseEvent| {
         if *is_running.read() {
             return;
@@ -64,7 +86,9 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
             let summary = if unresolved_count == 0 {
                 format!("Moved {move_count} ability slot(s). No remaining conflicts.")
             } else {
-                format!("Moved {move_count} ability slot(s). {unresolved_count} could not be placed.")
+                format!(
+                    "Moved {move_count} ability slot(s). {unresolved_count} could not be placed."
+                )
             };
             let title = String::from("Cascade applied");
             let toast_options = ToastOptions::new().description(summary);
@@ -72,20 +96,16 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
         });
     };
     if !has_file {
-        return rsx! {
-            ResolveEmptyState {}
-        };
+        return ResolvePageView::NoFile;
     }
     if move_count == 0 && unresolved_count == 0 {
-        return rsx! {
-            ResolveClearState {}
-        };
+        return ResolvePageView::Clear;
     }
     let plan = plan_option.expect("plan present when a file is loaded");
     let selected_slug = selected_move_category.read().clone();
     let active = plan.active_section(selected_slug.as_deref());
     let active_category = active.map(|section| section.category);
-    let mut breadcrumbs: Vec<ResolveBreadcrumbProps> = Vec::with_capacity(plan.sections.len());
+    let mut breadcrumb_list: Vec<ResolveBreadcrumbProps> = Vec::with_capacity(plan.sections.len());
     for section in &plan.sections {
         let category = section.category;
         let is_active = active_category == Some(category);
@@ -104,8 +124,11 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
             active: is_active,
             onclick,
         };
-        breadcrumbs.push(breadcrumb);
+        breadcrumb_list.push(breadcrumb);
     }
+    let breadcrumbs = ResolveBreadcrumbsProps {
+        breadcrumbs: breadcrumb_list,
+    };
     let section = active.map(|section| {
         let rows: Vec<ResolveMoveRowProps> = section
             .moves
@@ -129,6 +152,10 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
             carriers_dialog,
         })
         .collect();
+    let body = ResolvePlanBodyProps {
+        section,
+        unresolved_rows,
+    };
     let move_noun = if move_count == 1 { "move" } else { "moves" };
     let moves_text = format!("{move_count} {move_noun}");
     let apply_handler = EventHandler::new(handle_apply);
@@ -138,18 +165,17 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> Element {
         running: running_now,
         on_apply: apply_handler,
     };
-    rsx! {
-        section {
-            class: CLASS,
-            "data-resolve-state": "plan",
-            "data-move-count": "{move_count}",
-            "data-unresolved-count": "{unresolved_count}",
-            ResolvePlanHeader { ..header }
-            ResolveBreadcrumbs { breadcrumbs }
-            ResolvePlanBody { section, unresolved_rows }
-        }
-        if let Some(dialog_data) = dialog_state {
-            CarriersDialog { dialog_data, carriers_dialog, view_navigation }
-        }
-    }
+    let carriers_dialog_host = CarriersDialogHostProps {
+        carriers_dialog,
+        view_navigation,
+    };
+    let presentation = ResolvePlanPresentation {
+        move_count,
+        unresolved_count,
+        header,
+        breadcrumbs,
+        body,
+        carriers_dialog_host,
+    };
+    ResolvePageView::Plan(Box::new(presentation))
 }

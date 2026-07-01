@@ -1,9 +1,9 @@
 pub mod components;
 mod props;
 mod style;
+use crate::assert_component;
 use components::resolve_apply_button::{ResolveApplyButton, ResolveApplyButtonProps};
 use components::resolve_plan_summary::{ResolvePlanSummary, ResolvePlanSummaryProps};
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ResolvePlanHeaderProps;
 use style::CLASS;

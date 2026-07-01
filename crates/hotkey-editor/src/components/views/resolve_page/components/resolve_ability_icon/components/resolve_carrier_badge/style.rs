@@ -22,7 +22,11 @@ const BASE: &[&str] = &[
     "data-[win=true]:[border-color:var(--race-color,#ffce63)]",
     "data-[win=true]:text-warcraft-gold",
 ];
-const MOBILE: &[&str] = &["mobile:min-w-[15px]", "mobile:h-[15px]", "mobile:text-[0.85rem]"];
+const MOBILE: &[&str] = &[
+    "mobile:min-w-[15px]",
+    "mobile:h-[15px]",
+    "mobile:text-[0.85rem]",
+];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];

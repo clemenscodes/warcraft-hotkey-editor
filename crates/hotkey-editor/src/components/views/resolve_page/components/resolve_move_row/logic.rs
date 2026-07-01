@@ -107,7 +107,10 @@ impl From<&ResolveMoveRowProps> for ResolveMoveRowModel {
                     is_winner: !is_swap,
                     carriers_dialog,
                 };
-                let parts = AnchorParts { name_plate, ability };
+                let parts = AnchorParts {
+                    name_plate,
+                    ability,
+                };
                 Some(parts)
             }
             None => None,

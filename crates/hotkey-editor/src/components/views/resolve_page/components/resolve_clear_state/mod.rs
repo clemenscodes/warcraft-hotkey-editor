@@ -1,8 +1,8 @@
 pub mod components;
 mod style;
+use crate::assert_component;
 use components::resolve_clear_icon::ResolveClearIcon;
 use components::resolve_clear_label::ResolveClearLabel;
-use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
 assert_component!(ResolveClearState);

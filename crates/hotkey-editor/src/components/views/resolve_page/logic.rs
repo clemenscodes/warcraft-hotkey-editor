@@ -401,15 +401,22 @@ impl ResolvePlanView {
     pub fn active_section(&self, selected_slug: Option<&str>) -> Option<&MoveSection> {
         let selected = selected_slug.and_then(MoveCategory::from_data_breadcrumb);
         let selected_exists = selected
-            .map(|category| self.sections.iter().any(|section| section.category == category))
+            .map(|category| {
+                self.sections
+                    .iter()
+                    .any(|section| section.category == category)
+            })
             .unwrap_or(false);
         let active_category = if selected_exists {
             selected
         } else {
             self.sections.first().map(|section| section.category)
         };
-        active_category
-            .and_then(|category| self.sections.iter().find(|section| section.category == category))
+        active_category.and_then(|category| {
+            self.sections
+                .iter()
+                .find(|section| section.category == category)
+        })
     }
 }
 

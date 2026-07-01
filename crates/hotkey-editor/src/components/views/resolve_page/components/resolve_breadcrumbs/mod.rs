@@ -1,9 +1,9 @@
 pub mod components;
 mod props;
 mod style;
+use crate::assert_component;
 use components::resolve_breadcrumb::ResolveBreadcrumb;
 use components::resolve_breadcrumb_separator::ResolveBreadcrumbSeparator;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ResolveBreadcrumbsProps;
 use style::CLASS;

@@ -1,10 +1,10 @@
 pub mod components;
 mod props;
 mod style;
-use components::resolve_carrier_badge::{ResolveCarrierBadge, ResolveCarrierBadgeProps};
-use components::resolve_fight_icon::{ResolveFightIcon, ResolveFightIconProps};
 use crate::assert_component;
 use crate::components::views::resolve_page::logic::CarriersDialogData;
+use components::resolve_carrier_badge::{ResolveCarrierBadge, ResolveCarrierBadgeProps};
+use components::resolve_fight_icon::{ResolveFightIcon, ResolveFightIconProps};
 use dioxus::prelude::*;
 pub use props::ResolveAbilityIconProps;
 use style::CLASS;

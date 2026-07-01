@@ -1,5 +1,9 @@
 use crate::classes;
-const BASE: &[&str] = &["text-[1.35rem]", "text-warcraft-gold", "[text-shadow:1px_1px_0_#000]"];
+const BASE: &[&str] = &[
+    "text-[1.35rem]",
+    "text-warcraft-gold",
+    "[text-shadow:1px_1px_0_#000]",
+];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

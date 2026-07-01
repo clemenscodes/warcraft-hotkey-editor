@@ -1,9 +1,9 @@
 pub mod components;
 mod props;
 mod style;
+use crate::assert_component;
 use components::resolve_plan_counts::{ResolvePlanCounts, ResolvePlanCountsProps};
 use components::resolve_plan_title::ResolvePlanTitle;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ResolvePlanSummaryProps;
 use style::CLASS;

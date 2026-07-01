@@ -1,7 +1,7 @@
 pub mod components;
 mod style;
-use components::resolve_empty_message::ResolveEmptyMessage;
 use crate::assert_component;
+use components::resolve_empty_message::ResolveEmptyMessage;
 use dioxus::prelude::*;
 use style::CLASS;
 assert_component!(ResolveEmptyState);

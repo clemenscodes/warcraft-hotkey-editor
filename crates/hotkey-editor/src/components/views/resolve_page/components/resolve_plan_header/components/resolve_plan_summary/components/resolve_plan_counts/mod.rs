@@ -1,8 +1,8 @@
 pub mod components;
 mod props;
 mod style;
-use components::resolve_plan_unresolved::ResolvePlanUnresolved;
 use crate::assert_component;
+use components::resolve_plan_unresolved::ResolvePlanUnresolved;
 use dioxus::prelude::*;
 pub use props::ResolvePlanCountsProps;
 use style::CLASS;

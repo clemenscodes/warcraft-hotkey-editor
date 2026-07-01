@@ -4,8 +4,8 @@ mod style;
 
 use super::resolve_move_list::ResolveMoveList;
 use super::resolve_unresolved_row::ResolveUnresolvedRow;
-use components::resolve_unresolved_title::ResolveUnresolvedTitle;
 use crate::assert_component;
+use components::resolve_unresolved_title::ResolveUnresolvedTitle;
 use dioxus::prelude::*;
 pub use props::ResolveUnresolvedSectionProps;
 use style::CLASS;
