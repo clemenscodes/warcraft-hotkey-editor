@@ -3,4 +3,5 @@
 //! every unit that carries them).
 
 pub mod cross_unit;
+pub mod summary;
 pub mod unit_report;

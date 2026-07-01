@@ -6,7 +6,6 @@ use hotkey_editor::{
 };
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
-use warcraft_keybinds::GridCoordinate;
 
 use crate::stories::fixtures;
 
@@ -55,8 +54,9 @@ fn header_brand_default() -> Element {
         selected_unit_id,
         search_query,
     };
+    let onclick = EventHandler::new(move |_event: MouseEvent| navigation.apply(AppView::Editor));
     rsx! {
-        HeaderBrand { navigation }
+        HeaderBrand { onclick }
     }
 }
 
@@ -137,16 +137,15 @@ fn header_default() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
     let preview_open = use_signal(|| false);
-    let editing_layout_cell = use_signal(|| None::<GridCoordinate>);
-    let dragging_layout_cell = use_signal(|| None::<GridCoordinate>);
     let system_hotkeys_open = use_signal(|| false);
     let help_open = use_signal(|| false);
+    let layout_dialog_open = use_signal(|| false);
+    let templates_dialog_open = use_signal(|| false);
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let search_query = use_signal(String::new);
-    let update_hotkeys_on_move = use_signal(|| true);
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo);
     rsx! {
@@ -156,16 +155,15 @@ fn header_default() -> Element {
                 upload_status,
                 preview_open,
                 grid_layout,
-                editing_layout_cell,
-                dragging_layout_cell,
                 system_hotkeys_open,
                 help_open,
+                layout_dialog_open,
+                templates_dialog_open,
                 current_view,
                 active_race,
                 unit_mode,
                 selected_unit_id,
                 search_query,
-                update_hotkeys_on_move,
             }
         }
     }

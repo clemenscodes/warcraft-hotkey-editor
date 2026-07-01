@@ -96,6 +96,30 @@ body {
   }
 }
 
+/* The compact-header burger drawer slides in from the right. A @keyframes cannot
+   be a utility, so it lives here; the drawer references it with an arbitrary
+   `[animation:...]` utility. */
+@keyframes burger-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* While the burger drawer is open, lock the page behind it from scrolling. This
+   keys off the drawer's presence (`:has`), a global concern that no single
+   component owns, so it lives in the design layer rather than a component. */
+body:has(.burger-drawer) {
+  overflow: hidden;
+  position: relative;
+  overscroll-behavior: contain;
+}
+body:has(.burger-drawer) .app {
+  overflow: hidden;
+}
+
 @import "./styles/primitives.css" layer(components);
 @import "./styles/app-root.css" layer(components);
 @import "./src/components/unit_list/unit_list.css";

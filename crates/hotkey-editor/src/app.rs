@@ -6,7 +6,9 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::help_dialog::HelpDialog;
+use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
+use crate::components::dialogs::templates_dialog::TemplatesDialog;
 use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
@@ -360,6 +362,8 @@ pub fn App() -> Element {
     let mut preview_open = use_signal::<bool>(|| false);
     let mut system_hotkeys_open = use_signal::<bool>(|| false);
     let help_open = use_signal::<bool>(|| !OnboardingPersistence::has_been_seen());
+    let layout_dialog_open = use_signal::<bool>(|| false);
+    let templates_dialog_open = use_signal::<bool>(|| false);
     let collapsed_categories = use_signal::<HashSet<UnitKind>>(HashSet::new);
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
@@ -497,11 +501,10 @@ pub fn App() -> Element {
                 upload_status,
                 preview_open,
                 grid_layout,
-                editing_layout_cell,
-                dragging_layout_cell,
-                update_hotkeys_on_move,
                 system_hotkeys_open,
                 help_open,
+                layout_dialog_open,
+                templates_dialog_open,
                 current_view,
                 active_race,
                 unit_mode,
@@ -579,6 +582,19 @@ pub fn App() -> Element {
                 }
                 if *help_open.read() {
                     HelpDialog { help_open }
+                }
+                if templates_dialog_open() {
+                    TemplatesDialog { loaded_keys, upload_status, templates_dialog_open }
+                }
+                if layout_dialog_open() {
+                    LayoutEditor {
+                        grid_layout,
+                        editing_layout_cell,
+                        dragging_layout_cell,
+                        update_hotkeys_on_move,
+                        loaded_keys,
+                        layout_dialog_open,
+                    }
                 }
             }
         }

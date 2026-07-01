@@ -18,6 +18,7 @@ pub use cascade::queue::{AssignmentQueue, AssignmentScope, GroupKind, PositionAs
 pub use collision::cross_unit::{
     AffectedUnitEntry, CrossUnitCollisionReport, CrossUnitPositionGroup, SharedAbilityEntry,
 };
+pub use collision::summary::CollisionSummary;
 pub use collision::unit_report::{UnitCollisionEntry, UnitCollisionReport};
 pub use command::move_request::MoveRequest;
 pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict};
