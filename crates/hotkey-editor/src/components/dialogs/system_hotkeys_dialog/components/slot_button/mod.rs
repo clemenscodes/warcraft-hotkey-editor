@@ -1,12 +1,19 @@
 mod hooks;
+mod logic;
 mod props;
 mod state;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_key::SystemSlotKey;
-use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_label::SystemSlotLabel;
-use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_key::{
+    SystemSlotKey, SystemSlotKeyProps,
+};
+use crate::components::dialogs::system_hotkeys_dialog::components::system_slot_label::{
+    SystemSlotLabel, SystemSlotLabelProps,
+};
+use crate::components::dialogs::system_key_picker_dialog::{
+    SystemKeyPickerDialog, SystemKeyPickerDialogProps,
+};
 use dioxus::prelude::*;
 use hooks::use_slot_button;
 pub use props::SlotButtonProps;
@@ -18,33 +25,23 @@ assert_component!(SlotButton);
 #[component]
 pub fn SlotButton(props: SlotButtonProps) -> Element {
     let model = use_slot_button(&props);
+    let label = SystemSlotLabelProps::from(&model);
+    let key = SystemSlotKeyProps::from(&model);
+    let picker = SystemKeyPickerDialogProps::from(&model);
     let class = style::class(model.state);
-    let slot_label = props.slot_label.clone();
     rsx! {
         button {
             class,
             r#type: "button",
             tabindex: "0",
-            "data-compact": model
-                    .compact_attr,
+            "data-compact": model.compact_attr,
             "data-tooltip": model.conflict_title,
             onclick: model.on_click,
-            SystemSlotLabel { text: slot_label, compact: model.compact }
-            SystemSlotKey {
-                label: model.key_label,
-                compact: model.compact,
-                conflict: model.is_conflict,
-            }
+            SystemSlotLabel { ..label }
+            SystemSlotKey { ..key }
         }
         if model.is_editing {
-            SystemKeyPickerDialog {
-                title: "Pick a hotkey",
-                current_code: model.current_code,
-                conflicts: model.picker_conflicts,
-                open: true,
-                on_pick: model.on_pick,
-                on_close: model.on_close,
-            }
+            SystemKeyPickerDialog { ..picker }
         }
     }
 }

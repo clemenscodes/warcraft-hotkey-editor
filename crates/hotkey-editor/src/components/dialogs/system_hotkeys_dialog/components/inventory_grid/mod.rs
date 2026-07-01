@@ -5,18 +5,17 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use components::inventory_empty_slot::InventoryEmptySlot;
+use components::inventory_slot::InventorySlot;
 use dioxus::prelude::*;
 use hooks::use_inventory_grid;
 pub use inventory_cell::InventoryCell;
 pub use props::InventoryGridProps;
 use std::cell::Cell;
 use style::CLASS;
-use warcraft_database::SystemHotkeysCategory;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
-const INVENTORY_COLUMNS: usize = 2;
-const INVENTORY_ROWS: usize = 3;
+pub(super) const INVENTORY_COLUMNS: usize = 2;
+pub(super) const INVENTORY_ROWS: usize = 3;
 
 #[derive(Clone, Copy)]
 pub(super) struct DragOrigin {
@@ -77,43 +76,12 @@ assert_component!(InventoryGrid);
 #[component]
 pub fn InventoryGrid(props: InventoryGridProps) -> Element {
     let model = use_inventory_grid(&props);
-    let loaded_keys = props.loaded_keys;
-    let editing_section = props.editing_section;
-    let drag_follower = props.drag_follower;
-    let dragging_source = model.dragging_source;
-    let drop_target = model.drop_target;
-    let binding_map = model.binding_map;
-    let entries = SystemHotkeysCategory::Inventory.entries();
     rsx! {
-        div { class: CLASS, style: model.frame,
-            for row in 0..INVENTORY_ROWS {
-                for column in 0..INVENTORY_COLUMNS {
-                    {
-                        let slot_index = row * INVENTORY_COLUMNS + column;
-                        let entry_option = entries.get(slot_index).copied();
-                        match entry_option {
-                            Some(entry) => rsx! {
-                                InventoryCell {
-                                    slot_index,
-                                    section_id: entry.section_id()
-                                            .to_string(),
-                                    default_hotkey: entry.default_hotkey(),
-                                    default_modifier: entry
-                                            .default_modifier(),
-                                    loaded_keys,
-                                    editing_section,
-                                    dragging_source,
-                                    drop_target,
-                                    drag_follower,
-                                    binding_map,
-                                }
-                            },
-                            None => rsx! {
-                                InventoryEmptySlot {}
-                            },
-                        }
-                    }
-                }
+        div {
+            class: CLASS,
+            style: model.frame,
+            for slot in model.slots {
+                InventorySlot { ..slot }
             }
         }
     }

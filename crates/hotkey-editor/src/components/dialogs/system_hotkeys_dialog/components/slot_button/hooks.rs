@@ -9,6 +9,7 @@ use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
 /// (and the picker's inputs), and the click / pick / close handlers.
 pub(super) struct SlotButtonModel {
     pub(super) state: SlotButtonState,
+    pub(super) slot_label: String,
     pub(super) compact: bool,
     pub(super) compact_attr: &'static str,
     pub(super) key_label: String,
@@ -31,6 +32,7 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
     let lookup_id = props.section_id.clone();
+    let slot_label = props.slot_label.clone();
     let read_guard = loaded_keys.read();
     let effective = EffectiveBinding::resolve_from_file(
         read_guard.as_ref(),
@@ -88,6 +90,7 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
     SlotButtonModel {
         state,
+        slot_label,
         compact,
         compact_attr,
         key_label,

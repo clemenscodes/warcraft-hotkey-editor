@@ -1,10 +1,13 @@
 mod hooks;
+mod logic;
 mod props;
 mod state;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
+use crate::components::dialogs::system_key_picker_dialog::{
+    SystemKeyPickerDialog, SystemKeyPickerDialogProps,
+};
 use dioxus::prelude::*;
 use hooks::use_key_capture_cell;
 pub use props::KeyCaptureCellProps;
@@ -15,6 +18,7 @@ assert_component!(KeyCaptureCell);
 #[component]
 pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
     let model = use_key_capture_cell(&props);
+    let picker = SystemKeyPickerDialogProps::from(&model);
     let class = style::class(model.state);
     rsx! {
         button {
@@ -26,14 +30,7 @@ pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
             {model.key_label}
         }
         if model.is_editing {
-            SystemKeyPickerDialog {
-                title: "Pick a hotkey",
-                current_code: model.current_code,
-                conflicts: model.picker_conflicts,
-                open: true,
-                on_pick: model.on_pick,
-                on_close: model.on_close,
-            }
+            SystemKeyPickerDialog { ..picker }
         }
     }
 }

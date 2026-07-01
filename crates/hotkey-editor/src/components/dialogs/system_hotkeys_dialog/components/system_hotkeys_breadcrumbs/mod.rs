@@ -1,11 +1,16 @@
 pub mod components;
 mod hooks;
+mod logic;
 mod props;
 mod style;
 
 use crate::assert_component;
-use components::system_hotkeys_breadcrumbs_menu::SystemHotkeysBreadcrumbsMenu;
-use components::system_hotkeys_breadcrumbs_trigger::SystemHotkeysBreadcrumbsTrigger;
+use components::system_hotkeys_breadcrumbs_menu::{
+    SystemHotkeysBreadcrumbsMenu, SystemHotkeysBreadcrumbsMenuProps,
+};
+use components::system_hotkeys_breadcrumbs_trigger::{
+    SystemHotkeysBreadcrumbsTrigger, SystemHotkeysBreadcrumbsTriggerProps,
+};
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_breadcrumbs;
 pub use props::SystemHotkeysBreadcrumbsProps;
@@ -16,22 +21,15 @@ assert_component!(SystemHotkeysBreadcrumbs);
 /// small viewports.
 #[component]
 pub fn SystemHotkeysBreadcrumbs(props: SystemHotkeysBreadcrumbsProps) -> Element {
-    let active_category = props.active_category;
     let model = use_system_hotkeys_breadcrumbs(&props);
+    let trigger = SystemHotkeysBreadcrumbsTriggerProps::from(&model);
+    let menu = SystemHotkeysBreadcrumbsMenuProps::from(&model);
     rsx! {
-        nav { class: CLASS, aria_label: "System hotkeys categories",
-            SystemHotkeysBreadcrumbsTrigger {
-                label: model.trigger_label,
-                is_open: model
-                        .is_open,
-                open: model.open_attr,
-                on_toggle: model.on_toggle,
-            }
-            SystemHotkeysBreadcrumbsMenu {
-                active_category,
-                picker_open: model.open,
-                open: model.open_attr,
-            }
+        nav {
+            class: CLASS,
+            aria_label: "System hotkeys categories",
+            SystemHotkeysBreadcrumbsTrigger { ..trigger }
+            SystemHotkeysBreadcrumbsMenu { ..menu }
         }
     }
 }

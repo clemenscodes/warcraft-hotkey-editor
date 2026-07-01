@@ -1,10 +1,12 @@
 use super::props::SystemHotkeysBreadcrumbsProps;
 use dioxus::prelude::*;
+use warcraft_database::SystemHotkeysCategory;
 
 /// The breadcrumbs' shaped view: the active category, the dropdown open signal and
 /// its `"true"`/`"false"` attribute string, the trigger caption, and the toggle
 /// handler.
 pub(super) struct SystemHotkeysBreadcrumbsModel {
+    pub(super) active_category: Signal<SystemHotkeysCategory>,
     pub(super) open: Signal<bool>,
     pub(super) open_attr: &'static str,
     pub(super) is_open: bool,
@@ -26,6 +28,7 @@ pub(super) fn use_system_hotkeys_breadcrumbs(
         open.set(next);
     });
     SystemHotkeysBreadcrumbsModel {
+        active_category,
         open,
         open_attr,
         is_open,
