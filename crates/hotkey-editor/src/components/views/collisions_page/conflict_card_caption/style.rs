@@ -1,5 +1,10 @@
 use crate::classes;
-const BASE: &[&str] = &["text-[12px]","tracking-[0.08em]","uppercase","text-[#7b818d]"];
+const BASE: &[&str] = &[
+    "text-[12px]",
+    "tracking-[0.08em]",
+    "uppercase",
+    "text-[#7b818d]",
+];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];

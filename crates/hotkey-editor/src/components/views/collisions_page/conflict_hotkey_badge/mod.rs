@@ -7,6 +7,7 @@ use style::CLASS;
 assert_component!(ConflictHotkeyBadge);
 #[component]
 pub fn ConflictHotkeyBadge(props: ConflictHotkeyBadgeProps) -> Element {
+    let is_top = props.is_top;
     let children = props.children;
-    rsx! { span { class: CLASS, {children} } }
+    rsx! { span { class: CLASS, "data-top": is_top, {children} } }
 }

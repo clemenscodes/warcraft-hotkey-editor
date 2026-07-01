@@ -1,13 +1,11 @@
 use crate::classes;
 const BASE: &[&str] = &[
     "flex",
+    "flex-col",
     "items-center",
-    "gap-4",
-    "flex-none",
-    "pb-[0.85rem]",
-    "mb-[0.25rem]",
-    "border-b",
-    "border-b-[rgba(255,206,99,0.25)]",
+    "gap-[7px]",
+    "flex-[0_0_auto]",
+    "min-w-[112px]",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
