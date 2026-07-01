@@ -11,8 +11,20 @@ const BASE: &[&str] = &[
     "[scrollbar-width:thin]",
     "[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
+const MOBILE: &[&str] = &[
+    "mobile:grid-cols-[minmax(0,1fr)]",
+    "mobile:flex-none",
+    "mobile:min-h-[auto]",
+    "mobile:overflow-y-visible",
+    "mobile:p-[1rem_0]",
+];
+const TABLET: &[&str] = &[
+    "tablet:grid-cols-[minmax(0,1fr)]",
+    "tablet:flex-none",
+    "tablet:min-h-[auto]",
+    "tablet:overflow-y-visible",
+    "tablet:p-[1rem_0]",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

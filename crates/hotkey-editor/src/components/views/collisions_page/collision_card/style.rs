@@ -1,6 +1,7 @@
 use crate::classes;
 
 const BASE: &[&str] = &[
+    "group",
     "flex",
     "items-center",
     "gap-4",

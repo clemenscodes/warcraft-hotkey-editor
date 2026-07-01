@@ -1,4 +1,11 @@
+mod collision_breadcrumb;
+mod collision_breadcrumb_separator;
+mod collision_breadcrumbs;
 mod collision_card;
+mod collisions_clear_state;
+mod collisions_content;
+mod collisions_empty_state;
+mod collisions_shell;
 mod conflict_ability;
 mod conflict_ability_icon;
 mod conflict_ability_name;
@@ -8,10 +15,10 @@ mod conflict_card;
 mod conflict_card_caption;
 mod conflict_grid;
 mod conflict_hotkey_badge;
-mod conflict_position_cell;
 mod conflict_hotkey_key;
 mod conflict_object_id;
-mod detail;
+mod conflict_position_cell;
+mod hooks;
 mod hotkey_detail_unit;
 mod hotkey_unit_detail;
 mod hotkey_unit_name;
@@ -21,23 +28,26 @@ mod island_collision_count;
 mod island_coord;
 mod island_coord_group;
 mod island_coord_sep;
+mod island_detail;
 mod island_detail_header;
 mod island_mini_grid;
 mod island_row_meta;
 mod island_sidebar;
+mod props;
 mod unit_position_detail;
 mod unit_position_sidebar;
 
-use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use crate::model::icons::IconUrl;
-use crate::services::navigation::app_view::{AppView, CollisionKind};
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-pub use detail::IslandDetail;
+use collision_breadcrumbs::CollisionBreadcrumbs;
+use collisions_shell::CollisionsShell;
 use dioxus::prelude::*;
+use hooks::use_collisions_page;
 pub use hotkey_unit_detail::HotkeyUnitDetail;
 pub use hotkey_unit_sidebar::HotkeyUnitSidebar;
+pub use island_detail::IslandDetail;
 pub use island_mini_grid::IslandMiniGrid;
 pub use island_sidebar::IslandSidebar;
+pub use props::CollisionsPageProps;
 use std::collections::{HashMap, HashSet};
 pub use unit_position_detail::UnitPositionDetail;
 pub use unit_position_sidebar::UnitPositionSidebar;
@@ -627,348 +637,17 @@ impl UnitPositionPageModel {
     }
 }
 
-const CENTERED_STATE_CLASS: &str = "collisions-page flex flex-col items-center justify-center \
-    gap-[1.25rem] [flex:1_1_0] [min-height:0] text-center p-[2rem] text-warcraft-text-secondary";
-
-#[derive(Props, Clone, PartialEq)]
-struct CollisionBreadcrumbsProps {
-    kind: CollisionKind,
-    position_count: usize,
-    unit_position_count: usize,
-    hotkey_count: usize,
-    view_navigation: ViewNavigationContext,
-}
-
-#[derive(Props, Clone, PartialEq)]
-struct CollisionBreadcrumbProps {
-    label: &'static str,
-    count: usize,
-    target_kind: CollisionKind,
-    data_breadcrumb: &'static str,
-    active: bool,
-    view_navigation: ViewNavigationContext,
-}
-
-/// A single breadcrumb tab: a label with its live collision count that, when
-/// clicked, navigates the collisions view to its kind. Highlighted when active.
-#[component]
-fn CollisionBreadcrumb(props: CollisionBreadcrumbProps) -> Element {
-    let label = props.label;
-    let count = props.count;
-    let target_kind = props.target_kind;
-    let data_breadcrumb = props.data_breadcrumb;
-    let active = props.active;
-    let view_navigation = props.view_navigation;
-    let class_name = if active {
-        "collision-breadcrumb active"
-    } else {
-        "collision-breadcrumb"
-    };
-    let aria_current = if active { "page" } else { "false" };
-    let go_to_kind = move |_| {
-        let target = AppView::Collisions { kind: target_kind };
-        view_navigation.apply(target);
-    };
-    rsx! {
-        button {
-            class: class_name,
-            r#type: "button",
-            "aria-current": aria_current,
-            "data-breadcrumb": data_breadcrumb,
-            onclick: go_to_kind,
-            span { class: "collision-breadcrumb-label", "{label}" }
-            span { class: "collision-breadcrumb-count", "{count}" }
-        }
-    }
-}
-
-/// The breadcrumb bar under the header: one tab per collision kind — cross-unit
-/// position, per-unit position, and hotkey — each with its live collision count
-/// (counted the same way as the header badge, so the three sum to its total).
-/// Clicking a tab swaps the view below.
-#[component]
-fn CollisionBreadcrumbs(props: CollisionBreadcrumbsProps) -> Element {
-    let kind = props.kind;
-    let position_count = props.position_count;
-    let unit_position_count = props.unit_position_count;
-    let hotkey_count = props.hotkey_count;
-    let view_navigation = props.view_navigation;
-    let positions_active = matches!(kind, CollisionKind::Positions);
-    let unit_positions_active = matches!(kind, CollisionKind::UnitPositions);
-    let hotkeys_active = matches!(kind, CollisionKind::Hotkeys);
-    rsx! {
-        nav {
-            class: "collision-breadcrumbs",
-            aria_label: "Collision categories",
-            CollisionBreadcrumb {
-                label: "Cross Collisions",
-                count: position_count,
-                target_kind: CollisionKind::Positions,
-                data_breadcrumb: "positions",
-                active: positions_active,
-                view_navigation,
-            }
-            span { class: "collision-breadcrumb-separator", aria_hidden: "true", "|" }
-            CollisionBreadcrumb {
-                label: "Intra Collisions",
-                count: unit_position_count,
-                target_kind: CollisionKind::UnitPositions,
-                data_breadcrumb: "unit-positions",
-                active: unit_positions_active,
-                view_navigation,
-            }
-            span { class: "collision-breadcrumb-separator", aria_hidden: "true", "|" }
-            CollisionBreadcrumb {
-                label: "Hotkey Collisions",
-                count: hotkey_count,
-                target_kind: CollisionKind::Hotkeys,
-                data_breadcrumb: "hotkeys",
-                active: hotkeys_active,
-                view_navigation,
-            }
-        }
-    }
-}
-
-#[derive(Props, Clone, PartialEq)]
-pub struct CollisionsPageProps {
-    pub kind: CollisionKind,
-    pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub grid_layout: Signal<GridLayout>,
-    /// Selection signals live in `app.rs` so they survive leaving the page (a
-    /// unit click → editor) and ride in the `?entry=` URL param. One per kind,
-    /// for per-tab memory.
-    pub selected_island: Signal<Option<String>>,
-    pub selected_hotkey_unit: Signal<Option<String>>,
-    pub selected_unit_position: Signal<Option<String>>,
-}
-
-/// Top-level Collisions page. `Positions` renders an island sidebar (each
-/// island a mini command grid with its conflicting button flagged) and a detail
-/// pane listing every cross-unit conflict. `Hotkeys` renders a sidebar of units
-/// whose command cards share a hotkey letter and a detail pane of those clashes.
+/// Top-level Collisions page. Each kind renders a sidebar (islands, hotkey units,
+/// or per-unit positions) beside a detail pane, under a breadcrumb bar that swaps
+/// the active kind. Empty and all-clear states replace the two-pane content when
+/// there is no file or no conflicts.
 #[component]
 pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
-    let kind = props.kind;
-    let loaded_keys = props.loaded_keys;
-    let grid_layout = props.grid_layout;
-    let view_navigation = use_context::<ViewNavigationContext>();
-    let islands_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
-        CollisionPageModel::compute(custom_keys)
-    });
-    let hotkey_units_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
-        let layout = *grid_layout.read();
-        HotkeyCollisionPageModel::compute(custom_keys, layout)
-    });
-    let unit_positions_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
-        let layout = *grid_layout.read();
-        UnitPositionPageModel::compute(custom_keys, layout)
-    });
-    let mut selected_island = props.selected_island;
-    let mut selected_hotkey_unit = props.selected_hotkey_unit;
-    let mut selected_unit_position = props.selected_unit_position;
-    use_effect(move || {
-        let islands = islands_memo.read();
-        if islands.is_empty() {
-            return;
-        }
-        let current = selected_island.read().clone();
-        let still_valid = match current {
-            Some(ref key) => islands.iter().any(|island| island.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = islands.first().map(|island| island.key().to_owned());
-            if let Some(key) = first_key {
-                selected_island.set(Some(key));
-            }
-        }
-    });
-    use_effect(move || {
-        let hotkey_units = hotkey_units_memo.read();
-        if hotkey_units.is_empty() {
-            return;
-        }
-        let current = selected_hotkey_unit.read().clone();
-        let still_valid = match current {
-            Some(ref key) => hotkey_units.iter().any(|unit| unit.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = hotkey_units.first().map(|unit| unit.key().to_owned());
-            if let Some(key) = first_key {
-                selected_hotkey_unit.set(Some(key));
-            }
-        }
-    });
-    use_effect(move || {
-        let unit_positions = unit_positions_memo.read();
-        if unit_positions.is_empty() {
-            return;
-        }
-        let current = selected_unit_position.read().clone();
-        let still_valid = match current {
-            Some(ref key) => unit_positions.iter().any(|unit| unit.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = unit_positions.first().map(|unit| unit.key().to_owned());
-            if let Some(key) = first_key {
-                selected_unit_position.set(Some(key));
-            }
-        }
-    });
-    let islands = islands_memo();
-    let island_count = islands.len();
-    let has_file = loaded_keys.read().is_some();
-    let sidebar_islands = islands.clone();
-    let hotkey_units = hotkey_units_memo();
-    let hotkey_unit_count = hotkey_units.len();
-    let hotkey_collision_count = hotkey_units
-        .iter()
-        .map(|unit_view| unit_view.collision_count())
-        .sum::<usize>();
-    let sidebar_hotkey_units = hotkey_units.clone();
-    let unit_positions = unit_positions_memo();
-    let unit_position_unit_count = unit_positions.len();
-    let unit_position_collision_count = unit_positions
-        .iter()
-        .map(|unit_view| unit_view.collision_count())
-        .sum::<usize>();
-    let sidebar_unit_positions = unit_positions.clone();
+    let model = use_collisions_page(&props);
     rsx! {
-        div { class: "collisions-shell",
-            CollisionBreadcrumbs {
-                kind,
-                position_count: island_count,
-                unit_position_count: unit_position_collision_count,
-                hotkey_count: hotkey_collision_count,
-                view_navigation,
-            }
-            match kind {
-                CollisionKind::Hotkeys => rsx! {
-                    if !has_file {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "hotkeys",
-                            "data-unit-count": "0",
-                            p { class: "m-0", "Upload your CustomKeys.txt to inspect hotkey collisions." }
-                        }
-                    } else if hotkey_unit_count == 0 {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "hotkeys",
-                            "data-unit-count": "0",
-                            span {
-                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                                aria_hidden: "true",
-                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
-                            }
-                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                                "All clear."
-                            }
-                        }
-                    } else {
-                        div {
-                            class: "main-content collisions-content collisions-page",
-                            "data-collision-kind": "hotkeys",
-                            "data-unit-count": "{hotkey_unit_count}",
-                            HotkeyUnitSidebar { units: sidebar_hotkey_units, selected_unit: selected_hotkey_unit }
-                            HotkeyUnitDetail {
-                                units: hotkey_units,
-                                selected_unit: selected_hotkey_unit,
-                                view_navigation,
-                            }
-                        }
-                    }
-                },
-                CollisionKind::UnitPositions => rsx! {
-                    if !has_file {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "unit-positions",
-                            "data-unit-count": "0",
-                            p { class: "m-0", "Upload your CustomKeys.txt to inspect unit position collisions." }
-                        }
-                    } else if unit_position_unit_count == 0 {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "unit-positions",
-                            "data-unit-count": "0",
-                            span {
-                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                                aria_hidden: "true",
-                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
-                            }
-                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                                "All clear."
-                            }
-                        }
-                    } else {
-                        div {
-                            class: "main-content collisions-content collisions-page",
-                            "data-collision-kind": "unit-positions",
-                            "data-unit-count": "{unit_position_unit_count}",
-                            UnitPositionSidebar {
-                                units: sidebar_unit_positions,
-                                selected_unit: selected_unit_position,
-                            }
-                            UnitPositionDetail {
-                                units: unit_positions,
-                                selected_unit: selected_unit_position,
-                                view_navigation,
-                            }
-                        }
-                    }
-                },
-                CollisionKind::Positions => rsx! {
-                    if !has_file {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "positions",
-                            "data-island-count": "0",
-                            p { class: "m-0", "Upload your CustomKeys.txt to inspect position collisions." }
-                        }
-                    } else if island_count == 0 {
-                        section {
-                            class: CENTERED_STATE_CLASS,
-                            "data-collision-kind": "positions",
-                            "data-island-count": "0",
-                            span {
-                                class: "inline-flex w-[3.5rem] h-[3.5rem] text-warcraft-gold \
-                                                        [&_svg]:w-full [&_svg]:h-full [filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
-                                aria_hidden: "true",
-                                dangerous_inner_html: ICON_COLLISIONS_CLEAR,
-                            }
-                            p { class: "m-0 font-friz-quadrata uppercase tracking-[0.12em] text-warcraft-gold [text-shadow:1px_1px_0_#000]",
-                                "All clear."
-                            }
-                        }
-                    } else {
-                        div {
-                            class: "main-content collisions-content collisions-page",
-                            "data-collision-kind": "positions",
-                            "data-island-count": "{island_count}",
-                            IslandSidebar { islands: sidebar_islands, selected_island }
-                            IslandDetail { islands, selected_island, view_navigation }
-                        }
-                    }
-                },
-            }
+        CollisionsShell {
+            CollisionBreadcrumbs { ..model.breadcrumbs }
+            {model.content}
         }
     }
 }

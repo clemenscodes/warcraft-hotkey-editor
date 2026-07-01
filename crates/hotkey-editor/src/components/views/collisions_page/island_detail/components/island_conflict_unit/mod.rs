@@ -3,9 +3,9 @@ mod props;
 mod style;
 
 use super::super::super::conflict_object_id::ConflictObjectId;
+use crate::assert_component;
 use components::conflict_unit_icon::{ConflictUnitIcon, ConflictUnitIconProps};
 use components::conflict_unit_name::ConflictUnitName;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::IslandConflictUnitProps;
 use style::CLASS;

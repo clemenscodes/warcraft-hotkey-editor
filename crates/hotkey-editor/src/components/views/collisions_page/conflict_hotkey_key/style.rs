@@ -17,8 +17,20 @@ const BASE: &[&str] = &[
     "rounded-[8px]",
     "[text-shadow:1px_1px_0_#000]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
+const MOBILE: &[&str] = &[
+    "mobile:w-[56px]",
+    "mobile:min-w-0",
+    "mobile:h-[56px]",
+    "mobile:p-0",
+    "mobile:text-[30px]",
+];
+const TABLET: &[&str] = &[
+    "tablet:w-[56px]",
+    "tablet:min-w-0",
+    "tablet:h-[56px]",
+    "tablet:p-0",
+    "tablet:text-[30px]",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

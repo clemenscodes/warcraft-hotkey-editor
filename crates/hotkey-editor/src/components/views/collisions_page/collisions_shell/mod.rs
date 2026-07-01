@@ -1,0 +1,15 @@
+mod props;
+mod style;
+use crate::assert_component;
+use dioxus::prelude::*;
+pub use props::CollisionsShellProps;
+use style::CLASS;
+assert_component!(CollisionsShell);
+
+/// The collisions page shell: a breadcrumb bar above the two-pane content, filling
+/// the view height so the content pane keeps its own scroll.
+#[component]
+pub fn CollisionsShell(props: CollisionsShellProps) -> Element {
+    let children = props.children;
+    rsx! { div { class: CLASS, {children} } }
+}

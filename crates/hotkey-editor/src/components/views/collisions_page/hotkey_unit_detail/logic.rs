@@ -1,5 +1,5 @@
-use super::components::hotkey_conflict_card::HotkeyConflictCardProps;
 use super::super::hotkey_detail_unit::HotkeyDetailUnitProps;
+use super::components::hotkey_conflict_card::HotkeyConflictCardProps;
 use super::props::HotkeyUnitDetailProps;
 use dioxus::prelude::*;
 

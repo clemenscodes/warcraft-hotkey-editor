@@ -378,7 +378,6 @@ body[data-kb-modality] .dx-toast-container .dx-toast:focus {
 }
 
 @import "./styles/app-root.css" layer(components);
-@import "./src/components/views/collisions_page/collisions_page.css";
 @import "./src/components/views/resolve_page.css";
 @import "./styles/mobile-foundation.css" layer(mobile);
 

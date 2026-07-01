@@ -5,13 +5,13 @@ mod style;
 
 use super::conflict_grid::ConflictGrid;
 use super::conflict_object_id::ConflictObjectId;
+use super::hotkey_detail_unit::HotkeyDetailUnit;
 use super::island_collision_count::IslandCollisionCount;
 use super::island_coord::IslandCoord;
 use super::island_detail_header::IslandDetailHeader;
 use super::island_row_meta::IslandRowMeta;
-use components::hotkey_conflict_card::HotkeyConflictCard;
-use super::hotkey_detail_unit::HotkeyDetailUnit;
 use crate::assert_component;
+use components::hotkey_conflict_card::HotkeyConflictCard;
 use dioxus::prelude::*;
 use logic::selected;
 pub use props::HotkeyUnitDetailProps;

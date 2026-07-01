@@ -631,3 +631,10 @@
     }
 }
 }
+
+/* Collapse the header→content gap on the collisions view so the breadcrumb bar
+   sits flush under the header divider. Rehomed here from the (now purged)
+   collisions_page.css; folds into the .app shell when the globals convert. */
+.app:has(.collisions-shell) {
+    gap: 0;
+}
