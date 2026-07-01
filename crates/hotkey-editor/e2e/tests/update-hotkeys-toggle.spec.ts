@@ -37,7 +37,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".filled-tile").first().click();
     await page.locator(".override-key-cell").waitFor();
     await page.locator(".override-key-cell").click();
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-key[data-label="Q"]').click();
     await expect(page.locator(".override-key-cell")).toContainText("Q");
 
@@ -45,7 +45,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
     await page.locator(".layout-editor-content").waitFor();
     await page.locator('input[aria-label="Update hotkeys when moving abilities"]').uncheck();
-    await page.locator(".dialog-panel [aria-label='Close']").click().catch(() => {});
+    await page.locator(".dialog [aria-label='Close']").click().catch(() => {});
     await page.keyboard.press("Escape");
     await expect(page.locator(".layout-editor-content")).toHaveCount(0);
 

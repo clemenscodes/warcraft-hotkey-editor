@@ -4,21 +4,23 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::DialogRoot;
+use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 
 use crate::assert_component;
-use components::dialog_panel::{DialogPanel, DialogPanelProps};
+use components::dialog_body::{DialogBody, DialogBodyProps};
+use components::dialog_footer::{DialogFooter, DialogFooterProps};
+use components::dialog_header::{DialogHeader, DialogHeaderProps};
 use hooks::use_body_scroll_lock;
 use props::DialogChrome;
-use style::CLASS;
+use style::{CLASS, OVERLAY};
 
 pub use props::DialogProps;
 
 assert_component!(Dialog);
 
-/// The dialog backdrop. Owns `.dialog`, locks body scroll while open, and hands
-/// the panel everything below. Every concrete dialog is a component that composes
-/// this with its open signal, title, and body.
+/// The one dialog: a dimmed backdrop centring a bordered box that holds a header,
+/// a scrolling body, and an optional footer. Every concrete dialog composes this
+/// with its open signal, title, and body — there is no other dialog shell.
 #[component]
 pub fn Dialog(props: DialogProps) -> Element {
     use_body_scroll_lock(props.open);
@@ -26,13 +28,20 @@ pub fn Dialog(props: DialogProps) -> Element {
         open,
         on_open_change,
     } = DialogChrome::from(&props);
-    let panel = DialogPanelProps::from(&props);
+    let header = DialogHeaderProps::from(&props);
+    let body = DialogBodyProps::from(&props);
+    let footer = DialogFooterProps::from(&props);
     rsx! {
         DialogRoot {
-            class: CLASS,
+            class: OVERLAY,
             open,
             on_open_change,
-            DialogPanel { ..panel }
+            DialogContent {
+                class: CLASS.to_library_class(),
+                DialogHeader { ..header }
+                DialogBody { ..body }
+                DialogFooter { ..footer }
+            }
         }
     }
 }

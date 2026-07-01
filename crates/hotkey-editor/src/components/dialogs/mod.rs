@@ -1,9 +1,10 @@
 pub mod dialog;
-pub mod dialog_header;
-pub mod dialog_stack;
 pub mod download_info_dialog;
 pub mod help_dialog;
+pub mod key_picker;
 pub mod layout_editor;
 pub mod preview_dialog;
+pub mod system_hotkeys_dialog;
+pub mod system_key_picker_dialog;
 pub mod templates_dialog;
 pub mod upload_info_dialog;

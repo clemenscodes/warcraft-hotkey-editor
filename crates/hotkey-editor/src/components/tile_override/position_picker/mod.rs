@@ -9,9 +9,7 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::CustomKeys;
 
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
-
-use crate::components::dialogs::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog::Dialog;
 use crate::components::grid_editors::command_grid_editor::CommandGridEditor;
 use crate::components::grid_editors::grid_editor::GridEditorConfig;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
@@ -41,7 +39,7 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let dragging_slot = props.dragging_slot;
     let drop_target_tile = props.drop_target_tile;
     let drag_follower = props.drag_follower;
-    let mut alt_position_picker_open = props.alt_position_picker_open;
+    let alt_position_picker_open = props.alt_position_picker_open;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(|| Some(GridSlotId::ability_off(object_id)));
     let picker_selected_research = use_signal::<bool>(|| false);
@@ -70,25 +68,16 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
         restrict_draggable_to: restrict_draggable,
         host_unit_id: String::new(),
     };
-    let handle_open_change = move |is_open| alt_position_picker_open.set(is_open);
-    let handle_close = move |_| alt_position_picker_open.set(false);
     rsx! {
-        DialogRoot {
-            class: "dialog-overlay",
-            open: alt_position_picker_open(),
-            on_open_change: handle_open_change,
-            DialogContent { class: "dialog-shell wc3-dialog alt-position-picker-shell".to_string(),
-                DialogHeader {
-                    title: dialog_title,
-                    on_close: handle_close,
+        Dialog {
+            open: alt_position_picker_open,
+            title: dialog_title,
+            div { class: "alt-position-picker-body",
+                p { class: "alt-position-picker-explainer",
+                    "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
                 }
-                div { class: "wc3-dialog-body alt-position-picker-body",
-                    p { class: "alt-position-picker-explainer",
-                        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact."
-                    }
-                    div { class: "alt-position-picker-grid-anchor",
-                        CommandGridEditor { ..grid_props }
-                    }
+                div { class: "alt-position-picker-grid-anchor",
+                    CommandGridEditor { ..grid_props }
                 }
             }
         }

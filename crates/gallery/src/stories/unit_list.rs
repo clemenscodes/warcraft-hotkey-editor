@@ -2,13 +2,13 @@ use std::collections::HashSet;
 
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::IconUrl;
 use hotkey_editor::components::unit_list::UnitListPanel;
 use hotkey_editor::components::unit_list::category::UnitCategorySection;
 use hotkey_editor::components::unit_list::mobile_category_tab::MobileCategoryTab;
 use hotkey_editor::components::unit_list::unit_card::UnitCard;
 use hotkey_editor::components::unit_list::unit_card::icon::UnitCardIcon;
 use hotkey_editor::components::unit_list::unit_card::info::UnitCardInfo;
+use hotkey_editor::model::icons::IconUrl;
 use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};
 use warcraft_database::{CatalogVisibility, ObjectLookup, SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;

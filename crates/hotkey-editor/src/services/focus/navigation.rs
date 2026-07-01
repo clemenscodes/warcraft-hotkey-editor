@@ -13,10 +13,15 @@ impl FocusedElementInfo {
         let is_inside_grid_panel = classes.contains("filled-tile")
             || classes.contains("override-key-cell")
             || classes.contains("tile-override-tier-button");
+        // The system hotkeys dialog shares the base `.dialog` shell with every
+        // other dialog, so it is identified by content it alone carries: a
+        // `.system-key-cell`. The focused element is inside it when its nearest
+        // enclosing dialog holds one.
         let is_inside_system_dialog = active_element
-            .closest(".system-hotkeys-dialog")
+            .closest(".dialog")
             .ok()
             .flatten()
+            .and_then(|dialog| dialog.query_selector(".system-key-cell").ok().flatten())
             .is_some();
         let info = Self {
             classes,
@@ -66,11 +71,7 @@ impl FocusNavigation {
     }
 
     pub(crate) fn cycle_inside_system_dialog(reverse: bool) {
-        Self::cycle_within_container(
-            ".system-hotkeys-dialog",
-            ".close-button, .system-key-cell",
-            reverse,
-        );
+        Self::cycle_within_container(".dialog", ".dialog-close, .system-key-cell", reverse);
     }
 
     fn cycle_within_container(container_selector: &str, focusable_selectors: &str, reverse: bool) {

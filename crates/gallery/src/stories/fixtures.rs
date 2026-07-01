@@ -1,4 +1,4 @@
-use hotkey_editor::IconUrl;
+use hotkey_editor::model::icons::IconUrl;
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CustomKeys, GridLayout};
 

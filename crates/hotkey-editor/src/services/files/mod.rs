@@ -1,2 +1,2 @@
-pub(crate) mod download;
-pub(crate) mod upload;
+pub mod download;
+pub mod upload;

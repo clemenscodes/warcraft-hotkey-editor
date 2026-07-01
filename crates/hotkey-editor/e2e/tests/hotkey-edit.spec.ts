@@ -15,14 +15,14 @@ test.describe("Hotkey editing", () => {
 
   test("clicking the key cell opens the key picker", async ({ page }) => {
     await page.locator(".override-key-cell").click();
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
   });
 
   test("picking a key updates the cell display and writes hotkey=Q to localStorage", async ({ page }) => {
     await page.locator(".override-key-cell").click();
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-key[data-label="Q"]').click();
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("hotkey=Q");
@@ -31,9 +31,9 @@ test.describe("Hotkey editing", () => {
   test("Escape while picker is open cancels without changing localStorage", async ({ page }) => {
     const storedBefore = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     await page.locator(".override-key-cell").click();
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
     await page.keyboard.press("Escape");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     const storedAfter = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(storedAfter).toBe(storedBefore);
   });
@@ -55,9 +55,9 @@ test.describe("Hotkey editing", () => {
     await researchTile.dblclick();
 
     // The picker must open (it did not, for research items, before the fix).
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-key[data-label="Y"]').click();
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
 
     // It must write the RESEARCH hotkey field, proving the research picker opened
     // (not the primary Hotkey field).
@@ -69,9 +69,9 @@ test.describe("Hotkey editing", () => {
     // Reuses Q (proven pickable on this exact target by the click-based test
     // above) so the assertion exercises the double-click path, not fixture luck.
     await page.locator(".filled-tile").first().dblclick();
-    await page.locator(".key-picker-shell").waitFor();
+    await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-key[data-label="Q"]').click();
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("hotkey=Q");

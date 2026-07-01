@@ -1,1 +1,1 @@
-pub(crate) mod local_storage;
+pub mod local_storage;

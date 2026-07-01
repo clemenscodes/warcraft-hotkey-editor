@@ -12,7 +12,7 @@ use hotkey_editor::components::tile_override::upgrade_tier::UpgradeTierSelector;
 use hotkey_editor::components::tile_override::{
     AltPositionPicker, TileOverridePanel, UpgradePositionPicker,
 };
-use hotkey_editor::{DragFollower, DraggingSlot, DropTargetTile};
+use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitCommandSlots};

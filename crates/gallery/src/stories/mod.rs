@@ -4,7 +4,6 @@ mod buttons;
 mod dialogs;
 pub mod fixtures;
 mod grid;
-mod shared;
 mod shell;
 mod system_hotkeys;
 mod tabs;
@@ -20,7 +19,6 @@ pub fn registry() -> StoryRegistry {
     stories.extend(buttons::stories());
     stories.extend(grid::stories());
     stories.extend(dialogs::stories());
-    stories.extend(shared::stories());
     stories.extend(shell::stories());
     stories.extend(system_hotkeys::stories());
     stories.extend(tabs::stories());

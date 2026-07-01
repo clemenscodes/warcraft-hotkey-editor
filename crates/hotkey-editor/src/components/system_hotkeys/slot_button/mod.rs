@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, KeyCode};
 
-use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use warcraft_keybinds::EffectiveBinding;
 use warcraft_keybinds::SystemBindingMap;
 

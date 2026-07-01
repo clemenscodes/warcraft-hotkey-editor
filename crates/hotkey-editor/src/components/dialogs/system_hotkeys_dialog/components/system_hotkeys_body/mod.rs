@@ -1,0 +1,47 @@
+mod props;
+
+use dioxus::prelude::*;
+use warcraft_database::SystemHotkeysCategory;
+
+use crate::assert_component;
+use crate::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
+use crate::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
+use crate::components::system_hotkeys::inventory::InventoryHotkeysView;
+use crate::components::system_hotkeys::list_view::SystemHotkeysListView;
+
+pub use props::SystemHotkeysBodyProps;
+
+assert_component!(SystemHotkeysBody);
+
+/// Renders the editor for the active category. Inventory, hero selection, and
+/// control groups have bespoke editors; every other category is a plain list of
+/// key rows. A pure selector: it holds no class and picks one child to render.
+#[component]
+pub fn SystemHotkeysBody(props: SystemHotkeysBodyProps) -> Element {
+    let loaded_keys = props.loaded_keys;
+    let editing_section = props.editing_section;
+    let drag_follower = props.drag_follower;
+    let active = *props.active_category.read();
+    match active {
+        SystemHotkeysCategory::Inventory => rsx! {
+            InventoryHotkeysView {
+                loaded_keys,
+                editing_section,
+                drag_follower,
+            }
+        },
+        SystemHotkeysCategory::HeroSelection => rsx! {
+            HeroSelectionHotkeysView { loaded_keys, editing_section }
+        },
+        SystemHotkeysCategory::ControlGroups => rsx! {
+            ControlGroupsHotkeysView { loaded_keys, editing_section }
+        },
+        other_category => rsx! {
+            SystemHotkeysListView {
+                category: other_category,
+                loaded_keys,
+                editing_section,
+            }
+        },
+    }
+}

@@ -6,7 +6,7 @@ mod props;
 use dioxus::prelude::*;
 
 use crate::assert_component;
-use crate::components::shared::key_picker::KeyPicker;
+use crate::components::dialogs::key_picker::KeyPicker;
 use components::apply_button::ApplyButton;
 use components::layout_editor_content::LayoutEditorContent;
 use components::layout_grid::LayoutGrid;
@@ -35,7 +35,6 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
         Dialog {
             open,
             title: "Global Hotkey Layout",
-            on_open_change: Some(model.on_open_change),
             footer: Some(rsx! {
                 ApplyButton { on_apply: model.on_apply }
             }),

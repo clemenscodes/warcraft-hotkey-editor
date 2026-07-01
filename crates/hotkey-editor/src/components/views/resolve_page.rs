@@ -1,13 +1,12 @@
 use std::collections::{HashMap, HashSet};
 
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use gloo_timers::future::TimeoutFuture;
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
 
-use crate::components::dialogs::dialog_header::DialogHeader;
+use crate::components::dialogs::dialog::Dialog;
 use crate::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use crate::model::icons::IconUrl;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
@@ -661,47 +660,41 @@ fn CarriersDialog(props: CarriersDialogProps) -> Element {
     let mut carriers_dialog = props.carriers_dialog;
     let view_navigation = props.view_navigation;
     let title = dialog_data.ability_name.clone();
-    let handle_open_change = move |is_open: bool| {
-        if !is_open {
+    let open = use_signal(|| true);
+    use_effect(move || {
+        if !open() {
             carriers_dialog.set(None);
         }
-    };
-    let handle_close = move |_| carriers_dialog.set(None);
+    });
 
     rsx! {
-        DialogRoot {
-            class: "dialog-overlay",
-            open: true,
-            on_open_change: handle_open_change,
-            DialogContent { class: "dialog-shell wc3-dialog carriers-dialog".to_string(),
-                DialogHeader { title, on_close: handle_close }
-                div { class: "wc3-dialog-body carriers-dialog-body",
-                    div { class: "carriers-grid",
-                        for (carrier_index, carrier) in dialog_data.carriers.iter().enumerate() {
-                            {
-                                let carrier_id = carrier.unit_id.clone();
-                                let carrier_id_label = carrier_id.clone();
-                                let carrier_name = carrier.name.clone();
-                                let carrier_icon = carrier.icon_url.clone();
-                                rsx! {
-                                    button {
-                                        key: "carrier-{carrier_index}",
-                                        class: "carrier-card",
-                                        r#type: "button",
-                                        onclick: move |_| view_navigation.open_unit(&carrier_id),
-                                        if let Some(url) = carrier_icon {
-                                            img {
-                                                class: "carrier-card-icon",
-                                                src: "{url}",
-                                                alt: "{carrier_name}",
-                                                loading: "lazy",
-                                                decoding: "async",
-                                            }
-                                        }
-                                        span { class: "carrier-card-name", "{carrier_name}" }
-                                        code { class: "conflict-object-id", "{carrier_id_label}" }
+        Dialog {
+            open,
+            title,
+            div { class: "carriers-grid",
+                for (carrier_index, carrier) in dialog_data.carriers.iter().enumerate() {
+                    {
+                        let carrier_id = carrier.unit_id.clone();
+                        let carrier_id_label = carrier_id.clone();
+                        let carrier_name = carrier.name.clone();
+                        let carrier_icon = carrier.icon_url.clone();
+                        rsx! {
+                            button {
+                                key: "carrier-{carrier_index}",
+                                class: "carrier-card",
+                                r#type: "button",
+                                onclick: move |_| view_navigation.open_unit(&carrier_id),
+                                if let Some(url) = carrier_icon {
+                                    img {
+                                        class: "carrier-card-icon",
+                                        src: "{url}",
+                                        alt: "{carrier_name}",
+                                        loading: "lazy",
+                                        decoding: "async",
                                     }
                                 }
+                                span { class: "carrier-card-name", "{carrier_name}" }
+                                code { class: "conflict-object-id", "{carrier_id_label}" }
                             }
                         }
                     }

@@ -7,7 +7,11 @@ use hotkey_editor::components::shell::header::components::header_brand::HeaderBr
 use hotkey_editor::components::shell::header::components::header_toolbar::HeaderToolbar;
 use hotkey_editor::components::shell::toasts::ToastMount;
 use hotkey_editor::components::shell::tooltips::TooltipMount;
-use hotkey_editor::{AppView, OverlayState, UndoHistory, UploadStatus, ViewNavigationContext};
+use hotkey_editor::services::customkeys::upload_status::UploadStatus;
+use hotkey_editor::services::navigation::app_view::AppView;
+use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
+use hotkey_editor::services::overlay_state::OverlayState;
+use hotkey_editor::services::undo::UndoHistory;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 

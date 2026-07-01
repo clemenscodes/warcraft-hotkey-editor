@@ -8,7 +8,7 @@ use warcraft_api::SystemKeybindModifier;
 use warcraft_keybinds::{CustomKeys, KeyCode};
 use wasm_bindgen::JsCast;
 
-use crate::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
+use crate::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use crate::model::grid::{CursorPoint, HitTestPoint};
 use warcraft_keybinds::EffectiveBinding;
 use warcraft_keybinds::SystemBindingMap;

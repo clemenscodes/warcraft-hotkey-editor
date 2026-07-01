@@ -4,8 +4,7 @@ use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, HotkeyToken, RowIndex,
 };
 
-use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
-use crate::components::shared::key_picker::{KeyPickerCell, KeyPickerCellState};
+use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::services::customkeys::positions::Positions;
 
 use super::components::layout_grid::components::layout_cell::{LayoutCellProps, LayoutCellState};
@@ -24,7 +23,6 @@ pub(super) struct LayoutEditorModel {
     pub(super) on_apply: EventHandler<MouseEvent>,
     pub(super) toggle_checked: bool,
     pub(super) on_toggle: EventHandler<FormEvent>,
-    pub(super) on_open_change: Callback<bool>,
 }
 
 /// Composes the layout editor's state and behavior. Builds the twelve grid cells
@@ -188,13 +186,6 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         let current = *update_hotkeys_on_move.read();
         update_hotkeys_on_move.set(!current);
     });
-    let on_open_change = Callback::new(move |is_open: bool| {
-        if !is_open && nested_picker_dialog_is_present() {
-            return;
-        }
-        layout_dialog_open.set(is_open);
-    });
-
     LayoutEditorModel {
         cells,
         picker_open,
@@ -204,6 +195,5 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         on_apply,
         toggle_checked,
         on_toggle,
-        on_open_change,
     }
 }

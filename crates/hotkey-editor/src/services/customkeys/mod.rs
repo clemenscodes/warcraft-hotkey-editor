@@ -1,4 +1,4 @@
-pub(crate) mod hotkey_override;
-pub(crate) mod persistence;
-pub(crate) mod positions;
-pub(crate) mod upload_status;
+pub mod hotkey_override;
+pub mod persistence;
+pub mod positions;
+pub mod upload_status;

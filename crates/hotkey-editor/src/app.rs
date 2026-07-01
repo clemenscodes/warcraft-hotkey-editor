@@ -4,16 +4,15 @@ use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_keybinds::CustomKeys;
 
-use crate::components::dialogs::dialog_stack::nested_picker_dialog_is_present;
 use crate::components::dialogs::help_dialog::HelpDialog;
 use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
+use crate::components::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
 use crate::components::dialogs::templates_dialog::TemplatesDialog;
 use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
 use crate::components::shell::tooltips::TooltipMount;
-use crate::components::system_hotkeys::dialog::SystemHotkeysDialog;
 use crate::components::tabs::mode_and_race_tabs::ModeAndRaceTabs;
 use crate::components::unit_detail::UnitDetailPanel;
 use crate::components::unit_list::UnitListPanel;
@@ -405,11 +404,6 @@ pub fn App() -> Element {
             dragging_slot.set(None);
             drop_target_tile.set(None);
             drag_follower.set(None);
-            return;
-        }
-
-        if nested_picker_dialog_is_present() {
-            event.prevent_default();
             return;
         }
 

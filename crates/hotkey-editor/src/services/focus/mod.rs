@@ -1,2 +1,2 @@
-pub(crate) mod modality;
-pub(crate) mod navigation;
+pub mod modality;
+pub mod navigation;

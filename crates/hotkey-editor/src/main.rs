@@ -1,4 +1,4 @@
-use hotkey_editor::App;
+use hotkey_editor::app::App;
 
 fn main() {
     dioxus::launch(App);

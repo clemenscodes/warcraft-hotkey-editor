@@ -5,7 +5,8 @@ use hotkey_editor::components::views::collisions_page::{
     IslandSidebar, UnitPositionDetail, UnitPositionSidebar,
 };
 use hotkey_editor::components::views::resolve_page::ResolvePage;
-use hotkey_editor::{AppView, CollisionKind, ViewNavigationContext};
+use hotkey_editor::services::navigation::app_view::{AppView, CollisionKind};
+use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 

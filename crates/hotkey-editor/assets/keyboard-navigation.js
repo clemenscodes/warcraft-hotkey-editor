@@ -17,7 +17,7 @@ const NAV_SELECTORS = [
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 4;
+const INSTALL_VERSION = 6;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
 const POINTER_FOCUSABLE_SELECTOR = [NAV_SELECTOR, "button", "[role='button']", "a[href]", "[tabindex]:not([tabindex='-1'])"].join(", ");
 const COARSE_POINTER_MEDIA = "(hover: none), (pointer: coarse)";
@@ -147,8 +147,8 @@ function installSpatialNavigation() {
             if (event.ctrlKey || event.metaKey || event.altKey) return;
             // While a hotkey picker is open, H/J/K/L and the arrows are hotkey
             // candidates the picker must receive — don't hijack them for spatial
-            // navigation.
-            if (document.querySelector(".dialog-key-scope")) return;
+            // navigation. Either picker board being present means one is open.
+            if (document.querySelector(".key-picker-board, .system-key-picker-board")) return;
             const target = event.target;
             if (target instanceof HTMLElement) {
                 const tag = target.tagName;

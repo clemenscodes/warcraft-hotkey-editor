@@ -2,19 +2,18 @@ use std::collections::HashMap;
 
 use dioxus::prelude::*;
 use gallery::Story;
+use hotkey_editor::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use hotkey_editor::components::system_hotkeys::control_groups::ControlGroupsHotkeysView;
-use hotkey_editor::components::system_hotkeys::dialog::SystemHotkeysDialog;
-use hotkey_editor::components::system_hotkeys::dialog::breadcrumbs::SystemHotkeysBreadcrumbs;
-use hotkey_editor::components::system_hotkeys::dialog::category_tab::SystemHotkeysCategoryTab;
-use hotkey_editor::components::system_hotkeys::dialog::dialog_header::SystemHotkeysHeader;
-use hotkey_editor::components::system_hotkeys::dialog::inventory_drag_overlay::InventoryDragOverlay;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_drag_overlay::InventoryDragOverlay;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_breadcrumbs::SystemHotkeysBreadcrumbs;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_breadcrumbs::components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
 use hotkey_editor::components::system_hotkeys::hero_selection::HeroSelectionHotkeysView;
 use hotkey_editor::components::system_hotkeys::inventory::InventoryHotkeysView;
 use hotkey_editor::components::system_hotkeys::inventory_grid::{
     InventoryCell, InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
 use hotkey_editor::components::system_hotkeys::key_cell::KeyCaptureCell;
-use hotkey_editor::components::system_hotkeys::key_picker_dialog::SystemKeyPickerDialog;
 use hotkey_editor::components::system_hotkeys::list_view::{
     SystemHotkeysListEntry, SystemHotkeysListView,
 };
@@ -32,7 +31,6 @@ pub fn stories() -> Vec<Story> {
             system_hotkeys_list_entry_default,
         ),
         Story::single("System hotkeys", "SlotButton", slot_button_default),
-        Story::single("System hotkeys", "SystemHotkeysHeader", header),
         Story::single(
             "System hotkeys",
             "SystemHotkeysBreadcrumbs",
@@ -83,12 +81,6 @@ pub fn stories() -> Vec<Story> {
             system_hotkeys_dialog_open,
         ),
     ]
-}
-
-fn header() -> Element {
-    rsx! {
-        SystemHotkeysHeader { on_close: move |_| {} }
-    }
 }
 
 fn breadcrumbs_inventory() -> Element {

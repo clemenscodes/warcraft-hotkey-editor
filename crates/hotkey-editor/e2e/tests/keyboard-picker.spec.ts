@@ -25,17 +25,17 @@ async function openBlizzardPicker(page: Page) {
   await blizzardTile.click();
   await page.locator(".override-key-cell").waitFor();
   await page.locator(".override-key-cell").click();
-  await page.locator(".key-picker-shell").waitFor();
+  await page.locator(".key-picker-board").waitFor();
   // The keydown handler only fires once focus lands inside the dialog; wait for
   // it so the test never races the deferred focus.
-  await expect(page.locator(".key-picker-body")).toBeFocused();
+  await expect(page.locator(".key-picker-board")).toBeFocused();
 }
 
 test.describe("Ability hotkey picker keyboard input", () => {
   test("pressing an available letter selects it and closes the picker", async ({ page }) => {
     await openBlizzardPicker(page);
     await page.keyboard.press("e");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("E");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("=E");
@@ -45,16 +45,16 @@ test.describe("Ability hotkey picker keyboard input", () => {
     // First pick via keyboard.
     await openBlizzardPicker(page);
     await page.keyboard.press("e");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("E");
 
     // Reopen and pick a different key — this is the regression: focus used to be
     // lost on the second open, so the keypress did nothing.
     await page.locator(".override-key-cell").click();
-    await page.locator(".key-picker-shell").waitFor();
-    await expect(page.locator(".key-picker-body")).toBeFocused();
+    await page.locator(".key-picker-board").waitFor();
+    await expect(page.locator(".key-picker-board")).toBeFocused();
     await page.keyboard.press("r");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("R");
   });
 
@@ -64,14 +64,14 @@ test.describe("Ability hotkey picker keyboard input", () => {
     // disabled conflict cell and must not be selectable from the keyboard.
     await expect(page.locator('.key-picker-key[data-label="W"]')).toBeDisabled();
     await page.keyboard.press("w");
-    await expect(page.locator(".key-picker-shell")).toBeVisible();
+    await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("B");
   });
 
   test("pressing a key not on the board (a digit) does nothing", async ({ page }) => {
     await openBlizzardPicker(page);
     await page.keyboard.press("1");
-    await expect(page.locator(".key-picker-shell")).toBeVisible();
+    await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(page.locator(".override-key-cell")).toContainText("B");
   });
 });
@@ -81,8 +81,8 @@ test.describe("Global grid layout picker keyboard input", () => {
     await page
       .locator(`[data-layout-col="${column}"][data-layout-row="${row}"]`)
       .click();
-    await page.locator(".key-picker-shell").waitFor();
-    await expect(page.locator(".key-picker-body")).toBeFocused();
+    await page.locator(".key-picker-board").waitFor();
+    await expect(page.locator(".key-picker-board")).toBeFocused();
   }
 
   test("keyboard selection assigns the cell and keeps working after reopen", async ({ page }) => {
@@ -95,7 +95,7 @@ test.describe("Global grid layout picker keyboard input", () => {
     // so this also guards that the picker — not the navigation handler — gets it.
     await openGridCellPicker(page, 0, 0);
     await page.keyboard.press("h");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(
       page.locator('[data-layout-col="0"][data-layout-row="0"]'),
     ).toHaveText("H");
@@ -104,7 +104,7 @@ test.describe("Global grid layout picker keyboard input", () => {
     // on reopen and that J/K/L also reach the picker.
     await openGridCellPicker(page, 1, 0);
     await page.keyboard.press("j");
-    await expect(page.locator(".key-picker-shell")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(
       page.locator('[data-layout-col="1"][data-layout-row="0"]'),
     ).toHaveText("J");

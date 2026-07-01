@@ -47,7 +47,7 @@ test.describe("Drag does not trigger the double-click picker", () => {
     // Give any double-click-triggered dialog a chance to render, then assert it
     // did not open.
     await page.waitForTimeout(250);
-    await expect(page.locator(".key-picker-shell")).toHaveCount(0);
+    await expect(page.locator(".key-picker-board")).toHaveCount(0);
   });
 
   test("a genuine double-click still opens the hotkey picker", async ({
@@ -56,7 +56,7 @@ test.describe("Drag does not trigger the double-click picker", () => {
     // Guard: the fix must only suppress the picker after a real drag, never on
     // an ordinary double-click.
     await page.locator(".filled-tile").first().dblclick();
-    await page.locator(".key-picker-shell").waitFor();
-    await expect(page.locator(".key-picker-shell")).toBeVisible();
+    await page.locator(".key-picker-board").waitFor();
+    await expect(page.locator(".key-picker-board")).toBeVisible();
   });
 });

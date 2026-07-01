@@ -16,7 +16,7 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, HotkeyTarget, HotkeyToken, Letter};
 use wasm_bindgen::JsCast;
 
-use crate::components::shared::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
+use crate::components::dialogs::key_picker::{KeyPicker, KeyPickerCell, KeyPickerCellState};
 use warcraft_keybinds::InspectorDetail;
 use warcraft_keybinds::text::description::Description;
 use warcraft_keybinds::text::tip::Tip;

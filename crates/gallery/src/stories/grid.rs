@@ -13,7 +13,7 @@ use hotkey_editor::components::grid_editors::grid_editor::components::headed_gri
 };
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
 use hotkey_editor::components::shell::toasts::ToastMount;
-use hotkey_editor::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+use hotkey_editor::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
 use warcraft_api::Race;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{GridSlotId, HotkeyToken, UnitCommandSlots};

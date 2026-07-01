@@ -20,7 +20,7 @@ use hotkey_editor::components::unit_detail::stats_panel::damage_matchup_row::Dam
 use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_cell::DefenseMatchupCell;
 use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_row::DefenseMatchupRow;
 use hotkey_editor::components::unit_detail::stats_panel::stat_icon::StatIcon;
-use hotkey_editor::{DragFollower, DraggingSlot, DropTargetTile};
+use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use warcraft_api::{
     AttackType, DefenseType, PrimaryAttribute, Race, UnitCombat, WarcraftObjectMeta,
 };

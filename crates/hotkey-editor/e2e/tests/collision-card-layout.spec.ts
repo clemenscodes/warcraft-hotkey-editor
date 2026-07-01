@@ -28,12 +28,12 @@ async function openPositionCollisions(page: Page): Promise<void> {
 }
 
 async function dialogCarrierNames(page: Page): Promise<string[]> {
-  return page.locator(".carriers-dialog .carrier-card-name").allTextContents();
+  return page.locator(".dialog .carrier-card-name").allTextContents();
 }
 
 async function closeCarriersDialog(page: Page): Promise<void> {
-  await page.locator('.carriers-dialog [aria-label="Close"]').click();
-  await page.locator(".carriers-dialog").waitFor({ state: "detached" });
+  await page.locator('.dialog [aria-label="Close"]').click();
+  await page.locator(".dialog").waitFor({ state: "detached" });
 }
 
 test.describe("Collision card layout", () => {
@@ -66,7 +66,7 @@ test.describe("Collision card layout", () => {
   test("clicking an ability icon opens the carriers dialog", async ({ page }) => {
     await page.locator(".conflict-ability-trigger").first().click();
 
-    const dialog = page.locator(".carriers-dialog");
+    const dialog = page.locator(".dialog");
     await dialog.waitFor();
     await expect(dialog.locator(".carrier-card").first()).toBeVisible();
 
@@ -87,14 +87,14 @@ test.describe("Collision card layout", () => {
     ).toBeVisible();
 
     await abilityWithMore.locator(".conflict-ability-trigger").click();
-    await page.locator(".carriers-dialog").waitFor();
-    const titleFromIcon = await page.locator(".carriers-dialog h2").textContent();
+    await page.locator(".dialog").waitFor();
+    const titleFromIcon = await page.locator(".dialog h2").textContent();
     const namesFromIcon = await dialogCarrierNames(page);
     await closeCarriersDialog(page);
 
     await abilityWithMore.locator(".conflict-more").click();
-    await page.locator(".carriers-dialog").waitFor();
-    const titleFromMore = await page.locator(".carriers-dialog h2").textContent();
+    await page.locator(".dialog").waitFor();
+    const titleFromMore = await page.locator(".dialog h2").textContent();
     const namesFromMore = await dialogCarrierNames(page);
     await closeCarriersDialog(page);
 

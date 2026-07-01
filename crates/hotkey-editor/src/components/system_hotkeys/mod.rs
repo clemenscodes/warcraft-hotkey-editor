@@ -1,9 +1,7 @@
 pub mod control_groups;
-pub mod dialog;
 pub mod hero_selection;
 pub mod inventory;
 pub mod inventory_grid;
 pub mod key_cell;
-pub mod key_picker_dialog;
 pub mod list_view;
 pub mod slot_button;

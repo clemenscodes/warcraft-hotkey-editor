@@ -1,2 +1,2 @@
-pub(crate) mod grid;
-pub(crate) mod icons;
+pub mod grid;
+pub mod icons;
