@@ -1,11 +1,12 @@
 use crate::classes;
 
 const BASE: &[&str] = &[
-    "fixed",
-    "inset-0",
-    "z-[199]",
-    "bg-transparent",
-    "cursor-default",
+    "flex",
+    "flex-col",
+    "gap-[2.5rem]",
+    "items-stretch",
+    "flex-none",
+    "min-h-0",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

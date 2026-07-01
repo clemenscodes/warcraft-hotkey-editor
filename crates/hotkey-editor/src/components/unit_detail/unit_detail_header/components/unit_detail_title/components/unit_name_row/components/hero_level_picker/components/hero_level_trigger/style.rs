@@ -31,8 +31,18 @@ const BASE: &[&str] = &[
     "[body[data-kb-modality]_&]:focus:text-white",
     "[body[data-kb-modality]_&]:focus:[box-shadow:0_0_0_2px_#fff,0_0_14px_rgba(255,255,255,0.45)]",
 ];
-const MOBILE: &[&str] = &["mobile:w-[10.5rem]", "mobile:px-[0.65rem]", "mobile:py-[0.3rem]", "mobile:text-[1.55rem]"];
-const TABLET: &[&str] = &["tablet:w-[10.5rem]", "tablet:px-[0.65rem]", "tablet:py-[0.3rem]", "tablet:text-[1.55rem]"];
+const MOBILE: &[&str] = &[
+    "mobile:w-[10.5rem]",
+    "mobile:px-[0.65rem]",
+    "mobile:py-[0.3rem]",
+    "mobile:text-[1.55rem]",
+];
+const TABLET: &[&str] = &[
+    "tablet:w-[10.5rem]",
+    "tablet:px-[0.65rem]",
+    "tablet:py-[0.3rem]",
+    "tablet:text-[1.55rem]",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

@@ -2,7 +2,7 @@ use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::unit_detail::UnitDetailPanel;
-use hotkey_editor::components::unit_detail::grids::UnitCommandGrids;
+use hotkey_editor::components::unit_detail::unit_command_grids::UnitCommandGrids;
 use hotkey_editor::components::unit_detail::unit_detail_header::UnitDetailHeader;
 use hotkey_editor::components::unit_detail::unit_detail_header::components::unit_detail_title::components::unit_name_row::components::hero_level_picker::components::hero_level_menu::components::hero_level_option::HeroLevelOption;
 use hotkey_editor::components::unit_detail::stats_panel::UnitStatsPanel;

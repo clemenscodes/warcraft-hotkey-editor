@@ -1,7 +1,7 @@
-use dioxus::prelude::*;
 use super::components::unit_detail_title::UnitDetailTitleProps;
 use super::components::unit_portrait::UnitPortraitProps;
 use super::props::UnitDetailHeaderProps;
+use dioxus::prelude::*;
 
 impl From<&UnitDetailHeaderProps> for UnitPortraitProps {
     fn from(props: &UnitDetailHeaderProps) -> Self {

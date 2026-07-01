@@ -2,27 +2,22 @@ use crate::classes;
 
 const BASE: &[&str] = &[
     "grid",
-    "grid-cols-[clamp(5.75rem,4.8vw,7.5rem)_1fr]",
+    "grid-cols-[repeat(2,minmax(0,1fr))]",
+    "gap-x-[clamp(1.5rem,1.4vw,2rem)]",
+    "gap-y-[clamp(1rem,1.2vh,1.35rem)]",
     "items-start",
-    "gap-x-[clamp(0.85rem,0.8vw,1.25rem)]",
-    "mb-0",
-    "pb-[clamp(0.4rem,0.7vh,0.7rem)]",
-    "border-b",
-    "border-[#1f3d63]",
+    "flex-none",
 ];
 const MOBILE: &[&str] = &[
     "mobile:flex",
     "mobile:flex-col",
     "mobile:items-center",
-    "mobile:text-center",
-    "mobile:h-auto",
-    "mobile:gap-[0.85rem]",
-    "mobile:pb-[1rem]",
+    "mobile:gap-6",
 ];
 const TABLET: &[&str] = &[
-    "tablet:grid-cols-[11.5rem_1fr]",
-    "tablet:gap-x-[1.25rem]",
-    "tablet:pb-[1rem]",
+    "tablet:grid-cols-[repeat(2,1fr)]",
+    "tablet:gap-x-[2.5rem]",
+    "tablet:gap-y-[1.75rem]",
 ];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
