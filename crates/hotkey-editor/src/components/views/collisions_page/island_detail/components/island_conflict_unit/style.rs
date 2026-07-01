@@ -5,9 +5,11 @@ const BASE: &[&str] = &[
     "bg-transparent",
     "border-none",
     "cursor-pointer",
-    "inline-flex",
-    "leading-[0]",
-    "group",
+    "flex",
+    "flex-col",
+    "items-center",
+    "gap-[7px]",
+    "max-w-full",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];
