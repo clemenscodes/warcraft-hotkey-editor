@@ -1,6 +1,6 @@
 mod derived_stats;
 pub mod grids;
-pub mod header;
+pub mod unit_detail_header;
 pub mod stats_panel;
 pub mod tile_override_empty;
 pub mod tile_override_panel;
@@ -13,7 +13,7 @@ use crate::model::icons::IconUrl;
 use derived_stats::DerivedStats;
 use dioxus::prelude::*;
 use grids::UnitCommandGrids;
-use header::UnitDetailHeader;
+use unit_detail_header::UnitDetailHeader;
 use stats_panel::UnitStatsPanel;
 use std::collections::HashMap;
 use std::rc::Rc;
