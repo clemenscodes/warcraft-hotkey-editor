@@ -1,84 +1,27 @@
-pub mod hero_level_option;
+pub mod components;
+mod logic;
+mod props;
+mod style;
 
+use crate::assert_component;
+use components::unit_detail_title::{UnitDetailTitle, UnitDetailTitleProps};
+use components::unit_portrait::{UnitPortrait, UnitPortraitProps};
 use dioxus::prelude::*;
-use hero_level_option::HeroLevelOption;
+pub use props::UnitDetailHeaderProps;
+use style::CLASS;
+assert_component!(UnitDetailHeader);
 
-const MAX_HERO_LEVEL_DISPLAY: u32 = 10;
-
-#[derive(Props, Clone, PartialEq)]
-pub struct UnitDetailHeaderProps {
-    pub unit_name: &'static str,
-    pub unit_id: String,
-    pub portrait_url: Option<String>,
-    pub has_hero_attributes: bool,
-    pub selected_hero_level: Signal<u32>,
-    pub level_picker_open: Signal<bool>,
-}
-
+/// The unit detail header: the portrait beside the title column (name, id, and the
+/// optional hero level picker).
 #[component]
 pub fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
-    let unit_name = props.unit_name;
-    let unit_id = props.unit_id;
-    let portrait_url = props.portrait_url;
-    let has_hero_attributes = props.has_hero_attributes;
-    let selected_hero_level = props.selected_hero_level;
-    let mut level_picker_open = props.level_picker_open;
-    let current_level = selected_hero_level();
-    let current_level_text = current_level.to_string();
-    let picker_is_open = level_picker_open();
-    let trigger_class = if picker_is_open {
-        "hero-level-trigger open"
-    } else {
-        "hero-level-trigger"
-    };
-    let toggle_level_picker = move |_| level_picker_open.set(!level_picker_open());
-    let close_level_picker = move |_| level_picker_open.set(false);
+    let portrait = UnitPortraitProps::from(&props);
+    let title = UnitDetailTitleProps::from(&props);
     rsx! {
-        header { class: "unit-detail-header",
-            if let Some(source) = portrait_url {
-                img {
-                    class: "unit-portrait",
-                    src: source,
-                    alt: unit_name,
-                    loading: "lazy",
-                    decoding: "async",
-                }
-            }
-            div { class: "unit-detail-title",
-                div { class: "unit-name-row",
-                    h2 { {unit_name} }
-                    if has_hero_attributes {
-                        div { class: "hero-level-picker",
-                            button {
-                                class: trigger_class,
-                                r#type: "button",
-                                onclick: toggle_level_picker,
-                                span { class: "hero-level-trigger-label", "Level" }
-                                span { class: "hero-level-trigger-number", {current_level_text} }
-                                span { class: "hero-level-trigger-chevron", "▾" }
-                            }
-                            if picker_is_open {
-                                div { class: "hero-level-menu",
-                                    for level_index in 1..=MAX_HERO_LEVEL_DISPLAY {
-                                        HeroLevelOption {
-                                            key: "{level_index}",
-                                            level_index,
-                                            current_level,
-                                            selected_hero_level,
-                                            level_picker_open,
-                                        }
-                                    }
-                                }
-                                div {
-                                    class: "hero-level-backdrop",
-                                    onclick: close_level_picker,
-                                }
-                            }
-                        }
-                    }
-                }
-                code { {unit_id} }
-            }
+        header {
+            class: CLASS,
+            UnitPortrait { ..portrait }
+            UnitDetailTitle { ..title }
         }
     }
 }
