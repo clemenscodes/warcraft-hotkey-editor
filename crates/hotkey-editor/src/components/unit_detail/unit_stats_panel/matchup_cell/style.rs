@@ -1,0 +1,31 @@
+use crate::classes;
+
+const BASE: &[&str] = &[
+    "group",
+    "flex",
+    "items-baseline",
+    "justify-between",
+    "gap-[0.5rem]",
+    "px-[0.55rem]",
+    "py-[0.35rem]",
+    "rounded-[4px]",
+    "text-[clamp(1.3rem,0.85rem+0.4vw,1.85rem)]/[1.25]",
+    "font-mono",
+    "[text-shadow:1px_1px_0_#000]",
+    "min-w-0",
+    "data-[matchup=strong]:bg-[rgba(74,222,128,0.12)]",
+    "data-[matchup=weak]:bg-[rgba(239,68,68,0.12)]",
+];
+const MOBILE: &[&str] = &[
+    "mobile:text-[1.7rem]",
+    "mobile:px-[0.6rem]",
+    "mobile:py-[0.4rem]",
+];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+classes! {
+    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+}

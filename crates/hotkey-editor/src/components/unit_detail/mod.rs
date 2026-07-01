@@ -1,7 +1,6 @@
 mod derived_stats;
 mod hooks;
 mod props;
-pub mod stats_panel;
 mod style;
 pub mod tile_override_empty;
 pub mod tile_override_panel;
@@ -11,17 +10,18 @@ pub mod unit_detail_body;
 pub mod unit_detail_empty;
 pub mod unit_detail_header;
 pub mod unit_detail_row;
+pub mod unit_stats_panel;
 pub mod unit_tile_override;
 
 use dioxus::prelude::*;
 use hooks::{UnitDetailView, use_unit_detail_panel};
 pub use props::UnitDetailPanelProps;
-use stats_panel::UnitStatsPanel;
 use style::CLASS;
 use unit_description::UnitDescription;
 use unit_detail_body::UnitDetailBody;
 use unit_detail_empty::UnitDetailEmpty;
 use unit_detail_header::UnitDetailHeader;
+use unit_stats_panel::UnitStatsPanel;
 
 /// The unit detail card: header, description, stats, and the grids/override body.
 /// Empty until a unit is selected. Composes its children from a single shaped hook.

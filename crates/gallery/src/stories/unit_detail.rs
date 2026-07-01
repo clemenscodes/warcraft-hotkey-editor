@@ -5,22 +5,22 @@ use hotkey_editor::components::unit_detail::UnitDetailPanel;
 use hotkey_editor::components::unit_detail::unit_command_grids::UnitCommandGrids;
 use hotkey_editor::components::unit_detail::unit_detail_header::UnitDetailHeader;
 use hotkey_editor::components::unit_detail::unit_detail_header::components::unit_detail_title::components::unit_name_row::components::hero_level_picker::components::hero_level_menu::components::hero_level_option::HeroLevelOption;
-use hotkey_editor::components::unit_detail::stats_panel::UnitStatsPanel;
-use hotkey_editor::components::unit_detail::stats_panel::attack_matchup_cell::AttackMatchupCell;
-use hotkey_editor::components::unit_detail::stats_panel::attribute_row::AttributeRow;
+use hotkey_editor::components::unit_detail::unit_stats_panel::UnitStatsPanel;
+use hotkey_editor::components::unit_detail::unit_stats_panel::attack_matchup_cell::AttackMatchupCell;
+use hotkey_editor::components::unit_detail::unit_stats_panel::attribute_row::AttributeRow;
 
-use hotkey_editor::components::unit_detail::stats_panel::attributes_column::{
+use hotkey_editor::components::unit_detail::unit_stats_panel::attributes_column::{
     AttributesColumn, HeroDisplayData,
 };
 
-use hotkey_editor::components::unit_detail::stats_panel::combat_column::{
+use hotkey_editor::components::unit_detail::unit_stats_panel::combat_column::{
     AttackDisplayData, CombatColumn,
 };
 
-use hotkey_editor::components::unit_detail::stats_panel::damage_matchup_row::DamageMatchupRow;
-use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_cell::DefenseMatchupCell;
-use hotkey_editor::components::unit_detail::stats_panel::defense_matchup_row::DefenseMatchupRow;
-use hotkey_editor::components::unit_detail::stats_panel::stat_icon::StatIcon;
+use hotkey_editor::components::unit_detail::unit_stats_panel::damage_matchup_row::DamageMatchupRow;
+use hotkey_editor::components::unit_detail::unit_stats_panel::defense_matchup_cell::DefenseMatchupCell;
+use hotkey_editor::components::unit_detail::unit_stats_panel::defense_matchup_row::DefenseMatchupRow;
+use hotkey_editor::components::unit_detail::unit_stats_panel::stat_icon::StatIcon;
 use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use std::collections::HashMap;
 use std::rc::Rc;

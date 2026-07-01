@@ -1,11 +1,11 @@
 use super::derived_stats::DerivedStats;
 use super::props::UnitDetailPanelProps;
-use super::stats_panel::UnitStatsPanelProps;
 use super::unit_command_grids::UnitCommandGridsProps;
 use super::unit_description::UnitDescriptionProps;
 use super::unit_detail_body::UnitDetailBodyProps;
 use super::unit_detail_header::UnitDetailHeaderProps;
 use super::unit_detail_row::UnitDetailRowProps;
+use super::unit_stats_panel::UnitStatsPanelProps;
 use super::unit_tile_override::UnitTileOverrideProps;
 use crate::model::icons::IconUrl;
 use dioxus::prelude::*;

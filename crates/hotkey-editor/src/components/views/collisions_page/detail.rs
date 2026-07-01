@@ -1,4 +1,4 @@
-use super::mini_grid::IslandMiniGrid;
+use super::island_mini_grid::IslandMiniGrid;
 use super::{CarrierDialogData, IslandView};
 use crate::components::dialogs::dialog::Dialog;
 use crate::services::navigation::view_navigation::ViewNavigationContext;

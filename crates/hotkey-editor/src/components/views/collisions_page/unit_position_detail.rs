@@ -1,4 +1,4 @@
-use super::mini_grid::IslandMiniGrid;
+use super::island_mini_grid::IslandMiniGrid;
 use super::{UnitPositionConflictView, UnitPositionUnitView};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
