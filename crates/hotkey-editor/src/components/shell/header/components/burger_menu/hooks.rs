@@ -1,6 +1,8 @@
 use super::components::burger_drawer::BurgerDrawerProps;
 use super::components::burger_menu_item::{BurgerItemState, BurgerMenuItemProps};
 use super::props::BurgerMenuProps;
+use crate::components::dialogs::download_info_dialog::DownloadInfoDialogProps;
+use crate::components::dialogs::upload_info_dialog::UploadInfoDialogProps;
 
 use crate::components::shared::icons::{
     ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_HELP, ICON_PREVIEW, ICON_REDO, ICON_RESOLVE,
@@ -267,6 +269,21 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
         toggle,
         download_confirm,
         drawer,
+    }
+}
+
+impl From<&BurgerMenuView> for UploadInfoDialogProps {
+    fn from(view: &BurgerMenuView) -> Self {
+        let open = view.upload_info_open;
+        Self { open }
+    }
+}
+
+impl From<&BurgerMenuView> for DownloadInfoDialogProps {
+    fn from(view: &BurgerMenuView) -> Self {
+        let open = view.download_info_open;
+        let on_confirm = view.download_confirm;
+        Self { open, on_confirm }
     }
 }
 

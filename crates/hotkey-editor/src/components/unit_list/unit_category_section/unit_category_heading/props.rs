@@ -1,3 +1,4 @@
+use super::components::category_chevron::CategoryChevronProps;
 use dioxus::prelude::*;
 
 /// A category heading: its label, kind attribute, collapsed state, and the toggle
@@ -9,4 +10,11 @@ pub struct UnitCategoryHeadingProps {
     pub kind_attr: &'static str,
     pub is_collapsed: bool,
     pub on_toggle: EventHandler<MouseEvent>,
+}
+
+impl From<&UnitCategoryHeadingProps> for CategoryChevronProps {
+    fn from(props: &UnitCategoryHeadingProps) -> Self {
+        let is_collapsed = props.is_collapsed;
+        Self { is_collapsed }
+    }
 }

@@ -1,10 +1,12 @@
 pub mod components;
+mod logic;
 mod props;
 
 use dioxus::prelude::*;
 
 use crate::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCell;
 use components::tile_override_info_only::TileOverrideInfoOnly;
+use logic::TileOverrideHotkeySlotDispatch;
 
 pub use props::TileOverrideHotkeySlotProps;
 
@@ -12,33 +14,15 @@ pub use props::TileOverrideHotkeySlotProps;
 /// exactly the one that applies, or nothing.
 #[component]
 pub fn TileOverrideHotkeySlot(props: TileOverrideHotkeySlotProps) -> Element {
-    if props.show_hotkey_field {
-        let title = String::from("Hotkey");
+    let dispatch = TileOverrideHotkeySlotDispatch::from(&props);
+    if let Some(key_cell) = dispatch.key_cell {
         return rsx! {
-            OverrideKeyCell {
-                label: props.hotkey_label,
-                is_editing: props.hotkey_is_editing,
-                is_special: props.hotkey_is_special,
-                title,
-                on_activate: props.on_hotkey_activate,
-            }
+            OverrideKeyCell { ..key_cell }
         };
     }
-    if props.show_research_field {
-        let title = String::from("Research hotkey");
+    if let Some(info) = dispatch.info {
         return rsx! {
-            OverrideKeyCell {
-                label: props.research_label,
-                is_editing: props.research_is_editing,
-                is_special: props.research_is_special,
-                title,
-                on_activate: props.on_research_activate,
-            }
-        };
-    }
-    if props.is_info_only {
-        return rsx! {
-            TileOverrideInfoOnly { text: "Passive racial ability" }
+            TileOverrideInfoOnly { ..info }
         };
     }
     rsx! {}

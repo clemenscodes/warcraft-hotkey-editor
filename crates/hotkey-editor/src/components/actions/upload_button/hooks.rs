@@ -1,4 +1,8 @@
+use super::components::upload_button_input::UploadButtonInputProps;
 use super::props::UploadButtonProps;
+use crate::components::dialogs::upload_info_dialog::UploadInfoDialogProps;
+use crate::components::shared::icons::ICON_UPLOAD;
+use crate::components::shared::toolbar_button::ToolbarButtonProps;
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
@@ -62,5 +66,31 @@ pub(super) fn use_upload_button(props: &UploadButtonProps) -> UploadButtonModel 
         info_open,
         on_file_change,
         on_open_info,
+    }
+}
+
+impl From<&UploadButtonModel> for UploadButtonInputProps {
+    fn from(model: &UploadButtonModel) -> Self {
+        let on_change = model.on_file_change;
+        Self { on_change }
+    }
+}
+
+impl From<&UploadButtonModel> for ToolbarButtonProps {
+    fn from(model: &UploadButtonModel) -> Self {
+        let onclick = model.on_open_info;
+        Self {
+            icon: ICON_UPLOAD,
+            aria_label: "Upload CustomKeys.txt",
+            onclick,
+            ..Self::default()
+        }
+    }
+}
+
+impl From<&UploadButtonModel> for UploadInfoDialogProps {
+    fn from(model: &UploadButtonModel) -> Self {
+        let open = model.info_open;
+        Self { open }
     }
 }

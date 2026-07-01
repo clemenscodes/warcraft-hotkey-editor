@@ -6,7 +6,6 @@ mod style;
 use dioxus::prelude::*;
 
 use crate::assert_component;
-use crate::components::shared::icons::{ICON_TIER_NEXT, ICON_TIER_PREV};
 use components::tile_override_tier_button::TileOverrideTierButton;
 use components::tile_override_tier_label::TileOverrideTierLabel;
 use hooks::use_upgrade_tier;
@@ -23,21 +22,13 @@ pub fn UpgradeTier(props: UpgradeTierProps) -> Element {
     if props.total_tier_count <= 1 {
         return rsx! {};
     }
-    let tier_label_text = props.tier_label_text.clone();
     let model = use_upgrade_tier(&props);
     rsx! {
-        div { class: CLASS,
-            TileOverrideTierButton {
-                aria_label: "Previous level",
-                icon: ICON_TIER_PREV,
-                on_click: model.on_prev,
-            }
-            TileOverrideTierLabel { text: tier_label_text }
-            TileOverrideTierButton {
-                aria_label: "Next level",
-                icon: ICON_TIER_NEXT,
-                on_click: model.on_next,
-            }
+        div {
+            class: CLASS,
+            TileOverrideTierButton { ..model.prev_button }
+            TileOverrideTierLabel { ..model.label }
+            TileOverrideTierButton { ..model.next_button }
         }
     }
 }

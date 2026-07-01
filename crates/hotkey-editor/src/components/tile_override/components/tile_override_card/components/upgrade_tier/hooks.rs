@@ -1,12 +1,16 @@
 use dioxus::prelude::*;
 
+use super::components::tile_override_tier_button::TileOverrideTierButtonProps;
+use super::components::tile_override_tier_label::TileOverrideTierLabelProps;
 use super::props::UpgradeTierProps;
+use crate::components::shared::icons::{ICON_TIER_NEXT, ICON_TIER_PREV};
 
-/// The tier selector's handlers: cycle the stored tier index for this object
-/// backward (prev, wrapping) and forward (next, wrapping).
+/// The tier selector's finished children: the prev/next arrow buttons (each with
+/// its wrapping cycle handler) around the caption.
 pub(super) struct UpgradeTierModel {
-    pub(super) on_prev: EventHandler<MouseEvent>,
-    pub(super) on_next: EventHandler<MouseEvent>,
+    pub(super) prev_button: TileOverrideTierButtonProps,
+    pub(super) label: TileOverrideTierLabelProps,
+    pub(super) next_button: TileOverrideTierButtonProps,
 }
 
 pub(super) fn use_upgrade_tier(props: &UpgradeTierProps) -> UpgradeTierModel {
@@ -31,5 +35,22 @@ pub(super) fn use_upgrade_tier(props: &UpgradeTierProps) -> UpgradeTierModel {
         let next = (current + 1) % total_tier_count;
         writable_guard.insert(id_key, next);
     });
-    UpgradeTierModel { on_prev, on_next }
+    let prev_button = TileOverrideTierButtonProps {
+        aria_label: "Previous level",
+        icon: ICON_TIER_PREV,
+        on_click: on_prev,
+    };
+    let label = TileOverrideTierLabelProps {
+        text: props.tier_label_text.clone(),
+    };
+    let next_button = TileOverrideTierButtonProps {
+        aria_label: "Next level",
+        icon: ICON_TIER_NEXT,
+        on_click: on_next,
+    };
+    UpgradeTierModel {
+        prev_button,
+        label,
+        next_button,
+    }
 }

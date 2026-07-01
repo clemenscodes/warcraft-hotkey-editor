@@ -4,8 +4,10 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::download_info_dialog::DownloadInfoDialog;
-use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
+use crate::components::dialogs::download_info_dialog::{
+    DownloadInfoDialog, DownloadInfoDialogProps,
+};
+use crate::components::dialogs::upload_info_dialog::{UploadInfoDialog, UploadInfoDialogProps};
 use components::burger_backdrop::{BurgerBackdrop, BurgerBackdropProps};
 use components::burger_drawer::BurgerDrawer;
 use components::burger_toggle_icon::BurgerToggleIcon;
@@ -20,18 +22,19 @@ assert_component!(BurgerMenu);
 /// inline toolbar instead). Owns the drawer's open state through its composed hook.
 #[component]
 pub fn BurgerMenu(props: BurgerMenuProps) -> Element {
+    let view = use_burger_menu(&props);
+    let backdrop = BurgerBackdropProps {
+        onclick: view.drawer.on_close,
+    };
+    let upload_dialog = UploadInfoDialogProps::from(&view);
+    let download_dialog = DownloadInfoDialogProps::from(&view);
     let BurgerMenuView {
         burger_open,
-        upload_info_open,
-        download_info_open,
         has_loaded_file,
         toggle,
-        download_confirm,
         drawer,
-    } = use_burger_menu(&props);
-    let backdrop = BurgerBackdropProps {
-        onclick: drawer.on_close,
-    };
+        ..
+    } = view;
     rsx! {
         button {
             class: CLASS,
@@ -46,9 +49,9 @@ pub fn BurgerMenu(props: BurgerMenuProps) -> Element {
             BurgerBackdrop { ..backdrop }
             BurgerDrawer { ..drawer }
         }
-        UploadInfoDialog { open: upload_info_open }
+        UploadInfoDialog { ..upload_dialog }
         if has_loaded_file {
-            DownloadInfoDialog { open: download_info_open, on_confirm: download_confirm }
+            DownloadInfoDialog { ..download_dialog }
         }
     }
 }

@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use components::toolbar_button_icon::ToolbarButtonIcon;
+use components::toolbar_button_icon::{ToolbarButtonIcon, ToolbarButtonIconProps};
 use dioxus::prelude::*;
 pub use props::ToolbarButtonProps;
 use style::CLASS;
@@ -13,18 +13,19 @@ assert_component!(ToolbarButton);
 /// only the icon, the click handler, and aria/disabled state.
 #[component]
 pub fn ToolbarButton(props: ToolbarButtonProps) -> Element {
-    let icon = props.icon;
-    let onclick = props.onclick;
-    let disabled = props.disabled;
-    let attributes = props.attributes;
+    let glyph = ToolbarButtonIconProps::from(&props);
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
-            disabled,
-            onclick,
-            ..attributes,
-            ToolbarButtonIcon { icon }
+            aria_label: props.aria_label,
+            aria_haspopup: props.aria_haspopup,
+            aria_expanded: props.aria_expanded,
+            aria_pressed: props.aria_pressed,
+            "data-action": props.data_action,
+            disabled: props.disabled,
+            onclick: props.onclick,
+            ToolbarButtonIcon { ..glyph }
         }
     }
 }

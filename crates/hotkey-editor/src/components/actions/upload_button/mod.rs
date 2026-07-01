@@ -4,10 +4,9 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::upload_info_dialog::UploadInfoDialog;
-use crate::components::shared::icons::ICON_UPLOAD;
-use crate::components::shared::toolbar_button::ToolbarButton;
-use components::upload_button_input::UploadButtonInput;
+use crate::components::dialogs::upload_info_dialog::{UploadInfoDialog, UploadInfoDialogProps};
+use crate::components::shared::toolbar_button::{ToolbarButton, ToolbarButtonProps};
+use components::upload_button_input::{UploadButtonInput, UploadButtonInputProps};
 use dioxus::prelude::*;
 use hooks::use_upload_button;
 pub use props::UploadButtonProps;
@@ -19,15 +18,15 @@ assert_component!(UploadButton);
 #[component]
 pub fn UploadButton(props: UploadButtonProps) -> Element {
     let model = use_upload_button(&props);
+    let input = UploadButtonInputProps::from(&model);
+    let button = ToolbarButtonProps::from(&model);
+    let dialog = UploadInfoDialogProps::from(&model);
     rsx! {
-        div { class: CLASS,
-            UploadButtonInput { on_change: model.on_file_change }
-            ToolbarButton {
-                icon: ICON_UPLOAD,
-                aria_label: "Upload CustomKeys.txt",
-                onclick: model.on_open_info,
-            }
-            UploadInfoDialog { open: model.info_open }
+        div {
+            class: CLASS,
+            UploadButtonInput { ..input }
+            ToolbarButton { ..button }
+            UploadInfoDialog { ..dialog }
         }
     }
 }

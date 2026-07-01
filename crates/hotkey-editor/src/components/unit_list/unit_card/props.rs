@@ -1,3 +1,5 @@
+use super::unit_card_icon::UnitCardIconProps;
+use super::unit_card_info::UnitCardInfoProps;
 use crate::model::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
@@ -14,4 +16,28 @@ pub struct UnitCardProps {
     pub selected_unit_id: Signal<Option<String>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub active_category: Signal<UnitKind>,
+}
+
+impl From<&UnitCardProps> for UnitCardIconProps {
+    fn from(props: &UnitCardProps) -> Self {
+        let icon_path = props.icon_path.clone();
+        let display_name = props.display_name.clone();
+        Self {
+            icon_path,
+            display_name,
+        }
+    }
+}
+
+impl From<&UnitCardProps> for UnitCardInfoProps {
+    fn from(props: &UnitCardProps) -> Self {
+        let display_name = props.display_name.clone();
+        let unit_id = props.unit_id.clone();
+        let is_selected = props.is_selected;
+        Self {
+            display_name,
+            unit_id,
+            is_selected,
+        }
+    }
 }

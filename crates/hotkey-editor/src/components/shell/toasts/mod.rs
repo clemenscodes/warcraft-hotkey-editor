@@ -1,16 +1,8 @@
+mod props;
+
 use dioxus::prelude::*;
 use dioxus_primitives::toast::ToastProvider;
-
-#[derive(Props, Clone)]
-pub struct ToastMountProps {
-    pub children: Element,
-}
-
-impl PartialEq for ToastMountProps {
-    fn eq(&self, _other: &Self) -> bool {
-        false
-    }
-}
+pub use props::ToastMountProps;
 
 /// Wraps the app in the toast provider. The toast styling targets the primitive's
 /// own `.dx-toast-*` markup and is a global concern, so it lives in the design layer
