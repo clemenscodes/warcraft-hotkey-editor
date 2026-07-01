@@ -1,77 +1,39 @@
-pub mod icon;
-pub mod info;
-mod state;
+pub mod unit_card_icon;
+pub mod unit_card_info;
+mod hooks;
+mod props;
+mod style;
 
 use dioxus::prelude::*;
-use warcraft_api::{Race, UnitKind};
 
-use crate::model::icons::IconUrl;
-use crate::services::focus::modality::FocusModality;
-use warcraft_keybinds::GridSlotId;
+use crate::assert_component;
+use hooks::use_unit_card;
+use unit_card_icon::UnitCardIcon;
+use unit_card_info::UnitCardInfo;
 
-use super::unit_kind_data_attr;
-use icon::UnitCardIcon;
-use info::UnitCardInfo;
-use state::UnitCardClasses;
+pub use props::UnitCardProps;
 
-#[derive(Props, Clone, PartialEq)]
-pub struct UnitCardProps {
-    pub unit_id: String,
-    pub display_name: String,
-    pub icon_path: Option<IconUrl>,
-    pub unit_kind: UnitKind,
-    pub race: Race,
-    pub is_selected: bool,
-    pub selected_unit_id: Signal<Option<String>>,
-    pub selected_slot: Signal<Option<GridSlotId>>,
-    pub active_category: Signal<UnitKind>,
-}
+assert_component!(UnitCard);
 
+/// One selectable unit in the list: portrait plus name and id. Selecting it drives
+/// the unit-detail panel.
 #[component]
 pub fn UnitCard(props: UnitCardProps) -> Element {
-    let unit_id = props.unit_id;
+    let model = use_unit_card(&props);
     let display_name = props.display_name;
+    let unit_id = props.unit_id;
     let icon_path = props.icon_path;
-    let unit_kind = props.unit_kind;
-    let race = props.race;
     let is_selected = props.is_selected;
-    let mut selected_unit_id = props.selected_unit_id;
-    let mut selected_slot = props.selected_slot;
-    let mut active_category = props.active_category;
-    let classes = UnitCardClasses::compute(is_selected, race);
-    let button_class = classes.button_class();
-    let id_class = classes.id_class();
-    let kind_attr = unit_kind_data_attr(unit_kind);
-    let unit_id_for_click = unit_id.clone();
-    let unit_id_for_keydown = unit_id.clone();
     let display_name_for_icon = display_name.clone();
-    let kind_for_click = unit_kind;
-    let kind_for_keydown = unit_kind;
-
-    let handle_click = move |_| {
-        selected_unit_id.set(Some(unit_id_for_click.clone()));
-        selected_slot.set(None);
-        active_category.set(kind_for_click);
-    };
-    let handle_keydown = move |event: Event<KeyboardData>| {
-        let key_value = event.data().key().to_string();
-        if key_value == " " || key_value == "Enter" {
-            event.prevent_default();
-            selected_unit_id.set(Some(unit_id_for_keydown.clone()));
-            selected_slot.set(None);
-            active_category.set(kind_for_keydown);
-            FocusModality::after_render(".unit-card.selected, .unit-card");
-        }
-    };
-
     rsx! {
         button {
-            class: button_class,
-            "data-unit-kind": kind_attr,
-            onclick: handle_click,
-            onkeydown: handle_keydown,
+            class: model.class,
+            "data-unit-kind": model.kind_attr,
+            "data-selected": is_selected,
+            onclick: model.on_click,
+            onkeydown: model.on_keydown,
             UnitCardIcon { icon_path, display_name: display_name_for_icon }
-            UnitCardInfo { display_name, unit_id, id_class }
+            UnitCardInfo { display_name, unit_id, is_selected }
         }
     }
 }

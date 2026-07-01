@@ -1,13 +1,17 @@
+mod props;
+mod style;
+
 use dioxus::prelude::*;
 
-use crate::model::icons::IconUrl;
+use crate::assert_component;
+use style::CLASS;
 
-#[derive(Props, Clone, PartialEq)]
-pub struct UnitCardIconProps {
-    pub icon_path: Option<IconUrl>,
-    pub display_name: String,
-}
+pub use props::UnitCardIconProps;
 
+assert_component!(UnitCardIcon);
+
+/// The portrait thumbnail of a unit card, or an empty framed square when the unit
+/// has no icon.
 #[component]
 pub fn UnitCardIcon(props: UnitCardIconProps) -> Element {
     let icon_path = props.icon_path;
@@ -16,14 +20,14 @@ pub fn UnitCardIcon(props: UnitCardIconProps) -> Element {
     rsx! {
         if let Some(source) = icon_url {
             img {
-                class: "unit-card-icon",
+                class: CLASS,
                 src: source,
                 alt: display_name,
                 loading: "lazy",
                 decoding: "async",
             }
         } else {
-            div { class: "unit-card-icon" }
+            div { class: CLASS }
         }
     }
 }

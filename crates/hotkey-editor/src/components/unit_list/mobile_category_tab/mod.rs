@@ -1,16 +1,19 @@
+mod props;
+mod style;
+
 use dioxus::prelude::*;
-use warcraft_api::UnitKind;
 use warcraft_database::UnitKindHelpers;
+
+use crate::assert_component;
+use style::CLASS;
 
 use super::unit_kind_data_attr;
 
-#[derive(Props, Clone, PartialEq)]
-pub struct MobileCategoryTabProps {
-    pub kind: UnitKind,
-    pub is_active: bool,
-    pub active_category: Signal<UnitKind>,
-}
+pub use props::MobileCategoryTabProps;
 
+assert_component!(MobileCategoryTab);
+
+/// A single category tab in the mobile unit picker.
 #[component]
 pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
     let kind = props.kind;
@@ -21,7 +24,7 @@ pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
     let handle_click = move |_| active_category.set(kind);
     rsx! {
         button {
-            class: if is_active { "unit-category-tab active" } else { "unit-category-tab" },
+            class: CLASS,
             role: "tab",
             r#type: "button",
             aria_selected: is_active,

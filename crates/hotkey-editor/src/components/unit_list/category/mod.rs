@@ -1,4 +1,4 @@
-mod state;
+pub mod unit_category_heading;
 
 use std::collections::HashSet;
 
@@ -11,7 +11,7 @@ use warcraft_keybinds::GridSlotId;
 
 use super::unit_card::UnitCard;
 use super::unit_kind_data_attr;
-use state::UnitCategoryHeadingClass;
+use unit_category_heading::UnitCategoryHeading;
 
 struct UnitCardEntry {
     key: String,
@@ -60,7 +60,6 @@ pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let selected_unit_id = props.selected_unit_id;
     let selected_slot = props.selected_slot;
     let active_category = props.active_category;
-    let heading_class = UnitCategoryHeadingClass::compute(is_collapsed);
     let kind_attr = unit_kind_data_attr(category_kind);
     let captured_kind = category_kind;
     let query_str = query.as_str();
@@ -115,15 +114,13 @@ pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
         }
     };
 
+    let toggle_handler = EventHandler::new(toggle_collapse);
     rsx! {
-        button {
-            class: heading_class,
-            "data-unit-kind": kind_attr,
-            onclick: toggle_collapse,
-            span { class: "category-chevron",
-                if is_collapsed { "\u{25b6}" } else { "\u{25bc}" }
-            }
-            {category_label}
+        UnitCategoryHeading {
+            label: category_label,
+            kind_attr,
+            is_collapsed,
+            on_toggle: toggle_handler,
         }
         if !is_collapsed {
             for card_entry in unit_card_entries {

@@ -1,0 +1,12 @@
+use crate::classes;
+
+// The little disclosure triangle before a category name.
+const BASE: &[&str] = &["inline-flex", "w-[0.8rem]", "shrink-0", "text-[0.9rem]"];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
+const LAPTOP: &[&str] = &[];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
+
+classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
