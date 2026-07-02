@@ -1,9 +1,6 @@
 mod props;
 
-use crate::components::unit_detail::components::unit_stats_panel::components::stat_row::StatRow;
-use crate::components::unit_detail::components::unit_stats_panel::components::stat_row_gain::StatRowGain;
-use crate::components::unit_detail::components::unit_stats_panel::components::stat_row_label::StatRowLabel;
-use crate::components::unit_detail::components::unit_stats_panel::components::stat_row_value::StatRowValue;
+use crate::components::unit_detail::components::unit_stats_panel::components::shared::stat_row::StatRow;
 use dioxus::prelude::*;
 pub use props::AttributeRowProps;
 
@@ -15,12 +12,14 @@ pub fn AttributeRow(props: AttributeRowProps) -> Element {
     let is_primary = props.is_primary;
     let value_text = props.value.to_string();
     let per_level_text = format!("+{:.1}", props.per_level);
+    let value = Some(value_text);
+    let gain = Some(per_level_text);
     rsx! {
         StatRow {
             is_primary,
-            StatRowLabel { text: label }
-            StatRowValue { text: value_text }
-            StatRowGain { text: per_level_text }
+            label,
+            value,
+            gain,
         }
     }
 }

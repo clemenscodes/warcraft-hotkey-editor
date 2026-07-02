@@ -10,8 +10,10 @@ use warcraft_keybinds::{
 
 use crate::components::grid_editors::grid_editor::components::headed_grid::HeadedGridProps;
 
-use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
-    GridTileProps, GridTileState,
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
+use crate::components::grid_editors::grid_editor::components::grid_editor_tile::{
+    EditorTileKind, GridEditorTileProps,
 };
 
 use super::super::props::GridEditorProps;
@@ -25,11 +27,11 @@ use super::mechanics;
 
 /// Builds the editor's captioned grid: its heading plus the finished tiles. The
 /// domain renders the grid, each tile is adapted into its presentational
-/// `GridTileProps`, and the drag state plus every pointer handler is overlaid on
-/// top. This is all the grid's behavior, kept in the editor; the `HeadedGrid` and
-/// the pure `Grid` only draw what comes out. Always exactly
+/// `GridEditorTileProps`, and the drag state plus every pointer handler is
+/// overlaid on top. This is all the grid's behavior, kept in the editor; the
+/// `HeadedGrid` and the pure `Grid` only draw what comes out. Always exactly
 /// `COMMAND_GRID_TILE_COUNT` tiles, so the result is a fixed-size array.
-impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
+impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKind> {
     fn from(props: &GridEditorProps<B>) -> Self {
         let behavior = props.behavior.clone();
         let config = &props.config;
@@ -105,9 +107,10 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
             .filter(|detail| detail.grid_id() == grid_id)
             .map(|detail| detail.coordinate());
         let drag_active_here = dragging_source_coordinate.is_some();
-        let mut tile_props_list: Vec<GridTileProps> = Vec::with_capacity(rendered_tiles.len());
+        let mut tile_props_list: Vec<GridEditorTileProps> =
+            Vec::with_capacity(rendered_tiles.len());
         for rendered in rendered_tiles.iter() {
-            let mut tile = GridTileProps::from(rendered);
+            let mut tile = GridEditorTileProps::from(rendered);
             let coordinate = tile.coordinate;
             let base_state = tile.state;
             let draggable = tile.draggable;
@@ -177,17 +180,19 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps {
             tile.ondoubleclick = EventHandler::new(double_click);
             tile_props_list.push(tile);
         }
-        let tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT] = tile_props_list
+        let tiles: [GridEditorTileProps; COMMAND_GRID_TILE_COUNT] = tile_props_list
             .try_into()
-            .unwrap_or_else(|list: Vec<GridTileProps>| {
+            .unwrap_or_else(|list: Vec<GridEditorTileProps>| {
                 panic!(
                     "command grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
                     list.len(),
                 )
             });
+        let kind = EditorTileKind;
+        let grid = GridProps { kind, tiles };
         Self {
             heading: grid_id,
-            tiles,
+            grid,
         }
     }
 }

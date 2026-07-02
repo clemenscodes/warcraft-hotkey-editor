@@ -1,8 +1,8 @@
-use super::super::super::collision_count::CollisionCount;
-use super::super::super::conflict_object_id::ConflictObjectId;
-use super::super::super::hotkey_unit_name::HotkeyUnitName;
-use super::super::super::hotkey_unit_row_icon::{HotkeyUnitRowIcon, HotkeyUnitRowIconProps};
-use super::super::super::row_meta::RowMeta;
+use crate::components::views::collisions_page::components::body::components::shared::collision_count::CollisionCount;
+use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::shared::hotkey_unit_name::HotkeyUnitName;
+use crate::components::views::collisions_page::components::body::components::sidebars::shared::hotkey_unit_row_icon::{HotkeyUnitRowIcon, HotkeyUnitRowIconProps};
+use crate::components::views::collisions_page::components::body::components::shared::row_meta::RowMeta;
 use super::super::sidebar::components::collision_card::CollisionCardProps;
 use super::props::HotkeyUnitSidebarProps;
 use dioxus::prelude::*;

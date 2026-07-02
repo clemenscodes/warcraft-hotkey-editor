@@ -1,4 +1,4 @@
-use super::super::stat_icon_frame::StatIconFrameProps;
+use super::super::shared::stat_icon_frame::StatIconFrameProps;
 use super::components::attribute_row::AttributeRowProps;
 use dioxus::prelude::*;
 
@@ -51,7 +51,7 @@ impl HeroDisplayData {
 
 #[derive(Props, Clone, PartialEq)]
 pub struct AttributesColumnProps {
-    pub hero: HeroDisplayData,
+    pub hero: Option<HeroDisplayData>,
 }
 
 /// Which attribute an `AttributeRow` shows.
@@ -70,8 +70,10 @@ impl From<&HeroDisplayData> for StatIconFrameProps {
     }
 }
 
-impl From<(&HeroDisplayData, Attribute)> for AttributeRowProps {
-    fn from((hero, attribute): (&HeroDisplayData, Attribute)) -> Self {
+impl AttributeRowProps {
+    /// The row for one of the hero's three attributes, marked primary for its
+    /// main one.
+    pub(super) fn for_attribute(hero: &HeroDisplayData, attribute: Attribute) -> Self {
         match attribute {
             Attribute::Strength => Self {
                 label: "Strength",

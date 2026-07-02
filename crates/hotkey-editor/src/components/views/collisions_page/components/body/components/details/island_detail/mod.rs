@@ -4,12 +4,12 @@ mod logic;
 mod props;
 
 use super::detail::{Detail, DetailBody, DetailContent};
-use crate::components::views::collisions_page::components::body::components::collision_count::CollisionCount;
-use crate::components::views::collisions_page::components::body::components::coordinate::Coordinate;
-use crate::components::views::collisions_page::components::body::components::mini_grid::{
+use crate::components::views::collisions_page::components::body::components::shared::collision_count::CollisionCount;
+use crate::components::views::collisions_page::components::body::components::shared::coordinate::Coordinate;
+use crate::components::views::collisions_page::components::body::components::shared::mini_grid::{
     MiniGrid, MiniGridProps,
 };
-use crate::components::views::collisions_page::components::body::components::row_meta::RowMeta;
+use crate::components::views::collisions_page::components::body::components::shared::row_meta::RowMeta;
 use crate::components::views::collisions_page::logic::CarrierDialogData;
 use components::carriers_dialog_host::CarriersDialogHost;
 use components::island_conflict_card::IslandConflictCard;

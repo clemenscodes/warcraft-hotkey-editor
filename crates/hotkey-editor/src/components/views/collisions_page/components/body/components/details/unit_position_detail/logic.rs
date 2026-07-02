@@ -1,6 +1,6 @@
 use super::components::unit_position_conflict_card::UnitPositionConflictCardProps;
 use super::props::UnitPositionDetailProps;
-use crate::components::views::collisions_page::components::body::components::hotkey_detail_unit::HotkeyDetailUnitProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::hotkey_detail_unit::HotkeyDetailUnitProps;
 use dioxus::prelude::*;
 
 /// The selected unit's header data and its position-conflict cards.

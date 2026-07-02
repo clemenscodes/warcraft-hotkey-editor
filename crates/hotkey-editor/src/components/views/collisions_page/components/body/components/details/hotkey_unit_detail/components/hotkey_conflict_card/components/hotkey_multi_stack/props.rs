@@ -1,4 +1,4 @@
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbilityProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 
 /// The multi-way clash layout: the badge stacked above every clashing ability, or

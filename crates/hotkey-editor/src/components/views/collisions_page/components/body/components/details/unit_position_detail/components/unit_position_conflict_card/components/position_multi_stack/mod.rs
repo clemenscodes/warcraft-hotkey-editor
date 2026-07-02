@@ -1,8 +1,8 @@
 mod props;
 
 use super::conflict_position_cell::ConflictPositionCell;
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbility;
-use crate::components::views::collisions_page::components::body::components::conflict_ability_row::ConflictAbilityRow;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbility;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability_row::ConflictAbilityRow;
 use dioxus::prelude::*;
 pub use props::PositionMultiStackProps;
 

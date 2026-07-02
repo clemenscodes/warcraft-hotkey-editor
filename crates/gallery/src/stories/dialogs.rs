@@ -15,7 +15,10 @@ use hotkey_editor::components::dialogs::templates_dialog::TemplatesDialog;
 use hotkey_editor::components::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
 use hotkey_editor::components::dialogs::upload_info_dialog::UploadInfoDialog;
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileProps;
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
+use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::{
+    EditorTileKind, GridEditorTileProps,
+};
 use hotkey_editor::components::shell::toasts::ToastMount;
 
 use warcraft_keybinds::{
@@ -184,8 +187,10 @@ fn headed_grid_command() -> Element {
         .expect("at least one bundled template")
         .clone();
     let tiles = headed_grid_tiles(resolved.command_tiles());
+    let kind = EditorTileKind;
+    let grid = GridProps { kind, tiles };
     rsx! {
-        HeadedGrid { heading: "Command card", tiles }
+        HeadedGrid { heading: "Command card", grid }
     }
 }
 
@@ -196,15 +201,17 @@ fn headed_grid_research() -> Element {
         .expect("at least one bundled template")
         .clone();
     let tiles = headed_grid_tiles(resolved.research_tiles());
+    let kind = EditorTileKind;
+    let grid = GridProps { kind, tiles };
     rsx! {
-        HeadedGrid { heading: "Research menu", tiles }
+        HeadedGrid { heading: "Research menu", grid }
     }
 }
 
-fn headed_grid_tiles(source: &[RenderedTile]) -> [GridTileProps; COMMAND_GRID_TILE_COUNT] {
+fn headed_grid_tiles(source: &[RenderedTile]) -> [GridEditorTileProps; COMMAND_GRID_TILE_COUNT] {
     source
         .iter()
-        .map(GridTileProps::from)
+        .map(GridEditorTileProps::from)
         .collect::<Vec<_>>()
         .try_into()
         .unwrap_or_else(|_| panic!("command grid is always {COMMAND_GRID_TILE_COUNT} tiles"))

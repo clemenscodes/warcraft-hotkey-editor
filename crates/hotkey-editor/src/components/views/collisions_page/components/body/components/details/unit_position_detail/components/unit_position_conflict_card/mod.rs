@@ -2,8 +2,8 @@ pub mod components;
 mod logic;
 mod props;
 
-use crate::components::views::collisions_page::components::body::components::conflict_card::ConflictCard;
-use crate::components::views::collisions_page::components::body::components::conflict_card_caption::ConflictCardCaption;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_card::ConflictCard;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_card_caption::ConflictCardCaption;
 use components::position_multi_stack::PositionMultiStack;
 use components::position_pair_row::PositionPairRow;
 use dioxus::prelude::*;

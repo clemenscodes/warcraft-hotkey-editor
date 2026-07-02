@@ -1,4 +1,4 @@
-use super::super::stat_icon_frame::StatIconFrameProps;
+use super::super::shared::stat_icon_frame::StatIconFrameProps;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
 
@@ -62,7 +62,7 @@ impl AttackDisplayData {
 
 #[derive(Props, Clone, PartialEq)]
 pub struct CombatColumnProps {
-    pub attack: AttackDisplayData,
+    pub attack: Option<AttackDisplayData>,
 }
 
 impl From<&AttackDisplayData> for StatIconFrameProps {

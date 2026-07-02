@@ -1,7 +1,7 @@
 use super::components::hotkey_multi_stack::HotkeyMultiStackProps;
 use super::components::hotkey_pair_row::{AbilityPair, HotkeyPairRowProps};
 use super::props::HotkeyConflictCardProps;
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbilityProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 
 /// The card's shaped view: the caption plus the pair-row and multi-stack child
 /// props (exactly one of which renders; the other guards itself away).

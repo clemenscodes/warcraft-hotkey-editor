@@ -1,14 +1,16 @@
 use crate::classes;
+
+// The move's mini grid frame: a query container the reused `Grid` fills. Its width
+// sets the whole grid's scale (the tiles size in `cqi` off it), its height comes
+// from the three rows of square tiles, and it is display-only, so pointer events
+// pass through.
 const BASE: &[&str] = &[
     "flex-[1_1_auto]",
     "w-full",
     "max-w-[260px]",
     "min-w-0",
-    "aspect-[4/3]",
-    "grid",
-    "grid-cols-[repeat(4,1fr)]",
-    "grid-rows-[repeat(3,1fr)]",
-    "gap-[3px]",
+    "[container-type:inline-size]",
+    "pointer-events-none",
     "p-[4px]",
     "bg-[rgba(20,35,60,0.7)]",
     "border",

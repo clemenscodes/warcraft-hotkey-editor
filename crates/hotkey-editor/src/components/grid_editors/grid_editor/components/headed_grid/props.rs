@@ -1,14 +1,14 @@
-use super::components::grid::components::grid_tile::GridTileProps;
+use super::components::grid::{GridProps, GridTileKind};
 use dioxus::prelude::*;
-use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
-/// A heading stacked above a grid of finished tiles. Purely presentational: it
-/// pairs a caption with the reused `Grid` and draws whatever tiles it is handed.
-/// It has no behavior of its own. The `GridEditor` builds these props with
-/// interactive tiles, the templates preview builds them with read-only tiles;
-/// either way `HeadedGrid` just renders.
+/// A heading stacked above a grid. Purely presentational and generic over the
+/// [`GridTileKind`] its grid lays out: it is nothing but a caption plus the grid's
+/// own props, passed straight through. It has no behavior of its own and nothing
+/// to do with editing — the `GridEditor` builds these props with interactive
+/// tiles, the templates preview with read-only tiles; either way `HeadedGrid` just
+/// renders.
 #[derive(Props, Clone, PartialEq)]
-pub struct HeadedGridProps {
+pub struct HeadedGridProps<B: GridTileKind> {
     pub heading: &'static str,
-    pub tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT],
+    pub grid: GridProps<B>,
 }

@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::views::collisions_page::components::body::components::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use components::carrier_card_icon::{CarrierCardIcon, CarrierCardIconProps};
 use components::carrier_card_name::CarrierCardName;
 use dioxus::prelude::*;

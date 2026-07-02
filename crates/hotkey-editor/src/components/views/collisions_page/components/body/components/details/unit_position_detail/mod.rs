@@ -4,11 +4,11 @@ mod logic;
 mod props;
 
 use super::detail::{Detail, DetailBody, DetailContent};
-use crate::components::views::collisions_page::components::body::components::collision_count::CollisionCount;
-use crate::components::views::collisions_page::components::body::components::conflict_object_id::ConflictObjectId;
-use crate::components::views::collisions_page::components::body::components::hotkey_detail_unit::HotkeyDetailUnit;
-use crate::components::views::collisions_page::components::body::components::hotkey_unit_name::HotkeyUnitName;
-use crate::components::views::collisions_page::components::body::components::row_meta::RowMeta;
+use crate::components::views::collisions_page::components::body::components::shared::collision_count::CollisionCount;
+use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::details::shared::hotkey_detail_unit::HotkeyDetailUnit;
+use crate::components::views::collisions_page::components::body::components::shared::hotkey_unit_name::HotkeyUnitName;
+use crate::components::views::collisions_page::components::body::components::shared::row_meta::RowMeta;
 use components::unit_position_conflict_card::UnitPositionConflictCard;
 use dioxus::prelude::*;
 use logic::selected;

@@ -5,13 +5,12 @@ use hotkey_editor::components::grid_editors::grid_editor::components::drag_follo
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::components::hotkey_badge::{
+use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::components::hotkey_badge::{
     HotkeyBadge, HotkeyBadgeState,
 };
 
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
-    GridTile, GridTileState,
-};
+use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::GridEditorTile;
+use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
 
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
 use hotkey_editor::components::shell::toasts::ToastMount;
@@ -28,17 +27,37 @@ pub fn stories() -> Vec<Story> {
         Story::new("Grid", "HotkeyBadge", "Normal", hotkey_badge_normal),
         Story::new("Grid", "HotkeyBadge", "Passive", hotkey_badge_passive),
         Story::new("Grid", "HotkeyBadge", "Conflict", hotkey_badge_conflict),
-        Story::new("Grid", "GridTile", "Empty", grid_tile_empty),
-        Story::new("Grid", "GridTile", "Filled", grid_tile_filled),
-        Story::new("Grid", "GridTile", "Selected", grid_tile_selected),
-        Story::new("Grid", "GridTile", "Command", grid_tile_command),
-        Story::new("Grid", "GridTile", "Drop target", grid_tile_drop_target),
-        Story::new("Grid", "GridTile", "Blocked drop target", grid_tile_blocked),
-        Story::new("Grid", "GridTile", "Dragging source", grid_tile_dragging),
-        Story::new("Grid", "GridTile", "Drag over", grid_tile_drag_over),
-        Story::new("Grid", "GridTile", "Conflict", grid_tile_conflict),
-        Story::new("Grid", "GridTile", "Passive", grid_tile_passive),
-        Story::new("Grid", "GridTile", "Selected orc", grid_tile_selected_orc),
+        Story::new("Grid", "GridEditorTile", "Empty", grid_tile_empty),
+        Story::new("Grid", "GridEditorTile", "Filled", grid_tile_filled),
+        Story::new("Grid", "GridEditorTile", "Selected", grid_tile_selected),
+        Story::new("Grid", "GridEditorTile", "Command", grid_tile_command),
+        Story::new(
+            "Grid",
+            "GridEditorTile",
+            "Drop target",
+            grid_tile_drop_target,
+        ),
+        Story::new(
+            "Grid",
+            "GridEditorTile",
+            "Blocked drop target",
+            grid_tile_blocked,
+        ),
+        Story::new(
+            "Grid",
+            "GridEditorTile",
+            "Dragging source",
+            grid_tile_dragging,
+        ),
+        Story::new("Grid", "GridEditorTile", "Drag over", grid_tile_drag_over),
+        Story::new("Grid", "GridEditorTile", "Conflict", grid_tile_conflict),
+        Story::new("Grid", "GridEditorTile", "Passive", grid_tile_passive),
+        Story::new(
+            "Grid",
+            "GridEditorTile",
+            "Selected orc",
+            grid_tile_selected_orc,
+        ),
         Story::new(
             "Grid",
             "DragFollowerOverlay",
@@ -86,7 +105,7 @@ fn hotkey_badge_conflict() -> Element {
 
 fn grid_tile_empty() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Empty,
             hotkey: HotkeyToken::try_from('Q')
                     .expect("letter"),
@@ -96,7 +115,7 @@ fn grid_tile_empty() -> Element {
 
 fn grid_tile_filled() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
@@ -110,7 +129,7 @@ fn grid_tile_filled() -> Element {
 
 fn grid_tile_selected() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Selected,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
@@ -124,7 +143,7 @@ fn grid_tile_selected() -> Element {
 
 fn grid_tile_command() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Command,
             icon: fixtures::sample_icon_url(),
             label: "Build".to_string(),
@@ -137,7 +156,7 @@ fn grid_tile_command() -> Element {
 
 fn grid_tile_drop_target() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::DropTarget,
             hotkey: HotkeyToken::try_from('Q')
                     .expect("letter"),
@@ -147,7 +166,7 @@ fn grid_tile_drop_target() -> Element {
 
 fn grid_tile_blocked() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::BlockedDropTarget,
             hotkey: HotkeyToken::try_from('Q').expect("letter"),
         }
@@ -156,7 +175,7 @@ fn grid_tile_blocked() -> Element {
 
 fn grid_tile_dragging() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
@@ -171,7 +190,7 @@ fn grid_tile_dragging() -> Element {
 
 fn grid_tile_drag_over() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
@@ -186,7 +205,7 @@ fn grid_tile_drag_over() -> Element {
 
 fn grid_tile_conflict() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Footman".to_string(),
@@ -201,7 +220,7 @@ fn grid_tile_conflict() -> Element {
 
 fn grid_tile_passive() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             state: GridTileState::Filled,
             icon: fixtures::sample_icon_url(),
             label: "Inner Fire".to_string(),
@@ -228,7 +247,7 @@ fn footman_command_slots() -> Rc<[GridSlotId]> {
 
 fn grid_tile_selected_orc() -> Element {
     rsx! {
-        GridTile {
+        GridEditorTile {
             race: Race::Orc,
             state: GridTileState::Selected,
             icon: fixtures::sample_icon_url(),

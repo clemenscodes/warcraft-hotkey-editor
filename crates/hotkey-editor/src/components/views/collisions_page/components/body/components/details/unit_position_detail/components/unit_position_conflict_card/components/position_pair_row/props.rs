@@ -1,5 +1,5 @@
 use super::super::conflict_position_cell::ConflictPositionCellProps;
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbilityProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 
 /// The two abilities flanking the colliding cell in a pair clash, with the cell.

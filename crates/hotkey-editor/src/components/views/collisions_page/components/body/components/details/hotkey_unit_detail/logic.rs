@@ -1,6 +1,6 @@
 use super::components::hotkey_conflict_card::HotkeyConflictCardProps;
 use super::props::HotkeyUnitDetailProps;
-use crate::components::views::collisions_page::components::body::components::hotkey_detail_unit::HotkeyDetailUnitProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::hotkey_detail_unit::HotkeyDetailUnitProps;
 use dioxus::prelude::*;
 
 /// The selected unit's header data and its shared-hotkey conflict cards.

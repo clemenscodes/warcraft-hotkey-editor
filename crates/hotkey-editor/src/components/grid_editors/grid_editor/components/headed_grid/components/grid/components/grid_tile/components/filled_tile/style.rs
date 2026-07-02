@@ -6,10 +6,9 @@ const BASE: &[&str] = &[
     "w-full",
     "aspect-square",
     "[container-type:inline-size]",
-    "max-w-[140px]",
     "overflow-hidden",
-    "border-2",
-    "rounded-[6px]",
+    "border-[0.35cqi]",
+    "rounded-[1.04cqi]",
     "[transition:border-color_0.12s_ease,box-shadow_0.12s_ease]",
     "touch-pan-y",
     "cursor-grab",
@@ -41,12 +40,12 @@ const BASE: &[&str] = &[
     "[body:has([data-dragging-source=true])_&]:transition-none",
 ];
 
-const MOBILE: &[&str] = &["mobile:max-w-[116px]"];
-const TABLET: &[&str] = &["tablet:max-w-[128px]"];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &["desktop:max-w-[156px]"];
-const QHD: &[&str] = &["qhd:max-w-[172px]"];
-const UHD: &[&str] = &["uhd:max-w-[200px]"];
+const DESKTOP: &[&str] = &[];
+const QHD: &[&str] = &[];
+const UHD: &[&str] = &[];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

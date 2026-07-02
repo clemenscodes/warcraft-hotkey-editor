@@ -1,26 +1,24 @@
-pub mod components;
 mod logic;
 mod props;
 mod style;
+
 use crate::assert_component;
-use components::mini_cell::MiniCell;
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::Grid;
 use dioxus::prelude::*;
-use logic::cells;
 pub use props::MiniGridProps;
 use style::CLASS;
 assert_component!(MiniGrid);
 
-/// A 4×3 command grid that draws each placed ability's icon into its cell, so a
-/// move reads as "this ability ends up here".
+/// A tiny command grid showing where a move's abilities land. It reuses the generic
+/// `Grid`, shrunk by rendering it in a small query container, with each placed
+/// ability drawn as a filled tile.
 #[component]
 pub fn MiniGrid(props: MiniGridProps) -> Element {
-    let cells = cells(&props);
+    let grid = logic::grid(&props);
     rsx! {
         div {
             class: CLASS,
-            for cell in cells {
-                MiniCell { ..cell }
-            }
+            Grid { ..grid }
         }
     }
 }

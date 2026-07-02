@@ -1,13 +1,11 @@
 use super::super::super::GridTileProps;
 use super::super::super::GridTileState;
 use super::super::super::TileChrome;
-use super::super::hotkey_badge::HotkeyBadgeState;
 use super::state::EmptyTileState;
 use dioxus::prelude::*;
-use warcraft_keybinds::HotkeyToken;
 
-/// An empty command slot: the position's hotkey badge and the shared tile chrome.
-/// During a drag it can become a drop target (or a blocked one).
+/// An empty command slot: the shared tile chrome and its drop-target look. During
+/// a drag it can become a drop target (or a blocked one).
 #[derive(Props, Clone, PartialEq)]
 pub struct EmptyTileProps {
     pub chrome: TileChrome,
@@ -16,8 +14,6 @@ pub struct EmptyTileProps {
     /// `data-drop-target` hook for the position-picker styling (the tile's own
     /// look comes from `state`).
     pub drop_target: &'static str,
-    pub hotkey: HotkeyToken,
-    pub badge_state: HotkeyBadgeState,
 }
 
 impl From<&GridTileProps> for EmptyTileProps {
@@ -25,6 +21,7 @@ impl From<&GridTileProps> for EmptyTileProps {
         let state = match props.state {
             GridTileState::DropTarget => EmptyTileState::DropTarget,
             GridTileState::BlockedDropTarget => EmptyTileState::BlockedDropTarget,
+            GridTileState::Highlighted => EmptyTileState::Highlighted,
             _ => EmptyTileState::Empty,
         };
         let drop_target = if matches!(props.state, GridTileState::DropTarget) {
@@ -33,14 +30,10 @@ impl From<&GridTileProps> for EmptyTileProps {
             "false"
         };
         let chrome = TileChrome::from(props);
-        let hotkey = props.hotkey;
-        let badge_state = props.badge_state;
         Self {
             chrome,
             state,
             drop_target,
-            hotkey,
-            badge_state,
         }
     }
 }

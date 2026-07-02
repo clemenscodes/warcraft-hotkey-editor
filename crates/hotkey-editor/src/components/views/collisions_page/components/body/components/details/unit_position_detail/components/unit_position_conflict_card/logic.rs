@@ -2,7 +2,7 @@ use super::components::conflict_position_cell::ConflictPositionCellProps;
 use super::components::position_multi_stack::PositionMultiStackProps;
 use super::components::position_pair_row::{PositionPair, PositionPairRowProps};
 use super::props::UnitPositionConflictCardProps;
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbilityProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 
 /// The shaped card: the caption plus the pair-row and multi-stack child props. A
 /// two-way clash flanks the cell (pair row); a rarer 3+-way clash stacks the cell

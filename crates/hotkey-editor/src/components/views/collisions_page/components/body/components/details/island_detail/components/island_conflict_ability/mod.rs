@@ -3,12 +3,12 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::views::collisions_page::components::body::components::conflict_ability_icon::{
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability_icon::{
     ConflictAbilityIcon, ConflictAbilityIconProps,
 };
-use crate::components::views::collisions_page::components::body::components::conflict_ability_name::ConflictAbilityName;
-use crate::components::views::collisions_page::components::body::components::conflict_ability_trigger::ConflictAbilityTrigger;
-use crate::components::views::collisions_page::components::body::components::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability_trigger::ConflictAbilityTrigger;
+use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::views::collisions_page::logic::CarrierDialogData;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;

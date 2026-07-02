@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::views::collisions_page::components::body::components::mini_grid::{
+use crate::components::views::collisions_page::components::body::components::shared::mini_grid::{
     MiniGrid, MiniGridProps,
 };
 use dioxus::prelude::*;

@@ -16,4 +16,6 @@ pub enum GridTileState {
     DropTarget,
     /// Empty but reserved by another ability's off-state, so drops are refused.
     BlockedDropTarget,
+    /// Empty and marked as the coordinate a mini grid points at.
+    Highlighted,
 }

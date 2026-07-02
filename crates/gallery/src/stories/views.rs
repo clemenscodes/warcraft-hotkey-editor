@@ -8,7 +8,7 @@ use hotkey_editor::components::views::collisions_page::components::body::compone
 use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
 use hotkey_editor::components::views::collisions_page::components::body::components::details::island_detail::IslandDetail;
 use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
-use hotkey_editor::components::views::collisions_page::components::body::components::mini_grid::MiniGrid;
+use hotkey_editor::components::views::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
 use hotkey_editor::components::views::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;
 use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
 

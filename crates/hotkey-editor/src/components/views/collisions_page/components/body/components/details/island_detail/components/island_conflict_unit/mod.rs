@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::views::collisions_page::components::body::components::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use components::conflict_unit_icon::{ConflictUnitIcon, ConflictUnitIconProps};
 use components::conflict_unit_name::ConflictUnitName;
 use dioxus::prelude::*;

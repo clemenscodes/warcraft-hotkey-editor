@@ -1,25 +1,27 @@
 pub mod components;
+mod grid_tile_kind;
 mod props;
 mod style;
 
 use crate::assert_component;
-use components::grid_tile::GridTile;
 use dioxus::prelude::*;
+pub use grid_tile_kind::GridTileKind;
 pub use props::GridProps;
 use style::CLASS;
 assert_component!(Grid);
 
-/// The command grid: a pure tile renderer. It lays out the finished tiles it is
-/// handed and draws each one. It owns no behavior and no domain type. The
-/// `GridEditor` builds the tiles, with their handlers and drag state, and the
-/// templates preview hands it plain read-only tiles.
+/// The command grid: a pure tile renderer that encodes the three-by-four
+/// tile-square shape once and nothing else. It owns no behavior and no domain
+/// type. Generic over the [`GridTileKind`] that renders each cell — the editor
+/// binds an interactive tile, the mini grid a highlighted read-only tile — so the
+/// shape is written once and every extension inherits it.
 #[component]
-pub fn Grid(props: GridProps) -> Element {
+pub fn Grid<B: GridTileKind>(props: GridProps<B>) -> Element {
     let tiles = props.tiles;
     rsx! {
         div { class: CLASS,
             for tile in tiles {
-                GridTile { ..tile }
+                {B::tile(tile)}
             }
         }
     }

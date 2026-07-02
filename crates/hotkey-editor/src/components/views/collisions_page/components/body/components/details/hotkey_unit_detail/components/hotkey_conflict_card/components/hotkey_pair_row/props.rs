@@ -1,4 +1,4 @@
-use crate::components::views::collisions_page::components::body::components::conflict_ability::ConflictAbilityProps;
+use crate::components::views::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 
 /// The two abilities flanking the shared-key badge in a pair clash.

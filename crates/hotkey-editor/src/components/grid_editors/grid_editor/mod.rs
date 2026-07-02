@@ -5,6 +5,7 @@ mod style;
 
 use crate::assert_component;
 use components::drag_follower_overlay::{DragFollowerOverlay, DragFollowerOverlayProps};
+use components::grid_editor_tile::EditorTileKind;
 use components::headed_grid::{HeadedGrid, HeadedGridProps};
 use dioxus::prelude::*;
 pub use props::{GridEditorConfig, GridEditorProps};
@@ -22,7 +23,7 @@ assert_component!(GridEditor);
 pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element {
     rsx! {
         div { class: CLASS, "data-grid-id": props.config.heading,
-            HeadedGrid { ..HeadedGridProps::from(&props) }
+            HeadedGrid { ..HeadedGridProps::<EditorTileKind>::from(&props) }
             DragFollowerOverlay { ..DragFollowerOverlayProps::from(&props) }
         }
     }
