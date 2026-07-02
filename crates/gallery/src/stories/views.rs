@@ -4,19 +4,20 @@ use gallery::Story;
 use hotkey_editor::components::shell::toasts::ToastMount;
 
 use hotkey_editor::components::views::collisions_page::CollisionsPage;
-use hotkey_editor::components::views::collisions_page::components::body::components::hotkey_unit_detail::HotkeyUnitDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::hotkey_unit_sidebar::HotkeyUnitSidebar;
-use hotkey_editor::components::views::collisions_page::components::body::components::island_detail::IslandDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::island_sidebar::IslandSidebar;
+use hotkey_editor::components::views::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
+use hotkey_editor::components::views::collisions_page::components::body::components::details::island_detail::IslandDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
 use hotkey_editor::components::views::collisions_page::components::body::components::mini_grid::MiniGrid;
-use hotkey_editor::components::views::collisions_page::components::body::components::unit_position_detail::UnitPositionDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::unit_position_sidebar::UnitPositionSidebar;
+use hotkey_editor::components::views::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
 
 use hotkey_editor::components::views::resolve_page::ResolvePage;
 use hotkey_editor::services::navigation::app_view::{AppView, CollisionKind};
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
+use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
 
 fn make_view_navigation() -> ViewNavigationContext {
     let current_view = use_signal(|| AppView::Editor);
@@ -105,26 +106,23 @@ fn resolve_page_story() -> Element {
 }
 
 fn island_mini_grid_top_left() -> Element {
-    let collision_column: u8 = 0;
-    let collision_row: u8 = 0;
+    let coordinate = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
     rsx! {
-        MiniGrid { collision_column, collision_row }
+        MiniGrid { coordinate }
     }
 }
 
 fn island_mini_grid_center() -> Element {
-    let collision_column: u8 = 1;
-    let collision_row: u8 = 1;
+    let coordinate = GridCoordinate::new(ColumnIndex::One, RowIndex::One);
     rsx! {
-        MiniGrid { collision_column, collision_row }
+        MiniGrid { coordinate }
     }
 }
 
 fn island_mini_grid_bottom_right() -> Element {
-    let collision_column: u8 = 3;
-    let collision_row: u8 = 2;
+    let coordinate = GridCoordinate::new(ColumnIndex::Three, RowIndex::Two);
     rsx! {
-        MiniGrid { collision_column, collision_row }
+        MiniGrid { coordinate }
     }
 }
 

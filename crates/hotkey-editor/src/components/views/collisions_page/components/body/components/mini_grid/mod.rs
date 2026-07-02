@@ -4,23 +4,23 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use components::mini_cell::MiniCell;
+use components::mini_tile::MiniTile;
 use dioxus::prelude::*;
-use logic::cells;
+use logic::tiles;
 pub use props::MiniGridProps;
 use style::CLASS;
 assert_component!(MiniGrid);
 
-/// A tiny empty 4×3 command grid with only the island's conflicting cell
-/// highlighted. Shared by the sidebar island cards and the detail header.
+/// A tiny 4×3 command grid with only the given coordinate's tile highlighted.
+/// Shared by the sidebar island cards and the detail header.
 #[component]
 pub fn MiniGrid(props: MiniGridProps) -> Element {
-    let cells = cells(&props);
+    let tiles = tiles(&props);
     rsx! {
         div {
             class: CLASS,
-            for cell in cells {
-                MiniCell { ..cell }
+            for tile in tiles {
+                MiniTile { ..tile }
             }
         }
     }

@@ -1,10 +1,10 @@
 pub mod components;
 mod props;
 
-use components::attribute_row::{AttributeRow, AttributeRowProps};
 use super::stat_column::{StatColumn, StatColumnKind};
 use super::stat_icon_frame::{StatIconFrame, StatIconFrameProps};
 use super::stat_rows::StatRows;
+use components::attribute_row::{AttributeRow, AttributeRowProps};
 use dioxus::prelude::*;
 pub use props::{AttributesColumnProps, HeroDisplayData};
 

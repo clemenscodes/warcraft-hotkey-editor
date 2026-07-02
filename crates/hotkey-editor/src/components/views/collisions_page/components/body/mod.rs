@@ -3,13 +3,13 @@ mod props;
 
 use components::clear_state::ClearState;
 use components::content::Content;
+use components::details::hotkey_unit_detail::HotkeyUnitDetail;
+use components::details::island_detail::IslandDetail;
+use components::details::unit_position_detail::UnitPositionDetail;
 use components::empty_state::EmptyState;
-use components::hotkey_unit_detail::HotkeyUnitDetail;
-use components::hotkey_unit_sidebar::HotkeyUnitSidebar;
-use components::island_detail::IslandDetail;
-use components::island_sidebar::IslandSidebar;
-use components::unit_position_detail::UnitPositionDetail;
-use components::unit_position_sidebar::UnitPositionSidebar;
+use components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
+use components::sidebars::island_sidebar::IslandSidebar;
+use components::sidebars::unit_position_sidebar::UnitPositionSidebar;
 use dioxus::prelude::*;
 pub use props::{BodyProps, ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 

@@ -1,11 +1,11 @@
 use super::components::body::components::clear_state::ClearStateProps;
+use super::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
+use super::components::body::components::details::island_detail::IslandDetailProps;
+use super::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
 use super::components::body::components::empty_state::EmptyStateProps;
-use super::components::body::components::hotkey_unit_detail::HotkeyUnitDetailProps;
-use super::components::body::components::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
-use super::components::body::components::island_detail::IslandDetailProps;
-use super::components::body::components::island_sidebar::IslandSidebarProps;
-use super::components::body::components::unit_position_detail::UnitPositionDetailProps;
-use super::components::body::components::unit_position_sidebar::UnitPositionSidebarProps;
+use super::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
+use super::components::body::components::sidebars::island_sidebar::IslandSidebarProps;
+use super::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 use super::components::breadcrumbs::BreadcrumbsProps;
 use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};

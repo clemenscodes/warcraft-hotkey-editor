@@ -1,0 +1,45 @@
+mod components;
+mod data;
+mod logic;
+mod props;
+
+use super::detail::{Detail, DetailBody, DetailContent};
+use crate::components::views::collisions_page::components::body::components::collision_count::CollisionCount;
+use crate::components::views::collisions_page::components::body::components::conflict_object_id::ConflictObjectId;
+use crate::components::views::collisions_page::components::body::components::hotkey_detail_unit::HotkeyDetailUnit;
+use crate::components::views::collisions_page::components::body::components::hotkey_unit_name::HotkeyUnitName;
+use crate::components::views::collisions_page::components::body::components::row_meta::RowMeta;
+use components::unit_position_conflict_card::UnitPositionConflictCard;
+use dioxus::prelude::*;
+use logic::selected;
+pub use props::UnitPositionDetailProps;
+
+/// The per-unit position-collision detail extension: builds the selected unit's
+/// header and position-conflict cards, fed into the base detail pane.
+#[component]
+pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
+    let Some(model) = selected(&props) else {
+        let content = DetailContent::Empty(data::EMPTY_PROMPT);
+        return rsx! {
+            Detail { content }
+        };
+    };
+    let header = rsx! {
+        HotkeyDetailUnit { ..model.unit }
+        RowMeta {
+            HotkeyUnitName { text: model.name }
+            ConflictObjectId { text: model.unit_id_label }
+            CollisionCount { text: model.count_text }
+        }
+    };
+    let cards = rsx! {
+        for card in model.cards {
+            UnitPositionConflictCard { ..card }
+        }
+    };
+    let body = DetailBody { header, cards };
+    let content = DetailContent::Loaded(body);
+    rsx! {
+        Detail { content }
+    }
+}

@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
+use warcraft_keybinds::GridCoordinate;
 
-/// A tiny 4×3 command grid highlighting only the island's conflicting cell.
+/// A tiny 4×3 command grid highlighting the given coordinate's cell.
 #[derive(Props, Clone, PartialEq)]
 pub struct MiniGridProps {
-    pub collision_column: u8,
-    pub collision_row: u8,
+    pub coordinate: GridCoordinate,
 }

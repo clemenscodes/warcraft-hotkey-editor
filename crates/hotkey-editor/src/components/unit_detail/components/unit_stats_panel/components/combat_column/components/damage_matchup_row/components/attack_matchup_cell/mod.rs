@@ -1,6 +1,8 @@
 mod props;
 
-use crate::components::unit_detail::components::unit_stats_panel::components::matchup_cell::{MatchupCell, MatchupCellProps};
+use crate::components::unit_detail::components::unit_stats_panel::components::matchup_cell::{
+    MatchupCell, MatchupCellProps,
+};
 use dioxus::prelude::*;
 pub use props::AttackMatchupCellProps;
 

@@ -1,13 +1,13 @@
 pub mod components;
 mod props;
 
-use components::damage_matchup_row::DamageMatchupRow;
 use super::stat_column::{StatColumn, StatColumnKind};
 use super::stat_icon_frame::{StatIconFrame, StatIconFrameProps};
 use super::stat_row::StatRow;
 use super::stat_row_label::StatRowLabel;
 use super::stat_row_value::StatRowValue;
 use super::stat_rows::StatRows;
+use components::damage_matchup_row::DamageMatchupRow;
 use dioxus::prelude::*;
 pub use props::{AttackDisplayData, CombatColumnProps};
 

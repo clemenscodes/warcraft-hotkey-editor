@@ -1,1 +1,1 @@
-pub mod mini_cell;
+pub mod mini_tile;

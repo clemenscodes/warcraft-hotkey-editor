@@ -1,11 +1,11 @@
 use super::components::clear_state::ClearStateProps;
+use super::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
+use super::components::details::island_detail::IslandDetailProps;
+use super::components::details::unit_position_detail::UnitPositionDetailProps;
 use super::components::empty_state::EmptyStateProps;
-use super::components::hotkey_unit_detail::HotkeyUnitDetailProps;
-use super::components::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
-use super::components::island_detail::IslandDetailProps;
-use super::components::island_sidebar::IslandSidebarProps;
-use super::components::unit_position_detail::UnitPositionDetailProps;
-use super::components::unit_position_sidebar::UnitPositionSidebarProps;
+use super::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
+use super::components::sidebars::island_sidebar::IslandSidebarProps;
+use super::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
 use dioxus::prelude::*;
 
 /// The position-collision two-pane content: the island sidebar and detail, tagged

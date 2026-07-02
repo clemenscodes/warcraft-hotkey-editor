@@ -2,8 +2,8 @@ use crate::model::icons::IconUrl;
 use std::collections::{HashMap, HashSet};
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{
-    CrossUnitCollisionReport, CrossUnitPositionGroup, CustomKeys, GridLayout, GridSlotId,
-    SharedAbilityEntry, UnitCollisionReport,
+    CrossUnitCollisionReport, CrossUnitPositionGroup, CustomKeys, GridCoordinate, GridLayout,
+    GridSlotId, SharedAbilityEntry, UnitCollisionReport,
 };
 
 /// One ability resolved to an icon, display name, and object id. Two abilities
@@ -171,17 +171,16 @@ struct AbilityPairKey {
 #[derive(Clone, PartialEq)]
 pub struct IslandView {
     key: String,
-    position_column: u8,
-    position_row: u8,
+    coordinate: GridCoordinate,
     conflicts: Vec<ConflictView>,
     collision_count: usize,
 }
 
 impl IslandView {
     fn build(group: &CrossUnitPositionGroup) -> Self {
-        let position = group.position();
-        let position_column = u8::from(position.column());
-        let position_row = u8::from(position.row());
+        let coordinate = group.position();
+        let key_column = u8::from(coordinate.column());
+        let key_row = u8::from(coordinate.row());
         let shared_entries = group.shared_abilities();
         let mut shared_map: HashMap<&'static str, &SharedAbilityEntry> =
             HashMap::with_capacity(shared_entries.len());
@@ -287,11 +286,10 @@ impl IslandView {
             .first()
             .map(|shared| shared.slot_id().as_str())
             .unwrap_or("");
-        let key = format!("{position_column}:{position_row}:{first_shared_str}");
+        let key = format!("{key_column}:{key_row}:{first_shared_str}");
         Self {
             key,
-            position_column,
-            position_row,
+            coordinate,
             conflicts,
             collision_count,
         }
@@ -301,12 +299,8 @@ impl IslandView {
         &self.key
     }
 
-    pub fn position_column(&self) -> u8 {
-        self.position_column
-    }
-
-    pub fn position_row(&self) -> u8 {
-        self.position_row
+    pub fn coordinate(&self) -> GridCoordinate {
+        self.coordinate
     }
 
     pub fn conflicts(&self) -> &[ConflictView] {
@@ -473,19 +467,14 @@ impl HotkeyCollisionPageModel {
 /// single unit's own abilities land on the same slot, resolved to icons.
 #[derive(Clone, PartialEq)]
 pub struct UnitPositionConflictView {
-    position_column: u8,
-    position_row: u8,
+    coordinate: GridCoordinate,
     role_label: String,
     abilities: Vec<AbilityIconView>,
 }
 
 impl UnitPositionConflictView {
-    pub fn position_column(&self) -> u8 {
-        self.position_column
-    }
-
-    pub fn position_row(&self) -> u8 {
-        self.position_row
+    pub fn coordinate(&self) -> GridCoordinate {
+        self.coordinate
     }
 
     pub fn role_label(&self) -> &str {
@@ -547,9 +536,7 @@ impl UnitPositionPageModel {
                 }
                 let role = card.role();
                 let role_label = role.label().to_owned();
-                for (grid_coordinate, collision_slots) in card {
-                    let position_column = u8::from(grid_coordinate.column());
-                    let position_row = u8::from(grid_coordinate.row());
+                for (coordinate, collision_slots) in card {
                     let mut abilities: Vec<AbilityIconView> =
                         Vec::with_capacity(collision_slots.len());
                     for slot_id in collision_slots.iter() {
@@ -557,8 +544,7 @@ impl UnitPositionPageModel {
                         abilities.push(ability);
                     }
                     let conflict = UnitPositionConflictView {
-                        position_column,
-                        position_row,
+                        coordinate,
                         role_label: role_label.clone(),
                         abilities,
                     };

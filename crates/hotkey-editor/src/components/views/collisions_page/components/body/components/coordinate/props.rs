@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
-/// A single "Column N" / "Row N" coordinate label on an island card.
+use warcraft_keybinds::GridCoordinate;
+
+/// A command-card coordinate. Carries the domain `GridCoordinate`; the leaf just
+/// displays its column and row.
 #[derive(Props, Clone, PartialEq)]
 pub struct CoordinateProps {
-    #[props(into)]
-    pub text: String,
+    pub coordinate: GridCoordinate,
 }

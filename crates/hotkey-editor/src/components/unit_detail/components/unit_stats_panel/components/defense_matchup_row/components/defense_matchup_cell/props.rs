@@ -1,4 +1,6 @@
-use crate::components::unit_detail::components::unit_stats_panel::components::matchup_cell::{MatchupCellProps, MatchupStrength};
+use crate::components::unit_detail::components::unit_stats_panel::components::matchup_cell::{
+    MatchupCellProps, MatchupStrength,
+};
 use dioxus::prelude::*;
 use num_traits::cast::cast;
 use warcraft_api::{AttackType, DefenseType};

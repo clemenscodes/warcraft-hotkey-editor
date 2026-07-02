@@ -3,8 +3,8 @@ mod logic;
 mod props;
 mod style;
 
-use components::attack_matchup_cell::AttackMatchupCell;
 use crate::assert_component;
+use components::attack_matchup_cell::AttackMatchupCell;
 use dioxus::prelude::*;
 use logic::cells;
 pub use props::DamageMatchupRowProps;

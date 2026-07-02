@@ -1,5 +1,5 @@
-use super::components::attribute_row::AttributeRowProps;
 use super::super::stat_icon_frame::StatIconFrameProps;
+use super::components::attribute_row::AttributeRowProps;
 use dioxus::prelude::*;
 
 /// The resolved per-level hero attribute figures the column renders.
