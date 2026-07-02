@@ -1,0 +1,7 @@
+use dioxus::prelude::*;
+/// A single "Column N" / "Row N" coordinate label on an island card.
+#[derive(Props, Clone, PartialEq)]
+pub struct CoordinateProps {
+    #[props(into)]
+    pub text: String,
+}

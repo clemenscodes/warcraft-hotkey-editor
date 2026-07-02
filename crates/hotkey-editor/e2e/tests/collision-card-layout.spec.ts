@@ -48,8 +48,8 @@ test.describe("Collision card layout", () => {
   }) => {
     const shapes = await page.locator(".conflict-card").evaluateAll((cards: Element[]) =>
       cards.map((card) => ({
-        units: card.querySelectorAll(".conflict-unit").length,
-        abilities: card.querySelectorAll(".conflict-ability").length,
+        units: card.querySelectorAll(".island-conflict-unit").length,
+        abilities: card.querySelectorAll(".island-conflict-ability").length,
         separators: card.querySelectorAll(".conflict-separator").length,
       })),
     );
@@ -79,7 +79,7 @@ test.describe("Collision card layout", () => {
     page,
   }) => {
     const abilityWithMore = page
-      .locator(".conflict-ability", { has: page.locator(".conflict-more") })
+      .locator(".island-conflict-ability", { has: page.locator(".conflict-more") })
       .first();
     await expect(
       abilityWithMore,

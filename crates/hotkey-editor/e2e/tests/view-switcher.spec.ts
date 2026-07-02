@@ -6,18 +6,18 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
   test("default URL renders the Editor view", async ({ page }) => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
-    await expect(page.locator(".collisions-page")).toHaveCount(0);
-    await expect(page.locator(".resolve-page")).toHaveCount(0);
+    await expect(page.locator("[data-collision-kind]")).toHaveCount(0);
+    await expect(page.locator("[data-resolve-state]")).toHaveCount(0);
   });
 
   test("clicking the brand from the Collisions page navigates home to the editor", async ({
     page,
   }) => {
     await page.goto(`${APP}?view=collisions&kind=positions`);
-    await page.locator(".collisions-page").waitFor();
+    await page.locator("[data-collision-kind]").waitFor();
     await page.locator('[data-action="view-editor"]').click();
     await page.locator(".unit-card").first().waitFor();
-    await expect(page.locator(".collisions-page")).toHaveCount(0);
+    await expect(page.locator("[data-collision-kind]")).toHaveCount(0);
     const url = new URL(page.url());
     expect(url.searchParams.get("view")).toBeNull();
   });
@@ -35,7 +35,7 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[data-action="view-collisions"]').click();
     await page.waitForURL(/view=collisions/);
-    await page.locator('.collisions-page[data-collision-kind="positions"]').waitFor();
+    await page.locator('[data-collision-kind="positions"]').waitFor();
   });
 
   test("Collisions button shows a numeric notification badge for the default keys", async ({
@@ -122,19 +122,19 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     page,
   }) => {
     await page.goto(`${APP}?view=collisions&kind=positions`);
-    await page.locator('.collisions-page[data-collision-kind="positions"]').waitFor();
+    await page.locator('[data-collision-kind="positions"]').waitFor();
   });
 
   test("?view=collisions&kind=hotkeys deep-links to the hotkey collisions page", async ({
     page,
   }) => {
     await page.goto(`${APP}?view=collisions&kind=hotkeys`);
-    await page.locator('.collisions-page[data-collision-kind="hotkeys"]').waitFor();
+    await page.locator('[data-collision-kind="hotkeys"]').waitFor();
   });
 
   test("?view=resolve still parses and renders the resolve placeholder", async ({ page }) => {
     await page.goto(`${APP}?view=resolve`);
-    await page.locator(".resolve-page").waitFor();
+    await page.locator("[data-resolve-state]").waitFor();
     await expect(page.locator(".unit-card")).toHaveCount(0);
   });
 
@@ -147,7 +147,7 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[data-action="view-collisions"]').click();
-    await page.locator(".collisions-page").waitFor();
+    await page.locator("[data-collision-kind]").waitFor();
     await page.goBack();
     await page.locator(".unit-card").first().waitFor();
   });
@@ -156,11 +156,11 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[data-action="view-collisions"]').click();
-    await page.locator(".collisions-page").waitFor();
+    await page.locator("[data-collision-kind]").waitFor();
     await page.goBack();
     await page.locator(".unit-card").first().waitFor();
     await page.goForward();
-    await page.locator(".collisions-page").waitFor();
+    await page.locator("[data-collision-kind]").waitFor();
   });
 
   test("switching views preserves race/mode/unit query params", async ({ page }) => {

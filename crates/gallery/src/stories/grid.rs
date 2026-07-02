@@ -23,8 +23,6 @@ use warcraft_api::Race;
 use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{GridSlotId, HotkeyToken, UnitCommandSlots};
 
-const GRID_STORY_STYLES: Asset = asset!("/src/stories/grid.css");
-
 pub fn stories() -> Vec<Story> {
     vec![
         Story::new("Grid", "HotkeyBadge", "Normal", hotkey_badge_normal),
@@ -68,8 +66,7 @@ pub fn stories() -> Vec<Story> {
 fn hotkey_badge_demo(state: HotkeyBadgeState) -> Element {
     let letter = HotkeyToken::try_from('Q').expect("letter");
     rsx! {
-        document::Stylesheet { href: GRID_STORY_STYLES }
-        div { class: "grid-preview-slot",
+        div { class: "relative w-24 h-24 [container-type:inline-size]",
             HotkeyBadge { letter, state }
         }
     }

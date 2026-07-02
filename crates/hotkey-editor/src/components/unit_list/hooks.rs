@@ -1,11 +1,11 @@
 use super::components::catalog_visibility_toggle::CatalogVisibilityToggleProps;
+use super::components::mobile_category_tab::MobileCategoryTabProps;
 use super::components::search_field_toggle::SearchFieldToggleProps;
+use super::components::unit_category_section::UnitCategorySectionProps;
 use super::components::unit_list_search::UnitListSearchProps;
-use super::mobile_category_tab::MobileCategoryTabProps;
 use super::props::UnitListProps;
 use super::state::UnitListState;
-use super::unit_category_section::UnitCategorySectionProps;
-use super::unit_kind_data_attr;
+use crate::components::unit_list::unit_kind_data_attr;
 use crate::services::focus::modality::FocusModality;
 use dioxus::document;
 use dioxus::prelude::*;

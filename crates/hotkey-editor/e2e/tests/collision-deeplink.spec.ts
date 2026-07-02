@@ -46,16 +46,16 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-unit-position-key");
+    await openCollisionKind(page, "unit-positions", "data-collision-key");
 
-    const keys = await rowKeys(page, "data-unit-position-key");
+    const keys = await rowKeys(page, "data-collision-key");
     expect(keys.length).toBeGreaterThan(3);
     const target = keys[3];
 
-    const targetRow = page.locator(`[data-unit-position-key="${target}"]`);
+    const targetRow = page.locator(`[data-collision-key="${target}"]`);
     await targetRow.click();
     await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
-    await expect(targetRow).toHaveClass(/selected/);
+    await expect(targetRow).toHaveAttribute("data-selected", "true");
 
     // Open the affected unit in the editor.
     await page.locator(".hotkey-detail-unit").click();
@@ -68,40 +68,40 @@ test.describe("Collision page entry deep-linking", () => {
       new RegExp(`kind=unit-positions&entry=${target}`),
     );
     await expect(
-      page.locator(`[data-unit-position-key="${target}"]`),
-    ).toHaveClass(/selected/);
+      page.locator(`[data-collision-key="${target}"]`),
+    ).toHaveAttribute("data-selected", "true");
   });
 
   // Each kind keeps its own last selection in memory; switching tabs and back
   // returns to where you were, and the URL carries the active kind's entry.
   test("each collision tab remembers its own selected entry", async ({ page }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-unit-position-key");
+    await openCollisionKind(page, "unit-positions", "data-collision-key");
 
-    const unitPositionKeys = await rowKeys(page, "data-unit-position-key");
+    const unitPositionKeys = await rowKeys(page, "data-collision-key");
     expect(unitPositionKeys.length).toBeGreaterThan(3);
     const unitPositionTarget = unitPositionKeys[3];
-    await page.locator(`[data-unit-position-key="${unitPositionTarget}"]`).click();
+    await page.locator(`[data-collision-key="${unitPositionTarget}"]`).click();
     await expect(
-      page.locator(`[data-unit-position-key="${unitPositionTarget}"]`),
-    ).toHaveClass(/selected/);
+      page.locator(`[data-collision-key="${unitPositionTarget}"]`),
+    ).toHaveAttribute("data-selected", "true");
 
     // Switch to hotkeys and pick a different entry there.
     await page.locator('[data-breadcrumb="hotkeys"]').click();
-    await page.locator("[data-hotkey-unit-key]").first().waitFor();
-    const hotkeyKeys = await rowKeys(page, "data-hotkey-unit-key");
+    await page.locator("[data-collision-key]").first().waitFor();
+    const hotkeyKeys = await rowKeys(page, "data-collision-key");
     expect(hotkeyKeys.length).toBeGreaterThan(3);
     const hotkeyTarget = hotkeyKeys[3];
-    await page.locator(`[data-hotkey-unit-key="${hotkeyTarget}"]`).click();
+    await page.locator(`[data-collision-key="${hotkeyTarget}"]`).click();
     await expect(
-      page.locator(`[data-hotkey-unit-key="${hotkeyTarget}"]`),
-    ).toHaveClass(/selected/);
+      page.locator(`[data-collision-key="${hotkeyTarget}"]`),
+    ).toHaveAttribute("data-selected", "true");
 
     // Back to unit-positions: the earlier selection is still there.
     await page.locator('[data-breadcrumb="unit-positions"]').click();
     await expect(
-      page.locator(`[data-unit-position-key="${unitPositionTarget}"]`),
-    ).toHaveClass(/selected/);
+      page.locator(`[data-collision-key="${unitPositionTarget}"]`),
+    ).toHaveAttribute("data-selected", "true");
     await expect(page).toHaveURL(
       new RegExp(`kind=unit-positions&entry=${unitPositionTarget}`),
     );
@@ -109,8 +109,8 @@ test.describe("Collision page entry deep-linking", () => {
     // And hotkeys still remembers its own.
     await page.locator('[data-breadcrumb="hotkeys"]').click();
     await expect(
-      page.locator(`[data-hotkey-unit-key="${hotkeyTarget}"]`),
-    ).toHaveClass(/selected/);
+      page.locator(`[data-collision-key="${hotkeyTarget}"]`),
+    ).toHaveAttribute("data-selected", "true");
   });
 
   // A pasted/bookmarked deep-link to an entry far down the list selects it. The
@@ -121,15 +121,15 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-unit-position-key");
+    await openCollisionKind(page, "unit-positions", "data-collision-key");
 
-    const keys = await rowKeys(page, "data-unit-position-key");
+    const keys = await rowKeys(page, "data-collision-key");
     expect(keys.length).toBeGreaterThan(20);
     const target = keys[keys.length - 1];
 
     await page.goto(`${APP}?view=collisions&kind=unit-positions&entry=${target}`);
-    const targetRow = page.locator(`[data-unit-position-key="${target}"]`);
-    await expect(targetRow).toHaveClass(/selected/);
+    const targetRow = page.locator(`[data-collision-key="${target}"]`);
+    await expect(targetRow).toHaveAttribute("data-selected", "true");
   });
 
   // The same round-trip for cross-unit position islands, whose key contains
@@ -138,24 +138,22 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "positions", "data-island-key");
+    await openCollisionKind(page, "positions", "data-collision-key");
 
-    const keys = await rowKeys(page, "data-island-key");
+    const keys = await rowKeys(page, "data-collision-key");
     expect(keys.length).toBeGreaterThan(2);
     const target = keys[2];
 
-    const targetRow = page.locator(`[data-island-key="${target}"]`);
+    const targetRow = page.locator(`[data-collision-key="${target}"]`);
     await targetRow.click();
-    await expect(targetRow).toHaveClass(/selected/);
+    await expect(targetRow).toHaveAttribute("data-selected", "true");
     await expect(page).toHaveURL(/entry=/);
 
     // Open one of the affected units from the island detail, then back.
-    await page.locator(".conflict-unit").first().click();
+    await page.locator(".island-conflict-unit").first().click();
     await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     await page.goBack();
-    await expect(page.locator(`[data-island-key="${target}"]`)).toHaveClass(
-      /selected/,
-    );
+    await expect(page.locator(`[data-collision-key="${target}"]`)).toHaveAttribute("data-selected", "true");
   });
 });

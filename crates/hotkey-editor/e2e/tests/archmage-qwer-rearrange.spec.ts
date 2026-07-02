@@ -162,7 +162,7 @@ async function stuckCards(page: Page): Promise<StuckCard[]> {
     cards.map((card) => {
       const objectId = card.querySelector(".conflict-object-id")?.textContent?.trim() ?? "";
       const name = card.querySelector(".resolve-move-name")?.textContent?.trim() ?? "";
-      const cells = Array.from(card.querySelectorAll(".resolve-mini-grid .island-mini-cell"));
+      const cells = Array.from(card.querySelectorAll(".resolve-mini-grid .mini-cell"));
       const stuckIndex = cells.findIndex((miniCell) => miniCell.classList.contains("collision"));
       return { objectId, name, col: stuckIndex % 4, row: Math.floor(stuckIndex / 4) };
     }),
@@ -251,7 +251,7 @@ test("rearranged layout resolves with no stuck build/root commands on the resolv
   await performSwaps(page);
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('.resolve-plan[data-resolve-state="plan"]').waitFor();
+  await page.locator('[data-resolve-state="plan"]').waitFor();
 
   const cards = await stuckCards(page);
   expect(
@@ -275,15 +275,15 @@ test("applying the cascade clears every position collision, including toggle off
   await performSwaps(page);
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('.resolve-plan[data-resolve-state="plan"]').waitFor();
+  await page.locator('[data-resolve-state="plan"]').waitFor();
   await page.locator('[data-action="apply-cascade"]').click();
   await page.locator('[role="alertdialog"]').filter({ hasText: "Cascade applied" }).waitFor();
 
   await page.goto(`${APP}?view=collisions&kind=positions`);
-  await page.locator('.collisions-page[data-collision-kind="positions"]').waitFor();
+  await page.locator('[data-collision-kind="positions"]').waitFor();
 
-  const crossCount = page.locator('[data-breadcrumb="positions"] .collision-breadcrumb-count');
-  const intraCount = page.locator('[data-breadcrumb="unit-positions"] .collision-breadcrumb-count');
+  const crossCount = page.locator('[data-breadcrumb="positions"] .breadcrumb-count');
+  const intraCount = page.locator('[data-breadcrumb="unit-positions"] .breadcrumb-count');
   await expect(crossCount).toHaveText("0");
   await expect(intraCount).toHaveText("0");
 });

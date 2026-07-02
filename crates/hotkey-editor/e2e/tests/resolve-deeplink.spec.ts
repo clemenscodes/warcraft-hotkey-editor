@@ -21,13 +21,13 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 
 async function openResolvePlan(page: Page): Promise<void> {
   await page.goto(`${APP}?view=resolve`);
-  await page.locator('.resolve-plan[data-resolve-state="plan"]').waitFor();
-  await page.locator(".resolve-breadcrumbs [data-breadcrumb]").first().waitFor();
+  await page.locator('[data-resolve-state="plan"]').waitFor();
+  await page.locator(".breadcrumbs [data-breadcrumb]").first().waitFor();
 }
 
 function categorySlugs(page: Page): Promise<string[]> {
   return page
-    .locator(".resolve-breadcrumbs [data-breadcrumb]")
+    .locator(".breadcrumbs [data-breadcrumb]")
     .evaluateAll((elements) =>
       elements.map((element) => element.getAttribute("data-breadcrumb") ?? ""),
     );
@@ -46,7 +46,7 @@ test.describe("Resolve page move-category deep-linking", () => {
     expect(slugs.length).toBeGreaterThan(0);
 
     await expect(
-      page.locator(`.resolve-breadcrumbs [data-breadcrumb="${slugs[0]}"]`),
+      page.locator(`.breadcrumbs [data-breadcrumb="${slugs[0]}"]`),
     ).toHaveAttribute("aria-current", "page");
     await expect(page).not.toHaveURL(/entry=/);
   });
@@ -64,7 +64,7 @@ test.describe("Resolve page move-category deep-linking", () => {
     // the default first section.
     const target = slugs[slugs.length - 1];
 
-    const breadcrumb = page.locator(`.resolve-breadcrumbs [data-breadcrumb="${target}"]`);
+    const breadcrumb = page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`);
     await breadcrumb.click();
     await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
     await expect(breadcrumb).toHaveAttribute("aria-current", "page");
@@ -81,7 +81,7 @@ test.describe("Resolve page move-category deep-linking", () => {
 
     await page.goto(`${APP}?view=resolve&entry=${target}`);
     await expect(
-      page.locator(`.resolve-breadcrumbs [data-breadcrumb="${target}"]`),
+      page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`),
     ).toHaveAttribute("aria-current", "page");
   });
 
@@ -96,7 +96,7 @@ test.describe("Resolve page move-category deep-linking", () => {
     const slugs = await categorySlugs(page);
     const target = slugs[slugs.length - 1];
 
-    await page.locator(`.resolve-breadcrumbs [data-breadcrumb="${target}"]`).click();
+    await page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`).click();
     await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
 
     // Leave for the editor (pushes a history entry), then go back.
@@ -104,10 +104,10 @@ test.describe("Resolve page move-category deep-linking", () => {
     await page.locator(".unit-card").first().waitFor();
 
     await page.goBack();
-    await page.locator('.resolve-plan[data-resolve-state="plan"]').waitFor();
+    await page.locator('[data-resolve-state="plan"]').waitFor();
     await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
     await expect(
-      page.locator(`.resolve-breadcrumbs [data-breadcrumb="${target}"]`),
+      page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`),
     ).toHaveAttribute("aria-current", "page");
   });
 });

@@ -1,24 +1,24 @@
-use super::collision_breadcrumbs::CollisionBreadcrumbsProps;
-use super::collisions_clear_state::CollisionsClearState;
-use super::collisions_content::CollisionsContent;
-use super::collisions_empty_state::CollisionsEmptyState;
-use super::hotkey_unit_detail::HotkeyUnitDetail;
-use super::hotkey_unit_sidebar::HotkeyUnitSidebar;
-use super::island_detail::IslandDetail;
-use super::island_sidebar::IslandSidebar;
+use super::components::body::components::clear_state::ClearStateProps;
+use super::components::body::components::empty_state::EmptyStateProps;
+use super::components::body::components::hotkey_unit_detail::HotkeyUnitDetailProps;
+use super::components::body::components::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
+use super::components::body::components::island_detail::IslandDetailProps;
+use super::components::body::components::island_sidebar::IslandSidebarProps;
+use super::components::body::components::unit_position_detail::UnitPositionDetailProps;
+use super::components::body::components::unit_position_sidebar::UnitPositionSidebarProps;
+use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
+use super::components::breadcrumbs::BreadcrumbsProps;
+use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
 use super::props::CollisionsPageProps;
-use super::unit_position_detail::UnitPositionDetail;
-use super::unit_position_sidebar::UnitPositionSidebar;
-use super::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
 use crate::services::navigation::app_view::CollisionKind;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
-/// for the active kind (empty prompt, all-clear, or the two-pane view).
+/// for the active kind (empty prompt, all-clear, or the two-pane view), as data.
 pub(super) struct CollisionsPageModel {
-    pub(super) breadcrumbs: CollisionBreadcrumbsProps,
-    pub(super) content: Element,
+    pub(super) breadcrumbs: BreadcrumbsProps,
+    pub(super) content: ContentModel,
 }
 
 /// Computes the three collision models (memoised on the loaded keys and layout),
@@ -123,7 +123,7 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         .map(|unit_view| unit_view.collision_count())
         .sum::<usize>();
     let sidebar_unit_positions = unit_positions.clone();
-    let breadcrumbs = CollisionBreadcrumbsProps {
+    let breadcrumbs = BreadcrumbsProps {
         kind,
         position_count: island_count,
         unit_position_count: unit_position_collision_count,
@@ -133,85 +133,95 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
     let content = match kind {
         CollisionKind::Hotkeys => {
             if !has_file {
-                rsx! {
-                    CollisionsEmptyState {
-                        collision_kind: "hotkeys",
-                        message: "Upload your CustomKeys.txt to inspect hotkey collisions.",
-                    }
-                }
+                let state = EmptyStateProps {
+                    collision_kind: "hotkeys",
+                    message: super::data::HOTKEYS_UPLOAD_PROMPT.to_owned(),
+                };
+                ContentModel::Empty(state)
             } else if hotkey_unit_count == 0 {
-                rsx! {
-                    CollisionsClearState { collision_kind: "hotkeys" }
-                }
+                let state = ClearStateProps {
+                    collision_kind: "hotkeys",
+                };
+                ContentModel::Clear(state)
             } else {
-                rsx! {
-                    CollisionsContent {
-                        collision_kind: "hotkeys",
-                        count: hotkey_unit_count,
-                        HotkeyUnitSidebar {
-                            units: sidebar_hotkey_units,
-                            selected_unit: selected_hotkey_unit,
-                        }
-                        HotkeyUnitDetail {
-                            units: hotkey_units,
-                            selected_unit: selected_hotkey_unit,
-                            view_navigation,
-                        }
-                    }
-                }
+                let sidebar = HotkeyUnitSidebarProps {
+                    units: sidebar_hotkey_units,
+                    selected_unit: selected_hotkey_unit,
+                };
+                let detail = HotkeyUnitDetailProps {
+                    units: hotkey_units,
+                    selected_unit: selected_hotkey_unit,
+                    view_navigation,
+                };
+                let pane = HotkeysPane {
+                    collision_kind: "hotkeys",
+                    count: hotkey_unit_count,
+                    sidebar,
+                    detail,
+                };
+                ContentModel::Hotkeys(Box::new(pane))
             }
         }
         CollisionKind::UnitPositions => {
             if !has_file {
-                rsx! {
-                    CollisionsEmptyState {
-                        collision_kind: "unit-positions",
-                        message: "Upload your CustomKeys.txt to inspect unit position collisions.",
-                    }
-                }
+                let state = EmptyStateProps {
+                    collision_kind: "unit-positions",
+                    message: super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned(),
+                };
+                ContentModel::Empty(state)
             } else if unit_position_unit_count == 0 {
-                rsx! {
-                    CollisionsClearState { collision_kind: "unit-positions" }
-                }
+                let state = ClearStateProps {
+                    collision_kind: "unit-positions",
+                };
+                ContentModel::Clear(state)
             } else {
-                rsx! {
-                    CollisionsContent {
-                        collision_kind: "unit-positions",
-                        count: unit_position_unit_count,
-                        UnitPositionSidebar {
-                            units: sidebar_unit_positions,
-                            selected_unit: selected_unit_position,
-                        }
-                        UnitPositionDetail {
-                            units: unit_positions,
-                            selected_unit: selected_unit_position,
-                            view_navigation,
-                        }
-                    }
-                }
+                let sidebar = UnitPositionSidebarProps {
+                    units: sidebar_unit_positions,
+                    selected_unit: selected_unit_position,
+                };
+                let detail = UnitPositionDetailProps {
+                    units: unit_positions,
+                    selected_unit: selected_unit_position,
+                    view_navigation,
+                };
+                let pane = UnitPositionsPane {
+                    collision_kind: "unit-positions",
+                    count: unit_position_unit_count,
+                    sidebar,
+                    detail,
+                };
+                ContentModel::UnitPositions(Box::new(pane))
             }
         }
         CollisionKind::Positions => {
             if !has_file {
-                rsx! {
-                    CollisionsEmptyState {
-                        collision_kind: "positions",
-                        message: "Upload your CustomKeys.txt to inspect position collisions.",
-                    }
-                }
+                let state = EmptyStateProps {
+                    collision_kind: "positions",
+                    message: super::data::POSITIONS_UPLOAD_PROMPT.to_owned(),
+                };
+                ContentModel::Empty(state)
             } else if island_count == 0 {
-                rsx! {
-                    CollisionsClearState { collision_kind: "positions" }
-                }
+                let state = ClearStateProps {
+                    collision_kind: "positions",
+                };
+                ContentModel::Clear(state)
             } else {
-                rsx! {
-                    CollisionsContent {
-                        collision_kind: "positions",
-                        count: island_count,
-                        IslandSidebar { islands: sidebar_islands, selected_island }
-                        IslandDetail { islands, selected_island, view_navigation }
-                    }
-                }
+                let sidebar = IslandSidebarProps {
+                    islands: sidebar_islands,
+                    selected_island,
+                };
+                let detail = IslandDetailProps {
+                    islands,
+                    selected_island,
+                    view_navigation,
+                };
+                let pane = PositionsPane {
+                    collision_kind: "positions",
+                    count: island_count,
+                    sidebar,
+                    detail,
+                };
+                ContentModel::Positions(Box::new(pane))
             }
         }
     };

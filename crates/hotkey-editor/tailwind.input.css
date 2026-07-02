@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../gallery/src";
 
 * {
   box-sizing: border-box;

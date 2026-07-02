@@ -15,19 +15,17 @@ pub fn CarrierCard(props: CarrierCardProps) -> Element {
     let unit_id_label = props.unit_id.clone();
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-    let icon = props.icon_url.map(|src| CarrierCardIconProps {
-        src,
+    let icon = CarrierCardIconProps {
+        src: props.icon_url,
         alt: name.clone(),
-    });
+    };
     let onclick = move |_event: MouseEvent| view_navigation.open_unit(&unit_id);
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
             onclick,
-            if let Some(icon) = icon {
-                CarrierCardIcon { ..icon }
-            }
+            CarrierCardIcon { ..icon }
             CarrierCardName { text: name }
             CarrierObjectId { text: unit_id_label }
         }

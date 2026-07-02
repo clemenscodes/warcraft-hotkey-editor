@@ -3,10 +3,14 @@ use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::shell::toasts::ToastMount;
 
-use hotkey_editor::components::views::collisions_page::{
-    CollisionsPage, HotkeyUnitDetail, HotkeyUnitSidebar, IslandDetail, IslandMiniGrid,
-    IslandSidebar, UnitPositionDetail, UnitPositionSidebar,
-};
+use hotkey_editor::components::views::collisions_page::CollisionsPage;
+use hotkey_editor::components::views::collisions_page::components::body::components::hotkey_unit_detail::HotkeyUnitDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::hotkey_unit_sidebar::HotkeyUnitSidebar;
+use hotkey_editor::components::views::collisions_page::components::body::components::island_detail::IslandDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::island_sidebar::IslandSidebar;
+use hotkey_editor::components::views::collisions_page::components::body::components::mini_grid::MiniGrid;
+use hotkey_editor::components::views::collisions_page::components::body::components::unit_position_detail::UnitPositionDetail;
+use hotkey_editor::components::views::collisions_page::components::body::components::unit_position_sidebar::UnitPositionSidebar;
 
 use hotkey_editor::components::views::resolve_page::ResolvePage;
 use hotkey_editor::services::navigation::app_view::{AppView, CollisionKind};
@@ -104,7 +108,7 @@ fn island_mini_grid_top_left() -> Element {
     let collision_column: u8 = 0;
     let collision_row: u8 = 0;
     rsx! {
-        IslandMiniGrid { collision_column, collision_row }
+        MiniGrid { collision_column, collision_row }
     }
 }
 
@@ -112,7 +116,7 @@ fn island_mini_grid_center() -> Element {
     let collision_column: u8 = 1;
     let collision_row: u8 = 1;
     rsx! {
-        IslandMiniGrid { collision_column, collision_row }
+        MiniGrid { collision_column, collision_row }
     }
 }
 
@@ -120,7 +124,7 @@ fn island_mini_grid_bottom_right() -> Element {
     let collision_column: u8 = 3;
     let collision_row: u8 = 2;
     rsx! {
-        IslandMiniGrid { collision_column, collision_row }
+        MiniGrid { collision_column, collision_row }
     }
 }
 
@@ -196,16 +200,11 @@ pub fn stories() -> Vec<Story> {
             collisions_page_unit_positions,
         ),
         Story::single("Views", "ResolvePage", resolve_page_story),
+        Story::new("Views", "MiniGrid", "Top-left", island_mini_grid_top_left),
+        Story::new("Views", "MiniGrid", "Center", island_mini_grid_center),
         Story::new(
             "Views",
-            "IslandMiniGrid",
-            "Top-left",
-            island_mini_grid_top_left,
-        ),
-        Story::new("Views", "IslandMiniGrid", "Center", island_mini_grid_center),
-        Story::new(
-            "Views",
-            "IslandMiniGrid",
+            "MiniGrid",
             "Bottom-right",
             island_mini_grid_bottom_right,
         ),

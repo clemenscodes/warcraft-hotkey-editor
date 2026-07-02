@@ -1,11 +1,11 @@
+use super::components::breadcrumbs::BreadcrumbsProps;
+use super::components::breadcrumbs::components::breadcrumb::BreadcrumbProps;
 use super::components::carriers_dialog_host::CarriersDialogHostProps;
-use super::components::resolve_breadcrumbs::ResolveBreadcrumbsProps;
-use super::components::resolve_breadcrumbs::components::resolve_breadcrumb::ResolveBreadcrumbProps;
-use super::components::resolve_move_row::ResolveMoveRowProps;
-use super::components::resolve_plan_body::{ResolvePlanBodyProps, ResolvePlanBodySection};
-use super::components::resolve_plan_header::ResolvePlanHeaderProps;
-use super::components::resolve_unresolved_row::ResolveUnresolvedRowProps;
-use super::logic::{CarriersDialogData, ResolvePlanView};
+use super::components::plan_body::components::active_move_list::components::move_row::MoveRowProps;
+use super::components::plan_body::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
+use super::components::plan_body::{PlanBodyProps, PlanBodySection};
+use super::components::plan_header::PlanHeaderProps;
+use super::logic::{CarriersDialogData, PlanView};
 use super::props::ResolvePageProps;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
@@ -31,9 +31,9 @@ pub(super) enum ResolvePageView {
 pub(super) struct ResolvePlanPresentation {
     pub move_count: usize,
     pub unresolved_count: usize,
-    pub header: ResolvePlanHeaderProps,
-    pub breadcrumbs: ResolveBreadcrumbsProps,
-    pub body: ResolvePlanBodyProps,
+    pub header: PlanHeaderProps,
+    pub breadcrumbs: BreadcrumbsProps,
+    pub body: PlanBodyProps,
     pub carriers_dialog_host: CarriersDialogHostProps,
 }
 
@@ -49,7 +49,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let selected_move_category = props.selected_move_category;
     let plan_memo = use_memo(move || {
         let guard = loaded_keys.read();
-        guard.as_ref().map(ResolvePlanView::build)
+        guard.as_ref().map(PlanView::build)
     });
     let has_file = loaded_keys.read().is_some();
     let plan_option = plan_memo();
@@ -105,7 +105,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let selected_slug = selected_move_category.read().clone();
     let active = plan.active_section(selected_slug.as_deref());
     let active_category = active.map(|section| section.category);
-    let mut breadcrumb_list: Vec<ResolveBreadcrumbProps> = Vec::with_capacity(plan.sections.len());
+    let mut breadcrumb_list: Vec<BreadcrumbProps> = Vec::with_capacity(plan.sections.len());
     for section in &plan.sections {
         let category = section.category;
         let is_active = active_category == Some(category);
@@ -117,7 +117,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
             let slug = category.data_breadcrumb().to_owned();
             selection.set(Some(slug));
         });
-        let breadcrumb = ResolveBreadcrumbProps {
+        let breadcrumb = BreadcrumbProps {
             title,
             count,
             data_breadcrumb,
@@ -126,40 +126,40 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         };
         breadcrumb_list.push(breadcrumb);
     }
-    let breadcrumbs = ResolveBreadcrumbsProps {
+    let breadcrumbs = BreadcrumbsProps {
         breadcrumbs: breadcrumb_list,
     };
     let section = active.map(|section| {
-        let rows: Vec<ResolveMoveRowProps> = section
+        let rows: Vec<MoveRowProps> = section
             .moves
             .iter()
-            .map(|move_view| ResolveMoveRowProps {
+            .map(|move_view| MoveRowProps {
                 move_view: move_view.clone(),
                 view_navigation,
                 carriers_dialog,
             })
             .collect();
-        ResolvePlanBodySection {
+        PlanBodySection {
             data_category: section.category.data_breadcrumb(),
             rows,
         }
     });
-    let unresolved_rows: Vec<ResolveUnresolvedRowProps> = plan
+    let unresolved_rows: Vec<UnresolvedRowProps> = plan
         .unresolved
         .iter()
-        .map(|unresolved_view| ResolveUnresolvedRowProps {
+        .map(|unresolved_view| UnresolvedRowProps {
             unresolved_view: unresolved_view.clone(),
             carriers_dialog,
         })
         .collect();
-    let body = ResolvePlanBodyProps {
+    let body = PlanBodyProps {
         section,
         unresolved_rows,
     };
     let move_noun = if move_count == 1 { "move" } else { "moves" };
     let moves_text = format!("{move_count} {move_noun}");
     let apply_handler = EventHandler::new(handle_apply);
-    let header = ResolvePlanHeaderProps {
+    let header = PlanHeaderProps {
         moves_text,
         unresolved_count,
         running: running_now,

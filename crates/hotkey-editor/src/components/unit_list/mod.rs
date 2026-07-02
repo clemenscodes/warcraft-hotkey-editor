@@ -1,24 +1,21 @@
 pub mod components;
 mod hooks;
-pub mod mobile_category_tab;
 mod props;
 mod state;
 mod style;
-pub mod unit_card;
-pub mod unit_category_section;
 
 use crate::assert_component;
 use components::catalog_visibility_toggle::CatalogVisibilityToggle;
+use components::mobile_category_tab::MobileCategoryTab;
 use components::search_field_toggle::SearchFieldToggle;
+use components::unit_category_section::UnitCategorySection;
 use components::unit_category_tabs::UnitCategoryTabs;
 use components::unit_list_scroll::UnitListScroll;
 use components::unit_list_search::UnitListSearch;
 use dioxus::prelude::*;
 use hooks::use_unit_list;
-use mobile_category_tab::MobileCategoryTab;
 pub use props::UnitListProps;
 use style::CLASS;
-use unit_category_section::UnitCategorySection;
 use warcraft_api::UnitKind;
 assert_component!(UnitList);
 

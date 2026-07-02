@@ -107,7 +107,7 @@ impl MoveCategory {
 /// The visual kind of a move's reason badge — the four move categories plus the
 /// "Stuck" badge shown on unresolved abilities. Selects the badge's colour.
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub enum ResolveReasonKind {
+pub enum ReasonKind {
     Fight,
     GapPull,
     Spill,
@@ -115,7 +115,7 @@ pub enum ResolveReasonKind {
     Stuck,
 }
 
-impl From<MoveCategory> for ResolveReasonKind {
+impl From<MoveCategory> for ReasonKind {
     fn from(category: MoveCategory) -> Self {
         match category {
             MoveCategory::Fight => Self::Fight,
@@ -196,7 +196,7 @@ impl ReasonParts {
 /// One planned move, display-ready: the moved ability (with carriers + a unit to
 /// link to), the old → new cell, and the rival ability that displaced it.
 #[derive(Clone, PartialEq)]
-pub struct ResolveMoveView {
+pub struct MoveView {
     pub mover: AbilityDisplay,
     pub mover_carriers: usize,
     pub mover_unit_id: Option<String>,
@@ -208,7 +208,7 @@ pub struct ResolveMoveView {
     pub reason: ReasonParts,
 }
 
-impl ResolveMoveView {
+impl MoveView {
     /// How many units this move ties together — the larger of the moved ability's
     /// carriers and the rival's. Used to rank Fights by impact.
     fn contributor_count(&self) -> usize {
@@ -219,7 +219,7 @@ impl ResolveMoveView {
 
 /// One ability the cascade could not place, with the cell it is stuck on.
 #[derive(Clone, PartialEq)]
-pub struct ResolveUnresolvedView {
+pub struct UnresolvedView {
     pub ability: AbilityDisplay,
     pub carrier_count: usize,
     pub carrier_unit_ids: Vec<String>,
@@ -255,17 +255,17 @@ impl CarriersDialogData {
 pub struct MoveSection {
     pub category: MoveCategory,
     pub title: &'static str,
-    pub moves: Vec<ResolveMoveView>,
+    pub moves: Vec<MoveView>,
 }
 
 /// The cascade preview grouped into titled move sections and unresolved entries.
 #[derive(Clone, PartialEq)]
-pub struct ResolvePlanView {
+pub struct PlanView {
     pub sections: Vec<MoveSection>,
-    pub unresolved: Vec<ResolveUnresolvedView>,
+    pub unresolved: Vec<UnresolvedView>,
 }
 
-impl ResolvePlanView {
+impl PlanView {
     pub fn move_count(&self) -> usize {
         let mut total: usize = 0;
         for section in &self.sections {
@@ -283,7 +283,7 @@ impl ResolvePlanView {
             moves_by_slot.insert(slot_key, planned_move);
         }
         let mut consumed_swap_slots: HashSet<String> = HashSet::new();
-        let mut moves: Vec<ResolveMoveView> = Vec::with_capacity(plan.move_count());
+        let mut moves: Vec<MoveView> = Vec::with_capacity(plan.move_count());
         for planned_move in plan_moves {
             let mover_slot_key = planned_move.slot_id().as_str().to_owned();
             if consumed_swap_slots.contains(&mover_slot_key) {
@@ -321,7 +321,7 @@ impl ResolvePlanView {
                     reason.other_carrier_unit_ids = partner_carrier_unit_ids;
                 }
             }
-            let move_view = ResolveMoveView {
+            let move_view = MoveView {
                 mover,
                 mover_carriers,
                 mover_unit_id,
@@ -334,8 +334,7 @@ impl ResolvePlanView {
             };
             moves.push(move_view);
         }
-        let mut unresolved: Vec<ResolveUnresolvedView> =
-            Vec::with_capacity(plan.unresolved_count());
+        let mut unresolved: Vec<UnresolvedView> = Vec::with_capacity(plan.unresolved_count());
         for stuck in plan.unresolved() {
             let ability = AbilityDisplay::resolve(stuck.slot_id());
             let position = stuck.collision_position();
@@ -348,7 +347,7 @@ impl ResolvePlanView {
                 let carrier_value = carrier_object.value().to_owned();
                 carrier_unit_ids.push(carrier_value);
             }
-            let unresolved_view = ResolveUnresolvedView {
+            let unresolved_view = UnresolvedView {
                 ability,
                 carrier_count,
                 carrier_unit_ids,
@@ -366,10 +365,10 @@ impl ResolvePlanView {
 
     /// Partition the flat move list into titled sections in a fixed order, and
     /// within Fights put the ones with the most contributors first.
-    fn group_into_sections(moves: Vec<ResolveMoveView>) -> Vec<MoveSection> {
+    fn group_into_sections(moves: Vec<MoveView>) -> Vec<MoveSection> {
         let mut sections: Vec<MoveSection> = Vec::new();
         for category in MoveCategory::ORDER {
-            let mut group: Vec<ResolveMoveView> = Vec::new();
+            let mut group: Vec<MoveView> = Vec::new();
             for move_view in &moves {
                 if move_view.reason.category == category {
                     let cloned = move_view.clone();
@@ -420,7 +419,7 @@ impl ResolvePlanView {
     }
 }
 
-/// One ability icon pinned to a cell inside a `ResolveMiniGrid`.
+/// One ability icon pinned to a cell inside a `MiniGrid`.
 #[derive(Clone, PartialEq)]
 pub struct MiniGridPlacement {
     pub column: u8,

@@ -5,12 +5,12 @@ mod props;
 mod style;
 
 use crate::assert_component;
+use components::breadcrumbs::Breadcrumbs;
 use components::carriers_dialog_host::CarriersDialogHost;
-use components::resolve_breadcrumbs::ResolveBreadcrumbs;
-use components::resolve_clear_state::ResolveClearState;
-use components::resolve_empty_state::ResolveEmptyState;
-use components::resolve_plan_body::ResolvePlanBody;
-use components::resolve_plan_header::ResolvePlanHeader;
+use components::clear_state::ClearState;
+use components::empty_state::EmptyState;
+use components::plan_body::PlanBody;
+use components::plan_header::PlanHeader;
 use dioxus::prelude::*;
 use hooks::{ResolvePageView, use_resolve_page};
 pub use props::ResolvePageProps;
@@ -28,12 +28,12 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let plan = match use_resolve_page(&props) {
         ResolvePageView::NoFile => {
             return rsx! {
-                ResolveEmptyState {}
+                EmptyState {}
             };
         }
         ResolvePageView::Clear => {
             return rsx! {
-                ResolveClearState {}
+                ClearState {}
             };
         }
         ResolvePageView::Plan(plan) => *plan,
@@ -46,9 +46,9 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             "data-resolve-state": "plan",
             "data-move-count": "{move_count}",
             "data-unresolved-count": "{unresolved_count}",
-            ResolvePlanHeader { ..plan.header }
-            ResolveBreadcrumbs { ..plan.breadcrumbs }
-            ResolvePlanBody { ..plan.body }
+            PlanHeader { ..plan.header }
+            Breadcrumbs { ..plan.breadcrumbs }
+            PlanBody { ..plan.body }
             CarriersDialogHost { ..plan.carriers_dialog_host }
         }
     }
