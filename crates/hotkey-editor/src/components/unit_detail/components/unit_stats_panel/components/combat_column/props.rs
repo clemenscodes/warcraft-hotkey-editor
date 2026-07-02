@@ -1,74 +1,22 @@
 use super::super::shared::stat_icon_frame::StatIconFrameProps;
+use crate::components::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use dioxus::prelude::*;
-use warcraft_api::AttackType;
+use warcraft_keybinds::AttackStatistics;
 
-/// The resolved attack figures the combat column renders.
-#[derive(Clone, PartialEq)]
-pub struct AttackDisplayData {
-    damage_text: String,
-    attack_range: u32,
-    speed_text: String,
-    damage_per_second_text: Option<String>,
-    attack_type: AttackType,
-    type_label: String,
-    type_icon: Asset,
-}
-
-impl AttackDisplayData {
-    pub fn new(
-        damage_text: String,
-        attack_range: u32,
-        speed_text: String,
-        damage_per_second_text: Option<String>,
-        attack_type: AttackType,
-        type_label: String,
-        type_icon: Asset,
-    ) -> Self {
-        Self {
-            damage_text,
-            attack_range,
-            speed_text,
-            damage_per_second_text,
-            attack_type,
-            type_label,
-            type_icon,
-        }
-    }
-
-    pub fn damage_per_second_text(&self) -> Option<&str> {
-        self.damage_per_second_text.as_deref()
-    }
-
-    pub fn damage_text(&self) -> &str {
-        &self.damage_text
-    }
-
-    pub fn attack_range(&self) -> u32 {
-        self.attack_range
-    }
-
-    pub fn speed_text(&self) -> &str {
-        &self.speed_text
-    }
-
-    pub fn attack_type(&self) -> AttackType {
-        self.attack_type
-    }
-
-    pub fn type_label(&self) -> &str {
-        &self.type_label
-    }
-}
-
+/// The combat column's input: the unit's attack profile, or `None` when it cannot
+/// attack (the column then renders nothing).
 #[derive(Props, Clone, PartialEq)]
 pub struct CombatColumnProps {
-    pub attack: Option<AttackDisplayData>,
+    pub attack: Option<AttackStatistics>,
 }
 
-impl From<&AttackDisplayData> for StatIconFrameProps {
-    fn from(attack: &AttackDisplayData) -> Self {
-        let src = attack.type_icon;
-        let alt = format!("{} attack icon", attack.type_label);
+impl From<&AttackStatistics> for StatIconFrameProps {
+    fn from(attack: &AttackStatistics) -> Self {
+        let attack_type = attack.attack_type();
+        let icon = StatIcon::from(attack_type);
+        let src = icon.asset();
+        let type_label = attack_type.to_string();
+        let alt = format!("{type_label} attack icon");
         Self { src, alt }
     }
 }

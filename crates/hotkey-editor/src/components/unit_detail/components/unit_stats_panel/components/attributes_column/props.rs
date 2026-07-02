@@ -1,98 +1,22 @@
 use super::super::shared::stat_icon_frame::StatIconFrameProps;
-use super::components::attribute_row::AttributeRowProps;
+use crate::components::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use dioxus::prelude::*;
+use warcraft_keybinds::HeroStatistics;
 
-/// The resolved per-level hero attribute figures the column renders.
-#[derive(Clone, PartialEq)]
-pub struct HeroDisplayData {
-    primary_icon: Asset,
-    primary_label: String,
-    strength_value: u32,
-    strength_per_level: f32,
-    agility_value: u32,
-    agility_per_level: f32,
-    intelligence_value: u32,
-    intelligence_per_level: f32,
-    primary_is_strength: bool,
-    primary_is_agility: bool,
-    primary_is_intelligence: bool,
-}
-
-impl HeroDisplayData {
-    #[allow(clippy::too_many_arguments)]
-    pub fn new(
-        primary_icon: Asset,
-        primary_label: String,
-        strength_value: u32,
-        strength_per_level: f32,
-        agility_value: u32,
-        agility_per_level: f32,
-        intelligence_value: u32,
-        intelligence_per_level: f32,
-        primary_is_strength: bool,
-        primary_is_agility: bool,
-        primary_is_intelligence: bool,
-    ) -> Self {
-        Self {
-            primary_icon,
-            primary_label,
-            strength_value,
-            strength_per_level,
-            agility_value,
-            agility_per_level,
-            intelligence_value,
-            intelligence_per_level,
-            primary_is_strength,
-            primary_is_agility,
-            primary_is_intelligence,
-        }
-    }
-}
-
+/// The hero attributes column's input: the hero's three attributes at the selected
+/// level, or `None` for a non-hero unit (the column then renders nothing).
 #[derive(Props, Clone, PartialEq)]
 pub struct AttributesColumnProps {
-    pub hero: Option<HeroDisplayData>,
+    pub hero: Option<HeroStatistics>,
 }
 
-/// Which attribute an `AttributeRow` shows.
-#[derive(Clone, Copy)]
-pub(super) enum Attribute {
-    Strength,
-    Agility,
-    Intelligence,
-}
-
-impl From<&HeroDisplayData> for StatIconFrameProps {
-    fn from(hero: &HeroDisplayData) -> Self {
-        let src = hero.primary_icon;
-        let alt = format!("{} primary attribute icon", hero.primary_label);
+impl From<&HeroStatistics> for StatIconFrameProps {
+    fn from(hero: &HeroStatistics) -> Self {
+        let primary = hero.primary();
+        let icon = StatIcon::from(primary);
+        let src = icon.asset();
+        let primary_label = primary.to_string();
+        let alt = format!("{primary_label} primary attribute icon");
         Self { src, alt }
-    }
-}
-
-impl AttributeRowProps {
-    /// The row for one of the hero's three attributes, marked primary for its
-    /// main one.
-    pub(super) fn for_attribute(hero: &HeroDisplayData, attribute: Attribute) -> Self {
-        match attribute {
-            Attribute::Strength => Self {
-                label: "Strength",
-                value: hero.strength_value,
-                per_level: hero.strength_per_level,
-                is_primary: hero.primary_is_strength,
-            },
-            Attribute::Agility => Self {
-                label: "Agility",
-                value: hero.agility_value,
-                per_level: hero.agility_per_level,
-                is_primary: hero.primary_is_agility,
-            },
-            Attribute::Intelligence => Self {
-                label: "Intelligence",
-                value: hero.intelligence_value,
-                per_level: hero.intelligence_per_level,
-                is_primary: hero.primary_is_intelligence,
-            },
-        }
     }
 }

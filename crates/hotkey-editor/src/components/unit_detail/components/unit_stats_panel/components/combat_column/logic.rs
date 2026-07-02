@@ -1,51 +1,41 @@
-use super::data;
-use super::props::AttackDisplayData;
+use super::super::shared::stat_icon_frame::StatIconFrameProps;
+use super::super::shared::stat_row::StatRowProps;
+use super::kinds::{AttackSpeedKind, AttackTypeKind, DamageKind};
+use warcraft_api::AttackType;
+use warcraft_keybinds::{AttackRange, AttackStatistics, DamagePerSecond};
 
-/// One label/value line in the combat column.
-pub(super) struct CombatLine {
-    pub(super) label: &'static str,
-    pub(super) value: String,
+/// Every child's finished props for the combat column, shaped out of the body: the
+/// icon, the three value rows, and the guarded range and damage-per-second rows. This
+/// is the combat column's counterpart to the grid editor tile's `EditorTileChrome`.
+pub(super) struct CombatRows {
+    pub(super) icon: StatIconFrameProps,
+    pub(super) damage_row: StatRowProps<DamageKind>,
+    pub(super) range: AttackRange,
+    pub(super) speed_row: StatRowProps<AttackSpeedKind>,
+    pub(super) damage_per_second: Option<DamagePerSecond>,
+    pub(super) attack_type_row: StatRowProps<AttackTypeKind>,
+    pub(super) attack_type: AttackType,
 }
 
-/// The combat column's rows in order, including the range and damage-per-second
-/// rows only when they apply. The conditionals live here, in the data, so the
-/// column body is a pure loop.
-pub(super) fn combat_lines(attack: &AttackDisplayData) -> Vec<CombatLine> {
-    let mut lines: Vec<CombatLine> = Vec::new();
-    let damage_value = attack.damage_text().to_owned();
-    let damage = CombatLine {
-        label: data::DAMAGE,
-        value: damage_value,
-    };
-    lines.push(damage);
-    let attack_range = attack.attack_range();
-    if attack_range > 0 {
-        let range_value = attack_range.to_string();
-        let range = CombatLine {
-            label: data::RANGE,
-            value: range_value,
-        };
-        lines.push(range);
+impl From<&AttackStatistics> for CombatRows {
+    fn from(attack: &AttackStatistics) -> Self {
+        let icon = StatIconFrameProps::from(attack);
+        let attack_type = attack.attack_type();
+        let damage = attack.damage();
+        let range = attack.range();
+        let speed = attack.speed();
+        let damage_per_second = attack.damage_per_second();
+        let damage_row = StatRowProps::<DamageKind> { value: damage };
+        let speed_row = StatRowProps::<AttackSpeedKind> { value: speed };
+        let attack_type_row = StatRowProps::<AttackTypeKind> { value: attack_type };
+        Self {
+            icon,
+            damage_row,
+            range,
+            speed_row,
+            damage_per_second,
+            attack_type_row,
+            attack_type,
+        }
     }
-    let speed_value = attack.speed_text().to_owned();
-    let speed = CombatLine {
-        label: data::ATTACK_SPEED,
-        value: speed_value,
-    };
-    lines.push(speed);
-    if let Some(dps_text) = attack.damage_per_second_text() {
-        let dps_value = dps_text.to_owned();
-        let dps = CombatLine {
-            label: data::DAMAGE_PER_SECOND,
-            value: dps_value,
-        };
-        lines.push(dps);
-    }
-    let type_value = attack.type_label().to_owned();
-    let type_line = CombatLine {
-        label: data::ATTACK_TYPE,
-        value: type_value,
-    };
-    lines.push(type_line);
-    lines
 }

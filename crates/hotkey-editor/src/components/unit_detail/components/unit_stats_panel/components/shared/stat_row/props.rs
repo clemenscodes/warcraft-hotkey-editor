@@ -1,17 +1,14 @@
-use super::state::StatRowVariant;
+use super::kind::StatRowKind;
 use dioxus::prelude::*;
 
-/// A stat row: the `group` whose `data-variant`/`data-regen`/`data-primary` drive
-/// its children's colours. It owns only the row's shape; a semantic row component
-/// (hit points, armor, damage, …) fills it with its own label and its
-/// domain-typed value, formatted at the leaf.
+/// The base stat row's input: the row's DOMAIN value, bound to a concrete
+/// [`StatRowKind`] through the turbofish (`StatRow::<HitPointsKind>`). `StatRow`
+/// encodes the label-plus-value-side shape once and is generic over the kind, so it
+/// stays agnostic to which stat fills it; the bound kind supplies the label and the
+/// variant and renders the value from its domain type. The kind never appears as a
+/// field — it is a zero-sized marker named only at the call site, and `B::Value`
+/// carries it into the props.
 #[derive(Props, Clone, PartialEq)]
-pub struct StatRowProps {
-    #[props(default)]
-    pub variant: StatRowVariant,
-    #[props(default)]
-    pub is_regen: bool,
-    #[props(default)]
-    pub is_primary: bool,
-    pub children: Element,
+pub struct StatRowProps<B: StatRowKind> {
+    pub value: B::Value,
 }

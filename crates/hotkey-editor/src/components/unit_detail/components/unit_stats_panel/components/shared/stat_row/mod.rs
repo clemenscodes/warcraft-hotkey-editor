@@ -1,30 +1,40 @@
+pub mod components;
+mod kind;
 mod props;
+mod stat_figure;
 mod state;
 mod style;
 
 use crate::assert_component;
+use components::stat_row_label::StatRowLabel;
 use dioxus::prelude::*;
+pub use kind::StatRowKind;
 pub use props::StatRowProps;
 pub use state::StatRowVariant;
 use style::CLASS;
 assert_component!(StatRow);
 
-/// A stat row: the `group` whose `data-variant`/`data-regen`/`data-primary` drive
-/// its children's colours. It owns the row shape only; the semantic row that wraps
-/// it supplies the label and the domain-typed value.
+/// The base stat row: a pure renderer of a label plus a value-side, generic over the
+/// [`StatRowKind`] that supplies both. It owns the row shape and the
+/// `data-variant`/`data-regen`/`data-primary` group flags only; the bound kind
+/// supplies the label and the variant and renders the value from its domain type, so
+/// the shape is written once and every semantic row (hit points, mana, armor, …)
+/// inherits it — exactly as `Grid` is written once for every tile kind.
 #[component]
-pub fn StatRow(props: StatRowProps) -> Element {
-    let variant = props.variant.data_attr();
-    let is_regen = props.is_regen;
-    let is_primary = props.is_primary;
-    let children = props.children;
+pub fn StatRow<B: StatRowKind>(props: StatRowProps<B>) -> Element {
+    let variant = B::variant_attribute();
+    let is_regen = B::is_regen();
+    let is_primary = B::is_primary(&props.value);
+    let label = B::label();
+    let value = props.value;
     rsx! {
         div {
             class: CLASS,
             "data-variant": variant,
             "data-regen": is_regen,
             "data-primary": is_primary,
-            {children}
+            StatRowLabel { text: label }
+            {B::cells(value)}
         }
     }
 }

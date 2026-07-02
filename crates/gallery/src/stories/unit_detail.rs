@@ -7,45 +7,25 @@ use hotkey_editor::components::unit_detail::components::unit_detail_header::Unit
 use hotkey_editor::components::unit_detail::components::unit_detail_header::components::unit_detail_title::components::unit_name_row::components::hero_level_picker::components::hero_level_menu::components::hero_level_option::HeroLevelOption;
 use hotkey_editor::components::unit_detail::components::unit_stats_panel::UnitStatsPanel;
 use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::components::attack_matchup_cell::AttackMatchupCell;
-use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::attributes_column::components::attribute_row::AttributeRow;
-
-use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::attributes_column::{
-    AttributesColumn, HeroDisplayData,
-};
-
-use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::combat_column::{
-    AttackDisplayData, CombatColumn,
-};
-
+use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::attributes_column::AttributesColumn;
+use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::combat_column::CombatColumn;
 use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::DamageMatchupRow;
 use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::defense_matchup_row::components::defense_matchup_cell::DefenseMatchupCell;
 use hotkey_editor::components::unit_detail::components::unit_stats_panel::components::defense_matchup_row::DefenseMatchupRow;
-use hotkey_editor::components::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use warcraft_api::{
-    AttackType, DefenseType, PrimaryAttribute, Race, UnitCombat, WarcraftObjectMeta,
-};
+use warcraft_api::{AttackType, DefenseType, Race, UnitCombat, WarcraftObjectMeta};
 
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
-use warcraft_keybinds::{GridSlotId, UnitCommandSlots};
+use warcraft_keybinds::{
+    AttackRange, AttackSpeed, AttackStatistics, AttributeStatistic, DamageRange, Evasion,
+    GridSlotId, HeroStatistics, UnitCommandSlots,
+};
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::new(
-            "Unit detail",
-            "AttributeRow",
-            "Default",
-            attribute_row_default,
-        ),
-        Story::new(
-            "Unit detail",
-            "AttributeRow",
-            "Primary",
-            attribute_row_primary,
-        ),
         Story::single(
             "Unit detail",
             "AttackMatchupCell",
@@ -128,36 +108,6 @@ pub fn stories() -> Vec<Story> {
             unit_detail_panel_archmage,
         ),
     ]
-}
-
-fn attribute_row_default() -> Element {
-    let label = "Hit Points";
-    let value: u32 = 500;
-    let per_level: f32 = 0.0;
-    let is_primary = false;
-    rsx! {
-        AttributeRow {
-            label,
-            value,
-            per_level,
-            is_primary,
-        }
-    }
-}
-
-fn attribute_row_primary() -> Element {
-    let label = "Strength";
-    let value: u32 = 25;
-    let per_level: f32 = 2.5;
-    let is_primary = true;
-    rsx! {
-        AttributeRow {
-            label,
-            value,
-            per_level,
-            is_primary,
-        }
-    }
 }
 
 fn attack_matchup_cell_normal_vs_heavy() -> Element {
@@ -271,13 +221,13 @@ fn unit_stats_panel_empty() -> Element {
     let hero_attributes = None;
     let initial_level: u32 = 1;
     let selected_hero_level = use_signal(|| initial_level);
-    let evasion_chance: f32 = 0.0;
+    let evasion = Evasion::default();
     rsx! {
         UnitStatsPanel {
             combat,
             hero_attributes,
             selected_hero_level,
-            evasion_chance,
+            evasion,
         }
     }
 }
@@ -294,13 +244,13 @@ fn unit_stats_panel_archmage() -> Element {
     let hero_attributes = unit_meta.hero_attributes().copied();
     let initial_level: u32 = 1;
     let selected_hero_level = use_signal(|| initial_level);
-    let evasion_chance: f32 = 0.0;
+    let evasion = Evasion::default();
     rsx! {
         UnitStatsPanel {
             combat,
             hero_attributes,
             selected_hero_level,
-            evasion_chance,
+            evasion,
         }
     }
 }
@@ -317,13 +267,13 @@ fn unit_stats_panel_footman() -> Element {
     let hero_attributes = None;
     let initial_level: u32 = 1;
     let selected_hero_level = use_signal(|| initial_level);
-    let evasion_chance: f32 = 0.0;
+    let evasion = Evasion::default();
     rsx! {
         UnitStatsPanel {
             combat,
             hero_attributes,
             selected_hero_level,
-            evasion_chance,
+            evasion,
         }
     }
 }
@@ -340,30 +290,17 @@ fn attributes_column_archmage() -> Element {
         return rsx! { "Unit has no hero attributes." };
     };
     let primary = attributes.primary();
-    let primary_icon = StatIcon::from(primary).asset();
-    let primary_label = primary.to_string();
     let strength_value = attributes.strength();
     let strength_per_level = attributes.strength_per_level();
     let agility_value = attributes.agility();
     let agility_per_level = attributes.agility_per_level();
     let intelligence_value = attributes.intelligence();
     let intelligence_per_level = attributes.intelligence_per_level();
-    let primary_is_strength = primary == PrimaryAttribute::Strength;
-    let primary_is_agility = primary == PrimaryAttribute::Agility;
-    let primary_is_intelligence = primary == PrimaryAttribute::Intelligence;
-    let hero = HeroDisplayData::new(
-        primary_icon,
-        primary_label,
-        strength_value,
-        strength_per_level,
-        agility_value,
-        agility_per_level,
-        intelligence_value,
-        intelligence_per_level,
-        primary_is_strength,
-        primary_is_agility,
-        primary_is_intelligence,
-    );
+    let strength = AttributeStatistic::new(strength_value, strength_per_level);
+    let agility = AttributeStatistic::new(agility_value, agility_per_level);
+    let intelligence = AttributeStatistic::new(intelligence_value, intelligence_per_level);
+    let hero_statistics = HeroStatistics::new(strength, agility, intelligence, primary);
+    let hero = Some(hero_statistics);
     rsx! {
         AttributesColumn { hero }
     }
@@ -381,24 +318,18 @@ fn combat_column_footman() -> Element {
     let Some(unit_attack) = combat.attack() else {
         return rsx! { "Unit has no attack." };
     };
-    let damage_min = unit_attack.damage_min();
-    let damage_max = unit_attack.damage_max();
-    let damage_text = format!("{damage_min}\u{2013}{damage_max}");
-    let attack_range = unit_attack.range();
+    let damage_minimum = unit_attack.damage_min();
+    let damage_maximum = unit_attack.damage_max();
+    let damage = DamageRange::new(damage_minimum, damage_maximum);
+    let attack_range_value = unit_attack.range();
+    let range = AttackRange::new(attack_range_value);
     let cooldown_seconds = unit_attack.cooldown_seconds();
-    let speed_text = format!("{cooldown_seconds:.2}s");
+    let speed = AttackSpeed::new(cooldown_seconds);
+    let damage_per_second = None;
     let attack_type = unit_attack.attack_type();
-    let type_label = attack_type.to_string();
-    let type_icon = StatIcon::from(attack_type).asset();
-    let attack = AttackDisplayData::new(
-        damage_text,
-        attack_range,
-        speed_text,
-        None,
-        attack_type,
-        type_label,
-        type_icon,
-    );
+    let attack_statistics =
+        AttackStatistics::new(damage, range, speed, damage_per_second, attack_type);
+    let attack = Some(attack_statistics);
     rsx! {
         CombatColumn { attack }
     }

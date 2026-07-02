@@ -1,4 +1,3 @@
-use super::derived_stats::DerivedStats;
 use super::props::UnitDetailPanelProps;
 use super::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGridsProps;
 use super::components::unit_description::UnitDescriptionProps;
@@ -12,7 +11,7 @@ use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectMeta;
 use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
-use warcraft_keybinds::{GridSlotId, InspectorDetail, UnitCommandSlots};
+use warcraft_keybinds::{Evasion, GridSlotId, InspectorDetail, UnitCommandSlots};
 
 /// The panel's shaped view: either an empty-state message, or the fully-built child
 /// props for the loaded unit.
@@ -154,7 +153,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let unit_description = unit_object.ubertip();
     let unit_combat = *unit_meta.combat();
     let hero_attributes_option = unit_meta.hero_attributes().copied();
-    let unit_evasion_chance = DerivedStats::unit_evasion_chance(unit_meta);
+    let unit_evasion = Evasion::resolve(unit_meta);
     let header = UnitDetailHeaderProps {
         unit_name,
         unit_id: unit_id.clone(),
@@ -170,7 +169,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
         combat: unit_combat,
         hero_attributes: hero_attributes_option,
         selected_hero_level,
-        evasion_chance: unit_evasion_chance,
+        evasion: unit_evasion,
     };
     let grids = UnitCommandGridsProps {
         unit_id: unit_id.clone(),

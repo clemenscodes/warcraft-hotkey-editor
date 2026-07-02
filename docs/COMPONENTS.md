@@ -515,6 +515,24 @@ the tree, the way `Grid` drops in `HotkeyBadge`. Do not force a behavior
 parameter onto a button to make it look like a variant. Extend a base when there
 is a behavior to bind, compose a leaf when there is not.
 
+## Shared leaves live in a `shared/` grouping directory
+
+A leaf used verbatim by several sibling components is neither duplicated nor
+flat-dumped among those siblings. It lives once in a **`shared/` grouping
+subdirectory at their common parent**, and each sibling reaches it by its full
+module path.
+
+`shared/` is an organizational module, not a component: its `mod.rs` carries only
+`pub mod` entries for the leaves (and any trait) it groups, propagating each on a
+public path, and it has no component function, no class, and no `style.rs`. This is
+the sanctioned way to keep a genuinely-shared leaf out of the flat component list —
+the opposite of the flat-dumping the render-tree rule forbids.
+
+It is distinct from the forbidden `base/` / `extensions/` layers above: those would
+split a base and its variants across a grouping level and break
+`directory == component`. `shared/` names no component at all; it groups what several
+sibling components share, so it does not violate `directory == component == class`.
+
 ---
 
 ## Modules are public; imports carry the full path
@@ -553,6 +571,25 @@ for a value that is always present.
   a hotkey, a draggable follower always has an icon. Make the invariant true at
   the domain source and propagate it, rather than threading an `Option` that can
   never be `None`.
+
+The domain owns the computed, normalized value; the renderer owns how that value is
+**presented**. Convert to the display string at the leaf that renders it, with
+whatever precision, unit, or sign the UI wants (`{:.0}`, a trailing `%`, a leading
+`+`). That formatting is the UI's prerogative and is never required to live in the
+domain crate — the UI decides how it draws a normalized domain value.
+
+When one leaf renders several different domain figures and cannot give each its own
+`Display` here — the orphan rule forbids implementing `std::fmt::Display` for a
+foreign domain type in the renderer crate — a **renderer-local presentation trait**
+(one method per figure type returning its display text) is the sanctioned home for
+that formatting. It is not a `to_string` anticonvention; it is the UI deciding
+presentation for types it does not own. `Display` in the domain crate is allowed but
+not required; if a domain type already implements it (as `DefenseType` and
+`AttackType` do), the leaf uses that instead of re-wrapping it.
+
+Whether a figure renders muted — a mana of zero, a regeneration of zero — is decided
+at the leaf, and where the muted state is "the value is zero" it asks the domain type
+(`value.is_zero()`) rather than threading a parallel `is_zero: bool` prop.
 
 See `docs/ARCHITECTURE.md` for why the renderer never computes domain decisions,
 and `docs/RUST_STYLE.md` for the `From` and `TryFrom` rules these conversions

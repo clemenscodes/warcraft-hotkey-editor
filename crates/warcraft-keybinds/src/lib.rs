@@ -8,6 +8,7 @@ pub mod display;
 pub mod grid;
 pub mod identity;
 pub mod model;
+pub mod statistics;
 pub mod system;
 pub mod text;
 pub mod unit;
@@ -53,6 +54,12 @@ pub use model::{
     AbilityBinding, AbilityBindingBuilder, AbilityModifier, BindingEntry, ColumnIndex,
     CommandBinding, CommandBindingBuilder, CommandEntry, CustomKeysBuilder, GridCoordinate, Hotkey,
     RowIndex, SystemBinding, WarcraftKeybinding,
+};
+
+pub use statistics::{
+    Armor, AttackRange, AttackSpeed, AttackStatistics, AttributeStatistic, DamagePerSecond,
+    DamageRange, EffectiveHitPoints, Evasion, Gain, HeroStatistics, HitPoints, HitPointsRegen,
+    Mana, ManaRegen, UnitStatistics,
 };
 
 pub use system::binding_map::{EffectiveBinding, ResolvedSystemBinding, SystemBindingMap};
