@@ -264,28 +264,6 @@ body {
     }
 }
 
-/* ─────────────────────── 7. STATS PANEL ─────────────────────── */
-
-@media (max-width: 1099px) {
-    .stats-panel,
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 0.4rem;
-    }
-    .stats-panel {
-        padding: 0.75rem 0.85rem;
-    }
-    .stat-row,
-    .stats-row {
-        font-size: 0.95rem;
-        padding: 0.3rem 0;
-    }
-    .stat-row .stat-label,
-    .stats-row .stat-label {
-        font-size: 0.85rem;
-    }
-}
-
 /* ─────────────────────── 8. COMMAND GRID ─────────────────────── */
 
 @media (max-width: 1099px) {
@@ -782,16 +760,6 @@ body.body-scroll-locked {
         font-size: 13px;
     }
 
-    /* Stats panel typography */
-    .stat-row, .stats-row,
-    .stat-label, .stat-value,
-    .stat-pair, .stat-cell {
-        font-size: 13px;
-    }
-    .stat-row .stat-value, .stats-row .stat-value {
-        font-size: 16px;
-    }
-
     /* Override panel hint sizing handled in §9 (override panel section) so
        it stays consistent with the line-clamp / fixed-height geometry. */
 
@@ -808,15 +776,6 @@ body.body-scroll-locked {
    spacing feel jumpy. Pin everything to the same 12–16px budget. */
 
 @media (max-width: 1099px) {
-    .unit-stats-panel {
-        margin-top: 12px;
-        margin-bottom: 0;
-        gap: 1rem;
-        padding: 10px 12px;
-    }
-    .unit-stats-panel > .stat-column + .stat-column {
-        padding-top: 10px;
-    }
     .unit-detail-row {
         margin-top: 14px;
     }
@@ -827,22 +786,6 @@ body.body-scroll-locked {
     }
     .main-content {
         gap: 16px;
-    }
-}
-
-/* The max-width: 1099px block above sets gap: 1rem on .unit-stats-panel to
-   tighten spacing on compact viewports. But the 2×2 layout (min-width: 701px)
-   uses pseudo-element separators positioned at left: -1rem and top: -1.25rem —
-   the midpoint of the original 2rem column-gap and 2.5rem row-gap respectively.
-   With gap shrunk to 1rem, those midpoints shift and the content runs into the
-   separator lines with no breathing room.
-   Restore the separator-compatible gap and column padding for the 701–1099 range. */
-@media (min-width: 701px) and (max-width: 1099px) {
-    .unit-stats-panel {
-        gap: 2.5rem 2rem;
-    }
-    .unit-stats-panel > .stat-column + .stat-column {
-        padding-top: 1.25rem;
     }
 }
 

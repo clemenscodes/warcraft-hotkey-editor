@@ -2,7 +2,8 @@
 //! rows share one value type and cells shape, differing only in their attribute; each
 //! row's label is the attribute's name, which is domain vocabulary owned by
 //! `PrimaryAttribute` — so it is sourced from that type's `Display`, never re-typed as
-//! a renderer-local string literal.
+//! a renderer-local string literal. The three `cells` bodies are identical; they are
+//! duplicated per kind (duplication over coupling) so the value type stays pure data.
 
 use super::super::shared::stat_row::StatRowKind;
 use super::super::shared::stat_row::components::stat_row_gain::StatRowGain;
@@ -14,7 +15,7 @@ use warcraft_keybinds::AttributeStatistic;
 /// One hero attribute row's value: the attribute at the selected level, plus whether
 /// it is the hero's primary (which glows gold). `is_primary` cannot be a per-type
 /// constant — which attribute is primary is runtime hero data — so it rides on the
-/// value the row carries.
+/// value the row carries. A pure data value: it produces no markup.
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct MarkedAttribute {
     statistic: AttributeStatistic,
@@ -29,17 +30,12 @@ impl MarkedAttribute {
         }
     }
 
-    fn is_primary(self) -> bool {
-        self.is_primary
+    fn statistic(self) -> AttributeStatistic {
+        self.statistic
     }
 
-    fn cells(self) -> Element {
-        let statistic = self.statistic;
-        let growth = statistic.growth();
-        rsx! {
-            StatRowValue { value: statistic }
-            StatRowGain { value: growth }
-        }
+    fn is_primary(self) -> bool {
+        self.is_primary
     }
 }
 
@@ -59,7 +55,12 @@ impl StatRowKind for StrengthKind {
     }
 
     fn cells(value: MarkedAttribute) -> Element {
-        value.cells()
+        let statistic = value.statistic();
+        let growth = statistic.growth();
+        rsx! {
+            StatRowValue { value: statistic }
+            StatRowGain { value: growth }
+        }
     }
 }
 
@@ -79,7 +80,12 @@ impl StatRowKind for AgilityKind {
     }
 
     fn cells(value: MarkedAttribute) -> Element {
-        value.cells()
+        let statistic = value.statistic();
+        let growth = statistic.growth();
+        rsx! {
+            StatRowValue { value: statistic }
+            StatRowGain { value: growth }
+        }
     }
 }
 
@@ -99,6 +105,11 @@ impl StatRowKind for IntelligenceKind {
     }
 
     fn cells(value: MarkedAttribute) -> Element {
-        value.cells()
+        let statistic = value.statistic();
+        let growth = statistic.growth();
+        rsx! {
+            StatRowValue { value: statistic }
+            StatRowGain { value: growth }
+        }
     }
 }
