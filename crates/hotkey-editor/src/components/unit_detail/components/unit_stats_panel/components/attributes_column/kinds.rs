@@ -4,9 +4,9 @@
 //! `PrimaryAttribute` — so it is sourced from that type's `Display`, never re-typed as
 //! a renderer-local string literal.
 
+use super::super::shared::stat_row::StatRowKind;
 use super::super::shared::stat_row::components::stat_row_gain::StatRowGain;
 use super::super::shared::stat_row::components::stat_row_value::StatRowValue;
-use super::super::shared::stat_row::StatRowKind;
 use dioxus::prelude::*;
 use warcraft_api::PrimaryAttribute;
 use warcraft_keybinds::AttributeStatistic;

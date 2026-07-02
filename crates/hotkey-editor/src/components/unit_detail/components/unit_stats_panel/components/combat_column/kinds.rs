@@ -1,8 +1,8 @@
 //! The [`StatRowKind`] markers for the combat column's rows. Each binds a domain
 //! attack figure to the base `StatRow` at the call site.
 
-use super::super::shared::stat_row::components::stat_row_value::StatRowValue;
 use super::super::shared::stat_row::StatRowKind;
+use super::super::shared::stat_row::components::stat_row_value::StatRowValue;
 use super::data;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
