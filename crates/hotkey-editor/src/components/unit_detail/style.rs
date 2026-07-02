@@ -29,6 +29,7 @@ const BASE: &[&str] = &[
     "[&::-webkit-scrollbar-thumb:hover]:bg-[rgba(255,206,99,0.55)]",
 ];
 const MOBILE: &[&str] = &[
+    "mobile:[grid-column:auto]",
     "mobile:self-auto",
     "mobile:max-h-none",
     "mobile:p-[0.85rem]",
@@ -36,6 +37,7 @@ const MOBILE: &[&str] = &[
     "mobile:overflow-visible",
 ];
 const TABLET: &[&str] = &[
+    "tablet:[grid-column:auto]",
     "tablet:self-stretch",
     "tablet:max-h-none",
     "tablet:p-8",

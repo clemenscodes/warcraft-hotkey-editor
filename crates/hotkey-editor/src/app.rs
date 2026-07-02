@@ -7,10 +7,8 @@ use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
 use crate::components::shell::tooltips::TooltipMount;
-use crate::components::tabs::mode_and_race_tabs::ModeAndRaceTabs;
-use crate::components::unit_detail::UnitDetailPanel;
-use crate::components::unit_list::UnitList;
 use crate::components::views::collisions_page::CollisionsPage;
+use crate::components::views::editor_page::EditorPage;
 use crate::components::views::resolve_page::ResolvePage;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
@@ -23,7 +21,6 @@ use crate::services::overlay_state::OverlayState;
 use crate::services::undo::{EditorSnapshot, UndoHistory};
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
-use warcraft_api::RaceLabels;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{SearchField, UnitMode};
 use warcraft_keybinds::CustomKeys;
@@ -427,45 +424,26 @@ pub fn App() -> Element {
                 Header { loaded_keys, upload_status, grid_layout }
                 match *current_view.read() {
                     AppView::Editor => rsx! {
-                        div { class: "flex items-stretch gap-6 flex-none \
-                                                        min-h-[clamp(9rem,13vh,18rem)] \
-                                                        max-md:flex-col max-md:min-h-0 max-md:gap-[0.85rem]",
-                            ModeAndRaceTabs {
-                                unit_mode,
-                                active_race,
-                                selected_unit_id,
-                                selected_slot,
-                            }
-                        }
-                        div {
-                            class: "main-content",
-                            "data-race": "{RaceLabels::data_attribute(*active_race.read())}",
-                            UnitList {
-                                active_race,
-                                unit_mode,
-                                selected_unit_id,
-                                selected_slot,
-                                search_query,
-                                search_field,
-                                show_abilityless_units,
-                                expand_variants,
-                                collapsed_categories,
-                            }
-                            UnitDetailPanel {
-                                active_race,
-                                selected_unit_id,
-                                selected_slot,
-                                selected_from_research,
-                                selected_from_uprooted,
-                                tier_overrides,
-                                dragging_slot,
-                                drop_target_tile,
-                                drag_follower,
-                                loaded_keys,
-                                grid_layout,
-                                update_hotkeys_on_move,
-                                hotkey_assign_request,
-                            }
+                        EditorPage {
+                            active_race,
+                            unit_mode,
+                            selected_unit_id,
+                            selected_slot,
+                            search_query,
+                            search_field,
+                            show_abilityless_units,
+                            expand_variants,
+                            collapsed_categories,
+                            selected_from_research,
+                            selected_from_uprooted,
+                            tier_overrides,
+                            dragging_slot,
+                            drop_target_tile,
+                            drag_follower,
+                            loaded_keys,
+                            grid_layout,
+                            update_hotkeys_on_move,
+                            hotkey_assign_request,
                         }
                     },
                     AppView::Collisions { kind } => rsx! {

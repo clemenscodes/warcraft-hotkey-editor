@@ -267,20 +267,6 @@ body {
 /* ─────────────────────── 8. COMMAND GRID ─────────────────────── */
 
 @media (max-width: 1099px) {
-    .main-content {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        margin-top: 0.5rem;
-        padding: 0;
-        max-width: 100%;
-        /* Prevent main-content from growing to fill the viewport (flex: 1 1 0
-           from base CSS only resets at ≤700px via app-root.css). Without this,
-           overflow:visible grids inside UnitDetailPanel extend past the flex
-           boundary and visually overlap the footer. */
-        flex: 0 0 auto;
-        min-height: auto;
-    }
-
     .unit-detail {
         padding: 1.25rem;
         border-radius: 8px;
@@ -784,9 +770,6 @@ body.body-scroll-locked {
     .app {
         gap: 16px;
     }
-    .main-content {
-        gap: 16px;
-    }
 }
 
 /* ─────────────────────── 21. SAFETY NET — body-level overflow guard ───────────────────────
@@ -829,10 +812,6 @@ html, body {
     ──────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 1099px) {
     .collisions-shell {
-        flex: 0 0 auto;
-        min-height: auto;
-    }
-    .main-content.collisions-content {
         flex: 0 0 auto;
         min-height: auto;
     }

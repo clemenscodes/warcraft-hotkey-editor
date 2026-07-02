@@ -1,33 +1,4 @@
 @layer components {
-.main-content {
-    --race-color: #ffce63;
-    --race-color-soft: rgba(255, 206, 99, 0.45);
-    /* --main-sidebar-w mirrors the first grid column so absolutely-positioned
-       sidebar children can match it without repeating the value. Overridden
-       at the 1099px breakpoint where grid-template-columns also changes. */
-    --main-sidebar-w: var(--sidebar-column-width);
-    display: grid;
-    grid-template-columns: var(--sidebar-column-width) minmax(0, 1fr);
-    gap: 2.5rem;
-    align-items: stretch;
-    margin-top: 1.5rem;
-    flex: 1 1 0;
-    min-height: 0;
-}
-
-.main-content[data-race="human"]    { --race-color: #6aa1ff; --race-color-soft: rgba(106, 161, 255, 0.45); }
-.main-content[data-race="orc"]      { --race-color: #ff7a7a; --race-color-soft: rgba(255, 122, 122, 0.45); }
-.main-content[data-race="nightelf"] { --race-color: #5fdada; --race-color-soft: rgba(95, 218, 218, 0.45); }
-.main-content[data-race="undead"]   { --race-color: #c79bff; --race-color-soft: rgba(199, 155, 255, 0.45); }
-.main-content[data-race="neutral"]  { --race-color: #ffce63; --race-color-soft: rgba(255, 206, 99, 0.45); }
-
-@media (max-width: 700px) {
-    .main-content {
-        grid-template-columns: 1fr;
-        flex: 0 0 auto;
-        min-height: auto;
-    }
-}
 
 /* ─── Small desktop / laptop ─── */
 
@@ -38,10 +9,6 @@
     .mode-toggle {
         flex: 0 0 18rem;
         width: 18rem;
-    }
-    .main-content {
-        --main-sidebar-w: 18rem;
-        grid-template-columns: 18rem minmax(0, 1fr);
     }
     .unit-detail-row {
         grid-template-columns: 1fr;
@@ -172,15 +139,6 @@
         font-size: 1.9rem;
     }
 
-    /* Main content: single column, no max-height */
-    .main-content {
-        grid-template-columns: 1fr;
-        flex: 0 0 auto;
-        min-height: auto;
-        max-height: none;
-        gap: 1rem;
-        margin-top: 0.5rem;
-    }
 
     /* Unit list: compact */
     .unit-list {
@@ -478,14 +436,6 @@
         padding: 0.4rem 0.5rem 0.55rem;
     }
 
-    /* Main-content gap intentionally NOT overridden here — matches the
-       2.5rem gap between mode-toggle and race-tabs in the strip above so
-       the unit detail panel's left edge stays aligned with where the
-       race banners begin. */
-    .main-content {
-        margin-top: 0.5rem;
-    }
-
     .unit-detail {
         padding: 1.25rem 1.5rem;
     }
@@ -588,13 +538,6 @@
 @media (min-width: 1100px) {
     .app {
         max-height: 100dvh;
-        overflow: hidden;
-    }
-    .main-content {
-        flex: 1 1 0;
-        min-height: 0;
-        position: relative;
-        grid-template-rows: 1fr;
         overflow: hidden;
     }
 }
