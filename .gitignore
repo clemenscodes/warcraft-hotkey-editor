@@ -21,3 +21,4 @@ Cargo.lock.bak
 
 # Node / pnpm
 node_modules/
+.claude/goal-active
