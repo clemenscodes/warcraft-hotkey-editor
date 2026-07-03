@@ -32,15 +32,20 @@ const MOBILE: &[&str] = &[
     "mobile:[grid-column:auto]",
     "mobile:self-auto",
     "mobile:max-h-none",
-    "mobile:p-[0.85rem]",
-    "mobile:rounded-[6px]",
+    "mobile:w-full",
+    "mobile:box-border",
+    "mobile:p-[1.25rem]",
+    "mobile:rounded-[8px]",
     "mobile:overflow-visible",
 ];
 const TABLET: &[&str] = &[
     "tablet:[grid-column:auto]",
     "tablet:self-stretch",
     "tablet:max-h-none",
-    "tablet:p-8",
+    "tablet:w-full",
+    "tablet:box-border",
+    "tablet:p-[1.25rem]",
+    "tablet:rounded-[8px]",
     "tablet:overflow-visible",
 ];
 const LAPTOP: &[&str] = &[];

@@ -203,7 +203,6 @@
             (craneLib.fileset.commonCargoSources ./.)
             ./crates/hotkey-editor/Dioxus.toml
             ./crates/hotkey-editor/tailwind.input.css
-            ./crates/hotkey-editor/styles
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
             ./crates/hotkey-editor/templates

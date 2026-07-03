@@ -5,7 +5,7 @@ const BASE: &[&str] = &[
     "px-[1.6rem]",
     "py-[0.55rem]",
     "border",
-    "border-[var(--race-color,#ffce63)]",
+    "border-warcraft-gold",
     "rounded-[8px]",
     "cursor-pointer",
     "font-friz-quadrata",

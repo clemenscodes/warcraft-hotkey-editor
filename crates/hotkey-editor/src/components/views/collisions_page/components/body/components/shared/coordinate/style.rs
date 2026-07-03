@@ -5,7 +5,7 @@ const BASE: &[&str] = &[
     "text-[1.5rem]/[1.1]",
     "text-warcraft-text-primary",
     "whitespace-nowrap",
-    "group-data-[selected=true]:text-[var(--race-color,#ffce63)]",
+    "group-data-[selected=true]:text-warcraft-gold",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

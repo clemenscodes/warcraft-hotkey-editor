@@ -6,8 +6,8 @@ const BASE: &[&str] = &[
     "border-[#2a5085]",
     "rounded-[7px]",
     "object-cover",
-    "group-[:not(:disabled):hover]:[border-color:var(--race-color,#ffce63)]",
-    "group-[:not(:disabled):hover]:[box-shadow:0_0_8px_var(--race-color-soft,rgba(255,206,99,0.5))]",
+    "group-[:not(:disabled):hover]:border-warcraft-gold",
+    "group-[:not(:disabled):hover]:[box-shadow:0_0_8px_rgba(255,206,99,0.5)]",
 ];
 const MOBILE: &[&str] = &[
     "mobile:w-[max(40px,min(72px,9vw))]",

@@ -52,8 +52,23 @@ const BASE: &[&str] = &[
     "[body[data-kb-modality]_&]:focus:border-white",
     "[body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_#fff,0_0_18px_rgba(255,255,255,0.55)]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &["tablet:min-h-[clamp(3rem,6vh,5rem)]"];
+// Phone/tablet: a swipe-scannable banner-card strip — each tab a chunky fixed
+// height (all five share the row) with tighter type and a slightly softer banner
+// brightness than the desktop row.
+const MOBILE: &[&str] = &[
+    "mobile:h-[clamp(112px,36vw,200px)]",
+    "mobile:min-h-0",
+    "mobile:text-[clamp(0.75rem,2.6vw,1rem)]",
+    "mobile:before:brightness-[1.35]",
+    "mobile:before:saturate-[1.2]",
+];
+const TABLET: &[&str] = &[
+    "tablet:h-[clamp(112px,36vw,200px)]",
+    "tablet:min-h-0",
+    "tablet:text-[clamp(0.75rem,2.6vw,1rem)]",
+    "tablet:before:brightness-[1.35]",
+    "tablet:before:saturate-[1.2]",
+];
 const LAPTOP: &[&str] = &["laptop:min-h-[clamp(3rem,6vh,5rem)]"];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

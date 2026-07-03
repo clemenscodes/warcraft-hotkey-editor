@@ -51,12 +51,13 @@ const BLOCKED_DROP_TARGET: &[&str] = &[
     "cursor-not-allowed",
 ];
 
-// The mini grid marks one coordinate: the race-accented border, gold wash, and
-// glow, all scaling with the grid via `cqi`.
+// The mini grid marks one coordinate: a gold-accented border, gold wash, and glow,
+// all scaling with the grid via `cqi`. Mini grids sit outside any race context, so
+// the accent is the fixed warcraft gold (there is no race to tint it).
 const HIGHLIGHTED: &[&str] = &[
-    "[border-color:var(--race-color,#ffce63)]",
+    "border-warcraft-gold",
     "bg-[rgba(255,206,99,0.2)]",
-    "[box-shadow:0_0_7cqi_var(--race-color-soft,rgba(255,206,99,0.5))]",
+    "[box-shadow:0_0_7cqi_rgba(255,206,99,0.5)]",
 ];
 
 states! {

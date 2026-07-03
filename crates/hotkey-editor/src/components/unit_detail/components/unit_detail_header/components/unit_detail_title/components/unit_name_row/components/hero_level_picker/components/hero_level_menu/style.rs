@@ -16,8 +16,22 @@ const BASE: &[&str] = &[
     "rounded-[8px]",
     "[box-shadow:0_8px_24px_rgba(0,0,0,0.65),0_0_12px_rgba(255,206,99,0.1)]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
+const MOBILE: &[&str] = &[
+    "mobile:w-full",
+    "mobile:max-h-[min(320px,65dvh)]",
+    "mobile:overflow-y-auto",
+    "mobile:[overscroll-behavior:contain]",
+    "mobile:[scrollbar-width:none]",
+    "mobile:[&::-webkit-scrollbar]:hidden",
+];
+const TABLET: &[&str] = &[
+    "tablet:w-full",
+    "tablet:max-h-[min(320px,65dvh)]",
+    "tablet:overflow-y-auto",
+    "tablet:[overscroll-behavior:contain]",
+    "tablet:[scrollbar-width:none]",
+    "tablet:[&::-webkit-scrollbar]:hidden",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

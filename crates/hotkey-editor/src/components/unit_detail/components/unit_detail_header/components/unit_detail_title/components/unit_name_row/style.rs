@@ -8,11 +8,19 @@ const BASE: &[&str] = &[
     "min-h-0",
 ];
 const MOBILE: &[&str] = &[
-    "mobile:flex-col",
-    "mobile:items-stretch",
-    "mobile:gap-[0.75rem]",
+    "mobile:flex-row",
+    "mobile:items-center",
+    "mobile:gap-[8px]",
+    "mobile:w-full",
+    "mobile:min-w-0",
 ];
-const TABLET: &[&str] = &["tablet:gap-[1.5rem]", "tablet:min-h-[4.2rem]"];
+const TABLET: &[&str] = &[
+    "tablet:flex-row",
+    "tablet:items-center",
+    "tablet:gap-[8px]",
+    "tablet:w-full",
+    "tablet:min-w-0",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

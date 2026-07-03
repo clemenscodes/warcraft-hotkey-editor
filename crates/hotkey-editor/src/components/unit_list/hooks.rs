@@ -140,6 +140,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
             MobileCategoryTabProps {
                 kind,
                 is_active,
+                race,
                 active_category: active_category_signal,
             }
         })

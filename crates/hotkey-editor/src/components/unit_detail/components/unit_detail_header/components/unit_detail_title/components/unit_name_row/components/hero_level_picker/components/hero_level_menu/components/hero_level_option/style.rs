@@ -23,8 +23,18 @@ const BASE: &[&str] = &[
     "[body[data-kb-modality]_&]:focus:text-white",
     "[body[data-kb-modality]_&]:focus:[box-shadow:inset_0_0_0_2px_#fff]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
+const MOBILE: &[&str] = &[
+    "mobile:px-[10px]",
+    "mobile:py-[3px]",
+    "mobile:min-h-[24px]",
+    "mobile:text-[16px]",
+];
+const TABLET: &[&str] = &[
+    "tablet:px-[10px]",
+    "tablet:py-[3px]",
+    "tablet:min-h-[24px]",
+    "tablet:text-[13px]",
+];
 const LAPTOP: &[&str] = &[
     "laptop:px-[0.55rem]",
     "laptop:py-[0.3rem]",

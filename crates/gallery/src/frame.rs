@@ -1,4 +1,3 @@
-use crate::GALLERY_STYLES;
 use crate::registry::StoryRegistry;
 use dioxus::prelude::*;
 use hotkey_editor::components::shell::toasts::ToastMount;
@@ -18,16 +17,18 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         Some(story) => {
             let render = story.render();
             rsx! {
-                document::Stylesheet { href: GALLERY_STYLES }
                 TooltipMount {}
                 ToastMount {
-                    div { class: "gallery-frame-root", {render()} }
+                    div { class: "min-h-dvh flex flex-col items-center", {render()} }
                 }
             }
         }
         None => {
             rsx! {
-                div { class: "gallery-frame-root gallery-frame-missing", "Unknown story: {story_id}" }
+                div {
+                    class: "min-h-dvh flex flex-col items-center p-8 [font-family:system-ui,sans-serif]",
+                    "Unknown story: {story_id}"
+                }
             }
         }
     }

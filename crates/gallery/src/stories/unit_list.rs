@@ -54,34 +54,38 @@ pub fn stories() -> Vec<Story> {
 fn unit_card_info_footman() -> Element {
     let display_name = "Footman".to_string();
     let unit_id = "hfoo".to_string();
+    let race = Race::Human;
     rsx! {
-        UnitCardInfo { display_name, unit_id, is_selected: false }
+        UnitCardInfo { display_name, unit_id, race, is_selected: false }
     }
 }
 
 fn unit_card_info_hero() -> Element {
     let display_name = "Archmage".to_string();
     let unit_id = "Hamg".to_string();
+    let race = Race::Human;
     rsx! {
-        UnitCardInfo { display_name, unit_id, is_selected: true }
+        UnitCardInfo { display_name, unit_id, race, is_selected: true }
     }
 }
 
 fn mobile_category_tab_active() -> Element {
     let kind = UnitKind::Soldier;
     let is_active = true;
+    let race = Race::Orc;
     let active_category = use_signal(|| UnitKind::Soldier);
     rsx! {
-        MobileCategoryTab { kind, is_active, active_category }
+        MobileCategoryTab { kind, is_active, race, active_category }
     }
 }
 
 fn mobile_category_tab_inactive() -> Element {
     let kind = UnitKind::Hero;
     let is_active = false;
+    let race = Race::Human;
     let active_category = use_signal(|| UnitKind::Soldier);
     rsx! {
-        MobileCategoryTab { kind, is_active, active_category }
+        MobileCategoryTab { kind, is_active, race, active_category }
     }
 }
 

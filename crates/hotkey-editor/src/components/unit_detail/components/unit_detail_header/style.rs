@@ -12,17 +12,29 @@ const BASE: &[&str] = &[
 ];
 const MOBILE: &[&str] = &[
     "mobile:flex",
-    "mobile:flex-col",
-    "mobile:items-center",
-    "mobile:text-center",
+    "mobile:flex-row",
+    "mobile:items-start",
     "mobile:h-auto",
-    "mobile:gap-[0.85rem]",
-    "mobile:pb-[1rem]",
+    "mobile:min-h-0",
+    "mobile:gap-[12px]",
+    "mobile:pb-[16px]",
+    "mobile:overflow-visible",
+    "mobile:text-left",
+    "mobile:w-full",
+    "mobile:min-w-0",
 ];
 const TABLET: &[&str] = &[
-    "tablet:grid-cols-[11.5rem_1fr]",
-    "tablet:gap-x-[1.25rem]",
-    "tablet:pb-[1rem]",
+    "tablet:flex",
+    "tablet:flex-row",
+    "tablet:items-start",
+    "tablet:h-auto",
+    "tablet:min-h-0",
+    "tablet:gap-[12px]",
+    "tablet:pb-[16px]",
+    "tablet:overflow-visible",
+    "tablet:text-left",
+    "tablet:w-full",
+    "tablet:min-w-0",
 ];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];

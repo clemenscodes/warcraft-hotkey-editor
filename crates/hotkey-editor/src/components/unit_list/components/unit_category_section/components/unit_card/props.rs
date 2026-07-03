@@ -33,10 +33,12 @@ impl From<&UnitCardProps> for UnitCardInfoProps {
     fn from(props: &UnitCardProps) -> Self {
         let display_name = props.display_name.clone();
         let unit_id = props.unit_id.clone();
+        let race = props.race;
         let is_selected = props.is_selected;
         Self {
             display_name,
             unit_id,
+            race,
             is_selected,
         }
     }

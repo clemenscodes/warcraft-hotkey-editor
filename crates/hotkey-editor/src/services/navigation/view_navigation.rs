@@ -1,5 +1,4 @@
 use crate::services::navigation::app_view::AppView;
-use crate::services::navigation::url_state::UrlNavigationState;
 use dioxus::prelude::*;
 use warcraft_api::{Race, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, UnitMode};
@@ -19,22 +18,16 @@ pub struct ViewNavigationContext {
 }
 
 impl ViewNavigationContext {
-    /// Switch to `target` and push a history entry so browser
-    /// back/forward navigates between views.  No-op when `target`
-    /// already matches the current view.
+    /// Switch to `target`. No-op when `target` already matches the current view.
+    /// Setting the view signal is all that is needed: the workbench's URL-sync
+    /// effect observes the change and pushes the matching route through the router
+    /// (so browser back/forward navigates between views).
     pub fn apply(self, target: AppView) {
         let mut current_view = self.current_view;
         if target == *current_view.read() {
             return;
         }
         current_view.set(target);
-        let race = *self.active_race.read();
-        let mode = *self.unit_mode.read();
-        let unit_id_option = self.selected_unit_id.read().clone();
-        let query = self.search_query.read().clone();
-        let unit_id_ref = unit_id_option.as_deref();
-        let query_str = query.as_str();
-        UrlNavigationState::push_view_to_url(race, mode, unit_id_ref, query_str, target, None);
     }
 
     /// Deep-link into the editor focused on `unit_id`.  Resolves the

@@ -6,8 +6,8 @@ const BASE: &[&str] = &[
     "border-warcraft-blue",
     "rounded-[6px]",
     "object-cover",
-    "hover:border-[var(--race-color,#ffce63)]",
-    "hover:shadow-[0_0_8px_var(--race-color-soft,rgba(255,206,99,0.5))]",
+    "hover:border-warcraft-gold",
+    "hover:shadow-[0_0_8px_rgba(255,206,99,0.5)]",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

@@ -5,6 +5,7 @@ use crate::classes;
 // sheet so the override stays reachable while the grid scrolls.
 const BASE: &[&str] = &["flex", "flex-col", "min-w-0", "self-start"];
 const MOBILE: &[&str] = &[
+    "mobile:w-full",
     "mobile:self-stretch",
     "mobile:items-stretch",
     "mobile:sticky",
@@ -13,7 +14,7 @@ const MOBILE: &[&str] = &[
     "mobile:m-[0_-0.85rem]",
     "mobile:pt-0",
 ];
-const TABLET: &[&str] = &["tablet:self-stretch", "tablet:pt-0"];
+const TABLET: &[&str] = &["tablet:w-full", "tablet:self-stretch", "tablet:pt-0"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

@@ -26,6 +26,8 @@ const MOBILE: &[&str] = &[
     "mobile:h-[300px]",
     "mobile:p-[10px_12px]",
     "mobile:text-center",
+    "mobile:text-[14px]",
+    "mobile:leading-[1.4]",
     "mobile:rounded-[12px_12px_0_0]",
     "mobile:border-b-0",
     "mobile:shadow-[0_-4px_16px_rgba(0,0,0,0.4)]",
@@ -35,6 +37,8 @@ const TABLET: &[&str] = &[
     "tablet:box-border",
     "tablet:h-[300px]",
     "tablet:p-[10px_12px]",
+    "tablet:text-[14px]",
+    "tablet:leading-[1.4]",
 ];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];

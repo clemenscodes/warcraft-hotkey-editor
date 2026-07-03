@@ -1,14 +1,26 @@
 use crate::classes;
 
 const BASE: &[&str] = &[
-    "min-w-0",
-    "overflow-x-clip",
     "flex",
     "flex-col",
+    "min-w-0",
     "gap-[0.45rem]",
+    "overflow-x-clip",
 ];
-const MOBILE: &[&str] = &["mobile:items-center"];
-const TABLET: &[&str] = &[];
+const MOBILE: &[&str] = &[
+    "mobile:flex-1",
+    "mobile:items-start",
+    "mobile:gap-[3px]",
+    "mobile:text-left",
+    "mobile:overflow-visible",
+];
+const TABLET: &[&str] = &[
+    "tablet:flex-1",
+    "tablet:items-start",
+    "tablet:gap-[3px]",
+    "tablet:text-left",
+    "tablet:overflow-visible",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

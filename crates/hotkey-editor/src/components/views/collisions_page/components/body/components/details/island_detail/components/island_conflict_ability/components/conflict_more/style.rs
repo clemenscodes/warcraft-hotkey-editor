@@ -9,7 +9,7 @@ const BASE: &[&str] = &[
     "text-[#9aa3b2]",
     "underline",
     "underline-offset-2",
-    "hover:text-[var(--race-color,#ffce63)]",
+    "hover:text-warcraft-gold",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

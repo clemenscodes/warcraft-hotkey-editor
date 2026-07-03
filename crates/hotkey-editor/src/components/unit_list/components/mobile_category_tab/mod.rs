@@ -5,7 +5,6 @@ use crate::assert_component;
 use crate::components::unit_list::unit_kind_data_attr;
 use dioxus::prelude::*;
 pub use props::MobileCategoryTabProps;
-use style::CLASS;
 use warcraft_database::UnitKindHelpers;
 assert_component!(MobileCategoryTab);
 
@@ -14,13 +13,14 @@ assert_component!(MobileCategoryTab);
 pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
     let kind = props.kind;
     let is_active = props.is_active;
+    let class = style::class(props.race);
     let mut active_category = props.active_category;
     let label = UnitKindHelpers::category_label(kind);
     let kind_attr = unit_kind_data_attr(kind);
     let handle_click = move |_| active_category.set(kind);
     rsx! {
         button {
-            class: CLASS,
+            class,
             role: "tab",
             r#type: "button",
             aria_selected: is_active,

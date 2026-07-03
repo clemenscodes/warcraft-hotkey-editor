@@ -5,8 +5,8 @@ const BASE: &[&str] = &[
     "text-[clamp(0.95rem,0.42vw+0.35rem,1.25rem)]",
     "font-mono",
 ];
-const MOBILE: &[&str] = &["mobile:text-[1.6rem]"];
-const TABLET: &[&str] = &["tablet:text-[1.6rem]"];
+const MOBILE: &[&str] = &["mobile:text-[13px]"];
+const TABLET: &[&str] = &["tablet:text-[13px]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

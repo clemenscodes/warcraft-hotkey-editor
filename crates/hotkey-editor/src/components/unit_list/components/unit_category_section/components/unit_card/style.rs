@@ -1,5 +1,5 @@
-use crate::classes;
-use warcraft_api::UnitKind;
+use crate::{classes, states};
+use warcraft_api::Race;
 
 const BASE: &[&str] = &[
     "flex",
@@ -20,16 +20,12 @@ const BASE: &[&str] = &[
     "border-[#1f3d63]",
     "text-[#e0d8c8]",
     "hover:bg-[rgba(30,60,95,0.7)]",
-    "hover:border-[color:var(--race-color,#2a5085)]",
     "hover:text-white",
     "kb-focus:border-white",
     "kb-focus:text-white",
     "kb-focus:bg-[rgba(40,80,130,0.85)]",
     "kb-focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
     "data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.9)_0%,rgba(20,45,80,0.9)_100%)]",
-    "data-[selected=true]:border-[color:var(--race-color,#ffce63)]",
-    "data-[selected=true]:text-[color:var(--race-color,#ffce63)]",
-    "data-[selected=true]:shadow-[0_0_8px_var(--race-color-soft,rgba(255,206,99,0.3))]",
 ];
 
 const MOBILE: &[&str] = &[
@@ -49,8 +45,10 @@ const MOBILE: &[&str] = &[
     "mobile:border-[rgba(42,80,133,0.6)]",
     "mobile:hover:border-[rgba(255,206,99,0.35)]",
     "mobile:data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.85)_0%,rgba(20,45,80,0.85)_100%)]",
-    "mobile:data-[selected=true]:border-[color:var(--race-color,#ffce63)]",
-    "mobile:data-[selected=true]:shadow-[0_0_10px_var(--race-color-soft,rgba(255,206,99,0.3))]",
+    "mobile:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
+    "mobile:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
+    "mobile:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
+    "mobile:group-[[data-search-active=false][data-active-category=building]]:[&:not([data-unit-kind=building])]:hidden",
 ];
 
 const TABLET: &[&str] = &[
@@ -70,8 +68,10 @@ const TABLET: &[&str] = &[
     "tablet:border-[rgba(42,80,133,0.6)]",
     "tablet:hover:border-[rgba(255,206,99,0.35)]",
     "tablet:data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.85)_0%,rgba(20,45,80,0.85)_100%)]",
-    "tablet:data-[selected=true]:border-[color:var(--race-color,#ffce63)]",
-    "tablet:data-[selected=true]:shadow-[0_0_10px_var(--race-color-soft,rgba(255,206,99,0.3))]",
+    "tablet:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
+    "tablet:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
+    "tablet:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
+    "tablet:group-[[data-search-active=false][data-active-category=building]]:[&:not([data-unit-kind=building])]:hidden",
 ];
 
 const LAPTOP: &[&str] = &[];
@@ -82,17 +82,42 @@ classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const HERO_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=soldier]]:hidden mobile:group-[[data-search-active=false][data-active-category=worker]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=soldier]]:hidden tablet:group-[[data-search-active=false][data-active-category=worker]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";
-const SOLDIER_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=hero]]:hidden mobile:group-[[data-search-active=false][data-active-category=worker]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=hero]]:hidden tablet:group-[[data-search-active=false][data-active-category=worker]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";
-const WORKER_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=hero]]:hidden mobile:group-[[data-search-active=false][data-active-category=soldier]]:hidden mobile:group-[[data-search-active=false][data-active-category=building]]:hidden tablet:group-[[data-search-active=false][data-active-category=hero]]:hidden tablet:group-[[data-search-active=false][data-active-category=soldier]]:hidden tablet:group-[[data-search-active=false][data-active-category=building]]:hidden";
-const BUILDING_FILTER: &str = "mobile:group-[[data-search-active=false][data-active-category=hero]]:hidden mobile:group-[[data-search-active=false][data-active-category=soldier]]:hidden mobile:group-[[data-search-active=false][data-active-category=worker]]:hidden tablet:group-[[data-search-active=false][data-active-category=hero]]:hidden tablet:group-[[data-search-active=false][data-active-category=soldier]]:hidden tablet:group-[[data-search-active=false][data-active-category=worker]]:hidden";
-
-/// The mobile carousel hide-when-other-category filter classes for a card of `kind`.
-pub(super) fn filter_class(kind: UnitKind) -> &'static str {
-    match kind {
-        UnitKind::Hero => HERO_FILTER,
-        UnitKind::Soldier => SOLDIER_FILTER,
-        UnitKind::Worker => WORKER_FILTER,
-        UnitKind::Building => BUILDING_FILTER,
-    }
+// The active-race accent: the hover border (desktop; mobile/tablet keep their own
+// gold hover from the bands) and the selected border/text/glow all take the race
+// colour, chosen directly from the race rather than a cascaded var. The selected
+// glow is one blur for every width (the former 10px mobile/tablet variant folds into
+// this 8px — a 2px difference that no longer justifies a band-specific race style).
+const HUMAN: &[&str] = &[
+    "hover:border-[color:#6aa1ff]",
+    "data-[selected=true]:border-[color:#6aa1ff]",
+    "data-[selected=true]:text-[color:#6aa1ff]",
+    "data-[selected=true]:shadow-[0_0_8px_rgba(106,161,255,0.3)]",
+];
+const NIGHTELF: &[&str] = &[
+    "hover:border-[color:#5fdada]",
+    "data-[selected=true]:border-[color:#5fdada]",
+    "data-[selected=true]:text-[color:#5fdada]",
+    "data-[selected=true]:shadow-[0_0_8px_rgba(95,218,218,0.3)]",
+];
+const ORC: &[&str] = &[
+    "hover:border-[color:#ff7a7a]",
+    "data-[selected=true]:border-[color:#ff7a7a]",
+    "data-[selected=true]:text-[color:#ff7a7a]",
+    "data-[selected=true]:shadow-[0_0_8px_rgba(255,122,122,0.3)]",
+];
+const UNDEAD: &[&str] = &[
+    "hover:border-[color:#c79bff]",
+    "data-[selected=true]:border-[color:#c79bff]",
+    "data-[selected=true]:text-[color:#c79bff]",
+    "data-[selected=true]:shadow-[0_0_8px_rgba(199,155,255,0.3)]",
+];
+const NEUTRAL: &[&str] = &[
+    "hover:border-[color:#ffce63]",
+    "data-[selected=true]:border-[color:#ffce63]",
+    "data-[selected=true]:text-[color:#ffce63]",
+    "data-[selected=true]:shadow-[0_0_8px_rgba(255,206,99,0.3)]",
+];
+states! {
+    Race, Human => HUMAN, Nightelf => NIGHTELF, Orc => ORC, Undead => UNDEAD, Neutral =>
+    NEUTRAL,
 }

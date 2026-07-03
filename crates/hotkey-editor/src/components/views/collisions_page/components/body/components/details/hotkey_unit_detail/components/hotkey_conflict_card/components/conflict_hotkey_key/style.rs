@@ -13,7 +13,7 @@ const BASE: &[&str] = &[
     "text-warcraft-gold",
     "bg-[rgba(255,206,99,0.12)]",
     "border-2",
-    "[border-color:var(--race-color,#ffce63)]",
+    "border-warcraft-gold",
     "rounded-[8px]",
     "[text-shadow:1px_1px_0_#000]",
 ];

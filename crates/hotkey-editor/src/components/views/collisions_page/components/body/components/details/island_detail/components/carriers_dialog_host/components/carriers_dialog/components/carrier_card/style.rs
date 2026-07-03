@@ -11,8 +11,8 @@ const BASE: &[&str] = &[
     "border-[#24406a]",
     "rounded-[8px]",
     "cursor-pointer",
-    "hover:border-[var(--race-color,#ffce63)]",
-    "hover:shadow-[0_0_8px_var(--race-color-soft,rgba(255,206,99,0.45))]",
+    "hover:border-warcraft-gold",
+    "hover:shadow-[0_0_8px_rgba(255,206,99,0.45)]",
 ];
 const MOBILE: &[&str] = &[];
 const TABLET: &[&str] = &[];

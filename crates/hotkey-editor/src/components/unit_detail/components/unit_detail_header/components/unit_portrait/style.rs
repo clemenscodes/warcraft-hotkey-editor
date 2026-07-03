@@ -14,8 +14,18 @@ const BASE: &[&str] = &[
     "text-[0]",
     "leading-[0]",
 ];
-const MOBILE: &[&str] = &["mobile:w-[12rem]", "mobile:h-[12rem]"];
-const TABLET: &[&str] = &["tablet:w-[11rem]", "tablet:h-[11rem]"];
+const MOBILE: &[&str] = &[
+    "mobile:shrink-0",
+    "mobile:self-start",
+    "mobile:w-[clamp(80px,22vw,120px)]",
+    "mobile:h-[clamp(80px,22vw,120px)]",
+];
+const TABLET: &[&str] = &[
+    "tablet:shrink-0",
+    "tablet:self-start",
+    "tablet:w-[clamp(80px,22vw,120px)]",
+    "tablet:h-[clamp(80px,22vw,120px)]",
+];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

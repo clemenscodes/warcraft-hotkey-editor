@@ -14,16 +14,16 @@ const BASE: &[&str] = &[
 const MOBILE: &[&str] = &[
     "mobile:grid",
     "mobile:grid-cols-[minmax(0,1fr)]",
-    "mobile:gap-4",
+    "mobile:gap-[1.5rem]",
     "mobile:items-start",
-    "mobile:mt-5",
+    "mobile:mt-[14px]",
 ];
 const TABLET: &[&str] = &[
     "tablet:grid",
     "tablet:grid-cols-[minmax(0,1fr)]",
-    "tablet:gap-10",
+    "tablet:gap-[1.5rem]",
     "tablet:items-start",
-    "tablet:mt-5",
+    "tablet:mt-[14px]",
 ];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];

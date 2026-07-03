@@ -41,7 +41,6 @@ tasks:
       runFromWorkspaceRoot: false
     inputs:
       - "tailwind.input.css"
-      - "styles/**/*.css"
       - "src/**/*.css"
       - "src/**/*.rs"
 

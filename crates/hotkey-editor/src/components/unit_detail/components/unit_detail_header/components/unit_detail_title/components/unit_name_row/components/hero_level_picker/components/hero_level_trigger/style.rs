@@ -32,16 +32,20 @@ const BASE: &[&str] = &[
     "[body[data-kb-modality]_&]:focus:[box-shadow:0_0_0_2px_#fff,0_0_14px_rgba(255,255,255,0.45)]",
 ];
 const MOBILE: &[&str] = &[
-    "mobile:w-[10.5rem]",
-    "mobile:px-[0.65rem]",
-    "mobile:py-[0.3rem]",
-    "mobile:text-[1.55rem]",
+    "mobile:w-full",
+    "mobile:px-[10px]",
+    "mobile:py-[5px]",
+    "mobile:min-h-[32px]",
+    "mobile:text-[16px]",
+    "mobile:tracking-[0.04em]",
 ];
 const TABLET: &[&str] = &[
-    "tablet:w-[10.5rem]",
-    "tablet:px-[0.65rem]",
-    "tablet:py-[0.3rem]",
-    "tablet:text-[1.55rem]",
+    "tablet:w-full",
+    "tablet:px-[10px]",
+    "tablet:py-[5px]",
+    "tablet:min-h-[32px]",
+    "tablet:text-[14px]",
+    "tablet:tracking-[0.04em]",
 ];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];

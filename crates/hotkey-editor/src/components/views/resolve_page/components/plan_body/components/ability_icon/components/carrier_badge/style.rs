@@ -19,7 +19,7 @@ const BASE: &[&str] = &[
     "text-[1.05rem]",
     "leading-[1]",
     "[text-shadow:1px_1px_0_#000]",
-    "data-[win=true]:[border-color:var(--race-color,#ffce63)]",
+    "data-[win=true]:border-warcraft-gold",
     "data-[win=true]:text-warcraft-gold",
 ];
 const MOBILE: &[&str] = &[

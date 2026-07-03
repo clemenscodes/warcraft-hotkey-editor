@@ -1,4 +1,3 @@
-use crate::GALLERY_STYLES;
 use crate::frame_path::FramePath;
 use crate::registry::StoryRegistry;
 use crate::story::Story;
@@ -78,9 +77,9 @@ pub fn Gallery(props: GalleryProps) -> Element {
     let presets = ViewportPreset::defaults();
     let needle = query().to_lowercase();
     rsx! {
-        document::Stylesheet { href: GALLERY_STYLES }
         div {
-            class: if dragging() { "gallery-shell gallery-shell-dragging" } else { "gallery-shell" },
+            class: "group/shell flex h-dvh [font-family:system-ui,-apple-system,sans-serif] text-[#e0d8c8] bg-[#0a1020] data-[dragging=true]:cursor-col-resize data-[dragging=true]:select-none",
+            "data-dragging": dragging(),
             onpointermove: move |event| {
                 if dragging() {
                     let position = event.client_coordinates().x;
@@ -93,10 +92,10 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     dragging.set(false),
             if !sidebar_hidden() {
                 nav {
-                    class: "gallery-sidebar",
+                    class: "w-64 flex-none overflow-y-auto border-r border-white/10 p-3",
                     style: "width: {sidebar_width}px",
                     input {
-                        class: "gallery-search",
+                        class: "w-full box-border mb-2 bg-black/30 border border-white/15 text-inherit px-2 py-[0.35rem] rounded-[0.25rem] text-[0.85rem] placeholder:text-[#e0d8c8]/50",
                         r#type: "search",
                         placeholder: "Search components…",
                         value: "{query}",
@@ -149,7 +148,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                 rsx! {
                                     section { key: "{group_name}",
                                         button {
-                                            class: "gallery-group-title",
+                                            class: "flex items-center gap-[0.35rem] w-full bg-transparent border-0 text-inherit cursor-pointer text-left text-[0.7rem] uppercase tracking-[0.08em] opacity-60 mt-3 mb-1 hover:opacity-90",
                                             onclick: move |_| {
                                                 let mut set = collapsed_groups.write();
                                                 if set.contains(&toggle_group_key) {
@@ -159,7 +158,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                     set.insert(key);
                                                 }
                                             },
-                                            span { class: "gallery-chevron", "{group_chevron}" }
+                                            span { class: "inline-block w-3 flex-none text-[0.7rem] opacity-70", "{group_chevron}" }
                                             "{group_name}"
                                         }
                                         if group_open {
@@ -175,9 +174,9 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                         let click_id = story_id.clone();
                                                         let is_selected = selected.read().as_deref() == Some(story_id.as_str());
                                                         let item_class = if is_selected {
-                                                            "gallery-item gallery-leaf selected"
+                                                            "block w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] pl-6 bg-[rgba(255,206,99,0.18)] text-[#ffce63]"
                                                         } else {
-                                                            "gallery-item gallery-leaf"
+                                                            "block w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] pl-6"
                                                         };
                                                         rsx! {
                                                             button {
@@ -202,15 +201,15 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                         let component_open = searching || in_set;
                                                         let chevron = if component_open { "▾" } else { "▸" };
                                                         let header_class = if has_selected_child {
-                                                            "gallery-component-header active"
+                                                            "flex items-center gap-1 w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] text-[#ffce63]"
                                                         } else {
-                                                            "gallery-component-header"
+                                                            "flex items-center gap-1 w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06]"
                                                         };
                                                         let toggle_key = component_key.clone();
                                                         let first_story = component_stories.first();
                                                         let first_id = first_story.map(|story| story.id());
                                                         rsx! {
-                                                            div { key: "{component_key}", class: "gallery-component",
+                                                            div { key: "{component_key}",
                                                                 button {
                                                                     class: header_class,
                                                                     onclick: move |_| {
@@ -227,7 +226,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                                             }
                                                                         }
                                                                     },
-                                                                    span { class: "gallery-chevron", "{chevron}" }
+                                                                    span { class: "inline-block w-3 flex-none text-[0.7rem] opacity-70", "{chevron}" }
                                                                     "{component_name}"
                                                                 }
                                                                 if component_open {
@@ -238,9 +237,9 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                                             let label = story.label();
                                                                             let is_selected = selected.read().as_deref() == Some(story_id.as_str());
                                                                             let item_class = if is_selected {
-                                                                                "gallery-item gallery-variant selected"
+                                                                                "block w-full text-left bg-transparent border-0 text-inherit py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] ml-4 pl-5 border-l border-white/[0.14] rounded-tl-none rounded-bl-none bg-[rgba(255,206,99,0.18)] text-[#ffce63]"
                                                                             } else {
-                                                                                "gallery-item gallery-variant"
+                                                                                "block w-full text-left bg-transparent border-0 text-inherit py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] ml-4 pl-5 border-l border-white/[0.14] rounded-tl-none rounded-bl-none"
                                                                             };
                                                                             rsx! {
                                                                                 button {
@@ -269,17 +268,17 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     }
                 }
                 div {
-                    class: "gallery-resizer",
+                    class: "flex-none w-[6px] cursor-col-resize bg-white/5 border-r border-white/10 touch-none hover:bg-[rgba(255,206,99,0.35)]",
                     onpointerdown: move |event| {
                         event.prevent_default();
                         dragging.set(true);
                     },
                 }
             }
-            div { class: "gallery-main",
-                div { class: "gallery-toolbar",
+            div { class: "flex-1 flex flex-col min-w-0",
+                div { class: "flex-none flex items-center gap-2 flex-wrap px-3 py-2 border-b border-white/10",
                     button {
-                        class: "gallery-preset",
+                        class: "bg-white/[0.08] border-0 text-inherit px-[0.6rem] py-1 rounded-[0.25rem] cursor-pointer text-[0.8rem] hover:bg-white/[0.16]",
                         onclick: move |_| {
                             let hidden = sidebar_hidden();
                             let next = !hidden;
@@ -294,7 +293,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     for preset in presets {
                         button {
                             key: "{preset.label()}",
-                            class: "gallery-preset",
+                            class: "bg-white/[0.08] border-0 text-inherit px-[0.6rem] py-1 rounded-[0.25rem] cursor-pointer text-[0.8rem] hover:bg-white/[0.16]",
                             onclick: move |_| {
                                 width.set(preset.width());
                                 height.set(preset.height());
@@ -302,7 +301,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                             "{preset.label()}"
                         }
                     }
-                    label { class: "gallery-dim",
+                    label { class: "inline-flex items-center gap-1 text-[0.8rem] opacity-80 [&_input]:w-20 [&_input]:bg-black/30 [&_input]:border [&_input]:border-white/15 [&_input]:text-inherit [&_input]:px-[0.35rem] [&_input]:py-[0.15rem] [&_input]:rounded-[0.25rem]",
                         "W"
                         input {
                             r#type: "number",
@@ -314,7 +313,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                             },
                         }
                     }
-                    label { class: "gallery-dim",
+                    label { class: "inline-flex items-center gap-1 text-[0.8rem] opacity-80 [&_input]:w-20 [&_input]:bg-black/30 [&_input]:border [&_input]:border-white/15 [&_input]:text-inherit [&_input]:px-[0.35rem] [&_input]:py-[0.15rem] [&_input]:rounded-[0.25rem]",
                         "H"
                         input {
                             r#type: "number",
@@ -328,7 +327,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     }
                 }
                 div {
-                    class: "gallery-stage",
+                    class: "flex-1 overflow-auto flex items-start justify-center p-6 [background:repeating-conic-gradient(#0d1424_0%_25%,#0a1020_0%_50%)_50%/24px_24px]",
                     onresize: move |event| {
                         if let Ok(content_box) = event.get_content_box_size() {
                             let measured_width = content_box.width;
@@ -357,9 +356,9 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                 "transform: scale({scale}); transform-origin: top left",
                             );
                             rsx! {
-                                div { class: "gallery-frame-scaler", style: "{scaler_style}",
+                                div { class: "flex-none overflow-hidden", style: "{scaler_style}",
                                     iframe {
-                                        class: "gallery-frame",
+                                        class: "bg-[#050a1a] border border-white/15 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex-none group-data-[dragging=true]/shell:pointer-events-none",
                                         src: "{source}",
                                         style: "{frame_style}",
                                         width: "{width}",

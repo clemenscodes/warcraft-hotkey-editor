@@ -1,5 +1,4 @@
-use crate::{classes, states};
-use warcraft_api::Race;
+use crate::classes;
 
 // The workspace is a grid: a single stacked column on mobile and tablet (the unit
 // list sits above the detail panel, both in flow), and a two-column sidebar-plus-
@@ -48,31 +47,4 @@ const UHD: &[&str] = &[
 ];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
-}
-
-// The active race is workspace state: it sets the race accent the descendant cards,
-// tiles, and tabs pick up. Sourced from the race palette design tokens.
-const HUMAN: &[&str] = &[
-    "[--race-color:var(--color-race-human)]",
-    "[--race-color-soft:var(--color-race-human-soft)]",
-];
-const NIGHTELF: &[&str] = &[
-    "[--race-color:var(--color-race-nightelf)]",
-    "[--race-color-soft:var(--color-race-nightelf-soft)]",
-];
-const ORC: &[&str] = &[
-    "[--race-color:var(--color-race-orc)]",
-    "[--race-color-soft:var(--color-race-orc-soft)]",
-];
-const UNDEAD: &[&str] = &[
-    "[--race-color:var(--color-race-undead)]",
-    "[--race-color-soft:var(--color-race-undead-soft)]",
-];
-const NEUTRAL: &[&str] = &[
-    "[--race-color:var(--color-race-neutral)]",
-    "[--race-color-soft:var(--color-race-neutral-soft)]",
-];
-states! {
-    Race, Human => HUMAN, Nightelf => NIGHTELF, Orc => ORC, Undead => UNDEAD, Neutral =>
-    NEUTRAL,
 }

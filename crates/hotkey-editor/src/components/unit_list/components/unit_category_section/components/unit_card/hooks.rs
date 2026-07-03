@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 /// The card's shaped view: its full class string (base plus the mobile carousel
 /// filter for its kind), the kind data attribute, and the select handlers.
 pub(super) struct UnitCardModel {
-    pub(super) class: String,
+    pub(super) class: crate::styling::ClassList,
     pub(super) kind_attr: &'static str,
     pub(super) on_click: EventHandler<MouseEvent>,
     pub(super) on_keydown: EventHandler<KeyboardEvent>,
@@ -16,9 +16,7 @@ pub(super) struct UnitCardModel {
 /// selected slot, and switches the active category to the card's kind.
 pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let unit_kind = props.unit_kind;
-    let filter = style::filter_class(unit_kind);
-    let base = style::CLASS.to_library_class();
-    let class = format!("{base} {filter}");
+    let class = style::class(props.race);
     let kind_attr = crate::components::unit_list::unit_kind_data_attr(unit_kind);
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
