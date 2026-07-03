@@ -1,6 +1,7 @@
 use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
+use super::keys_mount::CustomKeysMount;
 use hotkey_editor::components::shell::toasts::ToastMount;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
@@ -309,18 +310,21 @@ fn tile_override_panel_archmage_blizzard() -> Element {
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        TileOverride {
-            detail,
+        CustomKeysMount {
             loaded_keys,
-            grid_layout,
-            selected_from_research,
-            selected_from_uprooted,
-            tier_overrides,
-            dragging_slot,
-            drop_target_tile,
-            drag_follower,
-            active_container_slots: archmage_slots,
-            hotkey_assign_request,
+            TileOverride {
+                detail,
+                loaded_keys,
+                grid_layout,
+                selected_from_research,
+                selected_from_uprooted,
+                tier_overrides,
+                dragging_slot,
+                drop_target_tile,
+                drag_follower,
+                active_container_slots: archmage_slots,
+                hotkey_assign_request,
+            }
         }
     }
 }

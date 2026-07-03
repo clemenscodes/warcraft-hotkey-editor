@@ -19,6 +19,7 @@ use hotkey_editor::components::grid_editors::grid_editor::components::headed_gri
 use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::{
     EditorTileKind, GridEditorTileProps,
 };
+use super::keys_mount::CustomKeysMount;
 use hotkey_editor::components::shell::toasts::ToastMount;
 
 use warcraft_keybinds::{
@@ -78,7 +79,7 @@ fn help_dialog_open() -> Element {
 }
 
 fn preview_dialog_open() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let preview_open = use_signal(|| true);
     rsx! {
         PreviewDialog { loaded_keys, preview_open }
@@ -94,13 +95,16 @@ fn layout_editor_default() -> Element {
     let update_hotkeys_on_move = use_signal(|| true);
     rsx! {
         ToastMount {
-            LayoutEditor {
-                grid_layout,
-                editing_layout_cell,
-                dragging_layout_cell,
+            CustomKeysMount {
                 loaded_keys,
-                open: layout_dialog_open,
-                update_hotkeys_on_move,
+                LayoutEditor {
+                    grid_layout,
+                    editing_layout_cell,
+                    dragging_layout_cell,
+                    loaded_keys,
+                    open: layout_dialog_open,
+                    update_hotkeys_on_move,
+                }
             }
         }
     }

@@ -22,6 +22,7 @@ use super::components::tile_override_upgrade_picker::TileOverrideUpgradePickerPr
 use super::props::TileOverrideProps;
 use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
+use crate::services::customkeys::service::CustomKeysService;
 
 /// Which field the hotkey picker is currently editing.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -55,7 +56,8 @@ fn label_or_dash(display: &str) -> String {
 
 pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel {
     let detail = props.detail.clone();
-    let mut loaded_keys = props.loaded_keys;
+    let loaded_keys = props.loaded_keys;
+    let custom_keys_service = use_context::<CustomKeysService>();
     let grid_layout = props.grid_layout;
     let selected_from_research = props.selected_from_research;
     let tier_overrides = props.tier_overrides;
@@ -299,7 +301,7 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
             OverrideEditTarget::AltHotkey => HotkeyTarget::ability_off_state(picker_object_id),
             OverrideEditTarget::UpgradeHotkey => HotkeyTarget::ability(picker_object_id),
         };
-        HotkeyOverride::apply(&mut loaded_keys, hotkey_target, Some(token));
+        custom_keys_service.override_hotkey(hotkey_target, Some(token));
         editing_target.set(None);
     });
     let alt_name_text = detail.alt_display_name().map(str::to_owned);

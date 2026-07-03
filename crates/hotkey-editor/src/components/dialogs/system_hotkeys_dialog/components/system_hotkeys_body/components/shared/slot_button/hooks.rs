@@ -82,7 +82,7 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     });
     let on_pick = EventHandler::new(move |code: KeyCode| {
         let mut guard = loaded_keys.write();
-        let file = guard.get_or_insert_with(|| CustomKeys::from(""));
+        let file = guard.get_or_insert_with(CustomKeys::default);
         file.set_system_hotkey(&section_id_for_pick, code);
         drop(guard);
         editing_section.set(None);

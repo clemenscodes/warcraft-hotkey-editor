@@ -101,7 +101,7 @@ fn preview_button() -> Element {
 }
 
 fn export_button() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     rsx! {
         ExportButton { loaded_keys }
     }
@@ -141,7 +141,7 @@ fn upload_button() -> Element {
 }
 
 fn resolve_button() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);

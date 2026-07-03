@@ -1,3 +1,4 @@
+use super::keys_mount::CustomKeysMount;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::grid_editors::command_grid_editor::CommandGridEditor;
@@ -327,22 +328,25 @@ fn grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
         ToastMount {
-            CommandGridEditor {
-                heading: "Main Commands",
-                race,
-                slot_ids,
+            CustomKeysMount {
                 loaded_keys,
-                selected_slot,
-                selected_from_research,
-                selected_from_uprooted,
-                tier_overrides,
-                dragging_slot,
-                drop_target_tile,
-                drag_follower,
-                grid_layout,
-                host_unit_id,
-                update_hotkeys_on_move,
-                hotkey_assign_request,
+                CommandGridEditor {
+                    heading: "Main Commands",
+                    race,
+                    slot_ids,
+                    loaded_keys,
+                    selected_slot,
+                    selected_from_research,
+                    selected_from_uprooted,
+                    tier_overrides,
+                    dragging_slot,
+                    drop_target_tile,
+                    drag_follower,
+                    grid_layout,
+                    host_unit_id,
+                    update_hotkeys_on_move,
+                    hotkey_assign_request,
+                }
             }
         }
     }
@@ -364,21 +368,24 @@ fn grid_editor_footman() -> Element {
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
         ToastMount {
-            CommandGridEditor {
-                heading: "Main Commands",
-                slot_ids,
+            CustomKeysMount {
                 loaded_keys,
-                selected_slot,
-                selected_from_research,
-                selected_from_uprooted,
-                tier_overrides,
-                dragging_slot,
-                drop_target_tile,
-                drag_follower,
-                grid_layout,
-                host_unit_id,
-                update_hotkeys_on_move,
-                hotkey_assign_request,
+                CommandGridEditor {
+                    heading: "Main Commands",
+                    slot_ids,
+                    loaded_keys,
+                    selected_slot,
+                    selected_from_research,
+                    selected_from_uprooted,
+                    tier_overrides,
+                    dragging_slot,
+                    drop_target_tile,
+                    drag_follower,
+                    grid_layout,
+                    host_unit_id,
+                    update_hotkeys_on_move,
+                    hotkey_assign_request,
+                }
             }
         }
     }

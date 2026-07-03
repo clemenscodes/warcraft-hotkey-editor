@@ -95,7 +95,7 @@ mod tests {
             let divine_shield_binding = AbilityBinding::builder()
                 .button_position(shared_position)
                 .build();
-            let mut custom_keys = CustomKeys::from("").normalize();
+            let mut custom_keys = CustomKeys::from_text("");
             custom_keys.put_ability("AHhb", holy_light_binding);
             custom_keys.put_ability("AHds", divine_shield_binding);
             let layout = GridLayout::qwerty_grid();
@@ -134,7 +134,7 @@ mod tests {
                 .button_position(second_cell)
                 .hotkey(hotkey_q)
                 .build();
-            let mut custom_keys = CustomKeys::from("").normalize();
+            let mut custom_keys = CustomKeys::from_text("");
             custom_keys.put_ability("AHhb", holy_light_binding);
             custom_keys.put_ability("AHds", divine_shield_binding);
             let layout = GridLayout::qwerty_grid();

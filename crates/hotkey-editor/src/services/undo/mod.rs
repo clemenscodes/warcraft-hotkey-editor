@@ -204,7 +204,7 @@ impl UndoHistory {
     fn apply(&self, snapshot: &EditorSnapshot) {
         let mut keys = self.keys;
         let mut grid_layout = self.grid_layout;
-        let restored_keys = CustomKeys::from(snapshot.keys_text.as_str());
+        let restored_keys = CustomKeys::from_text(snapshot.keys_text.as_str());
         keys.set(Some(restored_keys));
         if let Ok(restored_layout) = GridLayout::try_from(snapshot.grid_layout_text.as_str()) {
             grid_layout.set(restored_layout);

@@ -5,6 +5,7 @@ use crate::app::state::AppLayout;
 use crate::app::style;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
+use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
@@ -70,8 +71,8 @@ pub(super) fn use_workbench(params: RouteParams) -> WorkbenchModel {
     let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
         let stored_text = CustomKeysPersistence::load_text();
         let initial_file = match stored_text {
-            Some(stored) => CustomKeys::from(stored.as_str()).normalize(),
-            None => CustomKeys::from("").normalize(),
+            Some(stored) => CustomKeys::from_text(stored.as_str()),
+            None => CustomKeys::from_text(""),
         };
         let canonical_text = initial_file.to_string();
         CustomKeysPersistence::save_text(&canonical_text);
@@ -82,10 +83,11 @@ pub(super) fn use_workbench(params: RouteParams) -> WorkbenchModel {
         let Some(file) = read_guard.as_ref() else {
             return;
         };
-        let normalized = file.normalize();
-        let canonical_text = normalized.to_string();
+        let canonical_text = file.normalize().to_string();
         CustomKeysPersistence::save_text(&canonical_text);
     });
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
     let grid_layout = use_signal::<GridLayout>(|| {
         CustomKeysPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
     });

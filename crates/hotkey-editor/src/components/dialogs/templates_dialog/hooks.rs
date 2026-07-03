@@ -4,7 +4,7 @@ use super::props::TemplatesDialogProps;
 use crate::components::shell::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, DEFAULT_CUSTOM_KEYS, ResolvedTemplate};
+use warcraft_keybinds::{CustomKeys, ResolvedTemplate};
 
 /// The templates dialog's shaped view: the open signal driving the shell and the
 /// gallery of resolved template cards, each with its apply handler.
@@ -33,13 +33,10 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> TemplatesDia
             let toast_name = name.clone();
             let resolved_template = resolved.clone();
             let on_apply = EventHandler::new(move |()| {
-                let parsed_template = CustomKeys::from(template_content);
-                let binding_count = parsed_template.bindings_in_order().count();
-                let command_count = parsed_template.commands_in_order().count();
-                let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
-                baseline.extend(parsed_template);
-                let normalized = baseline.normalize();
-                loaded_keys.set(Some(normalized));
+                let outcome = CustomKeys::import_overlay(template_content);
+                let binding_count = outcome.binding_count();
+                let command_count = outcome.command_count();
+                loaded_keys.set(Some(outcome.into_keys()));
                 let status = UploadStatus::Loaded {
                     binding_count,
                     command_count,

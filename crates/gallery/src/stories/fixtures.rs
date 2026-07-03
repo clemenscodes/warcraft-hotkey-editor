@@ -5,7 +5,7 @@ use warcraft_keybinds::{CustomKeys, GridLayout};
 /// A normalized empty CustomKeys (no overrides applied).
 #[allow(dead_code)]
 pub fn sample_keys() -> CustomKeys {
-    CustomKeys::from("").normalize()
+    CustomKeys::from_text("")
 }
 
 /// A normalized CustomKeys with the QWERTY grid applied, so every binding's

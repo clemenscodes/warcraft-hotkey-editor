@@ -78,7 +78,7 @@ fn main() {
     match cli.command {
         Command::Unit { unit_id, keys } => {
             let custom_keys = match keys {
-                None => CustomKeys::from("").normalize(),
+                None => CustomKeys::from_text(""),
                 Some(path) => CustomKeys::try_from(path.as_path())
                     .unwrap_or_else(|error| {
                         eprintln!("error: cannot read {}: {error}", path.display());

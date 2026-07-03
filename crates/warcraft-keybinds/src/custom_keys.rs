@@ -107,6 +107,38 @@ impl From<BTreeMap<WarcraftObjectId, WarcraftKeybinding>> for CustomKeys {
     }
 }
 
+impl ddd::Layered for CustomKeys {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::AggregateRoot for CustomKeys {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::CustomKeys;
+    use ddd::AggregateRoot;
+    use ddd::DomainLayer;
+    use ddd::Layered;
+
+    fn assert_domain_aggregate<Aggregate>()
+    where
+        Aggregate: AggregateRoot + Layered<Layer = DomainLayer>,
+    {
+    }
+
+    #[test]
+    fn custom_keys_is_a_domain_aggregate_root() {
+        assert_domain_aggregate::<CustomKeys>();
+    }
+
+    #[test]
+    fn from_text_is_idempotent() {
+        let once = CustomKeys::from_text("");
+        let reparsed = CustomKeys::from_text(&once.to_string());
+        assert_eq!(once.to_string(), reparsed.to_string());
+    }
+}
+
 impl CustomKeys {
     pub fn binding(&self, id: impl Into<AbilityId>) -> Option<&AbilityBinding> {
         let ability_id = id.into();
@@ -444,7 +476,7 @@ impl CustomKeys {
     fn materialized_baseline() -> &'static Self {
         static CACHE: OnceLock<CustomKeys> = OnceLock::new();
         CACHE.get_or_init(|| {
-            let mut file = Self::from(BUNDLED_BASELINE);
+            let mut file = Self::parse_raw(BUNDLED_BASELINE);
             file.materialize_default_positions();
             file.materialize_shop_item_positions();
             file
@@ -452,7 +484,7 @@ impl CustomKeys {
     }
 
     pub fn serialize(&self, baseline: &str) -> String {
-        let mut export_file = Self::from(baseline);
+        let mut export_file = Self::parse_raw(baseline);
         let overlay_clone = self.clone();
         export_file.extend(overlay_clone);
         export_file.materialize_default_positions();
@@ -1552,19 +1584,66 @@ impl CustomKeysParser {
     }
 }
 
-impl From<&str> for CustomKeys {
-    fn from(text: &str) -> Self {
+impl CustomKeys {
+    /// Parses `CustomKeys.txt` text into the raw entry map without normalizing.
+    /// Internal only: the materialized baseline and the parser tests need the
+    /// un-materialized parse, and [`CustomKeys::from_text`] builds on it. Every
+    /// public path yields a normalized aggregate, so this stays `pub(crate)`.
+    pub(crate) fn parse_raw(text: &str) -> Self {
         let mut parser = CustomKeysParser::new();
         for line in text.lines() {
             parser.process_line(line);
         }
         parser.finish()
     }
+
+    /// Parses `CustomKeys.txt` text and normalizes it — the sole public
+    /// constructor from text. There is no public way to obtain a non-normalized
+    /// `CustomKeys`, so the type itself is the proof that its invariants hold.
+    pub fn from_text(text: &str) -> Self {
+        let raw = Self::parse_raw(text);
+        raw.normalize()
+    }
+
+    /// Overlays an imported `CustomKeys.txt` (a template or an uploaded file) onto
+    /// the bundled baseline and returns the normalized result together with the
+    /// counts of what the import defined. This is the domain home for the "import
+    /// replaces, then normalize" rule (R7); the renderer only calls it.
+    pub fn import_overlay(overlay_text: &str) -> ImportOutcome {
+        let overlay = Self::parse_raw(overlay_text);
+        let binding_count = overlay.bindings_in_order().count();
+        let command_count = overlay.commands_in_order().count();
+        let mut baseline = Self::parse_raw(DEFAULT_CUSTOM_KEYS);
+        baseline.extend(overlay);
+        let keys = baseline.normalize();
+        ImportOutcome {
+            keys,
+            binding_count,
+            command_count,
+        }
+    }
 }
 
-impl From<String> for CustomKeys {
-    fn from(text: String) -> Self {
-        Self::from(text.as_str())
+/// The result of [`CustomKeys::import_overlay`]: the normalized keys plus how many
+/// ability and command bindings the imported file defined.
+#[derive(Clone)]
+pub struct ImportOutcome {
+    keys: CustomKeys,
+    binding_count: usize,
+    command_count: usize,
+}
+
+impl ImportOutcome {
+    pub fn into_keys(self) -> CustomKeys {
+        self.keys
+    }
+
+    pub fn binding_count(&self) -> usize {
+        self.binding_count
+    }
+
+    pub fn command_count(&self) -> usize {
+        self.command_count
     }
 }
 
@@ -1573,7 +1652,7 @@ impl TryFrom<&std::path::Path> for CustomKeys {
 
     fn try_from(path: &std::path::Path) -> Result<Self, Self::Error> {
         let text = std::fs::read_to_string(path)?;
-        Ok(Self::from(text.as_str()))
+        Ok(Self::from_text(text.as_str()))
     }
 }
 
@@ -1590,7 +1669,7 @@ mod tests {
     #[test]
     fn parses_single_entry_with_hotkey_and_buttonpos() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("AHhb").unwrap();
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(binding.hotkey(), Some(&expected_hotkey));
@@ -1602,28 +1681,28 @@ mod tests {
     #[test]
     fn lookup_uses_canonical_case() {
         let input = "[Hpal]\nHotkey=T\nButtonpos=3,0\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert!(file.binding("Hpal").is_some());
     }
 
     #[test]
     fn missing_hotkey_returns_none() {
         let input = "[AHbz]\nButtonpos=0,0\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert_eq!(file.binding("AHbz").unwrap().hotkey(), None);
     }
 
     #[test]
     fn empty_hotkey_value_treated_as_absent() {
         let input = "[AHbz]\nHotkey=\nButtonpos=0,0\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert_eq!(file.binding("AHbz").unwrap().hotkey(), None);
     }
 
     #[test]
     fn research_fields_parsed() {
         let input = "[AHhb]\nResearchhotkey=T\nResearchbuttonpos=3,1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("AHhb").unwrap();
         let expected_hotkey = Hotkey::Letter('T');
         assert_eq!(binding.research_hotkey(), Some(&expected_hotkey));
@@ -1650,7 +1729,7 @@ mod tests {
     #[test]
     fn comment_lines_are_skipped() {
         let input = "// This is a comment\n[AHhb]\nHotkey=Q\n; Also a comment\nButtonpos=0,0\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("AHhb").unwrap();
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(binding.hotkey(), Some(&expected_hotkey));
@@ -1660,7 +1739,7 @@ mod tests {
     #[test]
     fn unknown_keys_are_silently_ignored() {
         let input = "[AHhb]\nHotkey=Q\nUnknownField=something\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             file.binding("AHhb").unwrap().hotkey(),
@@ -1671,21 +1750,21 @@ mod tests {
     #[test]
     fn malformed_buttonpos_gives_none() {
         let input = "[AHhb]\nButtonpos=notanumber\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert!(file.binding("AHhb").unwrap().button_position().is_none());
     }
 
     #[test]
     fn round_trip_preserves_section_id_case() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,0\n\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert!(file.to_string().contains("[AHhb]"));
     }
 
     #[test]
     fn duplicate_section_uses_first_occurrence() {
         let input = "[AHhb]\nHotkey=Q\n\n[AHhb]\nHotkey=W\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let expected_hotkey = Hotkey::Letter('Q');
         assert_eq!(
             file.binding("AHhb").unwrap().hotkey(),
@@ -1696,7 +1775,7 @@ mod tests {
     #[test]
     fn untouched_sections_round_trip_byte_identically() {
         let input = "[AHhb]\nHotkey=Q\nButtonpos=0,2\n//inline comment\nIcon=ReplaceableTextures\\CommandButtons\\BTNAvatar.blp\n\n[AHbz]\nHotkey=W\nButtonpos=1,2\n\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let output = file.to_string();
         assert!(output.contains("[AHhb]"));
         assert!(output.contains("BTNAvatar.blp"));
@@ -1736,7 +1815,7 @@ mod tests {
     #[test]
     fn parses_command_section() {
         let input = "[CmdMove]\nHotkey=M\nButtonpos=1,2\nTip=Move\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.command("CmdMove").expect("CmdMove parsed");
         let expected_hotkey = Hotkey::Letter('M');
         assert_eq!(binding.hotkey(), Some(&expected_hotkey));
@@ -1748,7 +1827,7 @@ mod tests {
     #[test]
     fn parses_system_section_game_command() {
         let input = "[itm1]\nHotkey=9\nGameCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("itm1").expect("system section parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(9));
         assert_eq!(sys.class(), SystemKeybindClass::Game);
@@ -1758,7 +1837,7 @@ mod tests {
     #[test]
     fn parses_system_section_ctrl_group_with_modifier() {
         let input = "[Ctr1]\nHotkey=49\nCtrlGroupCommand=1\nModifier=Ctrl\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("Ctr1").expect("parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(49));
         assert_eq!(sys.class(), SystemKeybindClass::ControlGroup);
@@ -1768,7 +1847,7 @@ mod tests {
     #[test]
     fn system_section_not_returned_by_binding() {
         let input = "[itm1]\nHotkey=9\nGameCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         assert!(file.binding("itm1").is_none());
         assert!(file.system("itm1").is_some());
     }
@@ -1776,7 +1855,7 @@ mod tests {
     #[test]
     fn system_section_round_trips() {
         let input = "[itm1]\nHotkey=9\nGameCommand=1\n\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let output = file.to_string();
         assert!(output.contains("[itm1]"));
         assert!(output.contains("Hotkey=9"));
@@ -1794,7 +1873,7 @@ mod tests {
             "Researchubertip=Researches something powerful.\n",
             "Unubertip=Off form description.\n",
         );
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("Ahrl must be present");
         assert_eq!(binding.tip(), Some("Cast Holy Light"));
         assert_eq!(binding.research_tip(), Some("Research something"));
@@ -1813,7 +1892,7 @@ mod tests {
     #[test]
     fn icon_field_parsed() {
         let input = "[Ahrl]\nIcon=ReplaceableTextures\\CommandButtons\\BTNHolyLight.blp\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("present");
         assert_eq!(
             binding.icon(),
@@ -1824,7 +1903,7 @@ mod tests {
     #[test]
     fn art_alias_maps_to_icon_field() {
         let input = "[Ahrl]\nArt=ReplaceableTextures\\CommandButtons\\BTNHolyLight.blp\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("present");
         assert_eq!(
             binding.icon(),
@@ -1835,7 +1914,7 @@ mod tests {
     #[test]
     fn unart_alias_maps_to_un_icon_field() {
         let input = "[Ahrl]\nUnArt=ReplaceableTextures\\CommandButtons\\BTNCancel.blp\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("present");
         assert_eq!(
             binding.un_icon(),
@@ -1846,7 +1925,7 @@ mod tests {
     #[test]
     fn modifier_field_parsed_in_ability_binding() {
         let input = "[Ahrl]\nModifier=Alt\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("present");
         assert_eq!(binding.modifier(), Some(AbilityModifier::Alt));
     }
@@ -1854,14 +1933,14 @@ mod tests {
     #[test]
     fn modifier_field_case_insensitive_in_parsing() {
         let input = "[Ahrl]\nMODIFIER=Ctrl\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let binding = file.binding("Ahrl").expect("present");
         assert_eq!(binding.modifier(), Some(AbilityModifier::Ctrl));
     }
 
     #[test]
     fn empty_file_has_no_entries() {
-        let file = CustomKeys::from("");
+        let file = CustomKeys::parse_raw("");
         let ability_count = file.bindings_in_order().count();
         let command_count = file.commands_in_order().count();
         assert_eq!(ability_count, 0);
@@ -1944,7 +2023,7 @@ mod tests {
     #[test]
     fn system_observer_command_parsed() {
         let input = "[THer]\nHotkey=120\nObserverCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("THer").expect("observer section parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(120));
         assert_eq!(sys.class(), SystemKeybindClass::Observer);
@@ -1953,7 +2032,7 @@ mod tests {
     #[test]
     fn system_replay_command_parsed() {
         let input = "[TRpl]\nHotkey=80\nReplayCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("TRpl").expect("replay section parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(80));
         assert_eq!(sys.class(), SystemKeybindClass::Replay);
@@ -1962,7 +2041,7 @@ mod tests {
     #[test]
     fn system_camera_command_parsed() {
         let input = "[ctcr]\nHotkey=65\nCameraCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("ctcr").expect("camera section parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(65));
         assert_eq!(sys.class(), SystemKeybindClass::Camera);
@@ -1971,7 +2050,7 @@ mod tests {
     #[test]
     fn system_menu_command_parsed() {
         let input = "[QLog]\nHotkey=27\nMenuCommand=1\n";
-        let file = CustomKeys::from(input);
+        let file = CustomKeys::parse_raw(input);
         let sys = file.system("QLog").expect("menu section parsed");
         assert_eq!(sys.hotkey(), &Hotkey::VirtualKey(27));
         assert_eq!(sys.class(), SystemKeybindClass::Menu);
@@ -2005,7 +2084,7 @@ mod tests {
             let modifier_text = case.modifier_text;
             let input =
                 format!("[Ctr1]\nHotkey=49\nCtrlGroupCommand=1\nModifier={modifier_text}\n",);
-            let file = CustomKeys::from(input.as_str());
+            let file = CustomKeys::parse_raw(input.as_str());
             let sys = file.system("Ctr1").expect("section parsed");
             let expected_modifier = Some(case.expected_modifier);
             assert_eq!(
@@ -2098,7 +2177,7 @@ mod tests {
     #[test]
     fn round_trip_of_baseline_preserves_known_sections() {
         let baseline = include_str!("../templates/CustomKeys.txt");
-        let file = CustomKeys::from(baseline);
+        let file = CustomKeys::parse_raw(baseline);
         let output = file.to_string();
         let known_sections = [
             "[CmdAttack]",
@@ -2192,7 +2271,7 @@ mod tests {
     #[test]
     fn apply_grid_preserves_three_tier_upgrade_hotkey() {
         let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         keys.apply_grid_to_all_bindings(layout);
         let binding = keys.binding("Rume").expect("Rume exists");
@@ -2204,7 +2283,7 @@ mod tests {
     #[test]
     fn apply_grid_preserves_two_tier_upgrade_hotkey() {
         let input = "[Ruba]\nHotkey=A,A\nButtonpos=1,2\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         keys.apply_grid_to_all_bindings(layout);
         let binding = keys.binding("Ruba").expect("Ruba exists");
@@ -2216,7 +2295,7 @@ mod tests {
     #[test]
     fn apply_grid_keeps_leveled_ability_single_tier() {
         let input = "[AEah]\nHotkey=D\nButtonpos=2,2\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         keys.apply_grid_to_all_bindings(layout);
         let binding = keys.binding("AEah").expect("AEah exists");
@@ -2226,8 +2305,8 @@ mod tests {
 
     #[test]
     fn normalize_restores_upgrade_hotkey_tiers_after_template_overlay() {
-        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
-        let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
+        let mut baseline = CustomKeys::parse_raw(DEFAULT_CUSTOM_KEYS);
+        let template = CustomKeys::parse_raw("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
         baseline.extend(template);
         let normalized = baseline.normalize();
         let binding = normalized.binding("Rume").expect("Rume exists");
@@ -2238,8 +2317,8 @@ mod tests {
 
     #[test]
     fn cascade_preserves_upgrade_hotkey_tiers() {
-        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
-        let template = CustomKeys::from("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
+        let mut baseline = CustomKeys::parse_raw(DEFAULT_CUSTOM_KEYS);
+        let template = CustomKeys::parse_raw("[Rume]\nHotkey=Q\nButtonpos=0,0\n");
         baseline.extend(template);
         let mut normalized = baseline.normalize();
         let _plan = normalized.resolve_conflicts();
@@ -2250,7 +2329,7 @@ mod tests {
 
     #[test]
     fn apply_grid_over_default_keeps_every_multi_level_upgrade_tiered() {
-        let mut keys = CustomKeys::from(DEFAULT_CUSTOM_KEYS).normalize();
+        let mut keys = CustomKeys::from_text(DEFAULT_CUSTOM_KEYS);
         let layout = GridLayout::qwerty_grid();
         keys.apply_grid_to_all_bindings(layout);
         let mut checked: usize = 0;
@@ -2291,7 +2370,7 @@ mod tests {
     fn assign_position_replicates_upgrade_hotkey_per_tier() {
         use crate::identity::slot::GridSlotId;
         let input = "[Rume]\nHotkey=S,S,S\nButtonpos=0,0\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let slot = GridSlotId::ability("Rume");
         keys.assign_position(layout, &slot, 1, 1, false, true);
@@ -2306,7 +2385,7 @@ mod tests {
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACad");
         let slot_ids = [moving];
@@ -2327,7 +2406,7 @@ mod tests {
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=2,2\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACad");
         let slot_ids = [moving];
@@ -2344,7 +2423,7 @@ mod tests {
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=Q\nButtonpos=0,0\n[AHbz]\nHotkey=S\nButtonpos=1,1\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let acad = GridSlotId::ability("ACad");
         let ahbz = GridSlotId::ability("AHbz");
@@ -2366,7 +2445,7 @@ mod tests {
         use crate::command::move_request::MoveRequest;
         use crate::identity::slot::GridSlotId;
         let input = "[ACad]\nHotkey=P\nButtonpos=0,0\n[AHbz]\nHotkey=K\nButtonpos=1,1\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACad");
         let displaced = GridSlotId::ability("AHbz");
@@ -2558,8 +2637,8 @@ mod extend_tests {
             "[Ctr1]\nCtrlGroupCommand=1,1\nHotkey=186\n\n",
             "[itm1]\nGameCommand=1,1\nHotkey=222\n\n",
         );
-        let uploaded = CustomKeys::from(imported_text);
-        let mut baseline = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
+        let uploaded = CustomKeys::parse_raw(imported_text);
+        let mut baseline = CustomKeys::parse_raw(DEFAULT_CUSTOM_KEYS);
         baseline.extend(uploaded);
         let normalized = baseline.normalize();
         let control_group_hotkey = normalized.system("Ctr1").map(|binding| *binding.hotkey());
@@ -2721,7 +2800,7 @@ mod export_tests {
     #[test]
     fn empty_overlay_on_minimal_baseline_round_trips() {
         let baseline = "[Ahrl]\nHotkey=Q\nButtonpos=0,0\n\n";
-        let loaded = CustomKeys::from("");
+        let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         assert!(
             output.contains("[Ahrl]"),
@@ -2733,7 +2812,7 @@ mod export_tests {
     #[test]
     fn overlay_values_appear_in_export() {
         let baseline = "[Ahrl]\nHotkey=Q\n\n";
-        let loaded = CustomKeys::from("[Ahrl]\nHotkey=W\n\n");
+        let loaded = CustomKeys::parse_raw("[Ahrl]\nHotkey=W\n\n");
         let output = loaded.serialize(baseline);
         assert!(output.contains("Hotkey=W"), "user hotkey override must win");
     }
@@ -2741,7 +2820,7 @@ mod export_tests {
     #[test]
     fn export_with_real_baseline_contains_known_sections() {
         let baseline = include_str!("../templates/CustomKeys.txt");
-        let loaded = CustomKeys::from("");
+        let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         for section in &["[Hpal]", "[CmdAttack]", "[CmdMove]"] {
             assert!(output.contains(section), "export should contain {section}");
@@ -2751,7 +2830,7 @@ mod export_tests {
     #[test]
     fn export_materializes_default_button_positions() {
         let baseline = include_str!("../templates/CustomKeys.txt");
-        let loaded = CustomKeys::from("");
+        let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         let after_ahrl = output
             .split("[Ahrl]")
@@ -2767,7 +2846,7 @@ mod export_tests {
     #[test]
     fn export_assigns_positions_to_goblin_merchant_shop_items_without_db_positions() {
         let baseline = include_str!("../templates/CustomKeys.txt");
-        let loaded = CustomKeys::from("");
+        let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         for item_id in &["bspd", "spro", "pinv"] {
             let section_marker = format!("[{item_id}]");
@@ -2788,7 +2867,7 @@ mod export_tests {
     #[test]
     fn export_assigns_position_to_goblin_shredder_sell_unit_without_db_position() {
         let baseline = include_str!("../templates/CustomKeys.txt");
-        let loaded = CustomKeys::from("");
+        let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         let lowercase_output = output.to_ascii_lowercase();
         let after_ngir = lowercase_output
@@ -2810,7 +2889,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_produces_non_empty_text() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let normalized_text = normalized.to_string();
         assert!(!normalized_text.is_empty());
     }
@@ -2825,7 +2904,7 @@ mod normalize_tests {
             .button_position(on_position)
             .unbutton_position(off_position)
             .build();
-        let mut overlay = CustomKeys::from("");
+        let mut overlay = CustomKeys::parse_raw("");
         overlay.put_ability("ACf2", binding);
         let normalized = overlay.normalize();
         let resolved_on = normalized.position_for_slot(&GridSlotId::ability("ACf2"), false);
@@ -2850,7 +2929,7 @@ mod normalize_tests {
             .hotkey(Hotkey::Letter('T'))
             .button_position(stale_position)
             .build();
-        let mut overlay = CustomKeys::from("");
+        let mut overlay = CustomKeys::parse_raw("");
         overlay.put_ability("Aave", aave_binding);
         overlay.put_ability("ubsp", ubsp_binding);
         let normalized = overlay.normalize();
@@ -2870,7 +2949,7 @@ mod normalize_tests {
             .button_position(on_position)
             .unbutton_position(off_position)
             .build();
-        let mut overlay = CustomKeys::from("");
+        let mut overlay = CustomKeys::parse_raw("");
         overlay.put_ability("Abur", binding);
         let normalized = overlay.normalize();
         let resolved_off = normalized.position_for_slot(&GridSlotId::ability_off("Abur"), false);
@@ -2883,7 +2962,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_includes_known_baseline_sections() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let normalized_text = normalized.to_string();
         assert!(normalized_text.contains("[Hpal]"));
         assert!(normalized_text.contains("[CmdAttack]"));
@@ -2891,7 +2970,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_prunes_non_button_shop_mechanics() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         for phantom_id in ["Aall", "Aneu", "Ane2", "Adt1"] {
             assert!(
                 normalized.binding(phantom_id).is_none(),
@@ -2907,7 +2986,7 @@ mod normalize_tests {
     #[test]
     fn normalize_prunes_phantom_from_uploaded_file() {
         let uploaded = "[Aall]\nHotkey=Q\nButtonpos=0,0\n";
-        let normalized = CustomKeys::from(uploaded).normalize();
+        let normalized = CustomKeys::from_text(uploaded);
         assert!(
             normalized.binding("Aall").is_none(),
             "normalize must strip a phantom [Aall] carried in over an upload",
@@ -2916,16 +2995,14 @@ mod normalize_tests {
 
     #[test]
     fn normalize_is_idempotent() {
-        let first_text = CustomKeys::from("").normalize().to_string();
-        let second_text = CustomKeys::from(first_text.as_str())
-            .normalize()
-            .to_string();
+        let first_text = CustomKeys::from_text("").to_string();
+        let second_text = CustomKeys::from_text(first_text.as_str()).to_string();
         assert_eq!(first_text, second_text);
     }
 
     #[test]
     fn normalize_includes_known_ability() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let hpal_present = normalized.binding("Hpal").is_some();
         assert!(hpal_present);
     }
@@ -2933,7 +3010,7 @@ mod normalize_tests {
     #[test]
     fn normalize_overlays_user_hotkey_on_baseline() {
         let user_input = "[Ahrl]\nHotkey=Z\n\n";
-        let normalized = CustomKeys::from(user_input).normalize();
+        let normalized = CustomKeys::from_text(user_input);
         let ahrl_binding = normalized.binding("Ahrl");
         let ahrl_hotkey = ahrl_binding.and_then(|binding| binding.hotkey());
         let expected_hotkey = Hotkey::Letter('Z');
@@ -2942,7 +3019,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_materializes_button_position_for_known_ability() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let normalized_text = normalized.to_string();
         let ahrl_marker = "[Ahrl]";
         let ahrl_section_start = normalized_text
@@ -2959,7 +3036,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_assigns_positions_to_goblin_merchant_sell_items_without_template_positions() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         for item_id in &["bspd", "spro", "pinv"] {
             let binding = normalized.binding(*item_id);
             let button_position = binding.and_then(|binding| binding.button_position());
@@ -2973,7 +3050,7 @@ mod normalize_tests {
     #[test]
     fn normalize_mirrors_build_command_position_and_hotkey_to_build_ability() {
         let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
-        let normalized = CustomKeys::from(uploaded).normalize();
+        let normalized = CustomKeys::from_text(uploaded);
         let ability_binding = normalized
             .binding("AHbu")
             .expect("build ability AHbu must exist after normalize");
@@ -2996,7 +3073,7 @@ mod normalize_tests {
     #[test]
     fn normalize_mirrors_build_command_to_ability_for_every_race() {
         let uploaded = "[CmdBuildOrc]\nButtonpos=2,1\n\n[CmdBuildUndead]\nButtonpos=2,1\n\n[CmdBuildNightElf]\nButtonpos=2,1\n";
-        let normalized = CustomKeys::from(uploaded).normalize();
+        let normalized = CustomKeys::from_text(uploaded);
         let expected_position = GridCoordinate::new(ColumnIndex::Two, RowIndex::One);
         for ability_id in &["AObu", "AUbu", "AEbu"] {
             let ability_binding = normalized
@@ -3014,8 +3091,8 @@ mod normalize_tests {
     #[test]
     fn build_ability_section_survives_parse_round_trip() {
         let uploaded = "[CmdBuildHuman]\nHotkey=Q\nButtonpos=3,1\n";
-        let canonical_once = CustomKeys::from(uploaded).normalize().to_string();
-        let canonical_twice = CustomKeys::from(canonical_once.as_str()).to_string();
+        let canonical_once = CustomKeys::from_text(uploaded).to_string();
+        let canonical_twice = CustomKeys::parse_raw(canonical_once.as_str()).to_string();
         assert!(
             canonical_once.contains("[AHbu]"),
             "normalized output must contain the mirrored [AHbu] section",
@@ -3028,7 +3105,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_assigns_position_to_goblin_shredder_sell_unit() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let binding = normalized.binding("ngir");
         let button_position = binding.and_then(|binding| binding.button_position());
         assert!(
@@ -3039,7 +3116,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_defaults_button_position_to_origin_when_database_has_no_position() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let binding = normalized
             .binding("Aatp")
             .expect("Aatp must have a binding after normalize");
@@ -3052,7 +3129,7 @@ mod normalize_tests {
 
     #[test]
     fn normalize_does_not_invent_off_state_for_one_shot_ability() {
-        let normalized = CustomKeys::from("").normalize();
+        let normalized = CustomKeys::from_text("");
         let healing_wave_off = normalized
             .binding("AChv")
             .and_then(|binding| binding.unbutton_position());
@@ -3068,7 +3145,7 @@ mod normalize_tests {
         use crate::grid::layout::GridLayout;
         use crate::identity::slot::GridSlotId;
         let input = "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=0,0\nUnhotkey=Q\n";
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACsw");
         let slot_ids = [GridSlotId::ability("ACsw")];
@@ -3104,7 +3181,7 @@ mod normalize_tests {
             "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=0,0\nUnhotkey=Q\n",
             "[ACdm]\nButtonpos=1,0\nHotkey=W\nUnbuttonpos=1,0\nUnhotkey=W\n",
         );
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACsw");
         let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
@@ -3149,7 +3226,7 @@ mod normalize_tests {
             "[ACsw]\nButtonpos=0,0\nHotkey=Q\nUnbuttonpos=2,0\nUnhotkey=E\n",
             "[ACdm]\nButtonpos=1,0\nHotkey=W\n",
         );
-        let mut keys = CustomKeys::from(input);
+        let mut keys = CustomKeys::parse_raw(input);
         let layout = GridLayout::qwerty_grid();
         let moving = GridSlotId::ability("ACsw");
         let slot_ids = [GridSlotId::ability("ACsw"), GridSlotId::ability("ACdm")];
@@ -3174,7 +3251,7 @@ mod normalize_tests {
     #[test]
     fn resolve_conflicts_co_moves_off_state_with_ability() {
         use crate::model::{ColumnIndex, GridCoordinate, RowIndex};
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let normalized_position = keys
             .binding("ACsw")
             .and_then(|binding| binding.button_position())
@@ -3204,7 +3281,7 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_produces_at_least_one_move_on_default_keys() {
-        let mut normalized = CustomKeys::from("").normalize();
+        let mut normalized = CustomKeys::from_text("");
         let plan = normalized.resolve_conflicts();
         assert!(
             plan.move_count() > 0,
@@ -3214,7 +3291,7 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_is_idempotent_on_default_keys() {
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let first_plan = keys.resolve_conflicts();
         assert!(first_plan.move_count() > 0, "first call must make moves");
         let second_plan = keys.resolve_conflicts();
@@ -3243,7 +3320,7 @@ mod normalize_tests {
     #[test]
     fn resolve_conflicts_writes_new_positions_into_bindings() {
         use crate::identity::slot::GridSlotId;
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let plan = keys.resolve_conflicts();
         for planned_move in plan.moves() {
             let slot = planned_move.slot_id();
@@ -3279,7 +3356,7 @@ mod normalize_tests {
 
     #[test]
     fn preview_resolve_does_not_mutate_self() {
-        let keys = CustomKeys::from("").normalize();
+        let keys = CustomKeys::from_text("");
         let before_text = keys.to_string();
         let plan = keys.preview_resolve();
         let after_text = keys.to_string();
@@ -3295,7 +3372,7 @@ mod normalize_tests {
 
     #[test]
     fn preview_resolve_matches_resolve_conflicts_plan_byte_for_byte() {
-        let mut keys_for_apply = CustomKeys::from("").normalize();
+        let mut keys_for_apply = CustomKeys::from_text("");
         let keys_for_preview = keys_for_apply.clone();
         let preview_plan = keys_for_preview.preview_resolve();
         let applied_plan = keys_for_apply.resolve_conflicts();
@@ -3309,7 +3386,7 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_final_state_matches_preview_apply_endpoint() {
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let preview_plan = keys.preview_resolve();
         assert!(
             preview_plan.move_count() > 0,
@@ -3334,7 +3411,7 @@ mod normalize_tests {
         use crate::cascade::conflict_graph::ConflictGraph;
         use crate::cascade::planner::CascadePlan;
         use crate::cascade::queue::{AssignmentQueue, AssignmentScope};
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let _plan = keys.resolve_conflicts();
         let graph = ConflictGraph::build(&keys);
         let queue = AssignmentQueue::build_with_scope(graph, AssignmentScope::IncludingIntraUnit);
@@ -3378,7 +3455,7 @@ mod normalize_tests {
 
     #[test]
     fn destroyer_intra_unit_collision_produces_minimal_displacement() {
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let _plan = keys.resolve_conflicts();
 
         use crate::cascade::conflict_graph::ConflictGraph;
@@ -3404,7 +3481,7 @@ mod normalize_tests {
 
     #[test]
     fn resolve_conflicts_cascades_origin_default_to_leftmost_free_cell() {
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let _plan = keys.resolve_conflicts();
         let binding = keys.binding("Aatp").expect("Aatp must have a binding");
         let position = binding
@@ -3421,7 +3498,7 @@ mod normalize_tests {
 
     #[test]
     fn resolved_default_customkeys_matches_snapshot() {
-        let mut keys = CustomKeys::from("").normalize();
+        let mut keys = CustomKeys::from_text("");
         let _plan = keys.resolve_conflicts();
         let actual = keys.to_string();
         let expected = include_str!("../fixtures/resolved_default_customkeys.txt");
@@ -3450,7 +3527,7 @@ mod normalize_tests {
     #[test]
     fn canonical_text_round_trips_through_parser() {
         let canonical = include_str!("../fixtures/resolved_default_customkeys.txt");
-        let reparsed = CustomKeys::from(canonical);
+        let reparsed = CustomKeys::parse_raw(canonical);
         let serialized = reparsed.to_string();
         if serialized != canonical {
             let serialized_bytes = serialized.len();
@@ -3482,11 +3559,11 @@ mod normalize_tests {
     #[test]
     fn canonical_form_is_idempotent() {
         let edited_overlay = "[acad]\nHotkey=Q\nButtonpos=0,0\n";
-        let overlay_keys = CustomKeys::from(edited_overlay).normalize();
+        let overlay_keys = CustomKeys::from_text(edited_overlay);
         let mut resolved_keys = overlay_keys;
         let _plan = resolved_keys.resolve_conflicts();
         let canonical_once = resolved_keys.to_string();
-        let reparsed_keys = CustomKeys::from(canonical_once.as_str());
+        let reparsed_keys = CustomKeys::parse_raw(canonical_once.as_str());
         let canonical_twice = reparsed_keys.to_string();
         assert_eq!(
             canonical_once, canonical_twice,
@@ -3513,7 +3590,7 @@ mod template_generation_tests {
     }
 
     fn build_text(layout: &GridLayout) -> String {
-        let tmpl = CustomKeys::from(super::DEFAULT_CUSTOM_KEYS);
+        let tmpl = CustomKeys::parse_raw(super::DEFAULT_CUSTOM_KEYS);
         let mut out = String::new();
         for (object_id, warcraft_object) in WARCRAFT_DATABASE.iter() {
             let id = object_id.value();

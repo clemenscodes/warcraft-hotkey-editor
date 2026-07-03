@@ -6,7 +6,8 @@ use std::rc::Rc;
 use warcraft_keybinds::{CustomKeys, GridBehavior, GridCoordinate, GridLayout, GridSlotId};
 
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeadingProps;
-use crate::services::customkeys::positions::{MoveRequest, Positions};
+use crate::services::customkeys::service::CustomKeysService;
+use warcraft_keybinds::MoveRequest;
 use crate::services::focus::modality::FocusModality;
 use super::super::props::GridEditorProps;
 
@@ -69,6 +70,7 @@ pub(super) fn activate_handler<B: GridBehavior>(
 pub(super) struct MoveHandlerArgs<B: GridBehavior> {
     pub(super) behavior: B,
     pub(super) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(super) custom_keys_service: CustomKeysService,
     pub(super) grid_layout: Signal<GridLayout>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
     pub(super) update_hotkeys_on_move: Signal<bool>,
@@ -82,7 +84,8 @@ pub(super) fn move_handler<B: GridBehavior>(
 ) -> EventHandler<Range<GridCoordinate>> {
     let MoveHandlerArgs {
         behavior,
-        mut loaded_keys,
+        loaded_keys,
+        custom_keys_service,
         grid_layout,
         mut selected_slot,
         update_hotkeys_on_move,
@@ -117,7 +120,7 @@ pub(super) fn move_handler<B: GridBehavior>(
             MoveRequest::for_behavior(&behavior, layout_snapshot, &slot_ids, &moving_slot, to)
                 .with_prevent_swap(prevent_swap_on_drop)
                 .with_assign_hotkey_on_move(assign_hotkey_on_move);
-        Positions::move_or_swap(&mut loaded_keys, move_request);
+        custom_keys_service.move_slot(&move_request);
         selected_slot.set(Some(moving_slot));
     })
 }

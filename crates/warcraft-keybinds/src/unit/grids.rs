@@ -501,7 +501,7 @@ mod unit_grids_tests {
 
     #[test]
     fn ability_without_command_position_has_no_main_command_token() {
-        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let custom_keys = CustomKeys::from_text(firelord_incinerate_sections());
         let layout = GridLayout::qwerty_grid();
         let incinerate_companion = GridSlotId::Ability(AbilityId::new("ANic"));
         let main_command_token =
@@ -515,7 +515,7 @@ mod unit_grids_tests {
 
     #[test]
     fn ability_with_research_position_keeps_research_token() {
-        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let custom_keys = CustomKeys::from_text(firelord_incinerate_sections());
         let layout = GridLayout::qwerty_grid();
         let incinerate_companion = GridSlotId::Ability(AbilityId::new("ANic"));
         let research_token =
@@ -530,7 +530,7 @@ mod unit_grids_tests {
 
     #[test]
     fn firelord_has_no_phantom_incinerate_patrol_collision() {
-        let custom_keys = CustomKeys::from(firelord_incinerate_sections()).normalize();
+        let custom_keys = CustomKeys::from_text(firelord_incinerate_sections());
         let unit_grids = UnitGrids::for_unit(firelord_id());
         let layout = GridLayout::qwerty_grid();
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
@@ -641,7 +641,7 @@ mod unit_grids_tests {
 
     #[test]
     fn position_collisions_empty_for_normalized_default() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let unit_grids = UnitGrids::for_unit(paladin_id());
         let cards = unit_grids.position_collisions(&custom_keys);
         assert!(
@@ -659,7 +659,7 @@ mod unit_grids_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(collision_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let unit_grids = UnitGrids::for_unit(paladin_id());
@@ -682,7 +682,7 @@ mod unit_grids_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let unit_grids = UnitGrids::for_unit(paladin_id());
@@ -698,7 +698,7 @@ mod unit_grids_tests {
 
     #[test]
     fn hotkey_collisions_empty_for_normalized_default() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let layout = GridLayout::qwerty_grid();
         let unit_grids = UnitGrids::for_unit(paladin_id());
         let cards = unit_grids.hotkey_collisions(&custom_keys, layout);
@@ -721,7 +721,7 @@ mod unit_grids_tests {
             .button_position(second_cell)
             .hotkey(hotkey_q)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let layout = GridLayout::qwerty_grid();
@@ -746,7 +746,7 @@ mod unit_grids_tests {
             .button_position(second_cell)
             .hotkey(hotkey_w)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let layout = GridLayout::qwerty_grid();
@@ -777,7 +777,7 @@ mod unit_grids_tests {
             .research_button_position(research_cell)
             .research_hotkey(hotkey_q)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_research);
         let layout = GridLayout::qwerty_grid();

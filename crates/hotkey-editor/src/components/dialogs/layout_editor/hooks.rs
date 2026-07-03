@@ -3,7 +3,7 @@ use super::data::QWERTY_ROWS;
 use super::props::LayoutEditorProps;
 use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::components::shell::toasts::{ToastOptions, use_toast};
-use crate::services::customkeys::positions::Positions;
+use crate::services::customkeys::service::CustomKeysService;
 use dioxus::prelude::*;
 
 use warcraft_keybinds::{
@@ -33,7 +33,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     let mut grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
-    let mut loaded_keys = props.loaded_keys;
+    let custom_keys_service = use_context::<CustomKeysService>();
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.open;
     let layout_snapshot = *grid_layout.read();
@@ -147,7 +147,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     };
     let on_apply = EventHandler::new(move |_event: MouseEvent| {
         let snapshot = *grid_layout.read();
-        let changed_count = Positions::apply_grid_to_all_known_objects(&mut loaded_keys, snapshot);
+        let changed_count = custom_keys_service.apply_grid_layout(snapshot);
         if changed_count > 0 {
             let hotkey_word = if changed_count == 1 {
                 "HOTKEY"

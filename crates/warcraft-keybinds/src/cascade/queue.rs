@@ -957,7 +957,7 @@ mod cascade_queue_tests {
     /// rearrange on top of the default keys: the four bottom-row cells fill up
     /// with pinned, high-carrier system commands.
     fn rearranged_default_keys() -> CustomKeys {
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         let mut put_command_at = |command_id: &'static str, column: ColumnIndex, row: RowIndex| {
             let position = GridCoordinate::new(column, row);
             let binding = CommandBinding::builder().button_position(position).build();
@@ -972,7 +972,7 @@ mod cascade_queue_tests {
     }
 
     fn default_queue() -> AssignmentQueue {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         AssignmentQueue::build(graph)
     }
@@ -1107,7 +1107,7 @@ mod cascade_queue_tests {
     fn three_way_collision_produces_at_least_two_movers() {
         let position = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
         let binding = AbilityBinding::builder().button_position(position).build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding.clone());
         custom_keys.put_ability("AHds", binding.clone());
         custom_keys.put_ability("AHad", binding);
@@ -1132,7 +1132,7 @@ mod cascade_queue_tests {
     fn four_way_collision_produces_at_least_three_movers() {
         let position = GridCoordinate::new(ColumnIndex::One, RowIndex::One);
         let binding = AbilityBinding::builder().button_position(position).build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding.clone());
         custom_keys.put_ability("AHds", binding.clone());
         custom_keys.put_ability("AHad", binding.clone());
@@ -1234,7 +1234,7 @@ mod cascade_queue_tests {
         let binding_next = AbilityBinding::builder()
             .button_position(next_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding_collision.clone());
         custom_keys.put_ability("AHds", binding_collision.clone());
         custom_keys.put_ability("AHad", binding_collision);
@@ -1263,7 +1263,7 @@ mod cascade_queue_tests {
         let collision_binding = AbilityBinding::builder()
             .button_position(collision_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         let paladin_abilities = ["AHhb", "AHds", "AHad", "AHre"];
         for ability_id in paladin_abilities {
             custom_keys.put_ability(ability_id, collision_binding.clone());

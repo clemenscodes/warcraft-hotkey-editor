@@ -132,7 +132,7 @@ fn inventory_drag_overlay_empty() -> Element {
 }
 
 fn control_groups_view() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     rsx! {
         ControlGroupsHotkeysView { loaded_keys, editing_section }
@@ -140,7 +140,7 @@ fn control_groups_view() -> Element {
 }
 
 fn hero_selection_view() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     rsx! {
         HeroSelectionHotkeysView { loaded_keys, editing_section }
@@ -148,7 +148,7 @@ fn hero_selection_view() -> Element {
 }
 
 fn inventory_view() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
@@ -157,7 +157,7 @@ fn inventory_view() -> Element {
 }
 
 fn inventory_grid() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
@@ -185,7 +185,7 @@ fn key_picker_dialog_open() -> Element {
 
 fn list_view_general_commands() -> Element {
     let category = SystemHotkeysCategory::GeneralCommands;
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     rsx! {
         SystemHotkeysListView { category, loaded_keys, editing_section }
@@ -193,7 +193,7 @@ fn list_view_general_commands() -> Element {
 }
 
 fn system_hotkeys_dialog_open() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let system_hotkeys_open = use_signal(|| true);
     rsx! {
         SystemHotkeysDialog { loaded_keys, system_hotkeys_open }
@@ -207,7 +207,7 @@ fn inventory_cell_default() -> Element {
     let section_id = first_entry.section_id().to_string();
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let dragging_source = use_signal(|| None::<InventoryDragSource>);
     let drop_target = use_signal(|| None::<String>);
@@ -238,7 +238,7 @@ fn key_capture_cell_default() -> Element {
     let section_id = first_entry.section_id().to_string();
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
@@ -263,7 +263,7 @@ fn system_hotkeys_list_entry_default() -> Element {
     let comment = first_entry.comment().to_string();
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
@@ -291,7 +291,7 @@ fn slot_button_default() -> Element {
     let section_id = first_entry.section_id().to_string();
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
-    let loaded_keys = use_signal(|| Some(CustomKeys::from("").normalize()));
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<String>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();

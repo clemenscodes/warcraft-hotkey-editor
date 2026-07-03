@@ -419,7 +419,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn normalized_default_has_cross_unit_collisions() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         assert!(
             !report.is_empty(),
@@ -430,7 +430,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn normalized_default_collision_count_is_stable() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         assert_eq!(
             report.position_groups().len(),
@@ -444,7 +444,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn islands_at_the_same_cell_never_share_an_affected_unit() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         let groups = report.position_groups();
         for outer_index in 0..groups.len() {
@@ -473,7 +473,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn at_least_one_cell_decomposes_into_multiple_islands() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         let mut island_counts: HashMap<PositionContext, usize> = HashMap::new();
         for group in report.position_groups() {
@@ -493,7 +493,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn demon_hunter_has_collision_at_two_zero_in_normalized_default() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         let two_zero = GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero);
         let demon_hunter_id = WarcraftObjectId::new("Eevi");
@@ -520,7 +520,7 @@ mod cross_unit_collision_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let report = CrossUnitCollisionReport::compute(&custom_keys);
@@ -539,7 +539,7 @@ mod cross_unit_collision_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let report = CrossUnitCollisionReport::compute(&custom_keys);
@@ -568,7 +568,7 @@ mod cross_unit_collision_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let report = CrossUnitCollisionReport::compute(&custom_keys);
@@ -595,7 +595,7 @@ mod cross_unit_collision_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let report = CrossUnitCollisionReport::compute(&custom_keys);
@@ -625,7 +625,7 @@ mod cross_unit_collision_tests {
 
     #[test]
     fn pure_intra_unit_collisions_are_excluded() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let report = CrossUnitCollisionReport::compute(&custom_keys);
         for group in report.position_groups() {
             assert!(
@@ -645,7 +645,7 @@ mod cross_unit_collision_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(position_b)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let report = CrossUnitCollisionReport::compute(&custom_keys);

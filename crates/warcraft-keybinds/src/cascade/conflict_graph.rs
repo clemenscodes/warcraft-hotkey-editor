@@ -365,7 +365,7 @@ mod conflict_graph_tests {
     use crate::model::{AbilityBinding, ColumnIndex, GridCoordinate, RowIndex};
 
     fn default_graph() -> ConflictGraph {
-        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let custom_keys = crate::custom_keys::CustomKeys::from_text("");
         ConflictGraph::build(&custom_keys)
     }
 
@@ -389,7 +389,7 @@ mod conflict_graph_tests {
 
     #[test]
     fn colliding_pairs_count_matches_cross_unit_report_structure() {
-        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let custom_keys = crate::custom_keys::CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let report = crate::collision::cross_unit::CrossUnitCollisionReport::compute(&custom_keys);
         assert!(
@@ -402,7 +402,7 @@ mod conflict_graph_tests {
 
     #[test]
     fn abilities_sharing_a_unit_have_a_conflict_edge() {
-        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let custom_keys = crate::custom_keys::CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let holy_light_index = graph
             .find_node("AHhb", GridRole::MainCommand)
@@ -419,7 +419,7 @@ mod conflict_graph_tests {
 
     #[test]
     fn abilities_on_different_pages_have_no_edge() {
-        let custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let custom_keys = crate::custom_keys::CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let Some(holy_light_index) = graph.find_node("AHhb", GridRole::MainCommand) else {
             return;
@@ -472,7 +472,7 @@ mod conflict_graph_tests {
         let binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let mut custom_keys = crate::custom_keys::CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding.clone());
         custom_keys.put_ability("AHds", binding);
         let graph = ConflictGraph::build(&custom_keys);
@@ -498,7 +498,7 @@ mod conflict_graph_tests {
         let binding_b = AbilityBinding::builder()
             .button_position(position_b)
             .build();
-        let mut custom_keys = crate::custom_keys::CustomKeys::from("").normalize();
+        let mut custom_keys = crate::custom_keys::CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding_a);
         custom_keys.put_ability("AHds", binding_b);
         let graph = ConflictGraph::build(&custom_keys);
@@ -530,7 +530,7 @@ mod conflict_graph_tests {
 
     #[test]
     fn ability_casing_variants_collapse_into_a_single_node() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let upper_index = graph.find_node("ACvs", GridRole::MainCommand);
         let lower_index = graph.find_node("Acvs", GridRole::MainCommand);

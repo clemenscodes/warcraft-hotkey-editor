@@ -233,7 +233,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         {
             keys_signal
                 .write()
-                .get_or_insert_with(|| CustomKeys::from(""))
+                .get_or_insert_with(CustomKeys::default)
                 .swap_system_bindings(&section_id_for_pointerup, &target_id);
             performed_swap = true;
         }
@@ -261,7 +261,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     });
     let on_pick = EventHandler::new(move |code: KeyCode| {
         let mut guard = keys_signal.write();
-        let file = guard.get_or_insert_with(|| CustomKeys::from(""));
+        let file = guard.get_or_insert_with(CustomKeys::default);
         file.set_system_hotkey(&section_id_for_pick, code);
         drop(guard);
         editing_section.set(None);

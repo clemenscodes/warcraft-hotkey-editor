@@ -1,4 +1,5 @@
 use crate::components::shell::toasts::consume_toast;
+use crate::services::customkeys::service::CustomKeysService;
 use dioxus::prelude::*;
 use std::ops::Range;
 use std::rc::Rc;
@@ -73,6 +74,7 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKi
         let move_args = MoveHandlerArgs {
             behavior: behavior.clone(),
             loaded_keys,
+            custom_keys_service: consume_context::<CustomKeysService>(),
             grid_layout,
             selected_slot,
             update_hotkeys_on_move,

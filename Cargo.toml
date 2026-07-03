@@ -30,6 +30,7 @@ license = "AGPL-3.0-only"
 version = "0.1.0"
 
 [workspace.dependencies]
+ddd = { path = "crates/ddd" }
 dioxus = { version = "=0.7.9" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
 serde = { version = "1.0.228", features = ["derive"] }

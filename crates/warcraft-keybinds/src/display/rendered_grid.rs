@@ -344,7 +344,7 @@ mod tests {
 
     #[test]
     fn renders_occupant_hotkey_and_marks_it_draggable() {
-        let keys = CustomKeys::from("[ACad]\nHotkey=P\nButtonpos=0,0\n");
+        let keys = CustomKeys::parse_raw("[ACad]\nHotkey=P\nButtonpos=0,0\n");
         let slots = [GridSlotId::ability("ACad")];
         let tiles = render(&keys, &slots, &[]);
         let occupied = tile_at(&tiles, 0, 0);
@@ -357,7 +357,7 @@ mod tests {
 
     #[test]
     fn empty_tile_shows_its_layout_letter_and_is_not_draggable() {
-        let keys = CustomKeys::from("[ACad]\nButtonpos=0,0\n");
+        let keys = CustomKeys::parse_raw("[ACad]\nButtonpos=0,0\n");
         let slots = [GridSlotId::ability("ACad")];
         let tiles = render(&keys, &slots, &[]);
         let empty = tile_at(&tiles, 1, 0);
@@ -369,7 +369,7 @@ mod tests {
 
     #[test]
     fn cascade_pinned_slot_is_still_draggable_in_the_editor() {
-        let keys = CustomKeys::from("[Aro1]\nButtonpos=0,0\n");
+        let keys = CustomKeys::parse_raw("[Aro1]\nButtonpos=0,0\n");
         let slots = [GridSlotId::ability("Aro1")];
         let tiles = render(&keys, &slots, &[]);
         let occupied = tile_at(&tiles, 0, 0);
@@ -379,7 +379,7 @@ mod tests {
 
     #[test]
     fn restrict_list_narrows_the_draggable_set() {
-        let keys = CustomKeys::from("[ACad]\nButtonpos=0,0\n[AHbz]\nButtonpos=1,0\n");
+        let keys = CustomKeys::parse_raw("[ACad]\nButtonpos=0,0\n[AHbz]\nButtonpos=1,0\n");
         let slots = [GridSlotId::ability("ACad"), GridSlotId::ability("AHbz")];
         let restrict = [GridSlotId::ability("ACad")];
         let tiles = render(&keys, &slots, &restrict);
@@ -389,8 +389,9 @@ mod tests {
 
     #[test]
     fn duplicate_hotkey_is_flagged_as_conflict() {
-        let keys =
-            CustomKeys::from("[ACad]\nHotkey=F\nButtonpos=0,0\n[AHbz]\nHotkey=F\nButtonpos=1,0\n");
+        let keys = CustomKeys::parse_raw(
+            "[ACad]\nHotkey=F\nButtonpos=0,0\n[AHbz]\nHotkey=F\nButtonpos=1,0\n",
+        );
         let slots = [GridSlotId::ability("ACad"), GridSlotId::ability("AHbz")];
         let tiles = render(&keys, &slots, &[]);
         assert!(tile_at(&tiles, 0, 0).is_conflict());
@@ -399,7 +400,7 @@ mod tests {
 
     #[test]
     fn slot_at_resolves_the_occupant_in_the_behavior_namespace() {
-        let keys = CustomKeys::from("[ACad]\nButtonpos=1,0\n");
+        let keys = CustomKeys::parse_raw("[ACad]\nButtonpos=1,0\n");
         let slots = [GridSlotId::ability("ACad")];
         let behavior = CommandBehavior;
         let occupied = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
@@ -411,8 +412,9 @@ mod tests {
 
     #[test]
     fn move_blocker_refuses_a_tile_reserved_by_an_off_state() {
-        let keys =
-            CustomKeys::from("[ACad]\nButtonpos=0,0\n[AHbz]\nButtonpos=0,1\nUnbuttonpos=1,1\n");
+        let keys = CustomKeys::parse_raw(
+            "[ACad]\nButtonpos=0,0\n[AHbz]\nButtonpos=0,1\nUnbuttonpos=1,1\n",
+        );
         let slots = [GridSlotId::ability("ACad"), GridSlotId::ability("AHbz")];
         let behavior = CommandBehavior;
         let from = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);

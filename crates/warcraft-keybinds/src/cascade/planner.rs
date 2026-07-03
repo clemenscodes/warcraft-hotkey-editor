@@ -398,7 +398,7 @@ mod cascade_planner_tests {
     use std::collections::HashSet;
 
     fn default_plan() -> CascadePlan {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
         CascadePlan::from(&queue)
@@ -415,7 +415,7 @@ mod cascade_planner_tests {
 
     #[test]
     fn no_two_moves_land_on_the_same_position_for_conflicting_abilities() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         let queue = AssignmentQueue::build(graph);
         let plan = CascadePlan::from(&queue);
@@ -562,7 +562,7 @@ mod cascade_planner_tests {
     #[test]
     fn unresolved_mover_stays_on_its_original_row() {
         let plan = default_plan();
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         for mover in plan.unresolved() {
             let original_row_value = graph
@@ -616,7 +616,7 @@ mod cascade_planner_tests {
         let binding = AbilityBinding::builder()
             .button_position(collision_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding.clone());
         custom_keys.put_ability("AHds", binding);
         let graph = ConflictGraph::build(&custom_keys);
@@ -646,7 +646,7 @@ mod cascade_planner_tests {
         let binding = AbilityBinding::builder()
             .button_position(collision_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", binding.clone());
         custom_keys.put_ability("AHds", binding);
         let graph = ConflictGraph::build(&custom_keys);

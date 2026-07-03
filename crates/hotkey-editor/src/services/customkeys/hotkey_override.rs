@@ -1,22 +1,10 @@
-use dioxus::prelude::*;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
-use warcraft_keybinds::{CustomKeys, HotkeyConflict, HotkeyTarget, HotkeyToken};
+use warcraft_keybinds::{CustomKeys, HotkeyConflict, HotkeyToken};
 
 pub(crate) struct HotkeyOverride;
 
 impl HotkeyOverride {
-    pub(crate) fn apply(
-        loaded_keys: &mut Signal<Option<CustomKeys>>,
-        target: HotkeyTarget,
-        new_token: Option<HotkeyToken>,
-    ) {
-        let mut writable_guard = loaded_keys.write();
-        let empty_source = "";
-        let file = writable_guard.get_or_insert_with(|| CustomKeys::from(empty_source));
-        file.set_hotkey(target, new_token);
-    }
-
     pub(crate) fn detect_conflict(
         container_slots: &[GridSlotId],
         target_object_id: &str,

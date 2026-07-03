@@ -4,6 +4,7 @@ mod buttons;
 mod dialogs;
 pub mod fixtures;
 mod grid;
+mod keys_mount;
 mod shell;
 mod system_hotkeys;
 mod tabs;

@@ -138,9 +138,9 @@ impl ResolvedTemplate {
         TEMPLATES
             .iter()
             .map(|template| {
-                let parsed_file = CustomKeys::from(template.content());
+                let parsed_file = CustomKeys::parse_raw(template.content());
                 let derived_grid = GridLayout::derived_from(&parsed_file);
-                let mut preview_file = CustomKeys::from(DEFAULT_CUSTOM_KEYS);
+                let mut preview_file = CustomKeys::parse_raw(DEFAULT_CUSTOM_KEYS);
                 preview_file.extend(parsed_file);
                 let command_input = CommandGridRenderInput {
                     slots: &command_slots,

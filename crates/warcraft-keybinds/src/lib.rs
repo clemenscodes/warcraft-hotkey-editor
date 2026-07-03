@@ -24,7 +24,7 @@ pub use collision::cross_unit::{
 pub use collision::summary::CollisionSummary;
 pub use collision::unit_report::{UnitCollisionEntry, UnitCollisionReport};
 pub use command::move_request::MoveRequest;
-pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict};
+pub use custom_keys::{CustomKeys, DEFAULT_CUSTOM_KEYS, HotkeyConflict, ImportOutcome};
 pub use display::ability_cell::{AbilityCell, AbilityIconPath};
 
 pub use display::grid_behavior::{

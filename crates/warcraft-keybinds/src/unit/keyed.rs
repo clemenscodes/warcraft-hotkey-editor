@@ -133,7 +133,7 @@ impl From<&CustomKeys> for UnitKeyedCustomKeys {
 
 impl From<&UnitKeyedCustomKeys> for CustomKeys {
     fn from(unit_keyed: &UnitKeyedCustomKeys) -> Self {
-        let mut custom_keys = CustomKeys::from("");
+        let mut custom_keys = CustomKeys::parse_raw("");
         let mut seen: std::collections::HashSet<&'static str> = std::collections::HashSet::new();
         for group in unit_keyed.groups() {
             for slot in group.slots() {
@@ -206,7 +206,7 @@ mod unit_keyed_tests {
             .hotkey(hotkey)
             .button_position(position)
             .build();
-        let mut original = CustomKeys::from("");
+        let mut original = CustomKeys::parse_raw("");
         original.put_ability("AHhb", binding);
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);
@@ -223,7 +223,7 @@ mod unit_keyed_tests {
         let binding = AbilityBinding::builder()
             .research_hotkey(research_hotkey)
             .build();
-        let mut original = CustomKeys::from("");
+        let mut original = CustomKeys::parse_raw("");
         original.put_ability("AHds", binding);
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);
@@ -238,7 +238,7 @@ mod unit_keyed_tests {
 
     #[test]
     fn for_unit_returns_only_matching_groups() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let unit_keyed = UnitKeyedCustomKeys::from(&custom_keys);
         let paladin_only = unit_keyed.for_unit("Hpal");
         assert!(
@@ -252,7 +252,7 @@ mod unit_keyed_tests {
 
     #[test]
     fn for_unit_is_case_insensitive() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let unit_keyed = UnitKeyedCustomKeys::from(&custom_keys);
         let upper = unit_keyed.for_unit("HPAL");
         let lower = unit_keyed.for_unit("hpal");
@@ -265,7 +265,7 @@ mod unit_keyed_tests {
 
     #[test]
     fn for_unit_returns_empty_when_no_match() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let unit_keyed = UnitKeyedCustomKeys::from(&custom_keys);
         let result = unit_keyed.for_unit("ZZZZ");
         assert!(
@@ -279,7 +279,7 @@ mod unit_keyed_tests {
         let binding = AbilityBinding::builder()
             .hotkey(Hotkey::Letter('X'))
             .build();
-        let mut original = CustomKeys::from("");
+        let mut original = CustomKeys::parse_raw("");
         original.put_ability("ZZZZ", binding);
         let unit_keyed = UnitKeyedCustomKeys::from(&original);
         let reconstructed = CustomKeys::from(&unit_keyed);

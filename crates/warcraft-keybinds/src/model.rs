@@ -1682,7 +1682,7 @@ mod builder_tests {
             .build();
         let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeys::from(serialized.as_str());
+        let reparsed = CustomKeys::parse_raw(serialized.as_str());
         let reparsed_binding = reparsed
             .binding("Ahrl")
             .expect("Ahrl must survive round-trip");
@@ -1720,7 +1720,7 @@ mod builder_tests {
         let binding = AbilityBinding::builder().hotkey(hotkey).build();
         let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeys::from(serialized.as_str());
+        let reparsed = CustomKeys::parse_raw(serialized.as_str());
         let hotkey_value = reparsed
             .binding("Ahrl")
             .and_then(|binding| binding.hotkey());
@@ -1793,7 +1793,7 @@ mod builder_tests {
             .build();
         let file = CustomKeys::builder().command("CmdMove", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeys::from(serialized.as_str());
+        let reparsed = CustomKeys::parse_raw(serialized.as_str());
         let reparsed_binding = reparsed
             .command("CmdMove")
             .expect("CmdMove must survive round-trip");
@@ -1933,7 +1933,7 @@ mod builder_tests {
             .build();
         let original_file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = original_file.to_string();
-        let reparsed_file = CustomKeys::from(serialized.as_str());
+        let reparsed_file = CustomKeys::parse_raw(serialized.as_str());
         let original_binding = original_file.binding("Ahrl").expect("present in original");
         let reparsed_binding = reparsed_file
             .binding("Ahrl")
@@ -1955,7 +1955,7 @@ mod builder_tests {
         );
         let file = CustomKeys::builder().system("Ctr1", binding).build();
         let serialized = file.to_string();
-        let reparsed = CustomKeys::from(serialized.as_str());
+        let reparsed = CustomKeys::parse_raw(serialized.as_str());
         let retrieved = reparsed.system("Ctr1").expect("must survive round-trip");
         assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(49));
         assert_eq!(retrieved.class(), SystemKeybindClass::ControlGroup);

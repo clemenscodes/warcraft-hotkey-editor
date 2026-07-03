@@ -258,7 +258,7 @@ mod unit_collision_report_tests {
 
     #[test]
     fn paladin_has_no_collisions_in_normalized_default() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
         let paladin_filtered = report.for_unit("Hpal");
@@ -277,7 +277,7 @@ mod unit_collision_report_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let layout = GridLayout::qwerty_grid();
@@ -318,7 +318,7 @@ mod unit_collision_report_tests {
             .button_position(second_cell)
             .hotkey(hotkey_q)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let layout = GridLayout::qwerty_grid();
@@ -347,7 +347,7 @@ mod unit_collision_report_tests {
         let divine_shield_binding = AbilityBinding::builder()
             .button_position(shared_position)
             .build();
-        let mut custom_keys = CustomKeys::from("").normalize();
+        let mut custom_keys = CustomKeys::from_text("");
         custom_keys.put_ability("AHhb", holy_light_binding);
         custom_keys.put_ability("AHds", divine_shield_binding);
         let layout = GridLayout::qwerty_grid();
@@ -364,7 +364,7 @@ mod unit_collision_report_tests {
 
     #[test]
     fn for_unit_returns_empty_for_unknown_unit() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
         let filtered = report.for_unit("ZZZZ");
@@ -376,7 +376,7 @@ mod unit_collision_report_tests {
 
     #[test]
     fn entries_are_sorted_by_unit_name() {
-        let custom_keys = CustomKeys::from("").normalize();
+        let custom_keys = CustomKeys::from_text("");
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
         let names: Vec<&str> = report.entries().iter().map(|e| e.unit_name()).collect();
@@ -408,7 +408,7 @@ mod unit_collision_report_tests {
         use crate::identity::hotkey_token::HotkeyToken;
         use crate::unit::grids::PositionCollisionCard;
         let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt",);
-        let custom_keys = CustomKeys::from(template_text).normalize();
+        let custom_keys = CustomKeys::from_text(template_text);
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
         for entry in report.entries() {
@@ -500,7 +500,7 @@ mod unit_collision_report_tests {
 
     fn run_default_collision_check() {
         let template_text = include_str!("../../../hotkey-editor/templates/CustomKeys.txt",);
-        let custom_keys = CustomKeys::from(template_text).normalize();
+        let custom_keys = CustomKeys::from_text(template_text);
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
         let empty_pos_builder = PositionCollisionCardBuilder::new(GridRole::MainCommand);
