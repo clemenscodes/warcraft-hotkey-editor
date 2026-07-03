@@ -1,7 +1,6 @@
 use crate::registry::StoryRegistry;
 use dioxus::prelude::*;
 use hotkey_editor::components::shell::toasts::ToastMount;
-use hotkey_editor::components::shell::tooltips::TooltipMount;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct StoryFrameProps {
@@ -17,7 +16,6 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         Some(story) => {
             let render = story.render();
             rsx! {
-                TooltipMount {}
                 ToastMount {
                     div { class: "min-h-dvh flex flex-col items-center", {render()} }
                 }

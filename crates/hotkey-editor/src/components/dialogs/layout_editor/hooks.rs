@@ -2,9 +2,9 @@ use super::components::layout_grid::components::layout_cell::{LayoutCellProps, L
 use super::data::QWERTY_ROWS;
 use super::props::LayoutEditorProps;
 use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
+use crate::components::shell::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::positions::Positions;
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
 
 use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, HotkeyToken, RowIndex,

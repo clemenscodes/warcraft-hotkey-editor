@@ -25,7 +25,6 @@ pub fn KeyCaptureCell(props: KeyCaptureCellProps) -> Element {
             class,
             r#type: "button",
             "data-tooltip": model.conflict_title,
-            "data-tooltip-placement": "above",
             onclick: model.on_click,
             {model.key_label}
         }

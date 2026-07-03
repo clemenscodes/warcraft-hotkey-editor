@@ -9,7 +9,6 @@ use crate::components::dialogs::templates_dialog::TemplatesDialog;
 use crate::components::shell::footer::Footer;
 use crate::components::shell::header::Header;
 use crate::components::shell::toasts::ToastMount;
-use crate::components::shell::tooltips::TooltipMount;
 use crate::components::views::collisions_page::CollisionsPage;
 use crate::components::views::editor_page::EditorPage;
 use crate::components::views::resolve_page::ResolvePage;
@@ -103,7 +102,6 @@ pub fn Workbench(
             content: "https://clemenscodes.github.io/warcraft-hotkey-editor/",
         }
         document::Meta { name: "twitter:card", content: "summary_large_image" }
-        TooltipMount {}
         ToastMount {
             div { class: app_class, onkeydown: handle_keydown,
                 Header { loaded_keys, upload_status, grid_layout }

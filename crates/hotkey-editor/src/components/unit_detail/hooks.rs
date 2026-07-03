@@ -8,11 +8,10 @@ use super::components::unit_stats_panel::UnitStatsPanelProps;
 use super::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::UnitTileOverrideProps;
 use crate::model::icons::IconUrl;
 use dioxus::prelude::*;
-use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectMeta;
-use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
-use warcraft_keybinds::{Evasion, GridSlotId, InspectorDetail, UnitCommandSlots, WarcraftObjectId};
+use warcraft_database::ObjectLookup;
+use warcraft_keybinds::{Evasion, GridSlotId, InspectorDetail, UnitSlotContainers};
 
 /// The panel's shaped view: either an empty-state message, or the fully-built child
 /// props for the loaded unit.
@@ -27,17 +26,6 @@ pub(super) struct UnitDetailModel {
     pub(super) description: UnitDescriptionProps,
     pub(super) stats: UnitStatsPanelProps,
     pub(super) body: UnitDetailBodyProps,
-}
-
-/// The unit's per-container command slots plus its train-upgrade map, resolved once
-/// from the database and memoised on the selected unit id.
-#[derive(Clone, PartialEq)]
-struct UnitSlotData {
-    command_card: Rc<[GridSlotId]>,
-    build_menu: Option<Rc<[GridSlotId]>>,
-    uprooted: Option<Rc<[GridSlotId]>>,
-    research: Option<Rc<[GridSlotId]>>,
-    train_upgrades: HashMap<WarcraftObjectId, WarcraftObjectId>,
 }
 
 /// Resolves the selected unit and shapes every child's props. All the domain work
@@ -66,31 +54,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let slot_data_memo = use_memo(move || {
         let unit_id_option = selected_unit_id.read().clone();
         let unit_id_str = unit_id_option.as_deref().unwrap_or("");
-        let unit_id_obj = WARCRAFT_DATABASE
-            .by_id_and_key(unit_id_str)
-            .map(|(id, _)| id)
-            .unwrap_or_default();
-        let command_card_slots: Rc<[GridSlotId]> = WARCRAFT_DATABASE
-            .command_card(unit_id_obj)
-            .filled_slots()
-            .collect();
-        let build_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
-            .build_menu(unit_id_obj)
-            .map(|card| card.filled_slots().collect());
-        let uprooted_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
-            .uprooted_menu(unit_id_obj)
-            .map(|card| card.filled_slots().collect());
-        let research_menu_slots: Option<Rc<[GridSlotId]>> = WARCRAFT_DATABASE
-            .research_menu(unit_id_obj)
-            .map(|card| card.filled_slots().collect());
-        let train_upgrades = WARCRAFT_DATABASE.train_unit_upgrades(unit_id_obj);
-        UnitSlotData {
-            command_card: command_card_slots,
-            build_menu: build_menu_slots,
-            uprooted: uprooted_menu_slots,
-            research: research_menu_slots,
-            train_upgrades,
-        }
+        UnitSlotContainers::resolve(unit_id_str)
     });
     let unit_id_option = selected_unit_id.read().clone();
     let Some(unit_id) = unit_id_option else {
@@ -109,14 +73,12 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
         .copied()
         .map(IconUrl::from_database_path)
         .map(|url| url.to_string());
-    let slot_data_guard = slot_data_memo.read();
-    let UnitSlotData {
-        command_card: command_card_slots_rc,
-        build_menu: build_menu_slots_rc,
-        uprooted: uprooted_menu_slots_rc,
-        research: research_menu_slots_rc,
-        train_upgrades,
-    } = slot_data_guard.clone();
+    let slot_containers = slot_data_memo.read();
+    let command_card_slots = slot_containers.command_card();
+    let build_menu_slots = slot_containers.build_menu();
+    let uprooted_menu_slots = slot_containers.uprooted();
+    let research_menu_slots = slot_containers.research();
+    let train_upgrades = slot_containers.train_upgrades().clone();
     let inspector_slot = *selected_slot.read();
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
@@ -137,11 +99,11 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     });
     let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
     let active_container_slots: Rc<[GridSlotId]> = if inspector_from_uprooted {
-        uprooted_menu_slots_rc
+        uprooted_menu_slots
             .clone()
             .unwrap_or_else(|| empty_slot_list.clone())
     } else if inspector_from_research {
-        research_menu_slots_rc
+        research_menu_slots
             .clone()
             .unwrap_or_else(|| empty_slot_list.clone())
     } else {
@@ -149,17 +111,17 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
             .as_ref()
             .map(|slot| slot.as_str().to_string());
         let in_build_menu = inspector_slot_id.as_deref().is_some_and(|id_value| {
-            build_menu_slots_rc.as_ref().is_some_and(|list| {
+            build_menu_slots.as_ref().is_some_and(|list| {
                 list.iter()
                     .any(|candidate| candidate.as_str().eq_ignore_ascii_case(id_value))
             })
         });
         if in_build_menu {
-            build_menu_slots_rc
+            build_menu_slots
                 .clone()
                 .unwrap_or_else(|| empty_slot_list.clone())
         } else {
-            command_card_slots_rc.clone()
+            command_card_slots.clone()
         }
     };
     let unit_description = unit_object.ubertip();
@@ -186,10 +148,10 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let grids = UnitCommandGridsProps {
         unit_id: unit_id.clone(),
         race,
-        command_card_slots: command_card_slots_rc,
-        build_menu_slots: build_menu_slots_rc,
-        uprooted_menu_slots: uprooted_menu_slots_rc,
-        research_menu_slots: research_menu_slots_rc,
+        command_card_slots,
+        build_menu_slots,
+        uprooted_menu_slots,
+        research_menu_slots,
         loaded_keys,
         selected_slot,
         selected_from_research,

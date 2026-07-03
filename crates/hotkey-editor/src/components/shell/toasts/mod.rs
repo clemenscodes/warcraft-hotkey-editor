@@ -1,16 +1,26 @@
+pub mod components;
+mod context;
+mod hooks;
 mod props;
 
+use components::toast_container::{ToastContainer, ToastContainerProps};
 use dioxus::prelude::*;
-use dioxus_primitives::toast::ToastProvider;
+use hooks::use_toast_provider;
+
+pub use context::{ToastOptions, ToastRecord, ToastType, Toasts, consume_toast, use_toast};
 pub use props::ToastMountProps;
 
-/// Wraps the app in the toast provider. The toast styling targets the primitive's
-/// own `.dx-toast-*` markup and is a global concern, so it lives in the design layer
-/// (`tailwind.input.css`) rather than here.
+/// Provides the toast queue to its subtree and renders the fixed toast overlay.
+/// Its own markup is pure layout glue — the app subtree plus the toast
+/// container — so it carries no class of its own; every styled element below is
+/// its own component.
 #[component]
 pub fn ToastMount(props: ToastMountProps) -> Element {
     let children = props.children;
+    let model = use_toast_provider();
+    let container_props = ToastContainerProps::from(&model);
     rsx! {
-        ToastProvider { {children} }
+        {children}
+        ToastContainer { ..container_props }
     }
 }

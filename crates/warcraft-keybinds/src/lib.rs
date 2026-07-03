@@ -71,5 +71,10 @@ pub use unit::grids::{
 };
 
 pub use unit::keyed::{UnitAbilityGroup, UnitAbilitySlot, UnitKeyedCustomKeys};
+pub use unit::listing::{
+    UnitCategoryEntry, UnitCategoryListing, UnitCategoryRequest, UnitListing, UnitListingEntry,
+    UnitListingRequest,
+};
+pub use unit::slot_containers::UnitSlotContainers;
 pub use unit::slots::UnitCommandSlots;
 pub use warcraft_database::{BuildingTraits, CommandCatalog};

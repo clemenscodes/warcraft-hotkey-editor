@@ -7,7 +7,6 @@ use hotkey_editor::components::shell::header::components::burger_menu::BurgerMen
 use hotkey_editor::components::shell::header::components::header_brand::HeaderBrand;
 use hotkey_editor::components::shell::header::components::header_toolbar::HeaderToolbar;
 use hotkey_editor::components::shell::toasts::ToastMount;
-use hotkey_editor::components::shell::tooltips::TooltipMount;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::services::navigation::app_view::AppView;
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
@@ -32,7 +31,6 @@ fn provide_overlay_state() {
 pub fn stories() -> Vec<Story> {
     vec![
         Story::single("Shell", "Footer", footer_default),
-        Story::single("Shell", "TooltipMount", tooltip_mount_default),
         Story::single("Shell", "ToastMount", toast_mount_with_child),
         Story::single("Shell", "HeaderBrand", header_brand_default),
         Story::single("Shell", "BurgerMenu", burger_menu_default),
@@ -44,12 +42,6 @@ pub fn stories() -> Vec<Story> {
 fn footer_default() -> Element {
     rsx! {
         Footer {}
-    }
-}
-
-fn tooltip_mount_default() -> Element {
-    rsx! {
-        TooltipMount {}
     }
 }
 

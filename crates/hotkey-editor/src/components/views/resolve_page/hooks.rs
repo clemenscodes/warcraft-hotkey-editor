@@ -7,9 +7,9 @@ use super::components::plan_body::{PlanBodyProps, PlanBodySection};
 use super::components::plan_header::PlanHeaderProps;
 use super::logic::{CarriersDialogData, PlanView};
 use super::props::ResolvePageProps;
+use crate::components::shell::toasts::{ToastOptions, use_toast};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
 use gloo_timers::future::TimeoutFuture;
 use warcraft_keybinds::CustomKeys;
 

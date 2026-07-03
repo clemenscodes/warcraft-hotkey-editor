@@ -4,7 +4,7 @@ use super::props::UnitCategorySectionProps;
 use crate::components::unit_list::unit_kind_data_attr;
 use crate::model::icons::IconUrl;
 use dioxus::prelude::*;
-use warcraft_database::UnitCatalog;
+use warcraft_keybinds::{UnitCategoryListing, UnitCategoryRequest};
 
 /// The section's shaped view: its heading (with the collapse toggle) and the unit
 /// cards to draw when expanded.
@@ -54,45 +54,25 @@ impl From<&UnitCategorySectionProps> for UnitCategoryHeadingProps {
 /// Queries the catalog for this category and adapts each entry into a finished
 /// unit card, marking the active one as selected.
 fn unit_cards(props: &UnitCategorySectionProps) -> Vec<UnitCardProps> {
-    let search_active = !props.query.is_empty();
-    let query_option = Some(props.query.as_str());
-    let race_option = if search_active {
-        None
-    } else {
-        Some(props.race)
-    };
-    let mode_option = if search_active {
-        None
-    } else {
-        Some(props.mode)
-    };
-    let category_option = Some(props.category_kind);
-    let entries = UnitCatalog::entries_for(
-        race_option,
-        mode_option,
-        category_option,
-        query_option,
+    let category_query = props.query.clone();
+    let category_request = UnitCategoryRequest::new(
+        props.race,
+        props.mode,
+        props.category_kind,
+        category_query,
         props.search_field,
         props.visibility,
     );
+    let category_listing = UnitCategoryListing::resolve(&category_request);
+    let entries = category_listing.into_entries();
     entries
         .into_iter()
         .map(|entry| {
-            let entry_object = entry.warcraft_object();
-            let display_name = entry_object
-                .names()
-                .first()
-                .copied()
-                .unwrap_or("(unnamed)")
-                .to_owned();
-            let icon_path = entry_object
-                .icons()
-                .first()
-                .copied()
-                .map(IconUrl::from_database_path);
-            let unit_id = entry.unit_id().to_owned();
-            let unit_kind = entry.unit_kind();
+            let icon_path = entry.icon_database_path().map(IconUrl::from_database_path);
             let is_selected = props.active_unit_id.as_deref() == Some(entry.unit_id());
+            let unit_id = entry.unit_id().to_owned();
+            let display_name = entry.display_name().to_owned();
+            let unit_kind = entry.unit_kind();
             let race = props.race;
             let selected_unit_id = props.selected_unit_id;
             let selected_slot = props.selected_slot;

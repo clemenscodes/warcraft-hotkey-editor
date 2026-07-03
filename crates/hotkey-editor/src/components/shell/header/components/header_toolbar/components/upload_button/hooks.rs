@@ -5,7 +5,7 @@ use crate::components::dialogs::info_dialogs::upload_info_dialog::UploadInfoDial
 use crate::components::shared::icons::ICON_UPLOAD;
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
+use crate::components::shell::toasts::{use_toast, ToastOptions};
 use warcraft_keybinds::CustomKeys;
 
 /// The upload button's shaped view: the info dialog signal and the two handlers.

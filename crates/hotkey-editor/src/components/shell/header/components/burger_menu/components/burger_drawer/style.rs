@@ -14,7 +14,11 @@ const BASE: &[&str] = &[
     "[box-shadow:-6px_0_40px_rgba(0,0,0,0.85)]",
     "flex",
     "flex-col",
-    "[animation:burger-slide-in_0.22s_cubic-bezier(0.16,1,0.3,1)]",
+    "translate-x-0",
+    "starting:translate-x-full",
+    "transition-transform",
+    "duration-[220ms]",
+    "ease-[cubic-bezier(0.16,1,0.3,1)]",
     "[padding-top:env(safe-area-inset-top)]",
     "[padding-bottom:env(safe-area-inset-bottom)]",
 ];

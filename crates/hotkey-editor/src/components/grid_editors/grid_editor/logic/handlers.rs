@@ -1,5 +1,5 @@
+use crate::components::shell::toasts::{ToastOptions, Toasts};
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, Toasts};
 use std::ops::Range;
 use std::rc::Rc;
 

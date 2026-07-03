@@ -42,6 +42,23 @@ pub fn use_burger_menu(props: &BurgerMenuProps) -> BurgerMenuView {
     let mut templates_dialog_open = overlay.templates_dialog_open;
     let mut preview_open = overlay.preview_open;
     let mut burger_open = use_signal::<bool>(|| false);
+    use_effect(move || {
+        let is_open = burger_open();
+        let Some(body) = web_sys::window()
+            .and_then(|window| window.document())
+            .and_then(|document| document.body())
+        else {
+            return;
+        };
+        let style = body.style();
+        if is_open {
+            let _ = style.set_property("overflow", "hidden");
+            let _ = style.set_property("overscroll-behavior", "contain");
+        } else {
+            let _ = style.remove_property("overflow");
+            let _ = style.remove_property("overscroll-behavior");
+        }
+    });
     let mut upload_info_open = use_signal::<bool>(|| false);
     let mut download_info_open = use_signal::<bool>(|| false);
     let has_loaded_file = loaded_keys.read().is_some();

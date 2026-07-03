@@ -1,9 +1,9 @@
 use super::components::template_gallery::TemplateGalleryProps;
 use super::components::template_gallery::components::template_card::TemplateCardProps;
 use super::props::TemplatesDialogProps;
+use crate::components::shell::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
-use dioxus_primitives::toast::{ToastOptions, use_toast};
 use warcraft_keybinds::{CustomKeys, DEFAULT_CUSTOM_KEYS, ResolvedTemplate};
 
 /// The templates dialog's shaped view: the open signal driving the shell and the

@@ -28,15 +28,13 @@ pub fn InventoryCell(props: InventoryCellProps) -> Element {
     let key = SystemSlotKeyProps::from(&model);
     let picker = SystemKeyPickerDialogProps::from(&model);
     let class = style::class(model.state);
-    let section_id = props.section_id.clone();
     rsx! {
         div {
             class,
-            "data-inventory-slot": section_id,
+            "data-inventory-slot": model.slot_id,
             "data-dragging": model.dragging_attr,
             tabindex: "0",
             "data-tooltip": model.conflict_title,
-            "data-tooltip-placement": "above",
             onpointerdown: model.on_pointerdown,
             onpointermove: model.on_pointermove,
             onpointerup: model.on_pointerup,

@@ -57,8 +57,7 @@ const EDITING: &[&str] = &[
     "[background:linear-gradient(135deg,rgba(255,206,99,0.3)_0%,rgba(255,171,1,0.18)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",
-    "[box-shadow:0_0_16px_rgba(255,206,99,0.65),inset_0_0_12px_rgba(255,206,99,0.25)]",
-    "[animation:pulse-editing_1s_ease-in-out_infinite_alternate]",
+    "[box-shadow:0_0_18px_#ffce63d9,inset_0_0_14px_#ffce6359]",
 ];
 states! {
     LayoutCellState, Idle => IDLE, Editing => EDITING

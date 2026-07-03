@@ -21,6 +21,7 @@ use wasm_bindgen::JsCast;
 /// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryCellModel {
     pub(super) state: InventoryCellState,
+    pub(super) slot_id: String,
     pub(super) dragging_attr: &'static str,
     pub(super) slot_label: String,
     pub(super) key_label: String,
@@ -268,6 +269,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
     InventoryCellModel {
         state,
+        slot_id: section_id,
         dragging_attr,
         slot_label,
         key_label,

@@ -1,9 +1,9 @@
 use crate::classes;
 
 // The hotkey-capture button in the override panel. A square gold-bordered key cap; it
-// pulses while capturing (`data-editing`) and widens for multi-character special
-// tokens like Esc / Mouse4 (`data-special`). Uses the global `pulse-editing`
-// keyframe. Class `.override-key-cell` is load-bearing (keyboard navigation).
+// lights up with a static gold glow while capturing (`data-editing`) and widens for
+// multi-character special tokens like Esc / Mouse4 (`data-special`). Class
+// `.override-key-cell` is load-bearing (keyboard navigation).
 const BASE: &[&str] = &[
     "w-20",
     "h-20",
@@ -36,8 +36,7 @@ const BASE: &[&str] = &[
     "data-[editing=true]:bg-[linear-gradient(135deg,rgba(255,206,99,0.3)_0%,rgba(255,171,1,0.18)_100%)]",
     "data-[editing=true]:border-warcraft-gold",
     "data-[editing=true]:text-warcraft-gold",
-    "data-[editing=true]:shadow-[0_0_16px_rgba(255,206,99,0.65),inset_0_0_12px_rgba(255,206,99,0.25)]",
-    "data-[editing=true]:animate-[pulse-editing_1s_ease-in-out_infinite_alternate]",
+    "data-[editing=true]:[box-shadow:0_0_18px_#ffce63d9,inset_0_0_14px_#ffce6359]",
     "data-[special=true]:w-auto",
     "data-[special=true]:min-w-[5rem]",
     "data-[special=true]:px-[0.9rem]",

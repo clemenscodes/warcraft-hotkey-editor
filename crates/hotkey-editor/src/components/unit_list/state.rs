@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind};
-use warcraft_database::{CatalogVisibility, SearchField, UnitCatalog, UnitMode};
+use warcraft_database::{CatalogVisibility, SearchField, UnitMode};
+use warcraft_keybinds::{UnitListing, UnitListingRequest};
 
 pub(super) struct UnitListState {
     active_category: Signal<UnitKind>,
@@ -35,31 +36,14 @@ impl UnitListState {
         let active_kind = *active_category.read();
         let active_unit_id = selected_unit_id.read().clone();
         let collapsed_snapshot = collapsed_categories.read().clone();
-        let query_str = query_snapshot.as_str();
-        let query_option = Some(query_str);
-        let race_option = if search_active { None } else { Some(race) };
-        let mode_option = if search_active { None } else { Some(mode) };
-        let all_entries = UnitCatalog::entries_for(
-            race_option,
-            mode_option,
-            None,
-            query_option,
-            search_field,
-            visibility,
-        );
-        let mut seen: Vec<UnitKind> = Vec::new();
-        let mut first_result_id: Option<String> = None;
-        let mut first_result_kind: Option<UnitKind> = None;
-        for entry in all_entries {
-            let entry_kind = entry.unit_kind();
-            if first_result_id.is_none() {
-                first_result_id = Some(entry.unit_id().to_owned());
-                first_result_kind = Some(entry_kind);
-            }
-            if !seen.contains(&entry_kind) {
-                seen.push(entry_kind);
-            }
-        }
+        let listing_query = query_snapshot.clone();
+        let listing_request =
+            UnitListingRequest::new(race, mode, listing_query, search_field, visibility);
+        let listing = UnitListing::resolve(&listing_request);
+        let category_kinds = listing.category_kinds().to_vec();
+        let first_result = listing.first_result();
+        let first_result_id = first_result.map(|entry| entry.unit_id().to_owned());
+        let first_result_kind = first_result.map(|entry| entry.unit_kind());
         Self {
             active_category,
             race,
@@ -69,7 +53,7 @@ impl UnitListState {
             active_kind,
             active_unit_id,
             collapsed_snapshot,
-            category_kinds: seen,
+            category_kinds,
             first_result_id,
             first_result_kind,
         }
