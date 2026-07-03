@@ -1,10 +1,11 @@
+pub mod components;
 mod props;
 
 use crate::assert_component;
-use crate::components::dialogs::system_hotkeys_dialog::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
-use crate::components::dialogs::system_hotkeys_dialog::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
-use crate::components::dialogs::system_hotkeys_dialog::components::inventory_hotkeys_view::InventoryHotkeysView;
-use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::SystemHotkeysListView;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
+use crate::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::SystemHotkeysListView;
 use dioxus::prelude::*;
 pub use props::SystemHotkeysBodyProps;
 use warcraft_database::SystemHotkeysCategory;

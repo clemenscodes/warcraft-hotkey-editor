@@ -59,7 +59,7 @@ pub use model::{
 pub use statistics::{
     Armor, AttackRange, AttackSpeed, AttackStatistics, AttributeStatistic, DamagePerSecond,
     DamageRange, EffectiveHitPoints, Evasion, Gain, HeroStatistics, HitPoints, HitPointsRegen,
-    Mana, ManaRegen, UnitStatistics,
+    Mana, ManaRegen, Matchup, MatchupStrength, UnitStatistics,
 };
 
 pub use system::binding_map::{EffectiveBinding, ResolvedSystemBinding, SystemBindingMap};

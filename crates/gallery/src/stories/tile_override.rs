@@ -4,7 +4,7 @@ use gallery::Story;
 use hotkey_editor::components::shell::toasts::ToastMount;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCell;
+use hotkey_editor::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCell;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
 use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
 

@@ -13,6 +13,13 @@ pub(super) struct UnitPositionConflictCardModel {
     pub(super) multi_stack: PositionMultiStackProps,
 }
 
+/// Which of the two clash presentations the card uses: an exact pair (two
+/// abilities) or a multi-stack (any other count). Exactly one field is populated.
+struct ClashLayout {
+    pair: Option<PositionPair>,
+    multi: Vec<ConflictAbilityProps>,
+}
+
 impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
     fn from(props: &UnitPositionConflictCardProps) -> Self {
         let role_label = props.conflict.role_label().to_owned();
@@ -37,22 +44,28 @@ impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
             coordinate,
             is_top: true,
         };
-        let (pair, multi) = if abilities.len() == 2 {
-            let mut iter = abilities.into_iter();
-            let left = iter.next().expect("checked len == 2");
-            let right = iter.next().expect("checked len == 2");
+        let clash = if abilities.len() == 2 {
+            let mut ability_iter = abilities.into_iter();
+            let left = ability_iter.next().expect("checked len == 2");
+            let right = ability_iter.next().expect("checked len == 2");
             let pair = PositionPair {
                 left,
                 right,
                 cell: cell_between,
             };
-            (Some(pair), Vec::new())
+            ClashLayout {
+                pair: Some(pair),
+                multi: Vec::new(),
+            }
         } else {
-            (None, abilities)
+            ClashLayout {
+                pair: None,
+                multi: abilities,
+            }
         };
-        let pair_row = PositionPairRowProps { pair };
+        let pair_row = PositionPairRowProps { pair: clash.pair };
         let multi_stack = PositionMultiStackProps {
-            abilities: multi,
+            abilities: clash.multi,
             cell: cell_top,
         };
         Self {

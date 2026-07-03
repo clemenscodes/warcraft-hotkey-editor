@@ -9,11 +9,13 @@
 
 mod attack;
 mod hero;
+mod matchup;
 mod unit_statistics;
 mod values;
 
 pub use attack::AttackStatistics;
 pub use hero::{AttributeStatistic, HeroStatistics};
+pub use matchup::{Matchup, MatchupStrength};
 pub use unit_statistics::UnitStatistics;
 pub use values::{
     Armor, AttackRange, AttackSpeed, DamagePerSecond, DamageRange, EffectiveHitPoints, Evasion,

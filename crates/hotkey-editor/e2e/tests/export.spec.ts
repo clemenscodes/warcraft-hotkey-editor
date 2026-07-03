@@ -10,7 +10,7 @@ test("clicking Download in the dialog triggers a CustomKeys.txt download with ho
 
   const [download] = await Promise.all([
     page.waitForEvent("download"),
-    page.locator(".download-info-actions button", { hasText: "Download" }).click(),
+    page.locator(".info-actions button", { hasText: "Download" }).click(),
   ]);
 
   expect(download.suggestedFilename()).toBe("CustomKeys.txt");

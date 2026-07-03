@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 
-use super::super::alt_state_label::AltStateLabelProps;
-use super::super::alt_state_position_button::AltStatePositionButtonProps;
-use super::super::override_key_cell::OverrideKeyCellProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_label::AltStateLabelProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::AltStatePositionButtonProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCellProps;
 
 /// The upgraded-form block: the position button and hotkey cell for the unit that
 /// shares this button position after an upgrade (e.g. post-Barrage Siege Engine).

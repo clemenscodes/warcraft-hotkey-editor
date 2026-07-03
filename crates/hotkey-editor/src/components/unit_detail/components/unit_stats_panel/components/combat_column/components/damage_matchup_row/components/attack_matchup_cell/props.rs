@@ -1,10 +1,9 @@
-use crate::components::unit_detail::components::unit_stats_panel::components::matchup_cell::{
+use crate::components::unit_detail::components::unit_stats_panel::components::shared::matchup_cell::{
     MatchupCellProps, MatchupStrength,
 };
 use dioxus::prelude::*;
-use num_traits::cast::cast;
 use warcraft_api::{AttackType, DefenseType};
-use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
+use warcraft_keybinds::Matchup;
 
 /// One cell of an attacker's damage matchup: how the attack fares against a defense.
 #[derive(Props, Clone, PartialEq)]
@@ -15,19 +14,15 @@ pub struct AttackMatchupCellProps {
 
 impl From<&AttackMatchupCellProps> for MatchupCellProps {
     fn from(props: &AttackMatchupCellProps) -> Self {
-        let effectiveness = WARCRAFT_GAMEPLAY_CONSTANTS.damage_effectiveness(props.attack_type);
-        let multiplier = effectiveness.against(props.defense_type);
-        let percent_int: i32 = cast::<f32, i32>((multiplier * 100.0).round()).unwrap_or(0);
-        let value = format!("{percent_int}%");
-        let label = props.defense_type.to_string();
+        let attack_type = props.attack_type;
+        let defense_type = props.defense_type;
+        let matchup = Matchup::resolve(attack_type, defense_type);
+        let percent = matchup.multiplier() * 100.0;
+        let value = format!("{percent:.0}%");
+        let label = defense_type.to_string();
         let title = format!("vs {label}");
-        let strength = if multiplier > 1.05 {
-            MatchupStrength::Strong
-        } else if multiplier < 0.95 {
-            MatchupStrength::Weak
-        } else {
-            MatchupStrength::Neutral
-        };
+        let attacker_strength = matchup.strength();
+        let strength = MatchupStrength::from(attacker_strength);
         Self {
             label,
             value,

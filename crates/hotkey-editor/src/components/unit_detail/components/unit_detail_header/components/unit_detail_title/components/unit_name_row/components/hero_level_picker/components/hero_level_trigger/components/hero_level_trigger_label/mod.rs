@@ -1,3 +1,4 @@
+mod data;
 mod style;
 
 use crate::assert_component;
@@ -11,7 +12,7 @@ pub fn HeroLevelTriggerLabel() -> Element {
     rsx! {
         span {
             class: CLASS,
-            "Level"
+            {data::LABEL}
         }
     }
 }

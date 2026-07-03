@@ -1,3 +1,4 @@
+mod data;
 mod props;
 mod style;
 
@@ -11,7 +12,13 @@ assert_component!(ApplyButton);
 #[component]
 pub fn ApplyButton(props: ApplyButtonProps) -> Element {
     let onclick = props.on_apply;
+    let label = data::LABEL;
     rsx! {
-        button { class: CLASS, r#type: "button", onclick, "Apply grid to all hotkeys" }
+        button {
+            class: CLASS,
+            r#type: "button",
+            onclick,
+            {label}
+        }
     }
 }

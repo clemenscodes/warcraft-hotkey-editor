@@ -29,7 +29,7 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
         RowMeta {
             HotkeyUnitName { text: model.name }
             ConflictObjectId { text: model.unit_id_label }
-            CollisionCount { text: model.count_text }
+            CollisionCount { count: model.count }
         }
     };
     let cards = rsx! {

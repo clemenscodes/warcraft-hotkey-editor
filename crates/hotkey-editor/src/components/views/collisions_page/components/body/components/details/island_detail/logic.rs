@@ -7,7 +7,7 @@ use warcraft_keybinds::GridCoordinate;
 /// The selected island's header coordinate and its per-unit conflict cards.
 pub(super) struct IslandDetailModel {
     pub(super) coordinate: GridCoordinate,
-    pub(super) count_text: String,
+    pub(super) count: usize,
     pub(super) cards: Vec<IslandConflictCardProps>,
 }
 
@@ -26,12 +26,6 @@ pub(super) fn selected(
         .clone();
     let coordinate = island.coordinate();
     let collision_count = island.collision_count();
-    let noun = if collision_count == 1 {
-        "collision"
-    } else {
-        "collisions"
-    };
-    let count_text = format!("{collision_count} {noun}");
     let cards = island
         .conflicts()
         .iter()
@@ -43,7 +37,7 @@ pub(super) fn selected(
         .collect();
     Some(IslandDetailModel {
         coordinate,
-        count_text,
+        count: collision_count,
         cards,
     })
 }

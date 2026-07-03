@@ -1,7 +1,8 @@
+pub mod components;
 mod style;
 
 use crate::assert_component;
-use crate::components::actions::grid_layout_button::GridLayoutButton;
+use components::grid_layout_button::GridLayoutButton;
 use dioxus::prelude::*;
 use style::CLASS;
 assert_component!(HeaderLayoutSlot);

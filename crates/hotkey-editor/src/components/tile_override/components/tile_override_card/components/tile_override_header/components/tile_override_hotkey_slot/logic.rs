@@ -1,6 +1,6 @@
 use super::components::tile_override_info_only::TileOverrideInfoOnlyProps;
 use super::props::TileOverrideHotkeySlotProps;
-use crate::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCellProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCellProps;
 
 /// Which of the three mutually-exclusive slot contents applies: the hotkey cell,
 /// the research-hotkey cell, the passive note, or nothing.

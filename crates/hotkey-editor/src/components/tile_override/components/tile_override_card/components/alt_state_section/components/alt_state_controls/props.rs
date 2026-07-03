@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
-use crate::components::tile_override::components::tile_override_card::components::alt_state_position_button::AltStatePositionButtonProps;
-use crate::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCellProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::AltStatePositionButtonProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCellProps;
 
 /// The editable controls of the off-state block: whether they show at all, plus the
 /// off-state hotkey data and the two handlers.

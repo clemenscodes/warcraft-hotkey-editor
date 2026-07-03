@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::help_dialog::components::help_section_title::HelpSectionTitle;
+use crate::components::dialogs::help_dialog::components::help_body::components::shared::help_section_title::HelpSectionTitle;
 use components::help_glossary_columns::{HelpGlossaryColumns, HelpGlossaryColumnsProps};
 use components::help_resolver_prose::{HelpResolverProse, HelpResolverProseProps};
 use dioxus::prelude::*;

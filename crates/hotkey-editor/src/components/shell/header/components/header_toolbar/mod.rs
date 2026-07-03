@@ -1,16 +1,17 @@
+pub mod components;
 mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::actions::export_button::ExportButton;
-use crate::components::actions::help_button::HelpButton;
-use crate::components::actions::preview_button::PreviewButton;
-use crate::components::actions::redo_button::RedoButton;
-use crate::components::actions::resolve_button::ResolveButton;
-use crate::components::actions::system_hotkeys_button::SystemHotkeysButton;
-use crate::components::actions::templates_button::TemplatesButton;
-use crate::components::actions::undo_button::UndoButton;
-use crate::components::actions::upload_button::UploadButton;
+use components::export_button::ExportButton;
+use components::help_button::HelpButton;
+use components::preview_button::PreviewButton;
+use components::redo_button::RedoButton;
+use components::resolve_button::ResolveButton;
+use components::system_hotkeys_button::SystemHotkeysButton;
+use components::templates_button::TemplatesButton;
+use components::undo_button::UndoButton;
+use components::upload_button::UploadButton;
 use dioxus::prelude::*;
 pub use props::HeaderToolbarProps;
 use style::CLASS;

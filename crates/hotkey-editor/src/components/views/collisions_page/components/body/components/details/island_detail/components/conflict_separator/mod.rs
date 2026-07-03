@@ -1,3 +1,4 @@
+mod data;
 mod style;
 use crate::assert_component;
 use dioxus::prelude::*;
@@ -8,6 +9,10 @@ assert_component!(ConflictSeparator);
 #[component]
 pub fn ConflictSeparator() -> Element {
     rsx! {
-        span { class: CLASS, aria_hidden: "true", "\u{2715}" }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            {data::SEPARATOR}
+        }
     }
 }

@@ -8,7 +8,7 @@ pub(super) struct UnitPositionDetailModel {
     pub(super) unit: HotkeyDetailUnitProps,
     pub(super) name: String,
     pub(super) unit_id_label: String,
-    pub(super) count_text: String,
+    pub(super) count: usize,
     pub(super) cards: Vec<UnitPositionConflictCardProps>,
 }
 
@@ -36,12 +36,6 @@ pub(super) fn selected(props: &UnitPositionDetailProps) -> Option<UnitPositionDe
         name: name.clone(),
     };
     let collision_count = unit_view.collision_count();
-    let noun = if collision_count == 1 {
-        "collision"
-    } else {
-        "collisions"
-    };
-    let count_text = format!("{collision_count} {noun}");
     let cards = unit_view
         .conflicts()
         .iter()
@@ -55,7 +49,7 @@ pub(super) fn selected(props: &UnitPositionDetailProps) -> Option<UnitPositionDe
         unit: unit_button,
         name,
         unit_id_label,
-        count_text,
+        count: collision_count,
         cards,
     })
 }

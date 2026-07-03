@@ -1,4 +1,5 @@
 pub mod components;
+mod data;
 mod logic;
 mod props;
 
@@ -13,7 +14,7 @@ pub use props::UnitTileOverrideProps;
 pub fn UnitTileOverride(props: UnitTileOverrideProps) -> Element {
     if props.detail.is_none() {
         let empty = TileOverrideEmptyProps {
-            message: "Select a tile in the grid to override its hotkey.".to_string(),
+            message: data::EMPTY_PROMPT.to_string(),
         };
         return rsx! {
             TileOverrideEmpty { ..empty }

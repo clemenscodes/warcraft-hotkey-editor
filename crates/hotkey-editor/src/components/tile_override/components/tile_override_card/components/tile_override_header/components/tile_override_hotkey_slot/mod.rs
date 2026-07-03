@@ -4,7 +4,7 @@ mod props;
 
 use dioxus::prelude::*;
 
-use crate::components::tile_override::components::tile_override_card::components::override_key_cell::OverrideKeyCell;
+use crate::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCell;
 use components::tile_override_info_only::TileOverrideInfoOnly;
 use logic::TileOverrideHotkeySlotDispatch;
 

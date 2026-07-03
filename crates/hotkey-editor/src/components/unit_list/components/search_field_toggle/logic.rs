@@ -1,4 +1,5 @@
 use super::components::search_field_button::SearchFieldButtonProps;
+use super::data;
 use super::props::SearchFieldToggleProps;
 use dioxus::prelude::*;
 use warcraft_database::SearchField;
@@ -21,12 +22,12 @@ impl From<&SearchFieldToggleProps> for SearchFieldToggleModel {
             search_field.set(SearchField::Ability);
         });
         let unit_button = SearchFieldButtonProps {
-            label: "Unit",
+            label: data::UNIT,
             is_active: current == SearchField::UnitName,
             on_select: select_unit,
         };
         let ability_button = SearchFieldButtonProps {
-            label: "Ability",
+            label: data::ABILITY,
             is_active: current == SearchField::Ability,
             on_select: select_ability,
         };

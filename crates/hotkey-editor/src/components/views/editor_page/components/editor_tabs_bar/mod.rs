@@ -1,8 +1,9 @@
+pub mod components;
 mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::tabs::mode_and_race_tabs::{ModeAndRaceTabs, ModeAndRaceTabsProps};
+use crate::components::views::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::{ModeAndRaceTabs, ModeAndRaceTabsProps};
 use dioxus::prelude::*;
 pub use props::EditorTabsBarProps;
 use style::CLASS;

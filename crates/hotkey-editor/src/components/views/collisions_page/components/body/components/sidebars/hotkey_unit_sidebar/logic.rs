@@ -1,14 +1,9 @@
-use crate::components::views::collisions_page::components::body::components::shared::collision_count::CollisionCount;
-use crate::components::views::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use crate::components::views::collisions_page::components::body::components::shared::hotkey_unit_name::HotkeyUnitName;
-use crate::components::views::collisions_page::components::body::components::sidebars::shared::hotkey_unit_row_icon::{HotkeyUnitRowIcon, HotkeyUnitRowIconProps};
-use crate::components::views::collisions_page::components::body::components::shared::row_meta::RowMeta;
-use super::super::sidebar::components::collision_card::CollisionCardProps;
 use super::props::HotkeyUnitSidebarProps;
+use crate::components::views::collisions_page::components::body::components::sidebars::shared::unit_card::UnitCardProps;
 use dioxus::prelude::*;
 
-/// One finished card per clashing unit: its portrait, name, id, and clash count.
-pub(super) fn cards(props: &HotkeyUnitSidebarProps) -> Vec<CollisionCardProps> {
+/// One card's data per clashing unit: its portrait, name, id, and clash count.
+pub(super) fn cards(props: &HotkeyUnitSidebarProps) -> Vec<UnitCardProps> {
     let mut selected_unit = props.selected_unit;
     let selected_key = selected_unit.read().clone();
     props
@@ -20,37 +15,20 @@ pub(super) fn cards(props: &HotkeyUnitSidebarProps) -> Vec<CollisionCardProps> {
             let unit = unit_view.unit();
             let icon_url = unit.icon_url().map(str::to_owned);
             let name = unit.name().to_owned();
-            let unit_id_label = unit.unit_id().to_owned();
+            let unit_id = unit.unit_id().to_owned();
             let collision_count = unit_view.collision_count();
-            let noun = if collision_count == 1 {
-                "collision"
-            } else {
-                "collisions"
-            };
-            let count_text = format!("{collision_count} {noun}");
             let key_for_click = collision_key.clone();
             let onclick = EventHandler::new(move |_event: MouseEvent| {
                 selected_unit.set(Some(key_for_click.clone()))
             });
-            let icon = icon_url.map(|src| HotkeyUnitRowIconProps {
-                src,
-                alt: name.clone(),
-            });
-            let children = rsx! {
-                if let Some(icon) = icon {
-                    HotkeyUnitRowIcon { ..icon }
-                }
-                RowMeta {
-                    HotkeyUnitName { text: name }
-                    ConflictObjectId { text: unit_id_label }
-                    CollisionCount { text: count_text }
-                }
-            };
-            CollisionCardProps {
+            UnitCardProps {
                 is_selected,
                 collision_key,
                 onclick,
-                children,
+                icon_url,
+                name,
+                unit_id,
+                count: collision_count,
             }
         })
         .collect()

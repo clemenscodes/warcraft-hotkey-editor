@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::help_dialog::components::help_section_title::HelpSectionTitle;
+use crate::components::dialogs::help_dialog::components::help_body::components::shared::help_section_title::HelpSectionTitle;
 use components::help_callout::{HelpCallout, HelpCalloutProps};
 use dioxus::prelude::*;
 pub use props::HelpWorkflowSectionProps;

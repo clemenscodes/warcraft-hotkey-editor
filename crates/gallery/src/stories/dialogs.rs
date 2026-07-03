@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::dialogs::dialog::components::dialog_header::DialogHeader;
-use hotkey_editor::components::dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::components::dialogs::help_dialog::HelpDialog;
+use hotkey_editor::components::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 
 use hotkey_editor::components::dialogs::key_picker::{
@@ -13,7 +13,7 @@ use hotkey_editor::components::dialogs::layout_editor::LayoutEditor;
 use hotkey_editor::components::dialogs::preview_dialog::PreviewDialog;
 use hotkey_editor::components::dialogs::templates_dialog::TemplatesDialog;
 use hotkey_editor::components::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
-use hotkey_editor::components::dialogs::upload_info_dialog::UploadInfoDialog;
+use hotkey_editor::components::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
 use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
 use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::{

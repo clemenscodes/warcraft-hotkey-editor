@@ -2,22 +2,22 @@ use std::collections::HashMap;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_drag_overlay::InventoryDragOverlay;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_breadcrumbs::SystemHotkeysBreadcrumbs;
 use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_breadcrumbs::components::system_hotkeys_breadcrumbs_menu::components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_hotkeys_view::InventoryHotkeysView;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
 
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::inventory_grid::{
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     InventoryCell, InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
 
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::key_capture_cell::KeyCaptureCell;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::SystemHotkeysListView;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
-use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::slot_button::SlotButton;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture_cell::KeyCaptureCell;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::SystemHotkeysListView;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
+use hotkey_editor::components::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
 use warcraft_database::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap};
 

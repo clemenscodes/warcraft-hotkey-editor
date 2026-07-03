@@ -1,7 +1,7 @@
 mod logic;
 mod props;
 
-use super::sidebar::components::collision_card::CollisionCard;
+use super::shared::unit_card::UnitCard;
 use super::sidebar::components::collision_list_scroll::CollisionScroll;
 use super::sidebar::{Sidebar, SidebarProps};
 use dioxus::prelude::*;
@@ -15,7 +15,7 @@ pub fn HotkeyUnitSidebar(props: HotkeyUnitSidebarProps) -> Element {
     let cards = cards(&props);
     let children = rsx! {
         for card in cards {
-            CollisionCard { ..card }
+            UnitCard { ..card }
         }
     };
     let kind = CollisionScroll;

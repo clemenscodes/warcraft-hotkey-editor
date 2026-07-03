@@ -4,10 +4,12 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::dialogs::download_info_dialog::{
+use crate::components::dialogs::info_dialogs::download_info_dialog::{
     DownloadInfoDialog, DownloadInfoDialogProps,
 };
-use crate::components::dialogs::upload_info_dialog::{UploadInfoDialog, UploadInfoDialogProps};
+use crate::components::dialogs::info_dialogs::upload_info_dialog::{
+    UploadInfoDialog, UploadInfoDialogProps,
+};
 use components::burger_backdrop::{BurgerBackdrop, BurgerBackdropProps};
 use components::burger_drawer::BurgerDrawer;
 use components::burger_toggle_icon::BurgerToggleIcon;

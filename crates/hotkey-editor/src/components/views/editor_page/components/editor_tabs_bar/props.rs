@@ -1,4 +1,4 @@
-use crate::components::tabs::mode_and_race_tabs::ModeAndRaceTabsProps;
+use crate::components::views::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::ModeAndRaceTabsProps;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;

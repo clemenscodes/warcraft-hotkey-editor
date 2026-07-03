@@ -3,10 +3,10 @@ mod props;
 
 use dioxus::prelude::*;
 
-use super::alt_state_container::AltStateContainer;
-use super::alt_state_header::AltStateHeader;
-use super::alt_state_header_text::AltStateHeaderText;
-use super::alt_state_label::{AltStateLabel, AltStateLabelProps};
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_container::AltStateContainer;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_header::AltStateHeader;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_header_text::AltStateHeaderText;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_label::{AltStateLabel, AltStateLabelProps};
 use components::alt_state_controls::{AltStateControls, AltStateControlsProps};
 use components::alt_state_line::AltStateLine;
 

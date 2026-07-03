@@ -2,11 +2,11 @@ mod props;
 
 use dioxus::prelude::*;
 
-use crate::components::tile_override::components::tile_override_card::components::alt_state_position_button::{
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::{
     AltStatePositionButton, AltStatePositionButtonProps,
 };
 
-use crate::components::tile_override::components::tile_override_card::components::override_key_cell::{
+use crate::components::tile_override::components::tile_override_card::components::shared::override_key_cell::{
     OverrideKeyCell, OverrideKeyCellProps,
 };
 

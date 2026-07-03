@@ -1,11 +1,6 @@
 pub mod ability_description;
-pub mod alt_state_container;
-pub mod alt_state_header;
-pub mod alt_state_header_text;
-pub mod alt_state_label;
-pub mod alt_state_position_button;
 pub mod alt_state_section;
-pub mod override_key_cell;
+pub mod shared;
 pub mod tile_override_header;
 pub mod upgrade_section;
 pub mod upgrade_tier;

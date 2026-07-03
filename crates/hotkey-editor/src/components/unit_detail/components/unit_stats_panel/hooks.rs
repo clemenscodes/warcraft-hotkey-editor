@@ -1,37 +1,22 @@
 use super::components::attributes_column::AttributesColumnProps;
 use super::components::combat_column::CombatColumnProps;
-use super::components::shared::stat_icon_frame::StatIconFrameProps;
-use super::components::shared::stat_row::StatRowProps;
-use super::kinds::{
-    ArmorKind, DefenseTypeKind, EffectiveHitPointsKind, HitPointsKind, HitPointsRegenKind,
-    ManaKind, ManaRegenKind,
-};
+use super::components::defense_column::DefenseColumnProps;
+use super::components::vitality_column::VitalityColumnProps;
 use super::props::UnitStatsPanelProps;
-use super::stat_icon::StatIcon;
-use warcraft_api::DefenseType;
-use warcraft_keybinds::{Evasion, UnitStatistics};
+use warcraft_keybinds::UnitStatistics;
 
-/// Every child's finished props for the stats panel: the vitality and defense rows the
-/// panel renders inline, the defense icon and matchup inputs, and the two guarded
-/// columns. The panel body destructures this and only places it.
+/// Every child column's finished props for the stats panel. The panel body
+/// destructures this and only places the four columns.
 pub(super) struct UnitStatsPanelModel {
-    pub(super) hit_points_row: StatRowProps<HitPointsKind>,
-    pub(super) hit_points_regen_row: StatRowProps<HitPointsRegenKind>,
-    pub(super) mana_row: StatRowProps<ManaKind>,
-    pub(super) mana_regen_row: StatRowProps<ManaRegenKind>,
-    pub(super) armor_row: StatRowProps<ArmorKind>,
-    pub(super) defense_type_row: StatRowProps<DefenseTypeKind>,
-    pub(super) effective_hit_points_row: StatRowProps<EffectiveHitPointsKind>,
-    pub(super) evasion: Evasion,
-    pub(super) defense_type: DefenseType,
-    pub(super) defense_icon: StatIconFrameProps,
+    pub(super) vitality: VitalityColumnProps,
     pub(super) combat: CombatColumnProps,
+    pub(super) defense: DefenseColumnProps,
     pub(super) attributes: AttributesColumnProps,
 }
 
 /// Resolves every stat figure through the domain's [`UnitStatistics::compute`], then
-/// shapes each child's props. All the arithmetic lives in the domain; this only reads
-/// the resolved figures and wraps them into row props.
+/// shapes each column's props. All the arithmetic lives in the domain; this only reads
+/// the resolved figures and wraps them into column props.
 pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelProps) -> UnitStatsPanelModel {
     let unit_combat = props.combat;
     let hero_attributes = props.hero_attributes;
@@ -60,41 +45,24 @@ pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelProps) -> UnitStatsPane
     let resolved_evasion = statistics.evasion();
     let attack = statistics.attack();
     let hero = statistics.hero();
-    let hit_points_row = StatRowProps::<HitPointsKind> { value: hit_points };
-    let hit_points_regen_row = StatRowProps::<HitPointsRegenKind> {
-        value: hit_points_regen,
-    };
-    let mana_row = StatRowProps::<ManaKind> { value: mana };
-    let mana_regen_row = StatRowProps::<ManaRegenKind> { value: mana_regen };
-    let armor_row = StatRowProps::<ArmorKind> { value: armor };
-    let defense_type_row = StatRowProps::<DefenseTypeKind> {
-        value: defense_type,
-    };
-    let effective_hit_points_row = StatRowProps::<EffectiveHitPointsKind> {
-        value: effective_hit_points,
-    };
-    let defense_icon_kind = StatIcon::from(defense_type);
-    let defense_icon_source = defense_icon_kind.asset();
-    let defense_label = defense_type.to_string();
-    let defense_icon_alt = format!("{defense_label} defense icon");
-    let defense_icon = StatIconFrameProps {
-        src: defense_icon_source,
-        alt: defense_icon_alt,
+    let vitality = VitalityColumnProps {
+        hit_points,
+        hit_points_regen,
+        mana,
+        mana_regen,
     };
     let combat = CombatColumnProps { attack };
+    let defense = DefenseColumnProps {
+        armor,
+        defense_type,
+        effective_hit_points,
+        evasion: resolved_evasion,
+    };
     let attributes = AttributesColumnProps { hero };
     UnitStatsPanelModel {
-        hit_points_row,
-        hit_points_regen_row,
-        mana_row,
-        mana_regen_row,
-        armor_row,
-        defense_type_row,
-        effective_hit_points_row,
-        evasion: resolved_evasion,
-        defense_type,
-        defense_icon,
+        vitality,
         combat,
+        defense,
         attributes,
     }
 }

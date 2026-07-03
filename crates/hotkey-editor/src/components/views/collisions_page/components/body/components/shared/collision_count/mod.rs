@@ -1,3 +1,4 @@
+mod data;
 mod props;
 mod style;
 
@@ -10,11 +11,16 @@ assert_component!(CollisionCount);
 /// The collision-count line on a collision card.
 #[component]
 pub fn CollisionCount(props: CollisionCountProps) -> Element {
-    let text = props.text;
+    let count = props.count;
+    let noun = if count == 1 {
+        data::SINGULAR
+    } else {
+        data::PLURAL
+    };
     rsx! {
         span {
             class: CLASS,
-            {text}
+            "{count} {noun}"
         }
     }
 }

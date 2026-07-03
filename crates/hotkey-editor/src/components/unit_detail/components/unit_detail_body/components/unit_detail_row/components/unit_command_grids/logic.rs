@@ -1,3 +1,4 @@
+use super::data;
 use super::props::UnitCommandGridsProps;
 use crate::components::grid_editors::grid_editor::GridEditorConfig;
 use std::rc::Rc;
@@ -14,19 +15,19 @@ pub(super) struct UnitCommandGridsModel {
 
 impl From<&UnitCommandGridsProps> for UnitCommandGridsModel {
     fn from(props: &UnitCommandGridsProps) -> Self {
-        let command_card = config(props, "Command card", props.command_card_slots.clone());
+        let command_card = config(props, data::COMMAND_CARD, props.command_card_slots.clone());
         let build_menu = props
             .build_menu_slots
             .clone()
-            .map(|ids| config(props, "Build menu", ids));
+            .map(|ids| config(props, data::BUILD_MENU, ids));
         let uprooted = props
             .uprooted_menu_slots
             .clone()
-            .map(|ids| config(props, "Uprooted", ids));
+            .map(|ids| config(props, data::UPROOTED, ids));
         let research = props
             .research_menu_slots
             .clone()
-            .map(|ids| config(props, "Research menu", ids));
+            .map(|ids| config(props, data::RESEARCH_MENU, ids));
         Self {
             command_card,
             build_menu,

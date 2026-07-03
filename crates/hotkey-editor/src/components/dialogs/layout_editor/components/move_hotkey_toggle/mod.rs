@@ -1,4 +1,5 @@
 pub mod components;
+mod data;
 mod props;
 mod style;
 
@@ -15,10 +16,12 @@ assert_component!(MoveHotkeyToggle);
 pub fn MoveHotkeyToggle(props: MoveHotkeyToggleProps) -> Element {
     let checked = props.checked;
     let on_toggle = props.on_toggle;
+    let label = data::LABEL;
     rsx! {
-        label { class: CLASS,
+        label {
+            class: CLASS,
             MoveHotkeyCheckbox { checked, on_toggle }
-            "Update hotkeys when moving abilities"
+            {label}
         }
     }
 }

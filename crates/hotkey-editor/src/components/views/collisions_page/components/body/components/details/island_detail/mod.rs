@@ -36,7 +36,7 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
         MiniGrid { ..mini_grid }
         RowMeta {
             Coordinate { coordinate }
-            CollisionCount { text: model.count_text }
+            CollisionCount { count: model.count }
         }
     };
     let cards = rsx! {

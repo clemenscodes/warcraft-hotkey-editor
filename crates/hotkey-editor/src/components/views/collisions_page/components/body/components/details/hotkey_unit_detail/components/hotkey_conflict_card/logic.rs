@@ -11,6 +11,13 @@ pub(super) struct HotkeyConflictCardModel {
     pub(super) multi_stack: HotkeyMultiStackProps,
 }
 
+/// Which of the two clash presentations the card uses: an exact pair (two
+/// abilities) or a multi-stack (any other count). Exactly one field is populated.
+struct ClashLayout {
+    pair: Option<AbilityPair>,
+    multi: Vec<ConflictAbilityProps>,
+}
+
 impl From<&HotkeyConflictCardProps> for HotkeyConflictCardModel {
     fn from(props: &HotkeyConflictCardProps) -> Self {
         let hotkey_label = props.conflict.hotkey_label().to_owned();
@@ -27,21 +34,27 @@ impl From<&HotkeyConflictCardProps> for HotkeyConflictCardModel {
                 view_navigation: props.view_navigation,
             })
             .collect();
-        let (pair, multi) = if abilities.len() == 2 {
-            let mut iter = abilities.into_iter();
-            let left = iter.next().expect("checked len == 2");
-            let right = iter.next().expect("checked len == 2");
+        let clash = if abilities.len() == 2 {
+            let mut ability_iter = abilities.into_iter();
+            let left = ability_iter.next().expect("checked len == 2");
+            let right = ability_iter.next().expect("checked len == 2");
             let pair = AbilityPair { left, right };
-            (Some(pair), Vec::new())
+            ClashLayout {
+                pair: Some(pair),
+                multi: Vec::new(),
+            }
         } else {
-            (None, abilities)
+            ClashLayout {
+                pair: None,
+                multi: abilities,
+            }
         };
         let pair_row = HotkeyPairRowProps {
-            pair,
+            pair: clash.pair,
             hotkey_label: hotkey_label.clone(),
         };
         let multi_stack = HotkeyMultiStackProps {
-            abilities: multi,
+            abilities: clash.multi,
             hotkey_label,
         };
         Self {

@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::tabs::mode_and_race_tabs::ModeAndRaceTabs;
-use hotkey_editor::components::tabs::mode_and_race_tabs::components::race_tabs::RaceTabs;
-use hotkey_editor::components::tabs::mode_and_race_tabs::components::race_tabs::components::race_tab::RaceTab;
+use hotkey_editor::components::views::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::ModeAndRaceTabs;
+use hotkey_editor::components::views::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::RaceTabs;
+use hotkey_editor::components::views::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::components::race_tab::RaceTab;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::GridSlotId;

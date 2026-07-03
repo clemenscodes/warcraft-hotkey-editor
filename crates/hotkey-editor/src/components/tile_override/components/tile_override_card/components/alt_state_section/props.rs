@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use super::components::alt_state_controls::AltStateControlsProps;
-use crate::components::tile_override::components::tile_override_card::components::alt_state_label::AltStateLabelProps;
+use crate::components::tile_override::components::tile_override_card::components::shared::alt_state_label::AltStateLabelProps;
 
 /// The off-state block of a toggle ability: its name, description lines, and (when
 /// editable) the position button and off-state hotkey cell.

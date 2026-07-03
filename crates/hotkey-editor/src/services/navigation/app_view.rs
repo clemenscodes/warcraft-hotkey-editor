@@ -76,8 +76,10 @@ impl CollisionKind {
         }
     }
 
+    /// The kind's canonical slug, used both as the URL `kind` query parameter and as
+    /// the `data-breadcrumb` selection attribute on its breadcrumb tab.
     #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
-    fn kind_param(self) -> &'static str {
+    pub(crate) fn kind_param(self) -> &'static str {
         match self {
             Self::Positions => "positions",
             Self::UnitPositions => "unit-positions",
