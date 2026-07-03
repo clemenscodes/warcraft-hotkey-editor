@@ -1,29 +1,26 @@
 pub mod components;
-mod hooks;
-mod props;
 mod style;
 
 use crate::assert_component;
-use components::header_actions::HeaderActions;
-use components::header_brand::HeaderBrand;
-use components::header_layout_slot::HeaderLayoutSlot;
+use components::brand::Brand;
+use components::grid_layout_button_host::GridLayoutButtonHost;
+use components::toolbar::Toolbar;
 use dioxus::prelude::*;
-use hooks::{HeaderView, use_header};
-pub use props::HeaderProps;
 use style::CLASS;
 assert_component!(Header);
 
-/// The app's top chrome: brand on the left, the global grid-layout button
-/// centered, and the action cluster on the right. It switches between a compact
-/// (burger) layout below 1280px and the full three-column layout at and above it.
+/// The app's top chrome: the brand on the left, the global grid-layout button
+/// centered, and the toolbar on the right. Below 1280px the centered button hides
+/// and the layout collapses to brand-left, toolbar-right. Pure layout — it wires
+/// nothing and threads nothing; every child sources its own state.
 #[component]
-pub fn Header(props: HeaderProps) -> Element {
-    let HeaderView { brand, actions } = use_header(&props);
+pub fn Header() -> Element {
     rsx! {
-        header { class: CLASS,
-            HeaderBrand { ..brand }
-            HeaderLayoutSlot {}
-            HeaderActions { ..actions }
+        header { 
+            class: CLASS,
+            Brand {}
+            GridLayoutButtonHost {}
+            Toolbar {}
         }
     }
 }

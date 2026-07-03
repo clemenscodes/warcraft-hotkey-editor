@@ -3,10 +3,11 @@ use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::shell::footer::Footer;
 use hotkey_editor::components::shell::header::Header;
-use hotkey_editor::components::shell::header::components::header_actions::components::burger_menu::BurgerMenu;
-use hotkey_editor::components::shell::header::components::header_brand::HeaderBrand;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::HeaderToolbar;
+use hotkey_editor::components::shell::header::components::brand::Brand;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::ToolbarActions;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::burger_menu::BurgerMenu;
 use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::services::customkeys::service::CustomKeysService;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::services::navigation::app_view::AppView;
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
@@ -28,13 +29,31 @@ fn provide_overlay_state() {
     use_context_provider(|| overlay);
 }
 
+/// Provides the navigation context the header's brand, collisions, and burger read
+/// from context, so those components can be shown in isolation.
+fn provide_navigation() {
+    let current_view = use_signal(|| AppView::Editor);
+    let active_race = use_signal(|| Race::Human);
+    let unit_mode = use_signal(|| UnitMode::Melee);
+    let selected_unit_id = use_signal(|| None::<String>);
+    let search_query = use_signal(String::new);
+    let navigation = ViewNavigationContext {
+        current_view,
+        active_race,
+        unit_mode,
+        selected_unit_id,
+        search_query,
+    };
+    use_context_provider(|| navigation);
+}
+
 pub fn stories() -> Vec<Story> {
     vec![
         Story::single("Shell", "Footer", footer_default),
         Story::single("Shell", "ToastMount", toast_mount_with_child),
-        Story::single("Shell", "HeaderBrand", header_brand_default),
+        Story::single("Shell", "Brand", brand_default),
         Story::single("Shell", "BurgerMenu", burger_menu_default),
-        Story::single("Shell", "HeaderToolbar", header_toolbar_default),
+        Story::single("Shell", "ToolbarActions", toolbar_actions_default),
         Story::single("Shell", "Header", header_default),
     ]
 }
@@ -53,72 +72,41 @@ fn toast_mount_with_child() -> Element {
     }
 }
 
-fn header_brand_default() -> Element {
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    let onclick = EventHandler::new(move |_event: MouseEvent| navigation.apply(AppView::Editor));
+fn brand_default() -> Element {
+    provide_navigation();
     rsx! {
-        HeaderBrand { onclick }
+        Brand {}
     }
 }
 
 fn burger_menu_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
     use_context_provider(|| undo);
-    use_context_provider(|| navigation);
+    provide_navigation();
     provide_overlay_state();
     rsx! {
-        BurgerMenu { loaded_keys }
+        BurgerMenu {}
     }
 }
 
-fn header_toolbar_default() -> Element {
+fn toolbar_actions_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
+    use_context_provider(|| upload_status);
     use_context_provider(|| undo);
-    use_context_provider(|| navigation);
+    provide_navigation();
     provide_overlay_state();
     rsx! {
         ToastMount {
-            HeaderToolbar { loaded_keys, upload_status }
+            ToolbarActions {}
         }
     }
 }
@@ -127,25 +115,17 @@ fn header_default() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let grid_layout = use_signal(fixtures::sample_grid_layout);
     let upload_status = use_signal(|| UploadStatus::Idle);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
     let undo = UndoHistory::use_history(loaded_keys, grid_layout);
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
+    use_context_provider(|| grid_layout);
+    use_context_provider(|| upload_status);
     use_context_provider(|| undo);
-    use_context_provider(|| navigation);
+    provide_navigation();
     provide_overlay_state();
     rsx! {
         ToastMount {
-            Header { loaded_keys, upload_status, grid_layout }
+            Header {}
         }
     }
 }

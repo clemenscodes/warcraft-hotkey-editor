@@ -10,6 +10,7 @@ use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::HotkeyTarget;
 use warcraft_keybinds::HotkeyToken;
+use warcraft_keybinds::ImportOutcome;
 use warcraft_keybinds::MoveRequest;
 
 use crate::services::customkeys::persistence::CustomKeysPersistence;
@@ -70,6 +71,21 @@ impl CustomKeysService {
 
     pub fn move_slot(&self, request: &MoveRequest<'_>) {
         self.commit(|keys| keys.move_slot(request));
+    }
+
+    /// The sanctioned import command: overlays the uploaded text onto the baseline
+    /// through the domain (rule R7, "imports replace, then normalize"), writes the
+    /// normalized result through to storage, and returns the outcome so the caller
+    /// can report how much was imported. An upload reaches the aggregate only here;
+    /// the renderer never sets the keys signal itself.
+    pub fn import_overlay(&self, overlay_text: &str) -> ImportOutcome {
+        let outcome = CustomKeys::import_overlay(overlay_text);
+        let imported_outcome = outcome.clone();
+        let imported_keys = imported_outcome.into_keys();
+        let repository = self.repository();
+        repository.save(&imported_keys);
+        self.replace(imported_keys);
+        outcome
     }
 }
 

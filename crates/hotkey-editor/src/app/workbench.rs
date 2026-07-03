@@ -104,7 +104,7 @@ pub fn Workbench(
         document::Meta { name: "twitter:card", content: "summary_large_image" }
         ToastMount {
             div { class: app_class, onkeydown: handle_keydown,
-                Header { loaded_keys, upload_status, grid_layout }
+                Header {}
                 match *current_view.read() {
                     AppView::Editor => rsx! {
                         EditorPage {

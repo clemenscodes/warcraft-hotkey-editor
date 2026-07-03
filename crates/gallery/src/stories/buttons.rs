@@ -1,26 +1,24 @@
 use crate::stories::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::export_button_host::components::export_button::ExportButton;
-use hotkey_editor::components::shell::header::components::header_layout_slot::components::grid_layout_button::GridLayoutButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::help_button::HelpButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::preview_button::PreviewButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::redo_button::RedoButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::resolve_button_host::components::resolve_button::ResolveButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::system_hotkeys_button::SystemHotkeysButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::templates_button::TemplatesButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::undo_button::UndoButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::upload_button::UploadButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::shared::toolbar_button::ToolbarButton;
-use hotkey_editor::components::shell::header::components::header_actions::components::collisions_button::CollisionsButton;
+use hotkey_editor::components::shell::header::components::grid_layout_button_host::components::grid_layout_button::GridLayoutButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::collisions_button_host::components::collisions_button::CollisionsButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::export_button_host::components::export_button::ExportButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::help_button::HelpButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::preview_button::PreviewButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::redo_button::RedoButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::resolve_button_host::components::resolve_button::ResolveButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::system_hotkeys_button::SystemHotkeysButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::templates_button::TemplatesButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::undo_button::UndoButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::upload_button::UploadButton;
 use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::services::customkeys::service::CustomKeysService;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
-use hotkey_editor::services::navigation::app_view::AppView;
-use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use hotkey_editor::services::overlay_state::OverlayState;
 use hotkey_editor::services::undo::UndoHistory;
-use warcraft_api::Race;
-use warcraft_database::UnitMode;
+use warcraft_keybinds::CollisionSummary;
 
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
 /// context, so a button can be shown in isolation.
@@ -79,9 +77,9 @@ fn help_button() -> Element {
 }
 
 fn grid_layout_button() -> Element {
-    provide_overlay_state();
+    let onclick = move |_| {};
     rsx! {
-        GridLayoutButton {}
+        GridLayoutButton { is_open: false, onclick }
     }
 }
 
@@ -100,13 +98,15 @@ fn preview_button() -> Element {
 }
 
 fn export_button() -> Element {
+    let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
     let info_open = use_signal(|| false);
     rsx! {
         ExportButton {
             visible: true,
             info_open,
             on_open: move |_| {},
-            on_confirm: move |_| {},
         }
     }
 }
@@ -137,9 +137,12 @@ fn upload_button() -> Element {
         binding_count: 42,
         command_count: 12,
     });
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
+    use_context_provider(|| upload_status);
     rsx! {
         ToastMount {
-            UploadButton { loaded_keys, upload_status }
+            UploadButton {}
         }
     }
 }
@@ -155,22 +158,13 @@ fn resolve_button() -> Element {
 }
 
 fn collisions_button() -> Element {
-    let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    use_context_provider(|| navigation);
+    let keys = fixtures::sample_keys();
+    let layout = fixtures::sample_grid_layout();
+    let summary = CollisionSummary::compute(&keys, layout);
     rsx! {
-        CollisionsButton { loaded_keys, grid_layout }
+        CollisionsButton {
+            summary,
+            onclick: move |_| {},
+        }
     }
 }

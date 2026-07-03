@@ -401,6 +401,12 @@ pub(super) fn use_workbench(params: RouteParams) -> WorkbenchModel {
         templates_dialog_open,
     };
     use_context_provider(|| overlay_state);
+    // The grid layout and upload status are app-wide state the header's action
+    // hosts read for themselves, so the header threads no data props. Provided
+    // last to keep the load-bearing hook order above untouched; other consumers
+    // still receive them as props.
+    use_context_provider(|| grid_layout);
+    use_context_provider(|| upload_status);
     WorkbenchModel {
         loaded_keys,
         grid_layout,
