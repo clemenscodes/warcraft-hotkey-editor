@@ -1,10 +1,11 @@
+pub mod components;
 mod props;
 mod style;
 
-use super::burger_menu::{BurgerMenu, BurgerMenuProps};
-use super::collisions_button::{CollisionsButton, CollisionsButtonProps};
-use super::header_toolbar::{HeaderToolbar, HeaderToolbarProps};
 use crate::assert_component;
+use components::burger_menu::{BurgerMenu, BurgerMenuProps};
+use components::collisions_button::{CollisionsButton, CollisionsButtonProps};
+use components::header_toolbar::{HeaderToolbar, HeaderToolbarProps};
 use dioxus::prelude::*;
 pub use props::HeaderActionsProps;
 use style::CLASS;

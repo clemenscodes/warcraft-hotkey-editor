@@ -1,6 +1,6 @@
 mod style;
 
-use super::header_brand_decoration::HeaderBrandDecoration;
+use super::shared::header_brand_decoration::HeaderBrandDecoration;
 use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;

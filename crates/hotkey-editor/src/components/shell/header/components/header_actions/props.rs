@@ -1,6 +1,6 @@
-use super::super::burger_menu::BurgerMenuProps;
-use super::super::collisions_button::CollisionsButtonProps;
-use super::super::header_toolbar::HeaderToolbarProps;
+use super::components::burger_menu::BurgerMenuProps;
+use super::components::collisions_button::CollisionsButtonProps;
+use super::components::header_toolbar::HeaderToolbarProps;
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use warcraft_keybinds::{CustomKeys, GridLayout};

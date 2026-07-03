@@ -1,18 +1,18 @@
 use crate::stories::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::export_button::ExportButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::export_button_host::components::export_button::ExportButton;
 use hotkey_editor::components::shell::header::components::header_layout_slot::components::grid_layout_button::GridLayoutButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::help_button::HelpButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::preview_button::PreviewButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::redo_button::RedoButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::resolve_button::ResolveButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::system_hotkeys_button::SystemHotkeysButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::templates_button::TemplatesButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::undo_button::UndoButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::upload_button::UploadButton;
-use hotkey_editor::components::shell::header::components::header_toolbar::components::shared::toolbar_button::ToolbarButton;
-use hotkey_editor::components::shell::header::components::collisions_button::CollisionsButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::help_button::HelpButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::preview_button::PreviewButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::redo_button::RedoButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::resolve_button_host::components::resolve_button::ResolveButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::system_hotkeys_button::SystemHotkeysButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::templates_button::TemplatesButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::undo_button::UndoButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::upload_button::UploadButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::header_toolbar::components::shared::toolbar_button::ToolbarButton;
+use hotkey_editor::components::shell::header::components::header_actions::components::collisions_button::CollisionsButton;
 use hotkey_editor::components::shell::toasts::ToastMount;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::services::navigation::app_view::AppView;
@@ -21,7 +21,6 @@ use hotkey_editor::services::overlay_state::OverlayState;
 use hotkey_editor::services::undo::UndoHistory;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
-use warcraft_keybinds::CustomKeys;
 
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
 /// context, so a button can be shown in isolation.
@@ -101,9 +100,14 @@ fn preview_button() -> Element {
 }
 
 fn export_button() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
+    let info_open = use_signal(|| false);
     rsx! {
-        ExportButton { loaded_keys }
+        ExportButton {
+            visible: true,
+            info_open,
+            on_open: move |_| {},
+            on_confirm: move |_| {},
+        }
     }
 }
 
@@ -141,22 +145,12 @@ fn upload_button() -> Element {
 }
 
 fn resolve_button() -> Element {
-    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let current_view = use_signal(|| AppView::Editor);
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
-    let search_query = use_signal(String::new);
-    let navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    use_context_provider(|| navigation);
+    let disabled = false;
     rsx! {
-        ResolveButton { loaded_keys }
+        ResolveButton {
+            disabled,
+            onclick: move |_| {},
+        }
     }
 }
 

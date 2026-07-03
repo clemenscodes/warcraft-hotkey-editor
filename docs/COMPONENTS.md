@@ -34,6 +34,140 @@ Everything the markup needs arrives already shaped through a hook. Anything that
 is not "call a hook" or "place this value in the tree" lives in a sibling file,
 not in the component body.
 
+---
+
+## The render tree IS the directory tree — the law you will be tempted to break
+
+Read this twice. It is the single most-violated rule in this codebase, every
+violation has been caught, and every one has cost real time and trust. It is not
+a style preference. A wrong placement here is a **structural defect**: the change
+gets **reverted, not patched**, and the person who wrote it is asked to do it
+again. Treat a misplaced component the way you would treat a compile error.
+
+State it once, absolutely:
+
+> **If a component renders another component, the rendered component is its child
+> and lives inside its own `components/` directory. There is no other correct
+> location.**
+
+The RSX render tree and the on-disk directory tree are **the same tree** — not
+"similar", not "usually aligned", the *same*. If `A` renders `B` in its RSX, then
+`B` lives at `A/components/B/`. Full stop. This holds at every depth, forever:
+`A` renders `B` renders `C` means `A/components/B/components/C/`.
+
+### The one test that proves a violation — run it on every component you touch
+
+Open the component's `mod.rs`. For each component it renders in RSX, ask: **does
+that component's directory sit under my own `components/`?** If it sits anywhere
+else — a sibling directory, an ancestor, a cousin — **it is a violation and the
+build of trust is broken.**
+
+The mechanical tell, and it is nearly infallible:
+
+> **A `use super::…::TheComponent;` (or `super::super::…`) for a component you
+> then render in RSX is a red flag that PROVES the rule is broken.**
+
+`super::` reaches *out* of your directory. A child you render lives *under* you,
+so you reach it with `use components::…` — never `super::`. So:
+
+- `use super::header_toolbar::HeaderToolbar;` followed by `HeaderToolbar {}` in
+  your RSX ⇒ `header_toolbar/` is misplaced. It is a sibling; it must become your
+  child at `<you>/components/header_toolbar/`. **Move it.**
+- `use components::header_toolbar::HeaderToolbar;` ⇒ correct: it is already your
+  child.
+
+`super::` is legal for exactly two things and nothing else: (1) reaching your own
+sibling *files* — `super::props`, `super::state`, `super::logic`, `super::style`,
+`super::hooks`, `super::data`; and (2) the two exceptions below (a generic base,
+a shared leaf), which are reached by their own explicit paths. `super::` is
+**never** the way to reach an ordinary child you render.
+
+### Worked example — the exact violation this rule exists to kill
+
+Wrong. `HeaderActions` renders three components that sit *beside* it, so its
+`mod.rs` is full of `super::` render imports — each one is the proof of the crime:
+
+```
+header/components/
+  header_actions/     renders CollisionsButton, HeaderToolbar, BurgerMenu
+  collisions_button/  ✗ rendered by HeaderActions → belongs UNDER it
+  header_toolbar/     ✗
+  burger_menu/        ✗
+```
+```rust
+// header_actions/mod.rs — every one of these is a red flag
+use super::collisions_button::CollisionsButton;   // ✗ super:: for a rendered child
+use super::header_toolbar::HeaderToolbar;          // ✗
+use super::burger_menu::BurgerMenu;                // ✗
+```
+
+Right. They nest under the component that renders them; the imports become
+`components::…`:
+
+```
+header/components/
+  header_actions/
+    components/
+      collisions_button/
+      header_toolbar/     (keeps its own components/ subtree)
+      burger_menu/        (keeps its own components/ subtree)
+```
+```rust
+// header_actions/mod.rs
+use components::collisions_button::CollisionsButton;   // ✓
+use components::header_toolbar::HeaderToolbar;          // ✓
+use components::burger_menu::BurgerMenu;                // ✓
+```
+
+The same test bites at every depth. `BurgerDrawer` renders `BurgerDrawerBody` ⇒
+`burger_drawer/components/burger_drawer_body/`, never beside `burger_drawer/`. A
+Host renders its leaf ⇒ the leaf nests under the Host:
+`resolve_button_host/components/resolve_button/`, **never** beside the host. Where
+older prose in this file says "keep the Host *beside* the leaf", that wording is
+wrong and this rule overrides it: the leaf is the Host's child. Nest it.
+
+### The ONLY two escapes — structural, countable, not judgment calls
+
+The default is: a component lives under its single renderer. You may deviate
+**only** if one of these two patterns *exactly* applies. You do not get to invent
+a third, and "it felt like it belonged there" is not one of them.
+
+1. **A leaf rendered by two or more sibling components** lives in a `shared/`
+   grouping directory at their nearest common parent —
+   `parent/components/shared/the_leaf/` — reached by each renderer via its full
+   path. The decision is a pure **count of render sites**, nothing else:
+
+   - rendered by exactly one component → nest it under that one component;
+   - rendered by two or more → `shared/` at their common parent.
+
+   You never flat-dump the leaf beside its renderers, and you never nest a
+   shared leaf under just one of several renderers. (See "Shared leaves".)
+
+2. **A generic base and its variant wrappers** are flat siblings inside one
+   plural group directory (`grid_editors/grid_editor/` beside
+   `grid_editors/command_grid_editor/`), and the variants reach the base with
+   `super::grid_editor::…`. This applies **only** when the wrapper binds the
+   base's generic type parameter, or fills a slot/body the base exposes (the
+   `Dialog` case). It does **not** cover "this wrapper just reuses that leaf" —
+   that is exception 1 if the leaf has several renderers, or plain nesting if it
+   has one. (See "Base and variants are flat".)
+
+If neither pattern fits exactly, there is no exception — nest it. When unsure
+which case you are in, **count the render sites**; that number, never your
+intuition about which component "owns" or "is really" the leaf, decides.
+
+### Why it is absolute
+
+The directory tree is how every reader — and the gallery, and you in six months —
+navigates the render tree without opening a single file. A flat dump erases who
+renders what; a child placed in the wrong subtree silently couples two subtrees
+that must stay independent, and that coupling is exactly how bugs we already fixed
+came back. So this is enforced socially the way the type checker is enforced
+mechanically: **a `super::`-rendered child is a broken build.** Do not ship one,
+do not rationalize one, and do not believe any claim that a header, dialog, or
+toolbar is "100% compliant" until you have run the `super::` test on every
+`mod.rs` yourself.
+
 ## Logic composes through hooks, the way markup composes through components
 
 Domain logic, `localStorage`, and web APIs are reached only through hooks, never
@@ -75,10 +209,14 @@ for `use_custom_keys` itself could not be showcased and could not be varied.
 app needs to feed a leaf the live document, it renders a **connected wrapper** — a
 component that does *nothing* but call the primitive hook(s), shape the result, and
 render the leaf with those props. It owns no markup beyond the single child it wraps.
-Name it `<Leaf>Host` and keep it beside the leaf:
+Name it `<Leaf>Host`. Because the Host renders the leaf, **the leaf is the Host's
+child and nests under it** — `<leaf>_host/components/<leaf>/`, never beside the Host
+(this is "The render tree IS the directory tree" applied; the `super::` test catches
+any slip):
 
 ```rust
 // collisions_button_host/mod.rs — connected: one hook call, shape, render the leaf.
+// The leaf lives at collisions_button_host/components/collisions_button/.
 #[component]
 pub fn CollisionsButtonHost() -> Element {
     let button = use_collisions_button();   // calls use_custom_keys + use_grid_layout, shapes the count
@@ -97,8 +235,10 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
 }
 ```
 
-So the app renders `CollisionsButtonHost`; the gallery renders `CollisionsButton`.
-The hook is called in exactly one place, on behalf of exactly one leaf.
+So the app renders `CollisionsButtonHost`; the gallery renders `CollisionsButton`,
+which lives at `collisions_button_host/components/collisions_button/` because the
+Host renders it. The hook is called in exactly one place, on behalf of exactly one
+leaf.
 
 **The rule this forces: an uninvolved parent threads nothing.** A container that does
 not itself use the document must neither receive it nor forward it. `HeaderActions` is
@@ -114,9 +254,92 @@ Three roles, never merged:
 
 - **presentational leaf** — props in, markup out; no hook, no context. The gallery
   renders this directly.
-- **connected wrapper (`<Leaf>Host`)** — one hook call, shape, render the leaf; no
-  markup of its own. The app renders this.
+- **connected wrapper (`<Leaf>Host`)** — one hook call, shape, render the leaf. The
+  only markup it owns is the single classed container root it wraps the leaf in. The
+  app renders this.
 - **container** — pure layout of children; fetches nothing, threads nothing.
+
+### The Host doubles as the leaf's container
+
+The connected wrapper is not only the *data* seam — it is also the leaf's **layout
+container**. The one piece of markup a Host owns is a single classed root that wraps
+its leaf, and that root is the container: it decides how much space the leaf gets,
+and — when the leaf sizes itself responsively — establishes the container-query
+context the leaf measures against. So a Host, like every component, carries its own
+`style.rs` (`classes!`) and `assert_component!`; its identity class *is* the
+container.
+
+```rust
+// export_button_host/mod.rs — the Host is the seam AND the container.
+#[component]
+pub fn ExportButtonHost() -> Element {
+    let button = use_export_button();        // the seam: shapes the leaf's props
+    rsx! {
+        div {
+            class: CLASS,                    // the container: owns the leaf's space
+            ExportButton { ..button }
+        }
+    }
+}
+```
+
+Because the container owns the space, the leaf never hard-codes a width or a
+breakpoint. The Host's `style.rs` allocates the space per band and, for a leaf that
+scales, marks the root a query container with `[container-type:inline-size]`; the
+leaf then expresses every size in `cqi` (`text-[13cqi]`, `gap-[1.04cqi]`,
+`border-[0.35cqi]`), so it fills whatever the container gives it at every width —
+this is how `headed_grid` scales its whole tile grid off one container width. A leaf
+that is intrinsically fixed (a single icon button) needs no `cqi`: its own root is
+`contents` — a layout-neutral grouping wrapper — and the Host's bands stay empty
+until a leaf needs the space carved up.
+
+**`[container-type:inline-size]` is the container marker; `contents` is not.**
+`contents` is `display: contents`: the element's own box disappears and its children
+lay out as if they were the parent's direct children — a neutral grouping wrapper
+that adds an identity class and nothing else. It establishes no query context. Only
+`[container-type:inline-size]` does. Do not confuse the two: a Host that must size
+its leaf carries `[container-type:inline-size]`, never `contents`.
+
+### A component owns its look; its parent owns its size
+
+This is the exact line the container split draws, and it is absolute:
+
+> **Everything *inside* a component's box — proportions, radius, borders, colors,
+> hover and focus treatment, how its glyph is centered — is owned by the component
+> and is unreachable from outside. Everything *about* the box — how much space it
+> gets, how large or small it is drawn — is owned by the parent that places it.**
+
+A caller in the header can make a finished button 25px or 50px wide (and, when the
+button is square, its height follows automatically) with total ease — that is a size
+decision, and size belongs to the parent. A caller can **never** reach in and change
+the button's radius, its icon centering, its text color, its hover glow, or make a
+square button rectangular — that is look, and look is the component's alone. The
+opaque `ClassList` already makes this mechanically impossible (no class prop, no
+`"{CLASS} …"`), and this rule is why: a size prop or a style hole would re-open
+exactly the coupling the opaque class closes. **Size flows through the box the parent
+draws, never through a prop.**
+
+Concretely, a self-sizing leaf like `ToolbarButton`:
+
+- **never writes its own width or height** (`w-20`, `h-20`) into its `style.rs` —
+  that is the parent stealing-back the size decision baked into the component. It
+  **fills the box it is given** (`h-full`) and locks its own shape (`aspect-square`).
+- **stays square in every viewport, never stretched.** With `aspect-square` +
+  `h-full` + `w-auto` + `max-w-full`, centered by its container, the drawn side is the
+  **smaller** side of whatever box it is handed — a wide box yields a square as tall as
+  the box, a tall box a square as wide as the box — so no container shape can stretch
+  it into a rectangle.
+- **scales its interior like an SVG.** The button marks itself
+  `[container-type:inline-size]` and expresses **every** interior length in `cqi` —
+  border, radius, icon size, glow radii — off its own side. Make the box ten times
+  larger and the whole interior — glyph, border, rounding, shadow — scales up in exact
+  proportion, as one drawing, because there is not a single absolute length left
+  inside. A `px` or `rem` anywhere in the interior is the bug: that part would refuse
+  to scale.
+
+The one knob the parent turns is the box. A whole row of buttons is sized uniformly
+by one length on the toolbar (its row height); a single button is resized by its own
+Host container overriding that box. Neither ever touches what is inside the button.
 
 ---
 
@@ -407,9 +630,10 @@ grid_tile/
   components/        child components, each its own directory of this same shape
 ```
 
-A component with children nests them under `components/`. A leaf component omits
-`components/`. A component with no logic beyond `From` conversions omits
-`logic.rs`. A component that reaches the domain, `localStorage`, or a web API
+A component with children nests them under `components/` — and **every** component
+it renders is such a child, per "The render tree IS the directory tree". A leaf
+component omits `components/`. A component with no logic beyond `From` conversions
+omits `logic.rs`. A component that reaches the domain, `localStorage`, or a web API
 carries a `hooks.rs` with its one composed hook, and omits it otherwise.
 
 ## Data and content are props, sourced from `data.rs`
@@ -545,6 +769,11 @@ pub fn CommandGridEditor(props: GridEditorConfig) -> Element {
 
 ## Base and variants are flat, not nested
 
+This is **exception 2** to "The render tree IS the directory tree", and it applies
+*only* when a variant wrapper binds the base's generic type parameter or fills a
+slot/body the base exposes. Outside that, a component you render is your child —
+nest it.
+
 A generic base and its variant wrappers are siblings under one plural group
 directory. Variants are never subcomponents of the base, since they depend on
 it, not the other way around.
@@ -578,6 +807,11 @@ parameter onto a button to make it look like a variant. Extend a base when there
 is a behavior to bind, compose a leaf when there is not.
 
 ## Shared leaves live in a `shared/` grouping directory
+
+This is **exception 1** to "The render tree IS the directory tree", and the test
+for it is a pure count: a leaf with a single renderer nests under that renderer; a
+leaf rendered by **two or more** sibling components uses `shared/`. Never flat-dump
+a shared leaf beside its renderers, and never nest it under just one of several.
 
 A leaf used verbatim by several sibling components is neither duplicated nor
 flat-dumped among those siblings. It lives once in a **`shared/` grouping
