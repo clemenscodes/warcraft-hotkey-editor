@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/ddd",
     "crates/gallery",
     "crates/hotkey-editor",
     "crates/warcraft-cli",
@@ -16,6 +17,7 @@ members = [
 # https://github.com/clemenscodes/warcraft-data and are consumed as git pins
 # below. `warcraft-keybinds` is the editor's own logic and stays local.
 default-members = [
+    "crates/ddd",
     "crates/gallery",
     "crates/hotkey-editor",
     "crates/warcraft-keybinds",

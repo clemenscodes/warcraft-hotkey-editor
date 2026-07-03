@@ -56,6 +56,68 @@ inline in a body. The hook layer mirrors the component layer exactly.
 Reading a component must tell the story immediately and never require following
 a logical calculus. The composed hook is where the calculus lives.
 
+## Presentational leaves, connected wrappers
+
+App-wide state — the `CustomKeys` document, the grid layout, the upload status —
+reaches the leaf that renders it as **props**, and never any other way. This splits
+every such component into two roles that are never blurred.
+
+**The leaf is presentational: props in, markup out.** A component that renders a
+slice of the document (a collisions count, a serialized-keys preview, an editable
+grid) takes that data as props and does nothing to *fetch* it. It reads no context
+and calls no domain / `localStorage` hook of its own. Hand it its props and it
+renders; it is a pure function of them. This is exactly what lets the **gallery**
+render it directly — the gallery hands it any value it likes and every state and
+variant falls out for free, with no document anywhere in sight. A leaf that reached
+for `use_custom_keys` itself could not be showcased and could not be varied.
+
+**The real data comes from a dedicated wrapper whose only job is the seam.** When the
+app needs to feed a leaf the live document, it renders a **connected wrapper** — a
+component that does *nothing* but call the primitive hook(s), shape the result, and
+render the leaf with those props. It owns no markup beyond the single child it wraps.
+Name it `<Leaf>Host` and keep it beside the leaf:
+
+```rust
+// collisions_button_host/mod.rs — connected: one hook call, shape, render the leaf.
+#[component]
+pub fn CollisionsButtonHost() -> Element {
+    let button = use_collisions_button();   // calls use_custom_keys + use_grid_layout, shapes the count
+    rsx! {
+        CollisionsButton { ..button }
+    }
+}
+```
+
+```rust
+// collisions_button/mod.rs — presentational: props in, markup out. No hook, no context.
+#[component]
+pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
+    let CollisionsButtonPresentation { count, onclick, .. } = CollisionsButtonPresentation::from(&props);
+    rsx! { /* renders the count and badge from props alone */ }
+}
+```
+
+So the app renders `CollisionsButtonHost`; the gallery renders `CollisionsButton`.
+The hook is called in exactly one place, on behalf of exactly one leaf.
+
+**The rule this forces: an uninvolved parent threads nothing.** A container that does
+not itself use the document must neither receive it nor forward it. `HeaderActions` is
+pure layout — it renders `CollisionsButtonHost`, `HeaderToolbar`, and the burger; it
+takes no `loaded_keys` prop and calls no document hook, because it has no stake in the
+document. Pushing the fetch onto a parent that has no stake is the leak this pattern
+exists to forbid: it is the same leak as a threaded god-signal, one layer smaller. The
+same holds for the header's overlay dialogs — each dialog is a presentational leaf, and
+a `PreviewDialogHost` / `TemplatesDialogHost` supplies its document; the header only
+places the hosts.
+
+Three roles, never merged:
+
+- **presentational leaf** — props in, markup out; no hook, no context. The gallery
+  renders this directly.
+- **connected wrapper (`<Leaf>Host`)** — one hook call, shape, render the leaf; no
+  markup of its own. The app renders this.
+- **container** — pure layout of children; fetches nothing, threads nothing.
+
 ---
 
 ## Directory equals component equals class
