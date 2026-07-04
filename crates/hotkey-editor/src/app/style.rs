@@ -11,9 +11,7 @@ const BASE: &[&str] = &[
     "mx-auto",
     "flex",
     "flex-col",
-    "pt-7",
-    "pb-12",
-    "px-14",
+    "px-4",
     "min-h-[100dvh]",
     "min-w-0",
     "max-w-[100vw]",
@@ -72,7 +70,6 @@ const BASE: &[&str] = &[
 // shrink below its min-content and cap images so nothing pushes past the viewport.
 // The `<767px` iOS-zoom input floor (`max(1rem,16px)`) is phone-only.
 const MOBILE: &[&str] = &[
-    "mobile:pt-0",
     "mobile:pl-[max(0.75rem,env(safe-area-inset-left))]",
     "mobile:pr-[max(0.75rem,env(safe-area-inset-right))]",
     "mobile:pb-[max(1rem,env(safe-area-inset-bottom))]",
@@ -97,7 +94,6 @@ const MOBILE: &[&str] = &[
     "mobile:[&_input]:touch-manipulation",
 ];
 const TABLET: &[&str] = &[
-    "tablet:pt-0",
     "tablet:pl-[max(0.75rem,env(safe-area-inset-left))]",
     "tablet:pr-[max(0.75rem,env(safe-area-inset-right))]",
     "tablet:pb-[max(1rem,env(safe-area-inset-bottom))]",

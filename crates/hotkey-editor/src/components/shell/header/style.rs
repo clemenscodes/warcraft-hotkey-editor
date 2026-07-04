@@ -1,5 +1,12 @@
 use crate::classes;
 
+// The bar's own layout scales with the viewport. On laptop and up it is a three-column
+// grid (brand | centered layout button | toolbar) whose column gap and symmetric vertical
+// padding are expressed in `vw`, so the whole bar grows coherently from laptop through 4K
+// and `items-center` centers every child in the bar (the padding is equal top and bottom,
+// never bottom-only, or the row floats off-center). The children (brand, layout button,
+// toolbar buttons) carry their own `cqi` scaling off the boxes this grid hands them.
+// Below laptop it collapses to a flex row (brand left, toolbar right) sized for touch.
 const BASE: &[&str] = &[
     "relative",
     "z-50",
@@ -47,33 +54,33 @@ const TABLET: &[&str] = &[
 const LAPTOP: &[&str] = &[
     "laptop:grid",
     "laptop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "laptop:gap-6",
+    "laptop:gap-[1vw]",
     "laptop:p-0",
-    "laptop:pb-[1.75rem]",
+    "laptop:py-[0.33vw]",
 ];
 
 const DESKTOP: &[&str] = &[
     "desktop:grid",
     "desktop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "desktop:gap-6",
+    "desktop:gap-[1vw]",
     "desktop:p-0",
-    "desktop:pb-[1.75rem]",
+    "desktop:py-[0.33vw]",
 ];
 
 const QHD: &[&str] = &[
     "qhd:grid",
     "qhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "qhd:gap-6",
+    "qhd:gap-[1vw]",
     "qhd:p-0",
-    "qhd:pb-[1.75rem]",
+    "qhd:py-[0.33vw]",
 ];
 
 const UHD: &[&str] = &[
     "uhd:grid",
     "uhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "uhd:gap-6",
+    "uhd:gap-[1vw]",
     "uhd:p-0",
-    "uhd:pb-[1.75rem]",
+    "uhd:py-[0.33vw]",
 ];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD

@@ -4,6 +4,7 @@ const BASE: &[&str] = &[
     "font-friz-quadrata",
     "font-normal",
     "uppercase",
+    "whitespace-nowrap",
     "tracking-[0.12em]",
     "[text-shadow:1px_1px_0_rgba(0,0,0,0.6)]",
 ];

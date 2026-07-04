@@ -1,17 +1,18 @@
 use crate::classes;
 
 // The brand's box, and the query context every `cqi` length inside the brand resolves
-// against. On mobile/tablet it grows to fill the space left beside the toolbar so the
-// wordmark is as large as fits; on laptop and up it takes a viewport-responsive capped
-// width. Either way the whole brand scales as one drawing off this box — one SVG, no
-// truncation.
+// against. Its width is definite and viewport-proportional per band, never `flex-auto`
+// (which grabs all free space and blows the wordmark up on tablet). On phones and
+// tablets it is a fraction of the viewport; on laptop and up it is a capped `vw` box
+// that sits left-aligned in its grid track beside the centered layout button. Either
+// way the whole brand scales as one drawing off this box — one SVG, no truncation.
 const BASE: &[&str] = &["[container-type:inline-size]", "min-w-0"];
-const MOBILE: &[&str] = &["mobile:flex-auto"];
-const TABLET: &[&str] = &["tablet:flex-auto"];
-const LAPTOP: &[&str] = &["laptop:w-[clamp(11rem,42vw,48rem)]"];
-const DESKTOP: &[&str] = &["desktop:w-[clamp(11rem,42vw,48rem)]"];
-const QHD: &[&str] = &["qhd:w-[clamp(11rem,42vw,48rem)]"];
-const UHD: &[&str] = &["uhd:w-[clamp(11rem,42vw,48rem)]"];
+const MOBILE: &[&str] = &["mobile:w-[65vw]"];
+const TABLET: &[&str] = &["tablet:w-[40vw]"];
+const LAPTOP: &[&str] = &["laptop:w-[clamp(12rem,20vw,56rem)]"];
+const DESKTOP: &[&str] = &["desktop:w-[clamp(12rem,20vw,56rem)]"];
+const QHD: &[&str] = &["qhd:w-[clamp(12rem,20vw,56rem)]"];
+const UHD: &[&str] = &["uhd:w-[clamp(12rem,20vw,56rem)]"];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

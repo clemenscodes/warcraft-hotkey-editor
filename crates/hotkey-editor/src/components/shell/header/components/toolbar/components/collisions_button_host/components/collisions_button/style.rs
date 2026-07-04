@@ -3,9 +3,10 @@ use crate::{classes, states};
 
 // The button surface fills its host container and draws itself as a cqi-scaled drawing:
 // every interior length resolves against the host box (the host is the query context).
-// The box is a fixed size per band, so the border is tuned per band to land on 1px at
-// each size (1.25cqi at the 80px desktop box, 2.8cqi at the 36px compact box); radius,
-// focus ring, icon and badge scale uniformly.
+// The border is tuned per band to read as a ~1px hairline: 2.8cqi on the 36px compact
+// phone/tablet box, and 1.25cqi on the laptop-and-up box (a viewport clamp) where it
+// renders about a pixel across the band and thickens gently toward 4K; radius, focus
+// ring, icon and badge scale uniformly with the box.
 const BASE: &[&str] = &[
     "relative",
     "flex",
