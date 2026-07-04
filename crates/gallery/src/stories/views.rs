@@ -1,18 +1,18 @@
 use super::fixtures::{sample_grid_layout, sample_keys};
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 
-use hotkey_editor::components::views::collisions_page::CollisionsPage;
-use hotkey_editor::components::views::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
-use hotkey_editor::components::views::collisions_page::components::body::components::details::island_detail::IslandDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
-use hotkey_editor::components::views::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
-use hotkey_editor::components::views::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;
-use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
+use hotkey_editor::components::app::components::shell::components::collisions_page::CollisionsPage;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::island_detail::IslandDetail;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
 
-use hotkey_editor::components::views::resolve_page::ResolvePage;
+use hotkey_editor::components::app::components::shell::components::resolve_page::ResolvePage;
 use hotkey_editor::services::collision_selection::CollisionSelection;
 use hotkey_editor::services::navigation::app_view::AppView;
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;

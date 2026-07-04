@@ -1,6 +1,6 @@
 use crate::registry::StoryRegistry;
 use dioxus::prelude::*;
-use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct StoryFrameProps {

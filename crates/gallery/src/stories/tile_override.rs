@@ -2,14 +2,14 @@ use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use super::keys_mount::CustomKeysMount;
-use hotkey_editor::components::shell::toasts::ToastMount;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCell;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
-use hotkey_editor::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
+use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCell;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
 
-use hotkey_editor::components::tile_override::{
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::{
     AltPositionPicker, TileOverride, UpgradePositionPicker,
 };
 

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use gallery::{Gallery, GalleryMode, GalleryView, StoryFrame};
-use hotkey_editor::app::TAILWIND_STYLES;
+use hotkey_editor::components::app::TAILWIND_STYLES;
 
 mod stories;
 

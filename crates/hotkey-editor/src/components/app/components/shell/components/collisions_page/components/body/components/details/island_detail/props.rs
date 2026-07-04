@@ -1,0 +1,12 @@
+use crate::components::app::components::shell::components::collisions_page::logic::IslandView;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
+
+/// The island (position-collision) detail pane: the collision islands, the selected
+/// one, and the navigation context its links use.
+#[derive(Props, Clone, PartialEq)]
+pub struct IslandDetailProps {
+    pub islands: Vec<IslandView>,
+    pub selected_island: Signal<Option<String>>,
+    pub view_navigation: ViewNavigationContext,
+}

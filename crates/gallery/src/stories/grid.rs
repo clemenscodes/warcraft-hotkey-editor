@@ -1,21 +1,21 @@
 use super::keys_mount::CustomKeysMount;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::grid_editors::command_grid_editor::CommandGridEditor;
-use hotkey_editor::components::grid_editors::grid_editor::components::drag_follower_overlay::DragFollowerOverlay;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::command_grid_editor::CommandGridEditor;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::drag_follower_overlay::DragFollowerOverlay;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::{
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::{
     HotkeyBadge, HotkeyBadgeState,
 };
 
-use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::GridEditorTile;
-use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::TileFace;
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::GridEditorTile;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::TileFace;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
 
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
-use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
+use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 
 use hotkey_editor::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
 

@@ -1,0 +1,24 @@
+mod hooks;
+mod style;
+
+use super::shared::dialogs::templates_dialog::TemplatesDialog;
+use crate::assert_component;
+use dioxus::prelude::*;
+use hooks::use_templates_dialog_host;
+use style::CLASS;
+
+assert_component!(TemplatesDialogHost);
+
+/// Connects the layout-templates browser to app state and places it in the
+/// always-mounted toolbar, so it opens from either the inline templates button or the
+/// burger drawer. The dialog self-gates on the shared open signal.
+#[component]
+pub fn TemplatesDialogHost() -> Element {
+    let dialog = use_templates_dialog_host();
+    rsx! {
+        div {
+            class: CLASS,
+            TemplatesDialog { ..dialog }
+        }
+    }
+}

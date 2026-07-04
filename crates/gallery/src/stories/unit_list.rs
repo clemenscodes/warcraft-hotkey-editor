@@ -1,12 +1,12 @@
 use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::unit_list::UnitList;
-use hotkey_editor::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
-use hotkey_editor::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
-use hotkey_editor::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_icon::UnitCardIcon;
-use hotkey_editor::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_info::UnitCardInfo;
-use hotkey_editor::components::unit_list::components::unit_category_section::UnitCategorySection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitList;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::UnitCategorySection;
 use hotkey_editor::model::icons::IconUrl;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};

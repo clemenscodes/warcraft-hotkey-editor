@@ -1,26 +1,26 @@
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::dialogs::dialog::components::dialog_header::DialogHeader;
-use hotkey_editor::components::dialogs::help_dialog::HelpDialog;
-use hotkey_editor::components::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::components::dialog_header::DialogHeader;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 
-use hotkey_editor::components::dialogs::key_picker::{
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{
     KeyPicker, KeyPickerCell, KeyPickerCellState,
 };
 
-use hotkey_editor::components::dialogs::layout_editor::LayoutEditor;
-use hotkey_editor::components::dialogs::preview_dialog::PreviewDialog;
-use hotkey_editor::components::dialogs::templates_dialog::TemplatesDialog;
-use hotkey_editor::components::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
-use hotkey_editor::components::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
-use hotkey_editor::components::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
-use hotkey_editor::components::grid_editors::grid_editor::components::grid_editor_tile::{
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor::LayoutEditor;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog::PreviewDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::{
     EditorTileKind, GridEditorTileProps,
 };
 use super::keys_mount::CustomKeysMount;
-use hotkey_editor::components::shell::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CustomKeys, GridCoordinate, HotkeyToken, RenderedTile,

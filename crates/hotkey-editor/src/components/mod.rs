@@ -1,8 +1,1 @@
-pub mod dialogs;
-pub mod grid_editors;
-pub mod shared;
-pub mod shell;
-pub mod tile_override;
-pub mod unit_detail;
-pub mod unit_list;
-pub mod views;
+pub mod app;
