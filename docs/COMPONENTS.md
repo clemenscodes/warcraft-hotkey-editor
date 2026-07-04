@@ -8,16 +8,20 @@ These sit alongside `docs/ARCHITECTURE.md` (the wall: where domain logic lives
 versus the renderer) and `docs/RUST_STYLE.md` (how Rust is written). All three
 must hold. This file is the reference for the renderer side.
 
-The one subsystem approved **end-to-end** — every structural rule below *and* the
-full styling / container-query / responsiveness treatment — is
-`components/shell/header`. It is the role model: the design-wise perfect
-application of this document, verified in the browser at every band. When a new
-component's shape is in question, the answer is "what does the header do here?",
-and nothing lower than that bar ships. The older `grid_editor` subsystem still
-illustrates the structural rules and is referenced throughout below, but it was
-never carried through the same styling treatment; where the two differ, **the
-header wins**. The capstone walk-through at the end of this file breaks the header
-down quality by quality.
+The subsystems approved **end-to-end** — every structural rule below *and* the
+full styling / container-query / responsiveness treatment — are
+`components/shell/header` and its bottom-of-shell counterpart
+`components/shell/footer`. They are the role models: the design-wise perfect
+application of this document, verified in the browser at every band. The header is
+a full-bleed bar of buttons; the footer is a full-bleed bar of text, converted the
+exact same way, so between them they show the model on both axes. When a new
+component's shape is in question, the answer is "what does the header do here?" (or,
+for text, the footer), and nothing lower than that bar ships. The older
+`grid_editor` subsystem still illustrates the structural rules and is referenced
+throughout below, but it was never carried through the same styling treatment;
+where they differ, **the header and footer win**. The capstone walk-through at the
+end of this file breaks the header down quality by quality, and a shorter companion
+does the same for the footer.
 
 > Before writing a component: read the `components/shell/header` tree and the
 > capstone walk-through at the end of this file, and mirror their shape exactly.
@@ -978,6 +982,55 @@ file wants a second class or a second responsibility it wants to be two componen
 There is no such thing as too many.
 
 Read these files before you write. When in doubt, do what the header does.
+
+---
+
+## The second reference — `shell/footer`
+
+`components/shell/footer` is the header's counterpart, converted the **exact same
+way** and approved end-to-end. Where the header is a bar of buttons, the footer is
+a full-bleed bar of *text* — the credit line, the outbound links, the trademark
+disclaimer — so it proves the same model holds on that axis. Read it beside the
+header when your component is text rather than controls; it is a shorter walk
+because the same rules produce a smaller tree.
+
+**A full-bleed bar owns its defining dimension in `vw` + `clamp`.** The header's
+defining dimension is its height (`min-h-[clamp(4rem,4.2vw,8.5rem)]`); the footer's
+is its font size (`text-[clamp(0.72rem,0.95vw,1.75rem)]`) — the very same
+`vw`-with-a-floor-and-ceiling knob, one axis over. The floor keeps the fine print
+legible on a small laptop, the ceiling keeps it from ballooning on 4K, and the `vw`
+in between grows it generously with the viewport. That one font size is the footer's
+single knob.
+
+**Leaves scale in `em` off that knob — never `px`/`rem`/`vw` inside a leaf.** Every
+glyph, gap, and icon expresses its length in `em` (`w-[1.15em]` for the heart and
+link glyphs, `gap-[0.4em]`, `text-[0.82em]` for the disclaimer), so they track the
+bar's font as one drawing — the text counterpart of the header leaves' `cqi`. `em`
+is exactly the header's blessed choice for a length that should follow the font
+(the brand's `tracking-[0.04em]`), applied here to the whole leaf — down to the
+heart's glow radius (`drop-shadow-[0_0_0.3em_…]`), so not a single fixed length is
+left inside a leaf. The footer is a query container (`@container`) like the header
+bar, so any leaf that later needs to measure the bar in `cqi` still can.
+
+**Size flows through the box: the bar owns it, the leaf fills it.** No leaf writes a
+size of its own; each sizes its parts as `em` fractions of the one font the bar
+hands down. Change the `clamp` and the credit, heart, link icons, separators, and
+disclaimer all rescale together, still centered, still wrapping.
+
+**`BASE` is the laptop-and-up truth; the two touch bands are deltas.** `BASE` carries
+the `vw` font ramp, the `em` gaps, and the symmetric `vw` padding; `mobile` and
+`tablet` override only the font ramp for their narrower widths and swap the padding
+for safe-area insets so the bar clears a notch and a home indicator. `laptop`
+through `uhd` inherit `BASE` unchanged, so their band arrays are empty — the same
+"`BASE` is the common truth, bands hold only what genuinely differs" the header
+follows.
+
+**Every structural rule the header follows, the footer follows too.** The render
+tree is the directory tree to the leaf (`footer` → `footer_credit` →
+`footer_heart`; the `super::` test passes on every `mod.rs`). The leaves are
+presentational, fed typed consts from `data.rs` and spread with `..`, with no
+domain state and no context — so the gallery renders `Footer` directly. Each file
+is one class, one concern.
 
 ---
 

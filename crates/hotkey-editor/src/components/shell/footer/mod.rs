@@ -16,8 +16,10 @@ pub fn Footer() -> Element {
     rsx! {
         footer { class: CLASS,
             FooterCredit { ..data::CREDIT }
-            for link in data::LINKS.iter().cloned() {
-                FooterSeparator {}
+            for (index, link) in data::LINKS.iter().cloned().enumerate() {
+                if index > 0 {
+                    FooterSeparator {}
+                }
                 FooterLink { ..link }
             }
             FooterDisclaimer { ..data::DISCLAIMER }

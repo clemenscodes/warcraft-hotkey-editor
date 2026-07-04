@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "left-auto",
     "w-max",
     "max-w-[calc(100vw-3rem)]",
-    "z-[2000]",
+    "z-2000",
     "outline-none",
     "pointer-events-none",
 ];

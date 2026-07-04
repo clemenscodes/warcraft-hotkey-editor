@@ -4,10 +4,13 @@ const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
-    "w-4",
-    "h-4",
+    "w-[1.15em]",
+    "h-[1.15em]",
     "text-rose-400/90",
-    "drop-shadow-[0_0_4px_rgba(244,114,182,0.35)]",
+    "drop-shadow-[0_0_0.3em_rgba(244,114,182,0.35)]",
+    "[&_svg]:block",
+    "[&_svg]:w-full",
+    "[&_svg]:h-full",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

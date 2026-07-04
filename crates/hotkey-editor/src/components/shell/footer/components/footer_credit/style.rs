@@ -1,6 +1,12 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[TailwindClass] = tw!["flex", "items-center", "gap-2"];
+const BASE: &[TailwindClass] = tw![
+    "flex",
+    "w-full",
+    "items-center",
+    "justify-center",
+    "gap-[0.5em]"
+];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
 const LAPTOP: &[TailwindClass] = tw![];

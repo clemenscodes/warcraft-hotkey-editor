@@ -1,7 +1,6 @@
 use crate::app::EditorNavKey;
 use crate::app::nav_params::{NavState, RouteParams};
 use crate::app::route::Route;
-use crate::app::state::AppLayout;
 use crate::app::style;
 use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
@@ -383,8 +382,7 @@ pub(super) fn use_workbench(params: RouteParams) -> WorkbenchModel {
             }
         }
     });
-    let app_layout = AppLayout::from(*current_view.read());
-    let app_class = style::class(app_layout);
+    let app_class = style::CLASS;
     let view_navigation = ViewNavigationContext {
         current_view,
         active_race,
