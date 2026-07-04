@@ -23,7 +23,7 @@ async function openCollisionKind(
   kind: string,
   rowAttribute: string,
 ): Promise<void> {
-  await page.goto(`${APP}?view=collisions&kind=${kind}`);
+  await page.goto(`${APP}collisions?kind=${kind}`);
   await page.locator(`[data-collision-kind="${kind}"]`).waitFor();
   await page.locator(`[${rowAttribute}]`).first().waitFor();
 }
@@ -59,7 +59,7 @@ test.describe("Collision page entry deep-linking", () => {
 
     // Open the affected unit in the editor.
     await page.locator(".hotkey-detail-unit").click();
-    await expect(page).not.toHaveURL(/view=collisions/);
+    await expect(page).not.toHaveURL(/\/collisions/);
     await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     // Browser back restores the collisions view on the very same entry.
@@ -127,7 +127,7 @@ test.describe("Collision page entry deep-linking", () => {
     expect(keys.length).toBeGreaterThan(20);
     const target = keys[keys.length - 1];
 
-    await page.goto(`${APP}?view=collisions&kind=unit-positions&entry=${target}`);
+    await page.goto(`${APP}collisions?kind=unit-positions&entry=${target}`);
     const targetRow = page.locator(`[data-collision-key="${target}"]`);
     await expect(targetRow).toHaveAttribute("data-selected", "true");
   });

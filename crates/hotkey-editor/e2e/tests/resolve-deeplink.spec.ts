@@ -20,7 +20,7 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 }
 
 async function openResolvePlan(page: Page): Promise<void> {
-  await page.goto(`${APP}?view=resolve`);
+  await page.goto(`${APP}resolve`);
   await page.locator('[data-resolve-state="plan"]').waitFor();
   await page.locator(".breadcrumbs [data-breadcrumb]").first().waitFor();
 }
@@ -79,7 +79,7 @@ test.describe("Resolve page move-category deep-linking", () => {
     const slugs = await categorySlugs(page);
     const target = slugs[slugs.length - 1];
 
-    await page.goto(`${APP}?view=resolve&entry=${target}`);
+    await page.goto(`${APP}resolve?entry=${target}`);
     await expect(
       page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`),
     ).toHaveAttribute("aria-current", "page");

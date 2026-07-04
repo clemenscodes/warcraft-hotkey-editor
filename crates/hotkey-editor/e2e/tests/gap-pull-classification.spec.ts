@@ -21,7 +21,7 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 }
 
 async function openResolveSection(page: Page, slug: string): Promise<void> {
-  await page.goto(`${APP}?view=resolve&entry=${slug}`);
+  await page.goto(`${APP}resolve?entry=${slug}`);
   await page.locator('[data-resolve-state="plan"]').waitFor();
 }
 

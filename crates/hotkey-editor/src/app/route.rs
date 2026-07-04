@@ -1,32 +1,56 @@
-use crate::app::workbench::Workbench;
+use crate::app::shell::Shell;
+use crate::components::views::collisions_page::CollisionsPage;
+use crate::components::views::editor_page::EditorPage;
+use crate::components::views::resolve_page::ResolvePage;
 use dioxus::prelude::*;
 
-/// The application's single client-side route.
+/// The application's three client-side pages, each a real route under one shared
+/// [`Shell`] layout.
 ///
-/// The workbench is a one-page app whose entire navigable state — which race, unit
-/// mode, and unit are selected; the live search query; which top-level view
-/// (editor / collisions / resolve) is showing, its collision kind, and the selected
-/// list entry — rides in the URL's query string. Keeping every field a query
-/// parameter preserves the exact URL shape the app has always used
-/// (`?race=…&mode=…&unit=…&q=…&view=…&kind=…&entry=…`), so deep links, the
-/// back/forward buttons, and the e2e suite all keep working unchanged — while the
-/// Dioxus `Router` now owns history and URL synchronisation in place of the old
-/// hand-rolled `UrlNavigationState` + `popstate` machinery.
+/// The view now lives in the URL **path** — `/` is the editor, `/collisions` and
+/// `/resolve` its siblings — instead of the old `?view=` query parameter, so the
+/// router owns the editor/collisions/resolve distinction and the back/forward
+/// buttons step between pages natively. Each route carries **only its own state** as
+/// query parameters: the editor its `?race=&mode=&unit=&q=` selection, the collisions
+/// page its `?kind=&entry=`, the resolve page its `?entry=`. Every field is an
+/// `Option<String>`: an absent parameter arrives as `None`, and each page reconciles
+/// its own parameters into the shell's signals.
 ///
-/// Every field is a `String`: an absent parameter arrives as the empty string, and
-/// the `Workbench` component normalises each into the typed domain/UI value it
-/// needs (`Race`, `UnitMode`, `AppView`, …), exactly as the old `from_url()` parser
-/// did.
+/// The editor selection is not repeated on the collisions/resolve routes — it is the
+/// editor's state, not theirs. Because the `Shell` layout stays mounted while the
+/// `Outlet` swaps the active page, the editor selection (and the loaded keys, and the
+/// grid layout) persists across page navigation in the shell's signals and reappears
+/// in the URL when the editor is next shown — the role the old one-page `Workbench`
+/// used to fill.
 #[derive(Routable, Clone, PartialEq)]
 pub enum Route {
-    #[route("/?:race&:mode&:unit&:q&:view&:kind&:entry")]
-    Workbench {
+    #[layout(Shell)]
+    #[route("/?:race&:mode&:unit&:q", EditorPage)]
+    Editor {
         race: Option<String>,
         mode: Option<String>,
         unit: Option<String>,
         q: Option<String>,
-        view: Option<String>,
+    },
+    #[route("/collisions?:kind&:entry", CollisionsPage)]
+    Collisions {
         kind: Option<String>,
         entry: Option<String>,
     },
+    // Any unmatched path redirects to the editor at parse time — the app only ever
+    // generates its three known routes, so this is reached solely by a stray or stale
+    // URL, and sending it home is friendlier than the router's default error screen.
+    // A redirect rule renders nothing, so there is no page component here: routing
+    // infrastructure stays in the routing layer, not in a would-be no-op component.
+    #[redirect("/:..segments", |segments: Vec<String>| {
+        let _ = segments;
+        Route::Editor {
+            race: None,
+            mode: None,
+            unit: None,
+            q: None,
+        }
+    })]
+    #[route("/resolve?:entry", ResolvePage)]
+    Resolve { entry: Option<String> },
 }

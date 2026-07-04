@@ -1,11 +1,15 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::CustomKeys;
 
-/// The Resolve page inputs: the loaded keys and the selected move-category
-/// breadcrumb (backed by the `?entry=` URL parameter so the viewed section
-/// deep-links and survives browser back/forward — mirroring the collisions page).
+/// The resolve page's route parameter: the selected move-category `?entry=`
+/// breadcrumb. That is the page's entire URL state — the editor selection is the
+/// editor's, not the resolve page's, so it is not carried here; it persists in the
+/// shell's signals while this page is shown and reappears in the URL when the editor
+/// is next active.
+///
+/// The selected move-category lives in the shell (backing the `?entry=` param so the
+/// viewed section deep-links and survives back/forward); the page reaches it through
+/// context, never the router.
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolvePageProps {
-    pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub selected_move_category: Signal<Option<String>>,
+    pub entry: Option<String>,
 }

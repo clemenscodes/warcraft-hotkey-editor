@@ -279,7 +279,7 @@ test("applying the cascade clears every position collision, including toggle off
   await page.locator('[data-action="apply-cascade"]').click();
   await page.locator('[role="alertdialog"]').filter({ hasText: "Cascade applied" }).waitFor();
 
-  await page.goto(`${APP}?view=collisions&kind=positions`);
+  await page.goto(`${APP}collisions?kind=positions`);
   await page.locator('[data-collision-kind="positions"]').waitFor();
 
   const crossCount = page.locator('[data-breadcrumb="positions"] .breadcrumb-count');

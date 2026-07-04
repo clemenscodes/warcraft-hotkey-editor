@@ -13,6 +13,10 @@ pub use props::PreviewDialogProps;
 #[component]
 pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
     let view = use_preview_dialog(&props);
+    let preview_open = props.preview_open;
+    if !preview_open() {
+        return rsx! {};
+    }
     rsx! {
         Dialog { ..DialogProps::from(&view) }
     }

@@ -12,6 +12,10 @@ pub use props::HelpDialogProps;
 /// in the footer slot. It renders no element of its own.
 #[component]
 pub fn HelpDialog(props: HelpDialogProps) -> Element {
+    let help_open = props.help_open;
+    if !help_open() {
+        return rsx! {};
+    }
     rsx! {
         Dialog { ..DialogProps::from(&props) }
     }

@@ -101,7 +101,6 @@ fn layout_editor_default() -> Element {
                     grid_layout,
                     editing_layout_cell,
                     dragging_layout_cell,
-                    loaded_keys,
                     open: layout_dialog_open,
                     update_hotkeys_on_move,
                 }

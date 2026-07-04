@@ -13,13 +13,13 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
   test("clicking the brand from the Collisions page navigates home to the editor", async ({
     page,
   }) => {
-    await page.goto(`${APP}?view=collisions&kind=positions`);
+    await page.goto(`${APP}collisions?kind=positions`);
     await page.locator("[data-collision-kind]").waitFor();
     await page.locator('[data-action="view-editor"]').click();
     await page.locator(".unit-card").first().waitFor();
     await expect(page.locator("[data-collision-kind]")).toHaveCount(0);
     const url = new URL(page.url());
-    expect(url.searchParams.get("view")).toBeNull();
+    expect(url.pathname).not.toContain("collisions");
   });
 
   test("the brand has an accessible label identifying it as a home link", async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[data-action="view-collisions"]').click();
-    await page.waitForURL(/view=collisions/);
+    await page.waitForURL(/\/collisions/);
     await page.locator('[data-collision-kind="positions"]').waitFor();
   });
 
@@ -118,28 +118,28 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await expect(page.locator('[data-action="view-collisions"]')).toBeVisible();
   });
 
-  test("?view=collisions&kind=positions deep-links to the position collisions page", async ({
+  test("/collisions?kind=positions deep-links to the position collisions page", async ({
     page,
   }) => {
-    await page.goto(`${APP}?view=collisions&kind=positions`);
+    await page.goto(`${APP}collisions?kind=positions`);
     await page.locator('[data-collision-kind="positions"]').waitFor();
   });
 
-  test("?view=collisions&kind=hotkeys deep-links to the hotkey collisions page", async ({
+  test("/collisions?kind=hotkeys deep-links to the hotkey collisions page", async ({
     page,
   }) => {
-    await page.goto(`${APP}?view=collisions&kind=hotkeys`);
+    await page.goto(`${APP}collisions?kind=hotkeys`);
     await page.locator('[data-collision-kind="hotkeys"]').waitFor();
   });
 
-  test("?view=resolve still parses and renders the resolve placeholder", async ({ page }) => {
-    await page.goto(`${APP}?view=resolve`);
+  test("/resolve renders the resolve placeholder", async ({ page }) => {
+    await page.goto(`${APP}resolve`);
     await page.locator("[data-resolve-state]").waitFor();
     await expect(page.locator(".unit-card")).toHaveCount(0);
   });
 
-  test("unknown ?view= falls back to Editor", async ({ page }) => {
-    await page.goto(`${APP}?view=nonsense`);
+  test("an unknown path redirects to the Editor", async ({ page }) => {
+    await page.goto(`${APP}nonsense`);
     await page.locator(".unit-card").first().waitFor();
   });
 
@@ -163,15 +163,22 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
     await page.locator("[data-collision-kind]").waitFor();
   });
 
-  test("switching views preserves race/mode/unit query params", async ({ page }) => {
+  test("the editor selection survives a round-trip through the collisions page", async ({
+    page,
+  }) => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('.race-tab[data-race="orc"]').click();
     await page.waitForURL(/race=orc/);
+    // Switching to collisions does not carry the editor's race in the URL — that is
+    // the editor's state, not the collisions page's. It is preserved in memory.
     await page.locator('[data-action="view-collisions"]').click();
-    await page.waitForURL(/view=collisions/);
-    const url = new URL(page.url());
-    expect(url.searchParams.get("race")).toBe("orc");
-    expect(url.searchParams.get("view")).toBe("collisions");
+    await page.waitForURL(/\/collisions/);
+    expect(new URL(page.url()).pathname).toContain("collisions");
+    expect(new URL(page.url()).searchParams.get("race")).toBeNull();
+    // Returning to the editor restores the orc selection, back into the URL.
+    await page.locator('[data-action="view-editor"]').click();
+    await page.waitForURL(/race=orc/);
+    await page.locator(".unit-card").first().waitFor();
   });
 });

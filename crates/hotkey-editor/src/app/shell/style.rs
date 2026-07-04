@@ -1,6 +1,6 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-// The app shell centres the workbench in a single full-bleed column — no padding, so
+// The app shell centres the routed page in a single full-bleed column — no padding, so
 // the shell (and its header) spans the whole viewport width and its content reaches
 // every edge. It sets no inter-section spacing: each section (header, the view, footer)
 // owns its own spacing, so the shell never reaches across the wall to space its children.

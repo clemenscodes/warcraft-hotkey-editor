@@ -121,6 +121,12 @@ jobs:
           mkdir -p ./pages-out
           cp -RL ./result/. ./pages-out/
           chmod -R u+w ./pages-out/
+          # SPA fallback: the app now has real path routes (/collisions,
+          # /resolve). GitHub Pages has no try_files, so a hard refresh or
+          # shared deep-link to a sub-path 404s unless a 404.html serves the
+          # SPA shell. Copy the built index.html (with its hashed asset URLs)
+          # verbatim so the client router resolves the path on load.
+          cp ./pages-out/index.html ./pages-out/404.html
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

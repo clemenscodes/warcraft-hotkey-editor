@@ -15,6 +15,10 @@ pub use props::SystemHotkeysDialogProps;
 #[component]
 pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
     let model = use_system_hotkeys_dialog(&props);
+    let system_hotkeys_open = props.system_hotkeys_open;
+    if !system_hotkeys_open() {
+        return rsx! {};
+    }
     rsx! {
         Dialog { ..DialogProps::from(&model) }
     }

@@ -10,8 +10,12 @@ use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPosi
 use super::components::breadcrumbs::BreadcrumbsProps;
 use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
 use super::props::CollisionsPageProps;
-use crate::services::navigation::app_view::CollisionKind;
-use crate::services::navigation::context::use_view_navigation;
+use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::grid_layout::use_grid_layout;
+use crate::services::navigation::app_view::{AppView, CollisionKind};
+use crate::services::navigation::context::{use_synced_route, use_view_navigation};
+use crate::services::navigation::nav_snapshot::NavSnapshot;
 use dioxus::prelude::*;
 
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
@@ -24,10 +28,27 @@ pub(super) struct CollisionsPageModel {
 /// Computes the three collision models (memoised on the loaded keys and layout),
 /// keeps each kind's selection valid, and shapes the breadcrumbs and active content.
 pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPageModel {
-    let kind = props.kind;
-    let loaded_keys = props.loaded_keys;
-    let grid_layout = props.grid_layout;
     let view_navigation = use_view_navigation();
+    let selection = use_collision_selection();
+    let loaded_keys = use_loaded_keys();
+    let grid_layout = use_grid_layout();
+    let kind = CollisionKind::from_query_param(props.kind.as_deref());
+    let entry = props.entry.clone().filter(|value| !value.is_empty());
+    let mut synced_route = use_synced_route();
+    use_effect(use_reactive!(|(kind, entry)| {
+        let view = AppView::Collisions { kind };
+        view_navigation.restore_view(view);
+        let mut selected = match kind {
+            CollisionKind::Positions => selection.selected_island,
+            CollisionKind::Hotkeys => selection.selected_hotkey_unit,
+            CollisionKind::UnitPositions => selection.selected_unit_position,
+        };
+        if *selected.peek() != entry {
+            selected.set(entry.clone());
+        }
+        let snapshot = NavSnapshot::Collisions { kind, entry };
+        synced_route.set(snapshot);
+    }));
     let islands_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {
@@ -51,9 +72,9 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         let layout = *grid_layout.read();
         UnitPositionPageModel::compute(custom_keys, layout)
     });
-    let mut selected_island = props.selected_island;
-    let mut selected_hotkey_unit = props.selected_hotkey_unit;
-    let mut selected_unit_position = props.selected_unit_position;
+    let mut selected_island = selection.selected_island;
+    let mut selected_hotkey_unit = selection.selected_hotkey_unit;
+    let mut selected_unit_position = selection.selected_unit_position;
     use_effect(move || {
         let islands = islands_memo.read();
         if islands.is_empty() {

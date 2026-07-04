@@ -1,16 +1,16 @@
-use crate::services::navigation::app_view::CollisionKind;
 use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, GridLayout};
 
-/// The Collisions page inputs. Selection signals live in `app.rs` so they survive
-/// leaving the page (a unit click → editor) and ride in the `?entry=` URL param —
-/// one per kind, for per-tab memory.
+/// The collisions page's route parameters: the active collision `?kind=` and the
+/// selected list `?entry=`. That is the page's entire URL state — the editor
+/// selection is the editor's, not the collisions page's, so it is not carried here;
+/// it persists in the shell's signals while this page is shown and reappears in the
+/// URL when the editor is next active.
+///
+/// The per-kind selection signals live in the shell (backing the `?entry=` param, one
+/// per kind for per-tab memory) so they outlive leaving the page and feed the URL
+/// sync; the page reaches them through context, never the router.
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionsPageProps {
-    pub kind: CollisionKind,
-    pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub grid_layout: Signal<GridLayout>,
-    pub selected_island: Signal<Option<String>>,
-    pub selected_hotkey_unit: Signal<Option<String>>,
-    pub selected_unit_position: Signal<Option<String>>,
+    pub kind: Option<String>,
+    pub entry: Option<String>,
 }

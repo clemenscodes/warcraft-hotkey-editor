@@ -8,7 +8,11 @@ use super::components::plan_header::PlanHeaderProps;
 use super::logic::{CarriersDialogData, PlanView};
 use super::props::ResolvePageProps;
 use crate::components::shell::toasts::{ToastOptions, use_toast};
-use crate::services::navigation::context::use_view_navigation;
+use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::context::{use_synced_route, use_view_navigation};
+use crate::services::navigation::nav_snapshot::NavSnapshot;
+use crate::services::resolve_selection::context::use_resolve_selection;
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
 use warcraft_keybinds::CustomKeys;
@@ -41,12 +45,26 @@ pub(super) struct ResolvePlanPresentation {
 /// handler and the carriers dialog, and shapes the active section, breadcrumbs,
 /// and header — returning the state's data for the body to render.
 pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
-    let mut loaded_keys = props.loaded_keys;
     let view_navigation = use_view_navigation();
+    let resolve_selection = use_resolve_selection();
+    let mut loaded_keys = use_loaded_keys();
     let toast_api = use_toast();
     let mut is_running = use_signal(|| false);
     let carriers_dialog = use_signal(|| None::<CarriersDialogData>);
-    let selected_move_category = props.selected_move_category;
+    let selected_move_category = resolve_selection.selected_move_category;
+    let mut synced_route = use_synced_route();
+    let entry = props.entry.clone().filter(|value| !value.is_empty());
+    use_effect(use_reactive!(|entry| {
+        view_navigation.restore_view(AppView::Resolve);
+        let mut selected = resolve_selection.selected_move_category;
+        if *selected.peek() != entry {
+            selected.set(entry.clone());
+        }
+        let snapshot = NavSnapshot::Resolve {
+            entry: entry.clone(),
+        };
+        synced_route.set(snapshot);
+    }));
     let plan_memo = use_memo(move || {
         let guard = loaded_keys.read();
         guard.as_ref().map(PlanView::build)

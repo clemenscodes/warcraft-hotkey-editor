@@ -13,8 +13,10 @@ use hotkey_editor::components::views::collisions_page::components::body::compone
 use hotkey_editor::components::views::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
 
 use hotkey_editor::components::views::resolve_page::ResolvePage;
-use hotkey_editor::services::navigation::app_view::{AppView, CollisionKind};
+use hotkey_editor::services::collision_selection::CollisionSelection;
+use hotkey_editor::services::navigation::app_view::AppView;
 use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
+use hotkey_editor::services::resolve_selection::ResolveSelection;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
@@ -34,73 +36,62 @@ fn make_view_navigation() -> ViewNavigationContext {
     }
 }
 
-fn collisions_page_positions() -> Element {
+/// Provide every context the collisions and resolve pages read now that they source
+/// their state from context instead of props: the loaded document, the grid layout,
+/// the navigation signals, and the per-page selection. The gallery has no router, so
+/// this is the app-specific decorator that lets the pages render in isolation — the
+/// pages never touch the router themselves.
+fn provide_page_contexts() {
     let loaded_keys = use_signal(|| Some(sample_keys()));
+    use_context_provider(|| loaded_keys);
     let grid_layout = use_signal(sample_grid_layout);
+    use_context_provider(|| grid_layout);
     use_context_provider(make_view_navigation);
     let selected_island = use_signal(|| None::<String>);
     let selected_hotkey_unit = use_signal(|| None::<String>);
     let selected_unit_position = use_signal(|| None::<String>);
-    let kind = CollisionKind::Positions;
+    let collision_selection = CollisionSelection {
+        selected_island,
+        selected_hotkey_unit,
+        selected_unit_position,
+    };
+    use_context_provider(|| collision_selection);
+    let selected_move_category = use_signal(|| None::<String>);
+    let resolve_selection = ResolveSelection {
+        selected_move_category,
+    };
+    use_context_provider(|| resolve_selection);
+}
+
+fn collisions_page_positions() -> Element {
+    provide_page_contexts();
+    let kind = Some(String::from("positions"));
     rsx! {
-        CollisionsPage {
-            kind,
-            loaded_keys,
-            grid_layout,
-            selected_island,
-            selected_hotkey_unit,
-            selected_unit_position,
-        }
+        CollisionsPage { kind, entry: None }
     }
 }
 
 fn collisions_page_hotkeys() -> Element {
-    let loaded_keys = use_signal(|| Some(sample_keys()));
-    let grid_layout = use_signal(sample_grid_layout);
-    use_context_provider(make_view_navigation);
-    let selected_island = use_signal(|| None::<String>);
-    let selected_hotkey_unit = use_signal(|| None::<String>);
-    let selected_unit_position = use_signal(|| None::<String>);
-    let kind = CollisionKind::Hotkeys;
+    provide_page_contexts();
+    let kind = Some(String::from("hotkeys"));
     rsx! {
-        CollisionsPage {
-            kind,
-            loaded_keys,
-            grid_layout,
-            selected_island,
-            selected_hotkey_unit,
-            selected_unit_position,
-        }
+        CollisionsPage { kind, entry: None }
     }
 }
 
 fn collisions_page_unit_positions() -> Element {
-    let loaded_keys = use_signal(|| Some(sample_keys()));
-    let grid_layout = use_signal(sample_grid_layout);
-    use_context_provider(make_view_navigation);
-    let selected_island = use_signal(|| None::<String>);
-    let selected_hotkey_unit = use_signal(|| None::<String>);
-    let selected_unit_position = use_signal(|| None::<String>);
-    let kind = CollisionKind::UnitPositions;
+    provide_page_contexts();
+    let kind = Some(String::from("unit-positions"));
     rsx! {
-        CollisionsPage {
-            kind,
-            loaded_keys,
-            grid_layout,
-            selected_island,
-            selected_hotkey_unit,
-            selected_unit_position,
-        }
+        CollisionsPage { kind, entry: None }
     }
 }
 
 fn resolve_page_story() -> Element {
-    let loaded_keys = use_signal(|| Some(sample_keys()));
-    use_context_provider(make_view_navigation);
-    let selected_move_category = use_signal(|| None::<String>);
+    provide_page_contexts();
     rsx! {
         ToastMount {
-            ResolvePage { loaded_keys, selected_move_category }
+            ResolvePage { entry: None }
         }
     }
 }

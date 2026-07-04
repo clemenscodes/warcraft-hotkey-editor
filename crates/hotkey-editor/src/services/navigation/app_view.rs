@@ -68,7 +68,7 @@ impl AppView {
 
 impl CollisionKind {
     #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
-    fn from_query_param(kind_param: Option<&str>) -> Self {
+    pub(crate) fn from_query_param(kind_param: Option<&str>) -> Self {
         match kind_param.unwrap_or("positions") {
             "hotkeys" => Self::Hotkeys,
             "unit-positions" => Self::UnitPositions,

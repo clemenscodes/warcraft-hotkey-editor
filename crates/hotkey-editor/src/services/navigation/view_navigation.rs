@@ -1,4 +1,5 @@
 use crate::services::navigation::app_view::AppView;
+use crate::services::navigation::editor_nav::DecodedEditorNav;
 use dioxus::prelude::*;
 use warcraft_api::{Race, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, UnitMode};
@@ -19,15 +20,52 @@ pub struct ViewNavigationContext {
 
 impl ViewNavigationContext {
     /// Switch to `target`. No-op when `target` already matches the current view.
-    /// Setting the view signal is all that is needed: the workbench's URL-sync
-    /// effect observes the change and pushes the matching route through the router
-    /// (so browser back/forward navigates between views).
+    /// Setting the view signal is all that is needed: the shell's URL-sync effect
+    /// observes the change and pushes the matching route through the router (so
+    /// browser back/forward navigates between views).
     pub fn apply(self, target: AppView) {
         let mut current_view = self.current_view;
         if target == *current_view.read() {
             return;
         }
         current_view.set(target);
+    }
+
+    /// Reconcile the current view alone, without touching the editor selection. The
+    /// collisions and resolve pages call this: their route carries no race/mode/unit/
+    /// search (that is the editor's state, which persists untouched in these signals
+    /// while another page is shown), so they only announce which page is now active.
+    pub fn restore_view(self, view: AppView) {
+        let mut current_view = self.current_view;
+        if *current_view.peek() != view {
+            current_view.set(view);
+        }
+    }
+
+    /// Reconcile the editor route into these navigation signals: set the current view
+    /// and the decoded editor race/mode/unit/search. Each field is set only when it
+    /// actually changes, so restoring a route the signals already match (the common
+    /// case, since the shell's own push wrote it) triggers no needless re-render. This
+    /// is the read side of the shell's URL contract for the editor page — the mounted
+    /// page owns it, so the current view always reflects the live route.
+    pub fn restore(self, view: AppView, nav: &DecodedEditorNav) {
+        self.restore_view(view);
+        let mut active_race = self.active_race;
+        if *active_race.peek() != nav.race {
+            active_race.set(nav.race);
+        }
+        let mut unit_mode = self.unit_mode;
+        if *unit_mode.peek() != nav.unit_mode {
+            unit_mode.set(nav.unit_mode);
+        }
+        let mut selected_unit_id = self.selected_unit_id;
+        if *selected_unit_id.peek() != nav.selected_unit_id {
+            selected_unit_id.set(nav.selected_unit_id.clone());
+        }
+        let mut search_query = self.search_query;
+        if *search_query.peek() != nav.search_query {
+            search_query.set(nav.search_query.clone());
+        }
     }
 
     /// Deep-link into the editor focused on `unit_id`.  Resolves the
