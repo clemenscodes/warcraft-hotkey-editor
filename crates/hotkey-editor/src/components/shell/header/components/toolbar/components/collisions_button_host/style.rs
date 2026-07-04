@@ -5,8 +5,8 @@ use crate::classes;
 // length inside the button — border, radius, icon, badge — scales against this box.
 // The box is 36px on phones and tablets (touch-compact, beside the burger). From laptop
 // up it is a viewport-proportional square — `1.55vw` lands on ~30px through the common
-// desktop widths (matching the deprecated production sizing) and grows with the viewport;
-// the tight toolbar gap keeps the ten-button row well inside its grid track.
+// desktop widths and grows with the viewport; the tight toolbar gap keeps the ten-button
+// row well inside its grid track.
 const BASE: &[&str] = &["inline-flex", "shrink-0", "[container-type:inline-size]"];
 const MOBILE: &[&str] = &["mobile:w-9", "mobile:h-9"];
 const TABLET: &[&str] = &["tablet:w-9", "tablet:h-9"];

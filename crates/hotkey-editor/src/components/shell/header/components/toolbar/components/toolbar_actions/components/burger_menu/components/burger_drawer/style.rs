@@ -7,7 +7,7 @@ const BASE: &[&str] = &[
     "h-dvh",
     "max-h-dvh",
     "z-[71]",
-    "w-[min(85vw,320px)]",
+    "w-[min(74vw,280px)]",
     "[background:linear-gradient(170deg,#0c1d30_0%,#070e1c_100%)]",
     "border-l",
     "border-l-[rgba(255,206,99,0.3)]",
