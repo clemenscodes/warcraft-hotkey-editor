@@ -1,17 +1,17 @@
 use super::state::AppLayout;
 use crate::{classes, states};
 
-// The app shell centres the workbench in a single column with generous padding that
-// tightens toward phones. It also owns the app-wide foundational resets that used to
-// live as global rules in tailwind.input.css: they are `.app`-scoped, so they are
-// inline descendant utilities on this root, not global CSS. Old pixel breakpoints
-// fold into the named bands (the former `<1099px` foundation → mobile+tablet, the
-// `<767px` input floor → mobile).
+// The app shell centres the workbench in a single full-bleed column — no padding, so
+// the shell (and its header) spans the whole viewport width and its content reaches
+// every edge. It also owns the app-wide foundational resets that used to live as global
+// rules in tailwind.input.css: they are `.app`-scoped, so they are inline descendant
+// utilities on this root, not global CSS. Old pixel breakpoints fold into the named
+// bands (the former `<1099px` foundation → mobile+tablet, the `<767px` input floor →
+// mobile).
 const BASE: &[&str] = &[
     "mx-auto",
     "flex",
     "flex-col",
-    "px-4",
     "min-h-[100dvh]",
     "min-w-0",
     "max-w-[100vw]",
@@ -64,15 +64,11 @@ const BASE: &[&str] = &[
     "[&_*::-webkit-scrollbar-thumb]:hover:[background:#ffce63]",
     "[&_*::-webkit-scrollbar-corner]:[background:#08122373]",
 ];
-// Phone/tablet: no top padding, safe-area-aware side/bottom padding (so notches
-// never clip the shell), a content-driven height above the dvh floor, the tighter
-// section gap, and the `<1099px` foundational resets — force every descendant to
+// Phone/tablet: full-bleed with no padding at all (the shell spans the whole viewport and
+// its content reaches every edge), a content-driven height above the dvh floor, the
+// tighter section gap, and the `<1099px` foundational resets — force every descendant to
 // shrink below its min-content and cap images so nothing pushes past the viewport.
-// The `<767px` iOS-zoom input floor (`max(1rem,16px)`) is phone-only.
 const MOBILE: &[&str] = &[
-    "mobile:pl-[max(0.75rem,env(safe-area-inset-left))]",
-    "mobile:pr-[max(0.75rem,env(safe-area-inset-right))]",
-    "mobile:pb-[max(1rem,env(safe-area-inset-bottom))]",
     "mobile:h-auto",
     "mobile:overflow-y-visible",
     "mobile:gap-[16px]",
@@ -81,10 +77,6 @@ const MOBILE: &[&str] = &[
     "mobile:[&_img]:h-auto",
     "mobile:[&_svg]:max-w-full",
     "mobile:[&_svg]:h-auto",
-    "mobile:[&_input]:text-[max(1rem,16px)]",
-    "mobile:[&_textarea]:text-[max(1rem,16px)]",
-    "mobile:[&_select]:text-[max(1rem,16px)]",
-    "mobile:[&_button]:text-[max(1rem,16px)]",
     "mobile:[&_button]:[-webkit-tap-highlight-color:transparent]",
     "mobile:[&_button]:touch-manipulation",
     "mobile:[&_a]:[-webkit-tap-highlight-color:transparent]",
@@ -94,9 +86,6 @@ const MOBILE: &[&str] = &[
     "mobile:[&_input]:touch-manipulation",
 ];
 const TABLET: &[&str] = &[
-    "tablet:pl-[max(0.75rem,env(safe-area-inset-left))]",
-    "tablet:pr-[max(0.75rem,env(safe-area-inset-right))]",
-    "tablet:pb-[max(1rem,env(safe-area-inset-bottom))]",
     "tablet:h-auto",
     "tablet:overflow-y-visible",
     "tablet:gap-[16px]",

@@ -32,6 +32,11 @@ const MOBILE: &[&str] = &[
     "mobile:min-h-14",
     "mobile:max-w-full",
     "mobile:w-full",
+    "mobile:[background-color:#050a1a]",
+    "mobile:[background-image:radial-gradient(ellipse_90%_60%_at_50%_0%,#18365b_0%,transparent_60%),linear-gradient(180deg,#0a1a35_0%,#050a1a_100%)]",
+    "mobile:bg-no-repeat",
+    "mobile:[background-attachment:fixed]",
+    "mobile:[background-size:100%_100%]",
 ];
 
 const TABLET: &[&str] = &[
@@ -49,6 +54,11 @@ const TABLET: &[&str] = &[
     "tablet:min-h-14",
     "tablet:max-w-full",
     "tablet:w-full",
+    "tablet:[background-color:#050a1a]",
+    "tablet:[background-image:radial-gradient(ellipse_90%_60%_at_50%_0%,#18365b_0%,transparent_60%),linear-gradient(180deg,#0a1a35_0%,#050a1a_100%)]",
+    "tablet:bg-no-repeat",
+    "tablet:[background-attachment:fixed]",
+    "tablet:[background-size:100%_100%]",
 ];
 
 const LAPTOP: &[&str] = &[
