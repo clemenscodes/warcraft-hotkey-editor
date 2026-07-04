@@ -52,6 +52,14 @@
   --font-display: "Inter", system-ui, -apple-system, sans-serif;
 }
 
+/* The page canvas behind the app column. The shell drops `viewport-fit=cover`, so on a
+   notched phone the browser keeps the app inside the safe area and paints the notch /
+   home-indicator strips itself — this makes those strips the app's own dark blue rather
+   than the browser default. On a desktop (no safe area) it is never visible. */
+html {
+  background-color: var(--color-warcraft-bg-base);
+}
+
 /* Responsive bands — disjoint width ranges, honest device/resolution names.
    Each band applies ONLY within its range: nothing inherits across bands, so a
    component styles every band explicitly. There is no `wide`/`ultrawide` width

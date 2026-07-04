@@ -1,58 +1,59 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 // The footer is the app's bottom chrome — the full-bleed mirror of the header at the other
-// end of the shell, and, like the header, the query container (`@container`) every `cqi`
-// length beneath it could resolve against. Like the header bar it owns its own defining
-// dimension in `vw`: here that dimension is the font size, `clamp`ed with a floor so the fine
-// print never shrinks to nothing on a small laptop and a ceiling so it never balloons on 4K —
-// exactly the bar-height `clamp` the header uses, one axis over. That single font size is the
-// footer's one knob: every glyph, icon, horizontal gap, and the disclaimer below expresses its
-// length in `em`, so the whole footer scales as one drawing off it. Change the `clamp` and the
-// credit, heart, link icons, separators, and disclaimer all rescale together.
+// end of the shell, and, like the header, a query container (`@container`) any `cqi` length
+// beneath it could resolve against. It is fine print, so its size barely changes across the
+// whole width range: one `text-[clamp(…)]` — a rem floor so it stays legible on a phone, a
+// rem ceiling so it never balloons on 4K, a gentle `vw` between — carries every band. That
+// single font size is the footer's one knob: every glyph, icon, and horizontal gap below
+// expresses its length in `em`, so the whole footer scales as one drawing off it.
 //
-// The bar owns its vertical rhythm with the same `clamp`ed `vw` as its height would take: `py`
-// (top/bottom) equals `gap-y` (between the three rows — credit, links, disclaimer), so the rows
-// sit in four equal vertical spaces — the top margin matches the bottom margin and the rows are
-// evenly distributed rather than bunched at the centre. `gap-y` is the single source of that row
-// spacing (the disclaimer carries no margin of its own). The `clamp` ceiling is what keeps the
-// bar from ballooning in height on 4K, exactly as the header's bar-height `clamp` does.
+// The vertical rhythm is one `clamp`ed `vw`, used for both `py` (top/bottom) and `gap-y`
+// (between the three rows — credit, links, disclaimer). Equal `py` and `gap-y` put the rows
+// in four equal vertical spaces: the top margin matches the bottom margin and the rows are
+// evenly distributed rather than bunched at the centre. `gap-y` is the single source of that
+// row spacing (the disclaimer carries no margin of its own); the `clamp` ceiling keeps the bar
+// from ballooning in height on 4K, exactly as the header's bar-height `clamp` does.
 //
-// BASE is the laptop-and-up truth. The two touch bands override the font ramp for their
-// narrower widths and swap the symmetric `vw` padding for safe-area insets, so the bar clears
-// a notch on the sides and a home indicator at the bottom while staying centered and wrapping.
+// There are no per-band overrides: the whole footer lives in BASE. It needs no safe-area insets
+// because the shell drops `viewport-fit=cover`, so the browser keeps the app clear of device
+// edges and every band renders the same. `mt-auto` pins the bar to the bottom of the shell
+// column when a short view leaves free space, and is a no-op when the view already fills it.
+//
+// The gold hairline along the top is the footer's own `::before`, the exact mirror of the
+// header's `::after` bottom divider: same `bg-warcraft-gold-soft`, same `left-4/right-4` inset
+// to the `px-4` edge, same double-shadow bevel — so the two shell bars frame the content with
+// matching golden edges. `relative` anchors the pseudo to the footer.
 const BASE: &[TailwindClass] = tw![
     "@container",
+    "relative",
     "flex-none",
     "flex",
     "flex-wrap",
     "items-center",
     "justify-center",
+    "tracking-wide",
+    "select-none",
+    "mt-auto",
+    "px-4",
     "gap-x-[0.9em]",
     "gap-y-[clamp(0.4rem,0.85vw,0.8rem)]",
-    "px-4",
     "py-[clamp(0.4rem,0.85vw,0.8rem)]",
-    "text-[clamp(0.65rem,0.78vw,0.88rem)]",
-    "tracking-wide",
+    "leading-[1.3]",
+    "text-center",
     "text-white/60",
-    "select-none",
+    "text-[clamp(0.7rem,0.8vw,0.9rem)]",
+    "before:content-['']",
+    "before:absolute",
+    "before:top-0",
+    "before:left-4",
+    "before:right-4",
+    "before:h-px",
+    "before:bg-warcraft-gold-soft",
+    "before:[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
 ];
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:px-[max(0.5rem,env(safe-area-inset-left))]",
-    "mobile:pt-2",
-    "mobile:pb-[max(0.5rem,env(safe-area-inset-bottom))]",
-    "mobile:text-center",
-    "mobile:leading-[1.3]",
-    "mobile:text-[clamp(0.62rem,2.9vw,0.85rem)]",
-];
-const TABLET: &[TailwindClass] = tw![
-    "tablet:px-[max(0.5rem,env(safe-area-inset-left))]",
-    "tablet:pt-2",
-    "tablet:pb-[max(0.5rem,env(safe-area-inset-bottom))]",
-    "tablet:text-center",
-    "tablet:leading-[1.3]",
-    "tablet:text-[clamp(0.7rem,1.25vw,1.05rem)]",
-    "tablet:mt-auto",
-];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
 const LAPTOP: &[TailwindClass] = tw![];
 const DESKTOP: &[TailwindClass] = tw![];
 const QHD: &[TailwindClass] = tw![];

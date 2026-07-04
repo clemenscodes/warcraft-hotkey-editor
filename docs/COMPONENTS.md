@@ -996,11 +996,12 @@ because the same rules produce a smaller tree.
 
 **A full-bleed bar owns its defining dimension in `vw` + `clamp`.** The header's
 defining dimension is its height (`min-h-[clamp(4rem,4.2vw,8.5rem)]`); the footer's
-is its font size (`text-[clamp(0.72rem,0.95vw,1.75rem)]`) — the very same
-`vw`-with-a-floor-and-ceiling knob, one axis over. The floor keeps the fine print
-legible on a small laptop, the ceiling keeps it from ballooning on 4K, and the `vw`
-in between grows it generously with the viewport. That one font size is the footer's
-single knob.
+is its font size (`text-[clamp(0.7rem,0.8vw,0.9rem)]`) — the same
+`vw`-with-a-floor-and-ceiling knob, one axis over. But the footer is fine print, so
+that font barely changes across the whole width range: the rem floor keeps it legible
+on a phone, the rem ceiling keeps it from ballooning on 4K, and the gentle `vw`
+between leaves it nearly flat — that flatness is the point, a footer should not grow
+into a banner on a big screen. That one font size is the footer's single knob.
 
 **Leaves scale in `em` off that knob — never `px`/`rem`/`vw` inside a leaf.** Every
 glyph, gap, and icon expresses its length in `em` (`w-[1.15em]` for the heart and
@@ -1017,13 +1018,15 @@ size of its own; each sizes its parts as `em` fractions of the one font the bar
 hands down. Change the `clamp` and the credit, heart, link icons, separators, and
 disclaimer all rescale together, still centered, still wrapping.
 
-**`BASE` is the laptop-and-up truth; the two touch bands are deltas.** `BASE` carries
-the `vw` font ramp, the `em` gaps, and the symmetric `vw` padding; `mobile` and
-`tablet` override only the font ramp for their narrower widths and swap the padding
-for safe-area insets so the bar clears a notch and a home indicator. `laptop`
-through `uhd` inherit `BASE` unchanged, so their band arrays are empty — the same
-"`BASE` is the common truth, bands hold only what genuinely differs" the header
-follows.
+**There are no per-band overrides — the whole footer lives in `BASE`.** Unlike the
+header, whose touch bands genuinely differ, the footer renders the same at every
+width: one font clamp, one uniform padding, one vertical rhythm, all in `BASE`, with
+`MOBILE` through `UHD` empty. It needs no safe-area insets because the shell drops
+`viewport-fit=cover`, so the browser keeps the whole app clear of device edges and no
+shell component reaches for `env(safe-area-inset-*)`. This is the lesson the footer
+adds to the header's rule that `BASE` is the common truth: a band array earns entries
+only when the width *genuinely* changes something — and when nothing changes, `BASE`
+is the entire component.
 
 **Every structural rule the header follows, the footer follows too.** The render
 tree is the directory tree to the leaf (`footer` → `footer_credit` →

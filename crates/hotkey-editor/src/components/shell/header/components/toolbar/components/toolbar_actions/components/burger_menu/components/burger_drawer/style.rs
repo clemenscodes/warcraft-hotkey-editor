@@ -19,8 +19,6 @@ const BASE: &[TailwindClass] = tw![
     "transition-transform",
     "duration-[220ms]",
     "ease-[cubic-bezier(0.16,1,0.3,1)]",
-    "[padding-top:env(safe-area-inset-top)]",
-    "[padding-bottom:env(safe-area-inset-bottom)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

@@ -1,6 +1,6 @@
+use crate::app::document_head::DocumentHead;
 use crate::app::hooks::{WorkbenchModel, use_workbench};
 use crate::app::nav_params::RouteParams;
-use crate::app::{FAVICON, KEYBOARD_NAVIGATION_SCRIPT, TAILWIND_STYLES};
 use crate::components::dialogs::help_dialog::HelpDialog;
 use crate::components::dialogs::layout_editor::LayoutEditor;
 use crate::components::dialogs::preview_dialog::PreviewDialog;
@@ -77,31 +77,7 @@ pub fn Workbench(
         handle_keydown,
     } = use_workbench(params);
     rsx! {
-        document::Stylesheet { href: TAILWIND_STYLES }
-        document::Script { src: KEYBOARD_NAVIGATION_SCRIPT, r#type: "module" }
-        document::Link { rel: "icon", r#type: "image/svg+xml", href: FAVICON }
-        document::Link { rel: "icon", r#type: "image/x-icon", href: "favicon.ico" }
-        document::Link { rel: "apple-touch-icon", href: "icon-192.png" }
-        document::Meta {
-            name: "viewport",
-            content: "width=device-width, initial-scale=1, viewport-fit=cover",
-        }
-        document::Meta { property: "og:type", content: "website" }
-        document::Meta { property: "og:title", content: "Warcraft III Hotkey Editor" }
-        document::Meta {
-            property: "og:description",
-            content: "Visual command-card editor for Warcraft III: Reforged. \
-                      Drag keys, export CustomKeys.txt — runs entirely in your browser.",
-        }
-        document::Meta {
-            property: "og:image",
-            content: "https://clemenscodes.github.io/warcraft-hotkey-editor/og-image.png",
-        }
-        document::Meta {
-            property: "og:url",
-            content: "https://clemenscodes.github.io/warcraft-hotkey-editor/",
-        }
-        document::Meta { name: "twitter:card", content: "summary_large_image" }
+        DocumentHead {}
         ToastMount {
             div { class: app_class, onkeydown: handle_keydown,
                 Header {}

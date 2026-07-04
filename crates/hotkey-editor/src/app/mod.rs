@@ -1,3 +1,4 @@
+mod document_head;
 mod hooks;
 mod nav_params;
 mod route;

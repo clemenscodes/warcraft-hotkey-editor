@@ -10,19 +10,9 @@ const BASE: &[TailwindClass] = tw![
     "overflow-y-auto",
 ];
 
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:gap-4",
-    "mobile:pt-5",
-    "mobile:px-4",
-    "mobile:pb-[max(1.25rem,env(safe-area-inset-bottom))]",
-];
+const MOBILE: &[TailwindClass] = tw!["mobile:gap-4", "mobile:pt-5", "mobile:px-4", "mobile:pb-5",];
 
-const TABLET: &[TailwindClass] = tw![
-    "tablet:gap-4",
-    "tablet:pt-5",
-    "tablet:px-4",
-    "tablet:pb-[max(1.25rem,env(safe-area-inset-bottom))]",
-];
+const TABLET: &[TailwindClass] = tw!["tablet:gap-4", "tablet:pt-5", "tablet:px-4", "tablet:pb-5",];
 
 const LAPTOP: &[TailwindClass] = tw![];
 const DESKTOP: &[TailwindClass] = tw![];

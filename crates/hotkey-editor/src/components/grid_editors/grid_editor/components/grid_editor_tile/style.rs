@@ -4,6 +4,10 @@ use crate::{classes, styling::TailwindClass, tw};
 // query container, so the hotkey badge's `cqi` sizing is unchanged and the drag
 // overlays sit exactly over the tile. All sizing is in `cqi`, so it scales with the
 // grid just like the base tile.
+//
+// The cursor tracks draggability: `grab` only on a draggable tile (`data-draggable=true`),
+// the default arrow otherwise — an empty tile is not draggable, so it reads as inert — and
+// `grabbing` while any drag is in flight.
 const BASE: &[TailwindClass] = tw![
     "relative",
     "w-full",
@@ -11,7 +15,8 @@ const BASE: &[TailwindClass] = tw![
     "[container-type:inline-size]",
     "rounded-[1.04cqi]",
     "touch-pan-y",
-    "cursor-grab",
+    "cursor-default",
+    "data-[draggable=true]:cursor-grab",
     "outline-none",
     "kb-focus:[box-shadow:0_0_0_0.52cqi_#ffce63,0_0_3.1cqi_rgba(255,206,99,0.55)]",
     "data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_#ffce63]",
