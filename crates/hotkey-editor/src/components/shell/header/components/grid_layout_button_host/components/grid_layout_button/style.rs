@@ -1,18 +1,17 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-// Fills its host container and draws itself as one cqi-scaled drawing: it takes the
-// host's full width (`w-full`), locks its shape with `aspect-[39/10]` so its height
-// follows, and expresses every interior length — padding, gap, border, radius, font,
-// glow — as a `cqi` fraction of the host box. Make the host wider and the whole button
-// scales up in proportion; there is no fixed length left inside. The host sizes the box
-// per viewport, so the button grows coherently from laptop through 4K.
+// Fills its host container and draws itself as one cqi-scaled drawing: it takes the host's
+// full box (`size-full`) — the host owns the `aspect-[39/10]` shape and gets its size from
+// the header — and expresses every interior length — padding, gap, border, radius, font,
+// glow — as a `cqi` fraction of the host box. Make the host taller and the whole button
+// scales up in proportion; there is no fixed length left inside. The header sizes the host
+// off the shared row height, so the button grows coherently from laptop through 4K.
 const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
     "gap-[4.27cqi]",
-    "w-full",
-    "aspect-[39/10]",
+    "size-full",
     "px-[8.55cqi]",
     "border-[0.3cqi]",
     "border-warcraft-gold",

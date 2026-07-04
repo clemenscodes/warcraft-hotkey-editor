@@ -1,14 +1,17 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-// Fills the host and lays the wordmark out as one cqi-scaled row: the gap between
-// flourishes and title is a container-query length, so it shrinks in step with the
-// title and flourishes as the host narrows. No fixed lengths — the host owns the size.
+// Fills the host box (`size-full`) and centres the wordmark within it vertically
+// (`items-center`), so when the header stretches the host to the full bar height the brand
+// sits centred rather than pinned to the top. It lays the wordmark out as one cqi-scaled
+// row: the gap between flourishes and title is a container-query length, so it shrinks in
+// step with the title and flourishes as the host narrows. No fixed lengths — the host owns
+// the size.
 const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-row",
     "items-center",
     "justify-start",
-    "w-full",
+    "size-full",
     "gap-[2.2cqi]",
     "bg-transparent",
     "border-0",

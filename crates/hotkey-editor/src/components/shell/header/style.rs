@@ -64,42 +64,54 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:[background-size:100%_100%]",
 ];
 
-// From laptop up the bar's height is driven by a `vw`-scaled `min-height` with a
-// `4rem` floor (above the mobile/tablet `min-h-14`) and an `8.5rem` ceiling, so it
-// never reads thinner than the touch header at the laptop floor and grows generously
-// with the viewport through 4K rather than staying flat. `items-center`
-// centres the row within that height; `py-[0.33vw]` is the breathing floor for the
-// rare case the content itself is taller than `min-height`.
+// From laptop up the bar is both a container-query context (`container-type:inline-size`,
+// so its children size in `cqi` off the bar, not the raw viewport) and its own single
+// height knob: a `vw`-scaled `min-height` with a `4rem` floor (above the mobile/tablet
+// `min-h-14`) and an `8.5rem` ceiling, growing generously with the viewport through 4K.
+// `items-stretch` hands that same row height to every column, so the layout button and
+// the toolbar buttons fill it and render at one shared height. `py-[0.7vw]` then insets
+// that fill so the buttons sit shorter than the bar with breathing room above and below —
+// this padding, not any button, is the one knob for the button-to-bar height ratio.
+// Nothing inside carries a fixed size — change the `min-height` (bar height) or the `py`
+// (button ratio) and the whole bar rescales together.
 const LAPTOP: &[TailwindClass] = tw![
     "laptop:grid",
     "laptop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
+    "laptop:items-stretch",
+    "laptop:[container-type:inline-size]",
     "laptop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
     "laptop:gap-[1vw]",
-    "laptop:py-[0.33vw]",
+    "laptop:py-[0.7vw]",
 ];
 
 const DESKTOP: &[TailwindClass] = tw![
     "desktop:grid",
     "desktop:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
+    "desktop:items-stretch",
+    "desktop:[container-type:inline-size]",
     "desktop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
     "desktop:gap-[1vw]",
-    "desktop:py-[0.33vw]",
+    "desktop:py-[0.7vw]",
 ];
 
 const QHD: &[TailwindClass] = tw![
     "qhd:grid",
     "qhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
+    "qhd:items-stretch",
+    "qhd:[container-type:inline-size]",
     "qhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
     "qhd:gap-[1vw]",
-    "qhd:py-[0.33vw]",
+    "qhd:py-[0.7vw]",
 ];
 
 const UHD: &[TailwindClass] = tw![
     "uhd:grid",
     "uhd:[grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)]",
+    "uhd:items-stretch",
+    "uhd:[container-type:inline-size]",
     "uhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
     "uhd:gap-[1vw]",
-    "uhd:py-[0.33vw]",
+    "uhd:py-[0.7vw]",
 ];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD

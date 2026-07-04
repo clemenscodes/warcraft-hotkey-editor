@@ -1,17 +1,18 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 // The layout button's box and container-query context. It owns the centered column at
-// laptop width and up (hidden below, where the drawer offers the action instead) and
-// marks itself the query container, so the button fills it (`w-full`) and every `cqi`
-// length inside the button — padding, gap, border, radius, font, icon — resolves against
-// this box. Its width is viewport-proportional (a vw clamp), so the whole button scales
-// as one drawing across laptop, desktop, and 4K.
+// laptop width and up (hidden below, where the drawer offers the action instead). The
+// header stretches it to the shared row height, and `aspect-[39/10]` turns that height
+// into a definite width — so the box is sized entirely by the bar, with no fixed length
+// of its own. It marks itself the query container off that definite width, so the button
+// fills it (`size-full`) and every `cqi` length inside the button — padding, gap, border,
+// radius, font, icon — resolves against this box and scales as one drawing with the bar.
 const BASE: &[TailwindClass] = tw![
     "hidden",
     "items-center",
     "justify-center",
+    "aspect-[39/10]",
     "[container-type:inline-size]",
-    "w-[clamp(7rem,7.2vw,22rem)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
