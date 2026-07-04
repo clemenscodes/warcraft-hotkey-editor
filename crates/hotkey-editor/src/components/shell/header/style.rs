@@ -13,15 +13,26 @@ use crate::{classes, styling::TailwindClass, tw};
 // fill (its own gradient below laptop, the app's fixed backdrop above) stays edge-to-edge
 // while only the content is inset. Vertical padding stays band-specific: safe-area top +
 // `pb-2` below laptop, symmetric `vw` on laptop and up.
+//
+// The gold divider that separates the bar from the app is the header's own `::after`, not
+// a full-width `border-b`: it is absolutely positioned along the bottom and inset
+// `left-4 right-4` to the same `px-4` edge as the content, so the line ends exactly where
+// the content ends while the bar's fill still spans edge-to-edge. The double drop-shadow
+// under it is the original bevel, now riding the inset line.
 const BASE: &[TailwindClass] = tw![
     "relative",
     "z-50",
     "items-center",
     "flex-none",
     "px-4",
-    "border-b",
-    "border-b-[rgba(255,206,99,0.4)]",
-    "[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
+    "after:content-['']",
+    "after:absolute",
+    "after:bottom-0",
+    "after:left-4",
+    "after:right-4",
+    "after:h-px",
+    "after:bg-[rgba(255,206,99,0.4)]",
+    "after:[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -33,7 +44,7 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:z-[60]",
     "mobile:[padding-top:max(0.5rem,env(safe-area-inset-top))]",
     "mobile:pb-2",
-    "mobile:border-b-[rgba(255,206,99,0.3)]",
+    "mobile:after:bg-[rgba(255,206,99,0.3)]",
     "mobile:min-h-14",
     "mobile:max-w-full",
     "mobile:w-full",
@@ -53,7 +64,7 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:z-[60]",
     "tablet:[padding-top:max(0.5rem,env(safe-area-inset-top))]",
     "tablet:pb-2",
-    "tablet:border-b-[rgba(255,206,99,0.3)]",
+    "tablet:after:bg-[rgba(255,206,99,0.3)]",
     "tablet:min-h-14",
     "tablet:max-w-full",
     "tablet:w-full",
