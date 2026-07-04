@@ -2,11 +2,11 @@ pub mod components;
 mod style;
 
 use crate::assert_component;
-use components::export_button_host::ExportButtonHost;
+use components::export_button::ExportButton;
 use components::help_button::HelpButton;
 use components::preview_button::PreviewButton;
 use components::redo_button::RedoButton;
-use components::resolve_button_host::ResolveButtonHost;
+use components::resolve_button::ResolveButton;
 use components::system_hotkeys_button::SystemHotkeysButton;
 use components::templates_button::TemplatesButton;
 use components::undo_button::UndoButton;
@@ -27,9 +27,9 @@ pub fn InlineActions() -> Element {
             UploadButton {}
             TemplatesButton {}
             SystemHotkeysButton {}
-            ResolveButtonHost {}
+            ResolveButton {}
             PreviewButton {}
-            ExportButtonHost {}
+            ExportButton {}
             HelpButton {}
         }
     }

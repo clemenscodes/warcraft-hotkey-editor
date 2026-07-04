@@ -1,3 +1,5 @@
+pub mod context;
+
 use crate::services::storage::local_storage::LocalStorage;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;

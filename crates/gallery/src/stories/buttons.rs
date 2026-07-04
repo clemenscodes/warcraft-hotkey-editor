@@ -3,11 +3,11 @@ use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::shell::header::components::grid_layout_button_host::components::grid_layout_button::GridLayoutButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::collisions_button_host::components::collisions_button::CollisionsButton;
-use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::export_button_host::components::export_button::ExportButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::export_button::ExportButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::help_button::HelpButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::preview_button::PreviewButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::redo_button::RedoButton;
-use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::resolve_button_host::components::resolve_button::ResolveButton;
+use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::resolve_button::ResolveButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::system_hotkeys_button::SystemHotkeysButton;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::templates_button::TemplatesButton;
@@ -16,8 +16,12 @@ use hotkey_editor::components::shell::header::components::toolbar::components::t
 use hotkey_editor::components::shell::toasts::ToastMount;
 use hotkey_editor::services::customkeys::service::CustomKeysService;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
+use hotkey_editor::services::navigation::app_view::AppView;
+use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use hotkey_editor::services::overlay_state::OverlayState;
 use hotkey_editor::services::undo::UndoHistory;
+use warcraft_api::Race;
+use warcraft_database::UnitMode;
 use warcraft_keybinds::CollisionSummary;
 
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
@@ -31,6 +35,23 @@ fn provide_overlay_state() {
         templates_dialog_open: use_signal(|| false),
     };
     use_context_provider(|| overlay);
+}
+
+/// Provides the app-wide view-navigation context a routing button reads from context,
+/// so a button that navigates on click can be shown in isolation.
+fn make_view_navigation() -> ViewNavigationContext {
+    let current_view = use_signal(|| AppView::Editor);
+    let active_race = use_signal(|| Race::Human);
+    let unit_mode = use_signal(|| UnitMode::Melee);
+    let selected_unit_id = use_signal(|| None::<String>);
+    let search_query = use_signal(String::new);
+    ViewNavigationContext {
+        current_view,
+        active_race,
+        unit_mode,
+        selected_unit_id,
+        search_query,
+    }
 }
 
 /// Placeholder glyph for the base button showcase: a plain rounded square so the
@@ -101,13 +122,8 @@ fn export_button() -> Element {
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let custom_keys_service = CustomKeysService::new(loaded_keys);
     use_context_provider(|| custom_keys_service);
-    let info_open = use_signal(|| false);
     rsx! {
-        ExportButton {
-            visible: true,
-            info_open,
-            on_open: move |_| {},
-        }
+        ExportButton {}
     }
 }
 
@@ -148,12 +164,12 @@ fn upload_button() -> Element {
 }
 
 fn resolve_button() -> Element {
-    let disabled = false;
+    let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
+    let custom_keys_service = CustomKeysService::new(loaded_keys);
+    use_context_provider(|| custom_keys_service);
+    use_context_provider(make_view_navigation);
     rsx! {
-        ResolveButton {
-            disabled,
-            onclick: move |_| {},
-        }
+        ResolveButton {}
     }
 }
 

@@ -3,7 +3,7 @@ use crate::components::dialogs::info_dialogs::upload_info_dialog::UploadInfoDial
 use crate::components::shared::icons::ICON_UPLOAD;
 use crate::components::shell::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButtonProps;
 use crate::components::shell::toasts::{ToastOptions, use_toast};
-use crate::services::customkeys::service::CustomKeysService;
+use crate::services::customkeys::context::{use_custom_keys_service, use_upload_status};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 
@@ -18,8 +18,8 @@ pub(super) struct UploadButtonModel {
 /// chosen file, imports it through the sanctioned service command, and reports via
 /// toast — all here so the body stays pure RSX and nothing is threaded in.
 pub(super) fn use_upload_button() -> UploadButtonModel {
-    let custom_keys_service = use_context::<CustomKeysService>();
-    let mut upload_status = use_context::<Signal<UploadStatus>>();
+    let custom_keys_service = use_custom_keys_service();
+    let mut upload_status = use_upload_status();
     let toast_api = use_toast();
     let mut info_open = use_signal(|| false);
     let on_file_change = EventHandler::new(move |event: FormEvent| {

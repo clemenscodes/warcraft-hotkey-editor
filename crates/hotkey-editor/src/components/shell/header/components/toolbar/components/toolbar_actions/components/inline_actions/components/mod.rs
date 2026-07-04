@@ -1,8 +1,8 @@
-pub mod export_button_host;
+pub mod export_button;
 pub mod help_button;
 pub mod preview_button;
 pub mod redo_button;
-pub mod resolve_button_host;
+pub mod resolve_button;
 pub mod shared;
 pub mod system_hotkeys_button;
 pub mod templates_button;

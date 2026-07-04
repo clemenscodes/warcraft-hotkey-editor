@@ -22,7 +22,7 @@ use super::components::tile_override_upgrade_picker::TileOverrideUpgradePickerPr
 use super::props::TileOverrideProps;
 use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
-use crate::services::customkeys::service::CustomKeysService;
+use crate::services::customkeys::context::use_custom_keys_service;
 
 /// Which field the hotkey picker is currently editing.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -57,7 +57,7 @@ fn label_or_dash(display: &str) -> String {
 pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel {
     let detail = props.detail.clone();
     let loaded_keys = props.loaded_keys;
-    let custom_keys_service = use_context::<CustomKeysService>();
+    let custom_keys_service = use_custom_keys_service();
     let grid_layout = props.grid_layout;
     let selected_from_research = props.selected_from_research;
     let tier_overrides = props.tier_overrides;

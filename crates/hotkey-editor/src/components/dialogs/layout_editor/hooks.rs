@@ -3,7 +3,7 @@ use super::data::QWERTY_ROWS;
 use super::props::LayoutEditorProps;
 use crate::components::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::components::shell::toasts::{ToastOptions, use_toast};
-use crate::services::customkeys::service::CustomKeysService;
+use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 
 use warcraft_keybinds::{
@@ -33,7 +33,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
     let mut grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
-    let custom_keys_service = use_context::<CustomKeysService>();
+    let custom_keys_service = use_custom_keys_service();
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.open;
     let layout_snapshot = *grid_layout.read();

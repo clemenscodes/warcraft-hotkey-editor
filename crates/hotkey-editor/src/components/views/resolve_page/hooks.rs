@@ -8,7 +8,7 @@ use super::components::plan_header::PlanHeaderProps;
 use super::logic::{CarriersDialogData, PlanView};
 use super::props::ResolvePageProps;
 use crate::components::shell::toasts::{ToastOptions, use_toast};
-use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
 use warcraft_keybinds::CustomKeys;
@@ -42,7 +42,7 @@ pub(super) struct ResolvePlanPresentation {
 /// and header — returning the state's data for the body to render.
 pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let mut loaded_keys = props.loaded_keys;
-    let view_navigation = use_context::<ViewNavigationContext>();
+    let view_navigation = use_view_navigation();
     let toast_api = use_toast();
     let mut is_running = use_signal(|| false);
     let carriers_dialog = use_signal(|| None::<CarriersDialogData>);

@@ -10,9 +10,9 @@ use crate::components::shared::icons::{
 };
 
 use crate::services::navigation::app_view::AppView;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-use crate::services::overlay_state::OverlayState;
-use crate::services::undo::UndoHistory;
+use crate::services::navigation::context::use_view_navigation;
+use crate::services::overlay_state::context::use_overlay_state;
+use crate::services::undo::context::use_undo_history;
 use dioxus::prelude::*;
 
 /// The already-shaped controller state the body renders: the drawer open flags,
@@ -30,8 +30,8 @@ pub struct BurgerMenuView {
 /// and the live config, and wires every row's handler and state. The body only
 /// names the result.
 pub fn use_burger_menu() -> BurgerMenuView {
-    let navigation = use_context::<ViewNavigationContext>();
-    let overlay = use_context::<OverlayState>();
+    let navigation = use_view_navigation();
+    let overlay = use_overlay_state();
     let mut system_hotkeys_open = overlay.system_hotkeys_open;
     let mut help_open = overlay.help_open;
     let mut layout_dialog_open = overlay.layout_dialog_open;
@@ -59,7 +59,7 @@ pub fn use_burger_menu() -> BurgerMenuView {
     let mut download_info_open = use_signal::<bool>(|| false);
     let preview_active = preview_open();
     let system_hotkeys_active = system_hotkeys_open();
-    let history = use_context::<UndoHistory>();
+    let history = use_undo_history();
     let can_undo = history.can_undo();
     let can_redo = history.can_redo();
     let toggle = EventHandler::new(move |_event: MouseEvent| {

@@ -1,18 +1,18 @@
 use crate::components::dialogs::info_dialogs::download_info_dialog::{
     DownloadInfoDialog, DownloadInfoDialogProps,
 };
-use crate::services::customkeys::service::CustomKeysService;
+use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::files::download::BlobDownload;
 use dioxus::prelude::*;
 
 /// Connected wrapper for the download dialog: reads the live document from the
-/// [`CustomKeysService`] and owns the confirm handler that serializes and
+/// [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) and owns the confirm handler that serializes and
 /// downloads it. Neither the export button nor the burger menu touches the
 /// document to offer a download — they place this host and pass only the open
 /// signal. Owns no markup beyond the dialog it wraps.
 #[component]
 pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
-    let custom_keys_service = use_context::<CustomKeysService>();
+    let custom_keys_service = use_custom_keys_service();
     let keys = custom_keys_service.keys();
     let on_confirm = EventHandler::new(move |_event: ()| {
         let serialized = {

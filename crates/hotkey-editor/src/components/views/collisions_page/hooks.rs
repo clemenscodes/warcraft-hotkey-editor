@@ -11,7 +11,7 @@ use super::components::breadcrumbs::BreadcrumbsProps;
 use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
 use super::props::CollisionsPageProps;
 use crate::services::navigation::app_view::CollisionKind;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
@@ -27,7 +27,7 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
     let kind = props.kind;
     let loaded_keys = props.loaded_keys;
     let grid_layout = props.grid_layout;
-    let view_navigation = use_context::<ViewNavigationContext>();
+    let view_navigation = use_view_navigation();
     let islands_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {

@@ -1,11 +1,11 @@
 use super::components::grid_layout_button::GridLayoutButtonProps;
-use crate::services::overlay_state::OverlayState;
+use crate::services::overlay_state::context::use_overlay_state;
 use dioxus::prelude::*;
 
 /// Reads the overlay context and shapes the grid-layout button's props: whether
 /// the layout dialog is open (for aria) and the toggle handler that opens it.
 pub(super) fn use_grid_layout_button() -> GridLayoutButtonProps {
-    let overlay = use_context::<OverlayState>();
+    let overlay = use_overlay_state();
     let mut layout_dialog_open = overlay.layout_dialog_open;
     let is_open = layout_dialog_open();
     let on_toggle = EventHandler::new(move |_event: MouseEvent| {
