@@ -1,6 +1,6 @@
 mod style;
 
-use super::shared::brand_decoration::BrandDecoration;
+use super::shared::brand_decoration_host::BrandDecorationHost;
 use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
@@ -10,6 +10,6 @@ assert_component!(BrandDecorationLeading);
 #[component]
 pub fn BrandDecorationLeading() -> Element {
     rsx! {
-        span { class: CLASS, BrandDecoration {} }
+        span { class: CLASS, BrandDecorationHost {} }
     }
 }

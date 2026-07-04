@@ -1,30 +1,22 @@
 use crate::classes;
 
+// The count badge scales with the button: its corner offsets and font size are cqi
+// fractions of the button box, so it holds its position and proportion at any size.
 const BASE: &[&str] = &[
     "absolute",
-    "top-[0.4rem]",
-    "right-[0.45rem]",
+    "top-[8cqi]",
+    "right-[9cqi]",
     "font-mono",
     "font-bold",
     "leading-none",
-    "text-base",
+    "text-[length:20cqi]",
     "text-[#ffe39a]",
     "pointer-events-none",
-    "[text-shadow:1px_1px_0_rgba(0,0,0,0.95),-1px_1px_0_rgba(0,0,0,0.95),1px_-1px_0_rgba(0,0,0,0.95),-1px_-1px_0_rgba(0,0,0,0.95),0_0_3px_rgba(0,0,0,0.95)]",
+    "[text-shadow:1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),0_0_3.75cqi_rgba(0,0,0,0.95)]",
 ];
 
-const MOBILE: &[&str] = &[
-    "mobile:top-[5px]",
-    "mobile:right-[6px]",
-    "mobile:text-[0.9rem]",
-];
-
-const TABLET: &[&str] = &[
-    "tablet:top-[5px]",
-    "tablet:right-[6px]",
-    "tablet:text-[0.9rem]",
-];
-
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

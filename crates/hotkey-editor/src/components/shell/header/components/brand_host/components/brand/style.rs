@@ -1,13 +1,15 @@
 use crate::classes;
 
+// Fills the host and lays the wordmark out as one cqi-scaled row: the gap between
+// flourishes and title is a container-query length, so it shrinks in step with the
+// title and flourishes as the host narrows. No fixed lengths — the host owns the size.
 const BASE: &[&str] = &[
     "flex",
     "flex-row",
     "items-center",
     "justify-start",
-    "min-w-0",
-    "flex-initial",
-    "gap-4",
+    "w-full",
+    "gap-[2.2cqi]",
     "bg-transparent",
     "border-0",
     "p-0",
@@ -20,8 +22,8 @@ const BASE: &[&str] = &[
     "focus-visible:[outline-offset:2px]",
 ];
 
-const MOBILE: &[&str] = &["mobile:gap-2", "mobile:flex-auto"];
-const TABLET: &[&str] = &["tablet:gap-2", "tablet:flex-auto"];
+const MOBILE: &[&str] = &[];
+const TABLET: &[&str] = &[];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];

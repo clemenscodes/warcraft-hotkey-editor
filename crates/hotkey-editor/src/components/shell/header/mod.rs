@@ -2,7 +2,7 @@ pub mod components;
 mod style;
 
 use crate::assert_component;
-use components::brand::Brand;
+use components::brand_host::BrandHost;
 use components::grid_layout_button_host::GridLayoutButtonHost;
 use components::toolbar::Toolbar;
 use dioxus::prelude::*;
@@ -16,9 +16,9 @@ assert_component!(Header);
 #[component]
 pub fn Header() -> Element {
     rsx! {
-        header { 
+        header {
             class: CLASS,
-            Brand {}
+            BrandHost {}
             GridLayoutButtonHost {}
             Toolbar {}
         }

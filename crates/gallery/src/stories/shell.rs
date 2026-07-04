@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::shell::footer::Footer;
 use hotkey_editor::components::shell::header::Header;
-use hotkey_editor::components::shell::header::components::brand::Brand;
+use hotkey_editor::components::shell::header::components::brand_host::BrandHost;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::ToolbarActions;
 use hotkey_editor::components::shell::header::components::toolbar::components::toolbar_actions::components::burger_menu::BurgerMenu;
 use hotkey_editor::components::shell::toasts::ToastMount;
@@ -51,7 +51,7 @@ pub fn stories() -> Vec<Story> {
     vec![
         Story::single("Shell", "Footer", footer_default),
         Story::single("Shell", "ToastMount", toast_mount_with_child),
-        Story::single("Shell", "Brand", brand_default),
+        Story::single("Shell", "BrandHost", brand_default),
         Story::single("Shell", "BurgerMenu", burger_menu_default),
         Story::single("Shell", "ToolbarActions", toolbar_actions_default),
         Story::single("Shell", "Header", header_default),
@@ -75,7 +75,7 @@ fn toast_mount_with_child() -> Element {
 fn brand_default() -> Element {
     provide_navigation();
     rsx! {
-        Brand {}
+        BrandHost {}
     }
 }
 

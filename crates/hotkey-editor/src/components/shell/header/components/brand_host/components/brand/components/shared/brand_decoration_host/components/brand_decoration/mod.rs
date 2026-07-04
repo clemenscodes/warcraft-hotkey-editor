@@ -7,8 +7,9 @@ use style::CLASS;
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 assert_component!(BrandDecoration);
 
-/// The gold flourish itself, sized for the header. The leading and trailing
-/// wrappers orient it; this base never flips.
+/// The gold flourish itself. It scales to fill its host container via container-query
+/// units and keeps its aspect ratio, so it never distorts; the host owns the box and
+/// the leading/trailing wrappers orient it.
 #[component]
 pub fn BrandDecoration() -> Element {
     rsx! {

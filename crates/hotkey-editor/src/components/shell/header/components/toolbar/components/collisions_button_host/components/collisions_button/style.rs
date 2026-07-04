@@ -1,17 +1,20 @@
 use super::state::CollisionState;
 use crate::{classes, states};
 
+// The button surface fills its host container and draws itself as a cqi-scaled drawing:
+// every interior length resolves against the host box (the host is the query context).
+// The box is a fixed size per band, so the border is tuned per band to land on 1px at
+// each size (1.25cqi at the 80px desktop box, 2.8cqi at the 36px compact box); radius,
+// focus ring, icon and badge scale uniformly.
 const BASE: &[&str] = &[
     "relative",
-    "inline-flex",
+    "flex",
     "items-center",
     "justify-center",
-    "shrink-0",
+    "size-full",
     "p-0",
-    "w-[5rem]",
-    "h-[5rem]",
-    "rounded-[12px]",
-    "border",
+    "rounded-[15cqi]",
+    "border-[1.25cqi]",
     "border-[#6c5a1f]",
     "[background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)]",
     "cursor-pointer",
@@ -19,25 +22,11 @@ const BASE: &[&str] = &[
     "focus:outline-none",
     "focus-visible:border-white",
     "focus-visible:text-white",
-    "focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
+    "focus-visible:[box-shadow:0_0_0_3.75cqi_#fff,0_0_20cqi_rgba(255,255,255,0.55)]",
 ];
 
-const MOBILE: &[&str] = &[
-    "mobile:w-11",
-    "mobile:h-11",
-    "mobile:min-w-11",
-    "mobile:min-h-11",
-    "mobile:rounded-[10px]",
-];
-
-const TABLET: &[&str] = &[
-    "tablet:w-11",
-    "tablet:h-11",
-    "tablet:min-w-11",
-    "tablet:min-h-11",
-    "tablet:rounded-[10px]",
-];
-
+const MOBILE: &[&str] = &["mobile:border-[2.8cqi]"];
+const TABLET: &[&str] = &["tablet:border-[2.8cqi]"];
 const LAPTOP: &[&str] = &[];
 const DESKTOP: &[&str] = &[];
 const QHD: &[&str] = &[];
@@ -51,15 +40,15 @@ const ATTENTION: &[&str] = &[
     "hover:border-warcraft-gold",
     "hover:text-warcraft-gold",
     "hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)]",
-    "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.3)]",
+    "hover:[box-shadow:0_0_15cqi_rgba(255,206,99,0.3)]",
 ];
 
 const CLEAR: &[&str] = &[
     "border-warcraft-gold",
     "text-warcraft-gold",
-    "[box-shadow:0_0_10px_rgba(255,206,99,0.2)]",
+    "[box-shadow:0_0_12.5cqi_rgba(255,206,99,0.2)]",
     "hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)]",
-    "hover:[box-shadow:0_0_14px_rgba(255,206,99,0.45)]",
+    "hover:[box-shadow:0_0_17.5cqi_rgba(255,206,99,0.45)]",
 ];
 states! {
     CollisionState, Attention => ATTENTION, Clear => CLEAR

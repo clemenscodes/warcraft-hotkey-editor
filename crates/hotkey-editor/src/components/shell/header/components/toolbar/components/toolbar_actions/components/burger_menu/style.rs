@@ -1,5 +1,7 @@
 use crate::classes;
 
+// The burger appears at a single size (the compact header, hidden at laptop and up),
+// so its chrome is fixed rather than cqi — there is no size change to scale against.
 const BASE: &[&str] = &[
     "inline-flex",
     "items-center",
@@ -7,14 +9,14 @@ const BASE: &[&str] = &[
     "shrink-0",
     "self-center",
     "p-0",
-    "w-11",
-    "h-11",
-    "min-w-11",
-    "min-h-11",
+    "w-9",
+    "h-9",
+    "min-w-9",
+    "min-h-9",
     "[background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)]",
     "border",
     "border-[#6c5a1f]",
-    "rounded-[10px]",
+    "rounded-[5.4px]",
     "text-warcraft-text-secondary",
     "cursor-pointer",
     "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",

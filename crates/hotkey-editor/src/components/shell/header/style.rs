@@ -13,6 +13,7 @@ const BASE: &[&str] = &[
 const MOBILE: &[&str] = &[
     "mobile:flex",
     "mobile:flex-row",
+    "mobile:justify-between",
     "mobile:sticky",
     "mobile:top-0",
     "mobile:z-[60]",
@@ -29,6 +30,7 @@ const MOBILE: &[&str] = &[
 const TABLET: &[&str] = &[
     "tablet:flex",
     "tablet:flex-row",
+    "tablet:justify-between",
     "tablet:sticky",
     "tablet:top-0",
     "tablet:z-[60]",
