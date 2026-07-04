@@ -1,4 +1,4 @@
-use super::super::super::GridEditorTileProps;
+use super::super::super::TileFaceProps;
 use super::super::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
@@ -9,8 +9,8 @@ pub struct TileBadgeProps {
     pub state: HotkeyBadgeState,
 }
 
-impl From<&GridEditorTileProps> for TileBadgeProps {
-    fn from(props: &GridEditorTileProps) -> Self {
+impl From<&TileFaceProps> for TileBadgeProps {
+    fn from(props: &TileFaceProps) -> Self {
         let letter = props.hotkey;
         let state = props.badge_state;
         Self { letter, state }

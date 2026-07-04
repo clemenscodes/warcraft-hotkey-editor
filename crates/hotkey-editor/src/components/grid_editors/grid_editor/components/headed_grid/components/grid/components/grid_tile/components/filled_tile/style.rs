@@ -11,7 +11,6 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[1.04cqi]",
     "[transition:border-color_0.12s_ease,box-shadow_0.12s_ease]",
     "touch-pan-y",
-    "cursor-grab",
     "outline-none",
     "hover:border-warcraft-gold",
     "active:border-warcraft-gold",
@@ -36,7 +35,6 @@ const BASE: &[TailwindClass] = tw![
     "data-[dragging-source=true]:[&>*]:invisible",
     "data-[dragging-source=true]:data-[drag-over=true]:border-warcraft-gold",
     "data-[dragging-source=true]:data-[drag-over=true]:border-dashed",
-    "[body:has([data-dragging-source=true])_&]:cursor-grabbing",
     "[body:has([data-dragging-source=true])_&]:transition-none",
 ];
 

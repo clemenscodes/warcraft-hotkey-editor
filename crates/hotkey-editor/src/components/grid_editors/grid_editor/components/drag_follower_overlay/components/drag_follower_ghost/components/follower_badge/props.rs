@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-use crate::components::grid_editors::grid_editor::components::grid_editor_tile::components::hotkey_badge::{
+use crate::components::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::{
     HotkeyBadgeProps, HotkeyBadgeState,
 };
 

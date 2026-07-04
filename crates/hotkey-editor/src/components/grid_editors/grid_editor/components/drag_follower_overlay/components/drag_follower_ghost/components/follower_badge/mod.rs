@@ -4,7 +4,7 @@ mod style;
 use crate::assert_component;
 use dioxus::prelude::*;
 
-use crate::components::grid_editors::grid_editor::components::grid_editor_tile::components::hotkey_badge::{
+use crate::components::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::{
     HotkeyBadge, HotkeyBadgeProps,
 };
 

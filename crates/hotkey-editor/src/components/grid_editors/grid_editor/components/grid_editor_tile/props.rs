@@ -1,16 +1,14 @@
-use super::components::hotkey_badge::HotkeyBadgeState;
-use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
-    GridTileProps, GridTileState,
-};
-use crate::model::icons::IconUrl;
+use super::components::tile_face::TileFaceProps;
+use super::components::tile_face::components::hotkey_badge::HotkeyBadgeState;
+use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
 
-/// The interactive editor tile. It wraps the inert base `GridTile` and layers the
-/// hotkey badge and every editor concern on top: focus, drag state, and the event
-/// handlers. This is the only tile that expects a hotkey. Its address is the
-/// domain `GridCoordinate`; its hotkey is the domain `HotkeyToken`.
+/// The interactive editor tile's props: the `TileFace` painter's visual fields plus the
+/// editor's interaction — focus, drag state, and the event handlers. This is the only
+/// tile that expects a hotkey. Its address is the domain `GridCoordinate`; its hotkey is
+/// the domain `HotkeyToken`.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridEditorTileProps {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
@@ -53,60 +51,49 @@ pub struct GridEditorTileProps {
     pub ondoubleclick: EventHandler<MouseEvent>,
 }
 
-impl From<&GridEditorTileProps> for GridTileProps {
-    /// The inert base tile: only the presentational fields, none of the editor's
-    /// interaction.
+impl From<&GridEditorTileProps> for TileFaceProps {
+    /// The painter's slice of the editor tile: the visual fields, none of the interaction.
     fn from(props: &GridEditorTileProps) -> Self {
         let coordinate = props.coordinate;
         let race = props.race;
         let icon = props.icon.clone();
         let label = props.label.clone();
+        let hotkey = props.hotkey;
+        let badge_state = props.badge_state;
         let state = props.state;
         Self {
             coordinate,
             race,
             icon,
             label,
+            hotkey,
+            badge_state,
             state,
         }
     }
 }
 
 impl From<&RenderedTile> for GridEditorTileProps {
-    /// The one adaptation the UI performs on a domain tile: a raw icon path becomes
-    /// an asset URL and the domain flags pick the widget's visual enums. No
-    /// decision is made here, and no interaction is wired: every handler and drag
-    /// flag stays at its default. The editor overlays those on top; a read-only
-    /// consumer like the templates preview uses this as-is.
+    /// The read-only adaptation from a domain tile: the paint comes from `TileFaceProps`,
+    /// and the editor overlays behavior on top. Here every handler stays at its default
+    /// (`render.rs` wires them); only the two interaction flags the domain decides —
+    /// focusability and draggability — are read from the rendered tile.
     fn from(rendered: &RenderedTile) -> Self {
-        let coordinate = rendered.coordinate();
-        let icon = rendered
-            .icon()
-            .map(IconUrl::from_icon_path)
-            .map(|url| url.to_string());
-        let label = rendered.display_name().to_string();
-        let hotkey = rendered.hotkey();
-        let badge_state = if rendered.is_conflict() {
-            HotkeyBadgeState::Conflict
-        } else if rendered.is_passive() {
-            HotkeyBadgeState::Passive
-        } else {
-            HotkeyBadgeState::Normal
-        };
-        let state = if rendered.occupant().is_none() {
-            GridTileState::Empty
-        } else if rendered.is_selected() {
-            GridTileState::Selected
-        } else if rendered.is_command() {
-            GridTileState::Command
-        } else {
-            GridTileState::Filled
-        };
+        let face = TileFaceProps::from(rendered);
+        let TileFaceProps {
+            coordinate,
+            race,
+            icon,
+            label,
+            hotkey,
+            badge_state,
+            state,
+        } = face;
         let is_focusable = rendered.occupant().is_some();
         let draggable = rendered.draggable();
         Self {
             coordinate,
-            race: Race::Neutral,
+            race,
             icon,
             label,
             hotkey,

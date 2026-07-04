@@ -5,10 +5,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
-use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
-    GridTile, GridTileProps,
-};
-use components::tile_badge::{TileBadge, TileBadgeProps};
+use components::tile_face::{TileFace, TileFaceProps};
 use dioxus::prelude::*;
 pub use kind::EditorTileKind;
 use logic::EditorTileChrome;
@@ -16,15 +13,13 @@ pub use props::GridEditorTileProps;
 use style::CLASS;
 assert_component!(GridEditorTile);
 
-/// The interactive command tile: the inert base `GridTile` with the hotkey badge
-/// layered on top, wrapped in the element that owns all interaction — focus, drag
-/// state, and every event handler. The base tile and the badge are siblings under
-/// this wrapper; the wrapper is the drag/click target and the badge's positioning
-/// and container context.
+/// The interactive command tile: the connected Host that wraps the presentational
+/// `TileFace` painter and owns all interaction — focus, drag state, the cursor, and
+/// every event handler. The painter draws the tile; this wrapper is the drag/click
+/// target and layers the drag-over ring, dragging-source ghost, and focus ring over it.
 #[component]
 pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
-    let base = GridTileProps::from(&props);
-    let badge = TileBadgeProps::from(&props);
+    let face = TileFaceProps::from(&props);
     let EditorTileChrome {
         tabindex,
         draggable_attribute,
@@ -54,8 +49,7 @@ pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
             onlostpointercapture,
             onclick,
             ondoubleclick,
-            GridTile { ..base }
-            TileBadge { ..badge }
+            TileFace { ..face }
         }
     }
 }

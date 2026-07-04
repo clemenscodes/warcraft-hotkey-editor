@@ -1,9 +1,10 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-// The interactive wrapper coincides with the base tile it wraps: same square, same
-// query container, so the hotkey badge's `cqi` sizing is unchanged and the drag
-// overlays sit exactly over the tile. All sizing is in `cqi`, so it scales with the
-// grid just like the base tile.
+// The Host coincides with the `TileFace` painter it wraps — same square, same corners —
+// so the drag-over ring, dragging-source ghost, and focus ring sit exactly over the
+// drawn tile. The query container itself lives on the painter (so its badge sizes with
+// no Host, in the preview); the Host has none, so its own `cqi` overlays resolve against
+// the outer grid, the same box they always did.
 //
 // The cursor tracks draggability: `grab` only on a draggable tile (`data-draggable=true`),
 // the default arrow otherwise — an empty tile is not draggable, so it reads as inert — and
@@ -12,7 +13,6 @@ const BASE: &[TailwindClass] = tw![
     "relative",
     "w-full",
     "aspect-square",
-    "[container-type:inline-size]",
     "rounded-[1.04cqi]",
     "touch-pan-y",
     "cursor-default",

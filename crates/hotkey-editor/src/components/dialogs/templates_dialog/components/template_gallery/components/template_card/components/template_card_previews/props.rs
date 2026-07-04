@@ -1,6 +1,6 @@
 use super::super::super::TemplateCardProps;
-use crate::components::grid_editors::grid_editor::components::grid_editor_tile::{
-    EditorTileKind, GridEditorTileProps,
+use crate::components::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::{
+    TileFaceKind, TileFaceProps,
 };
 use crate::components::grid_editors::grid_editor::components::headed_grid::HeadedGridProps;
 use crate::components::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
@@ -20,11 +20,11 @@ impl From<&TemplateCardProps> for TemplateCardPreviewsProps {
     }
 }
 
-/// The command card preview: the reused headed grid captioned "Command card",
-/// drawing the template's command tiles read-only.
-pub(super) fn command_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<EditorTileKind> {
+/// The command card preview: a headed grid of read-only `TileFace` painters — the same
+/// tiles the editor draws, without any of its behaviour — captioned "Command card".
+pub(super) fn command_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<TileFaceKind> {
     let tiles = preview_tiles(resolved.command_tiles());
-    let kind = EditorTileKind;
+    let kind = TileFaceKind;
     let grid = GridProps { kind, tiles };
     HeadedGridProps {
         heading: "Command card",
@@ -33,9 +33,9 @@ pub(super) fn command_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<Ed
 }
 
 /// The research menu preview, captioned "Research menu".
-pub(super) fn research_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<EditorTileKind> {
+pub(super) fn research_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<TileFaceKind> {
     let tiles = preview_tiles(resolved.research_tiles());
-    let kind = EditorTileKind;
+    let kind = TileFaceKind;
     let grid = GridProps { kind, tiles };
     HeadedGridProps {
         heading: "Research menu",
@@ -43,15 +43,13 @@ pub(super) fn research_preview(resolved: &ResolvedTemplate) -> HeadedGridProps<E
     }
 }
 
-/// Adapts a template's resolved tiles into read-only `GridEditorTileProps`, no
-/// handlers, so the preview draws the same tiles the editor does without its
-/// behavior.
-fn preview_tiles(source: &[RenderedTile]) -> [GridEditorTileProps; COMMAND_GRID_TILE_COUNT] {
-    let tile_list: Vec<GridEditorTileProps> =
-        source.iter().map(GridEditorTileProps::from).collect();
+/// Adapts a template's resolved tiles into read-only `TileFaceProps` — pure paint, no
+/// handlers — so the preview draws the same tiles the editor does without its behaviour.
+fn preview_tiles(source: &[RenderedTile]) -> [TileFaceProps; COMMAND_GRID_TILE_COUNT] {
+    let tile_list: Vec<TileFaceProps> = source.iter().map(TileFaceProps::from).collect();
     tile_list
         .try_into()
-        .unwrap_or_else(|list: Vec<GridEditorTileProps>| {
+        .unwrap_or_else(|list: Vec<TileFaceProps>| {
             panic!(
                 "template preview grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
                 list.len(),
