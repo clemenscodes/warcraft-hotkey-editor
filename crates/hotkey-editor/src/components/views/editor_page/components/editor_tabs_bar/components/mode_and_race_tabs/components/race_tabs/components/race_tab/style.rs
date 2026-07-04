@@ -1,7 +1,7 @@
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 use warcraft_api::Race;
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "group",
     "relative",
     "flex-1",
@@ -55,29 +55,29 @@ const BASE: &[&str] = &[
 // Phone/tablet: a swipe-scannable banner-card strip — each tab a chunky fixed
 // height (all five share the row) with tighter type and a slightly softer banner
 // brightness than the desktop row.
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:h-[clamp(112px,36vw,200px)]",
     "mobile:min-h-0",
     "mobile:text-[clamp(0.75rem,2.6vw,1rem)]",
     "mobile:before:brightness-[1.35]",
     "mobile:before:saturate-[1.2]",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:h-[clamp(112px,36vw,200px)]",
     "tablet:min-h-0",
     "tablet:text-[clamp(0.75rem,2.6vw,1rem)]",
     "tablet:before:brightness-[1.35]",
     "tablet:before:saturate-[1.2]",
 ];
-const LAPTOP: &[&str] = &["laptop:min-h-[clamp(3rem,6vh,5rem)]"];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw!["laptop:min-h-[clamp(3rem,6vh,5rem)]"];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const HUMAN: &[&str] = &[
+const HUMAN: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#173266_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png')]",
     "hover:border-race-human",
@@ -86,7 +86,7 @@ const HUMAN: &[&str] = &[
     "data-[active=true]:bg-[linear-gradient(180deg,#173266_0%,#0a1432_100%)]",
     "data-[active=true]:shadow-[0_0_22px_rgba(106,161,255,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
 ];
-const ORC: &[&str] = &[
+const ORC: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#5a1212_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png')]",
     "hover:border-race-orc",
@@ -95,7 +95,7 @@ const ORC: &[&str] = &[
     "data-[active=true]:bg-[linear-gradient(180deg,#5a1212_0%,#0a1432_100%)]",
     "data-[active=true]:shadow-[0_0_22px_rgba(255,122,122,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
 ];
-const NIGHTELF: &[&str] = &[
+const NIGHTELF: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#0c4348_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png')]",
     "hover:border-race-nightelf",
@@ -104,7 +104,7 @@ const NIGHTELF: &[&str] = &[
     "data-[active=true]:bg-[linear-gradient(180deg,#0c4348_0%,#0a1432_100%)]",
     "data-[active=true]:shadow-[0_0_22px_rgba(95,218,218,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
 ];
-const UNDEAD: &[&str] = &[
+const UNDEAD: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#321650_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png')]",
     "hover:border-race-undead",
@@ -113,7 +113,7 @@ const UNDEAD: &[&str] = &[
     "data-[active=true]:bg-[linear-gradient(180deg,#321650_0%,#0a1432_100%)]",
     "data-[active=true]:shadow-[0_0_22px_rgba(199,155,255,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
 ];
-const NEUTRAL: &[&str] = &[
+const NEUTRAL: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#4a3d14_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png')]",
     "hover:border-warcraft-gold",

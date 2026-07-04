@@ -1,5 +1,5 @@
-use crate::classes;
-const BASE: &[&str] = &[
+use crate::{classes, styling::TailwindClass, tw};
+const BASE: &[TailwindClass] = tw![
     "grid",
     "grid-cols-[repeat(auto-fill,minmax(450px,1fr))]",
     "gap-6",
@@ -11,22 +11,22 @@ const BASE: &[&str] = &[
     "[scrollbar-width:thin]",
     "[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
 ];
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:grid-cols-[minmax(0,1fr)]",
     "mobile:flex-none",
     "mobile:min-h-[auto]",
     "mobile:overflow-y-visible",
     "mobile:p-[1rem_0]",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:grid-cols-[minmax(0,1fr)]",
     "tablet:flex-none",
     "tablet:min-h-[auto]",
     "tablet:overflow-y-visible",
     "tablet:p-[1rem_0]",
 ];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

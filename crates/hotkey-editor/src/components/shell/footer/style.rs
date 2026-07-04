@@ -1,6 +1,6 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-none",
     "flex",
     "flex-wrap",
@@ -16,7 +16,7 @@ const BASE: &[&str] = &[
     "select-none",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:pt-2",
     "mobile:px-[max(0.5rem,env(safe-area-inset-left))]",
     "mobile:pb-[max(0.5rem,env(safe-area-inset-bottom))]",
@@ -25,7 +25,7 @@ const MOBILE: &[&str] = &[
     "mobile:text-[11px]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:pt-2",
     "tablet:px-[max(0.5rem,env(safe-area-inset-left))]",
     "tablet:pb-[max(0.5rem,env(safe-area-inset-bottom))]",
@@ -35,10 +35,10 @@ const TABLET: &[&str] = &[
     "tablet:mt-auto",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The burger appears at a single size (the compact header, hidden at laptop and up),
 // so its chrome is fixed rather than cqi — there is no size change to scale against.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
@@ -30,12 +30,12 @@ const BASE: &[&str] = &[
     "focus-visible:[box-shadow:0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &["laptop:hidden"];
-const DESKTOP: &[&str] = &["desktop:hidden"];
-const QHD: &[&str] = &["qhd:hidden"];
-const UHD: &[&str] = &["uhd:hidden"];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw!["laptop:hidden"];
+const DESKTOP: &[TailwindClass] = tw!["desktop:hidden"];
+const QHD: &[TailwindClass] = tw!["qhd:hidden"];
+const UHD: &[TailwindClass] = tw!["uhd:hidden"];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

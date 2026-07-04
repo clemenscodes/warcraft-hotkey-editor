@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The primary ubertip / tip text block for an ability or upgrade. A scrollable
 // gold-edged panel on the sidebar; natural-height and smaller text on small screens.
 // Each line is a `<p>` (pre-wrapped) so authored spacing survives.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-1",
     "min-h-0",
     "overflow-y-auto",
@@ -23,7 +23,7 @@ const BASE: &[&str] = &[
     "[&>p]:whitespace-pre-wrap",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-none",
     "mobile:overflow-visible",
     "mobile:max-h-none",
@@ -31,7 +31,7 @@ const MOBILE: &[&str] = &[
     "mobile:leading-[1.35]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:flex-none",
     "tablet:overflow-visible",
     "tablet:max-h-none",
@@ -39,9 +39,9 @@ const TABLET: &[&str] = &[
     "tablet:leading-[1.35]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

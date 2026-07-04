@@ -1,7 +1,7 @@
 use super::state::KeyPickerKeyState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "w-[clamp(5rem,7.5vw,11rem)]",
     "h-[clamp(5rem,7.5vw,11rem)]",
     "flex",
@@ -34,7 +34,7 @@ const BASE: &[&str] = &[
     "data-[special=true]:whitespace-nowrap",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[clamp(2.5rem,8.5vw,5rem)]",
     "mobile:h-[clamp(2.5rem,8.5vw,5rem)]",
     "mobile:text-[clamp(1.1rem,3.5vw,2.2rem)]",
@@ -43,29 +43,29 @@ const MOBILE: &[&str] = &[
     "mobile:data-[special=true]:text-[clamp(0.75rem,2.6vw,1.25rem)]",
 ];
 
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const AVAILABLE: &[&str] = &[
+const AVAILABLE: &[TailwindClass] = tw![
     "[background:rgba(40,30,8,0.55)]",
     "border-[#6c5a1f]",
     "text-warcraft-gold",
 ];
 
-const CURRENT: &[&str] = &[
+const CURRENT: &[TailwindClass] = tw![
     "[background:linear-gradient(135deg,rgba(255,206,99,0.32)_0%,rgba(255,171,1,0.18)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",
     "[box-shadow:0_0_14px_rgba(255,206,99,0.55),inset_0_0_10px_rgba(255,206,99,0.22)]",
 ];
 
-const CONFLICT: &[&str] = &[
+const CONFLICT: &[TailwindClass] = tw![
     "[background:rgba(80,16,18,0.5)]",
     "border-[#6a2020]",
     "text-[#f0a8a8]",

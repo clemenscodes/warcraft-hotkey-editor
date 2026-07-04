@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The search box wrapper. On the sidebar it is a bordered inset panel; on mobile it
 // becomes a bare relative box (the input carries its own chrome there) so the icon
 // can be positioned over the field.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-none",
     "flex",
     "items-center",
@@ -16,7 +16,7 @@ const BASE: &[&str] = &[
     "min-w-0",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:relative",
     "mobile:p-0",
     "mobile:bg-transparent",
@@ -25,7 +25,7 @@ const MOBILE: &[&str] = &[
     "mobile:mb-[6px]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:relative",
     "tablet:p-0",
     "tablet:bg-transparent",
@@ -34,9 +34,9 @@ const TABLET: &[&str] = &[
     "tablet:mb-[6px]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

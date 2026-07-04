@@ -1,7 +1,7 @@
 use super::state::BurgerItemState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "items-center",
     "gap-[0.7rem]",
@@ -30,26 +30,26 @@ const BASE: &[&str] = &[
     "focus-visible:[box-shadow:0_0_0_2px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const IDLE: &[&str] = &[];
+const IDLE: &[TailwindClass] = tw![];
 
-const ACTIVE: &[&str] = &[
+const ACTIVE: &[TailwindClass] = tw![
     "[background:linear-gradient(180deg,rgba(255,206,99,0.22)_0%,rgba(40,30,8,0.6)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",
     "[box-shadow:inset_0_0_0_1px_rgba(255,206,99,0.3),0_0_14px_rgba(255,206,99,0.22)]",
 ];
 
-const PRIMARY: &[&str] = &[
+const PRIMARY: &[TailwindClass] = tw![
     "[background:linear-gradient(135deg,rgba(40,30,8,0.85)_0%,rgba(15,12,4,0.85)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",

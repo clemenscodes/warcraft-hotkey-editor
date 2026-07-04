@@ -1,13 +1,13 @@
-use crate::classes;
-const BASE: &[&str] = &[
+use crate::{classes, styling::TailwindClass, tw};
+const BASE: &[TailwindClass] = tw![
     "grid",
     "grid-cols-[repeat(auto-fill,minmax(320px,1fr))]",
     "gap-6",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

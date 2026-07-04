@@ -1,7 +1,7 @@
 use super::state::FilledTileState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "relative",
     "w-full",
     "aspect-square",
@@ -40,29 +40,29 @@ const BASE: &[&str] = &[
     "[body:has([data-dragging-source=true])_&]:transition-none",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const FILLED: &[&str] = &[
+const FILLED: &[TailwindClass] = tw![
     "bg-[rgba(20,35,60,0.95)]",
     "border-[#4a7090]",
     "[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
 ];
 
-const COMMAND: &[&str] = &[
+const COMMAND: &[TailwindClass] = tw![
     "[background:linear-gradient(135deg,rgba(40,50,80,0.95)_0%,rgba(15,22,45,0.95)_100%)]",
     "border-[#5b6f9c]",
     "[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
 ];
 
-const SELECTED: &[&str] = &[
+const SELECTED: &[TailwindClass] = tw![
     "bg-[rgba(20,35,60,0.95)]",
     "border-warcraft-gold",
     "[box-shadow:0_0_14px_rgba(255,206,99,0.6)]",

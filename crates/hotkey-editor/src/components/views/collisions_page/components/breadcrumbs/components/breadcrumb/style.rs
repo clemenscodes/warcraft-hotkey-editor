@@ -1,5 +1,5 @@
-use crate::classes;
-const BASE: &[&str] = &[
+use crate::{classes, styling::TailwindClass, tw};
+const BASE: &[TailwindClass] = tw![
     "group",
     "m-0",
     "p-[0.25rem_0.15rem]",
@@ -17,10 +17,10 @@ const BASE: &[&str] = &[
     "data-[active=true]:text-warcraft-gold",
     "data-[active=true]:[text-shadow:1px_1px_0_#000]",
 ];
-const MOBILE: &[&str] = &["mobile:flex-none", "mobile:snap-start"];
-const TABLET: &[&str] = &["tablet:flex-none", "tablet:snap-start"];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw!["mobile:flex-none", "mobile:snap-start"];
+const TABLET: &[TailwindClass] = tw!["tablet:flex-none", "tablet:snap-start"];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // A prev/next arrow button in the tier-cycling footer. Small bronze square that
 // golds on hover; the injected arrow SVG is centered and fixed-size. Class
 // `.tile-override-tier-button` is load-bearing (keyboard navigation).
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "w-[2.4rem]",
     "h-[2.4rem]",
     "p-0",
@@ -24,7 +24,7 @@ const BASE: &[&str] = &[
     "[&_svg]:h-[1.7rem]",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[34px]",
     "mobile:h-[34px]",
     "mobile:min-w-[34px]",
@@ -33,7 +33,7 @@ const MOBILE: &[&str] = &[
     "mobile:[&_svg]:h-[22px]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:w-[34px]",
     "tablet:h-[34px]",
     "tablet:min-w-[34px]",
@@ -42,9 +42,9 @@ const TABLET: &[&str] = &[
     "tablet:[&_svg]:h-[22px]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The unit-detail card in its empty state: the same bordered shell, centered muted
 // italic message when no (or an invalid) unit is selected.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-col",
     "items-center",
@@ -20,11 +20,11 @@ const BASE: &[&str] = &[
     "italic",
 ];
 
-const MOBILE: &[&str] = &["mobile:p-[0.85rem]", "mobile:rounded-[6px]"];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw!["mobile:p-[0.85rem]", "mobile:rounded-[6px]"];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

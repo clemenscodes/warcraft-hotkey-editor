@@ -1,13 +1,13 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The label column of the alt-state header; clamps its width so long names ellipsize
 // rather than push the controls off the row.
-const BASE: &[&str] = &["min-w-0"];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const BASE: &[TailwindClass] = tw!["min-w-0"];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

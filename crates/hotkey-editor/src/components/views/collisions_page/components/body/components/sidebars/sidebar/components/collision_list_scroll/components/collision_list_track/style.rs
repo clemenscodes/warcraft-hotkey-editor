@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The list of collision cards. A vertical stack on the sidebar; a horizontal
 // fixed-height row (the swipe carousel) on small screens.
-const BASE: &[&str] = &["flex", "flex-col", "gap-2"];
+const BASE: &[TailwindClass] = tw!["flex", "flex-col", "gap-2"];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-row",
     "mobile:flex-nowrap",
     "mobile:w-max",
@@ -17,7 +17,7 @@ const MOBILE: &[&str] = &[
     "mobile:py-0",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:flex-row",
     "tablet:flex-nowrap",
     "tablet:w-max",
@@ -30,9 +30,9 @@ const TABLET: &[&str] = &[
     "tablet:py-0",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

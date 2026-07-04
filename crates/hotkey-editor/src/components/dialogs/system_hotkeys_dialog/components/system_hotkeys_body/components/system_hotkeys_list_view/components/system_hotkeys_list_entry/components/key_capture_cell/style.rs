@@ -1,7 +1,7 @@
 use super::state::KeyCaptureCellState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
@@ -56,7 +56,7 @@ const BASE: &[&str] = &[
     "[&[data-tooltip]:not([data-tooltip=''])]:focus-visible:after:opacity-100",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:min-w-[5.5rem]",
     "mobile:max-w-[14rem]",
     "mobile:px-[0.7rem]",
@@ -68,7 +68,7 @@ const MOBILE: &[&str] = &[
     "mobile:[touch-action:manipulation]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:min-w-[5.5rem]",
     "tablet:max-w-[14rem]",
     "tablet:px-[0.7rem]",
@@ -80,21 +80,21 @@ const TABLET: &[&str] = &[
     "tablet:[touch-action:manipulation]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const NORMAL: &[&str] = &[
+const NORMAL: &[TailwindClass] = tw![
     "text-warcraft-gold",
     "border-[rgba(255,206,99,0.45)]",
     "[text-shadow:1px_1px_0_#000]",
 ];
 
-const CONFLICT: &[&str] = &[
+const CONFLICT: &[TailwindClass] = tw![
     "text-[#ff5a5a]",
     "border-[rgba(255,90,90,0.65)]",
     "[text-shadow:1px_1px_0_#000,0_0_10px_rgba(255,90,90,0.5)]",

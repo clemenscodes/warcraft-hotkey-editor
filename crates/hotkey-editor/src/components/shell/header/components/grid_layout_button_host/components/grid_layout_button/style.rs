@@ -1,4 +1,4 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // Fills its host container and draws itself as one cqi-scaled drawing: it takes the
 // host's full width (`w-full`), locks its shape with `aspect-[39/10]` so its height
@@ -6,7 +6,7 @@ use crate::classes;
 // glow — as a `cqi` fraction of the host box. Make the host wider and the whole button
 // scales up in proportion; there is no fixed length left inside. The host sizes the box
 // per viewport, so the button grows coherently from laptop through 4K.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
@@ -34,12 +34,12 @@ const BASE: &[&str] = &[
     "hover:[box-shadow:0_0_6.94cqi_rgba(255,206,99,0.55),inset_0_0_3.74cqi_rgba(255,206,99,0.15)]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

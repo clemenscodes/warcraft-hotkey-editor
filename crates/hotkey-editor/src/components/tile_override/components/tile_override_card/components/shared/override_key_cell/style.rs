@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The hotkey-capture button in the override panel. A square gold-bordered key cap; it
 // lights up with a static gold glow while capturing (`data-editing`) and widens for
 // multi-character special tokens like Esc / Mouse4 (`data-special`). Class
 // `.override-key-cell` is load-bearing (keyboard navigation).
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "w-20",
     "h-20",
     "p-0",
@@ -47,7 +47,7 @@ const BASE: &[&str] = &[
     "data-[special=true]:whitespace-nowrap",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[4.6rem]",
     "mobile:h-[4.6rem]",
     "mobile:min-w-[4.6rem]",
@@ -59,10 +59,10 @@ const MOBILE: &[&str] = &[
     "mobile:data-[special=true]:text-[1.5rem]",
 ];
 
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

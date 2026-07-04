@@ -1,5 +1,5 @@
 use super::state::AppLayout;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
 // The app shell centres the workbench in a single full-bleed column — no padding, so
 // the shell (and its header) spans the whole viewport width and its content reaches
@@ -8,7 +8,7 @@ use crate::{classes, states};
 // utilities on this root, not global CSS. Old pixel breakpoints fold into the named
 // bands (the former `<1099px` foundation → mobile+tablet, the `<767px` input floor →
 // mobile).
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "mx-auto",
     "flex",
     "flex-col",
@@ -68,7 +68,7 @@ const BASE: &[&str] = &[
 // its content reaches every edge), a content-driven height above the dvh floor, the
 // tighter section gap, and the `<1099px` foundational resets — force every descendant to
 // shrink below its min-content and cap images so nothing pushes past the viewport.
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:h-auto",
     "mobile:overflow-y-visible",
     "mobile:gap-[16px]",
@@ -85,7 +85,7 @@ const MOBILE: &[&str] = &[
     "mobile:[&_[role=button]]:touch-manipulation",
     "mobile:[&_input]:touch-manipulation",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:h-auto",
     "tablet:overflow-y-visible",
     "tablet:gap-[16px]",
@@ -102,10 +102,10 @@ const TABLET: &[&str] = &[
     "tablet:[&_[role=button]]:touch-manipulation",
     "tablet:[&_input]:touch-manipulation",
 ];
-const LAPTOP: &[&str] = &["laptop:gap-4"];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw!["laptop:gap-4"];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
@@ -113,8 +113,8 @@ classes! {
 // The collisions view is one full-bleed page and drops the inter-section gap; every
 // other view keeps the standard responsive gaps from the bands above. `gap-0!` wins
 // over those band gaps regardless of the utility order Tailwind emits.
-const STANDARD: &[&str] = &[];
-const COLLISIONS: &[&str] = &["gap-0!"];
+const STANDARD: &[TailwindClass] = tw![];
+const COLLISIONS: &[TailwindClass] = tw!["gap-0!"];
 states! {
     AppLayout, Standard => STANDARD, Collisions => COLLISIONS
 }

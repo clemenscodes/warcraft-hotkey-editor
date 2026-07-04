@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // One button of the catalog-visibility toggle (No abilities / All variants). A
 // smaller bronze pill than the search-field toggle; gold when active. Height is set
 // by the group's `[&>button]` rule.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-1",
     "px-3",
     "whitespace-nowrap",
@@ -31,24 +31,24 @@ const BASE: &[&str] = &[
     "data-[active=true]:shadow-[0_0_12px_rgba(255,206,99,0.3)]",
 ];
 
-const MOBILE: &[&str] = &["mobile:text-[0.85rem]", "mobile:px-[0.5rem]"];
+const MOBILE: &[TailwindClass] = tw!["mobile:text-[0.85rem]", "mobile:px-[0.5rem]"];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:text-[clamp(0.8rem,0.45vw+0.55rem,1.05rem)]",
     "tablet:px-2",
 ];
 
-const LAPTOP: &[&str] = &[
+const LAPTOP: &[TailwindClass] = tw![
     "laptop:text-[clamp(0.8rem,0.45vw+0.55rem,1.05rem)]",
     "laptop:px-2",
 ];
 
-const DESKTOP: &[&str] = &[
+const DESKTOP: &[TailwindClass] = tw![
     "desktop:text-[clamp(0.8rem,0.45vw+0.55rem,1.05rem)]",
     "desktop:px-2",
 ];
 
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

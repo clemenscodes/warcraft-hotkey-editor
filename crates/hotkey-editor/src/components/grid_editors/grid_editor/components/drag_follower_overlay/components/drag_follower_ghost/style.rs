@@ -1,7 +1,7 @@
 use super::state::GhostState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "fixed",
     "pointer-events-none",
     "[container-type:inline-size]",
@@ -24,20 +24,20 @@ const BASE: &[&str] = &[
     "data-[race=neutral]:[box-shadow:0_0_14px_rgba(255,206,99,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const DEFAULT: &[&str] = &["bg-[rgba(20,35,60,0.95)]"];
+const DEFAULT: &[TailwindClass] = tw!["bg-[rgba(20,35,60,0.95)]"];
 
-const COMMAND: &[&str] =
-    &["[background:linear-gradient(135deg,rgba(40,50,80,0.95)_0%,rgba(15,22,45,0.95)_100%)]"];
+const COMMAND: &[TailwindClass] =
+    tw!["[background:linear-gradient(135deg,rgba(40,50,80,0.95)_0%,rgba(15,22,45,0.95)_100%)]"];
 states! {
     GhostState, Default => DEFAULT, Command => COMMAND
 }

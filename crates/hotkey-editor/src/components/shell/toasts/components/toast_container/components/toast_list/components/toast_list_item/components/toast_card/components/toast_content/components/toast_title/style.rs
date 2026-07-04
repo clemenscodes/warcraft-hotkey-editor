@@ -1,7 +1,7 @@
 use crate::components::shell::toasts::ToastType;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "text-warcraft-gold",
     "uppercase",
     "tracking-[0.06em]",
@@ -9,20 +9,20 @@ const BASE: &[&str] = &[
     "leading-[1.2]",
     "[text-shadow:1px_1px_0_#000]",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const SUCCESS: &[&str] = &["text-[#6dd49a]"];
-const ERROR: &[&str] = &["text-[#ff9090]"];
-const WARNING: &[&str] = &["text-[#ffb347]"];
-const INFO: &[&str] = &[];
+const SUCCESS: &[TailwindClass] = tw!["text-[#6dd49a]"];
+const ERROR: &[TailwindClass] = tw!["text-[#ff9090]"];
+const WARNING: &[TailwindClass] = tw!["text-[#ffb347]"];
+const INFO: &[TailwindClass] = tw![];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO
 }

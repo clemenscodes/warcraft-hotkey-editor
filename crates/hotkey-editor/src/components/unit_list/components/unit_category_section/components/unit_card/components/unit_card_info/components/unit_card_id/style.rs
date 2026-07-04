@@ -1,7 +1,7 @@
 use super::state::UnitCardIdState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "font-mono",
     "text-[1.05rem]",
     "leading-[1.2]",
@@ -10,32 +10,32 @@ const BASE: &[&str] = &[
     "whitespace-nowrap",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:block",
     "mobile:w-full",
     "mobile:text-[11px]",
     "mobile:leading-[1.2]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:block",
     "tablet:w-full",
     "tablet:text-[11px]",
     "tablet:leading-[1.2]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const NORMAL: &[&str] = &["text-[#7b818d]"];
+const NORMAL: &[TailwindClass] = tw!["text-[#7b818d]"];
 // Selected: the id text takes the card's race accent (chosen off the `data-race`
 // attribute the component renders), at reduced opacity.
-const SELECTED: &[&str] = &[
+const SELECTED: &[TailwindClass] = tw![
     "text-[color:#c0a67c]",
     "opacity-70",
     "data-[race=human]:text-[color:#6aa1ff]",

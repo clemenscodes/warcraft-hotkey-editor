@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The override panel header: name/id on the left, the hotkey slot pinned right, with
 // a hairline divider under it. A fixed two-column grid on the mobile panel.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "grid",
     "grid-cols-[minmax(0,1fr)_auto]",
     "items-center",
@@ -13,7 +13,7 @@ const BASE: &[&str] = &[
     "text-left",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:grid-cols-[1fr_auto]",
     "mobile:gap-[8px]",
     "mobile:p-[0_0_10px_0]",
@@ -23,7 +23,7 @@ const MOBILE: &[&str] = &[
     "mobile:w-full",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:grid-cols-[1fr_auto]",
     "tablet:gap-[8px]",
     "tablet:p-[0_0_10px_0]",
@@ -33,9 +33,9 @@ const TABLET: &[&str] = &[
     "tablet:w-full",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

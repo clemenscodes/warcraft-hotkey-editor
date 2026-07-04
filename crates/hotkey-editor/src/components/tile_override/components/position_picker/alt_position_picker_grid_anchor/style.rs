@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // Centers the embedded command grid inside a position-picker dialog and restyles its
 // tiles for the picker's single-button drag: non-draggable tiles dim out,
 // drop-target and drag-over cells glow gold. All descendant overrides are `!` so they
 // win over the grid editor's own tile styling.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "justify-center",
     "w-full",
@@ -50,11 +50,11 @@ const BASE: &[&str] = &[
     "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:[box-shadow:inset_0_0_0_1px_rgba(255,224,150,0.65),0_0_28px_rgba(255,206,99,0.85)]!",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

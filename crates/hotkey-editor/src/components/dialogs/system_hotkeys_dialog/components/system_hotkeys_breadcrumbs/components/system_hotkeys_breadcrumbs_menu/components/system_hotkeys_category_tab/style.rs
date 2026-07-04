@@ -1,7 +1,7 @@
 use super::state::SystemHotkeysCategoryTabState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "font-friz-quadrata",
     "uppercase",
     "tracking-[0.1em]",
@@ -33,24 +33,24 @@ const BASE: &[&str] = &[
     "group-data-[open=true]:whitespace-normal",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const ACTIVE: &[&str] = &[
+const ACTIVE: &[TailwindClass] = tw![
     "text-warcraft-gold",
     "[text-shadow:1px_1px_0_#000,0_0_16px_rgba(255,206,99,0.45)]",
     "group-data-[open=true]:bg-[rgba(255,206,99,0.14)]",
     "group-data-[open=true]:[box-shadow:inset_0_0_0_1px_rgba(255,206,99,0.4)]",
 ];
 
-const INACTIVE: &[&str] = &["text-warcraft-gold/55"];
+const INACTIVE: &[TailwindClass] = tw!["text-warcraft-gold/55"];
 states! {
     SystemHotkeysCategoryTabState, Active => ACTIVE, Inactive => INACTIVE
 }

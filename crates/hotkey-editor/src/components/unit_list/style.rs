@@ -1,11 +1,11 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The unit list panel. On the sidebar it is an absolutely-positioned column filling
 // the sidebar column of the editor workspace; on small screens it collapses to a
 // static, self-contained block (search + tabs + horizontal card carousel). `group`
 // lets the cards read the active category and the scrollbar reveal on hover. The
 // per-band sidebar widths match the workspace grid's first column.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "group",
     "flex",
     "flex-col",
@@ -15,7 +15,7 @@ const BASE: &[&str] = &[
     "min-h-0",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:static",
     "mobile:w-full",
     "mobile:max-h-none",
@@ -27,7 +27,7 @@ const MOBILE: &[&str] = &[
     "mobile:[contain:layout]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:static",
     "tablet:w-full",
     "tablet:max-h-none",
@@ -39,7 +39,7 @@ const TABLET: &[&str] = &[
     "tablet:[contain:layout]",
 ];
 
-const LAPTOP: &[&str] = &[
+const LAPTOP: &[TailwindClass] = tw![
     "laptop:absolute",
     "laptop:top-0",
     "laptop:left-0",
@@ -47,7 +47,7 @@ const LAPTOP: &[&str] = &[
     "laptop:h-full",
 ];
 
-const DESKTOP: &[&str] = &[
+const DESKTOP: &[TailwindClass] = tw![
     "desktop:absolute",
     "desktop:top-0",
     "desktop:left-0",
@@ -55,7 +55,7 @@ const DESKTOP: &[&str] = &[
     "desktop:h-full",
 ];
 
-const QHD: &[&str] = &[
+const QHD: &[TailwindClass] = tw![
     "qhd:absolute",
     "qhd:top-0",
     "qhd:left-0",
@@ -63,7 +63,7 @@ const QHD: &[&str] = &[
     "qhd:h-full",
 ];
 
-const UHD: &[&str] = &[
+const UHD: &[TailwindClass] = tw![
     "uhd:absolute",
     "uhd:top-0",
     "uhd:left-0",

@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The scroll region around the collision cards. Vertical scroll on the sidebar
 // with a gold scrollbar that fades in on hover of the list; horizontal snap
 // scroll (the swipe carousel) on small screens with the scrollbar hidden.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-1",
     "flex",
     "flex-col",
@@ -24,7 +24,7 @@ const BASE: &[&str] = &[
     "[&::-webkit-scrollbar-thumb:hover]:bg-warcraft-gold",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:overflow-x-auto",
     "mobile:overflow-y-hidden",
     "mobile:max-h-none",
@@ -41,7 +41,7 @@ const MOBILE: &[&str] = &[
     "mobile:[&::-webkit-scrollbar]:hidden",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:overflow-x-auto",
     "tablet:overflow-y-hidden",
     "tablet:max-h-none",
@@ -58,9 +58,9 @@ const TABLET: &[&str] = &[
     "tablet:[&::-webkit-scrollbar]:hidden",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

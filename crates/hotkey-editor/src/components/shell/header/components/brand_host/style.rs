@@ -1,4 +1,4 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The brand's box, and the query context every `cqi` length inside the brand resolves
 // against. Its width is definite and viewport-proportional per band, never `flex-auto`
@@ -6,13 +6,13 @@ use crate::classes;
 // tablets it is a fraction of the viewport; on laptop and up it is a capped `vw` box
 // that sits left-aligned in its grid track beside the centered layout button. Either
 // way the whole brand scales as one drawing off this box — one SVG, no truncation.
-const BASE: &[&str] = &["[container-type:inline-size]", "min-w-0"];
-const MOBILE: &[&str] = &["mobile:w-[72vw]"];
-const TABLET: &[&str] = &["tablet:w-[55vw]"];
-const LAPTOP: &[&str] = &["laptop:w-[clamp(12rem,20vw,56rem)]"];
-const DESKTOP: &[&str] = &["desktop:w-[clamp(12rem,20vw,56rem)]"];
-const QHD: &[&str] = &["qhd:w-[clamp(12rem,20vw,56rem)]"];
-const UHD: &[&str] = &["uhd:w-[clamp(12rem,20vw,56rem)]"];
+const BASE: &[TailwindClass] = tw!["[container-type:inline-size]", "min-w-0"];
+const MOBILE: &[TailwindClass] = tw!["mobile:w-[72vw]"];
+const TABLET: &[TailwindClass] = tw!["tablet:w-[55vw]"];
+const LAPTOP: &[TailwindClass] = tw!["laptop:w-[clamp(12rem,20vw,56rem)]"];
+const DESKTOP: &[TailwindClass] = tw!["desktop:w-[clamp(12rem,20vw,56rem)]"];
+const QHD: &[TailwindClass] = tw!["qhd:w-[clamp(12rem,20vw,56rem)]"];
+const UHD: &[TailwindClass] = tw!["uhd:w-[clamp(12rem,20vw,56rem)]"];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

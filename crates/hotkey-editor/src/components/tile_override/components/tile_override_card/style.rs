@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The override panel card: the gold-edged column that holds the header and the
 // ability sections. Content-sized on desktop; a fixed-height scrollless block on the
 // mobile panel. Class `.tile-override-card` is load-bearing (a scroll-into-view
 // effect queries it).
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-col",
     "items-stretch",
@@ -19,7 +19,7 @@ const BASE: &[&str] = &[
     "shadow-[0_0_12px_rgba(255,206,99,0.18)]",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-full",
     "mobile:max-w-full",
     "mobile:min-w-0",
@@ -31,7 +31,7 @@ const MOBILE: &[&str] = &[
     "mobile:h-[300px]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:w-full",
     "tablet:max-w-full",
     "tablet:min-w-0",
@@ -43,9 +43,9 @@ const TABLET: &[&str] = &[
     "tablet:h-[300px]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

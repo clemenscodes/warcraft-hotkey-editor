@@ -1,7 +1,7 @@
 use super::props::ButtonVariant;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
@@ -16,17 +16,17 @@ const BASE: &[&str] = &[
     "[transition:all_120ms]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const PRIMARY: &[&str] = &[
+const PRIMARY: &[TailwindClass] = tw![
     "border",
     "border-warcraft-gold",
     "[background:linear-gradient(180deg,#2a5085_0%,#1a3a5c_100%)]",
@@ -36,7 +36,7 @@ const PRIMARY: &[&str] = &[
     "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.4)]",
 ];
 
-const SECONDARY: &[&str] = &[
+const SECONDARY: &[TailwindClass] = tw![
     "border",
     "border-warcraft-blue",
     "bg-[rgba(20,40,70,0.7)]",

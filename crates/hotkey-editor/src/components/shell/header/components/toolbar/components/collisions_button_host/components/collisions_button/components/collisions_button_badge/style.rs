@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The count badge scales with the button: its corner offsets and font size are cqi
 // fractions of the button box, so it holds its position and proportion at any size.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "absolute",
     "top-[8cqi]",
     "right-[9cqi]",
@@ -15,12 +15,12 @@ const BASE: &[&str] = &[
     "[text-shadow:1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),0_0_3.75cqi_rgba(0,0,0,0.95)]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

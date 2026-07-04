@@ -1,7 +1,7 @@
 use super::state::SlotButtonState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "relative",
     "flex",
     "flex-col",
@@ -62,7 +62,7 @@ const BASE: &[&str] = &[
     "[&[data-tooltip]:not([data-tooltip=''])]:focus-visible:after:opacity-100",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:border-[8px]",
     "mobile:px-[0.3rem]",
     "mobile:py-[0.45rem]",
@@ -77,7 +77,7 @@ const MOBILE: &[&str] = &[
     "mobile:data-[compact=true]:aspect-[1/1]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:border-[8px]",
     "tablet:px-[0.3rem]",
     "tablet:py-[0.45rem]",
@@ -92,17 +92,18 @@ const TABLET: &[&str] = &[
     "tablet:data-[compact=true]:aspect-[1/1]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const IDLE: &[&str] = &[];
-const EDITING: &[&str] = &["[filter:brightness(1.32)_drop-shadow(0_0_14px_rgba(255,206,99,0.75))]"];
-const CONFLICT: &[&str] = &["[filter:drop-shadow(0_0_12px_rgba(255,90,90,0.55))]"];
+const IDLE: &[TailwindClass] = tw![];
+const EDITING: &[TailwindClass] =
+    tw!["[filter:brightness(1.32)_drop-shadow(0_0_14px_rgba(255,206,99,0.75))]"];
+const CONFLICT: &[TailwindClass] = tw!["[filter:drop-shadow(0_0_12px_rgba(255,90,90,0.55))]"];
 states! {
     SlotButtonState, Idle => IDLE, Editing => EDITING, Conflict => CONFLICT
 }

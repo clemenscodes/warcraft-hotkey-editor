@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The magnifier glyph inside the mobile search pill. Absent on the sidebar (the
 // search box there needs no icon), shown as a gold leading icon on small screens.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "hidden",
     "text-warcraft-gold",
     "pointer-events-none",
@@ -11,7 +11,7 @@ const BASE: &[&str] = &[
     "[&_svg]:h-full",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:block",
     "mobile:absolute",
     "mobile:left-3",
@@ -21,7 +21,7 @@ const MOBILE: &[&str] = &[
     "mobile:h-[18px]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:block",
     "tablet:absolute",
     "tablet:left-3",
@@ -31,9 +31,9 @@ const TABLET: &[&str] = &[
     "tablet:h-[18px]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

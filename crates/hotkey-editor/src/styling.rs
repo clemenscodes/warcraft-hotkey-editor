@@ -62,6 +62,29 @@ impl IntoAttributeValue for ClassList {
     }
 }
 
+/// A single Tailwind utility class. A named-field newtype over the static class
+/// string, built only by the [`tw!`](crate::tw) macro. Making a class list
+/// `&[TailwindClass]` rather than a bare `&[&str]` states, in the type, that
+/// these strings are Tailwind utilities — an ordinary `&[&str]` of prose is a
+/// different type and can never reach the styling machinery. It also gives
+/// editor tooling an exact anchor: completion targets `tw![…]` and nothing else.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct TailwindClass {
+    utility: &'static str,
+}
+
+impl TailwindClass {
+    /// Wrap a single utility class literal. Only the `tw!` macro calls this.
+    pub const fn new(utility: &'static str) -> Self {
+        Self { utility }
+    }
+
+    /// The underlying utility string.
+    pub const fn utility(&self) -> &'static str {
+        self.utility
+    }
+}
+
 const fn to_lower(byte: u8) -> u8 {
     if byte >= b'A' && byte <= b'Z' {
         byte + 32
@@ -145,10 +168,11 @@ pub const fn assert_named(actual: &str, expected: &str) {
 }
 
 /// Compile-time guard: every utility in a band must carry that band's prefix.
-pub const fn assert_band(band: &str, classes: &[&str]) {
+pub const fn assert_band(band: &str, classes: &[TailwindClass]) {
     let mut index = 0;
     while index < classes.len() {
-        if !has_band_prefix(classes[index], band) {
+        let class = classes[index].utility();
+        if !has_band_prefix(class, band) {
             panic!("a class is not prefixed with its band");
         }
         index += 1;
@@ -166,10 +190,11 @@ const fn is_band_prefixed(class: &str) -> bool {
 
 /// Compile-time guard: a BASE class is always-on, so it must NOT carry a band
 /// prefix (a width-specific style belongs in that band, never in BASE).
-pub const fn assert_base(classes: &[&str]) {
+pub const fn assert_base(classes: &[TailwindClass]) {
     let mut index = 0;
     while index < classes.len() {
-        if is_band_prefixed(classes[index]) {
+        let class = classes[index].utility();
+        if is_band_prefixed(class) {
             panic!("a BASE class carries a band prefix");
         }
         index += 1;
@@ -179,10 +204,11 @@ pub const fn assert_base(classes: &[&str]) {
 /// Compile-time guard: a state overlay (see `states!`) is always-on within its
 /// state, so it must NOT carry a band prefix.
 #[allow(dead_code)]
-pub const fn assert_flat(classes: &[&str]) {
+pub const fn assert_flat(classes: &[TailwindClass]) {
     let mut index = 0;
     while index < classes.len() {
-        if is_band_prefixed(classes[index]) {
+        let class = classes[index].utility();
+        if is_band_prefixed(class) {
             panic!("a state overlay carries a band prefix");
         }
         index += 1;
@@ -260,14 +286,15 @@ pub const fn assert_component_name(component: &str, module_path: &str) {
 
 /// Length of the joined class string: the identity plus, per band utility, a
 /// leading space and its bytes.
-pub const fn joined_len(identity: &str, bands: &[&[&str]]) -> usize {
+pub const fn joined_len(identity: &str, bands: &[&[TailwindClass]]) -> usize {
     let mut len = identity.len();
     let mut band_index = 0;
     while band_index < bands.len() {
         let band = bands[band_index];
         let mut utility_index = 0;
         while utility_index < band.len() {
-            len += 1 + band[utility_index].len();
+            let utility = band[utility_index].utility();
+            len += 1 + utility.len();
             utility_index += 1;
         }
         band_index += 1;
@@ -277,7 +304,7 @@ pub const fn joined_len(identity: &str, bands: &[&[&str]]) -> usize {
 
 /// Write the identity and every band utility, space separated, into a buffer
 /// sized by [`joined_len`].
-pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8; N] {
+pub const fn join_into<const N: usize>(identity: &str, bands: &[&[TailwindClass]]) -> [u8; N] {
     let mut out = [0u8; N];
     let mut position = 0;
     let identity_bytes = identity.as_bytes();
@@ -294,7 +321,8 @@ pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8
         while utility_index < band.len() {
             out[position] = b' ';
             position += 1;
-            let utility_bytes = band[utility_index].as_bytes();
+            let utility = band[utility_index].utility();
+            let utility_bytes = utility.as_bytes();
             let mut inner = 0;
             while inner < utility_bytes.len() {
                 out[position] = utility_bytes[inner];
@@ -307,6 +335,27 @@ pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8
     }
     out
 }
+/// Build a `&[TailwindClass]` from Tailwind utility literals — the one way a
+/// class array is written. `const BASE: &[TailwindClass] = tw!["flex", "m-0"];`
+/// expands each literal through [`TailwindClass::new`], so the array's element
+/// type is `TailwindClass`, never `&str`. A plain `&[&str]` (prose, labels) is a
+/// different type and cannot be passed to `classes!`/`states!`; editor tooling
+/// keys on the `tw!` call to scope completion to exactly these lists.
+///
+/// ```ignore
+/// use crate::tw;
+/// use crate::styling::TailwindClass;
+///
+/// const BASE: &[TailwindClass] = tw!["relative", "flex"];
+/// const MOBILE: &[TailwindClass] = tw![]; // an unused band is an empty list
+/// ```
+#[macro_export]
+macro_rules! tw {
+    ($($class:literal),* $(,)?) => {
+        &[$($crate::styling::TailwindClass::new($class)),*]
+    };
+}
+
 /// Join a component's six per-band utility lists into a compile-time,
 /// component-private `pub(super) const CLASS: &str`. The identity class is
 /// derived from the component directory; the caller passes only the bands.
@@ -315,16 +364,18 @@ pub const fn join_into<const N: usize>(identity: &str, bands: &[&[&str]]) -> [u8
 /// an explicit empty slice. See the module docs for the guarantees.
 ///
 /// ```ignore
-/// use crate::classes;
+/// use crate::{classes, tw};
+/// use crate::styling::TailwindClass;
 ///
-/// const MOBILE: &[&str] = &["mobile:m-0", "mobile:text-heading-sm", "mobile:text-center"];
-/// const TABLET: &[&str] = &[];
-/// const LAPTOP: &[&str] = &["laptop:text-heading", "laptop:text-left"];
-/// const DESKTOP: &[&str] = &[];
-/// const QHD: &[&str] = &[];
-/// const UHD: &[&str] = &[];
+/// const BASE: &[TailwindClass] = tw!["m-0"];
+/// const MOBILE: &[TailwindClass] = tw!["mobile:m-0", "mobile:text-heading-sm", "mobile:text-center"];
+/// const TABLET: &[TailwindClass] = tw![];
+/// const LAPTOP: &[TailwindClass] = tw!["laptop:text-heading", "laptop:text-left"];
+/// const DESKTOP: &[TailwindClass] = tw![];
+/// const QHD: &[TailwindClass] = tw![];
+/// const UHD: &[TailwindClass] = tw![];
 ///
-/// classes! { MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+/// classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
 /// // in dir help_section_title/ → CLASS starts with "help-section-title ..."
 /// ```
 #[macro_export]
@@ -361,7 +412,8 @@ macro_rules! classes {
             ::core::result::Result::Err(_) => ::core::panic!("non-utf8 identity"),
         };
 
-        const BANDS: &[&[&str]] = &[$base, $mobile, $tablet, $laptop, $desktop, $qhd, $uhd];
+        const BANDS: &[&[$crate::styling::TailwindClass]] =
+            &[$base, $mobile, $tablet, $laptop, $desktop, $qhd, $uhd];
         const LEN: usize = $crate::styling::joined_len(IDENTITY, BANDS);
         const BYTES: [u8; LEN] = $crate::styling::join_into::<LEN>(IDENTITY, BANDS);
 
@@ -388,14 +440,15 @@ macro_rules! classes {
 /// so the body never branches.
 ///
 /// ```ignore
-/// use crate::{classes, states};
+/// use crate::{classes, states, tw};
+/// use crate::styling::TailwindClass;
 ///
-/// const BASE: &[&str] = &["relative", "flex"];
+/// const BASE: &[TailwindClass] = tw!["relative", "flex"];
 /// // ... the six bands ...
 /// classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
 ///
-/// const IDLE: &[&str] = &[];
-/// const DRAG_SOURCE: &[&str] = &["opacity-40", "ring-2", "ring-warcraft-gold"];
+/// const IDLE: &[TailwindClass] = tw![];
+/// const DRAG_SOURCE: &[TailwindClass] = tw!["opacity-40", "ring-2", "ring-warcraft-gold"];
 ///
 /// states! { TileState, Idle => IDLE, DragSource => DRAG_SOURCE }
 /// // → pub(super) fn class(state: TileState) -> ClassList

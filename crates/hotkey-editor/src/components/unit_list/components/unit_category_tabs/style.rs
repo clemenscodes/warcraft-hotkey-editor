@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The category tab row. Hidden on the sidebar (collapsible headings replace it);
 // shown as a full-width equal-slot row on small screens.
-const BASE: &[&str] = &["hidden"];
+const BASE: &[TailwindClass] = tw!["hidden"];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:flex",
     "mobile:flex-row",
     "mobile:flex-nowrap",
@@ -15,7 +15,7 @@ const MOBILE: &[&str] = &[
     "mobile:m-0",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:flex",
     "tablet:flex-row",
     "tablet:flex-nowrap",
@@ -26,9 +26,9 @@ const TABLET: &[&str] = &[
     "tablet:m-0",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

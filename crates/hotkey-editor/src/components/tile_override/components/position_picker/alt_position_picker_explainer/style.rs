@@ -1,7 +1,7 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The instruction line at the top of a position-picker dialog.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "m-0",
     "text-center",
     "max-w-[90rem]",
@@ -14,11 +14,11 @@ const BASE: &[&str] = &[
     "[text-shadow:1px_1px_0_#000]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

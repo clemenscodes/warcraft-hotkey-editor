@@ -1,7 +1,7 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The "Level N of M" caption between the tier arrows.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "font-friz-quadrata",
     "uppercase",
     "tracking-[0.06em]",
@@ -9,11 +9,11 @@ const BASE: &[&str] = &[
     "text-[#c0c8da]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

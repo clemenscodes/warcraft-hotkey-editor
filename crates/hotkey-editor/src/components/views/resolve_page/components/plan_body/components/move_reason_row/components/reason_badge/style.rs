@@ -1,8 +1,8 @@
-use crate::classes;
 use crate::components::views::resolve_page::logic::ReasonKind;
 use crate::states;
+use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-none",
     "inline-flex",
     "items-center",
@@ -18,35 +18,35 @@ const BASE: &[&str] = &[
     "[text-shadow:1px_1px_0_#000]",
     "whitespace-nowrap",
 ];
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
 
-const FIGHT: &[&str] = &[
+const FIGHT: &[TailwindClass] = tw![
     "text-[#ff9a6a]",
     "border-[rgba(255,154,106,0.6)]",
     "bg-[rgba(255,122,122,0.12)]",
 ];
-const GAPPULL: &[&str] = &[
+const GAPPULL: &[TailwindClass] = tw![
     "text-[#7bdca0]",
     "border-[rgba(123,220,160,0.6)]",
     "bg-[rgba(123,220,160,0.12)]",
 ];
-const SPILL: &[&str] = &[
+const SPILL: &[TailwindClass] = tw![
     "text-[#6aa1ff]",
     "border-[rgba(106,161,255,0.6)]",
     "bg-[rgba(106,161,255,0.12)]",
 ];
-const SWAP: &[&str] = &[
+const SWAP: &[TailwindClass] = tw![
     "text-[#c79bff]",
     "border-[rgba(199,155,255,0.6)]",
     "bg-[rgba(199,155,255,0.12)]",
 ];
-const STUCK: &[&str] = &[
+const STUCK: &[TailwindClass] = tw![
     "text-[#ff9a6a]",
     "border-[rgba(255,154,106,0.6)]",
     "bg-[rgba(255,122,122,0.12)]",

@@ -1,6 +1,6 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "gap-4",
     "flex-nowrap",
@@ -11,20 +11,20 @@ const BASE: &[&str] = &[
 ];
 // Phone/tablet: the five banners share one full-width row (no clumping, no
 // horizontal scroll), with a tighter gap and a little breathing room below.
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:gap-[0.4rem]",
     "mobile:overflow-visible",
     "mobile:p-[0.15rem_0_0.4rem]",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:gap-[0.4rem]",
     "tablet:overflow-visible",
     "tablet:p-[0.15rem_0_0.4rem]",
 ];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

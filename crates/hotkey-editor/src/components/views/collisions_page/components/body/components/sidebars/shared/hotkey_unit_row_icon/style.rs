@@ -1,6 +1,6 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "h-[80px]",
     "w-[80px]",
     "shrink-0",
@@ -9,12 +9,12 @@ const BASE: &[&str] = &[
     "rounded-[4px]",
     "object-cover",
 ];
-const MOBILE: &[&str] = &["mobile:h-[66px]", "mobile:w-[66px]"];
-const TABLET: &[&str] = &["tablet:h-[92px]", "tablet:w-[92px]"];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw!["mobile:h-[66px]", "mobile:w-[66px]"];
+const TABLET: &[TailwindClass] = tw!["tablet:h-[92px]", "tablet:w-[92px]"];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

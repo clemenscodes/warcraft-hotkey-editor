@@ -1,10 +1,10 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The interactive wrapper coincides with the base tile it wraps: same square, same
 // query container, so the hotkey badge's `cqi` sizing is unchanged and the drag
 // overlays sit exactly over the tile. All sizing is in `cqi`, so it scales with the
 // grid just like the base tile.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "relative",
     "w-full",
     "aspect-square",
@@ -25,12 +25,12 @@ const BASE: &[&str] = &[
     "data-[dragging-source=true]:data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_#ffce63]",
 ];
 
-const MOBILE: &[&str] = &[];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

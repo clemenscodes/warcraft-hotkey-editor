@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The crosshair button that opens the position picker for an off-state / upgraded-
 // form button. Blue-themed square matching the alt-state block; the crosshair SVG
 // fills it. Shared by the alt-state and upgrade sections.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "appearance-none",
     "w-20",
     "h-20",
@@ -29,11 +29,11 @@ const BASE: &[&str] = &[
     "[&>svg]:h-full",
 ];
 
-const MOBILE: &[&str] = &["mobile:w-[4.6rem]", "mobile:h-[4.6rem]"];
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const MOBILE: &[TailwindClass] = tw!["mobile:w-[4.6rem]", "mobile:h-[4.6rem]"];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -1,7 +1,7 @@
 use super::state::SystemKeyPickerKeyState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "relative",
     "min-w-0",
     "w-[4.7vw]",
@@ -64,7 +64,7 @@ const BASE: &[&str] = &[
     "[&[data-tooltip]:not([data-tooltip=''])]:focus-visible:after:opacity-100",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[6.5vw]",
     "mobile:h-[8vw]",
     "mobile:p-0",
@@ -72,16 +72,16 @@ const MOBILE: &[&str] = &[
     "mobile:data-[wide=true]:w-[13vw]",
 ];
 
-const TABLET: &[&str] = &[];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const NORMAL: &[&str] = &[
+const NORMAL: &[TailwindClass] = tw![
     "[background:rgba(40,30,8,0.55)]",
     "border-[#6c5a1f]",
     "text-warcraft-gold",
@@ -90,14 +90,14 @@ const NORMAL: &[&str] = &[
     "[&:hover]:[box-shadow:0_0_6px_rgba(255,206,99,0.5)]",
 ];
 
-const CURRENT: &[&str] = &[
+const CURRENT: &[TailwindClass] = tw![
     "[background:linear-gradient(135deg,rgba(255,206,99,0.32)_0%,rgba(255,171,1,0.18)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",
     "[box-shadow:0_0_10px_rgba(255,206,99,0.55),inset_0_0_8px_rgba(255,206,99,0.2)]",
 ];
 
-const CONFLICT: &[&str] = &[
+const CONFLICT: &[TailwindClass] = tw![
     "[background:rgba(80,16,18,0.5)]",
     "border-[#6a2020]",
     "text-[#f0a8a8]",

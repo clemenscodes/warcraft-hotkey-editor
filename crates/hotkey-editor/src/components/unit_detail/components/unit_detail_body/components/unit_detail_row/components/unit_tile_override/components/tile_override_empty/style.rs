@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The placeholder shown in the override panel before a grid tile is selected: a
 // dashed muted-italic box.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-col",
     "items-center",
@@ -20,7 +20,7 @@ const BASE: &[&str] = &[
     "leading-[1.45]",
     "italic",
 ];
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-full",
     "mobile:box-border",
     "mobile:h-[300px]",
@@ -32,7 +32,7 @@ const MOBILE: &[&str] = &[
     "mobile:border-b-0",
     "mobile:shadow-[0_-4px_16px_rgba(0,0,0,0.4)]",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:w-full",
     "tablet:box-border",
     "tablet:h-[300px]",
@@ -40,9 +40,9 @@ const TABLET: &[&str] = &[
     "tablet:text-[14px]",
     "tablet:leading-[1.4]",
 ];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

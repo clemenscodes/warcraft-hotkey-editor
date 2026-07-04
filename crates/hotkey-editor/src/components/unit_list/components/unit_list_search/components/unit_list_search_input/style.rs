@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The search text field. A plain bordered box on the sidebar; on mobile it becomes a
 // tall pill with room for the leading magnifier icon and a gold focus glow.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-1",
     "min-w-0",
     "w-full",
@@ -20,7 +20,7 @@ const BASE: &[&str] = &[
     "focus:shadow-[0_0_6px_rgba(255,206,99,0.4)]",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:h-[44px]",
     "mobile:pl-[40px]",
     "mobile:pr-[14px]",
@@ -40,7 +40,7 @@ const MOBILE: &[&str] = &[
     "mobile:[&::-webkit-search-cancel-button]:appearance-none",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:h-[44px]",
     "tablet:pl-[40px]",
     "tablet:pr-[14px]",
@@ -60,9 +60,9 @@ const TABLET: &[&str] = &[
     "tablet:[&::-webkit-search-cancel-button]:appearance-none",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

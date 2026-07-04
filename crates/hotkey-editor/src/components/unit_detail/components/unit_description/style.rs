@@ -1,8 +1,8 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // The unit's flavor text under the header. Reserves two lines' height on desktop so
 // the stats card below never shifts; clamps to a single line on smaller panels.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "mt-4",
     "min-h-[9rem]",
     "text-[1.75rem]",
@@ -11,7 +11,7 @@ const BASE: &[&str] = &[
     "[text-shadow:1px_1px_0_rgba(0,0,0,0.6)]",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:mt-[12px]",
     "mobile:flex-none",
     "mobile:h-[1.4em]",
@@ -25,7 +25,7 @@ const MOBILE: &[&str] = &[
     "mobile:[word-break:break-word]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:mt-[12px]",
     "tablet:flex-none",
     "tablet:h-[1.4em]",
@@ -39,9 +39,9 @@ const TABLET: &[&str] = &[
     "tablet:[word-break:break-word]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

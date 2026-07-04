@@ -1,9 +1,9 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
 // One button of the Unit/Ability search-field toggle. Same bronze pill as the
 // Melee/Campaign mode buttons; gold when active. Its height is set by the group's
 // `[&>button]` rule, so only text and padding scale by viewport here.
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex-1",
     "px-6",
     "bg-[linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)]",
@@ -30,24 +30,24 @@ const BASE: &[&str] = &[
     "data-[active=true]:shadow-[0_0_12px_rgba(255,206,99,0.3)]",
 ];
 
-const MOBILE: &[&str] = &["mobile:text-[1rem]", "mobile:px-[0.6rem]"];
+const MOBILE: &[TailwindClass] = tw!["mobile:text-[1rem]", "mobile:px-[0.6rem]"];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]",
     "tablet:px-4",
 ];
 
-const LAPTOP: &[&str] = &[
+const LAPTOP: &[TailwindClass] = tw![
     "laptop:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]",
     "laptop:px-4",
 ];
 
-const DESKTOP: &[&str] = &[
+const DESKTOP: &[TailwindClass] = tw![
     "desktop:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]",
     "desktop:px-4",
 ];
 
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }

@@ -1,7 +1,7 @@
 use super::state::LayoutCellState;
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "w-[clamp(7rem,9vh,12rem)]",
     "h-[clamp(7rem,9vh,12rem)]",
     "flex",
@@ -31,29 +31,29 @@ const BASE: &[&str] = &[
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:text-warcraft-gold",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[clamp(52px,18vw,72px)]",
     "mobile:h-[clamp(52px,18vw,72px)]",
     "mobile:text-[clamp(22px,7vw,34px)]",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:w-[clamp(52px,18vw,72px)]",
     "tablet:h-[clamp(52px,18vw,72px)]",
     "tablet:text-[clamp(22px,7vw,34px)]",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const IDLE: &[&str] = &[];
+const IDLE: &[TailwindClass] = tw![];
 
-const EDITING: &[&str] = &[
+const EDITING: &[TailwindClass] = tw![
     "[background:linear-gradient(135deg,rgba(255,206,99,0.3)_0%,rgba(255,171,1,0.18)_100%)]",
     "border-warcraft-gold",
     "text-warcraft-gold",

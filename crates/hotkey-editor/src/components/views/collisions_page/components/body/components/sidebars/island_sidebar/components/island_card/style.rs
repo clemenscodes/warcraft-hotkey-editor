@@ -1,6 +1,6 @@
-use crate::classes;
+use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "group",
     "flex",
     "items-center",
@@ -31,7 +31,7 @@ const BASE: &[&str] = &[
     "data-[selected=true]:text-warcraft-gold",
     "data-[selected=true]:shadow-[0_0_8px_rgba(255,206,99,0.3)]",
 ];
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-[1_0_auto]",
     "mobile:w-[min(54vw,260px)]",
     "mobile:h-[clamp(96px,25vw,120px)]",
@@ -45,7 +45,7 @@ const MOBILE: &[&str] = &[
     "mobile:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
     "mobile:border-[rgba(42,80,133,0.6)]",
 ];
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:flex-[1_0_auto]",
     "tablet:w-[min(54vw,260px)]",
     "tablet:h-[clamp(96px,25vw,120px)]",
@@ -59,10 +59,10 @@ const TABLET: &[&str] = &[
     "tablet:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
     "tablet:border-[rgba(42,80,133,0.6)]",
 ];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

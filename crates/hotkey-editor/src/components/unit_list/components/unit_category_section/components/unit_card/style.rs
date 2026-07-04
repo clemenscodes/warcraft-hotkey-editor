@@ -1,7 +1,7 @@
-use crate::{classes, states};
+use crate::{classes, states, styling::TailwindClass, tw};
 use warcraft_api::Race;
 
-const BASE: &[&str] = &[
+const BASE: &[TailwindClass] = tw![
     "flex",
     "items-center",
     "gap-4",
@@ -28,7 +28,7 @@ const BASE: &[&str] = &[
     "data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.9)_0%,rgba(20,45,80,0.9)_100%)]",
 ];
 
-const MOBILE: &[&str] = &[
+const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-[1_0_auto]",
     "mobile:flex-row",
     "mobile:justify-start",
@@ -51,7 +51,7 @@ const MOBILE: &[&str] = &[
     "mobile:group-[[data-search-active=false][data-active-category=building]]:[&:not([data-unit-kind=building])]:hidden",
 ];
 
-const TABLET: &[&str] = &[
+const TABLET: &[TailwindClass] = tw![
     "tablet:flex-[1_0_auto]",
     "tablet:flex-row",
     "tablet:justify-start",
@@ -74,10 +74,10 @@ const TABLET: &[&str] = &[
     "tablet:group-[[data-search-active=false][data-active-category=building]]:[&:not([data-unit-kind=building])]:hidden",
 ];
 
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
@@ -87,31 +87,31 @@ classes! {
 // colour, chosen directly from the race rather than a cascaded var. The selected
 // glow is one blur for every width (the former 10px mobile/tablet variant folds into
 // this 8px — a 2px difference that no longer justifies a band-specific race style).
-const HUMAN: &[&str] = &[
+const HUMAN: &[TailwindClass] = tw![
     "hover:border-[color:#6aa1ff]",
     "data-[selected=true]:border-[color:#6aa1ff]",
     "data-[selected=true]:text-[color:#6aa1ff]",
     "data-[selected=true]:shadow-[0_0_8px_rgba(106,161,255,0.3)]",
 ];
-const NIGHTELF: &[&str] = &[
+const NIGHTELF: &[TailwindClass] = tw![
     "hover:border-[color:#5fdada]",
     "data-[selected=true]:border-[color:#5fdada]",
     "data-[selected=true]:text-[color:#5fdada]",
     "data-[selected=true]:shadow-[0_0_8px_rgba(95,218,218,0.3)]",
 ];
-const ORC: &[&str] = &[
+const ORC: &[TailwindClass] = tw![
     "hover:border-[color:#ff7a7a]",
     "data-[selected=true]:border-[color:#ff7a7a]",
     "data-[selected=true]:text-[color:#ff7a7a]",
     "data-[selected=true]:shadow-[0_0_8px_rgba(255,122,122,0.3)]",
 ];
-const UNDEAD: &[&str] = &[
+const UNDEAD: &[TailwindClass] = tw![
     "hover:border-[color:#c79bff]",
     "data-[selected=true]:border-[color:#c79bff]",
     "data-[selected=true]:text-[color:#c79bff]",
     "data-[selected=true]:shadow-[0_0_8px_rgba(199,155,255,0.3)]",
 ];
-const NEUTRAL: &[&str] = &[
+const NEUTRAL: &[TailwindClass] = tw![
     "hover:border-[color:#ffce63]",
     "data-[selected=true]:border-[color:#ffce63]",
     "data-[selected=true]:text-[color:#ffce63]",
