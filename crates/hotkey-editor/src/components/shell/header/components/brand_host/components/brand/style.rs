@@ -19,10 +19,10 @@ const BASE: &[TailwindClass] = tw![
     "cursor-pointer",
     "text-left",
     "[transition:filter_0.12s_ease,text-shadow_0.12s_ease]",
-    "hover:[filter:brightness(1.15)]",
+    "hover:filter-[brightness(1.15)]",
     "focus:outline-none",
     "focus-visible:[outline:2px_solid_#fff]",
-    "focus-visible:[outline-offset:2px]",
+    "focus-visible:outline-offset-2",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

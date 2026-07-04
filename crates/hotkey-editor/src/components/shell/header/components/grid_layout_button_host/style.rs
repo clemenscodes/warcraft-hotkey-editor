@@ -8,11 +8,11 @@ use crate::{classes, styling::TailwindClass, tw};
 // fills it (`size-full`) and every `cqi` length inside the button — padding, gap, border,
 // radius, font, icon — resolves against this box and scales as one drawing with the bar.
 const BASE: &[TailwindClass] = tw![
+    "@container",
     "hidden",
     "items-center",
     "justify-center",
-    "aspect-[39/10]",
-    "[container-type:inline-size]",
+    "aspect-39/10",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

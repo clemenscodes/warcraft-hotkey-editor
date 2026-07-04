@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "m-0",
     "font-friz-quadrata",
     "font-normal",
-    "text-[length:5cqi]",
+    "text-[5cqi]",
     "leading-[1.1]",
     "tracking-[0.04em]",
     "text-warcraft-gold",

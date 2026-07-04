@@ -1,13 +1,13 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
+    "@container",
     "block",
     "h-full",
     "w-auto",
     "max-w-full",
     "aspect-square",
     "shrink-0",
-    "[container-type:inline-size]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

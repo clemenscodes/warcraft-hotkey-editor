@@ -18,7 +18,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[3.2cqi]",
     "text-warcraft-gold",
     "font-mono",
-    "text-[length:8.55cqi]",
+    "text-[8.55cqi]",
     "tracking-[0.14em]",
     "font-medium",
     "cursor-pointer",

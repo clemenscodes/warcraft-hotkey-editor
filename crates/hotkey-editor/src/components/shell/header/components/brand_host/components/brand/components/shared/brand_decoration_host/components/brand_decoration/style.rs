@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "w-[100cqi]",
     "h-auto",
     "flex-none",
-    "[filter:drop-shadow(0_1px_0_rgba(0,0,0,0.7))]",
+    "filter-[drop-shadow(0_1px_0_rgba(0,0,0,0.7))]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

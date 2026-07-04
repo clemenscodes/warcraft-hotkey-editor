@@ -6,12 +6,21 @@ reminding. Read this file before adding or refactoring any component.
 
 These sit alongside `docs/ARCHITECTURE.md` (the wall: where domain logic lives
 versus the renderer) and `docs/RUST_STYLE.md` (how Rust is written). All three
-must hold. This file is the reference for the renderer side. It was distilled
-from the `grid_editor` subsystem, which is the worked example for every rule
-below.
+must hold. This file is the reference for the renderer side.
 
-> Before writing a component: read the relevant `grid_editor` files and mirror
-> their shape exactly.
+The one subsystem approved **end-to-end** — every structural rule below *and* the
+full styling / container-query / responsiveness treatment — is
+`components/shell/header`. It is the role model: the design-wise perfect
+application of this document, verified in the browser at every band. When a new
+component's shape is in question, the answer is "what does the header do here?",
+and nothing lower than that bar ships. The older `grid_editor` subsystem still
+illustrates the structural rules and is referenced throughout below, but it was
+never carried through the same styling treatment; where the two differ, **the
+header wins**. The capstone walk-through at the end of this file breaks the header
+down quality by quality.
+
+> Before writing a component: read the `components/shell/header` tree and the
+> capstone walk-through at the end of this file, and mirror their shape exactly.
 
 ---
 
@@ -890,6 +899,85 @@ at the leaf, and where the muted state is "the value is zero" it asks the domain
 See `docs/ARCHITECTURE.md` for why the renderer never computes domain decisions,
 and `docs/RUST_STYLE.md` for the `From` and `TryFrom` rules these conversions
 follow.
+
+---
+
+## The reference implementation — `shell/header`
+
+`components/shell/header` is the role model. It is the one subsystem taken through
+every rule in this file *and* the full styling, container-query, and responsiveness
+treatment, and approved end-to-end. Read it before writing any component; when your
+shape differs from the header's, the header is right. Each quality below is a rule
+you copy, not a suggestion — this is the standard, and lower quality is not accepted.
+
+**The render tree is the file tree, to the leaf.** `Header` renders `BrandHost`,
+`GridLayoutButtonHost`, `Toolbar`; each lives under `header/components/`. It holds at
+every depth — `Toolbar` → `ToolbarActions` → `InlineActions` → nine action buttons,
+and `BurgerMenu` → `BurgerDrawer` → `BurgerDrawerBody` → … — and every `mod.rs`
+reaches its children with `use components::…`, never `super::`. Run the `super::`
+test on any file in the tree and it passes.
+
+**Connected hosts feed presentational leaves; nothing drills props.** A `<Leaf>Host`
+calls one composed hook, shapes the result, and spreads it into a pure leaf.
+`CollisionsButtonHost` (`hooks.rs::use_collisions_button`) asks the domain for the
+collision count and hands `CollisionsButton { ..button }` its summary and click
+handler; `CollisionsButton` is props-in / markup-out and reads no context. The host's
+classed `div` is also the leaf's box and its query container. Uninvolved containers
+thread nothing: `Toolbar` and `ToolbarActions` are pure layout and pass no document
+down. Because the leaf is pure, the gallery renders it directly with any value.
+
+**Static content lives in `data.rs` and arrives as typed props.** `brand/data.rs`
+holds `const TITLE: BrandTitleProps = BrandTitleProps { title: "Warcraft III Hotkey
+Editor" }`, and `Brand` renders `BrandTitle { ..data::TITLE }`. No sentence is ever
+baked into a body — the copy is a typed constant in `data.rs`, spread in as props.
+
+**One shared leaf, many thin connected wrappers.** `ToolbarButton` lives once at
+`inline_actions/components/shared/toolbar_button/` and is reused by all nine action
+buttons. Each button — `ExportButton`, `UndoButton`, `TemplatesButton`, … — is a thin
+wrapper (`hooks.rs`) that sources only its own state and renders the shared
+`ToolbarButton`. It is in `shared/` because the count of render sites is ≥ 2; it is
+never duplicated and never flat-dumped beside its renderers.
+
+**A component is a drawing that scales off its box — `cqi`, never `px`/`rem`/`vw`
+inside a leaf.** The header is a query container (`@container`), and every interior
+length in a leaf is a `cqi` fraction of the box its parent hands it. `ToolbarButton`
+fills the height it is given (`size-full`), locks itself square (`aspect-square`),
+marks itself a container, and its surface expresses border, radius, icon, and glow
+entirely in `cqi` — enlarge the box and the whole button scales in exact proportion,
+as one drawing, because there is not a single fixed length left inside. A `px`, `rem`,
+or `vw` inside a leaf is the bug.
+
+**Size flows through the box: the parent owns it, the child fills it.** The header
+owns exactly two knobs — the bar height (`min-h`) and the button-to-bar ratio (`py`) —
+and `items-stretch` hands every column the same row height. The layout button and
+every toolbar button fill that height and come out identical; no leaf writes its own
+width or height. Change one knob and the whole bar rescales together, still centered,
+still proportional.
+
+**Per-band proportions: `BASE` is the common truth, the bands are deltas.** `BASE`
+carries the shared appearance — here the laptop-and-up default, since it covers four
+of the six bands — and the touch bands override only what genuinely differs. A `BASE`
+value that every band overrides is dead weight: delete it. `vw` appears only on the
+bar's *own* dimensions (`min-h`, `gap`, `py`) — the bar is full-bleed, so `vw` there
+is just a fraction of its own width. `clamp()` earns its place exactly once: the bar's
+`min-height`, bounding it against too-thin on small laptops and too-tall on 4K. It
+never appears inside a `cqi` drawing, where a floor or a cap would pin the proportional
+scaling and break it.
+
+**Canonical, LSP-validated classes.** Reach for the real Tailwind utility or theme
+token before a raw arbitrary value: `@container` (not `[container-type:inline-size]`),
+`aspect-39/10`, `grid-cols-[…]`, `z-60`, `bg-warcraft-gold-soft`, `bg-fixed`,
+`outline-offset-2`. Arbitrary `[…]` values are for the genuinely bespoke; if the
+utility exists and the Tailwind LSP knows it, use it — that is the difference between
+a class the tooling can validate and one it cannot.
+
+**Small, single-purpose, composable files.** Each component is one class, one concern,
+a handful of lines: `brand_title`, `collisions_button_icon`, `collisions_button_badge`,
+`toolbar_button_surface`, `toolbar_button_icon` are each their own leaf. The moment a
+file wants a second class or a second responsibility it wants to be two components.
+There is no such thing as too many.
+
+Read these files before you write. When in doubt, do what the header does.
 
 ---
 

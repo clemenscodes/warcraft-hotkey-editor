@@ -1,20 +1,23 @@
 use crate::{classes, styling::TailwindClass, tw};
 
+// One fixed inter-control gap on every band: the icon buttons scale, but a few px of gap
+// between them reads the same at any size, so this needs neither a per-band value nor a
+// clamp — a single `gap-1` in BASE covers phone through 4K.
 const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-row",
     "items-center",
     "justify-end",
-    "gap-[0.65rem]",
+    "gap-1",
     "min-w-0",
 ];
 
-const MOBILE: &[TailwindClass] = tw!["mobile:gap-1"];
-const TABLET: &[TailwindClass] = tw!["tablet:gap-1"];
-const LAPTOP: &[TailwindClass] = tw!["laptop:gap-[clamp(0.2rem,0.2vw,0.5rem)]"];
-const DESKTOP: &[TailwindClass] = tw!["desktop:gap-[clamp(0.2rem,0.2vw,0.5rem)]"];
-const QHD: &[TailwindClass] = tw!["qhd:gap-[clamp(0.2rem,0.2vw,0.5rem)]"];
-const UHD: &[TailwindClass] = tw!["uhd:gap-[clamp(0.2rem,0.2vw,0.5rem)]"];
+const MOBILE: &[TailwindClass] = tw![];
+const TABLET: &[TailwindClass] = tw![];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
