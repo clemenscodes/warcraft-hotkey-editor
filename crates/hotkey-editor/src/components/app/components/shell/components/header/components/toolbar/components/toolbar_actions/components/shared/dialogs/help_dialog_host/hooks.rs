@@ -1,4 +1,4 @@
-use super::super::shared::dialogs::help_dialog::HelpDialogProps;
+use super::super::help_dialog::HelpDialogProps;
 use crate::services::overlay_state::context::use_overlay_state;
 
 /// Shapes the help dialog's only prop from context: the shared open signal the help

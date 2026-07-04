@@ -1,4 +1,4 @@
-use super::super::shared::dialogs::system_hotkeys_dialog::SystemHotkeysDialogProps;
+use super::super::system_hotkeys_dialog::SystemHotkeysDialogProps;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::overlay_state::context::use_overlay_state;
 

@@ -1,4 +1,4 @@
-use super::super::shared::dialogs::templates_dialog::TemplatesDialogProps;
+use super::super::templates_dialog::TemplatesDialogProps;
 use crate::services::customkeys::context::{use_loaded_keys, use_upload_status};
 use crate::services::overlay_state::context::use_overlay_state;
 

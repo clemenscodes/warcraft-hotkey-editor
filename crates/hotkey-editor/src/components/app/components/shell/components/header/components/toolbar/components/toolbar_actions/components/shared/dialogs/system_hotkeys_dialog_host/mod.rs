@@ -1,7 +1,7 @@
 mod hooks;
 mod style;
 
-use super::shared::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
+use super::system_hotkeys_dialog::SystemHotkeysDialog;
 use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_dialog_host;

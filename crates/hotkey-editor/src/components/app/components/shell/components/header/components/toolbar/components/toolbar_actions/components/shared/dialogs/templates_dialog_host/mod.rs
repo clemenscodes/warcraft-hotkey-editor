@@ -1,7 +1,7 @@
 mod hooks;
 mod style;
 
-use super::shared::dialogs::templates_dialog::TemplatesDialog;
+use super::templates_dialog::TemplatesDialog;
 use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_templates_dialog_host;

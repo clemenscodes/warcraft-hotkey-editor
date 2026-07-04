@@ -1,7 +1,7 @@
 mod hooks;
 mod style;
 
-use super::shared::dialogs::preview_dialog::PreviewDialog;
+use super::preview_dialog::PreviewDialog;
 use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_preview_dialog_host;

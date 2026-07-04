@@ -1,7 +1,7 @@
 mod hooks;
 mod style;
 
-use super::shared::dialogs::help_dialog::HelpDialog;
+use super::help_dialog::HelpDialog;
 use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_help_dialog_host;

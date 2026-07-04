@@ -1,14 +1,26 @@
 mod hooks;
+mod style;
 
+use crate::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::HelpDialogHost;
 use dioxus::prelude::*;
 use hooks::use_help_button;
+use style::CLASS;
 
-/// Toolbar button that opens the onboarding help dialog.
+assert_component!(HelpButton);
+
+/// Toolbar button that opens the onboarding help dialog, carrying the dialog it opens.
+/// The button flips the shared open signal and the co-located host renders the dialog
+/// for the desktop trigger; the burger renders its own copy for the compact layout.
 #[component]
 pub fn HelpButton() -> Element {
     let button = use_help_button();
     rsx! {
-        ToolbarButton { ..button }
+        div {
+            class: CLASS,
+            ToolbarButton { ..button }
+        }
+        HelpDialogHost {}
     }
 }

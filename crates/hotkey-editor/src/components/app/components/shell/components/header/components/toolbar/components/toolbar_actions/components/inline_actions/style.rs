@@ -6,8 +6,13 @@ use crate::{classes, styling::TailwindClass, tw};
 // collisions and layout buttons, with no fixed size of its own. `gap-1` is the same fixed
 // inter-button gap the toolbar uses; the tight gap keeps the full ten-button row inside its
 // grid track.
+// The row stays mounted at every width so each button can carry the dialog it opens (a
+// fixed overlay that must render on mobile too, where the burger flips the shared open
+// signal). Below laptop every button's own slot is `hidden`, so the row collapses to
+// nothing visible while its dialogs stay live; the burger sits beside it as the compact
+// trigger. The row's flex layout is therefore always-on.
 const BASE: &[TailwindClass] = tw![
-    "hidden",
+    "flex",
     "flex-row",
     "items-center",
     "justify-end",
@@ -18,10 +23,10 @@ const BASE: &[TailwindClass] = tw![
 
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw!["laptop:flex"];
-const DESKTOP: &[TailwindClass] = tw!["desktop:flex"];
-const QHD: &[TailwindClass] = tw!["qhd:flex"];
-const UHD: &[TailwindClass] = tw!["uhd:flex"];
+const LAPTOP: &[TailwindClass] = tw![];
+const DESKTOP: &[TailwindClass] = tw![];
+const QHD: &[TailwindClass] = tw![];
+const UHD: &[TailwindClass] = tw![];
 classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }

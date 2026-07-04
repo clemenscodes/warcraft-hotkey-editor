@@ -1,7 +1,7 @@
 mod hooks;
 mod style;
 
-use super::shared::dialogs::layout_editor::LayoutEditor;
+use super::layout_editor::LayoutEditor;
 use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_layout_editor_host;
