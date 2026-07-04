@@ -12,7 +12,7 @@ use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPag
 use super::props::CollisionsPageProps;
 use crate::services::collision_selection::context::use_collision_selection;
 use crate::services::customkeys::context::use_loaded_keys;
-use crate::services::grid_layout::use_grid_layout;
+use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::context::{use_synced_route, use_view_navigation};
 use crate::services::navigation::nav_snapshot::NavSnapshot;

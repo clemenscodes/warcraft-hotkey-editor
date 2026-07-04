@@ -1,6 +1,6 @@
 use super::components::unit_card_icon::UnitCardIconProps;
 use super::components::unit_card_info::UnitCardInfoProps;
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind};
 use warcraft_keybinds::GridSlotId;

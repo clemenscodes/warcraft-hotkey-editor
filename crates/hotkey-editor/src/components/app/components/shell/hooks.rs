@@ -1,12 +1,12 @@
 use crate::components::app::components::shell::route_sync::NavDecision;
 use crate::components::app::components::shell::style;
 use crate::components::app::route::Route;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
 use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::editor_state::EditorState;
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::editor_nav::DecodedEditorNav;

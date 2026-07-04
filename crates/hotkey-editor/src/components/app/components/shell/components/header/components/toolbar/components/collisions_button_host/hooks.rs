@@ -1,6 +1,6 @@
 use super::components::collisions_button::CollisionsButtonProps;
 use crate::services::customkeys::context::use_custom_keys_service;
-use crate::services::grid_layout::use_grid_layout;
+use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;

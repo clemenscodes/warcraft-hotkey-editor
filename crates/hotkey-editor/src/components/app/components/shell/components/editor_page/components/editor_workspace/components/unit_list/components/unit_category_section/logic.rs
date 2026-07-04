@@ -2,7 +2,7 @@ use super::components::unit_card::UnitCardProps;
 use super::components::unit_category_heading::UnitCategoryHeadingProps;
 use super::props::UnitCategorySectionProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::unit_kind_data_attr;
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_keybinds::{UnitCategoryListing, UnitCategoryRequest};
 

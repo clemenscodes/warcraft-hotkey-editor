@@ -5,7 +5,7 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 use warcraft_keybinds::InspectorDetail;
 
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 
 /// The per-tile override editor: the panel that edits the selected ability's hotkey,
 /// off-state, upgraded form, and command-card position.

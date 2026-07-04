@@ -4,9 +4,12 @@ use warcraft_api::UnitKind;
 use warcraft_database::SearchField;
 use warcraft_keybinds::GridSlotId;
 
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
-
 pub mod context;
+pub mod drag;
+pub mod hit_test;
+
+pub use drag::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+pub(crate) use hit_test::{CursorPoint, HitTestPoint};
 
 /// The editor view's own UI state: the selected slot, the drag machinery, the
 /// per-catalog toggles, and the tier overrides. Provided once by the app shell and

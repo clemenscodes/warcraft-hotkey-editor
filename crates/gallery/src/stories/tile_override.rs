@@ -13,7 +13,7 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
     AltPositionPicker, TileOverride, UpgradePositionPicker,
 };
 
-use hotkey_editor::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use hotkey_editor::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;

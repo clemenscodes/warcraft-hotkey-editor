@@ -6,7 +6,7 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 
 use super::alt_position_picker_explainer::AltPositionPickerExplainerProps;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 
 /// The off-state position picker: a modal command grid where the off-state button can
 /// be dragged to a new cell.

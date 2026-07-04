@@ -6,7 +6,7 @@ use super::components::unit_detail_header::UnitDetailHeaderProps;
 use super::components::unit_detail_body::components::unit_detail_row::UnitDetailRowProps;
 use super::components::unit_stats_panel::UnitStatsPanelProps;
 use super::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::UnitTileOverrideProps;
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectMeta;

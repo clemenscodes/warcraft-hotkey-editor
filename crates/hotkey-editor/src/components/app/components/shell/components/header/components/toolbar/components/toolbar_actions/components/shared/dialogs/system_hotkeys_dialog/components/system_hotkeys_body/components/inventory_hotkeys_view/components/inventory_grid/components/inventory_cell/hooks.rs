@@ -5,7 +5,7 @@ use super::super::super::{
 
 use super::props::InventoryCellProps;
 use super::state::InventoryCellState;
-use crate::model::grid::{CursorPoint, HitTestPoint};
+use crate::services::editor_state::{CursorPoint, HitTestPoint};
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;

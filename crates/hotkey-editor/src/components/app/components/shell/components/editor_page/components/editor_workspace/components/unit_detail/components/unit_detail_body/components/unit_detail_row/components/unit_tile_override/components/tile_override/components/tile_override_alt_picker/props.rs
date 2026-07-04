@@ -6,7 +6,7 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 
 use super::super::position_picker::AltPositionPickerProps;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 
 /// Guards the off-state position picker so it is mounted only while it is open.
 #[derive(Props, Clone, PartialEq)]

@@ -4,8 +4,10 @@ use super::drag_state::{
     TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
 };
 
-use crate::model::grid::{CursorPoint, HitTestPoint};
-use crate::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{CursorPoint, HitTestPoint};
+use crate::services::editor_state::{
+    DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile,
+};
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;

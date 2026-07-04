@@ -1,5 +1,5 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorProps;
-use crate::model::grid::DragFollower;
+use crate::services::editor_state::DragFollower;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::GridBehavior;

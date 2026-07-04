@@ -17,7 +17,9 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
 use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 
-use hotkey_editor::model::grid::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
+use hotkey_editor::services::editor_state::{
+    DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile,
+};
 
 use super::fixtures;
 use warcraft_api::Race;

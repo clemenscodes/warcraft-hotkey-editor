@@ -2,7 +2,7 @@ use super::components::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::{
     GridTileProps, GridTileState,
 };
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};

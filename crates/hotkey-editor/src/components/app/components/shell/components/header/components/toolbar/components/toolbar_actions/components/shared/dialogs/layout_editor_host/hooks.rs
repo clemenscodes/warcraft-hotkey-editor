@@ -1,6 +1,6 @@
 use super::super::layout_editor::LayoutEditorProps;
 use crate::services::editor_state::context::use_editor_state;
-use crate::services::grid_layout::use_grid_layout;
+use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::overlay_state::context::use_overlay_state;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;

@@ -3,7 +3,7 @@ use super::components::editor_workspace::EditorWorkspaceProps;
 use super::props::EditorPageProps;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
-use crate::services::grid_layout::use_grid_layout;
+use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::context::{use_synced_route, use_view_navigation};
 use crate::services::navigation::editor_nav::DecodedEditorNav;

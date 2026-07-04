@@ -1,4 +1,4 @@
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;

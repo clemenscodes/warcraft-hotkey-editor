@@ -1,4 +1,4 @@
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 
 /// The portrait source (absent for units without an icon) and the alt text.

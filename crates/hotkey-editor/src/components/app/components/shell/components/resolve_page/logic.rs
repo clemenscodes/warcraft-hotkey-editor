@@ -1,4 +1,4 @@
-use crate::model::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use std::collections::{HashMap, HashSet};
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};

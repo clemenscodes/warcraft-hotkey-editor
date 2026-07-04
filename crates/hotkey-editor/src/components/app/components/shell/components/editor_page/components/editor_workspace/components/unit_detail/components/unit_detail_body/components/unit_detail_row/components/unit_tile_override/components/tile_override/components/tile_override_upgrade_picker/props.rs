@@ -6,7 +6,7 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 
 use super::super::position_picker::UpgradePositionPickerProps;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 
 /// Guards the upgraded-form position picker: it only exists when the ability has an
 /// upgraded form, so its unit id is optional here.

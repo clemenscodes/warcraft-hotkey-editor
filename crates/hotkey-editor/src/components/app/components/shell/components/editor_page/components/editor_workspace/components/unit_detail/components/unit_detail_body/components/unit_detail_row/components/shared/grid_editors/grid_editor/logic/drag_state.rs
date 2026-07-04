@@ -12,7 +12,7 @@ pub(crate) struct DragOrigin {
     pub(crate) cursor_vertical_position: f64,
 }
 
-use crate::model::grid::DragFollowerVisual;
+use crate::services::editor_state::DragFollowerVisual;
 use warcraft_keybinds::GridCoordinate;
 
 pub(crate) struct PendingDragData {

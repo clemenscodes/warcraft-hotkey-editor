@@ -1,6 +1,6 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailPanelProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitListProps;
-use crate::model::grid::{DragFollower, DraggingSlot, DropTargetTile};
+use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_api::{Race, UnitKind};

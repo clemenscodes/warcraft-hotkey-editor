@@ -18,7 +18,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 };
 
 use super::super::props::GridEditorProps;
-use crate::model::grid::DragFollowerVisual;
+use crate::services::editor_state::DragFollowerVisual;
 
 use super::handlers::{
     MoveHandlerArgs, activate_handler, drop_blocked_callback, move_handler, select_handler,
