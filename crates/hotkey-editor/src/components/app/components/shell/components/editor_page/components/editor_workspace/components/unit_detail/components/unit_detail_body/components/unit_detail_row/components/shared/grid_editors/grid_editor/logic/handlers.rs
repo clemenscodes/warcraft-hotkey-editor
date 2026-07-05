@@ -24,7 +24,7 @@ pub(super) fn occupant_at<B: GridBehavior>(
     slot_ids: &[GridSlotId],
     coordinate: GridCoordinate,
 ) -> Option<GridSlotId> {
-    let read_guard = loaded_keys.read();
+    let read_guard = loaded_keys.peek();
     let file = read_guard.as_ref()?;
     file.slot_at(behavior, slot_ids, coordinate)
 }
@@ -101,7 +101,7 @@ pub(super) fn move_handler<B: GridBehavior>(
             return;
         };
         let blocker_name = {
-            let read_guard = loaded_keys.read();
+            let read_guard = loaded_keys.peek();
             read_guard
                 .as_ref()
                 .and_then(|file| file.command_grid_move_blocker(&behavior, &slot_ids, from, to))
@@ -131,7 +131,7 @@ pub(super) fn drop_blocked_callback<B: GridBehavior>(
     slot_ids: Rc<[GridSlotId]>,
 ) -> Callback<Range<GridCoordinate>, bool> {
     Callback::new(move |grid_move: Range<GridCoordinate>| {
-        let read_guard = loaded_keys.read();
+        let read_guard = loaded_keys.peek();
         let Some(file) = read_guard.as_ref() else {
             return false;
         };

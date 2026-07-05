@@ -76,7 +76,7 @@ impl Service<CustomKeys> for CustomKeysService {
     }
 
     fn snapshot(&self) -> CustomKeys {
-        let read_guard = self.keys.read();
+        let read_guard = self.keys.peek();
         read_guard.clone().unwrap_or_default()
     }
 

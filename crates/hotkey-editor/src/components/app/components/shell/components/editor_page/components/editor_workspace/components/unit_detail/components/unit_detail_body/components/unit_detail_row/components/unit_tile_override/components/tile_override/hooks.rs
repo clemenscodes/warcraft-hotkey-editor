@@ -273,9 +273,9 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
         let Some(active_target) = *editing_target.read() else {
             return;
         };
-        let layout_snapshot_for_check = *grid_layout.read();
+        let layout_snapshot_for_check = *grid_layout.peek();
         let is_research_check = matches!(active_target, OverrideEditTarget::ResearchHotkey);
-        let read_guard = loaded_keys.read();
+        let read_guard = loaded_keys.peek();
         let custom_keys_ref = read_guard.as_ref();
         let conflict = HotkeyOverride::detect_conflict(
             &picker_active_container,

@@ -48,7 +48,7 @@ impl Service<GridLayout> for GridLayoutService {
     }
 
     fn snapshot(&self) -> GridLayout {
-        *self.layout.read()
+        *self.layout.peek()
     }
 
     fn replace(&self, aggregate: GridLayout) {

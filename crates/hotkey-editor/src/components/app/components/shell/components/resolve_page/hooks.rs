@@ -85,7 +85,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
             return;
         }
         let working_copy: CustomKeys = {
-            let read_guard = loaded_keys.read();
+            let read_guard = loaded_keys.peek();
             let Some(file) = read_guard.as_ref() else {
                 return;
             };

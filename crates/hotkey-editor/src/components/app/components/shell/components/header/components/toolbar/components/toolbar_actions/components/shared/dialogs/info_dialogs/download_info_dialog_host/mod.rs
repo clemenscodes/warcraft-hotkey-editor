@@ -16,7 +16,7 @@ pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
     let keys = custom_keys_service.keys();
     let on_confirm = EventHandler::new(move |_event: ()| {
         let serialized = {
-            let read_guard = keys.read();
+            let read_guard = keys.peek();
             let Some(file) = read_guard.as_ref() else {
                 return;
             };
