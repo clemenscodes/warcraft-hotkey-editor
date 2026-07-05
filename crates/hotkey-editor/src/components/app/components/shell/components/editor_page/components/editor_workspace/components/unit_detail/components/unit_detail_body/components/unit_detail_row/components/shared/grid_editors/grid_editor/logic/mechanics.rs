@@ -288,10 +288,10 @@ pub(crate) fn pointer_move(
             return;
         };
         let closure: DragRafClosure = Closure::new(move |_timestamp: f64| {
+            DRAG_RAF_HANDLE.with(|cell| cell.set(None));
             let Some(point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) else {
                 return;
             };
-            DRAG_RAF_HANDLE.with(|cell| cell.set(None));
             flush_drag_move(
                 dragging_slot,
                 drop_target_tile,
@@ -400,6 +400,16 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
     } = args;
     move |_event: Event<PointerData>| {
         DragThreadState::cancel_long_press();
+        if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
+            flush_drag_move(
+                dragging_slot,
+                drop_target_tile,
+                drag_follower,
+                grid_id,
+                final_point,
+            );
+        }
+        DragThreadState::cancel_drag_raf();
         let dragging_clone = *dragging_slot.read();
         let mut committed = false;
         let mut fell_back = false;
