@@ -140,9 +140,41 @@ async function selectArchmage(page: Page): Promise<void> {
   await page.locator(".filled-tile").first().waitFor();
 }
 
+// Drag one command-card tile onto another. The grid uses a custom pointer-based
+// drag (pointerdown/move/up with a start threshold and a cursor-following ghost),
+// not native HTML5 drag. Playwright's `dragTo()` emits a single move, which is
+// enough for Chromium but under-steps Firefox: the drag never crosses the start
+// threshold, so the drop lands on the wrong cell. Driving the pointer manually with
+// intermediate moves registers the drag identically in both engines.
+async function dragCell(
+  page: Page,
+  from: GridCoordinate,
+  to: GridCoordinate,
+): Promise<void> {
+  const sourceBox = await cell(page, from).boundingBox();
+  const targetBox = await cell(page, to).boundingBox();
+  if (!sourceBox || !targetBox) {
+    throw new Error(
+      `drag tiles missing: ${coordinateKey(from)} -> ${coordinateKey(to)}`,
+    );
+  }
+  const sourceX = sourceBox.x + sourceBox.width / 2;
+  const sourceY = sourceBox.y + sourceBox.height / 2;
+  const targetX = targetBox.x + targetBox.width / 2;
+  const targetY = targetBox.y + targetBox.height / 2;
+  await page.mouse.move(sourceX, sourceY);
+  await page.mouse.down();
+  // One nudge past the drag-start threshold, then a few tracked moves onto the
+  // target so the drop registers on the right cell. Kept minimal: every extra
+  // move re-renders the WASM grid, which is the slow part in Firefox.
+  await page.mouse.move(sourceX, sourceY + 8);
+  await page.mouse.move(targetX, targetY, { steps: 4 });
+  await page.mouse.up();
+}
+
 async function performSwaps(page: Page): Promise<void> {
   for (const swap of SWAP_SEQUENCE) {
-    await cell(page, swap.from).dragTo(cell(page, swap.to));
+    await dragCell(page, swap.from, swap.to);
   }
 }
 
@@ -170,6 +202,9 @@ async function stuckCards(page: Page): Promise<StuckCard[]> {
 }
 
 test("rearranging the Archmage command card into the QWER/ASDF/YXCV layout", async ({ page }) => {
+  // Eight sequential pointer-drags of the WASM grid; Firefox re-renders each move,
+  // so this legitimately needs more than the default per-test budget.
+  test.slow();
   await applyDefaultTemplate(page);
   await selectArchmage(page);
 
@@ -246,6 +281,7 @@ test("rearranging the Archmage command card into the QWER/ASDF/YXCV layout", asy
 test("rearranged layout resolves with no stuck build/root commands on the resolver", async ({
   page,
 }) => {
+  test.slow();
   await applyDefaultTemplate(page);
   await selectArchmage(page);
   await performSwaps(page);
@@ -270,6 +306,7 @@ test("rearranged layout resolves with no stuck build/root commands on the resolv
 test("applying the cascade clears every position collision, including toggle off-states", async ({
   page,
 }) => {
+  test.slow();
   await applyDefaultTemplate(page);
   await selectArchmage(page);
   await performSwaps(page);
