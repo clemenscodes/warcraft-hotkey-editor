@@ -35,7 +35,7 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
             selected_unit_id.set(Some(unit_id_for_keydown.clone()));
             selected_slot.set(None);
             active_category.set(unit_kind);
-            FocusModality::after_render(".unit-card.selected, .unit-card");
+            FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
         }
     });
     UnitCardModel {

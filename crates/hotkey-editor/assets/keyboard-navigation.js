@@ -1,24 +1,24 @@
 const NAV_SELECTORS = [
-    ".upload-button",
-    ".mode-toggle-button",
+    ".upload-button .toolbar-button-surface",
+    ".mode-tab",
     ".race-tab",
     'input[type="search"]',
     ".unit-card",
     ".unit-category-heading",
-    ".grid-tile.has-ability",
+    ".grid-editor-tile",
     ".override-key-cell",
     ".tile-override-tier-button",
     ".layout-cell",
     ".key-capture-cell",
     ".inventory-cell",
     ".slot-button",
-    ".close-button",
+    ".dialog-close",
 ];
 
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 7;
+const INSTALL_VERSION = 8;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
 const POINTER_FOCUSABLE_SELECTOR = [NAV_SELECTOR, "button", "[role='button']", "a[href]", "[tabindex]:not([tabindex='-1'])"].join(", ");
 const COARSE_POINTER_MEDIA = "(hover: none), (pointer: coarse)";

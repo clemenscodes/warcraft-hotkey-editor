@@ -123,7 +123,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
                     selected_unit_id.set(Some(unit_id));
                     selected_slot.set(None);
                     active_category_signal.set(unit_kind);
-                    FocusModality::after_render(".unit-card.selected, .unit-card");
+                    FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
                 }
             }
             _ => {}
