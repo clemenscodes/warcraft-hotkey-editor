@@ -1,2 +1,2 @@
 packages:
-  - "crates/hotkey-editor"
+  - "crates/hotkey-editor/e2e"

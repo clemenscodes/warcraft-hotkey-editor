@@ -39,7 +39,6 @@ tasks:
       runFromWorkspaceRoot: false
     inputs:
       - "tailwind.input.css"
-      - "src/**/*.css"
       - "src/**/*.rs"
 
   tailwind/watch:
@@ -103,60 +102,6 @@ tasks:
     deps:
       - dx/build
 
-  playwright/test:
-    toolchain: system
-    command: playwright test
-    deps:
-      - rust/fmt
-      - rust/lint
-      - rust/build
-      - rust/test
-      - dx/build
-    env:
-      STATIC_DIR: "../../target/dx/hotkey-editor/release/web/public"
-      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
-      NODE_NO_WARNINGS: "1"
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-    inputs:
-      - "e2e/**/*.ts"
-      - "e2e/tsconfig.json"
-      - "playwright.config.ts"
-    outputs:
-      - "dist/test-results"
-      - "dist/playwright-report"
-
-  # CI-only variant: runs the Nix build first, then tests against the
-  # resulting bundle at ../../result. In CI the Nix store is already warm
-  # so nix/bundle is a fast no-op; locally it builds from scratch.
-  playwright/ci:
-    toolchain: system
-    command: playwright test
-    deps:
-      - nix/bundle
-    env:
-      STATIC_DIR: "$workspaceRoot/result"
-      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: false
-      cache: false
-    inputs:
-      - "e2e/**/*.ts"
-      - "e2e/tsconfig.json"
-      - "playwright.config.ts"
-
-  docker/e2e:
-    toolchain: system
-    script: >
-      docker build --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
-      docker run --rm warcraft-hotkey-editor-e2e
-    options:
-      outputStyle: stream
-      runFromWorkspaceRoot: true
-      cache: false
-
   docker/serve:
     toolchain: system
     script: >
@@ -176,8 +121,4 @@ tasks:
       outputStyle: stream
       runFromWorkspaceRoot: true
       cache: false
-
-  ci:
-    deps:
-      - playwright/test
 

@@ -315,17 +315,20 @@ pub(super) fn use_shell() -> ShellModel {
         }
         if let Some(info) = active_info {
             let target_selectors: &[&str] = if info.classes().contains("override-key-cell") {
-                &[".filled-tile[data-selected=\"true\"]", ".filled-tile"]
-            } else if info.classes().contains("filled-tile") {
-                &[".unit-card.selected", ".unit-card"]
+                &[
+                    ".grid-editor-tile:has(.filled-tile[data-selected=\"true\"])",
+                    ".grid-editor-tile:has(.filled-tile)",
+                ]
+            } else if info.classes().contains("grid-editor-tile") {
+                &[".unit-card[data-selected=\"true\"]", ".unit-card"]
             } else if info.classes().contains("unit-card")
                 || info.classes().contains("unit-category-heading")
             {
-                &[".race-tab.active", ".race-tab"]
+                &[".race-tab[data-active=\"true\"]", ".race-tab"]
             } else if info.classes().contains("race-tab") {
-                &[".mode-toggle-button.active", ".mode-toggle-button"]
-            } else if info.classes().contains("mode-toggle-button") {
-                &[".upload-button"]
+                &[".mode-tab[data-active=\"true\"]", ".mode-tab"]
+            } else if info.classes().contains("mode-tab") {
+                &[".upload-button .toolbar-button-surface"]
             } else {
                 return;
             };

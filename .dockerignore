@@ -2,6 +2,8 @@
 .moon/cache
 **/Dockerfile
 **/dist
+**/test-results
+**/playwright-report
 **/node_modules
 **/target
 **/README.md

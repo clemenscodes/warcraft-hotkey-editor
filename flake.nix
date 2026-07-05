@@ -205,9 +205,7 @@
             ./crates/hotkey-editor/tailwind.input.css
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
-            ./crates/hotkey-editor/templates
             ./crates/warcraft-keybinds/templates
-            (pkgs.lib.fileset.fileFilter (file: file.hasExt "css") ./crates/hotkey-editor/src)
           ];
         };
 

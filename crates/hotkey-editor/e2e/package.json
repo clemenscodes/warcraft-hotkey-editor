@@ -1,10 +1,9 @@
 {
-  "name": "@warcraft-hotkey-editor/hotkey-editor",
+  "name": "@warcraft-hotkey-editor/e2e",
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
     "@types/node": "24.12.3",
-    "tailwindcss": "4.3.0",
     "typescript": "6.0.3"
   }
 }

@@ -43,7 +43,7 @@ impl From<&RaceTabProps> for RaceTabChrome {
                     selected_unit_id,
                     selected_slot,
                 );
-                FocusModality::after_render(".unit-card.selected, .unit-card");
+                FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
             }
         });
         Self {
