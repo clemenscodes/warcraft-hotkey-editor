@@ -1,15 +1,13 @@
-use super::components::layout_grid::components::layout_cell::{LayoutCellProps, LayoutCellState};
-use super::data::QWERTY_ROWS;
+use super::components::layout_grid::components::layout_cell::LayoutCellProps;
+use super::logic::{GridCellContext, LayoutGridCells, LayoutPickerBoard, LayoutPickerContext};
 use super::props::LayoutEditorProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::KeyPickerCell;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::grid_layout::context::use_grid_layout_service;
 use dioxus::prelude::*;
 
-use warcraft_keybinds::{
-    COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, HotkeyToken, RowIndex,
-};
+use warcraft_keybinds::HotkeyToken;
 
 /// Everything the layout editor's markup needs, already shaped: the grid cells,
 /// the key-picker state, the toggle state, and every handler. The body only
@@ -26,127 +24,27 @@ pub(super) struct LayoutEditorModel {
     pub(super) on_toggle: EventHandler<FormEvent>,
 }
 
-/// Composes the layout editor's state and behavior. Builds the twelve grid cells
-/// with their drag/click handlers, resolves the key-picker rows from the current
-/// layout, and wires the apply, pick, toggle, and guarded open-change handlers.
-pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel {
-    let open = props.open;
+/// The apply / pick / picker-close / move-toggle handlers plus the toggle's current
+/// checked state. Owns the writes: apply routes the grid through the
+/// [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) and
+/// toasts the result; pick routes the chosen letter through the
+/// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
+pub(super) struct LayoutActions {
+    pub(super) on_apply: EventHandler<MouseEvent>,
+    pub(super) on_pick: EventHandler<HotkeyToken>,
+    pub(super) on_picker_close: EventHandler<()>,
+    pub(super) toggle_checked: bool,
+    pub(super) on_toggle: EventHandler<FormEvent>,
+}
+
+fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
     let grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
-    let mut dragging_layout_cell = props.dragging_layout_cell;
-    let custom_keys_service = use_custom_keys_service();
-    let grid_layout_service = use_grid_layout_service();
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.open;
-    let layout_snapshot = *grid_layout.read();
-    let editing_snapshot = *editing_layout_cell.read();
+    let custom_keys_service = use_custom_keys_service();
+    let grid_layout_service = use_grid_layout_service();
     let toast_api = use_toast();
-    let mut cells: Vec<LayoutCellProps> = Vec::new();
-    for row in 0..COMMAND_GRID_ROWS {
-        for column in 0..COMMAND_GRID_COLUMNS {
-            let column_index = ColumnIndex::try_from(column).ok();
-            let row_index = RowIndex::try_from(row).ok();
-            let coordinate_option = column_index
-                .zip(row_index)
-                .map(|(col, row_idx)| GridCoordinate::new(col, row_idx));
-            let current_letter = coordinate_option
-                .and_then(|coordinate| {
-                    layout_snapshot.letter_at(coordinate.column(), coordinate.row())
-                })
-                .map(|letter| letter.to_string())
-                .unwrap_or_default();
-            let is_editing = editing_snapshot == coordinate_option;
-            let state = if is_editing {
-                LayoutCellState::Editing
-            } else {
-                LayoutCellState::Idle
-            };
-            let label = if is_editing {
-                String::from("…")
-            } else {
-                current_letter
-            };
-            let ondragstart = EventHandler::new(move |_event: Event<DragData>| {
-                if let Some(coordinate) = coordinate_option {
-                    dragging_layout_cell.set(Some(coordinate));
-                }
-            });
-            let ondragend = EventHandler::new(move |_event: Event<DragData>| {
-                dragging_layout_cell.set(None);
-            });
-            let ondragover = EventHandler::new(move |event: Event<DragData>| {
-                event.prevent_default();
-            });
-            let ondrop = EventHandler::new(move |event: Event<DragData>| {
-                event.prevent_default();
-                let source_option = *dragging_layout_cell.read();
-                let Some(source_cell) = source_option else {
-                    return;
-                };
-                let source_column = u8::from(source_cell.column());
-                let source_row = u8::from(source_cell.row());
-                if source_column == column && source_row == row {
-                    dragging_layout_cell.set(None);
-                    return;
-                }
-                let mut next_layout = *grid_layout.read();
-                next_layout.swap_cells(source_column, source_row, column, row);
-                grid_layout_service.select(next_layout);
-                dragging_layout_cell.set(None);
-            });
-            let onclick = EventHandler::new(move |_event: MouseEvent| {
-                if let Some(coordinate) = coordinate_option {
-                    editing_layout_cell.set(Some(coordinate));
-                }
-            });
-            let cell = LayoutCellProps {
-                state,
-                label,
-                row,
-                column,
-                ondragstart,
-                ondragend,
-                ondragover,
-                ondrop,
-                onclick,
-            };
-            cells.push(cell);
-        }
-    }
-    let picker_open = editing_snapshot.is_some();
-    let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
-        let current_letter = layout_snapshot
-            .letter_at(active_cell.column(), active_cell.row())
-            .map(|character| character.to_ascii_uppercase());
-        QWERTY_ROWS
-            .iter()
-            .map(|row| {
-                row.iter()
-                    .map(|&letter| {
-                        let token = HotkeyToken::try_from(letter)
-                            .expect("QWERTY layout letters are A to Z");
-                        let upper_letter = letter.to_ascii_uppercase();
-                        let state = if Some(upper_letter) == current_letter {
-                            KeyPickerCellState::Current
-                        } else if let Some(other_position) =
-                            layout_snapshot.position_for_letter(upper_letter)
-                        {
-                            let display_row = u8::from(other_position.row()) + 1;
-                            let display_column = u8::from(other_position.column()) + 1;
-                            let display_name =
-                                format!("row {display_row}, column {display_column}",);
-                            KeyPickerCellState::Conflict { display_name }
-                        } else {
-                            KeyPickerCellState::Available
-                        };
-                        KeyPickerCell::new(token, state)
-                    })
-                    .collect()
-            })
-            .collect()
-    } else {
-        Vec::new()
-    };
     let on_apply = EventHandler::new(move |_event: MouseEvent| {
         let snapshot = *grid_layout.read();
         let changed_count = custom_keys_service.apply_grid_layout(snapshot);
@@ -183,15 +81,61 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         let current = *update_hotkeys_on_move.read();
         update_hotkeys_on_move.set(!current);
     });
+    LayoutActions {
+        on_apply,
+        on_pick,
+        on_picker_close,
+        toggle_checked,
+        on_toggle,
+    }
+}
+
+/// Composes the layout editor's state and behavior. Resolves the twelve grid cells
+/// with their drag/click handlers, derives the key-picker rows from the current
+/// layout, and wires the apply, pick, and toggle handlers.
+pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel {
+    let open = props.open;
+    let grid_layout = props.grid_layout;
+    let editing_layout_cell = props.editing_layout_cell;
+    let dragging_layout_cell = props.dragging_layout_cell;
+    let grid_layout_service = use_grid_layout_service();
+    let layout_snapshot = *grid_layout.read();
+    let editing_snapshot = *editing_layout_cell.read();
+
+    let cell_context = GridCellContext {
+        grid_layout,
+        editing_layout_cell,
+        dragging_layout_cell,
+        grid_layout_service,
+        layout: layout_snapshot,
+        editing_snapshot,
+    };
+    let grid_cells = LayoutGridCells::build(&cell_context);
+    let cells = grid_cells.into_cells();
+
+    let picker_open = editing_snapshot.is_some();
+    let picker_rows: Vec<Vec<KeyPickerCell>> = if let Some(active_cell) = editing_snapshot {
+        let picker_context = LayoutPickerContext {
+            layout: layout_snapshot,
+            active_cell,
+        };
+        let board = LayoutPickerBoard::build(&picker_context);
+        board.into_rows()
+    } else {
+        Vec::new()
+    };
+
+    let actions = use_layout_actions(props);
+
     LayoutEditorModel {
         open,
         cells,
         picker_open,
         picker_rows,
-        on_pick,
-        on_picker_close,
-        on_apply,
-        toggle_checked,
-        on_toggle,
+        on_pick: actions.on_pick,
+        on_picker_close: actions.on_picker_close,
+        on_apply: actions.on_apply,
+        toggle_checked: actions.toggle_checked,
+        on_toggle: actions.on_toggle,
     }
 }

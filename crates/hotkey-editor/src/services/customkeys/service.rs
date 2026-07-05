@@ -9,6 +9,7 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::HotkeyTarget;
 use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::ImportOutcome;
+use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::MoveRequest;
 
 use crate::repository::custom_keys_repository::CustomKeysRepository;
@@ -44,6 +45,18 @@ impl CustomKeysService {
 
     pub fn move_slot(&self, request: &MoveRequest<'_>) {
         self.commit(|keys| keys.move_slot(request));
+    }
+
+    /// Set a single system keybind's hotkey, re-normalizing and persisting through the
+    /// commit boundary. The renderer never writes the aggregate directly.
+    pub fn set_system_hotkey(&self, section_id: &str, code: KeyCode) {
+        self.commit(|keys| keys.set_system_hotkey(section_id, code));
+    }
+
+    /// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture),
+    /// re-normalizing and persisting through the commit boundary.
+    pub fn swap_system_bindings(&self, source_id: &str, target_id: &str) {
+        self.commit(|keys| keys.swap_system_bindings(source_id, target_id));
     }
 
     /// The sanctioned import command: overlays the uploaded text onto the baseline

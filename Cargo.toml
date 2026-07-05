@@ -4,7 +4,6 @@ members = [
     "crates/ddd",
     "crates/gallery",
     "crates/hotkey-editor",
-    "crates/warcraft-cli",
     "crates/warcraft-keybinds",
 ]
 # Default workspace members compile on `wasm32-unknown-unknown` for the web app.

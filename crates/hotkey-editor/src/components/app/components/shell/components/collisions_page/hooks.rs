@@ -1,22 +1,20 @@
-use super::components::body::components::clear_state::ClearStateProps;
-use super::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
-use super::components::body::components::details::island_detail::IslandDetailProps;
-use super::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
-use super::components::body::components::empty_state::EmptyStateProps;
-use super::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
-use super::components::body::components::sidebars::island_sidebar::IslandSidebarProps;
-use super::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
-use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
+use dioxus::prelude::*;
+
+use super::components::body::ContentModel;
 use super::components::breadcrumbs::BreadcrumbsProps;
 use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
+use super::model::{
+    CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
+};
 use super::props::CollisionsPageProps;
+use crate::services::collision_selection::CollisionSelection;
 use crate::services::collision_selection::context::use_collision_selection;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::context::{use_synced_route, use_view_navigation};
 use crate::services::navigation::nav_snapshot::NavSnapshot;
-use dioxus::prelude::*;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
 /// for the active kind (empty prompt, all-clear, or the two-pane view), as data.
@@ -25,15 +23,15 @@ pub(super) struct CollisionsPageModel {
     pub(super) content: ContentModel,
 }
 
-/// Computes the three collision models (memoised on the loaded keys and layout),
-/// keeps each kind's selection valid, and shapes the breadcrumbs and active content.
-pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPageModel {
-    let view_navigation = use_view_navigation();
-    let selection = use_collision_selection();
-    let loaded_keys = use_loaded_keys();
-    let grid_layout = use_grid_layout();
-    let kind = CollisionKind::from_query_param(props.kind.as_deref());
-    let entry = props.entry.clone().filter(|value| !value.is_empty());
+/// Restores the active view, mirrors the incoming `?entry=` into the active kind's
+/// selection signal, and publishes the route snapshot the shell's URL sync reads.
+/// Reactive on the route's `kind` and `entry` so it re-runs only when they change.
+fn use_route_sync(
+    kind: CollisionKind,
+    entry: Option<String>,
+    view_navigation: ViewNavigationContext,
+    selection: CollisionSelection,
+) {
     let mut synced_route = use_synced_route();
     use_effect(use_reactive!(|(kind, entry)| {
         let view = AppView::Collisions { kind };
@@ -49,6 +47,46 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         let snapshot = NavSnapshot::Collisions { kind, entry };
         synced_route.set(snapshot);
     }));
+}
+
+/// Keeps one kind's selection pointing at a live entry: when the list is non-empty
+/// and the current selection is missing or stale, it falls back to the first entry.
+/// Applied once per kind, replacing three hand-copied effects.
+fn use_valid_selection<View>(memo: Memo<Vec<View>>, selected: Signal<Option<String>>)
+where
+    View: CollisionEntry + PartialEq + 'static,
+{
+    let mut selected = selected;
+    use_effect(move || {
+        let views = memo.read();
+        if views.is_empty() {
+            return;
+        }
+        let current = selected.read().clone();
+        let still_valid = match current {
+            Some(ref key) => views.iter().any(|view| view.key() == key),
+            None => false,
+        };
+        if !still_valid {
+            let first_key = views.first().map(|view| view.key().to_owned());
+            if let Some(key) = first_key {
+                selected.set(Some(key));
+            }
+        }
+    });
+}
+
+/// Computes the three collision models (memoised on the loaded keys and layout),
+/// keeps each kind's selection valid, and shapes the breadcrumbs and active content.
+pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPageModel {
+    let view_navigation = use_view_navigation();
+    let selection = use_collision_selection();
+    let loaded_keys = use_loaded_keys();
+    let grid_layout = use_grid_layout();
+    let kind = CollisionKind::from_query_param(props.kind.as_deref());
+    let entry = props.entry.clone().filter(|value| !value.is_empty());
+    use_route_sync(kind, entry, view_navigation, selection);
+
     let islands_memo = use_memo(move || {
         let guard = loaded_keys.read();
         let Some(custom_keys) = guard.as_ref() else {
@@ -72,178 +110,56 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         let layout = *grid_layout.read();
         UnitPositionPageModel::compute(custom_keys, layout)
     });
-    let mut selected_island = selection.selected_island;
-    let mut selected_hotkey_unit = selection.selected_hotkey_unit;
-    let mut selected_unit_position = selection.selected_unit_position;
-    use_effect(move || {
-        let islands = islands_memo.read();
-        if islands.is_empty() {
-            return;
-        }
-        let current = selected_island.read().clone();
-        let still_valid = match current {
-            Some(ref key) => islands.iter().any(|island| island.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = islands.first().map(|island| island.key().to_owned());
-            if let Some(key) = first_key {
-                selected_island.set(Some(key));
-            }
-        }
-    });
-    use_effect(move || {
-        let hotkey_units = hotkey_units_memo.read();
-        if hotkey_units.is_empty() {
-            return;
-        }
-        let current = selected_hotkey_unit.read().clone();
-        let still_valid = match current {
-            Some(ref key) => hotkey_units.iter().any(|unit| unit.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = hotkey_units.first().map(|unit| unit.key().to_owned());
-            if let Some(key) = first_key {
-                selected_hotkey_unit.set(Some(key));
-            }
-        }
-    });
-    use_effect(move || {
-        let unit_positions = unit_positions_memo.read();
-        if unit_positions.is_empty() {
-            return;
-        }
-        let current = selected_unit_position.read().clone();
-        let still_valid = match current {
-            Some(ref key) => unit_positions.iter().any(|unit| unit.key() == key),
-            None => false,
-        };
-        if !still_valid {
-            let first_key = unit_positions.first().map(|unit| unit.key().to_owned());
-            if let Some(key) = first_key {
-                selected_unit_position.set(Some(key));
-            }
-        }
-    });
-    let islands = islands_memo();
-    let island_count = islands.len();
+
+    let selected_island = selection.selected_island;
+    let selected_hotkey_unit = selection.selected_hotkey_unit;
+    let selected_unit_position = selection.selected_unit_position;
+    use_valid_selection(islands_memo, selected_island);
+    use_valid_selection(hotkey_units_memo, selected_hotkey_unit);
+    use_valid_selection(unit_positions_memo, selected_unit_position);
+
+    let island_views = islands_memo();
+    let hotkey_unit_views = hotkey_units_memo();
+    let unit_position_views = unit_positions_memo();
+    let islands = CollisionList::resolve(island_views);
+    let hotkey_units = CollisionList::resolve(hotkey_unit_views);
+    let unit_positions = CollisionList::resolve(unit_position_views);
     let has_file = loaded_keys.read().is_some();
-    let sidebar_islands = islands.clone();
-    let hotkey_units = hotkey_units_memo();
-    let hotkey_unit_count = hotkey_units.len();
-    let hotkey_collision_count = hotkey_units
-        .iter()
-        .map(|unit_view| unit_view.collision_count())
-        .sum::<usize>();
-    let sidebar_hotkey_units = hotkey_units.clone();
-    let unit_positions = unit_positions_memo();
-    let unit_position_unit_count = unit_positions.len();
-    let unit_position_collision_count = unit_positions
-        .iter()
-        .map(|unit_view| unit_view.collision_count())
-        .sum::<usize>();
-    let sidebar_unit_positions = unit_positions.clone();
+
     let breadcrumbs = BreadcrumbsProps {
         kind,
-        position_count: island_count,
-        unit_position_count: unit_position_collision_count,
-        hotkey_count: hotkey_collision_count,
+        position_count: islands.unit_count,
+        unit_position_count: unit_positions.collision_count,
+        hotkey_count: hotkey_units.collision_count,
         view_navigation,
     };
     let content = match kind {
         CollisionKind::Hotkeys => {
-            if !has_file {
-                let state = EmptyStateProps {
-                    collision_kind: "hotkeys",
-                    message: super::data::HOTKEYS_UPLOAD_PROMPT.to_owned(),
-                };
-                ContentModel::Empty(state)
-            } else if hotkey_unit_count == 0 {
-                let state = ClearStateProps {
-                    collision_kind: "hotkeys",
-                };
-                ContentModel::Clear(state)
-            } else {
-                let sidebar = HotkeyUnitSidebarProps {
-                    units: sidebar_hotkey_units,
-                    selected_unit: selected_hotkey_unit,
-                };
-                let detail = HotkeyUnitDetailProps {
-                    units: hotkey_units,
-                    selected_unit: selected_hotkey_unit,
-                    view_navigation,
-                };
-                let pane = HotkeysPane {
-                    collision_kind: "hotkeys",
-                    count: hotkey_unit_count,
-                    sidebar,
-                    detail,
-                };
-                ContentModel::Hotkeys(Box::new(pane))
-            }
+            let inputs = HotkeysContent {
+                has_file,
+                list: hotkey_units,
+                selected_unit: selected_hotkey_unit,
+                view_navigation,
+            };
+            ContentModel::from(inputs)
         }
         CollisionKind::UnitPositions => {
-            if !has_file {
-                let state = EmptyStateProps {
-                    collision_kind: "unit-positions",
-                    message: super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned(),
-                };
-                ContentModel::Empty(state)
-            } else if unit_position_unit_count == 0 {
-                let state = ClearStateProps {
-                    collision_kind: "unit-positions",
-                };
-                ContentModel::Clear(state)
-            } else {
-                let sidebar = UnitPositionSidebarProps {
-                    units: sidebar_unit_positions,
-                    selected_unit: selected_unit_position,
-                };
-                let detail = UnitPositionDetailProps {
-                    units: unit_positions,
-                    selected_unit: selected_unit_position,
-                    view_navigation,
-                };
-                let pane = UnitPositionsPane {
-                    collision_kind: "unit-positions",
-                    count: unit_position_unit_count,
-                    sidebar,
-                    detail,
-                };
-                ContentModel::UnitPositions(Box::new(pane))
-            }
+            let inputs = UnitPositionsContent {
+                has_file,
+                list: unit_positions,
+                selected_unit: selected_unit_position,
+                view_navigation,
+            };
+            ContentModel::from(inputs)
         }
         CollisionKind::Positions => {
-            if !has_file {
-                let state = EmptyStateProps {
-                    collision_kind: "positions",
-                    message: super::data::POSITIONS_UPLOAD_PROMPT.to_owned(),
-                };
-                ContentModel::Empty(state)
-            } else if island_count == 0 {
-                let state = ClearStateProps {
-                    collision_kind: "positions",
-                };
-                ContentModel::Clear(state)
-            } else {
-                let sidebar = IslandSidebarProps {
-                    islands: sidebar_islands,
-                    selected_island,
-                };
-                let detail = IslandDetailProps {
-                    islands,
-                    selected_island,
-                    view_navigation,
-                };
-                let pane = PositionsPane {
-                    collision_kind: "positions",
-                    count: island_count,
-                    sidebar,
-                    detail,
-                };
-                ContentModel::Positions(Box::new(pane))
-            }
+            let inputs = PositionsContent {
+                has_file,
+                list: islands,
+                selected_island,
+                view_navigation,
+            };
+            ContentModel::from(inputs)
         }
     };
     CollisionsPageModel {

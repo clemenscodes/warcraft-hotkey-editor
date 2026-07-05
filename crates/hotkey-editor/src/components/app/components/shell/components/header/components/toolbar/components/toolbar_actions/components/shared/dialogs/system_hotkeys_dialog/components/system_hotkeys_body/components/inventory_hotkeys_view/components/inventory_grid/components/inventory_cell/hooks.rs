@@ -4,16 +4,17 @@ use super::super::super::{
     InventoryDragSource, LATEST_DRAG_MOVE, SUPPRESS_NEXT_CLICK,
 };
 
+use super::logic::InventoryCellView;
 use super::props::InventoryCellProps;
 use super::state::InventoryCellState;
-use crate::services::editor_state::{CursorPoint, HitTestPoint};
+use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use std::cell::Cell;
 use std::collections::HashMap;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
+use warcraft_keybinds::KeyCode;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
@@ -41,77 +42,32 @@ pub(super) struct InventoryCellModel {
     pub(super) on_close: EventHandler<()>,
 }
 
-/// Composes an inventory cell's state and behaviour.
-pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellModel {
-    let loaded_keys = props.loaded_keys;
-    let mut editing_section = props.editing_section;
+/// The pointer-drag handlers that drive the drag-to-swap gesture. Owns no signals of
+/// its own — it drives the shared drag signals plus the thread-local drag session —
+/// and commits a completed swap through the [`CustomKeysService`](crate::services::customkeys).
+struct InventoryDrag {
+    on_pointerdown: EventHandler<Event<PointerData>>,
+    on_pointermove: EventHandler<Event<PointerData>>,
+    on_pointerup: EventHandler<Event<PointerData>>,
+    on_pointercancel: EventHandler<Event<PointerData>>,
+}
+
+/// The click-to-edit handlers: open the picker on click, commit a picked key through
+/// the service, and close on dismiss.
+struct InventoryEditing {
+    on_click: EventHandler<MouseEvent>,
+    on_pick: EventHandler<KeyCode>,
+    on_close: EventHandler<()>,
+}
+
+fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> InventoryDrag {
+    let custom_keys_service = use_custom_keys_service();
     let mut dragging_source = props.dragging_source;
     let mut drop_target = props.drop_target;
     let mut drag_follower = props.drag_follower;
-    let binding_map = props.binding_map;
-    let mut keys_signal = loaded_keys;
-    let section_id = props.section_id.clone();
-    let default_hotkey = props.default_hotkey;
-    let default_modifier = props.default_modifier;
-    let slot_index = props.slot_index;
-    let read_guard = loaded_keys.read();
-    let effective = EffectiveBinding::resolve_from_file(
-        read_guard.as_ref(),
-        &section_id,
-        default_hotkey,
-        default_modifier,
-    );
-    drop(read_guard);
-    let map_guard = binding_map.read();
-    let collisions = map_guard.collisions_for(&section_id, effective.key(), effective.modifier());
-    let is_conflict = !collisions.is_empty();
-    let conflict_title = if is_conflict {
-        let names: Vec<String> = collisions
-            .iter()
-            .map(|resolved| resolved.section_comment().to_string())
-            .collect();
-        format!("Also used by {}", names.join(", "))
-    } else {
-        String::new()
-    };
-    let picker_conflicts = map_guard.picker_conflicts(&section_id, effective.modifier());
-    drop(map_guard);
-    let is_editing = editing_section
-        .read()
-        .as_deref()
-        .map(|active| active == section_id.as_str())
-        .unwrap_or(false);
-    let is_being_dragged = dragging_source
-        .read()
-        .as_ref()
-        .map(|source| source.section_id == section_id)
-        .unwrap_or(false);
-    let is_drop_target = drop_target
-        .read()
-        .as_deref()
-        .map(|target| target == section_id.as_str())
-        .unwrap_or(false);
-    let state = if is_conflict {
-        InventoryCellState::Conflict
-    } else if is_editing || is_drop_target {
-        InventoryCellState::Active
-    } else {
-        InventoryCellState::Idle
-    };
-    let dragging_attr = if is_being_dragged { "true" } else { "false" };
-    let key_label = if is_editing {
-        String::from("…")
-    } else {
-        effective.label()
-    };
-    let slot_label = format!("Slot {}", slot_index + 1);
-    let current_code = effective.key();
-    let section_id_for_click = section_id.clone();
-    let section_id_for_pick = section_id.clone();
-    let section_id_for_pointerdown = section_id.clone();
-    let section_id_for_pointermove = section_id.clone();
-    let section_id_for_pointerup = section_id.clone();
-    let label_for_drag = key_label.clone();
+    let section_id_for_pointerdown = props.section_id.clone();
+    let section_id_for_pointermove = props.section_id.clone();
+    let section_id_for_pointerup = props.section_id.clone();
     let on_pointerdown = EventHandler::new(move |event: Event<PointerData>| {
         if event.data().trigger_button() != Some(MouseButton::Primary) {
             return;
@@ -201,12 +157,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
             let Some(point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) else {
                 return;
             };
-            flush_inventory_drag_move(
-                drop_target,
-                drag_follower,
-                section_id_for_flush.clone(),
-                point,
-            );
+            point.flush(drop_target, drag_follower, section_id_for_flush.clone());
         });
         if let Ok(handle) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
             DRAG_RAF_HANDLE.with(|cell| cell.set(Some(handle)));
@@ -215,12 +166,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     });
     let on_pointerup = EventHandler::new(move |_event: Event<PointerData>| {
         if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
-            flush_inventory_drag_move(
-                drop_target,
-                drag_follower,
-                section_id_for_pointerup.clone(),
-                final_point,
-            );
+            final_point.flush(drop_target, drag_follower, section_id_for_pointerup.clone());
         }
         InventoryDragRaf::cancel();
         let drop_clone = drop_target.read().clone();
@@ -228,10 +174,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         if let Some(target_id) = drop_clone
             && target_id != section_id_for_pointerup
         {
-            keys_signal
-                .write()
-                .get_or_insert_with(CustomKeys::default)
-                .swap_system_bindings(&section_id_for_pointerup, &target_id);
+            custom_keys_service.swap_system_bindings(&section_id_for_pointerup, &target_id);
             performed_swap = true;
         }
         let did_move = DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.replace(false));
@@ -251,6 +194,19 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         drop_target.set(None);
         drag_follower.set(None);
     });
+    InventoryDrag {
+        on_pointerdown,
+        on_pointermove,
+        on_pointerup,
+        on_pointercancel,
+    }
+}
+
+fn use_inventory_editing(props: &InventoryCellProps) -> InventoryEditing {
+    let custom_keys_service = use_custom_keys_service();
+    let mut editing_section = props.editing_section;
+    let section_id_for_click = props.section_id.clone();
+    let section_id_for_pick = props.section_id.clone();
     let on_click = EventHandler::new(move |_event: MouseEvent| {
         if SUPPRESS_NEXT_CLICK.with(|cell: &Cell<bool>| cell.replace(false)) {
             return;
@@ -258,83 +214,41 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         editing_section.set(Some(section_id_for_click.clone()));
     });
     let on_pick = EventHandler::new(move |code: KeyCode| {
-        let mut guard = keys_signal.write();
-        let file = guard.get_or_insert_with(CustomKeys::default);
-        file.set_system_hotkey(&section_id_for_pick, code);
-        drop(guard);
+        custom_keys_service.set_system_hotkey(&section_id_for_pick, code);
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
-    InventoryCellModel {
-        state,
-        slot_id: section_id,
-        dragging_attr,
-        slot_label,
-        key_label,
-        conflict_title,
-        is_conflict,
-        is_editing,
-        current_code,
-        picker_conflicts,
-        on_pointerdown,
-        on_pointermove,
-        on_pointerup,
-        on_pointercancel,
+    InventoryEditing {
         on_click,
         on_pick,
         on_close,
     }
 }
 
-fn flush_inventory_drag_move(
-    mut drop_target: Signal<Option<String>>,
-    mut drag_follower: Signal<Option<InventoryDragFollower>>,
-    section_id: String,
-    point: DragMovePoint,
-) {
-    let cursor_horizontal_position = point.client_horizontal;
-    let cursor_vertical_position = point.client_vertical;
-    let current_follower_option = drag_follower.read().clone();
-    if let Some(mut current_follower) = current_follower_option {
-        current_follower.cursor_horizontal_position = cursor_horizontal_position;
-        current_follower.cursor_vertical_position = cursor_vertical_position;
-        drag_follower.set(Some(current_follower));
-    }
-    let Some(document) = web_sys::window().and_then(|window| window.document()) else {
-        return;
-    };
-    let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
-    let hit_test_point = HitTestPoint::from(cursor_point);
-    let hit_test_horizontal = hit_test_point.horizontal_position();
-    let hit_test_vertical = hit_test_point.vertical_position();
-    let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
-    let cell_under_option =
-        elem_under_option.and_then(|elem| elem.closest(".inventory-cell").ok().flatten());
-    let Some(cell_under) = cell_under_option else {
-        if drop_target.read().is_some() {
-            drop_target.set(None);
-        }
-        return;
-    };
-    let target_id = cell_under.get_attribute("data-inventory-slot");
-    let Some(target_id_string) = target_id else {
-        if drop_target.read().is_some() {
-            drop_target.set(None);
-        }
-        return;
-    };
-    if target_id_string == section_id {
-        if drop_target.read().is_some() {
-            drop_target.set(None);
-        }
-        return;
-    }
-    let needs_update = drop_target
-        .read()
-        .as_deref()
-        .map(|existing| existing != target_id_string.as_str())
-        .unwrap_or(true);
-    if needs_update {
-        drop_target.set(Some(target_id_string));
+/// Composes an inventory cell's state and behaviour.
+pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellModel {
+    let view = InventoryCellView::resolve(props);
+    let label_for_drag = view.key_label.clone();
+    let drag = use_inventory_drag(props, label_for_drag);
+    let editing = use_inventory_editing(props);
+    let slot_id = props.section_id.clone();
+    InventoryCellModel {
+        state: view.state,
+        slot_id,
+        dragging_attr: view.dragging_attr,
+        slot_label: view.slot_label,
+        key_label: view.key_label,
+        conflict_title: view.conflict_title,
+        is_conflict: view.is_conflict,
+        is_editing: view.is_editing,
+        current_code: view.current_code,
+        picker_conflicts: view.picker_conflicts,
+        on_pointerdown: drag.on_pointerdown,
+        on_pointermove: drag.on_pointermove,
+        on_pointerup: drag.on_pointerup,
+        on_pointercancel: drag.on_pointercancel,
+        on_click: editing.on_click,
+        on_pick: editing.on_pick,
+        on_close: editing.on_close,
     }
 }

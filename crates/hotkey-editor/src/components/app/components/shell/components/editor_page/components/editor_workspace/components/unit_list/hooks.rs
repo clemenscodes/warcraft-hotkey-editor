@@ -3,6 +3,7 @@ use super::components::mobile_category_tab::MobileCategoryTabProps;
 use super::components::search_field_toggle::SearchFieldToggleProps;
 use super::components::unit_category_section::UnitCategorySectionProps;
 use super::components::unit_list_search::UnitListSearchProps;
+use super::logic::CatalogListingInputs;
 use super::props::UnitListProps;
 use super::state::UnitListState;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::unit_kind_data_attr;
@@ -12,7 +13,6 @@ use dioxus::prelude::*;
 use std::time::Duration;
 use warcraft_api::UnitKind;
 use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers};
-use warcraft_keybinds::{UnitListing, UnitListingRequest};
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
@@ -20,6 +20,57 @@ const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Worker,
     UnitKind::Building,
 ];
+
+/// The debounced search box's shaped state: the immediate `raw_query` the input
+/// shows, plus its input and clear handlers. Owns the `raw_query` and generation-
+/// counter signals and the effect that resyncs `raw_query` when the committed
+/// query changes underneath it. The input handler commits the query 150ms after
+/// the last keystroke, guarded by the generation counter so only the final
+/// keystroke wins; the clear handler resets both queries and bumps the counter.
+pub(super) struct DebouncedSearch {
+    pub(super) raw_query: Signal<String>,
+    pub(super) on_input: EventHandler<FormEvent>,
+    pub(super) on_clear: EventHandler<()>,
+}
+
+fn use_debounced_search(search_query: Signal<String>) -> DebouncedSearch {
+    let mut search_query = search_query;
+    let mut raw_query = use_signal(|| search_query.read().clone());
+    let mut debounce_gen: Signal<u32> = use_signal(|| 0);
+    use_effect(move || {
+        let committed = search_query.read().clone();
+        if *raw_query.peek() != committed {
+            raw_query.set(committed);
+        }
+    });
+    let on_input = EventHandler::new(move |event: FormEvent| {
+        let value = event.value();
+        raw_query.set(value.clone());
+        let current_gen: u32 = *debounce_gen.read();
+        let next_gen = current_gen.wrapping_add(1);
+        debounce_gen.set(next_gen);
+        spawn(async move {
+            let delay = Duration::from_millis(150);
+            gloo_timers::future::sleep(delay).await;
+            let gen_now: u32 = *debounce_gen.read();
+            if gen_now == next_gen {
+                search_query.set(value);
+            }
+        });
+    });
+    let on_clear = EventHandler::new(move |_: ()| {
+        raw_query.set(String::new());
+        search_query.set(String::new());
+        let current_gen: u32 = *debounce_gen.read();
+        let next_gen = current_gen.wrapping_add(1);
+        debounce_gen.set(next_gen);
+    });
+    DebouncedSearch {
+        raw_query,
+        on_input,
+        on_clear,
+    }
+}
 
 /// The unit list's shaped view: the data attributes for the panel, and the
 /// finished props for every child (the two toggles, the search box, the mobile
@@ -46,7 +97,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let unit_mode = props.unit_mode;
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
-    let mut search_query = props.search_query;
+    let search_query = props.search_query;
     let search_field = props.search_field;
     let show_abilityless_units = props.show_abilityless_units;
     let expand_variants = props.expand_variants;
@@ -62,14 +113,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
     };
-    let mut raw_query = use_signal(|| search_query.read().clone());
-    let mut debounce_gen: Signal<u32> = use_signal(|| 0);
-    use_effect(move || {
-        let committed = search_query.read().clone();
-        if *raw_query.peek() != committed {
-            raw_query.set(committed);
-        }
-    });
+    let search = use_debounced_search(search_query);
     let listing_memo = use_memo(move || {
         let listing_race = *active_race.read();
         let listing_mode = *unit_mode.read();
@@ -79,14 +123,14 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
         let listing_expand_variants = *expand_variants.read();
         let listing_visibility =
             CatalogVisibility::new(listing_show_abilityless, listing_expand_variants);
-        let listing_request = UnitListingRequest::new(
-            listing_race,
-            listing_mode,
-            listing_query,
-            listing_search_field,
-            listing_visibility,
-        );
-        UnitListing::resolve(&listing_request)
+        let inputs = CatalogListingInputs {
+            race: listing_race,
+            mode: listing_mode,
+            query: listing_query,
+            search_field: listing_search_field,
+            visibility: listing_visibility,
+        };
+        inputs.resolve()
     });
     let listing = listing_memo();
     let state = UnitListState::new(
@@ -100,6 +144,8 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let search_active = state.search_active();
     let first_result_id = state.first_result_id().map(str::to_owned);
     let first_result_kind = state.first_result_kind();
+    let raw_query = search.raw_query;
+    let on_clear = search.on_clear;
     let on_keydown = EventHandler::new(move |event: KeyboardEvent| {
         let key_string = event.key().to_string();
         match key_string.as_str() {
@@ -109,11 +155,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
                     let focus_script = "document.body.setAttribute('data-kb-modality', ''); const card = document.querySelector('.unit-card'); if (card) card.focus();";
                     document::eval(focus_script);
                 } else {
-                    raw_query.set(String::new());
-                    search_query.set(String::new());
-                    let current_gen: u32 = *debounce_gen.read();
-                    let next_gen = current_gen.wrapping_add(1);
-                    debounce_gen.set(next_gen);
+                    on_clear.call(());
                 }
             }
             "Enter" => {
@@ -129,31 +171,16 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
             _ => {}
         }
     });
-    let on_input = EventHandler::new(move |event: FormEvent| {
-        let value = event.value();
-        raw_query.set(value.clone());
-        let current_gen: u32 = *debounce_gen.read();
-        let next_gen = current_gen.wrapping_add(1);
-        debounce_gen.set(next_gen);
-        spawn(async move {
-            let delay = Duration::from_millis(150);
-            gloo_timers::future::sleep(delay).await;
-            let gen_now: u32 = *debounce_gen.read();
-            if gen_now == next_gen {
-                search_query.set(value);
-            }
-        });
-    });
     let active_category_attr = unit_kind_data_attr(active_kind);
     let search_field_toggle = SearchFieldToggleProps { search_field };
     let catalog_visibility_toggle = CatalogVisibilityToggleProps {
         show_abilityless_units,
         expand_variants,
     };
-    let search = UnitListSearchProps {
+    let search_box = UnitListSearchProps {
         value: raw_query.into(),
         placeholder: search_placeholder,
-        on_input,
+        on_input: search.on_input,
         on_keydown,
     };
     let mobile_tabs = MOBILE_CATEGORY_ORDER
@@ -198,7 +225,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
         search_active,
         search_field_toggle,
         catalog_visibility_toggle,
-        search,
+        search: search_box,
         mobile_tabs,
         sections,
     }

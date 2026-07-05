@@ -1,19 +1,12 @@
+use dioxus::prelude::*;
+
 use super::components::burger_drawer::BurgerDrawerProps;
-use super::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::{
-    BurgerItemState, BurgerMenuItemProps,
-};
+use super::logic::{BurgerActionHandlers, MenuRowBuilder, RowDynamics};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialogProps;
-
-use crate::components::app::components::shell::components::shared::icons::{
-    ICON_COG, ICON_DOWNLOAD, ICON_GRID, ICON_HELP, ICON_PREVIEW, ICON_REDO, ICON_RESOLVE,
-    ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
-};
-
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::context::use_view_navigation;
 use crate::services::overlay_state::context::use_overlay_state;
 use crate::services::undo::context::use_undo_history;
-use dioxus::prelude::*;
 
 /// The already-shaped controller state the body renders: the drawer open flags,
 /// the toggle and download handlers, and the fully-built drawer props (primary
@@ -26,17 +19,26 @@ pub struct BurgerMenuView {
     pub drawer: BurgerDrawerProps,
 }
 
-/// The composed hook: owns the drawer's local open state, reads the undo history
-/// and the live config, and wires every row's handler and state. The body only
-/// names the result.
-pub fn use_burger_menu() -> BurgerMenuView {
-    let navigation = use_view_navigation();
-    let overlay = use_overlay_state();
-    let mut system_hotkeys_open = overlay.system_hotkeys_open;
-    let mut help_open = overlay.help_open;
-    let mut layout_dialog_open = overlay.layout_dialog_open;
-    let mut templates_dialog_open = overlay.templates_dialog_open;
-    let mut preview_open = overlay.preview_open;
+/// The drawer's open state and the body-scroll lock it drives: owns the
+/// `burger_open` signal, the effect that pins the page while the drawer is open,
+/// and the toggle/close handlers.
+pub(super) struct BurgerOpen {
+    pub(super) burger_open: Signal<bool>,
+    pub(super) toggle: EventHandler<MouseEvent>,
+    pub(super) close: EventHandler<MouseEvent>,
+}
+
+/// The action rows' live state, their own info-dialog open signals, and every
+/// row handler — reading the undo history, navigation, and overlay dialogs once
+/// and wiring each row to close the drawer plus perform its action.
+pub(super) struct BurgerActions {
+    pub(super) upload_info_open: Signal<bool>,
+    pub(super) download_info_open: Signal<bool>,
+    pub(super) dynamics: RowDynamics,
+    pub(super) handlers: BurgerActionHandlers,
+}
+
+fn use_burger_open() -> BurgerOpen {
     let mut burger_open = use_signal::<bool>(|| false);
     use_effect(move || {
         let is_open = burger_open();
@@ -55,18 +57,39 @@ pub fn use_burger_menu() -> BurgerMenuView {
             let _ = style.remove_property("overscroll-behavior");
         }
     });
-    let mut upload_info_open = use_signal::<bool>(|| false);
-    let mut download_info_open = use_signal::<bool>(|| false);
-    let preview_active = preview_open();
-    let system_hotkeys_active = system_hotkeys_open();
-    let history = use_undo_history();
-    let can_undo = history.can_undo();
-    let can_redo = history.can_redo();
     let toggle = EventHandler::new(move |_event: MouseEvent| {
         let next = !*burger_open.read();
         burger_open.set(next);
     });
     let close = EventHandler::new(move |_event: MouseEvent| burger_open.set(false));
+    BurgerOpen {
+        burger_open,
+        toggle,
+        close,
+    }
+}
+
+fn use_burger_actions(burger_open: Signal<bool>) -> BurgerActions {
+    let navigation = use_view_navigation();
+    let overlay = use_overlay_state();
+    let history = use_undo_history();
+    let mut burger_open = burger_open;
+    let mut system_hotkeys_open = overlay.system_hotkeys_open;
+    let mut help_open = overlay.help_open;
+    let mut layout_dialog_open = overlay.layout_dialog_open;
+    let mut templates_dialog_open = overlay.templates_dialog_open;
+    let mut preview_open = overlay.preview_open;
+    let mut upload_info_open = use_signal::<bool>(|| false);
+    let mut download_info_open = use_signal::<bool>(|| false);
+
+    let preview_active = preview_open();
+    let system_hotkeys_active = system_hotkeys_open();
+    let layout_expanded = layout_dialog_open();
+    let templates_expanded = templates_dialog_open();
+    let help_expanded = help_open();
+    let can_undo = history.can_undo();
+    let can_redo = history.can_redo();
+
     let toggle_layout = EventHandler::new(move |_event: MouseEvent| {
         let next = !*layout_dialog_open.read();
         layout_dialog_open.set(next);
@@ -111,162 +134,60 @@ pub fn use_burger_menu() -> BurgerMenuView {
         burger_open.set(false);
         history.redo();
     });
-    let layout = BurgerMenuItemProps {
-        icon: ICON_GRID,
-        label: String::from("Grid Layout"),
-        state: BurgerItemState::Primary,
-        disabled: false,
-        role: None,
-        data_action: None,
-        aria_haspopup: Some("dialog"),
-        aria_expanded: aria_flag(layout_dialog_open()),
-        aria_pressed: None,
-        aria_label: Some("Edit global hotkey layout"),
-        onclick: toggle_layout,
+
+    let dynamics = RowDynamics {
+        can_undo,
+        can_redo,
+        system_hotkeys_active,
+        preview_active,
+        layout_expanded,
+        templates_expanded,
+        help_expanded,
     };
-    let mut items: Vec<BurgerMenuItemProps> = Vec::new();
-    let undo_item = BurgerMenuItemProps {
-        icon: ICON_UNDO,
-        label: String::from("Undo"),
-        state: BurgerItemState::Idle,
-        disabled: !can_undo,
-        role: Some("menuitem"),
-        data_action: Some("undo"),
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: None,
-        aria_label: None,
-        onclick: trigger_undo,
+    let handlers = BurgerActionHandlers {
+        toggle_layout,
+        trigger_undo,
+        trigger_redo,
+        open_upload,
+        toggle_templates,
+        toggle_system_hotkeys,
+        toggle_preview,
+        open_resolve,
+        open_download,
+        open_help,
     };
-    items.push(undo_item);
-    let redo_item = BurgerMenuItemProps {
-        icon: ICON_REDO,
-        label: String::from("Redo"),
-        state: BurgerItemState::Idle,
-        disabled: !can_redo,
-        role: Some("menuitem"),
-        data_action: Some("redo"),
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: None,
-        aria_label: None,
-        onclick: trigger_redo,
+    BurgerActions {
+        upload_info_open,
+        download_info_open,
+        dynamics,
+        handlers,
+    }
+}
+
+/// The composed hook: owns the drawer's local open state, reads the undo history
+/// and the live config, and wires every row's handler and state. The body only
+/// names the result.
+pub fn use_burger_menu() -> BurgerMenuView {
+    let drawer = use_burger_open();
+    let actions = use_burger_actions(drawer.burger_open);
+    let builder = MenuRowBuilder {
+        dynamics: actions.dynamics,
+        handlers: actions.handlers,
     };
-    items.push(redo_item);
-    let upload_item = BurgerMenuItemProps {
-        icon: ICON_UPLOAD,
-        label: String::from("Upload"),
-        state: BurgerItemState::Idle,
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: None,
-        aria_label: None,
-        onclick: open_upload,
-    };
-    items.push(upload_item);
-    let templates_item = BurgerMenuItemProps {
-        icon: ICON_TEMPLATES,
-        label: String::from("Browse Templates"),
-        state: BurgerItemState::Idle,
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: Some("dialog"),
-        aria_expanded: aria_flag(templates_dialog_open()),
-        aria_pressed: None,
-        aria_label: None,
-        onclick: toggle_templates,
-    };
-    items.push(templates_item);
-    let system_hotkeys_item = BurgerMenuItemProps {
-        icon: ICON_COG,
-        label: String::from("System Hotkeys"),
-        state: item_state(system_hotkeys_active),
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: Some("dialog"),
-        aria_expanded: aria_flag(system_hotkeys_active),
-        aria_pressed: None,
-        aria_label: None,
-        onclick: toggle_system_hotkeys,
-    };
-    items.push(system_hotkeys_item);
-    let preview_label = if preview_active {
-        String::from("Hide Preview")
-    } else {
-        String::from("Preview")
-    };
-    let preview_item = BurgerMenuItemProps {
-        icon: ICON_PREVIEW,
-        label: preview_label,
-        state: item_state(preview_active),
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: aria_flag(preview_active),
-        aria_label: None,
-        onclick: toggle_preview,
-    };
-    items.push(preview_item);
-    let resolve_item = BurgerMenuItemProps {
-        icon: ICON_RESOLVE,
-        label: String::from("Resolve Conflicts"),
-        state: BurgerItemState::Idle,
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: Some("view-resolve"),
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: None,
-        aria_label: None,
-        onclick: open_resolve,
-    };
-    items.push(resolve_item);
-    let download_item = BurgerMenuItemProps {
-        icon: ICON_DOWNLOAD,
-        label: String::from("Download"),
-        state: BurgerItemState::Idle,
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: None,
-        aria_expanded: None,
-        aria_pressed: None,
-        aria_label: None,
-        onclick: open_download,
-    };
-    items.push(download_item);
-    let help_item = BurgerMenuItemProps {
-        icon: ICON_HELP,
-        label: String::from("Help"),
-        state: BurgerItemState::Idle,
-        disabled: false,
-        role: Some("menuitem"),
-        data_action: None,
-        aria_haspopup: Some("dialog"),
-        aria_expanded: aria_flag(help_open()),
-        aria_pressed: None,
-        aria_label: None,
-        onclick: open_help,
-    };
-    items.push(help_item);
-    let drawer = BurgerDrawerProps {
-        on_close: close,
+    let layout = builder.layout();
+    let items = builder.items();
+    let on_close = drawer.close;
+    let drawer_props = BurgerDrawerProps {
+        on_close,
         layout,
         items,
     };
     BurgerMenuView {
-        burger_open,
-        upload_info_open,
-        download_info_open,
-        toggle,
-        drawer,
+        burger_open: drawer.burger_open,
+        upload_info_open: actions.upload_info_open,
+        download_info_open: actions.download_info_open,
+        toggle: drawer.toggle,
+        drawer: drawer_props,
     }
 }
 
@@ -274,20 +195,5 @@ impl From<&BurgerMenuView> for UploadInfoDialogProps {
     fn from(view: &BurgerMenuView) -> Self {
         let open = view.upload_info_open;
         Self { open }
-    }
-}
-
-/// A live boolean rendered as an `aria-*` attribute value, or omitted when the
-/// row does not carry that attribute.
-fn aria_flag(value: bool) -> Option<&'static str> {
-    if value { Some("true") } else { Some("false") }
-}
-
-/// A toggle row is styled active while its target (dialog/preview) is open.
-fn item_state(active: bool) -> BurgerItemState {
-    if active {
-        BurgerItemState::Active
-    } else {
-        BurgerItemState::Idle
     }
 }

@@ -3892,3 +3892,39 @@ mod template_generation_tests {
         println!("wrote {} bytes to {path}", content.len());
     }
 }
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod system_hotkey_command_tests {
+    use super::CustomKeys;
+    use crate::KeyCode;
+    use crate::model::{Hotkey, SystemBinding};
+    use warcraft_api::SystemKeybindClass;
+
+    #[test]
+    fn set_system_hotkey_replaces_the_binding_key() {
+        let initial = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
+        let mut file = CustomKeys::builder()
+            .system("IsHeroSelect", initial)
+            .build();
+        let replacement = KeyCode::try_from(49).expect("49 is a valid key code");
+        file.set_system_hotkey("IsHeroSelect", replacement);
+        let retrieved = file.system("IsHeroSelect").expect("system entry present");
+        let expected_code = u32::from(replacement);
+        assert_eq!(retrieved.hotkey(), &Hotkey::VirtualKey(expected_code));
+    }
+
+    #[test]
+    fn swap_system_bindings_exchanges_the_two_hotkeys() {
+        let first = SystemBinding::new(Hotkey::VirtualKey(9), SystemKeybindClass::Game, None);
+        let second = SystemBinding::new(Hotkey::VirtualKey(49), SystemKeybindClass::Game, None);
+        let mut file = CustomKeys::builder()
+            .system("Ctr1", first)
+            .system("Ctr2", second)
+            .build();
+        file.swap_system_bindings("Ctr1", "Ctr2");
+        let source = file.system("Ctr1").expect("source present");
+        let target = file.system("Ctr2").expect("target present");
+        assert_eq!(source.hotkey(), &Hotkey::VirtualKey(49));
+        assert_eq!(target.hotkey(), &Hotkey::VirtualKey(9));
+    }
+}

@@ -1,15 +1,12 @@
-use dioxus::prelude::*;
 use super::browser_event::BrowserKeyEvent;
 use super::components::system_key_picker_board::SystemKeyPickerBoardProps;
 use super::components::system_key_picker_board::components::system_key_picker_column::SystemKeyPickerColumnProps;
-use super::components::system_key_picker_board::components::system_key_picker_column::components::system_key_picker_row::SystemKeyPickerRowProps;
-
-use super::components::system_key_picker_board::components::system_key_picker_column::components::system_key_picker_row::components::system_key_picker_key::{
-    SystemKeyPickerKeyProps, SystemKeyPickerKeyState,
-};
+use dioxus::prelude::*;
 
 use super::data::{KEYBOARD_ROWS, NUMPAD_ROWS};
+use super::logic::{ColumnInputs, KeyColumn};
 use super::props::SystemKeyPickerDialogProps;
+use super::state::BoardSection;
 
 /// The system key picker's shaped view: the open signal that drives the shell and
 /// the fully built board (both columns of keys plus the keydown handler).
@@ -19,22 +16,18 @@ pub(super) struct SystemKeyPickerModel {
     pub(super) board: SystemKeyPickerBoardProps,
 }
 
-/// Composes the picker's state and behaviour: mirrors the open flag into a signal
-/// the shell can close, fires `on_close` when it does, builds the keyboard handler
-/// that maps a physical keypress to a pick, and shapes both boards' keys with their
-/// state, tooltip, anchor, and wide flags.
-pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> SystemKeyPickerModel {
-    let title = props.title.clone();
-    let current_code = props.current_code;
-    let conflicts = props.conflicts.clone();
+/// The physical-keyboard capture: the keydown handler that maps a real keypress to a
+/// pick (or a close on Escape), skipping any key the board does not offer.
+pub(super) struct KeyCapture {
+    pub(super) onkeydown: EventHandler<Event<KeyboardData>>,
+}
+
+/// Builds the keydown handler. It closes on Escape, translates the browser event to a
+/// domain [`KeyCode`](warcraft_keybinds::KeyCode), and fires a pick only for a key the
+/// board actually offers.
+fn use_key_capture(props: &SystemKeyPickerDialogProps) -> KeyCapture {
     let on_pick = props.on_pick;
     let on_close = props.on_close;
-    let open = use_signal(|| props.open);
-    use_effect(move || {
-        if !open() {
-            on_close.call(());
-        }
-    });
     let onkeydown = EventHandler::new(move |event: Event<KeyboardData>| {
         event.stop_propagation();
         let key_value = event.data().key().to_string();
@@ -59,93 +52,43 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
         event.prevent_default();
         on_pick.call(code);
     });
-    let mut columns: Vec<SystemKeyPickerColumnProps> = Vec::new();
-    let mut main_rows: Vec<SystemKeyPickerRowProps> = Vec::new();
-    let keyboard_total = KEYBOARD_ROWS.len();
-    for (row_index, row) in KEYBOARD_ROWS.iter().enumerate() {
-        let is_bottom_row = row_index + 2 >= keyboard_total;
-        let placement = if is_bottom_row { "above" } else { "below" };
-        let last_index = row.len().saturating_sub(1);
-        let mut keys: Vec<SystemKeyPickerKeyProps> = Vec::new();
-        for (key_index, entry) in row.iter().enumerate() {
-            let code = entry.code;
-            let label = entry.label;
-            let conflict_names = conflicts.get(&code);
-            let state = if code == current_code {
-                SystemKeyPickerKeyState::Current
-            } else if conflict_names.is_some() {
-                SystemKeyPickerKeyState::Conflict
-            } else {
-                SystemKeyPickerKeyState::Normal
-            };
-            let title = conflict_names
-                .map(|names| format!("Already used by {}", names.join(", ")))
-                .unwrap_or_default();
-            let anchor = if key_index == 0 {
-                "left"
-            } else if key_index == last_index {
-                "right"
-            } else {
-                ""
-            };
-            let is_wide = matches!(label, "Space" | "Mouse4" | "Mouse5" | "Backspace");
-            let wide = if is_wide { "true" } else { "" };
-            let key = SystemKeyPickerKeyProps {
-                label,
-                code,
-                state,
-                title,
-                placement,
-                anchor,
-                wide,
-                on_pick,
-            };
-            keys.push(key);
+    KeyCapture { onkeydown }
+}
+
+/// Composes the picker's state and behaviour: mirrors the open flag into a signal
+/// the shell can close, fires `on_close` when it does, builds the keyboard handler
+/// via [`use_key_capture`], and shapes both columns of keys through one
+/// [`KeyColumn`] builder.
+pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> SystemKeyPickerModel {
+    let title = props.title.clone();
+    let on_close = props.on_close;
+    let open = use_signal(|| props.open);
+    use_effect(move || {
+        if !open() {
+            on_close.call(());
         }
-        let row_props = SystemKeyPickerRowProps { keys };
-        main_rows.push(row_props);
-    }
-    let main_column = SystemKeyPickerColumnProps { rows: main_rows };
-    columns.push(main_column);
-    let mut numpad_rows: Vec<SystemKeyPickerRowProps> = Vec::new();
-    let numpad_total = NUMPAD_ROWS.len();
-    for (row_index, row) in NUMPAD_ROWS.iter().enumerate() {
-        let is_bottom_row = row_index + 2 >= numpad_total;
-        let placement = if is_bottom_row { "above" } else { "below" };
-        let mut keys: Vec<SystemKeyPickerKeyProps> = Vec::new();
-        for entry in row.iter() {
-            let code = entry.code;
-            let label = entry.label;
-            let conflict_names = conflicts.get(&code);
-            let state = if code == current_code {
-                SystemKeyPickerKeyState::Current
-            } else if conflict_names.is_some() {
-                SystemKeyPickerKeyState::Conflict
-            } else {
-                SystemKeyPickerKeyState::Normal
-            };
-            let title = conflict_names
-                .map(|names| format!("Already used by {}", names.join(", ")))
-                .unwrap_or_default();
-            let anchor = "right";
-            let wide = "";
-            let key = SystemKeyPickerKeyProps {
-                label,
-                code,
-                state,
-                title,
-                placement,
-                anchor,
-                wide,
-                on_pick,
-            };
-            keys.push(key);
-        }
-        let row_props = SystemKeyPickerRowProps { keys };
-        numpad_rows.push(row_props);
-    }
-    let numpad_column = SystemKeyPickerColumnProps { rows: numpad_rows };
-    columns.push(numpad_column);
+    });
+    let capture = use_key_capture(props);
+    let keyboard_inputs = ColumnInputs {
+        section: BoardSection::Keyboard,
+        rows: KEYBOARD_ROWS,
+        current_code: props.current_code,
+        conflicts: &props.conflicts,
+        on_pick: props.on_pick,
+    };
+    let numpad_inputs = ColumnInputs {
+        section: BoardSection::Numpad,
+        rows: NUMPAD_ROWS,
+        current_code: props.current_code,
+        conflicts: &props.conflicts,
+        on_pick: props.on_pick,
+    };
+    let keyboard_column = KeyColumn::build(&keyboard_inputs);
+    let numpad_column = KeyColumn::build(&numpad_inputs);
+    let main_column = keyboard_column.into_props();
+    let numpad_column_props = numpad_column.into_props();
+    let columns: Vec<SystemKeyPickerColumnProps> = vec![main_column, numpad_column_props];
+    let onkeydown = capture.onkeydown;
     let board = SystemKeyPickerBoardProps { columns, onkeydown };
     SystemKeyPickerModel { open, title, board }
 }

@@ -4,6 +4,7 @@ mod data;
 mod hooks;
 mod logic;
 mod props;
+mod state;
 
 use super::dialog::{Dialog, DialogProps};
 use dioxus::prelude::*;

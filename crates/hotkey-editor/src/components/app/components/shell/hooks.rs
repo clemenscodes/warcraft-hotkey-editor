@@ -1,3 +1,4 @@
+use crate::components::app::components::shell::logic::RouteBootstrap;
 use crate::components::app::components::shell::route_sync::NavDecision;
 use crate::components::app::components::shell::style;
 use crate::components::app::route::Route;
@@ -36,18 +37,25 @@ pub(super) struct ShellModel {
     pub(super) handle_keydown: EventHandler<KeyboardEvent>,
 }
 
-/// Build the app shell's full model: load the document and grid layout from storage,
-/// wire the persistence/undo effects, own every app-wide signal, provide the
-/// contexts the header and the routed pages read, and run the URL-sync push effect.
-///
-/// The pages reconcile the live route back into these signals (the read side of the
-/// URL contract), so this hook only pushes: on any state change it builds the route
-/// the signals now describe and diffs it against the address bar, pushing a new
-/// history entry for a page/selection change, replacing for an entry pick, and
-/// running the search-typing session for a query edit. Comparing against the live
-/// route (read without subscribing) is what keeps a browser back/forward from being
-/// echoed straight back.
-pub(super) fn use_shell() -> ShellModel {
+/// The app-wide signals the shell owns, grouped by the context they populate. Held
+/// together so the URL-sync effect and the key handler can read the exact slices they
+/// need after every signal is created and provided.
+struct AppSignals {
+    view_navigation: ViewNavigationContext,
+    collision_selection: CollisionSelection,
+    resolve_selection: ResolveSelection,
+    synced_route: Signal<NavSnapshot>,
+    dragging_slot: Signal<Option<DraggingSlot>>,
+    drop_target_tile: Signal<Option<DropTargetTile>>,
+    drag_follower: Signal<Option<DragFollower>>,
+    preview_open: Signal<bool>,
+    system_hotkeys_open: Signal<bool>,
+}
+
+/// Load the canonical document from storage into a signal, provide it and its service
+/// as context, and persist every change back. localStorage is the source of truth: the
+/// signal is a read cache re-serialized to storage on every write.
+fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
     let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
         let stored_text = CustomKeysPersistence::load_text();
         let initial_file = match stored_text {
@@ -78,6 +86,13 @@ pub(super) fn use_shell() -> ShellModel {
     });
     let custom_keys_service = CustomKeysService::new(loaded_keys);
     use_context_provider(|| custom_keys_service);
+    use_context_provider(|| loaded_keys);
+    loaded_keys
+}
+
+/// Load the grid layout from storage into a signal, provide it and its service as
+/// context, and persist every change back.
+fn use_grid_layout_document() -> Signal<GridLayout> {
     let grid_layout = use_signal::<GridLayout>(|| {
         GridLayoutPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
     });
@@ -87,12 +102,26 @@ pub(super) fn use_shell() -> ShellModel {
     });
     let grid_layout_service = GridLayoutService::new(grid_layout);
     use_context_provider(|| grid_layout_service);
+    use_context_provider(|| grid_layout);
+    grid_layout
+}
+
+/// The "update hotkeys as bindings move" editor preference, loaded from storage and
+/// persisted on change.
+fn use_editor_preferences() -> Signal<bool> {
     let update_hotkeys_on_move =
         use_signal::<bool>(EditorPreferencesPersistence::load_update_hotkeys_on_move);
     use_effect(move || {
         let enabled = *update_hotkeys_on_move.read();
         EditorPreferencesPersistence::save_update_hotkeys_on_move(enabled);
     });
+    update_hotkeys_on_move
+}
+
+/// Wire the undo/redo history: build it over the document and layout signals, provide
+/// it as context, record a snapshot on every change, and install its keyboard
+/// shortcuts.
+fn use_editor_history(loaded_keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) {
     let undo_history = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo_history);
     use_effect(move || {
@@ -107,55 +136,50 @@ pub(super) fn use_shell() -> ShellModel {
     });
     use_hook(move || undo_history.install_keyboard_shortcuts());
     use_effect(move || undo_history.handle_keyboard_request());
+}
 
+/// Decode the entry URL once into the shell's opening state, and canonicalize the
+/// address bar on entry if the URL was bare or partial. The signal→URL sync never
+/// fires here, since the decoded state already matches, so this gets its own one-time
+/// replace.
+fn use_route_bootstrap() -> RouteBootstrap {
     let initial_route = router().current::<Route>();
-    let initial_snapshot = NavSnapshot::from(&initial_route);
-    // A bare or partial URL (`/`, `/collisions`) decodes to the same state as its
-    // fully-materialized form (`/?race=human&mode=melee&unit=…`). Canonicalizing it on
-    // entry keeps the address bar a complete, shareable description of what is shown —
-    // the behavior the app has always had. It is a distinct concern from the
-    // signal→URL sync below (which never fires here, since the decoded state already
-    // matches), so it gets its own one-time replace.
-    let initial_canonical_route = Route::from(&initial_snapshot);
-    let needs_canonicalize = initial_route != initial_canonical_route;
-    let initial_nav = match &initial_snapshot {
-        NavSnapshot::Editor(nav) => nav.clone(),
-        _ => DecodedEditorNav::decode(None, None, None, None),
-    };
-    let initial_view = match &initial_snapshot {
-        NavSnapshot::Editor(_) => AppView::Editor,
-        NavSnapshot::Collisions { kind, .. } => AppView::Collisions { kind: *kind },
-        NavSnapshot::Resolve { .. } => AppView::Resolve,
-    };
-    let initial_race = initial_nav.race;
-    let initial_mode = initial_nav.unit_mode;
-    let initial_unit_id = initial_nav.selected_unit_id.clone();
-    let initial_search = initial_nav.search_query.clone();
-    let initial_island = match &initial_snapshot {
-        NavSnapshot::Collisions {
-            kind: CollisionKind::Positions,
-            entry,
-        } => entry.clone(),
-        _ => None,
-    };
-    let initial_hotkey_unit = match &initial_snapshot {
-        NavSnapshot::Collisions {
-            kind: CollisionKind::Hotkeys,
-            entry,
-        } => entry.clone(),
-        _ => None,
-    };
-    let initial_unit_position = match &initial_snapshot {
-        NavSnapshot::Collisions {
-            kind: CollisionKind::UnitPositions,
-            entry,
-        } => entry.clone(),
-        _ => None,
-    };
-    let initial_move_category = match &initial_snapshot {
-        NavSnapshot::Resolve { entry } => entry.clone(),
-        _ => None,
-    };
+    let bootstrap = RouteBootstrap::from(&initial_route);
+    let navigator = use_navigator();
+    let needs_canonicalize = bootstrap.needs_canonicalize;
+    let canonical_route = bootstrap.canonical_route.clone();
+    use_effect(move || {
+        if needs_canonicalize {
+            navigator.replace(canonical_route.clone());
+        }
+    });
+    bootstrap
+}
+
+/// Create every app-wide signal seeded from the route bootstrap, bundle them into the
+/// context structs the pages and header read, provide those, and return the slices the
+/// URL-sync effect and key handler still need directly.
+fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<bool>) -> AppSignals {
+    let RouteBootstrap {
+        snapshot,
+        view,
+        nav,
+        selected_island,
+        selected_hotkey_unit,
+        selected_unit_position,
+        selected_move_category,
+        ..
+    } = bootstrap;
+    let initial_view = view;
+    let initial_race = nav.race;
+    let initial_mode = nav.unit_mode;
+    let initial_unit_id = nav.selected_unit_id;
+    let initial_search = nav.search_query;
+    let initial_island = selected_island;
+    let initial_hotkey_unit = selected_hotkey_unit;
+    let initial_unit_position = selected_unit_position;
+    let initial_move_category = selected_move_category;
+    let initial_snapshot = snapshot;
 
     let current_view = use_signal::<AppView>(move || initial_view);
     let active_race = use_signal(move || initial_race);
@@ -166,9 +190,9 @@ pub(super) fn use_shell() -> ShellModel {
     let selected_from_uprooted = use_signal::<bool>(|| false);
     let hotkey_assign_request = use_signal::<bool>(|| false);
     let tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
-    let mut dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
-    let mut drop_target_tile = use_signal::<Option<DropTargetTile>>(|| None);
-    let mut drag_follower = use_signal::<Option<DragFollower>>(|| None);
+    let dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
+    let drop_target_tile = use_signal::<Option<DropTargetTile>>(|| None);
+    let drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let search_query = use_signal::<String>(move || initial_search);
     let search_field = use_signal(warcraft_database::SearchField::default);
     let selected_island = use_signal::<Option<String>>(move || initial_island);
@@ -178,21 +202,90 @@ pub(super) fn use_shell() -> ShellModel {
     let collapsed_categories = use_signal::<HashSet<warcraft_api::UnitKind>>(HashSet::new);
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
-
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
-    let mut preview_open = use_signal::<bool>(|| false);
-    let mut system_hotkeys_open = use_signal::<bool>(|| false);
+    let preview_open = use_signal::<bool>(|| false);
+    let system_hotkeys_open = use_signal::<bool>(|| false);
     let help_open = use_signal::<bool>(|| !OnboardingPersistence::has_been_seen());
     let layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
+    let synced_route = use_signal(move || initial_snapshot);
 
+    let view_navigation = ViewNavigationContext {
+        current_view,
+        active_race,
+        unit_mode,
+        selected_unit_id,
+        search_query,
+    };
+    use_context_provider(|| view_navigation);
+    let overlay_state = OverlayState {
+        preview_open,
+        system_hotkeys_open,
+        help_open,
+        layout_dialog_open,
+        templates_dialog_open,
+    };
+    use_context_provider(|| overlay_state);
+    let editor_state = EditorState {
+        selected_slot,
+        selected_from_research,
+        selected_from_uprooted,
+        hotkey_assign_request,
+        tier_overrides,
+        search_field,
+        collapsed_categories,
+        show_abilityless_units,
+        expand_variants,
+        dragging_slot,
+        drop_target_tile,
+        drag_follower,
+        update_hotkeys_on_move,
+    };
+    use_context_provider(|| editor_state);
+    let collision_selection = CollisionSelection {
+        selected_island,
+        selected_hotkey_unit,
+        selected_unit_position,
+    };
+    use_context_provider(|| collision_selection);
+    let resolve_selection = ResolveSelection {
+        selected_move_category,
+    };
+    use_context_provider(|| resolve_selection);
+    use_context_provider(|| synced_route);
+    use_context_provider(|| upload_status);
+
+    AppSignals {
+        view_navigation,
+        collision_selection,
+        resolve_selection,
+        synced_route,
+        dragging_slot,
+        drop_target_tile,
+        drag_follower,
+        preview_open,
+        system_hotkeys_open,
+    }
+}
+
+/// The write side of the URL contract: on any state change, build the route the
+/// signals now describe and diff it against the address bar, pushing a new history
+/// entry for a page/selection change, replacing for an entry pick, and running the
+/// debounced search-typing session for a query edit. Comparing against the live route
+/// (read without subscribing) is what keeps a browser back/forward from being echoed
+/// straight back.
+fn use_url_sync(signals: &AppSignals) {
+    let current_view = signals.view_navigation.current_view;
+    let active_race = signals.view_navigation.active_race;
+    let unit_mode = signals.view_navigation.unit_mode;
+    let selected_unit_id = signals.view_navigation.selected_unit_id;
+    let search_query = signals.view_navigation.search_query;
+    let selected_island = signals.collision_selection.selected_island;
+    let selected_hotkey_unit = signals.collision_selection.selected_hotkey_unit;
+    let selected_unit_position = signals.collision_selection.selected_unit_position;
+    let selected_move_category = signals.resolve_selection.selected_move_category;
+    let mut synced_route = signals.synced_route;
     let navigator = use_navigator();
-    let mut synced_route = use_signal(move || initial_snapshot);
-    use_effect(move || {
-        if needs_canonicalize {
-            navigator.replace(initial_canonical_route.clone());
-        }
-    });
     let mut search_session_active = use_signal(|| false);
     let mut search_session_gen = use_signal::<u32>(|| 0);
     use_effect(move || {
@@ -266,8 +359,18 @@ pub(super) fn use_shell() -> ShellModel {
             }
         }
     });
+}
 
-    let handle_keydown = EventHandler::new(move |event: Event<KeyboardData>| {
+/// The app-level key handler: Tab cycles focus inside the grid panel and the system
+/// dialog, and Escape cancels a drag, closes the top overlay, or walks selection back
+/// up the editor's focus chain.
+fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
+    let mut dragging_slot = signals.dragging_slot;
+    let mut drop_target_tile = signals.drop_target_tile;
+    let mut drag_follower = signals.drag_follower;
+    let mut preview_open = signals.preview_open;
+    let mut system_hotkeys_open = signals.system_hotkeys_open;
+    EventHandler::new(move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
         let shift_held = event.data().modifiers().shift();
         let active_info = FocusedElementInfo::current();
@@ -336,57 +439,24 @@ pub(super) fn use_shell() -> ShellModel {
                 event.prevent_default();
             }
         }
-    });
+    })
+}
 
+/// Build the app shell's full model: load the document and grid layout from storage,
+/// wire the persistence/undo effects, own every app-wide signal, provide the contexts
+/// the header and the routed pages read, and run the URL-sync push effect. Each concern
+/// is its own sub-hook; the body composes them and returns the two things the body
+/// renders.
+pub(super) fn use_shell() -> ShellModel {
+    let loaded_keys = use_custom_keys_document();
+    let grid_layout = use_grid_layout_document();
+    let update_hotkeys_on_move = use_editor_preferences();
+    use_editor_history(loaded_keys, grid_layout);
+    let bootstrap = use_route_bootstrap();
+    let signals = use_app_signals(bootstrap, update_hotkeys_on_move);
+    use_url_sync(&signals);
+    let handle_keydown = use_app_keydown(&signals);
     let class = style::CLASS;
-
-    let view_navigation = ViewNavigationContext {
-        current_view,
-        active_race,
-        unit_mode,
-        selected_unit_id,
-        search_query,
-    };
-    use_context_provider(|| view_navigation);
-    let overlay_state = OverlayState {
-        preview_open,
-        system_hotkeys_open,
-        help_open,
-        layout_dialog_open,
-        templates_dialog_open,
-    };
-    use_context_provider(|| overlay_state);
-    let editor_state = EditorState {
-        selected_slot,
-        selected_from_research,
-        selected_from_uprooted,
-        hotkey_assign_request,
-        tier_overrides,
-        search_field,
-        collapsed_categories,
-        show_abilityless_units,
-        expand_variants,
-        dragging_slot,
-        drop_target_tile,
-        drag_follower,
-        update_hotkeys_on_move,
-    };
-    use_context_provider(|| editor_state);
-    let collision_selection = CollisionSelection {
-        selected_island,
-        selected_hotkey_unit,
-        selected_unit_position,
-    };
-    use_context_provider(|| collision_selection);
-    let resolve_selection = ResolveSelection {
-        selected_move_category,
-    };
-    use_context_provider(|| resolve_selection);
-    use_context_provider(|| synced_route);
-    use_context_provider(|| loaded_keys);
-    use_context_provider(|| grid_layout);
-    use_context_provider(|| upload_status);
-
     ShellModel {
         class,
         handle_keydown,

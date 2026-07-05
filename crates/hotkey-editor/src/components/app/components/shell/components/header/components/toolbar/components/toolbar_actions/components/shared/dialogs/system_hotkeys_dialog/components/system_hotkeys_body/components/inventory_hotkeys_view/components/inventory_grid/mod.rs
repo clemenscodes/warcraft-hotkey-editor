@@ -4,6 +4,7 @@ mod props;
 mod style;
 
 use crate::assert_component;
+use crate::services::editor_state::{CursorPoint, HitTestPoint};
 pub use components::inventory_cell::InventoryCell;
 use components::inventory_slot::InventorySlot;
 use dioxus::prelude::*;
@@ -28,6 +29,63 @@ pub(super) struct DragOrigin {
 pub(super) struct DragMovePoint {
     pub(super) client_horizontal: f64,
     pub(super) client_vertical: f64,
+}
+
+impl DragMovePoint {
+    /// Applies this pending pointer position: moves the drag follower to it and
+    /// hit-tests the element underneath to pick (or clear) the current drop target.
+    pub(super) fn flush(
+        self,
+        mut drop_target: Signal<Option<String>>,
+        mut drag_follower: Signal<Option<InventoryDragFollower>>,
+        section_id: String,
+    ) {
+        let cursor_horizontal_position = self.client_horizontal;
+        let cursor_vertical_position = self.client_vertical;
+        let current_follower_option = drag_follower.read().clone();
+        if let Some(mut current_follower) = current_follower_option {
+            current_follower.cursor_horizontal_position = cursor_horizontal_position;
+            current_follower.cursor_vertical_position = cursor_vertical_position;
+            drag_follower.set(Some(current_follower));
+        }
+        let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+            return;
+        };
+        let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
+        let hit_test_point = HitTestPoint::from(cursor_point);
+        let hit_test_horizontal = hit_test_point.horizontal_position();
+        let hit_test_vertical = hit_test_point.vertical_position();
+        let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
+        let cell_under_option =
+            elem_under_option.and_then(|elem| elem.closest(".inventory-cell").ok().flatten());
+        let Some(cell_under) = cell_under_option else {
+            if drop_target.read().is_some() {
+                drop_target.set(None);
+            }
+            return;
+        };
+        let target_id = cell_under.get_attribute("data-inventory-slot");
+        let Some(target_id_string) = target_id else {
+            if drop_target.read().is_some() {
+                drop_target.set(None);
+            }
+            return;
+        };
+        if target_id_string == section_id {
+            if drop_target.read().is_some() {
+                drop_target.set(None);
+            }
+            return;
+        }
+        let needs_update = drop_target
+            .read()
+            .as_deref()
+            .map(|existing| existing != target_id_string.as_str())
+            .unwrap_or(true);
+        if needs_update {
+            drop_target.set(Some(target_id_string));
+        }
+    }
 }
 
 pub(super) type DragRafClosure = Closure<dyn FnMut(f64)>;

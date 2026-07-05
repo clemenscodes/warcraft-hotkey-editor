@@ -1,35 +1,41 @@
-use super::props::UnitDetailPanelProps;
-use super::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGridsProps;
 use super::components::unit_description::UnitDescriptionProps;
 use super::components::unit_detail_body::UnitDetailBodyProps;
-use super::components::unit_detail_header::UnitDetailHeaderProps;
 use super::components::unit_detail_body::components::unit_detail_row::UnitDetailRowProps;
-use super::components::unit_stats_panel::UnitStatsPanelProps;
+use super::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGridsProps;
 use super::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::UnitTileOverrideProps;
-use crate::components::app::components::shell::components::shared::icons::IconUrl;
+use super::components::unit_detail_header::UnitDetailHeaderProps;
+use super::components::unit_stats_panel::UnitStatsPanelProps;
+use super::logic::{ActiveContainer, InspectorPanel, ResolvedUnit};
+use super::props::UnitDetailPanelProps;
+use super::state::{UnitDetailModel, UnitDetailView};
 use dioxus::prelude::*;
-use std::rc::Rc;
-use warcraft_api::WarcraftObjectMeta;
-use warcraft_database::ObjectLookup;
-use warcraft_keybinds::{Evasion, GridSlotId, InspectorDetail, UnitSlotContainers};
+use warcraft_keybinds::UnitSlotContainers;
 
-/// The panel's shaped view: either an empty-state message, or the fully-built child
-/// props for the loaded unit.
-pub(super) enum UnitDetailView {
-    Empty(&'static str),
-    Loaded(Box<UnitDetailModel>),
+/// The hero-level picker state: the currently-chosen level and whether its picker is
+/// open. Both reset to their defaults whenever the selected unit changes.
+pub(super) struct HeroLevelState {
+    pub(super) selected_hero_level: Signal<u32>,
+    pub(super) level_picker_open: Signal<bool>,
 }
 
-/// Every child's finished props for a loaded unit.
-pub(super) struct UnitDetailModel {
-    pub(super) header: UnitDetailHeaderProps,
-    pub(super) description: UnitDescriptionProps,
-    pub(super) stats: UnitStatsPanelProps,
-    pub(super) body: UnitDetailBodyProps,
+fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelState {
+    let mut selected_hero_level = use_signal::<u32>(|| 1);
+    let mut level_picker_open = use_signal::<bool>(|| false);
+    use_effect(move || {
+        let _ = selected_unit_id.read();
+        selected_hero_level.set(1);
+        level_picker_open.set(false);
+    });
+    HeroLevelState {
+        selected_hero_level,
+        level_picker_open,
+    }
 }
 
-/// Resolves the selected unit and shapes every child's props. All the domain work
-/// (database lookups, inspector resolution, active-container selection) lives here.
+/// Resolves the selected unit and shapes every child's props. The domain work is
+/// grouped into the [`ResolvedUnit`], [`InspectorPanel`], and [`ActiveContainer`]
+/// derivations plus the memoized [`UnitSlotContainers`]; this hook only orchestrates
+/// them and assembles the child props.
 pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailView {
     let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
@@ -44,13 +50,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let grid_layout = props.grid_layout;
     let update_hotkeys_on_move = props.update_hotkeys_on_move;
     let hotkey_assign_request = props.hotkey_assign_request;
-    let mut selected_hero_level = use_signal::<u32>(|| 1);
-    let mut level_picker_open = use_signal::<bool>(|| false);
-    use_effect(move || {
-        let _ = selected_unit_id.read();
-        selected_hero_level.set(1);
-        level_picker_open.set(false);
-    });
+    let hero_level = use_hero_level_state(selected_unit_id);
     let slot_data_memo = use_memo(move || {
         let unit_id_option = selected_unit_id.read().clone();
         let unit_id_str = unit_id_option.as_deref().unwrap_or("");
@@ -60,90 +60,52 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let Some(unit_id) = unit_id_option else {
         return UnitDetailView::Empty("Select a unit to view its command card.");
     };
-    let Some(unit_object) = ObjectLookup::by_id(&unit_id) else {
-        return UnitDetailView::Empty("Unit not found in database.");
+    let resolved_unit = match ResolvedUnit::resolve(&unit_id) {
+        Ok(resolved) => resolved,
+        Err(message) => return UnitDetailView::Empty(message),
     };
-    let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
-        return UnitDetailView::Empty("Selected object is not a unit.");
-    };
-    let unit_name = unit_object.names().first().copied().unwrap_or("(unnamed)");
-    let portrait_url = unit_object
-        .icons()
-        .first()
-        .copied()
-        .map(IconUrl::from_database_path)
-        .map(|url| url.to_string());
     let slot_containers = slot_data_memo.read();
     let command_card_slots = slot_containers.command_card();
     let build_menu_slots = slot_containers.build_menu();
     let uprooted_menu_slots = slot_containers.uprooted();
     let research_menu_slots = slot_containers.research();
-    let train_upgrades = slot_containers.train_upgrades().clone();
     let inspector_slot = *selected_slot.read();
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
-    let inspector_panel = inspector_slot.as_ref().map(|slot| {
-        let upgrade_id = if let GridSlotId::Ability(id) = slot {
-            train_upgrades.get(&id.object_id()).copied()
-        } else {
-            None
-        };
-        InspectorDetail::build(
-            slot,
-            &loaded_keys.read(),
-            &unit_id,
-            inspector_from_uprooted,
-            inspector_from_research,
-            upgrade_id,
-        )
-    });
-    let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
-    let active_container_slots: Rc<[GridSlotId]> = if inspector_from_uprooted {
-        uprooted_menu_slots
-            .clone()
-            .unwrap_or_else(|| empty_slot_list.clone())
-    } else if inspector_from_research {
-        research_menu_slots
-            .clone()
-            .unwrap_or_else(|| empty_slot_list.clone())
-    } else {
-        let inspector_slot_id = inspector_slot
-            .as_ref()
-            .map(|slot| slot.as_str().to_string());
-        let in_build_menu = inspector_slot_id.as_deref().is_some_and(|id_value| {
-            build_menu_slots.as_ref().is_some_and(|list| {
-                list.iter()
-                    .any(|candidate| candidate.as_str().eq_ignore_ascii_case(id_value))
-            })
-        });
-        if in_build_menu {
-            build_menu_slots
-                .clone()
-                .unwrap_or_else(|| empty_slot_list.clone())
-        } else {
-            command_card_slots.clone()
-        }
-    };
-    let unit_description = unit_object.ubertip();
-    let unit_combat = *unit_meta.combat();
-    let hero_attributes_option = unit_meta.hero_attributes().copied();
-    let unit_evasion = Evasion::resolve(unit_meta);
+    let keys_guard = loaded_keys.read();
+    let train_upgrades = slot_containers.train_upgrades();
+    let inspector_panel = InspectorPanel::resolve(
+        &inspector_slot,
+        &keys_guard,
+        &unit_id,
+        inspector_from_uprooted,
+        inspector_from_research,
+        train_upgrades,
+    );
+    drop(keys_guard);
+    let active_container = ActiveContainer::resolve(
+        &slot_containers,
+        &inspector_slot,
+        inspector_from_uprooted,
+        inspector_from_research,
+    );
+    let active_container_slots = active_container.slots;
     let header = UnitDetailHeaderProps {
-        unit_name,
+        unit_name: resolved_unit.unit_name,
         unit_id: unit_id.clone(),
-        portrait_url,
-        has_hero_attributes: hero_attributes_option.is_some(),
-        selected_hero_level,
-        level_picker_open,
+        portrait_url: resolved_unit.portrait_url,
+        has_hero_attributes: resolved_unit.hero_attributes.is_some(),
+        selected_hero_level: hero_level.selected_hero_level,
+        level_picker_open: hero_level.level_picker_open,
     };
     let description = UnitDescriptionProps {
-        text: unit_description.unwrap_or_default().to_string(),
+        text: resolved_unit.description_text,
     };
     let stats = UnitStatsPanelProps {
-        combat: unit_combat,
-        hero_attributes: hero_attributes_option,
-        selected_hero_level,
-        evasion: unit_evasion,
+        combat: resolved_unit.combat,
+        hero_attributes: resolved_unit.hero_attributes,
+        selected_hero_level: hero_level.selected_hero_level,
+        evasion: resolved_unit.evasion,
     };
     let grids = UnitCommandGridsProps {
         unit_id: unit_id.clone(),
@@ -165,7 +127,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
         hotkey_assign_request,
     };
     let tile_override = UnitTileOverrideProps {
-        detail: inspector_panel,
+        detail: inspector_panel.detail,
         loaded_keys,
         grid_layout,
         selected_from_research,

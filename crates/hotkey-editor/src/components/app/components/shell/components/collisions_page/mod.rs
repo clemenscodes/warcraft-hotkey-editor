@@ -2,6 +2,7 @@ pub mod components;
 mod data;
 mod hooks;
 pub(crate) mod logic;
+mod model;
 mod props;
 
 use components::body::Body;

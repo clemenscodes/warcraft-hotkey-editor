@@ -1,4 +1,11 @@
+use super::components::breadcrumbs::BreadcrumbsProps;
+use super::components::breadcrumbs::components::breadcrumb::BreadcrumbProps;
+use super::components::plan_body::components::active_move_list::components::move_row::MoveRowProps;
+use super::components::plan_body::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
+use super::components::plan_body::{PlanBodyProps, PlanBodySection};
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
@@ -426,4 +433,99 @@ pub struct MiniGridPlacement {
     pub row: u8,
     pub icon_url: Option<String>,
     pub name: String,
+}
+
+/// The move counts derived from the cascade preview: how many slots the plan moves
+/// and how many abilities it cannot place. The plan state tags its root element with
+/// these and the header phrases them; both `0` is the all-clear state.
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
+pub(super) struct PlanCounts {
+    pub(super) move_count: usize,
+    pub(super) unresolved_count: usize,
+}
+
+impl PlanCounts {
+    pub(super) fn resolve(plan: Option<&PlanView>) -> Self {
+        let move_count = plan.map(PlanView::move_count).unwrap_or(0);
+        let unresolved_count = plan.map(|view| view.unresolved.len()).unwrap_or(0);
+        Self {
+            move_count,
+            unresolved_count,
+        }
+    }
+}
+
+/// The active section of the plan shaped for the body: the breadcrumb bar (one tab
+/// per section, the selected one flagged, each closing over the selection signal so
+/// a click reselects) and the scrollable body (the active section's move rows plus
+/// every unresolved row). Shaping the breadcrumbs and rows needs the Copy navigation
+/// and dialog signals, which arrive as inputs.
+pub(super) struct ActivePlanView {
+    pub(super) breadcrumbs: BreadcrumbsProps,
+    pub(super) body: PlanBodyProps,
+}
+
+impl ActivePlanView {
+    pub(super) fn resolve(
+        plan: &PlanView,
+        selected_slug: Option<&str>,
+        selection: Signal<Option<String>>,
+        view_navigation: ViewNavigationContext,
+        carriers_dialog: Signal<Option<CarriersDialogData>>,
+    ) -> Self {
+        let active = plan.active_section(selected_slug);
+        let active_category = active.map(|section| section.category);
+        let mut breadcrumb_list: Vec<BreadcrumbProps> = Vec::with_capacity(plan.sections.len());
+        for section in &plan.sections {
+            let category = section.category;
+            let is_active = active_category == Some(category);
+            let data_breadcrumb = category.data_breadcrumb();
+            let title = section.title.to_owned();
+            let count = section.moves.len();
+            let mut selection = selection;
+            let onclick = EventHandler::new(move |_event: MouseEvent| {
+                let slug = category.data_breadcrumb().to_owned();
+                selection.set(Some(slug));
+            });
+            let breadcrumb = BreadcrumbProps {
+                title,
+                count,
+                data_breadcrumb,
+                active: is_active,
+                onclick,
+            };
+            breadcrumb_list.push(breadcrumb);
+        }
+        let breadcrumbs = BreadcrumbsProps {
+            breadcrumbs: breadcrumb_list,
+        };
+        let section = active.map(|section| {
+            let rows: Vec<MoveRowProps> = section
+                .moves
+                .iter()
+                .map(|move_view| MoveRowProps {
+                    move_view: move_view.clone(),
+                    view_navigation,
+                    carriers_dialog,
+                })
+                .collect();
+            PlanBodySection {
+                data_category: section.category.data_breadcrumb(),
+                rows,
+            }
+        });
+        let unresolved_rows: Vec<UnresolvedRowProps> = plan
+            .unresolved
+            .iter()
+            .map(|unresolved_view| UnresolvedRowProps {
+                unresolved_view: unresolved_view.clone(),
+                carriers_dialog,
+            })
+            .collect();
+        let body = PlanBodyProps {
+            section,
+            unresolved_rows,
+        };
+        Self { breadcrumbs, body }
+    }
 }
