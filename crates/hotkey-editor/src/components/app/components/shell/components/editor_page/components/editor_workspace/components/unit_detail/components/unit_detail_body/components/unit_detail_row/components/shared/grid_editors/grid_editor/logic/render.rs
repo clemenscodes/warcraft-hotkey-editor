@@ -2,11 +2,11 @@ use crate::components::app::components::shell::components::toasts::consume_toast
 use crate::services::customkeys::service::CustomKeysService;
 use dioxus::prelude::*;
 use std::ops::Range;
-use std::rc::Rc;
 
+use warcraft_api::Race;
 use warcraft_keybinds::{
-    COMMAND_GRID_TILE_COUNT, CommandGridRenderInput, GridBehavior, GridCoordinate, GridSlotId,
-    RenderedTile,
+    COMMAND_GRID_TILE_COUNT, ColumnIndex, GridBehavior, GridCoordinate, HotkeyToken, RenderedTile,
+    RowIndex,
 };
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::HeadedGridProps;
@@ -16,6 +16,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::{
     EditorTileKind, GridEditorTileProps,
 };
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::HotkeyBadgeState;
 
 use super::super::props::GridEditorProps;
 use crate::services::editor_state::DragFollowerVisual;
@@ -26,14 +27,21 @@ use super::handlers::{
 
 use super::mechanics;
 
-/// Builds the editor's captioned grid: its heading plus the finished tiles. The
-/// domain renders the grid, each tile is adapted into its presentational
-/// `GridEditorTileProps`, and the drag state plus every pointer handler is
-/// overlaid on top. This is all the grid's behavior, kept in the editor; the
-/// `HeadedGrid` and the pure `Grid` only draw what comes out. Always exactly
-/// `COMMAND_GRID_TILE_COUNT` tiles, so the result is a fixed-size array.
-impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKind> {
-    fn from(props: &GridEditorProps<B>) -> Self {
+/// Builds the editor's captioned grid: its heading plus the finished tiles.
+/// `rendered_tiles` is already resolved by the caller (`GridEditor`, in a
+/// `use_memo` in its own reactive scope) — that is what lets one grid's edit
+/// avoid re-rendering its siblings, so this constructor must not itself read
+/// `loaded_keys` or any other grid-state signal. It only adapts each rendered
+/// tile into its presentational `GridEditorTileProps` and overlays the drag
+/// state plus every pointer handler on top. This is all the grid's behavior,
+/// kept in the editor; the `HeadedGrid` and the pure `Grid` only draw what
+/// comes out. Always exactly `COMMAND_GRID_TILE_COUNT` tiles, so the result is
+/// a fixed-size array.
+impl HeadedGridProps<EditorTileKind> {
+    pub(crate) fn from_parts<B: GridBehavior>(
+        props: &GridEditorProps<B>,
+        rendered_tiles: Vec<RenderedTile>,
+    ) -> Self {
         let behavior = props.behavior.clone();
         let config = &props.config;
         let toast = consume_toast();
@@ -44,13 +52,10 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKi
         let selected_slot = config.selected_slot;
         let selected_from_research = config.selected_from_research;
         let selected_from_uprooted = config.selected_from_uprooted;
-        let tier_overrides = config.tier_overrides;
         let update_hotkeys_on_move = config.update_hotkeys_on_move;
         let hotkey_assign_request = config.hotkey_assign_request;
         let prevent_swap_on_drop = config.prevent_swap_on_drop;
         let slot_ids = config.slot_ids.clone();
-        let restrict_draggable_to: Rc<[GridSlotId]> =
-            Rc::from(config.restrict_draggable_to.as_slice());
         let dragging_slot = config.dragging_slot;
         let drop_target_tile = config.drop_target_tile;
         let drag_follower = config.drag_follower;
@@ -84,25 +89,6 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKi
         };
         let on_move = move_handler(move_args);
         let drop_blocked = drop_blocked_callback(behavior.clone(), loaded_keys, slot_ids.clone());
-        let rendered_tiles: Vec<RenderedTile> = {
-            let read_guard = loaded_keys.read();
-            let file = read_guard
-                .as_ref()
-                .expect("loaded_keys is always Some after boot");
-            let tier_guard = tier_overrides.read();
-            let layout_snapshot = *grid_layout.read();
-            let selected_snapshot = *selected_slot.read();
-            let selected_research_snapshot = *selected_from_research.read();
-            let input = CommandGridRenderInput {
-                slots: &slot_ids,
-                layout: layout_snapshot,
-                selected: selected_snapshot,
-                selected_is_research: selected_research_snapshot,
-                tier_overrides: &tier_guard,
-                restrict_draggable_to: &restrict_draggable_to,
-            };
-            file.rendered_command_grid(&behavior, &input)
-        };
         let dragging_value = *dragging_slot.read();
         let drop_target_value = *drop_target_tile.read();
         let dragging_source_coordinate = dragging_value
@@ -184,18 +170,43 @@ impl<B: GridBehavior> From<&GridEditorProps<B>> for HeadedGridProps<EditorTileKi
         }
         let tiles: [GridEditorTileProps; COMMAND_GRID_TILE_COUNT] = tile_props_list
             .try_into()
-            .unwrap_or_else(|list: Vec<GridEditorTileProps>| {
-                panic!(
-                    "command grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
-                    list.len(),
-                )
-            });
+            .unwrap_or_else(|_| std::array::from_fn(|_| placeholder_tile()));
         let kind = EditorTileKind;
         let grid = GridProps { kind, tiles };
         Self {
             heading: grid_id,
             grid,
         }
+    }
+}
+
+/// An inert, empty tile used only as a fallback when the memoized rendered
+/// tiles are transiently not exactly `COMMAND_GRID_TILE_COUNT` long (e.g. the
+/// first frame before boot has resolved `loaded_keys`). Renders an empty,
+/// non-interactive square instead of panicking; the installed panic hook
+/// still surfaces the real cause if this path is ever hit outside boot.
+fn placeholder_tile() -> GridEditorTileProps {
+    let coordinate = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
+    GridEditorTileProps {
+        coordinate,
+        race: Race::Neutral,
+        icon: None,
+        label: String::new(),
+        hotkey: HotkeyToken::Escape,
+        badge_state: HotkeyBadgeState::default(),
+        state: GridTileState::default(),
+        is_dragging_source: false,
+        is_drag_over: false,
+        is_focusable: false,
+        draggable: false,
+        onkeydown: EventHandler::default(),
+        onpointerdown: EventHandler::default(),
+        onpointermove: EventHandler::default(),
+        onpointerup: EventHandler::default(),
+        onpointercancel: EventHandler::default(),
+        onlostpointercapture: EventHandler::default(),
+        onclick: EventHandler::default(),
+        ondoubleclick: EventHandler::default(),
     }
 }
 
