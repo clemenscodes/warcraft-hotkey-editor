@@ -24,7 +24,7 @@ const BASE: &[TailwindClass] = tw![
     "data-[dragging-source=true]:[&>*]:invisible",
     "data-[dragging-source=true]:border-[0.35cqi]",
     "data-[dragging-source=true]:border-dashed",
-    "data-[dragging-source=true]:border-warcraft-blue-bright",
+    "data-[dragging-source=true]:border-warcraft-blue-slate",
     "data-[dragging-source=true]:bg-panel-dark-diag-85",
     "data-[dragging-source=true]:shadow-bevel-hl",
     "data-[dragging-source=true]:data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_var(--color-warcraft-gold)]",

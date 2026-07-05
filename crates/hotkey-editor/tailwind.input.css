@@ -43,6 +43,10 @@
   --color-warcraft-blue-bright: #356dac;
   --color-warcraft-blue-bright-deep: #1f4a72;
   --color-warcraft-blue-glow: #18365b;
+  /* Muted slate-blue for the dashed outline of a picked-up tile's empty slot.
+     Deliberately desaturated so the placeholder recedes; the brighter blues
+     above read as active, not vacated. */
+  --color-warcraft-blue-slate: #4a7090;
 
   --color-race-human: #6aa1ff;
 
