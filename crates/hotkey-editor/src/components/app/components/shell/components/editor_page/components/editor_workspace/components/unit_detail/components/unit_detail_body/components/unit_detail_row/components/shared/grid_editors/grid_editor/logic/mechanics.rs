@@ -1,6 +1,7 @@
 use super::drag_state::{
-    DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, DragThreadState,
-    LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
+    DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
+    DragMovePoint, DragOrigin, DragRafClosure, DragThreadState, LATEST_DRAG_MOVE, LONG_PRESS_MS,
+    PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
     TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE, TOUCH_LONG_PRESS_TIMER_ID,
     TOUCH_STARTED,
 };
@@ -274,70 +275,108 @@ pub(crate) fn pointer_move(
                 }
             }
         }
-        let current_follower_option = drag_follower.read().clone();
-        if let Some(mut current_follower) = current_follower_option {
-            current_follower
-                .set_cursor_position(cursor_horizontal_position, cursor_vertical_position);
-            drag_follower.set(Some(current_follower));
-        }
-        let document_option = web_sys::window().and_then(|window| window.document());
-        let Some(document) = document_option else {
-            return;
+        let point = DragMovePoint {
+            client_horizontal: cursor_horizontal_position,
+            client_vertical: cursor_vertical_position,
         };
-        let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
-        let hit_test_point = HitTestPoint::from(cursor_point);
-        let hit_test_horizontal = hit_test_point.horizontal_position();
-        let hit_test_vertical = hit_test_point.vertical_position();
-        let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
-        let tile_under_option =
-            elem_under_option.and_then(|elem| elem.closest("[data-grid-row]").ok().flatten());
-        let Some(tile_under) = tile_under_option else {
-            if drop_target_tile.read().is_some() {
-                drop_target_tile.set(None);
-            }
-            return;
-        };
-        let grid_id_host_option = tile_under.closest("[data-grid-id]").ok().flatten();
-        let grid_id_attribute =
-            grid_id_host_option.and_then(|host| host.get_attribute("data-grid-id"));
-        let Some(grid_id_under) = grid_id_attribute else {
-            if drop_target_tile.read().is_some() {
-                drop_target_tile.set(None);
-            }
-            return;
-        };
-        if grid_id_under != grid_id {
-            if drop_target_tile.read().is_some() {
-                drop_target_tile.set(None);
-            }
+        LATEST_DRAG_MOVE.with(|cell| cell.set(Some(point)));
+        let frame_already_pending = DRAG_RAF_HANDLE.with(|cell| cell.get().is_some());
+        if frame_already_pending {
             return;
         }
-        let row_attr = tile_under.get_attribute("data-grid-row");
-        let col_attr = tile_under.get_attribute("data-grid-col");
-        let Some(under_row) = row_attr
-            .as_deref()
-            .and_then(|raw| raw.parse::<u8>().ok())
-            .and_then(|value| RowIndex::try_from(value).ok())
-        else {
+        let Some(window) = web_sys::window() else {
             return;
         };
-        let Some(under_column) = col_attr
-            .as_deref()
-            .and_then(|raw| raw.parse::<u8>().ok())
-            .and_then(|value| ColumnIndex::try_from(value).ok())
-        else {
-            return;
-        };
-        let under_coordinate = GridCoordinate::new(under_column, under_row);
-        let new_target = DropTargetTile::new(grid_id, under_coordinate);
-        let needs_update = drop_target_tile
-            .read()
-            .as_ref()
-            .map(|existing| *existing != new_target)
-            .unwrap_or(true);
-        if needs_update {
-            drop_target_tile.set(Some(new_target));
+        let closure: DragRafClosure = Closure::new(move |_timestamp: f64| {
+            let Some(point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) else {
+                return;
+            };
+            DRAG_RAF_HANDLE.with(|cell| cell.set(None));
+            flush_drag_move(
+                dragging_slot,
+                drop_target_tile,
+                drag_follower,
+                grid_id,
+                point,
+            );
+        });
+        if let Ok(handle) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
+            DRAG_RAF_HANDLE.with(|cell| cell.set(Some(handle)));
         }
+        DRAG_RAF_CLOSURE.with(|cell| *cell.borrow_mut() = Some(closure));
+    }
+}
+
+fn flush_drag_move(
+    _dragging_slot: Signal<Option<DraggingSlot>>,
+    mut drop_target_tile: Signal<Option<DropTargetTile>>,
+    mut drag_follower: Signal<Option<DragFollower>>,
+    grid_id: &'static str,
+    point: DragMovePoint,
+) {
+    let cursor_horizontal_position = point.client_horizontal;
+    let cursor_vertical_position = point.client_vertical;
+    let current_follower_option = drag_follower.read().clone();
+    if let Some(mut current_follower) = current_follower_option {
+        current_follower.set_cursor_position(cursor_horizontal_position, cursor_vertical_position);
+        drag_follower.set(Some(current_follower));
+    }
+    let document_option = web_sys::window().and_then(|window| window.document());
+    let Some(document) = document_option else {
+        return;
+    };
+    let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
+    let hit_test_point = HitTestPoint::from(cursor_point);
+    let hit_test_horizontal = hit_test_point.horizontal_position();
+    let hit_test_vertical = hit_test_point.vertical_position();
+    let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
+    let tile_under_option =
+        elem_under_option.and_then(|elem| elem.closest("[data-grid-row]").ok().flatten());
+    let Some(tile_under) = tile_under_option else {
+        if drop_target_tile.read().is_some() {
+            drop_target_tile.set(None);
+        }
+        return;
+    };
+    let grid_id_host_option = tile_under.closest("[data-grid-id]").ok().flatten();
+    let grid_id_attribute = grid_id_host_option.and_then(|host| host.get_attribute("data-grid-id"));
+    let Some(grid_id_under) = grid_id_attribute else {
+        if drop_target_tile.read().is_some() {
+            drop_target_tile.set(None);
+        }
+        return;
+    };
+    if grid_id_under != grid_id {
+        if drop_target_tile.read().is_some() {
+            drop_target_tile.set(None);
+        }
+        return;
+    }
+    let row_attr = tile_under.get_attribute("data-grid-row");
+    let col_attr = tile_under.get_attribute("data-grid-col");
+    let Some(under_row) = row_attr
+        .as_deref()
+        .and_then(|raw| raw.parse::<u8>().ok())
+        .and_then(|value| RowIndex::try_from(value).ok())
+    else {
+        return;
+    };
+    let Some(under_column) = col_attr
+        .as_deref()
+        .and_then(|raw| raw.parse::<u8>().ok())
+        .and_then(|value| ColumnIndex::try_from(value).ok())
+    else {
+        return;
+    };
+    let under_coordinate = GridCoordinate::new(under_column, under_row);
+    let new_target = DropTargetTile::new(grid_id, under_coordinate);
+    let needs_update = drop_target_tile
+        .read()
+        .as_ref()
+        .map(|existing| *existing != new_target)
+        .unwrap_or(true);
+    if needs_update {
+        drop_target_tile.set(Some(new_target));
     }
 }
 

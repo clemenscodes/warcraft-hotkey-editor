@@ -12,6 +12,13 @@ pub(crate) struct DragOrigin {
     pub(crate) cursor_vertical_position: f64,
 }
 
+/// Latest pointer coords awaiting an animation-frame flush.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct DragMovePoint {
+    pub(crate) client_horizontal: f64,
+    pub(crate) client_vertical: f64,
+}
+
 use crate::services::editor_state::DragFollowerVisual;
 use warcraft_keybinds::GridCoordinate;
 
@@ -31,6 +38,7 @@ pub(crate) struct PendingDragData {
 }
 
 pub(crate) type TouchScrollLock = Closure<dyn FnMut(web_sys::Event)>;
+pub(crate) type DragRafClosure = Closure<dyn FnMut(f64)>;
 thread_local! {
     /// Set on a successful drag-end so the synthetic `click` that fires after
     /// `pointerup` does not also re-select the source tile.
@@ -75,6 +83,17 @@ thread_local! {
 
     /// Non-passive `touchmove` listener installed only while a touch drag is active.
     pub(crate) static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const {
+        RefCell::new(None)
+    };
+
+    /// Latest pointer coords awaiting an animation-frame flush (client x, y).
+    pub(crate) static LATEST_DRAG_MOVE: Cell<Option<DragMovePoint>> = const { Cell::new(None) };
+
+    /// Handle of the pending requestAnimationFrame, so it can be cancelled.
+    pub(crate) static DRAG_RAF_HANDLE: Cell<Option<i32>> = const { Cell::new(None) };
+
+    /// The rAF callback closure, kept alive while a frame is pending.
+    pub(crate) static DRAG_RAF_CLOSURE: RefCell<Option<DragRafClosure>> = const {
         RefCell::new(None)
     };
 }
@@ -132,9 +151,20 @@ impl DragThreadState {
         }
     }
 
+    pub(crate) fn cancel_drag_raf() {
+        if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
+            && let Some(window) = web_sys::window()
+        {
+            let _ = window.cancel_animation_frame(handle);
+        }
+        LATEST_DRAG_MOVE.with(|cell| cell.set(None));
+        DRAG_RAF_CLOSURE.with(|cell| cell.borrow_mut().take());
+    }
+
     pub(crate) fn reset() {
         Self::cancel_long_press();
         Self::remove_scroll_lock();
+        Self::cancel_drag_raf();
         TOUCH_STARTED.with(|cell| cell.set(false));
         DID_DRAG_MOVE.with(|cell| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
