@@ -18,11 +18,12 @@ use crate::services::navigation::nav_snapshot::NavSnapshot;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::overlay_state::OverlayState;
 use crate::services::resolve_selection::ResolveSelection;
-use crate::services::undo::{EditorSnapshot, UndoHistory};
+use crate::services::undo::UndoHistory;
 use crate::styling::ClassList;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 

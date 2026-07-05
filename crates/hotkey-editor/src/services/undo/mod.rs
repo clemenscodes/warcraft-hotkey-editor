@@ -1,58 +1,16 @@
 pub mod context;
 
-use crate::persistence::local_storage::LocalStorage;
+use crate::repository::editor_history_repository::EditorHistoryRepository;
+use ddd::ApplicationLayer;
+use ddd::ApplicationService;
+use ddd::Layered;
+use ddd::Repository;
+use ddd::Service;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::EditorHistory;
+use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
-
-const UNDO_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.undo-history");
-
-/// Maximum number of snapshots kept per stack. Each snapshot is the full
-/// canonical state; the on-disk blob is deflate-compressed (the materialized
-/// text is highly repetitive), so a deep history still fits localStorage.
-const MAX_DEPTH: usize = 40;
-
-/// Separators chosen from the ASCII control range so they can never appear in
-/// the INI-style CustomKeys text or the grid-layout storage string.
-const FIELD_SEPARATOR: char = '\u{1f}';
-const RECORD_SEPARATOR: char = '\u{1e}';
-const GROUP_SEPARATOR: char = '\u{1d}';
-
-/// One complete, restorable editor state: the canonical keys text plus the grid
-/// layout. Because localStorage already holds the *entire* normalized state as a
-/// single string, a snapshot of that string (plus the layout) is the whole app
-/// state — so every action, large or small, is captured uniformly.
-#[derive(Clone, PartialEq, Eq, Debug)]
-pub(crate) struct EditorSnapshot {
-    keys_text: String,
-    grid_layout_text: String,
-}
-
-impl EditorSnapshot {
-    pub(crate) fn new(keys_text: String, grid_layout_text: String) -> Self {
-        Self {
-            keys_text,
-            grid_layout_text,
-        }
-    }
-
-    fn encode(&self) -> String {
-        format!(
-            "{}{FIELD_SEPARATOR}{}",
-            self.keys_text, self.grid_layout_text
-        )
-    }
-
-    fn decode(encoded: &str) -> Option<Self> {
-        let mut fields = encoded.splitn(2, FIELD_SEPARATOR);
-        let keys_text = fields.next()?.to_owned();
-        let grid_layout_text = fields.next()?.to_owned();
-        Some(Self {
-            keys_text,
-            grid_layout_text,
-        })
-    }
-}
 
 /// Which direction a keyboard shortcut requested. Constructed only by the
 /// wasm-only keyboard listener; the native build reads but never builds it.
@@ -63,11 +21,10 @@ enum UndoDirection {
     Redo,
 }
 
-/// A keyboard-shortcut request, carrying a monotonically increasing generation
-/// so each keypress is a distinct value (even repeats of the same direction).
-/// The window keydown listener only *sets* this signal — it never reads a signal
-/// — because signal reads from outside the Dioxus runtime return stale values.
-/// A reactive effect then performs the undo/redo, where reads are valid.
+/// A keyboard-shortcut request, carrying a monotonically increasing generation so
+/// each keypress is a distinct value (even repeats of the same direction). The
+/// window keydown listener only *sets* this signal; a reactive effect performs the
+/// undo/redo, where signal reads are valid.
 #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 struct KeyboardUndoRequest {
@@ -75,51 +32,46 @@ struct KeyboardUndoRequest {
     direction: UndoDirection,
 }
 
-/// A single global undo/redo timeline backed by full-state snapshots. Every
-/// committed mutation funnels through the two state signals, so a capture effect
-/// records one snapshot per action; undo/redo restore a snapshot by writing it
-/// back to those signals (which re-persists through the normal storage effects).
+/// The application-layer undo/redo service. It owns the live [`EditorHistory`]
+/// aggregate as a signal and is a [`Service`] over it; the pure timeline lives in
+/// the domain, persistence and compression live in the infrastructure layers, and
+/// this type keeps only the renderer glue: applying a restored snapshot back to the
+/// live keys/grid signals, the debounced persist, and the keyboard listener.
 #[derive(Clone, Copy)]
 pub struct UndoHistory {
     keys: Signal<Option<CustomKeys>>,
     grid_layout: Signal<GridLayout>,
-    undo_stack: Signal<Vec<EditorSnapshot>>,
-    redo_stack: Signal<Vec<EditorSnapshot>>,
-    present: Signal<EditorSnapshot>,
+    history: Signal<EditorHistory>,
     persist_generation: Signal<u32>,
     keyboard_request: Signal<Option<KeyboardUndoRequest>>,
     handled_request_generation: Signal<u32>,
 }
 
 impl UndoHistory {
-    /// Custom hook: creates the history signals (restoring any persisted stacks)
-    /// seeded with the current boot state as `present`, so the first capture-
-    /// effect run is a no-op rather than a spurious entry.
+    /// Custom hook: loads any persisted timeline, reseats its present on the actual
+    /// boot state (so the first capture-effect run is a no-op rather than a spurious
+    /// entry), and creates the history and keyboard signals.
     pub fn use_history(keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) -> Self {
-        let boot_snapshot = snapshot_from_state(&keys, &grid_layout);
-        let persisted_stacks = load_persisted_stacks();
-        let undo_entries = persisted_stacks.undo_entries;
-        let redo_entries = persisted_stacks.redo_entries;
-        let undo_stack = use_signal(|| undo_entries);
-        let redo_stack = use_signal(|| redo_entries);
-        let present = use_signal(|| boot_snapshot);
+        let boot_present = snapshot_from_state(&keys, &grid_layout);
+        let repository = EditorHistoryRepository;
+        let mut loaded_history = repository.load().unwrap_or_default();
+        loaded_history.reseat_present(boot_present);
+        let history = use_signal(|| loaded_history);
         let persist_generation = use_signal(|| 0_u32);
         let keyboard_request = use_signal(|| None);
         let handled_request_generation = use_signal(|| 0_u32);
         Self {
             keys,
             grid_layout,
-            undo_stack,
-            redo_stack,
-            present,
+            history,
             persist_generation,
             keyboard_request,
             handled_request_generation,
         }
     }
 
-    /// Performs the latest pending keyboard request, if any is unhandled. Meant
-    /// to be driven from a reactive effect (it reads the request signal and the
+    /// Performs the latest pending keyboard request, if any is unhandled. Meant to
+    /// be driven from a reactive effect (it reads the request signal and the
     /// stacks); the window listener only writes `keyboard_request`.
     pub(crate) fn handle_keyboard_request(&self) {
         let Some(request) = *self.keyboard_request.read() else {
@@ -137,78 +89,41 @@ impl UndoHistory {
     }
 
     pub(crate) fn can_undo(&self) -> bool {
-        !self.undo_stack.read().is_empty()
+        self.history.read().can_undo()
     }
 
     pub(crate) fn can_redo(&self) -> bool {
-        !self.redo_stack.read().is_empty()
+        self.history.read().can_redo()
     }
 
-    /// Records a transition to `current`. A no-op when `current` equals the
-    /// present state — which is exactly what happens right after undo/redo
-    /// restores a snapshot, so restores never create new history entries.
+    /// Records a transition to `current`. Delegates to the aggregate (a no-op when
+    /// `current` equals the present state, so restores never create new history).
     pub(crate) fn record(&self, current: EditorSnapshot) {
-        if current == *self.present.peek() {
-            return;
-        }
-        let mut undo_stack = self.undo_stack;
-        let mut redo_stack = self.redo_stack;
-        let mut present = self.present;
-        let previous = present.peek().clone();
-        {
-            let mut stack_guard = undo_stack.write();
-            stack_guard.push(previous);
-            while stack_guard.len() > MAX_DEPTH {
-                stack_guard.remove(0);
-            }
-        }
-        redo_stack.write().clear();
-        present.set(current);
-        self.schedule_persist();
+        self.commit(|history| {
+            history.record(current);
+        });
     }
 
     pub(crate) fn undo(&self) {
-        let mut undo_stack = self.undo_stack;
-        if undo_stack.peek().is_empty() {
-            return;
+        let restored = self.commit(EditorHistory::undo);
+        if let Some(snapshot) = restored {
+            self.apply(&snapshot);
         }
-        let mut redo_stack = self.redo_stack;
-        let mut present = self.present;
-        let restored = undo_stack
-            .write()
-            .pop()
-            .expect("undo stack is non-empty here");
-        let current = present.peek().clone();
-        redo_stack.write().push(current);
-        present.set(restored.clone());
-        self.apply(&restored);
-        self.schedule_persist();
     }
 
     pub(crate) fn redo(&self) {
-        let mut redo_stack = self.redo_stack;
-        if redo_stack.peek().is_empty() {
-            return;
+        let restored = self.commit(EditorHistory::redo);
+        if let Some(snapshot) = restored {
+            self.apply(&snapshot);
         }
-        let mut undo_stack = self.undo_stack;
-        let mut present = self.present;
-        let restored = redo_stack
-            .write()
-            .pop()
-            .expect("redo stack is non-empty here");
-        let current = present.peek().clone();
-        undo_stack.write().push(current);
-        present.set(restored.clone());
-        self.apply(&restored);
-        self.schedule_persist();
     }
 
     fn apply(&self, snapshot: &EditorSnapshot) {
         let mut keys = self.keys;
         let mut grid_layout = self.grid_layout;
-        let restored_keys = CustomKeys::from_text(snapshot.keys_text.as_str());
+        let restored_keys = CustomKeys::from_text(snapshot.keys_text());
         keys.set(Some(restored_keys));
-        if let Ok(restored_layout) = GridLayout::try_from(snapshot.grid_layout_text.as_str()) {
+        if let Ok(restored_layout) = GridLayout::try_from(snapshot.grid_layout_text()) {
             grid_layout.set(restored_layout);
         }
     }
@@ -230,17 +145,45 @@ impl UndoHistory {
     }
 
     fn persist(&self) {
-        let undo_guard = self.undo_stack.peek();
-        let redo_guard = self.redo_stack.peek();
-        let serialized = serialize_stacks(&undo_guard, &redo_guard);
-        let compressed = compress_blob(&serialized);
-        UNDO_STORAGE.set(&compressed);
+        let aggregate = self.snapshot();
+        let repository = self.repository();
+        repository.save(&aggregate);
     }
 }
 
-struct PersistedStacks {
-    undo_entries: Vec<EditorSnapshot>,
-    redo_entries: Vec<EditorSnapshot>,
+impl Layered for UndoHistory {
+    type Layer = ApplicationLayer;
+}
+
+impl ApplicationService for UndoHistory {}
+
+impl Service<EditorHistory> for UndoHistory {
+    type Repository = EditorHistoryRepository;
+
+    fn repository(&self) -> Self::Repository {
+        EditorHistoryRepository
+    }
+
+    fn snapshot(&self) -> EditorHistory {
+        self.history.read().clone()
+    }
+
+    fn replace(&self, aggregate: EditorHistory) {
+        let mut history_signal = self.history;
+        history_signal.set(aggregate);
+    }
+
+    /// Overridden to preserve the debounced write-through: the aggregate is
+    /// updated and the live signal replaced immediately, but the compressed blob is
+    /// persisted on a 1-second debounce (through the repository) rather than on
+    /// every keystroke.
+    fn commit<Outcome>(&self, change: impl FnOnce(&mut EditorHistory) -> Outcome) -> Outcome {
+        let mut aggregate = self.snapshot();
+        let outcome = change(&mut aggregate);
+        self.replace(aggregate);
+        self.schedule_persist();
+        outcome
+    }
 }
 
 fn snapshot_from_state(
@@ -256,76 +199,12 @@ fn snapshot_from_state(
     EditorSnapshot::new(keys_text, grid_layout_text)
 }
 
-fn serialize_stacks(undo: &[EditorSnapshot], redo: &[EditorSnapshot]) -> String {
-    let record_separator = RECORD_SEPARATOR.to_string();
-    let encode_stack = |stack: &[EditorSnapshot]| {
-        let encoded: Vec<String> = stack.iter().map(EditorSnapshot::encode).collect();
-        encoded.join(&record_separator)
-    };
-    let undo_text = encode_stack(undo);
-    let redo_text = encode_stack(redo);
-    format!("{undo_text}{GROUP_SEPARATOR}{redo_text}")
-}
-
-fn load_persisted_stacks() -> PersistedStacks {
-    let empty = PersistedStacks {
-        undo_entries: Vec::new(),
-        redo_entries: Vec::new(),
-    };
-    let Some(raw) = UNDO_STORAGE.get() else {
-        return empty;
-    };
-    let Some(serialized) = decompress_blob(&raw) else {
-        return empty;
-    };
-    let mut groups = serialized.splitn(2, GROUP_SEPARATOR);
-    let undo_part = groups.next().unwrap_or_default();
-    let redo_part = groups.next().unwrap_or_default();
-    PersistedStacks {
-        undo_entries: parse_stack(undo_part),
-        redo_entries: parse_stack(redo_part),
-    }
-}
-
-fn parse_stack(part: &str) -> Vec<EditorSnapshot> {
-    if part.is_empty() {
-        return Vec::new();
-    }
-    part.split(RECORD_SEPARATOR)
-        .filter_map(EditorSnapshot::decode)
-        .collect()
-}
-
-fn compress_blob(text: &str) -> String {
-    use base64::Engine;
-    use flate2::Compression;
-    use flate2::write::DeflateEncoder;
-    use std::io::Write;
-    let mut encoder = DeflateEncoder::new(Vec::new(), Compression::default());
-    let _ = encoder.write_all(text.as_bytes());
-    let compressed_bytes = encoder.finish().unwrap_or_default();
-    base64::engine::general_purpose::STANDARD.encode(compressed_bytes)
-}
-
-fn decompress_blob(encoded: &str) -> Option<String> {
-    use base64::Engine;
-    use flate2::read::DeflateDecoder;
-    use std::io::Read;
-    let compressed_bytes = base64::engine::general_purpose::STANDARD
-        .decode(encoded)
-        .ok()?;
-    let mut decoder = DeflateDecoder::new(compressed_bytes.as_slice());
-    let mut decompressed = String::new();
-    decoder.read_to_string(&mut decompressed).ok()?;
-    Some(decompressed)
-}
-
 #[cfg(target_arch = "wasm32")]
 impl UndoHistory {
     /// Installs a window-level keydown listener for Ctrl/Cmd+Z (undo) and
-    /// Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y (redo). Suppressed while focus is in a
-    /// text field so the browser's native text undo keeps working there. The
-    /// closure is leaked for the page lifetime (one-time install at boot).
+    /// Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y (redo). Suppressed while focus is in a text
+    /// field so the browser's native text undo keeps working there. The closure is
+    /// leaked for the page lifetime (one-time install at boot).
     pub(crate) fn install_keyboard_shortcuts(self) {
         use std::cell::Cell;
         use std::rc::Rc;
