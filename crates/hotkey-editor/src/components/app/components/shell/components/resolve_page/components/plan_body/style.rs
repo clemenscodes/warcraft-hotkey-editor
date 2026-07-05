@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "overflow-y-auto",
     "p-[0.75rem_0.75rem_0.75rem_0]",
     "[scrollbar-width:thin]",
-    "[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
+    "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-none",

@@ -21,15 +21,15 @@ const BASE: &[TailwindClass] = tw![
     "tracking-[0.14em]",
     "font-medium",
     "cursor-pointer",
-    "[background:linear-gradient(135deg,rgba(40,30,8,0.85)_0%,rgba(15,12,4,0.85)_100%)]",
-    "[box-shadow:0_0_5.88cqi_rgba(255,206,99,0.22)]",
+    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
+    "[box-shadow:0_0_5.88cqi_color-mix(in_oklab,var(--color-warcraft-gold)_22%,transparent)]",
     "[transition:background_0.12s_ease,box-shadow_0.12s_ease,transform_0.12s_ease]",
     "focus:outline-none",
     "focus-visible:border-white",
     "focus-visible:text-white",
-    "focus-visible:[box-shadow:0_0_0_0.8cqi_#fff,0_0_4.81cqi_rgba(255,255,255,0.55)]",
-    "hover:[background:linear-gradient(135deg,rgba(255,206,99,0.22)_0%,rgba(60,45,14,0.95)_100%)]",
-    "hover:[box-shadow:0_0_6.94cqi_rgba(255,206,99,0.55),inset_0_0_3.74cqi_rgba(255,206,99,0.15)]",
+    "focus-visible:[box-shadow:0_0_0_0.8cqi_var(--color-warcraft-highlight),0_0_4.81cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "hover:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_22%,transparent)_0%,color-mix(in_oklab,var(--color-race-neutral-strong)_95%,transparent)_100%)]",
+    "hover:[box-shadow:0_0_6.94cqi_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent),inset_0_0_3.74cqi_color-mix(in_oklab,var(--color-warcraft-gold)_15%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

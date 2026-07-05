@@ -9,7 +9,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-md",
     "border",
     "border-warcraft-blue",
-    "bg-[rgba(8,18,35,0.85)]",
+    "bg-warcraft-bg-base/85",
     "text-warcraft-text-primary",
     "text-[1.8rem]/[1.45]",
     "whitespace-pre",
@@ -17,7 +17,7 @@ const BASE: &[TailwindClass] = tw![
     "resize-y",
     "focus:outline-none",
     "focus:border-warcraft-gold",
-    "focus:shadow-[0_0_8px_rgba(255,206,99,0.4)]",
+    "focus:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[1.4rem]/[1.45]"];

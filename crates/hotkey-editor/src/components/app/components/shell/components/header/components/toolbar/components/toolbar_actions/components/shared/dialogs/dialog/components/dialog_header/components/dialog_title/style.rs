@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "tracking-[0.08em]",
     "text-[2.5rem]/[1]",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_#000,0_0_18px_rgba(255,206,99,0.35)]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

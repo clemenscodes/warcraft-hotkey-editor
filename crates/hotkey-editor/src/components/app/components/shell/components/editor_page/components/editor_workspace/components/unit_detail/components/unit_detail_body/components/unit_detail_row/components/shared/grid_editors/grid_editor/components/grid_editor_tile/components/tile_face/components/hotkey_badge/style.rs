@@ -13,7 +13,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[17cqi]/[1]",
     "font-normal",
     "pointer-events-none",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];
@@ -27,17 +27,21 @@ classes! {
 }
 
 const NORMAL: &[TailwindClass] = tw![
-    "bg-[rgba(0,0,0,0.78)]",
+    "bg-warcraft-shadow/78",
     "border-warcraft-gold/55",
     "text-warcraft-gold",
 ];
 
-const PASSIVE: &[TailwindClass] = tw!["bg-[#1a1f29]", "border-[#4a5160]", "text-[#b8bcc4]"];
+const PASSIVE: &[TailwindClass] = tw![
+    "bg-warcraft-bg-mid",
+    "border-warcraft-blue-glow",
+    "text-warcraft-text-secondary"
+];
 
 const CONFLICT: &[TailwindClass] = tw![
-    "bg-[rgba(80,0,0,0.85)]",
-    "border-[#ff4444]",
-    "text-[#ff4444]",
+    "bg-race-orc-strong/85",
+    "border-warcraft-danger",
+    "text-warcraft-danger",
 ];
 states! {
     HotkeyBadgeState, Normal => NORMAL, Passive => PASSIVE, Conflict => CONFLICT

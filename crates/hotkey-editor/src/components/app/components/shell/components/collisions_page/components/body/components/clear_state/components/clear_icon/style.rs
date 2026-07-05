@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "text-warcraft-gold",
     "[&_svg]:w-full",
     "[&_svg]:h-full",
-    "[filter:drop-shadow(0_0_10px_rgba(255,206,99,0.45))]",
+    "[filter:drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent))]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

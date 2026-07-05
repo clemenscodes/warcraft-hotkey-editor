@@ -6,11 +6,11 @@ const BASE: &[TailwindClass] = tw![
     "min-w-0",
     "min-h-[44px]",
     "px-[0.5rem]",
-    "bg-[rgba(13,31,61,0.55)]",
+    "bg-warcraft-bg-mid/55",
     "border",
-    "border-[#1f3d63]",
+    "border-warcraft-blue-deep",
     "rounded-[8px]",
-    "text-[#c0c8d4]",
+    "text-warcraft-text-secondary",
     "text-[0.95rem]",
     "tracking-[0.04em]",
     "uppercase",
@@ -21,12 +21,12 @@ const BASE: &[TailwindClass] = tw![
     "whitespace-nowrap",
     "overflow-hidden",
     "text-ellipsis",
-    "hover:bg-[rgba(30,60,95,0.7)]",
+    "hover:bg-warcraft-blue-deep/70",
     "hover:text-white",
     "focus:outline-none",
     "kb-focus:border-white",
-    "kb-focus:shadow-[0_0_0_2px_#fff]",
-    "data-[active=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.95)_0%,rgba(20,45,80,0.95)_100%)]",
+    "kb-focus:shadow-[0_0_0_2px_var(--color-warcraft-highlight)]",
+    "data-[active=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_95%,transparent)_100%)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -54,34 +54,34 @@ classes! {
 // The active-race accent: the tab's hover border and its active border/text/glow all
 // take the race colour, chosen directly from the race rather than a cascaded var.
 const HUMAN: &[TailwindClass] = tw![
-    "hover:border-[color:#6aa1ff]",
-    "data-[active=true]:border-[color:#6aa1ff]",
-    "data-[active=true]:text-[color:#6aa1ff]",
-    "data-[active=true]:shadow-[0_0_6px_rgba(106,161,255,0.3)]",
+    "hover:border-[color:var(--color-race-human)]",
+    "data-[active=true]:border-[color:var(--color-race-human)]",
+    "data-[active=true]:text-[color:var(--color-race-human)]",
+    "data-[active=true]:shadow-[0_0_6px_color-mix(in_oklab,var(--color-race-human)_30%,transparent)]",
 ];
 const NIGHTELF: &[TailwindClass] = tw![
-    "hover:border-[color:#5fdada]",
-    "data-[active=true]:border-[color:#5fdada]",
-    "data-[active=true]:text-[color:#5fdada]",
-    "data-[active=true]:shadow-[0_0_6px_rgba(95,218,218,0.3)]",
+    "hover:border-[color:var(--color-race-nightelf)]",
+    "data-[active=true]:border-[color:var(--color-race-nightelf)]",
+    "data-[active=true]:text-[color:var(--color-race-nightelf)]",
+    "data-[active=true]:shadow-[0_0_6px_color-mix(in_oklab,var(--color-race-nightelf)_30%,transparent)]",
 ];
 const ORC: &[TailwindClass] = tw![
-    "hover:border-[color:#ff7a7a]",
-    "data-[active=true]:border-[color:#ff7a7a]",
-    "data-[active=true]:text-[color:#ff7a7a]",
-    "data-[active=true]:shadow-[0_0_6px_rgba(255,122,122,0.3)]",
+    "hover:border-[color:var(--color-race-orc)]",
+    "data-[active=true]:border-[color:var(--color-race-orc)]",
+    "data-[active=true]:text-[color:var(--color-race-orc)]",
+    "data-[active=true]:shadow-[0_0_6px_color-mix(in_oklab,var(--color-race-orc)_30%,transparent)]",
 ];
 const UNDEAD: &[TailwindClass] = tw![
-    "hover:border-[color:#c79bff]",
-    "data-[active=true]:border-[color:#c79bff]",
-    "data-[active=true]:text-[color:#c79bff]",
-    "data-[active=true]:shadow-[0_0_6px_rgba(199,155,255,0.3)]",
+    "hover:border-[color:var(--color-race-undead)]",
+    "data-[active=true]:border-[color:var(--color-race-undead)]",
+    "data-[active=true]:text-[color:var(--color-race-undead)]",
+    "data-[active=true]:shadow-[0_0_6px_color-mix(in_oklab,var(--color-race-undead)_30%,transparent)]",
 ];
 const NEUTRAL: &[TailwindClass] = tw![
-    "hover:border-[color:#ffce63]",
-    "data-[active=true]:border-[color:#ffce63]",
-    "data-[active=true]:text-[color:#ffce63]",
-    "data-[active=true]:shadow-[0_0_6px_rgba(255,206,99,0.3)]",
+    "hover:border-[color:var(--color-warcraft-gold)]",
+    "data-[active=true]:border-[color:var(--color-warcraft-gold)]",
+    "data-[active=true]:text-[color:var(--color-warcraft-gold)]",
+    "data-[active=true]:shadow-[0_0_6px_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
 ];
 states! {
     Race, Human => HUMAN, Nightelf => NIGHTELF, Orc => ORC, Undead => UNDEAD, Neutral =>

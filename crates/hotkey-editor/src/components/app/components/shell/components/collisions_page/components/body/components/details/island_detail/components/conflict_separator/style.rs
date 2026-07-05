@@ -4,10 +4,10 @@ const BASE: &[TailwindClass] = tw![
     "h-[72px]",
     "flex",
     "items-center",
-    "text-[#b8a86a]",
+    "text-warcraft-gold",
     "text-[34px]",
     "leading-none",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

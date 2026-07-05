@@ -4,7 +4,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[clamp(2.2rem,0.85vw+1.1rem,3rem)]/[1.1]",
     "font-normal",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
+    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
     "m-0",
     "tracking-[0.03em]",
 ];

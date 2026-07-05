@@ -15,14 +15,14 @@ const BASE: &[TailwindClass] = tw![
     "border-0",
     "cursor-pointer",
     "text-warcraft-text-secondary",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
     "transition-[color,text-shadow]",
     "duration-150",
     "hover:text-warcraft-gold",
-    "hover:[text-shadow:1px_1px_0_#000,0_0_12px_rgba(255,206,99,0.55)]",
+    "hover:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
     "focus:outline-none",
     "kb-focus:text-white",
-    "kb-focus:[text-shadow:1px_1px_0_#000,0_0_16px_rgba(255,255,255,0.7)]",
+    "kb-focus:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_70%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

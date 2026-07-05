@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "self-start",
     "w-[clamp(4rem,2.7vw+1.75rem,5.75rem)]",
     "h-[clamp(4rem,2.7vw+1.75rem,5.75rem)]",
-    "[filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.6))]",
+    "[filter:drop-shadow(0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent))]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:w-[5rem]", "mobile:h-[5rem]"];
 const TABLET: &[TailwindClass] = tw![];

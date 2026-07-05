@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[0px]",
     "leading-[0]",
     "text-transparent",
-    "[background:radial-gradient(circle_at_center,rgba(255,206,99,0.08)_0%,rgba(255,206,99,0)_65%)]",
+    "[background:radial-gradient(circle_at_center,color-mix(in_oklab,var(--color-warcraft-gold)_8%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold)_0%,transparent)_65%)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

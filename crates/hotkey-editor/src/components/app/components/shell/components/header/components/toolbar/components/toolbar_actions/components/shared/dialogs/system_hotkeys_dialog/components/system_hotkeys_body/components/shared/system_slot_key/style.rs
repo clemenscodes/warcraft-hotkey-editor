@@ -7,10 +7,10 @@ const BASE: &[TailwindClass] = tw![
     "leading-none",
     "whitespace-nowrap",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_#000,0_0_14px_rgba(255,206,99,0.45)]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
     "data-[compact=true]:text-[2.4rem]",
-    "data-[conflict=true]:text-[#ff5a5a]",
-    "data-[conflict=true]:[text-shadow:1px_1px_0_#000,0_0_14px_rgba(255,90,90,0.55)]",
+    "data-[conflict=true]:text-warcraft-danger",
+    "data-[conflict=true]:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-danger)_55%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

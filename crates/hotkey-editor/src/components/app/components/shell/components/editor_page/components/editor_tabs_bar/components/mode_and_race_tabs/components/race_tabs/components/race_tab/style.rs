@@ -8,9 +8,9 @@ const BASE: &[TailwindClass] = tw![
     "min-w-0",
     "p-0",
     "border",
-    "border-[#3a4a6c]",
+    "border-warcraft-blue-bright-deep",
     "rounded-[8px]",
-    "text-[#fff5d6]",
+    "text-warcraft-text-primary",
     "text-[1.5rem]",
     "uppercase",
     "tracking-[0.08em]",
@@ -24,7 +24,7 @@ const BASE: &[TailwindClass] = tw![
     "justify-center",
     "min-h-[clamp(4rem,7vw,7rem)]",
     "min-w-[clamp(4.5rem,8vw,9rem)]",
-    "[text-shadow:1px_1px_0_#000,-1px_1px_0_#000,1px_-1px_0_#000,-1px_-1px_0_#000,0_0_8px_rgba(0,0,0,0.85)]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),-1px_1px_0_var(--color-warcraft-shadow),1px_-1px_0_var(--color-warcraft-shadow),-1px_-1px_0_var(--color-warcraft-shadow),0_0_8px_color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)]",
     "before:content-['']",
     "before:absolute",
     "before:inset-0",
@@ -39,7 +39,7 @@ const BASE: &[TailwindClass] = tw![
     "after:content-['']",
     "after:absolute",
     "after:inset-0",
-    "after:bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0)_45%,rgba(0,0,0,0.55)_75%,rgba(0,0,0,0.85)_100%)]",
+    "after:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-shadow)_0%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_0%,transparent)_45%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_75%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
     "after:z-[1]",
     "after:pointer-events-none",
     "after:block",
@@ -49,7 +49,7 @@ const BASE: &[TailwindClass] = tw![
     "[body[data-kb-modality]_&]:focus:outline-none",
     "[body[data-kb-modality]_&]:focus:text-white",
     "[body[data-kb-modality]_&]:focus:border-white",
-    "[body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_#fff,0_0_18px_rgba(255,255,255,0.55)]",
+    "[body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_18px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
 ];
 // Phone/tablet: a swipe-scannable banner-card strip — each tab a chunky fixed
 // height (all five share the row) with tighter type and a slightly softer banner
@@ -80,46 +80,46 @@ const HUMAN: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#173266_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png')]",
     "hover:border-race-human",
-    "hover:shadow-[0_0_12px_rgba(106,161,255,0.45)]",
+    "hover:shadow-[0_0_12px_color-mix(in_oklab,var(--color-race-human)_45%,transparent)]",
     "data-[active=true]:border-race-human",
     "data-[active=true]:bg-[linear-gradient(180deg,#173266_0%,#0a1432_100%)]",
-    "data-[active=true]:shadow-[0_0_22px_rgba(106,161,255,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
+    "data-[active=true]:shadow-[0_0_22px_color-mix(in_oklab,var(--color-race-human)_45%,transparent),inset_0_0_24px_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 const ORC: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#5a1212_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png')]",
     "hover:border-race-orc",
-    "hover:shadow-[0_0_12px_rgba(255,122,122,0.45)]",
+    "hover:shadow-[0_0_12px_color-mix(in_oklab,var(--color-race-orc)_45%,transparent)]",
     "data-[active=true]:border-race-orc",
     "data-[active=true]:bg-[linear-gradient(180deg,#5a1212_0%,#0a1432_100%)]",
-    "data-[active=true]:shadow-[0_0_22px_rgba(255,122,122,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
+    "data-[active=true]:shadow-[0_0_22px_color-mix(in_oklab,var(--color-race-orc)_45%,transparent),inset_0_0_24px_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 const NIGHTELF: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#0c4348_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png')]",
     "hover:border-race-nightelf",
-    "hover:shadow-[0_0_12px_rgba(95,218,218,0.45)]",
+    "hover:shadow-[0_0_12px_color-mix(in_oklab,var(--color-race-nightelf)_45%,transparent)]",
     "data-[active=true]:border-race-nightelf",
     "data-[active=true]:bg-[linear-gradient(180deg,#0c4348_0%,#0a1432_100%)]",
-    "data-[active=true]:shadow-[0_0_22px_rgba(95,218,218,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
+    "data-[active=true]:shadow-[0_0_22px_color-mix(in_oklab,var(--color-race-nightelf)_45%,transparent),inset_0_0_24px_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 const UNDEAD: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#321650_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png')]",
     "hover:border-race-undead",
-    "hover:shadow-[0_0_12px_rgba(199,155,255,0.45)]",
+    "hover:shadow-[0_0_12px_color-mix(in_oklab,var(--color-race-undead)_45%,transparent)]",
     "data-[active=true]:border-race-undead",
     "data-[active=true]:bg-[linear-gradient(180deg,#321650_0%,#0a1432_100%)]",
-    "data-[active=true]:shadow-[0_0_22px_rgba(199,155,255,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
+    "data-[active=true]:shadow-[0_0_22px_color-mix(in_oklab,var(--color-race-undead)_45%,transparent),inset_0_0_24px_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 const NEUTRAL: &[TailwindClass] = tw![
     "bg-[linear-gradient(180deg,#4a3d14_0%,#050a1a_100%)]",
     "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png')]",
     "hover:border-warcraft-gold",
-    "hover:shadow-[0_0_12px_rgba(255,206,99,0.45)]",
+    "hover:shadow-[0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
     "data-[active=true]:border-warcraft-gold",
     "data-[active=true]:bg-[linear-gradient(180deg,#4a3d14_0%,#0a1432_100%)]",
-    "data-[active=true]:shadow-[0_0_22px_rgba(255,206,99,0.45),inset_0_0_24px_rgba(255,255,255,0.04)]",
+    "data-[active=true]:shadow-[0_0_22px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent),inset_0_0_24px_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 states! {
     Race, Human => HUMAN, Orc => ORC, Nightelf => NIGHTELF, Undead => UNDEAD, Neutral => NEUTRAL

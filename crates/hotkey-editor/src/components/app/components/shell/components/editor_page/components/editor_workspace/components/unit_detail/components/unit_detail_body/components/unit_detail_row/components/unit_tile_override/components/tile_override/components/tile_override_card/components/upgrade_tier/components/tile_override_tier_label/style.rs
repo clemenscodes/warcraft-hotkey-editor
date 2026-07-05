@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "uppercase",
     "tracking-[0.06em]",
     "text-[1.3rem]",
-    "text-[#c0c8da]",
+    "text-warcraft-text-secondary",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

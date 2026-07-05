@@ -1,7 +1,7 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 // The object id under the name, in a monospace face; smaller on the mobile panel.
-const BASE: &[TailwindClass] = tw!["text-[1.4rem]", "text-[#7b818d]"];
+const BASE: &[TailwindClass] = tw!["text-[1.4rem]", "text-warcraft-text-faint"];
 
 const MOBILE: &[TailwindClass] = tw![
     "mobile:m-0",

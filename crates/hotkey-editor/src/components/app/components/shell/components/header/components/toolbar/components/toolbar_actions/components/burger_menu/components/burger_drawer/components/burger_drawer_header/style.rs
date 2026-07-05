@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "py-3",
     "px-4",
     "border-b",
-    "border-b-[rgba(255,206,99,0.12)]",
+    "border-b-warcraft-gold/12",
     "shrink-0",
 ];
 

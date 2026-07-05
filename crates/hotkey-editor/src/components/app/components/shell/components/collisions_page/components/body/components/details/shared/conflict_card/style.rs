@@ -5,9 +5,9 @@ const BASE: &[TailwindClass] = tw![
     "items-center",
     "gap-[22px]",
     "p-[24px_16px]",
-    "bg-[rgba(13,31,61,0.45)]",
+    "bg-warcraft-bg-mid/45",
     "border",
-    "border-[#24406a]",
+    "border-warcraft-blue-bright-deep",
     "rounded-[10px]",
     "min-w-0",
 ];

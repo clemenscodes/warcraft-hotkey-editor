@@ -10,9 +10,9 @@ const BASE: &[TailwindClass] = tw![
     "mt-[2.5rem]",
     "mb-[0.75rem]",
     "p-[1.4rem_1.75rem]",
-    "bg-[rgba(8,18,35,0.55)]",
+    "bg-warcraft-bg-base/55",
     "border",
-    "border-[#1f3d63]",
+    "border-warcraft-blue-deep",
     "rounded-[8px]",
 ];
 const MOBILE: &[TailwindClass] = tw![

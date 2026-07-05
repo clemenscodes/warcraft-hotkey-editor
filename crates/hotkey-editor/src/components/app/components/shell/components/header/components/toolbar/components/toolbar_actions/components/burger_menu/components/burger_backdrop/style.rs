@@ -4,7 +4,7 @@ const BASE: &[TailwindClass] = tw![
     "fixed",
     "inset-0",
     "z-[70]",
-    "bg-[rgba(0,0,0,0.65)]",
+    "bg-warcraft-shadow/65",
     "cursor-pointer",
     "border-none",
     "p-0",

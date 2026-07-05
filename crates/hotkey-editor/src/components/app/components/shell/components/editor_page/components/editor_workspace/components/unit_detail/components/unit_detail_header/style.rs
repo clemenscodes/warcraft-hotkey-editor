@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "mb-0",
     "pb-[clamp(0.4rem,0.7vh,0.7rem)]",
     "border-b",
-    "border-[#1f3d63]",
+    "border-warcraft-blue-deep",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:flex",

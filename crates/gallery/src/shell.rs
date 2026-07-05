@@ -78,7 +78,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
     let needle = query().to_lowercase();
     rsx! {
         div {
-            class: "group/shell flex h-dvh text-[#e0d8c8] bg-[#0a1020] data-[dragging=true]:cursor-col-resize data-[dragging=true]:select-none",
+            class: "group/shell flex h-dvh text-warcraft-text-primary bg-warcraft-bg-base data-[dragging=true]:cursor-col-resize data-[dragging=true]:select-none",
             "data-dragging": dragging(),
             onpointermove: move |event| {
                 if dragging() {
@@ -95,7 +95,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     class: "w-64 flex-none overflow-y-auto border-r border-white/10 p-3",
                     style: "width: {sidebar_width}px",
                     input {
-                        class: "w-full box-border mb-2 bg-black/30 border border-white/15 text-inherit px-2 py-[0.35rem] rounded-[0.25rem] text-[0.85rem] placeholder:text-[#e0d8c8]/50",
+                        class: "w-full box-border mb-2 bg-black/30 border border-white/15 text-inherit px-2 py-[0.35rem] rounded-[0.25rem] text-[0.85rem] placeholder:text-warcraft-text-primary/50",
                         r#type: "search",
                         placeholder: "Search components…",
                         value: "{query}",
@@ -174,7 +174,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                         let click_id = story_id.clone();
                                                         let is_selected = selected.read().as_deref() == Some(story_id.as_str());
                                                         let item_class = if is_selected {
-                                                            "block w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] pl-6 bg-[rgba(255,206,99,0.18)] text-[#ffce63]"
+                                                            "block w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] pl-6 bg-warcraft-gold/18 text-warcraft-gold"
                                                         } else {
                                                             "block w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] pl-6"
                                                         };
@@ -201,7 +201,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                         let component_open = searching || in_set;
                                                         let chevron = if component_open { "▾" } else { "▸" };
                                                         let header_class = if has_selected_child {
-                                                            "flex items-center gap-1 w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] text-[#ffce63]"
+                                                            "flex items-center gap-1 w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] text-warcraft-gold"
                                                         } else {
                                                             "flex items-center gap-1 w-full text-left bg-transparent border-0 text-inherit px-2 py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06]"
                                                         };
@@ -237,7 +237,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                                                                             let label = story.label();
                                                                             let is_selected = selected.read().as_deref() == Some(story_id.as_str());
                                                                             let item_class = if is_selected {
-                                                                                "block w-full text-left bg-transparent border-0 text-inherit py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] ml-4 pl-5 border-l border-white/[0.14] rounded-tl-none rounded-bl-none bg-[rgba(255,206,99,0.18)] text-[#ffce63]"
+                                                                                "block w-full text-left bg-transparent border-0 text-inherit py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] ml-4 pl-5 border-l border-white/[0.14] rounded-tl-none rounded-bl-none bg-warcraft-gold/18 text-warcraft-gold"
                                                                             } else {
                                                                                 "block w-full text-left bg-transparent border-0 text-inherit py-[0.3rem] rounded-[0.25rem] cursor-pointer text-[0.85rem] hover:bg-white/[0.06] ml-4 pl-5 border-l border-white/[0.14] rounded-tl-none rounded-bl-none"
                                                                             };
@@ -268,7 +268,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                     }
                 }
                 div {
-                    class: "flex-none w-[6px] cursor-col-resize bg-white/5 border-r border-white/10 touch-none hover:bg-[rgba(255,206,99,0.35)]",
+                    class: "flex-none w-[6px] cursor-col-resize bg-white/5 border-r border-white/10 touch-none hover:bg-warcraft-gold/35",
                     onpointerdown: move |event| {
                         event.prevent_default();
                         dragging.set(true);
@@ -358,7 +358,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
                             rsx! {
                                 div { class: "flex-none overflow-hidden", style: "{scaler_style}",
                                     iframe {
-                                        class: "bg-[#050a1a] border border-white/15 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex-none group-data-[dragging=true]/shell:pointer-events-none",
+                                        class: "bg-warcraft-bg-base border border-white/15 shadow-[0_8px_40px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)] flex-none group-data-[dragging=true]/shell:pointer-events-none",
                                         src: "{source}",
                                         style: "{frame_style}",
                                         width: "{width}",

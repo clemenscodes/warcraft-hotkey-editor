@@ -9,9 +9,9 @@ const BASE: &[TailwindClass] = tw![
     "font-bold",
     "leading-none",
     "text-[length:20cqi]",
-    "text-[#ffe39a]",
+    "text-warcraft-gold",
     "pointer-events-none",
-    "[text-shadow:1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_1.25cqi_0_rgba(0,0,0,0.95),1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),-1.25cqi_-1.25cqi_0_rgba(0,0,0,0.95),0_0_3.75cqi_rgba(0,0,0,0.95)]",
+    "[text-shadow:1.25cqi_1.25cqi_0_color-mix(in_oklab,var(--color-warcraft-shadow)_95%,transparent),-1.25cqi_1.25cqi_0_color-mix(in_oklab,var(--color-warcraft-shadow)_95%,transparent),1.25cqi_-1.25cqi_0_color-mix(in_oklab,var(--color-warcraft-shadow)_95%,transparent),-1.25cqi_-1.25cqi_0_color-mix(in_oklab,var(--color-warcraft-shadow)_95%,transparent),0_0_3.75cqi_color-mix(in_oklab,var(--color-warcraft-shadow)_95%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

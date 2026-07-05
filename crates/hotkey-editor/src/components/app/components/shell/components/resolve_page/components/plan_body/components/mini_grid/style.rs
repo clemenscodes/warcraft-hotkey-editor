@@ -12,9 +12,9 @@ const BASE: &[TailwindClass] = tw![
     "[container-type:inline-size]",
     "pointer-events-none",
     "p-[4px]",
-    "bg-[rgba(20,35,60,0.7)]",
+    "bg-warcraft-bg-panel/70",
     "border",
-    "border-[#2a5085]",
+    "border-warcraft-blue",
     "rounded-[4px]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:max-w-[max(130px,32vw)]"];

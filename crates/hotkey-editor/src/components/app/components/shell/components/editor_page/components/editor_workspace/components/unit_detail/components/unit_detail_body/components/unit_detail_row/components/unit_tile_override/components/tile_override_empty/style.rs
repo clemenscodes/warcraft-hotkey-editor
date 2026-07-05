@@ -12,10 +12,10 @@ const BASE: &[TailwindClass] = tw![
     "p-[2rem_2.25rem]",
     "border",
     "border-dashed",
-    "border-[#4a7090]",
+    "border-warcraft-blue-bright",
     "rounded-[10px]",
-    "bg-[rgba(13,31,61,0.45)]",
-    "text-[#7b818d]",
+    "bg-warcraft-bg-mid/45",
+    "text-warcraft-text-faint",
     "text-[1.8rem]",
     "leading-[1.45]",
     "italic",
@@ -30,7 +30,7 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:leading-[1.4]",
     "mobile:rounded-[12px_12px_0_0]",
     "mobile:border-b-0",
-    "mobile:shadow-[0_-4px_16px_rgba(0,0,0,0.4)]",
+    "mobile:shadow-[0_-4px_16px_color-mix(in_oklab,var(--color-warcraft-shadow)_40%,transparent)]",
 ];
 const TABLET: &[TailwindClass] = tw![
     "tablet:w-full",

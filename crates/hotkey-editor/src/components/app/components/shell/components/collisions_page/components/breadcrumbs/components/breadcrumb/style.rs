@@ -9,12 +9,12 @@ const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "gap-[0.45rem]",
-    "text-[#9aa3b2]",
+    "text-warcraft-text-muted",
     "transition-colors",
     "duration-[120ms]",
-    "hover:text-[#e0d8c8]",
+    "hover:text-warcraft-text-primary",
     "data-[active=true]:text-warcraft-gold",
-    "data-[active=true]:[text-shadow:1px_1px_0_#000]",
+    "data-[active=true]:[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:flex-none", "mobile:snap-start"];
 const TABLET: &[TailwindClass] = tw!["tablet:flex-none", "tablet:snap-start"];

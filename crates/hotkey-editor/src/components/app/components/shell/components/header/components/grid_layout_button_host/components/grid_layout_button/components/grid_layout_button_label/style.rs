@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "uppercase",
     "whitespace-nowrap",
     "tracking-[0.12em]",
-    "[text-shadow:1px_1px_0_rgba(0,0,0,0.6)]",
+    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

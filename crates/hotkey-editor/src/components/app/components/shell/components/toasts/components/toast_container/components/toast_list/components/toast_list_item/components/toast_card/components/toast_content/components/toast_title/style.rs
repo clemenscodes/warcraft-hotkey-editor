@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "tracking-[0.06em]",
     "text-[1.9rem]",
     "leading-[1.2]",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
@@ -19,9 +19,9 @@ classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const SUCCESS: &[TailwindClass] = tw!["text-[#6dd49a]"];
-const ERROR: &[TailwindClass] = tw!["text-[#ff9090]"];
-const WARNING: &[TailwindClass] = tw!["text-[#ffb347]"];
+const SUCCESS: &[TailwindClass] = tw!["text-warcraft-success"];
+const ERROR: &[TailwindClass] = tw!["text-race-orc"];
+const WARNING: &[TailwindClass] = tw!["text-warcraft-gold"];
 const INFO: &[TailwindClass] = tw![];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO

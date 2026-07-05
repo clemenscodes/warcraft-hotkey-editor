@@ -3,11 +3,11 @@ const BASE: &[TailwindClass] = tw![
     "w-[72px]",
     "h-[72px]",
     "border",
-    "border-[#2a5085]",
+    "border-warcraft-blue",
     "rounded-[7px]",
     "object-cover",
     "group-[:not(:disabled):hover]:border-warcraft-gold",
-    "group-[:not(:disabled):hover]:[box-shadow:0_0_8px_rgba(255,206,99,0.5)]",
+    "group-[:not(:disabled):hover]:[box-shadow:0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[max(40px,min(72px,9vw))]",

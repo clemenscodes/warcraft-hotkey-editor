@@ -31,17 +31,17 @@ classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const NORMAL: &[TailwindClass] = tw!["text-[#7b818d]"];
+const NORMAL: &[TailwindClass] = tw!["text-warcraft-text-faint"];
 // Selected: the id text takes the card's race accent (chosen off the `data-race`
 // attribute the component renders), at reduced opacity.
 const SELECTED: &[TailwindClass] = tw![
-    "text-[color:#c0a67c]",
+    "text-[color:var(--color-warcraft-gold)]",
     "opacity-70",
-    "data-[race=human]:text-[color:#6aa1ff]",
-    "data-[race=orc]:text-[color:#ff7a7a]",
-    "data-[race=nightelf]:text-[color:#5fdada]",
-    "data-[race=undead]:text-[color:#c79bff]",
-    "data-[race=neutral]:text-[color:#ffce63]",
+    "data-[race=human]:text-[color:var(--color-race-human)]",
+    "data-[race=orc]:text-[color:var(--color-race-orc)]",
+    "data-[race=nightelf]:text-[color:var(--color-race-nightelf)]",
+    "data-[race=undead]:text-[color:var(--color-race-undead)]",
+    "data-[race=neutral]:text-[color:var(--color-warcraft-gold)]",
 ];
 states! {
     UnitCardIdState, Normal => NORMAL, Selected => SELECTED

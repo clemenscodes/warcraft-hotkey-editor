@@ -6,11 +6,11 @@ const BASE: &[TailwindClass] = tw![
     "items-baseline",
     "gap-[0.55rem]",
     "text-[clamp(1.35rem,0.95rem+0.32vw,1.7rem)]/[1.2]",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
     "min-w-0",
     "data-[regen=true]:mt-[-0.2rem]",
     "data-[regen=true]:pl-[1.25rem]",
-    "data-[primary=true]:[text-shadow:1px_1px_0_#000,0_0_8px_rgba(255,206,99,0.35)]",
+    "data-[primary=true]:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[2rem]/[1.3]"];
 const TABLET: &[TailwindClass] = tw![];

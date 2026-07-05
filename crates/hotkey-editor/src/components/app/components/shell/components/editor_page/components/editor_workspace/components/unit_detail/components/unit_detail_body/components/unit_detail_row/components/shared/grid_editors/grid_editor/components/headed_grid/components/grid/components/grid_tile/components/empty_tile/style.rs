@@ -28,26 +28,26 @@ classes! {
 }
 
 const EMPTY: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,rgba(15,30,55,0.85)_0%,rgba(8,14,30,0.85)_100%)]",
-    "border-[#2c4a72]",
-    "[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
+    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "border-warcraft-blue-bright-deep",
+    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
 ];
 
 const DROP_TARGET: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,rgba(15,30,55,0.85)_0%,rgba(8,14,30,0.85)_100%)]",
-    "border-[#4a7090]",
+    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "border-warcraft-blue-bright",
     "border-dashed",
-    "[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
+    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
     "cursor-pointer",
     "hover:border-warcraft-gold",
-    "hover:bg-[rgba(255,206,99,0.08)]",
+    "hover:bg-warcraft-gold/8",
 ];
 
 const BLOCKED_DROP_TARGET: &[TailwindClass] = tw![
-    "[background:rgba(200,55,40,0.04)]",
-    "border-[rgba(220,70,55,0.55)]",
+    "[background:color-mix(in_oklab,var(--color-warcraft-danger)_4%,transparent)]",
+    "border-warcraft-danger/55",
     "border-dashed",
-    "[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
+    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
     "cursor-not-allowed",
 ];
 
@@ -56,8 +56,8 @@ const BLOCKED_DROP_TARGET: &[TailwindClass] = tw![
 // the accent is the fixed warcraft gold (there is no race to tint it).
 const HIGHLIGHTED: &[TailwindClass] = tw![
     "border-warcraft-gold",
-    "bg-[rgba(255,206,99,0.2)]",
-    "[box-shadow:0_0_7cqi_rgba(255,206,99,0.5)]",
+    "bg-warcraft-gold/20",
+    "[box-shadow:0_0_7cqi_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
 ];
 
 states! {

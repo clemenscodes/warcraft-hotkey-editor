@@ -10,7 +10,7 @@ const BASE: &[TailwindClass] = tw![
     "px-[4.5rem]",
     "pb-[1.8rem]",
     "border-t",
-    "border-warcraft-gold-soft",
+    "border-warcraft-gold/40",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:justify-center", "mobile:px-[1.5rem]"];

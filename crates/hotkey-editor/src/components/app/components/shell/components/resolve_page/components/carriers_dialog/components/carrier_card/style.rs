@@ -6,13 +6,13 @@ const BASE: &[TailwindClass] = tw![
     "gap-[18px]",
     "m-0",
     "p-[30px_20px]",
-    "bg-[rgba(13,31,61,0.5)]",
+    "bg-warcraft-bg-mid/50",
     "border",
-    "border-[#24406a]",
+    "border-warcraft-blue-bright-deep",
     "rounded-[8px]",
     "cursor-pointer",
     "hover:border-warcraft-gold",
-    "hover:shadow-[0_0_8px_rgba(255,206,99,0.45)]",
+    "hover:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

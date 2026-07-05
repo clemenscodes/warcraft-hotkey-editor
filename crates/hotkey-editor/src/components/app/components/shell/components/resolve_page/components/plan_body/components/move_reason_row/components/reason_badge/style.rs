@@ -14,7 +14,7 @@ const BASE: &[TailwindClass] = tw![
     "[letter-spacing:0.04em]",
     "border",
     "border-solid",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
     "whitespace-nowrap",
 ];
 const MOBILE: &[TailwindClass] = tw![];
@@ -25,31 +25,23 @@ const QHD: &[TailwindClass] = tw![];
 const UHD: &[TailwindClass] = tw![];
 classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
 
-const FIGHT: &[TailwindClass] = tw![
-    "text-[#ff9a6a]",
-    "border-[rgba(255,154,106,0.6)]",
-    "bg-[rgba(255,122,122,0.12)]",
-];
+const FIGHT: &[TailwindClass] = tw!["text-race-orc", "border-race-orc/60", "bg-race-orc/12",];
 const GAPPULL: &[TailwindClass] = tw![
-    "text-[#7bdca0]",
-    "border-[rgba(123,220,160,0.6)]",
-    "bg-[rgba(123,220,160,0.12)]",
+    "text-warcraft-success",
+    "border-warcraft-success/60",
+    "bg-warcraft-success/12",
 ];
 const SPILL: &[TailwindClass] = tw![
-    "text-[#6aa1ff]",
-    "border-[rgba(106,161,255,0.6)]",
-    "bg-[rgba(106,161,255,0.12)]",
+    "text-race-human",
+    "border-race-human/60",
+    "bg-race-human/12",
 ];
 const SWAP: &[TailwindClass] = tw![
-    "text-[#c79bff]",
-    "border-[rgba(199,155,255,0.6)]",
-    "bg-[rgba(199,155,255,0.12)]",
+    "text-race-undead",
+    "border-race-undead/60",
+    "bg-race-undead/12",
 ];
-const STUCK: &[TailwindClass] = tw![
-    "text-[#ff9a6a]",
-    "border-[rgba(255,154,106,0.6)]",
-    "bg-[rgba(255,122,122,0.12)]",
-];
+const STUCK: &[TailwindClass] = tw!["text-race-orc", "border-race-orc/60", "bg-race-orc/12",];
 
 states! {
     ReasonKind,

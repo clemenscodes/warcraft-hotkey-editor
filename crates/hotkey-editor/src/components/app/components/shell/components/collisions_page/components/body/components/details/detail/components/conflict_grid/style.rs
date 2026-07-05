@@ -9,7 +9,7 @@ const BASE: &[TailwindClass] = tw![
     "content-start",
     "p-[1rem_0.75rem_1rem_0]",
     "[scrollbar-width:thin]",
-    "[scrollbar-color:rgba(255,206,99,0.45)_transparent]",
+    "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:grid-cols-[minmax(0,1fr)]",

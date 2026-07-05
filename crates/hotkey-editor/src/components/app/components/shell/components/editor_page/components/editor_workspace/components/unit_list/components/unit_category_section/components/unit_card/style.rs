@@ -15,16 +15,16 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[6px]",
     "transition-all",
     "duration-[0.12s]",
-    "bg-[rgba(13,31,61,0.55)]",
-    "border-[#1f3d63]",
-    "text-[#e0d8c8]",
-    "hover:bg-[rgba(30,60,95,0.7)]",
+    "bg-warcraft-bg-mid/55",
+    "border-warcraft-blue-deep",
+    "text-warcraft-text-primary",
+    "hover:bg-warcraft-blue-deep/70",
     "hover:text-white",
     "kb-focus:border-white",
     "kb-focus:text-white",
-    "kb-focus:bg-[rgba(40,80,130,0.85)]",
-    "kb-focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
-    "data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.9)_0%,rgba(20,45,80,0.9)_100%)]",
+    "kb-focus:bg-warcraft-blue/85",
+    "kb-focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_90%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_90%,transparent)_100%)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -40,10 +40,10 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:[scroll-snap-align:start]",
     "mobile:box-border",
     "mobile:overflow-hidden",
-    "mobile:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
-    "mobile:border-[rgba(42,80,133,0.6)]",
-    "mobile:hover:border-[rgba(255,206,99,0.35)]",
-    "mobile:data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.85)_0%,rgba(20,45,80,0.85)_100%)]",
+    "mobile:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "mobile:border-warcraft-blue/60",
+    "mobile:hover:border-warcraft-gold/35",
+    "mobile:data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_85%,transparent)_100%)]",
     "mobile:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
     "mobile:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
     "mobile:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
@@ -63,10 +63,10 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:[scroll-snap-align:start]",
     "tablet:box-border",
     "tablet:overflow-hidden",
-    "tablet:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
-    "tablet:border-[rgba(42,80,133,0.6)]",
-    "tablet:hover:border-[rgba(255,206,99,0.35)]",
-    "tablet:data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.85)_0%,rgba(20,45,80,0.85)_100%)]",
+    "tablet:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "tablet:border-warcraft-blue/60",
+    "tablet:hover:border-warcraft-gold/35",
+    "tablet:data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_85%,transparent)_100%)]",
     "tablet:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
     "tablet:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
     "tablet:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
@@ -87,34 +87,34 @@ classes! {
 // glow is one blur for every width (the former 10px mobile/tablet variant folds into
 // this 8px — a 2px difference that no longer justifies a band-specific race style).
 const HUMAN: &[TailwindClass] = tw![
-    "hover:border-[color:#6aa1ff]",
-    "data-[selected=true]:border-[color:#6aa1ff]",
-    "data-[selected=true]:text-[color:#6aa1ff]",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(106,161,255,0.3)]",
+    "hover:border-[color:var(--color-race-human)]",
+    "data-[selected=true]:border-[color:var(--color-race-human)]",
+    "data-[selected=true]:text-[color:var(--color-race-human)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-race-human)_30%,transparent)]",
 ];
 const NIGHTELF: &[TailwindClass] = tw![
-    "hover:border-[color:#5fdada]",
-    "data-[selected=true]:border-[color:#5fdada]",
-    "data-[selected=true]:text-[color:#5fdada]",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(95,218,218,0.3)]",
+    "hover:border-[color:var(--color-race-nightelf)]",
+    "data-[selected=true]:border-[color:var(--color-race-nightelf)]",
+    "data-[selected=true]:text-[color:var(--color-race-nightelf)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-race-nightelf)_30%,transparent)]",
 ];
 const ORC: &[TailwindClass] = tw![
-    "hover:border-[color:#ff7a7a]",
-    "data-[selected=true]:border-[color:#ff7a7a]",
-    "data-[selected=true]:text-[color:#ff7a7a]",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(255,122,122,0.3)]",
+    "hover:border-[color:var(--color-race-orc)]",
+    "data-[selected=true]:border-[color:var(--color-race-orc)]",
+    "data-[selected=true]:text-[color:var(--color-race-orc)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-race-orc)_30%,transparent)]",
 ];
 const UNDEAD: &[TailwindClass] = tw![
-    "hover:border-[color:#c79bff]",
-    "data-[selected=true]:border-[color:#c79bff]",
-    "data-[selected=true]:text-[color:#c79bff]",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(199,155,255,0.3)]",
+    "hover:border-[color:var(--color-race-undead)]",
+    "data-[selected=true]:border-[color:var(--color-race-undead)]",
+    "data-[selected=true]:text-[color:var(--color-race-undead)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-race-undead)_30%,transparent)]",
 ];
 const NEUTRAL: &[TailwindClass] = tw![
-    "hover:border-[color:#ffce63]",
-    "data-[selected=true]:border-[color:#ffce63]",
-    "data-[selected=true]:text-[color:#ffce63]",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(255,206,99,0.3)]",
+    "hover:border-[color:var(--color-warcraft-gold)]",
+    "data-[selected=true]:border-[color:var(--color-warcraft-gold)]",
+    "data-[selected=true]:text-[color:var(--color-warcraft-gold)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
 ];
 states! {
     Race, Human => HUMAN, Nightelf => NIGHTELF, Orc => ORC, Undead => UNDEAD, Neutral =>

@@ -1,7 +1,7 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "text-[#7b818d]",
+    "text-warcraft-text-faint",
     "text-[clamp(0.95rem,0.42vw+0.35rem,1.25rem)]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[13px]"];

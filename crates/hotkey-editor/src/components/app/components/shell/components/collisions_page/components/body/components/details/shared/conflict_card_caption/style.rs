@@ -3,7 +3,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[12px]",
     "tracking-[0.08em]",
     "uppercase",
-    "text-[#7b818d]",
+    "text-warcraft-text-faint",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

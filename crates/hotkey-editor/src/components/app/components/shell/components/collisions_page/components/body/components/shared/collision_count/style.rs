@@ -3,7 +3,7 @@ use crate::{classes, styling::TailwindClass, tw};
 const BASE: &[TailwindClass] = tw![
     "text-[1.5rem]",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
     "whitespace-nowrap",
     "flex-none",
 ];

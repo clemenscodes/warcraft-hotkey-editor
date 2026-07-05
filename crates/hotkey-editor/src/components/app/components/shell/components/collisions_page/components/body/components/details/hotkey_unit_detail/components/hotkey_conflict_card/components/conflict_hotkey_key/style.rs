@@ -10,11 +10,11 @@ const BASE: &[TailwindClass] = tw![
     "text-[34px]",
     "leading-[1]",
     "text-warcraft-gold",
-    "bg-[rgba(255,206,99,0.12)]",
+    "bg-warcraft-gold/12",
     "border-2",
     "border-warcraft-gold",
     "rounded-[8px]",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[56px]",

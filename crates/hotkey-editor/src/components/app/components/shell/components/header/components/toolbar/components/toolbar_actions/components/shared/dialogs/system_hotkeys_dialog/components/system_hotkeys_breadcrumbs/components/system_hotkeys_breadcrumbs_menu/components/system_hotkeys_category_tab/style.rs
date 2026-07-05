@@ -13,13 +13,13 @@ const BASE: &[TailwindClass] = tw![
     "border-0",
     "cursor-pointer",
     "whitespace-nowrap",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
     "[transition:color_0.15s_ease,text-shadow_0.15s_ease]",
     "hover:text-warcraft-gold",
-    "hover:[text-shadow:1px_1px_0_#000,0_0_12px_rgba(255,206,99,0.55)]",
+    "hover:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
     "kb-focus:outline-none",
     "kb-focus:text-white",
-    "kb-focus:[text-shadow:1px_1px_0_#000,0_0_14px_rgba(255,255,255,0.65)]",
+    "kb-focus:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-highlight)_65%,transparent)]",
     "group-data-[open=true]:flex-none",
     "group-data-[open=true]:w-full",
     "group-data-[open=true]:text-left",
@@ -44,9 +44,9 @@ classes! {
 
 const ACTIVE: &[TailwindClass] = tw![
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_#000,0_0_16px_rgba(255,206,99,0.45)]",
-    "group-data-[open=true]:bg-[rgba(255,206,99,0.14)]",
-    "group-data-[open=true]:[box-shadow:inset_0_0_0_1px_rgba(255,206,99,0.4)]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_16px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+    "group-data-[open=true]:bg-warcraft-gold/14",
+    "group-data-[open=true]:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
 ];
 
 const INACTIVE: &[TailwindClass] = tw!["text-warcraft-gold/55"];

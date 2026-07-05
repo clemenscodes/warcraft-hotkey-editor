@@ -11,17 +11,17 @@ const BASE: &[TailwindClass] = tw![
     "border-2",
     "rounded-[6px]",
     "border-warcraft-gold",
-    "[box-shadow:0_0_14px_rgba(255,206,99,0.6),0_8px_24px_rgba(0,0,0,0.6)]",
-    "data-[race=human]:border-[color:#6aa1ff]",
-    "data-[race=human]:[box-shadow:0_0_14px_rgba(106,161,255,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
-    "data-[race=orc]:border-[color:#ff7a7a]",
-    "data-[race=orc]:[box-shadow:0_0_14px_rgba(255,122,122,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
-    "data-[race=nightelf]:border-[color:#5fdada]",
-    "data-[race=nightelf]:[box-shadow:0_0_14px_rgba(95,218,218,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
-    "data-[race=undead]:border-[color:#c79bff]",
-    "data-[race=undead]:[box-shadow:0_0_14px_rgba(199,155,255,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
-    "data-[race=neutral]:border-[color:#ffce63]",
-    "data-[race=neutral]:[box-shadow:0_0_14px_rgba(255,206,99,0.45),0_8px_24px_rgba(0,0,0,0.6)]",
+    "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "data-[race=human]:border-[color:var(--color-race-human)]",
+    "data-[race=human]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-human)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "data-[race=orc]:border-[color:var(--color-race-orc)]",
+    "data-[race=orc]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-orc)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "data-[race=nightelf]:border-[color:var(--color-race-nightelf)]",
+    "data-[race=nightelf]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-nightelf)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "data-[race=undead]:border-[color:var(--color-race-undead)]",
+    "data-[race=undead]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-undead)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "data-[race=neutral]:border-[color:var(--color-warcraft-gold)]",
+    "data-[race=neutral]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];
@@ -34,10 +34,11 @@ classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const DEFAULT: &[TailwindClass] = tw!["bg-[rgba(20,35,60,0.95)]"];
+const DEFAULT: &[TailwindClass] = tw!["bg-warcraft-bg-panel/95"];
 
-const COMMAND: &[TailwindClass] =
-    tw!["[background:linear-gradient(135deg,rgba(40,50,80,0.95)_0%,rgba(15,22,45,0.95)_100%)]"];
+const COMMAND: &[TailwindClass] = tw![
+    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue-glow)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-mid)_95%,transparent)_100%)]"
+];
 states! {
     GhostState, Default => DEFAULT, Command => COMMAND
 }

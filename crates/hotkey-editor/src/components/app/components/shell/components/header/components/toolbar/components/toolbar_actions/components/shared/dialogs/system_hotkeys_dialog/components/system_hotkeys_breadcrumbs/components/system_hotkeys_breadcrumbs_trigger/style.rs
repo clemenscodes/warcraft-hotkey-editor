@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "[body[data-kb-modality]_&]:focus-visible:outline-none",
     "[body[data-kb-modality]_&]:focus-visible:border-white",
     "[body[data-kb-modality]_&]:focus-visible:text-white",
-    "[body[data-kb-modality]_&]:focus-visible:[box-shadow:0_0_0_2px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
+    "[body[data-kb-modality]_&]:focus-visible:[box-shadow:0_0_0_2px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -17,16 +17,16 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:py-[0.55rem]",
     "mobile:px-[0.9rem]",
     "mobile:border",
-    "mobile:border-[rgba(255,206,99,0.55)]",
+    "mobile:border-warcraft-gold/55",
     "mobile:rounded-[8px]",
     "mobile:cursor-pointer",
     "mobile:uppercase",
     "mobile:text-warcraft-gold",
     "mobile:text-[clamp(14px,3.8vw,17px)]",
     "mobile:tracking-[0.06em]",
-    "mobile:[background:linear-gradient(135deg,rgba(40,30,8,0.85)_0%,rgba(15,12,4,0.85)_100%)]",
-    "mobile:[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
-    "mobile:[box-shadow:0_0_14px_rgba(255,206,99,0.18)]",
+    "mobile:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
+    "mobile:[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
+    "mobile:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
 ];
 
 const TABLET: &[TailwindClass] = tw![
@@ -38,16 +38,16 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:py-[0.55rem]",
     "tablet:px-[0.9rem]",
     "tablet:border",
-    "tablet:border-[rgba(255,206,99,0.55)]",
+    "tablet:border-warcraft-gold/55",
     "tablet:rounded-[8px]",
     "tablet:cursor-pointer",
     "tablet:uppercase",
     "tablet:text-warcraft-gold",
     "tablet:text-[clamp(14px,3.8vw,17px)]",
     "tablet:tracking-[0.06em]",
-    "tablet:[background:linear-gradient(135deg,rgba(40,30,8,0.85)_0%,rgba(15,12,4,0.85)_100%)]",
-    "tablet:[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
-    "tablet:[box-shadow:0_0_14px_rgba(255,206,99,0.18)]",
+    "tablet:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
+    "tablet:[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
+    "tablet:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
 ];
 
 const LAPTOP: &[TailwindClass] = tw![];

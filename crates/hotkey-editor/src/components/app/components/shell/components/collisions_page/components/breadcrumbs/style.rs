@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "flex-none",
     "py-[1.2rem]",
     "border-b",
-    "border-[rgba(255,206,99,0.25)]",
+    "border-warcraft-gold/25",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:gap-[0.85rem]",

@@ -16,14 +16,14 @@ const BASE: &[TailwindClass] = tw![
     "p-0",
     "rounded-[15cqi]",
     "border-[1.25cqi]",
-    "border-[#6c5a1f]",
-    "[background:linear-gradient(180deg,rgba(40,30,8,0.55)_0%,rgba(15,12,4,0.55)_100%)]",
+    "border-warcraft-gold-border",
+    "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
     "cursor-pointer",
     "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",
     "focus:outline-none",
     "focus-visible:border-white",
     "focus-visible:text-white",
-    "focus-visible:[box-shadow:0_0_0_3.75cqi_#fff,0_0_20cqi_rgba(255,255,255,0.55)]",
+    "focus-visible:[box-shadow:0_0_0_3.75cqi_var(--color-warcraft-highlight),0_0_20cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:border-[2.8cqi]"];
@@ -37,19 +37,19 @@ classes! {
 }
 
 const ATTENTION: &[TailwindClass] = tw![
-    "text-[#e8a23a]",
+    "text-warcraft-gold",
     "hover:border-warcraft-gold",
     "hover:text-warcraft-gold",
-    "hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)]",
-    "hover:[box-shadow:0_0_15cqi_rgba(255,206,99,0.3)]",
+    "hover:[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_100%)]",
+    "hover:[box-shadow:0_0_15cqi_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
 ];
 
 const CLEAR: &[TailwindClass] = tw![
     "border-warcraft-gold",
     "text-warcraft-gold",
-    "[box-shadow:0_0_12.5cqi_rgba(255,206,99,0.2)]",
-    "hover:[background:linear-gradient(180deg,rgba(255,206,99,0.18)_0%,rgba(40,30,8,0.55)_100%)]",
-    "hover:[box-shadow:0_0_17.5cqi_rgba(255,206,99,0.45)]",
+    "[box-shadow:0_0_12.5cqi_color-mix(in_oklab,var(--color-warcraft-gold)_20%,transparent)]",
+    "hover:[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_100%)]",
+    "hover:[box-shadow:0_0_17.5cqi_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
 ];
 states! {
     CollisionState, Attention => ATTENTION, Clear => CLEAR

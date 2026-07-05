@@ -21,7 +21,7 @@ const BASE: &[TailwindClass] = tw![
     "[transition:filter_0.12s_ease,text-shadow_0.12s_ease]",
     "hover:filter-[brightness(1.15)]",
     "focus:outline-none",
-    "focus-visible:[outline:2px_solid_#fff]",
+    "focus-visible:[outline:2px_solid_var(--color-warcraft-highlight)]",
     "focus-visible:outline-offset-2",
 ];
 

@@ -11,10 +11,10 @@ const BASE: &[TailwindClass] = tw![
     "cursor-default",
     "border-2",
     "border-dashed",
-    "border-[rgba(255,206,99,0.18)]",
+    "border-warcraft-gold/18",
     "text-[2.4rem]",
-    "text-[rgba(255,206,99,0.25)]",
-    "[background:rgba(8,14,30,0.5)]",
+    "text-warcraft-gold/25",
+    "[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_50%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:aspect-[1/0.85]", "mobile:text-[1.4rem]"];

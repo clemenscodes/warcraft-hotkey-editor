@@ -56,11 +56,11 @@ const BASE: &[TailwindClass] = tw![
     "[&_*::-webkit-scrollbar]:w-[8px]",
     "[&_*::-webkit-scrollbar]:h-[8px]",
     "[&_*::-webkit-scrollbar-track]:rounded-[4px]",
-    "[&_*::-webkit-scrollbar-track]:[background:#08122373]",
+    "[&_*::-webkit-scrollbar-track]:[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_45%,transparent)]",
     "[&_*::-webkit-scrollbar-thumb]:rounded-[4px]",
-    "[&_*::-webkit-scrollbar-thumb]:[background:#ffce6373]",
-    "[&_*::-webkit-scrollbar-thumb]:hover:[background:#ffce63]",
-    "[&_*::-webkit-scrollbar-corner]:[background:#08122373]",
+    "[&_*::-webkit-scrollbar-thumb]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+    "[&_*::-webkit-scrollbar-thumb]:hover:[background:var(--color-warcraft-gold)]",
+    "[&_*::-webkit-scrollbar-corner]:[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_45%,transparent)]",
 ];
 // Phone/tablet: full-bleed with no padding at all (the shell spans the whole viewport and
 // its content reaches every edge), a content-driven height above the dvh floor, and the

@@ -12,8 +12,8 @@ const BASE: &[TailwindClass] = tw![
     "rounded-xl",
     "border",
     "border-warcraft-gold",
-    "bg-[linear-gradient(135deg,rgba(12,25,50,0.98)_0%,rgba(6,12,28,0.98)_100%)]",
-    "shadow-[0_0_40px_rgba(255,206,99,0.25),0_8px_32px_rgba(0,0,0,0.6)]",
+    "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
+    "shadow-[0_0_40px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent),0_8px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

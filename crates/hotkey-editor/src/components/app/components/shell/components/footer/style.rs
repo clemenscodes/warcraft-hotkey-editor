@@ -21,7 +21,7 @@ use crate::{classes, styling::TailwindClass, tw};
 // column when a short view leaves free space, and is a no-op when the view already fills it.
 //
 // The gold hairline along the top is the footer's own `::before`, the exact mirror of the
-// header's `::after` bottom divider: same `bg-warcraft-gold-soft`, same `left-4/right-4` inset
+// header's `::after` bottom divider: same `bg-warcraft-gold/40`, same `left-4/right-4` inset
 // to the `px-4` edge, same double-shadow bevel — so the two shell bars frame the content with
 // matching golden edges. `relative` anchors the pseudo to the footer.
 const BASE: &[TailwindClass] = tw![
@@ -49,8 +49,8 @@ const BASE: &[TailwindClass] = tw![
     "before:left-4",
     "before:right-4",
     "before:h-px",
-    "before:bg-warcraft-gold-soft",
-    "before:[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
+    "before:bg-warcraft-gold/40",
+    "before:[box-shadow:0_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_2px_0_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

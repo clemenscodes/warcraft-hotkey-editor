@@ -18,16 +18,16 @@ const BASE: &[TailwindClass] = tw![
     "cursor-default",
     "data-[draggable=true]:cursor-grab",
     "outline-none",
-    "kb-focus:[box-shadow:0_0_0_0.52cqi_#ffce63,0_0_3.1cqi_rgba(255,206,99,0.55)]",
-    "data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_#ffce63]",
+    "kb-focus:[box-shadow:0_0_0_0.52cqi_var(--color-warcraft-gold),0_0_3.1cqi_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
+    "data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_var(--color-warcraft-gold)]",
     "[body:has([data-dragging-source=true])_&]:cursor-grabbing",
     "data-[dragging-source=true]:[&>*]:invisible",
     "data-[dragging-source=true]:border-[0.35cqi]",
     "data-[dragging-source=true]:border-dashed",
-    "data-[dragging-source=true]:border-[#4a7090]",
-    "data-[dragging-source=true]:[background:linear-gradient(135deg,rgba(15,30,55,0.85)_0%,rgba(8,14,30,0.85)_100%)]",
-    "data-[dragging-source=true]:[box-shadow:inset_0_1px_0_rgba(255,255,255,0.04),0_1px_2px_rgba(0,0,0,0.5)]",
-    "data-[dragging-source=true]:data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_#ffce63]",
+    "data-[dragging-source=true]:border-warcraft-blue-bright",
+    "data-[dragging-source=true]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "data-[dragging-source=true]:[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "data-[dragging-source=true]:data-[drag-over=true]:[box-shadow:0_0_0_0.35cqi_var(--color-warcraft-gold)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

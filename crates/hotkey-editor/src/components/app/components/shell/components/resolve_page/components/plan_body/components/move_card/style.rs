@@ -5,11 +5,11 @@ const BASE: &[TailwindClass] = tw![
     "gap-[1.2rem]",
     "p-[1.4rem_1.5rem]",
     "box-border",
-    "bg-[rgba(13,31,61,0.45)]",
+    "bg-warcraft-bg-mid/45",
     "border",
-    "border-[#24406a]",
+    "border-warcraft-blue-bright-deep",
     "rounded-[10px]",
-    "data-[stuck=true]:border-[rgba(255,154,106,0.5)]",
+    "data-[stuck=true]:border-race-orc/50",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

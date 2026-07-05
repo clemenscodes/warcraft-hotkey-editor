@@ -1,8 +1,8 @@
 use crate::{classes, styling::TailwindClass, tw};
 const BASE: &[TailwindClass] = tw![
     "text-[1.8rem]",
-    "text-[#e0d8c8]",
-    "[text-shadow:1px_1px_0_#000]",
+    "text-warcraft-text-primary",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

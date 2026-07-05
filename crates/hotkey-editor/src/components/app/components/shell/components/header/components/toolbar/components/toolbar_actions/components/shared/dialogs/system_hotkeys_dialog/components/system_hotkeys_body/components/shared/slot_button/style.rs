@@ -15,16 +15,16 @@ const BASE: &[TailwindClass] = tw![
     "select-none",
     "border-solid",
     "border-[12px]",
-    "[background:linear-gradient(180deg,rgba(15,22,45,0.85)_0%,rgba(8,14,30,0.95)_100%)]",
+    "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_95%,transparent)_100%)]",
     "[border-image-source:var(--wc3-slot-frame)]",
     "[border-image-slice:12_fill]",
     "[border-image-repeat:stretch]",
     "[touch-action:manipulation]",
     "[transition:filter_0.15s_ease]",
-    "[&:hover]:[filter:brightness(1.18)_drop-shadow(0_0_8px_rgba(255,206,99,0.45))]",
+    "[&:hover]:[filter:brightness(1.18)_drop-shadow(0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent))]",
     "focus:outline-none",
     "kb-focus:outline-none",
-    "kb-focus:[filter:brightness(1.25)_drop-shadow(0_0_10px_rgba(255,255,255,0.55))]",
+    "kb-focus:[filter:brightness(1.25)_drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent))]",
     "data-[compact=true]:border-[8px]",
     "data-[compact=true]:[border-image-slice:12]",
     "data-[compact=true]:px-[0.4rem]",
@@ -48,8 +48,8 @@ const BASE: &[TailwindClass] = tw![
     "after:text-[1.5rem]",
     "after:leading-[1.4]",
     "after:text-center",
-    "after:[text-shadow:1px_1px_0_#000]",
-    "after:[box-shadow:0_6px_22px_#000000b3]",
+    "after:[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "after:[box-shadow:0_6px_22px_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent)]",
     "after:whitespace-normal",
     "after:pointer-events-none",
     "after:z-[1200]",
@@ -100,9 +100,12 @@ classes! {
 }
 
 const IDLE: &[TailwindClass] = tw![];
-const EDITING: &[TailwindClass] =
-    tw!["[filter:brightness(1.32)_drop-shadow(0_0_14px_rgba(255,206,99,0.75))]"];
-const CONFLICT: &[TailwindClass] = tw!["[filter:drop-shadow(0_0_12px_rgba(255,90,90,0.55))]"];
+const EDITING: &[TailwindClass] = tw![
+    "[filter:brightness(1.32)_drop-shadow(0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_75%,transparent))]"
+];
+const CONFLICT: &[TailwindClass] = tw![
+    "[filter:drop-shadow(0_0_12px_color-mix(in_oklab,var(--color-warcraft-danger)_55%,transparent))]"
+];
 states! {
     SlotButtonState, Idle => IDLE, Editing => EDITING, Conflict => CONFLICT
 }

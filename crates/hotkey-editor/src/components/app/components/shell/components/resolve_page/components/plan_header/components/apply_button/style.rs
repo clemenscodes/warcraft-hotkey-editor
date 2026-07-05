@@ -11,10 +11,10 @@ const BASE: &[TailwindClass] = tw![
     "text-[1.5rem]",
     "text-warcraft-gold",
     "[background:linear-gradient(180deg,#2a5085_0%,#1a3a5c_100%)]",
-    "[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
+    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
     "[transition:box-shadow_0.12s_ease,background_0.12s_ease]",
     "hover:[background:linear-gradient(180deg,#356dac_0%,#1f4a72_100%)]",
-    "hover:[box-shadow:0_0_12px_rgba(255,206,99,0.4)]",
+    "hover:[box-shadow:0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
     "disabled:opacity-60",
     "disabled:cursor-wait",
 ];

@@ -1,7 +1,12 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 // The bold light-blue caption naming the off-state / upgraded form.
-const BASE: &[TailwindClass] = tw!["m-0", "font-semibold", "text-[#a9d8ff]", "text-[1.45rem]"];
+const BASE: &[TailwindClass] = tw![
+    "m-0",
+    "font-semibold",
+    "text-warcraft-text-secondary",
+    "text-[1.45rem]"
+];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
 const LAPTOP: &[TailwindClass] = tw![];

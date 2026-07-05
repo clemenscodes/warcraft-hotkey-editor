@@ -19,7 +19,7 @@ const BASE: &[TailwindClass] = tw![
     "starting:opacity-0",
     "starting:translate-x-8",
     "starting:scale-95",
-    "kb-focus:[box-shadow:0_0_0_3px_#fff,0_12px_32px_#0000008c]",
+    "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-highlight),0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:max-w-[calc(100vw-1.5rem)]"];
 const TABLET: &[TailwindClass] = tw!["tablet:max-w-[calc(100vw-1.5rem)]"];
@@ -32,20 +32,20 @@ classes! {
 }
 
 const SUCCESS: &[TailwindClass] = tw![
-    "border-[#6dd49a]",
-    "[box-shadow:0_12px_32px_#0000008c,0_0_24px_#6dd49a4d]",
+    "border-warcraft-success",
+    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),0_0_24px_color-mix(in_oklab,var(--color-warcraft-success)_30%,transparent)]",
 ];
 const ERROR: &[TailwindClass] = tw![
-    "border-[#ff7a7a]",
-    "[box-shadow:0_12px_32px_#0000008c,0_0_24px_#ff7a7a59]",
+    "border-race-orc",
+    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),0_0_24px_color-mix(in_oklab,var(--color-race-orc)_35%,transparent)]",
 ];
 const WARNING: &[TailwindClass] = tw![
-    "border-[#ffb347]",
-    "[box-shadow:0_12px_32px_#0000008c,inset_0_1px_0_#ffffff0a]",
+    "border-warcraft-gold",
+    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 const INFO: &[TailwindClass] = tw![
-    "border-[#6aa1ff]",
-    "[box-shadow:0_12px_32px_#0000008c,inset_0_1px_0_#ffffff0a]",
+    "border-race-human",
+    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
 ];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO

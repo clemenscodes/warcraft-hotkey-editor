@@ -16,13 +16,13 @@ const BASE: &[TailwindClass] = tw![
     "whitespace-nowrap",
     "border",
     "rounded-[2px]",
-    "[background:linear-gradient(180deg,rgba(15,22,45,0.85)_0%,rgba(8,14,30,0.95)_100%)]",
+    "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_95%,transparent)_100%)]",
     "[transition:filter_0.15s_ease,border-color_0.15s_ease]",
-    "hover:[filter:brightness(1.18)_drop-shadow(0_0_8px_rgba(255,206,99,0.4))]",
-    "hover:border-[rgba(255,206,99,0.85)]",
+    "hover:[filter:brightness(1.18)_drop-shadow(0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent))]",
+    "hover:border-warcraft-gold/85",
     "kb-focus:outline-none",
     "kb-focus:border-white",
-    "kb-focus:[filter:drop-shadow(0_0_10px_rgba(255,255,255,0.55))]",
+    "kb-focus:[filter:drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent))]",
     "relative",
     "after:[content:attr(data-tooltip)]",
     "after:absolute",
@@ -41,8 +41,8 @@ const BASE: &[TailwindClass] = tw![
     "after:text-[1.5rem]",
     "after:leading-[1.4]",
     "after:text-center",
-    "after:[text-shadow:1px_1px_0_#000]",
-    "after:[box-shadow:0_6px_22px_#000000b3]",
+    "after:[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "after:[box-shadow:0_6px_22px_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent)]",
     "after:whitespace-normal",
     "after:pointer-events-none",
     "after:z-[1200]",
@@ -88,14 +88,14 @@ classes! {
 
 const NORMAL: &[TailwindClass] = tw![
     "text-warcraft-gold",
-    "border-[rgba(255,206,99,0.45)]",
-    "[text-shadow:1px_1px_0_#000]",
+    "border-warcraft-gold/45",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 
 const CONFLICT: &[TailwindClass] = tw![
-    "text-[#ff5a5a]",
-    "border-[rgba(255,90,90,0.65)]",
-    "[text-shadow:1px_1px_0_#000,0_0_10px_rgba(255,90,90,0.5)]",
+    "text-warcraft-danger",
+    "border-warcraft-danger/65",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_10px_color-mix(in_oklab,var(--color-warcraft-danger)_50%,transparent)]",
 ];
 states! {
     KeyCaptureCellState, Normal => NORMAL, Conflict => CONFLICT

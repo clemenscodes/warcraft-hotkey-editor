@@ -5,10 +5,10 @@ const BASE: &[TailwindClass] = tw![
     "top-[50%]",
     "[transform:translate(-50%,-50%)]",
     "flex-none",
-    "text-[#b8a86a]",
+    "text-warcraft-gold",
     "text-[2.8rem]",
     "leading-[1]",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

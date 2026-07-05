@@ -10,11 +10,11 @@ const BASE: &[TailwindClass] = tw![
     "flex-col",
     "gap-[2px]",
     "p-[4px]",
-    "[background:linear-gradient(170deg,rgba(12,25,50,0.98)_0%,rgba(6,12,28,0.98)_100%)]",
+    "[background:linear-gradient(170deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
     "border",
-    "border-[rgba(255,206,99,0.45)]",
+    "border-warcraft-gold/45",
     "rounded-[8px]",
-    "[box-shadow:0_8px_24px_rgba(0,0,0,0.65),0_0_12px_rgba(255,206,99,0.1)]",
+    "[box-shadow:0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_65%,transparent),0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:w-full",

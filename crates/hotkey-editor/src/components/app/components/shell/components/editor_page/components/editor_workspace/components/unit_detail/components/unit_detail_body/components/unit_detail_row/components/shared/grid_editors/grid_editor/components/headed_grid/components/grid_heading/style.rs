@@ -9,7 +9,7 @@ const BASE: &[TailwindClass] = tw![
     "uppercase",
     "tracking-[0.08em]",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_rgba(0,0,0,0.92)]",
+    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[16px]"];

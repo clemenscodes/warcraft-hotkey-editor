@@ -1,12 +1,12 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "text-[#d6dcec]",
+    "text-warcraft-text-secondary",
     "font-medium",
     "[font-variant-numeric:tabular-nums]",
     "flex-[0_0_auto]",
-    "group-data-[matchup=strong]:text-[#4ade80]",
-    "group-data-[matchup=weak]:text-[#f87171]",
+    "group-data-[matchup=strong]:text-warcraft-success",
+    "group-data-[matchup=weak]:text-race-orc",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

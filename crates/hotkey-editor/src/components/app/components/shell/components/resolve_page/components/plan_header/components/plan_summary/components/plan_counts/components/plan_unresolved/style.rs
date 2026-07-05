@@ -1,5 +1,5 @@
 use crate::{classes, styling::TailwindClass, tw};
-const BASE: &[TailwindClass] = tw!["text-[#ff9a6a]"];
+const BASE: &[TailwindClass] = tw!["text-race-orc"];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
 const LAPTOP: &[TailwindClass] = tw![];

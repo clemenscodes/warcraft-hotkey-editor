@@ -10,7 +10,7 @@ const BASE: &[TailwindClass] = tw![
     "[container-type:inline-size]",
     "pointer-events-none",
     "p-[3px]",
-    "bg-[rgba(20,35,60,0.7)]",
+    "bg-warcraft-bg-panel/70",
     "border",
     "border-warcraft-blue",
     "rounded-[3px]",

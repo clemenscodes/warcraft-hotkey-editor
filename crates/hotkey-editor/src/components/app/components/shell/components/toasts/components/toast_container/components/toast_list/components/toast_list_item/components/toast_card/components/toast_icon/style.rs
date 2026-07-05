@@ -23,10 +23,22 @@ classes! {
     BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
 }
 
-const SUCCESS: &[TailwindClass] = tw!["[background-color:#6dd49a2e]", "text-[#6dd49a]"];
-const ERROR: &[TailwindClass] = tw!["[background-color:#ff7a7a33]", "text-[#ff7a7a]"];
-const WARNING: &[TailwindClass] = tw!["[background-color:#ffb34733]", "text-[#ffb347]"];
-const INFO: &[TailwindClass] = tw!["[background-color:#6aa1ff2e]", "text-[#6aa1ff]"];
+const SUCCESS: &[TailwindClass] = tw![
+    "[background-color:color-mix(in_oklab,var(--color-warcraft-success)_18%,transparent)]",
+    "text-warcraft-success"
+];
+const ERROR: &[TailwindClass] = tw![
+    "[background-color:color-mix(in_oklab,var(--color-race-orc)_20%,transparent)]",
+    "text-race-orc"
+];
+const WARNING: &[TailwindClass] = tw![
+    "[background-color:color-mix(in_oklab,var(--color-warcraft-gold)_20%,transparent)]",
+    "text-warcraft-gold"
+];
+const INFO: &[TailwindClass] = tw![
+    "[background-color:color-mix(in_oklab,var(--color-race-human)_18%,transparent)]",
+    "text-race-human"
+];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO
 }

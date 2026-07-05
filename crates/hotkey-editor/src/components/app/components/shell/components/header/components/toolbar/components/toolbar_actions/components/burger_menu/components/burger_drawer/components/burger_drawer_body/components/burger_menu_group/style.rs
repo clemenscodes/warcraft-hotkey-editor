@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "mt-1",
     "pt-[0.85rem]",
     "border-t",
-    "border-t-[rgba(255,206,99,0.12)]",
+    "border-t-warcraft-gold/12",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

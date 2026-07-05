@@ -7,10 +7,10 @@ const BASE: &[TailwindClass] = tw![
     "max-w-[90rem]",
     "uppercase",
     "tracking-[0.1em]",
-    "text-[rgba(255,206,99,0.75)]",
+    "text-warcraft-gold/75",
     "text-[1.85rem]",
     "leading-[1.4]",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

@@ -7,8 +7,8 @@ const BASE: &[TailwindClass] = tw![
     "gap-8",
     "px-8",
     "py-5",
-    "[border-top:1px_solid_rgba(255,206,99,0.14)]",
-    "last:[border-bottom:1px_solid_rgba(255,206,99,0.14)]",
+    "[border-top:1px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_14%,transparent)]",
+    "last:[border-bottom:1px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_14%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

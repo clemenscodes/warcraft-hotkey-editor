@@ -11,12 +11,13 @@
 
 @theme {
   --color-warcraft-gold: #ffce63;
-  --color-warcraft-gold-dim: rgba(255, 206, 99, 0.18);
-  --color-warcraft-gold-soft: rgba(255, 206, 99, 0.4);
+  --color-warcraft-gold-border: #6c5a1f;
+  --color-warcraft-gold-dark: #281e08;
 
   --color-warcraft-text-primary: #e0d8c8;
   --color-warcraft-text-secondary: #c0c8da;
   --color-warcraft-text-muted: #9ca8c5;
+  --color-warcraft-text-faint: #7b818d;
 
   --color-warcraft-bg-base: #050a1a;
   --color-warcraft-bg-mid: #0a1a35;
@@ -29,24 +30,27 @@
   --color-warcraft-blue-glow: #18365b;
 
   --color-race-human: #6aa1ff;
-  --color-race-human-soft: rgba(106, 161, 255, 0.45);
-  --color-race-human-strong: #173266;
 
   --color-race-orc: #ff7a7a;
-  --color-race-orc-soft: rgba(255, 122, 122, 0.45);
   --color-race-orc-strong: #5a1212;
 
   --color-race-nightelf: #5fdada;
-  --color-race-nightelf-soft: rgba(95, 218, 218, 0.45);
-  --color-race-nightelf-strong: #0c4348;
 
   --color-race-undead: #c79bff;
-  --color-race-undead-soft: rgba(199, 155, 255, 0.45);
-  --color-race-undead-strong: #321650;
 
   --color-race-neutral: #ffce63;
-  --color-race-neutral-soft: rgba(255, 206, 99, 0.45);
   --color-race-neutral-strong: #4a3d14;
+
+  /* Semantic status colors — not race/chrome. Success = gains & success
+     toasts; danger = hotkey/position collisions (distinct from race-orc red). */
+  --color-warcraft-success: #6dd49a;
+  --color-warcraft-danger: #ff5a5a;
+
+  /* Compositing primitives for shadows and highlight hairlines. Referenced as
+     var(--color-warcraft-shadow) inside arbitrary [text-shadow:…]/[box-shadow:…]
+     values, with color-mix() for partial opacity. */
+  --color-warcraft-shadow: #000000;
+  --color-warcraft-highlight: #ffffff;
 
   /* Friz Quadrata is the app's single typeface. Overriding Tailwind's base
      `--font-sans` makes preflight apply it globally (html + form controls),

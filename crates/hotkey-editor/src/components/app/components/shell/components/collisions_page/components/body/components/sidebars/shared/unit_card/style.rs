@@ -15,20 +15,20 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[6px]",
     "transition-all",
     "duration-[0.12s]",
-    "bg-[rgba(13,31,61,0.55)]",
-    "border-[#1f3d63]",
-    "text-[#e0d8c8]",
-    "hover:bg-[rgba(30,60,95,0.7)]",
-    "hover:border-[color:#2a5085]",
+    "bg-warcraft-bg-mid/55",
+    "border-warcraft-blue-deep",
+    "text-warcraft-text-primary",
+    "hover:bg-warcraft-blue-deep/70",
+    "hover:border-[color:var(--color-warcraft-blue)]",
     "hover:text-white",
     "kb-focus:border-white",
     "kb-focus:text-white",
-    "kb-focus:bg-[rgba(40,80,130,0.85)]",
-    "kb-focus:shadow-[0_0_0_3px_#fff,0_0_16px_rgba(255,255,255,0.55)]",
-    "data-[selected=true]:bg-[linear-gradient(135deg,rgba(45,80,130,0.9)_0%,rgba(20,45,80,0.9)_100%)]",
+    "kb-focus:bg-warcraft-blue/85",
+    "kb-focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_90%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_90%,transparent)_100%)]",
     "data-[selected=true]:border-warcraft-gold",
     "data-[selected=true]:text-warcraft-gold",
-    "data-[selected=true]:shadow-[0_0_8px_rgba(255,206,99,0.3)]",
+    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:flex-[1_0_auto]",
@@ -41,8 +41,8 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:[scroll-snap-align:start]",
     "mobile:box-border",
     "mobile:overflow-hidden",
-    "mobile:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
-    "mobile:border-[rgba(42,80,133,0.6)]",
+    "mobile:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "mobile:border-warcraft-blue/60",
 ];
 const TABLET: &[TailwindClass] = tw![
     "tablet:flex-[1_0_auto]",
@@ -55,8 +55,8 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:[scroll-snap-align:start]",
     "tablet:box-border",
     "tablet:overflow-hidden",
-    "tablet:bg-[linear-gradient(180deg,rgba(13,31,61,0.55)_0%,rgba(8,14,30,0.55)_100%)]",
-    "tablet:border-[rgba(42,80,133,0.6)]",
+    "tablet:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "tablet:border-warcraft-blue/60",
 ];
 const LAPTOP: &[TailwindClass] = tw![];
 const DESKTOP: &[TailwindClass] = tw![];

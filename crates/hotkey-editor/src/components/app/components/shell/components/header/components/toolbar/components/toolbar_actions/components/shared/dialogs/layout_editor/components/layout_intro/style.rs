@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "gap-[0.7rem]",
     "m-0",
     "text-center",
-    "[text-shadow:1px_1px_0_#000]",
+    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

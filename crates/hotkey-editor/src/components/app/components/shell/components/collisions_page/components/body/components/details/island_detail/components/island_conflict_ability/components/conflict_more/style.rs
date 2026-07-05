@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "border-none",
     "cursor-pointer",
     "text-[14px]",
-    "text-[#9aa3b2]",
+    "text-warcraft-text-muted",
     "underline",
     "underline-offset-2",
     "hover:text-warcraft-gold",

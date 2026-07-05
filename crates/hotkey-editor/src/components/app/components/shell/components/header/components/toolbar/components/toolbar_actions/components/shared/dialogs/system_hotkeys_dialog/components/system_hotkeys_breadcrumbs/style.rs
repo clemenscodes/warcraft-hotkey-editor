@@ -9,7 +9,7 @@ const BASE: &[TailwindClass] = tw![
     "flex-none",
     "px-8",
     "py-5",
-    "[border-bottom:1px_solid_rgba(255,206,99,0.25)]",
+    "[border-bottom:1px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

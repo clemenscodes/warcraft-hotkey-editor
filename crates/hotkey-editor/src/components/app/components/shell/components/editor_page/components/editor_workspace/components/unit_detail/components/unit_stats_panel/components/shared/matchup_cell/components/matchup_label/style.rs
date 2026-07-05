@@ -1,7 +1,7 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "text-[#9aa5bd]",
+    "text-warcraft-text-muted",
     "text-[inherit]",
     "min-w-0",
     "overflow-hidden",

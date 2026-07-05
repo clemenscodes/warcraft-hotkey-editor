@@ -9,7 +9,7 @@ const BASE: &[TailwindClass] = tw![
     "gap-x-6",
     "pb-[0.85rem]",
     "border-b",
-    "border-[#1f3d63]",
+    "border-warcraft-blue-deep",
     "text-left",
 ];
 

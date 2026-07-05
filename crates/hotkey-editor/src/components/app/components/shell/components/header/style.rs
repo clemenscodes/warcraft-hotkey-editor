@@ -38,8 +38,8 @@ const BASE: &[TailwindClass] = tw![
     "after:left-4",
     "after:right-4",
     "after:h-px",
-    "after:bg-warcraft-gold-soft",
-    "after:[box-shadow:0_1px_0_rgba(0,0,0,0.7),0_2px_0_rgba(255,206,99,0.1)]",
+    "after:bg-warcraft-gold/40",
+    "after:[box-shadow:0_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_2px_0_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -51,7 +51,7 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:z-60",
     "mobile:pt-2",
     "mobile:pb-2",
-    "mobile:after:bg-[rgba(255,206,99,0.3)]",
+    "mobile:after:bg-warcraft-gold/30",
     "mobile:min-h-14",
     "mobile:max-w-full",
     "mobile:w-full",
@@ -71,7 +71,7 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:z-60",
     "tablet:pt-2",
     "tablet:pb-2",
-    "tablet:after:bg-[rgba(255,206,99,0.3)]",
+    "tablet:after:bg-warcraft-gold/30",
     "tablet:min-h-14",
     "tablet:max-w-full",
     "tablet:w-full",
