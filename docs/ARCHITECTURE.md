@@ -104,6 +104,34 @@ ONLY presentation:
 That is the entire allowed scope. If something else looks domain-shaped, it
 isn't supposed to be here.
 
+### Internal layering inside `hotkey-editor`
+
+The frontend is split into three layer directories that mirror the `ddd`
+layer markers each type carries. This is organizational, not a second wall:
+a directory split does not enforce the dependency rule — the `ddd`
+`Layered` / `ApplicationService` / `Adapter` markers plus the crate's import
+graph are the guardrail. Only the crate boundary in §3 is truly enforced.
+
+- `services/` — application + presentation. Application services
+  (`CustomKeysService`, `GridLayoutService`, `UndoHistory`) implement
+  `ddd::Service<Aggregate>` and are the only sanctioned way for the renderer
+  to mutate state; every command funnels through `commit` (write-through:
+  mutate the snapshot → persist via the repository → replace the live
+  signal). UI-only signal bags (dialog-open flags, selection, drag,
+  navigation) also live here as presentation state and carry no repository.
+- `repository/` — infrastructure. One `ddd::Repository<Aggregate> + Adapter`
+  per persisted aggregate (`CustomKeysRepository`, `GridLayoutRepository`,
+  `EditorHistoryRepository`); loads and saves whole aggregates as canonical
+  text.
+- `persistence/` — infrastructure. Typed wrappers over the individual
+  localStorage keys plus the `LocalStorage` primitive. Compression (the undo
+  blob's deflate/base64) lives here, never in the domain crate (R8).
+
+A service can only get the full pattern if it is backed by a domain
+aggregate (`ddd::AggregateRoot`, which lives in `warcraft-keybinds`); that
+trait bound is what stops a repository being bolted onto non-domain UI
+state.
+
 ## 4. Hard rules (mechanically checkable)
 
 These are the rules every change must obey. Treat each as a compile-time
@@ -199,6 +227,14 @@ that reproduces the bug.
 dragging" — these are UI signals, never written to the CustomKeys.txt
 string. "What hotkey does ability X have", "where does it sit in the
 grid" — these live in CustomKeys.txt and only there.
+
+One deliberate reinterpretation: **editor revision history is domain
+state.** The undo/redo timeline is modelled as an `EditorHistory` aggregate
+in `warcraft-keybinds` (persisted under its own localStorage key via
+`EditorHistoryRepository`), not as loose UI signals — so it can use the same
+`Service`/`Repository`/`commit` pattern as `CustomKeys`. Everything else in
+the R10 list stays UI state; this is the only place a "history of edits" is
+treated as a domain concept rather than presentation scratch.
 
 ## 5. Where today's code violates these rules
 
