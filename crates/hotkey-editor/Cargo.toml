@@ -34,6 +34,7 @@ gloo-timers = { version = "0.3", features = ["futures"] }
 num-traits.workspace = true
 flate2 = "1.1"
 base64 = "0.22"
+console_error_panic_hook = "0.1"
 warcraft-api = { workspace = true }
 warcraft-database = { workspace = true }
 ddd = { workspace = true }
