@@ -4,7 +4,7 @@ const BASE: &[TailwindClass] = tw![
     "uppercase",
     "[letter-spacing:0.08em]",
     "text-race-orc",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

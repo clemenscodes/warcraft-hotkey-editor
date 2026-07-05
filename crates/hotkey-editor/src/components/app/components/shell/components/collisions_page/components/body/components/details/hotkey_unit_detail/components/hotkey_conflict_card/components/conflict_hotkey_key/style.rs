@@ -14,7 +14,7 @@ const BASE: &[TailwindClass] = tw![
     "border-2",
     "border-warcraft-gold",
     "rounded-[8px]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[56px]",

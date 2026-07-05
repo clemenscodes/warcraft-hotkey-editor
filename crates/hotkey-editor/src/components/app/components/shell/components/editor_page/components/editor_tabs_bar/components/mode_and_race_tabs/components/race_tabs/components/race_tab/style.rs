@@ -49,7 +49,7 @@ const BASE: &[TailwindClass] = tw![
     "[body[data-kb-modality]_&]:focus:outline-none",
     "[body[data-kb-modality]_&]:focus:text-white",
     "[body[data-kb-modality]_&]:focus:border-white",
-    "[body[data-kb-modality]_&]:focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_18px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "[body[data-kb-modality]_&]:focus:shadow-ring-hl-3",
 ];
 // Phone/tablet: a swipe-scannable banner-card strip — each tab a chunky fixed
 // height (all five share the row) with tighter type and a slightly softer banner

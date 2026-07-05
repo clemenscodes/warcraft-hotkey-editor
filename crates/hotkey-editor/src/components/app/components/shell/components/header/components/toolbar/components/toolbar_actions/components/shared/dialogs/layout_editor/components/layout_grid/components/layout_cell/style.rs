@@ -16,14 +16,14 @@ const BASE: &[TailwindClass] = tw![
     "border-warcraft-gold",
     "text-warcraft-gold",
     "bg-warcraft-gold-dark/75",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),-1px_1px_0_var(--color-warcraft-shadow),1px_-1px_0_var(--color-warcraft-shadow),-1px_-1px_0_var(--color-warcraft-shadow)]",
-    "hover:[box-shadow:0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    "text-shadow-outline",
+    "hover:shadow-glow-8",
     "hover:bg-warcraft-gold/12",
     "focus:outline-none",
     "kb-focus:outline-none",
     "kb-focus:border-white",
     "kb-focus:bg-warcraft-highlight/12",
-    "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "kb-focus:focus-ring",
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:border-warcraft-gold",
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:bg-warcraft-gold-dark/75",
     "[@media(hover:none)]:[body[data-kb-modality]_&]:focus-visible:[box-shadow:none]",
@@ -53,10 +53,10 @@ classes! {
 const IDLE: &[TailwindClass] = tw![];
 
 const EDITING: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_100%)]",
+    "bg-panel-gold-diag-30",
     "border-warcraft-gold",
     "text-warcraft-gold",
-    "[box-shadow:0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_85%,transparent),inset_0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
+    "shadow-glow-18",
 ];
 states! {
     LayoutCellState, Idle => IDLE, Editing => EDITING

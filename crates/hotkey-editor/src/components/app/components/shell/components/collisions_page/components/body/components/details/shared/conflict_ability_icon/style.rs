@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[6px]",
     "object-cover",
     "group-hover:border-warcraft-gold",
-    "group-hover:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    "group-hover:shadow-glow-8",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

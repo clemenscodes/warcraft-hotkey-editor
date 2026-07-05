@@ -16,15 +16,15 @@ const BASE: &[TailwindClass] = tw![
     "leading-none",
     "cursor-pointer",
     "[transition:border-color_0.12s_ease,background_0.12s_ease,box-shadow_0.12s_ease]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),-1px_1px_0_var(--color-warcraft-shadow),1px_-1px_0_var(--color-warcraft-shadow),-1px_-1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-outline",
     "[&:hover:not(:disabled)]:border-warcraft-gold",
     "[&:hover:not(:disabled)]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_12%,transparent)]",
-    "[&:hover:not(:disabled)]:[box-shadow:0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    "[&:hover:not(:disabled)]:shadow-glow-8",
     "focus:outline-none",
     "kb-focus:outline-none",
     "kb-focus:border-white",
     "kb-focus:text-white",
-    "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "kb-focus:focus-ring",
     "data-[special=true]:w-auto",
     "data-[special=true]:min-w-[clamp(5rem,7.5vw,11rem)]",
     "data-[special=true]:px-[0.85rem]",
@@ -57,7 +57,7 @@ const AVAILABLE: &[TailwindClass] = tw![
 ];
 
 const CURRENT: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_32%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_100%)]",
+    "bg-panel-gold-diag-32",
     "border-warcraft-gold",
     "text-warcraft-gold",
     "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent),inset_0_0_10px_color-mix(in_oklab,var(--color-warcraft-gold)_22%,transparent)]",

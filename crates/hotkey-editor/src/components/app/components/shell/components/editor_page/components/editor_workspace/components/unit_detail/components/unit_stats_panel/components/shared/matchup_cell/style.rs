@@ -10,7 +10,7 @@ const BASE: &[TailwindClass] = tw![
     "py-[0.35rem]",
     "rounded-[4px]",
     "text-[clamp(1.3rem,0.85rem+0.4vw,1.85rem)]/[1.25]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
     "min-w-0",
     "data-[matchup=strong]:bg-warcraft-success/12",
     "data-[matchup=weak]:bg-warcraft-danger/12",

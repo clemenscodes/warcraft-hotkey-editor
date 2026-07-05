@@ -30,7 +30,7 @@ const BASE: &[TailwindClass] = tw![
     "before:inset-0",
     "before:-z-10",
     "before:bg-warcraft-bg-base",
-    "before:bg-[radial-gradient(ellipse_90%_60%_at_50%_0%,#18365b_0%,transparent_60%),linear-gradient(180deg,#0a1a35_0%,#050a1a_100%)]",
+    "before:bg-panel-header-solid",
     "before:bg-no-repeat",
     "before:bg-fixed",
     "before:bg-size-[100%_100%]",

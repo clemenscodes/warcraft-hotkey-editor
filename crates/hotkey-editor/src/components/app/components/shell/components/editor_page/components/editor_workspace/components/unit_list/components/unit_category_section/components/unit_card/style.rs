@@ -23,8 +23,8 @@ const BASE: &[TailwindClass] = tw![
     "kb-focus:border-white",
     "kb-focus:text-white",
     "kb-focus:bg-warcraft-blue/85",
-    "kb-focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
-    "data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_90%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_90%,transparent)_100%)]",
+    "kb-focus:focus-ring",
+    "data-[selected=true]:bg-panel-blue-diag-90",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -40,10 +40,10 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:[scroll-snap-align:start]",
     "mobile:box-border",
     "mobile:overflow-hidden",
-    "mobile:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "mobile:bg-panel-dark-55",
     "mobile:border-warcraft-blue/60",
     "mobile:hover:border-warcraft-gold/35",
-    "mobile:data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_85%,transparent)_100%)]",
+    "mobile:data-[selected=true]:bg-panel-blue-diag-85",
     "mobile:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
     "mobile:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
     "mobile:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
@@ -63,10 +63,10 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:[scroll-snap-align:start]",
     "tablet:box-border",
     "tablet:overflow-hidden",
-    "tablet:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_55%,transparent)_100%)]",
+    "tablet:bg-panel-dark-55",
     "tablet:border-warcraft-blue/60",
     "tablet:hover:border-warcraft-gold/35",
-    "tablet:data-[selected=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_85%,transparent)_100%)]",
+    "tablet:data-[selected=true]:bg-panel-blue-diag-85",
     "tablet:group-[[data-search-active=false][data-active-category=hero]]:[&:not([data-unit-kind=hero])]:hidden",
     "tablet:group-[[data-search-active=false][data-active-category=soldier]]:[&:not([data-unit-kind=soldier])]:hidden",
     "tablet:group-[[data-search-active=false][data-active-category=worker]]:[&:not([data-unit-kind=worker])]:hidden",
@@ -114,7 +114,7 @@ const NEUTRAL: &[TailwindClass] = tw![
     "hover:border-[color:var(--color-warcraft-gold)]",
     "data-[selected=true]:border-[color:var(--color-warcraft-gold)]",
     "data-[selected=true]:text-[color:var(--color-warcraft-gold)]",
-    "data-[selected=true]:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
+    "data-[selected=true]:shadow-glow-8-2",
 ];
 states! {
     Race, Human => HUMAN, Nightelf => NIGHTELF, Orc => ORC, Undead => UNDEAD, Neutral =>

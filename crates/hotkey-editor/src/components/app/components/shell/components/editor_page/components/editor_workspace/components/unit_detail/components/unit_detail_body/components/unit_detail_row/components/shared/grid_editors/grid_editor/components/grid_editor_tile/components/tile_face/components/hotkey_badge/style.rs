@@ -13,7 +13,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[17cqi]/[1]",
     "font-normal",
     "pointer-events-none",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];
@@ -34,7 +34,7 @@ const NORMAL: &[TailwindClass] = tw![
 
 const PASSIVE: &[TailwindClass] = tw![
     "bg-warcraft-bg-mid",
-    "border-warcraft-blue-glow",
+    "border-warcraft-text-faint",
     "text-warcraft-text-secondary"
 ];
 

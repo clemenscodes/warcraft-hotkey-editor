@@ -7,13 +7,13 @@ const BASE: &[TailwindClass] = tw![
     "text-warcraft-text-primary",
     "font-medium",
     "[font-variant-numeric:tabular-nums]",
-    "group-data-[variant=hp]:text-warcraft-success",
+    "group-data-[variant=hp]:not-data-[zero=true]:text-warcraft-success",
     "group-data-[variant=hp]:font-semibold",
     "group-data-[variant=hp]:text-[clamp(1.7rem,1.05rem+0.48vw,2.2rem)]",
-    "group-data-[variant=mana]:text-race-human",
+    "group-data-[variant=mana]:not-data-[zero=true]:text-race-human",
     "group-data-[variant=mana]:font-semibold",
     "group-data-[variant=mana]:text-[clamp(1.7rem,1.05rem+0.48vw,2.2rem)]",
-    "data-[zero=true]:text-warcraft-blue-glow",
+    "data-[zero=true]:text-warcraft-text-faint",
     "data-[zero=true]:font-normal",
 ];
 const MOBILE: &[TailwindClass] = tw![

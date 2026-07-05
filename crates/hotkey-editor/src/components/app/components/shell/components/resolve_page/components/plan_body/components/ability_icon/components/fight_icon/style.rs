@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[7px]",
     "object-cover",
     "group-[:not(:disabled):hover]:border-warcraft-gold",
-    "group-[:not(:disabled):hover]:[box-shadow:0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    "group-[:not(:disabled):hover]:shadow-glow-8",
 ];
 const MOBILE: &[TailwindClass] = tw![
     "mobile:w-[max(40px,min(72px,9vw))]",

@@ -11,7 +11,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[15cqi]",
     "text-warcraft-text-secondary",
     "cursor-pointer",
-    "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
+    "bg-panel-gold-resting",
     "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",
     "focus:outline-none",
     "focus-visible:border-white",
@@ -19,7 +19,7 @@ const BASE: &[TailwindClass] = tw![
     "focus-visible:[box-shadow:0_0_0_3.75cqi_var(--color-warcraft-highlight),0_0_20cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
     "hover:border-warcraft-gold",
     "hover:text-warcraft-gold",
-    "hover:[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_100%)]",
+    "hover:bg-panel-gold-active",
     "hover:[box-shadow:0_0_15cqi_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
 ];
 

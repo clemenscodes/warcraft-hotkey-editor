@@ -37,7 +37,7 @@ classes! {
 const DEFAULT: &[TailwindClass] = tw!["bg-warcraft-bg-panel/95"];
 
 const COMMAND: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue-glow)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-mid)_95%,transparent)_100%)]"
+    "bg-panel-blue-diag-95"
 ];
 states! {
     GhostState, Default => DEFAULT, Command => COMMAND

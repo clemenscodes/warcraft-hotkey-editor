@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[1.2rem]",
     "italic",
     "text-warcraft-text-secondary/55",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[1.55rem]"];
 const TABLET: &[TailwindClass] = tw![];

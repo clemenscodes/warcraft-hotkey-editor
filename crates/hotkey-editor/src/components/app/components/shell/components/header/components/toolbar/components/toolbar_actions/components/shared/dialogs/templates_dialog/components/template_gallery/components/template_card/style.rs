@@ -11,20 +11,20 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[14px]",
     "text-left",
     "text-warcraft-text-secondary",
-    "bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
+    "bg-panel-gold-resting",
     "cursor-pointer",
     "transition-[border-color,color,background,box-shadow]",
     "duration-150",
     "ease-[ease]",
     "hover:border-warcraft-gold",
     "hover:text-warcraft-gold",
-    "hover:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_100%)]",
+    "hover:bg-panel-gold-active",
     "hover:shadow-[0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
     "focus:outline-none",
     "kb-focus:outline-none",
     "kb-focus:border-warcraft-highlight",
     "kb-focus:text-warcraft-highlight",
-    "kb-focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "kb-focus:focus-ring",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

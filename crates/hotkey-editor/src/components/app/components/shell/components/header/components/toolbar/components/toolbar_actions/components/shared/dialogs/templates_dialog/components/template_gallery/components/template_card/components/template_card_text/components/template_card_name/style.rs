@@ -6,7 +6,7 @@ const BASE: &[TailwindClass] = tw![
     "uppercase",
     "tracking-[0.08em]",
     "text-inherit",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

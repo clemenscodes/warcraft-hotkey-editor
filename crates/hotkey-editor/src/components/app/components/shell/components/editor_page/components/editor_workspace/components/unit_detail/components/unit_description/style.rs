@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[1.75rem]",
     "leading-[1.45]",
     "text-warcraft-text-secondary",
-    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "text-shadow-drop-60",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

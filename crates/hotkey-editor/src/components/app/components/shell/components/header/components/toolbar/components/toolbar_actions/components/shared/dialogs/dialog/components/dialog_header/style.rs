@@ -12,7 +12,7 @@ const BASE: &[TailwindClass] = tw![
     "pb-[1.4rem]",
     "border-b",
     "border-warcraft-gold/40",
-    "shadow-[0_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_2px_0_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
+    "shadow-edge",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:gap-2", "mobile:px-[1.4rem]"];

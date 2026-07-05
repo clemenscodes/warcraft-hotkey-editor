@@ -7,7 +7,7 @@ const BASE: &[TailwindClass] = tw![
     "flex-1",
     "px-3",
     "whitespace-nowrap",
-    "bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
+    "bg-panel-gold-resting",
     "border",
     "border-warcraft-gold-border",
     "rounded-[8px]",
@@ -15,7 +15,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[1.1rem]",
     "uppercase",
     "tracking-[0.08em]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
     "transition-[border-color,color,box-shadow]",
     "duration-150",
     "hover:border-warcraft-gold",
@@ -23,11 +23,11 @@ const BASE: &[TailwindClass] = tw![
     "focus:outline-none",
     "kb-focus:border-white",
     "kb-focus:text-white",
-    "kb-focus:shadow-[0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
-    "data-[active=true]:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_100%)]",
+    "kb-focus:focus-ring",
+    "data-[active=true]:bg-panel-gold-active",
     "data-[active=true]:border-warcraft-gold",
     "data-[active=true]:text-warcraft-gold",
-    "data-[active=true]:shadow-[0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
+    "data-[active=true]:shadow-glow-12",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[0.85rem]", "mobile:px-[0.5rem]"];

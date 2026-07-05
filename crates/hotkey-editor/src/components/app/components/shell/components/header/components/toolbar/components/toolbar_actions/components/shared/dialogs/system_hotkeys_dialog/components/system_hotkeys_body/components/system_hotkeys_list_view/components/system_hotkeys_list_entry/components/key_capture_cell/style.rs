@@ -16,7 +16,7 @@ const BASE: &[TailwindClass] = tw![
     "whitespace-nowrap",
     "border",
     "rounded-[2px]",
-    "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_95%,transparent)_100%)]",
+    "bg-panel-dark-85",
     "[transition:filter_0.15s_ease,border-color_0.15s_ease]",
     "hover:[filter:brightness(1.18)_drop-shadow(0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent))]",
     "hover:border-warcraft-gold/85",
@@ -36,13 +36,13 @@ const BASE: &[TailwindClass] = tw![
     "after:border",
     "after:border-warcraft-gold",
     "after:rounded-[4px]",
-    "after:[background:linear-gradient(180deg,#0f162dfa_0%,#080e1efc_100%)]",
+    "after:bg-panel-dark-solid",
     "after:text-warcraft-gold",
     "after:text-[1.5rem]",
     "after:leading-[1.4]",
     "after:text-center",
-    "after:[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
-    "after:[box-shadow:0_6px_22px_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent)]",
+    "after:text-shadow-drop",
+    "after:shadow-elevation",
     "after:whitespace-normal",
     "after:pointer-events-none",
     "after:z-[1200]",
@@ -89,7 +89,7 @@ classes! {
 const NORMAL: &[TailwindClass] = tw![
     "text-warcraft-gold",
     "border-warcraft-gold/45",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 
 const CONFLICT: &[TailwindClass] = tw![

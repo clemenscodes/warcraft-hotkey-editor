@@ -28,16 +28,16 @@ classes! {
 }
 
 const EMPTY: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "bg-panel-dark-diag-85",
     "border-warcraft-blue-bright-deep",
-    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "shadow-bevel-hl",
 ];
 
 const DROP_TARGET: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "bg-panel-dark-diag-85",
     "border-warcraft-blue-bright",
     "border-dashed",
-    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "shadow-bevel-hl",
     "cursor-pointer",
     "hover:border-warcraft-gold",
     "hover:bg-warcraft-gold/8",
@@ -47,7 +47,7 @@ const BLOCKED_DROP_TARGET: &[TailwindClass] = tw![
     "[background:color-mix(in_oklab,var(--color-warcraft-danger)_4%,transparent)]",
     "border-warcraft-danger/55",
     "border-dashed",
-    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "shadow-bevel-hl",
     "cursor-not-allowed",
 ];
 

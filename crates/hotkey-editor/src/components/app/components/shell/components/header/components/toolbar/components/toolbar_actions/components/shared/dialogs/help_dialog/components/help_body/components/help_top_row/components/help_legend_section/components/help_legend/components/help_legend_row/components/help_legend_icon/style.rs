@@ -10,7 +10,7 @@ const BASE: &[TailwindClass] = tw![
     "border",
     "border-warcraft-gold/40",
     "rounded-lg",
-    "bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
+    "bg-panel-gold-resting",
     "text-warcraft-gold",
     "[&_svg]:w-8",
     "[&_svg]:h-8",

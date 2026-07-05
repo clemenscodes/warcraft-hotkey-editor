@@ -25,7 +25,7 @@ const BASE: &[TailwindClass] = tw![
     "hover:text-white",
     "focus:outline-none",
     "kb-focus:border-white",
-    "kb-focus:shadow-[0_0_0_2px_var(--color-warcraft-highlight)]",
+    "kb-focus:shadow-ring-hl-2",
     "data-[active=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_95%,transparent)_100%)]",
 ];
 

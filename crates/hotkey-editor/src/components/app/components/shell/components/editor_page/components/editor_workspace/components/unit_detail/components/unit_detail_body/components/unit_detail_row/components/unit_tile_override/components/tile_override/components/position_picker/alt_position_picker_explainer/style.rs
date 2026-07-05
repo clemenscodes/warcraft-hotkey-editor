@@ -10,7 +10,7 @@ const BASE: &[TailwindClass] = tw![
     "text-warcraft-gold/75",
     "text-[1.85rem]",
     "leading-[1.4]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

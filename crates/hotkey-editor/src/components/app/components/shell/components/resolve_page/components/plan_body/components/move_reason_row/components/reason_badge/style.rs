@@ -14,7 +14,7 @@ const BASE: &[TailwindClass] = tw![
     "[letter-spacing:0.04em]",
     "border",
     "border-solid",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
     "whitespace-nowrap",
 ];
 const MOBILE: &[TailwindClass] = tw![];

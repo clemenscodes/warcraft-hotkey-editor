@@ -23,7 +23,7 @@ const BASE: &[TailwindClass] = tw![
     "[&_.filled-tile[data-draggable=false]]:opacity-[0.32]!",
     "[&_.filled-tile[data-draggable=false]]:[filter:saturate(0.35)_brightness(0.85)]!",
     "[&_.filled-tile[data-draggable=false]]:border-warcraft-blue-deep!",
-    "[&_.filled-tile[data-draggable=false]]:[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]!",
+    "[&_.filled-tile[data-draggable=false]]:shadow-bevel-hl!",
     "[&_.filled-tile[data-draggable=false]]:[transform:none]!",
     "[&_.empty-tile[data-draggable=false]]:[border:2px_dashed_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]!",
     "[&_.empty-tile[data-draggable=false]]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_4%,transparent)]!",
@@ -32,10 +32,10 @@ const BASE: &[TailwindClass] = tw![
     "[&_.empty-tile[data-drop-target=true]]:[border:2px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_75%,transparent)]!",
     "[&_.empty-tile[data-drop-target=true]]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_14%,transparent)]!",
     "[&_.empty-tile[data-drop-target=true]]:cursor-pointer!",
-    "[&_.empty-tile[data-drop-target=true]]:[box-shadow:0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]!",
+    "[&_.empty-tile[data-drop-target=true]]:shadow-glow-12-3!",
     "[&_.empty-tile[data-drag-over=true]]:[border:2px_solid_var(--color-warcraft-gold)]!",
-    "[&_.empty-tile[data-drag-over=true]]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_32%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_100%),color-mix(in_oklab,var(--color-warcraft-bg-panel)_95%,transparent)]!",
-    "[&_.empty-tile[data-drag-over=true]]:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--color-warcraft-gold)_65%,transparent),0_0_28px_color-mix(in_oklab,var(--color-warcraft-gold)_85%,transparent)]!",
+    "[&_.empty-tile[data-drag-over=true]]:bg-panel-gold-diag-32-2!",
+    "[&_.empty-tile[data-drag-over=true]]:shadow-inset-ring!",
     "[&_.filled-tile[data-draggable=true]]:cursor-grab!",
     "[&_.filled-tile[data-draggable=true]]:border-warcraft-gold!",
     "[&_.filled-tile[data-draggable=true]]:[transition:none]!",
@@ -46,8 +46,8 @@ const BASE: &[TailwindClass] = tw![
     "[&_.filled-tile[data-draggable=true][data-dragging-source=true]]:[transform:none]!",
     "[&_.filled-tile[data-draggable=true][data-dragging-source=true]]:[filter:none]!",
     "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:[border:3px_solid_var(--color-warcraft-gold)]!",
-    "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_32%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)_100%),color-mix(in_oklab,var(--color-warcraft-bg-panel)_95%,transparent)]!",
-    "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--color-warcraft-gold)_65%,transparent),0_0_28px_color-mix(in_oklab,var(--color-warcraft-gold)_85%,transparent)]!",
+    "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:bg-panel-gold-diag-32-2!",
+    "[&_.filled-tile[data-draggable=true][data-dragging-source=true][data-drag-over=true]]:shadow-inset-ring!",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

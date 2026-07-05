@@ -16,7 +16,7 @@ const BASE: &[TailwindClass] = tw![
     "cursor-pointer",
     "[transition:background_0.15s_ease,box-shadow_0.15s_ease]",
     "hover:bg-warcraft-gold/12",
-    "hover:[box-shadow:0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    "hover:shadow-glow-8",
     "checked:bg-warcraft-gold/18",
     "checked:[box-shadow:inset_0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]",
     "checked:after:content-['']",
@@ -29,7 +29,7 @@ const BASE: &[TailwindClass] = tw![
     "checked:after:rotate-45",
     "checked:after:[filter:drop-shadow(1px_1px_0_var(--color-warcraft-shadow))]",
     "focus-visible:outline-none",
-    "focus-visible:[box-shadow:0_0_0_3px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "focus-visible:focus-ring",
 ];
 
 const MOBILE: &[TailwindClass] = tw![

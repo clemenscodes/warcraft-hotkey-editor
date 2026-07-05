@@ -17,7 +17,7 @@ const BASE: &[TailwindClass] = tw![
     "text-warcraft-text-secondary",
     "text-[1.05rem]",
     "leading-[1]",
-    "[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "text-shadow-drop",
     "data-[win=true]:border-warcraft-gold",
     "data-[win=true]:text-warcraft-gold",
 ];

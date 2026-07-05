@@ -12,7 +12,7 @@ const BASE: &[TailwindClass] = tw![
     "text-[2rem]",
     "leading-[1.2]",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
+    "text-shadow-drop-92",
 ];
 
 const MOBILE: &[TailwindClass] = tw!["mobile:text-[15px]", "mobile:[word-break:normal]"];

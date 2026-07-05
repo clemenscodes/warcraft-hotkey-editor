@@ -21,7 +21,7 @@ const BASE: &[TailwindClass] = tw![
     "focus:outline-none",
     "focus-visible:border-white",
     "focus-visible:text-white",
-    "focus-visible:[box-shadow:0_0_0_2px_var(--color-warcraft-highlight)]",
+    "focus-visible:shadow-ring-hl-2",
 ];
 
 const MOBILE: &[TailwindClass] = tw![];

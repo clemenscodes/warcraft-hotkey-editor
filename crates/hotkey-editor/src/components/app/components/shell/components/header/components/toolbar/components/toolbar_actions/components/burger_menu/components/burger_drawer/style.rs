@@ -8,7 +8,7 @@ const BASE: &[TailwindClass] = tw![
     "max-h-dvh",
     "z-[71]",
     "w-[min(74vw,280px)]",
-    "[background:linear-gradient(170deg,#0c1d30_0%,#070e1c_100%)]",
+    "bg-panel-dark-solid-2",
     "border-l",
     "border-l-warcraft-gold/30",
     "[box-shadow:-6px_0_40px_color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)]",

@@ -13,7 +13,7 @@ const BASE: &[TailwindClass] = tw![
     "border",
     "border-warcraft-blue-deep",
     "rounded-[12px]",
-    "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_70%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_70%,transparent)_100%)]",
+    "bg-panel-dark-diag-70",
     "overflow-hidden",
     "data-[empty=true]:items-center",
     "data-[empty=true]:justify-center",

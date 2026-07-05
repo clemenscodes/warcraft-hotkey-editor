@@ -14,7 +14,7 @@ const BASE: &[TailwindClass] = tw![
     "duration-[120ms]",
     "hover:text-warcraft-text-primary",
     "data-[active=true]:text-warcraft-gold",
-    "data-[active=true]:[text-shadow:1px_1px_0_var(--color-warcraft-shadow)]",
+    "data-[active=true]:text-shadow-drop",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:flex-none", "mobile:snap-start"];
 const TABLET: &[TailwindClass] = tw!["tablet:flex-none", "tablet:snap-start"];

@@ -41,11 +41,11 @@ const ERROR: &[TailwindClass] = tw![
 ];
 const WARNING: &[TailwindClass] = tw![
     "border-warcraft-gold",
-    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
+    "shadow-elevation-hl",
 ];
 const INFO: &[TailwindClass] = tw![
     "border-race-human",
-    "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent)]",
+    "shadow-elevation-hl",
 ];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO

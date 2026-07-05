@@ -12,7 +12,7 @@ const BASE: &[TailwindClass] = tw![
     "rounded-[8px]",
     "cursor-pointer",
     "hover:border-warcraft-gold",
-    "hover:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+    "hover:shadow-glow-8-3",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

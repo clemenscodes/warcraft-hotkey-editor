@@ -5,7 +5,7 @@ const BASE: &[TailwindClass] = tw![
     "[body[data-kb-modality]_&]:focus-visible:outline-none",
     "[body[data-kb-modality]_&]:focus-visible:border-white",
     "[body[data-kb-modality]_&]:focus-visible:text-white",
-    "[body[data-kb-modality]_&]:focus-visible:[box-shadow:0_0_0_2px_var(--color-warcraft-highlight),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+    "[body[data-kb-modality]_&]:focus-visible:shadow-ring-hl",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -24,9 +24,9 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:text-warcraft-gold",
     "mobile:text-[clamp(14px,3.8vw,17px)]",
     "mobile:tracking-[0.06em]",
-    "mobile:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
-    "mobile:[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
-    "mobile:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
+    "mobile:bg-panel-gold-diag-85",
+    "mobile:text-shadow-drop-92",
+    "mobile:shadow-glow-14",
 ];
 
 const TABLET: &[TailwindClass] = tw![
@@ -45,9 +45,9 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:text-warcraft-gold",
     "tablet:text-[clamp(14px,3.8vw,17px)]",
     "tablet:tracking-[0.06em]",
-    "tablet:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)_100%)]",
-    "tablet:[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
-    "tablet:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
+    "tablet:bg-panel-gold-diag-85",
+    "tablet:text-shadow-drop-92",
+    "tablet:shadow-glow-14",
 ];
 
 const LAPTOP: &[TailwindClass] = tw![];

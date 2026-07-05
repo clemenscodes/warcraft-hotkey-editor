@@ -52,11 +52,116 @@
   --color-warcraft-shadow: #000000;
   --color-warcraft-highlight: #ffffff;
 
+  /* Design-system shadows — promoted verbatim from the recurring inline
+     [box-shadow:…] values so a component references the effect by name. Each is
+     the exact effect it replaces; distinct effects stay distinct tokens. */
+  --shadow-focus-ring: 0 0 0 3px var(--color-warcraft-highlight), 0 0 16px color-mix(in oklab, var(--color-warcraft-highlight) 55%, transparent);
+  --shadow-bevel-hl: inset 0 1px 0 color-mix(in oklab,var(--color-warcraft-highlight) 4%,transparent),0 1px 2px color-mix(in oklab,var(--color-warcraft-shadow) 50%,transparent);
+  --shadow-bevel-hl-2: inset 0 1px 0 color-mix(in oklab,var(--color-warcraft-highlight) 4%,transparent),0 1px 0 color-mix(in oklab,var(--color-warcraft-shadow) 60%,transparent);
+  --shadow-bevel-hl-3: inset 0 1px 0 color-mix(in oklab,var(--color-warcraft-highlight) 4%,transparent);
+  --shadow-edge: 0 1px 0 color-mix(in oklab,var(--color-warcraft-shadow) 70%,transparent),0 2px 0 color-mix(in oklab,var(--color-warcraft-gold) 10%,transparent);
+  --shadow-elevation: 0 6px 22px color-mix(in oklab,var(--color-warcraft-shadow) 70%,transparent);
+  --shadow-elevation-2: 0 14px 30px color-mix(in oklab,var(--color-warcraft-shadow) 70%,transparent),0 0 18px color-mix(in oklab,var(--color-warcraft-gold) 12%,transparent);
+  --shadow-elevation-hl: 0 12px 32px color-mix(in oklab,var(--color-warcraft-shadow) 55%,transparent),inset 0 1px 0 color-mix(in oklab,var(--color-warcraft-highlight) 4%,transparent);
+  --shadow-glow-12: 0 0 12px color-mix(in oklab,var(--color-warcraft-gold) 30%,transparent);
+  --shadow-glow-12-2: 0 0 12px color-mix(in oklab,var(--color-warcraft-gold) 40%,transparent);
+  --shadow-glow-12-3: 0 0 12px color-mix(in oklab,var(--color-warcraft-gold) 25%,transparent);
+  --shadow-glow-14: 0 0 14px color-mix(in oklab,var(--color-warcraft-gold) 18%,transparent);
+  --shadow-glow-18: 0 0 18px color-mix(in oklab,var(--color-warcraft-gold) 85%,transparent),inset 0 0 14px color-mix(in oklab,var(--color-warcraft-gold) 35%,transparent);
+  --shadow-glow-22: 0 0 22px color-mix(in oklab,var(--color-warcraft-gold) 22%,transparent);
+  --shadow-glow-8: 0 0 8px color-mix(in oklab,var(--color-warcraft-gold) 50%,transparent);
+  --shadow-glow-8-2: 0 0 8px color-mix(in oklab,var(--color-warcraft-gold) 30%,transparent);
+  --shadow-glow-8-3: 0 0 8px color-mix(in oklab,var(--color-warcraft-gold) 45%,transparent);
+  --shadow-inset-ring: inset 0 0 0 1px color-mix(in oklab,var(--color-warcraft-gold) 65%,transparent),0 0 28px color-mix(in oklab,var(--color-warcraft-gold) 85%,transparent);
+  --shadow-ring-hl: 0 0 0 2px var(--color-warcraft-highlight),0 0 16px color-mix(in oklab,var(--color-warcraft-highlight) 55%,transparent);
+  --shadow-ring-hl-2: 0 0 0 2px var(--color-warcraft-highlight);
+  --shadow-ring-hl-3: 0 0 0 3px var(--color-warcraft-highlight),0 0 18px color-mix(in oklab,var(--color-warcraft-highlight) 55%,transparent);
+  --shadow-ring-hl-4: 0 0 0 2px color-mix(in oklab,var(--color-warcraft-gold) 35%,transparent),inset 0 1px 0 color-mix(in oklab,var(--color-warcraft-highlight) 6%,transparent),0 0 14px color-mix(in oklab,var(--color-warcraft-gold) 30%,transparent);
+
+  /* Recurring text-shadows, promoted verbatim. */
+  --text-shadow-drop: 1px 1px 0 var(--color-warcraft-shadow);
+  --text-shadow-drop-60: 1px 1px 0 color-mix(in oklab,var(--color-warcraft-shadow) 60%,transparent);
+  --text-shadow-drop-92: 1px 1px 0 color-mix(in oklab,var(--color-warcraft-shadow) 92%,transparent);
+  --text-shadow-glow-12: 1px 1px 0 var(--color-warcraft-shadow),0 0 12px color-mix(in oklab,var(--color-warcraft-gold) 55%,transparent);
+  --text-shadow-glow-14: 1px 1px 0 var(--color-warcraft-shadow),0 0 14px color-mix(in oklab,var(--color-warcraft-gold) 45%,transparent);
+  --text-shadow-outline: 1px 1px 0 var(--color-warcraft-shadow),-1px 1px 0 var(--color-warcraft-shadow),1px -1px 0 var(--color-warcraft-shadow),-1px -1px 0 var(--color-warcraft-shadow);
+
   /* Friz Quadrata is the app's single typeface. Overriding Tailwind's base
      `--font-sans` makes preflight apply it globally (html + form controls),
      so no component needs a font utility. The trailing stack is a last-resort
      fallback only — used if the .ttf fails to load or lacks a glyph. */
   --font-sans: "Friz Quadrata", serif;
+}
+
+/* Design-system panel gradients — promoted verbatim from recurring inline
+   linear-gradient() fills. Resting and active are SEPARATE tokens on purpose: a
+   button's two states are two distinct surfaces, never collapsed into one. These
+   set background-image (they layer over a component's own bg-color), matching the
+   `bg-[linear-gradient(…)]` form they replace. */
+@utility bg-panel-gold-resting {
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 100%);
+}
+@utility bg-panel-gold-active {
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 100%);
+}
+
+/* Design-system panel gradients — promoted verbatim from recurring inline
+   linear/radial-gradient() fills. Each token IS the exact fill it replaces;
+   distinct fills stay distinct. background-image layers over a component's
+   own bg-color, matching the bg-[…] / [background:…] forms they replace. */
+@utility bg-panel-blue-diag-85 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-blue) 85%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-panel) 85%,transparent) 100%);
+}
+@utility bg-panel-blue-diag-90 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-blue) 90%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-panel) 90%,transparent) 100%);
+}
+@utility bg-panel-blue-diag-95 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-blue-glow) 95%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-mid) 95%,transparent) 100%);
+}
+@utility bg-panel-blue-solid {
+  background-image: linear-gradient(180deg,#2a5085 0%,#1a3a5c 100%);
+}
+@utility bg-panel-blue-solid-2 {
+  background-image: linear-gradient(180deg,#356dac 0%,#1f4a72 100%);
+}
+@utility bg-panel-dark-55 {
+  background-image: linear-gradient(180deg,color-mix(in oklab,var(--color-warcraft-bg-mid) 55%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-base) 55%,transparent) 100%);
+}
+@utility bg-panel-dark-85 {
+  background-image: linear-gradient(180deg,color-mix(in oklab,var(--color-warcraft-bg-mid) 85%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-base) 95%,transparent) 100%);
+}
+@utility bg-panel-dark-85-2 {
+  background-image: linear-gradient(180deg,color-mix(in oklab,var(--color-warcraft-bg-base) 85%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-mid) 85%,transparent) 100%);
+}
+@utility bg-panel-dark-diag-70 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-bg-mid) 70%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-base) 70%,transparent) 100%);
+}
+@utility bg-panel-dark-diag-85 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-bg-mid) 85%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-bg-base) 85%,transparent) 100%);
+}
+@utility bg-panel-dark-solid {
+  background-image: linear-gradient(180deg,#0f162dfa 0%,#080e1efc 100%);
+}
+@utility bg-panel-dark-solid-2 {
+  background-image: linear-gradient(170deg,#0c1d30 0%,#070e1c 100%);
+}
+@utility bg-panel-gold-diag-22 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-gold) 22%,transparent) 0%,color-mix(in oklab,var(--color-race-neutral-strong) 95%,transparent) 100%);
+}
+@utility bg-panel-gold-diag-30 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-gold) 30%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-gold) 18%,transparent) 100%);
+}
+@utility bg-panel-gold-diag-32 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-gold) 32%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-gold) 18%,transparent) 100%);
+}
+@utility bg-panel-gold-diag-32-2 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-gold) 32%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-gold) 18%,transparent) 100%),color-mix(in oklab,var(--color-warcraft-bg-panel) 95%,transparent);
+}
+@utility bg-panel-gold-diag-85 {
+  background-image: linear-gradient(135deg,color-mix(in oklab,var(--color-warcraft-gold-dark) 85%,transparent) 0%,color-mix(in oklab,var(--color-warcraft-shadow) 85%,transparent) 100%);
+}
+@utility bg-panel-header-solid {
+  background-image: radial-gradient(ellipse 90% 60% at 50% 0%,#18365b 0%,transparent 60%),linear-gradient(180deg,#0a1a35 0%,#050a1a 100%);
 }
 
 /* The page canvas behind the app column. The shell drops `viewport-fit=cover`, so on a

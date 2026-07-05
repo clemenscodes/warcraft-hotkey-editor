@@ -39,7 +39,7 @@ const BASE: &[TailwindClass] = tw![
     "after:right-4",
     "after:h-px",
     "after:bg-warcraft-gold/40",
-    "after:[box-shadow:0_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_2px_0_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
+    "after:shadow-edge",
 ];
 
 const MOBILE: &[TailwindClass] = tw![
@@ -56,7 +56,7 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:max-w-full",
     "mobile:w-full",
     "mobile:bg-warcraft-bg-base",
-    "mobile:bg-[radial-gradient(ellipse_90%_60%_at_50%_0%,#18365b_0%,transparent_60%),linear-gradient(180deg,#0a1a35_0%,#050a1a_100%)]",
+    "mobile:bg-panel-header-solid",
     "mobile:bg-no-repeat",
     "mobile:bg-fixed",
     "mobile:bg-size-[100%_100%]",
@@ -76,7 +76,7 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:max-w-full",
     "tablet:w-full",
     "tablet:bg-warcraft-bg-base",
-    "tablet:bg-[radial-gradient(ellipse_90%_60%_at_50%_0%,#18365b_0%,transparent_60%),linear-gradient(180deg,#0a1a35_0%,#050a1a_100%)]",
+    "tablet:bg-panel-header-solid",
     "tablet:bg-no-repeat",
     "tablet:bg-fixed",
     "tablet:bg-size-[100%_100%]",

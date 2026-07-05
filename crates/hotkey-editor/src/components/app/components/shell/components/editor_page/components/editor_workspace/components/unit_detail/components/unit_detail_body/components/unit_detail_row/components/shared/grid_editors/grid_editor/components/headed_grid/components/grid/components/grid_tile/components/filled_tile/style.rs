@@ -28,10 +28,10 @@ const BASE: &[TailwindClass] = tw![
     "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-gold),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
     "data-[drag-over=true]:border-warcraft-gold",
     "data-[drag-over=true]:border-solid",
-    "data-[dragging-source=true]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_85%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_85%,transparent)_100%)]",
+    "data-[dragging-source=true]:bg-panel-dark-diag-85",
     "data-[dragging-source=true]:border-warcraft-blue-bright",
     "data-[dragging-source=true]:border-dashed",
-    "data-[dragging-source=true]:[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "data-[dragging-source=true]:shadow-bevel-hl",
     "data-[dragging-source=true]:[&>*]:invisible",
     "data-[dragging-source=true]:data-[drag-over=true]:border-warcraft-gold",
     "data-[dragging-source=true]:data-[drag-over=true]:border-dashed",
@@ -51,13 +51,13 @@ classes! {
 const FILLED: &[TailwindClass] = tw![
     "bg-warcraft-bg-panel/95",
     "border-warcraft-blue-bright",
-    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "shadow-bevel-hl",
 ];
 
 const COMMAND: &[TailwindClass] = tw![
-    "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue-glow)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-mid)_95%,transparent)_100%)]",
+    "bg-panel-blue-diag-95",
     "border-warcraft-blue-bright",
-    "[box-shadow:inset_0_1px_0_color-mix(in_oklab,var(--color-warcraft-highlight)_4%,transparent),0_1px_2px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
+    "shadow-bevel-hl",
 ];
 
 const SELECTED: &[TailwindClass] = tw![

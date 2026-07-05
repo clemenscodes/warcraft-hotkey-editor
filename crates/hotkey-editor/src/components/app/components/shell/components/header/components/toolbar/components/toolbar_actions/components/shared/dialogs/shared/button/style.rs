@@ -28,11 +28,11 @@ classes! {
 const PRIMARY: &[TailwindClass] = tw![
     "border",
     "border-warcraft-gold",
-    "[background:linear-gradient(180deg,#2a5085_0%,#1a3a5c_100%)]",
+    "bg-panel-blue-solid",
     "text-warcraft-gold",
-    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent)]",
-    "hover:[background:linear-gradient(180deg,#356dac_0%,#1f4a72_100%)]",
-    "hover:[box-shadow:0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
+    "text-shadow-drop-92",
+    "hover:bg-panel-blue-solid-2",
+    "hover:shadow-glow-12-2",
 ];
 
 const SECONDARY: &[TailwindClass] = tw![
@@ -40,10 +40,10 @@ const SECONDARY: &[TailwindClass] = tw![
     "border-warcraft-blue",
     "bg-warcraft-bg-panel/70",
     "text-warcraft-text-secondary",
-    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    "text-shadow-drop-60",
     "hover:border-warcraft-gold",
     "hover:text-warcraft-gold",
-    "hover:[box-shadow:0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]",
+    "hover:shadow-glow-12-3",
 ];
 states! {
     ButtonVariant, Primary => PRIMARY, Secondary => SECONDARY

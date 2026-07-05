@@ -22,11 +22,11 @@ const MOBILE: &[TailwindClass] = tw![
     "mobile:data-[open=true]:items-stretch",
     "mobile:data-[open=true]:gap-[0.15rem]",
     "mobile:data-[open=true]:p-[0.4rem]",
-    "mobile:data-[open=true]:[background:linear-gradient(170deg,#0c1d30_0%,#070e1c_100%)]",
+    "mobile:data-[open=true]:bg-panel-dark-solid-2",
     "mobile:data-[open=true]:border",
     "mobile:data-[open=true]:border-warcraft-gold/45",
     "mobile:data-[open=true]:rounded-[10px]",
-    "mobile:data-[open=true]:[box-shadow:0_14px_30px_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_12%,transparent)]",
+    "mobile:data-[open=true]:shadow-elevation-2",
 ];
 
 const TABLET: &[TailwindClass] = tw![
@@ -41,11 +41,11 @@ const TABLET: &[TailwindClass] = tw![
     "tablet:data-[open=true]:items-stretch",
     "tablet:data-[open=true]:gap-[0.15rem]",
     "tablet:data-[open=true]:p-[0.4rem]",
-    "tablet:data-[open=true]:[background:linear-gradient(170deg,#0c1d30_0%,#070e1c_100%)]",
+    "tablet:data-[open=true]:bg-panel-dark-solid-2",
     "tablet:data-[open=true]:border",
     "tablet:data-[open=true]:border-warcraft-gold/45",
     "tablet:data-[open=true]:rounded-[10px]",
-    "tablet:data-[open=true]:[box-shadow:0_14px_30px_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_12%,transparent)]",
+    "tablet:data-[open=true]:shadow-elevation-2",
 ];
 
 const LAPTOP: &[TailwindClass] = tw![];

@@ -50,7 +50,7 @@ const BASE: &[TailwindClass] = tw![
     "before:right-4",
     "before:h-px",
     "before:bg-warcraft-gold/40",
-    "before:[box-shadow:0_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_70%,transparent),0_2px_0_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
+    "before:shadow-edge",
 ];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
