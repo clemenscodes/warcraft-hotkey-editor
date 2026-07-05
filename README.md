@@ -117,13 +117,13 @@ named build-artifact volumes so incremental builds stay fast.
 
 The image pins the same tool versions as the Nix dev shell:
 
-| Tool | Version |
-|------|---------|
-| Rust | 1.95.0 |
-| `dioxus-cli` | 0.7.9 |
-| `wasm-bindgen-cli` | 0.2.121 |
-| Tailwind CSS | v4.3.0 |
-| Node.js / pnpm | 24.15.0 / 11.0.9 |
+| Tool               | Version          |
+| ------------------ | ---------------- |
+| Rust               | 1.96.1           |
+| `dioxus-cli`       | 0.7.9            |
+| `wasm-bindgen-cli` | 0.2.126          |
+| Tailwind CSS       | v4.3.0           |
+| Node.js / pnpm     | 24.15.0 / 11.0.9 |
 
 #### Production image
 
@@ -147,7 +147,7 @@ matching local versions of:
 
 - Rust with the `wasm32-unknown-unknown` target
 - `dioxus-cli` 0.7.9
-- `wasm-bindgen-cli` 0.2.121
+- `wasm-bindgen-cli` 0.2.126
 - Tailwind CSS v4
 - binaryen / `wasm-opt`
 - Node.js 24.15.0 and pnpm 11.0.9
@@ -181,35 +181,23 @@ E2e tests are part of `moon run :ci` and run on every pull request.
 crates/
 ├── hotkey-editor/        # Dioxus web app (wasm)
 │   └── e2e/              # Playwright end-to-end tests
-├── warcraft-api/         # Shared Warcraft III data types
-├── warcraft-database/    # Pre-extracted Warcraft III object database
-├── warcraft-extractor/   # Native CLI: regenerates db.rs from CASC
-├── warcraft-keybinds/    # CustomKeys.txt parser and serializer
-└── warcraft-slk/         # SLK table parser used by warcraft-extractor
-
+├── warcraft-keybinds/    # Pure-Rust CustomKeys.txt domain logic
+├── ddd/                  # Domain-driven-design building blocks
+└── gallery/              # Generic Dioxus component previewer
 docs/
 ├── ARCHITECTURE.md       # Runtime and build architecture
-└── EXTRACTION.md         # How db.rs is generated and regenerated
+├── COMPONENTS.md         # Renderer component conventions
+└── RUST_STYLE.md         # Rust style rules
 ```
+
+Game data (`warcraft-api`, `warcraft-database`) is a git-pinned external
+dependency from
+[`clemenscodes/warcraft-data`](https://github.com/clemenscodes/warcraft-data),
+not a crate in this repository.
 
 Generated frontend assets such as
 `crates/hotkey-editor/assets/tailwind.css` are not committed. The dev,
 bundle, and Nix build paths generate them before Dioxus reads them.
-
-## Generated Data
-
-`crates/warcraft-database/src/db.rs` is **machine-generated** by
-`warcraft-extractor` from a Warcraft III: Reforged CASC install. Hand
-edits are wiped on the next regeneration. To refresh it after a patch
-or fix an extraction bug, see [`docs/EXTRACTION.md`](docs/EXTRACTION.md).
-
-The extractor is native-only (CASC + cmake + zlib) and is intentionally
-kept out of the default workspace operations so the wasm build remains
-clean. Run it explicitly:
-
-```bash
-nix develop --command cargo run -p warcraft-extractor -- --casc "$W3_CASC"
-```
 
 ## Release Checklist
 

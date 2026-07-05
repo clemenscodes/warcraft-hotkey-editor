@@ -6,8 +6,7 @@ use crate::{classes, styling::TailwindClass, tw};
 // owns its own spacing, so the shell never reaches across the wall to space its children.
 // It also owns the app-wide foundational resets that used to live as global rules in
 // tailwind.input.css: they are `.app`-scoped, so they are inline descendant utilities on
-// this root, not global CSS. Old pixel breakpoints fold into the named bands (the former
-// `<1099px` foundation → mobile+tablet, the `<767px` input floor → mobile).
+// this root, not global CSS.
 const BASE: &[TailwindClass] = tw![
     "mx-auto",
     "flex",
@@ -63,9 +62,7 @@ const BASE: &[TailwindClass] = tw![
     "[&_*::-webkit-scrollbar-corner]:[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_45%,transparent)]",
 ];
 // Phone/tablet: full-bleed with no padding at all (the shell spans the whole viewport and
-// its content reaches every edge), a content-driven height above the dvh floor, and the
-// `<1099px` foundational resets — force every descendant to shrink below its min-content
-// and cap images so nothing pushes past the viewport.
+// its content reaches every edge), a content-driven height above the dvh floor.
 const MOBILE: &[TailwindClass] = tw![
     "mobile:h-auto",
     "mobile:overflow-y-visible",

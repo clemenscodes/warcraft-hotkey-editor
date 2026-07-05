@@ -59,6 +59,15 @@ export default defineConfig({
         },
       },
     },
+    {
+      // The --no-sandbox family above is Chromium-only; Firefox runs headless
+      // in CI without any special launch flags, so it gets none.
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+        viewport: { width: 1600, height: 900 },
+      },
+    },
   ],
   webServer: staticDir
     ? {

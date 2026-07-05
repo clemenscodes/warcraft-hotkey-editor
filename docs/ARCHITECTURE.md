@@ -211,10 +211,12 @@ localStorage. No "overlay onto the in-memory copy" path exists in the
 frontend.
 
 **R8. The domain crate has zero browser dependencies.**
-`warcraft-keybinds` (and `warcraft-api`, `warcraft-database`) build and
-test as plain native Rust crates. No `wasm-bindgen`, no `web-sys`, no
-`dioxus`, no `gloo`. The crate's only external dependency may be `serde`
-if it becomes useful — nothing else.
+`warcraft-keybinds` builds and tests as a plain native Rust crate. No
+`wasm-bindgen`, no `web-sys`, no `dioxus`, no `gloo`. Its game data comes
+from `warcraft-api` and `warcraft-database`, consumed as a git-pinned
+external dependency (`github.com/clemenscodes/warcraft-data`, tag `v0.1.0`)
+and regenerated in that repo, not here; otherwise `serde` is the only
+dependency it may add — nothing else.
 
 **R9. The domain crate is fully tested.**
 Every cascade rule, every collision case, every duplicate-detection
@@ -426,8 +428,8 @@ All asset URLs the bundler generates include that prefix.
 ### Docker
 
 All Docker paths use `ubuntu:24.04` as the base and pin the same tool
-versions as the Nix dev shell: Rust 1.95.0, dioxus-cli 0.7.9,
-wasm-bindgen-cli 0.2.121, Node.js 24.15.0, pnpm 11.0.9, moon 2.0.3,
+versions as the Nix dev shell: Rust 1.96.1, dioxus-cli 0.7.9,
+wasm-bindgen-cli 0.2.126, Node.js 24.15.0, pnpm 11.0.9, moon 2.0.3,
 tailwindcss 4.3.0. `git` is installed in the image because moon requires
 it to detect the workspace root and changed files.
 

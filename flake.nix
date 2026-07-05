@@ -2,7 +2,7 @@
   description = "Warcraft III Hotkey Editor — web-based CustomKeys.txt editor";
 
   nixConfig = {
-    extra-substituters = ["https://clemenscodes.cachix.org"];
+    extra-substituters = [ "https://clemenscodes.cachix.org" ];
     extra-trusted-public-keys = [
       "clemenscodes.cachix.org-1:yEwW1YgttL2xdsyfFDz/vv8zZRhRGMeDQsKKmtV1N18="
     ];
@@ -11,8 +11,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    fenix = {
-      url = "github:nix-community/fenix";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     crane.url = "github:ipetkov/crane";
@@ -20,35 +20,43 @@
     moon-tui.url = "github:clemenscodes/moon-tui";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    fenix,
-    crane,
-    playwright,
-    moon-tui,
-  }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      rust-overlay,
+      crane,
+      playwright,
+      moon-tui,
+    }:
     flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
+            # oxalica's rust-overlay exposes `pkgs.rust-bin`, from which we
+            # build the toolchain declared in rust-toolchain.toml. It ships
+            # pre-generated version manifests, so this stays IFD-free — no
+            # toolchain hash to pin or churn.
+            (import rust-overlay)
             # `dioxus-cli` 0.7.9 strictly checks the wasm-bindgen-cli
-            # version against the wasm-bindgen library (transitively
-            # resolved to 0.2.121 by `dioxus = =0.7.9`). nixpkgs ships
-            # 0.2.117, so we pin our own at 0.2.121 via the in-tree builder.
+            # version against the wasm-bindgen library (pinned to 0.2.126
+            # by the workspace, see `crates/hotkey-editor/Cargo.toml`).
+            # nixpkgs ships an older cli, so we pin our own at 0.2.126
+            # via the in-tree builder.
             (final: prev: {
               wasm-bindgen-cli = final.buildWasmBindgenCli rec {
                 src = final.fetchCrate {
                   pname = "wasm-bindgen-cli";
-                  version = "0.2.121";
-                  hash = "sha256-ZOMgFNOcGkO66Jz/Z83eoIu+DIzo3Z/vq6Z5g6BDY/w=";
+                  version = "0.2.126";
+                  hash = "sha256-H6Is3fiZVxZCfOMWK5dWMSrtn50VGv0sfdnsT+cTtyk=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-DPdCDPTAPBrbqLUqnCwQu1dePs9lGg85JCJOCIr9qjU=";
+                  hash = "sha256-VucqkXbCi4qtQzY/HrXiDnbSURsagPsdNVMn1Tw3UiY=";
                 };
               };
               # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.9 to match
@@ -67,27 +75,13 @@
                   hash = "sha256-h5wkxHP8ehZLHqcUsro08/dpqSPnPuBbZuUGG8i4nBc=";
                 };
               });
-
-              # Pinned upstream CascLib source. `casclib-rs`'s build script
-              # builds CascLib from source via cmake; pointing it at this
-              # vendored snapshot makes the extractor build reproducible
-              # across machines and keeps it offline-friendly inside Nix.
-              casclib = prev.fetchFromGitHub {
-                owner = "ladislav-zezula";
-                repo = "CascLib";
-                rev = "07ab5f37ad282cc101d5c17793c550a0a6d4637f";
-                hash = "sha256-E1Z4Y1i3KbMuG17M0L3xCLVVcvAGzF5NWWOadAAw3ZQ=";
-              };
             })
           ];
         };
 
         # Rust toolchain — version, targets, and components are all
-        # declared in rust-toolchain.toml; fenix reads from there.
-        rustToolchain = fenix.packages.${system}.fromToolchainFile {
-          file = ./rust-toolchain.toml;
-          sha256 = "sha256-gh/xTkxKHL4eiRXzWv8KP7vfjSk61Iq48x47BEDFgfk=";
-        };
+        # declared in rust-toolchain.toml; rust-overlay reads from there.
+        rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
@@ -112,7 +106,7 @@
             OPENSSL_NO_VENDOR = 1;
           };
 
-          buildInputs = [pkgs.openssl];
+          buildInputs = [ pkgs.openssl ];
           nativeBuildInputs = with pkgs; [
             pkg-config
             installShellFiles
@@ -120,22 +114,22 @@
           ];
 
           postInstall =
-            pkgs.lib.optionalString
-            (pkgs.stdenv.hostPlatform.emulatorAvailable pkgs.buildPackages)
-            (
-              let
-                emulator = pkgs.stdenv.hostPlatform.emulator pkgs.buildPackages;
-              in ''
-                installShellCompletion --cmd moon \
-                  --bash <(${emulator} $out/bin/moon completions --shell bash) \
-                  --fish <(${emulator} $out/bin/moon completions --shell fish) \
-                  --zsh <(${emulator} $out/bin/moon completions --shell zsh)
-              ''
-            );
+            pkgs.lib.optionalString (pkgs.stdenv.hostPlatform.emulatorAvailable pkgs.buildPackages)
+              (
+                let
+                  emulator = pkgs.stdenv.hostPlatform.emulator pkgs.buildPackages;
+                in
+                ''
+                  installShellCompletion --cmd moon \
+                    --bash <(${emulator} $out/bin/moon completions --shell bash) \
+                    --fish <(${emulator} $out/bin/moon completions --shell fish) \
+                    --zsh <(${emulator} $out/bin/moon completions --shell zsh)
+                ''
+              );
 
           doCheck = false;
           doInstallCheck = true;
-          nativeInstallCheckInputs = [pkgs.versionCheckHook];
+          nativeInstallCheckInputs = [ pkgs.versionCheckHook ];
 
           meta = {
             description = "Task runner and repo management tool for the web ecosystem, written in Rust";
@@ -173,7 +167,7 @@
           playwright-test
           playwright-driver
         ];
-        moonRuntimeInputs = ciRuntimeInputs ++ [moonTui];
+        moonRuntimeInputs = ciRuntimeInputs ++ [ moonTui ];
 
         ci-cache-tools = pkgs.buildEnv {
           name = "warcraft-hotkey-editor-ci-cache-tools";
@@ -184,7 +178,8 @@
         # `hotkey-editor` per `.moon/workspace.yml`) in a shell app so
         # we can expose it as `nix run .#<task>` — no need to enter the
         # devshell first.
-        runMoonTask = task:
+        runMoonTask =
+          task:
           pkgs.writeShellApplication {
             name = "moon-${task}";
             runtimeInputs = moonRuntimeInputs;
@@ -247,27 +242,37 @@
         # used to run in the `rust-checks` CI job.
         cargoFmt = craneLib.cargoFmt { inherit src; };
 
-        cargoClippyNative = craneLib.cargoClippy (commonArgsNative // {
-          cargoArtifacts = cargoArtifactsNative;
-          cargoClippyExtraArgs = "-- -D warnings";
-        });
+        cargoClippyNative = craneLib.cargoClippy (
+          commonArgsNative
+          // {
+            cargoArtifacts = cargoArtifactsNative;
+            cargoClippyExtraArgs = "-- -D warnings";
+          }
+        );
 
-        cargoClippyWasm = craneLib.cargoClippy (commonArgs // {
-          inherit cargoArtifacts;
-          pnameSuffix = "-wasm";
-          cargoExtraArgs = "-p hotkey-editor";
-          cargoClippyExtraArgs = "-- -D warnings";
-        });
+        cargoClippyWasm = craneLib.cargoClippy (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
+            pnameSuffix = "-wasm";
+            cargoExtraArgs = "-p hotkey-editor";
+            cargoClippyExtraArgs = "-- -D warnings";
+          }
+        );
 
-        cargoTestNative = craneLib.cargoTest (commonArgsNative // {
-          cargoArtifacts = cargoArtifactsNative;
-        });
+        cargoTestNative = craneLib.cargoTest (
+          commonArgsNative
+          // {
+            cargoArtifacts = cargoArtifactsNative;
+          }
+        );
 
         # The final static bundle: index.html + hashed JS/WASM + assets +
         # `.nojekyll` and `404.html` for GitHub Pages compatibility.
         # The output directory is exactly what `actions/upload-pages-artifact`
         # wants — no post-processing needed in CI.
-        warcraft-hotkey-editor = craneLib.mkCargoDerivation (commonArgs
+        warcraft-hotkey-editor = craneLib.mkCargoDerivation (
+          commonArgs
           // {
             inherit cargoArtifacts;
             pnameSuffix = "-bundle";
@@ -295,16 +300,28 @@
               # without server-side rewrites.
               cp $out/index.html $out/404.html
             '';
-          });
-      in {
-        formatter = pkgs.alejandra;
+          }
+        );
+      in
+      {
+        formatter = pkgs.nixfmt;
 
         packages = {
           default = warcraft-hotkey-editor;
-          inherit cargoArtifacts cargoArtifactsNative ci-cache-tools moonCli warcraft-hotkey-editor;
-          inherit cargoFmt cargoClippyNative cargoClippyWasm cargoTestNative;
-          dioxus-cli = pkgs.dioxus-cli;
-          wasm-bindgen-cli = pkgs.wasm-bindgen-cli;
+          inherit
+            cargoArtifacts
+            cargoArtifactsNative
+            ci-cache-tools
+            moonCli
+            warcraft-hotkey-editor
+            ;
+          inherit
+            cargoFmt
+            cargoClippyNative
+            cargoClippyWasm
+            cargoTestNative
+            ;
+          inherit (pkgs) dioxus-cli wasm-bindgen-cli;
         };
 
         # `nix run .#dev` and `nix run .#bundle` are the same thing as
@@ -331,42 +348,23 @@
         };
 
         devShells.default = pkgs.mkShell {
-          inputsFrom = [warcraft-hotkey-editor];
+          inputsFrom = [ warcraft-hotkey-editor ];
           packages =
             moonRuntimeInputs
             ++ (with pkgs; [
               cargo-watch
               cargo-edit
               taplo
-              alejandra
               nil
-              # Native build deps for `warcraft-extractor`: casclib-rs's
-              # build.rs builds CascLib from source via cmake and links
-              # against zlib. None of this is in the wasm graph, so the
-              # commonArgs / wasm bundle stay untouched.
-              cmake
-              pkg-config
-              zlib
             ]);
 
-          # `casclib-rs`' build script reads CASCLIB_DIR to locate the
-          # CascLib source tree it should compile. Pointing it at the
-          # pinned overlay attribute (added above) makes the extractor
-          # build reproducible across machines without any network
-          # fetches at build time.
-          CASCLIB_DIR = pkgs.casclib;
-
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
-          PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+          # Use the pietdevries94 flake input's driver, NOT `pkgs.playwright-driver`
+          # (nixpkgs): the browsers must match the `playwright-test` runner on PATH,
+          # and only the flake input keeps that pair version-locked. Sourcing the
+          # browsers from nixpkgs instead lets them drift out of sync on a bump.
+          PLAYWRIGHT_BROWSERS_PATH = "${playwright-driver.browsers}";
           MOON_TOOLCHAIN_FORCE_GLOBALS = "true";
-
-          # Runtime linking for the extractor binary: zlib is dlopened
-          # by the freshly-built CascLib, gcc.cc.lib provides libstdc++
-          # for the C++ portion of CascLib.
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
-            gcc.cc.lib
-            zlib
-          ]);
 
           shellHook = ''
             export NODE_PATH="${playwright-test}/lib/node_modules''${NODE_PATH:+":$NODE_PATH"}"

@@ -17,10 +17,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Rust 1.95.0 + wasm32 target (matches rust-toolchain.toml)
+# Rust 1.96.1 + wasm32 target (matches rust-toolchain.toml)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     --profile minimal \
-    --default-toolchain 1.95.0 \
+    --default-toolchain 1.96.1 \
     --target wasm32-unknown-unknown \
     --component clippy,rustfmt \
     --no-modify-path
@@ -37,7 +37,7 @@ RUN set -eux; \
       "https://github.com/DioxusLabs/dioxus/releases/download/v0.7.9/dx-${triple}.tar.gz" \
       | tar -xz -C /usr/local/bin
 
-# wasm-bindgen-cli 0.2.121 — GitHub release binary, no crates.io involved
+# wasm-bindgen-cli 0.2.126 — GitHub release binary, no crates.io involved
 # Also install to $DX_HOME/bin/ so dx finds it without downloading at runtime
 RUN set -eux; \
     arch=$(uname -m); \
@@ -47,15 +47,15 @@ RUN set -eux; \
       *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
     esac; \
     curl --retry 5 --retry-delay 2 -fsSL \
-      "https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.121/wasm-bindgen-0.2.121-${triple}.tar.gz" \
+      "https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.126/wasm-bindgen-0.2.126-${triple}.tar.gz" \
       | tar -xz --strip-components=1 -C /usr/local/bin \
-          "wasm-bindgen-0.2.121-${triple}/wasm-bindgen"; \
+          "wasm-bindgen-0.2.126-${triple}/wasm-bindgen"; \
     mkdir -p "${DX_HOME}/bin"; \
     cp /usr/local/bin/wasm-bindgen "${DX_HOME}/bin/wasm-bindgen"
 
 # pnpm + moon + tailwindcss (v4, pinned to match Nix devshell) + playwright (matches flake)
 RUN corepack enable && corepack prepare pnpm@11.0.9 --activate
-RUN pnpm add -g @moonrepo/cli@2.0.3 @tailwindcss/cli@4.3.0 @playwright/test@1.59.1
+RUN pnpm add -g @moonrepo/cli@2.0.3 @tailwindcss/cli@4.3.0 @playwright/test@1.61.1
 
 RUN git config --global --add safe.directory '*'
 
@@ -110,7 +110,7 @@ COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY crates/hotkey-editor/e2e/package.json crates/hotkey-editor/e2e/package.json
 RUN pnpm install --frozen-lockfile \
     && playwright install --with-deps chromium \
-    && pnpm --filter @warcraft-hotkey-editor/e2e add @playwright/test@1.59.1
+    && pnpm --filter @warcraft-hotkey-editor/e2e add @playwright/test@1.61.1
 
 COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /app/dist/warcraft-hotkey-editor
 COPY crates/hotkey-editor/e2e crates/hotkey-editor/e2e

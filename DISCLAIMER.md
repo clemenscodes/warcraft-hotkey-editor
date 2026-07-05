@@ -16,8 +16,9 @@ applies to the source code:
   race banners, decorative frames).
 - The font file `crates/hotkey-editor/public/fonts/frizqt.ttf`
   (Friz Quadrata).
-- The data tables embedded in `crates/warcraft-database/src/db.rs`
-  (unit / hero / ability / item / upgrade definitions, tooltip strings).
+- The data tables compiled into the app from the `warcraft-database`
+  dependency (`github.com/clemenscodes/warcraft-data`): unit / hero /
+  ability / item / upgrade definitions and tooltip strings.
 
 These assets are extracted from a legally-purchased copy of Warcraft III
 and bundled here only so that the editor is usable out of the box. They

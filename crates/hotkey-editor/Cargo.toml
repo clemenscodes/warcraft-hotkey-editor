@@ -17,25 +17,41 @@ path = "src/main.rs"
 dioxus = { workspace = true, features = ["web", "router", "launch", "macro"] }
 dioxus-primitives = { workspace = true }
 dioxus-cli-config = { version = "0.7.9", features = ["web"] }
-wasm-bindgen = "0.2"
+wasm-bindgen = "0.2.126"
 web-sys = { version = "0.3", features = [
-    "AddEventListenerOptions", "Event",
-    "HtmlInputElement", "HtmlElement", "HtmlAnchorElement",
-    "Element", "Node", "NodeList",
-    "KeyboardEvent", "PointerEvent", "MouseEvent",
-    "DomRect", "Document", "EventTarget", "DomTokenList", "CssStyleDeclaration",
-    "ScrollIntoViewOptions", "ScrollLogicalPosition",
-    "Window", "Blob", "BlobPropertyBag", "Url",
-    "Storage",
-    "History", "Location", "UrlSearchParams",
+  "AddEventListenerOptions",
+  "Event",
+  "HtmlInputElement",
+  "HtmlElement",
+  "HtmlAnchorElement",
+  "Element",
+  "Node",
+  "NodeList",
+  "KeyboardEvent",
+  "PointerEvent",
+  "MouseEvent",
+  "DomRect",
+  "Document",
+  "EventTarget",
+  "DomTokenList",
+  "CssStyleDeclaration",
+  "ScrollIntoViewOptions",
+  "ScrollLogicalPosition",
+  "Window",
+  "Blob",
+  "BlobPropertyBag",
+  "Url",
+  "Storage",
+  "History",
+  "Location",
+  "UrlSearchParams",
 ] }
-js-sys = "0.3"
-gloo-timers = { version = "0.3", features = ["futures"] }
-num-traits.workspace = true
-flate2 = "1.1"
-base64 = "0.22"
-console_error_panic_hook = "0.1"
+js-sys = "0.3.103"
+gloo-timers = { version = "0.4.0", features = ["futures"] }
+flate2 = "1.1.9"
+base64 = "0.22.1"
+console_error_panic_hook = "0.1.7"
 warcraft-api = { workspace = true }
 warcraft-database = { workspace = true }
 ddd = { workspace = true }
-warcraft-keybinds = { path = "../warcraft-keybinds" }
+warcraft-keybinds = { workspace = true }
