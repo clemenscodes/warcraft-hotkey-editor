@@ -140,6 +140,21 @@ impl EditorHistory {
     pub fn reseat_present(&mut self, present: EditorSnapshot) {
         self.present = present;
     }
+
+    fn encode_stack(stack: &[EditorSnapshot]) -> String {
+        let record_separator = RECORD_SEPARATOR.to_string();
+        let encoded: Vec<String> = stack.iter().map(EditorSnapshot::to_string).collect();
+        encoded.join(&record_separator)
+    }
+
+    fn parse_stack(part: &str) -> Vec<EditorSnapshot> {
+        if part.is_empty() {
+            return Vec::new();
+        }
+        part.split(RECORD_SEPARATOR)
+            .filter_map(|entry| EditorSnapshot::from_str(entry).ok())
+            .collect()
+    }
 }
 
 impl ddd::Layered for EditorHistory {
@@ -148,25 +163,10 @@ impl ddd::Layered for EditorHistory {
 
 impl ddd::AggregateRoot for EditorHistory {}
 
-fn encode_stack(stack: &[EditorSnapshot]) -> String {
-    let record_separator = RECORD_SEPARATOR.to_string();
-    let encoded: Vec<String> = stack.iter().map(EditorSnapshot::to_string).collect();
-    encoded.join(&record_separator)
-}
-
-fn parse_stack(part: &str) -> Vec<EditorSnapshot> {
-    if part.is_empty() {
-        return Vec::new();
-    }
-    part.split(RECORD_SEPARATOR)
-        .filter_map(|entry| EditorSnapshot::from_str(entry).ok())
-        .collect()
-}
-
 impl fmt::Display for EditorHistory {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let undo_text = encode_stack(&self.undo_stack);
-        let redo_text = encode_stack(&self.redo_stack);
+        let undo_text = Self::encode_stack(&self.undo_stack);
+        let redo_text = Self::encode_stack(&self.redo_stack);
         write!(
             formatter,
             "{}{GROUP_SEPARATOR}{undo_text}{GROUP_SEPARATOR}{redo_text}",
@@ -185,8 +185,8 @@ impl FromStr for EditorHistory {
         let redo_part = groups.next().unwrap_or_default();
         let present = EditorSnapshot::from_str(present_part).unwrap_or_default();
         let history = Self {
-            undo_stack: parse_stack(undo_part),
-            redo_stack: parse_stack(redo_part),
+            undo_stack: Self::parse_stack(undo_part),
+            redo_stack: Self::parse_stack(redo_part),
             present,
         };
         Ok(history)
