@@ -1,7 +1,8 @@
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, DragThreadState,
     LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
-    TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
+    TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE, TOUCH_LONG_PRESS_TIMER_ID,
+    TOUCH_STARTED,
 };
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
@@ -157,8 +158,8 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
                 )
             {
                 TOUCH_LONG_PRESS_TIMER_ID.with(|c| c.set(Some(timer_id)));
+                TOUCH_LONG_PRESS_CLOSURE.with(|c| *c.borrow_mut() = Some(cb));
             }
-            cb.forget();
         }
     }
 }

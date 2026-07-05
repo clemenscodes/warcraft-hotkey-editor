@@ -67,6 +67,12 @@ thread_local! {
         Cell::new(None)
     };
 
+    /// Holds the live long-press callback so it is dropped (not leaked) when the
+    /// timer fires or is cancelled. Replaces the previous `Closure::forget()`.
+    pub(crate) static TOUCH_LONG_PRESS_CLOSURE: RefCell<Option<Closure<dyn FnMut()>>> = const {
+        RefCell::new(None)
+    };
+
     /// Non-passive `touchmove` listener installed only while a touch drag is active.
     pub(crate) static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const {
         RefCell::new(None)
@@ -82,6 +88,7 @@ impl DragThreadState {
         {
             window.clear_timeout_with_handle(id);
         }
+        TOUCH_LONG_PRESS_CLOSURE.with(|cell| cell.borrow_mut().take());
     }
 
     pub(crate) fn install_scroll_lock() {
