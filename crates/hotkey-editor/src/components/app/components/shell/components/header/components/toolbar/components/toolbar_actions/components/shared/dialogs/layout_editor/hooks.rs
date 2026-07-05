@@ -4,6 +4,7 @@ use super::props::LayoutEditorProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::use_custom_keys_service;
+use crate::services::grid_layout::context::use_grid_layout_service;
 use dioxus::prelude::*;
 
 use warcraft_keybinds::{
@@ -30,10 +31,11 @@ pub(super) struct LayoutEditorModel {
 /// layout, and wires the apply, pick, toggle, and guarded open-change handlers.
 pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel {
     let open = props.open;
-    let mut grid_layout = props.grid_layout;
+    let grid_layout = props.grid_layout;
     let mut editing_layout_cell = props.editing_layout_cell;
     let mut dragging_layout_cell = props.dragging_layout_cell;
     let custom_keys_service = use_custom_keys_service();
+    let grid_layout_service = use_grid_layout_service();
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.open;
     let layout_snapshot = *grid_layout.read();
@@ -89,7 +91,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
                 }
                 let mut next_layout = *grid_layout.read();
                 next_layout.swap_cells(source_column, source_row, column, row);
-                grid_layout.set(next_layout);
+                grid_layout_service.select(next_layout);
                 dragging_layout_cell.set(None);
             });
             let onclick = EventHandler::new(move |_event: MouseEvent| {
@@ -172,7 +174,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         let active_column = u8::from(active_cell.column());
         let active_row = u8::from(active_cell.row());
         next_layout.assign_unique(active_column, active_row, letter);
-        grid_layout.set(next_layout);
+        grid_layout_service.select(next_layout);
         editing_layout_cell.set(None);
     });
     let on_picker_close = EventHandler::new(move |_event: ()| editing_layout_cell.set(None));

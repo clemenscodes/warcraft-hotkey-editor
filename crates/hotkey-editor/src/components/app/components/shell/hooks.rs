@@ -8,6 +8,7 @@ use crate::persistence::grid_layout_persistence::GridLayoutPersistence;
 use crate::persistence::onboarding_persistence::OnboardingPersistence;
 use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::grid_layout::service::GridLayoutService;
 use crate::services::editor_state::EditorState;
 use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
@@ -73,6 +74,8 @@ pub(super) fn use_shell() -> ShellModel {
         let snapshot = *grid_layout.read();
         GridLayoutPersistence::save_grid_layout(snapshot);
     });
+    let grid_layout_service = GridLayoutService::new(grid_layout);
+    use_context_provider(|| grid_layout_service);
     let update_hotkeys_on_move =
         use_signal::<bool>(EditorPreferencesPersistence::load_update_hotkeys_on_move);
     use_effect(move || {
