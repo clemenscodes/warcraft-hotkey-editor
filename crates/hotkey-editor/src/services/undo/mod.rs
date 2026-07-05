@@ -165,7 +165,13 @@ impl Service<EditorHistory> for UndoHistory {
     }
 
     fn snapshot(&self) -> EditorHistory {
-        self.history.read().clone()
+        // `peek`, not `read`: `commit` calls `snapshot` and then writes the
+        // `history` signal via `replace`. `record` runs inside the shell's
+        // reactive capture effect, so a subscribing `read` here would make that
+        // effect depend on `history` and re-fire on its own write — an infinite
+        // render loop. A snapshot is a point-in-time clone to mutate, never a
+        // subscription.
+        self.history.peek().clone()
     }
 
     fn replace(&self, aggregate: EditorHistory) {
