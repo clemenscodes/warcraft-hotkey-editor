@@ -1,6 +1,6 @@
 pub mod context;
 
-use crate::services::storage::local_storage::LocalStorage;
+use crate::persistence::local_storage::LocalStorage;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;

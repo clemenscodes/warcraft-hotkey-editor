@@ -7,5 +7,4 @@ pub mod grid_layout;
 pub mod navigation;
 pub mod overlay_state;
 pub mod resolve_selection;
-pub mod storage;
 pub mod undo;
