@@ -12,7 +12,8 @@ pub(super) fn use_resolve_button() -> ToolbarButtonProps {
     let custom_keys_service = use_custom_keys_service();
     let navigation = use_view_navigation();
     let keys = custom_keys_service.keys();
-    let disabled = keys.read().is_none();
+    let disabled_memo = use_memo(move || keys.read().is_none());
+    let disabled = disabled_memo();
     let onclick = EventHandler::new(move |_event: MouseEvent| navigation.apply(AppView::Resolve));
     ToolbarButtonProps {
         icon: ICON_RESOLVE,

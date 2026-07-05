@@ -18,7 +18,8 @@ pub(super) struct ExportButtonPresentation {
 pub(super) fn use_export_button() -> ExportButtonPresentation {
     let custom_keys_service = use_custom_keys_service();
     let keys = custom_keys_service.keys();
-    let visible = keys.read().is_some();
+    let visible_memo = use_memo(move || keys.read().is_some());
+    let visible = visible_memo();
     let mut info_open = use_signal(|| false);
     let on_open = EventHandler::new(move |_event: MouseEvent| info_open.set(true));
     let button = ToolbarButtonProps {
