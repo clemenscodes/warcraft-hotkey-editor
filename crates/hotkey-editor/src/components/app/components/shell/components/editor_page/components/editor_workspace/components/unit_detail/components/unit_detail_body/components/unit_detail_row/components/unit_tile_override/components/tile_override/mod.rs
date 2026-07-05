@@ -1,6 +1,8 @@
 pub mod components;
 mod hooks;
+mod logic;
 mod props;
+mod state;
 
 use dioxus::prelude::*;
 
