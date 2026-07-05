@@ -1,5 +1,5 @@
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialogProps;
-use crate::services::customkeys::persistence::OnboardingPersistence;
+use crate::persistence::onboarding_persistence::OnboardingPersistence;
 use dioxus::prelude::*;
 
 /// The dismiss button's only input: the click handler. Built from the dialog

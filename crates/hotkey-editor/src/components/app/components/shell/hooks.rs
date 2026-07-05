@@ -2,7 +2,10 @@ use crate::components::app::components::shell::route_sync::NavDecision;
 use crate::components::app::components::shell::style;
 use crate::components::app::route::Route;
 use crate::services::collision_selection::CollisionSelection;
-use crate::services::customkeys::persistence::{CustomKeysPersistence, OnboardingPersistence};
+use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
+use crate::persistence::editor_preferences_persistence::EditorPreferencesPersistence;
+use crate::persistence::grid_layout_persistence::GridLayoutPersistence;
+use crate::persistence::onboarding_persistence::OnboardingPersistence;
 use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::editor_state::EditorState;
@@ -64,17 +67,17 @@ pub(super) fn use_shell() -> ShellModel {
     let custom_keys_service = CustomKeysService::new(loaded_keys);
     use_context_provider(|| custom_keys_service);
     let grid_layout = use_signal::<GridLayout>(|| {
-        CustomKeysPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
+        GridLayoutPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
     });
     use_effect(move || {
         let snapshot = *grid_layout.read();
-        CustomKeysPersistence::save_grid_layout(snapshot);
+        GridLayoutPersistence::save_grid_layout(snapshot);
     });
     let update_hotkeys_on_move =
-        use_signal::<bool>(CustomKeysPersistence::load_update_hotkeys_on_move);
+        use_signal::<bool>(EditorPreferencesPersistence::load_update_hotkeys_on_move);
     use_effect(move || {
         let enabled = *update_hotkeys_on_move.read();
-        CustomKeysPersistence::save_update_hotkeys_on_move(enabled);
+        EditorPreferencesPersistence::save_update_hotkeys_on_move(enabled);
     });
     let undo_history = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo_history);

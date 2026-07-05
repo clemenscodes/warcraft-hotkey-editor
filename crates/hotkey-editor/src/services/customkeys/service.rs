@@ -13,7 +13,7 @@ use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::ImportOutcome;
 use warcraft_keybinds::MoveRequest;
 
-use crate::services::customkeys::persistence::CustomKeysPersistence;
+use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
 
 /// Infrastructure adapter that persists the [`CustomKeys`] aggregate to
 /// localStorage. Its `save` funnels through [`CustomKeys::normalized_text`], so

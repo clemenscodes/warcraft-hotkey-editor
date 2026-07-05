@@ -1,5 +1,4 @@
 pub mod context;
 pub mod hotkey_override;
-pub mod persistence;
 pub mod service;
 pub mod upload_status;
