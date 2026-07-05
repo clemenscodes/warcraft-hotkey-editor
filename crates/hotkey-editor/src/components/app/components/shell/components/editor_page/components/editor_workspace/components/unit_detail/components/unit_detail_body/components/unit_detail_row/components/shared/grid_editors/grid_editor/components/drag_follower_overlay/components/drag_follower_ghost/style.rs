@@ -36,9 +36,7 @@ classes! {
 
 const DEFAULT: &[TailwindClass] = tw!["bg-warcraft-bg-panel/95"];
 
-const COMMAND: &[TailwindClass] = tw![
-    "bg-panel-blue-diag-95"
-];
+const COMMAND: &[TailwindClass] = tw!["bg-panel-blue-diag-95"];
 states! {
     GhostState, Default => DEFAULT, Command => COMMAND
 }

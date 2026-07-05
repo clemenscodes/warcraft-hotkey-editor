@@ -39,14 +39,8 @@ const ERROR: &[TailwindClass] = tw![
     "border-race-orc",
     "[box-shadow:0_12px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent),0_0_24px_color-mix(in_oklab,var(--color-race-orc)_35%,transparent)]",
 ];
-const WARNING: &[TailwindClass] = tw![
-    "border-warcraft-gold",
-    "shadow-elevation-hl",
-];
-const INFO: &[TailwindClass] = tw![
-    "border-race-human",
-    "shadow-elevation-hl",
-];
+const WARNING: &[TailwindClass] = tw!["border-warcraft-gold", "shadow-elevation-hl",];
+const INFO: &[TailwindClass] = tw!["border-race-human", "shadow-elevation-hl",];
 states! {
     ToastType, Success => SUCCESS, Error => ERROR, Warning => WARNING, Info => INFO
 }

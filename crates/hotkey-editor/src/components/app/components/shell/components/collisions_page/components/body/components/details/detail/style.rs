@@ -3,7 +3,7 @@ use crate::{classes, styling::TailwindClass, tw};
 const BASE: &[TailwindClass] = tw![
     "flex",
     "flex-col",
-    "self-start",
+    "self-stretch",
     "w-full",
     "min-w-0",
     "min-h-0",

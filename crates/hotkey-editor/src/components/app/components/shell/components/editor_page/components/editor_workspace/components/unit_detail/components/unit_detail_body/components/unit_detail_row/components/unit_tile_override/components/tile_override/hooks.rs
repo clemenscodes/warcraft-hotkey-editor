@@ -4,7 +4,6 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::text::description::Description;
 use warcraft_keybinds::text::tip::Tip;
 use warcraft_keybinds::{CustomKeys, GridLayout, GridSlotId, HotkeyTarget, HotkeyToken, Letter};
-use wasm_bindgen::JsCast;
 
 use super::components::tile_override_alt_picker::TileOverrideAltPickerProps;
 use super::components::tile_override_card::components::ability_description::AbilityDescriptionProps;
@@ -177,45 +176,6 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
     }
     let tier_label_text = format!("Level {} of {}", active_tier_index + 1, total_tier_count);
     let object_id_text = detail.object_id().value().to_string();
-    let scroll_dependency = detail.object_id();
-    use_effect(move || {
-        let _track = scroll_dependency;
-        let Some(window) = web_sys::window() else {
-            return;
-        };
-        let Some(document) = window.document() else {
-            return;
-        };
-        let Some(document_element) = document.document_element() else {
-            return;
-        };
-        let viewport_width = document_element.client_width();
-        if viewport_width > 1024 {
-            return;
-        }
-        let target_element_result = document
-            .query_selector(".tile-override-card")
-            .ok()
-            .flatten();
-        let Some(target_element) = target_element_result else {
-            return;
-        };
-        let Ok(html_element) = target_element.dyn_into::<web_sys::HtmlElement>() else {
-            return;
-        };
-        let is_keyboard_mode = document
-            .body()
-            .map(|body| body.has_attribute("data-kb-modality"))
-            .unwrap_or(false);
-        if !is_keyboard_mode
-            && let Some(active_el) = document
-                .active_element()
-                .and_then(|el| el.dyn_into::<web_sys::HtmlElement>().ok())
-        {
-            let _ = active_el.blur();
-        }
-        html_element.scroll_into_view_with_bool(true);
-    });
     let picker_open = editing_snapshot.is_some();
     let picker_target = editing_snapshot;
     let picker_is_research_context =
