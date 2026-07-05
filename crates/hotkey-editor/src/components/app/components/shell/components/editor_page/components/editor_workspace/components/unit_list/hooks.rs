@@ -12,6 +12,7 @@ use dioxus::prelude::*;
 use std::time::Duration;
 use warcraft_api::UnitKind;
 use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers};
+use warcraft_keybinds::{UnitListing, UnitListingRequest};
 
 const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
@@ -35,6 +36,11 @@ pub(super) struct UnitListModel {
 
 /// Reads the list's signals, runs the debounced search, computes the derived
 /// catalog state, and shapes every child's props so the body stays pure RSX.
+///
+/// The catalog walk itself (`UnitListing::resolve`) is memoized on the race,
+/// mode, committed query, search field, and visibility — the values it
+/// actually depends on — so it does not re-run on unrelated re-renders such as
+/// a unit selection.
 pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let active_race = props.active_race;
     let unit_mode = props.unit_mode;
@@ -45,6 +51,9 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let show_abilityless_units = props.show_abilityless_units;
     let expand_variants = props.expand_variants;
     let collapsed_categories = props.collapsed_categories;
+    let race = *active_race.read();
+    let mode = *unit_mode.read();
+    let committed_query = search_query.read().clone();
     let current_search_field = *search_field.read();
     let show_abilityless_active = *show_abilityless_units.read();
     let expand_variants_active = *expand_variants.read();
@@ -61,20 +70,34 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
             raw_query.set(committed);
         }
     });
+    let listing_memo = use_memo(move || {
+        let listing_race = *active_race.read();
+        let listing_mode = *unit_mode.read();
+        let listing_query = search_query.read().clone();
+        let listing_search_field = *search_field.read();
+        let listing_show_abilityless = *show_abilityless_units.read();
+        let listing_expand_variants = *expand_variants.read();
+        let listing_visibility =
+            CatalogVisibility::new(listing_show_abilityless, listing_expand_variants);
+        let listing_request = UnitListingRequest::new(
+            listing_race,
+            listing_mode,
+            listing_query,
+            listing_search_field,
+            listing_visibility,
+        );
+        UnitListing::resolve(&listing_request)
+    });
+    let listing = listing_memo();
     let state = UnitListState::new(
-        active_race,
-        unit_mode,
-        search_query,
-        current_search_field,
+        committed_query,
         selected_unit_id,
         collapsed_categories,
-        visibility,
+        listing,
     );
     let mut active_category_signal = state.active_category();
     let active_kind = state.active_kind();
     let search_active = state.search_active();
-    let race = state.race();
-    let mode = state.mode();
     let first_result_id = state.first_result_id().map(str::to_owned);
     let first_result_kind = state.first_result_kind();
     let on_keydown = EventHandler::new(move |event: KeyboardEvent| {
