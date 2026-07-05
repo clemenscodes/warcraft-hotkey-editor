@@ -19,3 +19,4 @@ vcs:
 projects:
   - moon.yml
   - crates/*/moon.yml
+  - crates/hotkey-editor/e2e/moon.yml

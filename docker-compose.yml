@@ -17,7 +17,7 @@ services:
       - target:/app/target
       - moon-cache:/app/.moon/cache
       - root-node-modules:/app/node_modules
-      - hotkey-editor-node-modules:/app/crates/hotkey-editor/node_modules
+      - e2e-node-modules:/app/crates/hotkey-editor/e2e/node_modules
       - moon-home:/root/.moon
     ports:
       - "8123:8123"
@@ -28,5 +28,5 @@ volumes:
   target:
   moon-cache:
   root-node-modules:
-  hotkey-editor-node-modules:
+  e2e-node-modules:
   moon-home:

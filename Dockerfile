@@ -65,14 +65,14 @@ WORKDIR /app
 FROM base AS development
 
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+COPY crates/hotkey-editor/e2e/package.json crates/hotkey-editor/e2e/package.json
 RUN pnpm install --frozen-lockfile
 
 # builder: compiles the production WASM app
 FROM base AS builder
 
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+COPY crates/hotkey-editor/e2e/package.json crates/hotkey-editor/e2e/package.json
 RUN pnpm install --frozen-lockfile
 
 COPY . .
@@ -82,23 +82,40 @@ RUN moon run hotkey-editor:bundle
 FROM nginx:alpine AS production
 
 COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /usr/share/nginx/html/warcraft-hotkey-editor
-COPY crates/hotkey-editor/nginx.conf /etc/nginx/conf.d/default.conf
+COPY <<'NGINX_CONF' /etc/nginx/conf.d/default.conf
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+
+    location = / {
+        return 301 /warcraft-hotkey-editor/;
+    }
+
+    location /warcraft-hotkey-editor/ {
+        try_files $uri $uri/ /warcraft-hotkey-editor/index.html;
+    }
+
+    location /_dioxus {
+        access_log off;
+        return 404;
+    }
+}
+NGINX_CONF
 EXPOSE 80
 
 # e2e: playwright against the production build served by a zero-dep Node static server
 FROM base AS e2e
 
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY crates/hotkey-editor/package.json crates/hotkey-editor/package.json
+COPY crates/hotkey-editor/e2e/package.json crates/hotkey-editor/e2e/package.json
 RUN pnpm install --frozen-lockfile \
     && playwright install --with-deps chromium \
-    && pnpm --filter @warcraft-hotkey-editor/hotkey-editor add @playwright/test@1.59.1
+    && pnpm --filter @warcraft-hotkey-editor/e2e add @playwright/test@1.59.1
 
 COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /app/dist/warcraft-hotkey-editor
 COPY crates/hotkey-editor/e2e crates/hotkey-editor/e2e
-COPY crates/hotkey-editor/playwright.config.ts crates/hotkey-editor/playwright.config.ts
 
 ENV STATIC_DIR=/app/dist
 
-WORKDIR /app/crates/hotkey-editor
-CMD ["/app/crates/hotkey-editor/node_modules/.bin/playwright", "test"]
+WORKDIR /app/crates/hotkey-editor/e2e
+CMD ["/app/crates/hotkey-editor/e2e/node_modules/.bin/playwright", "test"]

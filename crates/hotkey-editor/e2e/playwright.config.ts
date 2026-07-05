@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const staticDir = process.env["STATIC_DIR"];
 const staticBasePath = process.env["STATIC_BASE_PATH"] ?? "";
-const serverScript = join(__dirname, "e2e", "server.mjs");
+const serverScript = join(__dirname, "server.mjs");
 
 const baseUrl = process.env["BASE_URL"] ?? "http://localhost:8123";
 
@@ -26,9 +26,9 @@ const onboardingSuppressedState = {
 };
 
 export default defineConfig({
-  globalSetup: "./e2e/global-setup.ts",
-  testDir: "./e2e/tests",
-  outputDir: "./dist/test-results",
+  globalSetup: "./global-setup.ts",
+  testDir: "./tests",
+  outputDir: "./test-results",
   fullyParallel: true,
   forbidOnly: !!process.env["CI"],
   retries: process.env["CI"] ? 2 : 0,
@@ -37,7 +37,7 @@ export default defineConfig({
   expect: { timeout: process.env["CI"] ? 1000 : 5000 },
   reporter: [
     ["list"],
-    ["html", { open: "never", outputFolder: "./dist/playwright-report" }],
+    ["html", { open: "never", outputFolder: "./playwright-report" }],
   ],
   use: {
     baseURL: baseUrl,

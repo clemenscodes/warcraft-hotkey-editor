@@ -113,7 +113,7 @@ jobs:
         run: >
           nix shell .#ci-cache-tools
           --accept-flake-config
-          --command moon run hotkey-editor:playwright/ci
+          --command moon run e2e:playwright/ci
 
       - name: Stage Pages artifact
         if: github.event_name != 'pull_request'

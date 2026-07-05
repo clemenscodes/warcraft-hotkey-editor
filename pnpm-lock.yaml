@@ -6,16 +6,17 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      tailwindcss:
+        specifier: 4.3.0
+        version: 4.3.0
 
-  crates/hotkey-editor:
+  crates/hotkey-editor/e2e:
     devDependencies:
       '@types/node':
         specifier: 24.12.3
         version: 24.12.3
-      tailwindcss:
-        specifier: 4.3.0
-        version: 4.3.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
