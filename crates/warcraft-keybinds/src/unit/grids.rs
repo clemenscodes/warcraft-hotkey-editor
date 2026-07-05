@@ -5,6 +5,7 @@ use crate::identity::slot::{CommandCard, GridSlotId};
 use crate::model::GridCoordinate;
 use crate::unit::slots::UnitCommandSlots;
 use std::collections::{HashMap, HashSet};
+use std::sync::LazyLock;
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::WARCRAFT_DATABASE;
 
@@ -51,6 +52,7 @@ impl std::fmt::Display for GridRole {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NamedCommandGrid {
     role: GridRole,
     card: CommandCard,
@@ -70,13 +72,31 @@ impl NamedCommandGrid {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct UnitGrids {
     unit_id: WarcraftObjectId,
     grids: Vec<NamedCommandGrid>,
 }
 
+static UNIT_GRIDS_CACHE: LazyLock<HashMap<WarcraftObjectId, UnitGrids>> = LazyLock::new(|| {
+    let mut cache = HashMap::new();
+    for entry in WARCRAFT_DATABASE.into_iter() {
+        let object_id = *entry.0;
+        let grids = UnitGrids::build_for_unit(object_id);
+        cache.insert(object_id, grids);
+    }
+    cache
+});
+
 impl UnitGrids {
     pub fn for_unit(unit_id: WarcraftObjectId) -> Self {
+        if let Some(cached) = UNIT_GRIDS_CACHE.get(&unit_id) {
+            return cached.clone();
+        }
+        Self::build_for_unit(unit_id)
+    }
+
+    fn build_for_unit(unit_id: WarcraftObjectId) -> Self {
         let main_card = WARCRAFT_DATABASE.command_card(unit_id);
         let main_grid = NamedCommandGrid::new(GridRole::MainCommand, main_card);
         let mut grids = vec![main_grid];
@@ -794,5 +814,39 @@ mod unit_grids_tests {
             !cross_grid_collision,
             "same hotkey in main grid and skill tree must not be reported as a collision",
         );
+    }
+}
+
+#[cfg(test)]
+mod cache_tests {
+    use super::UnitGrids;
+    use warcraft_database::WARCRAFT_DATABASE;
+
+    fn first_unit_id() -> warcraft_api::WarcraftObjectId {
+        // any real unit id from the DB; take the first command-card-bearing object
+        *WARCRAFT_DATABASE
+            .into_iter()
+            .map(|(object_id, _object)| object_id)
+            .next()
+            .expect("database is non-empty")
+    }
+
+    #[test]
+    fn for_unit_is_stable_across_calls() {
+        let unit_id = first_unit_id();
+        let first = UnitGrids::for_unit(unit_id);
+        let second = UnitGrids::for_unit(unit_id);
+        assert_eq!(first.grid_count(), second.grid_count());
+        assert_eq!(first.unit_id(), second.unit_id());
+    }
+
+    #[test]
+    fn cached_grids_match_a_fresh_build() {
+        let unit_id = first_unit_id();
+        let cached = UnitGrids::for_unit(unit_id);
+        let fresh = UnitGrids::build_for_unit(unit_id); // uncached builder (added below)
+        assert_eq!(cached.grid_count(), fresh.grid_count());
+        assert_eq!(cached.unit_id(), fresh.unit_id());
+        assert_eq!(cached, fresh);
     }
 }
