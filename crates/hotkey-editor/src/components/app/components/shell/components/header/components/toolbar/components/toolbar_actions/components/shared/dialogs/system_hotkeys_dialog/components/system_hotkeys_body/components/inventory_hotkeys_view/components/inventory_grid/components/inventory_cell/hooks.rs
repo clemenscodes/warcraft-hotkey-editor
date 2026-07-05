@@ -1,6 +1,7 @@
 use super::super::super::{
-    DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DragOrigin, InventoryDragFollower,
-    InventoryDragSource, SUPPRESS_NEXT_CLICK,
+    DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
+    DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragRaf,
+    InventoryDragSource, LATEST_DRAG_MOVE, SUPPRESS_NEXT_CLICK,
 };
 
 use super::props::InventoryCellProps;
@@ -14,6 +15,7 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode};
 use wasm_bindgen::JsCast;
+use wasm_bindgen::closure::Closure;
 
 /// Everything the cell's markup needs, already shaped: its glow state, drag flag,
 /// caption/key, conflict tooltip, whether its picker is open, and the full set of
@@ -181,51 +183,46 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
                 DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(true));
             }
         }
-        let current_follower_option = drag_follower.read().clone();
-        if let Some(mut current_follower) = current_follower_option {
-            current_follower.cursor_horizontal_position = cursor_horizontal_position;
-            current_follower.cursor_vertical_position = cursor_vertical_position;
-            drag_follower.set(Some(current_follower));
-        }
-        let Some(document) = web_sys::window().and_then(|window| window.document()) else {
-            return;
+        let point = DragMovePoint {
+            client_horizontal: cursor_horizontal_position,
+            client_vertical: cursor_vertical_position,
         };
-        let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
-        let hit_test_point = HitTestPoint::from(cursor_point);
-        let hit_test_horizontal = hit_test_point.horizontal_position();
-        let hit_test_vertical = hit_test_point.vertical_position();
-        let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
-        let cell_under_option =
-            elem_under_option.and_then(|elem| elem.closest(".inventory-cell").ok().flatten());
-        let Some(cell_under) = cell_under_option else {
-            if drop_target.read().is_some() {
-                drop_target.set(None);
-            }
-            return;
-        };
-        let target_id = cell_under.get_attribute("data-inventory-slot");
-        let Some(target_id_string) = target_id else {
-            if drop_target.read().is_some() {
-                drop_target.set(None);
-            }
-            return;
-        };
-        if target_id_string == section_id_for_pointermove {
-            if drop_target.read().is_some() {
-                drop_target.set(None);
-            }
+        LATEST_DRAG_MOVE.with(|cell| cell.set(Some(point)));
+        let frame_already_pending = DRAG_RAF_HANDLE.with(|cell| cell.get().is_some());
+        if frame_already_pending {
             return;
         }
-        let needs_update = drop_target
-            .read()
-            .as_deref()
-            .map(|existing| existing != target_id_string.as_str())
-            .unwrap_or(true);
-        if needs_update {
-            drop_target.set(Some(target_id_string));
+        let Some(window) = web_sys::window() else {
+            return;
+        };
+        let section_id_for_flush = section_id_for_pointermove.clone();
+        let closure: DragRafClosure = Closure::new(move |_timestamp: f64| {
+            DRAG_RAF_HANDLE.with(|cell| cell.set(None));
+            let Some(point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) else {
+                return;
+            };
+            flush_inventory_drag_move(
+                drop_target,
+                drag_follower,
+                section_id_for_flush.clone(),
+                point,
+            );
+        });
+        if let Ok(handle) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
+            DRAG_RAF_HANDLE.with(|cell| cell.set(Some(handle)));
         }
+        DRAG_RAF_CLOSURE.with(|cell| *cell.borrow_mut() = Some(closure));
     });
     let on_pointerup = EventHandler::new(move |_event: Event<PointerData>| {
+        if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
+            flush_inventory_drag_move(
+                drop_target,
+                drag_follower,
+                section_id_for_pointerup.clone(),
+                final_point,
+            );
+        }
+        InventoryDragRaf::cancel();
         let drop_clone = drop_target.read().clone();
         let mut performed_swap = false;
         if let Some(target_id) = drop_clone
@@ -247,6 +244,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         drag_follower.set(None);
     });
     let on_pointercancel = EventHandler::new(move |_event: Event<PointerData>| {
+        InventoryDragRaf::cancel();
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
         dragging_source.set(None);
@@ -285,5 +283,58 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
         on_click,
         on_pick,
         on_close,
+    }
+}
+
+fn flush_inventory_drag_move(
+    mut drop_target: Signal<Option<String>>,
+    mut drag_follower: Signal<Option<InventoryDragFollower>>,
+    section_id: String,
+    point: DragMovePoint,
+) {
+    let cursor_horizontal_position = point.client_horizontal;
+    let cursor_vertical_position = point.client_vertical;
+    let current_follower_option = drag_follower.read().clone();
+    if let Some(mut current_follower) = current_follower_option {
+        current_follower.cursor_horizontal_position = cursor_horizontal_position;
+        current_follower.cursor_vertical_position = cursor_vertical_position;
+        drag_follower.set(Some(current_follower));
+    }
+    let Some(document) = web_sys::window().and_then(|window| window.document()) else {
+        return;
+    };
+    let cursor_point = CursorPoint::new(cursor_horizontal_position, cursor_vertical_position);
+    let hit_test_point = HitTestPoint::from(cursor_point);
+    let hit_test_horizontal = hit_test_point.horizontal_position();
+    let hit_test_vertical = hit_test_point.vertical_position();
+    let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
+    let cell_under_option =
+        elem_under_option.and_then(|elem| elem.closest(".inventory-cell").ok().flatten());
+    let Some(cell_under) = cell_under_option else {
+        if drop_target.read().is_some() {
+            drop_target.set(None);
+        }
+        return;
+    };
+    let target_id = cell_under.get_attribute("data-inventory-slot");
+    let Some(target_id_string) = target_id else {
+        if drop_target.read().is_some() {
+            drop_target.set(None);
+        }
+        return;
+    };
+    if target_id_string == section_id {
+        if drop_target.read().is_some() {
+            drop_target.set(None);
+        }
+        return;
+    }
+    let needs_update = drop_target
+        .read()
+        .as_deref()
+        .map(|existing| existing != target_id_string.as_str())
+        .unwrap_or(true);
+    if needs_update {
+        drop_target.set(Some(target_id_string));
     }
 }
