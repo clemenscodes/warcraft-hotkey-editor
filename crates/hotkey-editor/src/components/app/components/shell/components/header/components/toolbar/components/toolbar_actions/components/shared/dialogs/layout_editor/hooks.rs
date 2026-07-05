@@ -20,6 +20,7 @@ pub(super) struct LayoutEditorModel {
     pub(super) on_pick: EventHandler<HotkeyToken>,
     pub(super) on_picker_close: EventHandler<()>,
     pub(super) on_apply: EventHandler<MouseEvent>,
+    pub(super) on_dialog_open_change: Callback<bool>,
     pub(super) toggle_checked: bool,
     pub(super) on_toggle: EventHandler<FormEvent>,
 }
@@ -33,6 +34,7 @@ pub(super) struct LayoutActions {
     pub(super) on_apply: EventHandler<MouseEvent>,
     pub(super) on_pick: EventHandler<HotkeyToken>,
     pub(super) on_picker_close: EventHandler<()>,
+    pub(super) on_dialog_open_change: Callback<bool>,
     pub(super) toggle_checked: bool,
     pub(super) on_toggle: EventHandler<FormEvent>,
 }
@@ -76,6 +78,24 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
         editing_layout_cell.set(None);
     });
     let on_picker_close = EventHandler::new(move |_event: ()| editing_layout_cell.set(None));
+    // The key picker is a second modal nested inside this one. When it mounts it
+    // takes focus, which makes the base dialog primitive fire a close on this
+    // outer dialog — that close must be ignored, or opening the picker would
+    // dismiss the whole editor and strand `editing_layout_cell` set, so the
+    // editor never reopens. Only a close that arrives while the picker is shut is
+    // a real dismiss; then we also clear the editing cell so the next open is clean.
+    let on_dialog_open_change = Callback::new(move |is_open: bool| {
+        if is_open {
+            layout_dialog_open.set(true);
+            return;
+        }
+        let picker_is_open = editing_layout_cell.read().is_some();
+        if picker_is_open {
+            return;
+        }
+        editing_layout_cell.set(None);
+        layout_dialog_open.set(false);
+    });
     let toggle_checked = *update_hotkeys_on_move.read();
     let on_toggle = EventHandler::new(move |_event: FormEvent| {
         let current = *update_hotkeys_on_move.read();
@@ -85,6 +105,7 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
         on_apply,
         on_pick,
         on_picker_close,
+        on_dialog_open_change,
         toggle_checked,
         on_toggle,
     }
@@ -135,6 +156,7 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
         on_pick: actions.on_pick,
         on_picker_close: actions.on_picker_close,
         on_apply: actions.on_apply,
+        on_dialog_open_change: actions.on_dialog_open_change,
         toggle_checked: actions.toggle_checked,
         on_toggle: actions.on_toggle,
     }

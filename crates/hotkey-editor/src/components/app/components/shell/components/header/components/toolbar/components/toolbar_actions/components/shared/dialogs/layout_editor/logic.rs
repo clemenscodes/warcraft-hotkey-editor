@@ -41,12 +41,13 @@ impl From<&LayoutEditorModel> for DialogProps {
                 MoveHotkeyToggle { ..toggle }
             }
         };
+        let on_open_change = Some(model.on_dialog_open_change);
         Self {
             open,
             title,
             children,
             footer,
-            on_open_change: None,
+            on_open_change,
         }
     }
 }
