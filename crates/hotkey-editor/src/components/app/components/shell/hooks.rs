@@ -63,7 +63,17 @@ pub(super) fn use_shell() -> ShellModel {
         let Some(file) = read_guard.as_ref() else {
             return;
         };
-        let canonical_text = file.normalize().to_string();
+        // Invariant: every writer of `loaded_keys` stores a normalized aggregate
+        // (commit/import normalize, from_text normalizes, resolve-Apply normalizes,
+        // template-apply uses import_overlay's normalized output). So re-normalizing
+        // here is redundant work; just serialize. The debug assertion catches any
+        // future writer that violates the invariant.
+        debug_assert_eq!(
+            file.clone().normalize().to_string(),
+            file.to_string(),
+            "loaded_keys held a non-normalized aggregate; a writer must normalize before set()",
+        );
+        let canonical_text = file.to_string();
         CustomKeysPersistence::save_text(&canonical_text);
     });
     let custom_keys_service = CustomKeysService::new(loaded_keys);
@@ -89,7 +99,7 @@ pub(super) fn use_shell() -> ShellModel {
         let keys_text = loaded_keys
             .read()
             .as_ref()
-            .map(|file| file.normalize().to_string())
+            .map(|file| file.to_string())
             .unwrap_or_default();
         let grid_layout_text = grid_layout.read().to_storage_string();
         let snapshot = EditorSnapshot::new(keys_text, grid_layout_text);
