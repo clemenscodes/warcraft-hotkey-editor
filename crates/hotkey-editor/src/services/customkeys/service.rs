@@ -1,7 +1,5 @@
-use ddd::Adapter;
 use ddd::ApplicationLayer;
 use ddd::ApplicationService;
-use ddd::InfrastructureLayer;
 use ddd::Layered;
 use ddd::Repository;
 use ddd::Service;
@@ -13,32 +11,7 @@ use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::ImportOutcome;
 use warcraft_keybinds::MoveRequest;
 
-use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
-
-/// Infrastructure adapter that persists the [`CustomKeys`] aggregate to
-/// localStorage. Its `save` funnels through [`CustomKeys::normalized_text`], so
-/// only normalized text can ever reach storage (architecture rule R2).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct CustomKeysRepository;
-
-impl Layered for CustomKeysRepository {
-    type Layer = InfrastructureLayer;
-}
-
-impl Adapter for CustomKeysRepository {}
-
-impl Repository<CustomKeys> for CustomKeysRepository {
-    fn load(&self) -> Option<CustomKeys> {
-        let stored_text = CustomKeysPersistence::load_text()?;
-        let parsed_keys = CustomKeys::from_text(stored_text.as_str());
-        Some(parsed_keys)
-    }
-
-    fn save(&self, aggregate: &CustomKeys) {
-        let canonical_text = aggregate.to_string();
-        CustomKeysPersistence::save_text(&canonical_text);
-    }
-}
+use crate::repository::custom_keys_repository::CustomKeysRepository;
 
 /// The application-layer service that owns the live [`CustomKeys`] aggregate and
 /// is the only sanctioned way for the renderer to mutate it. Every command runs
