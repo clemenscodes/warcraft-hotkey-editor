@@ -178,6 +178,12 @@ impl Default for GridLayout {
     }
 }
 
+impl ddd::Layered for GridLayout {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::AggregateRoot for GridLayout {}
+
 impl TryFrom<&str> for GridLayout {
     type Error = ();
 
@@ -217,5 +223,24 @@ mod tests {
         assert_eq!(COMMAND_GRID_COLUMNS, 4);
         assert_eq!(COMMAND_GRID_ROWS, 3);
         assert_eq!(COMMAND_GRID_TILE_COUNT, 12);
+    }
+}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::GridLayout;
+    use ddd::AggregateRoot;
+    use ddd::DomainLayer;
+    use ddd::Layered;
+
+    fn assert_domain_aggregate<Aggregate>()
+    where
+        Aggregate: AggregateRoot + Layered<Layer = DomainLayer>,
+    {
+    }
+
+    #[test]
+    fn grid_layout_is_a_domain_aggregate_root() {
+        assert_domain_aggregate::<GridLayout>();
     }
 }
