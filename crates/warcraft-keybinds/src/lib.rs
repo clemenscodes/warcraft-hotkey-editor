@@ -5,6 +5,7 @@ pub mod collision;
 pub mod command;
 pub mod custom_keys;
 pub mod display;
+pub mod editor_history;
 pub mod grid;
 pub mod identity;
 pub mod model;
@@ -38,6 +39,8 @@ pub use display::templates::{BundledTemplate, ResolvedTemplate};
 pub use grid::layout::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, COMMAND_GRID_TILE_COUNT, GridLayout,
 };
+
+pub use editor_history::{EditorHistory, EditorSnapshot};
 
 pub use identity::ability_id::AbilityId;
 pub use identity::hotkey_target::HotkeyTarget;
