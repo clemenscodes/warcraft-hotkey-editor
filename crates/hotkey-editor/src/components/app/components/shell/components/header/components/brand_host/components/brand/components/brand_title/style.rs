@@ -6,7 +6,6 @@ use crate::{classes, styling::TailwindClass, tw};
 // per-band font clamps.
 const BASE: &[TailwindClass] = tw![
     "m-0",
-    "font-friz-quadrata",
     "font-normal",
     "text-[5cqi]",
     "leading-[1.1]",

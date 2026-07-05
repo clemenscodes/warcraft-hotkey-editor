@@ -4,7 +4,6 @@ const BASE: &[TailwindClass] = tw![
     "mx-0",
     "mt-[0.5rem]",
     "mb-[0.75rem]",
-    "font-friz-quadrata",
     "text-[20px]",
     "font-normal",
     "uppercase",

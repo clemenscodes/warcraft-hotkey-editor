@@ -15,7 +15,6 @@ const BASE: &[TailwindClass] = tw![
     "border",
     "border-[#3a5277]",
     "text-[#c2c8d2]",
-    "font-mono",
     "text-[1.05rem]",
     "leading-[1]",
     "[text-shadow:1px_1px_0_#000]",

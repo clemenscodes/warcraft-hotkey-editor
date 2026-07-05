@@ -1,7 +1,6 @@
 use crate::{classes, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "font-friz-quadrata",
     "uppercase",
     "tracking-[0.04em]",
     "text-[3.4rem]",

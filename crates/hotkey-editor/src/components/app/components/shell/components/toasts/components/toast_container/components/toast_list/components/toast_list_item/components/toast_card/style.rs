@@ -9,7 +9,6 @@ const BASE: &[TailwindClass] = tw![
     "py-6",
     "rounded-xl",
     "border-2",
-    "font-friz-quadrata",
     "text-warcraft-text-primary",
     "cursor-pointer",
     "outline-none",

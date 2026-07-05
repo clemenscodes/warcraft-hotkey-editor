@@ -7,5 +7,5 @@ use crate::services::editor_state::EditorState;
 /// editor page reads from context rather than as props, so this accessor lives
 /// beside the type in `services/`, not colocated with any component.
 pub(crate) fn use_editor_state() -> EditorState {
-    use_context::<EditorState>()
+    use_context()
 }

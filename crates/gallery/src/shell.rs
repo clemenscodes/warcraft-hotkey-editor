@@ -78,7 +78,7 @@ pub fn Gallery(props: GalleryProps) -> Element {
     let needle = query().to_lowercase();
     rsx! {
         div {
-            class: "group/shell flex h-dvh [font-family:system-ui,-apple-system,sans-serif] text-[#e0d8c8] bg-[#0a1020] data-[dragging=true]:cursor-col-resize data-[dragging=true]:select-none",
+            class: "group/shell flex h-dvh text-[#e0d8c8] bg-[#0a1020] data-[dragging=true]:cursor-col-resize data-[dragging=true]:select-none",
             "data-dragging": dragging(),
             onpointermove: move |event| {
                 if dragging() {

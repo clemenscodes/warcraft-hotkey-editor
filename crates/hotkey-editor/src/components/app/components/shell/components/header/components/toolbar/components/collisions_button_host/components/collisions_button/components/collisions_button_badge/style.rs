@@ -6,7 +6,6 @@ const BASE: &[TailwindClass] = tw![
     "absolute",
     "top-[8cqi]",
     "right-[9cqi]",
-    "font-mono",
     "font-bold",
     "leading-none",
     "text-[length:20cqi]",

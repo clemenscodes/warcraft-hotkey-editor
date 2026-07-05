@@ -7,7 +7,6 @@ const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "justify-center",
-    "font-friz-quadrata",
     "text-[34px]",
     "leading-[1]",
     "text-warcraft-gold",

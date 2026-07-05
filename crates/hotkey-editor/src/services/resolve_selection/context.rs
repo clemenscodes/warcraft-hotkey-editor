@@ -7,5 +7,5 @@ use crate::services::resolve_selection::ResolveSelection;
 /// the URL sync), so this accessor lives beside the type in `services/`, not
 /// colocated with any component.
 pub(crate) fn use_resolve_selection() -> ResolveSelection {
-    use_context::<ResolveSelection>()
+    use_context()
 }

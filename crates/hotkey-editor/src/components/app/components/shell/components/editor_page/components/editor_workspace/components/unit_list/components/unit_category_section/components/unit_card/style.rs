@@ -9,7 +9,6 @@ const BASE: &[TailwindClass] = tw![
     "w-full",
     "min-w-0",
     "text-left",
-    "font-friz-quadrata",
     "text-[1.4rem]",
     "tracking-[0.02em]",
     "border",

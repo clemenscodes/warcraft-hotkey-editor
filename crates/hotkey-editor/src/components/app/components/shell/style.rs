@@ -21,7 +21,6 @@ const BASE: &[TailwindClass] = tw![
     // `::before` layer so it still fills the whole viewport even though the shell
     // itself is a centred column. `cursor-pointer` on descendant buttons replaces
     // the old global `:where(button)` rule.
-    "font-display",
     "text-warcraft-text-primary",
     "[-webkit-text-size-adjust:100%]",
     "[text-size-adjust:100%]",

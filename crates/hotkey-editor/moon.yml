@@ -20,7 +20,6 @@ tasks:
     inputs:
       - "@group(sources)"
       - "@group(configs)"
-      - "templates/**/*.txt"
 
   rust/lint:
     toolchain: rust
@@ -31,7 +30,6 @@ tasks:
     inputs:
       - "@group(sources)"
       - "@group(configs)"
-      - "templates/**/*.txt"
 
   tailwind/build:
     toolchain: system
@@ -88,7 +86,6 @@ tasks:
       - "@group(sources)"
       - "@group(configs)"
       - "@group(static-assets)"
-      - "templates/**/*.txt"
       - "Dioxus.toml"
 
   nix/bundle:

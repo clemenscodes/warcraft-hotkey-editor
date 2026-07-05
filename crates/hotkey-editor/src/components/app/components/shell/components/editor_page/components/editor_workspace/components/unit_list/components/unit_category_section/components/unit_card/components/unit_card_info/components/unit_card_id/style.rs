@@ -2,7 +2,6 @@ use super::state::UnitCardIdState;
 use crate::{classes, states, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "font-mono",
     "text-[1.05rem]",
     "leading-[1.2]",
     "overflow-hidden",

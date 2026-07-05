@@ -1,12 +1,6 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[TailwindClass] = tw![
-    "flex",
-    "flex-col",
-    "gap-[2.6rem]",
-    "text-left",
-    "font-friz-quadrata",
-];
+const BASE: &[TailwindClass] = tw!["flex", "flex-col", "gap-[2.6rem]", "text-left",];
 
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];

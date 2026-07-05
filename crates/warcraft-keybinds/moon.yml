@@ -12,7 +12,6 @@ tasks:
       - "@group(sources)"
       - "@group(configs)"
       - "templates/**/*"
-      - "/crates/hotkey-editor/templates/**/*"
 
   rust/test:
     inputs:
@@ -20,4 +19,3 @@ tasks:
       - "@group(configs)"
       - "templates/**/*"
       - "fixtures/**/*"
-      - "/crates/hotkey-editor/templates/**/*"

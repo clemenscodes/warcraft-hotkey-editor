@@ -10,7 +10,7 @@ use crate::services::customkeys::upload_status::UploadStatus;
 /// Provided at the app root, so this accessor lives beside the service, not
 /// colocated with any component.
 pub(crate) fn use_loaded_keys() -> Signal<Option<CustomKeys>> {
-    use_context::<Signal<Option<CustomKeys>>>()
+    use_context()
 }
 
 /// Access the [`CustomKeysService`] provided at the app root. Call from a
@@ -18,7 +18,7 @@ pub(crate) fn use_loaded_keys() -> Signal<Option<CustomKeys>> {
 /// concept — no single component owns it — so this accessor lives beside the
 /// type in `services/`, not colocated with any component.
 pub(crate) fn use_custom_keys_service() -> CustomKeysService {
-    use_context::<CustomKeysService>()
+    use_context()
 }
 
 /// Access the app-wide [`UploadStatus`] signal provided at the app root. Call from
@@ -26,5 +26,5 @@ pub(crate) fn use_custom_keys_service() -> CustomKeysService {
 /// concept owned by the customkeys domain, so this accessor lives beside the type
 /// in `services/customkeys/`, not colocated with any component.
 pub(crate) fn use_upload_status() -> Signal<UploadStatus> {
-    use_context::<Signal<UploadStatus>>()
+    use_context()
 }

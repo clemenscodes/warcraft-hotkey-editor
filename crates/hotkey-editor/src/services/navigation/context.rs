@@ -8,7 +8,7 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 /// concept — no single component owns it — so this accessor lives beside the
 /// type in `services/`, not colocated with any component.
 pub(crate) fn use_view_navigation() -> ViewNavigationContext {
-    use_context::<ViewNavigationContext>()
+    use_context()
 }
 
 /// Access the shell's URL guard — the [`NavSnapshot`] mirroring what the address bar
@@ -17,5 +17,5 @@ pub(crate) fn use_view_navigation() -> ViewNavigationContext {
 /// back/forward (skip) from a genuine state change (navigate). Provided by the app
 /// shell, so this accessor lives beside the type in `services/`.
 pub(crate) fn use_synced_route() -> Signal<NavSnapshot> {
-    use_context::<Signal<NavSnapshot>>()
+    use_context()
 }

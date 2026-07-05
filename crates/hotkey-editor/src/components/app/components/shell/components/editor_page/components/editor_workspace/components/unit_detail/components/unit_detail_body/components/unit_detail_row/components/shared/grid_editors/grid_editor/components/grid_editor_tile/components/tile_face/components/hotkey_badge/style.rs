@@ -10,7 +10,6 @@ const BASE: &[TailwindClass] = tw![
     "px-[5cqi]",
     "rounded-[5cqi]",
     "border",
-    "font-friz-quadrata",
     "text-[17cqi]/[1]",
     "font-normal",
     "pointer-events-none",

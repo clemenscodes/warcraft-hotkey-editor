@@ -17,7 +17,6 @@ const BASE: &[TailwindClass] = tw![
     "border-warcraft-gold",
     "rounded-[3.2cqi]",
     "text-warcraft-gold",
-    "font-mono",
     "text-[8.55cqi]",
     "tracking-[0.14em]",
     "font-medium",

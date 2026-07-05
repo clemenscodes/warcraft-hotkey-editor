@@ -7,5 +7,5 @@ use crate::services::undo::UndoHistory;
 /// single component owns it — so this accessor lives beside the type in
 /// `services/`, not colocated with any component.
 pub(crate) fn use_undo_history() -> UndoHistory {
-    use_context::<UndoHistory>()
+    use_context()
 }

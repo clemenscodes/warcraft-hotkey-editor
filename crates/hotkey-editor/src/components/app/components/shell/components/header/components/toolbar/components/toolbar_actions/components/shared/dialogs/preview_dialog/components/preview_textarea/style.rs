@@ -11,7 +11,6 @@ const BASE: &[TailwindClass] = tw![
     "border-warcraft-blue",
     "bg-[rgba(8,18,35,0.85)]",
     "text-warcraft-text-primary",
-    "font-mono",
     "text-[1.8rem]/[1.45]",
     "whitespace-pre",
     "overflow-auto",

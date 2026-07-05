@@ -7,5 +7,5 @@ use crate::services::overlay_state::OverlayState;
 /// no single component owns it — so this accessor lives beside the type in
 /// `services/`, not colocated with any component.
 pub(crate) fn use_overlay_state() -> OverlayState {
-    use_context::<OverlayState>()
+    use_context()
 }

@@ -9,7 +9,6 @@ const BASE: &[TailwindClass] = tw![
     "inline-flex",
     "items-center",
     "gap-[0.45rem]",
-    "font-friz-quadrata",
     "text-[#9aa3b2]",
     "transition-colors",
     "duration-[120ms]",

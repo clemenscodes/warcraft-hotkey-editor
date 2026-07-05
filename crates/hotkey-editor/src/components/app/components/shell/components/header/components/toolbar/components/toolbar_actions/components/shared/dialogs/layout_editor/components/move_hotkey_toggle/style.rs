@@ -4,7 +4,6 @@ const BASE: &[TailwindClass] = tw![
     "flex",
     "items-center",
     "gap-[0.8rem]",
-    "font-friz-quadrata",
     "uppercase",
     "tracking-[0.06em]",
     "text-[1.9rem]",

@@ -24,7 +24,7 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         None => {
             rsx! {
                 div {
-                    class: "min-h-dvh flex flex-col items-center p-8 [font-family:system-ui,sans-serif]",
+                    class: "min-h-dvh flex flex-col items-center p-8",
                     "Unknown story: {story_id}"
                 }
             }

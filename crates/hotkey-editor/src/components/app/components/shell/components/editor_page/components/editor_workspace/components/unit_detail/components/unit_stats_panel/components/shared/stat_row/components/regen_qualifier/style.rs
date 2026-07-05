@@ -3,7 +3,6 @@ use crate::{classes, styling::TailwindClass, tw};
 const BASE: &[TailwindClass] = tw![
     "flex-[0_0_auto]",
     "ml-auto",
-    "font-friz-quadrata",
     "text-[1.2rem]",
     "italic",
     "text-[rgba(192,200,218,0.55)]",

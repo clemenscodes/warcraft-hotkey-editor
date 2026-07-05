@@ -8,7 +8,6 @@ const BASE: &[TailwindClass] = tw![
     "overflow-hidden",
     "whitespace-nowrap",
     "text-ellipsis",
-    "font-friz-quadrata",
     "font-normal",
     "text-[2rem]",
     "leading-[1.2]",

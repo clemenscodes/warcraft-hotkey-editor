@@ -8,7 +8,6 @@ const BASE: &[TailwindClass] = tw![
     "border-warcraft-gold",
     "rounded-[8px]",
     "cursor-pointer",
-    "font-friz-quadrata",
     "text-[1.5rem]",
     "text-warcraft-gold",
     "[background:linear-gradient(180deg,#2a5085_0%,#1a3a5c_100%)]",

@@ -12,7 +12,6 @@ const BASE: &[TailwindClass] = tw![
     "p-0",
     "border",
     "rounded-[6px]",
-    "font-friz-quadrata",
     "text-[clamp(2rem,3.5vw,5rem)]",
     "leading-none",
     "cursor-pointer",
@@ -30,7 +29,6 @@ const BASE: &[TailwindClass] = tw![
     "data-[special=true]:min-w-[clamp(5rem,7.5vw,11rem)]",
     "data-[special=true]:px-[0.85rem]",
     "data-[special=true]:text-[clamp(1rem,1.6vw,2rem)]",
-    "data-[special=true]:[font-family:system-ui,sans-serif]",
     "data-[special=true]:whitespace-nowrap",
 ];
 

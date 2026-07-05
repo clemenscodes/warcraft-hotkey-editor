@@ -2,7 +2,6 @@ use crate::{classes, styling::TailwindClass, tw};
 
 // The "Level N of M" caption between the tier arrows.
 const BASE: &[TailwindClass] = tw![
-    "font-friz-quadrata",
     "uppercase",
     "tracking-[0.06em]",
     "text-[1.3rem]",

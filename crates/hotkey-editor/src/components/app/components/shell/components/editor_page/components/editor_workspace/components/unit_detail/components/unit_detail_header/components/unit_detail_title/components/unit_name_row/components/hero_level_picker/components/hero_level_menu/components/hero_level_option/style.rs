@@ -9,7 +9,6 @@ const BASE: &[TailwindClass] = tw![
     "border-none",
     "rounded-[5px]",
     "text-warcraft-text-secondary",
-    "font-mono",
     "text-[1.4rem]/[1.25]",
     "text-left",
     "cursor-pointer",

@@ -7,7 +7,6 @@ const BASE: &[TailwindClass] = tw![
     "border",
     "border-warcraft-gold/35",
     "bg-[rgba(8,18,35,0.85)]",
-    "font-mono",
     "text-[2rem]",
     "text-warcraft-gold",
 ];

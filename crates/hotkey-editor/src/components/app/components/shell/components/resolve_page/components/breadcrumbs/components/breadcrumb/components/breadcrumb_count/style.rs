@@ -1,6 +1,5 @@
 use crate::{classes, styling::TailwindClass, tw};
 const BASE: &[TailwindClass] = tw![
-    "font-mono",
     "text-[1.6rem]",
     "opacity-80",
     "before:content-['(']",

@@ -11,7 +11,6 @@ const BASE: &[TailwindClass] = tw![
     "border-[#3a4a6c]",
     "rounded-[8px]",
     "text-[#fff5d6]",
-    "font-friz-quadrata",
     "text-[1.5rem]",
     "uppercase",
     "tracking-[0.08em]",

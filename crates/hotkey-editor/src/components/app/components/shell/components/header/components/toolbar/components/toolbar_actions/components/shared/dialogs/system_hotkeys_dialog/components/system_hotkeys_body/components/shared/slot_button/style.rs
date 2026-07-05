@@ -45,7 +45,6 @@ const BASE: &[TailwindClass] = tw![
     "after:rounded-[4px]",
     "after:[background:linear-gradient(180deg,#0f162dfa_0%,#080e1efc_100%)]",
     "after:text-warcraft-gold",
-    "after:font-friz-quadrata",
     "after:text-[1.5rem]",
     "after:leading-[1.4]",
     "after:text-center",

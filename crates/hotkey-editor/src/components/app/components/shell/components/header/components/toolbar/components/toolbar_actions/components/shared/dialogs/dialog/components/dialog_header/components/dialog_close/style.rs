@@ -8,7 +8,6 @@ const BASE: &[TailwindClass] = tw![
     "w-[2.5rem]",
     "h-[2.5rem]",
     "text-[1.5rem]",
-    "font-friz-quadrata",
     "flex",
     "items-center",
     "justify-center",

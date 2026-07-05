@@ -10,7 +10,6 @@ const BASE: &[TailwindClass] = tw![
     "p-0",
     "border-2",
     "rounded-[10px]",
-    "font-friz-quadrata",
     "text-[clamp(3.5rem,5vh,6rem)]",
     "leading-none",
     "uppercase",

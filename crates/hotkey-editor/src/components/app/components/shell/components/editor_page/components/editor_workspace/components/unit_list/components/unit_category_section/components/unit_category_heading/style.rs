@@ -10,7 +10,6 @@ const BASE: &[TailwindClass] = tw![
     "mb-1",
     "py-[0.35rem]",
     "px-[0.25rem]",
-    "font-friz-quadrata",
     "text-[1.2rem]",
     "uppercase",
     "tracking-[0.12em]",

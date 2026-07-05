@@ -2,7 +2,6 @@ use super::state::SystemHotkeysCategoryTabState;
 use crate::{classes, states, styling::TailwindClass, tw};
 
 const BASE: &[TailwindClass] = tw![
-    "font-friz-quadrata",
     "uppercase",
     "tracking-[0.1em]",
     "text-[2rem]",

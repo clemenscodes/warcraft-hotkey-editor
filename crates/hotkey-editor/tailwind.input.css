@@ -48,8 +48,11 @@
   --color-race-neutral-soft: rgba(255, 206, 99, 0.45);
   --color-race-neutral-strong: #4a3d14;
 
-  --font-friz-quadrata: "Friz Quadrata", serif;
-  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  /* Friz Quadrata is the app's single typeface. Overriding Tailwind's base
+     `--font-sans` makes preflight apply it globally (html + form controls),
+     so no component needs a font utility. The trailing stack is a last-resort
+     fallback only — used if the .ttf fails to load or lacks a glyph. */
+  --font-sans: "Friz Quadrata", serif;
 }
 
 /* The page canvas behind the app column. The shell drops `viewport-fit=cover`, so on a

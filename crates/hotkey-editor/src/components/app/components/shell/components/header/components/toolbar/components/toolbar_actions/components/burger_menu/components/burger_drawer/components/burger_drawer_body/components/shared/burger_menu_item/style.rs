@@ -14,7 +14,6 @@ const BASE: &[TailwindClass] = tw![
     "border-[#6c5a1f]",
     "rounded-[8px]",
     "text-warcraft-text-secondary",
-    "font-friz-quadrata",
     "text-[0.9rem]",
     "tracking-[0.05em]",
     "text-left",

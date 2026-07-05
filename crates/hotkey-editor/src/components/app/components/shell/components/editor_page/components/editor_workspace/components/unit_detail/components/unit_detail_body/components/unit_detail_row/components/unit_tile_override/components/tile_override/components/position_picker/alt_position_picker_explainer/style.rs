@@ -5,7 +5,6 @@ const BASE: &[TailwindClass] = tw![
     "m-0",
     "text-center",
     "max-w-[90rem]",
-    "font-friz-quadrata",
     "uppercase",
     "tracking-[0.1em]",
     "text-[rgba(255,206,99,0.75)]",

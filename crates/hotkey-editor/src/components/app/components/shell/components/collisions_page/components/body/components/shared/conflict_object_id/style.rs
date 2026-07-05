@@ -1,6 +1,6 @@
 use crate::{classes, styling::TailwindClass, tw};
 
-const BASE: &[TailwindClass] = tw!["font-mono", "text-[12px]", "text-[#7b818d]"];
+const BASE: &[TailwindClass] = tw!["text-[12px]", "text-[#7b818d]"];
 const MOBILE: &[TailwindClass] = tw![];
 const TABLET: &[TailwindClass] = tw![];
 const LAPTOP: &[TailwindClass] = tw![];
