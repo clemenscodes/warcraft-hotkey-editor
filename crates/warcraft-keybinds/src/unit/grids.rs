@@ -80,10 +80,9 @@ pub struct UnitGrids {
 
 static UNIT_GRIDS_CACHE: LazyLock<HashMap<WarcraftObjectId, UnitGrids>> = LazyLock::new(|| {
     let mut cache = HashMap::new();
-    for entry in WARCRAFT_DATABASE.into_iter() {
-        let object_id = *entry.0;
-        let grids = UnitGrids::build_for_unit(object_id);
-        cache.insert(object_id, grids);
+    for unit_id in WARCRAFT_DATABASE.all_unit_ids() {
+        let grids = UnitGrids::build_for_unit(unit_id);
+        cache.insert(unit_id, grids);
     }
     cache
 });
