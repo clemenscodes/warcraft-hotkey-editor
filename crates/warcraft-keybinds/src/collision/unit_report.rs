@@ -174,6 +174,8 @@ impl fmt::Display for UnitCollisionReport {
     }
 }
 
+impl ddd::ReadModel for UnitCollisionReport {}
+
 #[cfg(test)]
 mod unit_collision_report_tests {
     use super::*;

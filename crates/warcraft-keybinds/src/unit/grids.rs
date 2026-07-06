@@ -853,3 +853,5 @@ mod cache_tests {
         assert_eq!(cached, fresh);
     }
 }
+
+impl ddd::ReadModel for UnitGrids {}

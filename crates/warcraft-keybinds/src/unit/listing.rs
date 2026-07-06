@@ -239,6 +239,8 @@ impl UnitCategoryListing {
     }
 }
 
+impl ddd::ReadModel for UnitListing {}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -176,6 +176,8 @@ impl ResolvedTemplate {
     }
 }
 
+impl ddd::ReadModel for ResolvedTemplate {}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -153,3 +153,5 @@ impl AbilityCell {
         self.icon_path.as_ref()
     }
 }
+
+impl ddd::ReadModel for AbilityCell {}

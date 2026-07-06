@@ -1,31 +1,13 @@
 use crate::GridCoordinate;
 use crate::identity::slot::{CommandCard, GridSlotId};
+use crate::unit::ability_rules::{
+    AbilityInDatabase, AbilityOnUnit, FormUpgradeSwap, HiddenAbility, MorphAgainstHost,
+    RevertsToHost, RootedOnlyAbility, UnitPair,
+};
+use ddd::Specification;
 use std::collections::HashMap;
 use warcraft_api::{UnitKind, WarcraftDatabase, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_database::{BuildingTraits, CommandCatalog, UNIT_UPGRADE_SWAPS};
-
-const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("Apit"), WarcraftObjectId::new("Aall")];
-
-const ROOTED_ONLY_ABILITY_IDS: &[WarcraftObjectId] =
-    &[WarcraftObjectId::new("Anei"), WarcraftObjectId::new("Aent")];
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
-struct HiddenUnitAbility {
-    unit_id: WarcraftObjectId,
-    ability_id: WarcraftObjectId,
-}
-
-const HIDDEN_UNIT_ABILITIES: &[HiddenUnitAbility] = &[
-    HiddenUnitAbility {
-        unit_id: WarcraftObjectId::new("hphx"),
-        ability_id: WarcraftObjectId::new("Apxf"),
-    },
-    HiddenUnitAbility {
-        unit_id: WarcraftObjectId::new("egol"),
-        ability_id: WarcraftObjectId::new("Aenc"),
-    },
-];
+use warcraft_database::{BuildingTraits, CommandCatalog};
 
 pub trait UnitCommandSlots {
     fn command_card(&self, unit_id: WarcraftObjectId) -> CommandCard;
@@ -42,65 +24,6 @@ pub trait UnitCommandSlots {
     ) -> HashMap<WarcraftObjectId, WarcraftObjectId>;
 
     fn all_unit_ids(&self) -> impl Iterator<Item = WarcraftObjectId>;
-}
-
-fn ability_reverts_to_host(
-    database: &WarcraftDatabase,
-    ability_id: &str,
-    host_unit_id: &str,
-) -> bool {
-    let ability_object = database.by_id(ability_id);
-    let Some(target_id) = ability_object.and_then(|object| object.ability_morph_target_id()) else {
-        return false;
-    };
-    if !target_id.eq_ignore_ascii_case(host_unit_id) {
-        return false;
-    }
-    !BuildingTraits::ability_has_alt_state(ability_id)
-}
-
-fn ability_is_hidden_for_unit(unit_id: &str, ability_id: &str) -> bool {
-    HIDDEN_UNIT_ABILITIES.iter().any(|hidden| {
-        hidden.unit_id.value().eq_ignore_ascii_case(unit_id)
-            && hidden.ability_id.value().eq_ignore_ascii_case(ability_id)
-    })
-}
-
-fn ability_requires_rooted_form(database: &WarcraftDatabase, ability_id: &str) -> bool {
-    if ROOTED_ONLY_ABILITY_IDS
-        .iter()
-        .any(|id| id.value().eq_ignore_ascii_case(ability_id))
-    {
-        return true;
-    }
-    let ability_object = database.by_id(ability_id);
-    let Some(ability_code) = ability_object.and_then(|object| object.ability_code()) else {
-        return false;
-    };
-    ROOTED_ONLY_ABILITY_CODES
-        .iter()
-        .any(|code| code.value().eq_ignore_ascii_case(ability_code))
-}
-
-/// True when the two units are the same trainable button at different tech
-/// levels — a genuine upgrade swap such as Headhunter → Berserker. Two distinct
-/// units that merely share a default button cell (e.g. Grunt and Demolisher,
-/// both defaulting to (0,0)) are *not* a swap and must each keep their own slot.
-fn units_form_upgrade_swap(first_unit_id: &str, second_unit_id: &str) -> bool {
-    for swap in UNIT_UPGRADE_SWAPS {
-        let from_object_id = swap.from_unit_id();
-        let to_object_id = swap.to_unit_id();
-        let from_id = from_object_id.value();
-        let to_id = to_object_id.value();
-        let forward = from_id.eq_ignore_ascii_case(first_unit_id)
-            && to_id.eq_ignore_ascii_case(second_unit_id);
-        let backward = from_id.eq_ignore_ascii_case(second_unit_id)
-            && to_id.eq_ignore_ascii_case(first_unit_id);
-        if forward || backward {
-            return true;
-        }
-    }
-    false
 }
 
 fn slot_position_from_database(
@@ -184,7 +107,9 @@ impl UnitCommandSlots for WarcraftDatabase {
                         let occupant = card.slot_at(slot_position);
                         let collapses_into_swap = occupant.is_some_and(|existing| {
                             let existing_id = existing.id();
-                            units_form_upgrade_swap(trained_str, existing_id.value())
+                            let existing_str = existing_id.value();
+                            let pair = UnitPair::new(trained_str, existing_str);
+                            FormUpgradeSwap.is_satisfied_by(&pair)
                         });
                         if !collapses_into_swap {
                             unplaced_train_slots.push(train_slot);
@@ -297,7 +222,8 @@ impl UnitCommandSlots for WarcraftDatabase {
                     continue;
                 }
             }
-            if ability_is_hidden_for_unit(unit_id_str, ability_str) {
+            let hidden_candidate = AbilityOnUnit::new(unit_id_str, ability_str);
+            if HiddenAbility.is_satisfied_by(&hidden_candidate) {
                 continue;
             }
             if is_uprootable && ability_str.eq_ignore_ascii_case("Aeat") {
@@ -306,7 +232,8 @@ impl UnitCommandSlots for WarcraftDatabase {
             if host_is_burrowed && !BuildingTraits::ability_has_alt_state(ability_str) {
                 continue;
             }
-            if ability_reverts_to_host(self, ability_str, unit_id_str) {
+            let morph_candidate = MorphAgainstHost::new(self, ability_str, unit_id_str);
+            if RevertsToHost.is_satisfied_by(&morph_candidate) {
                 continue;
             }
             let ability_database_object = self.by_id(ability_str);
@@ -497,10 +424,12 @@ impl UnitCommandSlots for WarcraftDatabase {
             if !ability_has_icon {
                 continue;
             }
-            if ability_reverts_to_host(self, ability_str, unit_id_str) {
+            let morph_candidate = MorphAgainstHost::new(self, ability_str, unit_id_str);
+            if RevertsToHost.is_satisfied_by(&morph_candidate) {
                 continue;
             }
-            if ability_requires_rooted_form(self, ability_str) {
+            let rooted_candidate = AbilityInDatabase::new(self, ability_str);
+            if RootedOnlyAbility.is_satisfied_by(&rooted_candidate) {
                 continue;
             }
             let Some(slot_position) = slot_position_from_database(self, ability_str) else {
@@ -539,7 +468,9 @@ impl UnitCommandSlots for WarcraftDatabase {
                 continue;
             };
             if let Some(existing_id) = seen_positions.get(&position).copied() {
-                if units_form_upgrade_swap(existing_id.value(), trained_str) {
+                let existing_str = existing_id.value();
+                let pair = UnitPair::new(existing_str, trained_str);
+                if FormUpgradeSwap.is_satisfied_by(&pair) {
                     upgrades.entry(existing_id).or_insert(*trained_id);
                 }
             } else {

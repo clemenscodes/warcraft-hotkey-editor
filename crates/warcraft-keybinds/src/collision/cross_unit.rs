@@ -1,3 +1,4 @@
+use crate::collision::island_partition::SlotIslandPartition;
 use crate::custom_keys::CustomKeys;
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
@@ -12,57 +13,6 @@ use warcraft_database::WARCRAFT_DATABASE;
 struct PositionContext {
     position: GridCoordinate,
     grid_role: GridRole,
-}
-
-/// Union–find over ability slot strings, used to split the abilities sharing
-/// one grid cell into independent collision islands.  Two abilities are
-/// merged when some unit carries both of them at that cell — the same edge
-/// rule the cascade's conflict graph uses.  Components that never merge
-/// share no carrier unit and therefore never interact.
-#[derive(Clone, Debug, PartialEq, Eq, Default)]
-struct SlotIslandPartition {
-    parent: HashMap<String, String>,
-}
-
-impl SlotIslandPartition {
-    fn new() -> Self {
-        let parent = HashMap::new();
-        Self { parent }
-    }
-
-    fn register(&mut self, slot_key: &str) {
-        let already_present = self.parent.contains_key(slot_key);
-        if already_present {
-            return;
-        }
-        let owned_key = slot_key.to_string();
-        let key_copy = owned_key.clone();
-        self.parent.insert(key_copy, owned_key);
-    }
-
-    fn root(&mut self, slot_key: &str) -> String {
-        self.register(slot_key);
-        let mut current = slot_key.to_string();
-        loop {
-            let parent = self
-                .parent
-                .get(&current)
-                .cloned()
-                .expect("a registered key always has a parent entry");
-            if parent == current {
-                return current;
-            }
-            current = parent;
-        }
-    }
-
-    fn union(&mut self, left_key: &str, right_key: &str) {
-        let left_root = self.root(left_key);
-        let right_root = self.root(right_key);
-        if left_root != right_root {
-            self.parent.insert(left_root, right_root);
-        }
-    }
 }
 
 /// The subset of per-unit collisions where at least one colliding ability is shared
@@ -412,6 +362,8 @@ impl fmt::Display for CrossUnitPositionGroup {
         Ok(())
     }
 }
+
+impl ddd::ReadModel for CrossUnitCollisionReport {}
 
 #[cfg(test)]
 mod cross_unit_collision_tests {

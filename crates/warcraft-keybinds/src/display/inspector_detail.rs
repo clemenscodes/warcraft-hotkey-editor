@@ -447,3 +447,5 @@ impl InspectorDetail {
         self.is_off_state
     }
 }
+
+impl ddd::ReadModel for InspectorDetail {}

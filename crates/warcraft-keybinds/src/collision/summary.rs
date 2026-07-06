@@ -69,6 +69,8 @@ impl CollisionSummary {
     }
 }
 
+impl ddd::ReadModel for CollisionSummary {}
+
 #[cfg(test)]
 mod tests {
     use super::*;

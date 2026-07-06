@@ -3,5 +3,6 @@
 //! every unit that carries them).
 
 pub mod cross_unit;
+pub(crate) mod island_partition;
 pub mod summary;
 pub mod unit_report;
