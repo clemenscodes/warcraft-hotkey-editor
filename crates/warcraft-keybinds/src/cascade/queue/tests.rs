@@ -5,6 +5,7 @@ mod cascade_queue_tests {
     use crate::custom_keys::CustomKeys;
     use crate::identity::slot::GridSlotId;
     use crate::model::{AbilityBinding, ColumnIndex, CommandBinding, GridCoordinate, RowIndex};
+    use std::collections::HashSet;
 
     /// Replays the global-command half of the QWER/ASDF/YXCV drag-drop
     /// rearrange on top of the default keys: the four bottom-row cells fill up
