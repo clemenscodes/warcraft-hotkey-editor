@@ -105,4 +105,22 @@ test.describe("Undo / redo", () => {
     await expect.poll(() => storedKeys(page)).toBe(initial);
     expect(afterAction).not.toBe(initial);
   });
+
+  test("a fresh boot with no action never persists undo history", async ({ page }) => {
+    // Regression: the boot capture effect fires one no-op record on first render.
+    // If that no-op scheduled a persist, a visit that touched nothing would still
+    // write an empty-stack blob after the ~1s debounce — and a later reload would
+    // restore it as a history with nothing to undo (undo button wrongly disabled
+    // was the symptom; the empty blob is the cause). No action ⇒ no undo blob.
+    await expect(page.locator('[data-action="undo"]').first()).toBeDisabled();
+
+    // Wait well past the 1s persist debounce without interacting.
+    await page.waitForTimeout(2000);
+
+    const undoBlob = await page.evaluate(
+      (key) => localStorage.getItem(key),
+      UNDO_STORAGE,
+    );
+    expect(undoBlob).toBeNull();
+  });
 });

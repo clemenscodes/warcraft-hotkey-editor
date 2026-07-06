@@ -96,12 +96,20 @@ impl UndoHistory {
         self.history.read().can_redo()
     }
 
-    /// Records a transition to `current`. Delegates to the aggregate (a no-op when
-    /// `current` equals the present state, so restores never create new history).
+    /// Records a transition to `current`. A no-op when `current` equals the present
+    /// state (so restores never create new history) — and crucially, a no-op records
+    /// nothing *and persists nothing*. The boot capture effect fires one such no-op
+    /// on first render; were it to schedule a persist, a fresh visit that never
+    /// touched anything would still write an empty-stack blob after the debounce,
+    /// which a later reload would restore as "nothing to undo".
     pub(crate) fn record(&self, current: EditorSnapshot) {
-        self.commit(|history| {
-            history.record(current);
-        });
+        let mut aggregate = self.snapshot();
+        let recorded = aggregate.record(current);
+        if !recorded {
+            return;
+        }
+        self.replace(aggregate);
+        self.schedule_persist();
     }
 
     pub(crate) fn undo(&self) {

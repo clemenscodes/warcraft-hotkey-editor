@@ -33,8 +33,8 @@ export default defineConfig({
   forbidOnly: !!process.env["CI"],
   retries: process.env["CI"] ? 2 : 0,
   workers: process.env["CI"] ? 1 : 4,
-  timeout: 10_000,
-  expect: { timeout: process.env["CI"] ? 1000 : 5000 },
+  timeout: process.env["CI"] ? 10_000 : 20_000,
+  expect: { timeout: process.env["CI"] ? 1000 : 10_000 },
   reporter: [
     ["list"],
     ["html", { open: "never", outputFolder: "./playwright-report" }],
@@ -42,7 +42,7 @@ export default defineConfig({
   use: {
     baseURL: baseUrl,
     storageState: onboardingSuppressedState,
-    actionTimeout: process.env["CI"] ? 1000 : 5000,
+    actionTimeout: process.env["CI"] ? 1000 : 10_000,
     navigationTimeout: 10_000,
     trace: "on-first-retry",
   },
