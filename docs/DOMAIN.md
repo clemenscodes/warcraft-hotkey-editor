@@ -21,30 +21,63 @@ belongs in `warcraft-database`/`warcraft-api`.
 
 ## 2. The DDD role map
 
-Every domain type carries exactly one primary `ddd` role. The current map
-(kept in sync with `docs/superpowers/specs/2026-07-06-warcraft-keybinds-ddd-refactor-design.md`):
+Every marked domain type carries exactly one primary `ddd` role, proven by a
+`ddd_conformance` assertion. This table reflects the **adopted** state (~70
+conformance assertions across the crate):
 
 | `ddd` role | Layer | Types |
 |---|---|---|
 | **AggregateRoot** | Domain | `CustomKeys`, `GridLayout`, `EditorHistory` |
-| **Entity** (`identity()`) | Domain | `AbilityBinding`, `CommandBinding`, `SystemBinding` — identity = `WarcraftObjectId` |
-| **Identifier** | Domain | `AbilityId`, `GridSlotId`, `CommandCard`, `HotkeyTarget` |
-| **ValueObject** | Domain | `Hotkey`, `AbilityModifier`, `HotkeyToken`; the keycode enums (`Letter`, `Digit`, `FunctionKey`, `NumpadKey`, `Punctuation`, `MouseButton`, `KeyCode`); `NamedCommandGrid`, `GridRole`; the cascade value objects (`PositionAssignmentGroup`, `GroupKind`, `AssignmentScope`, `PlannedMove`, `UnresolvedMover`, `MoveReason`, `CascadePlan`); the collision cards; the `statistics/` value types |
-| **DomainService** | Domain | collision scans, the cascade solver + `CascadeResolver`, `Normalization`, `SectionResolution`, the parse/serialize `CustomKeysCodec` |
-| **Specification** | Domain | the `unit/slots` ability predicates (`HiddenAbility`, `RootedOnlyAbility`, `RevertsToHost`, `FormUpgradeSwap`) |
-| **Factory** | Domain | `CustomKeysFactory`, `UnitGridsFactory` |
-| **DomainEvent** (transient) | Domain | `SlotMoved`, `HotkeyRebound`, `PositionAssigned`, `GridLayoutApplied`, `CollisionIntroduced`, `CollisionResolved` |
-| **Policy** (in-tick) | Domain | `RewriteHotkeyOnMove`, `MirrorOffState`, `TriggerCascadeOnConflict` |
+| **Identifier** | Domain | `AbilityId`, `GridSlotId` |
+| **ValueObject** | Domain | `Hotkey`, `AbilityModifier`, `HotkeyToken`, `HotkeyTarget`, `CommandCard`; the keycode enums (`Letter`, `Digit`, `FunctionKey`, `NumpadKey`, `Punctuation`, `MouseButton`, `KeyCode`); the cascade value objects (`PositionAssignmentGroup`, `GroupKind`, `AssignmentScope`, `PlannedMove`, `UnresolvedMover`, `MoveReason`, `CascadePlan`, `ConflictNode`, `CollidingPair`, `ConflictGraph`) |
+| **DomainService** | Domain | `AssignmentQueue` (the cascade solver) |
+| **Specification** | Domain | the `unit/ability_rules` predicates: `HiddenAbility`, `RootedOnlyAbility`, `RevertsToHost`, `FormUpgradeSwap` (composable via `.and()/.or()/.not()`) |
 | **ReadModel** | Domain | the collision reports (`UnitCollisionReport`, `CrossUnitCollisionReport`, `CollisionSummary`), `UnitGrids`, `UnitListing`, the `display/` view builders |
 
 The application-layer `Command`/`Query` counterparts live across the wall in
 `hotkey-editor` (a `Command` is bound to `ApplicationLayer` and cannot live
 here without claiming the wrong layer).
 
-`Projection`, `EventStore`, `Saga`, and `UnitOfWork` stay deliberately unused —
-their concepts (persisted events, multi-aggregate transactions) do not appear
-in this app. That is consistent with the `ddd` crate's own design: the
-vocabulary is pre-built; roles are adopted as the concepts actually arise.
+### Domain-service *logic* without a marked service type
+
+The normalization pipeline (`custom_keys/normalize.rs`), the parse/serialize
+codec (`custom_keys/parser.rs`, `custom_keys/overlay.rs`), and the collision
+scans (`collision/`) are all **extracted into dedicated modules**, but they
+operate on the aggregate as `impl CustomKeys` continuations / free functions
+rather than standalone marked `DomainService` types. That is deliberate: the
+logic belongs to the aggregate's invariant, and inventing an empty service
+struct to carry a marker would be ceremony. Only `AssignmentQueue`, which is a
+genuinely free-standing algorithm object, carries the `DomainService` marker.
+
+### Deliberately deferred roles (with rationale)
+
+These roles from the design spec are **not** adopted, each for a concrete
+reason — consistent with the `ddd` crate's "adopt a role when the concept
+genuinely appears" philosophy and the repo's "resist premature
+framework-ization" principle:
+
+- **Entity** (bindings `AbilityBinding`/`CommandBinding`/`SystemBinding`): a
+  binding does **not** store its own identity — the `WarcraftObjectId` is the
+  aggregate's `BTreeMap` key, external to the binding. `ddd::Entity` requires
+  `fn identity(&self) -> &Self::Identity` returning a stored reference. Marking
+  them Entity needs a structural change (embedding the id in each binding),
+  deferred to a focused later pass.
+- **`statistics/` value types** (`Armor`, `AttackSpeed`, `Matchup`, …): they
+  hold `f32` and so cannot be `Eq`, which `ddd::ValueObject` requires. They
+  remain plain, correct value types without the marker.
+- **Factory** (`CustomKeysFactory`, `UnitGridsFactory`): `CustomKeys::from_text`
+  already cannot produce an invalid aggregate (it normalizes), so a factory
+  would add indirection with no invariant to enforce.
+- **DomainEvent / Policy**: the intended reactions (mirror off-state, materialize
+  tiers, mirror build commands) turned out to be **deterministic steps of the
+  normalization pipeline**, not decoupled event handlers. Introducing transient
+  events + policies here would be indirection without decoupling. They are
+  adopted the day a genuinely decoupled reaction appears.
+- **Command / Query** (application layer): these belong in `hotkey-editor`, and
+  that crate is out of scope for this domain-crate refactor.
+
+`Projection`, `EventStore`, `Saga`, and `UnitOfWork` likewise stay unused — the
+`ddd` vocabulary is pre-built and roles are adopted as the concepts arise.
 
 ## 3. The marker-assertion convention
 
