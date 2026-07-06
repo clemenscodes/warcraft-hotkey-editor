@@ -2,7 +2,7 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::button::Button;
 use dioxus::prelude::*;
 use logic::InfoActionsButtons;

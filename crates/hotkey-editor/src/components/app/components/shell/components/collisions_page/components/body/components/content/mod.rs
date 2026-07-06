@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ContentProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Content);
 
 /// The two-pane collision content: a sidebar column beside the fluid detail pane.

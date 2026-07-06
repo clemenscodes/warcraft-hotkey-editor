@@ -2,11 +2,11 @@ pub mod components;
 mod hooks;
 mod style;
 
-use crate::assert_component;
 use components::collisions_button::CollisionsButton;
 use dioxus::prelude::*;
 use hooks::use_collisions_button;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(CollisionsButtonHost);
 
 /// Connected wrapper and container: reads the live document and grid layout, asks the

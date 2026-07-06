@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HeroLevelBackdropProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeroLevelBackdrop);
 
 /// A fixed, transparent backdrop that dismisses the open level menu on click.

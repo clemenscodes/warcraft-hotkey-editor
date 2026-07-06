@@ -4,12 +4,12 @@ mod props;
 mod style;
 
 use super::move_list::MoveList;
-use crate::assert_component;
 use components::unresolved_row::UnresolvedRow;
 use components::unresolved_title::UnresolvedTitle;
 use dioxus::prelude::*;
 pub use props::UnresolvedSectionProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnresolvedSection);
 
 /// The unresolved-abilities section under the move list.

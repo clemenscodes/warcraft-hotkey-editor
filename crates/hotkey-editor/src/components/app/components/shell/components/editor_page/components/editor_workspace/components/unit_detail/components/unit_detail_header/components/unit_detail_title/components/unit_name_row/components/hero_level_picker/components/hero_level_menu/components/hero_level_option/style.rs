@@ -1,51 +1,57 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "block",
-    "w-full",
-    "py-[0.4rem]",
-    "px-[0.7rem]",
-    "bg-transparent",
-    "border-none",
-    "rounded-[5px]",
-    "text-warcraft-text-secondary",
-    "text-[1.4rem]/[1.25]",
-    "text-left",
-    "cursor-pointer",
-    "whitespace-nowrap",
-    "[transition:background_0.1s_ease,color_0.1s_ease]",
-    "hover:bg-warcraft-gold/12",
-    "hover:text-warcraft-gold",
-    "data-[active=true]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)_0%,color-mix(in_oklab,var(--color-race-neutral-strong)_70%,transparent)_100%)]",
-    "data-[active=true]:text-warcraft-gold",
-    "[body[data-kb-modality]_&]:focus:outline-none",
-    "[body[data-kb-modality]_&]:focus:text-white",
-    "[body[data-kb-modality]_&]:focus:[box-shadow:inset_0_0_0_2px_var(--color-warcraft-highlight)]",
-];
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:px-[10px]",
-    "mobile:py-[3px]",
-    "mobile:min-h-[24px]",
-    "mobile:text-[16px]",
-];
-const TABLET: &[TailwindClass] = tw![
-    "tablet:px-[10px]",
-    "tablet:py-[3px]",
-    "tablet:min-h-[24px]",
-    "tablet:text-[13px]",
-];
-const LAPTOP: &[TailwindClass] = tw![
-    "laptop:px-[0.55rem]",
-    "laptop:py-[0.3rem]",
-    "laptop:text-[1.05rem]",
-];
-const DESKTOP: &[TailwindClass] = tw![
-    "desktop:px-[0.55rem]",
-    "desktop:py-[0.3rem]",
-    "desktop:text-[1.05rem]",
-];
-const QHD: &[TailwindClass] = tw!["qhd:px-[0.55rem]", "qhd:py-[0.3rem]", "qhd:text-[1.05rem]"];
-const UHD: &[TailwindClass] = tw!["uhd:px-[0.55rem]", "uhd:py-[0.3rem]", "uhd:text-[1.05rem]"];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "block",
+        "w-full",
+        "py-[0.4rem]",
+        "px-[0.7rem]",
+        "bg-transparent",
+        "border-none",
+        "rounded-[5px]",
+        "text-warcraft-text-secondary",
+        "text-[1.4rem]/[1.25]",
+        "text-left",
+        "cursor-pointer",
+        "whitespace-nowrap",
+        "[transition:background_0.1s_ease,color_0.1s_ease]",
+        "hover:bg-warcraft-gold/12",
+        "hover:text-warcraft-gold",
+        "data-[active=true]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)_0%,color-mix(in_oklab,var(--color-race-neutral-strong)_70%,transparent)_100%)]",
+        "data-[active=true]:text-warcraft-gold",
+        "[body[data-kb-modality]_&]:focus:outline-none",
+        "[body[data-kb-modality]_&]:focus:text-white",
+        "[body[data-kb-modality]_&]:focus:[box-shadow:inset_0_0_0_2px_var(--color-warcraft-highlight)]",
+    ],
+    mobile: tw![
+        "mobile:px-[10px]",
+        "mobile:py-[3px]",
+        "mobile:min-h-[24px]",
+        "mobile:text-[16px]",
+    ],
+    tablet: tw![
+        "tablet:px-[10px]",
+        "tablet:py-[3px]",
+        "tablet:min-h-[24px]",
+        "tablet:text-[13px]",
+    ],
+    laptop: tw![
+        "laptop:px-[0.55rem]",
+        "laptop:py-[0.3rem]",
+        "laptop:text-[1.05rem]",
+    ],
+    desktop: tw![
+        "desktop:px-[0.55rem]",
+        "desktop:py-[0.3rem]",
+        "desktop:text-[1.05rem]",
+    ],
+    qhd: tw![
+        "qhd:px-[0.55rem]",
+        "qhd:py-[0.3rem]",
+        "qhd:text-[1.05rem]",
+    ],
+    uhd: tw![
+        "uhd:px-[0.55rem]",
+        "uhd:py-[0.3rem]",
+        "uhd:text-[1.05rem]",
+    ],
 }

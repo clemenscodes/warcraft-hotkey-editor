@@ -1,9 +1,9 @@
 mod style;
 
-use crate::assert_component;
 use crate::components::app::components::shell::components::shared::icons::ICON_BURGER;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(BurgerToggleIcon);
 
 #[component]

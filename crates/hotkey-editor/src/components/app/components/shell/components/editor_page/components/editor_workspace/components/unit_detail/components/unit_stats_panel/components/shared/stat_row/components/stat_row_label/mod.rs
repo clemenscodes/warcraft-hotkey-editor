@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::StatRowLabelProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(StatRowLabel);
 
 /// A stat row's label; its regen/primary colour comes from the parent row group.

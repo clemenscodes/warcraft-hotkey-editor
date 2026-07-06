@@ -1,6 +1,6 @@
 use super::props::ToastTitleProps;
 use super::style;
-use crate::styling::ClassList;
+use tw_macro::ClassList;
 
 /// The title's presentation: the type-tinted class plus the title text. The color
 /// override per type is chosen here, never in the body.

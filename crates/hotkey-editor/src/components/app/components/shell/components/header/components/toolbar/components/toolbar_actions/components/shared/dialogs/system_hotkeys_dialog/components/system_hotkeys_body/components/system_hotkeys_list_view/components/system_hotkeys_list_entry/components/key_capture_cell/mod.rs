@@ -4,7 +4,7 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::{
     SystemKeyPickerDialog, SystemKeyPickerDialogProps,
 };

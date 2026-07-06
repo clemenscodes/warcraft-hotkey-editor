@@ -2,9 +2,9 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::UnitCardIdProps;
+use tw_macro::assert_component;
 use warcraft_api::RaceLabels;
 assert_component!(UnitCardId);
 

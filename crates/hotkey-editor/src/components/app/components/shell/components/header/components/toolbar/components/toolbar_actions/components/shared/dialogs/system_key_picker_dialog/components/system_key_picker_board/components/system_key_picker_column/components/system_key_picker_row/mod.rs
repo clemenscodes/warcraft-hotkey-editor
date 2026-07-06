@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_key_picker_key::SystemKeyPickerKey;
 use dioxus::prelude::*;
 pub use props::SystemKeyPickerRowProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemKeyPickerRow);
 
 /// One horizontal row of system-board keys.

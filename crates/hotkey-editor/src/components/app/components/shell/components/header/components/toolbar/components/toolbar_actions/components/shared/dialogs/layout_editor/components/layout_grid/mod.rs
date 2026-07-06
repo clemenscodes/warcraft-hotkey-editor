@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::layout_cell::LayoutCell;
 use dioxus::prelude::*;
 pub use props::LayoutGridProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(LayoutGrid);
 
 /// The four-by-three grid of editable hotkey cells.

@@ -1,6 +1,6 @@
 use crate::components::app::components::shell::components::toasts::ToastRecord;
-use crate::components::app::components::shell::components::toasts::hooks::ToastProviderModel;
 use dioxus::prelude::*;
+use dioxus_kit::toast::ToastProviderModel;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct ToastContainerProps {

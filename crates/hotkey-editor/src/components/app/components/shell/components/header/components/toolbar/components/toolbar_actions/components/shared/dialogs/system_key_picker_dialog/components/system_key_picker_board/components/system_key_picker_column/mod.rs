@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_key_picker_row::SystemKeyPickerRow;
 use dioxus::prelude::*;
 pub use props::SystemKeyPickerColumnProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemKeyPickerColumn);
 
 /// One column of the system keyboard board: a stack of key rows. The main keyboard

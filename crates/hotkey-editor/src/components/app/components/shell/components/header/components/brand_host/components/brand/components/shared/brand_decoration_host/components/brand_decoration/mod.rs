@@ -1,8 +1,8 @@
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
 assert_component!(BrandDecoration);

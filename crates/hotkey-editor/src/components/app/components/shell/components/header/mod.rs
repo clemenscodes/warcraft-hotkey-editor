@@ -1,12 +1,12 @@
 pub mod components;
 mod style;
 
-use crate::assert_component;
 use components::brand_host::BrandHost;
 use components::grid_layout_button_host::GridLayoutButtonHost;
 use components::toolbar::Toolbar;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Header);
 
 /// The app's top chrome: the brand on the left, the global grid-layout button

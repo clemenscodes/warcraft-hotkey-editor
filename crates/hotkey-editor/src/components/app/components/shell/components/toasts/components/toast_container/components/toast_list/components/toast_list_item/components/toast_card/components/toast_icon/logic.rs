@@ -2,7 +2,7 @@ use super::data::{TOAST_ICON_ERROR, TOAST_ICON_INFO, TOAST_ICON_SUCCESS, TOAST_I
 use super::props::ToastIconProps;
 use super::style;
 use crate::components::app::components::shell::components::toasts::ToastType;
-use crate::styling::ClassList;
+use tw_macro::ClassList;
 
 /// The icon's presentation: the type-tinted circle class and the glyph markup for
 /// that type. Both are chosen from the toast type here, never in the body.

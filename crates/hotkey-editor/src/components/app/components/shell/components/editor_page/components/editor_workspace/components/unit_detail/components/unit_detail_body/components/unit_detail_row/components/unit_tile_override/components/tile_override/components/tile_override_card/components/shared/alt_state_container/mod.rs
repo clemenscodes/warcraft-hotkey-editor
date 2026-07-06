@@ -3,8 +3,8 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::AltStateContainerProps;
 

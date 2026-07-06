@@ -1,4 +1,4 @@
-use crate::persistence::local_storage::LocalStorage;
+use browser_kit::storage::LocalStorage;
 use warcraft_keybinds::GridLayout;
 
 const GRID_LAYOUT_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.grid-layout");

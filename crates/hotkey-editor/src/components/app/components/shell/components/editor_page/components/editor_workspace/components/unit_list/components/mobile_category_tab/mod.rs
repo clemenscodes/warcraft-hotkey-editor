@@ -1,7 +1,7 @@
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::unit_kind_data_attr;
 use dioxus::prelude::*;
 pub use props::MobileCategoryTabProps;

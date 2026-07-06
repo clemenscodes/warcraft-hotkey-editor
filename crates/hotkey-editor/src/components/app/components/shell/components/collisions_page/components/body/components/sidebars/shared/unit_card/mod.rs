@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use super::hotkey_unit_row_icon::HotkeyUnitRowIcon;
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::collision_count::CollisionCount;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::hotkey_unit_name::HotkeyUnitName;

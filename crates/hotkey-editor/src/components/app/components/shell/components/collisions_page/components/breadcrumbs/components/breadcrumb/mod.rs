@@ -3,13 +3,13 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::breadcrumb_count::{BreadcrumbCount, BreadcrumbCountProps};
 use components::breadcrumb_label::BreadcrumbLabel;
 use dioxus::prelude::*;
 use logic::BreadcrumbModel;
 pub use props::BreadcrumbProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Breadcrumb);
 
 /// A breadcrumb tab: a label with its live collision count that navigates the

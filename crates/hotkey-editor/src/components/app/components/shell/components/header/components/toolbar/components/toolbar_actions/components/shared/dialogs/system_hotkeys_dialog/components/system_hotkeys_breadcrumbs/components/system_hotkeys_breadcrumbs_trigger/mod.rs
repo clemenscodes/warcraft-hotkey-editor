@@ -2,7 +2,6 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_breadcrumbs_trigger_caret::{
     SystemHotkeysBreadcrumbsTriggerCaret, SystemHotkeysBreadcrumbsTriggerCaretProps,
 };
@@ -12,6 +11,7 @@ use components::system_hotkeys_breadcrumbs_trigger_label::{
 use dioxus::prelude::*;
 pub use props::SystemHotkeysBreadcrumbsTriggerProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysBreadcrumbsTrigger);
 
 /// The small-viewport dropdown trigger showing the active category.

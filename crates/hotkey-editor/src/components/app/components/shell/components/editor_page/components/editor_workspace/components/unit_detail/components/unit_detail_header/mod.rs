@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::unit_detail_title::{UnitDetailTitle, UnitDetailTitleProps};
 use components::unit_portrait::{UnitPortrait, UnitPortraitProps};
 use dioxus::prelude::*;
 pub use props::UnitDetailHeaderProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitDetailHeader);
 
 /// The unit detail header: the portrait beside the title column (name, id, and the

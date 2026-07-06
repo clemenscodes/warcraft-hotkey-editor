@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::mode_tab::ModeTab;
 use dioxus::prelude::*;
 use logic::ModeTabPair;
 pub use props::ModeTabsProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ModeTabs);
 
 /// The mode column: the Melee and Campaign buttons stacked (or laid in a row on

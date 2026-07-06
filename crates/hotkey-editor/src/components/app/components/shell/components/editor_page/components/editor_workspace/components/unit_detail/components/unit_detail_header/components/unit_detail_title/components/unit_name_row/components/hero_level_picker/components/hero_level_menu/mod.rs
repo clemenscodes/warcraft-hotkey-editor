@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::hero_level_option::HeroLevelOption;
 use dioxus::prelude::*;
 use logic::hero_level_options;
 pub use props::HeroLevelMenuProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeroLevelMenu);
 
 /// The dropdown list of selectable hero levels.

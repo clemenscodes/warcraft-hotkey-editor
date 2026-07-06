@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HelpLegendDescriptionProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpLegendDescription);
 
 /// The toolbar button's one-line description in a legend row. A leaf: the row

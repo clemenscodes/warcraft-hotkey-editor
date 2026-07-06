@@ -3,12 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_breadcrumbs_menu;
 pub use props::SystemHotkeysBreadcrumbsMenuProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysBreadcrumbsMenu);
 
 /// The category tab list: the desktop tab bar and the small-viewport popover.

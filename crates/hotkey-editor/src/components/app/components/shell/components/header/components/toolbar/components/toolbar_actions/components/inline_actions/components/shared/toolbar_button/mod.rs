@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toolbar_button_surface::{ToolbarButtonSurface, ToolbarButtonSurfaceProps};
 use dioxus::prelude::*;
 pub use props::ToolbarButtonProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToolbarButton);
 
 /// The container for a toolbar action button. It owns only the button's box: it fills

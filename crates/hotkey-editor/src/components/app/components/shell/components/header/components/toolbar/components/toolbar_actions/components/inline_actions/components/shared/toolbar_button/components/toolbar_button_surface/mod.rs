@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toolbar_button_icon::{ToolbarButtonIcon, ToolbarButtonIconProps};
 use dioxus::prelude::*;
 pub use props::ToolbarButtonSurfaceProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToolbarButtonSurface);
 
 /// The clickable surface of a toolbar button: the single source of truth for how a

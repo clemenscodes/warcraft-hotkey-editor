@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictHotkeyBadgeProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ConflictHotkeyBadge);
 #[component]
 pub fn ConflictHotkeyBadge(props: ConflictHotkeyBadgeProps) -> Element {

@@ -2,13 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_section_intro::{
     SystemHotkeysSectionIntro, SystemHotkeysSectionIntroProps,
 };
 use dioxus::prelude::*;
 pub use props::SystemHotkeysSectionProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysSection);
 
 /// Frames one system-hotkeys category editor: its intro line above the editor.

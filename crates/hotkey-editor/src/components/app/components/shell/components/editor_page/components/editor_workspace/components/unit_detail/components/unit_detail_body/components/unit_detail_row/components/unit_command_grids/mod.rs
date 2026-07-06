@@ -4,7 +4,7 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::command_grid_editor::CommandGridEditor;
 use components::build_menu::BuildMenu;
 use components::research_menu::ResearchMenu;

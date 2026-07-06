@@ -4,10 +4,10 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::unit_list_search_icon::UnitListSearchIcon;
 use components::unit_list_search_input::{UnitListSearchInput, UnitListSearchInputProps};
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::UnitListSearchProps;
 

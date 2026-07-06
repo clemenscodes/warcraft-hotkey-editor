@@ -1,43 +1,35 @@
-use crate::styling::ClassList;
-use crate::{classes, styling::TailwindClass, tw};
+use tw_macro::ClassList;
+use tw_macro::tw;
 
-const BASE: &[TailwindClass] = tw![
-    "flex",
-    "flex-col",
-    "w-[80vw]",
-    "h-[80vh]",
-    "p-0",
-    "gap-0",
-    "overflow-hidden",
-    "rounded-xl",
-    "border",
-    "border-warcraft-gold",
-    "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
-    "shadow-[0_0_40px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent),0_8px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
-];
-
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:w-screen",
-    "mobile:h-dvh",
-    "mobile:max-w-screen",
-    "mobile:max-h-dvh",
-    "mobile:rounded-none",
-    "mobile:border-x-0",
-];
-
-const TABLET: &[TailwindClass] = tw![
-    "tablet:w-[90vw]",
-    "tablet:h-[90vh]",
-    "tablet:max-w-[90vw]",
-    "tablet:max-h-[90vh]",
-];
-
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "flex",
+        "flex-col",
+        "w-[80vw]",
+        "h-[80vh]",
+        "p-0",
+        "gap-0",
+        "overflow-hidden",
+        "rounded-xl",
+        "border",
+        "border-warcraft-gold",
+        "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
+        "shadow-[0_0_40px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent),0_8px_32px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+    ],
+    mobile: tw![
+        "mobile:w-screen",
+        "mobile:h-dvh",
+        "mobile:max-w-screen",
+        "mobile:max-h-dvh",
+        "mobile:rounded-none",
+        "mobile:border-x-0",
+    ],
+    tablet: tw![
+        "tablet:w-[90vw]",
+        "tablet:h-[90vh]",
+        "tablet:max-w-[90vw]",
+        "tablet:max-h-[90vh]",
+    ],
 }
 
 /// The backdrop (the `DialogRoot`): dims the page and centres the box. A fixed,

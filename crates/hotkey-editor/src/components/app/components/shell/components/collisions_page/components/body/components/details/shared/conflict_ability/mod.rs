@@ -5,7 +5,7 @@ use super::conflict_ability_icon::{ConflictAbilityIcon, ConflictAbilityIconProps
 use super::conflict_ability_name::ConflictAbilityName;
 use super::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use crate::assert_component;
+use tw_macro::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityProps;
 use style::CLASS;

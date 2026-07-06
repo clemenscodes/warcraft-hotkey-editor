@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::unit_id::{UnitId, UnitIdProps};
 use components::unit_name_row::{UnitNameRow, UnitNameRowProps};
 use dioxus::prelude::*;
 pub use props::UnitDetailTitleProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitDetailTitle);
 
 /// The title column of the header: the name row and the unit id.

@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toast_description::{ToastDescription, ToastDescriptionProps};
 use components::toast_title::{ToastTitle, ToastTitleProps};
 use dioxus::prelude::*;
 pub use props::ToastContentProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToastContent);
 
 /// The text column of a toast: its title above its optional description.

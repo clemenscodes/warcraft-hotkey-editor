@@ -1,31 +1,23 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "w-full",
-    "flex-1",
-    "min-h-[20rem]",
-    "px-8",
-    "py-6",
-    "rounded-md",
-    "border",
-    "border-warcraft-blue",
-    "bg-warcraft-bg-base/85",
-    "text-warcraft-text-primary",
-    "text-[1.8rem]/[1.45]",
-    "whitespace-pre",
-    "overflow-auto",
-    "resize-y",
-    "focus:outline-none",
-    "focus:border-warcraft-gold",
-    "focus:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
-];
-
-const MOBILE: &[TailwindClass] = tw!["mobile:text-[1.4rem]/[1.45]"];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "w-full",
+        "flex-1",
+        "min-h-[20rem]",
+        "px-8",
+        "py-6",
+        "rounded-md",
+        "border",
+        "border-warcraft-blue",
+        "bg-warcraft-bg-base/85",
+        "text-warcraft-text-primary",
+        "text-[1.8rem]/[1.45]",
+        "whitespace-pre",
+        "overflow-auto",
+        "resize-y",
+        "focus:outline-none",
+        "focus:border-warcraft-gold",
+        "focus:shadow-[0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_40%,transparent)]",
+    ],
+    mobile: tw!["mobile:text-[1.4rem]/[1.45]"],
 }

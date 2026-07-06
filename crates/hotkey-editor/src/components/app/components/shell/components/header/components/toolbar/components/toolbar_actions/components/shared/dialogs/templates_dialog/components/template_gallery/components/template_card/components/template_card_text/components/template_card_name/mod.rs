@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::TemplateCardNameProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(TemplateCardName);
 
 /// A template card's name heading. Owns `.template-card-name`.

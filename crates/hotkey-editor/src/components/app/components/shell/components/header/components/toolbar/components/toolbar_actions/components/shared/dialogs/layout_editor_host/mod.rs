@@ -2,10 +2,10 @@ mod hooks;
 mod style;
 
 use super::layout_editor::LayoutEditor;
-use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_layout_editor_host;
 use style::CLASS;
+use tw_macro::assert_component;
 
 assert_component!(LayoutEditorHost);
 

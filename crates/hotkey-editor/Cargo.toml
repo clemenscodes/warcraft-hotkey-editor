@@ -14,6 +14,7 @@ name = "hotkey-editor"
 path = "src/main.rs"
 
 [dependencies]
+browser-kit = { workspace = true }
 dioxus = { workspace = true, features = ["web", "router", "launch", "macro"] }
 dioxus-primitives = { workspace = true }
 dioxus-cli-config = { version = "0.7.9", features = ["web"] }
@@ -23,7 +24,6 @@ web-sys = { version = "0.3", features = [
   "Event",
   "HtmlInputElement",
   "HtmlElement",
-  "HtmlAnchorElement",
   "Element",
   "Node",
   "NodeList",
@@ -38,20 +38,16 @@ web-sys = { version = "0.3", features = [
   "ScrollIntoViewOptions",
   "ScrollLogicalPosition",
   "Window",
-  "Blob",
-  "BlobPropertyBag",
-  "Url",
   "Storage",
   "History",
   "Location",
   "UrlSearchParams",
 ] }
-js-sys = "0.3.103"
 gloo-timers = { version = "0.4.0", features = ["futures"] }
-flate2 = "1.1.9"
-base64 = "0.22.1"
 console_error_panic_hook = "0.1.7"
 warcraft-api = { workspace = true }
 warcraft-database = { workspace = true }
 ddd = { workspace = true }
+dioxus-kit = { workspace = true }
+tw-macro = { workspace = true, features = ["dioxus"] }
 warcraft-keybinds = { workspace = true }

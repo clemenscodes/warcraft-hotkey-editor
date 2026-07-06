@@ -3,13 +3,13 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::hero_level_backdrop::{HeroLevelBackdrop, HeroLevelBackdropProps};
 use components::hero_level_menu::{HeroLevelMenu, HeroLevelMenuProps};
 use components::hero_level_trigger::{HeroLevelTrigger, HeroLevelTriggerProps};
 use dioxus::prelude::*;
 pub use props::HeroLevelPickerProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeroLevelPicker);
 
 /// The hero-level dropdown: the trigger, and — while open — the menu and its

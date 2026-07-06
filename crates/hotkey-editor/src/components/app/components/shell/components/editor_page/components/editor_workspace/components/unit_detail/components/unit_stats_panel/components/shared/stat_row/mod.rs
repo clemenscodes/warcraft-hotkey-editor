@@ -5,13 +5,13 @@ mod stat_figure;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::stat_row_label::StatRowLabel;
 use dioxus::prelude::*;
 pub use kind::StatRowKind;
 pub use props::StatRowProps;
 pub use state::StatRowVariant;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(StatRow);
 
 /// The base stat row: a pure renderer of a label plus a value-side, generic over the

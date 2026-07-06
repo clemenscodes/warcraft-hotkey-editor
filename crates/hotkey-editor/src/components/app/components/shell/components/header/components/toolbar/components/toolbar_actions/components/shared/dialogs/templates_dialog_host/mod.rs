@@ -2,10 +2,10 @@ mod hooks;
 mod style;
 
 use super::templates_dialog::TemplatesDialog;
-use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_templates_dialog_host;
 use style::CLASS;
+use tw_macro::assert_component;
 
 assert_component!(TemplatesDialogHost);
 

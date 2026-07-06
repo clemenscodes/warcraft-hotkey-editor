@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::CarrierBadgeProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(CarrierBadge);
 #[component]
 pub fn CarrierBadge(props: CarrierBadgeProps) -> Element {

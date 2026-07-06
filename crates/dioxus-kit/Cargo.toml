@@ -1,0 +1,13 @@
+[package]
+name = "dioxus-kit"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "General-purpose, app-agnostic utilities for Dioxus web apps (currently a framework-level toast queue)."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+dioxus = { workspace = true }

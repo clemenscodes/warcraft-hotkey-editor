@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::mode_tabs::{ModeTabs, ModeTabsProps};
 use components::race_tabs::{RaceTabs, RaceTabsProps};
 use dioxus::prelude::*;
 pub use props::ModeAndRaceTabsProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ModeAndRaceTabs);
 
 /// The unit-navigation band: the mode column (Melee / Campaign) beside the race

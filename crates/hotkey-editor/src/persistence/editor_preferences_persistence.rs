@@ -1,4 +1,4 @@
-use crate::persistence::local_storage::LocalStorage;
+use browser_kit::storage::LocalStorage;
 
 const UPDATE_HOTKEYS_ON_MOVE_STORAGE: LocalStorage =
     LocalStorage::new("warcraft-hotkey-editor.update-hotkeys-on-move");

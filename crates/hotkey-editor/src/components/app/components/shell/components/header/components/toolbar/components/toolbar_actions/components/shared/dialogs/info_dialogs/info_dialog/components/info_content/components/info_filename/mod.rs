@@ -1,6 +1,6 @@
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::data::FILENAME;
 use dioxus::prelude::*;
 use style::CLASS;

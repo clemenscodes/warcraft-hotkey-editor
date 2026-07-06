@@ -3,11 +3,11 @@ mod data;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::move_hotkey_checkbox::MoveHotkeyCheckbox;
 use dioxus::prelude::*;
 pub use props::MoveHotkeyToggleProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(MoveHotkeyToggle);
 
 /// The labeled checkbox controlling whether moving an ability rewrites its hotkey

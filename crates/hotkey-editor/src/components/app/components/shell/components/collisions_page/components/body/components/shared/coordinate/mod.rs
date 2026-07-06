@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::CoordinateProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Coordinate);
 /// A command-card coordinate: displays the column and row of the domain
 /// `GridCoordinate` it is handed.

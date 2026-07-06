@@ -1,11 +1,11 @@
 pub mod components;
 mod props;
 mod style;
-use crate::assert_component;
 use components::hotkey_detail_unit_icon::{HotkeyDetailUnitIcon, HotkeyDetailUnitIconProps};
 use dioxus::prelude::*;
 pub use props::HotkeyDetailUnitProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HotkeyDetailUnit);
 /// The clickable unit portrait in the detail header (deep-links into the editor).
 #[component]

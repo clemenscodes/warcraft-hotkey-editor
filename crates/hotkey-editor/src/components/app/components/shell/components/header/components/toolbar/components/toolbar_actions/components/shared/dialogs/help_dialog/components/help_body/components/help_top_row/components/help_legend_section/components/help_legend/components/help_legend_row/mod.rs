@@ -2,13 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_legend_description::HelpLegendDescription;
 use components::help_legend_icon::HelpLegendIcon;
 use components::help_legend_label::HelpLegendLabel;
 use dioxus::prelude::*;
 pub use props::HelpLegendRowProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpLegendRow);
 
 /// One legend entry: a framed glyph beside its label and description.

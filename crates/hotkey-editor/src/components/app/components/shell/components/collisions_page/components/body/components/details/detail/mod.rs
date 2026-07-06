@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::conflict_grid::ConflictGrid;
 use components::detail_header::DetailHeader;
 use dioxus::prelude::*;
 pub use props::{DetailBody, DetailContent, DetailProps};
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Detail);
 
 /// The base detail pane: the bordered section shell. It shows the empty prompt or

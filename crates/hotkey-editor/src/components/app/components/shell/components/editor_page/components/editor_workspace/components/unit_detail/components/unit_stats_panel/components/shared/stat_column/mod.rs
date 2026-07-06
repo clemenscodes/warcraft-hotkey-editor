@@ -2,11 +2,11 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::StatColumnProps;
 pub use state::StatColumnKind;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(StatColumn);
 
 /// One stat category column, placed by its named grid area.

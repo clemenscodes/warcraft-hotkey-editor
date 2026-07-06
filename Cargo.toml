@@ -1,9 +1,12 @@
 [workspace]
 resolver = "2"
 members = [
+  "crates/browser-kit",
   "crates/ddd",
+  "crates/dioxus-kit",
   "crates/gallery",
   "crates/hotkey-editor",
+  "crates/tw-macro",
   "crates/warcraft-keybinds",
 ]
 
@@ -20,7 +23,10 @@ version = "0.1.0"
 name = "warcraft-hotkey-editor"
 
 [workspace.dependencies]
+browser-kit = { path = "crates/browser-kit" }
 ddd = { path = "crates/ddd" }
+dioxus-kit = { path = "crates/dioxus-kit" }
+tw-macro = { path = "crates/tw-macro" }
 warcraft-keybinds = { path = "crates/warcraft-keybinds" }
 dioxus = { version = "=0.7.9" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }

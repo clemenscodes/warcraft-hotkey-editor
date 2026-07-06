@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_glossary_column::HelpGlossaryColumn;
 use dioxus::prelude::*;
 pub use props::HelpGlossaryColumnsProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpGlossaryColumns);
 
 /// The side-by-side glossaries that define the resolver's vocabulary, one column

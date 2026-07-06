@@ -5,10 +5,10 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::catalog_visibility_button::CatalogVisibilityButton;
 use logic::CatalogVisibilityToggleModel;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::CatalogVisibilityToggleProps;
 

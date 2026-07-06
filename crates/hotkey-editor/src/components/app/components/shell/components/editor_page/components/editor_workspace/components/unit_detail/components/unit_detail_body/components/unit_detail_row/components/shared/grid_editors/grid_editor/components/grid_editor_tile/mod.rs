@@ -4,13 +4,13 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::tile_face::{TileFace, TileFaceProps};
 use dioxus::prelude::*;
 pub use kind::EditorTileKind;
 use logic::EditorTileChrome;
 pub use props::GridEditorTileProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(GridEditorTile);
 
 /// The interactive command tile: the connected Host that wraps the presentational

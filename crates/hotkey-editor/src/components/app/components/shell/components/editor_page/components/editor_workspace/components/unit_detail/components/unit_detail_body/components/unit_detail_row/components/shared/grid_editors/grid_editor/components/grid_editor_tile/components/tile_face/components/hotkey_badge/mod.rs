@@ -2,10 +2,10 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HotkeyBadgeProps;
 pub use state::HotkeyBadgeState;
+use tw_macro::assert_component;
 assert_component!(HotkeyBadge);
 
 #[component]

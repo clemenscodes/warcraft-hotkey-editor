@@ -3,12 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::inventory_drag_key::{InventoryDragKey, InventoryDragKeyProps};
 use dioxus::prelude::*;
 use hooks::use_inventory_drag_overlay;
 pub use props::InventoryDragOverlayProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(InventoryDragOverlay);
 
 /// The card that follows the cursor while an inventory slot is dragged. Renders

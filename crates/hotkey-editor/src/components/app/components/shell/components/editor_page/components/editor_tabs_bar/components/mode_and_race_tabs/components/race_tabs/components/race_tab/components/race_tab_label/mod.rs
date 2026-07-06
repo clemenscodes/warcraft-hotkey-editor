@@ -1,9 +1,9 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::RaceTabLabelProps;
+use tw_macro::assert_component;
 assert_component!(RaceTabLabel);
 
 /// The race name overlaid on the banner. Its active color is the race accent,

@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ModeTabProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ModeTab);
 
 /// One mode button (Melee or Campaign). Its active look is driven by the

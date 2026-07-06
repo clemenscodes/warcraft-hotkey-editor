@@ -1,9 +1,9 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::{ButtonProps, ButtonVariant};
+use tw_macro::assert_component;
 assert_component!(Button);
 
 /// A WC3 action button in primary or secondary weight. A leaf: it owns the

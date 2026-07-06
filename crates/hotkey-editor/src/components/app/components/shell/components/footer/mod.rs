@@ -2,13 +2,13 @@ pub mod components;
 mod data;
 mod style;
 
-use crate::assert_component;
 use components::footer_credit::FooterCredit;
 use components::footer_disclaimer::FooterDisclaimer;
 use components::footer_link::FooterLink;
 use components::footer_separator::FooterSeparator;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Footer);
 
 #[component]

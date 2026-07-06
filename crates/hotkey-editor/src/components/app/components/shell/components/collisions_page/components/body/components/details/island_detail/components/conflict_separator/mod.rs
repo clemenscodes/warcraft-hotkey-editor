@@ -1,8 +1,8 @@
 mod data;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ConflictSeparator);
 
 /// The centered ✕ between the two clashing abilities on a conflict card.

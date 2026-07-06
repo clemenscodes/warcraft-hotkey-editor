@@ -2,11 +2,10 @@ use dioxus::prelude::*;
 use std::time::Duration;
 
 /// The default lifetime of a non-permanent toast.
-pub(super) const DEFAULT_TOAST_DURATION: Duration = Duration::from_secs(5);
+const DEFAULT_TOAST_DURATION: Duration = Duration::from_secs(5);
 
-/// The visual kind of a toast. Drives the border, glow, icon, and title color.
-/// Doubles as the visual-state enum for the `toast_card`, `toast_icon`, and
-/// `toast_title` components (their `states!` overlays match on it).
+/// The visual kind of a toast. A consumer's visuals decide how each kind looks;
+/// this enum can double as the `states!` overlay enum for a toast card/icon.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum ToastType {
     Success,
@@ -28,9 +27,9 @@ impl ToastType {
 }
 
 /// The payload handed to the provider's add callback. A named struct in place of
-/// the primitive's tuple callback argument.
+/// a tuple callback argument.
 #[derive(Clone, Debug, PartialEq)]
-pub struct AddToastRequest {
+pub(crate) struct AddToastRequest {
     title: String,
     description: Option<String>,
     toast_type: ToastType,
@@ -52,7 +51,7 @@ pub struct ToastRecord {
 impl ToastRecord {
     /// Build a record from an add request, materializing the default duration for
     /// a non-permanent toast that did not request one.
-    pub(super) fn new(id: usize, request: AddToastRequest) -> Self {
+    pub(crate) fn new(id: usize, request: AddToastRequest) -> Self {
         let permanent = request.permanent;
         let duration = if permanent {
             None
@@ -129,7 +128,8 @@ impl ToastOptions {
 }
 
 /// The dispatch handle exposed by [`use_toast`]/[`consume_toast`]. A copyable
-/// wrapper over the provider's add callback, provided as context by `ToastMount`.
+/// wrapper over the provider's add callback, provided as context by the
+/// provider hook.
 #[derive(Clone, Copy)]
 pub struct Toasts {
     add_toast: Callback<AddToastRequest>,
@@ -137,7 +137,7 @@ pub struct Toasts {
 
 impl Toasts {
     /// Construct the handle from the provider's add callback.
-    pub(super) fn new(add_toast: Callback<AddToastRequest>) -> Self {
+    pub(crate) fn new(add_toast: Callback<AddToastRequest>) -> Self {
         Self { add_toast }
     }
 
@@ -176,14 +176,14 @@ impl Toasts {
     }
 }
 
-/// Access the toast dispatch handle from the nearest [`ToastMount`]. Call from a
+/// Access the toast dispatch handle from the nearest provider. Call from a
 /// component body (it is a hook).
 pub fn use_toast() -> Toasts {
     use_hook(consume_toast)
 }
 
 /// Access the toast dispatch handle outside of hook position (from a `From` impl
-/// or other non-hook code running under a [`ToastMount`]).
+/// or other non-hook code running under a provider).
 pub fn consume_toast() -> Toasts {
     consume_context::<Toasts>()
 }

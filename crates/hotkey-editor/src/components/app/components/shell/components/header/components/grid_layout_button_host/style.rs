@@ -1,5 +1,4 @@
-use crate::{classes, styling::TailwindClass, tw};
-
+use tw_macro::tw;
 // The layout button's box and container-query context. It owns the centered column at
 // laptop width and up (hidden below, where the drawer offers the action instead). The
 // header hands it the shared row height, which it takes explicitly with `h-full`, and
@@ -12,20 +11,18 @@ use crate::{classes, styling::TailwindClass, tw};
 // it needs. It marks itself the query container off that definite width, so the button
 // fills it (`size-full`) and every `cqi` length inside — padding, gap, border, radius,
 // font, icon — resolves against this box and scales as one drawing with the bar.
-const BASE: &[TailwindClass] = tw![
-    "@container",
-    "hidden",
-    "items-center",
-    "justify-center",
-    "h-full",
-    "aspect-39/10",
-];
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw!["laptop:flex"];
-const DESKTOP: &[TailwindClass] = tw!["desktop:flex"];
-const QHD: &[TailwindClass] = tw!["qhd:flex"];
-const UHD: &[TailwindClass] = tw!["uhd:flex"];
+
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "@container",
+        "hidden",
+        "items-center",
+        "justify-center",
+        "h-full",
+        "aspect-39/10",
+    ],
+    laptop: tw!["laptop:flex"],
+    desktop: tw!["desktop:flex"],
+    qhd: tw!["qhd:flex"],
+    uhd: tw!["uhd:flex"],
 }

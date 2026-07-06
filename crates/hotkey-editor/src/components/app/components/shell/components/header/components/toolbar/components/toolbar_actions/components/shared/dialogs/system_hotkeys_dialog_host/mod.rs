@@ -2,10 +2,10 @@ mod hooks;
 mod style;
 
 use super::system_hotkeys_dialog::SystemHotkeysDialog;
-use crate::assert_component;
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_dialog_host;
 use style::CLASS;
+use tw_macro::assert_component;
 
 assert_component!(SystemHotkeysDialogHost);
 

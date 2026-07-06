@@ -1,7 +1,7 @@
 use super::props::ToastCardProps;
 use super::style;
 use crate::components::app::components::shell::components::toasts::ToastType;
-use crate::styling::ClassList;
+use tw_macro::ClassList;
 
 /// The card's presentation: the type-selected class and the `data-type` attribute
 /// value. Shaped from the record's toast type; the body only places it.

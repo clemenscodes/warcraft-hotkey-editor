@@ -1,13 +1,13 @@
 pub mod components;
 mod props;
 mod style;
-use crate::assert_component;
 use crate::components::app::components::shell::components::resolve_page::logic::CarriersDialogData;
 use components::carrier_badge::{CarrierBadge, CarrierBadgeProps};
 use components::fight_icon::{FightIcon, FightIconProps};
 use dioxus::prelude::*;
 pub use props::AbilityIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(AbilityIcon);
 
 /// One ability icon with a carrier-count badge; clicking opens the carriers dialog.

@@ -1,18 +1,13 @@
-use crate::{classes, styling::TailwindClass, tw};
-const BASE: &[TailwindClass] = tw![
-    "flex",
-    "items-start",
-    "justify-between",
-    "gap-4",
-    "flex-none",
-    "pb-[0.85rem]",
-    "border-b",
-    "border-warcraft-gold/25",
-];
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "flex",
+        "items-start",
+        "justify-between",
+        "gap-4",
+        "flex-none",
+        "pb-[0.85rem]",
+        "border-b",
+        "border-warcraft-gold/25",
+    ],
+}

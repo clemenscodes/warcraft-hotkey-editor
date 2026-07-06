@@ -4,9 +4,9 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::unit_list_track::UnitListTrack;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::UnitListScrollProps;
 

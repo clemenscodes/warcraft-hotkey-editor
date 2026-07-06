@@ -1,8 +1,8 @@
 mod style;
-use crate::assert_component;
 use crate::components::app::components::shell::components::shared::icons::ICON_COLLISIONS_CLEAR;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ClearIcon);
 
 /// The gold "all clear" glyph shown when a collision kind has no conflicts.

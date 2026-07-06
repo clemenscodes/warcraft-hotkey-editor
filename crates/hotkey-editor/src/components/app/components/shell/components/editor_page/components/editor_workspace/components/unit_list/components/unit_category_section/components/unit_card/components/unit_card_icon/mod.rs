@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::UnitCardIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitCardIcon);
 
 /// The portrait thumbnail of a unit card, or an empty framed square when the unit

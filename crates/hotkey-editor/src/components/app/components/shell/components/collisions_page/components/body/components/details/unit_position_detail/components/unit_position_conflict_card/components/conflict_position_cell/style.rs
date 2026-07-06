@@ -1,23 +1,15 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "self-start",
-    "h-[72px]",
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "[&>*]:h-[60px]",
-    "[&>*]:w-[calc(60px/3*4)]",
-    "data-[top=true]:self-center",
-    "data-[top=true]:h-auto",
-    "data-[top=true]:mb-[10px]",
-];
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "self-start",
+        "h-[72px]",
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "[&>*]:h-[60px]",
+        "[&>*]:w-[calc(60px/3*4)]",
+        "data-[top=true]:self-center",
+        "data-[top=true]:h-auto",
+        "data-[top=true]:mb-[10px]",
+    ],
 }

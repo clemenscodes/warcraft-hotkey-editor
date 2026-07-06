@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::footer_link_icon::{FooterLinkIcon, FooterLinkIconProps};
 use dioxus::prelude::*;
 pub use props::FooterLinkProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(FooterLink);
 
 #[component]

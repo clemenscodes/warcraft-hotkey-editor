@@ -1,34 +1,25 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "size-full",
-    "p-0",
-    "border-[1.25cqi]",
-    "border-warcraft-gold-border",
-    "rounded-[15cqi]",
-    "text-warcraft-text-secondary",
-    "cursor-pointer",
-    "bg-panel-gold-resting",
-    "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",
-    "focus:outline-none",
-    "focus-visible:border-white",
-    "focus-visible:text-white",
-    "focus-visible:[box-shadow:0_0_0_3.75cqi_var(--color-warcraft-highlight),0_0_20cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
-    "hover:border-warcraft-gold",
-    "hover:text-warcraft-gold",
-    "hover:bg-panel-gold-active",
-    "hover:[box-shadow:0_0_15cqi_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
-];
-
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "size-full",
+        "p-0",
+        "border-[1.25cqi]",
+        "border-warcraft-gold-border",
+        "rounded-[15cqi]",
+        "text-warcraft-text-secondary",
+        "cursor-pointer",
+        "bg-panel-gold-resting",
+        "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",
+        "focus:outline-none",
+        "focus-visible:border-white",
+        "focus-visible:text-white",
+        "focus-visible:[box-shadow:0_0_0_3.75cqi_var(--color-warcraft-highlight),0_0_20cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+        "hover:border-warcraft-gold",
+        "hover:text-warcraft-gold",
+        "hover:bg-panel-gold-active",
+        "hover:[box-shadow:0_0_15cqi_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
+    ],
 }

@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::BreadcrumbCountProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(BreadcrumbCount);
 
 /// A breadcrumb tab's live collision count, parenthesised via `::before`/`::after`.

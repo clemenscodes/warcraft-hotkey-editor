@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::empty_message::EmptyMessage;
 use dioxus::prelude::*;
 pub use props::EmptyStateProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(EmptyState);
 
 /// The centered upload prompt for a collision kind with no file loaded.

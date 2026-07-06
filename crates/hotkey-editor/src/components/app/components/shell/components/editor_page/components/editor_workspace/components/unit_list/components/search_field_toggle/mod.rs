@@ -6,10 +6,10 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::search_field_button::SearchFieldButton;
 use logic::SearchFieldToggleModel;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::SearchFieldToggleProps;
 

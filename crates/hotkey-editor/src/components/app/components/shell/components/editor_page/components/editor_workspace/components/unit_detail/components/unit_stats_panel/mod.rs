@@ -4,7 +4,6 @@ mod props;
 pub mod stat_icon;
 mod style;
 
-use crate::assert_component;
 use components::attributes_column::AttributesColumn;
 use components::combat_column::CombatColumn;
 use components::defense_column::DefenseColumn;
@@ -13,6 +12,7 @@ use dioxus::prelude::*;
 use hooks::{UnitStatsPanelModel, use_unit_stats_panel};
 pub use props::UnitStatsPanelProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitStatsPanel);
 
 /// The four stat-category columns (vitality, combat, defense, attributes) in a 2×2

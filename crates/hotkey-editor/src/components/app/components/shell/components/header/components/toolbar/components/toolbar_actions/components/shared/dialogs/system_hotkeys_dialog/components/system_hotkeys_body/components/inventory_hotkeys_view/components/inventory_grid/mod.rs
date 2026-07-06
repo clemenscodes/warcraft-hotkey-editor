@@ -3,7 +3,6 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
 pub use components::inventory_cell::InventoryCell;
 use components::inventory_slot::InventorySlot;
@@ -12,6 +11,7 @@ use hooks::use_inventory_grid;
 pub use props::InventoryGridProps;
 use std::cell::{Cell, RefCell};
 use style::CLASS;
+use tw_macro::assert_component;
 use wasm_bindgen::closure::Closure;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;

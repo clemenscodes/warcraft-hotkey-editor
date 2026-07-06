@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use components::carrier_card_icon::{CarrierCardIcon, CarrierCardIconProps};
 use components::carrier_card_name::CarrierCardName;

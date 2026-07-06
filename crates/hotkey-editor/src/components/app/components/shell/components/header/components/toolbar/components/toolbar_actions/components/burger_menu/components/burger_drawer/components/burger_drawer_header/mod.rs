@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::burger_close::{BurgerClose, BurgerCloseProps};
 use dioxus::prelude::*;
 pub use props::BurgerDrawerHeaderProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(BurgerDrawerHeader);
 
 #[component]

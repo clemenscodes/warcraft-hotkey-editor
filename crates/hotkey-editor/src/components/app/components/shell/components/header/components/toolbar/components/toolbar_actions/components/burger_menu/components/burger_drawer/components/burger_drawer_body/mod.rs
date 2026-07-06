@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::burger_menu_group::{BurgerMenuGroup, BurgerMenuGroupProps};
 use components::shared::burger_menu_item::BurgerMenuItem;
 use dioxus::prelude::*;
 pub use props::BurgerDrawerBodyProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(BurgerDrawerBody);
 
 #[component]

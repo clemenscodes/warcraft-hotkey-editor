@@ -1,11 +1,11 @@
 pub mod components;
 mod style;
 
-use crate::assert_component;
 use components::burger_menu::BurgerMenu;
 use components::inline_actions::InlineActions;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToolbarActions);
 
 /// The adaptive file-action controls: the inline button row at laptop width and up,

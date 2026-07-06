@@ -3,11 +3,11 @@ mod grid_tile_kind;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use grid_tile_kind::GridTileKind;
 pub use props::GridProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Grid);
 
 /// The command grid: a pure tile renderer that encodes the three-by-four

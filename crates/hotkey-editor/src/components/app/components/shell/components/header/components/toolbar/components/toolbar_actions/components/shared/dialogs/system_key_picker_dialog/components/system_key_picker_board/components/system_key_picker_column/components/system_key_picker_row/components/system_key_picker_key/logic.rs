@@ -1,7 +1,7 @@
 use super::props::SystemKeyPickerKeyProps;
 use super::style;
-use crate::styling::ClassList;
 use dioxus::prelude::*;
+use tw_macro::ClassList;
 
 /// A system-board key's shaped presentation: the state class, the label, the
 /// tooltip text and its placement/anchor, the wide flag, and the click handler.

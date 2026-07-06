@@ -1,35 +1,26 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "w-9",
-    "h-9",
-    "p-0",
-    "bg-transparent",
-    "border",
-    "border-warcraft-gold/30",
-    "rounded-[8px]",
-    "text-warcraft-gold/70",
-    "text-[0.9rem]",
-    "cursor-pointer",
-    "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease]",
-    "hover:border-warcraft-gold",
-    "hover:text-warcraft-gold",
-    "hover:bg-warcraft-gold/8",
-    "focus:outline-none",
-    "focus-visible:border-white",
-    "focus-visible:text-white",
-    "focus-visible:shadow-ring-hl-2",
-];
-
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "w-9",
+        "h-9",
+        "p-0",
+        "bg-transparent",
+        "border",
+        "border-warcraft-gold/30",
+        "rounded-[8px]",
+        "text-warcraft-gold/70",
+        "text-[0.9rem]",
+        "cursor-pointer",
+        "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease]",
+        "hover:border-warcraft-gold",
+        "hover:text-warcraft-gold",
+        "hover:bg-warcraft-gold/8",
+        "focus:outline-none",
+        "focus-visible:border-white",
+        "focus-visible:text-white",
+        "focus-visible:shadow-ring-hl-2",
+    ],
 }

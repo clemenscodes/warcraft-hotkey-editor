@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toast_card::{ToastCard, ToastCardProps};
 use dioxus::prelude::*;
 pub use props::ToastListItemProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToastListItem);
 
 /// A single list slot. Re-enables pointer events (the container is click-through)

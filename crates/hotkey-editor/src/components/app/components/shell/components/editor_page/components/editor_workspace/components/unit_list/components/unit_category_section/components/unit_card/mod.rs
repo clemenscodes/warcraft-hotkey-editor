@@ -3,12 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::unit_card_icon::{UnitCardIcon, UnitCardIconProps};
 use components::unit_card_info::{UnitCardInfo, UnitCardInfoProps};
 use dioxus::prelude::*;
 use hooks::use_unit_card;
 pub use props::UnitCardProps;
+use tw_macro::assert_component;
 assert_component!(UnitCard);
 
 /// One selectable unit in the list: portrait plus name and id. Selecting it drives

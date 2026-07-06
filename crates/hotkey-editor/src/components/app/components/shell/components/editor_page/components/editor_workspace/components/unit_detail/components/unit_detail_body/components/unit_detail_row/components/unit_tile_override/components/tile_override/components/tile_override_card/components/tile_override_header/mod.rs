@@ -4,10 +4,10 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::tile_override_header_text::TileOverrideHeaderText;
 use components::tile_override_hotkey_slot::TileOverrideHotkeySlot;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::TileOverrideHeaderProps;
 

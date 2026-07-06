@@ -3,11 +3,11 @@ mod list_scroll_kind;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use list_scroll_kind::ListScrollKind;
 pub use props::SidebarProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Sidebar);
 
 /// The base sidebar: the aside shell around a generic scroll slot. It owns the

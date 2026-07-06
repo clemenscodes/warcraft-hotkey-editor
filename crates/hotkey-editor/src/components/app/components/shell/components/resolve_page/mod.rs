@@ -4,7 +4,6 @@ pub mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::breadcrumbs::Breadcrumbs;
 use components::carriers_dialog_host::CarriersDialogHost;
 use components::clear_state::ClearState;
@@ -15,6 +14,7 @@ use dioxus::prelude::*;
 use hooks::{ResolvePageView, use_resolve_page};
 pub use props::ResolvePageProps;
 use style::CLASS;
+use tw_macro::assert_component;
 
 assert_component!(ResolvePage);
 

@@ -2,11 +2,11 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::SystemSlotKeyPresentation;
 pub use props::SystemSlotKeyProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemSlotKey);
 
 /// The bound-key glyph shown on a system hotkey slot.

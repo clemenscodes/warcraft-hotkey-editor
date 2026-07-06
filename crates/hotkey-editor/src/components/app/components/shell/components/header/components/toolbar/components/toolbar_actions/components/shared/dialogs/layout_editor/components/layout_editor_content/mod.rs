@@ -1,8 +1,8 @@
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(LayoutEditorContent);
 
 /// The centered body column of the layout editor: holds the intro, the grid, and

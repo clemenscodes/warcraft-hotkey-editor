@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HelpTermProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpTerm);
 
 /// A glossary term heading. A leaf: the entry passes the term as children.

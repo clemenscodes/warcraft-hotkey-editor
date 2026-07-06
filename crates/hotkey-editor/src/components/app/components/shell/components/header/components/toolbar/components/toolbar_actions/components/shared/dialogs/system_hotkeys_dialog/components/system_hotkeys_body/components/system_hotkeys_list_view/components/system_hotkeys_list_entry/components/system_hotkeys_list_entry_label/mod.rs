@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::SystemHotkeysListEntryLabelProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysListEntryLabel);
 
 /// The binding name shown in a system-hotkey list row.

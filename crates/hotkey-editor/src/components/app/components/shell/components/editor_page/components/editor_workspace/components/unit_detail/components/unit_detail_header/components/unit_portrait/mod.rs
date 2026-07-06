@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::UnitPortraitProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitPortrait);
 
 /// The unit's portrait image; renders nothing when the unit has no portrait.

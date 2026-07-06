@@ -3,12 +3,12 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::burger_menu_item_icon::{BurgerMenuItemIcon, BurgerMenuItemIconProps};
 use components::burger_menu_item_label::{BurgerMenuItemLabel, BurgerMenuItemLabelProps};
 use dioxus::prelude::*;
 pub use props::BurgerMenuItemProps;
 pub use state::BurgerItemState;
+use tw_macro::assert_component;
 assert_component!(BurgerMenuItem);
 
 #[component]

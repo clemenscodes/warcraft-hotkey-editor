@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_icon::{
     ConflictAbilityIcon, ConflictAbilityIconProps,
 };

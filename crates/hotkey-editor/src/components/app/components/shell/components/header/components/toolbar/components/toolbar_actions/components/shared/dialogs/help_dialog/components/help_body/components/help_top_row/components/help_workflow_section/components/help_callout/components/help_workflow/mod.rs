@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_workflow_step::HelpWorkflowStep;
 use dioxus::prelude::*;
 pub use props::HelpWorkflowProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpWorkflow);
 
 /// The ordered list of workflow steps. A pure loop: the steps and their inline

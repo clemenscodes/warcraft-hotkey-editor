@@ -4,7 +4,6 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_breadcrumbs_menu::{
     SystemHotkeysBreadcrumbsMenu, SystemHotkeysBreadcrumbsMenuProps,
 };
@@ -15,6 +14,7 @@ use dioxus::prelude::*;
 use hooks::use_system_hotkeys_breadcrumbs;
 pub use props::SystemHotkeysBreadcrumbsProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysBreadcrumbs);
 
 /// The category bar under the dialog header: a tab row on desktop, a dropdown on

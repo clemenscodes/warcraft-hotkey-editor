@@ -4,8 +4,8 @@ use super::style;
 use crate::components::app::components::shell::components::shared::icons::{
     ICON_COLLISIONS, ICON_COLLISIONS_CLEAR,
 };
-use crate::styling::ClassList;
 use dioxus::prelude::*;
+use tw_macro::ClassList;
 
 /// Everything the button renders, shaped once from the domain-computed collision
 /// summary: the styled class for its state, each collision class's count

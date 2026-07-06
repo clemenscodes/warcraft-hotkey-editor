@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::FightIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(FightIcon);
 #[component]
 pub fn FightIcon(props: FightIconProps) -> Element {

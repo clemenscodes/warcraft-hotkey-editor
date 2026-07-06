@@ -3,11 +3,11 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::race_tab_label::{RaceTabLabel, RaceTabLabelProps};
 use dioxus::prelude::*;
 use logic::RaceTabChrome;
 pub use props::RaceTabProps;
+use tw_macro::assert_component;
 assert_component!(RaceTab);
 
 /// One race banner button. Its per-race banner and accent come from

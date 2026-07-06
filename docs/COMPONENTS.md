@@ -413,8 +413,9 @@ prefixed name (`help-legend-row`) that matches the directory and component name.
 It exists only for selectability — e2e selectors, debugging, finding the element
 in the DOM. It is **never a Tailwind utility**, so Tailwind generates no rule for
 it and it carries **no styling, ever**. All styling is the named utilities beside
-it. The identity is its own const in `style.rs`, listed first, ahead of the band
-arrays. e2e decides whether it bothers to select a component, never whether the
+it. The identity is derived by `classes!` from the component directory — never
+written by hand and never a const you list. e2e decides whether it bothers to
+select a component, never whether the
 component gets an identity — every component is selectable.
 
 ## Styling: Tailwind utilities, with the global layer kept to the design system
@@ -489,10 +490,10 @@ something (`mobile:text-body-sm` vs the `BASE` `text-body`). `BASE` must never
 carry a band-prefixed class (the macro rejects it); a band must carry only its
 own prefix (the macro rejects `uhd:flex` in `MOBILE`).
 
-A component declares **all seven** lists (`BASE` + the six bands); an unused one
-is an explicit empty `&[]`, so a band is never silently missing. Within one list
-the property order is layout → sizing → spacing → border → typography → color →
-effects → state.
+A component keys only the bands it styles (`base` plus whichever responsive bands
+it restyles); an unused band is simply omitted, and an unknown band key is a
+compile error. Within one band the property order is layout → sizing → spacing →
+border → typography → color → effects → state.
 
 ## style.rs and the `classes!` macro
 
@@ -501,32 +502,39 @@ class name assembled at runtime (`format!`, a join, concatenation) is invisible
 to it and its CSS is never generated. Every class token must therefore appear as
 a literal in the source.
 
-Each component declares a `BASE` and one **`&[&str]` per band** of single-class
-literals in its own `style.rs`; `classes!` then derives the identity from the
-directory and joins everything at compile time into a
-`pub(super) const CLASS: ClassList`:
+Each component writes one **keyed list per band it styles**, inline, in its own
+`style.rs`; `classes!` derives the identity from the directory and joins
+everything at compile time into a `pub(super) const CLASS: ClassList`. The keys
+are `base` plus the responsive band names; a band the component does not restyle
+is simply omitted (no empty placeholder), and the keys may appear in any order:
 
 ```rust
-// help_top_row/style.rs — wide layout in BASE, the phone override per band.
+// help_top_row/style.rs — wide layout in `base`, the phone override per band.
 // Bespoke values are arbitrary and inline (component-local); the gold is a token.
-use crate::classes;
+use tw_macro::tw;
 
-const BASE: &[&str] = &["flex", "flex-row", "items-start", "gap-[3.2rem]"];
-const MOBILE: &[&str] = &["mobile:flex-col", "mobile:gap-[2.6rem]"];
-const TABLET: &[&str] = &["tablet:flex-col", "tablet:gap-[2.6rem]"];
-const LAPTOP: &[&str] = &[];
-const DESKTOP: &[&str] = &[];
-const QHD: &[&str] = &[];
-const UHD: &[&str] = &[];
-
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    base: tw!["flex", "flex-row", "items-start", "gap-[3.2rem]"],
+    mobile: tw!["mobile:flex-col", "mobile:gap-[2.6rem]"],
+    tablet: tw!["tablet:flex-col", "tablet:gap-[2.6rem]"],
+    // laptop/desktop/qhd/uhd omitted — this component does not restyle them
+}
 // CLASS starts with the derived identity "help-top-row" (from the directory).
 ```
 
+Each band value is a `tw![…]` list, not a raw array — the Tailwind LSP keys on
+`tw![` to scope class completion and validation, and `tw!` re-anchors the
+`TailwindClass` type so a stray `&[&str]` can't reach the macro. `classes!` and
+`states!` are generated crate-globally by one
+`tw_macro::define_styling! { bands: [mobile, tablet, laptop, desktop, qhd, uhd] }`
+at the crate root, which declares the band vocabulary once; they are in scope
+everywhere and need no `use`. `tw!` and `assert_component!` come from `tw_macro`
+directly (`use tw_macro::tw;` / `use tw_macro::assert_component;`).
+
 ```rust
 // help_top_row/mod.rs — body just names CLASS; assert_component! binds the name
-use crate::assert_component;
 use style::CLASS;
+use tw_macro::assert_component;
 
 assert_component!(HelpTopRow);
 
@@ -552,16 +560,18 @@ Why this shape:
   `mod.rs` asserts the PascalCase function name equals the directory
   (capitalization included), closing the triangle `component == directory ==
   class` at compile time. A `HelpTopRow` living in `top_row/` fails the build.
-- **`BASE` plus all six bands are mandatory and named.** Every component spells
-  out `BASE MOBILE TABLET LAPTOP DESKTOP QHD UHD`, an unused one being an explicit
-  `&[]`. A band is never silently missing, and `grep MOBILE` lists every
-  component's mobile styles.
-- The macro guards the whole contract at compile time: its fixed arity rejects a
-  missing list, `assert_named` rejects a misnamed const, `assert_base` rejects a
-  band-prefixed class in `BASE`, and `assert_band` rejects a class whose prefix
-  does not match its band — `uhd:flex` inside `MOBILE` fails the build.
-- Each utility is a separate literal in a `&[&str]`, so rustfmt lays them one per
-  line (no line-width fights) and Tailwind's scanner sees every token verbatim.
+- **Bands are keyed by name; only the ones you style appear.** A component lists
+  `base` plus whatever responsive keys it restyles, in any order. There is no
+  empty-placeholder ceremony, and `grep 'mobile:'` still lists every component's
+  mobile styles because every mobile class is literally `mobile:`-prefixed.
+- The macro guards the whole contract at compile time: `base` rejects a class
+  carrying any declared band prefix (a width style belongs in that band, not
+  `base` — but variant prefixes like `after:`/`hover:` are fine), a non-`base`
+  key must name a **declared** band (a typo like `moble:` fails the build), and
+  every class in a band must carry that band's prefix — `uhd:flex` under `mobile:`
+  fails the build.
+- Each utility is a separate literal, so rustfmt-style one-per-line arrays keep
+  Tailwind's scanner seeing every token verbatim.
 - `classes!` joins them in a `const fn` into one string at **compile time** —
   zero runtime cost; the body only names `CLASS`.
 - `CLASS` is a `pub(super)` **`ClassList`**, not a `&str`. `mod style;` is
@@ -570,8 +580,10 @@ Why this shape:
   (`class: "{CLASS} other-class"` does not compile). A component can only ever
   wear exactly its own class — styling coupling is impossible to express.
 
-The macro lives once at the crate root (`crate::classes!`); its `const fn`
-helpers are in `src/styling.rs`.
+The engine lives in the standalone `tw-macro` crate; `ClassList`/`TailwindClass`
+are imported from it directly (`use tw_macro::ClassList;`). `classes!`/`states!`
+are generated crate-global by `define_styling!` at the crate root, and their
+`const fn` helpers ship with the crate.
 
 ## Stateful components and the `states!` macro
 
@@ -593,17 +605,19 @@ element's *sizing* lives in the base bands. The component's state enum lives in
 pub enum TileState { Idle, DragSource, DropTarget }
 
 // grid_tile/style.rs
-use crate::{classes, states};
+use tw_macro::tw;
 
-const BASE: &[&str] = &["relative", "flex", "items-center"];
-// ... the six bands (the tile's sizing) ...
-classes! { BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD }
+classes! {
+    base: tw!["relative", "flex", "items-center"],
+    // ... plus the bands that carry the tile's sizing ...
+}
 
-const IDLE: &[&str] = &[];
-const DRAG_SOURCE: &[&str] = &["opacity-40", "ring-2", "ring-warcraft-gold"];
-const DROP_TARGET: &[&str] = &["bg-warcraft-gold-dim"];
-
-states! { TileState, Idle => IDLE, DragSource => DRAG_SOURCE, DropTarget => DROP_TARGET }
+states! {
+    TileState,
+    Idle => tw![],
+    DragSource => tw!["opacity-40", "ring-2", "ring-warcraft-gold"],
+    DropTarget => tw!["bg-warcraft-gold-dim"],
+}
 // → pub(super) fn class(state: TileState) -> ClassList
 ```
 
@@ -621,8 +635,9 @@ match returning a precomputed `ClassList`. The body never branches, `ClassList`
 stays opaque, and every token stays a literal for the scanner — the same
 guarantees as `classes!`.
 
-Both macros live at the crate root (`crate::classes!`, `crate::states!`); their
-`const fn` helpers are in `src/styling.rs`.
+Both macros are generated crate-global by `define_styling!` (from the `tw-macro`
+crate); their `const fn` helpers ship with that crate. State overlays are keyed
+by variant with inline literal lists, exactly like `classes!`.
 
 ---
 

@@ -2,11 +2,11 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::SystemSlotLabelPresentation;
 pub use props::SystemSlotLabelProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemSlotLabel);
 
 /// The caption shown above the key on a system hotkey slot.

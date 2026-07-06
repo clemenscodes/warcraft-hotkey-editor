@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 /// The card's shaped view: its full class string (base plus the mobile carousel
 /// filter for its kind), the kind data attribute, and the select handlers.
 pub(super) struct UnitCardModel {
-    pub(super) class: crate::styling::ClassList,
+    pub(super) class: tw_macro::ClassList,
     pub(super) kind_attr: &'static str,
     pub(super) on_click: EventHandler<MouseEvent>,
     pub(super) on_keydown: EventHandler<KeyboardEvent>,

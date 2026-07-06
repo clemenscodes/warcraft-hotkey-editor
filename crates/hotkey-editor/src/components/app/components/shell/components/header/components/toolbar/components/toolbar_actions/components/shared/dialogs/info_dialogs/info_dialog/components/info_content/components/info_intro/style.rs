@@ -1,22 +1,13 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "m-0",
-    "max-w-[90rem]",
-    "text-center",
-    "uppercase",
-    "tracking-widest",
-    "text-[2rem]/[1.375]",
-    "text-warcraft-gold/75",
-    "text-shadow-drop",
-];
-
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "m-0",
+        "max-w-[90rem]",
+        "text-center",
+        "uppercase",
+        "tracking-widest",
+        "text-[2rem]/[1.375]",
+        "text-warcraft-gold/75",
+        "text-shadow-drop",
+    ],
 }

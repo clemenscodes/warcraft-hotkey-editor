@@ -1,80 +1,70 @@
 use super::state::FilledTileState;
-use crate::{classes, states, styling::TailwindClass, tw};
+use tw_macro::tw;
 
-const BASE: &[TailwindClass] = tw![
-    "relative",
-    "w-full",
-    "aspect-square",
-    "[container-type:inline-size]",
-    "overflow-hidden",
-    "border-[2cqi]",
-    "rounded-[5.2cqi]",
-    "[transition:border-color_0.12s_ease,box-shadow_0.12s_ease]",
-    "touch-pan-y",
-    "outline-none",
-    "hover:border-warcraft-gold",
-    "active:border-warcraft-gold",
-    "data-[race=human]:hover:border-[color:var(--color-race-human)]",
-    "data-[race=human]:active:border-[color:var(--color-race-human)]",
-    "data-[race=orc]:hover:border-[color:var(--color-race-orc)]",
-    "data-[race=orc]:active:border-[color:var(--color-race-orc)]",
-    "data-[race=nightelf]:hover:border-[color:var(--color-race-nightelf)]",
-    "data-[race=nightelf]:active:border-[color:var(--color-race-nightelf)]",
-    "data-[race=undead]:hover:border-[color:var(--color-race-undead)]",
-    "data-[race=undead]:active:border-[color:var(--color-race-undead)]",
-    "data-[race=neutral]:hover:border-[color:var(--color-warcraft-gold)]",
-    "data-[race=neutral]:active:border-[color:var(--color-warcraft-gold)]",
-    "kb-focus:border-warcraft-gold",
-    "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-gold),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
-    "[[data-drag-over=true]_&]:border-warcraft-gold",
-    "[[data-drag-over=true]_&]:border-solid",
-    "data-[dragging-source=true]:bg-panel-dark-diag-85",
-    "data-[dragging-source=true]:border-warcraft-blue-bright",
-    "data-[dragging-source=true]:border-dashed",
-    "data-[dragging-source=true]:shadow-bevel-hl",
-    "data-[dragging-source=true]:[&>*]:invisible",
-    "data-[dragging-source=true]:data-[drag-over=true]:border-warcraft-gold",
-    "data-[dragging-source=true]:data-[drag-over=true]:border-dashed",
-    "[body:has([data-dragging-source=true])_&]:transition-none",
-];
-
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "relative",
+        "w-full",
+        "aspect-square",
+        "[container-type:inline-size]",
+        "overflow-hidden",
+        "border-[2cqi]",
+        "rounded-[5.2cqi]",
+        "[transition:border-color_0.12s_ease,box-shadow_0.12s_ease]",
+        "touch-pan-y",
+        "outline-none",
+        "hover:border-warcraft-gold",
+        "active:border-warcraft-gold",
+        "data-[race=human]:hover:border-[color:var(--color-race-human)]",
+        "data-[race=human]:active:border-[color:var(--color-race-human)]",
+        "data-[race=orc]:hover:border-[color:var(--color-race-orc)]",
+        "data-[race=orc]:active:border-[color:var(--color-race-orc)]",
+        "data-[race=nightelf]:hover:border-[color:var(--color-race-nightelf)]",
+        "data-[race=nightelf]:active:border-[color:var(--color-race-nightelf)]",
+        "data-[race=undead]:hover:border-[color:var(--color-race-undead)]",
+        "data-[race=undead]:active:border-[color:var(--color-race-undead)]",
+        "data-[race=neutral]:hover:border-[color:var(--color-warcraft-gold)]",
+        "data-[race=neutral]:active:border-[color:var(--color-warcraft-gold)]",
+        "kb-focus:border-warcraft-gold",
+        "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-gold),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
+        "[[data-drag-over=true]_&]:border-warcraft-gold",
+        "[[data-drag-over=true]_&]:border-solid",
+        "data-[dragging-source=true]:bg-panel-dark-diag-85",
+        "data-[dragging-source=true]:border-warcraft-blue-bright",
+        "data-[dragging-source=true]:border-dashed",
+        "data-[dragging-source=true]:shadow-bevel-hl",
+        "data-[dragging-source=true]:[&>*]:invisible",
+        "data-[dragging-source=true]:data-[drag-over=true]:border-warcraft-gold",
+        "data-[dragging-source=true]:data-[drag-over=true]:border-dashed",
+        "[body:has([data-dragging-source=true])_&]:transition-none",
+    ],
 }
 
-const FILLED: &[TailwindClass] = tw![
-    "bg-warcraft-bg-panel/95",
-    "border-warcraft-blue-bright",
-    "shadow-bevel-hl",
-];
-
-const COMMAND: &[TailwindClass] = tw![
-    "bg-panel-blue-diag-95",
-    "border-warcraft-blue-bright",
-    "shadow-bevel-hl",
-];
-
-const SELECTED: &[TailwindClass] = tw![
-    "bg-warcraft-bg-panel/95",
-    "border-warcraft-gold",
-    "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent)]",
-    "data-[race=human]:border-[color:var(--color-race-human)]",
-    "data-[race=human]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-human)_45%,transparent)]",
-    "data-[race=orc]:border-[color:var(--color-race-orc)]",
-    "data-[race=orc]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-orc)_45%,transparent)]",
-    "data-[race=nightelf]:border-[color:var(--color-race-nightelf)]",
-    "data-[race=nightelf]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-nightelf)_45%,transparent)]",
-    "data-[race=undead]:border-[color:var(--color-race-undead)]",
-    "data-[race=undead]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-undead)_45%,transparent)]",
-    "data-[race=neutral]:border-[color:var(--color-warcraft-gold)]",
-    "data-[race=neutral]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
-];
 states! {
-    FilledTileState, Filled => FILLED, Command => COMMAND, Selected => SELECTED
+    FilledTileState,
+    Filled => tw![
+        "bg-warcraft-bg-panel/95",
+        "border-warcraft-blue-bright",
+        "shadow-bevel-hl",
+    ],
+    Command => tw![
+        "bg-panel-blue-diag-95",
+        "border-warcraft-blue-bright",
+        "shadow-bevel-hl",
+    ],
+    Selected => tw![
+        "bg-warcraft-bg-panel/95",
+        "border-warcraft-gold",
+        "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent)]",
+        "data-[race=human]:border-[color:var(--color-race-human)]",
+        "data-[race=human]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-human)_45%,transparent)]",
+        "data-[race=orc]:border-[color:var(--color-race-orc)]",
+        "data-[race=orc]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-orc)_45%,transparent)]",
+        "data-[race=nightelf]:border-[color:var(--color-race-nightelf)]",
+        "data-[race=nightelf]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-nightelf)_45%,transparent)]",
+        "data-[race=undead]:border-[color:var(--color-race-undead)]",
+        "data-[race=undead]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-race-undead)_45%,transparent)]",
+        "data-[race=neutral]:border-[color:var(--color-warcraft-gold)]",
+        "data-[race=neutral]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+    ],
 }

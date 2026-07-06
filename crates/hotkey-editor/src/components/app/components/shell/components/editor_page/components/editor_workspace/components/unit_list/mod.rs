@@ -5,7 +5,6 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::catalog_visibility_toggle::CatalogVisibilityToggle;
 use components::mobile_category_tab::MobileCategoryTab;
 use components::search_field_toggle::SearchFieldToggle;
@@ -17,6 +16,7 @@ use dioxus::prelude::*;
 use hooks::use_unit_list;
 pub use props::UnitListProps;
 use style::CLASS;
+use tw_macro::assert_component;
 use warcraft_api::UnitKind;
 assert_component!(UnitList);
 

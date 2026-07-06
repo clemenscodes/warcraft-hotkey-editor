@@ -27,7 +27,8 @@ impl ToastProviderModel {
 
 /// Wire up the toast queue: create the backing signal, register the add and
 /// remove callbacks, provide the [`Toasts`] dispatch handle as context, and hand
-/// the body the current queue plus the remove callback.
+/// the body the current queue plus the remove callback. Render the queue with
+/// your own visuals.
 pub fn use_toast_provider() -> ToastProviderModel {
     let mut records = use_signal(Vec::<ToastRecord>::new);
     let on_remove = use_callback(move |id: usize| {

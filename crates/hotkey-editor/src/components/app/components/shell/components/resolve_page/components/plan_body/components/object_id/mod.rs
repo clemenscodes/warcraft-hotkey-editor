@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ObjectIdProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ObjectId);
 #[component]
 pub fn ObjectId(props: ObjectIdProps) -> Element {

@@ -1,9 +1,9 @@
 mod style;
 
 use super::dialog_header_decoration::DialogHeaderDecoration;
-use crate::assert_component;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(DialogHeaderDecorationLeading);
 
 /// The leading side of the header: the flourish facing inward as drawn.

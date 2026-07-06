@@ -3,10 +3,10 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::ToastIconPresentation;
 pub use props::ToastIconProps;
+use tw_macro::assert_component;
 assert_component!(ToastIcon);
 
 /// The circular type glyph at the leading edge of a toast.

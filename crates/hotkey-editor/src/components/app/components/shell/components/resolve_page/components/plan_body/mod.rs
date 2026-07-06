@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::active_move_list::{ActiveMoveList, ActiveMoveListProps};
 use components::unresolved_section::{UnresolvedSection, UnresolvedSectionProps};
 use dioxus::prelude::*;
 pub use props::{PlanBodyProps, PlanBodySection};
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(PlanBody);
 
 /// The scrollable plan body: the active category's move cards, then the unresolved

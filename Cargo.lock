@@ -169,6 +169,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "browser-kit"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "flate2",
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -905,6 +916,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dioxus-kit"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
+]
+
+[[package]]
 name = "dioxus-logger"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1446,15 +1464,15 @@ dependencies = [
 name = "hotkey-editor"
 version = "0.1.0"
 dependencies = [
- "base64",
+ "browser-kit",
  "console_error_panic_hook",
  "ddd",
  "dioxus",
  "dioxus-cli-config",
+ "dioxus-kit",
  "dioxus-primitives",
- "flate2",
  "gloo-timers 0.4.0",
- "js-sys",
+ "tw-macro",
  "warcraft-api",
  "warcraft-database",
  "warcraft-keybinds",
@@ -3250,6 +3268,13 @@ dependencies = [
  "sha1",
  "thiserror 2.0.18",
  "utf-8",
+]
+
+[[package]]
+name = "tw-macro"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
 ]
 
 [[package]]

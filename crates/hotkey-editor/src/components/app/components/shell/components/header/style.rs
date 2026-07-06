@@ -1,5 +1,4 @@
-use crate::{classes, styling::TailwindClass, tw};
-
+use tw_macro::tw;
 // On laptop and up the bar is a three-column grid (brand | centered layout button |
 // toolbar). Its own dimensions — `min-height`, column `gap`, vertical `py` — are the one
 // place `vw` still appears: the bar is full-bleed, so `vw` is just "a fraction of the bar's
@@ -25,62 +24,6 @@ use crate::{classes, styling::TailwindClass, tw};
 // resolves against the bar's own width, not the raw viewport. `container-type` makes a
 // *query* container only; unlike `contain`/`transform` it is not a containing block, so the
 // mobile burger's `fixed` drawer still fills the screen.
-const BASE: &[TailwindClass] = tw![
-    "@container",
-    "relative",
-    "z-50",
-    "items-center",
-    "flex-none",
-    "px-4",
-    "after:content-['']",
-    "after:absolute",
-    "after:bottom-0",
-    "after:left-4",
-    "after:right-4",
-    "after:h-px",
-    "after:bg-warcraft-gold/40",
-    "after:shadow-edge",
-];
-
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:flex",
-    "mobile:flex-row",
-    "mobile:justify-between",
-    "mobile:sticky",
-    "mobile:top-0",
-    "mobile:z-60",
-    "mobile:pt-2",
-    "mobile:pb-2",
-    "mobile:after:bg-warcraft-gold/30",
-    "mobile:min-h-14",
-    "mobile:max-w-full",
-    "mobile:w-full",
-    "mobile:bg-warcraft-bg-base",
-    "mobile:bg-panel-header-solid",
-    "mobile:bg-no-repeat",
-    "mobile:bg-fixed",
-    "mobile:bg-size-[100%_100%]",
-];
-
-const TABLET: &[TailwindClass] = tw![
-    "tablet:flex",
-    "tablet:flex-row",
-    "tablet:justify-between",
-    "tablet:sticky",
-    "tablet:top-0",
-    "tablet:z-60",
-    "tablet:pt-2",
-    "tablet:pb-2",
-    "tablet:after:bg-warcraft-gold/30",
-    "tablet:min-h-14",
-    "tablet:max-w-full",
-    "tablet:w-full",
-    "tablet:bg-warcraft-bg-base",
-    "tablet:bg-panel-header-solid",
-    "tablet:bg-no-repeat",
-    "tablet:bg-fixed",
-    "tablet:bg-size-[100%_100%]",
-];
 
 // From laptop up the bar is its own single height knob: a `vw`-scaled `min-height` with a
 // `4rem` floor (above the mobile/tablet `min-h-14`) and an `8.5rem` ceiling, growing
@@ -90,41 +33,92 @@ const TABLET: &[TailwindClass] = tw![
 // with breathing room above and below — this padding, not any button, is the one knob for
 // the button-to-bar height ratio. Nothing inside carries a fixed size — change the
 // `min-height` (bar height) or the `py` (button ratio) and the whole bar rescales together.
-const LAPTOP: &[TailwindClass] = tw![
-    "laptop:grid",
-    "laptop:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "laptop:items-stretch",
-    "laptop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
-    "laptop:gap-[1vw]",
-    "laptop:py-[0.7vw]",
-];
 
-const DESKTOP: &[TailwindClass] = tw![
-    "desktop:grid",
-    "desktop:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "desktop:items-stretch",
-    "desktop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
-    "desktop:gap-[1vw]",
-    "desktop:py-[0.7vw]",
-];
-
-const QHD: &[TailwindClass] = tw![
-    "qhd:grid",
-    "qhd:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "qhd:items-stretch",
-    "qhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
-    "qhd:gap-[1vw]",
-    "qhd:py-[0.7vw]",
-];
-
-const UHD: &[TailwindClass] = tw![
-    "uhd:grid",
-    "uhd:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
-    "uhd:items-stretch",
-    "uhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
-    "uhd:gap-[1vw]",
-    "uhd:py-[0.7vw]",
-];
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "@container",
+        "relative",
+        "z-50",
+        "items-center",
+        "flex-none",
+        "px-4",
+        "after:content-['']",
+        "after:absolute",
+        "after:bottom-0",
+        "after:left-4",
+        "after:right-4",
+        "after:h-px",
+        "after:bg-warcraft-gold/40",
+        "after:shadow-edge",
+    ],
+    mobile: tw![
+        "mobile:flex",
+        "mobile:flex-row",
+        "mobile:justify-between",
+        "mobile:sticky",
+        "mobile:top-0",
+        "mobile:z-60",
+        "mobile:pt-2",
+        "mobile:pb-2",
+        "mobile:after:bg-warcraft-gold/30",
+        "mobile:min-h-14",
+        "mobile:max-w-full",
+        "mobile:w-full",
+        "mobile:bg-warcraft-bg-base",
+        "mobile:bg-panel-header-solid",
+        "mobile:bg-no-repeat",
+        "mobile:bg-fixed",
+        "mobile:bg-size-[100%_100%]",
+    ],
+    tablet: tw![
+        "tablet:flex",
+        "tablet:flex-row",
+        "tablet:justify-between",
+        "tablet:sticky",
+        "tablet:top-0",
+        "tablet:z-60",
+        "tablet:pt-2",
+        "tablet:pb-2",
+        "tablet:after:bg-warcraft-gold/30",
+        "tablet:min-h-14",
+        "tablet:max-w-full",
+        "tablet:w-full",
+        "tablet:bg-warcraft-bg-base",
+        "tablet:bg-panel-header-solid",
+        "tablet:bg-no-repeat",
+        "tablet:bg-fixed",
+        "tablet:bg-size-[100%_100%]",
+    ],
+    laptop: tw![
+        "laptop:grid",
+        "laptop:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
+        "laptop:items-stretch",
+        "laptop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
+        "laptop:gap-[1vw]",
+        "laptop:py-[0.7vw]",
+    ],
+    desktop: tw![
+        "desktop:grid",
+        "desktop:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
+        "desktop:items-stretch",
+        "desktop:min-h-[clamp(4rem,4.2vw,8.5rem)]",
+        "desktop:gap-[1vw]",
+        "desktop:py-[0.7vw]",
+    ],
+    qhd: tw![
+        "qhd:grid",
+        "qhd:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
+        "qhd:items-stretch",
+        "qhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
+        "qhd:gap-[1vw]",
+        "qhd:py-[0.7vw]",
+    ],
+    uhd: tw![
+        "uhd:grid",
+        "uhd:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
+        "uhd:items-stretch",
+        "uhd:min-h-[clamp(4rem,4.2vw,8.5rem)]",
+        "uhd:gap-[1vw]",
+        "uhd:py-[0.7vw]",
+    ],
 }

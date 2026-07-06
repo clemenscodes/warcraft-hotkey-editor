@@ -3,12 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_list_entry::SystemHotkeysListEntry;
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_list_view;
 pub use props::SystemHotkeysListViewProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysListView);
 
 /// A plain list editor: one row per hotkey in the category, each a binding name

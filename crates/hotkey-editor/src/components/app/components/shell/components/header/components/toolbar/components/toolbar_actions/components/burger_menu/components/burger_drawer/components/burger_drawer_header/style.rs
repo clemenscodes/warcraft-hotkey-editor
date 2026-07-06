@@ -1,22 +1,13 @@
-use crate::{classes, styling::TailwindClass, tw};
-
-const BASE: &[TailwindClass] = tw![
-    "flex",
-    "items-center",
-    "justify-end",
-    "py-3",
-    "px-4",
-    "border-b",
-    "border-b-warcraft-gold/12",
-    "shrink-0",
-];
-
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
+use tw_macro::tw;
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "flex",
+        "items-center",
+        "justify-end",
+        "py-3",
+        "px-4",
+        "border-b",
+        "border-b-warcraft-gold/12",
+        "shrink-0",
+    ],
 }

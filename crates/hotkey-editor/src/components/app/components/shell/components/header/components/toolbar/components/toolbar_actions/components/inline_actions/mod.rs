@@ -1,7 +1,6 @@
 pub mod components;
 mod style;
 
-use crate::assert_component;
 use components::export_button::ExportButton;
 use components::help_button::HelpButton;
 use components::preview_button::PreviewButton;
@@ -13,6 +12,7 @@ use components::undo_button::UndoButton;
 use components::upload_button::UploadButton;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(InlineActions);
 
 /// The inline file-action buttons, shown at laptop width and up. Below that these

@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::SystemHotkeysSectionIntroProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysSectionIntro);
 
 /// The caption introducing a system-hotkeys category editor.

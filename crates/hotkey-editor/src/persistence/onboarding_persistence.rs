@@ -1,4 +1,4 @@
-use crate::persistence::local_storage::LocalStorage;
+use browser_kit::storage::LocalStorage;
 
 const ONBOARDING_SEEN_STORAGE: LocalStorage =
     LocalStorage::new("warcraft-hotkey-editor.onboarding-seen");

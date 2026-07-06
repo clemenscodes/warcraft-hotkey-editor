@@ -4,11 +4,11 @@ mod state;
 mod style;
 
 use super::super::TileChrome;
-use crate::assert_component;
 use components::tile_icon::{TileIcon, TileIconProps};
 use components::tile_label::{TileLabel, TileLabelProps};
 use dioxus::prelude::*;
 pub use props::FilledTileProps;
+use tw_macro::assert_component;
 assert_component!(FilledTile);
 
 /// An occupied command tile. Purely presentational: it draws the ability icon (or

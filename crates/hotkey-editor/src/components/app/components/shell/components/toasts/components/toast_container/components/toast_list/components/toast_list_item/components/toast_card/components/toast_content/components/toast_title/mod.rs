@@ -2,10 +2,10 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::ToastTitlePresentation;
 pub use props::ToastTitleProps;
+use tw_macro::assert_component;
 assert_component!(ToastTitle);
 
 /// The toast headline, tinted by type.

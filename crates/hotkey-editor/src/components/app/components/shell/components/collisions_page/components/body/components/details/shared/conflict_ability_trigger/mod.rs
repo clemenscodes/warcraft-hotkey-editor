@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityTriggerProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ConflictAbilityTrigger);
 /// The clickable wrapper around a conflict ability's icon.
 #[component]

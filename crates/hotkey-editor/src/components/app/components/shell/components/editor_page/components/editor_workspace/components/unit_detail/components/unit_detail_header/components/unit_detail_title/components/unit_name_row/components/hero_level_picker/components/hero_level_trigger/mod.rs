@@ -2,13 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::hero_level_trigger_chevron::HeroLevelTriggerChevron;
 use components::hero_level_trigger_label::HeroLevelTriggerLabel;
 use components::hero_level_trigger_number::{HeroLevelTriggerNumber, HeroLevelTriggerNumberProps};
 use dioxus::prelude::*;
 pub use props::HeroLevelTriggerProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeroLevelTrigger);
 
 /// The dropdown trigger button: a label, the current level, and a caret. Its open

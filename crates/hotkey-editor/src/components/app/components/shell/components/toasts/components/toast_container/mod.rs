@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toast_list::{ToastList, ToastListProps};
 use dioxus::prelude::*;
 pub use props::ToastContainerProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToastContainer);
 
 /// The fixed overlay anchoring the toast stack to the bottom-right of the

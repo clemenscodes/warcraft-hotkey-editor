@@ -1,4 +1,4 @@
-use crate::persistence::local_storage::LocalStorage;
+use browser_kit::storage::LocalStorage;
 
 const CUSTOM_KEYS_STORAGE: LocalStorage = LocalStorage::new("warcraft-hotkey-editor.custom-keys");
 

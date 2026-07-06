@@ -1,11 +1,11 @@
 pub mod components;
 mod style;
 
-use crate::assert_component;
 use components::collisions_button_host::CollisionsButtonHost;
 use components::toolbar_actions::ToolbarActions;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Toolbar);
 
 /// The editor action bar: a nav with the always-visible collisions button and the

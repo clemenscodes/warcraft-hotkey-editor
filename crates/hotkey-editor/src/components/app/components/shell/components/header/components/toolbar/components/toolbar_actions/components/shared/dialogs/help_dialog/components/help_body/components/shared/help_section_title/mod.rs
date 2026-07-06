@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HelpSectionTitleProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpSectionTitle);
 
 /// A section heading inside the help guide. A leaf: each section passes its

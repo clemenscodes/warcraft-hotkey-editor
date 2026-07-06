@@ -5,11 +5,11 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::tile_override_tier_button::TileOverrideTierButton;
 use components::tile_override_tier_label::TileOverrideTierLabel;
 use hooks::use_upgrade_tier;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::UpgradeTierProps;
 

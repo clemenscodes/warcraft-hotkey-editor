@@ -4,7 +4,6 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::toast_close::{ToastClose, ToastCloseProps};
 use components::toast_content::{ToastContent, ToastContentProps};
 use components::toast_icon::{ToastIcon, ToastIconProps};
@@ -12,6 +11,7 @@ use dioxus::prelude::*;
 use hooks::use_toast_auto_dismiss;
 use logic::ToastCardPresentation;
 pub use props::ToastCardProps;
+use tw_macro::assert_component;
 assert_component!(ToastCard);
 
 /// A single toast: its type-tinted card, the type icon, the title/description

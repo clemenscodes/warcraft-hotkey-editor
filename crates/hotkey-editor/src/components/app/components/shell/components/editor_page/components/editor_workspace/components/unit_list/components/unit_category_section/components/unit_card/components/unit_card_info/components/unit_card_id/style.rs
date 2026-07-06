@@ -1,48 +1,41 @@
 use super::state::UnitCardIdState;
-use crate::{classes, states, styling::TailwindClass, tw};
+use tw_macro::tw;
 
-const BASE: &[TailwindClass] = tw![
-    "text-[1.05rem]",
-    "leading-[1.2]",
-    "overflow-hidden",
-    "text-ellipsis",
-    "whitespace-nowrap",
-];
-
-const MOBILE: &[TailwindClass] = tw![
-    "mobile:block",
-    "mobile:w-full",
-    "mobile:text-[11px]",
-    "mobile:leading-[1.2]",
-];
-
-const TABLET: &[TailwindClass] = tw![
-    "tablet:block",
-    "tablet:w-full",
-    "tablet:text-[11px]",
-    "tablet:leading-[1.2]",
-];
-
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "text-[1.05rem]",
+        "leading-[1.2]",
+        "overflow-hidden",
+        "text-ellipsis",
+        "whitespace-nowrap",
+    ],
+    mobile: tw![
+        "mobile:block",
+        "mobile:w-full",
+        "mobile:text-[11px]",
+        "mobile:leading-[1.2]",
+    ],
+    tablet: tw![
+        "tablet:block",
+        "tablet:w-full",
+        "tablet:text-[11px]",
+        "tablet:leading-[1.2]",
+    ],
 }
 
-const NORMAL: &[TailwindClass] = tw!["text-warcraft-text-faint"];
 // Selected: the id text takes the card's race accent (chosen off the `data-race`
 // attribute the component renders), at reduced opacity.
-const SELECTED: &[TailwindClass] = tw![
-    "text-[color:var(--color-warcraft-gold)]",
-    "opacity-70",
-    "data-[race=human]:text-[color:var(--color-race-human)]",
-    "data-[race=orc]:text-[color:var(--color-race-orc)]",
-    "data-[race=nightelf]:text-[color:var(--color-race-nightelf)]",
-    "data-[race=undead]:text-[color:var(--color-race-undead)]",
-    "data-[race=neutral]:text-[color:var(--color-warcraft-gold)]",
-];
+
 states! {
-    UnitCardIdState, Normal => NORMAL, Selected => SELECTED
+    UnitCardIdState,
+    Normal => tw!["text-warcraft-text-faint"],
+    Selected => tw![
+        "text-[color:var(--color-warcraft-gold)]",
+        "opacity-70",
+        "data-[race=human]:text-[color:var(--color-race-human)]",
+        "data-[race=orc]:text-[color:var(--color-race-orc)]",
+        "data-[race=nightelf]:text-[color:var(--color-race-nightelf)]",
+        "data-[race=undead]:text-[color:var(--color-race-undead)]",
+        "data-[race=neutral]:text-[color:var(--color-warcraft-gold)]",
+    ],
 }

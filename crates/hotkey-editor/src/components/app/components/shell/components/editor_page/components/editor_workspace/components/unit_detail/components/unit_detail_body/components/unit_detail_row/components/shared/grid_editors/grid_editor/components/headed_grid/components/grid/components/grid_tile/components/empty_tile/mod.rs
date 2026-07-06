@@ -3,9 +3,9 @@ mod state;
 mod style;
 
 use super::super::TileChrome;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::EmptyTileProps;
+use tw_macro::assert_component;
 assert_component!(EmptyTile);
 
 /// An empty command slot. Purely presentational: it draws its state look, its race

@@ -2,10 +2,10 @@ mod data;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::CollisionCountProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(CollisionCount);
 
 /// The collision-count line on a collision card.

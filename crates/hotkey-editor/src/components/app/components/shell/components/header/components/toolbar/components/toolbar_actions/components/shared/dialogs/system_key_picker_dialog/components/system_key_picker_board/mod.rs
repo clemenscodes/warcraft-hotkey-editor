@@ -3,12 +3,12 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::system_key_picker_column::SystemKeyPickerColumn;
 use dioxus::prelude::*;
 use hooks::use_board_focus;
 pub use props::SystemKeyPickerBoardProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(SystemKeyPickerBoard);
 
 /// The on-screen system keyboard: the main keyboard column beside the numpad

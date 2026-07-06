@@ -2,13 +2,13 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::template_card_previews::{TemplateCardPreviews, TemplateCardPreviewsProps};
 use components::template_card_text::{TemplateCardText, TemplateCardTextProps};
 use dioxus::prelude::*;
 use props::TemplateCardPresentation;
 pub use props::TemplateCardProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(TemplateCard);
 
 /// A clickable template card: its name and description above a preview of the

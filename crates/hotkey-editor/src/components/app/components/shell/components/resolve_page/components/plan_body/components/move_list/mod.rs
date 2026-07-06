@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::MoveListProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(MoveList);
 #[component]
 pub fn MoveList(props: MoveListProps) -> Element {

@@ -3,13 +3,13 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::matchup_label::{MatchupLabel, MatchupLabelProps};
 use components::matchup_value::{MatchupValue, MatchupValueProps};
 use dioxus::prelude::*;
 pub use props::MatchupCellProps;
 pub use state::MatchupStrength;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(MatchupCell);
 
 /// One matchup cell: label and value, tinted by the matchup strength (the `group`).

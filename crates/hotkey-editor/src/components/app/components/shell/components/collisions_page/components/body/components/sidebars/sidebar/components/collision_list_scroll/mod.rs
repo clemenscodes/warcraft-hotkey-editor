@@ -3,11 +3,11 @@ mod props;
 mod style;
 
 use super::super::ListScrollKind;
-use crate::assert_component;
 use components::collision_list_track::CollisionListTrack;
 use dioxus::prelude::*;
 pub use props::CollisionListScrollProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(CollisionListScroll);
 
 /// The scrolling region of a collision sidebar: a vertical list, or the swipe

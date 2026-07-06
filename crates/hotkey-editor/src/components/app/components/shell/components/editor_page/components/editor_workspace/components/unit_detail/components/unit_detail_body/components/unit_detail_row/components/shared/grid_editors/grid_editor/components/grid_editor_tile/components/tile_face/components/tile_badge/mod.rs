@@ -2,10 +2,10 @@ mod props;
 mod style;
 
 use super::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::TileBadgeProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(TileBadge);
 
 /// The hotkey badge's placement inside a tile: pinned to the top-right corner.

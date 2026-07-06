@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::category_chevron::{CategoryChevron, CategoryChevronProps};
 use dioxus::prelude::*;
 pub use props::UnitCategoryHeadingProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitCategoryHeading);
 
 /// The clickable heading for a unit category in the sidebar list.

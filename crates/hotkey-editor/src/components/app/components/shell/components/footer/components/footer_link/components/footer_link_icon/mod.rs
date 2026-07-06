@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::FooterLinkIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(FooterLinkIcon);
 
 /// The inline glyph a footer link may carry. A leaf that early-returns when the

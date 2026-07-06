@@ -3,7 +3,7 @@ mod hooks;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::{ToolbarButton, ToolbarButtonProps};
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::{UploadInfoDialog, UploadInfoDialogProps};
 use components::upload_button_input::{UploadButtonInput, UploadButtonInputProps};
 use dioxus::prelude::*;

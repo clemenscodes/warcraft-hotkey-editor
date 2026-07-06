@@ -4,11 +4,11 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::system_hotkeys_category_separator::SystemHotkeysCategorySeparator;
 use dioxus::prelude::*;
 use hooks::use_system_hotkeys_category_tab;
 pub use props::SystemHotkeysCategoryTabProps;
+use tw_macro::assert_component;
 assert_component!(SystemHotkeysCategoryTab);
 
 /// One selectable category in the breadcrumbs, with a trailing separator on all but

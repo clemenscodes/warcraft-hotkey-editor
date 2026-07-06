@@ -3,13 +3,13 @@ mod data;
 mod hooks;
 mod style;
 
-use crate::assert_component;
 use components::brand_decoration_leading::BrandDecorationLeading;
 use components::brand_decoration_trailing::BrandDecorationTrailing;
 use components::brand_title::BrandTitle;
 use dioxus::prelude::*;
 use hooks::use_brand;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(Brand);
 
 /// The app's wordmark: the title flanked by mirrored gold flourishes, the whole

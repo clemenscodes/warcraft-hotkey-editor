@@ -3,11 +3,11 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::SystemKeyPickerKeyPresentation;
 pub use props::SystemKeyPickerKeyProps;
 pub use state::SystemKeyPickerKeyState;
+use tw_macro::assert_component;
 assert_component!(SystemKeyPickerKey);
 
 /// A single key on the system keyboard board: an on-screen keyboard button that

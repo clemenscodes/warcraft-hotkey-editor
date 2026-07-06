@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HelpLegendIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpLegendIcon);
 
 /// The framed toolbar glyph in a legend row. A leaf: the row passes which icon

@@ -4,12 +4,12 @@ mod props;
 mod state;
 mod style;
 
-use crate::assert_component;
 use components::follower_badge::{FollowerBadge, FollowerBadgeProps};
 use components::follower_figure::{FollowerFigure, FollowerFigureProps};
 use dioxus::prelude::*;
 use logic::FollowerPresentation;
 pub use props::DragFollowerGhostProps;
+use tw_macro::assert_component;
 assert_component!(DragFollowerGhost);
 
 #[component]

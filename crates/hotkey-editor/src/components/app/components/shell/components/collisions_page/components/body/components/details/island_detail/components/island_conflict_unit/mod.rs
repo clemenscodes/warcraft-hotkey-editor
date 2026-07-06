@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use components::conflict_unit_icon::{ConflictUnitIcon, ConflictUnitIconProps};
 use components::conflict_unit_name::ConflictUnitName;

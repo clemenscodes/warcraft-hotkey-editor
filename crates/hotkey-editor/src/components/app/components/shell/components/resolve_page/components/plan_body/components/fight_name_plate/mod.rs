@@ -2,10 +2,10 @@ mod props;
 mod style;
 use super::move_name::MoveName;
 use super::object_id::ObjectId;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::FightNamePlateProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(FightNamePlate);
 #[component]
 pub fn FightNamePlate(props: FightNamePlateProps) -> Element {

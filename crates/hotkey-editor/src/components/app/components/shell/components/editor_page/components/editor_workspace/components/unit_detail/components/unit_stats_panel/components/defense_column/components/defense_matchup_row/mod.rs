@@ -3,12 +3,12 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::defense_matchup_cell::DefenseMatchupCell;
 use dioxus::prelude::*;
 use logic::cells;
 pub use props::DefenseMatchupRowProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(DefenseMatchupRow);
 
 /// The defender's matchup grid.

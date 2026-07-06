@@ -3,7 +3,6 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::drag_follower_overlay::{DragFollowerOverlay, DragFollowerOverlayProps};
 use components::grid_editor_tile::EditorTileKind;
 use components::headed_grid::{HeadedGrid, HeadedGridProps};
@@ -11,6 +10,7 @@ use dioxus::prelude::*;
 pub use props::{GridEditorConfig, GridEditorProps};
 use std::rc::Rc;
 use style::CLASS;
+use tw_macro::assert_component;
 use warcraft_keybinds::{CommandGridRenderInput, GridBehavior, GridSlotId, RenderedTile};
 assert_component!(GridEditor);
 

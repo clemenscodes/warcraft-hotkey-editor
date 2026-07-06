@@ -1,11 +1,11 @@
 pub mod components;
 mod props;
 mod style;
-use crate::assert_component;
 use components::plan_unresolved::PlanUnresolved;
 use dioxus::prelude::*;
 pub use props::PlanCountsProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(PlanCounts);
 
 /// The move count (and, when present, the unresolved count) under the plan title.

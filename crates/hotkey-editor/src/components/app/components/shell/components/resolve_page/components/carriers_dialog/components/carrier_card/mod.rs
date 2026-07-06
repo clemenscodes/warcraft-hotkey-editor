@@ -1,13 +1,13 @@
 pub mod components;
 mod props;
 mod style;
-use crate::assert_component;
 use components::carrier_card_icon::{CarrierCardIcon, CarrierCardIconProps};
 use components::carrier_card_name::CarrierCardName;
 use components::carrier_object_id::CarrierObjectId;
 use dioxus::prelude::*;
 pub use props::CarrierCardProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(CarrierCard);
 #[component]
 pub fn CarrierCard(props: CarrierCardProps) -> Element {

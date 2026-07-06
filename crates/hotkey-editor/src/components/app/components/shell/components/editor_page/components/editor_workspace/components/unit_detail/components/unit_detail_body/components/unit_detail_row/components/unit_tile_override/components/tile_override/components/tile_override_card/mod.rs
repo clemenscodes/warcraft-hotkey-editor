@@ -4,13 +4,13 @@ mod style;
 
 use dioxus::prelude::*;
 
-use crate::assert_component;
 use components::ability_description::AbilityDescription;
 use components::alt_state_section::AltStateSection;
 use components::tile_override_header::TileOverrideHeader;
 use components::upgrade_section::UpgradeSection;
 use components::upgrade_tier::UpgradeTier;
 use style::CLASS;
+use tw_macro::assert_component;
 
 pub use props::TileOverrideCardProps;
 

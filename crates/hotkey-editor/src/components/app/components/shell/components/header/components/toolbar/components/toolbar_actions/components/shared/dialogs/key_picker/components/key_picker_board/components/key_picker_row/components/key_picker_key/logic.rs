@@ -2,7 +2,7 @@ use super::props::KeyPickerKeyProps;
 use super::state::KeyPickerKeyState;
 use super::style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::KeyPickerCellState;
-use crate::styling::ClassList;
+use tw_macro::ClassList;
 use dioxus::prelude::*;
 
 /// A picker key's fully shaped presentation: the state class, the letter it shows,

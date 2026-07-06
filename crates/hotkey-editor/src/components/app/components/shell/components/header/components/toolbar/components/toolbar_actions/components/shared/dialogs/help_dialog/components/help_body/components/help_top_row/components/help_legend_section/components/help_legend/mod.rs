@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_legend_row::HelpLegendRow;
 use dioxus::prelude::*;
 pub use props::HelpLegendProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpLegend);
 
 /// The list of toolbar buttons with what each one does, one row per entry passed

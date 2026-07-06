@@ -4,7 +4,6 @@ mod logic;
 mod route_sync;
 mod style;
 
-use crate::assert_component;
 use crate::components::app::route::Route;
 use components::document_head::DocumentHead;
 use components::footer::Footer;
@@ -12,6 +11,7 @@ use components::header::Header;
 use components::toasts::ToastMount;
 use dioxus::prelude::*;
 use hooks::{ShellModel, use_shell};
+use tw_macro::assert_component;
 
 assert_component!(Shell);
 

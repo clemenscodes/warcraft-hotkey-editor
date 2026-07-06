@@ -3,7 +3,6 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::dialog_body::{DialogBody, DialogBodyProps};
 use components::dialog_footer::{DialogFooter, DialogFooterProps};
 use components::dialog_header::{DialogHeader, DialogHeaderProps};
@@ -13,6 +12,7 @@ use hooks::use_body_scroll_lock;
 use props::DialogChrome;
 pub use props::DialogProps;
 use style::{CLASS, OVERLAY};
+use tw_macro::assert_component;
 assert_component!(Dialog);
 
 /// The one dialog: a dimmed backdrop centring a bordered box that holds a header,

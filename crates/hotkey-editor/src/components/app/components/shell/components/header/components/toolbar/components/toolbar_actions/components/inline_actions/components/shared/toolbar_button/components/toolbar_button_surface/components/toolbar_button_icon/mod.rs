@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::ToolbarButtonIconProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ToolbarButtonIcon);
 
 /// The glyph inside a toolbar button.

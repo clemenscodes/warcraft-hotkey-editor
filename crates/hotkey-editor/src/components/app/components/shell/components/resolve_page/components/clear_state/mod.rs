@@ -1,10 +1,10 @@
 pub mod components;
 mod style;
-use crate::assert_component;
 use components::clear_icon::ClearIcon;
 use components::clear_label::ClearLabel;
 use dioxus::prelude::*;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ClearState);
 
 /// The "nothing to resolve" state shown when a file is loaded but conflict-free.

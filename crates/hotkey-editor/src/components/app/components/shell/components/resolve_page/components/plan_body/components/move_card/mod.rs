@@ -1,9 +1,9 @@
 mod props;
 mod style;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::MoveCardProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(MoveCard);
 #[component]
 pub fn MoveCard(props: MoveCardProps) -> Element {

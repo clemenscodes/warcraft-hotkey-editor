@@ -1,6 +1,6 @@
 mod props;
 mod style;
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_name::MoveName;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::object_id::ObjectId;
 use dioxus::prelude::*;

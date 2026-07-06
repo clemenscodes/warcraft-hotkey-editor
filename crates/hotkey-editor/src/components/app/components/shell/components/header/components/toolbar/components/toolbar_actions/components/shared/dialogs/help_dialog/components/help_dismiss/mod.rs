@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::HelpDismissProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpDismiss);
 
 /// The footer button that closes the guide and records that the player has seen

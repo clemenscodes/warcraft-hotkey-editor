@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::grid::{Grid, GridTileKind};
 use components::grid_heading::GridHeading;
 use dioxus::prelude::*;
 pub use props::HeadedGridProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeadedGrid);
 
 /// A captioned grid: a heading above the reused `Grid`. Owns `.headed-grid`, which

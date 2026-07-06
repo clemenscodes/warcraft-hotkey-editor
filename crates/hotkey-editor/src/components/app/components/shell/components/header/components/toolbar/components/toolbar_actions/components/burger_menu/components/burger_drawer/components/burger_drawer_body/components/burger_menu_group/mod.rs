@@ -2,10 +2,10 @@ mod props;
 mod style;
 
 use super::shared::burger_menu_item::BurgerMenuItem;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::BurgerMenuGroupProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(BurgerMenuGroup);
 
 /// The scrolling list of file actions inside the drawer.

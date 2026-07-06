@@ -2,11 +2,11 @@ mod logic;
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 use logic::HeroLevelOptionPresentation;
 pub use props::HeroLevelOptionProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HeroLevelOption);
 
 /// One selectable hero level in the dropdown menu. Its active look is driven by the

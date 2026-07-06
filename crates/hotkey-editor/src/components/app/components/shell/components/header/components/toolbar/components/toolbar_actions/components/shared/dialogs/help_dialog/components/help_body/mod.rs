@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_resolver_section::{HelpResolverSection, HelpResolverSectionProps};
 use components::help_top_row::{HelpTopRow, HelpTopRowProps};
 use dioxus::prelude::*;
 pub use props::HelpBodyProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpBody);
 
 /// The help guide's scrolling content: the split top row above the full-width

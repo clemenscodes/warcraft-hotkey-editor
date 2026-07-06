@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
+use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_body::components::help_top_row::components::help_workflow_section::components::help_callout::components::help_workflow::components::help_workflow_step::components::help_inline_icon::HelpInlineIcon;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::data::HelpSegment;
 use dioxus::prelude::*;

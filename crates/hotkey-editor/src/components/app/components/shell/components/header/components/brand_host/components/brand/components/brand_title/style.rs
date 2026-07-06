@@ -1,28 +1,19 @@
-use crate::{classes, styling::TailwindClass, tw};
-
+use tw_macro::tw;
 // The title's font size is a container-query length off the brand host, and the line
 // never wraps — so title, gap, and flourishes are one fixed proportional composition
 // that scales with the host. It shrinks to fit instead of truncating; no ellipsis, no
 // per-band font clamps.
-const BASE: &[TailwindClass] = tw![
-    "m-0",
-    "font-normal",
-    "text-[5cqi]",
-    "leading-[1.1]",
-    "tracking-[0.04em]",
-    "text-warcraft-gold",
-    "whitespace-nowrap",
-    "text-left",
-    "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent),0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
-];
 
-const MOBILE: &[TailwindClass] = tw![];
-const TABLET: &[TailwindClass] = tw![];
-
-const LAPTOP: &[TailwindClass] = tw![];
-const DESKTOP: &[TailwindClass] = tw![];
-const QHD: &[TailwindClass] = tw![];
-const UHD: &[TailwindClass] = tw![];
 classes! {
-    BASE, MOBILE, TABLET, LAPTOP, DESKTOP, QHD, UHD
+    base: tw![
+        "m-0",
+        "font-normal",
+        "text-[5cqi]",
+        "leading-[1.1]",
+        "tracking-[0.04em]",
+        "text-warcraft-gold",
+        "whitespace-nowrap",
+        "text-left",
+        "[text-shadow:1px_1px_0_color-mix(in_oklab,var(--color-warcraft-shadow)_92%,transparent),0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
+    ],
 }

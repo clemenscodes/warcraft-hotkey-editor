@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::template_card_description::TemplateCardDescription;
 use components::template_card_name::TemplateCardName;
 use dioxus::prelude::*;
 pub use props::TemplateCardTextProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(TemplateCardText);
 
 /// The card's name-and-description block. Owns `.template-card-text`.

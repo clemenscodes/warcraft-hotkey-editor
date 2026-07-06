@@ -1,4 +1,9 @@
-use super::TailwindClass;
+//! The `const fn` machinery the generated `classes!`/`states!` macros expand
+//! into. Public so the macro expansions (which land in the consumer crate) can
+//! call it, but `#[doc(hidden)]` at the crate root: it is not part of the
+//! supported surface. Everything here runs at compile time.
+
+use crate::TailwindClass;
 
 const fn to_lower(byte: u8) -> u8 {
     if byte >= b'A' && byte <= b'Z' {
@@ -49,8 +54,52 @@ const fn has_band_prefix(class: &str, band: &str) -> bool {
     class[band.len()] == b':'
 }
 
+/// True when `class` carries any of the declared responsive band prefixes.
+const fn has_any_band_prefix(class: &str, bands: &[&str]) -> bool {
+    let mut index = 0;
+    while index < bands.len() {
+        if has_band_prefix(class, bands[index]) {
+            return true;
+        }
+        index += 1;
+    }
+    false
+}
+
+/// True when `key` names one of the declared responsive bands.
+const fn is_declared_band(key: &str, bands: &[&str]) -> bool {
+    let mut index = 0;
+    while index < bands.len() {
+        if equal(key, bands[index]) {
+            return true;
+        }
+        index += 1;
+    }
+    false
+}
+
+/// The byte range of a segment within a module path.
+struct SegmentBounds {
+    start: usize,
+    end: usize,
+}
+
+impl SegmentBounds {
+    const fn new(start: usize, end: usize) -> Self {
+        Self { start, end }
+    }
+
+    const fn start(&self) -> usize {
+        self.start
+    }
+
+    const fn end(&self) -> usize {
+        self.end
+    }
+}
+
 /// The byte range of the component directory in a module path ending `::style`.
-const fn directory_bounds(module_path: &str) -> (usize, usize) {
+const fn directory_bounds(module_path: &str) -> SegmentBounds {
     let bytes = module_path.as_bytes();
     let suffix = b"::style";
     if bytes.len() < suffix.len() + 1 {
@@ -72,59 +121,59 @@ const fn directory_bounds(module_path: &str) -> (usize, usize) {
         }
         position += 1;
     }
-    (directory_start, directory_end)
+    SegmentBounds::new(directory_start, directory_end)
 }
 
-/// Compile-time guard: a band const must be named exactly after its band.
-pub const fn assert_named(actual: &str, expected: &str) {
-    if !equal(actual, expected) {
-        panic!("a band const has the wrong name");
+/// The byte range of the final segment of a module path (the component module
+/// itself, as seen from its `mod.rs`).
+const fn last_segment_bounds(module_path: &str) -> SegmentBounds {
+    let bytes = module_path.as_bytes();
+    let end = bytes.len();
+    let mut start = 0;
+    let mut position = 0;
+    while position + 1 < end {
+        if bytes[position] == b':' && bytes[position + 1] == b':' {
+            start = position + 2;
+        }
+        position += 1;
     }
+    SegmentBounds::new(start, end)
 }
 
-/// Compile-time guard: every utility in a band must carry that band's prefix.
-pub const fn assert_band(band: &str, classes: &[TailwindClass]) {
+/// Compile-time guard for one keyed entry of `classes!`. The reserved key
+/// `base` is always-on and must carry no declared band prefix; every other key
+/// must name a declared band and every one of its utilities must carry that
+/// band's prefix.
+pub const fn assert_key(key: &str, bands: &[&str], classes: &[TailwindClass]) {
+    if equal(key, "base") {
+        let mut index = 0;
+        while index < classes.len() {
+            if has_any_band_prefix(classes[index].utility(), bands) {
+                panic!("a base class carries a responsive band prefix");
+            }
+            index += 1;
+        }
+        return;
+    }
+    if !is_declared_band(key, bands) {
+        panic!("a class key is not a declared responsive band");
+    }
     let mut index = 0;
     while index < classes.len() {
-        let class = classes[index].utility();
-        if !has_band_prefix(class, band) {
+        if !has_band_prefix(classes[index].utility(), key) {
             panic!("a class is not prefixed with its band");
         }
         index += 1;
     }
 }
 
-const fn is_band_prefixed(class: &str) -> bool {
-    has_band_prefix(class, "mobile")
-        || has_band_prefix(class, "tablet")
-        || has_band_prefix(class, "laptop")
-        || has_band_prefix(class, "desktop")
-        || has_band_prefix(class, "qhd")
-        || has_band_prefix(class, "uhd")
-}
-
-/// Compile-time guard: a BASE class is always-on, so it must NOT carry a band
-/// prefix (a width-specific style belongs in that band, never in BASE).
-pub const fn assert_base(classes: &[TailwindClass]) {
-    let mut index = 0;
-    while index < classes.len() {
-        let class = classes[index].utility();
-        if is_band_prefixed(class) {
-            panic!("a BASE class carries a band prefix");
-        }
-        index += 1;
-    }
-}
-
 /// Compile-time guard: a state overlay (see `states!`) is always-on within its
-/// state, so it must NOT carry a band prefix.
-#[allow(dead_code)]
-pub const fn assert_flat(classes: &[TailwindClass]) {
+/// state, so it must carry no declared band prefix.
+pub const fn assert_flat(classes: &[TailwindClass], bands: &[&str]) {
     let mut index = 0;
     while index < classes.len() {
-        let class = classes[index].utility();
-        if is_band_prefixed(class) {
-            panic!("a state overlay carries a band prefix");
+        if has_any_band_prefix(classes[index].utility(), bands) {
+            panic!("a state overlay carries a responsive band prefix");
         }
         index += 1;
     }
@@ -132,13 +181,14 @@ pub const fn assert_flat(classes: &[TailwindClass]) {
 
 /// Byte length of the kebab identity derived from `module_path`'s directory.
 pub const fn identity_len(module_path: &str) -> usize {
-    let (start, end) = directory_bounds(module_path);
-    end - start
+    let bounds = directory_bounds(module_path);
+    bounds.end() - bounds.start()
 }
 
 /// Build the kebab identity (the component directory with `_` mapped to `-`).
 pub const fn build_identity<const N: usize>(module_path: &str) -> [u8; N] {
-    let (start, _end) = directory_bounds(module_path);
+    let bounds = directory_bounds(module_path);
+    let start = bounds.start();
     let bytes = module_path.as_bytes();
     let mut out = [0u8; N];
     let mut index = 0;
@@ -150,30 +200,15 @@ pub const fn build_identity<const N: usize>(module_path: &str) -> [u8; N] {
     out
 }
 
-/// The byte range of the final segment of a module path (the component module
-/// itself, as seen from its `mod.rs`).
-const fn last_segment_bounds(module_path: &str) -> (usize, usize) {
-    let bytes = module_path.as_bytes();
-    let end = bytes.len();
-    let mut start = 0;
-    let mut position = 0;
-    while position + 1 < end {
-        if bytes[position] == b':' && bytes[position + 1] == b':' {
-            start = position + 2;
-        }
-        position += 1;
-    }
-    (start, end)
-}
-
 /// Compile-time guard: the PascalCase `component` name must equal the snake_case
 /// component directory (the final segment of the module path), capitalization
 /// included.
 pub const fn assert_component_name(component: &str, module_path: &str) {
-    let (start, end) = last_segment_bounds(module_path);
+    let bounds = last_segment_bounds(module_path);
+    let end = bounds.end();
     let directory = module_path.as_bytes();
     let pascal = component.as_bytes();
-    let mut directory_index = start;
+    let mut directory_index = bounds.start();
     let mut pascal_index = 0;
     let mut at_word_start = true;
     while directory_index < end {

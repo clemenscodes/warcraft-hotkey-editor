@@ -2,10 +2,10 @@ mod props;
 mod style;
 
 use super::super::stat_figure::StatFigure;
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::StatRowValueProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(StatRowValue);
 
 /// A stat row's value; hp/mana colour comes from the parent row group, and the

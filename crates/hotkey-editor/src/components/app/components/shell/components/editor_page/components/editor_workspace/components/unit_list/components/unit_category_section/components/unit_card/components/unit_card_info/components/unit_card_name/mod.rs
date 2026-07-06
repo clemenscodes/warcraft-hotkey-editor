@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::UnitCardNameProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(UnitCardName);
 
 /// The unit's display name inside a card.

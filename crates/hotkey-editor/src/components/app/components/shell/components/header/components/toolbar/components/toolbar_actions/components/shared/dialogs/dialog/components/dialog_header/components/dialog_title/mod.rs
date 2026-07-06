@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use crate::assert_component;
 use dioxus::prelude::*;
 pub use props::DialogTitleProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(DialogTitle);
 
 /// The dialog's heading text. A leaf: the header passes the title as children.

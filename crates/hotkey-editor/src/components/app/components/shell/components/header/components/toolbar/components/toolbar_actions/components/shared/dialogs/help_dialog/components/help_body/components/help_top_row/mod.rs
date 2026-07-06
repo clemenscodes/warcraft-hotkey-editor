@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::help_legend_section::{HelpLegendSection, HelpLegendSectionProps};
 use components::help_workflow_section::{HelpWorkflowSection, HelpWorkflowSectionProps};
 use dioxus::prelude::*;
 pub use props::HelpTopRowProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(HelpTopRow);
 
 /// The split upper region: the workflow on the left, the button legend on the

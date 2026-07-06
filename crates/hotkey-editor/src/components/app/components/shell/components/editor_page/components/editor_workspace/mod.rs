@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use crate::assert_component;
 use components::unit_detail::{UnitDetailPanel, UnitDetailPanelProps};
 use components::unit_list::{UnitList, UnitListProps};
 use dioxus::prelude::*;
 pub use props::EditorWorkspaceProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(EditorWorkspace);
 
 /// The editor's working area: the unit list laid out beside (or, on narrow widths,
