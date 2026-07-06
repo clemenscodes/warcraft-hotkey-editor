@@ -182,6 +182,7 @@ mod unit_collision_report_tests {
     use crate::unit::grids::{GridRole, HotkeyCollisionCardBuilder, PositionCollisionCardBuilder};
     use warcraft_api::WarcraftObjectId;
 
+    #[derive(Clone, Debug, PartialEq, Default)]
     struct UnitCollisionReportBuilder {
         entries: Vec<UnitCollisionEntry>,
     }
@@ -205,6 +206,7 @@ mod unit_collision_report_tests {
         }
     }
 
+    #[derive(Clone, Copy, Debug, PartialEq)]
     struct UnitCollisionEntryBuilder {
         unit_id: WarcraftObjectId,
         unit_name: &'static str,
@@ -379,7 +381,11 @@ mod unit_collision_report_tests {
         let custom_keys = CustomKeys::from_text("");
         let layout = GridLayout::qwerty_grid();
         let report = UnitCollisionReport::compute(&custom_keys, layout);
-        let names: Vec<&str> = report.entries().iter().map(|e| e.unit_name()).collect();
+        let names: Vec<&str> = report
+            .entries()
+            .iter()
+            .map(|entry| entry.unit_name())
+            .collect();
         let mut sorted_names = names.clone();
         sorted_names.sort();
         assert_eq!(names, sorted_names, "entries must be sorted by unit name");

@@ -1,6 +1,7 @@
 use super::color_codes::WarcraftColorCodes;
 use super::level_markers::LevelMarkers;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct Tip;
 
 impl Tip {

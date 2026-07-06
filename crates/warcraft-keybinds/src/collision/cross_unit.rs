@@ -19,6 +19,7 @@ struct PositionContext {
 /// merged when some unit carries both of them at that cell — the same edge
 /// rule the cascade's conflict graph uses.  Components that never merge
 /// share no carrier unit and therefore never interact.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 struct SlotIslandPartition {
     parent: HashMap<String, String>,
 }
@@ -43,15 +44,15 @@ impl SlotIslandPartition {
         self.register(slot_key);
         let mut current = slot_key.to_string();
         loop {
-            let parent_value = self
+            let parent = self
                 .parent
                 .get(&current)
                 .cloned()
                 .expect("a registered key always has a parent entry");
-            if parent_value == current {
+            if parent == current {
                 return current;
             }
-            current = parent_value;
+            current = parent;
         }
     }
 
@@ -72,6 +73,7 @@ impl SlotIslandPartition {
 /// it may create or shift collisions there too.  Pure intra-unit collisions (all
 /// colliding abilities exclusive to one unit) are omitted — they belong only in
 /// `UnitCollisionReport`.
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Default)]
 pub struct CrossUnitCollisionReport {
     position_groups: Vec<CrossUnitPositionGroup>,
 }
@@ -90,6 +92,7 @@ pub struct CrossUnitCollisionReport {
 /// Abilities on different pages (e.g. MainCommand vs BuildMenu) likewise live
 /// in separate groups and cannot collide — those pages are never displayed
 /// simultaneously.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct CrossUnitPositionGroup {
     position: GridCoordinate,
     grid_role: GridRole,
@@ -103,6 +106,7 @@ pub struct CrossUnitPositionGroup {
 }
 
 /// An ability assigned to a colliding position that appears on two or more units.
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct SharedAbilityEntry {
     slot_id: GridSlotId,
     /// Every unit whose command card includes this ability.
@@ -110,6 +114,7 @@ pub struct SharedAbilityEntry {
 }
 
 /// A unit experiencing a button collision at this position.
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct AffectedUnitEntry {
     unit_id: WarcraftObjectId,
     unit_name: &'static str,
@@ -653,7 +658,7 @@ mod cross_unit_collision_tests {
             let ids: Vec<&str> = group
                 .shared_abilities()
                 .iter()
-                .map(|e| e.slot_id().as_str())
+                .map(|entry| entry.slot_id().as_str())
                 .collect();
             ids.contains(&"AHhb") && ids.contains(&"AHds")
         });

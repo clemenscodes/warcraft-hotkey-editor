@@ -6,13 +6,13 @@ use crate::text::tip::Tip;
 use warcraft_api::WarcraftObjectId;
 use warcraft_database::ObjectLookup;
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum AbilityIconPath {
     Database(&'static str),
     Binding(String),
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Default)]
 pub struct AbilityCell {
     object_id: WarcraftObjectId,
     display_name: String,

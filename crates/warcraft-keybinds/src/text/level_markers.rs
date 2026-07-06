@@ -1,3 +1,4 @@
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct LevelMarkers;
 
 impl LevelMarkers {

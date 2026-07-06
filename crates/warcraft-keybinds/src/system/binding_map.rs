@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use warcraft_api::{ContextSet, SystemKeybindModifier};
 use warcraft_database::WARCRAFT_SYSTEM_KEYBINDS;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct EffectiveBinding {
     key: KeyCode,
     modifier: SystemKeybindModifier,
@@ -44,7 +44,7 @@ impl EffectiveBinding {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ResolvedSystemBinding {
     section_id: String,
     section_comment: String,
@@ -58,7 +58,7 @@ impl ResolvedSystemBinding {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct SystemBindingMap {
     bindings_by_section: HashMap<String, ResolvedSystemBinding>,
 }

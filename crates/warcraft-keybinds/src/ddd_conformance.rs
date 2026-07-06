@@ -98,16 +98,16 @@ mod tests {
         }
     }
 
-    impl Factory<ConformantMarker> for ConformantMarker {
+    impl Factory<Self> for ConformantMarker {
         type Blueprint = EmptyBlueprint;
 
-        fn create(&self, _blueprint: Self::Blueprint) -> ConformantMarker {
+        fn create(&self, _blueprint: Self::Blueprint) -> Self {
             *self
         }
     }
 
-    impl Specification<ConformantMarker> for ConformantMarker {
-        fn is_satisfied_by(&self, _candidate: &ConformantMarker) -> bool {
+    impl Specification<Self> for ConformantMarker {
+        fn is_satisfied_by(&self, _candidate: &Self) -> bool {
             true
         }
     }

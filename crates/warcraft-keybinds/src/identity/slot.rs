@@ -97,7 +97,7 @@ const CARD_COLUMN_COUNT: usize = 4;
 /// A Warcraft III command card: always exactly 3 rows × 4 columns = 12 slots.
 /// Each slot is either empty (`None`) or occupied by a `GridSlotId`.
 /// Slots are addressed by their `GridCoordinate` (column, row).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CommandCard {
     slots: [[Option<GridSlotId>; CARD_COLUMN_COUNT]; CARD_ROW_COUNT],
 }

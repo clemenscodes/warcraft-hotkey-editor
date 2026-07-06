@@ -33,6 +33,7 @@ struct AbilityRoleKey {
 }
 
 /// Intermediate accumulator used during graph construction.
+#[derive(Clone, Debug, PartialEq, Eq)]
 struct NodeAccumulator {
     canonical_slot: GridSlotId,
     position: GridCoordinate,
@@ -44,6 +45,7 @@ struct NodeAccumulator {
 /// Two nodes are connected by an edge if they share at least one carrier unit,
 /// meaning they cannot occupy the same grid position (doing so would produce a
 /// button collision on that unit's command card).
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ConflictNode {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -84,6 +86,7 @@ impl ConflictNode {
 
 /// A pair of graph nodes that are connected (share at least one carrier unit)
 /// and are currently assigned to the same grid position — i.e. a button collision.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct CollidingPair {
     first_index: usize,
     second_index: usize,
@@ -110,6 +113,7 @@ impl CollidingPair {
 /// This is the foundation for the cascade solver.  All abilities are included,
 /// not just colliding ones, because non-colliding abilities occupy positions
 /// that are off-limits for any move.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct ConflictGraph {
     nodes: Vec<ConflictNode>,
     /// `adjacency[i]` is a sorted list of node indices that conflict with node `i`.
@@ -117,27 +121,29 @@ pub struct ConflictGraph {
     key_to_index: HashMap<AbilityRoleKey, usize>,
 }
 
-/// Returns the minimum index of `ability_lowercase` across all carrier units'
-/// `abilList` ordering, or `usize::MAX` if it is absent from every list.
-fn ability_list_priority(ability_lowercase: &str, carrier_unit_ids: &[WarcraftObjectId]) -> usize {
-    let mut min_priority = usize::MAX;
-    for carrier_id in carrier_unit_ids {
-        let Some(unit_object) = WARCRAFT_DATABASE.by_id(carrier_id.value()) else {
-            continue;
-        };
-        let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
-            continue;
-        };
-        let abilities = unit_meta.abilities();
-        for (position, listed_id) in abilities.iter().enumerate() {
-            let listed_lower = listed_id.value().to_ascii_lowercase();
-            if listed_lower == ability_lowercase {
-                min_priority = min_priority.min(position);
-                break;
+impl AbilityRoleKey {
+    /// Returns the minimum index of this ability across all carrier units'
+    /// `abilList` ordering, or `usize::MAX` if it is absent from every list.
+    fn ability_list_priority(&self, carrier_unit_ids: &[WarcraftObjectId]) -> usize {
+        let mut min_priority = usize::MAX;
+        for carrier_id in carrier_unit_ids {
+            let Some(unit_object) = WARCRAFT_DATABASE.by_id(carrier_id.value()) else {
+                continue;
+            };
+            let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
+                continue;
+            };
+            let abilities = unit_meta.abilities();
+            for (position, listed_id) in abilities.iter().enumerate() {
+                let listed_lower = listed_id.value().to_ascii_lowercase();
+                if listed_lower == self.ability_str_lowercase {
+                    min_priority = min_priority.min(position);
+                    break;
+                }
             }
         }
+        min_priority
     }
-    min_priority
 }
 
 impl ConflictGraph {
@@ -198,8 +204,7 @@ impl ConflictGraph {
             let mut carrier_unit_ids: Vec<WarcraftObjectId> =
                 accumulator.carriers.into_iter().collect();
             carrier_unit_ids.sort_by(|left, right| left.value().cmp(right.value()));
-            let ability_list_priority =
-                ability_list_priority(&key.ability_str_lowercase, &carrier_unit_ids);
+            let ability_list_priority = key.ability_list_priority(&carrier_unit_ids);
             nodes.push(ConflictNode {
                 slot_id: accumulator.canonical_slot,
                 grid_role: key.grid_role,

@@ -7,18 +7,19 @@ use std::fmt;
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::WARCRAFT_DATABASE;
 
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Default)]
 pub struct UnitKeyedCustomKeys {
     groups: Vec<UnitAbilityGroup>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Default)]
 pub struct UnitAbilityGroup {
     unit_id: WarcraftObjectId,
     unit_name: &'static str,
     slots: [Option<UnitAbilitySlot>; 12],
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct UnitAbilitySlot {
     slot_id: GridSlotId,
     hotkey: Option<Hotkey>,
@@ -133,7 +134,7 @@ impl From<&CustomKeys> for UnitKeyedCustomKeys {
 
 impl From<&UnitKeyedCustomKeys> for CustomKeys {
     fn from(unit_keyed: &UnitKeyedCustomKeys) -> Self {
-        let mut custom_keys = CustomKeys::parse_raw("");
+        let mut custom_keys = Self::parse_raw("");
         let mut seen: std::collections::HashSet<&'static str> = std::collections::HashSet::new();
         for group in unit_keyed.groups() {
             for slot in group.slots() {
@@ -245,7 +246,7 @@ mod unit_keyed_tests {
             paladin_only
                 .groups()
                 .iter()
-                .all(|g| g.unit_id().value().eq_ignore_ascii_case("Hpal")),
+                .all(|group| group.unit_id().value().eq_ignore_ascii_case("Hpal")),
             "for_unit must return only groups whose unit_id matches",
         );
     }

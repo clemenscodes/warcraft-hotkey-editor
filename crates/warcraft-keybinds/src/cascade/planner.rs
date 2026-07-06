@@ -38,7 +38,7 @@ pub enum MoveReason {
 }
 
 /// One ability successfully relocated by the cascade solver.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PlannedMove {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -99,7 +99,7 @@ impl PlannedMove {
 /// One ability the solver could not relocate — the queue ran out of valid
 /// same-row slots while cascading rightward and the ability is stuck at the
 /// position recorded here.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UnresolvedMover {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -135,6 +135,7 @@ impl UnresolvedMover {
 /// could not be placed (same-row sacred, row full of higher-carrier
 /// neighbors).  Unresolved movers are left at their last attempted position
 /// and must be handled separately.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct CascadePlan {
     moves: Vec<PlannedMove>,
     unresolved: Vec<UnresolvedMover>,
@@ -173,7 +174,7 @@ impl CascadePlan {
 /// final state against each node's original position and emits one
 /// `PlannedMove` per change and one `UnresolvedMover` per stuck node.
 impl From<&AssignmentQueue> for CascadePlan {
-    fn from(queue: &AssignmentQueue) -> CascadePlan {
+    fn from(queue: &AssignmentQueue) -> Self {
         let graph = queue.graph();
         let mut moves: Vec<PlannedMove> = Vec::new();
         let mut unresolved: Vec<UnresolvedMover> = Vec::new();
@@ -196,7 +197,8 @@ impl From<&AssignmentQueue> for CascadePlan {
             if original_position == final_position {
                 continue;
             }
-            let reason = move_reason_for_node(queue, node_index)
+            let reason = queue
+                .move_reason_for_node(node_index)
                 .expect("a node whose position changed must have a queue event explaining it");
             let planned_move = PlannedMove {
                 slot_id,
@@ -208,86 +210,90 @@ impl From<&AssignmentQueue> for CascadePlan {
             };
             moves.push(planned_move);
         }
-        CascadePlan { moves, unresolved }
+        Self { moves, unresolved }
     }
 }
 
-/// Walk the queue's groups in reverse order to find the last event that
-/// determined this node's final position, and translate it into a
-/// `MoveReason`.
-///
-/// A node may pass through multiple groups (a phase-1 fight mover may later
-/// be spill-relocated, etc.).  The *latest* group that touched the node is
-/// the one that placed it where it ended up — earlier events were
-/// superseded by it.
-fn move_reason_for_node(queue: &AssignmentQueue, node_index: usize) -> Option<MoveReason> {
-    let groups = queue.groups();
-    for group in groups.iter().rev() {
-        if let Some(reason) = move_reason_from_group(queue, group, node_index) {
-            return Some(reason);
+impl AssignmentQueue {
+    /// Walk the queue's groups in reverse order to find the last event that
+    /// determined this node's final position, and translate it into a
+    /// `MoveReason`.
+    ///
+    /// A node may pass through multiple groups (a phase-1 fight mover may later
+    /// be spill-relocated, etc.).  The *latest* group that touched the node is
+    /// the one that placed it where it ended up — earlier events were
+    /// superseded by it.
+    fn move_reason_for_node(&self, node_index: usize) -> Option<MoveReason> {
+        let groups = self.groups();
+        for group in groups.iter().rev() {
+            if let Some(reason) = group.move_reason_for_node(self, node_index) {
+                return Some(reason);
+            }
         }
+        None
     }
-    None
 }
 
-fn move_reason_from_group(
-    queue: &AssignmentQueue,
-    group: &PositionAssignmentGroup,
-    node_index: usize,
-) -> Option<MoveReason> {
-    let graph = queue.graph();
-    let is_anchor = group.anchor_index() == node_index;
-    let is_mover = group.mover_indices().contains(&node_index);
-    if !is_anchor && !is_mover {
-        return None;
-    }
-    match group.kind() {
-        GroupKind::Fight => {
-            if !is_mover {
-                return None;
-            }
-            let anchor_node = graph.node(group.anchor_index());
-            let anchor_slot = anchor_node.slot_id();
-            let anchor_carrier_unit_ids = anchor_node.carrier_unit_ids().to_vec();
-            let reason = MoveReason::Fight {
-                anchor_slot,
-                anchor_carrier_unit_ids,
-            };
-            Some(reason)
+impl PositionAssignmentGroup {
+    fn move_reason_for_node(
+        &self,
+        queue: &AssignmentQueue,
+        node_index: usize,
+    ) -> Option<MoveReason> {
+        let graph = queue.graph();
+        let is_anchor = self.anchor_index() == node_index;
+        let is_mover = self.mover_indices().contains(&node_index);
+        if !is_anchor && !is_mover {
+            return None;
         }
-        GroupKind::GapPull { source_position } => {
-            if !is_anchor {
-                return None;
+        match self.kind() {
+            GroupKind::Fight => {
+                if !is_mover {
+                    return None;
+                }
+                let anchor_node = graph.node(self.anchor_index());
+                let anchor_slot = anchor_node.slot_id();
+                let anchor_carrier_unit_ids = anchor_node.carrier_unit_ids().to_vec();
+                let reason = MoveReason::Fight {
+                    anchor_slot,
+                    anchor_carrier_unit_ids,
+                };
+                Some(reason)
             }
-            let reason = MoveReason::GapPull { source_position };
-            Some(reason)
-        }
-        GroupKind::Spill { stuck_position } => {
-            if is_anchor {
-                let stays_in_row = group.position().row() == stuck_position.row();
-                if stays_in_row {
-                    let has_swap_partner = !group.mover_indices().is_empty();
-                    if has_swap_partner {
-                        let first_incumbent = group.mover_indices()[0];
-                        let swapped_with = graph.node(first_incumbent).slot_id();
-                        let reason = MoveReason::Swap { swapped_with };
+            GroupKind::GapPull { source_position } => {
+                if !is_anchor {
+                    return None;
+                }
+                let reason = MoveReason::GapPull { source_position };
+                Some(reason)
+            }
+            GroupKind::Spill { stuck_position } => {
+                if is_anchor {
+                    let stays_in_row = self.position().row() == stuck_position.row();
+                    if stays_in_row {
+                        let has_swap_partner = !self.mover_indices().is_empty();
+                        if has_swap_partner {
+                            let first_incumbent = self.mover_indices()[0];
+                            let swapped_with = graph.node(first_incumbent).slot_id();
+                            let reason = MoveReason::Swap { swapped_with };
+                            return Some(reason);
+                        }
+                        let reason = MoveReason::GapPull {
+                            source_position: stuck_position,
+                        };
                         return Some(reason);
                     }
-                    let reason = MoveReason::GapPull {
-                        source_position: stuck_position,
+                    let reason = MoveReason::Spill {
+                        from_position: stuck_position,
                     };
                     return Some(reason);
                 }
-                let reason = MoveReason::Spill {
-                    from_position: stuck_position,
+                let anchor_slot = graph.node(self.anchor_index()).slot_id();
+                let reason = MoveReason::Swap {
+                    swapped_with: anchor_slot,
                 };
-                return Some(reason);
+                Some(reason)
             }
-            let anchor_slot = graph.node(group.anchor_index()).slot_id();
-            let reason = MoveReason::Swap {
-                swapped_with: anchor_slot,
-            };
-            Some(reason)
         }
     }
 }
@@ -367,7 +373,7 @@ impl fmt::Display for CascadePlan {
                 let name = mover.slot_id.display_name(None, None);
                 let id = mover.slot_id.as_str();
                 let role = mover.grid_role.label();
-                let col = u8::from(mover.collision_position.column());
+                let column = u8::from(mover.collision_position.column());
                 let row = u8::from(mover.collision_position.row());
                 let carrier_count = mover.carrier_count();
                 let carrier_ids = mover
@@ -378,7 +384,7 @@ impl fmt::Display for CascadePlan {
                     .join(", ");
                 writeln!(
                     formatter,
-                    "  {name} ({id})  [{role}]  stayed at ({col},{row})  \
+                    "  {name} ({id})  [{role}]  stayed at ({column},{row})  \
                      [{carrier_count} carriers: {carrier_ids}]",
                 )?;
             }
@@ -529,9 +535,12 @@ mod cascade_planner_tests {
     fn all_new_positions_are_within_grid_bounds() {
         let plan = default_plan();
         for planned_move in plan.moves() {
-            let col = u8::from(planned_move.new_position().column());
+            let column = u8::from(planned_move.new_position().column());
             let row = u8::from(planned_move.new_position().row());
-            assert!(col < COMMAND_GRID_COLUMNS, "column {col} is out of bounds");
+            assert!(
+                column < COMMAND_GRID_COLUMNS,
+                "column {column} is out of bounds"
+            );
             assert!(row < COMMAND_GRID_ROWS, "row {row} is out of bounds");
         }
     }
@@ -565,7 +574,7 @@ mod cascade_planner_tests {
         let custom_keys = CustomKeys::from_text("");
         let graph = ConflictGraph::build(&custom_keys);
         for mover in plan.unresolved() {
-            let original_row_value = graph
+            let original_row = graph
                 .nodes()
                 .iter()
                 .find(|node| {
@@ -573,14 +582,14 @@ mod cascade_planner_tests {
                 })
                 .map(|node| u8::from(node.current_position().row()))
                 .expect("unresolved node must exist in the graph");
-            let stuck_row_value = u8::from(mover.collision_position().row());
+            let stuck_row = u8::from(mover.collision_position().row());
             assert_eq!(
-                original_row_value,
-                stuck_row_value,
+                original_row,
+                stuck_row,
                 "unresolved mover {} ended on row {} but started on row {}",
                 mover.slot_id().as_str(),
-                stuck_row_value,
-                original_row_value,
+                stuck_row,
+                original_row,
             );
         }
     }

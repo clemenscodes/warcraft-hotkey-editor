@@ -32,6 +32,7 @@ pub enum GroupKind {
 /// three flavors.  After the queue finishes,
 /// `AssignmentQueue::final_position(group.anchor_index())` always equals
 /// `group.position()`.
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PositionAssignmentGroup {
     position: GridCoordinate,
     grid_role: GridRole,
@@ -96,7 +97,7 @@ impl PositionAssignmentGroup {
 ///
 /// `AssignmentQueue::build` runs in two phases:
 ///
-/// **Phase 1 — Raster sweep over every grid cell** (`row` asc, `col` asc,
+/// **Phase 1 — Raster sweep over every grid cell** (`row` asc, `column` asc,
 /// `grid_role` in display order).  At each cell:
 ///
 ///   1. **Conflict fights**: residents currently assigned to the cell are
@@ -119,6 +120,7 @@ impl PositionAssignmentGroup {
 /// incumbents can be safely swapped into the node's stuck slot.  Cross-row
 /// movement is bad, but a persistent collision is worse — phase 2 makes
 /// exactly that trade.  A node that finds no swap candidate stays unresolved.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct AssignmentQueue {
     graph: ConflictGraph,
     groups: Vec<PositionAssignmentGroup>,
@@ -166,8 +168,8 @@ impl AssignmentQueue {
             let Ok(row) = RowIndex::try_from(row_byte) else {
                 continue;
             };
-            for col_byte in 0..COMMAND_GRID_COLUMNS {
-                let Ok(column) = ColumnIndex::try_from(col_byte) else {
+            for column_byte in 0..COMMAND_GRID_COLUMNS {
+                let Ok(column) = ColumnIndex::try_from(column_byte) else {
                     continue;
                 };
                 let position = GridCoordinate::new(column, row);
@@ -223,6 +225,7 @@ impl AssignmentQueue {
 }
 
 /// Mutable state threaded through the raster sweep.
+#[derive(Clone, PartialEq, Eq, Default)]
 struct QueueBuildState {
     live_positions: Vec<GridCoordinate>,
     unresolved: HashSet<usize>,
@@ -311,26 +314,26 @@ impl QueueBuildState {
     }
 
     fn relocate_mover_rightward(&mut self, mover_index: usize, from_position: GridCoordinate) {
-        let column_value = u8::from(from_position.column());
-        let row_value = u8::from(from_position.row());
-        let next_column_value = column_value + 1;
-        if next_column_value < COMMAND_GRID_COLUMNS
-            && let Ok(next_column) = ColumnIndex::try_from(next_column_value)
+        let column = u8::from(from_position.column());
+        let row = u8::from(from_position.row());
+        let next_column = column + 1;
+        if next_column < COMMAND_GRID_COLUMNS
+            && let Ok(next_column_index) = ColumnIndex::try_from(next_column)
         {
-            let new_position = GridCoordinate::new(next_column, from_position.row());
+            let new_position = GridCoordinate::new(next_column_index, from_position.row());
             self.live_positions[mover_index] = new_position;
             return;
         }
-        let next_row_value = row_value + 1;
-        if next_row_value >= COMMAND_GRID_ROWS {
+        let next_row = row + 1;
+        if next_row >= COMMAND_GRID_ROWS {
             self.unresolved.insert(mover_index);
             return;
         }
-        let Ok(next_row) = RowIndex::try_from(next_row_value) else {
+        let Ok(next_row_index) = RowIndex::try_from(next_row) else {
             self.unresolved.insert(mover_index);
             return;
         };
-        let wrapped_position = GridCoordinate::new(ColumnIndex::Zero, next_row);
+        let wrapped_position = GridCoordinate::new(ColumnIndex::Zero, next_row_index);
         self.live_positions[mover_index] = wrapped_position;
     }
 
@@ -340,8 +343,8 @@ impl QueueBuildState {
         grid_role: GridRole,
         graph: &ConflictGraph,
     ) -> Option<usize> {
-        let column_value = u8::from(position.column());
-        let row_value = u8::from(position.row());
+        let column = u8::from(position.column());
+        let row = u8::from(position.row());
         let mut units_needing_gap_close: HashSet<WarcraftObjectId> = HashSet::new();
         for (key, node_indices) in &self.unit_carries {
             if key.grid_role != grid_role {
@@ -354,19 +357,19 @@ impl QueueBuildState {
                     continue;
                 }
                 let node_position = self.live_positions[node_index];
-                let node_row_value = u8::from(node_position.row());
-                if node_row_value != row_value {
+                let node_row = u8::from(node_position.row());
+                if node_row != row {
                     continue;
                 }
-                let node_column_value = u8::from(node_position.column());
-                if node_column_value == column_value {
+                let node_column = u8::from(node_position.column());
+                if node_column == column {
                     anyone_at_cell = true;
                     break;
                 }
-                if node_column_value > column_value {
-                    let original_column_value =
+                if node_column > column {
+                    let original_column =
                         u8::from(graph.node(node_index).current_position().column());
-                    if original_column_value <= column_value {
+                    if original_column <= column {
                         anyone_displaced_past_here = true;
                     }
                 }
@@ -392,12 +395,12 @@ impl QueueBuildState {
                 continue;
             }
             let node_position = self.live_positions[index];
-            let node_row_value = u8::from(node_position.row());
-            if node_row_value != row_value {
+            let node_row = u8::from(node_position.row());
+            if node_row != row {
                 continue;
             }
-            let node_column_value = u8::from(node_position.column());
-            if node_column_value <= column_value {
+            let node_column = u8::from(node_position.column());
+            if node_column <= column {
                 continue;
             }
             let helps_at_least_one_gap = node
@@ -417,7 +420,7 @@ impl QueueBuildState {
             let carrier_count = node.carrier_count();
             let candidate = GapPullCandidate {
                 node_index: index,
-                source_column: node_column_value,
+                source_column: node_column,
                 carrier_count,
             };
             candidates.push(candidate);
@@ -480,12 +483,12 @@ impl QueueBuildState {
         let stuck_column = u8::from(stuck_position.column());
         let stuck_row = u8::from(stuck_position.row());
         let mut row_order: Vec<u8> = (0..COMMAND_GRID_ROWS).collect();
-        let stuck_row_value = i32::from(stuck_row);
+        let stuck_row_signed = i32::from(stuck_row);
         row_order.sort_by(|&left_row, &right_row| {
-            let left_row_value = i32::from(left_row);
-            let right_row_value = i32::from(right_row);
-            let left_distance = (left_row_value - stuck_row_value).unsigned_abs();
-            let right_distance = (right_row_value - stuck_row_value).unsigned_abs();
+            let left_row_signed = i32::from(left_row);
+            let right_row_signed = i32::from(right_row);
+            let left_distance = (left_row_signed - stuck_row_signed).unsigned_abs();
+            let right_distance = (right_row_signed - stuck_row_signed).unsigned_abs();
             left_distance
                 .cmp(&right_distance)
                 .then_with(|| left_row.cmp(&right_row))
@@ -517,12 +520,12 @@ impl QueueBuildState {
         let mut best: Option<SpillDecision> = None;
         let mut best_occupation_count: usize = usize::MAX;
         let mut best_column_distance: u32 = u32::MAX;
-        for col_byte in 0..COMMAND_GRID_COLUMNS {
-            let Ok(column) = ColumnIndex::try_from(col_byte) else {
+        for column_byte in 0..COMMAND_GRID_COLUMNS {
+            let Ok(column) = ColumnIndex::try_from(column_byte) else {
                 continue;
             };
             let candidate = GridCoordinate::new(column, candidate_row);
-            if candidate_row_byte == stuck_row_byte && col_byte == stuck_column_byte {
+            if candidate_row_byte == stuck_row_byte && column_byte == stuck_column_byte {
                 continue;
             }
             let mut incumbents: Vec<usize> = Vec::new();
@@ -545,9 +548,9 @@ impl QueueBuildState {
             if !all_swappable {
                 continue;
             }
-            let col_byte_value = i32::from(col_byte);
-            let origin_column_value = i32::from(origin_column);
-            let column_distance_signed = col_byte_value - origin_column_value;
+            let column_byte_signed = i32::from(column_byte);
+            let origin_column_signed = i32::from(origin_column);
+            let column_distance_signed = column_byte_signed - origin_column_signed;
             let column_distance = column_distance_signed.unsigned_abs();
             let beats_best = occupation_count < best_occupation_count
                 || (occupation_count == best_occupation_count
@@ -622,11 +625,13 @@ impl QueueBuildState {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 struct SpillDecision {
     destination: GridCoordinate,
     incumbents: Vec<usize>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 struct GapPullCandidate {
     node_index: usize,
     source_column: u8,
@@ -643,7 +648,7 @@ impl PositionAssignmentGroup {
         grid_role: GridRole,
         graph: &ConflictGraph,
         scope: AssignmentScope,
-    ) -> Vec<PositionAssignmentGroup> {
+    ) -> Vec<Self> {
         let resident_set: HashSet<usize> = residents.iter().copied().collect();
         let mut position_adjacency: HashMap<usize, Vec<usize>> = HashMap::new();
         let mut any_edge_in_residents = false;
@@ -662,7 +667,7 @@ impl PositionAssignmentGroup {
         if !any_edge_in_residents {
             return Vec::new();
         }
-        let mut groups: Vec<PositionAssignmentGroup> = Vec::new();
+        let mut groups: Vec<Self> = Vec::new();
         let mut visited: HashSet<usize> = HashSet::new();
         for &start_node in residents {
             if visited.contains(&start_node) {
@@ -712,7 +717,7 @@ impl PositionAssignmentGroup {
         position: GridCoordinate,
         grid_role: GridRole,
         scope: AssignmentScope,
-    ) -> Vec<PositionAssignmentGroup> {
+    ) -> Vec<Self> {
         let anchor_candidates: Vec<usize> = match scope {
             AssignmentScope::CrossUnitOnly => component
                 .iter()
@@ -790,14 +795,14 @@ impl PositionAssignmentGroup {
         let excluded_from_remaining: HashSet<usize> = std::iter::once(anchor_index)
             .chain(direct_mover_indices.iter().copied())
             .collect();
-        let first_group = PositionAssignmentGroup {
+        let first_group = Self {
             position,
             grid_role,
             anchor_index,
             mover_indices: direct_mover_indices,
             kind: GroupKind::Fight,
         };
-        let mut groups: Vec<PositionAssignmentGroup> = vec![first_group];
+        let mut groups: Vec<Self> = vec![first_group];
         let remaining_nodes: Vec<usize> = component
             .iter()
             .copied()
@@ -1017,15 +1022,20 @@ mod cascade_queue_tests {
 
     #[test]
     fn raster_phase_groups_are_sorted_left_to_right_top_to_bottom() {
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+        struct RowColumn {
+            row: u8,
+            column: u8,
+        }
         let queue = default_queue();
-        let positions: Vec<(u8, u8)> = queue
+        let positions: Vec<RowColumn> = queue
             .groups()
             .iter()
             .filter(|group| !group.is_spill())
             .map(|group| {
-                let column_value = u8::from(group.position().column());
-                let row_value = u8::from(group.position().row());
-                (row_value, column_value)
+                let column = u8::from(group.position().column());
+                let row = u8::from(group.position().row());
+                RowColumn { row, column }
             })
             .collect();
         let mut sorted = positions.clone();
@@ -1167,20 +1177,20 @@ mod cascade_queue_tests {
             if !group.is_fight() {
                 continue;
             }
-            let group_row_value = u8::from(group.position().row());
+            let group_row = u8::from(group.position().row());
             for &mover_index in group.mover_indices() {
                 if spilled_anchors.contains(&mover_index) {
                     continue;
                 }
                 let final_position = queue.final_position(mover_index);
-                let mover_row_value = u8::from(final_position.row());
+                let mover_row = u8::from(final_position.row());
                 assert!(
-                    mover_row_value >= group_row_value,
+                    mover_row >= group_row,
                     "mover {} ended on row {} but its fight group was on row {} — \
                      cascade may wrap forward to a later row, never backward",
                     queue.graph().node(mover_index).slot_id().as_str(),
-                    mover_row_value,
-                    group_row_value,
+                    mover_row,
+                    group_row,
                 );
             }
         }

@@ -49,7 +49,7 @@ pub enum Letter {
 }
 
 impl Letter {
-    const ALL: [Letter; 26] = [
+    const ALL: [Self; 26] = [
         Self::A,
         Self::B,
         Self::C,
@@ -156,7 +156,7 @@ pub enum Digit {
 }
 
 impl Digit {
-    const ALL: [Digit; 10] = [
+    const ALL: [Self; 10] = [
         Self::Zero,
         Self::One,
         Self::Two,
@@ -218,7 +218,7 @@ pub enum FunctionKey {
 }
 
 impl FunctionKey {
-    const ALL: [FunctionKey; 12] = [
+    const ALL: [Self; 12] = [
         Self::F1,
         Self::F2,
         Self::F3,
@@ -282,7 +282,7 @@ pub enum NumpadKey {
 }
 
 impl NumpadKey {
-    const DIGITS: [NumpadKey; 10] = [
+    const DIGITS: [Self; 10] = [
         Self::Num0,
         Self::Num1,
         Self::Num2,

@@ -2,6 +2,7 @@ use super::inner_spaces::InnerSpaces;
 use super::level_markers::LevelMarkers;
 use super::substitution_placeholders::SubstitutionPlaceholders;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct Description;
 
 impl Description {

@@ -8,8 +8,7 @@ pub const COMMAND_GRID_ROWS: u8 = 3;
 /// Every command grid is exactly this many tiles, always: `COMMAND_GRID_COLUMNS`
 /// times `COMMAND_GRID_ROWS`. A hard domain invariant with no exceptions, so the
 /// renderer carries the tiles as a fixed-size array rather than a slice.
-pub const COMMAND_GRID_TILE_COUNT: usize =
-    COMMAND_GRID_COLUMNS as usize * COMMAND_GRID_ROWS as usize;
+pub const COMMAND_GRID_TILE_COUNT: usize = 12;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct GridLayout {
@@ -187,12 +186,12 @@ impl ddd::AggregateRoot for GridLayout {}
 impl TryFrom<&str> for GridLayout {
     type Error = ();
 
-    fn try_from(raw_value: &str) -> Result<Self, ()> {
-        let trimmed_value = raw_value.trim();
-        if trimmed_value.len() != 12 {
+    fn try_from(raw: &str) -> Result<Self, ()> {
+        let trimmed = raw.trim();
+        if trimmed.len() != 12 {
             return Err(());
         }
-        let mut characters = trimmed_value.chars();
+        let mut characters = trimmed.chars();
         let mut letters = [[' '; 4]; 3];
         for row in letters.iter_mut() {
             for cell in row.iter_mut() {
@@ -222,6 +221,8 @@ mod tests {
     fn command_grid_is_always_three_by_four_twelve_tiles() {
         assert_eq!(COMMAND_GRID_COLUMNS, 4);
         assert_eq!(COMMAND_GRID_ROWS, 3);
+        let derived_tile_count = usize::from(COMMAND_GRID_COLUMNS) * usize::from(COMMAND_GRID_ROWS);
+        assert_eq!(COMMAND_GRID_TILE_COUNT, derived_tile_count);
         assert_eq!(COMMAND_GRID_TILE_COUNT, 12);
     }
 }

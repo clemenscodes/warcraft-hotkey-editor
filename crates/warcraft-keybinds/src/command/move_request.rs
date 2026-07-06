@@ -3,6 +3,7 @@ use crate::grid::layout::GridLayout;
 use crate::identity::slot::GridSlotId;
 use crate::model::GridCoordinate;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct MoveRequest<'a> {
     layout: GridLayout,
     slot_ids: &'a [GridSlotId],

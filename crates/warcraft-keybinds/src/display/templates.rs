@@ -16,6 +16,7 @@ use warcraft_database::WARCRAFT_DATABASE;
 
 /// A bundled preset: a name, a one-line description, and the CustomKeys text it
 /// ships.
+#[derive(Clone, Copy, Debug)]
 pub struct BundledTemplate {
     name: &'static str,
     description: &'static str,
@@ -82,7 +83,7 @@ const TEMPLATES: &[BundledTemplate] = &[
 
 /// A preset resolved into paint-ready previews of a representative unit's command
 /// card and research menu, plus the layout the preset derives.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ResolvedTemplate {
     template: &'static BundledTemplate,
     grid: GridLayout,
@@ -117,12 +118,12 @@ impl ResolvedTemplate {
     }
 
     /// Every bundled preset, resolved once and cached.
-    pub fn resolve_all() -> Vec<ResolvedTemplate> {
+    pub fn resolve_all() -> Vec<Self> {
         static CACHE: OnceLock<Vec<ResolvedTemplate>> = OnceLock::new();
         CACHE.get_or_init(Self::compute_all).clone()
     }
 
-    fn compute_all() -> Vec<ResolvedTemplate> {
+    fn compute_all() -> Vec<Self> {
         let archmage_id = WarcraftObjectId::new("Hamg");
         let command_slots: Vec<GridSlotId> = WARCRAFT_DATABASE
             .command_card(archmage_id)
@@ -142,29 +143,29 @@ impl ResolvedTemplate {
                 let derived_grid = GridLayout::derived_from(&parsed_file);
                 let mut preview_file = CustomKeys::parse_raw(DEFAULT_CUSTOM_KEYS);
                 preview_file.extend(parsed_file);
-                let command_input = CommandGridRenderInput {
-                    slots: &command_slots,
-                    layout: derived_grid,
-                    selected: None,
-                    selected_is_research: false,
-                    tier_overrides: &no_tiers,
-                    restrict_draggable_to: &no_restrict,
-                };
+                let command_input = CommandGridRenderInput::new(
+                    &command_slots,
+                    derived_grid,
+                    None,
+                    false,
+                    &no_tiers,
+                    &no_restrict,
+                );
                 let command_behavior = CommandBehavior;
                 let command_tiles =
                     preview_file.rendered_command_grid(&command_behavior, &command_input);
-                let research_input = CommandGridRenderInput {
-                    slots: &research_slots,
-                    layout: derived_grid,
-                    selected: None,
-                    selected_is_research: false,
-                    tier_overrides: &no_tiers,
-                    restrict_draggable_to: &no_restrict,
-                };
+                let research_input = CommandGridRenderInput::new(
+                    &research_slots,
+                    derived_grid,
+                    None,
+                    false,
+                    &no_tiers,
+                    &no_restrict,
+                );
                 let research_behavior = ResearchBehavior;
                 let research_tiles =
                     preview_file.rendered_command_grid(&research_behavior, &research_input);
-                ResolvedTemplate {
+                Self {
                     template,
                     grid: derived_grid,
                     command_tiles,

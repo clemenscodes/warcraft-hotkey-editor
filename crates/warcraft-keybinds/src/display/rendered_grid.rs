@@ -72,13 +72,58 @@ impl RenderedTile {
 }
 
 /// Inputs the UI sends for one render pass, beyond the grid's own slots and layout.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct CommandGridRenderInput<'a> {
-    pub slots: &'a [GridSlotId],
-    pub layout: GridLayout,
-    pub selected: Option<GridSlotId>,
-    pub selected_is_research: bool,
-    pub tier_overrides: &'a HashMap<String, usize>,
-    pub restrict_draggable_to: &'a [GridSlotId],
+    slots: &'a [GridSlotId],
+    layout: GridLayout,
+    selected: Option<GridSlotId>,
+    selected_is_research: bool,
+    tier_overrides: &'a HashMap<String, usize>,
+    restrict_draggable_to: &'a [GridSlotId],
+}
+
+impl<'a> CommandGridRenderInput<'a> {
+    pub fn new(
+        slots: &'a [GridSlotId],
+        layout: GridLayout,
+        selected: Option<GridSlotId>,
+        selected_is_research: bool,
+        tier_overrides: &'a HashMap<String, usize>,
+        restrict_draggable_to: &'a [GridSlotId],
+    ) -> Self {
+        Self {
+            slots,
+            layout,
+            selected,
+            selected_is_research,
+            tier_overrides,
+            restrict_draggable_to,
+        }
+    }
+
+    pub fn slots(&self) -> &'a [GridSlotId] {
+        self.slots
+    }
+
+    pub fn layout(&self) -> GridLayout {
+        self.layout
+    }
+
+    pub fn selected(&self) -> Option<GridSlotId> {
+        self.selected
+    }
+
+    pub fn selected_is_research(&self) -> bool {
+        self.selected_is_research
+    }
+
+    pub fn tier_overrides(&self) -> &'a HashMap<String, usize> {
+        self.tier_overrides
+    }
+
+    pub fn restrict_draggable_to(&self) -> &'a [GridSlotId] {
+        self.restrict_draggable_to
+    }
 }
 
 impl CustomKeys {
@@ -91,7 +136,7 @@ impl CustomKeys {
     ) -> Vec<RenderedTile> {
         let is_research_context = behavior.research_positions();
         let conflicting_tokens =
-            self.conflicting_tokens(input.slots, input.layout, is_research_context);
+            self.conflicting_tokens(input.slots(), input.layout(), is_research_context);
         let mut tiles: Vec<RenderedTile> = Vec::new();
         for row in 0..COMMAND_GRID_ROWS {
             for column in 0..COMMAND_GRID_COLUMNS {
@@ -188,8 +233,8 @@ impl CustomKeys {
             let GridSlotId::Ability(ability_id) = slot else {
                 return None;
             };
-            let ability_value = ability_id.value();
-            if ability_value.eq_ignore_ascii_case(moving_id) {
+            let ability_code = ability_id.value();
+            if ability_code.eq_ignore_ascii_case(moving_id) {
                 return None;
             }
             let off_slot = GridSlotId::AbilityOff(*ability_id);
@@ -197,9 +242,9 @@ impl CustomKeys {
             if off_position != to {
                 return None;
             }
-            let database_object = ObjectLookup::by_id(ability_value);
+            let database_object = ObjectLookup::by_id(ability_code);
             let primary_name = database_object.and_then(|object| object.names().first().copied());
-            let blocker_name = primary_name.unwrap_or(ability_value).to_owned();
+            let blocker_name = primary_name.unwrap_or(ability_code).to_owned();
             Some(blocker_name)
         })
     }
@@ -214,19 +259,19 @@ impl CustomKeys {
         let is_research_context = behavior.research_positions();
         let column = u8::from(coordinate.column());
         let row = u8::from(coordinate.row());
-        let occupant_slot = self.slot_at_position(input.slots, is_research_context, column, row);
+        let occupant_slot = self.slot_at_position(input.slots(), is_research_context, column, row);
         let occupant_cell = occupant_slot.map(|slot| self.cell_for_slot(slot));
         let is_off_state = matches!(occupant_slot, Some(GridSlotId::AbilityOff(_)));
         let is_command = matches!(occupant_slot, Some(GridSlotId::Command(_)));
         let has_occupant = occupant_cell.is_some();
-        let is_selected = occupant_slot.is_some_and(|occupant_value| {
-            input.selected.is_some_and(|active| {
-                occupant_value == active && input.selected_is_research == is_research_context
+        let is_selected = occupant_slot.is_some_and(|occupant| {
+            input.selected().is_some_and(|active| {
+                occupant == active && input.selected_is_research() == is_research_context
             })
         });
         let object_id_option = occupant_cell.as_ref().map(|cell| cell.object_id());
         let tier_index = object_id_option
-            .and_then(|id| input.tier_overrides.get(id.value()).copied())
+            .and_then(|id| input.tier_overrides().get(id.value()).copied())
             .unwrap_or(0);
         let database_object = object_id_option.and_then(|id| ObjectLookup::by_id(id.value()));
         let tier_name = database_object
@@ -257,10 +302,11 @@ impl CustomKeys {
         } else {
             cell_icon.or(tier_icon)
         };
-        let effective_token = occupant_slot
-            .and_then(|slot| self.effective_hotkey_token(&slot, input.layout, is_research_context));
+        let effective_token = occupant_slot.and_then(|slot| {
+            self.effective_hotkey_token(&slot, input.layout(), is_research_context)
+        });
         let layout_character = input
-            .layout
+            .layout()
             .letter_at(coordinate.column(), coordinate.row())
             .expect("every grid cell has a layout letter");
         let layout_token =
@@ -274,8 +320,8 @@ impl CustomKeys {
             .map(|token| conflicting_tokens.contains(&token))
             .unwrap_or(false);
         let draggable = has_occupant
-            && (input.restrict_draggable_to.is_empty()
-                || occupant_slot.is_some_and(|slot| input.restrict_draggable_to.contains(&slot)));
+            && (input.restrict_draggable_to().is_empty()
+                || occupant_slot.is_some_and(|slot| input.restrict_draggable_to().contains(&slot)));
         RenderedTile {
             coordinate,
             occupant: occupant_slot,
@@ -301,8 +347,8 @@ impl CustomKeys {
                 AbilityCell::for_ability_off(ability_id, binding)
             }
             GridSlotId::Command(command_name) => {
-                let command_value = command_name.value();
-                let binding = self.command(command_value);
+                let command_code = command_name.value();
+                let binding = self.command(command_code);
                 AbilityCell::for_command(command_name, binding)
             }
         }

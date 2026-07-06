@@ -10,6 +10,7 @@ const ROOTED_ONLY_ABILITY_CODES: &[WarcraftObjectId] =
 const ROOTED_ONLY_ABILITY_IDS: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Anei"), WarcraftObjectId::new("Aent")];
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 struct HiddenUnitAbility {
     unit_id: WarcraftObjectId,
     ability_id: WarcraftObjectId,

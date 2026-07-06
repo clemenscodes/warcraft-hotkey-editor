@@ -98,18 +98,18 @@ pub struct HotkeyTokenParseError;
 impl TryFrom<&str> for HotkeyToken {
     type Error = HotkeyTokenParseError;
 
-    fn try_from(raw_value: &str) -> Result<Self, Self::Error> {
-        let trimmed_value = raw_value.trim();
-        if trimmed_value.is_empty() {
+    fn try_from(raw: &str) -> Result<Self, Self::Error> {
+        let trimmed = raw.trim();
+        if trimmed.is_empty() {
             return Err(HotkeyTokenParseError);
         }
-        let mut characters = trimmed_value.chars();
+        let mut characters = trimmed.chars();
         let first_character = characters.next().ok_or(HotkeyTokenParseError)?;
         let is_single_character = characters.next().is_none();
         if is_single_character && first_character.is_ascii_alphabetic() {
-            return HotkeyToken::try_from(first_character);
+            return Self::try_from(first_character);
         }
-        if let Ok(code) = trimmed_value.parse::<u32>() {
+        if let Ok(code) = trimmed.parse::<u32>() {
             return match code {
                 ESCAPE_VK => Ok(Self::Escape),
                 MOUSE_FORWARD_VK => Ok(Self::MouseForward),

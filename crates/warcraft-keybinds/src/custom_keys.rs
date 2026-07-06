@@ -44,6 +44,7 @@ const GRID_ROWS: u8 = 3;
 /// `AObu`, `AUbu`, `AEbu`) and reads its position and hotkey from there; the
 /// `CmdBuild*` command only drives the in-game hotkey editor. Moving the build
 /// command in the editor must write both, so the live game honors the position.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 struct BuildCommandMirror {
     command_id: WarcraftObjectId,
     ability_id: WarcraftObjectId,
@@ -86,6 +87,7 @@ const BUILD_COMMAND_MIRRORS: &[BuildCommandMirror] = &[
 /// for reversible toggles, summon spells, and mount actions, several of whose
 /// targets are ordinary train/sell units that this mirror would clobber, the
 /// same invariant that makes [`BuildCommandMirror`] safe.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 struct MorphAbilityMirror {
     ability_id: WarcraftObjectId,
     produced_unit_id: WarcraftObjectId,
@@ -96,7 +98,7 @@ const MORPH_ABILITY_MIRRORS: &[MorphAbilityMirror] = &[MorphAbilityMirror {
     produced_unit_id: WarcraftObjectId::new("ubsp"),
 }];
 
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct CustomKeys {
     entries: BTreeMap<WarcraftObjectId, WarcraftKeybinding>,
 }
@@ -177,11 +179,11 @@ impl CustomKeys {
     /// they share a single binding in the entries map and produce a single
     /// section in the serialized output.
     fn canonical_object_id_for(&self, requested: WarcraftObjectId) -> Option<WarcraftObjectId> {
-        let requested_value = requested.value();
-        if self.entries.contains_key(requested_value) {
+        let requested_code = requested.value();
+        if self.entries.contains_key(requested_code) {
             return Some(requested);
         }
-        let requested_lowercase = requested_value.to_ascii_lowercase();
+        let requested_lowercase = requested_code.to_ascii_lowercase();
         self.entries
             .keys()
             .find(|stored| stored.value().to_ascii_lowercase() == requested_lowercase)
@@ -326,8 +328,8 @@ impl CustomKeys {
             let WarcraftKeybinding::Ability(ability_binding) = keybinding else {
                 continue;
             };
-            let object_value = object_id.value();
-            let object_option = WARCRAFT_DATABASE.by_id(object_value);
+            let object_code = object_id.value();
+            let object_option = WARCRAFT_DATABASE.by_id(object_code);
             let Some(warcraft_object) = object_option else {
                 continue;
             };
@@ -550,17 +552,17 @@ impl CustomKeys {
                         continue;
                     };
                     if binding.button_position().is_none() {
-                        if let Some(position_value) = default_button {
-                            binding.set_button_position(Some(position_value));
+                        if let Some(position) = default_button {
+                            binding.set_button_position(Some(position));
                         } else if needs_origin_fallback {
                             let origin = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
                             binding.set_button_position(Some(origin));
                         }
                     }
                     if binding.research_button_position().is_none()
-                        && let Some(position_value) = default_research
+                        && let Some(position) = default_research
                     {
-                        binding.set_research_button_position(Some(position_value));
+                        binding.set_research_button_position(Some(position));
                     }
                     if binding.unbutton_position().is_none()
                         && !warcraft_object.is_passive_ability()
@@ -903,8 +905,8 @@ impl CustomKeys {
     }
 
     fn fan_out_position(&mut self, ability_id: AbilityId) {
-        let source_object_value = ability_id.value();
-        let siblings = VariantUnits::fanout_siblings(source_object_value);
+        let source_object_code = ability_id.value();
+        let siblings = VariantUnits::fanout_siblings(source_object_code);
         if siblings.is_empty() {
             return;
         }
@@ -914,8 +916,8 @@ impl CustomKeys {
         let button_position = source_binding.button_position().copied();
         let unbutton_position = source_binding.unbutton_position().copied();
         let research_button_position = source_binding.research_button_position().copied();
-        for sibling_value in siblings.iter().copied() {
-            let sibling_object_id = WarcraftObjectId::new(sibling_value);
+        for sibling_code in siblings.iter().copied() {
+            let sibling_object_id = WarcraftObjectId::new(sibling_code);
             let sibling_ability_id = AbilityId::from(sibling_object_id);
             let Some(sibling_binding) = self.binding_or_default_mut(sibling_ability_id) else {
                 continue;
@@ -964,7 +966,9 @@ impl CustomKeys {
             };
             if let Some(position) = button_position
                 && let Some(letter) = layout.letter_at(position.column(), position.row())
-                && binding.hotkey().is_none_or(|h| h.accepts_grid_letter())
+                && binding
+                    .hotkey()
+                    .is_none_or(|hotkey| hotkey.accepts_grid_letter())
             {
                 let new_hotkey = Self::grid_hotkey_for(bound_id, letter);
                 if binding.hotkey() != Some(&new_hotkey) {
@@ -976,7 +980,7 @@ impl CustomKeys {
                 && let Some(letter) = layout.letter_at(position.column(), position.row())
                 && binding
                     .research_hotkey()
-                    .is_none_or(|h| h.accepts_grid_letter())
+                    .is_none_or(|hotkey| hotkey.accepts_grid_letter())
             {
                 let new_hotkey = Self::grid_hotkey_for(bound_id, letter);
                 if binding.research_hotkey() != Some(&new_hotkey) {
@@ -986,7 +990,9 @@ impl CustomKeys {
             }
             if let Some(position) = unbutton_position
                 && let Some(letter) = layout.letter_at(position.column(), position.row())
-                && binding.unhotkey().is_none_or(|h| h.accepts_grid_letter())
+                && binding
+                    .unhotkey()
+                    .is_none_or(|hotkey| hotkey.accepts_grid_letter())
             {
                 let new_hotkey = Hotkey::from(letter);
                 if binding.unhotkey() != Some(&new_hotkey) {
@@ -1009,7 +1015,10 @@ impl CustomKeys {
             let Some(binding) = self.command_or_default_mut(*command_name) else {
                 continue;
             };
-            if binding.hotkey().is_none_or(|h| h.accepts_grid_letter()) {
+            if binding
+                .hotkey()
+                .is_none_or(|hotkey| hotkey.accepts_grid_letter())
+            {
                 let new_hotkey = Hotkey::from(letter);
                 if binding.hotkey() != Some(&new_hotkey) {
                     binding.set_hotkey(Some(new_hotkey));
@@ -1201,10 +1210,10 @@ impl CustomKeys {
         let Some(ability_id) = fan_out_ability_id else {
             return;
         };
-        let source_object_value = ability_id.value();
-        let siblings = VariantUnits::fanout_siblings(source_object_value);
-        for sibling_value in siblings.iter().copied() {
-            let sibling_object_id = WarcraftObjectId::new(sibling_value);
+        let source_object_code = ability_id.value();
+        let siblings = VariantUnits::fanout_siblings(source_object_code);
+        for sibling_code in siblings.iter().copied() {
+            let sibling_object_id = WarcraftObjectId::new(sibling_code);
             let sibling_ability_id = AbilityId::from(sibling_object_id);
             let sibling_target = match target {
                 HotkeyTarget::Ability(_) => HotkeyTarget::Ability(sibling_ability_id),
@@ -1229,8 +1238,8 @@ impl CustomKeys {
     /// yield `0`.
     fn upgrade_tier_count(ability_id: AbilityId) -> usize {
         let object_id = ability_id.object_id();
-        let object_value = object_id.value();
-        let object_option = WARCRAFT_DATABASE.by_id(object_value);
+        let object_code = object_id.value();
+        let object_option = WARCRAFT_DATABASE.by_id(object_code);
         object_option
             .and_then(|warcraft_object| warcraft_object.upgrade_max_level())
             .unwrap_or(0)
@@ -1251,7 +1260,7 @@ impl CustomKeys {
             HotkeyTarget::Ability(ability_id) => {
                 let upgrade_levels = Self::upgrade_tier_count(ability_id);
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
-                    let existing_levels = binding.hotkey().map_or(0, |h| h.level_count());
+                    let existing_levels = binding.hotkey().map_or(0, |hotkey| hotkey.level_count());
                     let tier_count = existing_levels.max(upgrade_levels).max(1);
                     let replicated = new_token.map(|token| Hotkey::replicated(token, tier_count));
                     binding.set_hotkey(replicated);
@@ -1260,7 +1269,9 @@ impl CustomKeys {
             HotkeyTarget::AbilityResearch(ability_id) => {
                 let upgrade_levels = Self::upgrade_tier_count(ability_id);
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
-                    let research_levels = binding.research_hotkey().map_or(0, |h| h.level_count());
+                    let research_levels = binding
+                        .research_hotkey()
+                        .map_or(0, |hotkey| hotkey.level_count());
                     let tier_count = research_levels.max(upgrade_levels).max(1);
                     let replicated = new_token.map(|token| Hotkey::replicated(token, tier_count));
                     binding.set_research_hotkey(replicated);
@@ -1268,7 +1279,8 @@ impl CustomKeys {
             }
             HotkeyTarget::AbilityOffState(ability_id) => {
                 if let Some(binding) = self.binding_or_default_mut(ability_id) {
-                    let existing_levels = binding.unhotkey().map_or(0, |h| h.level_count());
+                    let existing_levels =
+                        binding.unhotkey().map_or(0, |hotkey| hotkey.level_count());
                     let replicated =
                         new_token.map(|token| Hotkey::replicated(token, existing_levels));
                     binding.set_unhotkey(replicated);
@@ -1276,7 +1288,7 @@ impl CustomKeys {
             }
             HotkeyTarget::Command(command_name) => {
                 if let Some(binding) = self.command_or_default_mut(command_name) {
-                    let existing_levels = binding.hotkey().map_or(0, |h| h.level_count());
+                    let existing_levels = binding.hotkey().map_or(0, |hotkey| hotkey.level_count());
                     let replicated =
                         new_token.map(|token| Hotkey::replicated(token, existing_levels));
                     binding.set_hotkey(replicated);
@@ -1302,10 +1314,10 @@ impl CustomKeys {
             }
             let candidate_token =
                 self.effective_hotkey_token(candidate_slot, layout, is_research_context);
-            let Some(token_value) = candidate_token else {
+            let Some(token) = candidate_token else {
                 continue;
             };
-            if token_value != proposed_token {
+            if token != proposed_token {
                 continue;
             }
             let display_name = match candidate_slot {
@@ -1362,6 +1374,7 @@ impl CustomKeys {
 
 /// Snapshot of a single `PlannedMove` decoupled from the plan's borrow, so
 /// `resolve_conflicts` can release its read of `&self` before mutating.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 struct MoveApplication {
     slot_id: GridSlotId,
     grid_role: GridRole,
@@ -1393,6 +1406,7 @@ struct MoveKey {
 /// reflects where the slot ended up.  `reason` is overwritten on each
 /// update so it always reflects the *last* event that placed the slot —
 /// earlier iterations were superseded by the most recent move.
+#[derive(Clone, Debug, PartialEq, Eq)]
 struct AccumulatedMove {
     old_position: GridCoordinate,
     new_position: GridCoordinate,
@@ -1512,6 +1526,7 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
     }
 }
 
+#[derive(Clone, Debug, Default)]
 struct CustomKeysParser {
     entries: BTreeMap<WarcraftObjectId, WarcraftKeybinding>,
     current_id: Option<WarcraftObjectId>,
@@ -1558,13 +1573,13 @@ impl CustomKeysParser {
         if let Some(section_id) = Self::extract_section_id(trimmed) {
             self.flush_pending_section();
             if let Some(resolution) = SectionResolution::from_section_id(&section_id) {
-                let already_present = self.entries.contains_key(resolution.canonical_id.value());
+                let already_present = self.entries.contains_key(resolution.canonical_id().value());
                 if already_present {
                     self.current_id = None;
                     self.accumulator = None;
                 } else {
-                    let section_accumulator = SectionAccumulator::new(resolution.kind);
-                    self.current_id = Some(resolution.canonical_id);
+                    let section_accumulator = SectionAccumulator::new(resolution.kind());
+                    self.current_id = Some(resolution.canonical_id());
                     self.accumulator = Some(section_accumulator);
                 }
             } else {
@@ -1626,7 +1641,7 @@ impl CustomKeys {
 
 /// The result of [`CustomKeys::import_overlay`]: the normalized keys plus how many
 /// ability and command bindings the imported file defined.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ImportOutcome {
     keys: CustomKeys,
     binding_count: usize,
@@ -2058,6 +2073,7 @@ mod tests {
 
     #[test]
     fn system_section_all_modifiers_parse() {
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
         struct ModifierCase {
             modifier_text: &'static str,
             expected_modifier: SystemKeybindModifier,
@@ -2335,8 +2351,8 @@ mod tests {
         let mut checked: usize = 0;
         for entry in keys.bindings_in_order() {
             let ability_id = entry.ability_id();
-            let object_value = ability_id.value();
-            let Some(object) = WARCRAFT_DATABASE.by_id(object_value) else {
+            let object_code = ability_id.value();
+            let Some(object) = WARCRAFT_DATABASE.by_id(object_code) else {
                 continue;
             };
             let Some(max_level) = object.upgrade_max_level() else {
@@ -2355,7 +2371,7 @@ mod tests {
             let level_count = hotkey.level_count();
             assert_eq!(
                 level_count, max_level,
-                "upgrade {object_value} lost tiers after apply_grid: \
+                "upgrade {object_code} lost tiers after apply_grid: \
                  `{hotkey}` has {level_count} level(s), expected {max_level}",
             );
             checked += 1;
@@ -3461,17 +3477,20 @@ mod normalize_tests {
         use crate::cascade::conflict_graph::ConflictGraph;
         use crate::unit::grids::GridRole;
         let graph = ConflictGraph::build(&keys);
-        let check = |ability: &str, expected_col: u8, expected_row: u8| {
+        let check = |ability: &str, expected_column: u8, expected_row: u8| {
             let index = graph
                 .find_node(ability, GridRole::MainCommand)
                 .unwrap_or_else(|| panic!("{ability} not found in conflict graph"));
             let position = graph.node(index).current_position();
-            let col = u8::from(position.column());
+            let column = u8::from(position.column());
             let row = u8::from(position.row());
             assert_eq!(
-                (col, row),
-                (expected_col, expected_row),
-                "{ability} expected ({expected_col},{expected_row}), got ({col},{row})",
+                column, expected_column,
+                "{ability} expected column {expected_column}, got {column}",
+            );
+            assert_eq!(
+                row, expected_row,
+                "{ability} expected row {expected_row}, got {row}",
             );
         };
         check("Advm", 0, 2);
@@ -3604,7 +3623,7 @@ mod template_generation_tests {
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
             if let Some(hotkey_string) = traditional
-                .and_then(|c| c.hotkey())
+                .and_then(|command| command.hotkey())
                 .map(|hotkey_display| hotkey_display.to_string())
             {
                 let hotkey_line = format!("Hotkey={hotkey_string}\n");
@@ -3615,7 +3634,7 @@ mod template_generation_tests {
             let buttonpos_line = format!("Buttonpos={default_column},{default_row}\n");
             out.push_str(&buttonpos_line);
             if let Some(tip) = traditional
-                .and_then(|c| c.tip())
+                .and_then(|command| command.tip())
                 .map(str::to_owned)
                 .or_else(|| join_levels(warcraft_object.tip_levels()))
             {
@@ -3829,9 +3848,8 @@ mod template_generation_tests {
                             )
                             .map(|letter| letter.to_string())
                     });
-                if let Some(research_hotkey_line_value) = research_hotkey_string {
-                    let research_hotkey_line =
-                        format!("ResearchHotkey={research_hotkey_line_value}\n",);
+                if let Some(research_hotkey_line) = research_hotkey_string {
+                    let research_hotkey_line = format!("ResearchHotkey={research_hotkey_line}\n",);
                     out.push_str(&research_hotkey_line);
                 }
                 let res_btn_column = u8::from(research_button_position.column());

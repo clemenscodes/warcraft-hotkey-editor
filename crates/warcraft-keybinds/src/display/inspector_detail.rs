@@ -6,7 +6,7 @@ use crate::text::color_codes::WarcraftColorCodes;
 use warcraft_api::{GridCoordinate, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_database::{BuildingTraits, ObjectLookup};
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Default)]
 pub struct InspectorDetail {
     display_name: String,
     object_id: WarcraftObjectId,
@@ -217,7 +217,7 @@ impl InspectorDetail {
                 let upgrade_unit_id_field = upgrade_unit_id;
                 let upgrade_display_name = upgrade_unit_id
                     .and_then(|upgrade_id| ObjectLookup::by_id(upgrade_id.value()))
-                    .and_then(|obj| obj.names().first().copied())
+                    .and_then(|object| object.names().first().copied())
                     .map(String::from);
                 let upgrade_hotkey_token = upgrade_unit_id
                     .and_then(|upgrade_id| {

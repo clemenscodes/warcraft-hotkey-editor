@@ -504,7 +504,7 @@ impl CommandBinding {
 /// Binding for a system-level hotkey section.
 /// Sections are identified by a class-discriminator field
 /// (`GameCommand=1`, `CtrlGroupCommand=1`, etc.).
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SystemBinding {
     hotkey: Hotkey,
     class: SystemKeybindClass,
@@ -623,6 +623,7 @@ impl WarcraftKeybinding {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct BindingEntry<'a> {
     ability_id: AbilityId,
     binding: &'a AbilityBinding,
@@ -645,6 +646,7 @@ impl<'a> BindingEntry<'a> {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct CommandEntry<'a> {
     name: WarcraftObjectId,
     binding: &'a CommandBinding,
@@ -690,12 +692,21 @@ pub(crate) enum SectionKind {
 
 /// Resolved section identity: the canonical database ID and the binding kind.
 /// Returned by `SectionResolution::from_section_id`; replaces a raw tuple.
+#[derive(Clone, Copy, Debug)]
 pub(crate) struct SectionResolution {
-    pub(crate) canonical_id: WarcraftObjectId,
-    pub(crate) kind: SectionKind,
+    canonical_id: WarcraftObjectId,
+    kind: SectionKind,
 }
 
 impl SectionResolution {
+    pub(crate) fn canonical_id(&self) -> WarcraftObjectId {
+        self.canonical_id
+    }
+
+    pub(crate) fn kind(&self) -> SectionKind {
+        self.kind
+    }
+
     /// Look up `section_id` in the game database and system-keybind table.
     /// Returns `None` for unknown section IDs.
     pub(crate) fn from_section_id(section_id: &str) -> Option<Self> {
@@ -728,6 +739,7 @@ impl SectionResolution {
 
 /// Typed discriminator for INI field names found inside a CustomKeys.txt section.
 /// `"icon"` and `"art"` both map to `Icon`; `"unart"` maps to `UnIcon`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 enum BindingFieldKey {
     Hotkey,
     Unhotkey,
@@ -772,6 +784,7 @@ impl TryFrom<&str> for BindingFieldKey {
 }
 
 /// Accumulates all fields of a section before converting to a [`WarcraftKeybinding`].
+#[derive(Clone, Debug)]
 pub(crate) struct SectionAccumulator {
     kind: SectionKind,
     hotkey: Option<Hotkey>,
@@ -1067,13 +1080,13 @@ mod model_tests {
     #[test]
     fn section_resolution_resolves_known_ability() {
         let resolution = SectionResolution::from_section_id("Hpal").unwrap();
-        assert!(matches!(resolution.kind, SectionKind::Ability));
+        assert!(matches!(resolution.kind(), SectionKind::Ability));
     }
 
     #[test]
     fn section_resolution_resolves_known_command() {
         let resolution = SectionResolution::from_section_id("CmdAttack").unwrap();
-        assert!(matches!(resolution.kind, SectionKind::Command));
+        assert!(matches!(resolution.kind(), SectionKind::Command));
     }
 
     #[test]
@@ -1094,7 +1107,7 @@ mod model_tests {
     }
 }
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct AbilityBindingBuilder {
     hotkey: Option<Hotkey>,
     unhotkey: Option<Hotkey>,
@@ -1213,7 +1226,7 @@ impl From<AbilityBindingBuilder> for AbilityBinding {
             un_icon,
             modifier,
         } = builder;
-        let mut binding = AbilityBinding::default();
+        let mut binding = Self::default();
         binding.set_hotkey(hotkey);
         binding.set_unhotkey(unhotkey);
         binding.set_button_position(button_position);
@@ -1233,7 +1246,7 @@ impl From<AbilityBindingBuilder> for AbilityBinding {
     }
 }
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct CommandBindingBuilder {
     hotkey: Option<Hotkey>,
     button_position: Option<GridCoordinate>,
@@ -1282,7 +1295,7 @@ impl From<CommandBindingBuilder> for CommandBinding {
             tip,
             un_tip,
         } = builder;
-        let mut binding = CommandBinding::default();
+        let mut binding = Self::default();
         binding.set_hotkey(hotkey);
         binding.set_button_position(button_position);
         binding.set_unbutton_position(unbutton_position);
@@ -1292,7 +1305,7 @@ impl From<CommandBindingBuilder> for CommandBinding {
     }
 }
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct CustomKeysBuilder {
     file: CustomKeys,
 }
@@ -1721,10 +1734,10 @@ mod builder_tests {
         let file = CustomKeys::builder().ability("Ahrl", binding).build();
         let serialized = file.to_string();
         let reparsed = CustomKeys::parse_raw(serialized.as_str());
-        let hotkey_value = reparsed
+        let parsed_hotkey = reparsed
             .binding("Ahrl")
             .and_then(|binding| binding.hotkey());
-        assert_eq!(hotkey_value, Some(&Hotkey::FunctionKey(5)));
+        assert_eq!(parsed_hotkey, Some(&Hotkey::FunctionKey(5)));
     }
 
     #[test]

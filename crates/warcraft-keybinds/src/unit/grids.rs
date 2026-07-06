@@ -21,27 +21,27 @@ pub enum GridRole {
 
 impl GridRole {
     pub fn is_research_context(self) -> bool {
-        matches!(self, GridRole::HeroSkillTree)
+        matches!(self, Self::HeroSkillTree)
     }
 
     /// Stable sort index for laying out groups when multiple grid roles share
-    /// the same `(row, col)` cell.  Lower comes first.
+    /// the same `(row, column)` cell.  Lower comes first.
     pub fn sort_index(self) -> u8 {
         match self {
-            GridRole::MainCommand => 0,
-            GridRole::BuildMenu => 1,
-            GridRole::UprootedForm => 2,
-            GridRole::HeroSkillTree => 3,
+            Self::MainCommand => 0,
+            Self::BuildMenu => 1,
+            Self::UprootedForm => 2,
+            Self::HeroSkillTree => 3,
         }
     }
 
     /// Short human-readable label used in CLI output and Display formatting.
     pub fn label(self) -> &'static str {
         match self {
-            GridRole::MainCommand => "main command",
-            GridRole::BuildMenu => "build menu",
-            GridRole::UprootedForm => "uprooted",
-            GridRole::HeroSkillTree => "research",
+            Self::MainCommand => "main command",
+            Self::BuildMenu => "build menu",
+            Self::UprootedForm => "uprooted",
+            Self::HeroSkillTree => "research",
         }
     }
 }
@@ -259,6 +259,7 @@ impl PositionCollisionCard {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct PositionCollisionCardIterator {
     card: PositionCollisionCard,
     index: u8,
@@ -342,6 +343,7 @@ impl HotkeyCollisionCard {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct HotkeyCollisionCardIterator {
     card: HotkeyCollisionCard,
     index: u8,
@@ -400,6 +402,7 @@ impl PartialEq for CollisionSlots {
 }
 
 #[cfg(test)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct PositionCollisionCardBuilder {
     role: GridRole,
     cells: [[Option<CollisionSlots>; 4]; 3],
@@ -430,6 +433,7 @@ impl PositionCollisionCardBuilder {
 }
 
 #[cfg(test)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct HotkeyCollisionCardBuilder {
     role: GridRole,
     cells: [[Option<HotkeyCollisionAtCell>; 4]; 3],

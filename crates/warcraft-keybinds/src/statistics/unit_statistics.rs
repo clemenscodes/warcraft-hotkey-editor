@@ -15,6 +15,7 @@ use warcraft_database::WARCRAFT_GAMEPLAY_CONSTANTS;
 /// Widens a count into `f32` for arithmetic. The lossy `as` cast is confined to this
 /// `From` body (RUST_STYLE permits `as` only inside `From`/`TryFrom` impls); stat
 /// counts are small, so the conversion is exact.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Default)]
 struct AsFloat {
     value: f32,
 }
@@ -29,6 +30,7 @@ impl From<u32> for AsFloat {
 
 /// Floors a non-negative float back into a count, clamping below at zero. The `as`
 /// cast is confined to this `From` body.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 struct FlooredCount {
     value: u32,
 }
@@ -45,6 +47,7 @@ impl From<f32> for FlooredCount {
 /// A hero's figures scaled to the selected level: the three attributes and every
 /// stat the primary attribute raises. Private to this module — the public surface
 /// is [`UnitStatistics`], built from these.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Default)]
 struct LeveledFigures {
     strength: u32,
     agility: u32,
@@ -157,24 +160,24 @@ impl UnitStatistics {
     ) -> Self {
         let leveled = hero_attributes
             .map(|attributes| LeveledFigures::for_hero(combat, attributes, hero_level));
-        let hit_points_value = leveled
+        let hit_points_amount = leveled
             .as_ref()
             .map(|figures| figures.hit_points)
             .unwrap_or_else(|| combat.hit_points());
-        let hit_points_regen_value = leveled
+        let hit_points_regen_rate = leveled
             .as_ref()
             .map(|figures| figures.hit_points_regen)
             .unwrap_or_else(|| combat.hit_points_regen());
         let regen_type = combat.regen_type();
-        let armor_value = leveled
+        let armor_amount = leveled
             .as_ref()
             .map(|figures| figures.armor)
             .unwrap_or_else(|| combat.armor());
-        let mana_value = leveled
+        let mana_amount = leveled
             .as_ref()
             .map(|figures| figures.mana)
             .unwrap_or_else(|| combat.mana_pool().map(|pool| pool.mana()).unwrap_or(0));
-        let mana_regen_value = leveled
+        let mana_regen_rate = leveled
             .as_ref()
             .map(|figures| figures.mana_regen)
             .unwrap_or_else(|| {
@@ -184,8 +187,8 @@ impl UnitStatistics {
                     .unwrap_or(0.0)
             });
         let defense_type = combat.defense_type();
-        let effective_value =
-            Self::effective_hit_points_value(hit_points_value, armor_value, evasion_chance);
+        let effective_hit_points_amount =
+            Self::effective_hit_points_from(hit_points_amount, armor_amount, evasion_chance);
         let attack = combat.attack().map(|unit_attack| {
             let damage_minimum = leveled
                 .as_ref()
@@ -199,8 +202,8 @@ impl UnitStatistics {
             let range = AttackRange::new(unit_attack.range());
             let cooldown_seconds = unit_attack.cooldown_seconds();
             let speed = AttackSpeed::new(cooldown_seconds);
-            let damage_per_second_value = Self::damage_per_second_value(damage, cooldown_seconds);
-            let damage_per_second = damage_per_second_value.map(DamagePerSecond::new);
+            let damage_per_second_amount = Self::damage_per_second(damage, cooldown_seconds);
+            let damage_per_second = damage_per_second_amount.map(DamagePerSecond::new);
             let attack_type = unit_attack.attack_type();
             AttackStatistics::new(damage, range, speed, damage_per_second, attack_type)
         });
@@ -218,12 +221,12 @@ impl UnitStatistics {
                 let primary = attributes.primary();
                 HeroStatistics::new(strength, agility, intelligence, primary)
             });
-        let hit_points = HitPoints::new(hit_points_value);
-        let hit_points_regen = HitPointsRegen::new(hit_points_regen_value, regen_type);
-        let mana = Mana::new(mana_value);
-        let mana_regen = ManaRegen::new(mana_regen_value);
-        let armor = Armor::new(armor_value);
-        let effective_hit_points = EffectiveHitPoints::new(effective_value);
+        let hit_points = HitPoints::new(hit_points_amount);
+        let hit_points_regen = HitPointsRegen::new(hit_points_regen_rate, regen_type);
+        let mana = Mana::new(mana_amount);
+        let mana_regen = ManaRegen::new(mana_regen_rate);
+        let armor = Armor::new(armor_amount);
+        let effective_hit_points = EffectiveHitPoints::new(effective_hit_points_amount);
         let evasion = Evasion::new(evasion_chance);
         Self {
             hit_points,
@@ -281,7 +284,7 @@ impl UnitStatistics {
 
     /// Effective hit points: raw hit points scaled by armor (each point ≈ +6% EHP)
     /// and evasion (survivability ×1/(1−evasion)), mirroring Warcraft III's model.
-    fn effective_hit_points_value(hit_points: u32, armor: f32, evasion_chance: f32) -> f32 {
+    fn effective_hit_points_from(hit_points: u32, armor: f32, evasion_chance: f32) -> f32 {
         let hit_points_float = AsFloat::from(hit_points).value;
         let armor_multiplier = Self::armor_multiplier(armor);
         let evasion_multiplier = Self::evasion_multiplier(evasion_chance);
@@ -310,7 +313,7 @@ impl UnitStatistics {
 
     /// Mean damage per second over the attack cooldown. `None` when there is no real
     /// attack (a non-positive cooldown).
-    fn damage_per_second_value(damage: DamageRange, cooldown_seconds: f32) -> Option<f32> {
+    fn damage_per_second(damage: DamageRange, cooldown_seconds: f32) -> Option<f32> {
         if cooldown_seconds <= 0.0 {
             return None;
         }
@@ -328,25 +331,25 @@ mod tests {
     #[test]
     fn damage_per_second_is_mean_damage_over_cooldown() {
         let damage = DamageRange::new(24, 27);
-        let damage_per_second = UnitStatistics::damage_per_second_value(damage, 1.35).unwrap();
+        let damage_per_second = UnitStatistics::damage_per_second(damage, 1.35).unwrap();
         assert!((damage_per_second - 18.888).abs() < 0.01);
     }
 
     #[test]
     fn damage_per_second_is_none_without_a_real_attack() {
         let damage = DamageRange::new(0, 0);
-        assert!(UnitStatistics::damage_per_second_value(damage, 0.0).is_none());
+        assert!(UnitStatistics::damage_per_second(damage, 0.0).is_none());
     }
 
     #[test]
     fn effective_hit_points_add_six_percent_per_armor_point() {
-        let effective_hit_points = UnitStatistics::effective_hit_points_value(850, 3.0, 0.0);
+        let effective_hit_points = UnitStatistics::effective_hit_points_from(850, 3.0, 0.0);
         assert!((effective_hit_points - 1003.0).abs() < 0.5);
     }
 
     #[test]
     fn effective_hit_points_fold_in_evasion() {
-        let effective_hit_points = UnitStatistics::effective_hit_points_value(1000, 0.0, 0.2);
+        let effective_hit_points = UnitStatistics::effective_hit_points_from(1000, 0.0, 0.2);
         assert!((effective_hit_points - 1250.0).abs() < 0.5);
     }
 }

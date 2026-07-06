@@ -194,8 +194,8 @@ impl Evasion {
         let mut best_chance: f32 = 0.0;
         for ability_list in ability_lists {
             for ability_id in ability_list {
-                let ability_id_value = ability_id.value();
-                let Some(ability_object) = ObjectLookup::by_id(ability_id_value) else {
+                let ability_code = ability_id.value();
+                let Some(ability_object) = ObjectLookup::by_id(ability_code) else {
                     continue;
                 };
                 let WarcraftObjectMeta::Ability(ability_meta) = ability_object.meta() else {
