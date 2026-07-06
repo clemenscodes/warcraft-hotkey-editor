@@ -1,3 +1,4 @@
+pub mod commands;
 pub mod context;
 pub mod hotkey_override;
 pub mod service;

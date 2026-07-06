@@ -1,0 +1,41 @@
+use ddd::ApplicationLayer;
+use ddd::Command;
+use ddd::Layered;
+use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::MoveRequest;
+
+/// Move a slot to a target cell (with optional swap / co-move / hotkey-follow),
+/// resolving any cascade the move triggers. Carries a `MoveRequest`, which is
+/// `Copy`, so the command owns it outright.
+pub struct MoveSlot<'a> {
+    request: MoveRequest<'a>,
+}
+
+impl<'a> MoveSlot<'a> {
+    pub fn new(request: MoveRequest<'a>) -> Self {
+        Self { request }
+    }
+}
+
+impl Layered for MoveSlot<'_> {
+    type Layer = ApplicationLayer;
+}
+
+impl Command<CustomKeys> for MoveSlot<'_> {
+    type Outcome = ();
+
+    fn execute(self, keys: &mut CustomKeys) {
+        keys.move_slot(&self.request);
+    }
+}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::MoveSlot;
+    use crate::services::customkeys::commands::assert_command;
+
+    #[test]
+    fn move_slot_is_a_command() {
+        assert_command::<MoveSlot<'_>>();
+    }
+}

@@ -13,6 +13,11 @@ use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::MoveRequest;
 
 use crate::repository::custom_keys_repository::CustomKeysRepository;
+use crate::services::customkeys::commands::apply_grid_layout::ApplyGridLayout;
+use crate::services::customkeys::commands::move_slot::MoveSlot;
+use crate::services::customkeys::commands::set_hotkey::SetHotkey;
+use crate::services::customkeys::commands::set_system_hotkey::SetSystemHotkey;
+use crate::services::customkeys::commands::swap_system_bindings::SwapSystemBindings;
 
 /// The application-layer service that owns the live [`CustomKeys`] aggregate and
 /// is the only sanctioned way for the renderer to mutate it. Every command runs
@@ -36,27 +41,36 @@ impl CustomKeysService {
     }
 
     pub fn apply_grid_layout(&self, layout: GridLayout) -> usize {
-        self.commit(|keys| keys.apply_grid_to_all_bindings(layout))
+        let command = ApplyGridLayout::new(layout);
+        self.dispatch(command)
     }
 
     pub fn override_hotkey(&self, target: HotkeyTarget, token: Option<HotkeyToken>) {
-        self.commit(|keys| keys.set_hotkey(target, token));
+        let command = SetHotkey::new(target, token);
+        self.dispatch(command);
     }
 
     pub fn move_slot(&self, request: &MoveRequest<'_>) {
-        self.commit(|keys| keys.move_slot(request));
+        let owned_request = *request;
+        let command = MoveSlot::new(owned_request);
+        self.dispatch(command);
     }
 
     /// Set a single system keybind's hotkey, re-normalizing and persisting through the
     /// commit boundary. The renderer never writes the aggregate directly.
     pub fn set_system_hotkey(&self, section_id: &str, code: KeyCode) {
-        self.commit(|keys| keys.set_system_hotkey(section_id, code));
+        let owned_section_id = section_id.to_string();
+        let command = SetSystemHotkey::new(owned_section_id, code);
+        self.dispatch(command);
     }
 
     /// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture),
     /// re-normalizing and persisting through the commit boundary.
     pub fn swap_system_bindings(&self, source_id: &str, target_id: &str) {
-        self.commit(|keys| keys.swap_system_bindings(source_id, target_id));
+        let owned_source_id = source_id.to_string();
+        let owned_target_id = target_id.to_string();
+        let command = SwapSystemBindings::new(owned_source_id, owned_target_id);
+        self.dispatch(command);
     }
 
     /// The sanctioned import command: overlays the uploaded text onto the baseline
