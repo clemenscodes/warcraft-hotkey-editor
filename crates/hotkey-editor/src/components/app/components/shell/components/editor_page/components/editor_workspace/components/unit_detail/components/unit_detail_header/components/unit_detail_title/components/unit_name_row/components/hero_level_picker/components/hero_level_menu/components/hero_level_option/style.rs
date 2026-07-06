@@ -18,9 +18,9 @@ classes! {
         "hover:text-warcraft-gold",
         "data-[active=true]:[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)_0%,color-mix(in_oklab,var(--color-race-neutral-strong)_70%,transparent)_100%)]",
         "data-[active=true]:text-warcraft-gold",
-        "[body[data-kb-modality]_&]:focus:outline-none",
-        "[body[data-kb-modality]_&]:focus:text-white",
-        "[body[data-kb-modality]_&]:focus:[box-shadow:inset_0_0_0_2px_var(--color-warcraft-highlight)]",
+        "kb-focus:outline-none",
+        "kb-focus:text-white",
+        "kb-focus:[box-shadow:inset_0_0_0_2px_var(--color-warcraft-highlight)]",
     ],
     mobile: tw![
         "mobile:px-[10px]",

@@ -1,6 +1,7 @@
 use super::props::UnitCardProps;
 use super::style;
-use crate::services::focus::modality::FocusModality;
+use crate::services::focus::context::use_focus_coordinator;
+use crate::services::focus::coordinator::FocusTarget;
 use dioxus::prelude::*;
 
 /// The card's shaped view: its full class string (base plus the mobile carousel
@@ -21,6 +22,7 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
     let mut active_category = props.active_category;
+    let focus = use_focus_coordinator();
     let unit_id_for_click = props.unit_id.clone();
     let unit_id_for_keydown = props.unit_id.clone();
     let on_click = EventHandler::new(move |_event: MouseEvent| {
@@ -35,7 +37,7 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
             selected_unit_id.set(Some(unit_id_for_keydown.clone()));
             selected_slot.set(None);
             active_category.set(unit_kind);
-            FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
+            focus.request(FocusTarget::UnitCard);
         }
     });
     UnitCardModel {

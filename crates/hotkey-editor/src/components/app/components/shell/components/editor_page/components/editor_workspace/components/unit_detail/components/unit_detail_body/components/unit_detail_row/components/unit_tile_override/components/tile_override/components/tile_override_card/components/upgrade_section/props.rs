@@ -44,6 +44,7 @@ impl From<&UpgradeSectionProps> for OverrideKeyCellProps {
             is_editing: props.upgrade_is_editing,
             is_special: props.upgrade_hotkey_is_special,
             title,
+            is_focus_target: false,
             on_activate: props.on_hotkey_activate,
         }
     }

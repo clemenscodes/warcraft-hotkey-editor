@@ -2,10 +2,10 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "hidden",
-        "[body[data-kb-modality]_&]:focus-visible:outline-none",
-        "[body[data-kb-modality]_&]:focus-visible:border-white",
-        "[body[data-kb-modality]_&]:focus-visible:text-white",
-        "[body[data-kb-modality]_&]:focus-visible:shadow-ring-hl",
+        "kb-focus:outline-none",
+        "kb-focus:border-white",
+        "kb-focus:text-white",
+        "kb-focus:shadow-ring-hl",
     ],
     mobile: tw![
         "mobile:flex",

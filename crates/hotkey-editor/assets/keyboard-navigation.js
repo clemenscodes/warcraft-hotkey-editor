@@ -1,3 +1,12 @@
+// Spatial (2D) keyboard navigation for desktop-width viewports: HJKL / arrow keys
+// move focus to the nearest focusable neighbour in that direction. This legitimately
+// needs the DOM — "nearest neighbour" is a geometry question over the rendered layout,
+// not something application state can answer — so it measures element rects here.
+//
+// Focus *modality* (keyboard vs pointer focus rings) is now the platform's own
+// :focus-visible, and post-activation focus hand-off is driven by application state
+// through the Rust FocusCoordinator. Neither lives in this file anymore.
+
 const NAV_SELECTORS = [
     ".upload-button .toolbar-button-surface",
     ".mode-tab",
@@ -18,19 +27,11 @@ const NAV_SELECTORS = [
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 8;
+const INSTALL_VERSION = 9;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
-const POINTER_FOCUSABLE_SELECTOR = [NAV_SELECTOR, "button", "[role='button']", "a[href]", "[tabindex]:not([tabindex='-1'])"].join(", ");
-const COARSE_POINTER_MEDIA = "(hover: none), (pointer: coarse)";
-
-let pointerModalityActive = false;
 
 function isNavigationViewport() {
     return document.documentElement.clientWidth >= MIN_NAV_VIEWPORT_WIDTH;
-}
-
-function hasCoarsePointer() {
-    return window.matchMedia(COARSE_POINTER_MEDIA).matches;
 }
 
 function directionFor(event) {
@@ -101,45 +102,6 @@ function moveSpatially(direction) {
     if (bestTarget) bestTarget.focus();
 }
 
-function installModalityTracking() {
-    const setKeyboard = (event) => {
-        if (!isNavigationViewport()) return;
-        if (hasCoarsePointer()) {
-            pointerModalityActive = true;
-            document.body.removeAttribute("data-kb-modality");
-            return;
-        }
-        const target = event.target;
-        if (target instanceof HTMLElement) {
-            const tag = target.tagName;
-            if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-            if (target.isContentEditable) return;
-        }
-        pointerModalityActive = false;
-        document.body.setAttribute("data-kb-modality", "");
-    };
-    const setPointer = () => {
-        if (!isNavigationViewport()) return;
-        pointerModalityActive = true;
-        document.body.removeAttribute("data-kb-modality");
-    };
-    document.addEventListener("keydown", setKeyboard, true);
-    document.addEventListener("mousedown", setPointer, true);
-    document.addEventListener("mouseup", setPointer, true);
-    document.addEventListener("pointerdown", setPointer, true);
-    document.addEventListener("pointerup", setPointer, true);
-    document.addEventListener("touchstart", setPointer, true);
-    document.addEventListener("touchend", setPointer, true);
-    document.addEventListener(
-        "click",
-        (event) => {
-            if (event instanceof MouseEvent && event.detail === 0) return;
-            setPointer();
-        },
-        true,
-    );
-}
-
 function installSpatialNavigation() {
     document.addEventListener(
         "keydown",
@@ -165,85 +127,7 @@ function installSpatialNavigation() {
     );
 }
 
-function installFocusAfterRender() {
-    window.__focusAfterRender = (selector) => {
-        if (!isNavigationViewport()) return;
-        if (!document.body.hasAttribute("data-kb-modality")) return;
-        if (hasCoarsePointer()) return;
-        requestAnimationFrame(() => {
-            const target = document.querySelector(selector);
-            if (target) target.focus();
-        });
-    };
-}
-
-function installPointerFocusSuppression() {
-    const shouldKeepFocus = (element) => {
-        const tag = element.tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
-        if (element.isContentEditable) return true;
-        return false;
-    };
-    const inPointerModality = () =>
-        isNavigationViewport() &&
-        (pointerModalityActive ||
-            hasCoarsePointer() ||
-            !document.body.hasAttribute("data-kb-modality"));
-    const blurActivePointerFocus = () => {
-        if (!isNavigationViewport()) return false;
-        if (!inPointerModality()) return false;
-        const active = document.activeElement;
-        if (!(active instanceof HTMLElement)) return false;
-        const navEl = active.closest(POINTER_FOCUSABLE_SELECTOR);
-        if (!(navEl instanceof HTMLElement)) return false;
-        if (shouldKeepFocus(navEl)) return false;
-        active.blur();
-        document.body.removeAttribute("data-kb-modality");
-        return true;
-    };
-    const guardAgainstPostRenderFocus = () => {
-        blurActivePointerFocus();
-        requestAnimationFrame(() => {
-            blurActivePointerFocus();
-            requestAnimationFrame(blurActivePointerFocus);
-        });
-    };
-
-    document.addEventListener(
-        "mousedown",
-        (event) => {
-            if (!isNavigationViewport()) return;
-            if (!inPointerModality()) return;
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            const tag = target.tagName;
-            if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-            const navEl = target.closest(NAV_SELECTOR);
-            if (navEl) event.preventDefault();
-        },
-        true,
-    );
-    document.addEventListener("focusin", guardAgainstPostRenderFocus, true);
-    document.addEventListener("pointerup", guardAgainstPostRenderFocus, true);
-    document.addEventListener("touchend", guardAgainstPostRenderFocus, true);
-    document.addEventListener("mouseup", guardAgainstPostRenderFocus, true);
-    document.addEventListener(
-        "click",
-        (event) => {
-            if (event instanceof MouseEvent && event.detail === 0) return;
-            guardAgainstPostRenderFocus();
-        },
-        true,
-    );
-}
-
-if (!isNavigationViewport()) {
-    window.__focusAfterRender = () => {};
-} else if (window.__kbNavigationVersion !== INSTALL_VERSION) {
+if (window.__kbNavigationVersion !== INSTALL_VERSION) {
     window.__kbNavigationVersion = INSTALL_VERSION;
-    window.__kbModalityInstalled = true;
-    installModalityTracking();
     installSpatialNavigation();
-    installFocusAfterRender();
-    installPointerFocusSuppression();
 }

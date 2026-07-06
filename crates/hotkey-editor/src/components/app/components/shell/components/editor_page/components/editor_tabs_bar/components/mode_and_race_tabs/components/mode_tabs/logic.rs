@@ -1,6 +1,6 @@
 use super::components::mode_tab::ModeTabProps;
 use super::props::ModeTabsProps;
-use crate::services::focus::modality::FocusModality;
+use crate::services::focus::coordinator::{FocusCoordinator, FocusTarget};
 use dioxus::prelude::*;
 use warcraft_api::Race;
 use warcraft_database::{UnitKindHelpers, UnitMode};
@@ -13,10 +13,10 @@ pub(super) struct ModeTabPair {
     pub(super) campaign: ModeTabProps,
 }
 
-impl From<&ModeTabsProps> for ModeTabPair {
-    fn from(props: &ModeTabsProps) -> Self {
-        let melee = mode_tab(props, UnitMode::Melee, "Melee");
-        let campaign = mode_tab(props, UnitMode::Campaign, "Campaign");
+impl ModeTabPair {
+    pub(super) fn build(props: &ModeTabsProps, focus: FocusCoordinator) -> Self {
+        let melee = mode_tab(props, focus, UnitMode::Melee, "Melee");
+        let campaign = mode_tab(props, focus, UnitMode::Campaign, "Campaign");
         Self { melee, campaign }
     }
 }
@@ -24,7 +24,12 @@ impl From<&ModeTabsProps> for ModeTabPair {
 /// Builds one mode button: selecting it switches the mode, picks that mode's
 /// default unit for the current race, and clears the slot selection. The keyboard
 /// activation additionally moves focus onto the race tabs.
-fn mode_tab(props: &ModeTabsProps, mode: UnitMode, label: &'static str) -> ModeTabProps {
+fn mode_tab(
+    props: &ModeTabsProps,
+    focus: FocusCoordinator,
+    mode: UnitMode,
+    label: &'static str,
+) -> ModeTabProps {
     let unit_mode = props.unit_mode;
     let active_race = props.active_race;
     let selected_unit_id = props.selected_unit_id;
@@ -50,7 +55,7 @@ fn mode_tab(props: &ModeTabsProps, mode: UnitMode, label: &'static str) -> ModeT
                 selected_unit_id,
                 selected_slot,
             );
-            FocusModality::after_render(".race-tab[data-active='true'], .race-tab");
+            focus.request(FocusTarget::RaceTabs);
         }
     });
     ModeTabProps {

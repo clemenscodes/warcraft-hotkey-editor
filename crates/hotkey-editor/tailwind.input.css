@@ -14,9 +14,9 @@
 @custom-variant qhd (@media (2560px <= width < 3840px));
 @custom-variant uhd (@media (width >= 3840px));
 
-/* Keyboard-modality focus: the global focus service sets data-kb-modality on
-   <body>; this variant lets an element opt into a keyboard-only focus style. */
-@custom-variant kb-focus (body[data-kb-modality] &:focus);
+/* Keyboard-only focus, native: matches the browser's :focus-visible heuristic
+   (keyboard / programmatic focus, not pointer). No app-state attribute involved. */
+@custom-variant kb-focus (&:focus-visible);
 
 @font-face {
   font-family: "Friz Quadrata";

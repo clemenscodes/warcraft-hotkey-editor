@@ -1,5 +1,5 @@
 use super::props::RaceTabProps;
-use crate::services::focus::modality::FocusModality;
+use crate::services::focus::coordinator::{FocusCoordinator, FocusTarget};
 use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels};
 use warcraft_database::{UnitKindHelpers, UnitMode};
@@ -14,8 +14,8 @@ pub(super) struct RaceTabChrome {
     pub(super) onkeydown: EventHandler<KeyboardEvent>,
 }
 
-impl From<&RaceTabProps> for RaceTabChrome {
-    fn from(props: &RaceTabProps) -> Self {
+impl RaceTabChrome {
+    pub(super) fn build(props: &RaceTabProps, focus: FocusCoordinator) -> Self {
         let race = props.race;
         let is_active = props.is_active;
         let race_attribute = RaceLabels::data_attribute(race).to_string();
@@ -43,7 +43,7 @@ impl From<&RaceTabProps> for RaceTabChrome {
                     selected_unit_id,
                     selected_slot,
                 );
-                FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
+                focus.request(FocusTarget::UnitCard);
             }
         });
         Self {

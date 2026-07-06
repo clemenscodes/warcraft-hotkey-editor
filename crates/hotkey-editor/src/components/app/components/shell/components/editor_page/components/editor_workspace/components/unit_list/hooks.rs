@@ -7,8 +7,8 @@ use super::logic::CatalogListingInputs;
 use super::props::UnitListProps;
 use super::state::UnitListState;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::unit_kind_data_attr;
-use crate::services::focus::modality::FocusModality;
-use dioxus::document;
+use crate::services::focus::context::use_focus_coordinator;
+use crate::services::focus::coordinator::FocusTarget;
 use dioxus::prelude::*;
 use std::time::Duration;
 use warcraft_api::UnitKind;
@@ -146,14 +146,14 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let first_result_kind = state.first_result_kind();
     let raw_query = search.raw_query;
     let on_clear = search.on_clear;
+    let focus = use_focus_coordinator();
     let on_keydown = EventHandler::new(move |event: KeyboardEvent| {
         let key_string = event.key().to_string();
         match key_string.as_str() {
             "Escape" => {
                 let current_raw = raw_query.read().clone();
                 if current_raw.is_empty() {
-                    let focus_script = "document.body.setAttribute('data-kb-modality', ''); const card = document.querySelector('.unit-card'); if (card) card.focus();";
-                    document::eval(focus_script);
+                    focus.request(FocusTarget::UnitCard);
                 } else {
                     on_clear.call(());
                 }
@@ -165,7 +165,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
                     selected_unit_id.set(Some(unit_id));
                     selected_slot.set(None);
                     active_category_signal.set(unit_kind);
-                    FocusModality::after_render(".unit-card[data-selected='true'], .unit-card");
+                    focus.request(FocusTarget::UnitCard);
                 }
             }
             _ => {}

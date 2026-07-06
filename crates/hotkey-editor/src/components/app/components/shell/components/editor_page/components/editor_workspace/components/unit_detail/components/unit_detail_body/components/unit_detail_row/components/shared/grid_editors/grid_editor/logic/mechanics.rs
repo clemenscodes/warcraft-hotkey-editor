@@ -22,12 +22,17 @@ use wasm_bindgen::closure::Closure;
 pub(crate) fn keydown(
     on_select: EventHandler<GridCoordinate>,
     coordinate: GridCoordinate,
+    focus: crate::services::focus::coordinator::FocusCoordinator,
 ) -> impl FnMut(Event<KeyboardData>) + 'static {
     move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
         if key_value == " " || key_value == "Enter" {
             event.prevent_default();
             on_select.call(coordinate);
+            // Keyboard selection hands focus on to the override key cell. This lives in
+            // the keydown mechanic (not the shared select handler) so a mouse click,
+            // which runs the same `on_select`, does not steal focus.
+            focus.request(crate::services::focus::coordinator::FocusTarget::OverrideKey);
         }
     }
 }

@@ -4,6 +4,7 @@ mod props;
 mod style;
 
 use components::mode_tab::ModeTab;
+use crate::services::focus::context::use_focus_coordinator;
 use dioxus::prelude::*;
 use logic::ModeTabPair;
 pub use props::ModeTabsProps;
@@ -16,7 +17,8 @@ assert_component!(ModeTabs);
 /// conversion in `logic`.
 #[component]
 pub fn ModeTabs(props: ModeTabsProps) -> Element {
-    let ModeTabPair { melee, campaign } = ModeTabPair::from(&props);
+    let focus = use_focus_coordinator();
+    let ModeTabPair { melee, campaign } = ModeTabPair::build(&props, focus);
     rsx! {
         div {
             class: CLASS,

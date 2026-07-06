@@ -8,7 +8,6 @@ use warcraft_keybinds::{CustomKeys, GridBehavior, GridCoordinate, GridLayout, Gr
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeadingProps;
 use crate::services::customkeys::service::CustomKeysService;
 use warcraft_keybinds::MoveRequest;
-use crate::services::focus::modality::FocusModality;
 use super::super::props::GridEditorProps;
 
 impl<B: GridBehavior> From<&GridEditorProps<B>> for GridHeadingProps {
@@ -42,7 +41,6 @@ pub(super) fn select_handler<B: GridBehavior>(
         selected_slot.set(occupant);
         selected_from_research.set(behavior.research_positions());
         selected_from_uprooted.set(behavior.marks_alternate_form());
-        FocusModality::after_render(".tile-override-card .override-key-cell");
     })
 }
 

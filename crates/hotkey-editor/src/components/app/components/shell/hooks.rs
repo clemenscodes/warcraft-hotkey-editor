@@ -449,11 +449,21 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
 /// the header and the routed pages read, and run the URL-sync push effect. Each concern
 /// is its own sub-hook; the body composes them and returns the two things the body
 /// renders.
+/// Provide the keyboard focus coordinator at the shell root and run its single driver
+/// effect, so every editor region below can hand keyboard focus on to the next by
+/// application state instead of querying the DOM.
+fn use_focus_coordinator_provider() {
+    let coordinator = crate::services::focus::coordinator::FocusCoordinator::use_coordinator();
+    use_context_provider(|| coordinator);
+    coordinator.drive();
+}
+
 pub(super) fn use_shell() -> ShellModel {
     let loaded_keys = use_custom_keys_document();
     let grid_layout = use_grid_layout_document();
     let update_hotkeys_on_move = use_editor_preferences();
     use_editor_history(loaded_keys, grid_layout);
+    use_focus_coordinator_provider();
     let bootstrap = use_route_bootstrap();
     let signals = use_app_signals(bootstrap, update_hotkeys_on_move);
     use_url_sync(&signals);
