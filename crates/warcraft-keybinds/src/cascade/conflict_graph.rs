@@ -364,6 +364,39 @@ impl fmt::Display for ConflictGraph {
     }
 }
 
+impl ddd::Layered for ConflictNode {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for ConflictNode {}
+
+impl ddd::Layered for CollidingPair {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for CollidingPair {}
+
+impl ddd::Layered for ConflictGraph {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for ConflictGraph {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::CollidingPair;
+    use super::ConflictGraph;
+    use super::ConflictNode;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn conflict_graph_types_are_value_objects() {
+        assert_value_object::<ConflictNode>();
+        assert_value_object::<CollidingPair>();
+        assert_value_object::<ConflictGraph>();
+    }
+}
+
 #[cfg(test)]
 mod conflict_graph_tests {
     use super::*;

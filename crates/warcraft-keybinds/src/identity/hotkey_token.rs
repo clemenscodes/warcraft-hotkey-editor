@@ -120,3 +120,20 @@ impl TryFrom<&str> for HotkeyToken {
         Err(HotkeyTokenParseError)
     }
 }
+
+impl ddd::Layered for HotkeyToken {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for HotkeyToken {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::HotkeyToken;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn hotkey_token_is_a_value_object() {
+        assert_value_object::<HotkeyToken>();
+    }
+}

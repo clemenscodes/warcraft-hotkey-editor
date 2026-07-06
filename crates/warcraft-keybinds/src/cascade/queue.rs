@@ -950,6 +950,48 @@ impl fmt::Display for AssignmentQueue {
     }
 }
 
+impl ddd::Layered for GroupKind {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for GroupKind {}
+
+impl ddd::Layered for PositionAssignmentGroup {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for PositionAssignmentGroup {}
+
+impl ddd::Layered for AssignmentScope {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for AssignmentScope {}
+
+impl ddd::Layered for AssignmentQueue {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::DomainService for AssignmentQueue {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::AssignmentQueue;
+    use super::AssignmentScope;
+    use super::GroupKind;
+    use super::PositionAssignmentGroup;
+    use crate::ddd_conformance::assert_domain_service;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn cascade_queue_types_carry_their_ddd_roles() {
+        assert_value_object::<GroupKind>();
+        assert_value_object::<PositionAssignmentGroup>();
+        assert_value_object::<AssignmentScope>();
+        assert_domain_service::<AssignmentQueue>();
+    }
+}
+
 #[cfg(test)]
 mod cascade_queue_tests {
     use super::*;

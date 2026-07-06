@@ -40,3 +40,22 @@ impl From<&'static str> for AbilityId {
         }
     }
 }
+
+impl ddd::Layered for AbilityId {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for AbilityId {}
+
+impl ddd::Identifier for AbilityId {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::AbilityId;
+    use crate::ddd_conformance::assert_identifier;
+
+    #[test]
+    fn ability_id_is_an_identifier() {
+        assert_identifier::<AbilityId>();
+    }
+}

@@ -393,6 +393,47 @@ impl fmt::Display for CascadePlan {
     }
 }
 
+impl ddd::Layered for MoveReason {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for MoveReason {}
+
+impl ddd::Layered for PlannedMove {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for PlannedMove {}
+
+impl ddd::Layered for UnresolvedMover {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for UnresolvedMover {}
+
+impl ddd::Layered for CascadePlan {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for CascadePlan {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::CascadePlan;
+    use super::MoveReason;
+    use super::PlannedMove;
+    use super::UnresolvedMover;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn cascade_plan_types_are_value_objects() {
+        assert_value_object::<MoveReason>();
+        assert_value_object::<PlannedMove>();
+        assert_value_object::<UnresolvedMover>();
+        assert_value_object::<CascadePlan>();
+    }
+}
+
 #[cfg(test)]
 mod cascade_planner_tests {
     use super::*;

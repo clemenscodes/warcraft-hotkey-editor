@@ -26,3 +26,20 @@ impl HotkeyTarget {
         Self::Command(id.into())
     }
 }
+
+impl ddd::Layered for HotkeyTarget {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for HotkeyTarget {}
+
+#[cfg(test)]
+mod ddd_marker_tests {
+    use super::HotkeyTarget;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn hotkey_target_is_a_value_object() {
+        assert_value_object::<HotkeyTarget>();
+    }
+}

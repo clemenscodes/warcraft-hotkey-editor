@@ -205,6 +205,31 @@ impl FromStr for AbilityModifier {
     }
 }
 
+impl ddd::Layered for Hotkey {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for Hotkey {}
+
+impl ddd::Layered for AbilityModifier {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for AbilityModifier {}
+
+#[cfg(test)]
+mod hotkey_marker_tests {
+    use super::AbilityModifier;
+    use super::Hotkey;
+    use crate::ddd_conformance::assert_value_object;
+
+    #[test]
+    fn hotkey_and_modifier_are_value_objects() {
+        assert_value_object::<Hotkey>();
+        assert_value_object::<AbilityModifier>();
+    }
+}
+
 /// Slot data for a single command-card position.
 /// Shared by the primary (on) and alt (off/un) states of an ability.
 #[derive(Default, Debug, Clone)]

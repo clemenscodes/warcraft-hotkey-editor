@@ -156,10 +156,32 @@ impl CommandCard {
     }
 }
 
+impl ddd::Layered for GridSlotId {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for GridSlotId {}
+
+impl ddd::Identifier for GridSlotId {}
+
+impl ddd::Layered for CommandCard {
+    type Layer = ddd::DomainLayer;
+}
+
+impl ddd::ValueObject for CommandCard {}
+
 #[cfg(test)]
 mod slot_tests {
     use super::*;
+    use crate::ddd_conformance::assert_identifier;
+    use crate::ddd_conformance::assert_value_object;
     use crate::model::{ColumnIndex, RowIndex};
+
+    #[test]
+    fn slot_id_is_an_identifier_and_command_card_a_value_object() {
+        assert_identifier::<GridSlotId>();
+        assert_value_object::<CommandCard>();
+    }
 
     #[test]
     fn ability_slot_display_shows_id() {
