@@ -238,131 +238,41 @@ in `warcraft-keybinds` (persisted under its own localStorage key via
 the R10 list stays UI state; this is the only place a "history of edits" is
 treated as a domain concept rather than presentation scratch.
 
-## 5. Where today's code violates these rules
+## 5. History: the original violations are resolved
 
-These are the active violators that motivated this document. The refactor
-plan in §6 names the order in which to fix them.
+An earlier revision of this document catalogued a set of rule violations — an
+in-memory `loaded_keys` signal that trailed localStorage (R1), renderer-time
+cascade shims (R3), a `write_container_resolved` that refused to bake resolved
+positions (R2), an `explicit_export.rs` re-derivation pipeline (R2/R5), UI
+`binding.set_*` mutations (R4), and a 1779-line `lib.rs` — together with a
+seven-phase plan to fix them.
 
-- **`hotkey-editor/src/app.rs`** holds `loaded_keys: Signal<Option<CustomKeysFile>>`
-  as an in-memory copy that's mutated directly by UI code. localStorage is
-  written from a `use_effect` that trails the signal. **Violates R1.**
+**That plan is complete.** localStorage is the source of truth, cascade is
+baked at write time, the renderer mutates only through the `CustomKeys` facade,
+and `warcraft-keybinds` has a semantic module tree with the three aggregate
+roots (`CustomKeys`, `GridLayout`, `EditorHistory`) already marked via `ddd`.
+The hard rules R1–R10 in §4 stand unchanged and are the live contract; this
+section is kept only as the historical record of what motivated them.
 
-- **`hotkey-editor/src/domain/positions.rs`** is a thin shim over
-  `warcraft_keybinds::cascade::*` and is called from render code in
-  `command_grid.rs`, `inspector_detail.rs`, etc. The cascade runs every
-  render. **Violates R3.**
+## 6. Current work: the domain-crate DDD + quality refactor
 
-- **`warcraft_keybinds::cascade::write_container_resolved`** explicitly
-  refuses to write back resolved ability `Buttonpos` values:
+The active effort is bringing `warcraft-keybinds` up to the architectural and
+code-quality bar `hotkey-editor` reached — full CQRS adoption of the `ddd`
+vocabulary (realized cross-crate), full `RUST_STYLE.md` compliance, and
+hierarchical file decomposition of the remaining monoliths.
 
-  > "Ability button positions are NOT written back here."
+- **Structural + DDD conventions for the domain crate:** `docs/DOMAIN.md`.
+- **The design spec:**
+  `docs/superpowers/specs/2026-07-06-warcraft-keybinds-ddd-refactor-design.md`
+  (§9 holds the phase list).
+- **Per-phase implementation plans:** `docs/superpowers/plans/`, one file per
+  phase, authored just-in-time against the real post-split code.
 
-  This is the smoking gun. The on-disk file does not match what the
-  renderer shows. Anyone reading the file in another tool sees stale
-  positions. **Violates R2.**
-
-- **`hotkey-editor/src/customkeys/explicit_export.rs`** rebuilds an export
-  file by re-running overlay + materialize + normalize on every save.
-  This is also how localStorage is written, which means localStorage is
-  the *output* of an export pipeline rather than the canonical state.
-  **Violates R2 and R5.**
-
-- **UI components mutate bindings directly via `binding.set_*`** through
-  `Positions::assign` and `Positions::move_or_swap`. **Violates R4.**
-
-- **`warcraft-keybinds/src/lib.rs`** carries the parser, the model, the
-  serializer, and a giant raw-section-preservation cache in 1779 lines.
-  The "raw section preservation" path is dead weight given R2: if state
-  is always normalized, there is no untouched raw text to preserve.
-  Round-trip-byte-identical isn't a goal anymore.
-
-- **`hotkey-editor/src/customkeys/baseline.rs`** + the `overlay` module +
-  `materialize_default_positions` form a multi-step "build the export"
-  pipeline that exists only because the in-memory state isn't normalized.
-  Once R2 holds, all of that collapses into a single
-  `CustomKeys::default()` constructor that runs once at boot.
-
-## 6. Refactor plan
-
-Phased so each phase ships a working app. Don't merge a phase that breaks
-the build. Don't leave a phase half-done across sessions.
-
-**Phase 1 — Establish the contract (this commit).**
-- Write this document.
-- Write `/CLAUDE.md` with the agent-facing rules.
-- No production code change yet beyond a stub.
-
-**Phase 2 — A canonical facade in `warcraft-keybinds`.**
-Add a public `CustomKeys` type that is the only thing the frontend may
-touch:
-
-```rust
-pub struct CustomKeys { /* opaque */ }
-
-impl CustomKeys {
-    pub fn from_text(text: &str) -> Self;          // parses + normalizes
-    pub fn from_default() -> Self;                 // bundled baseline + normalize
-    pub fn to_text(&self) -> &str;                 // canonical, already-normalized
-    pub fn parsed(&self) -> &CustomKeysFile;       // read-only view for the renderer
-
-    // Commands. Each one re-normalizes before returning.
-    pub fn assign_position(&mut self, ...);
-    pub fn move_or_swap(&mut self, ...);
-    pub fn apply_grid_layout(&mut self, layout: GridLayout) -> usize;
-    pub fn apply_template(&mut self, template_text: &str);
-    pub fn replace_with_uploaded(&mut self, uploaded_text: &str);
-    pub fn clear_override(&mut self, slot: GridSlotId);
-    // ...
-}
-```
-
-The internals can keep delegating to the existing `cascade`, `overlay`,
-`export` modules for now — the goal in this phase is to give the frontend
-exactly one API surface to depend on.
-
-**Phase 3 — Make localStorage the source of truth.**
-- `LocalStorageCache::save(&CustomKeys)` writes `CustomKeys::to_text()` directly.
-- Remove `ExplicitExport`. Export and preview read `localStorage` and show
-  the string verbatim.
-- Boot path: `CustomKeys::from_default()` if no entry, else
-  `CustomKeys::from_text(stored)`. Either way, write back so the entry is
-  always present and normalized.
-
-**Phase 4 — Bake cascade into stored state.**
-- Change `write_container_resolved` to write resolved ability `Buttonpos`
-  back to the file (the comment that forbids this becomes obsolete once
-  the container model is unit-scoped).
-- Add a regression test: after `from_text`, every binding that was visible
-  in any container has a concrete `Buttonpos=` matching what the renderer
-  would show.
-- Delete the renderer-time cascade calls in `positions.rs` and replace
-  them with simple lookups: `file.binding(id).button_position()`.
-
-**Phase 5 — Strip domain logic out of the renderer.**
-- Delete `hotkey-editor/src/domain/positions.rs` (or shrink it to a
-  display-only adapter that contains zero logic).
-- All `command_grid.rs` / `inspector_detail.rs` reads become direct field
-  accesses on `CustomKeys::parsed()`.
-- All UI mutations route through `CustomKeys` commands. No
-  `binding.set_*` outside `warcraft-keybinds`.
-
-**Phase 6 — Clean up the domain crate internals.**
-- Drop the raw-section-preservation cache (R2 makes it dead weight).
-- Split `lib.rs` into focused modules (`parser.rs`, `model.rs`,
-  `serializer.rs`).
-- Replace the per-field setter sprawl with idiomatic builder / patch
-  patterns where it improves clarity.
-- Audit and trim `building`, `catalog`, `unit_slots`, `lookup` for things
-  that should live in `warcraft-database` instead.
-
-**Phase 7 — Tests.**
-- Property tests: `from_text(to_text(x)) == x` for normalized inputs.
-- Regression tests for every shipped fix in `cascade_tests`.
-- A test that asserts the renderer never imports anything from
-  `warcraft_keybinds::cascade` (use a deny-list lint or grep guard in CI).
-
-Each phase ends with `moon run :ci` green and the app working in the
-browser.
+Guardrails unchanged from §4: DomainEvents are transient (no event store),
+localStorage-materialized text stays the source of truth (R1/R2/R5), and no
+domain logic crosses the wall — only application-layer `Command`/`Query` shells
+live in `hotkey-editor`. Each phase ends with `moon run :ci` green and the app
+working in the browser.
 
 ## 7. Build, test, and release
 
