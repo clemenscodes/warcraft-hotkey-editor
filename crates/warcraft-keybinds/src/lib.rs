@@ -14,6 +14,9 @@ pub mod system;
 pub mod text;
 pub mod unit;
 
+#[cfg(test)]
+mod ddd_conformance;
+
 pub use cascade::conflict_graph::{CollidingPair, ConflictGraph, ConflictNode};
 pub use cascade::planner::{CascadePlan, MoveReason, PlannedMove, UnresolvedMover};
 pub use cascade::queue::{AssignmentQueue, AssignmentScope, GroupKind, PositionAssignmentGroup};
