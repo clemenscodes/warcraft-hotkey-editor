@@ -3,8 +3,8 @@ mod logic;
 mod props;
 mod style;
 
-use components::race_tab_label::{RaceTabLabel, RaceTabLabelProps};
 use crate::services::focus::context::use_focus_coordinator;
+use components::race_tab_label::{RaceTabLabel, RaceTabLabelProps};
 use dioxus::prelude::*;
 use logic::RaceTabChrome;
 pub use props::RaceTabProps;

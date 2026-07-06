@@ -10,6 +10,7 @@ mod shell;
 mod system_hotkeys;
 mod tabs;
 mod tile_override;
+mod toggle_button;
 mod unit_detail;
 mod unit_list;
 mod views;
@@ -25,6 +26,7 @@ pub fn registry() -> StoryRegistry {
     stories.extend(system_hotkeys::stories());
     stories.extend(tabs::stories());
     stories.extend(tile_override::stories());
+    stories.extend(toggle_button::stories());
     stories.extend(unit_detail::stories());
     stories.extend(unit_list::stories());
     stories.extend(views::stories());

@@ -3,9 +3,9 @@ mod hooks;
 mod props;
 mod style;
 
+use crate::services::focus::context::use_focus_coordinator;
 use components::unit_card_icon::{UnitCardIcon, UnitCardIconProps};
 use components::unit_card_info::{UnitCardInfo, UnitCardInfoProps};
-use crate::services::focus::context::use_focus_coordinator;
 use dioxus::prelude::*;
 use hooks::use_unit_card;
 pub use props::UnitCardProps;

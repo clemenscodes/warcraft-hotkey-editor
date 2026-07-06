@@ -9,7 +9,7 @@
 
 const NAV_SELECTORS = [
     ".upload-button .toolbar-button-surface",
-    ".mode-tab",
+    ".toggle-button",
     ".race-tab",
     'input[type="search"]',
     ".unit-card",

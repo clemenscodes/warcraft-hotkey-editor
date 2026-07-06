@@ -17,7 +17,8 @@ pub struct OverrideKeyCellProps {
     pub title: String,
     /// Whether this is the card's primary key cell — the one a keyboard tile
     /// selection hands focus on to. Only the header hotkey cell sets this; the
-    /// alt-state and upgrade cells leave it false.
+    /// alt-state and upgrade cells (and the gallery previews) leave it false.
+    #[props(default)]
     pub is_focus_target: bool,
     /// Called when the player clicks to start editing.
     pub on_activate: EventHandler<()>,

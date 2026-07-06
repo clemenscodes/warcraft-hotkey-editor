@@ -3,8 +3,8 @@ mod logic;
 mod props;
 mod style;
 
-use components::mode_tab::ModeTab;
 use crate::services::focus::context::use_focus_coordinator;
+use components::mode_tab::ModeTab;
 use dioxus::prelude::*;
 use logic::ModeTabPair;
 pub use props::ModeTabsProps;

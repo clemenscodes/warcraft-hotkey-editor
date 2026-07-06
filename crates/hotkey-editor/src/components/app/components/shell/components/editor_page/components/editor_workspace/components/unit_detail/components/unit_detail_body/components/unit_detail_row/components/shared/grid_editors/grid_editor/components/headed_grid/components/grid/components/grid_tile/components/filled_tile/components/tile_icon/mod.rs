@@ -20,6 +20,10 @@ pub fn TileIcon(props: TileIconProps) -> Element {
             class: CLASS,
             src,
             alt,
+            // Images are `draggable` by default; a native HTML5 image drag fires
+            // `dragstart` on pointerdown and pre-empts the tile's own pointer-based drag,
+            // so a grid rearrange would silently do nothing. Cancel the native drag.
+            ondragstart: move |event| event.prevent_default(),
             loading: "lazy",
             decoding: "async",
         }
