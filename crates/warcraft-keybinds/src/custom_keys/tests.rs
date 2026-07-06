@@ -1,6 +1,11 @@
 #[cfg(test)]
 mod parse_and_binding_tests {
     use super::super::*;
+    use crate::grid::layout::GridLayout;
+    use crate::identity::hotkey_target::HotkeyTarget;
+    use crate::identity::hotkey_token::HotkeyToken;
+    use crate::model::{ColumnIndex, RowIndex};
+    use warcraft_database::WARCRAFT_DATABASE;
 
     use crate::model::{
         AbilityBinding, AbilityModifier, CommandBinding, GridCoordinate, Hotkey, SystemBinding,
@@ -924,6 +929,7 @@ mod parse_and_binding_tests {
 mod extend_tests {
     use super::super::*;
     use crate::model::{AbilityBinding, CommandBinding, GridCoordinate, Hotkey, SystemBinding};
+    use crate::model::{ColumnIndex, RowIndex};
     use warcraft_api::SystemKeybindClass;
 
     #[test]
