@@ -11,7 +11,7 @@ use crate::identity::slot::GridSlotId;
 
 use crate::model::{
     AbilityBinding, BindingEntry, ColumnIndex, CommandBinding, CommandEntry, GridCoordinate,
-    Hotkey, RowIndex, SectionAccumulator, SectionResolution, SystemBinding, WarcraftKeybinding,
+    Hotkey, RowIndex, SystemBinding, WarcraftKeybinding,
 };
 
 use crate::unit::grids::{GridRole, UnitGrids};
@@ -22,7 +22,11 @@ use std::sync::OnceLock;
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
 
-pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../templates/CustomKeys.txt");
+mod parser;
+
+use parser::CustomKeysParser;
+
+pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../../templates/CustomKeys.txt");
 const BUNDLED_BASELINE: &str = DEFAULT_CUSTOM_KEYS;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -1526,79 +1530,6 @@ impl Extend<(WarcraftObjectId, WarcraftKeybinding)> for CustomKeys {
     }
 }
 
-#[derive(Clone, Debug, Default)]
-struct CustomKeysParser {
-    entries: BTreeMap<WarcraftObjectId, WarcraftKeybinding>,
-    current_id: Option<WarcraftObjectId>,
-    accumulator: Option<SectionAccumulator>,
-}
-
-impl CustomKeysParser {
-    fn new() -> Self {
-        Self {
-            entries: BTreeMap::new(),
-            current_id: None,
-            accumulator: None,
-        }
-    }
-
-    fn flush_pending_section(&mut self) {
-        let maybe_id = self.current_id.take();
-        let maybe_accumulator = self.accumulator.take();
-        if let Some(object_id) = maybe_id
-            && let Some(accumulated) = maybe_accumulator
-        {
-            let binding = WarcraftKeybinding::from(accumulated);
-            self.entries.insert(object_id, binding);
-        }
-    }
-
-    fn extract_section_id(trimmed_line: &str) -> Option<String> {
-        let without_brackets = trimmed_line.strip_prefix('[')?.strip_suffix(']')?;
-        let section_id = without_brackets.trim();
-        if section_id.is_empty() {
-            None
-        } else {
-            Some(section_id.to_string())
-        }
-    }
-
-    fn process_line(&mut self, line: &str) {
-        let trimmed = line.trim();
-        let is_blank = trimmed.is_empty();
-        let is_comment = trimmed.starts_with("//") || trimmed.starts_with(';');
-        if is_blank || is_comment {
-            return;
-        }
-        if let Some(section_id) = Self::extract_section_id(trimmed) {
-            self.flush_pending_section();
-            if let Some(resolution) = SectionResolution::from_section_id(&section_id) {
-                let already_present = self.entries.contains_key(resolution.canonical_id().value());
-                if already_present {
-                    self.current_id = None;
-                    self.accumulator = None;
-                } else {
-                    let section_accumulator = SectionAccumulator::new(resolution.kind());
-                    self.current_id = Some(resolution.canonical_id());
-                    self.accumulator = Some(section_accumulator);
-                }
-            } else {
-                self.current_id = None;
-                self.accumulator = None;
-            }
-        } else if let Some((key, value)) = trimmed.split_once('=')
-            && let Some(section_accumulator) = self.accumulator.as_mut()
-        {
-            section_accumulator.apply(key.trim(), value);
-        }
-    }
-
-    fn finish(mut self) -> CustomKeys {
-        self.flush_pending_section();
-        CustomKeys::from(self.entries)
-    }
-}
-
 impl CustomKeys {
     /// Parses `CustomKeys.txt` text into the raw entry map without normalizing.
     /// Internal only: the materialized baseline and the parser tests need the
@@ -2192,7 +2123,7 @@ mod tests {
 
     #[test]
     fn round_trip_of_baseline_preserves_known_sections() {
-        let baseline = include_str!("../templates/CustomKeys.txt");
+        let baseline = include_str!("../../templates/CustomKeys.txt");
         let file = CustomKeys::parse_raw(baseline);
         let output = file.to_string();
         let known_sections = [
@@ -2835,7 +2766,7 @@ mod export_tests {
 
     #[test]
     fn export_with_real_baseline_contains_known_sections() {
-        let baseline = include_str!("../templates/CustomKeys.txt");
+        let baseline = include_str!("../../templates/CustomKeys.txt");
         let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         for section in &["[Hpal]", "[CmdAttack]", "[CmdMove]"] {
@@ -2845,7 +2776,7 @@ mod export_tests {
 
     #[test]
     fn export_materializes_default_button_positions() {
-        let baseline = include_str!("../templates/CustomKeys.txt");
+        let baseline = include_str!("../../templates/CustomKeys.txt");
         let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         let after_ahrl = output
@@ -2861,7 +2792,7 @@ mod export_tests {
 
     #[test]
     fn export_assigns_positions_to_goblin_merchant_shop_items_without_db_positions() {
-        let baseline = include_str!("../templates/CustomKeys.txt");
+        let baseline = include_str!("../../templates/CustomKeys.txt");
         let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         for item_id in &["bspd", "spro", "pinv"] {
@@ -2882,7 +2813,7 @@ mod export_tests {
 
     #[test]
     fn export_assigns_position_to_goblin_shredder_sell_unit_without_db_position() {
-        let baseline = include_str!("../templates/CustomKeys.txt");
+        let baseline = include_str!("../../templates/CustomKeys.txt");
         let loaded = CustomKeys::parse_raw("");
         let output = loaded.serialize(baseline);
         let lowercase_output = output.to_ascii_lowercase();
@@ -3520,7 +3451,7 @@ mod normalize_tests {
         let mut keys = CustomKeys::from_text("");
         let _plan = keys.resolve_conflicts();
         let actual = keys.to_string();
-        let expected = include_str!("../fixtures/resolved_default_customkeys.txt");
+        let expected = include_str!("../../fixtures/resolved_default_customkeys.txt");
         if actual != expected {
             let actual_bytes = actual.len();
             let expected_bytes = expected.len();
@@ -3545,7 +3476,7 @@ mod normalize_tests {
 
     #[test]
     fn canonical_text_round_trips_through_parser() {
-        let canonical = include_str!("../fixtures/resolved_default_customkeys.txt");
+        let canonical = include_str!("../../fixtures/resolved_default_customkeys.txt");
         let reparsed = CustomKeys::parse_raw(canonical);
         let serialized = reparsed.to_string();
         if serialized != canonical {
