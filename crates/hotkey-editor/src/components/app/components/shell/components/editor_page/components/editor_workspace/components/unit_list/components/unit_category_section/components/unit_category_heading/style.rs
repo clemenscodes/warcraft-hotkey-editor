@@ -20,7 +20,6 @@ classes! {
         "duration-[0.12s]",
         "first:mt-0",
         "text-warcraft-text-faint",
-        "data-[collapsed=true]:text-warcraft-text-faint",
         "hover:text-warcraft-gold",
         "focus:outline-none",
         "kb-focus:text-warcraft-gold",
