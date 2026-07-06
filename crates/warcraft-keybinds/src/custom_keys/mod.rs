@@ -193,10 +193,12 @@ impl CustomKeys {
         self.entries.get_mut(id)?.as_system_mut()
     }
 
-    pub fn set_system_hotkey(&mut self, section_id: &str, key: KeyCode) {
+    pub fn set_system_hotkey(&mut self, section_id: impl Into<WarcraftObjectId>, key: KeyCode) {
+        let section_object_id = section_id.into();
+        let section_key = section_object_id.value();
         let hotkey_code = u32::from(key);
         let hotkey = Hotkey::VirtualKey(hotkey_code);
-        if let Some(binding) = self.system_mut(section_id) {
+        if let Some(binding) = self.system_mut(section_key) {
             binding.set_hotkey(hotkey);
         }
     }
@@ -224,23 +226,31 @@ impl CustomKeys {
             .insert(object_id, WarcraftKeybinding::System(binding));
     }
 
-    pub fn swap_system_bindings(&mut self, source_id: &str, target_id: &str) {
+    pub fn swap_system_bindings(
+        &mut self,
+        source_id: impl Into<WarcraftObjectId>,
+        target_id: impl Into<WarcraftObjectId>,
+    ) {
+        let source_object_id = source_id.into();
+        let target_object_id = target_id.into();
+        let source_key = source_object_id.value();
+        let target_key = target_object_id.value();
         let source_hotkey = self
-            .system(source_id)
+            .system(source_key)
             .and_then(|binding| match binding.hotkey() {
                 Hotkey::VirtualKey(code) => Some(*code),
                 _ => None,
             });
         let target_hotkey = self
-            .system(target_id)
+            .system(target_key)
             .and_then(|binding| match binding.hotkey() {
                 Hotkey::VirtualKey(code) => Some(*code),
                 _ => None,
             });
-        if let Some(binding) = self.system_mut(source_id) {
+        if let Some(binding) = self.system_mut(source_key) {
             binding.set_hotkey(Hotkey::VirtualKey(target_hotkey.unwrap_or(0)));
         }
-        if let Some(binding) = self.system_mut(target_id) {
+        if let Some(binding) = self.system_mut(target_key) {
             binding.set_hotkey(Hotkey::VirtualKey(source_hotkey.unwrap_or(0)));
         }
     }
