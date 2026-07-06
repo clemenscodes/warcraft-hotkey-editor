@@ -7,21 +7,21 @@ use warcraft_keybinds::MoveRequest;
 /// Move a slot to a target cell (with optional swap / co-move / hotkey-follow),
 /// resolving any cascade the move triggers. Carries a `MoveRequest`, which is
 /// `Copy`, so the command owns it outright.
-pub struct MoveSlot<'a> {
+pub struct MoveSlotCommand<'a> {
     request: MoveRequest<'a>,
 }
 
-impl<'a> MoveSlot<'a> {
+impl<'a> MoveSlotCommand<'a> {
     pub fn new(request: MoveRequest<'a>) -> Self {
         Self { request }
     }
 }
 
-impl Layered for MoveSlot<'_> {
+impl Layered for MoveSlotCommand<'_> {
     type Layer = ApplicationLayer;
 }
 
-impl Command<CustomKeys> for MoveSlot<'_> {
+impl Command<CustomKeys> for MoveSlotCommand<'_> {
     type Outcome = ();
 
     fn execute(self, keys: &mut CustomKeys) {
@@ -31,11 +31,11 @@ impl Command<CustomKeys> for MoveSlot<'_> {
 
 #[cfg(test)]
 mod ddd_marker_tests {
-    use super::MoveSlot;
+    use super::MoveSlotCommand;
     use crate::services::customkeys::commands::assert_command;
 
     #[test]
     fn move_slot_is_a_command() {
-        assert_command::<MoveSlot<'_>>();
+        assert_command::<MoveSlotCommand<'_>>();
     }
 }

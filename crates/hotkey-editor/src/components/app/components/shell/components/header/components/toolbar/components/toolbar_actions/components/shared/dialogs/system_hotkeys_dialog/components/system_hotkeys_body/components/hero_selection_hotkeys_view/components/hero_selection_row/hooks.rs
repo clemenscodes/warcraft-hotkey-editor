@@ -2,7 +2,7 @@ use super::props::HeroSelectionRowProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::slot_button::SlotButtonProps;
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::SystemBindingMap;
+use warcraft_keybinds::{SystemBindingMap, WarcraftObjectId};
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
@@ -30,7 +30,8 @@ pub(super) fn use_hero_selection_row(props: &HeroSelectionRowProps) -> HeroSelec
         .enumerate()
         .map(|(slot_index, entry)| {
             let slot_label = format!("Hero {}", slot_index + 1);
-            let section_id = entry.section_id().to_string();
+            let section_key = entry.section_id();
+            let section_id = WarcraftObjectId::from(section_key);
             let default_hotkey = entry.default_hotkey();
             let default_modifier = entry.default_modifier();
             SlotButtonProps {

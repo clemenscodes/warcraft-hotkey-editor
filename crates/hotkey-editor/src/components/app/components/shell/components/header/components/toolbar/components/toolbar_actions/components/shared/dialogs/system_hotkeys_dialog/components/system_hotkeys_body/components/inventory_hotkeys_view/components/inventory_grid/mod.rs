@@ -12,6 +12,7 @@ pub use props::InventoryGridProps;
 use std::cell::{Cell, RefCell};
 use style::CLASS;
 use tw_macro::assert_component;
+use warcraft_keybinds::{SystemBindingMap, WarcraftObjectId};
 use wasm_bindgen::closure::Closure;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
@@ -36,9 +37,9 @@ impl DragMovePoint {
     /// hit-tests the element underneath to pick (or clear) the current drop target.
     pub(super) fn flush(
         self,
-        mut drop_target: Signal<Option<String>>,
+        mut drop_target: Signal<Option<WarcraftObjectId>>,
         mut drag_follower: Signal<Option<InventoryDragFollower>>,
-        section_id: String,
+        section_id: WarcraftObjectId,
     ) {
         let cursor_horizontal_position = self.client_horizontal;
         let cursor_vertical_position = self.client_vertical;
@@ -64,26 +65,29 @@ impl DragMovePoint {
             }
             return;
         };
-        let target_id = cell_under.get_attribute("data-inventory-slot");
-        let Some(target_id_string) = target_id else {
+        let target_id_attribute = cell_under.get_attribute("data-inventory-slot");
+        let Some(target_id_string) = target_id_attribute else {
             if drop_target.read().is_some() {
                 drop_target.set(None);
             }
             return;
         };
-        if target_id_string == section_id {
+        let resolved_target = SystemBindingMap::resolve_section(&target_id_string);
+        let Some(target_id) = resolved_target else {
+            if drop_target.read().is_some() {
+                drop_target.set(None);
+            }
+            return;
+        };
+        if target_id == section_id {
             if drop_target.read().is_some() {
                 drop_target.set(None);
             }
             return;
         }
-        let needs_update = drop_target
-            .read()
-            .as_deref()
-            .map(|existing| existing != target_id_string.as_str())
-            .unwrap_or(true);
+        let needs_update = *drop_target.read() != Some(target_id);
         if needs_update {
-            drop_target.set(Some(target_id_string));
+            drop_target.set(Some(target_id));
         }
     }
 }
@@ -127,7 +131,7 @@ const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct InventoryDragFollower {
-    pub(super) section_id: String,
+    pub(super) section_id: WarcraftObjectId,
     pub(super) label: String,
     pub(super) click_offset_horizontal: f64,
     pub(super) click_offset_vertical: f64,
@@ -159,9 +163,9 @@ impl InventoryDragFollower {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct InventoryDragSource {
-    pub(crate) section_id: String,
+    pub(crate) section_id: WarcraftObjectId,
 }
 assert_component!(InventoryGrid);
 

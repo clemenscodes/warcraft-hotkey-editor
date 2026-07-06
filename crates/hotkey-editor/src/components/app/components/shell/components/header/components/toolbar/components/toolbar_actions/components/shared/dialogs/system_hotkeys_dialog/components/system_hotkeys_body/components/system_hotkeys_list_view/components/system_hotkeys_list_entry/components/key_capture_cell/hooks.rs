@@ -27,17 +27,17 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
     let binding_map = props.binding_map;
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
-    let lookup_id = props.section_id.clone();
+    let lookup_id = props.section_id;
     let read_guard = loaded_keys.read();
     let effective = EffectiveBinding::resolve_from_file(
         read_guard.as_ref(),
-        &lookup_id,
+        lookup_id,
         default_hotkey,
         default_modifier,
     );
     drop(read_guard);
     let map_guard = binding_map.read();
-    let collisions = map_guard.collisions_for(&lookup_id, effective.key(), effective.modifier());
+    let collisions = map_guard.collisions_for(lookup_id, effective.key(), effective.modifier());
     let is_conflict = !collisions.is_empty();
     let conflict_title = if is_conflict {
         let names: Vec<String> = collisions
@@ -48,13 +48,9 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
     } else {
         String::new()
     };
-    let picker_conflicts = map_guard.picker_conflicts(&lookup_id, effective.modifier());
+    let picker_conflicts = map_guard.picker_conflicts(lookup_id, effective.modifier());
     drop(map_guard);
-    let is_editing = editing_section
-        .read()
-        .as_deref()
-        .map(|active| active == lookup_id.as_str())
-        .unwrap_or(false);
+    let is_editing = *editing_section.read() == Some(lookup_id);
     let key_label = effective.label();
     let state = if is_conflict {
         KeyCaptureCellState::Conflict
@@ -62,15 +58,12 @@ pub(super) fn use_key_capture_cell(props: &KeyCaptureCellProps) -> KeyCaptureCel
         KeyCaptureCellState::Normal
     };
     let current_code = effective.key();
-    let section_id_for_click = lookup_id.clone();
-    let section_id_for_pick = lookup_id.clone();
-    let on_click = EventHandler::new(move |_event: MouseEvent| {
-        editing_section.set(Some(section_id_for_click.clone()))
-    });
+    let on_click =
+        EventHandler::new(move |_event: MouseEvent| editing_section.set(Some(lookup_id)));
     let on_pick = EventHandler::new(move |code: KeyCode| {
         let mut guard = loaded_keys.write();
         let file = guard.get_or_insert_with(CustomKeys::default);
-        file.set_system_hotkey(&section_id_for_pick, code);
+        file.set_system_hotkey(lookup_id, code);
         drop(guard);
         editing_section.set(None);
     });

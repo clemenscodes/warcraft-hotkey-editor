@@ -6,22 +6,22 @@ use warcraft_keybinds::HotkeyTarget;
 use warcraft_keybinds::HotkeyToken;
 
 /// Override (or clear) the hotkey of one ability/research/off-state target.
-pub struct SetHotkey {
+pub struct SetHotkeyCommand {
     target: HotkeyTarget,
     token: Option<HotkeyToken>,
 }
 
-impl SetHotkey {
+impl SetHotkeyCommand {
     pub fn new(target: HotkeyTarget, token: Option<HotkeyToken>) -> Self {
         Self { target, token }
     }
 }
 
-impl Layered for SetHotkey {
+impl Layered for SetHotkeyCommand {
     type Layer = ApplicationLayer;
 }
 
-impl Command<CustomKeys> for SetHotkey {
+impl Command<CustomKeys> for SetHotkeyCommand {
     type Outcome = ();
 
     fn execute(self, keys: &mut CustomKeys) {
@@ -31,11 +31,11 @@ impl Command<CustomKeys> for SetHotkey {
 
 #[cfg(test)]
 mod ddd_marker_tests {
-    use super::SetHotkey;
+    use super::SetHotkeyCommand;
     use crate::services::customkeys::commands::assert_command;
 
     #[test]
     fn set_hotkey_is_a_command() {
-        assert_command::<SetHotkey>();
+        assert_command::<SetHotkeyCommand>();
     }
 }

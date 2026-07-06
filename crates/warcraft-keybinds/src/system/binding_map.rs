@@ -147,4 +147,37 @@ impl SystemBindingMap {
         }
         conflicts
     }
+
+    /// Resolve a raw section-id string — for example one read back from a DOM
+    /// `data-*` attribute during an inventory drag — to its canonical
+    /// [`WarcraftObjectId`]. Returns `None` when the string names no known system
+    /// keybind section, so a stray drop target is simply ignored. This is the
+    /// domain's answer to "which known section is this string?"; the renderer must
+    /// never invent a `WarcraftObjectId` of its own.
+    pub fn resolve_section(section_key: &str) -> Option<WarcraftObjectId> {
+        let matching_entry = WARCRAFT_SYSTEM_KEYBINDS
+            .iter()
+            .find(|entry| entry.section_id() == section_key)?;
+        let canonical_key = matching_entry.section_id();
+        let section_id = WarcraftObjectId::from(canonical_key);
+        Some(section_id)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::SystemBindingMap;
+
+    #[test]
+    fn resolves_a_known_inventory_section() {
+        let resolved = SystemBindingMap::resolve_section("itm3");
+        let section_id = resolved.expect("itm3 is a known system keybind section");
+        assert_eq!(section_id.value(), "itm3");
+    }
+
+    #[test]
+    fn rejects_an_unknown_section() {
+        let resolved = SystemBindingMap::resolve_section("not-a-real-section");
+        assert!(resolved.is_none());
+    }
 }

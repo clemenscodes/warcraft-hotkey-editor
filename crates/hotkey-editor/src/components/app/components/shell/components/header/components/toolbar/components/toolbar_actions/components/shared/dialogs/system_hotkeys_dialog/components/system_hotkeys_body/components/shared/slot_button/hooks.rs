@@ -37,21 +37,14 @@ pub(super) struct SlotEditing {
 fn use_slot_editing(props: &SlotButtonProps) -> SlotEditing {
     let mut loaded_keys = props.loaded_keys;
     let mut editing_section = props.editing_section;
-    let lookup_id = props.section_id.clone();
-    let is_editing = editing_section
-        .read()
-        .as_deref()
-        .map(|active| active == lookup_id.as_str())
-        .unwrap_or(false);
-    let section_id_for_click = lookup_id.clone();
-    let section_id_for_pick = lookup_id.clone();
-    let on_click = EventHandler::new(move |_event: MouseEvent| {
-        editing_section.set(Some(section_id_for_click.clone()))
-    });
+    let lookup_id = props.section_id;
+    let is_editing = *editing_section.read() == Some(lookup_id);
+    let on_click =
+        EventHandler::new(move |_event: MouseEvent| editing_section.set(Some(lookup_id)));
     let on_pick = EventHandler::new(move |code: KeyCode| {
         let mut guard = loaded_keys.write();
         let file = guard.get_or_insert_with(CustomKeys::default);
-        file.set_system_hotkey(&section_id_for_pick, code);
+        file.set_system_hotkey(lookup_id, code);
         drop(guard);
         editing_section.set(None);
     });
@@ -72,7 +65,7 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let binding_map = props.binding_map;
     let default_hotkey = props.default_hotkey;
     let default_modifier = props.default_modifier;
-    let section_id = props.section_id.clone();
+    let section_id = props.section_id;
     let slot_label = props.slot_label.clone();
     let compact = props.compact;
 
@@ -82,7 +75,7 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let binding = SlotBinding::resolve(
         custom_keys,
         &map_guard,
-        &section_id,
+        section_id,
         default_hotkey,
         default_modifier,
     );

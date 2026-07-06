@@ -24,7 +24,7 @@ use wasm_bindgen::closure::Closure;
 /// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryCellModel {
     pub(super) state: InventoryCellState,
-    pub(super) slot_id: String,
+    pub(super) slot_id: &'static str,
     pub(super) dragging_attr: &'static str,
     pub(super) slot_label: String,
     pub(super) key_label: String,
@@ -65,9 +65,9 @@ fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> Inv
     let mut dragging_source = props.dragging_source;
     let mut drop_target = props.drop_target;
     let mut drag_follower = props.drag_follower;
-    let section_id_for_pointerdown = props.section_id.clone();
-    let section_id_for_pointermove = props.section_id.clone();
-    let section_id_for_pointerup = props.section_id.clone();
+    let section_id_for_pointerdown = props.section_id;
+    let section_id_for_pointermove = props.section_id;
+    let section_id_for_pointerup = props.section_id;
     let on_pointerdown = EventHandler::new(move |event: Event<PointerData>| {
         if event.data().trigger_button() != Some(MouseButton::Primary) {
             return;
@@ -104,12 +104,12 @@ fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> Inv
         DRAG_ORIGIN.with(|cell| cell.set(Some(drag_origin)));
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
         let drag_source = InventoryDragSource {
-            section_id: section_id_for_pointerdown.clone(),
+            section_id: section_id_for_pointerdown,
         };
         dragging_source.set(Some(drag_source));
         drop_target.set(None);
         let follower = InventoryDragFollower {
-            section_id: section_id_for_pointerdown.clone(),
+            section_id: section_id_for_pointerdown,
             label: label_for_drag.clone(),
             click_offset_horizontal,
             click_offset_vertical,
@@ -151,13 +151,13 @@ fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> Inv
         let Some(window) = web_sys::window() else {
             return;
         };
-        let section_id_for_flush = section_id_for_pointermove.clone();
+        let section_id_for_flush = section_id_for_pointermove;
         let closure: DragRafClosure = Closure::new(move |_timestamp: f64| {
             DRAG_RAF_HANDLE.with(|cell| cell.set(None));
             let Some(point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) else {
                 return;
             };
-            point.flush(drop_target, drag_follower, section_id_for_flush.clone());
+            point.flush(drop_target, drag_follower, section_id_for_flush);
         });
         if let Ok(handle) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
             DRAG_RAF_HANDLE.with(|cell| cell.set(Some(handle)));
@@ -166,15 +166,15 @@ fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> Inv
     });
     let on_pointerup = EventHandler::new(move |_event: Event<PointerData>| {
         if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
-            final_point.flush(drop_target, drag_follower, section_id_for_pointerup.clone());
+            final_point.flush(drop_target, drag_follower, section_id_for_pointerup);
         }
         InventoryDragRaf::cancel();
-        let drop_clone = drop_target.read().clone();
+        let drop_clone = *drop_target.read();
         let mut performed_swap = false;
         if let Some(target_id) = drop_clone
             && target_id != section_id_for_pointerup
         {
-            custom_keys_service.swap_system_bindings(&section_id_for_pointerup, &target_id);
+            custom_keys_service.swap_system_bindings(section_id_for_pointerup, target_id);
             performed_swap = true;
         }
         let did_move = DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.replace(false));
@@ -205,16 +205,16 @@ fn use_inventory_drag(props: &InventoryCellProps, label_for_drag: String) -> Inv
 fn use_inventory_editing(props: &InventoryCellProps) -> InventoryEditing {
     let custom_keys_service = use_custom_keys_service();
     let mut editing_section = props.editing_section;
-    let section_id_for_click = props.section_id.clone();
-    let section_id_for_pick = props.section_id.clone();
+    let section_id_for_click = props.section_id;
+    let section_id_for_pick = props.section_id;
     let on_click = EventHandler::new(move |_event: MouseEvent| {
         if SUPPRESS_NEXT_CLICK.with(|cell: &Cell<bool>| cell.replace(false)) {
             return;
         }
-        editing_section.set(Some(section_id_for_click.clone()));
+        editing_section.set(Some(section_id_for_click));
     });
     let on_pick = EventHandler::new(move |code: KeyCode| {
-        custom_keys_service.set_system_hotkey(&section_id_for_pick, code);
+        custom_keys_service.set_system_hotkey(section_id_for_pick, code);
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
@@ -231,7 +231,7 @@ pub(super) fn use_inventory_cell(props: &InventoryCellProps) -> InventoryCellMod
     let label_for_drag = view.key_label.clone();
     let drag = use_inventory_drag(props, label_for_drag);
     let editing = use_inventory_editing(props);
-    let slot_id = props.section_id.clone();
+    let slot_id = props.section_id.value();
     InventoryCellModel {
         state: view.state,
         slot_id,

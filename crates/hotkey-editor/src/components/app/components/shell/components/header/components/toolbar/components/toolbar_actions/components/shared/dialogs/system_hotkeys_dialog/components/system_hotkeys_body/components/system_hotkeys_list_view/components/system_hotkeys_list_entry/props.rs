@@ -2,18 +2,18 @@ use super::components::system_hotkeys_list_entry_label::SystemHotkeysListEntryLa
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture_cell::KeyCaptureCellProps;
 use dioxus::prelude::*;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeys, SystemBindingMap};
+use warcraft_keybinds::{CustomKeys, SystemBindingMap, WarcraftObjectId};
 
 /// One hotkey row: the binding's display name, its section and defaults, and the
 /// shared editing signal and binding map its key chip needs.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysListEntryProps {
-    pub section_id: String,
+    pub section_id: WarcraftObjectId,
     pub comment: String,
     pub default_hotkey: u32,
     pub default_modifier: SystemKeybindModifier,
     pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub editing_section: Signal<Option<String>>,
+    pub editing_section: Signal<Option<WarcraftObjectId>>,
     pub binding_map: ReadSignal<SystemBindingMap>,
 }
 
@@ -26,7 +26,7 @@ impl From<&SystemHotkeysListEntryProps> for SystemHotkeysListEntryLabelProps {
 
 impl From<&SystemHotkeysListEntryProps> for KeyCaptureCellProps {
     fn from(props: &SystemHotkeysListEntryProps) -> Self {
-        let section_id = props.section_id.clone();
+        let section_id = props.section_id;
         let default_hotkey = props.default_hotkey;
         let default_modifier = props.default_modifier;
         let loaded_keys = props.loaded_keys;

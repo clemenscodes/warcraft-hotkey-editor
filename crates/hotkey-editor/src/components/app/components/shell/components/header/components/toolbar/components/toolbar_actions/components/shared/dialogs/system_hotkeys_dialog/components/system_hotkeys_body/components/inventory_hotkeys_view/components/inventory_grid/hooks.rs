@@ -4,7 +4,7 @@ use super::props::InventoryGridProps;
 use super::{INVENTORY_COLUMNS, INVENTORY_ROWS, InventoryDragSource, SLOT_FRAME_GOLD};
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::SystemBindingMap;
+use warcraft_keybinds::{SystemBindingMap, WarcraftObjectId};
 
 /// The grid's shaped setup: the inline `--wc3-slot-frame` variable that feeds every
 /// slot's border-image, and the six finished grid positions (filled cell or empty).
@@ -20,7 +20,7 @@ pub(super) fn use_inventory_grid(props: &InventoryGridProps) -> InventoryGridMod
     let editing_section = props.editing_section;
     let drag_follower = props.drag_follower;
     let dragging_source = use_signal::<Option<InventoryDragSource>>(|| None);
-    let drop_target = use_signal::<Option<String>>(|| None);
+    let drop_target = use_signal::<Option<WarcraftObjectId>>(|| None);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
         SystemBindingMap::build(guard.as_ref())
@@ -35,7 +35,8 @@ pub(super) fn use_inventory_grid(props: &InventoryGridProps) -> InventoryGridMod
             let slot_index = row * INVENTORY_COLUMNS + column;
             let entry_option = entries.get(slot_index).copied();
             let cell = entry_option.map(|entry| {
-                let section_id = entry.section_id().to_string();
+                let section_key = entry.section_id();
+                let section_id = WarcraftObjectId::from(section_key);
                 let default_hotkey = entry.default_hotkey();
                 let default_modifier = entry.default_modifier();
                 InventoryCellProps {

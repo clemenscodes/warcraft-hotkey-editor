@@ -6,21 +6,21 @@ use warcraft_keybinds::GridLayout;
 
 /// Reassign every binding's hotkey from a grid layout. Its outcome is the number
 /// of bindings whose hotkey actually changed.
-pub struct ApplyGridLayout {
+pub struct ApplyGridLayoutCommand {
     layout: GridLayout,
 }
 
-impl ApplyGridLayout {
+impl ApplyGridLayoutCommand {
     pub fn new(layout: GridLayout) -> Self {
         Self { layout }
     }
 }
 
-impl Layered for ApplyGridLayout {
+impl Layered for ApplyGridLayoutCommand {
     type Layer = ApplicationLayer;
 }
 
-impl Command<CustomKeys> for ApplyGridLayout {
+impl Command<CustomKeys> for ApplyGridLayoutCommand {
     type Outcome = usize;
 
     fn execute(self, keys: &mut CustomKeys) -> usize {
@@ -30,11 +30,11 @@ impl Command<CustomKeys> for ApplyGridLayout {
 
 #[cfg(test)]
 mod ddd_marker_tests {
-    use super::ApplyGridLayout;
+    use super::ApplyGridLayoutCommand;
     use crate::services::customkeys::commands::assert_command;
 
     #[test]
     fn apply_grid_layout_is_a_command() {
-        assert_command::<ApplyGridLayout>();
+        assert_command::<ApplyGridLayoutCommand>();
     }
 }

@@ -30,7 +30,7 @@ impl InventoryCellView {
         let dragging_source = props.dragging_source;
         let drop_target = props.drop_target;
         let binding_map = props.binding_map;
-        let section_id = &props.section_id;
+        let section_id = props.section_id;
         let default_hotkey = props.default_hotkey;
         let default_modifier = props.default_modifier;
         let slot_index = props.slot_index;
@@ -59,21 +59,13 @@ impl InventoryCellView {
         };
         let picker_conflicts = map_guard.picker_conflicts(section_id, effective_modifier);
         drop(map_guard);
-        let is_editing = editing_section
-            .read()
-            .as_deref()
-            .map(|active| active == section_id.as_str())
-            .unwrap_or(false);
+        let is_editing = *editing_section.read() == Some(section_id);
         let is_being_dragged = dragging_source
             .read()
             .as_ref()
-            .map(|source| source.section_id == *section_id)
+            .map(|source| source.section_id == section_id)
             .unwrap_or(false);
-        let is_drop_target = drop_target
-            .read()
-            .as_deref()
-            .map(|target| target == section_id.as_str())
-            .unwrap_or(false);
+        let is_drop_target = *drop_target.read() == Some(section_id);
         let state = if is_conflict {
             InventoryCellState::Conflict
         } else if is_editing || is_drop_target {

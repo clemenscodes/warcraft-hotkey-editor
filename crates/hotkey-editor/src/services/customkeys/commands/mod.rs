@@ -5,11 +5,11 @@
 //! and persists). Commands are `ApplicationLayer` — they live here in the
 //! renderer crate, not in the pure-domain `warcraft-keybinds` crate.
 
-pub mod apply_grid_layout;
-pub mod move_slot;
-pub mod set_hotkey;
-pub mod set_system_hotkey;
-pub mod swap_system_bindings;
+pub mod apply_grid_layout_command;
+pub mod move_slot_command;
+pub mod set_hotkey_command;
+pub mod set_system_hotkey_command;
+pub mod swap_system_bindings_command;
 
 #[cfg(test)]
 pub(crate) fn assert_command<TheCommand>()

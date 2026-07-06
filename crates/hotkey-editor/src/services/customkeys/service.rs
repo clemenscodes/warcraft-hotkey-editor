@@ -11,13 +11,14 @@ use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::ImportOutcome;
 use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::MoveRequest;
+use warcraft_keybinds::WarcraftObjectId;
 
 use crate::repository::custom_keys_repository::CustomKeysRepository;
-use crate::services::customkeys::commands::apply_grid_layout::ApplyGridLayout;
-use crate::services::customkeys::commands::move_slot::MoveSlot;
-use crate::services::customkeys::commands::set_hotkey::SetHotkey;
-use crate::services::customkeys::commands::set_system_hotkey::SetSystemHotkey;
-use crate::services::customkeys::commands::swap_system_bindings::SwapSystemBindings;
+use crate::services::customkeys::commands::apply_grid_layout_command::ApplyGridLayoutCommand;
+use crate::services::customkeys::commands::move_slot_command::MoveSlotCommand;
+use crate::services::customkeys::commands::set_hotkey_command::SetHotkeyCommand;
+use crate::services::customkeys::commands::set_system_hotkey_command::SetSystemHotkeyCommand;
+use crate::services::customkeys::commands::swap_system_bindings_command::SwapSystemBindingsCommand;
 
 /// The application-layer service that owns the live [`CustomKeys`] aggregate and
 /// is the only sanctioned way for the renderer to mutate it. Every command runs
@@ -41,35 +42,32 @@ impl CustomKeysService {
     }
 
     pub fn apply_grid_layout(&self, layout: GridLayout) -> usize {
-        let command = ApplyGridLayout::new(layout);
+        let command = ApplyGridLayoutCommand::new(layout);
         self.dispatch(command)
     }
 
     pub fn override_hotkey(&self, target: HotkeyTarget, token: Option<HotkeyToken>) {
-        let command = SetHotkey::new(target, token);
+        let command = SetHotkeyCommand::new(target, token);
         self.dispatch(command);
     }
 
     pub fn move_slot(&self, request: &MoveRequest<'_>) {
         let owned_request = *request;
-        let command = MoveSlot::new(owned_request);
+        let command = MoveSlotCommand::new(owned_request);
         self.dispatch(command);
     }
 
     /// Set a single system keybind's hotkey, re-normalizing and persisting through the
     /// commit boundary. The renderer never writes the aggregate directly.
-    pub fn set_system_hotkey(&self, section_id: &str, code: KeyCode) {
-        let owned_section_id = section_id.to_string();
-        let command = SetSystemHotkey::new(owned_section_id, code);
+    pub fn set_system_hotkey(&self, section_id: WarcraftObjectId, code: KeyCode) {
+        let command = SetSystemHotkeyCommand::new(section_id, code);
         self.dispatch(command);
     }
 
     /// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture),
     /// re-normalizing and persisting through the commit boundary.
-    pub fn swap_system_bindings(&self, source_id: &str, target_id: &str) {
-        let owned_source_id = source_id.to_string();
-        let owned_target_id = target_id.to_string();
-        let command = SwapSystemBindings::new(owned_source_id, owned_target_id);
+    pub fn swap_system_bindings(&self, source_id: WarcraftObjectId, target_id: WarcraftObjectId) {
+        let command = SwapSystemBindingsCommand::new(source_id, target_id);
         self.dispatch(command);
     }
 

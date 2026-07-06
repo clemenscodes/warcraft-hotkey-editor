@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use warcraft_api::SystemKeybindModifier;
-use warcraft_keybinds::{CustomKeys, EffectiveBinding, KeyCode, SystemBindingMap};
+use warcraft_keybinds::{
+    CustomKeys, EffectiveBinding, KeyCode, SystemBindingMap, WarcraftObjectId,
+};
 
 use super::hooks::SlotButtonModel;
 use super::state::SlotButtonState;
@@ -25,7 +27,7 @@ impl SlotBinding {
     pub(super) fn resolve(
         custom_keys: Option<&CustomKeys>,
         binding_map: &SystemBindingMap,
-        section_id: &str,
+        section_id: WarcraftObjectId,
         default_hotkey: u32,
         default_modifier: SystemKeybindModifier,
     ) -> Self {

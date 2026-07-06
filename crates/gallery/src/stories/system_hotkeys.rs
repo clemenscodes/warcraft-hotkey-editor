@@ -19,7 +19,7 @@ use hotkey_editor::components::app::components::shell::components::header::compo
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap};
+use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap, WarcraftObjectId};
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -133,7 +133,7 @@ fn inventory_drag_overlay_empty() -> Element {
 
 fn control_groups_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         ControlGroupsHotkeysView { loaded_keys, editing_section }
     }
@@ -141,7 +141,7 @@ fn control_groups_view() -> Element {
 
 fn hero_selection_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         HeroSelectionHotkeysView { loaded_keys, editing_section }
     }
@@ -149,7 +149,7 @@ fn hero_selection_view() -> Element {
 
 fn inventory_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
         InventoryHotkeysView { loaded_keys, editing_section, drag_follower }
@@ -158,7 +158,7 @@ fn inventory_view() -> Element {
 
 fn inventory_grid() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
         InventoryGrid { loaded_keys, editing_section, drag_follower }
@@ -186,7 +186,7 @@ fn key_picker_dialog_open() -> Element {
 fn list_view_general_commands() -> Element {
     let category = SystemHotkeysCategory::GeneralCommands;
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         SystemHotkeysListView { category, loaded_keys, editing_section }
     }
@@ -204,13 +204,14 @@ fn inventory_cell_default() -> Element {
     let entries = SystemHotkeysCategory::Inventory.entries();
     let first_entry = entries[0];
     let slot_index: usize = 0;
-    let section_id = first_entry.section_id().to_string();
+    let section_key = first_entry.section_id();
+    let section_id = WarcraftObjectId::from(section_key);
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let dragging_source = use_signal(|| None::<InventoryDragSource>);
-    let drop_target = use_signal(|| None::<String>);
+    let drop_target = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
@@ -235,11 +236,12 @@ fn inventory_cell_default() -> Element {
 fn key_capture_cell_default() -> Element {
     let entries = SystemHotkeysCategory::GeneralCommands.entries();
     let first_entry = entries[0];
-    let section_id = first_entry.section_id().to_string();
+    let section_key = first_entry.section_id();
+    let section_id = WarcraftObjectId::from(section_key);
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
         SystemBindingMap::build(guard.as_ref())
@@ -259,12 +261,13 @@ fn key_capture_cell_default() -> Element {
 fn system_hotkeys_list_entry_default() -> Element {
     let entries = SystemHotkeysCategory::GeneralCommands.entries();
     let first_entry = entries[0];
-    let section_id = first_entry.section_id().to_string();
+    let section_key = first_entry.section_id();
+    let section_id = WarcraftObjectId::from(section_key);
     let comment = first_entry.comment().to_string();
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
         SystemBindingMap::build(guard.as_ref())
@@ -288,11 +291,12 @@ fn slot_button_default() -> Element {
     let entries = SystemHotkeysCategory::Inventory.entries();
     let first_entry = entries[0];
     let slot_label = "Slot 1".to_string();
-    let section_id = first_entry.section_id().to_string();
+    let section_key = first_entry.section_id();
+    let section_id = WarcraftObjectId::from(section_key);
     let default_hotkey = first_entry.default_hotkey();
     let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<String>);
+    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let binding_map = use_memo(move || {
         let guard = loaded_keys.read();
         SystemBindingMap::build(guard.as_ref())

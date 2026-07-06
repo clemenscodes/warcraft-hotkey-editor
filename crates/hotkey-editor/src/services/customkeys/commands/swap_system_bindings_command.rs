@@ -2,16 +2,17 @@ use ddd::ApplicationLayer;
 use ddd::Command;
 use ddd::Layered;
 use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::WarcraftObjectId;
 
-/// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture).
-/// Owns both section ids so the command is self-contained.
-pub struct SwapSystemBindings {
-    source_id: String,
-    target_id: String,
+/// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture),
+/// each addressed by its section's `WarcraftObjectId`.
+pub struct SwapSystemBindingsCommand {
+    source_id: WarcraftObjectId,
+    target_id: WarcraftObjectId,
 }
 
-impl SwapSystemBindings {
-    pub fn new(source_id: String, target_id: String) -> Self {
+impl SwapSystemBindingsCommand {
+    pub fn new(source_id: WarcraftObjectId, target_id: WarcraftObjectId) -> Self {
         Self {
             source_id,
             target_id,
@@ -19,25 +20,25 @@ impl SwapSystemBindings {
     }
 }
 
-impl Layered for SwapSystemBindings {
+impl Layered for SwapSystemBindingsCommand {
     type Layer = ApplicationLayer;
 }
 
-impl Command<CustomKeys> for SwapSystemBindings {
+impl Command<CustomKeys> for SwapSystemBindingsCommand {
     type Outcome = ();
 
     fn execute(self, keys: &mut CustomKeys) {
-        keys.swap_system_bindings(&self.source_id, &self.target_id);
+        keys.swap_system_bindings(self.source_id, self.target_id);
     }
 }
 
 #[cfg(test)]
 mod ddd_marker_tests {
-    use super::SwapSystemBindings;
+    use super::SwapSystemBindingsCommand;
     use crate::services::customkeys::commands::assert_command;
 
     #[test]
     fn swap_system_bindings_is_a_command() {
-        assert_command::<SwapSystemBindings>();
+        assert_command::<SwapSystemBindingsCommand>();
     }
 }
