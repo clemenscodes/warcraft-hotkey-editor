@@ -3,7 +3,7 @@ mod logic;
 mod props;
 mod style;
 
-use components::hero_level_picker::{HeroLevelPicker, HeroLevelPickerProps};
+use components::hero_level_picker::HeroLevelPicker;
 use components::unit_name::{UnitName, UnitNameProps};
 use dioxus::prelude::*;
 pub use props::UnitNameRowProps;
@@ -15,14 +15,13 @@ assert_component!(UnitNameRow);
 #[component]
 pub fn UnitNameRow(props: UnitNameRowProps) -> Element {
     let name = UnitNameProps::from(&props);
-    let picker = HeroLevelPickerProps::from(&props);
     let has_hero_attributes = props.has_hero_attributes;
     rsx! {
         div {
             class: CLASS,
             UnitName { ..name }
             if has_hero_attributes {
-                HeroLevelPicker { ..picker }
+                HeroLevelPicker {}
             }
         }
     }

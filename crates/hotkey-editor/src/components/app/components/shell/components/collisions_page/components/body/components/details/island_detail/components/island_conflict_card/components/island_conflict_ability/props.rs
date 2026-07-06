@@ -1,9 +1,10 @@
-use crate::components::app::components::shell::components::collisions_page::logic::CarrierDialogData;
+use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 
 /// One ability of an island conflict: a big icon and name that open the carriers
-/// dialog, plus an optional "+N more" link when the ability is carried by more
-/// units than the one shown.
+/// dialog, plus an optional "+N more" link when the ability is carried by more units
+/// than the one shown. `inspected` is the opaque identity this ability opens the dialog
+/// on — a name and a carrier-id list, resolved to views only by the dialog's host.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictAbilityProps {
     #[props(into)]
@@ -12,6 +13,5 @@ pub struct IslandConflictAbilityProps {
     pub ability_id: String,
     pub icon_url: Option<String>,
     pub extra_count: usize,
-    pub carrier_unit_ids: Vec<String>,
-    pub carrier_dialog: Signal<Option<CarrierDialogData>>,
+    pub inspected: InspectedAbility,
 }

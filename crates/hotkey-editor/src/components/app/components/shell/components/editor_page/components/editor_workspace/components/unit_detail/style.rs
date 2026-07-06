@@ -14,7 +14,7 @@ classes! {
         "gap-[clamp(0.95rem,1.6vh,1.5rem)]",
         "border",
         "border-warcraft-blue-deep",
-        "rounded-[12px]",
+        "rounded-container",
         "bg-panel-dark-diag-70",
         "shadow-bevel-hl-3",
         "overflow-y-auto",
@@ -25,7 +25,7 @@ classes! {
         "[&::-webkit-scrollbar]:w-[5px]",
         "[&::-webkit-scrollbar-track]:bg-transparent",
         "[&::-webkit-scrollbar-thumb]:bg-warcraft-gold/35",
-        "[&::-webkit-scrollbar-thumb]:rounded-[3px]",
+        "[&::-webkit-scrollbar-thumb]:rounded-hairline",
         "[&::-webkit-scrollbar-thumb:hover]:bg-warcraft-gold/55",
     ],
     mobile: tw![
@@ -35,7 +35,7 @@ classes! {
         "mobile:w-full",
         "mobile:box-border",
         "mobile:p-[1.25rem]",
-        "mobile:rounded-[8px]",
+        "mobile:rounded-card",
         "mobile:overflow-visible",
     ],
     tablet: tw![
@@ -45,7 +45,7 @@ classes! {
         "tablet:w-full",
         "tablet:box-border",
         "tablet:p-[1.25rem]",
-        "tablet:rounded-[8px]",
+        "tablet:rounded-card",
         "tablet:overflow-visible",
     ],
 }

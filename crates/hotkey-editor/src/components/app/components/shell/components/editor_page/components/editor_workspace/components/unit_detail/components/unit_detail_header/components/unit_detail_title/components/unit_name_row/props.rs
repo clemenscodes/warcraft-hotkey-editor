@@ -5,8 +5,4 @@ use dioxus::prelude::*;
 pub struct UnitNameRowProps {
     pub unit_name: &'static str,
     pub has_hero_attributes: bool,
-    pub current_level: u32,
-    pub is_open: bool,
-    pub selected_hero_level: Signal<u32>,
-    pub level_picker_open: Signal<bool>,
 }

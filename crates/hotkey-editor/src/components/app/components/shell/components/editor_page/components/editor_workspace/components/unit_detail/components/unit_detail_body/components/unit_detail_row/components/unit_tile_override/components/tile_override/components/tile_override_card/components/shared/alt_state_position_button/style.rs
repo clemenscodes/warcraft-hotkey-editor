@@ -16,7 +16,7 @@ classes! {
         "border-2",
         "border-race-human",
         "text-warcraft-text-secondary",
-        "rounded-[4px]",
+        "rounded-control",
         "cursor-pointer",
         "transition-[background,border-color,color]",
         "duration-[0.12s]",

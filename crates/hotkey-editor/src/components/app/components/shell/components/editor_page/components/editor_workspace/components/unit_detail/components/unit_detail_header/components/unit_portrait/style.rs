@@ -6,7 +6,7 @@ classes! {
         "[image-rendering:auto]",
         "border-2",
         "border-warcraft-blue",
-        "rounded-[4px]",
+        "rounded-control",
         "[box-shadow:0_0_6px_color-mix(in_oklab,var(--color-warcraft-shadow)_50%,transparent)]",
         "object-cover",
         "bg-warcraft-bg-panel/70",

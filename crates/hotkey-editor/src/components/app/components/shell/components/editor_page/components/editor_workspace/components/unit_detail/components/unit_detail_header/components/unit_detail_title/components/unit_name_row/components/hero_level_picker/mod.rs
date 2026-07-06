@@ -1,25 +1,27 @@
 pub mod components;
-mod logic;
-mod props;
+mod hooks;
 mod style;
 
-use components::hero_level_backdrop::{HeroLevelBackdrop, HeroLevelBackdropProps};
-use components::hero_level_menu::{HeroLevelMenu, HeroLevelMenuProps};
-use components::hero_level_trigger::{HeroLevelTrigger, HeroLevelTriggerProps};
+use components::hero_level_backdrop::HeroLevelBackdrop;
+use components::hero_level_menu::HeroLevelMenu;
+use components::hero_level_trigger::HeroLevelTrigger;
 use dioxus::prelude::*;
-pub use props::HeroLevelPickerProps;
+use hooks::{HeroLevelPickerView, use_hero_level_picker};
 use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(HeroLevelPicker);
 
 /// The hero-level dropdown: the trigger, and — while open — the menu and its
-/// dismissing backdrop.
+/// dismissing backdrop. Owns its own open state, sources the selected level from
+/// context, and mounts its own menu — so nothing is threaded in from the header.
 #[component]
-pub fn HeroLevelPicker(props: HeroLevelPickerProps) -> Element {
-    let trigger = HeroLevelTriggerProps::from(&props);
-    let menu = HeroLevelMenuProps::from(&props);
-    let backdrop = HeroLevelBackdropProps::from(&props);
-    let is_open = props.is_open;
+pub fn HeroLevelPicker() -> Element {
+    let HeroLevelPickerView {
+        is_open,
+        trigger,
+        menu,
+        backdrop,
+    } = use_hero_level_picker();
     rsx! {
         div {
             class: CLASS,

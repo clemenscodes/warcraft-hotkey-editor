@@ -7,7 +7,7 @@ classes! {
         "object-cover",
         "border",
         "border-warcraft-blue",
-        "rounded-[3px]",
+        "rounded-hairline",
         "bg-warcraft-bg-panel/70",
         "text-transparent",
         "text-[0]",

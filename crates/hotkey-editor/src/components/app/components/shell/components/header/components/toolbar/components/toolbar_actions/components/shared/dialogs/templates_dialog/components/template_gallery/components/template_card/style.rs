@@ -30,12 +30,12 @@ classes! {
         "mobile:gap-[10px]",
         "mobile:py-[12px]",
         "mobile:px-[14px]",
-        "mobile:rounded-[10px]",
+        "mobile:rounded-panel",
     ],
     tablet: tw![
         "tablet:gap-[10px]",
         "tablet:py-[12px]",
         "tablet:px-[14px]",
-        "tablet:rounded-[10px]",
+        "tablet:rounded-panel",
     ],
 }

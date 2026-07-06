@@ -10,7 +10,7 @@ classes! {
         "bg-transparent",
         "border",
         "border-warcraft-gold/30",
-        "rounded-[8px]",
+        "rounded-card",
         "text-warcraft-gold/70",
         "text-[0.9rem]",
         "cursor-pointer",

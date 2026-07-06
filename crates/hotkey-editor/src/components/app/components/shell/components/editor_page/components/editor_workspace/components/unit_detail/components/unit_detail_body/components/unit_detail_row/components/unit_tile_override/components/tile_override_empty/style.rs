@@ -14,7 +14,7 @@ classes! {
         "border",
         "border-dashed",
         "border-warcraft-blue-bright",
-        "rounded-[10px]",
+        "rounded-panel",
         "bg-warcraft-bg-mid/45",
         "text-warcraft-text-faint",
         "text-[1.8rem]",

@@ -13,7 +13,7 @@ classes! {
         "bg-warcraft-bg-mid/85",
         "border",
         "border-warcraft-blue-deep",
-        "rounded-[6px]",
+        "rounded-tile",
         "min-w-0",
     ],
     mobile: tw![

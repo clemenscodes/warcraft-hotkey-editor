@@ -1,54 +1,48 @@
 pub mod components;
+mod hooks;
 mod props;
 mod style;
 
-use tw_macro::assert_component;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_icon::{
-    ConflictAbilityIcon, ConflictAbilityIconProps,
-};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_icon::ConflictAbilityIcon;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use crate::components::app::components::shell::components::collisions_page::logic::CarrierDialogData;
+use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;
+use hooks::{IslandConflictAbilityView, use_island_conflict_ability};
 pub use props::IslandConflictAbilityProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(IslandConflictAbility);
 
 /// One ability column of an island conflict: a clickable icon over the name and id,
-/// with an optional "+N more" link. Both the icon and the link open the same
-/// carriers dialog for this ability.
+/// with an optional "+N more" link. Both the icon and the link open this ability's
+/// carriers dialog. The column owns the open state and mounts the dialog's host beneath
+/// itself, so no ancestor knows the dialog exists.
 #[component]
 pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
-    let ability_name = props.ability_name;
-    let ability_id = props.ability_id;
-    let extra_count = props.extra_count;
-    let mut carrier_dialog = props.carrier_dialog;
-    let icon = ConflictAbilityIconProps {
-        src: props.icon_url,
-        alt: ability_name.clone(),
-    };
-    let open_dialog_name = ability_name.clone();
-    let carrier_unit_ids = props.carrier_unit_ids;
-    let open = move |_event: MouseEvent| {
-        let data = CarrierDialogData::new(open_dialog_name.clone(), &carrier_unit_ids);
-        carrier_dialog.set(Some(data));
-    };
-    let open_from_icon = EventHandler::new(open.clone());
-    let open_from_more = EventHandler::new(open);
+    let IslandConflictAbilityView {
+        open_state,
+        icon,
+        onclick,
+        ability_name,
+        ability_id,
+        extra_count,
+    } = use_island_conflict_ability(&props);
     rsx! {
         div {
             class: CLASS,
             ConflictAbilityTrigger {
-                onclick: open_from_icon,
+                onclick,
                 ConflictAbilityIcon { ..icon }
             }
             ConflictAbilityName { text: ability_name }
             ConflictObjectId { text: ability_id }
             if extra_count > 0 {
-                ConflictMore { count: extra_count, onclick: open_from_more }
+                ConflictMore { count: extra_count, onclick }
             }
         }
+        CarriersDialogHost { open_state }
     }
 }

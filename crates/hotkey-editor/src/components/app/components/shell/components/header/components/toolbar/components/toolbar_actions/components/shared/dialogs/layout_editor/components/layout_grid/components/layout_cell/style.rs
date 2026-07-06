@@ -10,7 +10,7 @@ classes! {
         "justify-center",
         "p-0",
         "border-2",
-        "rounded-[10px]",
+        "rounded-panel",
         "text-[clamp(3.5rem,5vh,6rem)]",
         "leading-none",
         "uppercase",

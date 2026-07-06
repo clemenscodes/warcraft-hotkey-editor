@@ -15,7 +15,7 @@ classes! {
         "bg-warcraft-gold-dark/75",
         "border-2",
         "border-warcraft-gold",
-        "rounded-[6px]",
+        "rounded-tile",
         "text-warcraft-gold",
         "text-[2rem]",
         "leading-none",

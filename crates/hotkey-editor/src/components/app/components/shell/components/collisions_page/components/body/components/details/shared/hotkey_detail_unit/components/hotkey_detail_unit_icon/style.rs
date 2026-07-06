@@ -5,7 +5,7 @@ classes! {
         "w-[80px]",
         "border",
         "border-warcraft-blue",
-        "rounded-[4px]",
+        "rounded-control",
         "object-cover",
     ],
 }

@@ -1,5 +1,6 @@
 pub mod components;
 mod data;
+mod hooks;
 mod logic;
 mod props;
 mod style;
@@ -10,7 +11,7 @@ use components::build_menu::BuildMenu;
 use components::research_menu::ResearchMenu;
 use components::uprooted_menu::UprootedMenu;
 use dioxus::prelude::*;
-use logic::UnitCommandGridsModel;
+use hooks::use_unit_command_grids;
 pub use props::UnitCommandGridsProps;
 use style::CLASS;
 assert_component!(UnitCommandGrids);
@@ -19,7 +20,7 @@ assert_component!(UnitCommandGrids);
 /// menus the unit has. Each optional menu renders itself away when the unit lacks it.
 #[component]
 pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
-    let model = UnitCommandGridsModel::from(&props);
+    let model = use_unit_command_grids(&props);
     let build_menu = model.build_menu;
     let uprooted = model.uprooted;
     let research = model.research;

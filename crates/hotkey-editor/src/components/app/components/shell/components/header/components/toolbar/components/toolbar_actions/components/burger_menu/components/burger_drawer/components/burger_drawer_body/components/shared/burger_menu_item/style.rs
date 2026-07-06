@@ -13,7 +13,7 @@ classes! {
         "bg-panel-gold-resting",
         "border",
         "border-warcraft-gold-border",
-        "rounded-[8px]",
+        "rounded-card",
         "text-warcraft-text-secondary",
         "text-[0.9rem]",
         "tracking-[0.05em]",

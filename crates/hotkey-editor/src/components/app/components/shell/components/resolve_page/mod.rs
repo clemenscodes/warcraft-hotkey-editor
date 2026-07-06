@@ -5,7 +5,6 @@ mod props;
 mod style;
 
 use components::breadcrumbs::Breadcrumbs;
-use components::carriers_dialog_host::CarriersDialogHost;
 use components::clear_state::ClearState;
 use components::empty_state::EmptyState;
 use components::plan_body::PlanBody;
@@ -49,7 +48,6 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
             PlanHeader { ..plan.header }
             Breadcrumbs { ..plan.breadcrumbs }
             PlanBody { ..plan.body }
-            CarriersDialogHost { ..plan.carriers_dialog_host }
         }
     }
 }

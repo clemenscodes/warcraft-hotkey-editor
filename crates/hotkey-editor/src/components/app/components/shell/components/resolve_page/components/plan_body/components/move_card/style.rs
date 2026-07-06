@@ -9,7 +9,7 @@ classes! {
         "bg-warcraft-bg-mid/45",
         "border",
         "border-warcraft-blue-bright-deep",
-        "rounded-[10px]",
+        "rounded-panel",
         "data-[stuck=true]:border-race-orc/50",
     ],
 }

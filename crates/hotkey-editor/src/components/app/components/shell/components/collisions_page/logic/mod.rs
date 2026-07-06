@@ -126,36 +126,6 @@ impl ConflictView {
     }
 }
 
-/// The data backing the carriers dialog: the shared ability's name and every
-/// unit that carries it, resolved to icons and names when the dialog opens.
-#[derive(Clone, PartialEq)]
-pub struct CarrierDialogData {
-    ability_name: String,
-    carriers: Vec<UnitIconView>,
-}
-
-impl CarrierDialogData {
-    pub(crate) fn new(ability_name: String, carrier_unit_ids: &[String]) -> Self {
-        let mut carriers: Vec<UnitIconView> = Vec::with_capacity(carrier_unit_ids.len());
-        for carrier_unit_id in carrier_unit_ids {
-            let carrier = UnitIconView::resolve(carrier_unit_id);
-            carriers.push(carrier);
-        }
-        Self {
-            ability_name,
-            carriers,
-        }
-    }
-
-    pub(crate) fn ability_name(&self) -> &str {
-        &self.ability_name
-    }
-
-    pub(crate) fn carriers(&self) -> &[UnitIconView] {
-        &self.carriers
-    }
-}
-
 /// Identity of a conflict by the two abilities that clash. Within one island
 /// the same mover/anchor pair can appear on many units (every unit that
 /// carries both abilities at the cell); they are the same collision with the

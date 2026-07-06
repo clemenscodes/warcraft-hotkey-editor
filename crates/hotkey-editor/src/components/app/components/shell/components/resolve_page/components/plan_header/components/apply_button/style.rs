@@ -7,7 +7,7 @@ classes! {
         "py-[0.55rem]",
         "border",
         "border-warcraft-gold",
-        "rounded-[8px]",
+        "rounded-card",
         "cursor-pointer",
         "text-[1.5rem]",
         "text-warcraft-gold",

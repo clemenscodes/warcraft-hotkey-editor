@@ -38,7 +38,7 @@ classes! {
         "after:py-3",
         "after:border",
         "after:border-warcraft-gold",
-        "after:rounded-[4px]",
+        "after:rounded-control",
         "after:bg-panel-dark-solid",
         "after:text-warcraft-gold",
         "after:text-[1.5rem]",
@@ -57,7 +57,7 @@ classes! {
         "[&[data-tooltip]:not([data-tooltip=''])]:focus-visible:after:opacity-100",
     ],
     mobile: tw![
-        "mobile:border-[8px]",
+        "mobile:border-8",
         "mobile:px-[0.3rem]",
         "mobile:py-[0.45rem]",
         "mobile:gap-[0.25rem]",
@@ -65,7 +65,7 @@ classes! {
         "mobile:min-h-0",
     ],
     tablet: tw![
-        "tablet:border-[8px]",
+        "tablet:border-8",
         "tablet:px-[0.3rem]",
         "tablet:py-[0.45rem]",
         "tablet:gap-[0.25rem]",

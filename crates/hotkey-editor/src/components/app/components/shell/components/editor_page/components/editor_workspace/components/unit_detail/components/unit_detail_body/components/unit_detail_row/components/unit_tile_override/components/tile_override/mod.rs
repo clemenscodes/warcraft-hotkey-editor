@@ -12,7 +12,6 @@ use components::tile_override_key_picker::TileOverrideKeyPicker;
 use components::tile_override_upgrade_picker::TileOverrideUpgradePicker;
 use hooks::use_tile_override;
 
-pub use components::position_picker::{AltPositionPicker, UpgradePositionPicker};
 pub use props::TileOverrideProps;
 
 /// The per-tile override editor. A pure renderer: the composed hook shapes the

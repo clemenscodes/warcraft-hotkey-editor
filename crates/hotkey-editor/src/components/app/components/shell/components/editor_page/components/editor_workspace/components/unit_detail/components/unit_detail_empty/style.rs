@@ -13,7 +13,7 @@ classes! {
         "p-8",
         "border",
         "border-warcraft-blue-deep",
-        "rounded-[12px]",
+        "rounded-container",
         "bg-panel-dark-diag-70",
         "shadow-bevel-hl-3",
         "text-warcraft-text-faint",
@@ -22,6 +22,6 @@ classes! {
     ],
     mobile: tw![
         "mobile:p-[0.85rem]",
-        "mobile:rounded-[6px]",
+        "mobile:rounded-tile",
     ],
 }

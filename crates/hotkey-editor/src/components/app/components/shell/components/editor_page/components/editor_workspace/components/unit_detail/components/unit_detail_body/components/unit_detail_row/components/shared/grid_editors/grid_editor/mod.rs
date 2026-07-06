@@ -47,14 +47,14 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element 
         let layout_snapshot = *grid_layout.read();
         let selected_snapshot = *selected_slot.read();
         let selected_research_snapshot = *selected_from_research.read();
-        let input = CommandGridRenderInput {
-            slots: &slot_ids,
-            layout: layout_snapshot,
-            selected: selected_snapshot,
-            selected_is_research: selected_research_snapshot,
-            tier_overrides: &tier_guard,
-            restrict_draggable_to: &restrict_draggable_to,
-        };
+        let input = CommandGridRenderInput::new(
+            &slot_ids,
+            layout_snapshot,
+            selected_snapshot,
+            selected_research_snapshot,
+            &tier_guard,
+            &restrict_draggable_to,
+        );
         file.rendered_command_grid(&behavior, &input)
     });
     rsx! {

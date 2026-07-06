@@ -12,7 +12,7 @@ classes! {
         "gap-[0.2rem]",
         "p-0",
         "border",
-        "rounded-[6px]",
+        "rounded-tile",
         "text-[clamp(2rem,3.5vw,5rem)]",
         "leading-none",
         "cursor-pointer",

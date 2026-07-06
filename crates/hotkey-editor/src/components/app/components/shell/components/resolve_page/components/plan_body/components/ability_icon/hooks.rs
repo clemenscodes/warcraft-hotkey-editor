@@ -1,0 +1,48 @@
+use super::components::carrier_badge::CarrierBadgeProps;
+use super::components::fight_icon::FightIconProps;
+use super::props::AbilityIconProps;
+use crate::services::carriers::InspectedAbility;
+use dioxus::prelude::*;
+
+/// The ability icon's shaped state: the open-state signal it owns, the icon and badge
+/// props, the tooltip, whether it is disabled, and the click handler that opens this
+/// ability's carriers dialog.
+pub(super) struct AbilityIconView {
+    pub(super) open_state: Signal<Option<InspectedAbility>>,
+    pub(super) icon: FightIconProps,
+    pub(super) badge: CarrierBadgeProps,
+    pub(super) title: String,
+    pub(super) disabled: bool,
+    pub(super) onclick: EventHandler<MouseEvent>,
+}
+
+/// Owns the icon's local open state and wires the click that opens its carriers dialog,
+/// so the body only names the result and renders.
+pub(super) fn use_ability_icon(props: &AbilityIconProps) -> AbilityIconView {
+    let mut open_state = use_signal(|| None::<InspectedAbility>);
+    let inspected = props.inspected.clone();
+    let onclick = EventHandler::new(move |_event: MouseEvent| {
+        let opened = inspected.clone();
+        open_state.set(Some(opened));
+    });
+    let name = props.name.clone();
+    let carrier_count = props.carrier_count;
+    let title = format!("{name} — {carrier_count} carriers");
+    let icon = FightIconProps {
+        src: props.icon_url.clone(),
+        alt: name,
+    };
+    let badge = CarrierBadgeProps {
+        count: carrier_count,
+        is_winner: props.is_winner,
+    };
+    let disabled = props.disabled;
+    AbilityIconView {
+        open_state,
+        icon,
+        badge,
+        title,
+        disabled,
+        onclick,
+    }
+}

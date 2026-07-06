@@ -1,4 +1,4 @@
-pub mod position_picker;
+pub mod shared;
 pub mod tile_override_alt_picker;
 pub mod tile_override_card;
 pub mod tile_override_key_picker;

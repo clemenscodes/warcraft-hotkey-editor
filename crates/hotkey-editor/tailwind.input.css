@@ -71,6 +71,17 @@
   --color-warcraft-shadow: #000000;
   --color-warcraft-highlight: #ffffff;
 
+  /* Design-system corner radii — promoted from the recurring inline
+     rounded-[Npx] values, named by the role that dominates each size. Each is
+     the exact pixel radius it replaces; the proportional `cqi` radii inside
+     self-scaling "drawing" leaves stay inline. */
+  --radius-hairline: 3px;
+  --radius-control: 4px;
+  --radius-tile: 6px;
+  --radius-card: 8px;
+  --radius-panel: 10px;
+  --radius-container: 12px;
+
   /* Design-system shadows — promoted verbatim from the recurring inline
      [box-shadow:…] values so a component references the effect by name. Each is
      the exact effect it replaces; distinct effects stay distinct tokens. */
@@ -122,6 +133,36 @@
     color-mix(in oklab, var(--color-warcraft-gold) 30%, transparent);
   --shadow-glow-8-3: 0 0 8px
     color-mix(in oklab, var(--color-warcraft-gold) 45%, transparent);
+
+  /* Race-colored selection/hover glows — the same glow family as the gold ones
+     above, one token per race so a component names the effect (shadow-glow-orc-12)
+     instead of spelling out the color-mix. `-raised` adds the card drop shadow;
+     `-22` adds the inner highlight. Verbatim promotions of the recurring inline
+     values; the em/cqi race glows inside self-scaling drawings stay inline. */
+  --shadow-glow-human-6: 0 0 6px color-mix(in oklab, var(--color-race-human) 30%, transparent);
+  --shadow-glow-orc-6: 0 0 6px color-mix(in oklab, var(--color-race-orc) 30%, transparent);
+  --shadow-glow-nightelf-6: 0 0 6px color-mix(in oklab, var(--color-race-nightelf) 30%, transparent);
+  --shadow-glow-undead-6: 0 0 6px color-mix(in oklab, var(--color-race-undead) 30%, transparent);
+  --shadow-glow-human-8: 0 0 8px color-mix(in oklab, var(--color-race-human) 30%, transparent);
+  --shadow-glow-orc-8: 0 0 8px color-mix(in oklab, var(--color-race-orc) 30%, transparent);
+  --shadow-glow-nightelf-8: 0 0 8px color-mix(in oklab, var(--color-race-nightelf) 30%, transparent);
+  --shadow-glow-undead-8: 0 0 8px color-mix(in oklab, var(--color-race-undead) 30%, transparent);
+  --shadow-glow-human-12: 0 0 12px color-mix(in oklab, var(--color-race-human) 45%, transparent);
+  --shadow-glow-orc-12: 0 0 12px color-mix(in oklab, var(--color-race-orc) 45%, transparent);
+  --shadow-glow-nightelf-12: 0 0 12px color-mix(in oklab, var(--color-race-nightelf) 45%, transparent);
+  --shadow-glow-undead-12: 0 0 12px color-mix(in oklab, var(--color-race-undead) 45%, transparent);
+  --shadow-glow-human-14: 0 0 14px color-mix(in oklab, var(--color-race-human) 45%, transparent);
+  --shadow-glow-orc-14: 0 0 14px color-mix(in oklab, var(--color-race-orc) 45%, transparent);
+  --shadow-glow-nightelf-14: 0 0 14px color-mix(in oklab, var(--color-race-nightelf) 45%, transparent);
+  --shadow-glow-undead-14: 0 0 14px color-mix(in oklab, var(--color-race-undead) 45%, transparent);
+  --shadow-glow-human-14-raised: 0 0 14px color-mix(in oklab, var(--color-race-human) 45%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-glow-orc-14-raised: 0 0 14px color-mix(in oklab, var(--color-race-orc) 45%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-glow-nightelf-14-raised: 0 0 14px color-mix(in oklab, var(--color-race-nightelf) 45%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-glow-undead-14-raised: 0 0 14px color-mix(in oklab, var(--color-race-undead) 45%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-glow-human-22: 0 0 22px color-mix(in oklab, var(--color-race-human) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
+  --shadow-glow-orc-22: 0 0 22px color-mix(in oklab, var(--color-race-orc) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
+  --shadow-glow-nightelf-22: 0 0 22px color-mix(in oklab, var(--color-race-nightelf) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
+  --shadow-glow-undead-22: 0 0 22px color-mix(in oklab, var(--color-race-undead) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
   --shadow-inset-ring:
     inset 0 0 0 1px
       color-mix(in oklab, var(--color-warcraft-gold) 65%, transparent),

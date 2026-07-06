@@ -12,7 +12,7 @@ classes! {
         "p-[clamp(0.9rem,1.2vh,1.25rem)_clamp(1rem,1vw,1.5rem)]",
         "border",
         "border-warcraft-blue-deep",
-        "rounded-[12px]",
+        "rounded-container",
         "bg-panel-dark-diag-70",
         "overflow-hidden",
         "data-[empty=true]:items-center",

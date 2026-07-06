@@ -29,7 +29,7 @@ classes! {
         "group-data-[open=true]:text-[clamp(14px,3.8vw,17px)]",
         "group-data-[open=true]:tracking-[0.05em]",
         "group-data-[open=true]:min-h-[44px]",
-        "group-data-[open=true]:rounded-[6px]",
+        "group-data-[open=true]:rounded-tile",
         "group-data-[open=true]:whitespace-normal",
     ],
 }

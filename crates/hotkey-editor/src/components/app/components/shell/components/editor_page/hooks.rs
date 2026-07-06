@@ -1,9 +1,7 @@
 use super::components::editor_tabs_bar::EditorTabsBarProps;
 use super::components::editor_workspace::EditorWorkspaceProps;
 use super::props::EditorPageProps;
-use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
-use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::context::{use_synced_route, use_view_navigation};
 use crate::services::navigation::editor_nav::DecodedEditorNav;
@@ -26,8 +24,6 @@ pub(super) struct EditorPageModel {
 pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
     let navigation = use_view_navigation();
     let editor = use_editor_state();
-    let loaded_keys = use_loaded_keys();
-    let grid_layout = use_grid_layout();
     let mut synced_route = use_synced_route();
     let decoded = DecodedEditorNav::decode(
         props.race.as_deref(),
@@ -56,16 +52,6 @@ pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
         show_abilityless_units: editor.show_abilityless_units,
         expand_variants: editor.expand_variants,
         collapsed_categories: editor.collapsed_categories,
-        selected_from_research: editor.selected_from_research,
-        selected_from_uprooted: editor.selected_from_uprooted,
-        tier_overrides: editor.tier_overrides,
-        dragging_slot: editor.dragging_slot,
-        drop_target_tile: editor.drop_target_tile,
-        drag_follower: editor.drag_follower,
-        loaded_keys,
-        grid_layout,
-        update_hotkeys_on_move: editor.update_hotkeys_on_move,
-        hotkey_assign_request: editor.hotkey_assign_request,
     };
     EditorPageModel { tabs, workspace }
 }

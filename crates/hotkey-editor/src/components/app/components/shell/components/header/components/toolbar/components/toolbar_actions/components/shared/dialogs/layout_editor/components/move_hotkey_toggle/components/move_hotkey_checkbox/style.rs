@@ -10,7 +10,7 @@ classes! {
         "h-[2rem]",
         "m-0",
         "border-2",
-        "rounded-[8px]",
+        "rounded-card",
         "border-warcraft-gold",
         "bg-warcraft-gold-dark/75",
         "cursor-pointer",
@@ -34,7 +34,7 @@ classes! {
     mobile: tw![
         "mobile:w-[22px]",
         "mobile:h-[22px]",
-        "mobile:rounded-[6px]",
+        "mobile:rounded-tile",
         "mobile:checked:after:w-[6px]",
         "mobile:checked:after:h-[11px]",
         "mobile:checked:after:mt-[-2px]",
@@ -43,7 +43,7 @@ classes! {
     tablet: tw![
         "tablet:w-[22px]",
         "tablet:h-[22px]",
-        "tablet:rounded-[6px]",
+        "tablet:rounded-tile",
         "tablet:checked:after:w-[6px]",
         "tablet:checked:after:h-[11px]",
         "tablet:checked:after:mt-[-2px]",

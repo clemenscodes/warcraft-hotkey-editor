@@ -16,7 +16,7 @@ classes! {
         "bg-warcraft-bg-panel/70",
         "border",
         "border-warcraft-blue",
-        "rounded-[4px]",
+        "rounded-control",
         "[&_.empty-tile]:border-[0.35cqi]!",
         "[&_.filled-tile]:border-[0.35cqi]!",
         "[&_.empty-tile]:rounded-[1.04cqi]!",

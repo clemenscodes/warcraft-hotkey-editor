@@ -16,6 +16,6 @@ classes! {
         "[border-image-repeat:stretch]",
         "[filter:drop-shadow(0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent))_drop-shadow(0_0_16px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent))]",
     ],
-    mobile: tw!["mobile:border-[8px]"],
-    tablet: tw!["tablet:border-[8px]"],
+    mobile: tw!["mobile:border-8"],
+    tablet: tw!["tablet:border-8"],
 }

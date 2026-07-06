@@ -13,7 +13,7 @@ classes! {
         "bg-warcraft-bg-base/55",
         "border",
         "border-warcraft-blue-deep",
-        "rounded-[8px]",
+        "rounded-card",
     ],
     mobile: tw![
         "mobile:grid-cols-[minmax(0,1fr)]",

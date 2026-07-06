@@ -203,6 +203,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
+    let selected_hero_level = use_signal::<u32>(|| 1);
     let preview_open = use_signal::<bool>(|| false);
     let system_hotkeys_open = use_signal::<bool>(|| false);
     let help_open = use_signal::<bool>(|| !OnboardingPersistence::has_been_seen());
@@ -228,6 +229,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     use_context_provider(|| overlay_state);
     let editor_state = EditorState {
         selected_slot,
+        selected_hero_level,
         selected_from_research,
         selected_from_uprooted,
         hotkey_assign_request,

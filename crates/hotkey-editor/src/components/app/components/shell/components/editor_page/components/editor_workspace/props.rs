@@ -1,16 +1,16 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailPanelProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitListProps;
-use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use dioxus::prelude::*;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind};
 use warcraft_database::{SearchField, UnitMode};
-use warcraft_keybinds::{CustomKeys, GridLayout, GridSlotId};
+use warcraft_keybinds::GridSlotId;
 
-/// The editor workspace's input: the unit list's state and the detail panel's state,
-/// plus the active race that tints the whole workspace. The workspace lays the unit
-/// list beside (or, on narrow widths, above) the detail panel and hands each child
-/// its own props.
+/// The editor workspace's input: the unit list's state, plus the active race and
+/// selected unit the detail panel needs. The workspace lays the unit list beside (or,
+/// on narrow widths, above) the detail panel and hands each child its own props. The
+/// editor signals the detail panel's grids and override card drive are sourced from
+/// context by those children, not threaded through here.
 #[derive(Props, Clone, PartialEq)]
 pub struct EditorWorkspaceProps {
     pub active_race: Signal<Race>,
@@ -22,16 +22,6 @@ pub struct EditorWorkspaceProps {
     pub show_abilityless_units: Signal<bool>,
     pub expand_variants: Signal<bool>,
     pub collapsed_categories: Signal<HashSet<UnitKind>>,
-    pub selected_from_research: Signal<bool>,
-    pub selected_from_uprooted: Signal<bool>,
-    pub tier_overrides: Signal<HashMap<String, usize>>,
-    pub dragging_slot: Signal<Option<DraggingSlot>>,
-    pub drop_target_tile: Signal<Option<DropTargetTile>>,
-    pub drag_follower: Signal<Option<DragFollower>>,
-    pub loaded_keys: Signal<Option<CustomKeys>>,
-    pub grid_layout: Signal<GridLayout>,
-    pub update_hotkeys_on_move: Signal<bool>,
-    pub hotkey_assign_request: Signal<bool>,
 }
 
 impl From<&EditorWorkspaceProps> for UnitListProps {
@@ -55,17 +45,6 @@ impl From<&EditorWorkspaceProps> for UnitDetailPanelProps {
         Self {
             active_race: props.active_race,
             selected_unit_id: props.selected_unit_id,
-            selected_slot: props.selected_slot,
-            selected_from_research: props.selected_from_research,
-            selected_from_uprooted: props.selected_from_uprooted,
-            tier_overrides: props.tier_overrides,
-            dragging_slot: props.dragging_slot,
-            drop_target_tile: props.drop_target_tile,
-            drag_follower: props.drag_follower,
-            loaded_keys: props.loaded_keys,
-            grid_layout: props.grid_layout,
-            update_hotkeys_on_move: props.update_hotkeys_on_move,
-            hotkey_assign_request: props.hotkey_assign_request,
         }
     }
 }

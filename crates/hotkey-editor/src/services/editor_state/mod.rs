@@ -24,6 +24,7 @@ pub(crate) use hit_test::{CursorPoint, HitTestPoint};
 #[derive(Clone, Copy, PartialEq)]
 pub struct EditorState {
     pub selected_slot: Signal<Option<GridSlotId>>,
+    pub selected_hero_level: Signal<u32>,
     pub selected_from_research: Signal<bool>,
     pub selected_from_uprooted: Signal<bool>,
     pub hotkey_assign_request: Signal<bool>,

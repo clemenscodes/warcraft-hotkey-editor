@@ -8,7 +8,7 @@ classes! {
         "gap-[0.5rem]",
         "px-[0.55rem]",
         "py-[0.35rem]",
-        "rounded-[4px]",
+        "rounded-control",
         "text-[clamp(1.3rem,0.85rem+0.4vw,1.85rem)]/[1.25]",
         "text-shadow-drop",
         "min-w-0",

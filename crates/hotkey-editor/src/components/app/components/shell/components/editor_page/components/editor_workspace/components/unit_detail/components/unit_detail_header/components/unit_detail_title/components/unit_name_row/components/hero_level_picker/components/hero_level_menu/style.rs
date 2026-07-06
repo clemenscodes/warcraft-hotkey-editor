@@ -13,7 +13,7 @@ classes! {
         "[background:linear-gradient(170deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
         "border",
         "border-warcraft-gold/45",
-        "rounded-[8px]",
+        "rounded-card",
         "[box-shadow:0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_65%,transparent),0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
     ],
     mobile: tw![

@@ -14,7 +14,7 @@ classes! {
         "bg-warcraft-bg-panel/70",
         "border",
         "border-warcraft-blue",
-        "rounded-[3px]",
+        "rounded-hairline",
         "[&_.empty-tile]:border-[0.35cqi]!",
         "[&_.filled-tile]:border-[0.35cqi]!",
         "[&_.empty-tile]:rounded-[1.04cqi]!",

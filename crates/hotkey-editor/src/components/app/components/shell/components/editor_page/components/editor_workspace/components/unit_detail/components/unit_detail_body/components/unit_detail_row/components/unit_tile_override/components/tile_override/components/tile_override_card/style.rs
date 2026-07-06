@@ -15,7 +15,7 @@ classes! {
         "overflow-hidden",
         "border",
         "border-warcraft-gold",
-        "rounded-[10px]",
+        "rounded-panel",
         "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
         "shadow-[0_0_12px_color-mix(in_oklab,var(--color-warcraft-gold)_18%,transparent)]",
     ],

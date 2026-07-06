@@ -8,7 +8,7 @@ classes! {
         "items-center",
         "px-[0.75rem]",
         "py-[0.3rem]",
-        "rounded-[6px]",
+        "rounded-tile",
         "text-[1.35rem]",
         "uppercase",
         "[letter-spacing:0.04em]",

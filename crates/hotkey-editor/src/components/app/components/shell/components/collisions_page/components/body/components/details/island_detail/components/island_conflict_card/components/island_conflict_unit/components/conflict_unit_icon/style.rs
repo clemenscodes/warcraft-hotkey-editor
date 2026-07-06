@@ -5,7 +5,7 @@ classes! {
         "h-[112px]",
         "border",
         "border-warcraft-blue",
-        "rounded-[6px]",
+        "rounded-tile",
         "object-cover",
         "hover:border-warcraft-gold",
         "hover:shadow-glow-8",

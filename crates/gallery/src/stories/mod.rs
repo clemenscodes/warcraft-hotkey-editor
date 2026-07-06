@@ -2,6 +2,7 @@ use gallery::{Story, StoryRegistry};
 
 mod buttons;
 mod dialogs;
+mod editor_mount;
 pub mod fixtures;
 mod grid;
 mod keys_mount;

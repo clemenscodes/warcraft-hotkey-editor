@@ -8,27 +8,25 @@ use super::components::unit_stats_panel::UnitStatsPanelProps;
 use super::logic::{ActiveContainer, InspectorPanel, ResolvedUnit};
 use super::props::UnitDetailPanelProps;
 use super::state::{UnitDetailModel, UnitDetailView};
+use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::editor_state::context::use_editor_state;
 use dioxus::prelude::*;
 use warcraft_keybinds::UnitSlotContainers;
 
-/// The hero-level picker state: the currently-chosen level and whether its picker is
-/// open. Both reset to their defaults whenever the selected unit changes.
+/// The hero-level picker state: the currently-chosen level, reset to its default
+/// whenever the selected unit changes. (The picker owns its own open state.)
 pub(super) struct HeroLevelState {
     pub(super) selected_hero_level: Signal<u32>,
-    pub(super) level_picker_open: Signal<bool>,
 }
 
 fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelState {
-    let mut selected_hero_level = use_signal::<u32>(|| 1);
-    let mut level_picker_open = use_signal::<bool>(|| false);
+    let mut selected_hero_level = use_editor_state().selected_hero_level;
     use_effect(move || {
         let _ = selected_unit_id.read();
         selected_hero_level.set(1);
-        level_picker_open.set(false);
     });
     HeroLevelState {
         selected_hero_level,
-        level_picker_open,
     }
 }
 
@@ -39,17 +37,11 @@ fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelSt
 pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailView {
     let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
-    let selected_slot = props.selected_slot;
-    let selected_from_research = props.selected_from_research;
-    let selected_from_uprooted = props.selected_from_uprooted;
-    let tier_overrides = props.tier_overrides;
-    let dragging_slot = props.dragging_slot;
-    let drop_target_tile = props.drop_target_tile;
-    let drag_follower = props.drag_follower;
-    let loaded_keys = props.loaded_keys;
-    let grid_layout = props.grid_layout;
-    let update_hotkeys_on_move = props.update_hotkeys_on_move;
-    let hotkey_assign_request = props.hotkey_assign_request;
+    let editor = use_editor_state();
+    let selected_slot = editor.selected_slot;
+    let selected_from_research = editor.selected_from_research;
+    let selected_from_uprooted = editor.selected_from_uprooted;
+    let loaded_keys = use_loaded_keys();
     let hero_level = use_hero_level_state(selected_unit_id);
     let slot_data_memo = use_memo(move || {
         let unit_id_option = selected_unit_id.read().clone();
@@ -95,8 +87,6 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
         unit_id: unit_id.clone(),
         portrait_url: resolved_unit.portrait_url,
         has_hero_attributes: resolved_unit.hero_attributes.is_some(),
-        selected_hero_level: hero_level.selected_hero_level,
-        level_picker_open: hero_level.level_picker_open,
     };
     let description = UnitDescriptionProps {
         text: resolved_unit.description_text,
@@ -114,30 +104,10 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
         build_menu_slots,
         uprooted_menu_slots,
         research_menu_slots,
-        loaded_keys,
-        selected_slot,
-        selected_from_research,
-        selected_from_uprooted,
-        tier_overrides,
-        dragging_slot,
-        drop_target_tile,
-        drag_follower,
-        grid_layout,
-        update_hotkeys_on_move,
-        hotkey_assign_request,
     };
     let tile_override = UnitTileOverrideProps {
         detail: inspector_panel.detail,
-        loaded_keys,
-        grid_layout,
-        selected_from_research,
-        selected_from_uprooted,
-        tier_overrides,
-        dragging_slot,
-        drop_target_tile,
-        drag_follower,
         active_container_slots,
-        hotkey_assign_request,
     };
     let row = UnitDetailRowProps {
         grids,

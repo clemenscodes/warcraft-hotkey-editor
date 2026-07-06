@@ -1,6 +1,5 @@
 use super::components::island_conflict_card::IslandConflictCardProps;
 use super::props::IslandDetailProps;
-use crate::components::app::components::shell::components::collisions_page::logic::CarrierDialogData;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -13,10 +12,7 @@ pub(super) struct IslandDetailModel {
 
 /// Resolves the selected island and shapes its header and conflict cards, or `None`
 /// when nothing is selected (the pane shows its empty prompt).
-pub(super) fn selected(
-    props: &IslandDetailProps,
-    carrier_dialog: Signal<Option<CarrierDialogData>>,
-) -> Option<IslandDetailModel> {
+pub(super) fn selected(props: &IslandDetailProps) -> Option<IslandDetailModel> {
     let selected_key = props.selected_island.read().clone();
     let key = selected_key?;
     let island = props
@@ -31,7 +27,6 @@ pub(super) fn selected(
         .iter()
         .map(|conflict| IslandConflictCardProps {
             conflict: conflict.clone(),
-            carrier_dialog,
             view_navigation: props.view_navigation,
         })
         .collect();

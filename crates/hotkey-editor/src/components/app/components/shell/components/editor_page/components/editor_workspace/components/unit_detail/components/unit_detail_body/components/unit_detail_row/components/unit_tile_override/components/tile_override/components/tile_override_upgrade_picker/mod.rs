@@ -1,8 +1,9 @@
+pub mod components;
 mod props;
 
 use dioxus::prelude::*;
 
-use super::position_picker::{UpgradePositionPicker, UpgradePositionPickerProps};
+use components::upgrade_position_picker::{UpgradePositionPicker, UpgradePositionPickerProps};
 
 pub use props::TileOverrideUpgradePickerProps;
 
@@ -10,7 +11,7 @@ pub use props::TileOverrideUpgradePickerProps;
 /// form; the picker's own dialog handles open/closed.
 #[component]
 pub fn TileOverrideUpgradePicker(props: TileOverrideUpgradePickerProps) -> Element {
-    if !props.visible || props.upgrade_unit_id.is_none() {
+    if !*props.upgrade_position_picker_open.read() || props.upgrade_unit_id.is_none() {
         return rsx! {};
     }
     rsx! {

@@ -1,8 +1,7 @@
 use super::components::breadcrumbs::BreadcrumbsProps;
-use super::components::carriers_dialog_host::CarriersDialogHostProps;
 use super::components::plan_body::PlanBodyProps;
 use super::components::plan_header::PlanHeaderProps;
-use super::logic::{ActivePlanView, CarriersDialogData, PlanCounts, PlanView};
+use super::logic::{ActivePlanView, PlanCounts, PlanView};
 use super::props::ResolvePageProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_loaded_keys};
@@ -29,15 +28,13 @@ pub(super) enum ResolvePageView {
 }
 
 /// Everything the plan state needs, fully shaped: the header, breadcrumb bar, and
-/// body child props, the counts the root element tags itself with, and the
-/// carriers-dialog host props.
+/// body child props, plus the counts the root element tags itself with.
 pub(super) struct ResolvePlanPresentation {
     pub move_count: usize,
     pub unresolved_count: usize,
     pub header: PlanHeaderProps,
     pub breadcrumbs: BreadcrumbsProps,
     pub body: PlanBodyProps,
-    pub carriers_dialog_host: CarriersDialogHostProps,
 }
 
 /// The Apply control's state: whether the cascade is currently running and the
@@ -118,7 +115,6 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let view_navigation = use_view_navigation();
     let resolve_selection = use_resolve_selection();
     let loaded_keys = use_loaded_keys();
-    let carriers_dialog = use_signal(|| None::<CarriersDialogData>);
     let selected_move_category = resolve_selection.selected_move_category;
     let synced_route = use_synced_route();
     let entry = props.entry.clone().filter(|value| !value.is_empty());
@@ -144,7 +140,6 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         selected_slug.as_deref(),
         selected_move_category,
         view_navigation,
-        carriers_dialog,
     );
     let move_count = counts.move_count;
     let move_noun = if move_count == 1 { "move" } else { "moves" };
@@ -155,17 +150,12 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         running: apply.running,
         on_apply: apply.on_apply,
     };
-    let carriers_dialog_host = CarriersDialogHostProps {
-        carriers_dialog,
-        view_navigation,
-    };
     let presentation = ResolvePlanPresentation {
         move_count: counts.move_count,
         unresolved_count: counts.unresolved_count,
         header,
         breadcrumbs: active.breadcrumbs,
         body: active.body,
-        carriers_dialog_host,
     };
     ResolvePageView::Plan(Box::new(presentation))
 }

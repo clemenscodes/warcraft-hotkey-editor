@@ -20,7 +20,7 @@ classes! {
         "[&::-webkit-scrollbar]:w-[6px]",
         "[&::-webkit-scrollbar-track]:bg-transparent",
         "[&::-webkit-scrollbar-thumb]:bg-transparent",
-        "[&::-webkit-scrollbar-thumb]:rounded-[3px]",
+        "[&::-webkit-scrollbar-thumb]:rounded-hairline",
         "group-hover:[&::-webkit-scrollbar-thumb]:bg-warcraft-gold/45",
         "[&::-webkit-scrollbar-thumb:hover]:bg-warcraft-gold",
     ],

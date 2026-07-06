@@ -9,7 +9,7 @@ classes! {
         "py-[0.7rem]",
         "border",
         "border-warcraft-gold",
-        "rounded-[10px]",
+        "rounded-panel",
         "text-warcraft-gold",
         "text-[1.4rem]",
         "tracking-[0.08em]",

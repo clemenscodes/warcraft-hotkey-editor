@@ -5,6 +5,7 @@ use crate::components::app::components::shell::components::resolve_page::compone
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::fight_name_plate::FightNamePlateProps;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRowProps;
 use crate::components::app::components::shell::components::resolve_page::logic::{MiniGridPlacement, ReasonKind};
+use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 
 /// The fully shaped move card: reason badge, mover column, rival column props (the
@@ -22,7 +23,6 @@ pub(super) struct MoveRowModel {
 impl From<&MoveRowProps> for MoveRowModel {
     fn from(props: &MoveRowProps) -> Self {
         let move_view = props.move_view.clone();
-        let carriers_dialog = props.carriers_dialog;
         let view_navigation = props.view_navigation;
         let mover = move_view.mover;
         let reason = move_view.reason;
@@ -44,14 +44,13 @@ impl From<&MoveRowProps> for MoveRowModel {
             has_unit,
             onclick: open_mover,
         };
-        let mover_ability = AbilityIconProps {
-            name: mover.name.clone(),
-            icon_url: mover.icon_url.clone(),
-            carrier_count: move_view.mover_carriers,
-            carrier_unit_ids: move_view.mover_carrier_unit_ids,
-            is_winner: false,
-            carriers_dialog,
-        };
+        let mover_ability = Self::ability(
+            mover.name.clone(),
+            mover.icon_url.clone(),
+            move_view.mover_carriers,
+            move_view.mover_carrier_unit_ids,
+            false,
+        );
         let is_swap = reason.is_swap;
         let anchor_carriers = reason.other_carriers.unwrap_or(0);
         let anchor_carrier_unit_ids = reason.other_carrier_unit_ids;
@@ -95,14 +94,13 @@ impl From<&MoveRowProps> for MoveRowModel {
                     name: anchor_ability.name.clone(),
                     object_id: anchor_ability.object_id.clone(),
                 };
-                let ability = AbilityIconProps {
-                    name: anchor_ability.name,
-                    icon_url: anchor_ability.icon_url,
-                    carrier_count: anchor_carriers,
-                    carrier_unit_ids: anchor_carrier_unit_ids,
-                    is_winner: !is_swap,
-                    carriers_dialog,
-                };
+                let ability = Self::ability(
+                    anchor_ability.name,
+                    anchor_ability.icon_url,
+                    anchor_carriers,
+                    anchor_carrier_unit_ids,
+                    !is_swap,
+                );
                 let parts = AnchorParts {
                     name_plate,
                     ability,
@@ -121,6 +119,27 @@ impl From<&MoveRowProps> for MoveRowModel {
             anchor,
             from_placements,
             to_placements,
+        }
+    }
+}
+
+impl MoveRowModel {
+    fn ability(
+        name: String,
+        icon_url: Option<String>,
+        carrier_count: usize,
+        carrier_unit_ids: Vec<String>,
+        is_winner: bool,
+    ) -> AbilityIconProps {
+        let disabled = carrier_unit_ids.is_empty();
+        let inspected = InspectedAbility::new(name.clone(), carrier_unit_ids);
+        AbilityIconProps {
+            name,
+            icon_url,
+            carrier_count,
+            is_winner,
+            disabled,
+            inspected,
         }
     }
 }

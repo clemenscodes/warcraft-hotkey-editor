@@ -40,32 +40,6 @@ impl AbilityDisplay {
     }
 }
 
-/// One unit resolved to its id, name, and icon for the carriers dialog.
-#[derive(Clone, PartialEq)]
-pub struct UnitDisplay {
-    pub unit_id: String,
-    pub name: String,
-    pub icon_url: Option<String>,
-}
-
-impl UnitDisplay {
-    fn resolve(unit_id_value: &str) -> Self {
-        let object_option = ObjectLookup::by_id(unit_id_value);
-        let icon_url = object_option
-            .and_then(|object| object.icons().first().copied())
-            .map(IconUrl::from_database_path)
-            .map(|icon| icon.to_string());
-        let name_option = object_option.and_then(|object| object.names().first().copied());
-        let name = name_option.unwrap_or(unit_id_value).to_owned();
-        let unit_id = unit_id_value.to_owned();
-        Self {
-            unit_id,
-            name,
-            icon_url,
-        }
-    }
-}
-
 /// Which kind of move this is. Drives both grouping into sections and the order
 /// the sections render in (Fights first, then Gap pulls, Spills, Swaps).
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -232,28 +206,6 @@ pub struct UnresolvedView {
     pub carrier_unit_ids: Vec<String>,
     pub column: u8,
     pub row: u8,
-}
-
-/// The data backing the carriers dialog: an ability's name and every unit that
-/// carries it, resolved to icons and names.
-#[derive(Clone, PartialEq)]
-pub struct CarriersDialogData {
-    pub ability_name: String,
-    pub carriers: Vec<UnitDisplay>,
-}
-
-impl CarriersDialogData {
-    pub fn new(ability_name: String, carrier_unit_ids: &[String]) -> Self {
-        let mut carriers: Vec<UnitDisplay> = Vec::with_capacity(carrier_unit_ids.len());
-        for carrier_unit_id in carrier_unit_ids {
-            let carrier = UnitDisplay::resolve(carrier_unit_id);
-            carriers.push(carrier);
-        }
-        Self {
-            ability_name,
-            carriers,
-        }
-    }
 }
 
 /// One titled group of moves of the same category (e.g. all Fights), in render
@@ -471,7 +423,6 @@ impl ActivePlanView {
         selected_slug: Option<&str>,
         selection: Signal<Option<String>>,
         view_navigation: ViewNavigationContext,
-        carriers_dialog: Signal<Option<CarriersDialogData>>,
     ) -> Self {
         let active = plan.active_section(selected_slug);
         let active_category = active.map(|section| section.category);
@@ -506,7 +457,6 @@ impl ActivePlanView {
                 .map(|move_view| MoveRowProps {
                     move_view: move_view.clone(),
                     view_navigation,
-                    carriers_dialog,
                 })
                 .collect();
             PlanBodySection {
@@ -519,7 +469,6 @@ impl ActivePlanView {
             .iter()
             .map(|unresolved_view| UnresolvedRowProps {
                 unresolved_view: unresolved_view.clone(),
-                carriers_dialog,
             })
             .collect();
         let body = PlanBodyProps {

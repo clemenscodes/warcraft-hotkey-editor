@@ -4,6 +4,7 @@ use crate::components::app::components::shell::components::resolve_page::compone
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::fight_name_plate::FightNamePlateProps;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRowProps;
 use crate::components::app::components::shell::components::resolve_page::logic::{MiniGridPlacement, ReasonKind};
+use crate::services::carriers::InspectedAbility;
 
 /// The stuck card's reason badge, plate, icon, and the single cell it is stuck on.
 pub(super) struct UnresolvedRowModel {
@@ -32,13 +33,16 @@ impl From<&UnresolvedRowProps> for UnresolvedRowModel {
             name: ability.name.clone(),
         };
         let placements: Vec<MiniGridPlacement> = vec![placement];
+        let carrier_unit_ids = view.carrier_unit_ids;
+        let disabled = carrier_unit_ids.is_empty();
+        let inspected = InspectedAbility::new(ability.name.clone(), carrier_unit_ids);
         let icon = AbilityIconProps {
             name: ability.name,
             icon_url: ability.icon_url,
             carrier_count: view.carrier_count,
-            carrier_unit_ids: view.carrier_unit_ids,
             is_winner: false,
-            carriers_dialog: props.carriers_dialog,
+            disabled,
+            inspected,
         };
         Self {
             reason_row,

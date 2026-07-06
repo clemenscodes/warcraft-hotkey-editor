@@ -5,7 +5,7 @@ classes! {
         "py-[1.4rem]",
         "border",
         "border-warcraft-gold-border",
-        "rounded-[10px]",
+        "rounded-panel",
         "text-[2rem]",
         "tracking-[0.06em]",
         "uppercase",

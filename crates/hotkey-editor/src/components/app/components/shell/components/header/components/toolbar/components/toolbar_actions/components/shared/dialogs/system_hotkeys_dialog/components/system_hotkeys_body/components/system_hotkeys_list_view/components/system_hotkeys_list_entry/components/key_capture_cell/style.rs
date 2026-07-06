@@ -36,7 +36,7 @@ classes! {
         "after:py-3",
         "after:border",
         "after:border-warcraft-gold",
-        "after:rounded-[4px]",
+        "after:rounded-control",
         "after:bg-panel-dark-solid",
         "after:text-warcraft-gold",
         "after:text-[1.5rem]",

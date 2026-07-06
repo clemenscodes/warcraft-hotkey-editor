@@ -12,8 +12,7 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::DamageMatchupRow;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::defense_column::components::defense_matchup_row::components::defense_matchup_cell::DefenseMatchupCell;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::defense_column::components::defense_matchup_row::DefenseMatchupRow;
-use hotkey_editor::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
-use std::collections::HashMap;
+use super::editor_mount::EditorMount;
 use std::rc::Rc;
 
 use warcraft_api::{AttackType, DefenseType, Race, UnitCombat, WarcraftObjectMeta};
@@ -179,18 +178,14 @@ fn unit_detail_header_no_portrait() -> Element {
     let unit_id = "hfoo".to_string();
     let portrait_url = None;
     let has_hero_attributes = false;
-    let initial_level: u32 = 1;
-    let initial_open: bool = false;
-    let selected_hero_level = use_signal(|| initial_level);
-    let level_picker_open = use_signal(|| initial_open);
     rsx! {
-        UnitDetailHeader {
-            unit_name,
-            unit_id,
-            portrait_url,
-            has_hero_attributes,
-            selected_hero_level,
-            level_picker_open,
+        EditorMount {
+            UnitDetailHeader {
+                unit_name,
+                unit_id,
+                portrait_url,
+                has_hero_attributes,
+            }
         }
     }
 }
@@ -200,18 +195,14 @@ fn unit_detail_header_hero() -> Element {
     let unit_id = "Hamg".to_string();
     let portrait_url = None;
     let has_hero_attributes = true;
-    let initial_level: u32 = 3;
-    let initial_open: bool = false;
-    let selected_hero_level = use_signal(|| initial_level);
-    let level_picker_open = use_signal(|| initial_open);
     rsx! {
-        UnitDetailHeader {
-            unit_name,
-            unit_id,
-            portrait_url,
-            has_hero_attributes,
-            selected_hero_level,
-            level_picker_open,
+        EditorMount {
+            UnitDetailHeader {
+                unit_name,
+                unit_id,
+                portrait_url,
+                has_hero_attributes,
+            }
         }
     }
 }
@@ -346,102 +337,42 @@ fn unit_command_grids_footman() -> Element {
                 .collect::<Rc<[GridSlotId]>>()
         })
         .unwrap_or_else(|| Rc::from(Vec::<GridSlotId>::new()));
-    let loaded_keys = use_signal(|| None);
-    let selected_slot = use_signal(|| None);
-    let selected_from_research = use_signal(|| false);
-    let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides = use_signal(HashMap::new);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let update_hotkeys_on_move = use_signal(|| true);
-    let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        UnitCommandGrids {
-            unit_id,
-            race: Race::Human,
-            command_card_slots,
-            build_menu_slots: None,
-            uprooted_menu_slots: None,
-            research_menu_slots: None,
-            loaded_keys,
-            selected_slot,
-            selected_from_research,
-            selected_from_uprooted,
-            tier_overrides,
-            dragging_slot,
-            drop_target_tile,
-            drag_follower,
-            grid_layout,
-            update_hotkeys_on_move,
-            hotkey_assign_request,
+        EditorMount {
+            UnitCommandGrids {
+                unit_id,
+                race: Race::Human,
+                command_card_slots,
+                build_menu_slots: None,
+                uprooted_menu_slots: None,
+                research_menu_slots: None,
+            }
         }
     }
 }
 
 fn unit_detail_panel_footman() -> Element {
     let selected_unit_id = use_signal(|| Some(fixtures::sample_unit_id()));
-    let selected_slot = use_signal(|| None);
-    let selected_from_research = use_signal(|| false);
-    let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides = use_signal(HashMap::new);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
-    let loaded_keys = use_signal(|| None);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let update_hotkeys_on_move = use_signal(|| true);
-    let hotkey_assign_request = use_signal(|| false);
     let active_race = use_signal(|| Race::Human);
     rsx! {
-        UnitDetailPanel {
-            active_race,
-            selected_unit_id,
-            selected_slot,
-            selected_from_research,
-            selected_from_uprooted,
-            tier_overrides,
-            dragging_slot,
-            drop_target_tile,
-            drag_follower,
-            loaded_keys,
-            grid_layout,
-            update_hotkeys_on_move,
-            hotkey_assign_request,
+        EditorMount {
+            UnitDetailPanel {
+                active_race,
+                selected_unit_id,
+            }
         }
     }
 }
 
 fn unit_detail_panel_archmage() -> Element {
     let selected_unit_id = use_signal(|| Some(fixtures::sample_hero_id()));
-    let selected_slot = use_signal(|| None);
-    let selected_from_research = use_signal(|| false);
-    let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides = use_signal(HashMap::new);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
-    let loaded_keys = use_signal(|| None);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let update_hotkeys_on_move = use_signal(|| true);
-    let hotkey_assign_request = use_signal(|| false);
     let active_race = use_signal(|| Race::Human);
     rsx! {
-        UnitDetailPanel {
-            active_race,
-            selected_unit_id,
-            selected_slot,
-            selected_from_research,
-            selected_from_uprooted,
-            tier_overrides,
-            dragging_slot,
-            drop_target_tile,
-            drag_follower,
-            loaded_keys,
-            grid_layout,
-            update_hotkeys_on_move,
-            hotkey_assign_request,
+        EditorMount {
+            UnitDetailPanel {
+                active_race,
+                selected_unit_id,
+            }
         }
     }
 }

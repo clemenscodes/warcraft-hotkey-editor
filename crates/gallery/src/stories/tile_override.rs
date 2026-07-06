@@ -9,11 +9,11 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
 
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::{
-    AltPositionPicker, TileOverride, UpgradePositionPicker,
-};
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::TileOverride;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_alt_picker::components::alt_position_picker::AltPositionPicker;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_upgrade_picker::components::upgrade_position_picker::UpgradePositionPicker;
 
-use hotkey_editor::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
+use super::editor_mount::EditorMount;
 use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
@@ -223,24 +223,16 @@ fn alt_position_picker_open() -> Element {
     let off_slot = GridSlotId::ability_off(object_id);
     let picker_slots_vec: Vec<GridSlotId> = vec![off_slot];
     let picker_slots: Rc<[GridSlotId]> = picker_slots_vec.into();
-    let loaded_keys = use_signal(|| None::<CustomKeys>);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let alt_position_picker_open = use_signal(|| true);
     rsx! {
-        ToastMount {
-            AltPositionPicker {
-                object_id,
-                display_name,
-                picker_slots,
-                loaded_keys,
-                grid_layout,
-                dragging_slot,
-                drop_target_tile,
-                drag_follower,
-                alt_position_picker_open,
+        EditorMount {
+            ToastMount {
+                AltPositionPicker {
+                    object_id,
+                    display_name,
+                    picker_slots,
+                    alt_position_picker_open,
+                }
             }
         }
     }
@@ -252,24 +244,16 @@ fn upgrade_position_picker_open() -> Element {
     let upgrade_slot = GridSlotId::ability(upgrade_unit_id);
     let picker_slots_vec: Vec<GridSlotId> = vec![upgrade_slot];
     let picker_slots: Rc<[GridSlotId]> = picker_slots_vec.into();
-    let loaded_keys = use_signal(|| None::<CustomKeys>);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
     let upgrade_position_picker_open = use_signal(|| true);
     rsx! {
-        ToastMount {
-            UpgradePositionPicker {
-                upgrade_unit_id,
-                display_name,
-                picker_slots,
-                loaded_keys,
-                grid_layout,
-                dragging_slot,
-                drop_target_tile,
-                drag_follower,
-                upgrade_position_picker_open,
+        EditorMount {
+            ToastMount {
+                UpgradePositionPicker {
+                    upgrade_unit_id,
+                    display_name,
+                    picker_slots,
+                    upgrade_position_picker_open,
+                }
             }
         }
     }
@@ -301,29 +285,14 @@ fn tile_override_panel_archmage_blizzard() -> Element {
         })
         .unwrap_or_else(|| Rc::from(Vec::<GridSlotId>::new()));
     let loaded_keys = use_signal(|| None::<CustomKeys>);
-    let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let selected_from_research = use_signal(|| false);
-    let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
-    let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
-    let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
-    let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
-    let hotkey_assign_request = use_signal(|| false);
     rsx! {
         CustomKeysMount {
             loaded_keys,
-            TileOverride {
-                detail,
-                loaded_keys,
-                grid_layout,
-                selected_from_research,
-                selected_from_uprooted,
-                tier_overrides,
-                dragging_slot,
-                drop_target_tile,
-                drag_follower,
-                active_container_slots: archmage_slots,
-                hotkey_assign_request,
+            EditorMount {
+                TileOverride {
+                    detail,
+                    active_container_slots: archmage_slots,
+                }
             }
         }
     }

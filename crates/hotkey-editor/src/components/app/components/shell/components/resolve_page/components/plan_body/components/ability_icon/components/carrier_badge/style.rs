@@ -11,7 +11,7 @@ classes! {
         "inline-flex",
         "items-center",
         "justify-center",
-        "rounded-[10px]",
+        "rounded-panel",
         "bg-warcraft-bg-panel",
         "border",
         "border-warcraft-blue",

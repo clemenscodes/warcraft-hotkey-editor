@@ -21,7 +21,10 @@ use super::logic::{
 use super::props::TileOverrideProps;
 use super::state::OverrideEditTarget;
 use crate::services::customkeys::context::use_custom_keys_service;
+use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
+use crate::services::editor_state::context::use_editor_state;
+use crate::services::grid_layout::context::use_grid_layout;
 
 /// Everything the override panel body places, already shaped: the card's full
 /// nested props tree plus the three picker dialogs.
@@ -61,12 +64,13 @@ fn use_override_editing(
     tokens: &OverrideTokens,
 ) -> OverrideEditing {
     let detail = props.detail.clone();
-    let loaded_keys = props.loaded_keys;
-    let grid_layout = props.grid_layout;
+    let loaded_keys = use_loaded_keys();
+    let grid_layout = use_grid_layout();
+    let editor = use_editor_state();
     let custom_keys_service = use_custom_keys_service();
     let active_container_slots = props.active_container_slots.clone();
     let mut editing_target = use_signal::<Option<OverrideEditTarget>>(|| None);
-    let mut hotkey_assign_request = props.hotkey_assign_request;
+    let mut hotkey_assign_request = editor.hotkey_assign_request;
     let hotkey_field_available = visibility.show_hotkey_field;
     let research_field_available = visibility.show_research_field;
     use_effect(move || {
@@ -167,10 +171,11 @@ fn use_position_pickers() -> PositionPickers {
 
 pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel {
     let detail = props.detail.clone();
-    let loaded_keys = props.loaded_keys;
-    let grid_layout = props.grid_layout;
-    let tier_overrides = props.tier_overrides;
-    let is_research_context = *props.selected_from_research.read();
+    let loaded_keys = use_loaded_keys();
+    let grid_layout = use_grid_layout();
+    let editor = use_editor_state();
+    let tier_overrides = editor.tier_overrides;
+    let is_research_context = *editor.selected_from_research.read();
     let layout_snapshot = *grid_layout.read();
     let object_id = detail.object_id();
     let upgrade_unit_id = detail.upgrade_unit_id();
@@ -295,27 +300,15 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
         on_close: editing.on_close,
     };
     let alt_picker = TileOverrideAltPickerProps {
-        visible: alt_picker_visible,
         object_id,
         display_name: alt_display_name,
         picker_slots: alt_picker_slots,
-        loaded_keys: props.loaded_keys,
-        grid_layout: props.grid_layout,
-        dragging_slot: props.dragging_slot,
-        drop_target_tile: props.drop_target_tile,
-        drag_follower: props.drag_follower,
         alt_position_picker_open: pickers.alt_open,
     };
     let upgrade_picker = TileOverrideUpgradePickerProps {
-        visible: upgrade_picker_visible,
         upgrade_unit_id,
         display_name: upgrade_display_name,
         picker_slots: upgrade_picker_slots,
-        loaded_keys: props.loaded_keys,
-        grid_layout: props.grid_layout,
-        dragging_slot: props.dragging_slot,
-        drop_target_tile: props.drop_target_tile,
-        drag_follower: props.drag_follower,
         upgrade_position_picker_open: pickers.upgrade_open,
     };
     let header_text = TileOverrideHeaderTextProps { name, id };

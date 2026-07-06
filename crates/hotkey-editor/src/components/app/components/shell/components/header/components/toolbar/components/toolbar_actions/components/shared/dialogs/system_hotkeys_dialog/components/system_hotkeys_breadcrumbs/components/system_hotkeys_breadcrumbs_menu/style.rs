@@ -24,7 +24,7 @@ classes! {
         "mobile:data-[open=true]:bg-panel-dark-solid-2",
         "mobile:data-[open=true]:border",
         "mobile:data-[open=true]:border-warcraft-gold/45",
-        "mobile:data-[open=true]:rounded-[10px]",
+        "mobile:data-[open=true]:rounded-panel",
         "mobile:data-[open=true]:shadow-elevation-2",
     ],
     tablet: tw![
@@ -42,7 +42,7 @@ classes! {
         "tablet:data-[open=true]:bg-panel-dark-solid-2",
         "tablet:data-[open=true]:border",
         "tablet:data-[open=true]:border-warcraft-gold/45",
-        "tablet:data-[open=true]:rounded-[10px]",
+        "tablet:data-[open=true]:rounded-panel",
         "tablet:data-[open=true]:shadow-elevation-2",
     ],
 }

@@ -13,7 +13,7 @@ classes! {
         "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_60%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)_100%)]",
         "border",
         "border-warcraft-gold/45",
-        "rounded-[6px]",
+        "rounded-tile",
         "text-warcraft-gold",
         "text-[1.15rem]",
         "uppercase",

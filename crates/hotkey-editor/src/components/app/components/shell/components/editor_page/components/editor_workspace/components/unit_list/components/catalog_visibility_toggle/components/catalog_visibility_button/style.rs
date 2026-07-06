@@ -11,7 +11,7 @@ classes! {
         "bg-panel-gold-resting",
         "border",
         "border-warcraft-gold-border",
-        "rounded-[8px]",
+        "rounded-card",
         "text-warcraft-text-secondary",
         "text-[1.1rem]",
         "uppercase",

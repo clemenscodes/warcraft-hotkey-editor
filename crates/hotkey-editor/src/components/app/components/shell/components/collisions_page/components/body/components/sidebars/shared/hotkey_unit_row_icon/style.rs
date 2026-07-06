@@ -6,7 +6,7 @@ classes! {
         "shrink-0",
         "border",
         "border-warcraft-blue",
-        "rounded-[4px]",
+        "rounded-control",
         "object-cover",
     ],
     mobile: tw![
