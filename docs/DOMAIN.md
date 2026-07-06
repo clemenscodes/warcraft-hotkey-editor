@@ -73,8 +73,15 @@ framework-ization" principle:
   normalization pipeline**, not decoupled event handlers. Introducing transient
   events + policies here would be indirection without decoupling. They are
   adopted the day a genuinely decoupled reaction appears.
-- **Command / Query** (application layer): these belong in `hotkey-editor`, and
-  that crate is out of scope for this domain-crate refactor.
+- **Command / Query** (application layer): these live in `hotkey-editor`, never in
+  the domain crate. The renderer mutates the aggregate only through
+  `ddd::Command<CustomKeys>` structs (`SetHotkeyCommand`, `MoveSlotCommand`,
+  `ApplyGridLayoutCommand`, `SetSystemHotkeyCommand`, `SwapSystemBindingsCommand`)
+  dispatched via `CustomKeysService`. The cross-wall application layer was delivered
+  in phase 7; the domain crate itself still hosts no `Command`/`Query` type. What the
+  domain does expose for that layer is a lookup like
+  `SystemBindingMap::resolve_section` — the sanctioned way to turn a raw section
+  string back into a canonical `WarcraftObjectId`, so the renderer never mints one.
 
 `Projection`, `EventStore`, `Saga`, and `UnitOfWork` likewise stay unused — the
 `ddd` vocabulary is pre-built and roles are adopted as the concepts arise.
