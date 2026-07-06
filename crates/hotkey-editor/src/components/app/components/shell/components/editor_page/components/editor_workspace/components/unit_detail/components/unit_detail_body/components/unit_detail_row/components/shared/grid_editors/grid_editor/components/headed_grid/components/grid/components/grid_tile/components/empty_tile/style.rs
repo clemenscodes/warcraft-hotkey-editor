@@ -1,17 +1,18 @@
 use super::state::EmptyTileState;
 use crate::{classes, states, styling::TailwindClass, tw};
 
-// Sizes in `cqi` off the grid's container: the tile fills its column and its
-// border and corner scale with the grid, so the same tile renders full-size in the
-// editor and tiny in a mini grid.
+// Border and corner in `cqi` off the tile-face container (one tile), so they read
+// as production's 2px border / 6px radius on a full-size editor tile. Mini grids
+// render this painter with NO tile-face, so their frame overrides both back down
+// (see each `mini_grid/style.rs`).
 const BASE: &[TailwindClass] = tw![
     "relative",
     "w-full",
     "aspect-square",
     "[container-type:inline-size]",
     "overflow-hidden",
-    "border-[0.35cqi]",
-    "rounded-[1.04cqi]",
+    "border-[2cqi]",
+    "rounded-[5.2cqi]",
     "touch-pan-y",
     "outline-none",
     "[body:has([data-dragging-source=true])_&]:transition-none",
@@ -33,14 +34,17 @@ const EMPTY: &[TailwindClass] = tw![
     "shadow-bevel-hl",
 ];
 
+// A drop target during a drag looks exactly like the lifted source tile: a
+// muted-slate dashed border of the same weight, no differentiation. Under the
+// cursor (`data-drag-over` on the wrapping Host) the same border turns gold —
+// replacing the slate, not stacking a ring over it, matching production.
 const DROP_TARGET: &[TailwindClass] = tw![
     "bg-panel-dark-diag-85",
-    "border-warcraft-blue-bright",
+    "border-warcraft-blue-slate",
     "border-dashed",
     "shadow-bevel-hl",
     "cursor-pointer",
-    "hover:border-warcraft-gold",
-    "hover:bg-warcraft-gold/8",
+    "[[data-drag-over=true]_&]:border-warcraft-gold",
 ];
 
 const BLOCKED_DROP_TARGET: &[TailwindClass] = tw![

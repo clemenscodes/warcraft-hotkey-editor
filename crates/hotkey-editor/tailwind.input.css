@@ -279,8 +279,14 @@
     color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 100%
   );
 }
+/* The `background` shorthand, not `background-image`: the last layer is a solid
+   panel color, and a bare color is not a valid `background-image` layer — as
+   `background-image` the whole declaration is invalid and the browser drops it,
+   leaving the gold-gradient inner glow off the drag-over tile. The shorthand maps
+   the gradient to `background-image` and the panel color to `background-color`,
+   exactly as production does. */
 @utility bg-panel-gold-diag-32-2 {
-  background-image:
+  background:
     linear-gradient(
       135deg,
       color-mix(in oklab, var(--color-warcraft-gold) 32%, transparent) 0%,

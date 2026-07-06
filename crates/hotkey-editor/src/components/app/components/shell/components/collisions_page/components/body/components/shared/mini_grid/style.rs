@@ -14,6 +14,14 @@ const BASE: &[TailwindClass] = tw![
     "border",
     "border-warcraft-blue",
     "rounded-[3px]",
+    // The reused tile painter sizes its border/corner for a full editor tile
+    // (one tile-face). A mini grid has no tile-face, so the painter would resolve
+    // those against this whole 4-column frame and render huge. Scale them back to
+    // the frame here, the way they read before the editor was recalibrated.
+    "[&_.empty-tile]:border-[0.35cqi]!",
+    "[&_.filled-tile]:border-[0.35cqi]!",
+    "[&_.empty-tile]:rounded-[1.04cqi]!",
+    "[&_.filled-tile]:rounded-[1.04cqi]!",
 ];
 const MOBILE: &[TailwindClass] = tw!["mobile:w-[calc(66px/3*4)]"];
 const TABLET: &[TailwindClass] = tw!["tablet:w-[calc(92px/3*4)]"];
