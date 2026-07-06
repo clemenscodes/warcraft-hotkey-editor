@@ -22,9 +22,11 @@ use std::sync::OnceLock;
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
 
+mod mirrors;
 mod overlay;
 mod parser;
 
+use mirrors::{BUILD_COMMAND_MIRRORS, MORPH_ABILITY_MIRRORS};
 use parser::CustomKeysParser;
 
 pub const DEFAULT_CUSTOM_KEYS: &str = include_str!("../../templates/CustomKeys.txt");
@@ -43,65 +45,6 @@ impl HotkeyConflict {
 
 const GRID_COLUMNS: u8 = 4;
 const GRID_ROWS: u8 = 3;
-
-/// Pairs a worker build command with the build ability the live game actually
-/// renders for it. In game the command card shows the build ability (`AHbu`,
-/// `AObu`, `AUbu`, `AEbu`) and reads its position and hotkey from there; the
-/// `CmdBuild*` command only drives the in-game hotkey editor. Moving the build
-/// command in the editor must write both, so the live game honors the position.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
-struct BuildCommandMirror {
-    command_id: WarcraftObjectId,
-    ability_id: WarcraftObjectId,
-}
-
-const BUILD_COMMAND_MIRRORS: &[BuildCommandMirror] = &[
-    BuildCommandMirror {
-        command_id: WarcraftObjectId::new("CmdBuildHuman"),
-        ability_id: WarcraftObjectId::new("AHbu"),
-    },
-    BuildCommandMirror {
-        command_id: WarcraftObjectId::new("CmdBuildOrc"),
-        ability_id: WarcraftObjectId::new("AObu"),
-    },
-    BuildCommandMirror {
-        command_id: WarcraftObjectId::new("CmdBuildUndead"),
-        ability_id: WarcraftObjectId::new("AUbu"),
-    },
-    BuildCommandMirror {
-        command_id: WarcraftObjectId::new("CmdBuildNightElf"),
-        ability_id: WarcraftObjectId::new("AEbu"),
-    },
-];
-
-/// Pairs a permanent one-way morph ability with the produced-unit section the
-/// live game reads its keybind from. The Obsidian Statue's Transform (`Aave`)
-/// is irreversible — a Destroyer (`ubsp`) can never become a Statue again — so
-/// the morph is a one-time command whose keybind lives in a section keyed by
-/// the produced unit id, separate from the `Aave` ability the editor's grid
-/// button edits. Editing the button only touches `Aave`, so without this mirror
-/// the produced-unit section keeps its stale default hotkey and the morph binds
-/// the wrong key in game.
-///
-/// This is why the list is a single entry and is not derived from the database:
-/// every *other* morph is a reversible toggle whose second state is the base
-/// unit's off-state (`Unhotkey`/`Unbuttonpos`, handled by
-/// `sync_mirrored_off_states` and the independent-off-slot logic), so it has no
-/// orphaned produced-unit command section to sync. The
-/// `morph_target_unit` database field cannot distinguish these — it is also set
-/// for reversible toggles, summon spells, and mount actions, several of whose
-/// targets are ordinary train/sell units that this mirror would clobber, the
-/// same invariant that makes [`BuildCommandMirror`] safe.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
-struct MorphAbilityMirror {
-    ability_id: WarcraftObjectId,
-    produced_unit_id: WarcraftObjectId,
-}
-
-const MORPH_ABILITY_MIRRORS: &[MorphAbilityMirror] = &[MorphAbilityMirror {
-    ability_id: WarcraftObjectId::new("Aave"),
-    produced_unit_id: WarcraftObjectId::new("ubsp"),
-}];
 
 #[derive(Clone, Debug, Default)]
 pub struct CustomKeys {
@@ -408,7 +351,7 @@ impl CustomKeys {
     /// default cell and slides it on collision.
     fn mirror_build_commands_to_abilities(&mut self) {
         for mirror in BUILD_COMMAND_MIRRORS {
-            let command_id = mirror.command_id;
+            let command_id = mirror.command_id();
             let command_name = command_id.value();
             let Some(command_binding) = self.command(command_name) else {
                 continue;
@@ -420,7 +363,7 @@ impl CustomKeys {
             if button_position.is_none() && hotkey.is_none() {
                 continue;
             }
-            let ability_id = mirror.ability_id;
+            let ability_id = mirror.ability_id();
             let existing_binding = self.binding(ability_id).cloned();
             let mut ability_binding = existing_binding.unwrap_or_default();
             ability_binding.set_button_position(button_position);
@@ -436,7 +379,7 @@ impl CustomKeys {
     /// follows the edited morph ability.
     fn mirror_morph_abilities_to_unit_commands(&mut self) {
         for mirror in MORPH_ABILITY_MIRRORS {
-            let ability_id = mirror.ability_id;
+            let ability_id = mirror.ability_id();
             let Some(ability_binding) = self.binding(ability_id) else {
                 continue;
             };
@@ -447,7 +390,7 @@ impl CustomKeys {
             if button_position.is_none() && hotkey.is_none() {
                 continue;
             }
-            let produced_unit_id = mirror.produced_unit_id;
+            let produced_unit_id = mirror.produced_unit_id();
             let existing_binding = self.binding(produced_unit_id).cloned();
             let mut produced_binding = existing_binding.unwrap_or_default();
             produced_binding.set_button_position(button_position);
