@@ -83,13 +83,13 @@ test.describe("Editor selection history (back/forward)", () => {
 
     await search.pressSequentially("Footman", { delay: 60 });
     await page.locator('.unit-list[data-search-active="true"]').waitFor();
-    await expect(page).toHaveURL(/q=Footman/);
+    await expect(page).toHaveURL(/search_query=Footman/);
 
     const after = await page.evaluate(() => history.length);
     expect(after - before).toBe(1);
 
     await page.goBack();
-    await expect(page).not.toHaveURL(/q=/);
+    await expect(page).not.toHaveURL(/search_query=/);
     await expect(search).toHaveValue("");
   });
 
@@ -101,23 +101,23 @@ test.describe("Editor selection history (back/forward)", () => {
     const search = page.locator('input[type="search"]');
 
     await search.fill("Footman");
-    await expect(page).toHaveURL(/q=Footman/);
+    await expect(page).toHaveURL(/search_query=Footman/);
     // Let the search session end (idle longer than the coalescing window).
     await page.waitForTimeout(700);
 
     await search.fill("Grunt");
-    await expect(page).toHaveURL(/q=Grunt/);
+    await expect(page).toHaveURL(/search_query=Grunt/);
 
     await page.goBack();
-    await expect(page).toHaveURL(/q=Footman/);
+    await expect(page).toHaveURL(/search_query=Footman/);
     await expect(search).toHaveValue("Footman");
 
     await page.goBack();
-    await expect(page).not.toHaveURL(/q=/);
+    await expect(page).not.toHaveURL(/search_query=/);
     await expect(search).toHaveValue("");
 
     await page.goForward();
-    await expect(page).toHaveURL(/q=Footman/);
+    await expect(page).toHaveURL(/search_query=Footman/);
     await expect(search).toHaveValue("Footman");
   });
 });

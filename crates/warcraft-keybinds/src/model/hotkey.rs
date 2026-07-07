@@ -117,7 +117,7 @@ impl Hotkey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct ParseHotkeyError;
 
 impl fmt::Display for ParseHotkeyError {
@@ -176,7 +176,7 @@ impl From<AbilityModifier> for String {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct ParseAbilityModifierError;
 
 impl fmt::Display for ParseAbilityModifierError {

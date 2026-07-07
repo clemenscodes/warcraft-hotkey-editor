@@ -14,18 +14,21 @@ use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::MoveRequest;
 use warcraft_keybinds::WarcraftObjectId;
 
+use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
 use crate::repository::custom_keys_repository::CustomKeysRepository;
 use crate::services::customkeys::commands::apply_grid_layout_command::ApplyGridLayoutCommand;
 use crate::services::customkeys::commands::move_slot_command::MoveSlotCommand;
 use crate::services::customkeys::commands::set_hotkey_command::SetHotkeyCommand;
 use crate::services::customkeys::commands::set_system_hotkey_command::SetSystemHotkeyCommand;
 use crate::services::customkeys::commands::swap_system_bindings_command::SwapSystemBindingsCommand;
+use crate::services::customkeys::queries::collision_summary_query::CollisionSummaryQuery;
 use crate::services::customkeys::queries::cross_unit_collisions_query::CrossUnitCollisionsQuery;
 use crate::services::customkeys::queries::resolve_preview_query::ResolvePreviewQuery;
 use crate::services::customkeys::queries::slot_binding_query::SlotBindingQuery;
 use crate::services::customkeys::queries::slot_binding_query::SlotBindingView;
 use crate::services::customkeys::queries::unit_collisions_query::UnitCollisionsQuery;
 use warcraft_keybinds::CascadePlan;
+use warcraft_keybinds::CollisionSummary;
 use warcraft_keybinds::CrossUnitCollisionReport;
 use warcraft_keybinds::UnitCollisionReport;
 
@@ -113,6 +116,24 @@ impl CustomKeysService {
         self.handle(query)
     }
 
+    /// The collision-count summary the toolbar badge shows, for a grid layout (the
+    /// read side). Reactive on the aggregate; the badge asks here instead of running
+    /// the collision reports itself at render time.
+    pub fn collision_summary(&self, layout: GridLayout) -> CollisionSummary {
+        let query = CollisionSummaryQuery::new(layout);
+        self.handle(query)
+    }
+
+    /// The exact stored `CustomKeys.txt` text (R5: export and preview ARE the stored
+    /// localStorage text, nothing more — no re-serialize, no re-normalize; the stored
+    /// text is already normalized per R2). Reads the aggregate first so a reactive
+    /// caller re-reads on every mutation, then returns the authoritative stored text.
+    pub fn exported_text(&self) -> String {
+        let _subscribe = self.keys.read();
+        let stored_text = CustomKeysPersistence::load_text();
+        stored_text.unwrap_or_default()
+    }
+
     /// The sanctioned import command: overlays the uploaded text onto the baseline
     /// through the domain (rule R7, "imports replace, then normalize"), writes the
     /// normalized result through to storage, and returns the outcome so the caller
@@ -163,6 +184,14 @@ impl QueryHandler<UnitCollisionsQuery> for CustomKeysService {
 
 impl QueryHandler<ResolvePreviewQuery> for CustomKeysService {
     fn handle(&self, query: ResolvePreviewQuery) -> CascadePlan {
+        let read_guard = self.keys.read();
+        let custom_keys = read_guard.as_ref();
+        query.answer(custom_keys)
+    }
+}
+
+impl QueryHandler<CollisionSummaryQuery> for CustomKeysService {
+    fn handle(&self, query: CollisionSummaryQuery) -> CollisionSummary {
         let read_guard = self.keys.read();
         let custom_keys = read_guard.as_ref();
         query.answer(custom_keys)

@@ -3,7 +3,7 @@ mod data;
 mod props;
 mod style;
 
-use super::move_list::MoveList;
+use super::shared::move_list::MoveList;
 use components::unresolved_row::UnresolvedRow;
 use components::unresolved_title::UnresolvedTitle;
 use dioxus::prelude::*;

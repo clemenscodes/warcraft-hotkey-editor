@@ -1,7 +1,7 @@
 mod props;
 mod style;
 
-use super::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
 use dioxus::prelude::*;
 pub use props::TileBadgeProps;
 use style::CLASS;

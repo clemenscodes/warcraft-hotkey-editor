@@ -4,7 +4,7 @@ mod style;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::{
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::{
     HotkeyBadge, HotkeyBadgeProps,
 };
 

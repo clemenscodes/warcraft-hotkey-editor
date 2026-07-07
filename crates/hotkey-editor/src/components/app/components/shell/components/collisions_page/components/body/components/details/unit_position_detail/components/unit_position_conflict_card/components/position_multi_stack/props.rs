@@ -1,4 +1,4 @@
-use super::super::conflict_position::ConflictPositionProps;
+use super::super::shared::conflict_position::ConflictPositionProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 

@@ -1,4 +1,4 @@
-use super::components::conflict_position::ConflictPositionProps;
+use super::components::shared::conflict_position::ConflictPositionProps;
 use super::components::position_multi_stack::PositionMultiStackProps;
 use super::components::position_pair_row::{PositionPair, PositionPairRowProps};
 use super::props::UnitPositionConflictCardProps;

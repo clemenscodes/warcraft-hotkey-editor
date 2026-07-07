@@ -23,26 +23,20 @@ impl RaceTabChrome {
         let unit_mode = props.unit_mode;
         let selected_unit_id = props.selected_unit_id;
         let selected_slot = props.selected_slot;
+        let selection = RaceSelection {
+            active_race,
+            unit_mode,
+            selected_unit_id,
+            selected_slot,
+        };
         let onclick = EventHandler::new(move |_event: MouseEvent| {
-            apply_race(
-                race,
-                active_race,
-                unit_mode,
-                selected_unit_id,
-                selected_slot,
-            );
+            selection.apply(race);
         });
         let onkeydown = EventHandler::new(move |event: KeyboardEvent| {
             let key_value = event.key().to_string();
             if key_value == " " || key_value == "Enter" {
                 event.prevent_default();
-                apply_race(
-                    race,
-                    active_race,
-                    unit_mode,
-                    selected_unit_id,
-                    selected_slot,
-                );
+                selection.apply(race);
                 focus.request(FocusTarget::UnitCard);
             }
         });
@@ -55,16 +49,26 @@ impl RaceTabChrome {
     }
 }
 
-fn apply_race(
-    race: Race,
-    mut active_race: Signal<Race>,
+/// The editor selection a race click updates: the active race, plus the unit and
+/// slot it resets. Grouping the signals makes "apply this race" a method rather than
+/// a free function.
+#[derive(Clone, Copy)]
+struct RaceSelection {
+    active_race: Signal<Race>,
     unit_mode: Signal<UnitMode>,
-    mut selected_unit_id: Signal<Option<String>>,
-    mut selected_slot: Signal<Option<GridSlotId>>,
-) {
-    active_race.set(race);
-    let mode_value = *unit_mode.read();
-    let next_id = UnitKindHelpers::default_unit_id_for(race, mode_value);
-    selected_unit_id.set(next_id);
-    selected_slot.set(None);
+    selected_unit_id: Signal<Option<String>>,
+    selected_slot: Signal<Option<GridSlotId>>,
+}
+
+impl RaceSelection {
+    fn apply(self, race: Race) {
+        let mut active_race = self.active_race;
+        active_race.set(race);
+        let mode_value = *self.unit_mode.read();
+        let next_id = UnitKindHelpers::default_unit_id_for(race, mode_value);
+        let mut selected_unit_id = self.selected_unit_id;
+        selected_unit_id.set(next_id);
+        let mut selected_slot = self.selected_slot;
+        selected_slot.set(None);
+    }
 }

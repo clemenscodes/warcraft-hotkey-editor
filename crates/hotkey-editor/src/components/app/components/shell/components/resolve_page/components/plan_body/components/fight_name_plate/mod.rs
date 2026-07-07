@@ -1,7 +1,7 @@
 mod props;
 mod style;
-use super::move_name::MoveName;
-use super::object_id::ObjectId;
+use super::shared::move_name::MoveName;
+use super::shared::object_id::ObjectId;
 use dioxus::prelude::*;
 pub use props::FightNamePlateProps;
 use style::CLASS;

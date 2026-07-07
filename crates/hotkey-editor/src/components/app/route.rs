@@ -34,12 +34,12 @@ pub enum Route {
         let _ = segments;
         Self::default()
     })]
-    #[route("/?:race&:mode&:unit&:q", EditorPage)]
+    #[route("/?:race&:mode&:unit&:search_query", EditorPage)]
     Editor {
         race: Option<String>,
         mode: Option<String>,
         unit: Option<String>,
-        q: Option<String>,
+        search_query: Option<String>,
     },
     #[route("/collisions?:kind&:entry", CollisionsPage)]
     Collisions {
@@ -56,7 +56,7 @@ impl Default for Route {
             race: None,
             mode: None,
             unit: None,
-            q: None,
+            search_query: None,
         }
     }
 }

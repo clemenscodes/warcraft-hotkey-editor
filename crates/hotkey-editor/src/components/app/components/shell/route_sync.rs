@@ -11,13 +11,13 @@ impl From<&Route> for NavSnapshot {
                 race,
                 mode,
                 unit,
-                q,
+                search_query,
             } => {
                 let nav = DecodedEditorNav::decode(
                     race.as_deref(),
                     mode.as_deref(),
                     unit.as_deref(),
-                    q.as_deref(),
+                    search_query.as_deref(),
                 );
                 Self::Editor(nav)
             }
@@ -50,7 +50,7 @@ impl From<&NavSnapshot> for Route {
                     .selected_unit_id
                     .clone()
                     .filter(|value| !value.is_empty());
-                let q = if nav.search_query.is_empty() {
+                let search_query = if nav.search_query.is_empty() {
                     None
                 } else {
                     Some(nav.search_query.clone())
@@ -59,7 +59,7 @@ impl From<&NavSnapshot> for Route {
                     race,
                     mode,
                     unit,
-                    q,
+                    search_query,
                 }
             }
             NavSnapshot::Collisions { kind, entry } => {

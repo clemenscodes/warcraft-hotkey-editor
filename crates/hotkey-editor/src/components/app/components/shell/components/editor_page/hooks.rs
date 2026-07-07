@@ -18,9 +18,9 @@ pub(super) struct EditorPageModel {
 
 /// Reconcile the editor route into the shell's navigation signals, then read every
 /// editor signal from context and shape the two children's props. The reconcile is
-/// the read side of the URL contract — decoding `?race=&mode=&unit=&q=` and writing it
-/// into the navigation signals whenever the route changes (deep-link, back/forward) —
-/// while the shell's push effect handles the write side.
+/// the read side of the URL contract — decoding `?race=&mode=&unit=&search_query=` and
+/// writing it into the navigation signals whenever the route changes (deep-link,
+/// back/forward) — while the shell's push effect handles the write side.
 pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
     let navigation = use_view_navigation();
     let editor = use_editor_state();
@@ -29,7 +29,7 @@ pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
         props.race.as_deref(),
         props.mode.as_deref(),
         props.unit.as_deref(),
-        props.q.as_deref(),
+        props.search_query.as_deref(),
     );
     use_effect(use_reactive!(|decoded| {
         navigation.restore(AppView::Editor, &decoded);

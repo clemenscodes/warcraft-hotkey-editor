@@ -1,8 +1,8 @@
 mod props;
 mod style;
 use tw_macro::assert_component;
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_name::MoveName;
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::object_id::ObjectId;
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::move_name::MoveName;
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::object_id::ObjectId;
 use dioxus::prelude::*;
 pub use props::FightNameButtonProps;
 use style::CLASS;

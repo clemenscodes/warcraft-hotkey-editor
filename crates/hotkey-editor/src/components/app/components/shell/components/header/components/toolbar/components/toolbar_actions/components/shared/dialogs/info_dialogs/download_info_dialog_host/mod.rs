@@ -13,15 +13,10 @@ use dioxus::prelude::*;
 #[component]
 pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
     let custom_keys_service = use_custom_keys_service();
-    let keys = custom_keys_service.keys();
     let on_confirm = EventHandler::new(move |_event: ()| {
-        let serialized = {
-            let read_guard = keys.peek();
-            let Some(file) = read_guard.as_ref() else {
-                return;
-            };
-            file.normalize().to_string()
-        };
+        // R5: the download IS the stored CustomKeys.txt text — read it back, never
+        // re-serialize or re-normalize the in-memory aggregate.
+        let serialized = custom_keys_service.exported_text();
         BlobDownload::trigger("CustomKeys.txt", &serialized);
     });
     let dialog = DownloadInfoDialogProps { open, on_confirm };

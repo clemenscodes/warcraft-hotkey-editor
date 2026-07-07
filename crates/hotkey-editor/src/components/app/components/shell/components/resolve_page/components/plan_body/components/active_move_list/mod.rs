@@ -1,7 +1,7 @@
 pub mod components;
 mod props;
 
-use super::move_list::MoveList;
+use super::shared::move_list::MoveList;
 use components::move_row::MoveRow;
 use dioxus::prelude::*;
 pub use props::ActiveMoveListProps;

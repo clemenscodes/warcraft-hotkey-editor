@@ -1,5 +1,5 @@
 use warcraft_keybinds::HotkeyToken;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::components::tile_face::components::hotkey_badge::HotkeyBadgeState;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::services::editor_state::DragFollower;
 use super::state::GhostState;
 

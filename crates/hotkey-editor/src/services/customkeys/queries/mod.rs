@@ -8,6 +8,7 @@
 //! `ApplicationLayer`; they live here in the renderer crate, not in the
 //! pure-domain `warcraft-keybinds` crate.
 
+pub mod collision_summary_query;
 pub mod cross_unit_collisions_query;
 pub mod resolve_preview_query;
 pub mod slot_binding_query;
