@@ -4,7 +4,6 @@ mod props;
 mod style;
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
-pub use components::inventory_filled_slot::InventoryFilledSlot;
 use components::inventory_slot::InventorySlot;
 use dioxus::prelude::*;
 use hooks::use_inventory_grid;

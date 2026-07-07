@@ -418,47 +418,62 @@ written by hand and never a const you list. e2e decides whether it bothers to
 select a component, never whether the
 component gets an identity — every component is selectable.
 
-## Styling: Tailwind utilities, with the global layer kept to the design system
+## Styling: shared values, individual looks
 
 A component is styled with Tailwind utility classes and nothing else. There are
 no per-component CSS files, no `asset!` stylesheets, no `styles/` directories,
 no `document::Stylesheet` for project styling.
 
-The line that matters is **what is allowed to be global**:
+The line that matters is **what is shared and what is individual**. The one-line
+rule, from which the rest follows: **share *values*, never *looks*.**
 
-- **The design system is global, on purpose.** The `@theme` block in
-  `crates/hotkey-editor/tailwind.input.css` holds only the shared design
-  vocabulary: the warcraft and race color palettes, the fonts. Plus the six
-  responsive bands (`@custom-variant`) and the `kb-focus` variant. These are
-  *meant* to be used anywhere — `text-warcraft-gold` shared across components is
-  the design system working, not a leak. App-wide treatments that aren't
-  utilities at all (the gold scrollbar) live as global base rules, also by
-  design.
-- **A component's look is never global.** It is the list of utilities in that
-  component's own `style.rs`, nothing more. There is no `surface-callout`,
-  `chip-gold`, `button-dismiss` — promoting one component's appearance into a
-  shared `@utility` is exactly the leak we forbid: another component could wear
-  it, and editing it would reach across components. If two components look alike,
-  they each list the utilities (duplication over coupling, the same trade the
-  one-class-per-component rule makes).
+> **History, so the rule is not misread.** An earlier version of this section
+> said the inverse — "a value goes in `@theme` only if it is a palette color or a
+> font; everything else, inline it; when in doubt inline." That rule existed to
+> escape a specific mess: globally interconnected CSS with no design system at
+> all, where the only safe move was total component isolation. That north star is
+> reached. The failure mode now is the **opposite** one — an archipelago of
+> components that are each internally clean but collectively look like different
+> applications. So the rule is refined below. Individualism is still allowed, but
+> **limited**: the shared visual vocabulary is now mandatory, because a design
+> system is the point.
 
-**Arbitrary values are allowed, and are how bespoke styling stays local.** A
-one-off value a component needs — `min-w-[24cqi]`, `text-[1.6rem]/[1.6]`,
-`bg-[linear-gradient(135deg,#0c1932,#060c1c)]`, `[&_svg]:size-8`,
-`[text-shadow:1px_1px_0_#000]` — goes inline in that component's `style.rs`. It
-is a literal in the component's own `CLASS`, so it is private by construction:
-nothing global, nobody else can reach it. This is *better* isolation than a
-bespoke global token, which would sit in a shared namespace for anyone to use.
+- **The design vocabulary is global, on purpose — and mandatory.** The `@theme`
+  block in `crates/hotkey-editor/tailwind.input.css` owns the shared design
+  vocabulary: the color palette, the type scale (`--text-*`), the radius scale
+  (`--radius-*`), the shadow set (`--shadow-*`), the line-heights
+  (`--leading-*`), the recurring surface gradients (`bg-panel-*`), and the font —
+  plus the six responsive bands and `kb-focus`. Every component draws its colors,
+  font sizes, radii, and shadows **from this vocabulary**, so the whole app reads
+  as one product. `text-lg` and `text-warcraft-gold` shared across a hundred
+  components is the design system working, not a leak.
+- **Sharing a value is not coupling; sharing a look is.** Two components that
+  both use `text-lg` are **not** coupled — each still writes its own utility
+  list, and editing one's markup cannot touch the other. What stays forbidden is
+  promoting a component's **composite look** — a `surface-callout`, `chip-gold`,
+  `button-primary` — into a shared `@utility`/class another component could
+  *wear*, because then one edit restyles them all. That is the CSS-spaghetti
+  coupling this project was built to escape, and it is still banned. **The test:
+  share a *value* (a token, consumed through a utility); never share a *rule* (a
+  selector or a composite look).**
 
-So the rule is the inverse of a blanket ban: **a value goes in `@theme` only if
-it is genuine shared design vocabulary** (a palette color, a font). Everything
-component-specific — a one-off size, a gradient, a shadow, a descendant selector
-— is an arbitrary value inline. When in doubt, inline it; the global layer earns
-new entries only by being shared design, never by being one component's detail.
+**Individualism allowed, but limited.** In a tokenized dimension the token is
+**mandatory**: a color, font size, radius, shadow, or line-height must be the
+design-system token — `text-lg` not `text-[1.4rem]`, `rounded-card` not
+`rounded-[8px]`, `text-warcraft-gold` (with `/opacity` modifiers) not a fresh hex
+or `rgba`. Arbitrary `[…]` values remain the right tool for the genuinely bespoke
+**non-vocabulary** value — a one-off layout dimension (`min-w-[24cqi]`,
+`[&_svg]:size-8`, a `cqi`/`cqh` length off the component's container). Those stay
+inline and private by construction. The distinction is the *dimension*: **visual
+vocabulary (color, type, radius, shadow, gradient) is tokenized and shared;
+structure and one-off geometry stay individual.**
 
-Use the design tokens where they apply: `text-warcraft-gold`, and opacity
-modifiers on them (`border-warcraft-gold/35`, `text-warcraft-gold/75`) instead of
-a fresh rgba. Reach for an arbitrary value for the genuinely bespoke.
+**Consolidate — a scale is a constraint.** Tokenizing means *collapsing*, not
+renaming: ~92 one-off font sizes become nine scale steps; a dozen shades of gold
+become two or three. The count of distinct values in a dimension **going down**
+is the design system appearing — a page needs several font sizes, not ninety-two.
+A value that nearly matches a token snaps to it; only a genuinely new vocabulary
+value earns a new token (and then everyone reuses it), never a one-off.
 
 ## Responsive bands
 
@@ -494,6 +509,35 @@ A component keys only the bands it styles (`base` plus whichever responsive band
 it restyles); an unused band is simply omitted, and an unknown band key is a
 compile error. Within one band the property order is layout → sizing → spacing →
 border → typography → color → effects → state.
+
+## No `clamp()` — responsiveness is bands plus containers
+
+The app has exactly two responsive mechanisms, and `clamp()` is not one of them.
+
+- **Per viewport: the six bands.** A component picks the right token per band —
+  `text-2xl` in `BASE`, `mobile:text-xl` where the phone needs it. Different
+  widths get different *steps*, chosen explicitly, never interpolated.
+- **Per container: `cqi`.** A self-scaling drawing leaf expresses its interior in
+  `cqi`/`cqh` off the box its parent hands it, so it scales continuously with the
+  container at every width (the header capstone is the worked example).
+
+`clamp()` is a third mechanism that fights both. Its `vw` term interpolates
+*across* the band boundaries the band system deliberately makes disjoint
+("nothing inherits across bands"), and a `clamp` inside a `cqi` drawing pins the
+proportional scaling that `cqi` exists to provide. It reads as "responsive" but
+papers over bands that were never designed per width and containers that were
+never wired — and it is a real complexity cost, three-part expressions where a
+single token would do. **Design the bands and the container scaling correctly and
+`clamp` is unnecessary, so it is not used.** A value that seems to want a
+floor-and-ceiling is the signal that a band override or a `cqi` context is
+missing; add that, not a clamp.
+
+> **The capstones lag this rule.** The `shell/header` and `shell/footer`
+> walk-throughs at the end of this file still describe and praise `clamp()`
+> (`min-h-[clamp(…)]`, the footer's `text-[clamp(…)]`). Those uses are **slated
+> for migration** to bands + `cqi`, not grandfathered — where a capstone praises
+> `clamp`, this rule wins, and the capstone prose is updated as each role model
+> is de-clamped.
 
 ## style.rs and the `classes!` macro
 

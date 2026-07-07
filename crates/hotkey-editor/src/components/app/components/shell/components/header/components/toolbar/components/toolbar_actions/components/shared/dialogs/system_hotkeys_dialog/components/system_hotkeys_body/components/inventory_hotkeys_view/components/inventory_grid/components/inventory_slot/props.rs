@@ -1,4 +1,4 @@
-use super::super::inventory_filled_slot::InventoryFilledSlotProps;
+use super::components::inventory_filled_slot::InventoryFilledSlotProps;
 use dioxus::prelude::*;
 
 /// One grid position: the finished cell props when the slot is filled, or `None`

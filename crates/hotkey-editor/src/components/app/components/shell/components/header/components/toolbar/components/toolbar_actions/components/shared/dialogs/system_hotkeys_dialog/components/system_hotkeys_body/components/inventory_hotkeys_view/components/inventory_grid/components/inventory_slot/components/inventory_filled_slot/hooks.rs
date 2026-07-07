@@ -1,4 +1,4 @@
-use super::super::super::{
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
     DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragRaf,
     InventoryDragSource, LATEST_DRAG_MOVE, SUPPRESS_NEXT_CLICK,

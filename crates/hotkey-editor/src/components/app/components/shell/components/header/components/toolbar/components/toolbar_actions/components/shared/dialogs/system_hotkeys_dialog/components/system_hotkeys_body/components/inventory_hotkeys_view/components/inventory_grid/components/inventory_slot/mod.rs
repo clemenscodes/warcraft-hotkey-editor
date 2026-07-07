@@ -1,7 +1,8 @@
+pub mod components;
 mod props;
 
-use super::inventory_empty_slot::InventoryEmptySlot;
-use super::inventory_filled_slot::InventoryFilledSlot;
+use components::inventory_empty_slot::InventoryEmptySlot;
+use components::inventory_filled_slot::InventoryFilledSlot;
 use dioxus::prelude::*;
 pub use props::InventorySlotProps;
 

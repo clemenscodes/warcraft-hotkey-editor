@@ -1,4 +1,6 @@
-use super::super::super::{InventoryDragFollower, InventoryDragSource};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
+    InventoryDragFollower, InventoryDragSource,
+};
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 

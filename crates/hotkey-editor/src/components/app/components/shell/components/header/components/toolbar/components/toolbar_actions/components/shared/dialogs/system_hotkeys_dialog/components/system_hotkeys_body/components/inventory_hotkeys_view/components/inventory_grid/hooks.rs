@@ -1,5 +1,5 @@
-use super::components::inventory_filled_slot::InventoryFilledSlotProps;
 use super::components::inventory_slot::InventorySlotProps;
+use super::components::inventory_slot::components::inventory_filled_slot::InventoryFilledSlotProps;
 use super::props::InventoryGridProps;
 use super::{INVENTORY_COLUMNS, INVENTORY_ROWS, InventoryDragSource, SLOT_FRAME_GOLD};
 use dioxus::prelude::*;

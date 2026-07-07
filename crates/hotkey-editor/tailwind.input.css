@@ -86,6 +86,32 @@
   --radius-panel: 10px;
   --radius-container: 12px;
 
+  /* Type scale — nine fixed-rem steps, no clamp(). The whole app snaps to these,
+     collapsing ~92 one-off text-[Nrem]/text-[Npx] sizes; the number of distinct
+     sizes going down IS the design system appearing. Responsiveness is NOT baked
+     into the token (no clamp/vw): a component picks the right step per band
+     (base plus mobile:/tablet:/… overrides), and a self-scaling drawing leaf
+     uses cqi off its container. These OVERRIDE Tailwind's fixed defaults; no
+     component used a default text-* utility, so there is no blast radius. */
+  --text-xs: 0.8rem;
+  --text-sm: 0.9rem;
+  --text-base: 1rem;
+  --text-md: 1.15rem;
+  --text-lg: 1.35rem;
+  --text-xl: 1.6rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.5rem;
+  --text-4xl: 3.25rem;
+
+  /* Line-height tokens, role-named like the radius scale (not numeric), no
+     clamp. Additive: they do not shadow Tailwind's leading-none/tight/etc.
+     Replace the recurring leading-[N] one-offs. */
+  --leading-flush: 1.1;
+  --leading-title: 1.2;
+  --leading-heading: 1.3;
+  --leading-body: 1.4;
+  --leading-prose: 1.5;
+
   /* Design-system shadows — promoted verbatim from the recurring inline
      [box-shadow:…] values so a component references the effect by name. Each is
      the exact effect it replaces; distinct effects stay distinct tokens. */
