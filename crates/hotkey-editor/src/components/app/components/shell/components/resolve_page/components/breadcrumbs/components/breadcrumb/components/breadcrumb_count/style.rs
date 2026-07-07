@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[1.6rem]",
+        "text-xl",
         "opacity-80",
         "before:content-['(']",
         "after:content-[')']",

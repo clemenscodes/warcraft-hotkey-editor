@@ -7,8 +7,8 @@ classes! {
         "[transform:translate(-50%,-50%)]",
         "flex-none",
         "text-warcraft-gold",
-        "text-[2.8rem]",
-        "leading-[1]",
+        "text-3xl",
+        "leading-none",
         "text-shadow-drop",
     ],
 }

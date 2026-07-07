@@ -1,8 +1,8 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[1.05rem]",
-        "leading-[1.25]",
+        "text-base",
+        "leading-title",
         "pb-[0.1rem]",
         "overflow-hidden",
         "text-ellipsis",
@@ -12,18 +12,18 @@ classes! {
     mobile: tw![
         "mobile:block",
         "mobile:w-full",
-        "mobile:text-[11px]",
-        "mobile:leading-[1.2]",
+        "mobile:text-xs",
+        "mobile:leading-title",
         "mobile:data-[selected=true]:text-white",
     ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",
-        "tablet:text-[11px]",
-        "tablet:leading-[1.2]",
+        "tablet:text-xs",
+        "tablet:leading-title",
         "tablet:data-[selected=true]:text-white",
     ],
-    desktop: tw!["desktop:text-[1.35rem]"],
-    qhd: tw!["qhd:text-[1.35rem]"],
-    uhd: tw!["uhd:text-[1.35rem]"],
+    desktop: tw!["desktop:text-lg"],
+    qhd: tw!["qhd:text-lg"],
+    uhd: tw!["uhd:text-lg"],
 }

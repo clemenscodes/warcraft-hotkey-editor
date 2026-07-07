@@ -6,7 +6,7 @@ classes! {
         "flex",
         "items-center",
         "text-warcraft-gold",
-        "text-[34px]",
+        "text-2xl",
         "leading-none",
         "text-shadow-drop",
     ],

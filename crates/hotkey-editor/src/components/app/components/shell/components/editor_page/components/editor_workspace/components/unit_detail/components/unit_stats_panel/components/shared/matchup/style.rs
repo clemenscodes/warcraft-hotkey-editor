@@ -16,7 +16,7 @@ classes! {
         "data-[matchup=weak]:bg-warcraft-danger/12",
     ],
     mobile: tw![
-        "mobile:text-[1.7rem]",
+        "mobile:text-xl",
         "mobile:px-[0.6rem]",
         "mobile:py-[0.4rem]",
     ],

@@ -6,6 +6,6 @@ classes! {
         "m-0",
         "font-semibold",
         "text-warcraft-text-secondary",
-        "text-[1.45rem]",
+        "text-lg",
     ],
 }

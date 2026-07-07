@@ -10,17 +10,17 @@ classes! {
         "whitespace-nowrap",
         "text-ellipsis",
         "font-normal",
-        "text-[2rem]",
-        "leading-[1.2]",
+        "text-2xl",
+        "leading-title",
         "text-warcraft-gold",
         "text-shadow-drop-92",
     ],
     mobile: tw![
-        "mobile:text-[15px]",
+        "mobile:text-sm",
         "mobile:[word-break:normal]",
     ],
     tablet: tw![
-        "tablet:text-[15px]",
+        "tablet:text-sm",
         "tablet:[word-break:normal]",
     ],
 }

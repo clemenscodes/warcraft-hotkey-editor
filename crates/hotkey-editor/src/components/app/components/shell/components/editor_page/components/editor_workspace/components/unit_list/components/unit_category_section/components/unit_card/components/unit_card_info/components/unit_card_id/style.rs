@@ -3,8 +3,8 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "text-[1.05rem]",
-        "leading-[1.2]",
+        "text-base",
+        "leading-title",
         "overflow-hidden",
         "text-ellipsis",
         "whitespace-nowrap",
@@ -12,14 +12,14 @@ classes! {
     mobile: tw![
         "mobile:block",
         "mobile:w-full",
-        "mobile:text-[11px]",
-        "mobile:leading-[1.2]",
+        "mobile:text-xs",
+        "mobile:leading-title",
     ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",
-        "tablet:text-[11px]",
-        "tablet:leading-[1.2]",
+        "tablet:text-xs",
+        "tablet:leading-title",
     ],
 }
 

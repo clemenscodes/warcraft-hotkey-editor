@@ -17,7 +17,7 @@ classes! {
         "data-[zero=true]:font-normal",
     ],
     mobile: tw![
-        "mobile:group-data-[variant=hp]:text-[2.6rem]",
-        "mobile:group-data-[variant=mana]:text-[2.6rem]",
+        "mobile:group-data-[variant=hp]:text-3xl",
+        "mobile:group-data-[variant=mana]:text-3xl",
     ],
 }

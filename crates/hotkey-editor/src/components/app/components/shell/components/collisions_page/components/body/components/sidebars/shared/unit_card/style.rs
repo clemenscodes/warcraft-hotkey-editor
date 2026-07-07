@@ -9,7 +9,7 @@ classes! {
         "w-full",
         "min-w-0",
         "text-left",
-        "text-[1.4rem]",
+        "text-lg",
         "tracking-[0.02em]",
         "border",
         "rounded-tile",

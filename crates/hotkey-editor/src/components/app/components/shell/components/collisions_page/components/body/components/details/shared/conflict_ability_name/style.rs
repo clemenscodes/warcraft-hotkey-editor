@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[17px]",
+        "text-base",
         "text-warcraft-gold",
         "text-center",
         "whitespace-nowrap",

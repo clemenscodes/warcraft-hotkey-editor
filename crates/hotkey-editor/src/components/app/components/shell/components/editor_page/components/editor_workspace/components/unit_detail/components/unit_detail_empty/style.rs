@@ -17,7 +17,7 @@ classes! {
         "bg-panel-dark-diag-70",
         "shadow-bevel-hl-3",
         "text-warcraft-text-faint",
-        "text-[1rem]",
+        "text-base",
         "italic",
     ],
     mobile: tw![

@@ -8,7 +8,7 @@ classes! {
         "p-[24px_16px]",
         "bg-warcraft-bg-mid/45",
         "border",
-        "border-warcraft-blue-bright-deep",
+        "border-warcraft-blue-deep",
         "rounded-panel",
         "min-w-0",
     ],

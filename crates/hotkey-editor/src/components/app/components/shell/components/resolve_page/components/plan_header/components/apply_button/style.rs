@@ -9,7 +9,7 @@ classes! {
         "border-warcraft-gold",
         "rounded-card",
         "cursor-pointer",
-        "text-[1.5rem]",
+        "text-xl",
         "text-warcraft-gold",
         "bg-panel-blue-solid",
         "text-shadow-drop-92",

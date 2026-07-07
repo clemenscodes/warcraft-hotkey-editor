@@ -9,7 +9,7 @@ classes! {
         "p-[30px_20px]",
         "bg-warcraft-bg-mid/50",
         "border",
-        "border-warcraft-blue-bright-deep",
+        "border-warcraft-blue-deep",
         "rounded-card",
         "cursor-pointer",
         "hover:border-warcraft-gold",

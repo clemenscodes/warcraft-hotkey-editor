@@ -13,5 +13,5 @@ classes! {
         "data-[zero=true]:text-warcraft-text-faint",
         "data-[zero=true]:font-normal",
     ],
-    mobile: tw!["mobile:text-[1.7rem]"],
+    mobile: tw!["mobile:text-xl"],
 }

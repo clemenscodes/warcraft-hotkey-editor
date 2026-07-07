@@ -5,7 +5,7 @@ classes! {
     base: tw![
         "uppercase",
         "tracking-[0.06em]",
-        "text-[1.3rem]",
+        "text-lg",
         "text-warcraft-text-secondary",
     ],
 }

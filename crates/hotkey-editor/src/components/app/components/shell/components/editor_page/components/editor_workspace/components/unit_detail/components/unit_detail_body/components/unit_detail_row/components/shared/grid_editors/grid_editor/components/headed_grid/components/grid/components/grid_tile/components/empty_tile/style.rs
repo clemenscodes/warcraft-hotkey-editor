@@ -34,7 +34,7 @@ states! {
     EmptyTileState,
     Empty => tw![
         "bg-panel-dark-diag-85",
-        "border-warcraft-blue-bright-deep",
+        "border-warcraft-blue-deep",
         "shadow-bevel-hl",
     ],
     DropTarget => tw![

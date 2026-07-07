@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[1.4rem]",
+        "text-lg",
         "uppercase",
         "[letter-spacing:0.08em]",
         "text-race-orc",

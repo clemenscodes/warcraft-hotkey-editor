@@ -10,7 +10,7 @@ classes! {
         "mb-1",
         "py-[0.35rem]",
         "px-[0.25rem]",
-        "text-[1.2rem]",
+        "text-md",
         "uppercase",
         "tracking-[0.12em]",
         "border-b",

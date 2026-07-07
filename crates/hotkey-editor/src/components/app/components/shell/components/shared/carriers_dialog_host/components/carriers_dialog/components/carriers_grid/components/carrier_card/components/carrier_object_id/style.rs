@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[12px]",
+        "text-xs",
         "text-warcraft-text-faint",
     ],
 }

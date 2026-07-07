@@ -6,7 +6,7 @@ classes! {
         "bg-transparent",
         "border-none",
         "cursor-pointer",
-        "text-[14px]",
+        "text-sm",
         "text-warcraft-text-muted",
         "underline",
         "underline-offset-2",

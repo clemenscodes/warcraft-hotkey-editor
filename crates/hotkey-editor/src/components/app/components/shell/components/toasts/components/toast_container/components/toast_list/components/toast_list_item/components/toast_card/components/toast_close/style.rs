@@ -13,7 +13,7 @@ classes! {
         "cursor-pointer",
         "transition-[color,background-color,border-color]",
         "duration-150",
-        "text-[2rem]",
+        "text-2xl",
         "leading-none",
         "hover:text-warcraft-gold",
     ],

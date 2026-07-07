@@ -15,7 +15,7 @@ classes! {
         "border-race-human",
         "rounded-[4px_0_0_4px]",
         "text-warcraft-text-secondary",
-        "text-[1.4rem]",
-        "leading-[1.5]",
+        "text-lg",
+        "leading-prose",
     ],
 }

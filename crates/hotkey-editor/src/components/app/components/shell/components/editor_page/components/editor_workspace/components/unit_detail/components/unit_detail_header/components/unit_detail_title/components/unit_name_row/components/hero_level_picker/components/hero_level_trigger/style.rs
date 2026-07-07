@@ -15,7 +15,7 @@ classes! {
         "border-warcraft-gold/45",
         "rounded-tile",
         "text-warcraft-gold",
-        "text-[1.15rem]",
+        "text-md",
         "uppercase",
         "tracking-[0.06em]",
         "text-shadow-drop",
@@ -35,7 +35,7 @@ classes! {
         "mobile:px-[10px]",
         "mobile:py-[5px]",
         "mobile:min-h-[32px]",
-        "mobile:text-[16px]",
+        "mobile:text-base",
         "mobile:tracking-[0.04em]",
     ],
     tablet: tw![
@@ -43,7 +43,7 @@ classes! {
         "tablet:px-[10px]",
         "tablet:py-[5px]",
         "tablet:min-h-[32px]",
-        "tablet:text-[14px]",
+        "tablet:text-sm",
         "tablet:tracking-[0.04em]",
     ],
 }

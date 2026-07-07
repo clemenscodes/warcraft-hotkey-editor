@@ -9,7 +9,7 @@ classes! {
         "px-[0.75rem]",
         "py-[0.3rem]",
         "rounded-tile",
-        "text-[1.35rem]",
+        "text-lg",
         "uppercase",
         "[letter-spacing:0.04em]",
         "border",

@@ -16,8 +16,8 @@ classes! {
         "border",
         "border-warcraft-blue",
         "text-warcraft-text-secondary",
-        "text-[1.05rem]",
-        "leading-[1]",
+        "text-base",
+        "leading-none",
         "text-shadow-drop",
         "data-[win=true]:border-warcraft-gold",
         "data-[win=true]:text-warcraft-gold",
@@ -25,6 +25,6 @@ classes! {
     mobile: tw![
         "mobile:min-w-[15px]",
         "mobile:h-[15px]",
-        "mobile:text-[0.85rem]",
+        "mobile:text-sm",
     ],
 }

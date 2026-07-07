@@ -6,8 +6,8 @@ classes! {
         "text-warcraft-gold",
         "uppercase",
         "tracking-[0.06em]",
-        "text-[1.9rem]",
-        "leading-[1.2]",
+        "text-2xl",
+        "leading-title",
         "text-shadow-drop",
     ],
 }

@@ -4,7 +4,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "m-0",
-        "text-[1.45rem]",
+        "text-lg",
         "italic",
         "text-warcraft-text-faint",
     ],

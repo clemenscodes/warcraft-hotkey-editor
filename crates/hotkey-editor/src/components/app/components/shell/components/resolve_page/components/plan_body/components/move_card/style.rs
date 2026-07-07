@@ -8,7 +8,7 @@ classes! {
         "box-border",
         "bg-warcraft-bg-mid/45",
         "border",
-        "border-warcraft-blue-bright-deep",
+        "border-warcraft-blue-deep",
         "rounded-panel",
         "data-[stuck=true]:border-race-orc/50",
     ],
