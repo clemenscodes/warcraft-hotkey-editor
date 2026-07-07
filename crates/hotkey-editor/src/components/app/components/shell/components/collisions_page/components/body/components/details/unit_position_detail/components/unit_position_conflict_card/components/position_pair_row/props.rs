@@ -1,4 +1,4 @@
-use super::super::conflict_position_cell::ConflictPositionCellProps;
+use super::super::conflict_position::ConflictPositionProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 
@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 pub struct PositionPair {
     pub left: ConflictAbilityProps,
     pub right: ConflictAbilityProps,
-    pub cell: ConflictPositionCellProps,
+    pub cell: ConflictPositionProps,
 }
 
 /// The pair-clash row: two abilities flanking the colliding cell, or nothing when

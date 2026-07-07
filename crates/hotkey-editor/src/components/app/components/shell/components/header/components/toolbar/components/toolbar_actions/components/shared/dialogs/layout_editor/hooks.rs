@@ -1,4 +1,4 @@
-use super::components::layout_grid::components::layout_cell::LayoutCellProps;
+use super::components::layout_grid::components::layout_tile::LayoutTileProps;
 use super::logic::{GridCellContext, LayoutGridCells, LayoutPickerBoard, LayoutPickerContext};
 use super::props::LayoutEditorProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::KeyPickerCell;
@@ -14,7 +14,7 @@ use warcraft_keybinds::HotkeyToken;
 /// places these; all the work happens here.
 pub(super) struct LayoutEditorModel {
     pub(super) open: Signal<bool>,
-    pub(super) cells: Vec<LayoutCellProps>,
+    pub(super) cells: Vec<LayoutTileProps>,
     pub(super) picker_open: bool,
     pub(super) picker_rows: Vec<Vec<KeyPickerCell>>,
     pub(super) on_pick: EventHandler<HotkeyToken>,
@@ -41,7 +41,7 @@ pub(super) struct LayoutActions {
 
 fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
     let grid_layout = props.grid_layout;
-    let mut editing_layout_cell = props.editing_layout_cell;
+    let mut editing_layout_tile = props.editing_layout_tile;
     let mut update_hotkeys_on_move = props.update_hotkeys_on_move;
     let mut layout_dialog_open = props.open;
     let custom_keys_service = use_custom_keys_service();
@@ -64,7 +64,7 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
         layout_dialog_open.set(false);
     });
     let on_pick = EventHandler::new(move |token: HotkeyToken| {
-        let Some(active_cell) = *editing_layout_cell.read() else {
+        let Some(active_cell) = *editing_layout_tile.read() else {
             return;
         };
         let Ok(letter) = char::try_from(token) else {
@@ -75,13 +75,13 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
         let active_row = u8::from(active_cell.row());
         next_layout.assign_unique(active_column, active_row, letter);
         grid_layout_service.select(next_layout);
-        editing_layout_cell.set(None);
+        editing_layout_tile.set(None);
     });
-    let on_picker_close = EventHandler::new(move |_event: ()| editing_layout_cell.set(None));
+    let on_picker_close = EventHandler::new(move |_event: ()| editing_layout_tile.set(None));
     // The key picker is a second modal nested inside this one. When it mounts it
     // takes focus, which makes the base dialog primitive fire a close on this
     // outer dialog — that close must be ignored, or opening the picker would
-    // dismiss the whole editor and strand `editing_layout_cell` set, so the
+    // dismiss the whole editor and strand `editing_layout_tile` set, so the
     // editor never reopens. Only a close that arrives while the picker is shut is
     // a real dismiss; then we also clear the editing cell so the next open is clean.
     let on_dialog_open_change = Callback::new(move |is_open: bool| {
@@ -89,11 +89,11 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
             layout_dialog_open.set(true);
             return;
         }
-        let picker_is_open = editing_layout_cell.read().is_some();
+        let picker_is_open = editing_layout_tile.read().is_some();
         if picker_is_open {
             return;
         }
-        editing_layout_cell.set(None);
+        editing_layout_tile.set(None);
         layout_dialog_open.set(false);
     });
     let toggle_checked = *update_hotkeys_on_move.read();
@@ -117,16 +117,16 @@ fn use_layout_actions(props: &LayoutEditorProps) -> LayoutActions {
 pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel {
     let open = props.open;
     let grid_layout = props.grid_layout;
-    let editing_layout_cell = props.editing_layout_cell;
-    let dragging_layout_cell = props.dragging_layout_cell;
+    let editing_layout_tile = props.editing_layout_tile;
+    let dragging_layout_tile = props.dragging_layout_tile;
     let grid_layout_service = use_grid_layout_service();
     let layout_snapshot = *grid_layout.read();
-    let editing_snapshot = *editing_layout_cell.read();
+    let editing_snapshot = *editing_layout_tile.read();
 
     let cell_context = GridCellContext {
         grid_layout,
-        editing_layout_cell,
-        dragging_layout_cell,
+        editing_layout_tile,
+        dragging_layout_tile,
         grid_layout_service,
         layout: layout_snapshot,
         editing_snapshot,

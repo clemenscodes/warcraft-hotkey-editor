@@ -61,6 +61,12 @@ impl ResolvedSystemBinding {
     pub fn section_comment(&self) -> &str {
         &self.section_comment
     }
+
+    /// The effective key + modifier this section resolves to, materialized when
+    /// the map was built (custom override if present, else the database default).
+    pub fn effective(&self) -> EffectiveBinding {
+        self.binding
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
@@ -93,6 +99,14 @@ impl SystemBindingMap {
         Self {
             bindings_by_section,
         }
+    }
+
+    /// The resolved binding for one section, or `None` when the string names no
+    /// known system keybind section. Reads the entry the build already
+    /// materialized — the query layer uses this instead of re-resolving the
+    /// effective binding (and re-supplying the database defaults) at render time.
+    pub fn binding_for(&self, section_id: WarcraftObjectId) -> Option<&ResolvedSystemBinding> {
+        self.bindings_by_section.get(&section_id)
     }
 
     pub fn collisions_for(
@@ -179,5 +193,25 @@ mod tests {
     fn rejects_an_unknown_section() {
         let resolved = SystemBindingMap::resolve_section("not-a-real-section");
         assert!(resolved.is_none());
+    }
+
+    #[test]
+    fn exposes_the_materialized_binding_for_a_known_section() {
+        let section_id = SystemBindingMap::resolve_section("itm3")
+            .expect("itm3 is a known system keybind section");
+        let map = SystemBindingMap::build(None);
+        let resolved = map
+            .binding_for(section_id)
+            .expect("a built map holds an entry for every known section");
+        assert_eq!(resolved.section_id(), section_id);
+        let effective = resolved.effective();
+        assert!(!effective.label().is_empty());
+    }
+
+    #[test]
+    fn has_no_binding_for_an_unknown_section() {
+        let stray_id = warcraft_api::WarcraftObjectId::from("not-a-real-section");
+        let map = SystemBindingMap::build(None);
+        assert!(map.binding_for(stray_id).is_none());
     }
 }

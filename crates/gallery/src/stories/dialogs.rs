@@ -88,8 +88,8 @@ fn preview_dialog_open() -> Element {
 
 fn layout_editor_default() -> Element {
     let grid_layout = use_signal(fixtures::sample_grid_layout);
-    let editing_layout_cell = use_signal(|| None::<GridCoordinate>);
-    let dragging_layout_cell = use_signal(|| None::<GridCoordinate>);
+    let editing_layout_tile = use_signal(|| None::<GridCoordinate>);
+    let dragging_layout_tile = use_signal(|| None::<GridCoordinate>);
     let loaded_keys = use_signal(|| Some(fixtures::sample_keys()));
     let layout_dialog_open = use_signal(|| true);
     let update_hotkeys_on_move = use_signal(|| true);
@@ -99,8 +99,8 @@ fn layout_editor_default() -> Element {
                 loaded_keys,
                 LayoutEditor {
                     grid_layout,
-                    editing_layout_cell,
-                    dragging_layout_cell,
+                    editing_layout_tile,
+                    dragging_layout_tile,
                     open: layout_dialog_open,
                     update_hotkeys_on_move,
                 }

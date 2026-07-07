@@ -419,7 +419,7 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
             return;
         }
         if let Some(info) = active_info {
-            let target_selectors: &[&str] = if info.classes().contains("override-key-cell") {
+            let target_selectors: &[&str] = if info.classes().contains("override-key") {
                 &[
                     ".grid-editor-tile:has(.filled-tile[data-selected=\"true\"])",
                     ".grid-editor-tile:has(.filled-tile)",

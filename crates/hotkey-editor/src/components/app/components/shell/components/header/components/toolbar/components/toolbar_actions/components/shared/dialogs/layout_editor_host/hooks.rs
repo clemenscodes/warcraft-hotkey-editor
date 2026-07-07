@@ -15,12 +15,12 @@ pub(super) fn use_layout_editor_host() -> LayoutEditorProps {
     let update_hotkeys_on_move = editor.update_hotkeys_on_move;
     let overlay = use_overlay_state();
     let open = overlay.layout_dialog_open;
-    let editing_layout_cell = use_signal::<Option<GridCoordinate>>(|| None);
-    let dragging_layout_cell = use_signal::<Option<GridCoordinate>>(|| None);
+    let editing_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
+    let dragging_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     LayoutEditorProps {
         grid_layout,
-        editing_layout_cell,
-        dragging_layout_cell,
+        editing_layout_tile,
+        dragging_layout_tile,
         update_hotkeys_on_move,
         open,
     }

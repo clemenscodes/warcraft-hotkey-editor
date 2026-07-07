@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_label::AltStateLabelProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::AltStatePositionButtonProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCellProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKeyProps;
 
 /// The upgraded-form block: the position button and hotkey cell for the unit that
 /// shares this button position after an upgrade (e.g. post-Barrage Siege Engine).
@@ -35,7 +35,7 @@ impl From<&UpgradeSectionProps> for AltStatePositionButtonProps {
     }
 }
 
-impl From<&UpgradeSectionProps> for OverrideKeyCellProps {
+impl From<&UpgradeSectionProps> for OverrideKeyProps {
     fn from(props: &UpgradeSectionProps) -> Self {
         let label = props.upgrade_hotkey_label.clone();
         let title = String::from("Hotkey for the upgraded form");

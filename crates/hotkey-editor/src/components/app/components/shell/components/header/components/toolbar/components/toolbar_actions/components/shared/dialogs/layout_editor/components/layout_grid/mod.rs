@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use components::layout_cell::LayoutCell;
+use components::layout_tile::LayoutTile;
 use dioxus::prelude::*;
 pub use props::LayoutGridProps;
 use style::CLASS;
@@ -16,7 +16,7 @@ pub fn LayoutGrid(props: LayoutGridProps) -> Element {
     rsx! {
         div { class: CLASS,
             for cell in cells {
-                LayoutCell { ..cell }
+                LayoutTile { ..cell }
             }
         }
     }

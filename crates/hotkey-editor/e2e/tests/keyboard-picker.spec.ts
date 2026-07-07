@@ -23,8 +23,8 @@ async function openBlizzardPicker(page: Page) {
     .filter({ has: page.locator('img[alt="Blizzard"]') });
   await blizzardTile.waitFor();
   await blizzardTile.click();
-  await page.locator(".override-key-cell").waitFor();
-  await page.locator(".override-key-cell").click();
+  await page.locator(".override-key").waitFor();
+  await page.locator(".override-key").click();
   await page.locator(".key-picker-board").waitFor();
   // The keydown handler only fires once focus lands inside the dialog; wait for
   // it so the test never races the deferred focus.
@@ -36,7 +36,7 @@ test.describe("Ability hotkey picker keyboard input", () => {
     await openBlizzardPicker(page);
     await page.keyboard.press("e");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(page.locator(".override-key-cell")).toContainText("E");
+    await expect(page.locator(".override-key")).toContainText("E");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("=E");
   });
@@ -46,16 +46,16 @@ test.describe("Ability hotkey picker keyboard input", () => {
     await openBlizzardPicker(page);
     await page.keyboard.press("e");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(page.locator(".override-key-cell")).toContainText("E");
+    await expect(page.locator(".override-key")).toContainText("E");
 
     // Reopen and pick a different key — this is the regression: focus used to be
     // lost on the second open, so the keypress did nothing.
-    await page.locator(".override-key-cell").click();
+    await page.locator(".override-key").click();
     await page.locator(".key-picker-board").waitFor();
     await expect(page.locator(".key-picker-board")).toBeFocused();
     await page.keyboard.press("r");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(page.locator(".override-key-cell")).toContainText("R");
+    await expect(page.locator(".override-key")).toContainText("R");
   });
 
   test("pressing a conflicting (disabled) key does nothing", async ({ page }) => {
@@ -65,14 +65,14 @@ test.describe("Ability hotkey picker keyboard input", () => {
     await expect(page.locator('.key-picker-key[data-label="W"]')).toBeDisabled();
     await page.keyboard.press("w");
     await expect(page.locator(".key-picker-board")).toBeVisible();
-    await expect(page.locator(".override-key-cell")).toContainText("B");
+    await expect(page.locator(".override-key")).toContainText("B");
   });
 
   test("pressing a key not on the board (a digit) does nothing", async ({ page }) => {
     await openBlizzardPicker(page);
     await page.keyboard.press("1");
     await expect(page.locator(".key-picker-board")).toBeVisible();
-    await expect(page.locator(".override-key-cell")).toContainText("B");
+    await expect(page.locator(".override-key")).toContainText("B");
   });
 });
 

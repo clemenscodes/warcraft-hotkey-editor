@@ -2,7 +2,7 @@ use super::props::ControlGroupsRowProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::slot_button::SlotButtonProps;
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::{SystemBindingMap, WarcraftObjectId};
+use warcraft_keybinds::WarcraftObjectId;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
@@ -13,15 +13,10 @@ pub(super) struct ControlGroupsRowModel {
     pub(super) slots: Vec<SlotButtonProps>,
 }
 
-/// Builds the binding map, the gold-frame variable, and the ten slot buttons.
+/// Builds the gold-frame variable and the ten slot buttons. Each slot resolves its
+/// own binding from the CustomKeys query, so the row builds no binding map.
 pub(super) fn use_control_groups_row(props: &ControlGroupsRowProps) -> ControlGroupsRowModel {
-    let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;
-    let binding_map = use_memo(move || {
-        let guard = loaded_keys.read();
-        SystemBindingMap::build(guard.as_ref())
-    });
-    let binding_map_signal: ReadSignal<SystemBindingMap> = binding_map.into();
     let frame_url = SLOT_FRAME_GOLD;
     let frame = format!("--wc3-slot-frame: url('{frame_url}');");
     let entries = SystemHotkeysCategory::ControlGroups.entries();
@@ -32,16 +27,10 @@ pub(super) fn use_control_groups_row(props: &ControlGroupsRowProps) -> ControlGr
             let slot_label = format!("{}", slot_index + 1);
             let section_key = entry.section_id();
             let section_id = WarcraftObjectId::from(section_key);
-            let default_hotkey = entry.default_hotkey();
-            let default_modifier = entry.default_modifier();
             SlotButtonProps {
                 slot_label,
                 section_id,
-                default_hotkey,
-                default_modifier,
-                loaded_keys,
                 editing_section,
-                binding_map: binding_map_signal,
                 compact: true,
             }
         })

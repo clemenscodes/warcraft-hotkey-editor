@@ -1,12 +1,12 @@
 use dioxus::prelude::*;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::{CustomKeys, WarcraftObjectId};
+use warcraft_keybinds::WarcraftObjectId;
 
-/// What the list editor needs: the category whose rows to list, the loaded keys it
-/// edits, and the shared editing-section signal.
+/// What the list editor needs: the category whose rows to list and the shared
+/// editing-section signal. Each row resolves its own binding from the query, so
+/// the view no longer builds a binding map or holds the loaded keys.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysListViewProps {
     pub category: SystemHotkeysCategory,
-    pub loaded_keys: Signal<Option<CustomKeys>>,
     pub editing_section: Signal<Option<WarcraftObjectId>>,
 }

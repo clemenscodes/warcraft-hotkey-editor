@@ -1,6 +1,6 @@
 mod props;
 
-use super::conflict_position_cell::ConflictPositionCell;
+use super::conflict_position::ConflictPosition;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbility;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_row::ConflictAbilityRow;
 use dioxus::prelude::*;
@@ -19,7 +19,7 @@ pub fn PositionPairRow(props: PositionPairRowProps) -> Element {
     rsx! {
         ConflictAbilityRow {
             ConflictAbility { ..left }
-            ConflictPositionCell { ..cell }
+            ConflictPosition { ..cell }
             ConflictAbility { ..right }
         }
     }

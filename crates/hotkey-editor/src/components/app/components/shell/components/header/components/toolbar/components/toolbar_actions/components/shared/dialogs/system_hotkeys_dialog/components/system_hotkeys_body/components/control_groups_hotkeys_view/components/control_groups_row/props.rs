@@ -1,10 +1,9 @@
 use dioxus::prelude::*;
-use warcraft_keybinds::{CustomKeys, WarcraftObjectId};
+use warcraft_keybinds::WarcraftObjectId;
 
-/// The row's inputs: the loaded keys its slots edit and the shared editing-section
-/// signal.
+/// The row's inputs: the shared editing-section signal its slots share. Each slot
+/// resolves its own binding from the CustomKeys query.
 #[derive(Props, Clone, PartialEq)]
 pub struct ControlGroupsRowProps {
-    pub loaded_keys: Signal<Option<CustomKeys>>,
     pub editing_section: Signal<Option<WarcraftObjectId>>,
 }

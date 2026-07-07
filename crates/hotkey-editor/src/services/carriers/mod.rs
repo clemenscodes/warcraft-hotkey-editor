@@ -36,8 +36,8 @@ pub struct CarrierUnitView {
     icon_url: Option<String>,
 }
 
-impl CarrierUnitView {
-    fn resolve(unit_id_value: &str) -> Self {
+impl From<&str> for CarrierUnitView {
+    fn from(unit_id_value: &str) -> Self {
         let object_option = ObjectLookup::by_id(unit_id_value);
         let icon_url = object_option
             .and_then(|object| object.icons().first().copied())
@@ -52,7 +52,9 @@ impl CarrierUnitView {
             icon_url,
         }
     }
+}
 
+impl CarrierUnitView {
     pub(crate) fn unit_id(&self) -> &str {
         &self.unit_id
     }
@@ -76,7 +78,8 @@ impl Carriers {
     pub(crate) fn for_unit_ids(carrier_unit_ids: &[String]) -> Vec<CarrierUnitView> {
         let mut views: Vec<CarrierUnitView> = Vec::with_capacity(carrier_unit_ids.len());
         for carrier_unit_id in carrier_unit_ids {
-            let view = CarrierUnitView::resolve(carrier_unit_id);
+            let carrier_unit_id_value = carrier_unit_id.as_str();
+            let view = CarrierUnitView::from(carrier_unit_id_value);
             views.push(view);
         }
         views

@@ -1,4 +1,4 @@
-use super::super::conflict_position_cell::ConflictPositionCellProps;
+use super::super::conflict_position::ConflictPositionProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
 use dioxus::prelude::*;
 
@@ -7,5 +7,5 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct PositionMultiStackProps {
     pub abilities: Vec<ConflictAbilityProps>,
-    pub cell: ConflictPositionCellProps,
+    pub cell: ConflictPositionProps,
 }

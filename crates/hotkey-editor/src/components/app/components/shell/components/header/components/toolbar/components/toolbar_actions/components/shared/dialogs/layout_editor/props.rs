@@ -8,8 +8,8 @@ use warcraft_keybinds::{GridCoordinate, GridLayout};
 #[derive(Props, Clone, PartialEq)]
 pub struct LayoutEditorProps {
     pub grid_layout: Signal<GridLayout>,
-    pub editing_layout_cell: Signal<Option<GridCoordinate>>,
-    pub dragging_layout_cell: Signal<Option<GridCoordinate>>,
+    pub editing_layout_tile: Signal<Option<GridCoordinate>>,
+    pub dragging_layout_tile: Signal<Option<GridCoordinate>>,
     pub update_hotkeys_on_move: Signal<bool>,
     pub open: Signal<bool>,
 }

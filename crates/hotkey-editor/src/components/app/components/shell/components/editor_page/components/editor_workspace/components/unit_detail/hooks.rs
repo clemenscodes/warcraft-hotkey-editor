@@ -1,17 +1,12 @@
-use super::components::unit_description::UnitDescriptionProps;
-use super::components::unit_detail_body::UnitDetailBodyProps;
-use super::components::unit_detail_body::components::unit_detail_row::UnitDetailRowProps;
-use super::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGridsProps;
-use super::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::UnitTileOverrideProps;
-use super::components::unit_detail_header::UnitDetailHeaderProps;
-use super::components::unit_stats_panel::UnitStatsPanelProps;
-use super::logic::{ActiveContainer, InspectorPanel, ResolvedUnit};
-use super::props::UnitDetailPanelProps;
+use super::logic::{
+    ActiveContainer, ActiveContainerInputs, InspectorPanel, InspectorPanelInputs, ResolvedUnit,
+};
+use super::props::{UnitDetailInputs, UnitDetailPanelProps};
 use super::state::{UnitDetailModel, UnitDetailView};
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
 use dioxus::prelude::*;
-use warcraft_keybinds::UnitSlotContainers;
+use warcraft_keybinds::{CustomKeys, UnitSlotContainers};
 
 /// The hero-level picker state: the currently-chosen level, reset to its default
 /// whenever the selected unit changes. (The picker owns its own open state.)
@@ -33,7 +28,7 @@ fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelSt
 /// Resolves the selected unit and shapes every child's props. The domain work is
 /// grouped into the [`ResolvedUnit`], [`InspectorPanel`], and [`ActiveContainer`]
 /// derivations plus the memoized [`UnitSlotContainers`]; this hook only orchestrates
-/// them and assembles the child props.
+/// them, gathers the [`UnitDetailInputs`], and lets the props tree derive itself.
 pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailView {
     let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
@@ -52,7 +47,8 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let Some(unit_id) = unit_id_option else {
         return UnitDetailView::Empty("Select a unit to view its command card.");
     };
-    let resolved_unit = match ResolvedUnit::resolve(&unit_id) {
+    let unit_id_ref = unit_id.as_str();
+    let resolved_unit = match ResolvedUnit::try_from(unit_id_ref) {
         Ok(resolved) => resolved,
         Err(message) => return UnitDetailView::Empty(message),
     };
@@ -66,59 +62,42 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let inspector_from_research = *selected_from_research.read();
     let keys_guard = loaded_keys.read();
     let train_upgrades = slot_containers.train_upgrades();
-    let inspector_panel = InspectorPanel::resolve(
-        &inspector_slot,
-        &keys_guard,
-        &unit_id,
-        inspector_from_uprooted,
-        inspector_from_research,
+    let custom_keys_ref: &Option<CustomKeys> = &keys_guard;
+    let host_unit_id_ref: &str = &unit_id;
+    let inspector_inputs = InspectorPanelInputs {
+        inspector_slot: &inspector_slot,
+        custom_keys: custom_keys_ref,
+        host_unit_id: host_unit_id_ref,
+        from_uprooted: inspector_from_uprooted,
+        from_research: inspector_from_research,
         train_upgrades,
-    );
+    };
+    let inspector_panel = InspectorPanel::from(inspector_inputs);
     drop(keys_guard);
-    let active_container = ActiveContainer::resolve(
-        &slot_containers,
-        &inspector_slot,
-        inspector_from_uprooted,
-        inspector_from_research,
-    );
+    let containers_ref: &UnitSlotContainers = &slot_containers;
+    let active_container_inputs = ActiveContainerInputs {
+        containers: containers_ref,
+        inspector_slot: &inspector_slot,
+        from_uprooted: inspector_from_uprooted,
+        from_research: inspector_from_research,
+    };
+    let active_container = ActiveContainer::from(active_container_inputs);
     let active_container_slots = active_container.slots;
-    let header = UnitDetailHeaderProps {
-        unit_name: resolved_unit.unit_name,
-        unit_id: unit_id.clone(),
-        portrait_url: resolved_unit.portrait_url,
-        has_hero_attributes: resolved_unit.hero_attributes.is_some(),
-    };
-    let description = UnitDescriptionProps {
-        text: resolved_unit.description_text,
-    };
-    let stats = UnitStatsPanelProps {
-        combat: resolved_unit.combat,
-        hero_attributes: resolved_unit.hero_attributes,
-        selected_hero_level: hero_level.selected_hero_level,
-        evasion: resolved_unit.evasion,
-    };
-    let grids = UnitCommandGridsProps {
-        unit_id: unit_id.clone(),
+    let selected_hero_level = hero_level.selected_hero_level;
+    let detail = inspector_panel.detail;
+    let inputs = UnitDetailInputs {
         race,
+        unit_id,
+        resolved_unit,
+        selected_hero_level,
         command_card_slots,
         build_menu_slots,
         uprooted_menu_slots,
         research_menu_slots,
-    };
-    let tile_override = UnitTileOverrideProps {
-        detail: inspector_panel.detail,
+        detail,
         active_container_slots,
     };
-    let row = UnitDetailRowProps {
-        grids,
-        tile_override,
-    };
-    let body = UnitDetailBodyProps { row };
-    let model = UnitDetailModel {
-        header,
-        description,
-        stats,
-        body,
-    };
-    UnitDetailView::Loaded(Box::new(model))
+    let model = UnitDetailModel::from(inputs);
+    let boxed_model = Box::new(model);
+    UnitDetailView::Loaded(boxed_model)
 }

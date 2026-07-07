@@ -6,11 +6,11 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_header::UnitDetailHeader;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_header::components::unit_detail_title::components::unit_name_row::components::hero_level_picker::components::hero_level_menu::components::hero_level_option::HeroLevelOption;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::UnitStatsPanel;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::components::attack_matchup_cell::AttackMatchupCell;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::components::attack_matchup::AttackMatchup;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::attributes_column::AttributesColumn;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::combat_column::CombatColumn;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::combat_column::components::damage_matchup_row::DamageMatchupRow;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::defense_column::components::defense_matchup_row::components::defense_matchup_cell::DefenseMatchupCell;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::defense_column::components::defense_matchup_row::components::defense_matchup::DefenseMatchup;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::defense_column::components::defense_matchup_row::DefenseMatchupRow;
 use super::editor_mount::EditorMount;
 use std::rc::Rc;
@@ -27,13 +27,13 @@ pub fn stories() -> Vec<Story> {
     vec![
         Story::single(
             "Unit detail",
-            "AttackMatchupCell",
-            attack_matchup_cell_normal_vs_heavy,
+            "AttackMatchup",
+            attack_matchup_normal_vs_heavy,
         ),
         Story::single(
             "Unit detail",
-            "DefenseMatchupCell",
-            defense_matchup_cell_heavy_vs_normal,
+            "DefenseMatchup",
+            defense_matchup_heavy_vs_normal,
         ),
         Story::single("Unit detail", "DamageMatchupRow", damage_matchup_row_normal),
         Story::single(
@@ -109,19 +109,19 @@ pub fn stories() -> Vec<Story> {
     ]
 }
 
-fn attack_matchup_cell_normal_vs_heavy() -> Element {
+fn attack_matchup_normal_vs_heavy() -> Element {
     let attack_type = AttackType::Normal;
     let defense_type = DefenseType::Heavy;
     rsx! {
-        AttackMatchupCell { defense_type, attack_type }
+        AttackMatchup { defense_type, attack_type }
     }
 }
 
-fn defense_matchup_cell_heavy_vs_normal() -> Element {
+fn defense_matchup_heavy_vs_normal() -> Element {
     let attack_type = AttackType::Normal;
     let defense_type = DefenseType::Heavy;
     rsx! {
-        DefenseMatchupCell { attack_type, defense_type }
+        DefenseMatchup { attack_type, defense_type }
     }
 }
 

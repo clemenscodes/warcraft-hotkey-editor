@@ -9,13 +9,13 @@ impl FocusedElementInfo {
         let active_element = web_sys::window()?.document()?.active_element()?;
         let classes = active_element.class_name();
         let is_inside_grid_panel = classes.contains("grid-editor-tile")
-            || classes.contains("override-key-cell")
+            || classes.contains("override-key")
             || classes.contains("tile-override-tier-button");
         let is_inside_system_dialog = active_element
             .closest(".dialog")
             .ok()
             .flatten()
-            .and_then(|dialog| dialog.query_selector(".key-capture-cell").ok().flatten())
+            .and_then(|dialog| dialog.query_selector(".key-capture").ok().flatten())
             .is_some();
         let info = Self {
             classes,
@@ -51,16 +51,12 @@ impl FocusNavigation {
     pub(crate) fn cycle_inside_unit_detail(reverse: bool) {
         browser_kit::dom::RovingFocus::cycle(
             ".unit-detail",
-            ".grid-editor-tile, .override-key-cell, .tile-override-tier-button",
+            ".grid-editor-tile, .override-key, .tile-override-tier-button",
             reverse,
         );
     }
 
     pub(crate) fn cycle_inside_system_dialog(reverse: bool) {
-        browser_kit::dom::RovingFocus::cycle(
-            ".dialog",
-            ".dialog-close, .key-capture-cell",
-            reverse,
-        );
+        browser_kit::dom::RovingFocus::cycle(".dialog", ".dialog-close, .key-capture", reverse);
     }
 }

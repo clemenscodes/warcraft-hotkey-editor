@@ -18,8 +18,10 @@ pub(super) struct ResolvedUnit {
     pub(super) evasion: Evasion,
 }
 
-impl ResolvedUnit {
-    pub(super) fn resolve(unit_id: &str) -> Result<Self, &'static str> {
+impl TryFrom<&str> for ResolvedUnit {
+    type Error = &'static str;
+
+    fn try_from(unit_id: &str) -> Result<Self, Self::Error> {
         let Some(unit_object) = ObjectLookup::by_id(unit_id) else {
             return Err("Unit not found in database.");
         };
@@ -56,15 +58,28 @@ pub(super) struct InspectorPanel {
     pub(super) detail: Option<InspectorDetail>,
 }
 
-impl InspectorPanel {
-    pub(super) fn resolve(
-        inspector_slot: &Option<GridSlotId>,
-        custom_keys: &Option<CustomKeys>,
-        host_unit_id: &str,
-        from_uprooted: bool,
-        from_research: bool,
-        train_upgrades: &HashMap<WarcraftObjectId, WarcraftObjectId>,
-    ) -> Self {
+/// The inputs that shape an [`InspectorPanel`]: the selected slot, the live
+/// document, the host unit, the research / uprooted flags, and the unit's
+/// train-upgrade map.
+pub(super) struct InspectorPanelInputs<'a> {
+    pub(super) inspector_slot: &'a Option<GridSlotId>,
+    pub(super) custom_keys: &'a Option<CustomKeys>,
+    pub(super) host_unit_id: &'a str,
+    pub(super) from_uprooted: bool,
+    pub(super) from_research: bool,
+    pub(super) train_upgrades: &'a HashMap<WarcraftObjectId, WarcraftObjectId>,
+}
+
+impl From<InspectorPanelInputs<'_>> for InspectorPanel {
+    fn from(inputs: InspectorPanelInputs<'_>) -> Self {
+        let InspectorPanelInputs {
+            inspector_slot,
+            custom_keys,
+            host_unit_id,
+            from_uprooted,
+            from_research,
+            train_upgrades,
+        } = inputs;
         let detail = inspector_slot.as_ref().map(|slot| {
             let upgrade_id = if let GridSlotId::Ability(id) = slot {
                 train_upgrades.get(&id.object_id()).copied()
@@ -92,13 +107,23 @@ pub(super) struct ActiveContainer {
     pub(super) slots: Rc<[GridSlotId]>,
 }
 
-impl ActiveContainer {
-    pub(super) fn resolve(
-        containers: &UnitSlotContainers,
-        inspector_slot: &Option<GridSlotId>,
-        from_uprooted: bool,
-        from_research: bool,
-    ) -> Self {
+/// The inputs that select an [`ActiveContainer`]: the unit's containers, the
+/// inspected slot, and the research / uprooted flags.
+pub(super) struct ActiveContainerInputs<'a> {
+    pub(super) containers: &'a UnitSlotContainers,
+    pub(super) inspector_slot: &'a Option<GridSlotId>,
+    pub(super) from_uprooted: bool,
+    pub(super) from_research: bool,
+}
+
+impl From<ActiveContainerInputs<'_>> for ActiveContainer {
+    fn from(inputs: ActiveContainerInputs<'_>) -> Self {
+        let ActiveContainerInputs {
+            containers,
+            inspector_slot,
+            from_uprooted,
+            from_research,
+        } = inputs;
         let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
         let slots: Rc<[GridSlotId]> = if from_uprooted {
             containers

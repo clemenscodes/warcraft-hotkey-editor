@@ -2,8 +2,8 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use std::collections::{HashMap, HashSet};
 use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{
-    CrossUnitCollisionReport, CrossUnitPositionGroup, CustomKeys, GridCoordinate, GridLayout,
-    GridSlotId, SharedAbilityEntry, UnitCollisionReport,
+    CrossUnitCollisionReport, CrossUnitPositionGroup, GridCoordinate, GridSlotId,
+    SharedAbilityEntry, UnitCollisionReport,
 };
 
 /// One ability resolved to an icon, display name, and object id. Two abilities
@@ -15,9 +15,9 @@ pub struct AbilityIconView {
     name: String,
 }
 
-impl AbilityIconView {
-    fn resolve(slot_id: GridSlotId) -> Self {
-        let resolution = AbilityResolution::resolve(slot_id);
+impl From<GridSlotId> for AbilityIconView {
+    fn from(slot_id: GridSlotId) -> Self {
+        let resolution = AbilityResolution::from(slot_id);
         let object_id = slot_id.as_str().to_owned();
         Self {
             object_id,
@@ -25,7 +25,9 @@ impl AbilityIconView {
             name: resolution.name,
         }
     }
+}
 
+impl AbilityIconView {
     pub fn object_id(&self) -> &str {
         &self.object_id
     }
@@ -48,8 +50,8 @@ pub struct UnitIconView {
     icon_url: Option<String>,
 }
 
-impl UnitIconView {
-    pub fn resolve(unit_id_value: &str) -> Self {
+impl From<&str> for UnitIconView {
+    fn from(unit_id_value: &str) -> Self {
         let object_option = ObjectLookup::by_id(unit_id_value);
         let icon_url = object_option
             .and_then(|object| object.icons().first().copied())
@@ -64,7 +66,9 @@ impl UnitIconView {
             icon_url,
         }
     }
+}
 
+impl UnitIconView {
     pub fn unit_id(&self) -> &str {
         &self.unit_id
     }
@@ -190,10 +194,10 @@ impl IslandView {
                 .copied()
                 .find(|slot_id| *slot_id != shared_slot)
                 .unwrap_or(shared_slot);
-            let own_ability_icon = AbilityIconView::resolve(own_slot);
-            let shared_ability_icon = AbilityIconView::resolve(shared_slot);
+            let own_ability_icon = AbilityIconView::from(own_slot);
+            let shared_ability_icon = AbilityIconView::from(shared_slot);
             let affected_unit_id_value = affected.unit_id().value();
-            let affected_unit = UnitIconView::resolve(affected_unit_id_value);
+            let affected_unit = UnitIconView::from(affected_unit_id_value);
             let mut shared_carrier_unit_ids: Vec<String> =
                 Vec::with_capacity(shared_entry.unit_ids().len());
             for carrier_object in shared_entry.unit_ids() {
@@ -288,8 +292,8 @@ struct AbilityResolution {
     name: String,
 }
 
-impl AbilityResolution {
-    fn resolve(slot_id: GridSlotId) -> Self {
+impl From<GridSlotId> for AbilityResolution {
+    fn from(slot_id: GridSlotId) -> Self {
         let id_value = slot_id.id().value();
         let object_option = ObjectLookup::by_id(id_value);
         let icon_url = object_option
@@ -310,8 +314,7 @@ impl AbilityResolution {
 pub(crate) struct CollisionPageModel;
 
 impl CollisionPageModel {
-    pub(crate) fn compute(custom_keys: &CustomKeys) -> Vec<IslandView> {
-        let report = CrossUnitCollisionReport::compute(custom_keys);
+    pub(crate) fn compute(report: &CrossUnitCollisionReport) -> Vec<IslandView> {
         let groups = report.position_groups();
         let mut islands: Vec<IslandView> = Vec::with_capacity(groups.len());
         for group in groups {
@@ -380,8 +383,7 @@ impl HotkeyUnitView {
 pub(crate) struct HotkeyCollisionPageModel;
 
 impl HotkeyCollisionPageModel {
-    pub(crate) fn compute(custom_keys: &CustomKeys, layout: GridLayout) -> Vec<HotkeyUnitView> {
-        let report = UnitCollisionReport::compute(custom_keys, layout);
+    pub(crate) fn compute(report: &UnitCollisionReport) -> Vec<HotkeyUnitView> {
         let entries = report.entries();
         let mut units: Vec<HotkeyUnitView> = Vec::with_capacity(entries.len());
         for entry in entries {
@@ -400,7 +402,7 @@ impl HotkeyCollisionPageModel {
                     let mut abilities: Vec<AbilityIconView> =
                         Vec::with_capacity(collision_slots.len());
                     for slot_id in collision_slots.iter() {
-                        let ability = AbilityIconView::resolve(slot_id);
+                        let ability = AbilityIconView::from(slot_id);
                         abilities.push(ability);
                     }
                     let conflict = HotkeyConflictView {
@@ -418,7 +420,7 @@ impl HotkeyCollisionPageModel {
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();
-            let unit = UnitIconView::resolve(unit_id_value);
+            let unit = UnitIconView::from(unit_id_value);
             let key = unit_id_value.to_owned();
             let unit_view = HotkeyUnitView {
                 key,
@@ -490,11 +492,7 @@ impl UnitPositionUnitView {
 pub(crate) struct UnitPositionPageModel;
 
 impl UnitPositionPageModel {
-    pub(crate) fn compute(
-        custom_keys: &CustomKeys,
-        layout: GridLayout,
-    ) -> Vec<UnitPositionUnitView> {
-        let report = UnitCollisionReport::compute(custom_keys, layout);
+    pub(crate) fn compute(report: &UnitCollisionReport) -> Vec<UnitPositionUnitView> {
         let entries = report.entries();
         let mut units: Vec<UnitPositionUnitView> = Vec::with_capacity(entries.len());
         for entry in entries {
@@ -510,7 +508,7 @@ impl UnitPositionPageModel {
                     let mut abilities: Vec<AbilityIconView> =
                         Vec::with_capacity(collision_slots.len());
                     for slot_id in collision_slots.iter() {
-                        let ability = AbilityIconView::resolve(slot_id);
+                        let ability = AbilityIconView::from(slot_id);
                         abilities.push(ability);
                     }
                     let conflict = UnitPositionConflictView {
@@ -528,7 +526,7 @@ impl UnitPositionPageModel {
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();
-            let unit = UnitIconView::resolve(unit_id_value);
+            let unit = UnitIconView::from(unit_id_value);
             let key = unit_id_value.to_owned();
             let unit_view = UnitPositionUnitView {
                 key,

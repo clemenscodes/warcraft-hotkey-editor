@@ -1,6 +1,6 @@
 use super::components::apply_button::{ApplyButton, ApplyButtonProps};
 use super::components::layout_editor_content::LayoutEditorContent;
-use super::components::layout_grid::components::layout_cell::{LayoutCellProps, LayoutCellState};
+use super::components::layout_grid::components::layout_tile::{LayoutTileProps, LayoutTileState};
 use super::components::layout_grid::{LayoutGrid, LayoutGridProps};
 use super::components::layout_intro::LayoutIntro;
 use super::components::move_hotkey_toggle::{MoveHotkeyToggle, MoveHotkeyToggleProps};
@@ -78,8 +78,8 @@ impl From<&LayoutEditorModel> for KeyPickerProps {
 #[derive(Clone, Copy)]
 pub(super) struct GridCellContext {
     pub(super) grid_layout: Signal<GridLayout>,
-    pub(super) editing_layout_cell: Signal<Option<GridCoordinate>>,
-    pub(super) dragging_layout_cell: Signal<Option<GridCoordinate>>,
+    pub(super) editing_layout_tile: Signal<Option<GridCoordinate>>,
+    pub(super) dragging_layout_tile: Signal<Option<GridCoordinate>>,
     pub(super) grid_layout_service: GridLayoutService,
     pub(super) layout: GridLayout,
     pub(super) editing_snapshot: Option<GridCoordinate>,
@@ -90,9 +90,9 @@ impl GridCellContext {
     /// shows, and the five drag/click handlers. The drag-drop handler routes a cell
     /// swap through the
     /// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
-    fn cell(&self, row: u8, column: u8) -> LayoutCellProps {
-        let mut editing_layout_cell = self.editing_layout_cell;
-        let mut dragging_layout_cell = self.dragging_layout_cell;
+    fn cell(&self, row: u8, column: u8) -> LayoutTileProps {
+        let mut editing_layout_tile = self.editing_layout_tile;
+        let mut dragging_layout_tile = self.dragging_layout_tile;
         let grid_layout = self.grid_layout;
         let grid_layout_service = self.grid_layout_service;
         let column_index = ColumnIndex::try_from(column).ok();
@@ -106,9 +106,9 @@ impl GridCellContext {
             .unwrap_or_default();
         let is_editing = self.editing_snapshot == coordinate_option;
         let state = if is_editing {
-            LayoutCellState::Editing
+            LayoutTileState::Editing
         } else {
-            LayoutCellState::Idle
+            LayoutTileState::Idle
         };
         let label = if is_editing {
             String::from("…")
@@ -117,38 +117,38 @@ impl GridCellContext {
         };
         let ondragstart = EventHandler::new(move |_event: Event<DragData>| {
             if let Some(coordinate) = coordinate_option {
-                dragging_layout_cell.set(Some(coordinate));
+                dragging_layout_tile.set(Some(coordinate));
             }
         });
         let ondragend = EventHandler::new(move |_event: Event<DragData>| {
-            dragging_layout_cell.set(None);
+            dragging_layout_tile.set(None);
         });
         let ondragover = EventHandler::new(move |event: Event<DragData>| {
             event.prevent_default();
         });
         let ondrop = EventHandler::new(move |event: Event<DragData>| {
             event.prevent_default();
-            let source_option = *dragging_layout_cell.read();
+            let source_option = *dragging_layout_tile.read();
             let Some(source_cell) = source_option else {
                 return;
             };
             let source_column = u8::from(source_cell.column());
             let source_row = u8::from(source_cell.row());
             if source_column == column && source_row == row {
-                dragging_layout_cell.set(None);
+                dragging_layout_tile.set(None);
                 return;
             }
             let mut next_layout = *grid_layout.read();
             next_layout.swap_cells(source_column, source_row, column, row);
             grid_layout_service.select(next_layout);
-            dragging_layout_cell.set(None);
+            dragging_layout_tile.set(None);
         });
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             if let Some(coordinate) = coordinate_option {
-                editing_layout_cell.set(Some(coordinate));
+                editing_layout_tile.set(Some(coordinate));
             }
         });
-        LayoutCellProps {
+        LayoutTileProps {
             state,
             label,
             row,
@@ -166,12 +166,12 @@ impl GridCellContext {
 /// over the command-grid positions. Mirrors the key picker's board: one fielded
 /// carrier the body places, built from data rather than twelve copy-pasted blocks.
 pub(super) struct LayoutGridCells {
-    pub(super) cells: Vec<LayoutCellProps>,
+    pub(super) cells: Vec<LayoutTileProps>,
 }
 
 impl LayoutGridCells {
     pub(super) fn build(context: &GridCellContext) -> Self {
-        let mut cells: Vec<LayoutCellProps> = Vec::new();
+        let mut cells: Vec<LayoutTileProps> = Vec::new();
         for row in 0..COMMAND_GRID_ROWS {
             for column in 0..COMMAND_GRID_COLUMNS {
                 let cell = context.cell(row, column);
@@ -181,7 +181,7 @@ impl LayoutGridCells {
         Self { cells }
     }
 
-    pub(super) fn into_cells(self) -> Vec<LayoutCellProps> {
+    pub(super) fn into_cells(self) -> Vec<LayoutTileProps> {
         self.cells
     }
 }

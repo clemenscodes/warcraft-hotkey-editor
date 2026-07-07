@@ -6,12 +6,8 @@ use dioxus::prelude::*;
 
 impl From<&ControlGroupsHotkeysViewProps> for ControlGroupsRowProps {
     fn from(props: &ControlGroupsHotkeysViewProps) -> Self {
-        let loaded_keys = props.loaded_keys;
         let editing_section = props.editing_section;
-        Self {
-            loaded_keys,
-            editing_section,
-        }
+        Self { editing_section }
     }
 }
 

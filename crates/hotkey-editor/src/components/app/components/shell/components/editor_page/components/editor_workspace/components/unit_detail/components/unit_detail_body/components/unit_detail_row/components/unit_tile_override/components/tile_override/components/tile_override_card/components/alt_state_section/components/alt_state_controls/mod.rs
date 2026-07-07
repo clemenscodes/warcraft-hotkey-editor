@@ -6,8 +6,8 @@ use crate::components::app::components::shell::components::editor_page::componen
     AltStatePositionButton, AltStatePositionButtonProps,
 };
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key_cell::{
-    OverrideKeyCell, OverrideKeyCellProps,
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::{
+    OverrideKey, OverrideKeyProps,
 };
 
 pub use props::AltStateControlsProps;
@@ -20,9 +20,9 @@ pub fn AltStateControls(props: AltStateControlsProps) -> Element {
         return rsx! {};
     }
     let position_button = AltStatePositionButtonProps::from(&props);
-    let key_cell = OverrideKeyCellProps::from(&props);
+    let key_cell = OverrideKeyProps::from(&props);
     rsx! {
         AltStatePositionButton { ..position_button }
-        OverrideKeyCell { ..key_cell }
+        OverrideKey { ..key_cell }
     }
 }

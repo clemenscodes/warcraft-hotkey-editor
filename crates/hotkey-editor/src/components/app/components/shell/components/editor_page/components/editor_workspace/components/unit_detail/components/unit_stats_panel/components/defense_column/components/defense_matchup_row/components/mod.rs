@@ -1,1 +1,1 @@
-pub mod defense_matchup_cell;
+pub mod defense_matchup;

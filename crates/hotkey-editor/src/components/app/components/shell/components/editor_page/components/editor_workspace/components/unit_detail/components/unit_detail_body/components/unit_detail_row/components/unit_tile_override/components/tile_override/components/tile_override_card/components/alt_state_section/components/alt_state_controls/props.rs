@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::AltStatePositionButtonProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCellProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKeyProps;
 
 /// The editable controls of the off-state block: whether they show at all, plus the
 /// off-state hotkey data and the two handlers.
@@ -26,7 +26,7 @@ impl From<&AltStateControlsProps> for AltStatePositionButtonProps {
     }
 }
 
-impl From<&AltStateControlsProps> for OverrideKeyCellProps {
+impl From<&AltStateControlsProps> for OverrideKeyProps {
     fn from(props: &AltStateControlsProps) -> Self {
         let label = props.hotkey_label.clone();
         let title = String::from("Hotkey for the off state (writes Unhotkey)");

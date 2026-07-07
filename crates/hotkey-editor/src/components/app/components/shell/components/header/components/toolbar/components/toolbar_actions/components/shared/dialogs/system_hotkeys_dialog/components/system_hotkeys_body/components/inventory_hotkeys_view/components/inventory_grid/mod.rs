@@ -4,7 +4,7 @@ mod props;
 mod style;
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
-pub use components::inventory_cell::InventoryCell;
+pub use components::inventory_filled_slot::InventoryFilledSlot;
 use components::inventory_slot::InventorySlot;
 use dioxus::prelude::*;
 use hooks::use_inventory_grid;
@@ -57,8 +57,8 @@ impl DragMovePoint {
         let hit_test_horizontal = hit_test_point.horizontal_position();
         let hit_test_vertical = hit_test_point.vertical_position();
         let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
-        let cell_under_option =
-            elem_under_option.and_then(|elem| elem.closest(".inventory-cell").ok().flatten());
+        let cell_under_option = elem_under_option
+            .and_then(|elem| elem.closest(".inventory-filled-slot").ok().flatten());
         let Some(cell_under) = cell_under_option else {
             if drop_target.read().is_some() {
                 drop_target.set(None);
@@ -170,7 +170,7 @@ pub struct InventoryDragSource {
 assert_component!(InventoryGrid);
 
 /// The two-by-three inventory slot grid. Each filled slot is an editable,
-/// draggable `InventoryCell`; the grid seeds the gold-frame CSS variable and holds
+/// draggable `InventoryFilledSlot`; the grid seeds the gold-frame CSS variable and holds
 /// the drag/drop signals its cells share.
 #[component]
 pub fn InventoryGrid(props: InventoryGridProps) -> Element {

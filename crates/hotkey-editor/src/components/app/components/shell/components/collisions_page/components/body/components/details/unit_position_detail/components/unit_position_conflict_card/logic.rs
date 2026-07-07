@@ -1,4 +1,4 @@
-use super::components::conflict_position_cell::ConflictPositionCellProps;
+use super::components::conflict_position::ConflictPositionProps;
 use super::components::position_multi_stack::PositionMultiStackProps;
 use super::components::position_pair_row::{PositionPair, PositionPairRowProps};
 use super::props::UnitPositionConflictCardProps;
@@ -36,11 +36,11 @@ impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
                 view_navigation: props.view_navigation,
             })
             .collect();
-        let cell_between = ConflictPositionCellProps {
+        let cell_between = ConflictPositionProps {
             coordinate,
             is_top: false,
         };
-        let cell_top = ConflictPositionCellProps {
+        let cell_top = ConflictPositionProps {
             coordinate,
             is_top: true,
         };

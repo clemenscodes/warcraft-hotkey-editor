@@ -3,7 +3,7 @@ mod logic;
 mod props;
 mod style;
 
-use components::attack_matchup_cell::AttackMatchupCell;
+use components::attack_matchup::AttackMatchup;
 use dioxus::prelude::*;
 use logic::cells;
 pub use props::DamageMatchupRowProps;
@@ -19,7 +19,7 @@ pub fn DamageMatchupRow(props: DamageMatchupRowProps) -> Element {
         div {
             class: CLASS,
             for cell in cells {
-                AttackMatchupCell { ..cell }
+                AttackMatchup { ..cell }
             }
         }
     }

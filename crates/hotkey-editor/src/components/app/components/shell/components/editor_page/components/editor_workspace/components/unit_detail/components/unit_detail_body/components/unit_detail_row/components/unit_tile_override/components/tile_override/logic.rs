@@ -19,8 +19,16 @@ pub(super) struct OverrideTokens {
     pub(super) upgrade: Option<HotkeyToken>,
 }
 
-impl OverrideTokens {
-    pub(super) fn resolve(detail: &InspectorDetail, layout: GridLayout) -> Self {
+/// The inputs that resolve the [`OverrideTokens`]: the inspected ability and the
+/// active grid layout its fallback letters come from.
+pub(super) struct OverrideTokensInputs<'a> {
+    pub(super) detail: &'a InspectorDetail,
+    pub(super) layout: GridLayout,
+}
+
+impl From<OverrideTokensInputs<'_>> for OverrideTokens {
+    fn from(inputs: OverrideTokensInputs<'_>) -> Self {
+        let OverrideTokensInputs { detail, layout } = inputs;
         let layout_hotkey = detail
             .button_position()
             .and_then(|position| {
@@ -85,12 +93,21 @@ pub(super) struct FieldVisibility {
     pub(super) is_info_only: bool,
 }
 
-impl FieldVisibility {
-    pub(super) fn resolve(
-        detail: &InspectorDetail,
-        is_research_context: bool,
-        alt_content: &AltContent,
-    ) -> Self {
+/// The inputs that decide [`FieldVisibility`]: the inspected ability, the
+/// research-context flag, and its off-state content.
+pub(super) struct FieldVisibilityInputs<'a> {
+    pub(super) detail: &'a InspectorDetail,
+    pub(super) is_research_context: bool,
+    pub(super) alt_content: &'a AltContent,
+}
+
+impl From<FieldVisibilityInputs<'_>> for FieldVisibility {
+    fn from(inputs: FieldVisibilityInputs<'_>) -> Self {
+        let FieldVisibilityInputs {
+            detail,
+            is_research_context,
+            alt_content,
+        } = inputs;
         let show_hotkey_field =
             !detail.is_passive() && (!is_research_context || detail.is_command());
         let show_research_field =
@@ -121,12 +138,21 @@ pub(super) struct TierResolution {
     pub(super) tier_label_text: String,
 }
 
-impl TierResolution {
-    pub(super) fn resolve(
-        detail: &InspectorDetail,
-        stored_tier_index: usize,
-        is_research_context: bool,
-    ) -> Self {
+/// The inputs that resolve a [`TierResolution`]: the inspected ability, the stored
+/// tier index, and the research-context flag.
+pub(super) struct TierResolutionInputs<'a> {
+    pub(super) detail: &'a InspectorDetail,
+    pub(super) stored_tier_index: usize,
+    pub(super) is_research_context: bool,
+}
+
+impl From<TierResolutionInputs<'_>> for TierResolution {
+    fn from(inputs: TierResolutionInputs<'_>) -> Self {
+        let TierResolutionInputs {
+            detail,
+            stored_tier_index,
+            is_research_context,
+        } = inputs;
         let ubertip_count = detail.ubertip_levels().len();
         let name_count = detail.name_levels().len();
         let icon_count = detail.icon_levels_len();
@@ -222,13 +248,23 @@ pub(super) struct PickerTarget {
     pub(super) title: String,
 }
 
-impl PickerTarget {
-    pub(super) fn resolve(
-        snapshot: Option<OverrideEditTarget>,
-        tokens: &OverrideTokens,
-        object_id: WarcraftObjectId,
-        upgrade_unit_id: Option<WarcraftObjectId>,
-    ) -> Self {
+/// The inputs that resolve the [`PickerTarget`]: the editing snapshot, the ability's
+/// resolved tokens, the object the pick writes to, and its upgrade-form unit id.
+pub(super) struct PickerTargetInputs<'a> {
+    pub(super) snapshot: Option<OverrideEditTarget>,
+    pub(super) tokens: &'a OverrideTokens,
+    pub(super) object_id: WarcraftObjectId,
+    pub(super) upgrade_unit_id: Option<WarcraftObjectId>,
+}
+
+impl From<PickerTargetInputs<'_>> for PickerTarget {
+    fn from(inputs: PickerTargetInputs<'_>) -> Self {
+        let PickerTargetInputs {
+            snapshot,
+            tokens,
+            object_id,
+            upgrade_unit_id,
+        } = inputs;
         let open = snapshot.is_some();
         let is_research_context = matches!(snapshot, Some(OverrideEditTarget::ResearchHotkey));
         let current_token = match snapshot {

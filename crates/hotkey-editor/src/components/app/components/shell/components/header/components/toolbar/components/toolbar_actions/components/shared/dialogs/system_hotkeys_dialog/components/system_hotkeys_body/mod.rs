@@ -16,31 +16,29 @@ assert_component!(SystemHotkeysBody);
 /// key rows. A pure selector: it holds no class and picks one child to render.
 #[component]
 pub fn SystemHotkeysBody(props: SystemHotkeysBodyProps) -> Element {
-    let loaded_keys = props.loaded_keys;
     let editing_section = props.editing_section;
     let drag_follower = props.drag_follower;
     let active = *props.active_category.read();
     match active {
         SystemHotkeysCategory::Inventory => {
             rsx! {
-                InventoryHotkeysView { loaded_keys, editing_section, drag_follower }
+                InventoryHotkeysView { editing_section, drag_follower }
             }
         }
         SystemHotkeysCategory::HeroSelection => {
             rsx! {
-                HeroSelectionHotkeysView { loaded_keys, editing_section }
+                HeroSelectionHotkeysView { editing_section }
             }
         }
         SystemHotkeysCategory::ControlGroups => {
             rsx! {
-                ControlGroupsHotkeysView { loaded_keys, editing_section }
+                ControlGroupsHotkeysView { editing_section }
             }
         }
         other_category => {
             rsx! {
                 SystemHotkeysListView {
                     category: other_category,
-                    loaded_keys,
                     editing_section,
                 }
             }

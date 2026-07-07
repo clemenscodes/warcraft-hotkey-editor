@@ -35,11 +35,11 @@ test.describe("Update-hotkeys-on-move toggle", () => {
 
     // Give the first ability a known manual hotkey (Q).
     await page.locator(".filled-tile").first().click();
-    await page.locator(".override-key-cell").waitFor();
-    await page.locator(".override-key-cell").click();
+    await page.locator(".override-key").waitFor();
+    await page.locator(".override-key").click();
     await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-key[data-label="Q"]').click();
-    await expect(page.locator(".override-key-cell")).toContainText("Q");
+    await expect(page.locator(".override-key")).toContainText("Q");
 
     // Turn the toggle off.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
@@ -72,8 +72,8 @@ test.describe("Update-hotkeys-on-move toggle", () => {
       `[data-grid-id="${targetSection}"] [data-grid-col="${targetCol}"][data-grid-row="${targetRow}"]`,
     );
     await movedAbilityCell.click();
-    await page.locator(".override-key-cell").waitFor();
+    await page.locator(".override-key").waitFor();
     // The moved ability still shows Q (hotkey not snapped to the new cell).
-    await expect(page.locator(".override-key-cell")).toContainText("Q");
+    await expect(page.locator(".override-key")).toContainText("Q");
   });
 });

@@ -61,8 +61,8 @@ pub(super) struct CollisionList<View> {
     pub(super) collision_count: usize,
 }
 
-impl<View: CollisionEntry> CollisionList<View> {
-    pub(super) fn resolve(views: Vec<View>) -> Self {
+impl<View: CollisionEntry> From<Vec<View>> for CollisionList<View> {
+    fn from(views: Vec<View>) -> Self {
         let unit_count = views.len();
         let collision_count: usize = views.iter().map(CollisionEntry::collision_count).sum();
         Self {

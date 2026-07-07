@@ -15,7 +15,10 @@ pub(super) struct CatalogListingInputs {
 }
 
 impl CatalogListingInputs {
-    pub(super) fn resolve(self) -> UnitListing {
+    /// Consume these inputs into the domain [`UnitListing`]. A consuming `into_*`
+    /// conversion rather than `From`/`Into`, since the output is the foreign domain
+    /// type (the orphan rule forbids a `From` impl in the renderer crate).
+    pub(super) fn into_listing(self) -> UnitListing {
         let Self {
             race,
             mode,

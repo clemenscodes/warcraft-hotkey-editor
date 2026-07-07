@@ -1,7 +1,7 @@
 use super::components::breadcrumbs::BreadcrumbsProps;
 use super::components::plan_body::PlanBodyProps;
 use super::components::plan_header::PlanHeaderProps;
-use super::logic::{ActivePlanView, PlanCounts, PlanView};
+use super::logic::{ActivePlanInputs, ActivePlanView, PlanCounts, PlanView};
 use super::props::ResolvePageProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_loaded_keys};
@@ -114,19 +114,24 @@ fn use_apply_plan() -> ApplyPlan {
 pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let view_navigation = use_view_navigation();
     let resolve_selection = use_resolve_selection();
+    let custom_keys_service = use_custom_keys_service();
     let loaded_keys = use_loaded_keys();
     let selected_move_category = resolve_selection.selected_move_category;
     let synced_route = use_synced_route();
     let entry = props.entry.clone().filter(|value| !value.is_empty());
     use_route_reconcile(entry, view_navigation, resolve_selection, synced_route);
     let plan_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        guard.as_ref().map(PlanView::build)
+        if loaded_keys.read().is_none() {
+            return None;
+        }
+        let plan = custom_keys_service.resolve_preview();
+        let plan_view = PlanView::build(&plan);
+        Some(plan_view)
     });
     let apply = use_apply_plan();
     let has_file = loaded_keys.read().is_some();
     let plan_option = plan_memo();
-    let counts = PlanCounts::resolve(plan_option.as_ref());
+    let counts = PlanCounts::from(plan_option.as_ref());
     if !has_file {
         return ResolvePageView::NoFile;
     }
@@ -135,12 +140,13 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     }
     let plan = plan_option.expect("plan present when a file is loaded");
     let selected_slug = selected_move_category.read().clone();
-    let active = ActivePlanView::resolve(
-        &plan,
-        selected_slug.as_deref(),
-        selected_move_category,
+    let active_inputs = ActivePlanInputs {
+        plan: &plan,
+        selected_slug: selected_slug.as_deref(),
+        selection: selected_move_category,
         view_navigation,
-    );
+    };
+    let active = ActivePlanView::from(active_inputs);
     let move_count = counts.move_count;
     let move_noun = if move_count == 1 { "move" } else { "moves" };
     let moves_text = format!("{move_count} {move_noun}");

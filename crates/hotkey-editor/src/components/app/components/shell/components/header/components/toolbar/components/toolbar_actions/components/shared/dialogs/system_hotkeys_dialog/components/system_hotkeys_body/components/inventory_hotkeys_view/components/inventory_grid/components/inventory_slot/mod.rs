@@ -1,7 +1,7 @@
 mod props;
 
-use super::inventory_cell::InventoryCell;
 use super::inventory_empty_slot::InventoryEmptySlot;
+use super::inventory_filled_slot::InventoryFilledSlot;
 use dioxus::prelude::*;
 pub use props::InventorySlotProps;
 
@@ -15,6 +15,6 @@ pub fn InventorySlot(props: InventorySlotProps) -> Element {
         };
     };
     rsx! {
-        InventoryCell { ..cell }
+        InventoryFilledSlot { ..cell }
     }
 }

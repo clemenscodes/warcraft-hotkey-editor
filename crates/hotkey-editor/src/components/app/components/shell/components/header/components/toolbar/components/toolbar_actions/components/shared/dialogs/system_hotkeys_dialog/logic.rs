@@ -16,7 +16,6 @@ impl From<&SystemHotkeysDialogModel> for DialogProps {
         };
         let body = SystemHotkeysBodyProps {
             active_category: model.active_category,
-            loaded_keys: model.loaded_keys,
             editing_section: model.editing_section,
             drag_follower: model.drag_follower,
         };

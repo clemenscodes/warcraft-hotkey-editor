@@ -1,62 +1,20 @@
 use dioxus::prelude::*;
 use warcraft_keybinds::{HotkeyTarget, HotkeyToken};
 
-use super::components::tile_override_alt_picker::TileOverrideAltPickerProps;
-use super::components::tile_override_card::components::ability_description::AbilityDescriptionProps;
-use super::components::tile_override_card::components::alt_state_section::AltStateSectionProps;
-use super::components::tile_override_card::components::tile_override_header::components::tile_override_header_text::components::tile_override_id::TileOverrideIdProps;
-use super::components::tile_override_card::components::tile_override_header::components::tile_override_header_text::components::tile_override_name::TileOverrideNameProps;
-use super::components::tile_override_card::components::tile_override_header::components::tile_override_header_text::TileOverrideHeaderTextProps;
-use super::components::tile_override_card::components::tile_override_header::components::tile_override_hotkey_slot::TileOverrideHotkeySlotProps;
-use super::components::tile_override_card::components::tile_override_header::TileOverrideHeaderProps;
-use super::components::tile_override_card::components::upgrade_section::UpgradeSectionProps;
-use super::components::tile_override_card::components::upgrade_tier::UpgradeTierProps;
-use super::components::tile_override_card::TileOverrideCardProps;
-use super::components::tile_override_key_picker::TileOverrideKeyPickerProps;
-use super::components::tile_override_upgrade_picker::TileOverrideUpgradePickerProps;
 use super::logic::{
-    AltContent, FieldVisibility, HotkeyFieldView, OverridePickerSlots, OverrideTokens, PickerBoard,
-    PickerContext, PickerTarget, TierResolution,
+    AltContent, FieldVisibility, FieldVisibilityInputs, HotkeyFieldView, OverridePickerSlots,
+    OverrideTokens, OverrideTokensInputs, PickerBoard, PickerContext, PickerTarget,
+    PickerTargetInputs, TierResolution, TierResolutionInputs,
 };
-use super::props::TileOverrideProps;
+use super::props::{
+    OverrideEditing, PositionPickers, TileOverrideInputs, TileOverrideModel, TileOverrideProps,
+};
 use super::state::OverrideEditTarget;
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::customkeys::hotkey_override::HotkeyOverride;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
-
-/// Everything the override panel body places, already shaped: the card's full
-/// nested props tree plus the three picker dialogs.
-pub(super) struct TileOverrideModel {
-    pub(super) card: TileOverrideCardProps,
-    pub(super) key_picker: TileOverrideKeyPickerProps,
-    pub(super) alt_picker: TileOverrideAltPickerProps,
-    pub(super) upgrade_picker: TileOverrideUpgradePickerProps,
-}
-
-/// The editing state of the override panel: which field the picker is open on, plus
-/// every handler that opens, commits, or closes it. Owns the `editing_target` signal
-/// and the assign-request effect; the commit handler runs the conflict check and
-/// routes the write through the [`CustomKeysService`](crate::services::customkeys).
-pub(super) struct OverrideEditing {
-    pub(super) snapshot: Option<OverrideEditTarget>,
-    pub(super) picker: PickerTarget,
-    pub(super) on_hotkey_activate: EventHandler<()>,
-    pub(super) on_research_activate: EventHandler<()>,
-    pub(super) on_alt_activate: EventHandler<()>,
-    pub(super) on_upgrade_activate: EventHandler<()>,
-    pub(super) on_pick: EventHandler<HotkeyToken>,
-    pub(super) on_close: EventHandler<()>,
-}
-
-/// The two off-form position pickers' open state and their open handlers.
-pub(super) struct PositionPickers {
-    pub(super) alt_open: Signal<bool>,
-    pub(super) upgrade_open: Signal<bool>,
-    pub(super) on_alt_position_click: EventHandler<()>,
-    pub(super) on_upgrade_position_click: EventHandler<()>,
-}
 
 fn use_override_editing(
     props: &TileOverrideProps,
@@ -90,7 +48,13 @@ fn use_override_editing(
     let upgrade_unit_id = detail.upgrade_unit_id();
     let is_off_state = detail.is_off_state();
     let is_command = detail.is_command();
-    let picker = PickerTarget::resolve(snapshot, tokens, object_id, upgrade_unit_id);
+    let picker_inputs = PickerTargetInputs {
+        snapshot,
+        tokens,
+        object_id,
+        upgrade_unit_id,
+    };
+    let picker = PickerTarget::from(picker_inputs);
 
     let on_hotkey_activate =
         EventHandler::new(move |_: ()| editing_target.set(Some(OverrideEditTarget::Hotkey)));
@@ -180,15 +144,29 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
     let object_id = detail.object_id();
     let upgrade_unit_id = detail.upgrade_unit_id();
 
-    let tokens = OverrideTokens::resolve(&detail, layout_snapshot);
+    let tokens_inputs = OverrideTokensInputs {
+        detail: &detail,
+        layout: layout_snapshot,
+    };
+    let tokens = OverrideTokens::from(tokens_inputs);
     let alt_content = AltContent::from(&detail);
-    let visibility = FieldVisibility::resolve(&detail, is_research_context, &alt_content);
+    let visibility_inputs = FieldVisibilityInputs {
+        detail: &detail,
+        is_research_context,
+        alt_content: &alt_content,
+    };
+    let visibility = FieldVisibility::from(visibility_inputs);
     let stored_tier_index = tier_overrides
         .read()
         .get(object_id.value())
         .copied()
         .unwrap_or(0);
-    let tiers = TierResolution::resolve(&detail, stored_tier_index, is_research_context);
+    let tier_inputs = TierResolutionInputs {
+        detail: &detail,
+        stored_tier_index,
+        is_research_context,
+    };
+    let tiers = TierResolution::from(tier_inputs);
 
     let editing = use_override_editing(props, &visibility, &tokens);
     let pickers = use_position_pickers();
@@ -244,89 +222,24 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
         _ => OverridePickerSlots::default().into_slots(),
     };
 
-    let object_id_text = object_id.value().to_string();
-    let name = TileOverrideNameProps {
-        text: tiers.active_tier_name,
-    };
-    let id = TileOverrideIdProps {
-        text: object_id_text,
-    };
-    let hotkey_slot = TileOverrideHotkeySlotProps {
-        show_hotkey_field: visibility.show_hotkey_field,
-        hotkey_label: hotkey_view.label,
-        hotkey_is_editing: hotkey_view.is_editing,
-        hotkey_is_special: hotkey_view.is_special,
-        on_hotkey_activate: editing.on_hotkey_activate,
-        show_research_field: visibility.show_research_field,
-        research_label: research_view.label,
-        research_is_editing: research_view.is_editing,
-        research_is_special: research_view.is_special,
-        on_research_activate: editing.on_research_activate,
-        is_info_only: visibility.is_info_only,
-    };
-    let description = AbilityDescriptionProps {
-        description_lines: tiers.description_lines,
-    };
-    let alt_state = AltStateSectionProps {
-        alt_name_text: alt_content.name_text,
-        alt_description_lines: alt_content.description_lines,
-        show_alt_controls: visibility.show_alt_controls,
-        alt_hotkey_label: alt_view.label,
-        alt_hotkey_is_editing: alt_view.is_editing,
-        alt_hotkey_is_special_token: alt_view.is_special,
-        on_position_click: pickers.on_alt_position_click,
-        on_hotkey_activate: editing.on_alt_activate,
-    };
-    let upgrade = UpgradeSectionProps {
-        show: visibility.upgrade_show,
-        upgrade_hotkey_label: upgrade_view.label,
-        upgrade_is_editing: upgrade_view.is_editing,
-        upgrade_hotkey_is_special: upgrade_view.is_special,
-        on_position_click: pickers.on_upgrade_position_click,
-        on_hotkey_activate: editing.on_upgrade_activate,
-    };
-    let tier = UpgradeTierProps {
+    let inputs = TileOverrideInputs {
         object_id,
-        active_tier_index: tiers.active_tier_index,
-        total_tier_count: tiers.total_tier_count,
-        tier_label_text: tiers.tier_label_text,
+        upgrade_unit_id,
+        visibility,
+        tiers,
+        alt_content,
+        hotkey_view,
+        research_view,
+        alt_view,
+        upgrade_view,
+        editing,
+        pickers,
+        picker_rows,
+        alt_display_name,
+        upgrade_display_name,
+        alt_picker_slots,
+        upgrade_picker_slots,
         tier_overrides,
     };
-    let key_picker = TileOverrideKeyPickerProps {
-        visible: editing.picker.open,
-        title: editing.picker.title,
-        rows: picker_rows,
-        on_pick: editing.on_pick,
-        on_close: editing.on_close,
-    };
-    let alt_picker = TileOverrideAltPickerProps {
-        object_id,
-        display_name: alt_display_name,
-        picker_slots: alt_picker_slots,
-        alt_position_picker_open: pickers.alt_open,
-    };
-    let upgrade_picker = TileOverrideUpgradePickerProps {
-        upgrade_unit_id,
-        display_name: upgrade_display_name,
-        picker_slots: upgrade_picker_slots,
-        upgrade_position_picker_open: pickers.upgrade_open,
-    };
-    let header_text = TileOverrideHeaderTextProps { name, id };
-    let header = TileOverrideHeaderProps {
-        header_text,
-        hotkey_slot,
-    };
-    let card = TileOverrideCardProps {
-        header,
-        description,
-        alt_state,
-        upgrade,
-        tier,
-    };
-    TileOverrideModel {
-        card,
-        key_picker,
-        alt_picker,
-        upgrade_picker,
-    }
+    TileOverrideModel::from(inputs)
 }

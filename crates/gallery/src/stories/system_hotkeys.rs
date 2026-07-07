@@ -11,20 +11,25 @@ use hotkey_editor::components::app::components::shell::components::header::compo
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
 
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
-    InventoryCell, InventoryDragFollower, InventoryDragSource, InventoryGrid,
+    InventoryFilledSlot, InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
 
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture_cell::KeyCaptureCell;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture::KeyCapture;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::SystemHotkeysListView;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
+use super::keys_mount::CustomKeysMount;
 use warcraft_database::SystemHotkeysCategory;
-use warcraft_keybinds::{CustomKeys, KeyCode, SystemBindingMap, WarcraftObjectId};
+use warcraft_keybinds::{CustomKeys, KeyCode, WarcraftObjectId};
 
 pub fn stories() -> Vec<Story> {
     vec![
-        Story::single("System hotkeys", "InventoryCell", inventory_cell_default),
-        Story::single("System hotkeys", "KeyCaptureCell", key_capture_cell_default),
+        Story::single(
+            "System hotkeys",
+            "InventoryFilledSlot",
+            inventory_filled_slot_default,
+        ),
+        Story::single("System hotkeys", "KeyCapture", key_capture_default),
         Story::single(
             "System hotkeys",
             "SystemHotkeysListEntry",
@@ -135,7 +140,9 @@ fn control_groups_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
-        ControlGroupsHotkeysView { loaded_keys, editing_section }
+        CustomKeysMount { loaded_keys,
+            ControlGroupsHotkeysView { editing_section }
+        }
     }
 }
 
@@ -143,7 +150,9 @@ fn hero_selection_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
-        HeroSelectionHotkeysView { loaded_keys, editing_section }
+        CustomKeysMount { loaded_keys,
+            HeroSelectionHotkeysView { editing_section }
+        }
     }
 }
 
@@ -152,7 +161,9 @@ fn inventory_view() -> Element {
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
-        InventoryHotkeysView { loaded_keys, editing_section, drag_follower }
+        CustomKeysMount { loaded_keys,
+            InventoryHotkeysView { editing_section, drag_follower }
+        }
     }
 }
 
@@ -161,7 +172,9 @@ fn inventory_grid() -> Element {
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
-        InventoryGrid { loaded_keys, editing_section, drag_follower }
+        CustomKeysMount { loaded_keys,
+            InventoryGrid { editing_section, drag_follower }
+        }
     }
 }
 
@@ -188,7 +201,9 @@ fn list_view_general_commands() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
-        SystemHotkeysListView { category, loaded_keys, editing_section }
+        CustomKeysMount { loaded_keys,
+            SystemHotkeysListView { category, editing_section }
+        }
     }
 }
 
@@ -196,64 +211,50 @@ fn system_hotkeys_dialog_open() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let system_hotkeys_open = use_signal(|| true);
     rsx! {
-        SystemHotkeysDialog { loaded_keys, system_hotkeys_open }
+        CustomKeysMount { loaded_keys,
+            SystemHotkeysDialog { system_hotkeys_open }
+        }
     }
 }
 
-fn inventory_cell_default() -> Element {
+fn inventory_filled_slot_default() -> Element {
     let entries = SystemHotkeysCategory::Inventory.entries();
     let first_entry = entries[0];
     let slot_index: usize = 0;
     let section_key = first_entry.section_id();
     let section_id = WarcraftObjectId::from(section_key);
-    let default_hotkey = first_entry.default_hotkey();
-    let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let dragging_source = use_signal(|| None::<InventoryDragSource>);
     let drop_target = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
-    let binding_map = use_memo(move || {
-        let guard = loaded_keys.read();
-        SystemBindingMap::build(guard.as_ref())
-    });
     rsx! {
-        InventoryCell {
-            slot_index,
-            section_id,
-            default_hotkey,
-            default_modifier,
-            loaded_keys,
-            editing_section,
-            dragging_source,
-            drop_target,
-            drag_follower,
-            binding_map,
+        CustomKeysMount { loaded_keys,
+            InventoryFilledSlot {
+                slot_index,
+                section_id,
+                editing_section,
+                dragging_source,
+                drop_target,
+                drag_follower,
+            }
         }
     }
 }
 
-fn key_capture_cell_default() -> Element {
+fn key_capture_default() -> Element {
     let entries = SystemHotkeysCategory::GeneralCommands.entries();
     let first_entry = entries[0];
     let section_key = first_entry.section_id();
     let section_id = WarcraftObjectId::from(section_key);
-    let default_hotkey = first_entry.default_hotkey();
-    let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
-    let binding_map = use_memo(move || {
-        let guard = loaded_keys.read();
-        SystemBindingMap::build(guard.as_ref())
-    });
     rsx! {
-        KeyCaptureCell {
-            section_id,
-            default_hotkey,
-            default_modifier,
-            loaded_keys,
-            editing_section,
-            binding_map,
+        CustomKeysMount { loaded_keys,
+            KeyCapture {
+                section_id,
+                editing_section,
+            }
         }
     }
 }
@@ -264,24 +265,16 @@ fn system_hotkeys_list_entry_default() -> Element {
     let section_key = first_entry.section_id();
     let section_id = WarcraftObjectId::from(section_key);
     let comment = first_entry.comment().to_string();
-    let default_hotkey = first_entry.default_hotkey();
-    let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
-    let binding_map = use_memo(move || {
-        let guard = loaded_keys.read();
-        SystemBindingMap::build(guard.as_ref())
-    });
     rsx! {
-        ul {
-            SystemHotkeysListEntry {
-                section_id,
-                comment,
-                default_hotkey,
-                default_modifier,
-                loaded_keys,
-                editing_section,
-                binding_map,
+        CustomKeysMount { loaded_keys,
+            ul {
+                SystemHotkeysListEntry {
+                    section_id,
+                    comment,
+                    editing_section,
+                }
             }
         }
     }
@@ -293,23 +286,15 @@ fn slot_button_default() -> Element {
     let slot_label = "Slot 1".to_string();
     let section_key = first_entry.section_id();
     let section_id = WarcraftObjectId::from(section_key);
-    let default_hotkey = first_entry.default_hotkey();
-    let default_modifier = first_entry.default_modifier();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
-    let binding_map = use_memo(move || {
-        let guard = loaded_keys.read();
-        SystemBindingMap::build(guard.as_ref())
-    });
     rsx! {
-        SlotButton {
-            slot_label,
-            section_id,
-            default_hotkey,
-            default_modifier,
-            loaded_keys,
-            editing_section,
-            binding_map,
+        CustomKeysMount { loaded_keys,
+            SlotButton {
+                slot_label,
+                section_id,
+                editing_section,
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_database::ObjectLookup;
-use warcraft_keybinds::{CustomKeys, GridSlotId, MoveReason};
+use warcraft_keybinds::{CascadePlan, GridSlotId, MoveReason};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, PartialEq)]
@@ -18,8 +18,8 @@ pub struct AbilityDisplay {
     pub icon_url: Option<String>,
 }
 
-impl AbilityDisplay {
-    fn resolve(slot_id: GridSlotId) -> Self {
+impl From<GridSlotId> for AbilityDisplay {
+    fn from(slot_id: GridSlotId) -> Self {
         let id_value = slot_id.id().value();
         let object_option = ObjectLookup::by_id(id_value);
         let icon_url = object_option
@@ -119,14 +119,14 @@ pub struct ReasonParts {
     pub category: MoveCategory,
 }
 
-impl ReasonParts {
-    fn resolve(reason: &MoveReason) -> Self {
+impl From<&MoveReason> for ReasonParts {
+    fn from(reason: &MoveReason) -> Self {
         match reason {
             MoveReason::Fight {
                 anchor_slot,
                 anchor_carrier_unit_ids,
             } => {
-                let anchor = AbilityDisplay::resolve(*anchor_slot);
+                let anchor = AbilityDisplay::from(*anchor_slot);
                 let mut other_carrier_unit_ids: Vec<String> =
                     Vec::with_capacity(anchor_carrier_unit_ids.len());
                 for anchor_carrier_object in anchor_carrier_unit_ids {
@@ -144,7 +144,7 @@ impl ReasonParts {
                 }
             }
             MoveReason::Swap { swapped_with } => {
-                let other = AbilityDisplay::resolve(*swapped_with);
+                let other = AbilityDisplay::from(*swapped_with);
                 Self {
                     label: "Swap",
                     other_ability: Some(other),
@@ -233,8 +233,7 @@ impl PlanView {
         total
     }
 
-    pub fn build(custom_keys: &CustomKeys) -> Self {
-        let plan = custom_keys.preview_resolve();
+    pub fn build(plan: &CascadePlan) -> Self {
         let plan_moves = plan.moves();
         let mut moves_by_slot = HashMap::new();
         for planned_move in plan_moves {
@@ -248,7 +247,7 @@ impl PlanView {
             if consumed_swap_slots.contains(&mover_slot_key) {
                 continue;
             }
-            let mover = AbilityDisplay::resolve(planned_move.slot_id());
+            let mover = AbilityDisplay::from(planned_move.slot_id());
             let mover_carriers = planned_move.carrier_count();
             let carrier_objects = planned_move.carrier_unit_ids();
             let mut mover_carrier_unit_ids: Vec<String> = Vec::with_capacity(carrier_objects.len());
@@ -263,7 +262,7 @@ impl PlanView {
             let from_row = u8::from(old_position.row());
             let to_column = u8::from(new_position.column());
             let to_row = u8::from(new_position.row());
-            let mut reason = ReasonParts::resolve(planned_move.reason());
+            let mut reason = ReasonParts::from(planned_move.reason());
             if let MoveReason::Swap { swapped_with } = planned_move.reason() {
                 let partner_key = swapped_with.as_str().to_owned();
                 consumed_swap_slots.insert(partner_key.clone());
@@ -295,7 +294,7 @@ impl PlanView {
         }
         let mut unresolved: Vec<UnresolvedView> = Vec::with_capacity(plan.unresolved_count());
         for stuck in plan.unresolved() {
-            let ability = AbilityDisplay::resolve(stuck.slot_id());
+            let ability = AbilityDisplay::from(stuck.slot_id());
             let position = stuck.collision_position();
             let column = u8::from(position.column());
             let row = u8::from(position.row());
@@ -396,8 +395,8 @@ pub(super) struct PlanCounts {
     pub(super) unresolved_count: usize,
 }
 
-impl PlanCounts {
-    pub(super) fn resolve(plan: Option<&PlanView>) -> Self {
+impl From<Option<&PlanView>> for PlanCounts {
+    fn from(plan: Option<&PlanView>) -> Self {
         let move_count = plan.map(PlanView::move_count).unwrap_or(0);
         let unresolved_count = plan.map(|view| view.unresolved.len()).unwrap_or(0);
         Self {
@@ -417,13 +416,24 @@ pub(super) struct ActivePlanView {
     pub(super) body: PlanBodyProps,
 }
 
-impl ActivePlanView {
-    pub(super) fn resolve(
-        plan: &PlanView,
-        selected_slug: Option<&str>,
-        selection: Signal<Option<String>>,
-        view_navigation: ViewNavigationContext,
-    ) -> Self {
+/// The inputs that shape an [`ActivePlanView`]: the plan to render, the selected
+/// section slug, and the Copy selection + navigation signals its breadcrumbs and
+/// rows close over.
+pub(super) struct ActivePlanInputs<'a> {
+    pub(super) plan: &'a PlanView,
+    pub(super) selected_slug: Option<&'a str>,
+    pub(super) selection: Signal<Option<String>>,
+    pub(super) view_navigation: ViewNavigationContext,
+}
+
+impl From<ActivePlanInputs<'_>> for ActivePlanView {
+    fn from(inputs: ActivePlanInputs<'_>) -> Self {
+        let ActivePlanInputs {
+            plan,
+            selected_slug,
+            selection,
+            view_navigation,
+        } = inputs;
         let active = plan.active_section(selected_slug);
         let active_category = active.map(|section| section.category);
         let mut breadcrumb_list: Vec<BreadcrumbProps> = Vec::with_capacity(plan.sections.len());

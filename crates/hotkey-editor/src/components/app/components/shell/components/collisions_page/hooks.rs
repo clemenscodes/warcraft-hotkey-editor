@@ -9,6 +9,7 @@ use super::model::{
 use super::props::CollisionsPageProps;
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
@@ -81,6 +82,7 @@ where
 pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPageModel {
     let view_navigation = use_view_navigation();
     let selection = use_collision_selection();
+    let custom_keys_service = use_custom_keys_service();
     let loaded_keys = use_loaded_keys();
     let grid_layout = use_grid_layout();
     let kind = CollisionKind::from_query_param(props.kind.as_deref());
@@ -88,27 +90,18 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
     use_route_sync(kind, entry, view_navigation, selection);
 
     let islands_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
-        CollisionPageModel::compute(custom_keys)
+        let report = custom_keys_service.cross_unit_collisions();
+        CollisionPageModel::compute(&report)
     });
     let hotkey_units_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
         let layout = *grid_layout.read();
-        HotkeyCollisionPageModel::compute(custom_keys, layout)
+        let report = custom_keys_service.unit_collisions(layout);
+        HotkeyCollisionPageModel::compute(&report)
     });
     let unit_positions_memo = use_memo(move || {
-        let guard = loaded_keys.read();
-        let Some(custom_keys) = guard.as_ref() else {
-            return Vec::new();
-        };
         let layout = *grid_layout.read();
-        UnitPositionPageModel::compute(custom_keys, layout)
+        let report = custom_keys_service.unit_collisions(layout);
+        UnitPositionPageModel::compute(&report)
     });
 
     let selected_island = selection.selected_island;
@@ -121,9 +114,9 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
     let island_views = islands_memo();
     let hotkey_unit_views = hotkey_units_memo();
     let unit_position_views = unit_positions_memo();
-    let islands = CollisionList::resolve(island_views);
-    let hotkey_units = CollisionList::resolve(hotkey_unit_views);
-    let unit_positions = CollisionList::resolve(unit_position_views);
+    let islands = CollisionList::from(island_views);
+    let hotkey_units = CollisionList::from(hotkey_unit_views);
+    let unit_positions = CollisionList::from(unit_position_views);
     let has_file = loaded_keys.read().is_some();
 
     let breadcrumbs = BreadcrumbsProps {

@@ -1,1 +1,1 @@
-pub mod attack_matchup_cell;
+pub mod attack_matchup;

@@ -5,7 +5,7 @@ use super::keys_mount::CustomKeysMount;
 use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key_cell::OverrideKeyCell;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKey;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_section::UpgradeSection;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::upgrade_tier::UpgradeTier;
 
@@ -44,19 +44,19 @@ pub fn stories() -> Vec<Story> {
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyCell",
+            "OverrideKey",
             "Idle",
             override_key_field_idle,
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyCell",
+            "OverrideKey",
             "Editing",
             override_key_field_editing,
         ),
         Story::new(
             "Tile override",
-            "OverrideKeyCell",
+            "OverrideKey",
             "Special token",
             override_key_field_special,
         ),
@@ -97,7 +97,7 @@ fn override_key_field_idle() -> Element {
     let is_special = false;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyCell {
+        OverrideKey {
             label,
             is_editing,
             is_special,
@@ -114,7 +114,7 @@ fn override_key_field_editing() -> Element {
     let is_special = false;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyCell {
+        OverrideKey {
             label,
             is_editing,
             is_special,
@@ -131,7 +131,7 @@ fn override_key_field_special() -> Element {
     let is_special = true;
     let title = "Hotkey".to_string();
     rsx! {
-        OverrideKeyCell {
+        OverrideKey {
             label,
             is_editing,
             is_special,

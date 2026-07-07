@@ -1,6 +1,7 @@
 use ddd::ApplicationLayer;
 use ddd::ApplicationService;
 use ddd::Layered;
+use ddd::QueryHandler;
 use ddd::Repository;
 use ddd::Service;
 use dioxus::prelude::*;
@@ -19,6 +20,14 @@ use crate::services::customkeys::commands::move_slot_command::MoveSlotCommand;
 use crate::services::customkeys::commands::set_hotkey_command::SetHotkeyCommand;
 use crate::services::customkeys::commands::set_system_hotkey_command::SetSystemHotkeyCommand;
 use crate::services::customkeys::commands::swap_system_bindings_command::SwapSystemBindingsCommand;
+use crate::services::customkeys::queries::cross_unit_collisions_query::CrossUnitCollisionsQuery;
+use crate::services::customkeys::queries::resolve_preview_query::ResolvePreviewQuery;
+use crate::services::customkeys::queries::slot_binding_query::SlotBindingQuery;
+use crate::services::customkeys::queries::slot_binding_query::SlotBindingView;
+use crate::services::customkeys::queries::unit_collisions_query::UnitCollisionsQuery;
+use warcraft_keybinds::CascadePlan;
+use warcraft_keybinds::CrossUnitCollisionReport;
+use warcraft_keybinds::UnitCollisionReport;
 
 /// The application-layer service that owns the live [`CustomKeys`] aggregate and
 /// is the only sanctioned way for the renderer to mutate it. Every command runs
@@ -71,6 +80,39 @@ impl CustomKeysService {
         self.dispatch(command);
     }
 
+    /// The resolved binding + conflict picture for one system keybind section (the
+    /// read side). Reactive: reading it subscribes the caller, so a slot re-renders
+    /// when the keys change. The renderer asks here instead of building the binding
+    /// map or resolving collisions itself.
+    pub fn slot_binding(&self, section_id: WarcraftObjectId) -> SlotBindingView {
+        let query = SlotBindingQuery::new(section_id);
+        self.handle(query)
+    }
+
+    /// The cross-unit position-collision report (the read side). Reactive: reading it
+    /// subscribes the caller. The collisions page asks here instead of running the
+    /// report itself at render time.
+    pub fn cross_unit_collisions(&self) -> CrossUnitCollisionReport {
+        let query = CrossUnitCollisionsQuery;
+        self.handle(query)
+    }
+
+    /// The per-unit collision report for a grid layout (the read side). Reactive on
+    /// the aggregate; the layout is supplied by the caller from the grid-layout
+    /// service.
+    pub fn unit_collisions(&self, layout: GridLayout) -> UnitCollisionReport {
+        let query = UnitCollisionsQuery::new(layout);
+        self.handle(query)
+    }
+
+    /// The cascade plan a resolve would produce — a read-only preview (the read
+    /// side). Reactive on the aggregate; the resolve page previews the plan here
+    /// instead of running the cascade at render time.
+    pub fn resolve_preview(&self) -> CascadePlan {
+        let query = ResolvePreviewQuery;
+        self.handle(query)
+    }
+
     /// The sanctioned import command: overlays the uploaded text onto the baseline
     /// through the domain (rule R7, "imports replace, then normalize"), writes the
     /// normalized result through to storage, and returns the outcome so the caller
@@ -92,6 +134,40 @@ impl Layered for CustomKeysService {
 }
 
 impl ApplicationService for CustomKeysService {}
+
+impl QueryHandler<SlotBindingQuery> for CustomKeysService {
+    /// Reads the live aggregate reactively (so the caller re-renders on change)
+    /// and answers the query against that snapshot.
+    fn handle(&self, query: SlotBindingQuery) -> SlotBindingView {
+        let read_guard = self.keys.read();
+        let custom_keys = read_guard.as_ref();
+        query.answer(custom_keys)
+    }
+}
+
+impl QueryHandler<CrossUnitCollisionsQuery> for CustomKeysService {
+    fn handle(&self, query: CrossUnitCollisionsQuery) -> CrossUnitCollisionReport {
+        let read_guard = self.keys.read();
+        let custom_keys = read_guard.as_ref();
+        query.answer(custom_keys)
+    }
+}
+
+impl QueryHandler<UnitCollisionsQuery> for CustomKeysService {
+    fn handle(&self, query: UnitCollisionsQuery) -> UnitCollisionReport {
+        let read_guard = self.keys.read();
+        let custom_keys = read_guard.as_ref();
+        query.answer(custom_keys)
+    }
+}
+
+impl QueryHandler<ResolvePreviewQuery> for CustomKeysService {
+    fn handle(&self, query: ResolvePreviewQuery) -> CascadePlan {
+        let read_guard = self.keys.read();
+        let custom_keys = read_guard.as_ref();
+        query.answer(custom_keys)
+    }
+}
 
 impl Service<CustomKeys> for CustomKeysService {
     type Repository = CustomKeysRepository;

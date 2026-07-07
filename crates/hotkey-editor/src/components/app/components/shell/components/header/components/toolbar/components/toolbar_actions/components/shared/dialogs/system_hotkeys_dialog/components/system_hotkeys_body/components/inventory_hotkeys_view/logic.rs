@@ -7,11 +7,9 @@ use dioxus::prelude::*;
 
 impl From<&InventoryHotkeysViewProps> for InventoryGridProps {
     fn from(props: &InventoryHotkeysViewProps) -> Self {
-        let loaded_keys = props.loaded_keys;
         let editing_section = props.editing_section;
         let drag_follower = props.drag_follower;
         Self {
-            loaded_keys,
             editing_section,
             drag_follower,
         }
