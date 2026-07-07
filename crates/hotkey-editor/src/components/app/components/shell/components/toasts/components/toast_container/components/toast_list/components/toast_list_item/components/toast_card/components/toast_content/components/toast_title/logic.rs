@@ -5,8 +5,8 @@ use tw_macro::ClassList;
 /// The title's presentation: the type-tinted class plus the title text. The color
 /// override per type is chosen here, never in the body.
 pub struct ToastTitlePresentation {
-    pub class: ClassList,
-    pub title: String,
+    pub(super) class: ClassList,
+    pub(super) title: String,
 }
 
 impl From<&ToastTitleProps> for ToastTitlePresentation {

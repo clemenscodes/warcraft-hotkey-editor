@@ -48,11 +48,7 @@ impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
             let mut ability_iter = abilities.into_iter();
             let left = ability_iter.next().expect("checked len == 2");
             let right = ability_iter.next().expect("checked len == 2");
-            let pair = PositionPair {
-                left,
-                right,
-                cell: cell_between,
-            };
+            let pair = PositionPair::new(left, right, cell_between);
             ClashLayout {
                 pair: Some(pair),
                 multi: Vec::new(),

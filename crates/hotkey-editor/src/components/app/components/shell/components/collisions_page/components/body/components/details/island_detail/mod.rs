@@ -40,7 +40,7 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
             IslandConflictCard { ..card }
         }
     };
-    let body = DetailBody { header, cards };
+    let body = DetailBody::new(header, cards);
     let content = DetailContent::Loaded(body);
     rsx! {
         Detail { content }

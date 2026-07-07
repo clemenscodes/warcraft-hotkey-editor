@@ -11,7 +11,7 @@ pub struct HelpWorkflowSectionProps {
 impl From<&HelpTopRowProps> for HelpWorkflowSectionProps {
     fn from(props: &HelpTopRowProps) -> Self {
         Self {
-            steps: props.content.workflow,
+            steps: props.content.workflow(),
         }
     }
 }

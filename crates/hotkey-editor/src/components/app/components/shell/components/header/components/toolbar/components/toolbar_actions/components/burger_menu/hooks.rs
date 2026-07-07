@@ -12,11 +12,11 @@ use crate::services::undo::context::use_undo_history;
 /// the toggle and download handlers, and the fully-built drawer props (primary
 /// row plus grouped action rows, each with its handler and state).
 pub struct BurgerMenuView {
-    pub burger_open: Signal<bool>,
-    pub upload_info_open: Signal<bool>,
-    pub download_info_open: Signal<bool>,
-    pub toggle: EventHandler<MouseEvent>,
-    pub drawer: BurgerDrawerProps,
+    pub(super) burger_open: Signal<bool>,
+    pub(super) upload_info_open: Signal<bool>,
+    pub(super) download_info_open: Signal<bool>,
+    pub(super) toggle: EventHandler<MouseEvent>,
+    pub(super) drawer: BurgerDrawerProps,
 }
 
 /// The drawer's open state and the body-scroll lock it drives: owns the

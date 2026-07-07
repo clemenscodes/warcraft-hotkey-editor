@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 
 /// The close button's presentation: the click handler that dismisses this toast.
 pub struct ToastClosePresentation {
-    pub onclick: EventHandler<MouseEvent>,
+    pub(super) onclick: EventHandler<MouseEvent>,
 }
 
 impl From<&ToastCloseProps> for ToastClosePresentation {

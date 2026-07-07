@@ -4,8 +4,14 @@ use dioxus::prelude::*;
 /// The two abilities flanking the shared-key badge in a pair clash.
 #[derive(Clone, PartialEq)]
 pub struct AbilityPair {
-    pub left: ConflictAbilityProps,
-    pub right: ConflictAbilityProps,
+    pub(super) left: ConflictAbilityProps,
+    pub(super) right: ConflictAbilityProps,
+}
+
+impl AbilityPair {
+    pub fn new(left: ConflictAbilityProps, right: ConflictAbilityProps) -> Self {
+        Self { left, right }
+    }
 }
 
 /// The pair-clash row: two abilities flanking the badge, or nothing when the clash

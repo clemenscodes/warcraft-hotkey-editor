@@ -14,8 +14,8 @@ pub fn ActiveMoveList(props: ActiveMoveListProps) -> Element {
     let Some(section) = props.section else {
         return rsx! {};
     };
-    let data_category = section.data_category;
-    let rows = section.rows;
+    let data_category = section.data_category();
+    let rows = section.rows().to_vec();
     rsx! {
         MoveList {
             data_category,

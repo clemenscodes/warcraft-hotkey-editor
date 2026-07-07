@@ -6,8 +6,8 @@ use tw_macro::ClassList;
 /// The card's presentation: the type-selected class and the `data-type` attribute
 /// value. Shaped from the record's toast type; the body only places it.
 pub struct ToastCardPresentation {
-    pub class: ClassList,
-    pub data_type: &'static str,
+    pub(super) class: ClassList,
+    pub(super) data_type: &'static str,
 }
 
 impl From<&ToastCardProps> for ToastCardPresentation {

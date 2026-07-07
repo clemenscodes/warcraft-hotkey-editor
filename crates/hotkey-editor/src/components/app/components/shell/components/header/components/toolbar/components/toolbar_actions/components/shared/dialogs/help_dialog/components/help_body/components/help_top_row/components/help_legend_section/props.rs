@@ -11,7 +11,7 @@ pub struct HelpLegendSectionProps {
 impl From<&HelpTopRowProps> for HelpLegendSectionProps {
     fn from(props: &HelpTopRowProps) -> Self {
         Self {
-            rows: props.content.legend,
+            rows: props.content.legend(),
         }
     }
 }

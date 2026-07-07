@@ -23,12 +23,16 @@ pub fn Detail(props: DetailProps) -> Element {
                 p { {prompt} }
             }
         },
-        DetailContent::Loaded(body) => rsx! {
-            section {
-                class: CLASS,
-                DetailHeader { {body.header} }
-                ConflictGrid { {body.cards} }
+        DetailContent::Loaded(body) => {
+            let header = body.header().clone();
+            let cards = body.cards().clone();
+            rsx! {
+                section {
+                    class: CLASS,
+                    DetailHeader { {header} }
+                    ConflictGrid { {cards} }
+                }
             }
-        },
+        }
     }
 }

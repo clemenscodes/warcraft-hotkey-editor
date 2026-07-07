@@ -8,12 +8,12 @@ use super::state::GhostState;
 /// the markup spreads them with RSX shorthand.
 #[derive(Clone, PartialEq)]
 pub struct FollowerPresentation {
-    pub state: GhostState,
-    pub style: String,
-    pub badge_state: HotkeyBadgeState,
-    pub src: String,
-    pub alt: String,
-    pub letter: HotkeyToken,
+    pub(super) state: GhostState,
+    pub(super) style: String,
+    pub(super) badge_state: HotkeyBadgeState,
+    pub(super) src: String,
+    pub(super) alt: String,
+    pub(super) letter: HotkeyToken,
 }
 
 impl From<&DragFollower> for FollowerPresentation {

@@ -5,8 +5,25 @@ use dioxus::prelude::*;
 /// The active section's move cards, tagged with its category slug.
 #[derive(Clone, PartialEq)]
 pub struct PlanBodySection {
-    pub data_category: &'static str,
-    pub rows: Vec<MoveRowProps>,
+    data_category: &'static str,
+    rows: Vec<MoveRowProps>,
+}
+
+impl PlanBodySection {
+    pub fn new(data_category: &'static str, rows: Vec<MoveRowProps>) -> Self {
+        Self {
+            data_category,
+            rows,
+        }
+    }
+
+    pub fn data_category(&self) -> &'static str {
+        self.data_category
+    }
+
+    pub fn rows(&self) -> &[MoveRowProps] {
+        &self.rows
+    }
 }
 
 /// The scrollable plan body: the active move section and the unresolved section.

@@ -128,10 +128,7 @@ impl From<&MoveRowProps> for MoveRowModel {
                     anchor_carrier_unit_ids,
                     is_not_swap,
                 );
-                let parts = AnchorParts {
-                    name_plate,
-                    ability,
-                };
+                let parts = AnchorParts::new(name_plate, ability);
                 Some(parts)
             }
             None => None,

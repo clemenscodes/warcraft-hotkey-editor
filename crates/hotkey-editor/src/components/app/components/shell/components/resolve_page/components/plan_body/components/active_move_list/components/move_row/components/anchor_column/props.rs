@@ -5,8 +5,17 @@ use dioxus::prelude::*;
 /// The rival ability's plate and icon, present only on Fight/Swap moves.
 #[derive(Clone, PartialEq)]
 pub struct AnchorParts {
-    pub name_plate: FightNamePlateProps,
-    pub ability: AbilityIconProps,
+    pub(super) name_plate: FightNamePlateProps,
+    pub(super) ability: AbilityIconProps,
+}
+
+impl AnchorParts {
+    pub fn new(name_plate: FightNamePlateProps, ability: AbilityIconProps) -> Self {
+        Self {
+            name_plate,
+            ability,
+        }
+    }
 }
 
 /// The optional rival column of a move card: the anchor ability's name plate and

@@ -13,16 +13,16 @@ use tw_macro::ClassList;
 /// the state attribute, the icon glyph, and the click handler. The body never
 /// computes any of this — it destructures this and places the values.
 pub struct CollisionsButtonPresentation {
-    pub class: ClassList,
-    pub collision_count: usize,
-    pub cross_unit_count: usize,
-    pub per_unit_position_count: usize,
-    pub per_unit_hotkey_count: usize,
-    pub count_label: String,
-    pub aria_label: String,
-    pub state_attribute: &'static str,
-    pub icon: &'static str,
-    pub onclick: EventHandler<MouseEvent>,
+    pub(super) class: ClassList,
+    pub(super) collision_count: usize,
+    pub(super) cross_unit_count: usize,
+    pub(super) per_unit_position_count: usize,
+    pub(super) per_unit_hotkey_count: usize,
+    pub(super) count_label: String,
+    pub(super) aria_label: String,
+    pub(super) state_attribute: &'static str,
+    pub(super) icon: &'static str,
+    pub(super) onclick: EventHandler<MouseEvent>,
 }
 
 impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {

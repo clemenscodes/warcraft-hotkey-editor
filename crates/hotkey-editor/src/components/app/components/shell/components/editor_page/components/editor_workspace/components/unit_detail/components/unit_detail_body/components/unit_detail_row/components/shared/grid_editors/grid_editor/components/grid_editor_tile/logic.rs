@@ -8,18 +8,18 @@ use dioxus::prelude::*;
 /// deliberately does not carry.
 #[derive(Clone, PartialEq)]
 pub struct EditorTileChrome {
-    pub tabindex: &'static str,
-    pub draggable_attribute: &'static str,
-    pub dragging_source: &'static str,
-    pub drag_over: &'static str,
-    pub onkeydown: EventHandler<KeyboardEvent>,
-    pub onpointerdown: EventHandler<PointerEvent>,
-    pub onpointermove: EventHandler<PointerEvent>,
-    pub onpointerup: EventHandler<PointerEvent>,
-    pub onpointercancel: EventHandler<PointerEvent>,
-    pub onlostpointercapture: EventHandler<PointerEvent>,
-    pub onclick: EventHandler<MouseEvent>,
-    pub ondoubleclick: EventHandler<MouseEvent>,
+    pub(super) tabindex: &'static str,
+    pub(super) draggable_attribute: &'static str,
+    pub(super) dragging_source: &'static str,
+    pub(super) drag_over: &'static str,
+    pub(super) onkeydown: EventHandler<KeyboardEvent>,
+    pub(super) onpointerdown: EventHandler<PointerEvent>,
+    pub(super) onpointermove: EventHandler<PointerEvent>,
+    pub(super) onpointerup: EventHandler<PointerEvent>,
+    pub(super) onpointercancel: EventHandler<PointerEvent>,
+    pub(super) onlostpointercapture: EventHandler<PointerEvent>,
+    pub(super) onclick: EventHandler<MouseEvent>,
+    pub(super) ondoubleclick: EventHandler<MouseEvent>,
 }
 
 impl From<&GridEditorTileProps> for EditorTileChrome {

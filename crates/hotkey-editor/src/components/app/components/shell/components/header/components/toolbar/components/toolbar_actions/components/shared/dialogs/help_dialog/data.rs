@@ -19,10 +19,28 @@ pub enum HelpSegment {
 /// renderer components as props. No UI component owns any of this.
 #[derive(Clone, Copy, PartialEq)]
 pub struct HelpContent {
-    pub workflow: &'static [&'static [HelpSegment]],
-    pub legend: &'static [HelpLegendRowProps],
-    pub resolver_prose: &'static [&'static str],
-    pub glossary: &'static [&'static [HelpGlossaryEntryProps]],
+    workflow: &'static [&'static [HelpSegment]],
+    legend: &'static [HelpLegendRowProps],
+    resolver_prose: &'static [&'static str],
+    glossary: &'static [&'static [HelpGlossaryEntryProps]],
+}
+
+impl HelpContent {
+    pub fn workflow(&self) -> &'static [&'static [HelpSegment]] {
+        self.workflow
+    }
+
+    pub fn legend(&self) -> &'static [HelpLegendRowProps] {
+        self.legend
+    }
+
+    pub fn resolver_prose(&self) -> &'static [&'static str] {
+        self.resolver_prose
+    }
+
+    pub fn glossary(&self) -> &'static [&'static [HelpGlossaryEntryProps]] {
+        self.glossary
+    }
 }
 
 /// The guide content, defined once and passed down from the dialog root.

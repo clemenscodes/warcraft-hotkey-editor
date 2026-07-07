@@ -4,8 +4,22 @@ use dioxus::prelude::*;
 /// cards, already built by the extension.
 #[derive(Clone, PartialEq)]
 pub struct DetailBody {
-    pub header: Element,
-    pub cards: Element,
+    header: Element,
+    cards: Element,
+}
+
+impl DetailBody {
+    pub fn new(header: Element, cards: Element) -> Self {
+        Self { header, cards }
+    }
+
+    pub fn header(&self) -> &Element {
+        &self.header
+    }
+
+    pub fn cards(&self) -> &Element {
+        &self.cards
+    }
 }
 
 /// A detail pane's content: the empty prompt before a selection, or the loaded

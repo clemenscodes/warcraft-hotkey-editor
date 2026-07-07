@@ -38,7 +38,7 @@ impl From<&HotkeyConflictCardProps> for HotkeyConflictCardModel {
             let mut ability_iter = abilities.into_iter();
             let left = ability_iter.next().expect("checked len == 2");
             let right = ability_iter.next().expect("checked len == 2");
-            let pair = AbilityPair { left, right };
+            let pair = AbilityPair::new(left, right);
             ClashLayout {
                 pair: Some(pair),
                 multi: Vec::new(),

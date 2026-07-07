@@ -8,9 +8,9 @@ use warcraft_api::RaceLabels;
 /// `GridEditorTile`, which wraps this base tile.
 #[derive(Clone, PartialEq)]
 pub struct TileChrome {
-    pub race_attribute: &'static str,
-    pub row: u8,
-    pub column: u8,
+    pub(super) race_attribute: &'static str,
+    pub(super) row: u8,
+    pub(super) column: u8,
 }
 
 impl From<&GridTileProps> for TileChrome {

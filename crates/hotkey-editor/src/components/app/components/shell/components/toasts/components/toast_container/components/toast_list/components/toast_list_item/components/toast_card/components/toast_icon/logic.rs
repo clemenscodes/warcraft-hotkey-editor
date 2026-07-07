@@ -7,8 +7,8 @@ use tw_macro::ClassList;
 /// The icon's presentation: the type-tinted circle class and the glyph markup for
 /// that type. Both are chosen from the toast type here, never in the body.
 pub struct ToastIconPresentation {
-    pub class: ClassList,
-    pub svg: &'static str,
+    pub(super) class: ClassList,
+    pub(super) svg: &'static str,
 }
 
 impl From<&ToastIconProps> for ToastIconPresentation {

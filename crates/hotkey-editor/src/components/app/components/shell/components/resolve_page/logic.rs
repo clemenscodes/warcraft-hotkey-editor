@@ -496,10 +496,8 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
                     view_navigation,
                 })
                 .collect();
-            PlanBodySection {
-                data_category: section.category.data_breadcrumb(),
-                rows,
-            }
+            let data_category = section.category.data_breadcrumb();
+            PlanBodySection::new(data_category, rows)
         });
         let unresolved_rows: Vec<UnresolvedRowProps> = plan
             .unresolved

@@ -13,8 +13,8 @@ pub struct HelpResolverSectionProps {
 impl From<&HelpBodyProps> for HelpResolverSectionProps {
     fn from(props: &HelpBodyProps) -> Self {
         Self {
-            prose: props.content.resolver_prose,
-            glossary: props.content.glossary,
+            prose: props.content.resolver_prose(),
+            glossary: props.content.glossary(),
         }
     }
 }

@@ -5,9 +5,19 @@ use dioxus::prelude::*;
 /// The two abilities flanking the colliding cell in a pair clash, with the cell.
 #[derive(Clone, PartialEq)]
 pub struct PositionPair {
-    pub left: ConflictAbilityProps,
-    pub right: ConflictAbilityProps,
-    pub cell: ConflictPositionProps,
+    pub(super) left: ConflictAbilityProps,
+    pub(super) right: ConflictAbilityProps,
+    pub(super) cell: ConflictPositionProps,
+}
+
+impl PositionPair {
+    pub fn new(
+        left: ConflictAbilityProps,
+        right: ConflictAbilityProps,
+        cell: ConflictPositionProps,
+    ) -> Self {
+        Self { left, right, cell }
+    }
 }
 
 /// The pair-clash row: two abilities flanking the colliding cell, or nothing when
