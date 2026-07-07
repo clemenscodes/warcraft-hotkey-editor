@@ -8,7 +8,7 @@ use crate::components::app::route::Route;
 use components::document_head::DocumentHead;
 use components::footer::Footer;
 use components::header::Header;
-use components::toasts::ToastMount;
+use components::toasts::Toasts;
 use dioxus::prelude::*;
 use hooks::{ShellModel, use_shell};
 use tw_macro::assert_component;
@@ -34,7 +34,7 @@ pub fn Shell() -> Element {
     } = use_shell();
     rsx! {
         DocumentHead {}
-        ToastMount {
+        Toasts {
             div {
                 class,
                 onkeydown: handle_keydown,

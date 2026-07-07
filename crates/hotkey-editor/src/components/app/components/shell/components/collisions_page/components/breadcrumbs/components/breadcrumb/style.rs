@@ -12,7 +12,7 @@ classes! {
         "gap-2",
         "text-warcraft-text-muted",
         "transition-colors",
-        "duration-[120ms]",
+        "duration-fast",
         "hover:text-warcraft-text-primary",
         "data-[active=true]:text-warcraft-gold",
         "data-[active=true]:text-shadow-drop",

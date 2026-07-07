@@ -8,6 +8,8 @@ pub use props::InventorySlotProps;
 
 /// One inventory grid position: a filled, editable cell, or the empty placeholder.
 /// A pure dispatcher, so it carries no class of its own.
+use tw_macro::assert_component;
+assert_component!(InventorySlot);
 #[component]
 pub fn InventorySlot(props: InventorySlotProps) -> Element {
     let Some(cell) = props.cell else {

@@ -5,6 +5,8 @@ use dioxus::prelude::*;
 pub use props::UprootedMenuProps;
 
 /// The unit's uprooted-form menu, when it has one; renders nothing otherwise.
+use tw_macro::assert_component;
+assert_component!(UprootedMenu);
 #[component]
 pub fn UprootedMenu(props: UprootedMenuProps) -> Element {
     let Some(config) = props.config else {

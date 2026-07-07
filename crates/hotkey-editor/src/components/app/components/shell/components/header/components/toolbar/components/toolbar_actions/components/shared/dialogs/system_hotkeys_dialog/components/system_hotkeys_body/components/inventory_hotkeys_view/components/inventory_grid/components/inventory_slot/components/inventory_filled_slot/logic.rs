@@ -1,6 +1,7 @@
 use super::hooks::InventoryFilledSlotModel;
 use super::props::InventoryFilledSlotProps;
 use super::state::InventoryFilledSlotState;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_key::SystemSlotKeyProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabelProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;
@@ -80,6 +81,19 @@ impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
             is_editing,
             current_code,
             picker_conflicts,
+        }
+    }
+}
+
+impl From<&InventoryFilledSlotModel> for TooltipProps {
+    fn from(model: &InventoryFilledSlotModel) -> Self {
+        let text = model.conflict_title.clone();
+        let placement = TooltipPlacement::Above;
+        let anchor = TooltipAnchor::Center;
+        Self {
+            text,
+            placement,
+            anchor,
         }
     }
 }

@@ -13,6 +13,8 @@ pub use props::HotkeyConflictCardProps;
 /// One shared-hotkey conflict card: the abilities flanking (or stacked under) the
 /// shared key badge, captioned by the command card the clash lives on. Each of the
 /// two layouts renders itself away when it does not apply.
+use tw_macro::assert_component;
+assert_component!(HotkeyConflictCard);
 #[component]
 pub fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
     let model = HotkeyConflictCardModel::from(&props);

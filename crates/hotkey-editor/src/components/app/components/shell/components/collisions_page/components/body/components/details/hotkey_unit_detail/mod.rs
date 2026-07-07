@@ -16,6 +16,8 @@ pub use props::HotkeyUnitDetailProps;
 
 /// The hotkey-collision detail extension: builds the selected unit's header and
 /// hotkey-conflict cards, fed into the base detail pane.
+use tw_macro::assert_component;
+assert_component!(HotkeyUnitDetail);
 #[component]
 pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let Some(model) = selected(&props) else {

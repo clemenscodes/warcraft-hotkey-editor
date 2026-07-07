@@ -3,6 +3,6 @@ classes! {
     base: tw![
         "flex-1",
         "leading-tight",
-        "text-shadow-drop-60",
+        "text-shadow-drop",
     ],
 }

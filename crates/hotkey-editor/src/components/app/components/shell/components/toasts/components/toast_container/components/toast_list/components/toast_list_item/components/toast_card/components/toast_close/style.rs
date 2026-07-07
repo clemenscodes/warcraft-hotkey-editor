@@ -12,7 +12,7 @@ classes! {
         "text-warcraft-text-muted",
         "cursor-pointer",
         "transition-[color,background-color,border-color]",
-        "duration-150",
+        "duration-base",
         "text-2xl",
         "leading-none",
         "hover:text-warcraft-gold",

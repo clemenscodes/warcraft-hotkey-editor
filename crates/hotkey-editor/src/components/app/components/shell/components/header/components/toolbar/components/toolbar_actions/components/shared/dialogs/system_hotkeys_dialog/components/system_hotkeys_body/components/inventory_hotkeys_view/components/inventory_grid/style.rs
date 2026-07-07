@@ -7,19 +7,19 @@ classes! {
         "gap-6",
     ],
     mobile: tw![
-        "mobile:grid-cols-[repeat(2,minmax(0,1fr))]",
+        "mobile:grid-cols-2",
         "mobile:auto-rows-[minmax(86px,auto)]",
         "mobile:gap-2.5",
         "mobile:w-full",
-        "mobile:max-w-[26rem]",
+        "mobile:max-w-104",
         "mobile:mx-auto",
     ],
     tablet: tw![
-        "tablet:grid-cols-[repeat(2,minmax(0,1fr))]",
+        "tablet:grid-cols-2",
         "tablet:auto-rows-[minmax(86px,auto)]",
         "tablet:gap-2.5",
         "tablet:w-full",
-        "tablet:max-w-[26rem]",
+        "tablet:max-w-104",
         "tablet:mx-auto",
     ],
     laptop: tw![

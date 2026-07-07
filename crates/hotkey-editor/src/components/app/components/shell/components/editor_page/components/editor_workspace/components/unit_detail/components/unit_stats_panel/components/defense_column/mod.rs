@@ -17,6 +17,8 @@ pub use props::DefenseColumnProps;
 /// The defense column: the defense-type icon beside the armor/defense-type/effective
 /// hit points rows, the guarded evasion row, and the defender's matchup grid. Always
 /// present; every unit has defense figures.
+use tw_macro::assert_component;
+assert_component!(DefenseColumn);
 #[component]
 pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
     let DefenseRows {

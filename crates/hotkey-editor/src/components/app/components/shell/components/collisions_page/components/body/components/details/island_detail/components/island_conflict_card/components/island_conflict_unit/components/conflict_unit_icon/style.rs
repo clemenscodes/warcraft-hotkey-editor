@@ -7,6 +7,6 @@ classes! {
         "border-warcraft-blue",
         "rounded-tile",
         "hover:border-warcraft-gold",
-        "hover:shadow-glow-8",
+        "hover:shadow-glow-soft",
     ],
 }

@@ -9,11 +9,11 @@ classes! {
         "rounded-control",
     ],
     mobile: tw![
-        "mobile:h-[66px]",
-        "mobile:w-[66px]",
+        "mobile:h-16.5",
+        "mobile:w-16.5",
     ],
     tablet: tw![
-        "tablet:h-[92px]",
-        "tablet:w-[92px]",
+        "tablet:h-23",
+        "tablet:w-23",
     ],
 }

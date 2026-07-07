@@ -17,8 +17,8 @@ classes! {
         "mobile:left-3",
         "mobile:top-1/2",
         "mobile:-translate-y-1/2",
-        "mobile:w-[18px]",
-        "mobile:h-[18px]",
+        "mobile:w-4.5",
+        "mobile:h-4.5",
     ],
     tablet: tw![
         "tablet:block",
@@ -26,7 +26,7 @@ classes! {
         "tablet:left-3",
         "tablet:top-1/2",
         "tablet:-translate-y-1/2",
-        "tablet:w-[18px]",
-        "tablet:h-[18px]",
+        "tablet:w-4.5",
+        "tablet:h-4.5",
     ],
 }

@@ -12,6 +12,8 @@ pub use props::EditorPageProps;
 /// unit detail panel). A route target under the shell layout — it reconciles its URL
 /// into the shell's navigation signals and reads the rest of the editor's state from
 /// context, then composes its two children. A pure composition — no class of its own.
+use tw_macro::assert_component;
+assert_component!(EditorPage);
 #[component]
 pub fn EditorPage(props: EditorPageProps) -> Element {
     let EditorPageModel { tabs, workspace } = use_editor_page(&props);

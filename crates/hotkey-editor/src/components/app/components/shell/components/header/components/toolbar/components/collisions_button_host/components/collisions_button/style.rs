@@ -21,7 +21,7 @@ classes! {
         "border-warcraft-gold-border",
         "bg-panel-gold-resting",
         "cursor-pointer",
-        "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",
+        "transition-[border-color,color,background,box-shadow]",
         "focus:outline-none",
         "focus-visible:border-white",
         "focus-visible:text-white",

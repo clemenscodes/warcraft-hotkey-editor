@@ -11,6 +11,8 @@ pub use props::IslandSidebarProps;
 
 /// The island-collision sidebar: one card per collision island, fed into the base
 /// sidebar bound to the collision scroll.
+use tw_macro::assert_component;
+assert_component!(IslandSidebar);
 #[component]
 pub fn IslandSidebar(props: IslandSidebarProps) -> Element {
     let cards = cards(&props);

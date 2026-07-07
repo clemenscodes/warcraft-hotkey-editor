@@ -9,6 +9,8 @@ pub use props::HotkeyMultiStackProps;
 
 /// The badge stacked above every clashing ability; renders nothing when the clash
 /// is an exact pair (that layout is the pair row instead).
+use tw_macro::assert_component;
+assert_component!(HotkeyMultiStack);
 #[component]
 pub fn HotkeyMultiStack(props: HotkeyMultiStackProps) -> Element {
     let abilities = props.abilities;

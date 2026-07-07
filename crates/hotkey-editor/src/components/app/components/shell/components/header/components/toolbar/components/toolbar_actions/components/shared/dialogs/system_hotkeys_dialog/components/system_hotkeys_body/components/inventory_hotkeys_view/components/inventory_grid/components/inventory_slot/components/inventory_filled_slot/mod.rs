@@ -14,6 +14,9 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::{
     SystemKeyPickerDialog, SystemKeyPickerDialogProps,
 };
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{
+    Tooltip, TooltipProps,
+};
 use dioxus::prelude::*;
 use hooks::use_inventory_filled_slot;
 pub use props::InventoryFilledSlotProps;
@@ -26,6 +29,7 @@ pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
     let model = use_inventory_filled_slot(&props);
     let label = SystemSlotLabelProps::from(&model);
     let key = SystemSlotKeyProps::from(&model);
+    let tooltip = TooltipProps::from(&model);
     let picker = SystemKeyPickerDialogProps::from(&model);
     let class = style::class(model.state);
     rsx! {
@@ -34,7 +38,6 @@ pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
             "data-inventory-slot": model.slot_id,
             "data-dragging": model.dragging_attr,
             tabindex: "0",
-            "data-tooltip": model.conflict_title,
             onpointerdown: model.on_pointerdown,
             onpointermove: model.on_pointermove,
             onpointerup: model.on_pointerup,
@@ -42,6 +45,7 @@ pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
             onclick: model.on_click,
             SystemSlotLabel { ..label }
             SystemSlotKey { ..key }
+            Tooltip { ..tooltip }
         }
         if model.is_editing {
             SystemKeyPickerDialog { ..picker }

@@ -17,7 +17,7 @@ classes! {
         "border-warcraft-gold",
         "rounded-panel",
         "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
-        "shadow-glow-12-3",
+        "shadow-glow-soft",
     ],
     mobile: tw![
         "mobile:w-full",
@@ -28,7 +28,7 @@ classes! {
         "mobile:justify-start",
         "mobile:gap-y-1.5", "mobile:gap-x-2.5",
         "mobile:py-2.5", "mobile:px-3",
-        "mobile:h-[300px]",
+        "mobile:h-75",
     ],
     tablet: tw![
         "tablet:w-full",
@@ -39,6 +39,6 @@ classes! {
         "tablet:justify-start",
         "tablet:gap-y-1.5", "tablet:gap-x-2.5",
         "tablet:py-2.5", "tablet:px-3",
-        "tablet:h-[300px]",
+        "tablet:h-75",
     ],
 }

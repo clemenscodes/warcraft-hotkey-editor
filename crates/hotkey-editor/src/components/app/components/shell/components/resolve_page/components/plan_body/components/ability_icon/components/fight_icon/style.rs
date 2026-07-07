@@ -7,6 +7,6 @@ classes! {
         "rounded-card",
         "object-cover",
         "group-[:not(:disabled):hover]:border-warcraft-gold",
-        "group-[:not(:disabled):hover]:shadow-glow-8",
+        "group-[:not(:disabled):hover]:shadow-glow-soft",
     ],
 }

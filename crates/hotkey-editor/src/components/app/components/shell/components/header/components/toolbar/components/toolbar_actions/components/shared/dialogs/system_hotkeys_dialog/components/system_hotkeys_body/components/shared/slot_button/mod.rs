@@ -14,6 +14,9 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::{
     SystemKeyPickerDialog, SystemKeyPickerDialogProps,
 };
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{
+    Tooltip, TooltipProps,
+};
 use dioxus::prelude::*;
 use hooks::use_slot_button;
 pub use props::SlotButtonProps;
@@ -27,6 +30,7 @@ pub fn SlotButton(props: SlotButtonProps) -> Element {
     let model = use_slot_button(&props);
     let label = SystemSlotLabelProps::from(&model);
     let key = SystemSlotKeyProps::from(&model);
+    let tooltip = TooltipProps::from(&model);
     let picker = SystemKeyPickerDialogProps::from(&model);
     let class = style::class(model.state);
     rsx! {
@@ -35,10 +39,10 @@ pub fn SlotButton(props: SlotButtonProps) -> Element {
             r#type: "button",
             tabindex: "0",
             "data-compact": model.compact_attr,
-            "data-tooltip": model.conflict_title,
             onclick: model.on_click,
             SystemSlotLabel { ..label }
             SystemSlotKey { ..key }
+            Tooltip { ..tooltip }
         }
         if model.is_editing {
             SystemKeyPickerDialog { ..picker }

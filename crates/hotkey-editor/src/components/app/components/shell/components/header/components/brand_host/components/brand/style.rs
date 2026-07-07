@@ -19,7 +19,7 @@ classes! {
         "p-0",
         "cursor-pointer",
         "text-left",
-        "[transition:filter_0.12s_ease,text-shadow_0.12s_ease]",
+        "transition-[filter,text-shadow]", "duration-fast",
         "hover:filter-[brightness(1.15)]",
         "focus:outline-none",
         "focus-visible:[outline:2px_solid_var(--color-warcraft-highlight)]",

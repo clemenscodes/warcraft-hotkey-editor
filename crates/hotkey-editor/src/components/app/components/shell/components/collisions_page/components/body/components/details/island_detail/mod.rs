@@ -18,6 +18,8 @@ pub use props::IslandDetailProps;
 /// The island (position-collision) detail extension: builds the mini-grid header and
 /// per-unit conflict cards, fed into the base detail pane. Each conflict ability owns
 /// and opens its own carriers dialog, so this pane knows nothing about it.
+use tw_macro::assert_component;
+assert_component!(IslandDetail);
 #[component]
 pub fn IslandDetail(props: IslandDetailProps) -> Element {
     let Some(model) = selected(&props) else {

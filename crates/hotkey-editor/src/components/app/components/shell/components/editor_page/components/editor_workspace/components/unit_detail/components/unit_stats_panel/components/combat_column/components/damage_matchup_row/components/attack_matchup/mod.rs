@@ -7,6 +7,8 @@ use dioxus::prelude::*;
 pub use props::AttackMatchupProps;
 
 /// One cell of an attacker's damage matchup. A thin wrapper over `Matchup`.
+use tw_macro::assert_component;
+assert_component!(AttackMatchup);
 #[component]
 pub fn AttackMatchup(props: AttackMatchupProps) -> Element {
     rsx! {

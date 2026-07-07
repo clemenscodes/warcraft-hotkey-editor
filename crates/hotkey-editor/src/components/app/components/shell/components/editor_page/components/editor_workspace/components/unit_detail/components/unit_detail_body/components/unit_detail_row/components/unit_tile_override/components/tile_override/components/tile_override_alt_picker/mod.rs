@@ -9,6 +9,8 @@ pub use props::TileOverrideAltPickerProps;
 
 /// Mounts the off-state position picker only while it is open, reading its own open
 /// signal to decide — the way `CarriersDialogHost` reads its open state.
+use tw_macro::assert_component;
+assert_component!(TileOverrideAltPicker);
 #[component]
 pub fn TileOverrideAltPicker(props: TileOverrideAltPickerProps) -> Element {
     if !*props.alt_position_picker_open.read() {

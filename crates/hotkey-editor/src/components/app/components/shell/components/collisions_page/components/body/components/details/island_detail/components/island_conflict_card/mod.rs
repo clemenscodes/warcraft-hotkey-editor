@@ -13,6 +13,8 @@ pub use props::IslandConflictCardProps;
 
 /// One conflict card: the affected unit on top, its two clashing abilities flanking
 /// the centered ✕ below.
+use tw_macro::assert_component;
+assert_component!(IslandConflictCard);
 #[component]
 pub fn IslandConflictCard(props: IslandConflictCardProps) -> Element {
     let model = IslandConflictCardModel::from(&props);

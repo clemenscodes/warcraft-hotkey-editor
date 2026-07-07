@@ -5,6 +5,6 @@ classes! {
         "uppercase",
         "whitespace-nowrap",
         "tracking-[0.12em]",
-        "text-shadow-drop-60",
+        "text-shadow-drop",
     ],
 }

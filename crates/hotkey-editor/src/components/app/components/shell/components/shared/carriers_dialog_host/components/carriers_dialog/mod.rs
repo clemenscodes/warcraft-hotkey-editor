@@ -11,6 +11,8 @@ pub use props::CarriersDialogProps;
 
 /// Lists every unit that carries an ability in a scrollable grid; closing the dialog
 /// clears the open state that summoned it.
+use tw_macro::assert_component;
+assert_component!(CarriersDialog);
 #[component]
 pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
     let CarriersDialogView { open, title, cards } = use_carriers_dialog(&props);

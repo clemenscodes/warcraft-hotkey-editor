@@ -7,6 +7,6 @@ classes! {
         "leading-none",
         "whitespace-nowrap",
         "text-warcraft-gold",
-        "text-shadow-glow-14",
+        "text-shadow-glow",
     ],
 }

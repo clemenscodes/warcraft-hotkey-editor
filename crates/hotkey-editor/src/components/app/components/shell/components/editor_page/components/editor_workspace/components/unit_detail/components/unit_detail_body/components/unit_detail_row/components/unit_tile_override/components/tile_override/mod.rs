@@ -16,6 +16,8 @@ pub use props::TileOverrideProps;
 
 /// The per-tile override editor. A pure renderer: the composed hook shapes the
 /// card's whole nested props tree and the pickers, and the body only places them.
+use tw_macro::assert_component;
+assert_component!(TileOverride);
 #[component]
 pub fn TileOverride(props: TileOverrideProps) -> Element {
     let model = use_tile_override(&props);

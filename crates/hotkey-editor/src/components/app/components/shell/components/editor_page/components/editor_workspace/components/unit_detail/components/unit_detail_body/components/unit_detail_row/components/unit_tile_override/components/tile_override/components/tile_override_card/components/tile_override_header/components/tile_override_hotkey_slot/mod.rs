@@ -12,6 +12,8 @@ pub use props::TileOverrideHotkeySlotProps;
 
 /// The hotkey / research-hotkey / passive-note slot in the override header. Renders
 /// exactly the one that applies, or nothing.
+use tw_macro::assert_component;
+assert_component!(TileOverrideHotkeySlot);
 #[component]
 pub fn TileOverrideHotkeySlot(props: TileOverrideHotkeySlotProps) -> Element {
     let dispatch = TileOverrideHotkeySlotDispatch::from(&props);

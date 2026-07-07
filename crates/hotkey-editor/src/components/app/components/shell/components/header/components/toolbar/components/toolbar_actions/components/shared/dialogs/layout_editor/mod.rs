@@ -14,6 +14,8 @@ pub use props::LayoutEditorProps;
 /// resolves the grid cells, picker state, and handlers; the body composes the
 /// shell with the centered content and the apply action, plus the nested key
 /// picker shown while a cell is being edited.
+use tw_macro::assert_component;
+assert_component!(LayoutEditor);
 #[component]
 pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
     let model = use_layout_editor(&props);

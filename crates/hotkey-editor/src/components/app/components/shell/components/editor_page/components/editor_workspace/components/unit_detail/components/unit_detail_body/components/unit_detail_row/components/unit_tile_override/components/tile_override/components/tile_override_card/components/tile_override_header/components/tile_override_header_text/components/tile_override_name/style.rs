@@ -13,7 +13,7 @@ classes! {
         "text-2xl",
         "leading-title",
         "text-warcraft-gold",
-        "text-shadow-drop-92",
+        "text-shadow-drop",
     ],
     mobile: tw![
         "mobile:text-sm",

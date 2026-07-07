@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex-none",
-        "h-[72px]",
+        "h-18",
         "flex",
         "items-center",
         "text-warcraft-gold",

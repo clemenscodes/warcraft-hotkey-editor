@@ -17,7 +17,7 @@ classes! {
         "border-warcraft-blue-deep",
         "cursor-pointer",
         "transition-colors",
-        "duration-[0.12s]",
+        "duration-fast",
         "first:mt-0",
         "text-warcraft-text-faint",
         "hover:text-warcraft-gold",

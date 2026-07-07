@@ -9,6 +9,8 @@ pub use props::{AbilityPair, HotkeyPairRowProps};
 
 /// The two abilities flanking the shared-key badge; renders nothing unless the
 /// clash is an exact pair.
+use tw_macro::assert_component;
+assert_component!(HotkeyPairRow);
 #[component]
 pub fn HotkeyPairRow(props: HotkeyPairRowProps) -> Element {
     let Some(pair) = props.pair else {

@@ -15,6 +15,8 @@ const FAVICON: Asset = asset!("/assets/favicon.svg");
 /// [`Shell`](components::shell::Shell) layout — so the router owns history and URL
 /// synchronisation, and the shell owns the app-wide state that persists as the pages
 /// swap beneath it.
+use tw_macro::assert_component;
+assert_component!(App);
 #[component]
 pub fn App() -> Element {
     rsx! {

@@ -4,7 +4,7 @@ classes! {
         "absolute",
         "left-[50%]",
         "top-[50%]",
-        "[transform:translate(-50%,-50%)]",
+        "transform-[translate(-50%,-50%)]",
         "flex-none",
         "text-warcraft-gold",
         "text-3xl",

@@ -9,6 +9,8 @@ use dioxus::prelude::*;
 pub use props::HeroSelectionHotkeysViewProps;
 
 /// The hero-selection hotkey editor: three big slots for selecting heroes by index.
+use tw_macro::assert_component;
+assert_component!(HeroSelectionHotkeysView);
 #[component]
 pub fn HeroSelectionHotkeysView(props: HeroSelectionHotkeysViewProps) -> Element {
     rsx! {

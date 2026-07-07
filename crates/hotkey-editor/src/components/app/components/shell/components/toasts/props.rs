@@ -4,11 +4,11 @@ use dioxus::prelude::*;
 /// inequality so the provider re-renders on every parent update, keeping live
 /// toasts in sync.
 #[derive(Props, Clone)]
-pub struct ToastMountProps {
+pub struct ToastsProps {
     pub children: Element,
 }
 
-impl PartialEq for ToastMountProps {
+impl PartialEq for ToastsProps {
     fn eq(&self, _other: &Self) -> bool {
         false
     }

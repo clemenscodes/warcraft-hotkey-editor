@@ -13,6 +13,6 @@ classes! {
     ],
     mobile: tw![
         "mobile:flex-row",
-        "mobile:[&>button]:min-h-[3.5rem]!",
+        "mobile:[&>button]:min-h-14!",
     ],
 }

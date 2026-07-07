@@ -7,6 +7,6 @@ classes! {
         "border-warcraft-gold/45",
         "rounded-xl",
         "bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_45%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_35%,transparent)_100%)]",
-        "shadow-ring-gold-soft",
+        "shadow-ring",
     ],
 }

@@ -2,10 +2,10 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "absolute",
-        "top-[-6px]",
-        "right-[-6px]",
-        "min-w-[19px]",
-        "h-[19px]",
+        "-top-1.5",
+        "-right-1.5",
+        "min-w-4.75",
+        "h-4.75",
         "px-1",
         "box-border",
         "inline-flex",
@@ -23,8 +23,8 @@ classes! {
         "data-[win=true]:text-warcraft-gold",
     ],
     mobile: tw![
-        "mobile:min-w-[15px]",
-        "mobile:h-[15px]",
+        "mobile:min-w-3.75",
+        "mobile:h-3.75",
         "mobile:text-sm",
     ],
 }

@@ -15,6 +15,8 @@ const OG_URL: &str = "https://clemenscodes.github.io/warcraft-hotkey-editor/";
 /// app inside the safe area, so no shell component has to re-inset itself with
 /// `env(safe-area-inset-*)`. `theme-color` paints the browser chrome (and, with the `html`
 /// background, the safe-area strips on a notched phone) the app's own dark blue.
+use tw_macro::assert_component;
+assert_component!(DocumentHead);
 #[component]
 pub fn DocumentHead() -> Element {
     rsx! {

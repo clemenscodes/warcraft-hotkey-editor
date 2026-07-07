@@ -7,6 +7,8 @@ use crate::components::app::components::shell::components::header::components::t
 pub use props::TileOverrideKeyPickerProps;
 
 /// Mounts the hotkey picker only while a hotkey field is being edited.
+use tw_macro::assert_component;
+assert_component!(TileOverrideKeyPicker);
 #[component]
 pub fn TileOverrideKeyPicker(props: TileOverrideKeyPickerProps) -> Element {
     if !props.visible {

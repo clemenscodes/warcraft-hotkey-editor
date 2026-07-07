@@ -13,7 +13,7 @@ classes! {
         "py-8", "px-9",
         "border",
         "border-dashed",
-        "border-warcraft-blue-bright",
+        "border-warcraft-blue",
         "rounded-panel",
         "bg-warcraft-bg-mid/45",
         "text-warcraft-text-faint",
@@ -24,7 +24,7 @@ classes! {
     mobile: tw![
         "mobile:w-full",
         "mobile:box-border",
-        "mobile:h-[300px]",
+        "mobile:h-75",
         "mobile:py-2.5", "mobile:px-3",
         "mobile:text-center",
         "mobile:text-sm",
@@ -36,7 +36,7 @@ classes! {
     tablet: tw![
         "tablet:w-full",
         "tablet:box-border",
-        "tablet:h-[300px]",
+        "tablet:h-75",
         "tablet:py-2.5", "tablet:px-3",
         "tablet:text-sm",
         "tablet:leading-body",

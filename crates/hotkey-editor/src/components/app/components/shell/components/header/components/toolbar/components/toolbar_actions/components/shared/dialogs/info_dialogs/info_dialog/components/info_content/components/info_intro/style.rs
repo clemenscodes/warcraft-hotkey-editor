@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "m-0",
-        "max-w-[90rem]",
+        "max-w-360",
         "text-center",
         "uppercase",
         "tracking-widest",

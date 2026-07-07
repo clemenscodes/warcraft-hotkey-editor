@@ -12,7 +12,7 @@ classes! {
         "p-0",
         "bg-transparent",
         "border-none",
-        "[color:inherit]",
+        "text-inherit",
         "[font:inherit]",
         "text-center",
         "cursor-default",

@@ -11,6 +11,8 @@ use crate::components::app::components::shell::components::editor_page::componen
 
 pub use props::UpgradeSectionProps;
 
+use tw_macro::assert_component;
+assert_component!(UpgradeSection);
 #[component]
 pub fn UpgradeSection(props: UpgradeSectionProps) -> Element {
     if !props.show {

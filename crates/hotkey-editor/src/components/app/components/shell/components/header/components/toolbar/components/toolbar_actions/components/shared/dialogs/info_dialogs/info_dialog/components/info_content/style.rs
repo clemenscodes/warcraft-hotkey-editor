@@ -8,7 +8,7 @@ classes! {
         "gap-10",
         "flex-1",
         "w-full",
-        "max-w-[70rem]",
+        "max-w-280",
         "mx-auto",
     ],
 }

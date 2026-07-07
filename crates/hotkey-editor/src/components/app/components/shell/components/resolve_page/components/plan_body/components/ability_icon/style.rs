@@ -11,7 +11,7 @@ classes! {
         "bg-transparent",
         "border-none",
         "cursor-pointer",
-        "leading-[0]",
+        "leading-0",
         "disabled:cursor-default",
     ],
     mobile: tw![

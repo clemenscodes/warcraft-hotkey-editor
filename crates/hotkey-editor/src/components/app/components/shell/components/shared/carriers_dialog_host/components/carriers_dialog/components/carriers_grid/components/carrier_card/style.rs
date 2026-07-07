@@ -13,6 +13,6 @@ classes! {
         "rounded-card",
         "cursor-pointer",
         "hover:border-warcraft-gold",
-        "hover:shadow-glow-8-3",
+        "hover:shadow-glow-soft",
     ],
 }

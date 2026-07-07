@@ -9,7 +9,7 @@ classes! {
         "uppercase",
         "tracking-[0.08em]",
         "text-warcraft-gold",
-        "text-shadow-drop-92",
+        "text-shadow-drop",
     ],
     mobile: tw!["mobile:text-base"],
     tablet: tw!["tablet:text-md"],

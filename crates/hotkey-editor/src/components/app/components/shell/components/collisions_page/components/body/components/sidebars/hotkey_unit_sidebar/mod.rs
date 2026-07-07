@@ -10,6 +10,8 @@ pub use props::HotkeyUnitSidebarProps;
 
 /// The hotkey-collision sidebar: one card per clashing unit, fed into the base
 /// sidebar bound to the collision scroll.
+use tw_macro::assert_component;
+assert_component!(HotkeyUnitSidebar);
 #[component]
 pub fn HotkeyUnitSidebar(props: HotkeyUnitSidebarProps) -> Element {
     let cards = cards(&props);

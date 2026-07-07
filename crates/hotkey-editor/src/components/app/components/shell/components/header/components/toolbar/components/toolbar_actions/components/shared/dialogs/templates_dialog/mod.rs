@@ -11,6 +11,8 @@ pub use props::TemplatesDialogProps;
 /// Lets the player apply a bundled layout template. A variant of the `Dialog`
 /// base: the hook resolves the templates and their apply handlers, the gallery
 /// renders them.
+use tw_macro::assert_component;
+assert_component!(TemplatesDialog);
 #[component]
 pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
     let view = use_templates_dialog(&props);

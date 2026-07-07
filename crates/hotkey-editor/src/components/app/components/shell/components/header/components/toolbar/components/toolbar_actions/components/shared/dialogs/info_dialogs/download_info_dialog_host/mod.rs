@@ -10,6 +10,8 @@ use dioxus::prelude::*;
 /// downloads it. Neither the export button nor the burger menu touches the
 /// document to offer a download — they place this host and pass only the open
 /// signal. Owns no markup beyond the dialog it wraps.
+use tw_macro::assert_component;
+assert_component!(DownloadInfoDialogHost);
 #[component]
 pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
     let custom_keys_service = use_custom_keys_service();

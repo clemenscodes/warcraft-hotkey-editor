@@ -13,6 +13,8 @@ pub use props::UnitPositionConflictCardProps;
 /// One position-collision card: the abilities that land on the same command-card
 /// cell, flanking (or stacked under) a mini grid flagging that cell. Each of the two
 /// layouts renders itself away when it does not apply.
+use tw_macro::assert_component;
+assert_component!(UnitPositionConflictCard);
 #[component]
 pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
     let model = UnitPositionConflictCardModel::from(&props);

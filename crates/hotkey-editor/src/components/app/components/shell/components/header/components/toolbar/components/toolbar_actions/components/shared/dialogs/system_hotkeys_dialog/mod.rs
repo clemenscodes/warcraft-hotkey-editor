@@ -12,6 +12,8 @@ pub use props::SystemHotkeysDialogProps;
 /// the hook holds the UI signals, and the body composes the shell with the
 /// category breadcrumbs, the active category's editor, and the inventory drag
 /// follower.
+use tw_macro::assert_component;
+assert_component!(SystemHotkeysDialog);
 #[component]
 pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
     let model = use_system_hotkeys_dialog(&props);

@@ -8,6 +8,8 @@ pub use props::{AnchorColumnProps, AnchorParts};
 
 /// The rival column of a move card, shown only when the move has an anchor
 /// (Fight/Swap): the rival's name plate over its icon. Renders nothing otherwise.
+use tw_macro::assert_component;
+assert_component!(AnchorColumn);
 #[component]
 pub fn AnchorColumn(props: AnchorColumnProps) -> Element {
     let Some(anchor) = props.anchor else {

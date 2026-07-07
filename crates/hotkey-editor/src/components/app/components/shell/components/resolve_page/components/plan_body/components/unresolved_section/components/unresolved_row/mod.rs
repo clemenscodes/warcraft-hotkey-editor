@@ -16,6 +16,8 @@ pub use props::UnresolvedRowProps;
 
 /// One unresolved ability card: the Stuck badge, the ability, and the cell it is
 /// stuck on.
+use tw_macro::assert_component;
+assert_component!(UnresolvedRow);
 #[component]
 pub fn UnresolvedRow(props: UnresolvedRowProps) -> Element {
     let model = UnresolvedRowModel::from(&props);

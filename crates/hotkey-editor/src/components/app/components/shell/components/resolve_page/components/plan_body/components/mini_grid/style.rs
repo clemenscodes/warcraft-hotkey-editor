@@ -9,7 +9,7 @@ classes! {
         "flex-[1_1_auto]",
         "w-full",
         "min-w-0",
-        "[container-type:inline-size]",
+        "@container",
         "pointer-events-none",
         "p-1",
         "bg-warcraft-bg-panel/70",

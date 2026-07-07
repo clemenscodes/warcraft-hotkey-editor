@@ -1,8 +1,8 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "w-[168px]",
-        "h-[168px]",
+        "w-42",
+        "h-42",
         "border",
         "border-warcraft-blue",
         "rounded-tile",

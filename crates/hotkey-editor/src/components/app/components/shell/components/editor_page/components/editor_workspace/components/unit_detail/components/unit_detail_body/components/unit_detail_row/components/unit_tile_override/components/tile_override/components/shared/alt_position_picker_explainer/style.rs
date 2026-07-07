@@ -5,9 +5,9 @@ classes! {
     base: tw![
         "m-0",
         "text-center",
-        "max-w-[90rem]",
+        "max-w-360",
         "uppercase",
-        "tracking-[0.1em]",
+        "tracking-widest",
         "text-warcraft-gold/75",
         "text-2xl",
         "leading-body",

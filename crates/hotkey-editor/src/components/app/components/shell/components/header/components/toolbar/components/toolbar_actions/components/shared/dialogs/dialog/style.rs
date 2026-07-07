@@ -14,7 +14,7 @@ classes! {
         "border",
         "border-warcraft-gold",
         "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
-        "shadow-ambient-gold",
+        "shadow-overlay",
     ],
     mobile: tw![
         "mobile:w-screen",
@@ -36,5 +36,5 @@ classes! {
 /// near-non-responsive concern, so it is a plain class list on the library
 /// element rather than a second banded identity.
 pub(super) const OVERLAY: ClassList = ClassList::new(
-    "fixed inset-0 z-[1000] flex items-center justify-center p-8 bg-black/70 mobile:p-0",
+    "fixed inset-0 z-1000 flex items-center justify-center p-8 bg-black/70 mobile:p-0",
 );

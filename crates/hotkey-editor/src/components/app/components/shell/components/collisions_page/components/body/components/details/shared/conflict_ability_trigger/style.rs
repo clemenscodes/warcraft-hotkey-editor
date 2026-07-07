@@ -8,7 +8,7 @@ classes! {
         "cursor-pointer",
         "inline-flex",
         "size-18",
-        "leading-[0]",
+        "leading-0",
         "group",
     ],
 }

@@ -15,6 +15,8 @@ pub use props::SystemKeyPickerDialogProps;
 /// the shared `KeyPicker` does not offer, like function keys and the numpad). A
 /// variant of the `Dialog` base: the hook shapes the open signal and the board,
 /// and the body composes the shell with the keyboard.
+use tw_macro::assert_component;
+assert_component!(SystemKeyPickerDialog);
 #[component]
 pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
     let model = use_system_key_picker(&props);

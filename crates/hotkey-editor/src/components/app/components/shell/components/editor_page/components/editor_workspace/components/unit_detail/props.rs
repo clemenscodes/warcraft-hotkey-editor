@@ -16,7 +16,7 @@ use warcraft_keybinds::{GridSlotId, InspectorDetail};
 /// signals its grids and override card drive are sourced from context by those
 /// children's own hooks, so the panel is fed no god-bag of signals as props.
 #[derive(Props, Clone, PartialEq)]
-pub struct UnitDetailPanelProps {
+pub struct UnitDetailProps {
     pub active_race: Signal<Race>,
     pub selected_unit_id: Signal<Option<String>>,
 }

@@ -10,5 +10,5 @@ classes! {
         "mb-2",
         "[&>button]:min-h-[6.7rem]!",
     ],
-    mobile: tw!["mobile:[&>button]:min-h-[3.5rem]!"],
+    mobile: tw!["mobile:[&>button]:min-h-14!"],
 }

@@ -10,6 +10,8 @@ use hooks::use_upgrade_position_picker;
 pub use props::UpgradePositionPickerProps;
 
 /// The upgraded-form position picker dialog.
+use tw_macro::assert_component;
+assert_component!(UpgradePositionPicker);
 #[component]
 pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
     let model = use_upgrade_position_picker(&props);

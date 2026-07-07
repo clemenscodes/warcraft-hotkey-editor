@@ -9,6 +9,8 @@ pub use props::ActiveMoveListProps;
 /// The active category's move list: the grid of move cards for the selected
 /// section. Renders nothing when the plan has no moves (only unresolved
 /// abilities), so the plan body never has to branch on it.
+use tw_macro::assert_component;
+assert_component!(ActiveMoveList);
 #[component]
 pub fn ActiveMoveList(props: ActiveMoveListProps) -> Element {
     let Some(section) = props.section else {

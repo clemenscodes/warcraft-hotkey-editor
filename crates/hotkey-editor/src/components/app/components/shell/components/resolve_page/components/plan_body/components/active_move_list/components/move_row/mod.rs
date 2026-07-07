@@ -20,6 +20,8 @@ pub use props::MoveRowProps;
 /// One move card: the reason badge, the fighting abilities (names over icons), and
 /// the from → to grids drawing where each ability lands. The rival column renders
 /// itself away when the move has no anchor.
+use tw_macro::assert_component;
+assert_component!(MoveRow);
 #[component]
 pub fn MoveRow(props: MoveRowProps) -> Element {
     let model = MoveRowModel::from(&props);

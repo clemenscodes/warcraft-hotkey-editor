@@ -14,6 +14,8 @@ pub use props::AltStateControlsProps;
 
 /// The position button and off-state hotkey cell of the alt-state block; renders
 /// nothing when the off-state is not editable in this context.
+use tw_macro::assert_component;
+assert_component!(AltStateControls);
 #[component]
 pub fn AltStateControls(props: AltStateControlsProps) -> Element {
     if !props.show {

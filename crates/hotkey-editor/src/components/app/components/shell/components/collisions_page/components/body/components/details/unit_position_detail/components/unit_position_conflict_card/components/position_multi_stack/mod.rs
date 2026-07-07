@@ -8,6 +8,8 @@ pub use props::PositionMultiStackProps;
 
 /// The colliding cell stacked above every landing ability; renders nothing when the
 /// clash is an exact pair (that layout is the pair row instead).
+use tw_macro::assert_component;
+assert_component!(PositionMultiStack);
 #[component]
 pub fn PositionMultiStack(props: PositionMultiStackProps) -> Element {
     let abilities = props.abilities;

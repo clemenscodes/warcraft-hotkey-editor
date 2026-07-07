@@ -12,14 +12,16 @@ use components::unit_detail_header::UnitDetailHeader;
 use components::unit_stats_panel::UnitStatsPanel;
 use dioxus::prelude::*;
 use hooks::use_unit_detail_panel;
-pub use props::UnitDetailPanelProps;
+pub use props::UnitDetailProps;
 use state::UnitDetailView;
 use style::CLASS;
 
 /// The unit detail card: header, description, stats, and the grids/override body.
 /// Empty until a unit is selected. Composes its children from a single shaped hook.
+use tw_macro::assert_component;
+assert_component!(UnitDetail);
 #[component]
-pub fn UnitDetailPanel(props: UnitDetailPanelProps) -> Element {
+pub fn UnitDetail(props: UnitDetailProps) -> Element {
     let model = match use_unit_detail_panel(&props) {
         UnitDetailView::Loaded(model) => *model,
         UnitDetailView::Empty(message) => {

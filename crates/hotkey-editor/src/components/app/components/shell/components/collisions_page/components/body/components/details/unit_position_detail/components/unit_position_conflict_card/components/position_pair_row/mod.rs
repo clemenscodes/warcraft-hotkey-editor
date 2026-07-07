@@ -8,6 +8,8 @@ pub use props::{PositionPair, PositionPairRowProps};
 
 /// Two abilities flanking the colliding cell; renders nothing unless the clash is
 /// an exact pair.
+use tw_macro::assert_component;
+assert_component!(PositionPairRow);
 #[component]
 pub fn PositionPairRow(props: PositionPairRowProps) -> Element {
     let Some(pair) = props.pair else {

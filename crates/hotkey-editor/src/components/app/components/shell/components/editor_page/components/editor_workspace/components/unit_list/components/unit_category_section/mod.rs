@@ -13,6 +13,8 @@ pub use props::UnitCategorySectionProps;
 /// unit cards. The heading, collapsed state, and cards are all built by the
 /// composed hook (memoized on the catalog inputs); this component is a thin
 /// renderer with no own class.
+use tw_macro::assert_component;
+assert_component!(UnitCategorySection);
 #[component]
 pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let model = use_unit_category_section(&props);

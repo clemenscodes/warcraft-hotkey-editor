@@ -11,7 +11,7 @@ classes! {
         "rounded-tile",
         "text-lg",
         "uppercase",
-        "[letter-spacing:0.04em]",
+        "tracking-[0.04em]",
         "border",
         "border-solid",
         "text-shadow-drop",

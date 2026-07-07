@@ -6,6 +6,6 @@ classes! {
         "items-center",
         "gap-2",
         "flex-[0_0_auto]",
-        "min-w-[112px]",
+        "min-w-28",
     ],
 }

@@ -16,6 +16,8 @@ pub use state::GridTileState;
 /// occupied tile (`FilledTile`) or the empty one (`EmptyTile`). The occupancy
 /// decision lives in the `TryFrom`/`From` conversions, so the body only guards and
 /// renders — no computation.
+use tw_macro::assert_component;
+assert_component!(GridTile);
 #[component]
 pub fn GridTile(props: GridTileProps) -> Element {
     if let Ok(filled) = FilledTileProps::try_from(&props) {

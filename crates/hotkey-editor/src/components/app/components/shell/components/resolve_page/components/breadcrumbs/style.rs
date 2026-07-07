@@ -17,7 +17,7 @@ classes! {
         "mobile:overscroll-x-contain",
         "mobile:snap-x",
         "mobile:snap-mandatory",
-        "mobile:[scrollbar-width:none]",
+        "mobile:scrollbar-none",
         "mobile:[&::-webkit-scrollbar]:hidden",
     ],
     tablet: tw![
@@ -27,7 +27,7 @@ classes! {
         "tablet:overscroll-x-contain",
         "tablet:snap-x",
         "tablet:snap-mandatory",
-        "tablet:[scrollbar-width:none]",
+        "tablet:scrollbar-none",
         "tablet:[&::-webkit-scrollbar]:hidden",
     ],
 }

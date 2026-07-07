@@ -2,8 +2,8 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "box-border",
-        "min-w-[60px]",
-        "h-[60px]",
+        "min-w-15",
+        "h-15",
         "px-3",
         "inline-flex",
         "items-center",
@@ -18,16 +18,16 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:w-[56px]",
+        "mobile:w-14",
         "mobile:min-w-0",
-        "mobile:h-[56px]",
+        "mobile:h-14",
         "mobile:p-0",
         "mobile:text-xl",
     ],
     tablet: tw![
-        "tablet:w-[56px]",
+        "tablet:w-14",
         "tablet:min-w-0",
-        "tablet:h-[56px]",
+        "tablet:h-14",
         "tablet:p-0",
         "tablet:text-xl",
     ],

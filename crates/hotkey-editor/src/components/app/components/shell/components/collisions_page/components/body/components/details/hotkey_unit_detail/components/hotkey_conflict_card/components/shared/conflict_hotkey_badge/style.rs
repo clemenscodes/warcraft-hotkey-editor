@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "self-start",
-        "h-[72px]",
+        "h-18",
         "inline-flex",
         "items-center",
         "justify-center",

@@ -5,7 +5,7 @@ classes! {
         "leading-flush",
         "font-normal",
         "text-warcraft-gold",
-        "text-shadow-drop-92",
+        "text-shadow-drop",
         "m-0",
         "tracking-[0.03em]",
     ],
@@ -15,7 +15,7 @@ classes! {
         "mobile:text-lg",
         "mobile:leading-title",
         "mobile:text-left",
-        "mobile:[overflow-wrap:break-word]",
+        "mobile:wrap-break-word",
         "mobile:[word-break:break-word]",
     ],
     tablet: tw![
@@ -24,7 +24,7 @@ classes! {
         "tablet:text-lg",
         "tablet:leading-title",
         "tablet:text-left",
-        "tablet:[overflow-wrap:break-word]",
+        "tablet:wrap-break-word",
         "tablet:[word-break:break-word]",
     ],
 }

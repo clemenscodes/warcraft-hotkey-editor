@@ -1,7 +1,7 @@
 use super::logic::{
     ActiveContainer, ActiveContainerInputs, InspectorPanel, InspectorPanelInputs, ResolvedUnit,
 };
-use super::props::{UnitDetailInputs, UnitDetailPanelProps};
+use super::props::{UnitDetailInputs, UnitDetailProps};
 use super::state::{UnitDetailModel, UnitDetailView};
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
@@ -29,7 +29,7 @@ fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelSt
 /// grouped into the [`ResolvedUnit`], [`InspectorPanel`], and [`ActiveContainer`]
 /// derivations plus the memoized [`UnitSlotContainers`]; this hook only orchestrates
 /// them, gathers the [`UnitDetailInputs`], and lets the props tree derive itself.
-pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailView {
+pub(super) fn use_unit_detail_panel(props: &UnitDetailProps) -> UnitDetailView {
     let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
     let editor = use_editor_state();

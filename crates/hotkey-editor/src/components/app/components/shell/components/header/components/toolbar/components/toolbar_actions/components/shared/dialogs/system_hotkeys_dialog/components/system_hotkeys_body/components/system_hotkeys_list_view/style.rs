@@ -5,7 +5,7 @@ classes! {
         "m-0",
         "p-0",
         "w-full",
-        "max-w-[110rem]",
+        "max-w-440",
         "mx-auto",
         "flex",
         "flex-col",

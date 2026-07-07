@@ -1,4 +1,4 @@
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailPanelProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitListProps;
 use dioxus::prelude::*;
 use std::collections::HashSet;
@@ -40,7 +40,7 @@ impl From<&EditorWorkspaceProps> for UnitListProps {
     }
 }
 
-impl From<&EditorWorkspaceProps> for UnitDetailPanelProps {
+impl From<&EditorWorkspaceProps> for UnitDetailProps {
     fn from(props: &EditorWorkspaceProps) -> Self {
         Self {
             active_race: props.active_race,

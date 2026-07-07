@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use components::unit_detail::{UnitDetailPanel, UnitDetailPanelProps};
+use components::unit_detail::{UnitDetail, UnitDetailProps};
 use components::unit_list::{UnitList, UnitListProps};
 use dioxus::prelude::*;
 pub use props::EditorWorkspaceProps;
@@ -17,12 +17,12 @@ assert_component!(EditorWorkspace);
 pub fn EditorWorkspace(props: EditorWorkspaceProps) -> Element {
     let class = CLASS;
     let unit_list = UnitListProps::from(&props);
-    let unit_detail = UnitDetailPanelProps::from(&props);
+    let unit_detail = UnitDetailProps::from(&props);
     rsx! {
         div {
             class,
             UnitList { ..unit_list }
-            UnitDetailPanel { ..unit_detail }
+            UnitDetail { ..unit_detail }
         }
     }
 }

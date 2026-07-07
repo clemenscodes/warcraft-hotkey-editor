@@ -12,6 +12,8 @@ use components::alt_state_line::AltStateLine;
 
 pub use props::AltStateSectionProps;
 
+use tw_macro::assert_component;
+assert_component!(AltStateSection);
 #[component]
 pub fn AltStateSection(props: AltStateSectionProps) -> Element {
     let has_alt_state = props.alt_name_text.is_some() || !props.alt_description_lines.is_empty();

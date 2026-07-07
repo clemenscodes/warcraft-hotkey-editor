@@ -1,5 +1,19 @@
 use super::hooks::KeyCaptureModel;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;
+
+impl From<&KeyCaptureModel> for TooltipProps {
+    fn from(model: &KeyCaptureModel) -> Self {
+        let text = model.conflict_title.clone();
+        let placement = TooltipPlacement::Above;
+        let anchor = TooltipAnchor::Center;
+        Self {
+            text,
+            placement,
+            anchor,
+        }
+    }
+}
 
 impl From<&KeyCaptureModel> for SystemKeyPickerDialogProps {
     fn from(model: &KeyCaptureModel) -> Self {

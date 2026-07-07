@@ -6,7 +6,7 @@ classes! {
         "bg-transparent",
         "border-none",
         "cursor-pointer",
-        "leading-[0]",
+        "leading-0",
         "flex-none",
         "size-20",
     ],

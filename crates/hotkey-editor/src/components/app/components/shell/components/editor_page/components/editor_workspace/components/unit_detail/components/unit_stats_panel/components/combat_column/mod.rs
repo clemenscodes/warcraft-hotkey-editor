@@ -18,6 +18,8 @@ pub use props::CombatColumnProps;
 /// The combat column: the attack-type icon beside the damage/range/speed rows and the
 /// damage matchup grid. Present only when the unit has an attack; a unit that cannot
 /// attack renders nothing here.
+use tw_macro::assert_component;
+assert_component!(CombatColumn);
 #[component]
 pub fn CombatColumn(props: CombatColumnProps) -> Element {
     let Some(attack) = props.attack else {

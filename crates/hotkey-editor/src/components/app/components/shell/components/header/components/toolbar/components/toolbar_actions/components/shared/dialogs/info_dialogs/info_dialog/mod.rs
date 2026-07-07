@@ -11,6 +11,8 @@ pub use props::InfoDialogConfig;
 /// instruction block above a cancel/primary action row. Variants fill in the
 /// title, copy, warning, and handlers via `InfoDialogConfig`; this composes the
 /// `Dialog` base from them and adds no markup of its own.
+use tw_macro::assert_component;
+assert_component!(InfoDialog);
 #[component]
 pub fn InfoDialog(props: InfoDialogConfig) -> Element {
     rsx! {

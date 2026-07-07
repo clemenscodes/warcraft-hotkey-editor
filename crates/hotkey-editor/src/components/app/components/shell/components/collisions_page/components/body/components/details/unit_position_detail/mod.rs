@@ -16,6 +16,8 @@ pub use props::UnitPositionDetailProps;
 
 /// The per-unit position-collision detail extension: builds the selected unit's
 /// header and position-conflict cards, fed into the base detail pane.
+use tw_macro::assert_component;
+assert_component!(UnitPositionDetail);
 #[component]
 pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
     let Some(model) = selected(&props) else {

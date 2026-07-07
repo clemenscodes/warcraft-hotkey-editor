@@ -5,12 +5,12 @@ classes! {
         "mobile:flex-none",
         "mobile:text-[0.9em]",
         "mobile:leading-none",
-        "mobile:[transition:transform_0.18s_ease]",
+        "mobile:transition-[transform]", "mobile:duration-slow",
     ],
     tablet: tw![
         "tablet:flex-none",
         "tablet:text-[0.9em]",
         "tablet:leading-none",
-        "tablet:[transition:transform_0.18s_ease]",
+        "tablet:transition-[transform]", "tablet:duration-slow",
     ],
 }

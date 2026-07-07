@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "w-full",
         "flex-1",
-        "min-h-[20rem]",
+        "min-h-80",
         "px-8",
         "py-6",
         "rounded-md",
@@ -18,7 +18,7 @@ classes! {
         "resize-y",
         "focus:outline-none",
         "focus:border-warcraft-gold",
-        "focus:shadow-glow-8-3",
+        "focus:shadow-glow-soft",
     ],
     mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
 }

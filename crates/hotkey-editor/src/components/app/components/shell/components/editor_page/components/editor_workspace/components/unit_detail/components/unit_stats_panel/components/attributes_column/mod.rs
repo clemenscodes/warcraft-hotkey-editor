@@ -12,6 +12,8 @@ pub use props::AttributesColumnProps;
 
 /// The hero attributes column: the primary-attribute icon beside the three attribute
 /// rows. Present only for a hero unit; an ordinary unit renders nothing here.
+use tw_macro::assert_component;
+assert_component!(AttributesColumn);
 #[component]
 pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
     let Some(hero) = props.hero else {

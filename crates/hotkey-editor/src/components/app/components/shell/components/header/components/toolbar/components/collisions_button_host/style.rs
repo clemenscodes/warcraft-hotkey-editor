@@ -11,7 +11,7 @@ classes! {
     base: tw![
         "inline-flex",
         "shrink-0",
-        "[container-type:inline-size]",
+        "@container",
         "h-full",
         "aspect-square",
     ],

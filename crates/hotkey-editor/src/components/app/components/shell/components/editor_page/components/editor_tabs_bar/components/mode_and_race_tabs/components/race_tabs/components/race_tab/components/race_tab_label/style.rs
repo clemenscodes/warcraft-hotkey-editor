@@ -4,7 +4,7 @@ use warcraft_api::Race;
 classes! {
     base: tw![
         "relative",
-        "z-[2]",
+        "z-2",
         "py-1.5",
         "px-2.5",
         "pb-2",

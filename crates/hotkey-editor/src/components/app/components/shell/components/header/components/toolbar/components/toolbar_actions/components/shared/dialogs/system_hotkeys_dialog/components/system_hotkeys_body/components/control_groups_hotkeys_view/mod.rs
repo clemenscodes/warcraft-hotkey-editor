@@ -9,6 +9,8 @@ use dioxus::prelude::*;
 pub use props::ControlGroupsHotkeysViewProps;
 
 /// The control-groups (1–10) hotkey editor: a ten-cell strip of editable slots.
+use tw_macro::assert_component;
+assert_component!(ControlGroupsHotkeysView);
 #[component]
 pub fn ControlGroupsHotkeysView(props: ControlGroupsHotkeysViewProps) -> Element {
     rsx! {

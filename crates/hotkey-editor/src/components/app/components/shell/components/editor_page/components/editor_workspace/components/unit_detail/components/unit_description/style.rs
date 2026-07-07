@@ -5,11 +5,11 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "mt-4",
-        "min-h-[9rem]",
+        "min-h-36",
         "text-xl",
         "leading-body",
         "text-warcraft-text-secondary",
-        "text-shadow-drop-60",
+        "text-shadow-drop",
     ],
     mobile: tw![
         "mobile:mt-3",
@@ -21,7 +21,7 @@ classes! {
         "mobile:text-sm",
         "mobile:leading-body",
         "mobile:line-clamp-1",
-        "mobile:[overflow-wrap:break-word]",
+        "mobile:wrap-break-word",
         "mobile:[word-break:break-word]",
     ],
     tablet: tw![
@@ -34,7 +34,7 @@ classes! {
         "tablet:text-sm",
         "tablet:leading-body",
         "tablet:line-clamp-1",
-        "tablet:[overflow-wrap:break-word]",
+        "tablet:wrap-break-word",
         "tablet:[word-break:break-word]",
     ],
 }

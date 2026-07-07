@@ -5,6 +5,8 @@ use dioxus::prelude::*;
 pub use props::ResearchMenuProps;
 
 /// The unit's research menu, when it has one; renders nothing otherwise.
+use tw_macro::assert_component;
+assert_component!(ResearchMenu);
 #[component]
 pub fn ResearchMenu(props: ResearchMenuProps) -> Element {
     let Some(config) = props.config else {

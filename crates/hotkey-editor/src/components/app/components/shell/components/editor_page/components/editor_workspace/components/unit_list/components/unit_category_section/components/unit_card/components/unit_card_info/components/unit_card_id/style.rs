@@ -30,12 +30,12 @@ states! {
     UnitCardIdState,
     Normal => tw!["text-warcraft-text-faint"],
     Selected => tw![
-        "text-[color:var(--color-warcraft-gold)]",
+        "text-warcraft-gold",
         "opacity-70",
-        "data-[race=human]:text-[color:var(--color-race-human)]",
-        "data-[race=orc]:text-[color:var(--color-race-orc)]",
-        "data-[race=nightelf]:text-[color:var(--color-race-nightelf)]",
-        "data-[race=undead]:text-[color:var(--color-race-undead)]",
-        "data-[race=neutral]:text-[color:var(--color-warcraft-gold)]",
+        "data-[race=human]:text-race-human",
+        "data-[race=orc]:text-race-orc",
+        "data-[race=nightelf]:text-race-nightelf",
+        "data-[race=undead]:text-race-undead",
+        "data-[race=neutral]:text-warcraft-gold",
     ],
 }

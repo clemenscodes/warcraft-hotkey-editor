@@ -10,6 +10,8 @@ pub use props::UnitPositionSidebarProps;
 
 /// The unit-position-collision sidebar: one card per clashing unit, fed into the
 /// base sidebar bound to the collision scroll.
+use tw_macro::assert_component;
+assert_component!(UnitPositionSidebar);
 #[component]
 pub fn UnitPositionSidebar(props: UnitPositionSidebarProps) -> Element {
     let cards = cards(&props);

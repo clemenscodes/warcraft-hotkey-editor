@@ -12,7 +12,7 @@ classes! {
         "relative",
         "w-full",
         "aspect-square",
-        "[container-type:inline-size]",
+        "@container",
         "rounded-[1.04cqi]",
     ],
 }

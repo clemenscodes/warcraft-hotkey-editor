@@ -7,8 +7,8 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "shrink-0",
-        "w-[calc(80px/3*4)]",
-        "[container-type:inline-size]",
+        "w-[106.67px]",
+        "@container",
         "pointer-events-none",
         "p-1",
         "bg-warcraft-bg-panel/70",
@@ -20,6 +20,6 @@ classes! {
         "[&_.empty-tile]:rounded-[1.04cqi]!",
         "[&_.filled-tile]:rounded-[1.04cqi]!",
     ],
-    mobile: tw!["mobile:w-[calc(66px/3*4)]"],
-    tablet: tw!["tablet:w-[calc(92px/3*4)]"],
+    mobile: tw!["mobile:w-[88px]"],
+    tablet: tw!["tablet:w-[122.67px]"],
 }

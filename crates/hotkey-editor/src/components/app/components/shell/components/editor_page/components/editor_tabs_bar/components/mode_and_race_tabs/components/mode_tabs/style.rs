@@ -6,7 +6,7 @@ classes! {
         "gap-2",
         "self-stretch",
         "flex-[0_0_34rem]",
-        "w-[34rem]",
+        "w-136",
     ],
     mobile: tw![
         "mobile:flex-row",
@@ -20,10 +20,10 @@ classes! {
     ],
     qhd: tw![
         "qhd:flex-[0_0_46rem]",
-        "qhd:w-[46rem]",
+        "qhd:w-184",
     ],
     uhd: tw![
         "uhd:flex-[0_0_62rem]",
-        "uhd:w-[62rem]",
+        "uhd:w-248",
     ],
 }

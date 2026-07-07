@@ -9,6 +9,8 @@ use dioxus::prelude::*;
 pub use props::InventoryHotkeysViewProps;
 
 /// The inventory hotkey editor: the six-slot grid, reorderable by drag.
+use tw_macro::assert_component;
+assert_component!(InventoryHotkeysView);
 #[component]
 pub fn InventoryHotkeysView(props: InventoryHotkeysViewProps) -> Element {
     rsx! {

@@ -9,6 +9,8 @@ pub use props::UploadInfoDialogProps;
 /// Tells the player where to find CustomKeys.txt and opens the file picker. A
 /// thin variant that fills the shared `InfoDialog` shell with the import title,
 /// copy, and choose-file handler.
+use tw_macro::assert_component;
+assert_component!(UploadInfoDialog);
 #[component]
 pub fn UploadInfoDialog(props: UploadInfoDialogProps) -> Element {
     rsx! {

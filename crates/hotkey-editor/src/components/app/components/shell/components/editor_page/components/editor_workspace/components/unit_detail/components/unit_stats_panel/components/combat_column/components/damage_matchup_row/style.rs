@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "grid",
-        "grid-cols-[repeat(2,minmax(0,1fr))]",
+        "grid-cols-2",
         "gap-x-2",
         "gap-y-1",
         "mt-auto",

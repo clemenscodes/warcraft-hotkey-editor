@@ -16,6 +16,8 @@ pub use props::CollisionsPageProps;
 /// or per-unit positions) beside a detail pane, under a breadcrumb bar that swaps
 /// the active kind. Empty and all-clear states replace the two-pane content when
 /// there is no file or no conflicts.
+use tw_macro::assert_component;
+assert_component!(CollisionsPage);
 #[component]
 pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     let model = use_collisions_page(&props);

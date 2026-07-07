@@ -11,6 +11,8 @@ pub use props::VitalityColumnProps;
 
 /// The vitality column: the unit's hit points and mana rows with their regeneration.
 /// Always present; every unit has vitality figures.
+use tw_macro::assert_component;
+assert_component!(VitalityColumn);
 #[component]
 pub fn VitalityColumn(props: VitalityColumnProps) -> Element {
     let VitalityRows {

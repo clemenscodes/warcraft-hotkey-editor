@@ -13,7 +13,7 @@ classes! {
         "whitespace-nowrap",
         "cursor-pointer",
         "select-none",
-        "[transition:all_120ms]",
+        "transition-all", "duration-fast",
     ],
 }
 
@@ -22,20 +22,20 @@ states! {
     Primary => tw![
         "border",
         "border-warcraft-gold",
-        "bg-panel-blue-solid",
+        "bg-panel-blue",
         "text-warcraft-gold",
-        "text-shadow-drop-92",
-        "hover:bg-panel-blue-solid-2",
-        "hover:shadow-glow-12-2",
+        "text-shadow-drop",
+        "hover:bg-panel-blue",
+        "hover:shadow-glow",
     ],
     Secondary => tw![
         "border",
         "border-warcraft-blue",
         "bg-warcraft-bg-panel/70",
         "text-warcraft-text-secondary",
-        "text-shadow-drop-60",
+        "text-shadow-drop",
         "hover:border-warcraft-gold",
         "hover:text-warcraft-gold",
-        "hover:shadow-glow-12-3",
+        "hover:shadow-glow-soft",
     ],
 }

@@ -12,13 +12,13 @@ classes! {
     ],
     mobile: tw![
         "mobile:gap-0.5",
-        "mobile:min-h-[44px]",
+        "mobile:min-h-11",
         "mobile:justify-center",
         "mobile:text-left",
     ],
     tablet: tw![
         "tablet:gap-0.5",
-        "tablet:min-h-[44px]",
+        "tablet:min-h-11",
         "tablet:justify-center",
         "tablet:text-left",
     ],

@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "fixed",
         "inset-0",
-        "z-[70]",
+        "z-70",
         "bg-warcraft-shadow/65",
         "cursor-pointer",
         "border-none",

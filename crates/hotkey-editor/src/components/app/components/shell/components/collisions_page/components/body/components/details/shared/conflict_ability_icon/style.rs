@@ -7,6 +7,6 @@ classes! {
         "rounded-tile",
         "object-cover",
         "group-hover:border-warcraft-gold",
-        "group-hover:shadow-glow-8",
+        "group-hover:shadow-glow-soft",
     ],
 }

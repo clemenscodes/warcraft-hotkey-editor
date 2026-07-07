@@ -9,6 +9,8 @@ pub use props::DownloadInfoDialogProps;
 /// Tells the player where CustomKeys.txt must go and confirms the download. A
 /// thin variant that fills the shared `InfoDialog` shell with the download
 /// title, copy, warning, and confirm handler.
+use tw_macro::assert_component;
+assert_component!(DownloadInfoDialog);
 #[component]
 pub fn DownloadInfoDialog(props: DownloadInfoDialogProps) -> Element {
     rsx! {

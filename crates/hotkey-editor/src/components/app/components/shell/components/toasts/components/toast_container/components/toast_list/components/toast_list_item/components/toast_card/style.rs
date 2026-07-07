@@ -15,12 +15,12 @@ classes! {
         "outline-none",
         "bg-panel-toast",
         "transition-all",
-        "duration-[240ms]",
+        "duration-slow",
         "ease-[cubic-bezier(0.2,0.9,0.3,1)]",
         "starting:opacity-0",
         "starting:translate-x-8",
         "starting:scale-95",
-        "kb-focus:[box-shadow:var(--shadow-toast-focus)]",
+        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]", "kb-focus:shadow-toast-focus",
     ],
     mobile: tw!["mobile:max-w-[calc(100vw-1.5rem)]"],
     tablet: tw!["tablet:max-w-[calc(100vw-1.5rem)]"],
@@ -30,18 +30,18 @@ states! {
     ToastType,
     Success => tw![
         "border-warcraft-success",
-        "[box-shadow:var(--shadow-toast-success)]",
+        "[--glow-color:var(--color-warcraft-success)]", "shadow-toast",
     ],
     Error => tw![
         "border-race-orc",
-        "[box-shadow:var(--shadow-toast-error)]",
+        "[--glow-color:var(--color-warcraft-danger)]", "shadow-toast",
     ],
     Warning => tw![
         "border-warcraft-gold",
-        "shadow-elevation-hl",
+        "shadow-overlay",
     ],
     Info => tw![
         "border-race-human",
-        "shadow-elevation-hl",
+        "shadow-overlay",
     ],
 }
