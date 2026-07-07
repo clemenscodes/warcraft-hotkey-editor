@@ -7,7 +7,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 //   - The drag-over gold used to sit as a box-shadow RING stacked on top of the
 //     tile's own (too-thin) border; production REPLACES the border color instead.
 //   - The lifted source tile was styled differently from empty drop targets;
-//     production makes them identical (2px dashed muted-slate, 6px radius).
+//     production makes them identical (2px dashed deep-blue, 6px radius).
 //   - Every tile rendered nearly square (~1px radius) because the painter's `cqi`
 //     border/radius resolved against the tiny tile-face instead of a full tile;
 //     production tiles are 6px-rounded with a 2px border.
@@ -17,12 +17,12 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 //
 // Production truth, asserted below as computed CSS:
 //   - resting + lifted-source + empty-target: ~6px radius, 2px border.
-//   - lifted source: 2px DASHED muted-slate (#4a7090 = rgb(74,112,144)),
+//   - lifted source: 2px DASHED deep-blue (#1a3a5c = rgb(26,58,92)),
 //     identical to an empty drop target — no source/target distinction.
 //   - filled target under the cursor: 2px SOLID gold (#ffce63 = rgb(255,206,99)),
 //     border color replaced, NO gold box-shadow ring on the Host.
 //   - off-state picker: targets are golden-dashed at rest AND while dragging (idle),
-//     gaining only a 12px glow; the tile under the cursor goes solid gold + 28px glow.
+//     gaining only an 8px glow; the tile under the cursor goes solid gold + 14px glow.
 //
 // The drag look is driven by data-attributes the interaction sets on the Host
 // `.grid-editor-tile` (`data-dragging-source`, `data-drag-over`) and the painter
@@ -34,7 +34,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 // sets these markers and commits a move) is covered by drag-drop.spec.ts and
 // archmage-qwer-rearrange.spec.ts.
 
-const SLATE = "rgb(74, 112, 144)"; // --color-warcraft-blue-slate #4a7090
+const DEEP = "rgb(26, 58, 92)"; // --color-warcraft-blue-deep #1a3a5c
 const GOLD = "rgb(255, 206, 99)"; // --color-warcraft-gold #ffce63
 
 // Read computed styles while a data-attribute is set on a tile's drag Host, then
@@ -114,12 +114,12 @@ test.describe("Grid editor drag styling matches production", () => {
     }
   });
 
-  test("the lifted source tile is a rounded muted-slate dashed ghost", async ({ page }) => {
+  test("the lifted source tile is a rounded deep-blue dashed ghost", async ({ page }) => {
     const s = await styleWithHostMarker(firstFilled(page), "data-dragging-source");
     // The Host draws the ghost (the painter's children are hidden while lifted):
-    // a 2px dashed muted-slate border with the same 6px rounding an empty drop
+    // a 2px dashed deep-blue border with the same 6px rounding an empty drop
     // target wears, so the source is not distinguished from the targets.
-    expect(s.hostBorderColor).toBe(SLATE);
+    expect(s.hostBorderColor).toBe(DEEP);
     expect(s.hostBorderStyle).toBe("dashed");
     expect(isTwoPx(s.hostBorderWidth)).toBe(true);
     expect(isRounded(s.hostRadius)).toBe(true);
@@ -260,13 +260,13 @@ test.describe("Off-state position picker styling matches production", () => {
   }) => {
     await openPicker(page);
     // A target that is a drop candidate but NOT under the cursor: the regression
-    // turned all of these solid on lift. Production keeps them dashed + a 12px glow.
+    // turned all of these solid on lift. Production keeps them dashed + an 8px glow.
     const idle = await pickerTargetStyle(page, { dropTarget: true });
     expect(idle.style).toBe("dashed");
     expect(idle.width).toBe("2px");
-    expect(idle.shadow).toContain("12px");
+    expect(idle.shadow).toContain("8px");
     // Not the big under-cursor glow.
-    expect(idle.shadow).not.toContain("28px");
+    expect(idle.shadow).not.toContain("14px");
   });
 
   test("the target under the cursor goes solid gold with the big glow", async ({ page }) => {
@@ -276,8 +276,8 @@ test.describe("Off-state position picker styling matches production", () => {
     const hovered = await pickerTargetStyle(page, { dropTarget: true, dragOver: true });
     expect(hovered.style).toBe("solid");
     expect(hovered.color).toBe(GOLD);
-    // The signature golden glow: a wide (28px) gold outer box-shadow.
-    expect(hovered.shadow).toContain("28px");
+    // The signature golden glow: the gold `shadow-ring` outer box-shadow (14px).
+    expect(hovered.shadow).toContain("14px");
     // The INNER glow: a gold gradient fills the tile. The regression left this as
     // `background-image: none` because `bg-panel-gold-diag-32-2` put a bare panel
     // COLOR in `background-image` (invalid → dropped by the browser), so the tile
@@ -321,6 +321,6 @@ test.describe("Off-state position picker styling matches production", () => {
     });
     expect(style.color).toBe(GOLD);
     expect(style.style).toBe("solid");
-    expect(style.shadow).toContain("28px");
+    expect(style.shadow).toContain("14px");
   });
 });
