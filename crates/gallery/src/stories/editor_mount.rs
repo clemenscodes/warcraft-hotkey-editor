@@ -34,7 +34,7 @@ pub fn EditorMount(children: Element) -> Element {
     let drop_target_tile = use_signal::<Option<DropTargetTile>>(|| None);
     let drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let update_hotkeys_on_move = use_signal::<bool>(|| true);
-    let editor_state = EditorState {
+    let editor_state = EditorState::new(
         selected_slot,
         selected_hero_level,
         selected_from_research,
@@ -49,7 +49,7 @@ pub fn EditorMount(children: Element) -> Element {
         drop_target_tile,
         drag_follower,
         update_hotkeys_on_move,
-    };
+    );
     use_context_provider(|| editor_state);
     rsx! {
         {children}

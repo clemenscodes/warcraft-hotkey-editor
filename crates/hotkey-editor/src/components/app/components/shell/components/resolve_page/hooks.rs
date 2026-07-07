@@ -57,7 +57,7 @@ fn use_route_reconcile(
 ) {
     use_effect(use_reactive!(|entry| {
         view_navigation.restore_view(AppView::Resolve);
-        let mut selected = resolve_selection.selected_move_category;
+        let mut selected = resolve_selection.selected_move_category();
         if *selected.peek() != entry {
             selected.set(entry.clone());
         }
@@ -116,7 +116,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let resolve_selection = use_resolve_selection();
     let custom_keys_service = use_custom_keys_service();
     let loaded_keys = use_loaded_keys();
-    let selected_move_category = resolve_selection.selected_move_category;
+    let selected_move_category = resolve_selection.selected_move_category();
     let synced_route = use_synced_route();
     let entry = props.entry.clone().filter(|value| !value.is_empty());
     use_route_reconcile(entry, view_navigation, resolve_selection, synced_route);

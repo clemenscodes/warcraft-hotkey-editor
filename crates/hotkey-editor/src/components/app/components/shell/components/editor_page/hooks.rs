@@ -37,21 +37,21 @@ pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
         synced_route.set(snapshot);
     }));
     let tabs = EditorTabsBarProps {
-        unit_mode: navigation.unit_mode,
-        active_race: navigation.active_race,
-        selected_unit_id: navigation.selected_unit_id,
-        selected_slot: editor.selected_slot,
+        unit_mode: navigation.unit_mode(),
+        active_race: navigation.active_race(),
+        selected_unit_id: navigation.selected_unit_id(),
+        selected_slot: editor.selected_slot(),
     };
     let workspace = EditorWorkspaceProps {
-        active_race: navigation.active_race,
-        unit_mode: navigation.unit_mode,
-        selected_unit_id: navigation.selected_unit_id,
-        selected_slot: editor.selected_slot,
-        search_query: navigation.search_query,
-        search_field: editor.search_field,
-        show_abilityless_units: editor.show_abilityless_units,
-        expand_variants: editor.expand_variants,
-        collapsed_categories: editor.collapsed_categories,
+        active_race: navigation.active_race(),
+        unit_mode: navigation.unit_mode(),
+        selected_unit_id: navigation.selected_unit_id(),
+        selected_slot: editor.selected_slot(),
+        search_query: navigation.search_query(),
+        search_field: editor.search_field(),
+        show_abilityless_units: editor.show_abilityless_units(),
+        expand_variants: editor.expand_variants(),
+        collapsed_categories: editor.collapsed_categories(),
     };
     EditorPageModel { tabs, workspace }
 }

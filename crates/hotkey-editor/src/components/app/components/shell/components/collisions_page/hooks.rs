@@ -38,9 +38,9 @@ fn use_route_sync(
         let view = AppView::Collisions { kind };
         view_navigation.restore_view(view);
         let mut selected = match kind {
-            CollisionKind::Positions => selection.selected_island,
-            CollisionKind::Hotkeys => selection.selected_hotkey_unit,
-            CollisionKind::UnitPositions => selection.selected_unit_position,
+            CollisionKind::Positions => selection.selected_island(),
+            CollisionKind::Hotkeys => selection.selected_hotkey_unit(),
+            CollisionKind::UnitPositions => selection.selected_unit_position(),
         };
         if *selected.peek() != entry {
             selected.set(entry.clone());
@@ -104,9 +104,9 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         UnitPositionPageModel::compute(&report)
     });
 
-    let selected_island = selection.selected_island;
-    let selected_hotkey_unit = selection.selected_hotkey_unit;
-    let selected_unit_position = selection.selected_unit_position;
+    let selected_island = selection.selected_island();
+    let selected_hotkey_unit = selection.selected_hotkey_unit();
+    let selected_unit_position = selection.selected_unit_position();
     use_valid_selection(islands_memo, selected_island);
     use_valid_selection(hotkey_units_memo, selected_hotkey_unit);
     use_valid_selection(unit_positions_memo, selected_unit_position);

@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 /// toggles the dialog, and `aria-expanded` tracks whether it is open.
 pub(super) fn use_system_hotkeys_button() -> ToolbarButtonProps {
     let overlay = use_overlay_state();
-    let mut system_hotkeys_open = overlay.system_hotkeys_open;
+    let mut system_hotkeys_open = overlay.system_hotkeys_open();
     let is_open = system_hotkeys_open();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         let next = !*system_hotkeys_open.read();

@@ -24,13 +24,17 @@ impl From<&MoveRowProps> for MoveRowModel {
     fn from(props: &MoveRowProps) -> Self {
         let move_view = props.move_view.clone();
         let view_navigation = props.view_navigation;
-        let mover = move_view.mover;
-        let reason = move_view.reason;
-        let mover_unit_id = move_view.mover_unit_id;
+        let mover = move_view.mover();
+        let reason = move_view.reason();
+        let mover_unit_id_ref = move_view.mover_unit_id();
+        let mover_unit_id = mover_unit_id_ref.map(str::to_owned);
         let has_unit = mover_unit_id.is_some();
+        let reason_category = reason.category();
+        let reason_kind = ReasonKind::from(reason_category);
+        let reason_label = reason.label().to_owned();
         let reason_row = MoveReasonRowProps {
-            kind: ReasonKind::from(reason.category),
-            label: reason.label.to_owned(),
+            kind: reason_kind,
+            label: reason_label,
         };
         let open_unit_id = mover_unit_id.clone();
         let open_mover = EventHandler::new(move |_event: MouseEvent| {
@@ -38,68 +42,91 @@ impl From<&MoveRowProps> for MoveRowModel {
                 view_navigation.open_unit(unit_id);
             }
         });
+        let mover_name = mover.name().to_owned();
+        let mover_object_id = mover.object_id().to_owned();
+        let mover_icon_url_ref = mover.icon_url();
+        let mover_icon_url = mover_icon_url_ref.map(str::to_owned);
+        let mover_name_for_button = mover_name.clone();
         let mover_name_btn = FightNameButtonProps {
-            name: mover.name.clone(),
-            object_id: mover.object_id.clone(),
+            name: mover_name_for_button,
+            object_id: mover_object_id,
             has_unit,
             onclick: open_mover,
         };
+        let mover_carriers = move_view.mover_carriers();
+        let mover_carrier_unit_ids_ref = move_view.mover_carrier_unit_ids();
+        let mover_carrier_unit_ids = mover_carrier_unit_ids_ref.to_vec();
+        let mover_name_for_ability = mover_name.clone();
+        let mover_icon_url_for_ability = mover_icon_url.clone();
         let mover_ability = Self::ability(
-            mover.name.clone(),
-            mover.icon_url.clone(),
-            move_view.mover_carriers,
-            move_view.mover_carrier_unit_ids,
+            mover_name_for_ability,
+            mover_icon_url_for_ability,
+            mover_carriers,
+            mover_carrier_unit_ids,
             false,
         );
-        let is_swap = reason.is_swap;
-        let anchor_carriers = reason.other_carriers.unwrap_or(0);
-        let anchor_carrier_unit_ids = reason.other_carrier_unit_ids;
-        let from_column = move_view.from_column;
-        let from_row = move_view.from_row;
-        let to_column = move_view.to_column;
-        let to_row = move_view.to_row;
-        let mover_from_placement = MiniGridPlacement {
-            column: from_column,
-            row: from_row,
-            icon_url: mover.icon_url.clone(),
-            name: mover.name.clone(),
-        };
-        let mover_to_placement = MiniGridPlacement {
-            column: to_column,
-            row: to_row,
-            icon_url: mover.icon_url.clone(),
-            name: mover.name.clone(),
-        };
+        let is_swap = reason.is_swap();
+        let anchor_carrier_option = reason.other_carriers();
+        let anchor_carriers = anchor_carrier_option.unwrap_or(0);
+        let anchor_carrier_unit_ids_ref = reason.other_carrier_unit_ids();
+        let anchor_carrier_unit_ids = anchor_carrier_unit_ids_ref.to_vec();
+        let from_column = move_view.from_column();
+        let from_row = move_view.from_row();
+        let to_column = move_view.to_column();
+        let to_row = move_view.to_row();
+        let mover_icon_url_for_from = mover_icon_url.clone();
+        let mover_name_for_from = mover_name.clone();
+        let mover_from_placement = MiniGridPlacement::new(
+            from_column,
+            from_row,
+            mover_icon_url_for_from,
+            mover_name_for_from,
+        );
+        let mover_icon_url_for_to = mover_icon_url.clone();
+        let mover_name_for_to = mover_name.clone();
+        let mover_to_placement =
+            MiniGridPlacement::new(to_column, to_row, mover_icon_url_for_to, mover_name_for_to);
         let mut from_placements: Vec<MiniGridPlacement> = vec![mover_from_placement];
         let mut to_placements: Vec<MiniGridPlacement> = vec![mover_to_placement];
-        let anchor_parts = match reason.other_ability {
+        let other_ability_option = reason.other_ability();
+        let anchor_parts = match other_ability_option {
             Some(anchor_ability) => {
-                let anchor_after_placement = MiniGridPlacement {
-                    column: from_column,
-                    row: from_row,
-                    icon_url: anchor_ability.icon_url.clone(),
-                    name: anchor_ability.name.clone(),
-                };
+                let anchor_name = anchor_ability.name().to_owned();
+                let anchor_object_id = anchor_ability.object_id().to_owned();
+                let anchor_icon_url_ref = anchor_ability.icon_url();
+                let anchor_icon_url = anchor_icon_url_ref.map(str::to_owned);
+                let anchor_icon_url_for_after = anchor_icon_url.clone();
+                let anchor_name_for_after = anchor_name.clone();
+                let anchor_after_placement = MiniGridPlacement::new(
+                    from_column,
+                    from_row,
+                    anchor_icon_url_for_after,
+                    anchor_name_for_after,
+                );
                 to_placements.push(anchor_after_placement);
                 if is_swap {
-                    let anchor_before_placement = MiniGridPlacement {
-                        column: to_column,
-                        row: to_row,
-                        icon_url: anchor_ability.icon_url.clone(),
-                        name: anchor_ability.name.clone(),
-                    };
+                    let anchor_icon_url_for_before = anchor_icon_url.clone();
+                    let anchor_name_for_before = anchor_name.clone();
+                    let anchor_before_placement = MiniGridPlacement::new(
+                        to_column,
+                        to_row,
+                        anchor_icon_url_for_before,
+                        anchor_name_for_before,
+                    );
                     from_placements.push(anchor_before_placement);
                 }
+                let anchor_name_for_plate = anchor_name.clone();
                 let name_plate = FightNamePlateProps {
-                    name: anchor_ability.name.clone(),
-                    object_id: anchor_ability.object_id.clone(),
+                    name: anchor_name_for_plate,
+                    object_id: anchor_object_id,
                 };
+                let is_not_swap = !is_swap;
                 let ability = Self::ability(
-                    anchor_ability.name,
-                    anchor_ability.icon_url,
+                    anchor_name,
+                    anchor_icon_url,
                     anchor_carriers,
                     anchor_carrier_unit_ids,
-                    !is_swap,
+                    is_not_swap,
                 );
                 let parts = AnchorParts {
                     name_plate,
@@ -132,7 +159,8 @@ impl MoveRowModel {
         is_winner: bool,
     ) -> AbilityIconProps {
         let disabled = carrier_unit_ids.is_empty();
-        let inspected = InspectedAbility::new(name.clone(), carrier_unit_ids);
+        let name_for_inspected = name.clone();
+        let inspected = InspectedAbility::new(name_for_inspected, carrier_unit_ids);
         AbilityIconProps {
             name,
             icon_url,

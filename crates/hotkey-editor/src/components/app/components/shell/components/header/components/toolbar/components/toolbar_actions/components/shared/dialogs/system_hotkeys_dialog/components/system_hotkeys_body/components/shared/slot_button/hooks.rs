@@ -35,7 +35,13 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let slot_label = props.slot_label.clone();
     let compact = props.compact;
 
-    let binding = custom_keys_service.slot_binding(lookup_id);
+    // Firebreak: `slot_binding` reads the whole CustomKeys document, so calling it
+    // bare re-renders this slot on every edit anywhere. Memoizing on the returned
+    // `SlotBindingView` (which derives `PartialEq`) confines the re-render to when
+    // *this* slot's binding actually changes — the same reactive-scope isolation
+    // `GridEditor` uses for its rendered tiles.
+    let memoized_binding = use_memo(move || custom_keys_service.slot_binding(lookup_id));
+    let binding = memoized_binding.read();
     let is_conflict = binding.is_conflict();
     let conflict_title = if is_conflict {
         let joined_names = binding.colliding_names().join(", ");

@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 /// pressed state flip with the pane's visibility.
 pub(super) fn use_preview_button() -> ToolbarButtonProps {
     let overlay = use_overlay_state();
-    let mut preview_open = overlay.preview_open;
+    let mut preview_open = overlay.preview_open();
     let visible = *preview_open.read();
     let aria_label = if visible { "Hide preview" } else { "Preview" };
     let onclick = EventHandler::new(move |_event: MouseEvent| {

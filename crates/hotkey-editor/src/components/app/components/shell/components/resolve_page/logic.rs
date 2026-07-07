@@ -13,9 +13,9 @@ use warcraft_keybinds::{CascadePlan, GridSlotId, MoveReason};
 /// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, PartialEq)]
 pub struct AbilityDisplay {
-    pub object_id: String,
-    pub name: String,
-    pub icon_url: Option<String>,
+    object_id: String,
+    name: String,
+    icon_url: Option<String>,
 }
 
 impl From<GridSlotId> for AbilityDisplay {
@@ -111,12 +111,12 @@ impl From<MoveCategory> for ReasonKind {
 /// and, for Fight/Swap, the rival ability and its carrier count.
 #[derive(Clone, PartialEq)]
 pub struct ReasonParts {
-    pub label: &'static str,
-    pub other_ability: Option<AbilityDisplay>,
-    pub other_carriers: Option<usize>,
-    pub other_carrier_unit_ids: Vec<String>,
-    pub is_swap: bool,
-    pub category: MoveCategory,
+    label: &'static str,
+    other_ability: Option<AbilityDisplay>,
+    other_carriers: Option<usize>,
+    other_carrier_unit_ids: Vec<String>,
+    is_swap: bool,
+    category: MoveCategory,
 }
 
 impl From<&MoveReason> for ReasonParts {
@@ -178,15 +178,15 @@ impl From<&MoveReason> for ReasonParts {
 /// link to), the old → new cell, and the rival ability that displaced it.
 #[derive(Clone, PartialEq)]
 pub struct MoveView {
-    pub mover: AbilityDisplay,
-    pub mover_carriers: usize,
-    pub mover_unit_id: Option<String>,
-    pub mover_carrier_unit_ids: Vec<String>,
-    pub from_column: u8,
-    pub from_row: u8,
-    pub to_column: u8,
-    pub to_row: u8,
-    pub reason: ReasonParts,
+    mover: AbilityDisplay,
+    mover_carriers: usize,
+    mover_unit_id: Option<String>,
+    mover_carrier_unit_ids: Vec<String>,
+    from_column: u8,
+    from_row: u8,
+    to_column: u8,
+    to_row: u8,
+    reason: ReasonParts,
 }
 
 impl MoveView {
@@ -201,27 +201,27 @@ impl MoveView {
 /// One ability the cascade could not place, with the cell it is stuck on.
 #[derive(Clone, PartialEq)]
 pub struct UnresolvedView {
-    pub ability: AbilityDisplay,
-    pub carrier_count: usize,
-    pub carrier_unit_ids: Vec<String>,
-    pub column: u8,
-    pub row: u8,
+    ability: AbilityDisplay,
+    carrier_count: usize,
+    carrier_unit_ids: Vec<String>,
+    column: u8,
+    row: u8,
 }
 
 /// One titled group of moves of the same category (e.g. all Fights), in render
 /// order.
 #[derive(Clone, PartialEq)]
 pub struct MoveSection {
-    pub category: MoveCategory,
-    pub title: &'static str,
-    pub moves: Vec<MoveView>,
+    category: MoveCategory,
+    title: &'static str,
+    moves: Vec<MoveView>,
 }
 
 /// The cascade preview grouped into titled move sections and unresolved entries.
 #[derive(Clone, PartialEq)]
 pub struct PlanView {
-    pub sections: Vec<MoveSection>,
-    pub unresolved: Vec<UnresolvedView>,
+    sections: Vec<MoveSection>,
+    unresolved: Vec<UnresolvedView>,
 }
 
 impl PlanView {
@@ -380,10 +380,37 @@ impl PlanView {
 /// One ability icon pinned to a cell inside a `MiniGrid`.
 #[derive(Clone, PartialEq)]
 pub struct MiniGridPlacement {
-    pub column: u8,
-    pub row: u8,
-    pub icon_url: Option<String>,
-    pub name: String,
+    column: u8,
+    row: u8,
+    icon_url: Option<String>,
+    name: String,
+}
+
+impl MiniGridPlacement {
+    pub fn new(column: u8, row: u8, icon_url: Option<String>, name: String) -> Self {
+        Self {
+            column,
+            row,
+            icon_url,
+            name,
+        }
+    }
+
+    pub fn column(&self) -> u8 {
+        self.column
+    }
+
+    pub fn row(&self) -> u8 {
+        self.row
+    }
+
+    pub fn icon_url(&self) -> Option<&str> {
+        self.icon_url.as_deref()
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
 }
 
 /// The move counts derived from the cascade preview: how many slots the plan moves
@@ -486,5 +513,107 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             unresolved_rows,
         };
         Self { breadcrumbs, body }
+    }
+}
+
+impl AbilityDisplay {
+    pub fn object_id(&self) -> &str {
+        &self.object_id
+    }
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+    pub fn icon_url(&self) -> Option<&str> {
+        self.icon_url.as_deref()
+    }
+}
+
+impl ReasonParts {
+    pub fn label(&self) -> &'static str {
+        self.label
+    }
+    pub fn other_ability(&self) -> Option<&AbilityDisplay> {
+        self.other_ability.as_ref()
+    }
+    pub fn other_carriers(&self) -> Option<usize> {
+        self.other_carriers
+    }
+    pub fn other_carrier_unit_ids(&self) -> &[String] {
+        &self.other_carrier_unit_ids
+    }
+    pub fn is_swap(&self) -> bool {
+        self.is_swap
+    }
+    pub fn category(&self) -> MoveCategory {
+        self.category
+    }
+}
+
+impl MoveView {
+    pub fn mover(&self) -> &AbilityDisplay {
+        &self.mover
+    }
+    pub fn mover_carriers(&self) -> usize {
+        self.mover_carriers
+    }
+    pub fn mover_unit_id(&self) -> Option<&str> {
+        self.mover_unit_id.as_deref()
+    }
+    pub fn mover_carrier_unit_ids(&self) -> &[String] {
+        &self.mover_carrier_unit_ids
+    }
+    pub fn from_column(&self) -> u8 {
+        self.from_column
+    }
+    pub fn from_row(&self) -> u8 {
+        self.from_row
+    }
+    pub fn to_column(&self) -> u8 {
+        self.to_column
+    }
+    pub fn to_row(&self) -> u8 {
+        self.to_row
+    }
+    pub fn reason(&self) -> &ReasonParts {
+        &self.reason
+    }
+}
+
+impl UnresolvedView {
+    pub fn ability(&self) -> &AbilityDisplay {
+        &self.ability
+    }
+    pub fn carrier_count(&self) -> usize {
+        self.carrier_count
+    }
+    pub fn carrier_unit_ids(&self) -> &[String] {
+        &self.carrier_unit_ids
+    }
+    pub fn column(&self) -> u8 {
+        self.column
+    }
+    pub fn row(&self) -> u8 {
+        self.row
+    }
+}
+
+impl MoveSection {
+    pub fn category(&self) -> MoveCategory {
+        self.category
+    }
+    pub fn title(&self) -> &'static str {
+        self.title
+    }
+    pub fn moves(&self) -> &[MoveView] {
+        &self.moves
+    }
+}
+
+impl PlanView {
+    pub fn sections(&self) -> &[MoveSection] {
+        &self.sections
+    }
+    pub fn unresolved(&self) -> &[UnresolvedView] {
+        &self.unresolved
     }
 }

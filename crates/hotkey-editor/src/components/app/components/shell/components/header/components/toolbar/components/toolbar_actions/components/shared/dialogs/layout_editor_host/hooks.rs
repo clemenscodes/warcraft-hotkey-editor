@@ -12,9 +12,9 @@ use warcraft_keybinds::GridCoordinate;
 pub(super) fn use_layout_editor_host() -> LayoutEditorProps {
     let grid_layout = use_grid_layout();
     let editor = use_editor_state();
-    let update_hotkeys_on_move = editor.update_hotkeys_on_move;
+    let update_hotkeys_on_move = editor.update_hotkeys_on_move();
     let overlay = use_overlay_state();
-    let open = overlay.layout_dialog_open;
+    let open = overlay.layout_dialog_open();
     let editing_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     let dragging_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     LayoutEditorProps {

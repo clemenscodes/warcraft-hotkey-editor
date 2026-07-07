@@ -9,9 +9,47 @@ pub mod context;
 /// touches.
 #[derive(Clone, Copy, PartialEq)]
 pub struct OverlayState {
-    pub preview_open: Signal<bool>,
-    pub system_hotkeys_open: Signal<bool>,
-    pub help_open: Signal<bool>,
-    pub layout_dialog_open: Signal<bool>,
-    pub templates_dialog_open: Signal<bool>,
+    preview_open: Signal<bool>,
+    system_hotkeys_open: Signal<bool>,
+    help_open: Signal<bool>,
+    layout_dialog_open: Signal<bool>,
+    templates_dialog_open: Signal<bool>,
+}
+
+impl OverlayState {
+    pub fn new(
+        preview_open: Signal<bool>,
+        system_hotkeys_open: Signal<bool>,
+        help_open: Signal<bool>,
+        layout_dialog_open: Signal<bool>,
+        templates_dialog_open: Signal<bool>,
+    ) -> Self {
+        Self {
+            preview_open,
+            system_hotkeys_open,
+            help_open,
+            layout_dialog_open,
+            templates_dialog_open,
+        }
+    }
+
+    pub fn preview_open(&self) -> Signal<bool> {
+        self.preview_open
+    }
+
+    pub fn system_hotkeys_open(&self) -> Signal<bool> {
+        self.system_hotkeys_open
+    }
+
+    pub fn help_open(&self) -> Signal<bool> {
+        self.help_open
+    }
+
+    pub fn layout_dialog_open(&self) -> Signal<bool> {
+        self.layout_dialog_open
+    }
+
+    pub fn templates_dialog_open(&self) -> Signal<bool> {
+        self.templates_dialog_open
+    }
 }

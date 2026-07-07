@@ -7,7 +7,7 @@ use crate::services::overlay_state::context::use_overlay_state;
 pub(super) fn use_preview_dialog_host() -> PreviewDialogProps {
     let loaded_keys = use_loaded_keys();
     let overlay = use_overlay_state();
-    let preview_open = overlay.preview_open;
+    let preview_open = overlay.preview_open();
     PreviewDialogProps {
         loaded_keys,
         preview_open,

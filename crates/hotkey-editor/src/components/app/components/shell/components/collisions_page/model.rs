@@ -10,6 +10,7 @@ use super::components::body::components::sidebars::island_sidebar::IslandSidebar
 use super::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 use super::logic::{HotkeyUnitView, IslandView, UnitPositionUnitView};
+use crate::services::navigation::app_view::CollisionKind;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 /// A collision view that carries a stable selection key and a conflict count.
@@ -88,14 +89,14 @@ impl From<PositionsContent> for ContentModel {
     fn from(content: PositionsContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: "positions",
+                collision_kind: CollisionKind::Positions,
                 message: super::data::POSITIONS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
             let state = ClearStateProps {
-                collision_kind: "positions",
+                collision_kind: CollisionKind::Positions,
             };
             return Self::Clear(state);
         }
@@ -109,12 +110,9 @@ impl From<PositionsContent> for ContentModel {
             selected_island: content.selected_island,
             view_navigation: content.view_navigation,
         };
-        let pane = PositionsPane {
-            collision_kind: "positions",
-            count: content.list.unit_count,
-            sidebar,
-            detail,
-        };
+        let collision_kind = CollisionKind::Positions;
+        let count = content.list.unit_count;
+        let pane = PositionsPane::new(collision_kind, count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::Positions(boxed)
     }
@@ -133,14 +131,14 @@ impl From<HotkeysContent> for ContentModel {
     fn from(content: HotkeysContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: "hotkeys",
+                collision_kind: CollisionKind::Hotkeys,
                 message: super::data::HOTKEYS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
             let state = ClearStateProps {
-                collision_kind: "hotkeys",
+                collision_kind: CollisionKind::Hotkeys,
             };
             return Self::Clear(state);
         }
@@ -154,12 +152,9 @@ impl From<HotkeysContent> for ContentModel {
             selected_unit: content.selected_unit,
             view_navigation: content.view_navigation,
         };
-        let pane = HotkeysPane {
-            collision_kind: "hotkeys",
-            count: content.list.unit_count,
-            sidebar,
-            detail,
-        };
+        let collision_kind = CollisionKind::Hotkeys;
+        let count = content.list.unit_count;
+        let pane = HotkeysPane::new(collision_kind, count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::Hotkeys(boxed)
     }
@@ -178,14 +173,14 @@ impl From<UnitPositionsContent> for ContentModel {
     fn from(content: UnitPositionsContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: "unit-positions",
+                collision_kind: CollisionKind::UnitPositions,
                 message: super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
             let state = ClearStateProps {
-                collision_kind: "unit-positions",
+                collision_kind: CollisionKind::UnitPositions,
             };
             return Self::Clear(state);
         }
@@ -199,12 +194,9 @@ impl From<UnitPositionsContent> for ContentModel {
             selected_unit: content.selected_unit,
             view_navigation: content.view_navigation,
         };
-        let pane = UnitPositionsPane {
-            collision_kind: "unit-positions",
-            count: content.list.unit_count,
-            sidebar,
-            detail,
-        };
+        let collision_kind = CollisionKind::UnitPositions;
+        let count = content.list.unit_count;
+        let pane = UnitPositionsPane::new(collision_kind, count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::UnitPositions(boxed)
     }

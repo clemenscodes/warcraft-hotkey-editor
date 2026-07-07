@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 /// the layout dialog is open (for aria) and the toggle handler that opens it.
 pub(super) fn use_grid_layout_button() -> GridLayoutButtonProps {
     let overlay = use_overlay_state();
-    let mut layout_dialog_open = overlay.layout_dialog_open;
+    let mut layout_dialog_open = overlay.layout_dialog_open();
     let is_open = layout_dialog_open();
     let on_toggle = EventHandler::new(move |_event: MouseEvent| {
         let next = !*layout_dialog_open.read();

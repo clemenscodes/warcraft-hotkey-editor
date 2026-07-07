@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 /// browser dialog, and `aria-expanded` tracks whether it is open.
 pub(super) fn use_templates_button() -> ToolbarButtonProps {
     let overlay = use_overlay_state();
-    let mut templates_dialog_open = overlay.templates_dialog_open;
+    let mut templates_dialog_open = overlay.templates_dialog_open();
     let is_open = templates_dialog_open();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         let next = !*templates_dialog_open.read();

@@ -171,10 +171,10 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
         ..
     } = bootstrap;
     let initial_view = view;
-    let initial_race = nav.race;
-    let initial_mode = nav.unit_mode;
-    let initial_unit_id = nav.selected_unit_id;
-    let initial_search = nav.search_query;
+    let initial_race = nav.race();
+    let initial_mode = nav.unit_mode();
+    let initial_unit_id = nav.selected_unit_id().clone();
+    let initial_search = nav.search_query().to_owned();
     let initial_island = selected_island;
     let initial_hotkey_unit = selected_hotkey_unit;
     let initial_unit_position = selected_unit_position;
@@ -211,23 +211,23 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let templates_dialog_open = use_signal::<bool>(|| false);
     let synced_route = use_signal(move || initial_snapshot);
 
-    let view_navigation = ViewNavigationContext {
+    let view_navigation = ViewNavigationContext::new(
         current_view,
         active_race,
         unit_mode,
         selected_unit_id,
         search_query,
-    };
+    );
     use_context_provider(|| view_navigation);
-    let overlay_state = OverlayState {
+    let overlay_state = OverlayState::new(
         preview_open,
         system_hotkeys_open,
         help_open,
         layout_dialog_open,
         templates_dialog_open,
-    };
+    );
     use_context_provider(|| overlay_state);
-    let editor_state = EditorState {
+    let editor_state = EditorState::new(
         selected_slot,
         selected_hero_level,
         selected_from_research,
@@ -242,17 +242,15 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
         drop_target_tile,
         drag_follower,
         update_hotkeys_on_move,
-    };
+    );
     use_context_provider(|| editor_state);
-    let collision_selection = CollisionSelection {
+    let collision_selection = CollisionSelection::new(
         selected_island,
         selected_hotkey_unit,
         selected_unit_position,
-    };
+    );
     use_context_provider(|| collision_selection);
-    let resolve_selection = ResolveSelection {
-        selected_move_category,
-    };
+    let resolve_selection = ResolveSelection::new(selected_move_category);
     use_context_provider(|| resolve_selection);
     use_context_provider(|| synced_route);
     use_context_provider(|| upload_status);
@@ -277,15 +275,15 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
 /// (read without subscribing) is what keeps a browser back/forward from being echoed
 /// straight back.
 fn use_url_sync(signals: &AppSignals) {
-    let current_view = signals.view_navigation.current_view;
-    let active_race = signals.view_navigation.active_race;
-    let unit_mode = signals.view_navigation.unit_mode;
-    let selected_unit_id = signals.view_navigation.selected_unit_id;
-    let search_query = signals.view_navigation.search_query;
-    let selected_island = signals.collision_selection.selected_island;
-    let selected_hotkey_unit = signals.collision_selection.selected_hotkey_unit;
-    let selected_unit_position = signals.collision_selection.selected_unit_position;
-    let selected_move_category = signals.resolve_selection.selected_move_category;
+    let current_view = signals.view_navigation.current_view();
+    let active_race = signals.view_navigation.active_race();
+    let unit_mode = signals.view_navigation.unit_mode();
+    let selected_unit_id = signals.view_navigation.selected_unit_id();
+    let search_query = signals.view_navigation.search_query();
+    let selected_island = signals.collision_selection.selected_island();
+    let selected_hotkey_unit = signals.collision_selection.selected_hotkey_unit();
+    let selected_unit_position = signals.collision_selection.selected_unit_position();
+    let selected_move_category = signals.resolve_selection.selected_move_category();
     let mut synced_route = signals.synced_route;
     let navigator = use_navigator();
     let mut search_session_active = use_signal(|| false);
@@ -298,12 +296,7 @@ fn use_url_sync(signals: &AppSignals) {
                 let unit_mode_value = *unit_mode.read();
                 let selected_unit = selected_unit_id.read().clone();
                 let query = search_query.read().clone();
-                let nav = DecodedEditorNav {
-                    race,
-                    unit_mode: unit_mode_value,
-                    selected_unit_id: selected_unit,
-                    search_query: query,
-                };
+                let nav = DecodedEditorNav::new(race, unit_mode_value, selected_unit, query);
                 NavSnapshot::Editor(nav)
             }
             AppView::Collisions { kind } => {

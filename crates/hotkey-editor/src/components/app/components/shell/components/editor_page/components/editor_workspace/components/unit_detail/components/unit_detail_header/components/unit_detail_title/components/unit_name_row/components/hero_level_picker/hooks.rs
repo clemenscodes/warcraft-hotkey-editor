@@ -19,12 +19,12 @@ pub(super) struct HeroLevelPickerView {
 pub(super) fn use_hero_level_picker() -> HeroLevelPickerView {
     let mut level_picker_open = use_signal::<bool>(|| false);
     let navigation = use_view_navigation();
-    let selected_unit_id = navigation.selected_unit_id;
+    let selected_unit_id = navigation.selected_unit_id();
     use_effect(move || {
         let _ = selected_unit_id.read();
         level_picker_open.set(false);
     });
-    let selected_hero_level = use_editor_state().selected_hero_level;
+    let selected_hero_level = use_editor_state().selected_hero_level();
     let current_level = *selected_hero_level.read();
     let is_open = *level_picker_open.read();
     let number = current_level.to_string();

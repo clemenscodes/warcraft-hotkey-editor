@@ -15,7 +15,7 @@ pub(super) struct HeroLevelState {
 }
 
 fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelState {
-    let mut selected_hero_level = use_editor_state().selected_hero_level;
+    let mut selected_hero_level = use_editor_state().selected_hero_level();
     use_effect(move || {
         let _ = selected_unit_id.read();
         selected_hero_level.set(1);
@@ -33,9 +33,9 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailPanelProps) -> UnitDetailV
     let race = *props.active_race.read();
     let selected_unit_id = props.selected_unit_id;
     let editor = use_editor_state();
-    let selected_slot = editor.selected_slot;
-    let selected_from_research = editor.selected_from_research;
-    let selected_from_uprooted = editor.selected_from_uprooted;
+    let selected_slot = editor.selected_slot();
+    let selected_from_research = editor.selected_from_research();
+    let selected_from_uprooted = editor.selected_from_uprooted();
     let loaded_keys = use_loaded_keys();
     let hero_level = use_hero_level_state(selected_unit_id);
     let slot_data_memo = use_memo(move || {

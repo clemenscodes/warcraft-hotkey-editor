@@ -20,8 +20,8 @@ pub(super) fn grid(props: &MiniGridProps) -> GridProps<PlainTileKind> {
             let placement = props
                 .placements
                 .iter()
-                .find(|placed| placed.column == grid_column && placed.row == grid_row);
-            let icon = placement.and_then(|placed| placed.icon_url.clone());
+                .find(|placed| placed.column() == grid_column && placed.row() == grid_row);
+            let icon = placement.and_then(|placed| placed.icon_url().map(str::to_owned));
             let state = if placement.is_some() {
                 GridTileState::Filled
             } else {

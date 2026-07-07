@@ -21,7 +21,11 @@
 @font-face {
   font-family: "Friz Quadrata";
   src: url("/warcraft-hotkey-editor/fonts/frizqt.ttf") format("truetype");
-  font-display: block;
+  /* `swap`, not `block`: Lighthouse flags `block` (it hides text — FOIT — until
+     the face loads). `swap` paints the fallback serif immediately, then swaps in
+     Friz Quadrata. The font is preloaded in DocumentHead, so the swap window is
+     tiny; `swap` over `optional` keeps the brand face on first paint. */
+  font-display: swap;
 }
 
 @theme {

@@ -50,6 +50,13 @@ pub fn DocumentHead() -> Element {
             name: "twitter:card",
             content: "summary_large_image"
         }
+        document::Link {
+            rel: "preload",
+            href: "/warcraft-hotkey-editor/fonts/frizqt.ttf",
+            r#as: "font",
+            r#type: "font/ttf",
+            crossorigin: "anonymous",
+        }
         document::Stylesheet {
             href: TAILWIND_STYLES
         }

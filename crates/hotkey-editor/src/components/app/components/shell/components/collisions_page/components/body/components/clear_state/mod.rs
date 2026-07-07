@@ -13,7 +13,7 @@ assert_component!(ClearState);
 /// The centered "all clear" state for a collision kind with no conflicts.
 #[component]
 pub fn ClearState(props: ClearStateProps) -> Element {
-    let collision_kind = props.collision_kind;
+    let collision_kind = props.collision_kind.kind_param();
     rsx! {
         section {
             class: CLASS,

@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 /// onboarding dialog, and `aria-expanded` tracks whether it is open.
 pub(super) fn use_help_button() -> ToolbarButtonProps {
     let overlay = use_overlay_state();
-    let mut help_open = overlay.help_open;
+    let mut help_open = overlay.help_open();
     let is_open = help_open();
     let onclick = EventHandler::new(move |_event: MouseEvent| help_open.set(true));
     ToolbarButtonProps {

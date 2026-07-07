@@ -11,14 +11,50 @@ use warcraft_database::{ObjectLookup, UnitMode};
 /// `apply` to dispatch the navigation.
 #[derive(Clone, Copy, PartialEq)]
 pub struct ViewNavigationContext {
-    pub current_view: Signal<AppView>,
-    pub active_race: Signal<Race>,
-    pub unit_mode: Signal<UnitMode>,
-    pub selected_unit_id: Signal<Option<String>>,
-    pub search_query: Signal<String>,
+    current_view: Signal<AppView>,
+    active_race: Signal<Race>,
+    unit_mode: Signal<UnitMode>,
+    selected_unit_id: Signal<Option<String>>,
+    search_query: Signal<String>,
 }
 
 impl ViewNavigationContext {
+    pub fn new(
+        current_view: Signal<AppView>,
+        active_race: Signal<Race>,
+        unit_mode: Signal<UnitMode>,
+        selected_unit_id: Signal<Option<String>>,
+        search_query: Signal<String>,
+    ) -> Self {
+        Self {
+            current_view,
+            active_race,
+            unit_mode,
+            selected_unit_id,
+            search_query,
+        }
+    }
+
+    pub fn current_view(&self) -> Signal<AppView> {
+        self.current_view
+    }
+
+    pub fn active_race(&self) -> Signal<Race> {
+        self.active_race
+    }
+
+    pub fn unit_mode(&self) -> Signal<UnitMode> {
+        self.unit_mode
+    }
+
+    pub fn selected_unit_id(&self) -> Signal<Option<String>> {
+        self.selected_unit_id
+    }
+
+    pub fn search_query(&self) -> Signal<String> {
+        self.search_query
+    }
+
     /// Switch to `target`. No-op when `target` already matches the current view.
     /// Setting the view signal is all that is needed: the shell's URL-sync effect
     /// observes the change and pushes the matching route through the router (so
@@ -51,20 +87,20 @@ impl ViewNavigationContext {
     pub fn restore(self, view: AppView, nav: &DecodedEditorNav) {
         self.restore_view(view);
         let mut active_race = self.active_race;
-        if *active_race.peek() != nav.race {
-            active_race.set(nav.race);
+        if *active_race.peek() != nav.race() {
+            active_race.set(nav.race());
         }
         let mut unit_mode = self.unit_mode;
-        if *unit_mode.peek() != nav.unit_mode {
-            unit_mode.set(nav.unit_mode);
+        if *unit_mode.peek() != nav.unit_mode() {
+            unit_mode.set(nav.unit_mode());
         }
         let mut selected_unit_id = self.selected_unit_id;
-        if *selected_unit_id.peek() != nav.selected_unit_id {
-            selected_unit_id.set(nav.selected_unit_id.clone());
+        if *selected_unit_id.peek() != *nav.selected_unit_id() {
+            selected_unit_id.set(nav.selected_unit_id().clone());
         }
         let mut search_query = self.search_query;
-        if *search_query.peek() != nav.search_query {
-            search_query.set(nav.search_query.clone());
+        if *search_query.peek() != nav.search_query() {
+            search_query.set(nav.search_query().to_owned());
         }
     }
 

@@ -28,7 +28,7 @@ fn use_override_editing(
     let custom_keys_service = use_custom_keys_service();
     let active_container_slots = props.active_container_slots.clone();
     let mut editing_target = use_signal::<Option<OverrideEditTarget>>(|| None);
-    let mut hotkey_assign_request = editor.hotkey_assign_request;
+    let mut hotkey_assign_request = editor.hotkey_assign_request();
     let hotkey_field_available = visibility.show_hotkey_field;
     let research_field_available = visibility.show_research_field;
     use_effect(move || {
@@ -138,8 +138,8 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
     let loaded_keys = use_loaded_keys();
     let grid_layout = use_grid_layout();
     let editor = use_editor_state();
-    let tier_overrides = editor.tier_overrides;
-    let is_research_context = *editor.selected_from_research.read();
+    let tier_overrides = editor.tier_overrides();
+    let is_research_context = *editor.selected_from_research().read();
     let layout_snapshot = *grid_layout.read();
     let object_id = detail.object_id();
     let upgrade_unit_id = detail.upgrade_unit_id();

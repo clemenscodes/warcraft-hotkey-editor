@@ -43,17 +43,17 @@ impl From<&NavSnapshot> for Route {
     fn from(snapshot: &NavSnapshot) -> Self {
         match snapshot {
             NavSnapshot::Editor(nav) => {
-                let race_label = RaceLabels::data_attribute(nav.race).to_string();
+                let race_label = RaceLabels::data_attribute(nav.race()).to_string();
                 let race = Some(race_label);
-                let mode = Some(nav.unit_mode.to_string());
+                let mode = Some(nav.unit_mode().to_string());
                 let unit = nav
-                    .selected_unit_id
+                    .selected_unit_id()
                     .clone()
                     .filter(|value| !value.is_empty());
-                let search_query = if nav.search_query.is_empty() {
+                let search_query = if nav.search_query().is_empty() {
                     None
                 } else {
-                    Some(nav.search_query.clone())
+                    Some(nav.search_query().to_owned())
                 };
                 Self::Editor {
                     race,
@@ -108,9 +108,9 @@ impl NavDecision {
         }
         match (live, target) {
             (NavSnapshot::Editor(live_nav), NavSnapshot::Editor(target_nav)) => {
-                let same_race_mode_unit = live_nav.race == target_nav.race
-                    && live_nav.unit_mode == target_nav.unit_mode
-                    && live_nav.selected_unit_id == target_nav.selected_unit_id;
+                let same_race_mode_unit = live_nav.race() == target_nav.race()
+                    && live_nav.unit_mode() == target_nav.unit_mode()
+                    && live_nav.selected_unit_id() == target_nav.selected_unit_id();
                 if same_race_mode_unit {
                     Self::SessionQuery
                 } else {

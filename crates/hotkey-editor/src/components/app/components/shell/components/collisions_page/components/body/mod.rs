@@ -30,35 +30,44 @@ pub fn Body(props: BodyProps) -> Element {
             }
         }
         ContentModel::Positions(pane) => {
-            let pane = *pane;
+            let collision_kind = pane.collision_kind();
+            let count = pane.count();
+            let sidebar = pane.sidebar().clone();
+            let detail = pane.detail().clone();
             rsx! {
                 Content {
-                    collision_kind: pane.collision_kind,
-                    count: pane.count,
-                    IslandSidebar { ..pane.sidebar }
-                    IslandDetail { ..pane.detail }
+                    collision_kind,
+                    count,
+                    IslandSidebar { ..sidebar }
+                    IslandDetail { ..detail }
                 }
             }
         }
         ContentModel::Hotkeys(pane) => {
-            let pane = *pane;
+            let collision_kind = pane.collision_kind();
+            let count = pane.count();
+            let sidebar = pane.sidebar().clone();
+            let detail = pane.detail().clone();
             rsx! {
                 Content {
-                    collision_kind: pane.collision_kind,
-                    count: pane.count,
-                    HotkeyUnitSidebar { ..pane.sidebar }
-                    HotkeyUnitDetail { ..pane.detail }
+                    collision_kind,
+                    count,
+                    HotkeyUnitSidebar { ..sidebar }
+                    HotkeyUnitDetail { ..detail }
                 }
             }
         }
         ContentModel::UnitPositions(pane) => {
-            let pane = *pane;
+            let collision_kind = pane.collision_kind();
+            let count = pane.count();
+            let sidebar = pane.sidebar().clone();
+            let detail = pane.detail().clone();
             rsx! {
                 Content {
-                    collision_kind: pane.collision_kind,
-                    count: pane.count,
-                    UnitPositionSidebar { ..pane.sidebar }
-                    UnitPositionDetail { ..pane.detail }
+                    collision_kind,
+                    count,
+                    UnitPositionSidebar { ..sidebar }
+                    UnitPositionDetail { ..detail }
                 }
             }
         }

@@ -74,11 +74,11 @@ fn use_burger_actions(burger_open: Signal<bool>) -> BurgerActions {
     let overlay = use_overlay_state();
     let history = use_undo_history();
     let mut burger_open = burger_open;
-    let mut system_hotkeys_open = overlay.system_hotkeys_open;
-    let mut help_open = overlay.help_open;
-    let mut layout_dialog_open = overlay.layout_dialog_open;
-    let mut templates_dialog_open = overlay.templates_dialog_open;
-    let mut preview_open = overlay.preview_open;
+    let mut system_hotkeys_open = overlay.system_hotkeys_open();
+    let mut help_open = overlay.help_open();
+    let mut layout_dialog_open = overlay.layout_dialog_open();
+    let mut templates_dialog_open = overlay.templates_dialog_open();
+    let mut preview_open = overlay.preview_open();
     let mut upload_info_open = use_signal::<bool>(|| false);
     let mut download_info_open = use_signal::<bool>(|| false);
 

@@ -12,13 +12,45 @@ use warcraft_database::{UnitKindHelpers, UnitMode};
 /// race+mode default unit.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct DecodedEditorNav {
-    pub race: Race,
-    pub unit_mode: UnitMode,
-    pub selected_unit_id: Option<String>,
-    pub search_query: String,
+    race: Race,
+    unit_mode: UnitMode,
+    selected_unit_id: Option<String>,
+    search_query: String,
 }
 
 impl DecodedEditorNav {
+    pub fn race(&self) -> Race {
+        self.race
+    }
+
+    pub fn unit_mode(&self) -> UnitMode {
+        self.unit_mode
+    }
+
+    pub fn selected_unit_id(&self) -> &Option<String> {
+        &self.selected_unit_id
+    }
+
+    pub fn search_query(&self) -> &str {
+        &self.search_query
+    }
+
+    /// Assemble navigation state from already-typed values (the shell's write side,
+    /// diffing the live signals against the route).
+    pub fn new(
+        race: Race,
+        unit_mode: UnitMode,
+        selected_unit_id: Option<String>,
+        search_query: String,
+    ) -> Self {
+        Self {
+            race,
+            unit_mode,
+            selected_unit_id,
+            search_query,
+        }
+    }
+
     /// Decode the four editor query parameters into typed navigation state.
     pub fn decode(
         race: Option<&str>,

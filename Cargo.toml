@@ -33,9 +33,15 @@ dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-
 warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.1.0" }
 warcraft-database = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.1.0" }
 
+# Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
+# DOM-bound (per-frame Rust work is light), so trading compile time and raw
+# opt-level for a smaller binary is the right call. `opt-level = "z"` is the one
+# knob to revisit if interaction latency ever regresses — bump it to "s".
+# `panic = "abort"` drops the unwinding machinery and its JS glue; cargo forces
+# unwind back on for `cargo test`, so the native keybinds tests are unaffected.
 [profile.release]
-codegen-units = 16
-opt-level = 3
-lto = false
-panic = 'unwind'
+codegen-units = 1
+opt-level = "z"
+lto = "fat"
+panic = "abort"
 strip = "symbols"

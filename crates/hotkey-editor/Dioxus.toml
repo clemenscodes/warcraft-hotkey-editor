@@ -11,3 +11,10 @@ base_path = "warcraft-hotkey-editor"
 [web.watcher]
 reload_html = true
 watch_path = ["src", "public"]
+
+# Crunch the release wasm as small as possible with binaryen (installed in the
+# Dockerfile). `dx` runs wasm-opt on release builds already; pinning the level to
+# "z" makes the size target explicit rather than relying on the default.
+[web.wasm_opt]
+level = "z"
+debug = false

@@ -9,7 +9,7 @@ pub(super) fn use_templates_dialog_host() -> TemplatesDialogProps {
     let loaded_keys = use_loaded_keys();
     let upload_status = use_upload_status();
     let overlay = use_overlay_state();
-    let open = overlay.templates_dialog_open;
+    let open = overlay.templates_dialog_open();
     TemplatesDialogProps {
         loaded_keys,
         upload_status,

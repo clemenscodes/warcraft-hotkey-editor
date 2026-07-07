@@ -27,13 +27,13 @@ fn make_view_navigation() -> ViewNavigationContext {
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let search_query = use_signal(String::new);
-    ViewNavigationContext {
+    ViewNavigationContext::new(
         current_view,
         active_race,
         unit_mode,
         selected_unit_id,
         search_query,
-    }
+    )
 }
 
 /// Provide every context the collisions and resolve pages read now that they source
@@ -50,16 +50,14 @@ fn provide_page_contexts() {
     let selected_island = use_signal(|| None::<String>);
     let selected_hotkey_unit = use_signal(|| None::<String>);
     let selected_unit_position = use_signal(|| None::<String>);
-    let collision_selection = CollisionSelection {
+    let collision_selection = CollisionSelection::new(
         selected_island,
         selected_hotkey_unit,
         selected_unit_position,
-    };
+    );
     use_context_provider(|| collision_selection);
     let selected_move_category = use_signal(|| None::<String>);
-    let resolve_selection = ResolveSelection {
-        selected_move_category,
-    };
+    let resolve_selection = ResolveSelection::new(selected_move_category);
     use_context_provider(|| resolve_selection);
 }
 

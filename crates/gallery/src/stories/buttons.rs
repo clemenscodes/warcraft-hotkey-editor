@@ -27,13 +27,18 @@ use warcraft_keybinds::CollisionSummary;
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
 /// context, so a button can be shown in isolation.
 fn provide_overlay_state() {
-    let overlay = OverlayState {
-        preview_open: use_signal(|| false),
-        system_hotkeys_open: use_signal(|| false),
-        help_open: use_signal(|| false),
-        layout_dialog_open: use_signal(|| false),
-        templates_dialog_open: use_signal(|| false),
-    };
+    let preview_open = use_signal(|| false);
+    let system_hotkeys_open = use_signal(|| false);
+    let help_open = use_signal(|| false);
+    let layout_dialog_open = use_signal(|| false);
+    let templates_dialog_open = use_signal(|| false);
+    let overlay = OverlayState::new(
+        preview_open,
+        system_hotkeys_open,
+        help_open,
+        layout_dialog_open,
+        templates_dialog_open,
+    );
     use_context_provider(|| overlay);
 }
 
@@ -45,13 +50,13 @@ fn make_view_navigation() -> ViewNavigationContext {
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let search_query = use_signal(String::new);
-    ViewNavigationContext {
+    ViewNavigationContext::new(
         current_view,
         active_race,
         unit_mode,
         selected_unit_id,
         search_query,
-    }
+    )
 }
 
 /// Placeholder glyph for the base button showcase: a plain rounded square so the

@@ -12,7 +12,7 @@ assert_component!(EmptyState);
 /// The centered upload prompt for a collision kind with no file loaded.
 #[component]
 pub fn EmptyState(props: EmptyStateProps) -> Element {
-    let collision_kind = props.collision_kind;
+    let collision_kind = props.collision_kind.kind_param();
     let message = props.message;
     rsx! {
         section {

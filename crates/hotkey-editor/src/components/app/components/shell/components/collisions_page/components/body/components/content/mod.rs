@@ -9,7 +9,7 @@ assert_component!(Content);
 /// The two-pane collision content: a sidebar column beside the fluid detail pane.
 #[component]
 pub fn Content(props: ContentProps) -> Element {
-    let collision_kind = props.collision_kind;
+    let collision_kind = props.collision_kind.kind_param();
     let count = props.count;
     let children = props.children;
     rsx! {
