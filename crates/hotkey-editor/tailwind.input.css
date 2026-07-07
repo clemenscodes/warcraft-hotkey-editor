@@ -3,32 +3,23 @@
 @source "../../gallery/src";
 @source "./src/**/*.rs";
 
-/* Responsive bands — disjoint width ranges, honest device/resolution names.
-   Each band applies ONLY within its range: nothing inherits across bands, so a
-   component styles every band explicitly. There is no `wide`/`ultrawide` width
-   band (those are aspect ratios). */
 @custom-variant mobile (@media (width < 768px));
 @custom-variant tablet (@media (768px <= width < 1280px));
 @custom-variant laptop (@media (1280px <= width < 1920px));
 @custom-variant desktop (@media (1920px <= width < 2560px));
 @custom-variant qhd (@media (2560px <= width < 3840px));
 @custom-variant uhd (@media (width >= 3840px));
-
-/* Keyboard-only focus, native: matches the browser's :focus-visible heuristic
-   (keyboard / programmatic focus, not pointer). No app-state attribute involved. */
 @custom-variant kb-focus (&:focus-visible);
 
 @font-face {
   font-family: "Friz Quadrata";
   src: url("/warcraft-hotkey-editor/fonts/frizqt.ttf") format("truetype");
-  /* `swap`, not `block`: Lighthouse flags `block` (it hides text — FOIT — until
-     the face loads). `swap` paints the fallback serif immediately, then swaps in
-     Friz Quadrata. The font is preloaded in DocumentHead, so the swap window is
-     tiny; `swap` over `optional` keeps the brand face on first paint. */
-  font-display: swap;
+  font-display: block;
 }
 
 @theme {
+  --font-sans: "Friz Quadrata", serif;
+
   --color-warcraft-gold: #ffce63;
   --color-warcraft-gold-border: #6c5a1f;
   --color-warcraft-gold-dark: #281e08;
@@ -45,35 +36,18 @@
   --color-warcraft-blue: #2a5085;
   --color-warcraft-blue-deep: #1a3a5c;
 
-  /* One accent per race (neutral = gold). The race-tab banner tops derive from the
-     accent — `color-mix(<accent> 25%, bg-base)` — so there are no bespoke per-race
-     banner tokens; orc/neutral keep a `-strong` dark that is also reused elsewhere. */
   --color-race-human: #6aa1ff;
-
   --color-race-orc: #ff7a7a;
   --color-race-orc-strong: #5a1212;
-
   --color-race-nightelf: #5fdada;
-
   --color-race-undead: #c79bff;
-
   --color-race-neutral-strong: #4a3d14;
 
-  /* Semantic status colors — not race/chrome. Success = gains & success
-     toasts; danger = hotkey/position collisions (distinct from race-orc red). */
   --color-warcraft-success: #6dd49a;
   --color-warcraft-danger: #ff5a5a;
-
-  /* Compositing primitives for shadows and highlight hairlines. Referenced as
-     var(--color-warcraft-shadow) inside arbitrary [text-shadow:…]/[box-shadow:…]
-     values, with color-mix() for partial opacity. */
   --color-warcraft-shadow: #000000;
   --color-warcraft-highlight: #ffffff;
 
-  /* Design-system corner radii — promoted from the recurring inline
-     rounded-[Npx] values, named by the role that dominates each size. Each is
-     the exact pixel radius it replaces; the proportional `cqi` radii inside
-     self-scaling "drawing" leaves stay inline. */
   --radius-hairline: 3px;
   --radius-control: 4px;
   --radius-tile: 6px;
@@ -81,13 +55,6 @@
   --radius-panel: 10px;
   --radius-container: 12px;
 
-  /* Type scale — nine fixed-rem steps, no clamp(). The whole app snaps to these,
-     collapsing ~92 one-off text-[Nrem]/text-[Npx] sizes; the number of distinct
-     sizes going down IS the design system appearing. Responsiveness is NOT baked
-     into the token (no clamp/vw): a component picks the right step per band
-     (base plus mobile:/tablet:/… overrides), and a self-scaling drawing leaf
-     uses cqi off its container. These OVERRIDE Tailwind's fixed defaults; no
-     component used a default text-* utility, so there is no blast radius. */
   --text-xs: 0.8rem;
   --text-sm: 0.9rem;
   --text-base: 1rem;
@@ -99,187 +66,48 @@
   --text-4xl: 3.25rem;
   --text-5xl: 4.5rem;
 
-  /* Line-height tokens, role-named like the radius scale (not numeric), no
-     clamp. Additive: they do not shadow Tailwind's leading-none/tight/etc.
-     Replace the recurring leading-[N] one-offs. */
   --leading-flush: 1.1;
   --leading-title: 1.2;
   --leading-heading: 1.3;
   --leading-body: 1.4;
   --leading-prose: 1.5;
 
-  /* App-wide transition defaults: every `transition-*` uses `ease` timing and the
-     `base` (0.15s) duration unless a `duration-*` utility overrides. Collapses the
-     old six spellings (0.1s/0.12s/120ms/150/200/220/240) + the inline-vs-utility
-     split into one convention: `transition-[props]` + optional `duration-{fast,slow}`. */
   --default-transition-timing-function: ease;
   --default-transition-duration: 0.15s;
 
-  /* CONSOLIDATED shadow system (was ~59 flat tokens), orthogonal: glow color is a
-     parameter. NOTE: the PARAMETRIC glows/focus/toast are `@utility` rules at the
-     bottom of this file, NOT `--shadow-*` tokens — Tailwind resolves a token's
-     `color-mix()` to a fixed rgba at BUILD time, which silently strips the opacity
-     when the color is a runtime `var(--glow-color)`. Only STATIC-color shadows (drop
-     shadows, gold ring/bevel) live here as tokens; they resolve correctly. */
-  --shadow-raised: 0 8px 24px
-    color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
-  --shadow-overlay:
-    0 12px 32px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent),
-    0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 8%, transparent);
-  --shadow-ring:
-    inset 0 0 0 1px color-mix(in oklab, var(--color-warcraft-gold) 30%, transparent),
-    0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 22%, transparent);
-  --shadow-bevel:
-    inset 0 1px 0
-      color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent),
-    0 1px 2px color-mix(in oklab, var(--color-warcraft-shadow) 50%, transparent);
+  --shadow-raised: 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-overlay: 0 12px 32px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent), 0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 8%, transparent);
+  --shadow-ring: inset 0 0 0 1px color-mix(in oklab, var(--color-warcraft-gold) 30%, transparent), 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 22%, transparent);
+  --shadow-bevel: inset 0 1px 0 color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent), 0 1px 2px color-mix(in oklab, var(--color-warcraft-shadow) 50%, transparent);
+  --shadow-edge: 0 1px 0 color-mix(in oklab, var(--color-warcraft-shadow) 70%, transparent), 0 2px 0 color-mix(in oklab, var(--color-warcraft-gold) 10%, transparent);
+  --shadow-drop-top: 0 -4px 16px color-mix(in oklab, var(--color-warcraft-shadow) 40%, transparent);
+  --shadow-drawer: -6px 0 40px color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent);
 
-  /* Kept specials — the header's gold divider and two directional drops (toasts
-     compose `overlay` + a `--glow-color` glow; the side drawer uses `drawer`). */
-  --shadow-edge:
-    0 1px 0 color-mix(in oklab, var(--color-warcraft-shadow) 70%, transparent),
-    0 2px 0 color-mix(in oklab, var(--color-warcraft-gold) 10%, transparent);
-  --shadow-drop-top: 0 -4px 16px
-    color-mix(in oklab, var(--color-warcraft-shadow) 40%, transparent);
-  --shadow-drawer: -6px 0 40px
-    color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent);
-
-  /* Text-shadows — drop (opaque backing), glow (gold halo over the backing),
-     outline (four-way). Consolidated from the old -60/-92/-12/-14 variants. */
   --text-shadow-drop: 1px 1px 0 var(--color-warcraft-shadow);
-  --text-shadow-glow:
-    1px 1px 0 var(--color-warcraft-shadow),
-    0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent);
-  --text-shadow-outline:
-    1px 1px 0 var(--color-warcraft-shadow),
-    -1px 1px 0 var(--color-warcraft-shadow),
-    1px -1px 0 var(--color-warcraft-shadow),
-    -1px -1px 0 var(--color-warcraft-shadow);
-
-  /* Friz Quadrata is the app's single typeface. Overriding Tailwind's base
-     `--font-sans` makes preflight apply it globally (html + form controls),
-     so no component needs a font utility. The trailing stack is a last-resort
-     fallback only — used if the .ttf fails to load or lacks a glyph. */
-  --font-sans: "Friz Quadrata", serif;
+  --text-shadow-glow: 1px 1px 0 var(--color-warcraft-shadow), 0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent);
+  --text-shadow-outline: 1px 1px 0 var(--color-warcraft-shadow), -1px 1px 0 var(--color-warcraft-shadow), 1px -1px 0 var(--color-warcraft-shadow), -1px -1px 0 var(--color-warcraft-shadow);
 }
 
-/* Design-system panel gradients — promoted verbatim from recurring inline
-   linear-gradient() fills. Resting and active are SEPARATE tokens on purpose: a
-   button's two states are two distinct surfaces, never collapsed into one. These
-   set background-image (they layer over a component's own bg-color), matching the
-   `bg-[linear-gradient(…)]` form they replace. */
-@utility bg-panel-gold-resting {
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 100%
-  );
-}
-@utility bg-panel-gold-active {
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 100%
-  );
-}
+@utility bg-panel-gold-resting { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 100%); }
+@utility bg-panel-gold-active { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 100%); }
+@utility bg-panel-dark { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-bg-mid) 85%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-base) 90%, transparent) 100%); }
+@utility bg-panel-blue { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-blue) 90%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-panel) 90%, transparent) 100%); }
+@utility bg-panel-gold { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-gold) 32%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 100%); }
+@utility bg-panel-header { background-image: radial-gradient( ellipse 90% 60% at 50% 0%, var(--color-warcraft-blue-deep) 0%, transparent 60%), linear-gradient( 180deg, var(--color-warcraft-bg-mid) 0%, var(--color-warcraft-bg-base) 100%); }
+@utility bg-panel-toast { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-bg-mid) 97%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-base) 97%, transparent) 100%); }
 
-/* CONSOLIDATED panel gradients (was 21). One canonical surface per family at one
-   angle + one opacity. Need a lighter panel? Use the opacity modifier on a solid
-   color (`bg-warcraft-bg-panel/85`), not a new gradient. background-image layers
-   over a component's own bg-color, matching the bg-[…] / [background:…] forms. */
-@utility bg-panel-dark {
-  background-image: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-warcraft-bg-mid) 85%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-bg-base) 90%, transparent) 100%
-  );
-}
-@utility bg-panel-blue {
-  background-image: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-warcraft-blue) 90%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-bg-panel) 90%, transparent) 100%
-  );
-}
-@utility bg-panel-gold {
-  background-image: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-warcraft-gold) 32%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 100%
-  );
-}
-@utility bg-panel-header {
-  background-image:
-    radial-gradient(
-      ellipse 90% 60% at 50% 0%,
-      var(--color-warcraft-blue-deep) 0%,
-      transparent 60%
-    ),
-    linear-gradient(
-      180deg,
-      var(--color-warcraft-bg-mid) 0%,
-      var(--color-warcraft-bg-base) 100%
-    );
-}
-/* The toast card's near-opaque dark surface: bg-mid → bg-base at ~97% alpha. */
-@utility bg-panel-toast {
-  background-image: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-warcraft-bg-mid) 97%, transparent) 0%,
-    color-mix(in oklab, var(--color-warcraft-bg-base) 97%, transparent) 100%
-  );
-}
+@utility shadow-glow-soft { box-shadow: 0 0 8px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.48); }
+@utility shadow-glow { box-shadow: 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55); }
+@utility shadow-glow-strong { box-shadow: 0 0 18px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.8), inset 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.32); }
+@utility shadow-glow-raised { box-shadow: 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55), 0 8px 24px rgb(from var(--color-warcraft-shadow) r g b / 0.6); }
+@utility shadow-focus { box-shadow: 0 0 0 3px var(--focus-color, var(--color-warcraft-gold)), 0 0 18px rgb(from var(--focus-color, var(--color-warcraft-gold)) r g b / 0.55); }
+@utility shadow-toast { box-shadow: 0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55), 0 0 24px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.3); }
+@utility shadow-toast-focus { box-shadow: 0 0 0 3px var(--color-warcraft-highlight), 0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55); }
 
-/* Parametric shadows — defined as @utility (NOT @theme --shadow-* tokens) and using
-   RELATIVE-COLOR syntax `rgb(from <token> r g b / <alpha>)` for the runtime color.
-   Why not `color-mix(… <token> N%, transparent)`: Tailwind emits that as a fallback +
-   an `@supports(color-mix)` override, and `tailwindcss --minify` (LightningCSS, the
-   production build) STRIPS the @supports block — leaving the full-opacity fallback, so
-   every runtime-colored glow renders as flat solid color. `rgb(from … / a)` is a single
-   minify-safe value (identical result: the token at that alpha). Theme a glow with
-   `[--glow-color:var(--color-race-orc)]`; the default is gold. */
-@utility shadow-glow-soft {
-  box-shadow: 0 0 8px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.48);
-}
-@utility shadow-glow {
-  box-shadow: 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55);
-}
-@utility shadow-glow-strong {
-  box-shadow:
-    0 0 18px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.8),
-    inset 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.32);
-}
-@utility shadow-glow-raised {
-  box-shadow:
-    0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55),
-    0 8px 24px rgb(from var(--color-warcraft-shadow) r g b / 0.6);
-}
-@utility shadow-focus {
-  box-shadow:
-    0 0 0 3px var(--focus-color, var(--color-warcraft-gold)),
-    0 0 18px rgb(from var(--focus-color, var(--color-warcraft-gold)) r g b / 0.55);
-}
-@utility shadow-toast {
-  box-shadow:
-    0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55),
-    0 0 24px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.3);
-}
-@utility shadow-toast-focus {
-  box-shadow:
-    0 0 0 3px var(--color-warcraft-highlight),
-    0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55);
-}
-
-/* Semantic transition durations (flow through any `transition-*` via --tw-duration).
-   `base` (0.15s) is the app default, so components at base need no duration utility. */
 @utility duration-fast { --tw-duration: 0.12s; }
 @utility duration-base { --tw-duration: 0.15s; }
 @utility duration-slow { --tw-duration: 0.2s; }
 
-/* The page canvas behind the app column. The shell drops `viewport-fit=cover`, so on a
-   notched phone the browser keeps the app inside the safe area and paints the notch /
-   home-indicator strips itself — this makes those strips the app's own dark blue rather
-   than the browser default. On a desktop (no safe area) it is never visible. */
 html {
   background-color: var(--color-warcraft-bg-base);
 }
