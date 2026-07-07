@@ -26,7 +26,7 @@ classes! {
         "data-[race=neutral]:hover:border-warcraft-gold",
         "data-[race=neutral]:active:border-warcraft-gold",
         "kb-focus:border-warcraft-gold",
-        "kb-focus:[box-shadow:0_0_0_3px_var(--color-warcraft-gold),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent)]",
+        "kb-focus:[box-shadow:var(--shadow-focus-gold)]",
         "[[data-drag-over=true]_&]:border-warcraft-gold",
         "[[data-drag-over=true]_&]:border-solid",
         "data-[dragging-source=true]:bg-panel-dark-diag-85",
@@ -55,7 +55,7 @@ states! {
     Selected => tw![
         "bg-warcraft-bg-panel/95",
         "border-warcraft-gold",
-        "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent)]",
+        "[box-shadow:var(--shadow-glow-gold)]",
         "data-[race=human]:border-race-human",
         "data-[race=human]:[box-shadow:var(--shadow-glow-human-select)]",
         "data-[race=orc]:border-race-orc",
@@ -65,6 +65,6 @@ states! {
         "data-[race=undead]:border-race-undead",
         "data-[race=undead]:[box-shadow:var(--shadow-glow-undead-select)]",
         "data-[race=neutral]:border-warcraft-gold",
-        "data-[race=neutral]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+        "data-[race=neutral]:[box-shadow:var(--shadow-glow-gold-select)]",
     ],
 }

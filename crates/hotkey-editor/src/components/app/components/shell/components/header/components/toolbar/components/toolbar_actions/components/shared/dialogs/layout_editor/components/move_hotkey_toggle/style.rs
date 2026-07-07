@@ -3,20 +3,20 @@ classes! {
     base: tw![
         "flex",
         "items-center",
-        "gap-[0.8rem]",
+        "gap-3",
         "uppercase",
         "tracking-[0.06em]",
-        "text-[1.9rem]",
+        "text-2xl",
         "text-warcraft-gold",
         "cursor-pointer",
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:gap-[8px]",
-        "mobile:text-[15px]",
+        "mobile:gap-2",
+        "mobile:text-sm",
     ],
     tablet: tw![
-        "tablet:gap-[8px]",
-        "tablet:text-[15px]",
+        "tablet:gap-2",
+        "tablet:text-sm",
     ],
 }

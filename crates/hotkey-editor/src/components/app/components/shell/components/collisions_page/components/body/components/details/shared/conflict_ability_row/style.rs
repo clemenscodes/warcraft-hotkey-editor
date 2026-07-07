@@ -5,7 +5,7 @@ classes! {
         "grid-cols-[1fr_auto_1fr]",
         "items-start",
         "justify-items-center",
-        "gap-[12px]",
+        "gap-3",
         "w-full",
         "data-[multi=true]:grid-cols-none",
         "data-[multi=true]:flex",

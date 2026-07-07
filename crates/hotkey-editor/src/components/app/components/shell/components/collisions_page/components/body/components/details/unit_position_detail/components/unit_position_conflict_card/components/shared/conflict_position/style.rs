@@ -10,6 +10,6 @@ classes! {
         "[&>*]:w-[calc(60px/3*4)]",
         "data-[top=true]:self-center",
         "data-[top=true]:h-auto",
-        "data-[top=true]:mb-[10px]",
+        "data-[top=true]:mb-2.5",
     ],
 }

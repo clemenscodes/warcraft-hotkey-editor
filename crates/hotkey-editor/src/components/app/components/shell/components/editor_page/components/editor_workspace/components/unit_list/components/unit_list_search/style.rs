@@ -22,7 +22,7 @@ classes! {
         "mobile:bg-transparent",
         "mobile:border-0",
         "mobile:rounded-none",
-        "mobile:mb-[6px]",
+        "mobile:mb-1.5",
     ],
     tablet: tw![
         "tablet:relative",
@@ -30,6 +30,6 @@ classes! {
         "tablet:bg-transparent",
         "tablet:border-0",
         "tablet:rounded-none",
-        "tablet:mb-[6px]",
+        "tablet:mb-1.5",
     ],
 }

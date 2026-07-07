@@ -21,7 +21,7 @@ classes! {
         "italic",
     ],
     mobile: tw![
-        "mobile:p-[0.85rem]",
+        "mobile:p-3.5",
         "mobile:rounded-tile",
     ],
 }

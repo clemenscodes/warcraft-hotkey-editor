@@ -2,12 +2,11 @@ use tw_macro::tw;
 // The footer is the app's bottom chrome — the full-bleed mirror of the header at the other
 // end of the shell, and, like the header, a query container (`@container`) any `cqi` length
 // beneath it could resolve against. It is fine print, so its size barely changes across the
-// whole width range: one `text-[clamp(…)]` — a rem floor so it stays legible on a phone, a
-// rem ceiling so it never balloons on 4K, a gentle `vw` between — carries every band. That
-// single font size is the footer's one knob: every glyph, icon, and horizontal gap below
-// expresses its length in `em`, so the whole footer scales as one drawing off it.
+// whole width range: one small type step (`text-xs`) is the footer's single knob, and every
+// glyph, icon, and horizontal gap below expresses its length in `em`, so the whole footer
+// scales as one drawing off that one font size.
 //
-// The vertical rhythm is one `clamp`ed `vw`, used for both `py` (top/bottom) and `gap-y`
+// The vertical rhythm is one spacing step, used for both `py` (top/bottom) and `gap-y`
 // (between the three rows — credit, links, disclaimer). Equal `py` and `gap-y` put the rows
 // in four equal vertical spaces: the top margin matches the bottom margin and the rows are
 // evenly distributed rather than bunched at the centre. `gap-y` is the single source of that
@@ -38,12 +37,12 @@ classes! {
         "mt-auto",
         "px-4",
         "gap-x-[0.9em]",
-        "gap-y-[clamp(0.4rem,0.85vw,0.8rem)]",
-        "py-[clamp(0.4rem,0.85vw,0.8rem)]",
-        "leading-[1.3]",
+        "gap-y-2.5",
+        "py-2.5",
+        "leading-heading",
         "text-center",
         "text-white/60",
-        "text-[clamp(0.7rem,0.8vw,0.9rem)]",
+        "text-xs",
         "before:content-['']",
         "before:absolute",
         "before:top-0",

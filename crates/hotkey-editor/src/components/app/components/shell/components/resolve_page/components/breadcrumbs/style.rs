@@ -6,7 +6,7 @@ classes! {
         "gap-3",
         "flex-none",
         "m-0",
-        "py-[1.2rem]",
+        "py-5",
         "border-b",
         "border-warcraft-gold/25",
     ],

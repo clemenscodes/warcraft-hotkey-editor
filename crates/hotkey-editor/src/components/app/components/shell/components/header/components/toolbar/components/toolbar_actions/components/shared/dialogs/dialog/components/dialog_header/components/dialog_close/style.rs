@@ -7,7 +7,7 @@ classes! {
         "-translate-y-1/2",
         "w-[2.5rem]",
         "h-[2.5rem]",
-        "text-[1.5rem]",
+        "text-xl",
         "flex",
         "items-center",
         "justify-center",

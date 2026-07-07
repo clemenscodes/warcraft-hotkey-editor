@@ -10,5 +10,5 @@ classes! {
         "group-[:not(:disabled):hover]:data-[link=true]:underline",
         "group-[:not(:disabled):hover]:data-[link=true]:[text-underline-offset:2px]",
     ],
-    mobile: tw!["mobile:text-[max(0.6rem,min(1.7rem,calc((100vw_-_88px)/27.5)))]"],
+    mobile: tw!["mobile:text-base"],
 }

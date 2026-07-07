@@ -5,6 +5,7 @@ classes! {
         "relative",
         "inline-flex",
         "flex-none",
+        "size-18",
         "m-0",
         "p-0",
         "bg-transparent",
@@ -12,5 +13,8 @@ classes! {
         "cursor-pointer",
         "leading-[0]",
         "disabled:cursor-default",
+    ],
+    mobile: tw![
+        "mobile:size-14",
     ],
 }

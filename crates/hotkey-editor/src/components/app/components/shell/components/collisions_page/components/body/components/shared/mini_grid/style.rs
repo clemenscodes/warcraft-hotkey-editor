@@ -10,7 +10,7 @@ classes! {
         "w-[calc(80px/3*4)]",
         "[container-type:inline-size]",
         "pointer-events-none",
-        "p-[3px]",
+        "p-1",
         "bg-warcraft-bg-panel/70",
         "border",
         "border-warcraft-blue",

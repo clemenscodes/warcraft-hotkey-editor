@@ -7,7 +7,7 @@ classes! {
         "border",
         "border-warcraft-gold/35",
         "bg-warcraft-bg-base/85",
-        "text-[2rem]",
+        "text-2xl",
         "text-warcraft-gold",
     ],
 }

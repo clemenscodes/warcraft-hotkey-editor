@@ -4,7 +4,7 @@ classes! {
         "flex",
         "flex-col",
         "items-center",
-        "gap-[7px]",
+        "gap-2",
         "flex-[0_0_auto]",
         "min-w-[112px]",
     ],

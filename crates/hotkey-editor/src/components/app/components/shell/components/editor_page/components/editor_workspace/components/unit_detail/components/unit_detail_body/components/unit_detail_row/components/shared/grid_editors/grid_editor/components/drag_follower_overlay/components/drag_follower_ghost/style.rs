@@ -12,7 +12,7 @@ classes! {
         "border-2",
         "rounded-tile",
         "border-warcraft-gold",
-        "[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+        "[box-shadow:var(--shadow-glow-gold-raised)]",
         "data-[race=human]:border-race-human",
         "data-[race=human]:[box-shadow:var(--shadow-glow-human-raised)]",
         "data-[race=orc]:border-race-orc",
@@ -22,7 +22,7 @@ classes! {
         "data-[race=undead]:border-race-undead",
         "data-[race=undead]:[box-shadow:var(--shadow-glow-undead-raised)]",
         "data-[race=neutral]:border-warcraft-gold",
-        "data-[race=neutral]:[box-shadow:0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent),0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)]",
+        "data-[race=neutral]:[box-shadow:var(--shadow-glow-gold-select-raised)]",
     ],
 }
 

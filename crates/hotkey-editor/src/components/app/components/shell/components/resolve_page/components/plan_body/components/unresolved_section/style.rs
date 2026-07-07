@@ -1,9 +1,9 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "mt-[1.25rem]",
+        "mt-5",
         "flex",
         "flex-col",
-        "gap-[0.5rem]",
+        "gap-2",
     ],
 }

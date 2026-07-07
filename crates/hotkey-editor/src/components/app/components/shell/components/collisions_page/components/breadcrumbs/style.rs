@@ -5,12 +5,12 @@ classes! {
         "items-center",
         "gap-3",
         "flex-none",
-        "py-[1.2rem]",
+        "py-5",
         "border-b",
         "border-warcraft-gold/25",
     ],
     mobile: tw![
-        "mobile:gap-[0.85rem]",
+        "mobile:gap-3.5",
         "mobile:flex-nowrap",
         "mobile:overflow-x-auto",
         "mobile:overflow-y-hidden",
@@ -21,7 +21,7 @@ classes! {
         "mobile:[&::-webkit-scrollbar]:hidden",
     ],
     tablet: tw![
-        "tablet:gap-[0.85rem]",
+        "tablet:gap-3.5",
         "tablet:flex-nowrap",
         "tablet:overflow-x-auto",
         "tablet:overflow-y-hidden",

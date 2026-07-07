@@ -9,7 +9,7 @@ classes! {
         "m-0",
         "font-normal",
         "text-[5cqi]",
-        "leading-[1.1]",
+        "leading-flush",
         "tracking-[0.04em]",
         "text-warcraft-gold",
         "whitespace-nowrap",

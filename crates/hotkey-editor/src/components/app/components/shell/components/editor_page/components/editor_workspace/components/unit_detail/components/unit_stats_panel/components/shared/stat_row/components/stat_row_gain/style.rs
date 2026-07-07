@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "flex-[0_0_auto]",
         "text-warcraft-success",
-        "text-[clamp(1.3rem,0.85rem+0.32vw,1.75rem)]",
+        "text-xl",
         "font-normal",
         "[font-variant-numeric:tabular-nums]",
         "text-shadow-drop",

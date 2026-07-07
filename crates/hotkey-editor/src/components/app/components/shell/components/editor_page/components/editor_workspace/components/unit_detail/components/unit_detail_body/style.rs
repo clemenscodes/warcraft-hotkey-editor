@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "flex",
         "flex-col",
-        "gap-[2.5rem]",
+        "gap-10",
         "items-stretch",
         "flex-none",
         "min-h-0",

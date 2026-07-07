@@ -17,7 +17,7 @@ classes! {
         "bg-panel-gold-resting",
         "border",
         "border-warcraft-gold-border",
-        "rounded-[5.4px]",
+        "rounded-tile",
         "text-warcraft-text-secondary",
         "cursor-pointer",
         "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease,box-shadow_0.15s_ease]",

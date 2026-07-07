@@ -8,7 +8,7 @@ classes! {
         "appearance-none",
         "w-20",
         "h-20",
-        "p-[0.3rem]",
+        "p-1",
         "inline-flex",
         "items-center",
         "justify-center",

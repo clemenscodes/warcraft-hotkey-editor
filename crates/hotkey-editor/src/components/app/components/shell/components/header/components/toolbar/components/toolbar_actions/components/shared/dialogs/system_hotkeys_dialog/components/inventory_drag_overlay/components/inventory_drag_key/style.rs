@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "uppercase",
         "tracking-[0.04em]",
-        "text-[3.4rem]",
+        "text-4xl",
         "leading-none",
         "whitespace-nowrap",
         "text-warcraft-gold",

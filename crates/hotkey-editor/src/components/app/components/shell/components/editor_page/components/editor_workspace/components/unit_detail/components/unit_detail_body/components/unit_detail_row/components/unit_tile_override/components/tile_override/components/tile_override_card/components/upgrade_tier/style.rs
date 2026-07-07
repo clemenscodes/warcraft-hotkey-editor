@@ -8,7 +8,7 @@ classes! {
         "flex",
         "items-center",
         "justify-center",
-        "gap-[0.85rem]",
+        "gap-3.5",
         "pt-4",
     ],
 }

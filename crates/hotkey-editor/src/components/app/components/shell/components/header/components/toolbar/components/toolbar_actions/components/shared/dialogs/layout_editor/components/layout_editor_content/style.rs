@@ -5,14 +5,14 @@ classes! {
         "flex-col",
         "items-center",
         "justify-center",
-        "gap-[4rem]",
+        "gap-16",
     ],
     mobile: tw![
         "mobile:justify-start",
-        "mobile:gap-[20px]",
+        "mobile:gap-5",
     ],
     tablet: tw![
         "tablet:justify-start",
-        "tablet:gap-[20px]",
+        "tablet:gap-5",
     ],
 }

@@ -1,12 +1,11 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "w-[112px]",
-        "h-[112px]",
+        "size-28",
+        "overflow-hidden",
         "border",
         "border-warcraft-blue",
         "rounded-tile",
-        "object-cover",
         "hover:border-warcraft-gold",
         "hover:shadow-glow-8",
     ],

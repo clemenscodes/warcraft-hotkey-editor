@@ -4,7 +4,7 @@ classes! {
         "box-border",
         "min-w-[60px]",
         "h-[60px]",
-        "px-[11px]",
+        "px-3",
         "inline-flex",
         "items-center",
         "justify-center",

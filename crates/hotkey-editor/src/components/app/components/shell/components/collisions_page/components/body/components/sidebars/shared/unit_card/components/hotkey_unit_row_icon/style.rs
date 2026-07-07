@@ -1,13 +1,12 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "h-[80px]",
-        "w-[80px]",
+        "size-20",
         "shrink-0",
+        "overflow-hidden",
         "border",
         "border-warcraft-blue",
         "rounded-control",
-        "object-cover",
     ],
     mobile: tw![
         "mobile:h-[66px]",

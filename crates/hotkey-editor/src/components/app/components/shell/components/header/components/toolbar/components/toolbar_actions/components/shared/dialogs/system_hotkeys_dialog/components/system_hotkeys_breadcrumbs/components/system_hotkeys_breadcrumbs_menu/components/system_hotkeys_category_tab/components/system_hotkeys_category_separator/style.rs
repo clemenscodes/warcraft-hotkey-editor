@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "text-[2rem]",
+        "text-2xl",
         "leading-none",
         "select-none",
         "text-warcraft-gold/45",

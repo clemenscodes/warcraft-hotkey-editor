@@ -2,21 +2,21 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "grid",
-        "[grid-template-columns:repeat(4,clamp(7rem,9vh,12rem))]",
-        "[grid-auto-rows:clamp(7rem,9vh,12rem)]",
-        "gap-[1.25rem]",
+        "[grid-template-columns:repeat(4,9rem)]",
+        "[grid-auto-rows:9rem]",
+        "gap-5",
         "mx-auto",
     ],
     mobile: tw![
         "mobile:justify-center",
-        "mobile:[grid-template-columns:repeat(4,clamp(52px,18vw,72px))]",
-        "mobile:[grid-auto-rows:clamp(52px,18vw,72px)]",
-        "mobile:gap-[8px]",
+        "mobile:[grid-template-columns:repeat(4,4rem)]",
+        "mobile:[grid-auto-rows:4rem]",
+        "mobile:gap-2",
     ],
     tablet: tw![
         "tablet:justify-center",
-        "tablet:[grid-template-columns:repeat(4,clamp(52px,18vw,72px))]",
-        "tablet:[grid-auto-rows:clamp(52px,18vw,72px)]",
-        "tablet:gap-[8px]",
+        "tablet:[grid-template-columns:repeat(4,4rem)]",
+        "tablet:[grid-auto-rows:4rem]",
+        "tablet:gap-2",
     ],
 }

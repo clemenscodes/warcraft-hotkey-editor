@@ -5,8 +5,8 @@ classes! {
         "flex",
         "items-center",
         "justify-center",
-        "gap-[1.6rem]",
+        "gap-6",
         "w-full",
-        "mt-[1.4rem]",
+        "mt-6",
     ],
 }

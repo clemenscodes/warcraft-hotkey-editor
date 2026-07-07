@@ -3,15 +3,14 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "w-[clamp(7rem,9vh,12rem)]",
-        "h-[clamp(7rem,9vh,12rem)]",
+        "size-full",
         "flex",
         "items-center",
         "justify-center",
         "p-0",
         "border-2",
         "rounded-panel",
-        "text-[clamp(3.5rem,5vh,6rem)]",
+        "text-5xl",
         "leading-none",
         "uppercase",
         "border-warcraft-gold",
@@ -31,14 +30,10 @@ classes! {
         "[@media(hover:none)]:kb-focus:text-warcraft-gold",
     ],
     mobile: tw![
-        "mobile:w-[clamp(52px,18vw,72px)]",
-        "mobile:h-[clamp(52px,18vw,72px)]",
-        "mobile:text-[clamp(22px,7vw,34px)]",
+        "mobile:text-2xl",
     ],
     tablet: tw![
-        "tablet:w-[clamp(52px,18vw,72px)]",
-        "tablet:h-[clamp(52px,18vw,72px)]",
-        "tablet:text-[clamp(22px,7vw,34px)]",
+        "tablet:text-2xl",
     ],
 }
 

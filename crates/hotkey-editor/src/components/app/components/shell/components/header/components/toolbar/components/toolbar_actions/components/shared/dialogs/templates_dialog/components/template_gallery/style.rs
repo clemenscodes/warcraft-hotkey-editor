@@ -8,10 +8,10 @@ classes! {
     ],
     mobile: tw![
         "mobile:grid-cols-1",
-        "mobile:gap-[10px]",
+        "mobile:gap-2.5",
     ],
     tablet: tw![
         "tablet:grid-cols-1",
-        "tablet:gap-[10px]",
+        "tablet:gap-2.5",
     ],
 }

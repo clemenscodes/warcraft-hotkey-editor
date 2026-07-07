@@ -6,7 +6,7 @@ classes! {
         "max-w-[50%]",
         "flex-col",
         "items-center",
-        "gap-[0.7rem]",
+        "gap-3",
         "min-w-0",
     ],
 }

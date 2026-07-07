@@ -12,7 +12,7 @@ classes! {
         "text-shadow-drop-60",
     ],
     mobile: tw![
-        "mobile:mt-[12px]",
+        "mobile:mt-3",
         "mobile:flex-none",
         "mobile:h-[1.4em]",
         "mobile:min-h-[1.4em]",
@@ -25,7 +25,7 @@ classes! {
         "mobile:[word-break:break-word]",
     ],
     tablet: tw![
-        "tablet:mt-[12px]",
+        "tablet:mt-3",
         "tablet:flex-none",
         "tablet:h-[1.4em]",
         "tablet:min-h-[1.4em]",

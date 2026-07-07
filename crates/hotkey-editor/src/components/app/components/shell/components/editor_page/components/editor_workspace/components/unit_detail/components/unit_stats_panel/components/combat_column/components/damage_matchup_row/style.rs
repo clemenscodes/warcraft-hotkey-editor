@@ -3,10 +3,10 @@ classes! {
     base: tw![
         "grid",
         "grid-cols-[repeat(2,minmax(0,1fr))]",
-        "gap-x-[0.5rem]",
-        "gap-y-[0.25rem]",
+        "gap-x-2",
+        "gap-y-1",
         "mt-auto",
-        "pt-[0.75rem]",
+        "pt-3",
         "border-t",
         "border-t-warcraft-gold/15",
     ],

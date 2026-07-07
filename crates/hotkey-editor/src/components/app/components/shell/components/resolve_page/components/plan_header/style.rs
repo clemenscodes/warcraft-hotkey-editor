@@ -6,7 +6,7 @@ classes! {
         "justify-between",
         "gap-4",
         "flex-none",
-        "pb-[0.85rem]",
+        "pb-3.5",
         "border-b",
         "border-warcraft-gold/25",
     ],

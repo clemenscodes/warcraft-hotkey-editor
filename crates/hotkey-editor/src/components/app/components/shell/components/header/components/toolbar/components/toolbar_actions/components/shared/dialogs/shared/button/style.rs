@@ -9,7 +9,7 @@ classes! {
         "px-14",
         "py-6",
         "rounded-lg",
-        "text-[2rem]",
+        "text-2xl",
         "whitespace-nowrap",
         "cursor-pointer",
         "select-none",

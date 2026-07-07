@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex",
-        "gap-[0.28rem]",
+        "gap-1",
     ],
-    mobile: tw!["mobile:gap-[0.18rem]"],
+    mobile: tw!["mobile:gap-0.5"],
 }

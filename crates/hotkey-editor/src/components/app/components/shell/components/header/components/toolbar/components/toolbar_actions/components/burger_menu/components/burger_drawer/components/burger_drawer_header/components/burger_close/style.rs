@@ -12,7 +12,7 @@ classes! {
         "border-warcraft-gold/30",
         "rounded-card",
         "text-warcraft-gold/70",
-        "text-[0.9rem]",
+        "text-sm",
         "cursor-pointer",
         "[transition:border-color_0.15s_ease,color_0.15s_ease,background_0.15s_ease]",
         "hover:border-warcraft-gold",

@@ -41,6 +41,9 @@
   --color-warcraft-bg-base: #050a1a;
   --color-warcraft-bg-mid: #0a1a35;
   --color-warcraft-bg-panel: rgba(20, 40, 70, 0.7);
+  /* Deep blue-black floor of an active race banner (below bg-base in the tab
+     gradient). */
+  --color-warcraft-bg-abyss: #0a1432;
 
   --color-warcraft-blue: #2a5085;
   --color-warcraft-blue-deep: #1a3a5c;
@@ -61,6 +64,12 @@
 
   --color-race-neutral: #ffce63;
   --color-race-neutral-strong: #4a3d14;
+
+  /* Per-race banner top colors for the editor race tabs (the resting/active
+     gradient tops). Orc and neutral reuse their `-strong` tokens above. */
+  --color-race-human-banner: #173266;
+  --color-race-nightelf-banner: #0c4348;
+  --color-race-undead-banner: #321650;
 
   /* Semantic status colors — not race/chrome. Success = gains & success
      toasts; danger = hotkey/position collisions (distinct from race-orc red). */
@@ -100,6 +109,7 @@
   --text-2xl: 2rem;
   --text-3xl: 2.5rem;
   --text-4xl: 3.25rem;
+  --text-5xl: 4.5rem;
 
   /* Line-height tokens, role-named like the radius scale (not numeric), no
      clamp. Additive: they do not shadow Tailwind's leading-none/tight/etc.
@@ -183,6 +193,35 @@
   --shadow-glow-orc-strong: 0 0 22px color-mix(in oklab, var(--color-race-orc) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
   --shadow-glow-nightelf-strong: 0 0 22px color-mix(in oklab, var(--color-race-nightelf) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
   --shadow-glow-undead-strong: 0 0 22px color-mix(in oklab, var(--color-race-undead) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
+
+  /* Bespoke composite shadows promoted from recurring inline [box-shadow:…]
+     values so components name the effect instead of spelling out the color-mix.
+     Gold counterparts of the race `-raised`/`-strong` glows, the two toast-status
+     drops, the dialog ambient halo, the menu-item inset hover glow, the key
+     picker "current" ring, and the side drawer's directional shadow. */
+  --shadow-glow-gold: 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 60%, transparent);
+  --shadow-glow-gold-raised: 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 60%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-glow-danger: 0 0 8px color-mix(in oklab, var(--color-warcraft-danger) 50%, transparent);
+  --shadow-ring-gold: inset 0 0 0 1px color-mix(in oklab, var(--color-warcraft-gold) 30%, transparent), 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 22%, transparent);
+  --shadow-ring-gold-soft: inset 0 0 0 1px color-mix(in oklab, var(--color-warcraft-gold) 8%, transparent), 0 0 18px color-mix(in oklab, var(--color-warcraft-gold) 12%, transparent);
+  --shadow-inset-gold: inset 0 0 0 1px color-mix(in oklab, var(--color-warcraft-gold) 40%, transparent);
+  --shadow-inset-gold-glow: inset 0 0 8px color-mix(in oklab, var(--color-warcraft-gold) 25%, transparent);
+  --shadow-menu: 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 65%, transparent), 0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 10%, transparent);
+  --shadow-drop-soft: 0 0 6px color-mix(in oklab, var(--color-warcraft-shadow) 50%, transparent);
+  --shadow-drop-top: 0 -4px 16px color-mix(in oklab, var(--color-warcraft-shadow) 40%, transparent);
+  --shadow-toast-focus: 0 0 0 3px var(--color-warcraft-highlight), 0 12px 32px color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent);
+  /* Neutral-race counterparts of the per-race select/raised glows (neutral = gold),
+     and the gold focus ring for a selected tile. */
+  --shadow-glow-gold-select: 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 45%, transparent);
+  --shadow-glow-gold-select-raised: 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 45%, transparent), 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-focus-gold: 0 0 0 3px var(--color-warcraft-gold), 0 0 18px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent);
+  --shadow-glow-gold-strong: 0 0 22px color-mix(in oklab, var(--color-warcraft-gold) 45%, transparent), inset 0 0 24px color-mix(in oklab, var(--color-warcraft-highlight) 4%, transparent);
+  --shadow-glow-gold-inset: 0 0 26px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent), inset 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 15%, transparent);
+  --shadow-glow-gold-current: 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent), inset 0 0 10px color-mix(in oklab, var(--color-warcraft-gold) 22%, transparent);
+  --shadow-ambient-gold: 0 0 40px color-mix(in oklab, var(--color-warcraft-gold) 25%, transparent), 0 8px 32px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --shadow-toast-success: 0 12px 32px color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent), 0 0 24px color-mix(in oklab, var(--color-warcraft-success) 30%, transparent);
+  --shadow-toast-error: 0 12px 32px color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent), 0 0 24px color-mix(in oklab, var(--color-race-orc) 35%, transparent);
+  --shadow-drawer: -6px 0 40px color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent);
   --shadow-inset-ring:
     inset 0 0 0 1px
       color-mix(in oklab, var(--color-warcraft-gold) 65%, transparent),
@@ -366,6 +405,12 @@
   background-image:
     radial-gradient(ellipse 90% 60% at 50% 0%, #18365b 0%, transparent 60%),
     linear-gradient(180deg, #0a1a35 0%, #050a1a 100%);
+}
+/* The toast card's near-opaque dark surface. Promoted from the inline
+   [background:linear-gradient(…)] so no component style carries a raw hex; the
+   ~97%-alpha near-blacks are a one-off toast tint that lives here, not inline. */
+@utility bg-panel-toast {
+  background-image: linear-gradient(135deg, #0c1932f7 0%, #060c1cf7 100%);
 }
 
 /* The page canvas behind the app column. The shell drops `viewport-fit=cover`, so on a

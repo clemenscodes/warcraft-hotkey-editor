@@ -7,6 +7,6 @@ classes! {
         "grid",
         "grid-cols-[minmax(0,1fr)_auto_auto]",
         "items-center",
-        "gap-x-[0.85rem]",
+        "gap-x-3.5",
     ],
 }

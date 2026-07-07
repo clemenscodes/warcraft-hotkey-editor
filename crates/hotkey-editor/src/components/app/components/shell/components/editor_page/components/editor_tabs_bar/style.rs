@@ -9,11 +9,11 @@ classes! {
         "items-stretch",
         "flex-none",
         "gap-6",
-        "min-h-[clamp(9rem,13vh,18rem)]",
+        "min-h-36",
     ],
     mobile: tw![
         "mobile:flex-col",
         "mobile:min-h-0",
-        "mobile:gap-[0.85rem]",
+        "mobile:gap-3.5",
     ],
 }

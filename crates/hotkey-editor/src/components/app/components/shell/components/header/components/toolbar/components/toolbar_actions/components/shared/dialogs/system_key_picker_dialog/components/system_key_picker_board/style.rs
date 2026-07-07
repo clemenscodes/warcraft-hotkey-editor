@@ -4,11 +4,11 @@ classes! {
         "flex",
         "flex-row",
         "items-end",
-        "gap-[0.8rem]",
+        "gap-3",
     ],
     mobile: tw![
         "mobile:flex-col",
         "mobile:items-center",
-        "mobile:gap-[0.4rem]",
+        "mobile:gap-1.5",
     ],
 }

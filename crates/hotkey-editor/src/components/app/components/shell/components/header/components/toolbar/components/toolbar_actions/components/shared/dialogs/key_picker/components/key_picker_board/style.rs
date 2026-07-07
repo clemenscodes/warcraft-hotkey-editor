@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "flex",
         "flex-col",
-        "gap-[0.6rem]",
+        "gap-2.5",
     ],
-    mobile: tw!["mobile:gap-[0.3rem]"],
+    mobile: tw!["mobile:gap-1"],
 }

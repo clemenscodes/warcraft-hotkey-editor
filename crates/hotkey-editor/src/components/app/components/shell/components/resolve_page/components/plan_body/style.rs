@@ -4,7 +4,7 @@ classes! {
         "flex-[1_1_0]",
         "min-h-0",
         "overflow-y-auto",
-        "p-[0.75rem_0.75rem_0.75rem_0]",
+        "pt-3", "pr-3", "pb-3", "pl-0",
         "[scrollbar-width:thin]",
         "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
     ],
@@ -12,12 +12,12 @@ classes! {
         "mobile:flex-none",
         "mobile:min-h-[auto]",
         "mobile:overflow-y-visible",
-        "mobile:p-[0.75rem_0]",
+        "mobile:py-3", "mobile:px-0",
     ],
     tablet: tw![
         "tablet:flex-none",
         "tablet:min-h-[auto]",
         "tablet:overflow-y-visible",
-        "tablet:p-[0.75rem_0]",
+        "tablet:py-3", "tablet:px-0",
     ],
 }

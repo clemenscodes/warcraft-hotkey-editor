@@ -5,7 +5,7 @@ classes! {
         "h-[168px]",
         "border",
         "border-warcraft-blue",
-        "rounded-[5px]",
+        "rounded-tile",
         "object-cover",
     ],
 }

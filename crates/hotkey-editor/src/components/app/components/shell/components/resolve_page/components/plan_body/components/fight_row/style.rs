@@ -4,7 +4,7 @@ classes! {
         "flex",
         "items-start",
         "justify-center",
-        "gap-[1.6rem]",
+        "gap-6",
         "w-full",
     ],
 }

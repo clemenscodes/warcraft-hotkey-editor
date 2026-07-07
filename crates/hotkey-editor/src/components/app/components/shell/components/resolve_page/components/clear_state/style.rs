@@ -5,11 +5,11 @@ classes! {
         "flex-col",
         "items-center",
         "justify-center",
-        "gap-[1.25rem]",
+        "gap-5",
         "[flex:1_1_0]",
         "[min-height:0]",
         "text-center",
-        "p-[2rem]",
+        "p-8",
         "text-warcraft-text-secondary",
     ],
 }

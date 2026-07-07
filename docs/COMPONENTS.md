@@ -532,12 +532,55 @@ single token would do. **Design the bands and the container scaling correctly an
 floor-and-ceiling is the signal that a band override or a `cqi` context is
 missing; add that, not a clamp.
 
-> **The capstones lag this rule.** The `shell/header` and `shell/footer`
-> walk-throughs at the end of this file still describe and praise `clamp()`
-> (`min-h-[clamp(…)]`, the footer's `text-[clamp(…)]`). Those uses are **slated
-> for migration** to bands + `cqi`, not grandfathered — where a capstone praises
-> `clamp`, this rule wins, and the capstone prose is updated as each role model
-> is de-clamped.
+**The one sanctioned `vw` exception — a full-bleed on-screen keyboard.** The
+system key-picker renders a complete keyboard whose keys must tile across the
+full dialog width; its board is a full-bleed row, so — exactly like a `vw` on the
+header *bar's own dimension* — its keys size in `vw` off that full width
+(`w-[4.7vw]`, `text-[1.3vw]`). This is the single place a `vw` length is allowed
+inside a key/leaf: the keyboard *is* the full-width surface it measures against,
+and a `cqi` container would only re-express the same full-width proportion. No
+other leaf gets this; a normal drawing leaf still scales in `cqi` off its box.
+
+> **The capstones' `clamp` examples are superseded.** The app is now 100%
+> clamp-free — including the role models: the header bar's height is per-band
+> (`laptop:min-h-18` … `uhd:min-h-34`) and the footer's font knob is `text-xs`.
+> The `shell/header` / `shell/footer` walk-throughs at the end of this file still
+> *show* `clamp()` in their prose examples (`min-h-[clamp(…)]`, `text-[clamp(…)]`);
+> read them for the structural lessons, but those specific `clamp` values are
+> historical — the live rule is per-band steps + `cqi`, never `clamp`.
+
+## Fill the container — a component defines shape, its parent defines scale
+
+Sizing follows one rule: **a component fills the box its parent gives it and
+scales like an SVG.** It declares its own *shape and structure* — aspect ratio,
+internal proportions (`cqi`), how its parts sit relative to each other — and then
+renders at whatever *scale* the parent hands down, preserving those proportions
+fluidly. Exactly as an `<svg viewBox>` fills any box you place it in, a component
+fills its slot: `w-full` / `h-full` / `size-full`, not a pinned pixel size. Only a
+**viewport band** may declare a genuinely *new shape* (a different layout for the
+phone than the desktop) — within a band there is no size step, just fill.
+
+So the absolute scale lives *up* the tree, on the container that owns the
+structure — the header bar's per-band `min-h`, a page column's per-band width, an
+icon slot's per-band `size-*` — and every child below fills it. Push scale up;
+never let a leaf pin its own render size.
+
+**`min-*` / `max-*` are mostly the anti-pattern.** A `max-w-[260px]` on a card, a
+`w-[72px]` on an icon, a `min-h-[16rem]` on a panel — each pins *scale* onto the
+component, fighting the fill model. Replace them: the leaf becomes `size-full` /
+`w-full`, and the per-band scale moves to the slot its parent owns. Two kinds of
+`min`/`max` are **not** scale-pins and stay:
+
+- **Layout plumbing** — `min-w-0`, `min-h-0`, `minmax(0,1fr)`. These *enable* fill
+  and shrink (they let a flex/grid child collapse below its content); keep them.
+- **Intrinsic shape** — a component's own form, not its scale. An accessible
+  tap-target floor (`min-h-[44px]` on a button) and a readable line-length cap
+  (`max-w-[90rem]` on a block of prose) describe *what the component is*, and by
+  "the component defines its shape" they belong to the component. Keep these; they
+  are the shape side of the line, not the scale side.
+
+The test: does the value say *what proportions this thing has* (shape → keep) or
+*how big it renders* (scale → dissolve into fill + a parent-owned per-band size)?
 
 ## style.rs and the `classes!` macro
 
@@ -1022,10 +1065,11 @@ carries the shared appearance — here the laptop-and-up default, since it cover
 of the six bands — and the touch bands override only what genuinely differs. A `BASE`
 value that every band overrides is dead weight: delete it. `vw` appears only on the
 bar's *own* dimensions (`min-h`, `gap`, `py`) — the bar is full-bleed, so `vw` there
-is just a fraction of its own width. `clamp()` earns its place exactly once: the bar's
-`min-height`, bounding it against too-thin on small laptops and too-tall on 4K. It
-never appears inside a `cqi` drawing, where a floor or a cap would pin the proportional
-scaling and break it.
+is just a fraction of its own width. The bar's `min-height` is an explicit
+**per-band step** (`laptop:min-h-18` growing to `uhd:min-h-34`) — chosen per band,
+never a `clamp` (see the no-`clamp` rule above). No `clamp` appears anywhere, and
+nothing pins the `cqi` drawings with a floor or cap that would break their
+proportional scaling.
 
 **Canonical, LSP-validated classes.** Reach for the real Tailwind utility or theme
 token before a raw arbitrary value: `@container` (not `[container-type:inline-size]`),
@@ -1053,14 +1097,12 @@ disclaimer — so it proves the same model holds on that axis. Read it beside th
 header when your component is text rather than controls; it is a shorter walk
 because the same rules produce a smaller tree.
 
-**A full-bleed bar owns its defining dimension in `vw` + `clamp`.** The header's
-defining dimension is its height (`min-h-[clamp(4rem,4.2vw,8.5rem)]`); the footer's
-is its font size (`text-[clamp(0.7rem,0.8vw,0.9rem)]`) — the same
-`vw`-with-a-floor-and-ceiling knob, one axis over. But the footer is fine print, so
-that font barely changes across the whole width range: the rem floor keeps it legible
-on a phone, the rem ceiling keeps it from ballooning on 4K, and the gentle `vw`
-between leaves it nearly flat — that flatness is the point, a footer should not grow
-into a banner on a big screen. That one font size is the footer's single knob.
+**A full-bleed bar owns its defining dimension as one token.** The header's
+defining dimension is its height (a per-band step, `laptop:min-h-18` …
+`uhd:min-h-34`); the footer's is its font size (`text-xs`) — the same single-knob
+idea, one axis over. The footer is fine print, so that one small type step holds
+flat across the whole width range — legible on a phone, never ballooning into a
+banner on 4K. That single font token is the footer's one knob.
 
 **Leaves scale in `em` off that knob — never `px`/`rem`/`vw` inside a leaf.** Every
 glyph, gap, and icon expresses its length in `em` (`w-[1.15em]` for the heart and
@@ -1074,12 +1116,12 @@ bar, so any leaf that later needs to measure the bar in `cqi` still can.
 
 **Size flows through the box: the bar owns it, the leaf fills it.** No leaf writes a
 size of its own; each sizes its parts as `em` fractions of the one font the bar
-hands down. Change the `clamp` and the credit, heart, link icons, separators, and
-disclaimer all rescale together, still centered, still wrapping.
+hands down. Change the `text-xs` knob and the credit, heart, link icons,
+separators, and disclaimer all rescale together, still centered, still wrapping.
 
 **There are no per-band overrides — the whole footer lives in `BASE`.** Unlike the
 header, whose touch bands genuinely differ, the footer renders the same at every
-width: one font clamp, one uniform padding, one vertical rhythm, all in `BASE`, with
+width: one font token, one uniform padding, one vertical rhythm, all in `BASE`, with
 `MOBILE` through `UHD` empty. It needs no safe-area insets because the shell drops
 `viewport-fit=cover`, so the browser keeps the whole app clear of device edges and no
 shell component reaches for `env(safe-area-inset-*)`. This is the lesson the footer

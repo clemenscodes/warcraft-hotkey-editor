@@ -1,6 +1,9 @@
 use tw_macro::tw;
 classes! {
-    base: tw!["relative"],
+    base: tw![
+        "relative",
+        "w-[8.25rem]",
+    ],
     mobile: tw![
         "mobile:shrink-0",
         "mobile:w-[95px]",

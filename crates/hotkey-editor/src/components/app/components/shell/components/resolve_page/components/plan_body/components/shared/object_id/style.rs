@@ -5,5 +5,5 @@ classes! {
         "text-lg",
         "flex-none",
     ],
-    mobile: tw!["mobile:text-[max(0.5rem,min(1.35rem,calc((100vw_-_88px)/35)))]"],
+    mobile: tw!["mobile:text-xs"],
 }

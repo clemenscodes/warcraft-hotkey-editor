@@ -3,8 +3,8 @@ classes! {
     base: tw![
         "flex-none",
         "m-0",
-        "px-[1.6rem]",
-        "py-[0.55rem]",
+        "px-6",
+        "py-2",
         "border",
         "border-warcraft-gold",
         "rounded-card",

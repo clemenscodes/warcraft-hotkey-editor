@@ -9,6 +9,6 @@ classes! {
     ],
     mobile: tw![
         "mobile:flex-col",
-        "mobile:gap-[0.6rem]",
+        "mobile:gap-2.5",
     ],
 }

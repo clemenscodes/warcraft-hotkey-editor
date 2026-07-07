@@ -11,7 +11,7 @@ classes! {
         "bg-panel-dark-solid-2",
         "border-l",
         "border-l-warcraft-gold/30",
-        "[box-shadow:-6px_0_40px_color-mix(in_oklab,var(--color-warcraft-shadow)_85%,transparent)]",
+        "[box-shadow:var(--shadow-drawer)]",
         "flex",
         "flex-col",
         "translate-x-0",

@@ -9,7 +9,7 @@ classes! {
         "flex",
         "flex-col",
         "items-center",
-        "gap-[7px]",
+        "gap-2",
         "max-w-full",
     ],
 }

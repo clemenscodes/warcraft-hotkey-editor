@@ -12,7 +12,7 @@ classes! {
         "mobile:flex-row",
         "mobile:flex-none",
         "mobile:w-full",
-        "mobile:gap-[0.5rem]",
+        "mobile:gap-2",
     ],
     tablet: tw![
         "tablet:flex-[0_0_18rem]",

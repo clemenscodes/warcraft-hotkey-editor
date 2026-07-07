@@ -11,15 +11,15 @@ classes! {
         "last:[border-bottom:1px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_14%,transparent)]",
     ],
     mobile: tw![
-        "mobile:gap-[0.75rem]",
-        "mobile:px-[0.5rem]",
-        "mobile:py-[0.7rem]",
+        "mobile:gap-3",
+        "mobile:px-2",
+        "mobile:py-3",
         "mobile:[touch-action:pan-y]",
     ],
     tablet: tw![
-        "tablet:gap-[0.75rem]",
-        "tablet:px-[0.5rem]",
-        "tablet:py-[0.7rem]",
+        "tablet:gap-3",
+        "tablet:px-2",
+        "tablet:py-3",
         "tablet:[touch-action:pan-y]",
     ],
 }

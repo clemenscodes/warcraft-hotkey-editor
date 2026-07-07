@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "text-base",
         "leading-title",
-        "pb-[0.1rem]",
+        "pb-0.5",
         "overflow-hidden",
         "text-ellipsis",
         "whitespace-nowrap",

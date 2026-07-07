@@ -10,6 +10,6 @@ classes! {
         "whitespace-nowrap",
         "group-data-[regen=true]:text-warcraft-gold/70",
         "group-data-[primary=true]:text-warcraft-gold",
-        "group-data-[regen=true]:text-[clamp(1.3rem,0.85rem+0.32vw,1.75rem)]",
+        "group-data-[regen=true]:text-xl",
     ],
 }

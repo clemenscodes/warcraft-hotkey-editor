@@ -14,7 +14,7 @@ classes! {
         "bg-warcraft-gold-dark/55",
         "border",
         "border-warcraft-gold-border",
-        "rounded-[0.25rem]",
+        "rounded-control",
         "cursor-pointer",
         "transition-[border-color,background]",
         "duration-[0.12s]",

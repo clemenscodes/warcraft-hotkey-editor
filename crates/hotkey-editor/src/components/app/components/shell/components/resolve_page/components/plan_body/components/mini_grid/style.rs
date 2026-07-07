@@ -8,11 +8,10 @@ classes! {
     base: tw![
         "flex-[1_1_auto]",
         "w-full",
-        "max-w-[260px]",
         "min-w-0",
         "[container-type:inline-size]",
         "pointer-events-none",
-        "p-[4px]",
+        "p-1",
         "bg-warcraft-bg-panel/70",
         "border",
         "border-warcraft-blue",
@@ -22,5 +21,4 @@ classes! {
         "[&_.empty-tile]:rounded-[1.04cqi]!",
         "[&_.filled-tile]:rounded-[1.04cqi]!",
     ],
-    mobile: tw!["mobile:max-w-[max(130px,32vw)]"],
 }

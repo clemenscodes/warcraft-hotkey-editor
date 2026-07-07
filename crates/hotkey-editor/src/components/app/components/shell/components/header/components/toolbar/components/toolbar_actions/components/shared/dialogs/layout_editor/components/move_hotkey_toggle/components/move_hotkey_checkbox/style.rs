@@ -18,7 +18,7 @@ classes! {
         "hover:bg-warcraft-gold/12",
         "hover:shadow-glow-8",
         "checked:bg-warcraft-gold/18",
-        "checked:[box-shadow:inset_0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]",
+        "checked:[box-shadow:var(--shadow-inset-gold-glow)]",
         "checked:after:content-['']",
         "checked:after:w-[0.6rem]",
         "checked:after:h-[1.05rem]",

@@ -5,6 +5,6 @@ classes! {
         "flex-col",
         "gap-2",
     ],
-    mobile: tw!["mobile:gap-[4px]"],
-    tablet: tw!["tablet:gap-[4px]"],
+    mobile: tw!["mobile:gap-1"],
+    tablet: tw!["tablet:gap-1"],
 }

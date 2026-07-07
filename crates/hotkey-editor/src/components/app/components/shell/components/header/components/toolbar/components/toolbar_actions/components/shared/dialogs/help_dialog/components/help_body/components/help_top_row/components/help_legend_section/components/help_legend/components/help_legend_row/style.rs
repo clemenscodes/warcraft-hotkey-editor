@@ -3,6 +3,6 @@ classes! {
     base: tw![
         "flex",
         "items-center",
-        "gap-[1.2rem]",
+        "gap-5",
     ],
 }

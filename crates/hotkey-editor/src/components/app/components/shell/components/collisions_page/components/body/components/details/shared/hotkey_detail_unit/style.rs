@@ -8,5 +8,6 @@ classes! {
         "cursor-pointer",
         "leading-[0]",
         "flex-none",
+        "size-20",
     ],
 }

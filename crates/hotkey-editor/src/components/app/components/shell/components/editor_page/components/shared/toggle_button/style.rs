@@ -34,8 +34,8 @@ classes! {
         "data-[active=true]:text-warcraft-gold",
         "data-[active=true]:shadow-glow-12",
     ],
-    mobile: tw!["mobile:text-base", "mobile:px-[0.6rem]"],
-    tablet: tw!["tablet:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]", "tablet:px-4"],
-    laptop: tw!["laptop:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]", "laptop:px-4"],
-    desktop: tw!["desktop:text-[clamp(1rem,0.5vw+0.7rem,1.4rem)]", "desktop:px-4"],
+    mobile: tw!["mobile:text-base", "mobile:px-2.5"],
+    tablet: tw!["tablet:text-md", "tablet:px-4"],
+    laptop: tw!["laptop:text-md", "laptop:px-4"],
+    desktop: tw!["desktop:text-md", "desktop:px-4"],
 }

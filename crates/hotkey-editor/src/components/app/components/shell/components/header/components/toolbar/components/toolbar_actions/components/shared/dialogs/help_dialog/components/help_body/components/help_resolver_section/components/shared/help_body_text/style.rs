@@ -2,9 +2,10 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "m-0",
-        "text-[1.6rem]/[1.6]",
+        "text-xl",
+        "leading-relaxed",
         "text-warcraft-text-primary",
     ],
-    mobile: tw!["mobile:text-[1.4rem]/[1.5]"],
-    tablet: tw!["tablet:text-[1.4rem]/[1.5]"],
+    mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
+    tablet: tw!["tablet:text-lg", "tablet:leading-prose"],
 }

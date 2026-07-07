@@ -6,7 +6,7 @@ classes! {
         "right-[-6px]",
         "min-w-[19px]",
         "h-[19px]",
-        "px-[4px]",
+        "px-1",
         "box-border",
         "inline-flex",
         "items-center",

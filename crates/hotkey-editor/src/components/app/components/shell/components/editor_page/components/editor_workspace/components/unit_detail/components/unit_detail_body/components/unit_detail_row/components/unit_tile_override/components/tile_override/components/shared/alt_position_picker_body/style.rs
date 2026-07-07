@@ -8,6 +8,6 @@ classes! {
         "flex-col",
         "items-center",
         "gap-6",
-        "p-[2rem_2.5rem_2.5rem]",
+        "pt-8", "px-10", "pb-10",
     ],
 }

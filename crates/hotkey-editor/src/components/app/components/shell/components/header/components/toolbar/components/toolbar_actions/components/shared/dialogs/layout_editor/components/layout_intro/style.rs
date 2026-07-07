@@ -4,7 +4,7 @@ classes! {
         "flex",
         "flex-col",
         "items-center",
-        "gap-[0.7rem]",
+        "gap-3",
         "m-0",
         "text-center",
         "text-shadow-drop",
