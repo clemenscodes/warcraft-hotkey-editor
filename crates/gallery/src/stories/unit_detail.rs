@@ -1,7 +1,7 @@
 use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailPanel;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetail;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGrids;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_header::UnitDetailHeader;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_header::components::unit_detail_title::components::unit_name_row::components::hero_level_picker::components::hero_level_menu::components::hero_level_option::HeroLevelOption;
@@ -96,13 +96,13 @@ pub fn stories() -> Vec<Story> {
         ),
         Story::new(
             "Unit detail",
-            "UnitDetailPanel",
+            "UnitDetail",
             "Footman",
             unit_detail_panel_footman,
         ),
         Story::new(
             "Unit detail",
-            "UnitDetailPanel",
+            "UnitDetail",
             "Archmage",
             unit_detail_panel_archmage,
         ),
@@ -356,7 +356,7 @@ fn unit_detail_panel_footman() -> Element {
     let active_race = use_signal(|| Race::Human);
     rsx! {
         EditorMount {
-            UnitDetailPanel {
+            UnitDetail {
                 active_race,
                 selected_unit_id,
             }
@@ -369,7 +369,7 @@ fn unit_detail_panel_archmage() -> Element {
     let active_race = use_signal(|| Race::Human);
     rsx! {
         EditorMount {
-            UnitDetailPanel {
+            UnitDetail {
                 active_race,
                 selected_unit_id,
             }

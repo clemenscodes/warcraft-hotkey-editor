@@ -20,7 +20,7 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
     EditorTileKind, GridEditorTileProps,
 };
 use super::keys_mount::CustomKeysMount;
-use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CustomKeys, GridCoordinate, HotkeyToken, RenderedTile,
@@ -94,7 +94,7 @@ fn layout_editor_default() -> Element {
     let layout_dialog_open = use_signal(|| true);
     let update_hotkeys_on_move = use_signal(|| true);
     rsx! {
-        ToastMount {
+        Toasts {
             CustomKeysMount {
                 loaded_keys,
                 LayoutEditor {
@@ -114,7 +114,7 @@ fn templates_dialog_open_story() -> Element {
     let upload_status = use_signal(|| UploadStatus::Idle);
     let templates_dialog_open = use_signal(|| true);
     rsx! {
-        ToastMount {
+        Toasts {
             TemplatesDialog {
                 loaded_keys,
                 upload_status,

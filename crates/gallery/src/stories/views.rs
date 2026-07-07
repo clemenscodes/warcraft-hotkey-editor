@@ -1,7 +1,7 @@
 use super::fixtures::{sample_grid_layout, sample_keys};
 use dioxus::prelude::*;
 use gallery::Story;
-use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 
 use hotkey_editor::components::app::components::shell::components::collisions_page::CollisionsPage;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
@@ -88,7 +88,7 @@ fn collisions_page_unit_positions() -> Element {
 fn resolve_page_story() -> Element {
     provide_page_contexts();
     rsx! {
-        ToastMount {
+        Toasts {
             ResolvePage { entry: None }
         }
     }

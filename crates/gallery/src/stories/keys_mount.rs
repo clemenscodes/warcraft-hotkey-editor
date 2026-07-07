@@ -8,7 +8,7 @@ use warcraft_keybinds::CustomKeys;
 /// presentational majority needs no such wrapper — it takes its slice of the
 /// document as props and renders directly. Lives with the stories, not in the
 /// generic gallery framework, which stays domain-agnostic. This is the analogue
-/// of a Storybook decorator, mirroring `ToastMount` for the toast context.
+/// of a Storybook decorator, mirroring `Toasts` for the toast context.
 #[component]
 pub fn CustomKeysMount(loaded_keys: Signal<Option<CustomKeys>>, children: Element) -> Element {
     use_context_provider(|| CustomKeysService::new(loaded_keys));

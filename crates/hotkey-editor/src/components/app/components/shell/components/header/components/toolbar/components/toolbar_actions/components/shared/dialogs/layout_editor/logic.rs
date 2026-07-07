@@ -24,9 +24,6 @@ impl From<&LayoutEditorModel> for DialogProps {
         let apply = ApplyButtonProps {
             on_apply: model.on_apply,
         };
-        let footer = Some(rsx! {
-            ApplyButton { ..apply }
-        });
         let grid = LayoutGridProps {
             cells: model.cells.clone(),
         };
@@ -39,8 +36,10 @@ impl From<&LayoutEditorModel> for DialogProps {
                 LayoutIntro {}
                 LayoutGrid { ..grid }
                 MoveHotkeyToggle { ..toggle }
+                ApplyButton { ..apply }
             }
         };
+        let footer: Option<Element> = None;
         let on_open_change = Some(model.on_dialog_open_change);
         Self {
             open,

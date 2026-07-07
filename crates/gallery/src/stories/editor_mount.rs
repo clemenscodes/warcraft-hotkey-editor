@@ -13,7 +13,7 @@ use warcraft_keybinds::{CustomKeys, GridSlotId};
 /// chosen grid layout, and the editor's UI-state bag. Every field is a fresh signal
 /// seeded with the same default the app shell uses, so a presentational story renders
 /// as it would in the live editor. Lives with the stories, mirroring `CustomKeysMount`
-/// and `ToastMount`, and stays out of the domain-agnostic gallery framework.
+/// and `Toasts`, and stays out of the domain-agnostic gallery framework.
 #[component]
 pub fn EditorMount(children: Element) -> Element {
     let loaded_keys = use_signal(|| None::<CustomKeys>);

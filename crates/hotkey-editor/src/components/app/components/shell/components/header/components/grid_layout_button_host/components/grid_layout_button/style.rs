@@ -1,10 +1,12 @@
 use tw_macro::tw;
-// Fills its host container and draws itself as one cqi-scaled drawing: it takes the host's
-// full box (`size-full`) — the host owns the `aspect-[39/10]` shape and gets its size from
-// the header — and expresses every interior length — padding, gap, border, radius, font,
-// glow — as a `cqi` fraction of the host box. Make the host taller and the whole button
-// scales up in proportion; there is no fixed length left inside. The header sizes the host
-// off the shared row height, so the button grows coherently from laptop through 4K.
+// Fills its host container and draws its structure as a cqi-scaled drawing: it takes the
+// host's full box (`size-full`) — the host owns the `aspect-[39/10]` shape and gets its
+// size from the header — and expresses every interior *layout* length — padding, gap,
+// border, radius, font — as a `cqi` fraction of the host box, so making the host taller
+// scales the button up in proportion. The gold glow and focus ring are the shared design
+// tokens (`shadow-glow-soft` at rest, `shadow-glow-strong` on hover, `shadow-focus` on
+// focus) that every gold button wears — a glow is shared vocabulary, not a per-button
+// reinvention. The header sizes the host off the shared row height.
 
 classes! {
     base: tw![
@@ -23,13 +25,14 @@ classes! {
         "font-medium",
         "cursor-pointer",
         "bg-panel-gold-resting",
-        "[box-shadow:0_0_5.88cqi_color-mix(in_oklab,var(--color-warcraft-gold)_22%,transparent)]",
+        "shadow-glow-soft",
         "transition-[background,box-shadow,transform]", "duration-fast",
         "focus:outline-none",
         "focus-visible:border-white",
         "focus-visible:text-white",
-        "focus-visible:[box-shadow:0_0_0_0.8cqi_var(--color-warcraft-highlight),0_0_4.81cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
-        "hover:bg-panel-gold",
-        "hover:[box-shadow:0_0_6.94cqi_color-mix(in_oklab,var(--color-warcraft-gold)_55%,transparent),inset_0_0_3.74cqi_color-mix(in_oklab,var(--color-warcraft-gold)_15%,transparent)]",
+        "focus-visible:[--focus-color:var(--color-warcraft-highlight)]",
+        "focus-visible:shadow-focus",
+        "hover:bg-panel-gold-active",
+        "hover:shadow-glow-strong",
     ],
 }

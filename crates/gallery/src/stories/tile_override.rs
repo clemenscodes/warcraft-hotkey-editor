@@ -2,7 +2,7 @@ use super::fixtures;
 use dioxus::prelude::*;
 use gallery::Story;
 use super::keys_mount::CustomKeysMount;
-use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::alt_state_section::AltStateSection;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKey;
@@ -226,7 +226,7 @@ fn alt_position_picker_open() -> Element {
     let alt_position_picker_open = use_signal(|| true);
     rsx! {
         EditorMount {
-            ToastMount {
+            Toasts {
                 AltPositionPicker {
                     object_id,
                     display_name,
@@ -247,7 +247,7 @@ fn upgrade_position_picker_open() -> Element {
     let upgrade_position_picker_open = use_signal(|| true);
     rsx! {
         EditorMount {
-            ToastMount {
+            Toasts {
                 UpgradePositionPicker {
                     upgrade_unit_id,
                     display_name,

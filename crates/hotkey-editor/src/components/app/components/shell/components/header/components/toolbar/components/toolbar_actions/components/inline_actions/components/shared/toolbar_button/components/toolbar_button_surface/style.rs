@@ -16,10 +16,11 @@ classes! {
         "focus:outline-none",
         "focus-visible:border-white",
         "focus-visible:text-white",
-        "focus-visible:[box-shadow:0_0_0_3.75cqi_var(--color-warcraft-highlight),0_0_20cqi_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent)]",
+        "focus-visible:[--focus-color:var(--color-warcraft-highlight)]",
+        "focus-visible:shadow-focus",
         "hover:border-warcraft-gold",
         "hover:text-warcraft-gold",
         "hover:bg-panel-gold-active",
-        "hover:[box-shadow:0_0_15cqi_color-mix(in_oklab,var(--color-warcraft-gold)_30%,transparent)]",
+        "hover:shadow-glow",
     ],
 }

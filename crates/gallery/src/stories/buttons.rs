@@ -13,7 +13,7 @@ use hotkey_editor::components::app::components::shell::components::header::compo
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::templates_button::TemplatesButton;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::undo_button::UndoButton;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::upload_button::UploadButton;
-use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 use hotkey_editor::services::customkeys::service::CustomKeysService;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::services::navigation::app_view::AppView;
@@ -162,7 +162,7 @@ fn upload_button() -> Element {
     use_context_provider(|| custom_keys_service);
     use_context_provider(|| upload_status);
     rsx! {
-        ToastMount {
+        Toasts {
             UploadButton {}
         }
     }

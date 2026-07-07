@@ -15,7 +15,7 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid::components::grid_tile::GridTileState;
 
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid_heading::GridHeading;
-use hotkey_editor::components::app::components::shell::components::toasts::ToastMount;
+use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 
 use hotkey_editor::services::editor_state::{
     DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile,
@@ -305,7 +305,7 @@ fn grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let update_hotkeys_on_move = use_signal(move || update_hotkeys);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        ToastMount {
+        Toasts {
             CustomKeysMount {
                 loaded_keys,
                 CommandGridEditor {
@@ -345,7 +345,7 @@ fn grid_editor_footman() -> Element {
     let update_hotkeys_on_move = use_signal(|| true);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        ToastMount {
+        Toasts {
             CustomKeysMount {
                 loaded_keys,
                 CommandGridEditor {
