@@ -1,12 +1,11 @@
 use super::AbilityBinding;
 use super::AbilityModifier;
-use super::AbilitySlotData;
 use super::CommandBinding;
 use super::GridCoordinate;
 use super::Hotkey;
-use super::ResearchSlotData;
 use super::SystemBinding;
 use super::WarcraftKeybinding;
+use super::ability_binding::{AbilitySlotData, ResearchSlotData};
 use warcraft_api::{
     SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId, WarcraftObjectKind,
 };
@@ -222,23 +221,25 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
     fn from(accumulator: SectionAccumulator) -> Self {
         match accumulator.kind {
             SectionKind::Command => {
-                let command_binding = CommandBinding {
-                    hotkey: accumulator.hotkey,
-                    button_position: accumulator.button_position,
-                    unbutton_position: accumulator.unbutton_position,
-                    tip: accumulator.tip,
-                    un_tip: accumulator.un_tip,
-                };
+                let hotkey = accumulator.hotkey;
+                let button_position = accumulator.button_position;
+                let unbutton_position = accumulator.unbutton_position;
+                let tip = accumulator.tip;
+                let un_tip = accumulator.un_tip;
+                let command_binding = CommandBinding::from_parts(
+                    hotkey,
+                    button_position,
+                    unbutton_position,
+                    tip,
+                    un_tip,
+                );
                 Self::Command(command_binding)
             }
             SectionKind::System(class) => {
                 let missing_hotkey = Hotkey::VirtualKey(0);
                 let hotkey = accumulator.hotkey.unwrap_or(missing_hotkey);
-                let system_binding = SystemBinding {
-                    hotkey,
-                    class,
-                    modifier: accumulator.system_modifier,
-                };
+                let modifier = accumulator.system_modifier;
+                let system_binding = SystemBinding::new(hotkey, class, modifier);
                 Self::System(system_binding)
             }
             SectionKind::Ability => {
@@ -262,12 +263,9 @@ impl From<SectionAccumulator> for WarcraftKeybinding {
                     tip: accumulator.research_tip,
                     ubertip: accumulator.research_ubertip,
                 };
-                let ability_binding = AbilityBinding {
-                    primary: primary_slot,
-                    alt: alt_slot,
-                    research: research_slot,
-                    modifier: accumulator.modifier,
-                };
+                let modifier = accumulator.modifier;
+                let ability_binding =
+                    AbilityBinding::from_parts(primary_slot, alt_slot, research_slot, modifier);
                 Self::Ability(ability_binding)
             }
         }
