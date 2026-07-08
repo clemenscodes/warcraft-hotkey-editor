@@ -171,6 +171,7 @@ dependencies = [
 [[package]]
 name = "browser-kit"
 version = "0.1.0"
+source = "git+https://github.com/clemenscodes/browser-kit?tag=v0.1.0#b7fda3918729bbae1f8212bf8361d996edce489f"
 dependencies = [
  "base64",
  "flate2",
@@ -199,9 +200,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "bytes"
-version = "1.12.0"
+version = "1.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ae3f5d315924270530207e2a68396c3cc547f6dca3fbdca317cfb1a51edb593"
+checksum = "fc652a48c352aef3ea3aed32080501cf3ef6ed5da78602a020c991775b0aff04"
 dependencies = [
  "serde",
 ]
@@ -524,6 +525,7 @@ checksum = "a4ae5f15dda3c708c0ade84bfee31ccab44a3da4f88015ed22f63732abe300c8"
 [[package]]
 name = "ddd"
 version = "0.1.0"
+source = "git+https://github.com/clemenscodes/ddd?tag=v0.1.0#a1d0caca8983313fd45ddb2ffce9f6adf404a338"
 
 [[package]]
 name = "deranged"
@@ -838,6 +840,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "dioxus-gallery"
+version = "0.1.0"
+source = "git+https://github.com/clemenscodes/dioxus-gallery?tag=v0.1.0#169e3ad2e403ff5bcc1c9eba4af20fb9ca810747"
+dependencies = [
+ "dioxus",
+]
+
+[[package]]
 name = "dioxus-history"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -918,6 +928,7 @@ dependencies = [
 [[package]]
 name = "dioxus-kit"
 version = "0.1.0"
+source = "git+https://github.com/clemenscodes/dioxus-kit?tag=v0.1.0#cebc0b6928839ab80aedca46eaaa58e6bee03f87"
 dependencies = [
  "dioxus",
 ]
@@ -1294,6 +1305,7 @@ name = "gallery"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "dioxus-gallery",
  "hotkey-editor",
  "warcraft-api",
  "warcraft-database",
@@ -1957,9 +1969,9 @@ checksum = "47e1ffaa40ddd1f3ed91f717a33c8c0ee23fff369e3aa8772b9605cc1d22f4c3"
 
 [[package]]
 name = "memchr"
-version = "2.8.2"
+version = "2.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88904434abc2901f197fe8cc55f0445e7ded921dba5911dad2e2b39b48e663c4"
+checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
 name = "memfd"
@@ -2638,9 +2650,9 @@ dependencies = [
 
 [[package]]
 name = "rustversion"
-version = "1.0.22"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
+checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
 
 [[package]]
 name = "ryu"
@@ -3273,6 +3285,7 @@ dependencies = [
 [[package]]
 name = "tw-macro"
 version = "0.1.0"
+source = "git+https://github.com/clemenscodes/tw-macro?tag=v0.1.0#808419381ac46c32e1abc3a9a344c346dd9fa800"
 dependencies = [
  "dioxus",
 ]
@@ -3375,7 +3388,7 @@ dependencies = [
 [[package]]
 name = "warcraft-api"
 version = "0.1.0"
-source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.1.0#6adf61ca1d69d199afa1684a49291d822d6a434f"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.2.0#233dd9f02738df648ce06ccd1908810f7760092e"
 dependencies = [
  "serde",
  "serde_json",
@@ -3384,7 +3397,7 @@ dependencies = [
 [[package]]
 name = "warcraft-database"
 version = "0.1.0"
-source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.1.0#6adf61ca1d69d199afa1684a49291d822d6a434f"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.2.0#233dd9f02738df648ce06ccd1908810f7760092e"
 dependencies = [
  "warcraft-api",
 ]
@@ -3392,6 +3405,7 @@ dependencies = [
 [[package]]
 name = "warcraft-keybinds"
 version = "0.1.0"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.2.0#233dd9f02738df648ce06ccd1908810f7760092e"
 dependencies = [
  "ddd",
  "warcraft-api",
@@ -3756,18 +3770,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.52"
+version = "0.8.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce1022995ff5ff5d841ad7d994facc23098cd40152f2c1d11cd607c6f530653f"
+checksum = "75726053136156d419e285b9b7eddaaea9e3fea6ce32eed44a89901f0bd98de1"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.52"
+version = "0.8.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ae7f38b72ec2a254e2b87ef277cf2cd4fb97cbebf944faa6f33354da0867930"
+checksum = "4714fd92cf900833d49538023a9b3915155210801d1c1169eba513b2addefd71"
 dependencies = [
  "proc-macro2",
  "quote",

@@ -237,10 +237,12 @@ a third, and "it felt like it belonged there" is not one of them.
    plural group directory (`grid_editors/grid_editor/` beside
    `grid_editors/command_grid_editor/`), and the variants reach the base with
    `super::grid_editor::…`. This applies **only** when the wrapper binds the
-   base's generic type parameter, or fills a slot/body the base exposes (the
-   `Dialog` case). It does **not** cover "this wrapper just reuses that leaf" —
-   that is exception 1 if the leaf has several renderers, or plain nesting if it
-   has one. (See "Base and variants are flat".)
+   base's generic **behavior** type parameter (the way `CommandGridEditor` binds
+   `GridEditor`'s `GridBehavior`). There is **no** "fills a slot/body the base
+   exposes" case — a base that receives a body is `children: Element`, forbidden
+   above. It does **not** cover "this wrapper just reuses that leaf" — that is
+   exception 1 if the leaf has several renderers, or plain nesting if it has one.
+   (See "Base and variants are flat".)
 
 If neither pattern fits exactly, there is no exception — nest it. When unsure
 which case you are in, **count the render sites**; that number, never your
@@ -962,9 +964,10 @@ pub fn CommandGridEditor(props: GridEditorConfig) -> Element {
 ## Base and variants are flat, not nested
 
 This is **exception 2** to "The render tree IS the directory tree", and it applies
-*only* when a variant wrapper binds the base's generic type parameter or fills a
-slot/body the base exposes. Outside that, a component you render is your child —
-nest it.
+*only* when a variant wrapper binds the base's generic **behavior** type
+parameter. Outside that, a component you render is your child — nest it. There is
+no "fills a slot/body the base exposes" variant: a base that receives a body is
+`children: Element`, forbidden.
 
 A generic base and its variant wrappers are siblings under one plural group
 directory. Variants are never subcomponents of the base, since they depend on
@@ -985,16 +988,24 @@ directory equals component. Do not add grouping layers like `base/` or
 
 ## Two kinds of reuse: extend a base, or compose a leaf
 
-The variant pattern above is for a base that is generic over a behavior, where
-variants bind the type parameter. A `Dialog` base owns the dialog shell and its
-chrome CSS, and each concrete dialog is a variant that fills the body, the way
-`CommandGridEditor` wraps `GridEditor`. Shell sizing, scrollbar, and backdrop
-rules live once on the base, never copied per dialog.
+The variant pattern above is for a base that is generic over a **behavior**, where
+variants bind the type parameter (`CommandGridEditor` binds `GridEditor`'s
+`GridBehavior`). Binding a behavior type is the *only* thing a base is for.
+
+**A base is never a shell that receives a body.** There is no "the base owns the
+chrome and each variant fills the body" pattern — that is `children: Element` with
+extra steps, the exact anti-pattern this document forbids. A reused *frame* — a
+dialog shell, a card surface, a scrolling panel — is **not** a base. Each concrete
+instance owns its own shell markup, sharing the shell's utility-class **values**
+(never a wrapper that swallows a body) and nesting shared **leaves** by name. That
+is how `shell/header` and `shell/footer` — the only sanctioned role models — are
+built: they receive no markup, they *name* their typed children. When a dialog,
+card, or panel tempts you toward a body-slot base, do what the header does instead.
 
 A small shared piece that is not generic over a behavior is not a variant. A
 close button, a primary button, an edit panel are plain leaf components. They
 live once, own their class and CSS, and parents reuse them by nesting them in
-the tree, the way `Grid` drops in `HotkeyBadge`. Do not force a behavior
+the tree, the way a toolbar drops in `ToolbarButton`. Do not force a behavior
 parameter onto a button to make it look like a variant. Extend a base when there
 is a behavior to bind, compose a leaf when there is not.
 

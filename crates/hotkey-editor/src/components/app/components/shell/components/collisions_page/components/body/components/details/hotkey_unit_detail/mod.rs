@@ -2,11 +2,9 @@ mod components;
 mod data;
 mod logic;
 mod props;
+mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnit;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_grid::ConflictGrid;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::detail::Detail;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::detail_header::DetailHeader;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::collision_count::CollisionCount;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_unit_name::ConflictUnitName;
@@ -15,18 +13,20 @@ use components::hotkey_conflict_card::HotkeyConflictCard;
 use dioxus::prelude::*;
 use logic::HotkeyUnitDetailData;
 pub use props::HotkeyUnitDetailProps;
+use style::{DETAIL, GRID, HEADER};
 use tw_macro::assert_component;
-
 assert_component!(HotkeyUnitDetail);
 
-/// The hotkey-collision detail extension: resolves the selected unit into typed detail
-/// data and fills the base detail pane with its header and hotkey-conflict cards.
+/// The shared-hotkey detail pane: the selected unit's header over its conflict cards.
+/// It owns its own pane, header, and grid elements directly; renders the empty prompt
+/// when nothing is selected.
 #[component]
 pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let Some(data) = logic::selected(&props) else {
         return rsx! {
-            Detail {
-                is_empty: true,
+            section {
+                class: DETAIL,
+                "data-empty": true,
                 p { {data::EMPTY_PROMPT} }
             }
         };
@@ -39,8 +39,11 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
         cards,
     } = data;
     rsx! {
-        Detail {
-            DetailHeader {
+        section {
+            class: DETAIL,
+            "data-empty": false,
+            header {
+                class: HEADER,
                 ConflictDetailUnit { ..unit }
                 RowMeta {
                     ConflictUnitName { text: name }
@@ -48,7 +51,8 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
                     CollisionCount { count }
                 }
             }
-            ConflictGrid {
+            div {
+                class: GRID,
                 for card in cards {
                     HotkeyConflictCard { ..card }
                 }

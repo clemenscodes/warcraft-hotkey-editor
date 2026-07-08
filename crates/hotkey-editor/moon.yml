@@ -7,9 +7,6 @@ tags:
   - wasm
 language: rust
 
-dependsOn:
-  - warcraft-keybinds
-
 tasks:
   rust/build:
     toolchain: rust
@@ -80,7 +77,6 @@ tasks:
       runFromWorkspaceRoot: false
     deps:
       - tailwind/build
-      - warcraft-keybinds:rust/build
     inputs:
       - "@group(sources)"
       - "@group(configs)"

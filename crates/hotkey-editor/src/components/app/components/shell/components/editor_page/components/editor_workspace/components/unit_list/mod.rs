@@ -9,13 +9,11 @@ use components::catalog_visibility_toggle::CatalogVisibilityToggle;
 use components::mobile_category_tab::MobileCategoryTab;
 use components::search_field_toggle::SearchFieldToggle;
 use components::unit_category_section::UnitCategorySection;
-use components::unit_category_tabs::UnitCategoryTabs;
-use components::unit_list_scroll::UnitListScroll;
 use components::unit_list_search::UnitListSearch;
 use dioxus::prelude::*;
 use hooks::use_unit_list;
 pub use props::UnitListProps;
-use style::CLASS;
+use style::{CLASS, SCROLL, TABS, TRACK};
 use tw_macro::assert_component;
 use warcraft_api::UnitKind;
 assert_component!(UnitList);
@@ -32,8 +30,8 @@ pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
 }
 
 /// The unit sidebar: search, catalog toggles, mobile category tabs, and the
-/// scrollable category sections. Every child is fed by conversion from the
-/// composed hook.
+/// scrollable category sections. It owns its tab row, scroll region, and section
+/// track directly. Every child is fed by conversion from the composed hook.
 #[component]
 pub fn UnitList(props: UnitListProps) -> Element {
     let model = use_unit_list(&props);
@@ -45,16 +43,23 @@ pub fn UnitList(props: UnitListProps) -> Element {
             SearchFieldToggle { ..model.search_field_toggle }
             CatalogVisibilityToggle { ..model.catalog_visibility_toggle }
             UnitListSearch { ..model.search }
-            UnitCategoryTabs {
+            nav {
+                class: TABS,
+                role: "tablist",
+                aria_label: "Unit categories",
                 for tab in model.mobile_tabs {
                     MobileCategoryTab { key: "{unit_kind_data_attr(tab.kind)}", ..tab }
                 }
             }
-            UnitListScroll {
-                for section in model.sections {
-                    UnitCategorySection {
-                        key: "{unit_kind_data_attr(section.category_kind)}",
-                        ..section
+            div {
+                class: SCROLL,
+                div {
+                    class: TRACK,
+                    for section in model.sections {
+                        UnitCategorySection {
+                            key: "{unit_kind_data_attr(section.category_kind)}",
+                            ..section
+                        }
                     }
                 }
             }

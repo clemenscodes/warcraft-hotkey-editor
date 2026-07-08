@@ -1,6 +1,6 @@
 use super::fixtures;
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use super::keys_mount::CustomKeysMount;
 use super::toast_mount::ToastMount;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_card::components::ability_description::AbilityDescription;

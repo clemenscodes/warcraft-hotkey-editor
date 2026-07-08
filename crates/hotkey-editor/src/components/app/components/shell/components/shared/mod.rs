@@ -10,6 +10,5 @@ pub mod icons;
 pub mod key_picker_board;
 pub mod key_picker_board_host;
 pub mod mini_grid_frame;
-pub mod panel_card;
 pub mod selectable_entity_card;
 pub mod tooltip;

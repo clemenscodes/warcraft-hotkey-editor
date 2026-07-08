@@ -3,9 +3,8 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_icon::ConflictAbilityIcon;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::ConflictAbilityTrigger;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::{ConflictAbilityTrigger, ConflictAbilityTriggerProps};
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::conflict_more::ConflictMore;
@@ -30,13 +29,11 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
         ability_id,
         extra_count,
     } = use_island_conflict_ability(&props);
+    let trigger = ConflictAbilityTriggerProps { onclick, icon };
     rsx! {
         div {
             class: CLASS,
-            ConflictAbilityTrigger {
-                onclick,
-                ConflictAbilityIcon { ..icon }
-            }
+            ConflictAbilityTrigger { ..trigger }
             ConflictAbilityName { text: ability_name }
             ConflictObjectId { text: ability_id }
             if extra_count > 0 {

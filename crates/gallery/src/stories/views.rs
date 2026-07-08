@@ -1,7 +1,7 @@
 use super::fixtures::{sample_grid_layout, sample_keys};
 use super::toast_mount::ToastMount;
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 
 use hotkey_editor::components::app::components::shell::components::collisions_page::CollisionsPage;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;

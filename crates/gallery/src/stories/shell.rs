@@ -1,7 +1,7 @@
 use crate::stories::fixtures;
 use super::toast_mount::ToastMount;
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::footer::Footer;
 use hotkey_editor::components::app::components::shell::components::header::Header;
 use hotkey_editor::components::app::components::shell::components::header::components::brand_host::BrandHost;

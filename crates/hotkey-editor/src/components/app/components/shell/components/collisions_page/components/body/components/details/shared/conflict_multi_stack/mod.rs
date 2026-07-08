@@ -1,15 +1,17 @@
 mod props;
+mod style;
 
 use super::conflict_ability::ConflictAbility;
-use super::conflict_ability_row::ConflictAbilityRow;
 use super::conflict_marker_view::{ConflictMarkerView, ConflictMarkerViewProps};
 use dioxus::prelude::*;
 pub use props::ConflictMultiStackProps;
-
-/// The conflict marker stacked above every clashing ability; renders nothing when
-/// the clash is an exact pair (that layout is the pair row instead).
+use style::ABILITY_ROW;
 use tw_macro::assert_component;
 assert_component!(ConflictMultiStack);
+
+/// The stacked layout for a shared-key clash carried by three or more abilities: the
+/// key badge over a wrapping row of ability icons. It owns its own abilities row.
+/// Renders nothing when there are no abilities to stack.
 #[component]
 pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
     let abilities = props.abilities;
@@ -22,8 +24,9 @@ pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
     };
     rsx! {
         ConflictMarkerView { ..marker }
-        ConflictAbilityRow {
-            is_multi: true,
+        div {
+            class: ABILITY_ROW,
+            "data-multi": true,
             for ability in abilities {
                 ConflictAbility { ..ability }
             }

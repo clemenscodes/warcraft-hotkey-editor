@@ -20,30 +20,57 @@ value is not coupling); reuse a *piece* as a typed leaf nested by name. A generi
 selects typed **data** via a marker `B` and renders a **fixed** typed component via
 `From`; where variants render different components, there is no base — separate components.
 
-## ⚠️ State of the tree RIGHT NOW — do not trust it
+## ⚠️ State of the tree — do NOT reset to HEAD
 
-The working tree is **mid-refactor, uncommitted, and almost certainly does not compile.**
-This session ran a large "reuse dedup" campaign that (wrongly) created many
-`children: Element` wrapper components, then began ripping them out and was interrupted:
-- `details/` subtree: a DetailKind→typed rewrite was **killed mid-flight** (partial).
-- `matchup_grid`: rewritten to a `children: Element` leaf (still a violation).
-- Batch-6 focus/tracking edits applied but **never gated**.
-- Nothing is committed — **GPG signing is locked** (`git commit` times out; a hook forbids
-  `--no-gpg-sign`; the user must unlock the agent to commit).
+**IGNORE any advice to `git checkout HEAD -- .` / reset to `5ed3cfbc`.** That was verified WRONG:
+the current working tree has **fewer** `Element` violations than HEAD (HEAD is itself a messy
+mid-refactor `wip`), and it holds real, wanted work (the `hotkey_*`→`conflict_*` renames, the
++77-line `docs/COMPONENTS.md` rule this task depends on, a11y `kb-focus`, and several completed
+eradications below). Resetting is strictly negative — more violations to fix, real work destroyed.
+Work forward from the current tree. Re-grep the three "Done" greps to get the live count.
 
-**Recommended start:** reset to a clean, compiling baseline and do the eradication from
-there. Two options:
-- `git checkout HEAD -- .` — HEAD is `5ed3cfbc` (pristine, pre-session, compiles). **Recommended.**
-  The session's dedup wrappers are themselves violations you'd have to remove anyway, so
-  starting clean shrinks the surface. Note: the pre-existing violations (dialogs, sidebars,
-  stats, grid_editors) are all still present at HEAD — they are the real job.
-- Restore point `62decbeb` (a `git stash create` object = "waves 1-2 green"): keeps the
-  session's dedup structure, but that structure is full of the violations to remove. Not recommended.
-Only the legit, spec-aligned session bits (the `hotkey_*`→`conflict_*` rename, the
-`LayoutTileProps`→`GridCoordinate` typing, the a11y `kb-focus` additions) would be lost by a
-HEAD reset — cherry-pick them later if wanted; they are minor next to a clean base.
+## What the previous (fired) session did — 2026-07-08
 
-## The full inventory (current tree; re-grep after you pick a baseline)
+**DONE CORRECTLY, keep (all gated green earlier):**
+- **Stat panel** (`unit_stats_panel/`): rebuilt per [[per-data-point-components]] — 4 column
+  components, ~16 per-stat row components, shared leaves (`StatValue`/`StatGain`/`RegenQualifier`/
+  `StatFigure`). `StatRow<B>`/`StatRowKind`/`StatColumn`/`StatRows`/`MatchupGrid` deleted. Design
+  approved + visually verified. **Caveat:** rows still inline `span.LABEL` / (HP/Mana) `span.VALUE`
+  — those are TWO extra classes → per the cardinal rule they must become `StatLabel` / value
+  components. Minor, but not yet done.
+- **`page_state`** dissolved (ClearState/EmptyState now = one `section.CLASS` + component children ✓).
+- **`toasts`**: provider moved into `Shell`; gallery gets a bin-local `ToastMount` decorator
+  (`crates/gallery/src/stories/toast_mount.rs`) — `StoryFrame`/gallery LIB stays domain-agnostic
+  ([[gallery-generic-framework]] — do NOT put app types in `frame.rs`).
+- `CLAUDE.md` gained the dev-URL base path (`http://localhost:8123/warcraft-hotkey-editor/`, NOT `/`)
+  and the "don't wait on the stuck rebuild overlay — refresh" notes. e2e firefox full-suite flakes
+  under machine load: **never run a `tail -f` monitor during the e2e phase**, light-poll only, re-run clean.
+
+**DONE WRONG — must be REDONE per the cardinal rule (they INLINED wrappers → multi-class components):**
+The previous session dissolved these by deleting the wrapper and inlining its classed element into the
+consumer (multiple `class:` per component = the exact violation). Each must be **converted to a
+typed-props component** instead (see the corrected Fix pattern below). Clusters affected:
+- **resolve `plan_body`**: `move_row`, `unresolved_row`, `anchor_column`, `active_move_list`,
+  `unresolved_section` — inlined `move_card`, `fight_row`, `fight_column`, `move_transition`,
+  `transition_column`, `move_list`, `panel_card` (all deleted; need restoring as typed-props components).
+- **collisions conflict cards**: `island_conflict_card`, `hotkey_conflict_card`,
+  `unit_position_conflict_card` — inlined `conflict_card` + `panel_card`.
+- **unit_list**: inlined `unit_category_tabs`, `unit_list_scroll`, `unit_list_track`.
+- **tile_override**: inlined `tile_override_panel` (in `unit_detail_row`) + `alt_state_container`/
+  `alt_state_header`/`alt_state_header_text` (in `alt_state_section`, `upgrade_section`).
+- **collisions detail panes**: `hotkey_unit_detail`, `island_detail`, `unit_position_detail` —
+  inlined `detail`, `detail_header`, `conflict_grid`.
+- **collisions ability**: `conflict_ability`, `island_conflict_ability` inlined `conflict_ability_trigger`
+  (⚠️ `conflict_ability_trigger` was JUST restored as a typed-props component, but the two consumers
+  still reference a now-gone `TRIGGER` `ClassList` const → **tree is RED right now**);
+  `conflict_marker_view` inlined `conflict_hotkey_badge`; `conflict_multi_stack`, `conflict_pair_row`,
+  `island_conflict_card` inlined `conflict_ability_row`.
+
+**Recovery:** it is uncommitted, so the cleanest path for each wrong cluster is `git checkout -- <files>`
+to restore the original `children: Element` wrappers, then convert each wrapper `children` → typed props
+(NOT inline). Gate after each cluster. `git status`/`git diff` show exactly which files each cluster touched.
+
+## The full inventory (current tree — re-grep, counts have moved)
 
 Only allowed commands: **`moon run :ci`** (the one gate) and **`moon run :dev`**. Nothing else
 (no bare cargo/dx/playwright, no individual moon targets).
@@ -91,14 +118,40 @@ the pickers (`alt_position_picker`, `upgrade_position_picker`), the system-hotke
 These build a `children` variable and pass it to a Category-2 wrapper — they get fixed together with their wrapper:
 delete the wrapper, inline the rsx where it belongs.
 
-## Fix pattern (concrete)
-- **Wrapper `Foo { children }` consumed once with a fixed shape** → delete `Foo`; the consumer renders `Foo`'s
-  classed element + its specific typed children directly (move `Foo`'s class into the consumer's `style.rs`).
-- **Wrapper consumed by N siblings with the SAME shape** → it is a real leaf, but it must take **typed props**,
-  not `children`: give it the typed fields and have it render its own specific children.
-- **`XKind { fn f() -> Element }` where variants render the same leaf** → change `f` to return typed **props/data**;
-  the base renders the fixed leaf from them. **Different leaves** → delete the base+trait; separate components.
-- **`let children = rsx!{}`** → never; inline the markup at its destination once the wrapper is gone.
+## ⚠️⚠️ THE CARDINAL RULE THE LAST SESSION GOT WRONG — READ THIS FIRST ⚠️⚠️
+
+**ONE classed root element per component. Full stop.** (`docs/COMPONENTS.md`: *"The one piece of
+markup a Host owns is a single classed root that wraps its leaf."*) A component's body is exactly:
+**one element with a `class`, containing typed child components nested by name (or a `for` over data
+rendering one typed component).** Nothing else carries a class.
+
+**If a component's markup assigns `class:` to two or more elements, that is PROOF you failed to
+extract a component.** `div.A { div.B { … } }` is illegal — `div.B` must be its own component. This
+includes raw `ClassList` consts (`const PANEL: ClassList = …; div { class: PANEL, … }`) — those count
+as a class. There is no "leaf span" or "inline scaffold" loophole: `span.LABEL` + `span.VALUE` inside
+one row is already two extra classes → they are `StatLabel` / `StatValue` **components**.
+
+**So you DO NOT "dissolve" a `children: Element` wrapper by deleting it and inlining its classed
+element into the parent.** That is the exact mistake that produced multi-class components. You
+**CONVERT** the wrapper into a component that takes **typed props** instead of `children`, keeping its
+single classed root and naming its children by type. The wrapper stays a component; only its
+`children: Element` prop is replaced by the typed props of the specific children it wraps.
+
+## Fix pattern (concrete — CORRECTED)
+- **`Foo { children }` wrapping one typed component** (e.g. `Foo { Bar { ..x } }`) → `Foo` keeps its
+  single classed root; give it a **typed prop** `bar: BarProps` and render `root.CLASS { Bar { ..bar } }`.
+  Consumer passes `Foo { bar: x }`. **Never inline `Foo`'s root into the consumer.**
+- **`Foo { children }` wrapping several fixed typed components** → `Foo` takes one typed prop per child
+  (`a: AProps, b: BProps`) and renders `root.CLASS { A { ..a } B { ..b } }`.
+- **`Foo { children }` wrapping a `for` over data** → `Foo` takes the data (`items: Vec<ItemProps>` /
+  a `Signal`) and renders `root.CLASS { for it in items { Item { ..it } } }`.
+- **`Foo`'s children genuinely DIFFER per consumer** (a shared scaffold class worn by structurally
+  different content) → there is no single `Foo`; each consumer gets its **own** component that owns
+  the classed root and names its own children, and they **share the class VALUE** (same utilities
+  written in each `style.rs` — sharing a value is not coupling). Still one classed root each.
+- **`XKind { fn f() -> Element }`** → change `f` to return typed **props/data**; the base renders the
+  fixed leaf from them. Different leaves → separate components.
+- **`let children = rsx!{}`** → never; the markup becomes typed props on the (now typed) child component.
 
 ## e2e-coupled selectors to preserve (grep `crates/hotkey-editor/e2e` before renaming any class/attr)
 `.unit-card`, `data-unit-kind`, `data-selected`, `.collision-card`?/`data-collision-key`, `.conflict-detail-unit`,

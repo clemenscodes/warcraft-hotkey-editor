@@ -1,7 +1,7 @@
 use crate::stories::fixtures;
 use super::toast_mount::ToastMount;
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::header::components::grid_layout_button_host::components::grid_layout_button::GridLayoutButton;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::collisions_button_host::components::collisions_button::CollisionsButton;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::export_button::ExportButton;

@@ -1,15 +1,16 @@
 mod props;
+mod style;
 
 use super::conflict_ability::ConflictAbility;
-use super::conflict_ability_row::ConflictAbilityRow;
 use super::conflict_marker_view::{ConflictMarkerView, ConflictMarkerViewProps};
 use dioxus::prelude::*;
 pub use props::{AbilityPair, ConflictPairRowProps};
-
-/// The two abilities flanking the conflict marker; renders nothing unless the clash
-/// is an exact pair. The marker is the shared hotkey key or the colliding cell.
+use style::ABILITY_ROW;
 use tw_macro::assert_component;
 assert_component!(ConflictPairRow);
+
+/// The two-ability layout for a shared-key clash: the two abilities flanking the key
+/// badge. It owns its own abilities row. Renders nothing when there is no pair.
 #[component]
 pub fn ConflictPairRow(props: ConflictPairRowProps) -> Element {
     let Some(pair) = props.pair else {
@@ -22,7 +23,9 @@ pub fn ConflictPairRow(props: ConflictPairRowProps) -> Element {
         is_top: false,
     };
     rsx! {
-        ConflictAbilityRow {
+        div {
+            class: ABILITY_ROW,
+            "data-multi": false,
             ConflictAbility { ..left }
             ConflictMarkerView { ..marker }
             ConflictAbility { ..right }

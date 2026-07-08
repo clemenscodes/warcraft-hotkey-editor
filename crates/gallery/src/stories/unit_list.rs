@@ -1,6 +1,6 @@
 use super::fixtures;
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitList;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;

@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::ModeAndRaceTabs;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::RaceTabs;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::components::race_tab::RaceTab;

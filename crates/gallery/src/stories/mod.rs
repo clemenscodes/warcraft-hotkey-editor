@@ -1,4 +1,4 @@
-use gallery::{Story, StoryRegistry};
+use dioxus_gallery::{Story, StoryRegistry};
 
 mod buttons;
 mod dialogs;

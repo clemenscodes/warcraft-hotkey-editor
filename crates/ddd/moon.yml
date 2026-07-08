@@ -1,7 +1,0 @@
-id: ddd
-stack: backend
-layer: library
-tags:
-  - rust
-  - lib
-language: rust

@@ -1,13 +1,14 @@
 pub mod components;
 mod props;
 mod state;
+mod style;
 
-use components::conflict_hotkey_badge::ConflictHotkeyBadge;
 use components::conflict_hotkey_key::ConflictHotkeyKey;
 use components::conflict_position::{ConflictPosition, ConflictPositionProps};
 use dioxus::prelude::*;
 pub use props::ConflictMarkerViewProps;
 pub use state::ConflictMarker;
+use style::BADGE;
 
 /// The marker shown between (or above) a conflict's abilities: the shared-hotkey
 /// badge for a hotkey clash, or the colliding command-card cell for a position
@@ -21,8 +22,9 @@ pub fn ConflictMarkerView(props: ConflictMarkerViewProps) -> Element {
     match props.marker {
         ConflictMarker::Hotkey { label } => {
             rsx! {
-                ConflictHotkeyBadge {
-                    is_top,
+                span {
+                    class: BADGE,
+                    "data-top": is_top,
                     ConflictHotkeyKey { text: label }
                 }
             }

@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use gallery::Story;
+use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::shared::toggle_button::ToggleButton;
 
 pub fn stories() -> Vec<Story> {

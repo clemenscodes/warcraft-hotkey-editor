@@ -1,4 +1,4 @@
-use tw_macro::tw;
+use tw_macro::{ClassList, tw};
 classes! {
     base: tw![
         "flex",
@@ -24,3 +24,10 @@ classes! {
         "tablet:items-start",
     ],
 }
+
+/// The right column holding the hotkey override: the "Hotkey override" heading over
+/// the override card. On phones it becomes a sticky bottom sheet, widened and shifted
+/// out of the card's padding. Its own inlined element in the detail row.
+pub(super) const PANEL: ClassList = ClassList::new(
+    "flex flex-col min-w-0 self-start mobile:self-stretch mobile:items-stretch mobile:sticky mobile:bottom-0 mobile:z-100 mobile:-left-[0.85rem] mobile:w-[calc(100%+1.7rem)] mobile:pt-0 tablet:w-full tablet:self-stretch tablet:pt-0",
+);

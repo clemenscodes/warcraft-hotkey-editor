@@ -4,10 +4,7 @@ authors.workspace = true
 edition.workspace = true
 license.workspace = true
 version.workspace = true
-description = "Generic Dioxus component previewer and isolator."
-
-[lib]
-path = "src/lib.rs"
+description = "App-specific stories and glue for the dioxus-gallery previewer."
 
 [[bin]]
 name = "gallery"
@@ -15,6 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 dioxus = { workspace = true, features = ["web", "launch", "macro"] }
+dioxus-gallery = { workspace = true }
 hotkey-editor = { path = "../hotkey-editor" }
 warcraft-api = { workspace = true }
 warcraft-database = { workspace = true }
