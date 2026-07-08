@@ -10,6 +10,7 @@ mod shell;
 mod system_hotkeys;
 mod tabs;
 mod tile_override;
+mod toast_mount;
 mod toggle_button;
 mod unit_detail;
 mod unit_list;

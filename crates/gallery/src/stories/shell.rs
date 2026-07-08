@@ -1,4 +1,5 @@
 use crate::stories::fixtures;
+use super::toast_mount::ToastMount;
 use dioxus::prelude::*;
 use gallery::Story;
 use hotkey_editor::components::app::components::shell::components::footer::Footer;
@@ -6,7 +7,6 @@ use hotkey_editor::components::app::components::shell::components::header::Heade
 use hotkey_editor::components::app::components::shell::components::header::components::brand_host::BrandHost;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::ToolbarActions;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::BurgerMenu;
-use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 use hotkey_editor::services::customkeys::service::CustomKeysService;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 use hotkey_editor::services::navigation::app_view::AppView;
@@ -55,7 +55,7 @@ fn provide_navigation() {
 pub fn stories() -> Vec<Story> {
     vec![
         Story::single("Shell", "Footer", footer_default),
-        Story::single("Shell", "Toasts", toast_mount_with_child),
+        Story::single("Shell", "ToastMount", toast_mount_with_child),
         Story::single("Shell", "BrandHost", brand_default),
         Story::single("Shell", "BurgerMenu", burger_menu_default),
         Story::single("Shell", "ToolbarActions", toolbar_actions_default),
@@ -71,7 +71,7 @@ fn footer_default() -> Element {
 
 fn toast_mount_with_child() -> Element {
     rsx! {
-        Toasts {
+        ToastMount {
             div { "Toast provider mounted" }
         }
     }
@@ -110,7 +110,7 @@ fn toolbar_actions_default() -> Element {
     provide_navigation();
     provide_overlay_state();
     rsx! {
-        Toasts {
+        ToastMount {
             ToolbarActions {}
         }
     }
@@ -129,7 +129,7 @@ fn header_default() -> Element {
     provide_navigation();
     provide_overlay_state();
     rsx! {
-        Toasts {
+        ToastMount {
             Header {}
         }
     }

@@ -1,6 +1,5 @@
 use crate::registry::StoryRegistry;
 use dioxus::prelude::*;
-use hotkey_editor::components::app::components::shell::components::toasts::Toasts;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct StoryFrameProps {
@@ -16,9 +15,7 @@ pub fn StoryFrame(props: StoryFrameProps) -> Element {
         Some(story) => {
             let render = story.render();
             rsx! {
-                Toasts {
-                    div { class: "min-h-dvh flex flex-col items-center", {render()} }
-                }
+                div { class: "min-h-dvh flex flex-col items-center", {render()} }
             }
         }
         None => {
