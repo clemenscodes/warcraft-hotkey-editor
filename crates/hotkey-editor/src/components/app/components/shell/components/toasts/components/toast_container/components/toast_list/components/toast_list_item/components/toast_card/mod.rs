@@ -1,39 +1,40 @@
 pub mod components;
 mod hooks;
-mod logic;
 mod props;
 mod style;
 
-use components::toast_close::{ToastClose, ToastCloseProps};
-use components::toast_content::{ToastContent, ToastContentProps};
-use components::toast_icon::{ToastIcon, ToastIconProps};
+use crate::components::app::components::shell::components::toasts::ToastType;
+use components::error_toast_card::ErrorToastCard;
+use components::info_toast_card::InfoToastCard;
+use components::success_toast_card::SuccessToastCard;
+use components::warning_toast_card::WarningToastCard;
 use dioxus::prelude::*;
 use hooks::use_toast_auto_dismiss;
-use logic::ToastCardPresentation;
 pub use props::ToastCardProps;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(ToastCard);
 
-/// A single toast: its type-tinted card, the type icon, the title/description
-/// content, and the close button. Auto-dismisses after its duration unless
-/// permanent.
+/// A single toast. Auto-dismisses after its duration unless permanent, then routes
+/// the toast's type to the matching per-kind card, each of which owns that type's
+/// surface look.
 #[component]
 pub fn ToastCard(props: ToastCardProps) -> Element {
     use_toast_auto_dismiss(&props);
-    let ToastCardPresentation { class, data_type } = ToastCardPresentation::from(&props);
-    let icon_props = ToastIconProps::from(&props);
-    let content_props = ToastContentProps::from(&props);
-    let close_props = ToastCloseProps::from(&props);
+    let record = props.record;
+    let on_remove = props.on_remove;
+    let toast_type = record.toast_type();
     rsx! {
         div {
-            class,
-            role: "alertdialog",
-            "data-type": data_type,
-            "aria-modal": "false",
-            tabindex: "0",
-            ToastIcon { ..icon_props }
-            ToastContent { ..content_props }
-            ToastClose { ..close_props }
+            class: CLASS,
+            {
+                match toast_type {
+                    ToastType::Success => rsx! { SuccessToastCard { record, on_remove } },
+                    ToastType::Error => rsx! { ErrorToastCard { record, on_remove } },
+                    ToastType::Warning => rsx! { WarningToastCard { record, on_remove } },
+                    ToastType::Info => rsx! { InfoToastCard { record, on_remove } },
+                }
+            }
         }
     }
 }

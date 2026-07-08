@@ -1,2 +1,1 @@
-pub mod info_actions;
-pub mod info_content;
+pub mod info_dialog_body;

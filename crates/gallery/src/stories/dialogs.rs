@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::components::dialog_header::DialogHeader;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialog;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
@@ -12,13 +12,10 @@ use hotkey_editor::components::app::components::shell::components::header::compo
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor::LayoutEditor;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog::PreviewDialog;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::components::template_gallery::components::template_card::TemplateCard;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCard;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::HeadedGrid;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::headed_grid::components::grid::GridProps;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::grid_editor_tile::{
-    EditorTileKind, GridEditorTileProps,
-};
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::EditorHeadedGrid;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::GridEditorTileProps;
 use super::keys_mount::CustomKeysMount;
 use super::toast_mount::ToastMount;
 
@@ -41,10 +38,15 @@ pub fn stories() -> Vec<Story> {
         Story::single("Dialogs", "TemplateCard", template_card_default),
         Story::new("Dialogs", "KeyPicker", "Closed", key_picker_closed),
         Story::new("Dialogs", "KeyPicker", "Open, all states", key_picker_open),
-        Story::new("Dialogs", "HeadedGrid", "Command card", headed_grid_command),
         Story::new(
             "Dialogs",
-            "HeadedGrid",
+            "EditorHeadedGrid",
+            "Command card",
+            headed_grid_command,
+        ),
+        Story::new(
+            "Dialogs",
+            "EditorHeadedGrid",
             "Research menu",
             headed_grid_research,
         ),
@@ -190,10 +192,8 @@ fn headed_grid_command() -> Element {
         .expect("at least one bundled template")
         .clone();
     let tiles = headed_grid_tiles(resolved.command_tiles());
-    let kind = EditorTileKind;
-    let grid = GridProps { kind, tiles };
     rsx! {
-        HeadedGrid { heading: "Command card", grid }
+        EditorHeadedGrid { heading: "Command card", tiles }
     }
 }
 
@@ -204,10 +204,8 @@ fn headed_grid_research() -> Element {
         .expect("at least one bundled template")
         .clone();
     let tiles = headed_grid_tiles(resolved.research_tiles());
-    let kind = EditorTileKind;
-    let grid = GridProps { kind, tiles };
     rsx! {
-        HeadedGrid { heading: "Research menu", grid }
+        EditorHeadedGrid { heading: "Research menu", tiles }
     }
 }
 

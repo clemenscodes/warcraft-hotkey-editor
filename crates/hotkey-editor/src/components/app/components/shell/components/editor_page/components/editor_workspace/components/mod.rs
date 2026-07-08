@@ -1,2 +1,1 @@
-pub mod unit_detail;
-pub mod unit_list;
+pub mod race_theme;

@@ -1,5 +1,4 @@
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::UnitDetailProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitListProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::RaceThemeProps;
 use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind};
@@ -24,7 +23,7 @@ pub struct EditorWorkspaceProps {
     pub collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
-impl From<&EditorWorkspaceProps> for UnitListProps {
+impl From<&EditorWorkspaceProps> for RaceThemeProps {
     fn from(props: &EditorWorkspaceProps) -> Self {
         Self {
             active_race: props.active_race,
@@ -36,15 +35,6 @@ impl From<&EditorWorkspaceProps> for UnitListProps {
             show_abilityless_units: props.show_abilityless_units,
             expand_variants: props.expand_variants,
             collapsed_categories: props.collapsed_categories,
-        }
-    }
-}
-
-impl From<&EditorWorkspaceProps> for UnitDetailProps {
-    fn from(props: &EditorWorkspaceProps) -> Self {
-        Self {
-            active_race: props.active_race,
-            selected_unit_id: props.selected_unit_id,
         }
     }
 }

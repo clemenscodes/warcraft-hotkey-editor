@@ -1,4 +1,4 @@
-use super::components::carriers_grid::components::carrier_card::CarrierCardProps;
+use super::components::carriers_dialog_body::components::carriers_grid::components::carrier_card::CarrierCardProps;
 use super::logic::cards;
 use super::props::CarriersDialogProps;
 use dioxus::prelude::*;

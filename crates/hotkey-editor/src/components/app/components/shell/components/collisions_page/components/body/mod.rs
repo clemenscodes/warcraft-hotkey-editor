@@ -2,13 +2,10 @@ pub mod components;
 mod props;
 
 use components::clear_state::ClearState;
-use components::content::Content;
-use components::details::hotkey_unit_detail::HotkeyUnitDetail;
-use components::details::island_detail::IslandDetail;
-use components::details::unit_position_detail::UnitPositionDetail;
 use components::empty_state::EmptyState;
-use components::sidebars::island_sidebar::IslandSidebar;
-use components::sidebars::unit_cards_sidebar::UnitCardsSidebar;
+use components::hotkeys_content::{HotkeysContent, HotkeysContentProps};
+use components::positions_content::{PositionsContent, PositionsContentProps};
+use components::unit_positions_content::{UnitPositionsContent, UnitPositionsContentProps};
 use dioxus::prelude::*;
 pub use props::{BodyProps, ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 
@@ -31,45 +28,42 @@ pub fn Body(props: BodyProps) -> Element {
             }
         }
         ContentModel::Positions(pane) => {
-            let collision_kind = pane.collision_kind();
             let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
+            let content = PositionsContentProps {
+                count,
+                sidebar,
+                detail,
+            };
             rsx! {
-                Content {
-                    collision_kind,
-                    count,
-                    IslandSidebar { ..sidebar }
-                    IslandDetail { ..detail }
-                }
+                PositionsContent { ..content }
             }
         }
         ContentModel::Hotkeys(pane) => {
-            let collision_kind = pane.collision_kind();
             let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
+            let content = HotkeysContentProps {
+                count,
+                sidebar,
+                detail,
+            };
             rsx! {
-                Content {
-                    collision_kind,
-                    count,
-                    UnitCardsSidebar { ..sidebar }
-                    HotkeyUnitDetail { ..detail }
-                }
+                HotkeysContent { ..content }
             }
         }
         ContentModel::UnitPositions(pane) => {
-            let collision_kind = pane.collision_kind();
             let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
+            let content = UnitPositionsContentProps {
+                count,
+                sidebar,
+                detail,
+            };
             rsx! {
-                Content {
-                    collision_kind,
-                    count,
-                    UnitCardsSidebar { ..sidebar }
-                    UnitPositionDetail { ..detail }
-                }
+                UnitPositionsContent { ..content }
             }
         }
     }

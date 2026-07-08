@@ -1,24 +1,37 @@
-use super::components::info_actions::{InfoActions, InfoActionsProps};
-use super::components::info_content::{InfoContent, InfoContentProps};
+use super::components::info_dialog_body::InfoDialogBodyProps;
+use super::components::info_dialog_body::components::info_actions::InfoActionsProps;
+use super::components::info_dialog_body::components::info_content::InfoContentProps;
 use super::props::InfoDialogConfig;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::DialogProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
-impl From<&InfoDialogConfig> for DialogProps {
+/// The info dialog's own shell, shaped from its config: the open value driving the
+/// backdrop, the change handler that writes the open signal, the header props, and
+/// the scroll-region body props. Every dialog owns its shell now — there is no base.
+pub(super) struct InfoDialogShell {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) header: DialogHeaderProps,
+    pub(super) body: InfoDialogBodyProps,
+}
+
+impl From<&InfoDialogConfig> for InfoDialogShell {
     fn from(props: &InfoDialogConfig) -> Self {
-        let open = props.open;
+        let mut open_signal = props.open;
+        let open = open_signal();
+        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let mut close_signal = props.open;
         let title = props.title.to_owned();
+        let on_close = EventHandler::new(move |()| close_signal.set(false));
+        let header = DialogHeaderProps { title, on_close };
         let content = InfoContentProps::from(props);
         let actions = InfoActionsProps::from(props);
-        let children = rsx! {
-            InfoContent { ..content }
-            InfoActions { ..actions }
-        };
+        let body = InfoDialogBodyProps { content, actions };
         Self {
             open,
-            title,
-            children,
-            on_open_change: None,
+            on_open_change,
+            header,
+            body,
         }
     }
 }

@@ -1,4 +1,4 @@
-use super::components::hotkey_conflict_card::HotkeyConflictCardProps;
+use super::components::hotkey_conflict_grid::components::hotkey_conflict_card::HotkeyConflictCardProps;
 use super::props::HotkeyUnitDetailProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnitProps;
 use dioxus::prelude::*;

@@ -1,21 +1,34 @@
-use super::components::preview_textarea::PreviewTextarea;
+use super::components::preview_dialog_body::PreviewDialogBodyProps;
 use super::hooks::PreviewDialogView;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::DialogProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
-impl From<&PreviewDialogView> for DialogProps {
+/// The preview dialog's own shell, shaped from its view: the open value driving the
+/// backdrop, the change handler that writes the open signal, the header props, and
+/// the scroll-region body props. Every dialog owns its shell now — there is no base.
+pub(super) struct PreviewDialogShell {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) header: DialogHeaderProps,
+    pub(super) body: PreviewDialogBodyProps,
+}
+
+impl From<&PreviewDialogView> for PreviewDialogShell {
     fn from(view: &PreviewDialogView) -> Self {
-        let open = view.open;
+        let mut open_signal = view.open;
+        let open = open_signal();
+        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let mut close_signal = view.open;
         let title = String::from("Preview");
+        let on_close = EventHandler::new(move |()| close_signal.set(false));
+        let header = DialogHeaderProps { title, on_close };
         let textarea = view.textarea.clone();
-        let children = rsx! {
-            PreviewTextarea { ..textarea }
-        };
+        let body = PreviewDialogBodyProps { textarea };
         Self {
             open,
-            title,
-            children,
-            on_open_change: None,
+            on_open_change,
+            header,
+            body,
         }
     }
 }

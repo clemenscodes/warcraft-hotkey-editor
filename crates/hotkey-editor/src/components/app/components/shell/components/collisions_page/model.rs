@@ -99,9 +99,8 @@ impl From<PositionsContent> for ContentModel {
             selected_island: content.selected_island,
             view_navigation: content.view_navigation,
         };
-        let collision_kind = CollisionKind::Positions;
         let count = content.list.unit_count;
-        let pane = PositionsPane::new(collision_kind, count, sidebar, detail);
+        let pane = PositionsPane::new(count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::Positions(boxed)
     }
@@ -141,9 +140,8 @@ impl From<HotkeysContent> for ContentModel {
             selected_unit: content.selected_unit,
             view_navigation: content.view_navigation,
         };
-        let collision_kind = CollisionKind::Hotkeys;
         let count = content.list.unit_count;
-        let pane = HotkeysPane::new(collision_kind, count, sidebar, detail);
+        let pane = HotkeysPane::new(count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::Hotkeys(boxed)
     }
@@ -183,9 +181,8 @@ impl From<UnitPositionsContent> for ContentModel {
             selected_unit: content.selected_unit,
             view_navigation: content.view_navigation,
         };
-        let collision_kind = CollisionKind::UnitPositions;
         let count = content.list.unit_count;
-        let pane = UnitPositionsPane::new(collision_kind, count, sidebar, detail);
+        let pane = UnitPositionsPane::new(count, sidebar, detail);
         let boxed = Box::new(pane);
         Self::UnitPositions(boxed)
     }

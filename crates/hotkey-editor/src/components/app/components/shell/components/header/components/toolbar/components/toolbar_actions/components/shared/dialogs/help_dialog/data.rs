@@ -3,8 +3,8 @@ use crate::components::app::components::shell::components::shared::icons::{
     ICON_RESOLVE, ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
 
-use super::components::help_body::components::help_resolver_section::components::help_glossary_columns::components::help_glossary_column::components::help_glossary_entry::HelpGlossaryEntryProps;
-use super::components::help_body::components::help_top_row::components::help_legend_section::components::help_legend::components::help_legend_row::HelpLegendRowProps;
+use super::components::help_dialog_body::components::help_body::components::help_resolver_section::components::help_glossary_columns::components::help_glossary_column::components::help_glossary_entry::HelpGlossaryEntryProps;
+use super::components::help_dialog_body::components::help_body::components::help_top_row::components::help_legend_section::components::help_legend::components::help_legend_row::HelpLegendRowProps;
 
 /// One piece of a workflow step: either a run of text or an inline toolbar glyph.
 /// A step is a sequence of these, so the renderer is a pure loop and never bakes

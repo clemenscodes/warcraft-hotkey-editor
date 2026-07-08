@@ -15,11 +15,11 @@ assert_component!(MiniGrid);
 /// frame. Shared by the island sidebar cards and the detail headers.
 #[component]
 pub fn MiniGrid(props: MiniGridProps) -> Element {
-    let grid = logic::grid(&props);
+    let tiles = logic::grid(&props);
     rsx! {
         div {
             class: CLASS,
-            MiniGridFrame { grid }
+            MiniGridFrame { tiles }
         }
     }
 }

@@ -1,4 +1,3 @@
-pub mod dialog;
 pub mod help_dialog;
 pub mod help_dialog_host;
 pub mod info_dialogs;

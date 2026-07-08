@@ -1,12 +1,12 @@
 use super::fixtures;
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::UnitList;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_icon::UnitCardIcon;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_info::UnitCardInfo;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::components::unit_category_section::UnitCategorySection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::UnitList;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::UnitCategorySection;
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};
@@ -171,16 +171,19 @@ fn unit_card_archmage_selected() -> Element {
     let selected_slot: Signal<Option<GridSlotId>> = use_signal(|| None);
     let active_category = use_signal(|| UnitKind::Hero);
     rsx! {
-        UnitCard {
-            unit_id,
-            display_name,
-            icon_path,
-            unit_kind,
-            race,
-            is_selected,
-            selected_unit_id,
-            selected_slot,
-            active_category,
+        div {
+            class: "[--race-color:var(--color-race-human)]",
+            UnitCard {
+                unit_id,
+                display_name,
+                icon_path,
+                unit_kind,
+                race,
+                is_selected,
+                selected_unit_id,
+                selected_slot,
+                active_category,
+            }
         }
     }
 }

@@ -8,36 +8,24 @@ use super::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
 use crate::components::app::components::shell::components::collisions_page::logic::{
     HotkeyConflictView, UnitPositionConflictView,
 };
-use crate::services::navigation::app_view::CollisionKind;
 use dioxus::prelude::*;
 
 /// The position-collision two-pane content: the island sidebar and detail, tagged
-/// with the kind slug and conflict count for the surrounding `Content`.
+/// with the conflict count for the surrounding content wrapper.
 #[derive(Clone, PartialEq)]
 pub struct PositionsPane {
-    collision_kind: CollisionKind,
     count: usize,
     sidebar: IslandSidebarProps,
     detail: IslandDetailProps,
 }
 
 impl PositionsPane {
-    pub fn new(
-        collision_kind: CollisionKind,
-        count: usize,
-        sidebar: IslandSidebarProps,
-        detail: IslandDetailProps,
-    ) -> Self {
+    pub fn new(count: usize, sidebar: IslandSidebarProps, detail: IslandDetailProps) -> Self {
         Self {
-            collision_kind,
             count,
             sidebar,
             detail,
         }
-    }
-
-    pub fn collision_kind(&self) -> CollisionKind {
-        self.collision_kind
     }
 
     pub fn count(&self) -> usize {
@@ -56,7 +44,6 @@ impl PositionsPane {
 /// The hotkey-collision two-pane content: the clashing-units sidebar and detail.
 #[derive(Clone, PartialEq)]
 pub struct HotkeysPane {
-    collision_kind: CollisionKind,
     count: usize,
     sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
     detail: HotkeyUnitDetailProps,
@@ -64,21 +51,15 @@ pub struct HotkeysPane {
 
 impl HotkeysPane {
     pub fn new(
-        collision_kind: CollisionKind,
         count: usize,
         sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
         detail: HotkeyUnitDetailProps,
     ) -> Self {
         Self {
-            collision_kind,
             count,
             sidebar,
             detail,
         }
-    }
-
-    pub fn collision_kind(&self) -> CollisionKind {
-        self.collision_kind
     }
 
     pub fn count(&self) -> usize {
@@ -97,7 +78,6 @@ impl HotkeysPane {
 /// The per-unit position-collision two-pane content.
 #[derive(Clone, PartialEq)]
 pub struct UnitPositionsPane {
-    collision_kind: CollisionKind,
     count: usize,
     sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
     detail: UnitPositionDetailProps,
@@ -105,21 +85,15 @@ pub struct UnitPositionsPane {
 
 impl UnitPositionsPane {
     pub fn new(
-        collision_kind: CollisionKind,
         count: usize,
         sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
         detail: UnitPositionDetailProps,
     ) -> Self {
         Self {
-            collision_kind,
             count,
             sidebar,
             detail,
         }
-    }
-
-    pub fn collision_kind(&self) -> CollisionKind {
-        self.collision_kind
     }
 
     pub fn count(&self) -> usize {

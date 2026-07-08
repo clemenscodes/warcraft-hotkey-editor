@@ -1,5 +1,5 @@
-use super::components::template_gallery::TemplateGalleryProps;
-use super::components::template_gallery::components::template_card::TemplateCardProps;
+use super::components::templates_dialog_body::components::template_gallery::TemplateGalleryProps;
+use super::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardProps;
 use super::props::TemplatesDialogProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::upload_status::UploadStatus;

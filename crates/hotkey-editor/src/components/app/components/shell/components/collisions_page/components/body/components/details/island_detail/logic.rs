@@ -1,4 +1,4 @@
-use super::components::island_conflict_card::IslandConflictCardProps;
+use super::components::island_conflict_grid::components::island_conflict_card::IslandConflictCardProps;
 use super::props::IslandDetailProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;

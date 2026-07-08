@@ -45,7 +45,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
     await page.locator(".layout-editor-content").waitFor();
     await page.locator('input[aria-label="Update hotkeys when moving abilities"]').uncheck();
-    await page.locator(".dialog [aria-label='Close']").click().catch(() => {});
+    await page.locator(".layout-editor [aria-label='Close']").click().catch(() => {});
     await page.keyboard.press("Escape");
     await expect(page.locator(".layout-editor-content")).toHaveCount(0);
 

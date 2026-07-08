@@ -2,23 +2,45 @@ pub mod components;
 pub mod data;
 mod logic;
 mod props;
+mod style;
 
-use super::dialog::{Dialog, DialogProps};
+use components::help_dialog_body::HelpDialogBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
+use dioxus_primitives::dialog::{DialogContent, DialogRoot};
+use logic::HelpDialogShell;
 pub use props::HelpDialogProps;
-
-/// The onboarding guide. Just a component that composes the `Dialog` base: it
-/// sources the guide content and hands the body its data followed by a dismiss
-/// button. It renders no element of its own.
+use style::{CLASS, OVERLAY};
 use tw_macro::assert_component;
+
 assert_component!(HelpDialog);
+
+/// The onboarding guide. It owns its own dialog shell: the shell struct shapes
+/// the header and scroll body directly from props, and this places them inside
+/// the backdrop and bordered box.
 #[component]
 pub fn HelpDialog(props: HelpDialogProps) -> Element {
-    let help_open = props.help_open;
-    if !help_open() {
+    use_body_scroll_lock(props.help_open);
+    let HelpDialogShell {
+        open,
+        on_open_change,
+        header,
+        body,
+    } = HelpDialogShell::from(&props);
+    if !open {
         return rsx! {};
     }
     rsx! {
-        Dialog { ..DialogProps::from(&props) }
+        DialogRoot {
+            class: OVERLAY,
+            open,
+            on_open_change,
+            DialogContent {
+                class: CLASS.to_library_class(),
+                DialogHeader { ..header }
+                HelpDialogBody { ..body }
+            }
+        }
     }
 }

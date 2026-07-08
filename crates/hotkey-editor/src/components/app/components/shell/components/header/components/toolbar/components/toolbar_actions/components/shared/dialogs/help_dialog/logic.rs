@@ -1,27 +1,44 @@
-use super::components::help_body::{HelpBody, HelpBodyProps};
-use super::components::help_dismiss::{HelpDismiss, HelpDismissProps};
+use super::components::help_dialog_body::HelpDialogBodyProps;
+use super::components::help_dialog_body::components::help_body::HelpBodyProps;
+use super::components::help_dialog_body::components::help_dismiss::HelpDismissProps;
 use super::data::HELP_CONTENT;
 use super::props::HelpDialogProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::DialogProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
-impl From<&HelpDialogProps> for DialogProps {
+/// The help dialog's own shell, shaped directly from its props: the open value
+/// driving the backdrop, the change handler that writes the open signal, the
+/// header props, and the scroll-region body props. Every dialog owns its shell
+/// now — there is no base.
+pub(super) struct HelpDialogShell {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) header: DialogHeaderProps,
+    pub(super) body: HelpDialogBodyProps,
+}
+
+impl From<&HelpDialogProps> for HelpDialogShell {
     fn from(props: &HelpDialogProps) -> Self {
-        let open = props.help_open;
+        let mut open_signal = props.help_open;
+        let open = open_signal();
+        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let mut close_signal = props.help_open;
         let title = String::from("How to use this editor");
-        let dismiss = HelpDismissProps::from(props);
-        let body = HelpBodyProps {
+        let on_close = EventHandler::new(move |()| close_signal.set(false));
+        let header = DialogHeaderProps { title, on_close };
+        let help_body_props = HelpBodyProps {
             content: HELP_CONTENT,
         };
-        let children = rsx! {
-            HelpBody { ..body }
-            HelpDismiss { ..dismiss }
+        let dismiss = HelpDismissProps::from(props);
+        let body = HelpDialogBodyProps {
+            body: help_body_props,
+            dismiss,
         };
         Self {
             open,
-            title,
-            children,
-            on_open_change: None,
+            on_open_change,
+            header,
+            body,
         }
     }
 }

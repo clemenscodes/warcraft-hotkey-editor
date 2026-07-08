@@ -200,7 +200,6 @@
             ./crates/hotkey-editor/tailwind.input.css
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
-            ./crates/warcraft-keybinds/templates
           ];
         };
 

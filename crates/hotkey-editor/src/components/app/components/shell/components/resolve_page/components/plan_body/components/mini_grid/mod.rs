@@ -15,11 +15,11 @@ assert_component!(MiniGrid);
 /// shared `MiniGrid` frame.
 #[component]
 pub fn MiniGrid(props: MiniGridProps) -> Element {
-    let grid = logic::grid(&props);
+    let tiles = logic::grid(&props);
     rsx! {
         div {
             class: CLASS,
-            MiniGridFrame { grid }
+            MiniGridFrame { tiles }
         }
     }
 }

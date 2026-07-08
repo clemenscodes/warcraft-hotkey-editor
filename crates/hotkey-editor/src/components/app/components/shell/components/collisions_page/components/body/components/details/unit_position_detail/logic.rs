@@ -1,4 +1,4 @@
-use super::components::unit_position_conflict_card::UnitPositionConflictCardProps;
+use super::components::unit_position_conflict_grid::components::unit_position_conflict_card::UnitPositionConflictCardProps;
 use super::props::UnitPositionDetailProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnitProps;
 use dioxus::prelude::*;

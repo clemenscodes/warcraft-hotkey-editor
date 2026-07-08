@@ -1,13 +1,13 @@
+use super::components::key_picker_body::KeyPickerBodyProps;
 use super::hooks::KeyPickerModel;
 use super::props::{KeyPickerCell, KeyPickerCellState};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::DialogProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use crate::components::app::components::shell::components::shared::tooltip::{
     TooltipAnchor, TooltipPlacement,
 };
 use crate::components::app::components::shell::components::shared::key_picker_board::{
     KeyCell, KeyCellState, KeyColumn, KeyWidth,
 };
-use crate::components::app::components::shell::components::shared::key_picker_board_host::KeyPickerBoardHost;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
 
@@ -73,19 +73,32 @@ impl From<LetterColumnInputs> for KeyColumn {
     }
 }
 
-impl From<&KeyPickerModel> for DialogProps {
+/// The key picker's own shell, shaped from its model: the open value driving the
+/// backdrop, the change handler that writes the open signal, the header props, and
+/// the scroll-region body props. Every dialog owns its shell now — there is no base.
+pub(super) struct KeyPickerShell {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) header: DialogHeaderProps,
+    pub(super) body: KeyPickerBodyProps,
+}
+
+impl From<&KeyPickerModel> for KeyPickerShell {
     fn from(model: &KeyPickerModel) -> Self {
-        let open = model.open;
+        let mut open_signal = model.open;
+        let open = open_signal();
+        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let mut close_signal = model.open;
         let title = model.title.clone();
+        let on_close = EventHandler::new(move |()| close_signal.set(false));
+        let header = DialogHeaderProps { title, on_close };
         let board = model.board.clone();
-        let children = rsx! {
-            KeyPickerBoardHost { ..board }
-        };
+        let body = KeyPickerBodyProps { board };
         Self {
             open,
-            title,
-            children,
-            on_open_change: None,
+            on_open_change,
+            header,
+            body,
         }
     }
 }

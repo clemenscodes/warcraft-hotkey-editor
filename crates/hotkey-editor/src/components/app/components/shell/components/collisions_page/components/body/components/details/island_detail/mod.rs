@@ -4,21 +4,18 @@ mod logic;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::collision_count::CollisionCount;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::coordinate::Coordinate;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::{MiniGrid, MiniGridProps};
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::row_meta::RowMeta;
-use components::island_conflict_card::IslandConflictCard;
+use components::island_conflict_grid::{IslandConflictGrid, IslandConflictGridProps};
+use components::island_detail_header::{IslandDetailHeader, IslandDetailHeaderProps};
 use dioxus::prelude::*;
 use logic::IslandDetailData;
 pub use props::IslandDetailProps;
-use style::{DETAIL, GRID, HEADER};
+use style::DETAIL;
 use tw_macro::assert_component;
 assert_component!(IslandDetail);
 
 /// The position-island detail pane: the island's mini-grid and coordinate header over
-/// its conflict cards. It owns its own pane, header, and grid elements directly;
-/// renders the empty prompt when nothing is selected.
+/// its conflict cards. It owns its own pane element directly; renders the empty prompt
+/// when nothing is selected.
 #[component]
 pub fn IslandDetail(props: IslandDetailProps) -> Element {
     let Some(data) = logic::selected(&props) else {
@@ -35,25 +32,14 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
         count,
         cards,
     } = data;
-    let mini_grid = MiniGridProps { coordinate };
+    let header = IslandDetailHeaderProps { coordinate, count };
+    let grid = IslandConflictGridProps { cards };
     rsx! {
         section {
             class: DETAIL,
             "data-empty": false,
-            header {
-                class: HEADER,
-                MiniGrid { ..mini_grid }
-                RowMeta {
-                    Coordinate { coordinate }
-                    CollisionCount { count }
-                }
-            }
-            div {
-                class: GRID,
-                for card in cards {
-                    IslandConflictCard { ..card }
-                }
-            }
+            IslandDetailHeader { ..header }
+            IslandConflictGrid { ..grid }
         }
     }
 }

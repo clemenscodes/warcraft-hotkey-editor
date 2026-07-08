@@ -1,2 +1,1 @@
-pub mod help_body;
-pub mod help_dismiss;
+pub mod help_dialog_body;

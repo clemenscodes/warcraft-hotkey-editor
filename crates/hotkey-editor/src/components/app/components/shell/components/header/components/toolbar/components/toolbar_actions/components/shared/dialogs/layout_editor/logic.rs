@@ -1,15 +1,17 @@
-use super::components::apply_button::{ApplyButton, ApplyButtonProps};
-use super::components::layout_editor_content::LayoutEditorContent;
-use super::components::layout_grid::components::layout_tile::{LayoutTileProps, LayoutTileState};
-use super::components::layout_grid::{LayoutGrid, LayoutGridProps};
-use super::components::layout_intro::LayoutIntro;
-use super::components::move_hotkey_toggle::{MoveHotkeyToggle, MoveHotkeyToggleProps};
+use super::components::layout_editor_body::LayoutEditorBodyProps;
+use super::components::layout_editor_body::components::layout_editor_content::LayoutEditorContentProps;
+use super::components::layout_editor_body::components::layout_editor_content::components::apply_button::ApplyButtonProps;
+use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::LayoutGridProps;
+use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::{
+    LayoutTileProps, LayoutTileState,
+};
+use super::components::layout_editor_body::components::layout_editor_content::components::move_hotkey_toggle::MoveHotkeyToggleProps;
 use super::data::QWERTY_ROWS;
 use super::hooks::LayoutEditorModel;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::dialog::DialogProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{
     KeyPickerCell, KeyPickerCellState, KeyPickerProps,
 };
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use crate::services::grid_layout::service::GridLayoutService;
 use dioxus::prelude::*;
 use warcraft_keybinds::{
@@ -17,10 +19,25 @@ use warcraft_keybinds::{
     RowIndex,
 };
 
-impl From<&LayoutEditorModel> for DialogProps {
+/// The layout editor's own shell, shaped from its model: the open value, the
+/// change handler (the nested-picker close guard — a focus-steal close while the
+/// picker is open must be ignored), the header props, and the scroll-region body
+/// holding the centered editor column.
+pub(super) struct LayoutEditorShell {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) header: DialogHeaderProps,
+    pub(super) body: LayoutEditorBodyProps,
+}
+
+impl From<&LayoutEditorModel> for LayoutEditorShell {
     fn from(model: &LayoutEditorModel) -> Self {
-        let open = model.open;
+        let mut open_signal = model.open;
+        let open = open_signal();
+        let on_open_change = model.on_dialog_open_change;
         let title = String::from("Global Hotkey Layout");
+        let on_close = EventHandler::new(move |()| open_signal.set(false));
+        let header = DialogHeaderProps { title, on_close };
         let apply = ApplyButtonProps {
             on_apply: model.on_apply,
         };
@@ -31,20 +48,17 @@ impl From<&LayoutEditorModel> for DialogProps {
             checked: model.toggle_checked,
             on_toggle: model.on_toggle,
         };
-        let children = rsx! {
-            LayoutEditorContent {
-                LayoutIntro {}
-                LayoutGrid { ..grid }
-                MoveHotkeyToggle { ..toggle }
-                ApplyButton { ..apply }
-            }
+        let content = LayoutEditorContentProps {
+            grid,
+            toggle,
+            apply,
         };
-        let on_open_change = Some(model.on_dialog_open_change);
+        let body = LayoutEditorBodyProps { content };
         Self {
             open,
-            title,
-            children,
             on_open_change,
+            header,
+            body,
         }
     }
 }

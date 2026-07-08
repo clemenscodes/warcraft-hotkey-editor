@@ -1,5 +1,5 @@
 use super::props::UnitCardsSidebarProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_card::{CollisionCardContent, CollisionCardProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardProps};
 use dioxus::prelude::*;
 
 /// One card's data per clashing unit: its portrait, name, id, and clash count.

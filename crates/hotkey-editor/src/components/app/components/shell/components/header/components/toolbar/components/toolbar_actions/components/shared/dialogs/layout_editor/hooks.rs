@@ -1,4 +1,4 @@
-use super::components::layout_grid::components::layout_tile::LayoutTileProps;
+use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileProps;
 use super::logic::{GridCellContext, LayoutGridCells, LayoutPickerBoard, LayoutPickerContext};
 use super::props::LayoutEditorProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::KeyPickerCell;

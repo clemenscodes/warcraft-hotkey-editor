@@ -1,5 +1,5 @@
 use super::props::IslandSidebarProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_card::{CollisionCardContent, CollisionCardProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardProps};
 use dioxus::prelude::*;
 
 /// One card's data per collision island: its selected state, key, click handler,

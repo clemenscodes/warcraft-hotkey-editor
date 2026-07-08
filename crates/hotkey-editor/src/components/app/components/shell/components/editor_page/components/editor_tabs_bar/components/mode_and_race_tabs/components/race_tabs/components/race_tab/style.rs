@@ -1,4 +1,6 @@
+use tw_macro::internal::{join_into, joined_len};
 use tw_macro::tw;
+use tw_macro::{ClassList, TailwindClass};
 use warcraft_api::Race;
 
 // Phone/tablet: a swipe-scannable banner-card strip — each tab a chunky fixed
@@ -67,51 +69,81 @@ classes! {
     ],
 }
 
-states! {
-    Race,
-    Human => tw![
-        "[--race-color:var(--color-race-human)]",
-        "bg-race-banner-soft",
-        "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png')]",
-        "hover:border-race-human",
-        "hover:[--glow-color:var(--color-race-human)]", "hover:shadow-glow",
-        "data-[active=true]:border-race-human",
-        "data-[active=true]:[--glow-color:var(--color-race-human)]", "data-[active=true]:shadow-glow-strong",
-    ],
-    Orc => tw![
-        "[--race-color:var(--color-race-orc-strong)]",
-        "bg-race-banner-strong",
-        "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png')]",
-        "hover:border-race-orc",
-        "hover:[--glow-color:var(--color-race-orc)]", "hover:shadow-glow",
-        "data-[active=true]:border-race-orc",
-        "data-[active=true]:[--glow-color:var(--color-race-orc)]", "data-[active=true]:shadow-glow-strong",
-    ],
-    Nightelf => tw![
-        "[--race-color:var(--color-race-nightelf)]",
-        "bg-race-banner-soft",
-        "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png')]",
-        "hover:border-race-nightelf",
-        "hover:[--glow-color:var(--color-race-nightelf)]", "hover:shadow-glow",
-        "data-[active=true]:border-race-nightelf",
-        "data-[active=true]:[--glow-color:var(--color-race-nightelf)]", "data-[active=true]:shadow-glow-strong",
-    ],
-    Undead => tw![
-        "[--race-color:var(--color-race-undead)]",
-        "bg-race-banner-soft",
-        "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png')]",
-        "hover:border-race-undead",
-        "hover:[--glow-color:var(--color-race-undead)]", "hover:shadow-glow",
-        "data-[active=true]:border-race-undead",
-        "data-[active=true]:[--glow-color:var(--color-race-undead)]", "data-[active=true]:shadow-glow-strong",
-    ],
-    Neutral => tw![
-        "[--race-color:var(--color-race-neutral-strong)]",
-        "bg-race-banner-strong",
-        "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png')]",
-        "hover:border-warcraft-gold",
-        "hover:shadow-glow",
-        "data-[active=true]:border-warcraft-gold",
-        "data-[active=true]:shadow-glow-strong",
-    ],
+// Each race tab wears its OWN race's banner and accent — a per-tab data→token
+// mapping, not active-race theming: the banner art, the `--race-color`, and the
+// hover/active border-and-glow all follow the race the tab represents. This is a
+// plain `match` layering that race's overlay onto the shared base (via a small local
+// join macro), never a `states!` table: the tab is not one element with N
+// mutually-exclusive runtime states, it is one look parameterised by its race. The
+// active/inactive distinction is a separate concern handled by the `data-[active]`
+// variants inside each arm and the base, driven by the button's `data-active`.
+macro_rules! race_tab_class {
+    ($($utility:literal),+ $(,)?) => {{
+        const OVERLAY: &[TailwindClass] = tw![$($utility),+];
+        const LEN: usize = joined_len(CLASS_STR, &[OVERLAY]);
+        const BYTES: [u8; LEN] = join_into::<LEN>(CLASS_STR, &[OVERLAY]);
+        const JOINED: ClassList = ClassList::new(match ::core::str::from_utf8(&BYTES) {
+            ::core::result::Result::Ok(class) => class,
+            ::core::result::Result::Err(_) => ::core::panic!("non-utf8 race tab class"),
+        });
+        JOINED
+    }};
+}
+
+pub(super) fn class(race: Race) -> ClassList {
+    match race {
+        Race::Human => race_tab_class![
+            "[--race-color:var(--color-race-human)]",
+            "bg-race-banner-soft",
+            "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-human.png')]",
+            "hover:border-race-human",
+            "hover:[--glow-color:var(--color-race-human)]",
+            "hover:shadow-glow",
+            "data-[active=true]:border-race-human",
+            "data-[active=true]:[--glow-color:var(--color-race-human)]",
+            "data-[active=true]:shadow-glow-strong",
+        ],
+        Race::Orc => race_tab_class![
+            "[--race-color:var(--color-race-orc-strong)]",
+            "bg-race-banner-strong",
+            "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-orc.png')]",
+            "hover:border-race-orc",
+            "hover:[--glow-color:var(--color-race-orc)]",
+            "hover:shadow-glow",
+            "data-[active=true]:border-race-orc",
+            "data-[active=true]:[--glow-color:var(--color-race-orc)]",
+            "data-[active=true]:shadow-glow-strong",
+        ],
+        Race::Nightelf => race_tab_class![
+            "[--race-color:var(--color-race-nightelf)]",
+            "bg-race-banner-soft",
+            "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-nightelf.png')]",
+            "hover:border-race-nightelf",
+            "hover:[--glow-color:var(--color-race-nightelf)]",
+            "hover:shadow-glow",
+            "data-[active=true]:border-race-nightelf",
+            "data-[active=true]:[--glow-color:var(--color-race-nightelf)]",
+            "data-[active=true]:shadow-glow-strong",
+        ],
+        Race::Undead => race_tab_class![
+            "[--race-color:var(--color-race-undead)]",
+            "bg-race-banner-soft",
+            "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png')]",
+            "hover:border-race-undead",
+            "hover:[--glow-color:var(--color-race-undead)]",
+            "hover:shadow-glow",
+            "data-[active=true]:border-race-undead",
+            "data-[active=true]:[--glow-color:var(--color-race-undead)]",
+            "data-[active=true]:shadow-glow-strong",
+        ],
+        Race::Neutral => race_tab_class![
+            "[--race-color:var(--color-race-neutral-strong)]",
+            "bg-race-banner-strong",
+            "before:bg-[url('/warcraft-hotkey-editor/webui/common/dark-banner-random.png')]",
+            "hover:border-warcraft-gold",
+            "hover:shadow-glow",
+            "data-[active=true]:border-warcraft-gold",
+            "data-[active=true]:shadow-glow-strong",
+        ],
+    }
 }

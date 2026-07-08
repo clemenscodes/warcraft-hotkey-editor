@@ -1,1 +1,1 @@
-pub mod preview_textarea;
+pub mod preview_dialog_body;
