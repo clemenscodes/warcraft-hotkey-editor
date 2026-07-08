@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "text-xl",
-        "leading-relaxed",
+        "leading-prose",
         "text-warcraft-gold",
         "text-shadow-drop",
     ],

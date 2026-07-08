@@ -7,9 +7,8 @@ use components::details::hotkey_unit_detail::HotkeyUnitDetail;
 use components::details::island_detail::IslandDetail;
 use components::details::unit_position_detail::UnitPositionDetail;
 use components::empty_state::EmptyState;
-use components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
 use components::sidebars::island_sidebar::IslandSidebar;
-use components::sidebars::unit_position_sidebar::UnitPositionSidebar;
+use components::sidebars::unit_cards_sidebar::UnitCardsSidebar;
 use dioxus::prelude::*;
 pub use props::{BodyProps, ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 
@@ -54,7 +53,7 @@ pub fn Body(props: BodyProps) -> Element {
                 Content {
                     collision_kind,
                     count,
-                    HotkeyUnitSidebar { ..sidebar }
+                    UnitCardsSidebar { ..sidebar }
                     HotkeyUnitDetail { ..detail }
                 }
             }
@@ -68,7 +67,7 @@ pub fn Body(props: BodyProps) -> Element {
                 Content {
                     collision_kind,
                     count,
-                    UnitPositionSidebar { ..sidebar }
+                    UnitCardsSidebar { ..sidebar }
                     UnitPositionDetail { ..detail }
                 }
             }

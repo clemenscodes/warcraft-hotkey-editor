@@ -1,26 +1,9 @@
-use super::components::shared::conflict_position::ConflictPositionProps;
-use super::components::position_multi_stack::PositionMultiStackProps;
-use super::components::position_pair_row::{PositionPair, PositionPairRowProps};
 use super::props::UnitPositionConflictCardProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability::ConflictAbilityProps;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_marker_view::ConflictMarker;
 
-/// The shaped card: the caption plus the pair-row and multi-stack child props. A
-/// two-way clash flanks the cell (pair row); a rarer 3+-way clash stacks the cell
-/// above (multi stack). Exactly one renders; the other guards itself away.
-pub(super) struct UnitPositionConflictCardModel {
-    pub(super) role_label: String,
-    pub(super) pair_row: PositionPairRowProps,
-    pub(super) multi_stack: PositionMultiStackProps,
-}
-
-/// Which of the two clash presentations the card uses: an exact pair (two
-/// abilities) or a multi-stack (any other count). Exactly one field is populated.
-struct ClashLayout {
-    pair: Option<PositionPair>,
-    multi: Vec<ConflictAbilityProps>,
-}
-
-impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
+impl From<&UnitPositionConflictCardProps> for ConflictCardModel {
     fn from(props: &UnitPositionConflictCardProps) -> Self {
         let role_label = props.conflict.role_label().to_owned();
         let coordinate = props.conflict.coordinate();
@@ -36,38 +19,7 @@ impl From<&UnitPositionConflictCardProps> for UnitPositionConflictCardModel {
                 view_navigation: props.view_navigation,
             })
             .collect();
-        let cell_between = ConflictPositionProps {
-            coordinate,
-            is_top: false,
-        };
-        let cell_top = ConflictPositionProps {
-            coordinate,
-            is_top: true,
-        };
-        let clash = if abilities.len() == 2 {
-            let mut ability_iter = abilities.into_iter();
-            let left = ability_iter.next().expect("checked len == 2");
-            let right = ability_iter.next().expect("checked len == 2");
-            let pair = PositionPair::new(left, right, cell_between);
-            ClashLayout {
-                pair: Some(pair),
-                multi: Vec::new(),
-            }
-        } else {
-            ClashLayout {
-                pair: None,
-                multi: abilities,
-            }
-        };
-        let pair_row = PositionPairRowProps { pair: clash.pair };
-        let multi_stack = PositionMultiStackProps {
-            abilities: clash.multi,
-            cell: cell_top,
-        };
-        Self {
-            role_label,
-            pair_row,
-            multi_stack,
-        }
+        let marker = ConflictMarker::Position { coordinate };
+        Self::new(role_label, marker, abilities)
     }
 }

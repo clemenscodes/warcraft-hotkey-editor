@@ -1,8 +1,7 @@
-pub mod components;
 mod props;
 mod style;
 
-use components::empty_message::EmptyMessage;
+use crate::components::app::components::shell::components::shared::empty_message::EmptyMessage;
 use dioxus::prelude::*;
 pub use props::EmptyStateProps;
 use style::CLASS;

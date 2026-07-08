@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex-1",
-        "leading-tight",
+        "leading-title",
         "text-shadow-drop",
     ],
 }

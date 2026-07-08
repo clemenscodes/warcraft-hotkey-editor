@@ -1,12 +1,14 @@
 use dioxus::prelude::*;
 
 use super::components::body::ContentModel;
-use super::components::breadcrumbs::BreadcrumbsProps;
-use super::logic::{CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel};
+use super::logic::{
+    CollisionBreadcrumbsInputs, CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel,
+};
 use super::model::{
     CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
 };
 use super::props::CollisionsPageProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::collision_selection::context::use_collision_selection;
 use crate::services::customkeys::context::use_custom_keys_service;
@@ -119,13 +121,14 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
     let unit_positions = CollisionList::from(unit_position_views);
     let has_file = loaded_keys.read().is_some();
 
-    let breadcrumbs = BreadcrumbsProps {
-        kind,
+    let breadcrumb_inputs = CollisionBreadcrumbsInputs {
+        active_kind: kind,
         position_count: islands.unit_count,
         unit_position_count: unit_positions.collision_count,
         hotkey_count: hotkey_units.collision_count,
         view_navigation,
     };
+    let breadcrumbs = BreadcrumbsProps::from(breadcrumb_inputs);
     let content = match kind {
         CollisionKind::Hotkeys => {
             let inputs = HotkeysContent {

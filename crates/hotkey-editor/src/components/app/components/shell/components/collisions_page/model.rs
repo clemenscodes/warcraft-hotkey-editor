@@ -5,11 +5,10 @@ use super::components::body::components::details::hotkey_unit_detail::HotkeyUnit
 use super::components::body::components::details::island_detail::IslandDetailProps;
 use super::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
 use super::components::body::components::empty_state::EmptyStateProps;
-use super::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
 use super::components::body::components::sidebars::island_sidebar::IslandSidebarProps;
-use super::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
+use super::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
-use super::logic::{HotkeyUnitView, IslandView, UnitPositionUnitView};
+use super::logic::{CollisionUnitView, HotkeyUnitView, IslandView, UnitPositionUnitView};
 use crate::services::navigation::app_view::CollisionKind;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
@@ -32,17 +31,7 @@ impl CollisionEntry for IslandView {
     }
 }
 
-impl CollisionEntry for HotkeyUnitView {
-    fn key(&self) -> &str {
-        self.key()
-    }
-
-    fn collision_count(&self) -> usize {
-        self.collision_count()
-    }
-}
-
-impl CollisionEntry for UnitPositionUnitView {
+impl<Conflict> CollisionEntry for CollisionUnitView<Conflict> {
     fn key(&self) -> &str {
         self.key()
     }
@@ -143,7 +132,7 @@ impl From<HotkeysContent> for ContentModel {
             return Self::Clear(state);
         }
         let sidebar_units = content.list.views.clone();
-        let sidebar = HotkeyUnitSidebarProps {
+        let sidebar = UnitCardsSidebarProps {
             units: sidebar_units,
             selected_unit: content.selected_unit,
         };
@@ -185,7 +174,7 @@ impl From<UnitPositionsContent> for ContentModel {
             return Self::Clear(state);
         }
         let sidebar_units = content.list.views.clone();
-        let sidebar = UnitPositionSidebarProps {
+        let sidebar = UnitCardsSidebarProps {
             units: sidebar_units,
             selected_unit: content.selected_unit,
         };

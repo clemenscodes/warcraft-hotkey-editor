@@ -1,12 +1,12 @@
 pub mod components;
 mod data;
 mod hooks;
-pub(crate) mod logic;
+pub mod logic;
 mod model;
 mod props;
 
+use crate::components::app::components::shell::components::shared::breadcrumbs::Breadcrumbs;
 use components::body::Body;
-use components::breadcrumbs::Breadcrumbs;
 use components::collisions_shell::CollisionsShell;
 use dioxus::prelude::*;
 use hooks::use_collisions_page;

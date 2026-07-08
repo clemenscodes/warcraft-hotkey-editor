@@ -3,6 +3,26 @@
 This project edits **`CustomKeys.txt`** for Warcraft III: Reforged. It is a
 pure-frontend web app — no server, no database, no cloud.
 
+## Only two commands exist — nothing else is allowed
+
+There are exactly **two** commands you may ever run for this project. Do not
+invent, guess, or "try" any other target, and do not fall back to bare
+`cargo`/`dx`/`playwright`/`moon <anything-else>`:
+
+- **Test gate:** `moon run :ci` — the one and only way to verify. It runs
+  fmt, clippy, tests, the wasm build, and the Playwright e2e gate across every
+  project. If you want to know whether the work is green, you run `moon run
+  :ci`. Full stop. Never `moon run <crate>:rust/test`, never `moon run
+  e2e:playwright/test`, never `cargo test`, never `cargo clippy`, never
+  `cargo check` — those are not the gate and are forbidden.
+- **Dev server:** `moon run :dev` — the one and only way to run the app.
+  Never `dx serve`, never `moon run hotkey-editor:dx/serve`, never anything
+  else.
+
+Any other command shape is wrong by definition. If `moon run :ci` fails, fix
+the code and run `moon run :ci` again — never route around it with a
+narrower command.
+
 Three documents define the rules of this project. All are mandatory reading
 before any non-trivial change:
 

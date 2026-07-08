@@ -1,13 +1,12 @@
-use super::components::breadcrumbs::BreadcrumbsProps;
-use super::components::breadcrumbs::components::breadcrumb::BreadcrumbProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::components::breadcrumb::BreadcrumbProps;
 use super::components::plan_body::components::active_move_list::components::move_row::MoveRowProps;
 use super::components::plan_body::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
 use super::components::plan_body::{PlanBodyProps, PlanBodySection};
-use crate::components::app::components::shell::components::shared::icons::IconUrl;
+use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
-use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CascadePlan, GridSlotId, MoveReason};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
@@ -21,14 +20,10 @@ pub struct AbilityDisplay {
 impl From<GridSlotId> for AbilityDisplay {
     fn from(slot_id: GridSlotId) -> Self {
         let id_value = slot_id.id().value();
-        let object_option = ObjectLookup::by_id(id_value);
-        let icon_url = object_option
-            .and_then(|object| object.icons().first().copied())
-            .map(IconUrl::from_database_path)
-            .map(|icon| icon.to_string());
-        let name_option = object_option.and_then(|object| object.names().first().copied());
-        let name = match name_option {
-            Some(resolved) => resolved.to_owned(),
+        let resolved = ResolvedIcon::lookup(id_value);
+        let icon_url = resolved.icon_url().map(str::to_owned);
+        let name = match resolved.name() {
+            Some(name) => name.to_owned(),
             None => slot_id.display_name(None, None),
         };
         let object_id = slot_id.as_str().to_owned();
@@ -468,7 +463,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             let category = section.category;
             let is_active = active_category == Some(category);
             let data_breadcrumb = category.data_breadcrumb();
-            let title = section.title.to_owned();
+            let label = section.title.to_owned();
             let count = section.moves.len();
             let mut selection = selection;
             let onclick = EventHandler::new(move |_event: MouseEvent| {
@@ -476,7 +471,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
                 selection.set(Some(slug));
             });
             let breadcrumb = BreadcrumbProps {
-                title,
+                label,
                 count,
                 data_breadcrumb,
                 active: is_active,
@@ -486,6 +481,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
         }
         let breadcrumbs = BreadcrumbsProps {
             breadcrumbs: breadcrumb_list,
+            aria_label: "Move categories",
         };
         let section = active.map(|section| {
             let rows: Vec<MoveRowProps> = section

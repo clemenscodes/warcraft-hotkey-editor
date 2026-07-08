@@ -1,13 +1,12 @@
-pub mod components;
 mod logic;
 mod props;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card::ConflictCard;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_caption::ConflictCardCaption;
-use components::hotkey_multi_stack::HotkeyMultiStack;
-use components::hotkey_pair_row::HotkeyPairRow;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_multi_stack::ConflictMultiStack;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_pair_row::ConflictPairRow;
 use dioxus::prelude::*;
-use logic::HotkeyConflictCardModel;
 pub use props::HotkeyConflictCardProps;
 
 /// One shared-hotkey conflict card: the abilities flanking (or stacked under) the
@@ -17,12 +16,12 @@ use tw_macro::assert_component;
 assert_component!(HotkeyConflictCard);
 #[component]
 pub fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
-    let model = HotkeyConflictCardModel::from(&props);
+    let model = ConflictCardModel::from(&props);
     rsx! {
         ConflictCard {
-            ConflictCardCaption { text: model.role_label }
-            HotkeyPairRow { ..model.pair_row }
-            HotkeyMultiStack { ..model.multi_stack }
+            ConflictCardCaption { ..model.caption }
+            ConflictPairRow { ..model.pair_row }
+            ConflictMultiStack { ..model.multi_stack }
         }
     }
 }

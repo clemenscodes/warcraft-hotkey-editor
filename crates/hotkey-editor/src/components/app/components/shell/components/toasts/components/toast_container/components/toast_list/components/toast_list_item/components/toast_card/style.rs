@@ -8,7 +8,7 @@ classes! {
         "gap-5",
         "px-8",
         "py-6",
-        "rounded-xl",
+        "rounded-container",
         "border-2",
         "text-warcraft-text-primary",
         "cursor-pointer",

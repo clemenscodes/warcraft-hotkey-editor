@@ -11,8 +11,8 @@ const APP = "/warcraft-hotkey-editor/";
 
 async function openFirstSlotPicker(page: Page) {
   await page.locator('[data-inventory-slot]').first().click();
-  await page.locator(".system-key-picker-board").waitFor();
-  await expect(page.locator(".system-key-picker-board")).toBeFocused();
+  await page.locator(".key-picker-board").waitFor();
+  await expect(page.locator(".key-picker-board")).toBeFocused();
 }
 
 test.describe("System hotkey picker keyboard input", () => {
@@ -27,7 +27,7 @@ test.describe("System hotkey picker keyboard input", () => {
     const slotKey = page.locator('[data-inventory-slot]').first().locator(".system-slot-key");
     await openFirstSlotPicker(page);
     await page.keyboard.press("g");
-    await expect(page.locator(".system-key-picker-board")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(slotKey).toHaveText("G");
   });
 
@@ -40,7 +40,7 @@ test.describe("System hotkey picker keyboard input", () => {
     // Reopen and pick again — regression guard for the lost-focus-on-reopen bug.
     await openFirstSlotPicker(page);
     await page.keyboard.press("h");
-    await expect(page.locator(".system-key-picker-board")).not.toBeVisible();
+    await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(slotKey).toHaveText("H");
   });
 
@@ -49,7 +49,7 @@ test.describe("System hotkey picker keyboard input", () => {
     await page.keyboard.press("Tab");
     // The picker stays open and the slot stays in its editing state, proving Tab
     // was not accepted as a hotkey.
-    await expect(page.locator(".system-key-picker-board")).toBeVisible();
+    await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(
       page.locator('[data-inventory-slot]').first().locator(".system-slot-key"),
     ).toHaveText("…");

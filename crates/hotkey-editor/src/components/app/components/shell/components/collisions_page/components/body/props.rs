@@ -3,9 +3,11 @@ use super::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
 use super::components::details::island_detail::IslandDetailProps;
 use super::components::details::unit_position_detail::UnitPositionDetailProps;
 use super::components::empty_state::EmptyStateProps;
-use super::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebarProps;
 use super::components::sidebars::island_sidebar::IslandSidebarProps;
-use super::components::sidebars::unit_position_sidebar::UnitPositionSidebarProps;
+use super::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
+use crate::components::app::components::shell::components::collisions_page::logic::{
+    HotkeyConflictView, UnitPositionConflictView,
+};
 use crate::services::navigation::app_view::CollisionKind;
 use dioxus::prelude::*;
 
@@ -56,7 +58,7 @@ impl PositionsPane {
 pub struct HotkeysPane {
     collision_kind: CollisionKind,
     count: usize,
-    sidebar: HotkeyUnitSidebarProps,
+    sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
     detail: HotkeyUnitDetailProps,
 }
 
@@ -64,7 +66,7 @@ impl HotkeysPane {
     pub fn new(
         collision_kind: CollisionKind,
         count: usize,
-        sidebar: HotkeyUnitSidebarProps,
+        sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
         detail: HotkeyUnitDetailProps,
     ) -> Self {
         Self {
@@ -83,7 +85,7 @@ impl HotkeysPane {
         self.count
     }
 
-    pub fn sidebar(&self) -> &HotkeyUnitSidebarProps {
+    pub fn sidebar(&self) -> &UnitCardsSidebarProps<HotkeyConflictView> {
         &self.sidebar
     }
 
@@ -97,7 +99,7 @@ impl HotkeysPane {
 pub struct UnitPositionsPane {
     collision_kind: CollisionKind,
     count: usize,
-    sidebar: UnitPositionSidebarProps,
+    sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
     detail: UnitPositionDetailProps,
 }
 
@@ -105,7 +107,7 @@ impl UnitPositionsPane {
     pub fn new(
         collision_kind: CollisionKind,
         count: usize,
-        sidebar: UnitPositionSidebarProps,
+        sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
         detail: UnitPositionDetailProps,
     ) -> Self {
         Self {
@@ -124,7 +126,7 @@ impl UnitPositionsPane {
         self.count
     }
 
-    pub fn sidebar(&self) -> &UnitPositionSidebarProps {
+    pub fn sidebar(&self) -> &UnitCardsSidebarProps<UnitPositionConflictView> {
         &self.sidebar
     }
 

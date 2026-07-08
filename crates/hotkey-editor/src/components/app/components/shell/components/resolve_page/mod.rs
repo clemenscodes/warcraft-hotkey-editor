@@ -4,7 +4,7 @@ pub mod logic;
 mod props;
 mod style;
 
-use components::breadcrumbs::Breadcrumbs;
+use crate::components::app::components::shell::components::shared::breadcrumbs::Breadcrumbs;
 use components::clear_state::ClearState;
 use components::empty_state::EmptyState;
 use components::plan_body::PlanBody;

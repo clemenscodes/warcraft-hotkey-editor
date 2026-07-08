@@ -8,13 +8,13 @@ classes! {
     ],
     mobile: tw![
         "mobile:text-xs",
-        "mobile:leading-snug",
+        "mobile:leading-body",
         "mobile:text-warcraft-text-secondary",
         "mobile:opacity-90",
     ],
     tablet: tw![
         "tablet:text-xs",
-        "tablet:leading-snug",
+        "tablet:leading-body",
         "tablet:text-warcraft-text-secondary",
         "tablet:opacity-90",
     ],

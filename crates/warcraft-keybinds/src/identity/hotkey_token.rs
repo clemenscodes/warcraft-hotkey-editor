@@ -1,4 +1,4 @@
-use crate::identity::keycode::Letter;
+use crate::identity::keycode::{KeyCode, Letter, MouseButton};
 use crate::model::Hotkey;
 use std::fmt;
 
@@ -54,6 +54,31 @@ impl TryFrom<HotkeyToken> for char {
     }
 }
 
+impl From<HotkeyToken> for KeyCode {
+    fn from(token: HotkeyToken) -> Self {
+        match token {
+            HotkeyToken::Letter(letter) => Self::Letter(letter),
+            HotkeyToken::Escape => Self::Escape,
+            HotkeyToken::MouseForward => Self::Mouse(MouseButton::Forward),
+            HotkeyToken::MouseBack => Self::Mouse(MouseButton::Back),
+        }
+    }
+}
+
+impl TryFrom<KeyCode> for HotkeyToken {
+    type Error = KeyCodeIsNotHotkeyToken;
+
+    fn try_from(key: KeyCode) -> Result<Self, Self::Error> {
+        match key {
+            KeyCode::Letter(letter) => Ok(Self::Letter(letter)),
+            KeyCode::Escape => Ok(Self::Escape),
+            KeyCode::Mouse(MouseButton::Forward) => Ok(Self::MouseForward),
+            KeyCode::Mouse(MouseButton::Back) => Ok(Self::MouseBack),
+            _ => Err(KeyCodeIsNotHotkeyToken),
+        }
+    }
+}
+
 impl fmt::Display for HotkeyToken {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         let label = self.display_label();
@@ -89,11 +114,16 @@ impl TryFrom<&Hotkey> for HotkeyToken {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct HotkeyTokenIsNotLetter;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct HotkeyTokenParseError;
+
+/// A [`KeyCode`] that is not one of the keys an ability hotkey may bind: it is
+/// neither a letter, Escape, nor a mouse side button, so it has no [`HotkeyToken`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
+pub struct KeyCodeIsNotHotkeyToken;
 
 impl TryFrom<&str> for HotkeyToken {
     type Error = HotkeyTokenParseError;
@@ -135,5 +165,34 @@ mod ddd_marker_tests {
     #[test]
     fn hotkey_token_is_a_value_object() {
         assert_value_object::<HotkeyToken>();
+    }
+}
+
+#[cfg(test)]
+mod keycode_conversion_tests {
+    use super::{HotkeyToken, KeyCodeIsNotHotkeyToken};
+    use crate::identity::keycode::{KeyCode, Letter};
+
+    #[test]
+    fn every_token_round_trips_through_its_keycode() {
+        let letter = Letter::try_from('Q').expect("Q is a letter");
+        let tokens = [
+            HotkeyToken::Letter(letter),
+            HotkeyToken::Escape,
+            HotkeyToken::MouseForward,
+            HotkeyToken::MouseBack,
+        ];
+        for token in tokens {
+            let key = KeyCode::from(token);
+            let recovered = HotkeyToken::try_from(key).expect("a token keycode is a token");
+            assert_eq!(recovered, token);
+        }
+    }
+
+    #[test]
+    fn a_keycode_outside_the_token_set_has_no_token() {
+        let key = KeyCode::Space;
+        let recovered = HotkeyToken::try_from(key);
+        assert_eq!(recovered, Err(KeyCodeIsNotHotkeyToken));
     }
 }

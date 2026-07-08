@@ -27,7 +27,7 @@ classes! {
         "focus:outline-none",
         "kb-focus:border-white",
         "kb-focus:[--focus-color:var(--color-warcraft-highlight)]", "kb-focus:shadow-focus",
-        "data-[active=true]:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-blue)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-panel)_95%,transparent)_100%)]",
+        "data-[active=true]:bg-panel-blue",
     ],
     mobile: tw![
         "mobile:text-xs",

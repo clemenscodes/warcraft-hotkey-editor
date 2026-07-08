@@ -4,7 +4,7 @@ classes! {
         "uppercase",
         "tracking-[0.08em]",
         "text-3xl",
-        "leading-tight",
+        "leading-title",
         "text-warcraft-text-secondary",
         "text-shadow-drop",
     ],

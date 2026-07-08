@@ -8,7 +8,6 @@ classes! {
         "flex",
         "flex-col",
         "gap-2",
-        "mb-2",
         "[&>button]:min-h-[6.7rem]!",
     ],
     mobile: tw![

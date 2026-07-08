@@ -1,7 +1,6 @@
-pub mod components;
 mod data;
 mod style;
-use components::empty_message::EmptyMessage;
+use crate::components::app::components::shell::components::shared::empty_message::EmptyMessage;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;

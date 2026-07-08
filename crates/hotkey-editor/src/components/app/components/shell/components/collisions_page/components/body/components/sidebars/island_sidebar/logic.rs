@@ -1,10 +1,10 @@
-use super::components::island_card::IslandCardProps;
 use super::props::IslandSidebarProps;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_card::{CollisionCardContent, CollisionCardProps};
 use dioxus::prelude::*;
 
 /// One card's data per collision island: its selected state, key, click handler,
 /// highlighted coordinate, and collision-count line.
-pub(super) fn cards(props: &IslandSidebarProps) -> Vec<IslandCardProps> {
+pub(super) fn cards(props: &IslandSidebarProps) -> Vec<CollisionCardProps> {
     let mut selected_island = props.selected_island;
     let selected_key = selected_island.read().clone();
     props
@@ -19,12 +19,13 @@ pub(super) fn cards(props: &IslandSidebarProps) -> Vec<IslandCardProps> {
             let onclick = EventHandler::new(move |_event: MouseEvent| {
                 selected_island.set(Some(key_for_click.clone()))
             });
-            IslandCardProps {
+            let content = CollisionCardContent::Island { coordinate };
+            CollisionCardProps {
                 is_selected,
                 collision_key,
                 onclick,
-                coordinate,
                 count: collision_count,
+                content,
             }
         })
         .collect()

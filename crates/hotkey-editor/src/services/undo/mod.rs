@@ -12,9 +12,8 @@ use warcraft_keybinds::EditorHistory;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 
-/// Which direction a keyboard shortcut requested. Constructed only by the
-/// wasm-only keyboard listener; the native build reads but never builds it.
-#[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
+/// Which direction a keyboard shortcut requested. Constructed by the window
+/// keydown listener installed at boot.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum UndoDirection {
     Undo,
@@ -25,7 +24,6 @@ enum UndoDirection {
 /// each keypress is a distinct value (even repeats of the same direction). The
 /// window keydown listener only *sets* this signal; a reactive effect performs the
 /// undo/redo, where signal reads are valid.
-#[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 struct KeyboardUndoRequest {
     generation: u32,
@@ -213,7 +211,6 @@ fn snapshot_from_state(
     EditorSnapshot::new(keys_text, grid_layout_text)
 }
 
-#[cfg(target_arch = "wasm32")]
 impl UndoHistory {
     /// Installs a window-level keydown listener for Ctrl/Cmd+Z (undo) and
     /// Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y (redo). Suppressed while focus is in a text
@@ -265,12 +262,6 @@ impl UndoHistory {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-impl UndoHistory {
-    pub(crate) fn install_keyboard_shortcuts(self) {}
-}
-
-#[cfg(target_arch = "wasm32")]
 fn editable_target_is_focused() -> bool {
     use wasm_bindgen::JsCast;
     let Some(document) = web_sys::window().and_then(|window| window.document()) else {

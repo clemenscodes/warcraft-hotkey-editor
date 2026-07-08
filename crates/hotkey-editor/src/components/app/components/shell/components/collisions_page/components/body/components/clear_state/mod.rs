@@ -1,9 +1,8 @@
-pub mod components;
 mod props;
 mod style;
 
-use components::clear_icon::ClearIcon;
-use components::clear_label::ClearLabel;
+use crate::components::app::components::shell::components::shared::clear_icon::ClearIcon;
+use crate::components::app::components::shell::components::shared::clear_label::ClearLabel;
 use dioxus::prelude::*;
 pub use props::ClearStateProps;
 use style::CLASS;
@@ -20,7 +19,7 @@ pub fn ClearState(props: ClearStateProps) -> Element {
             "data-collision-kind": collision_kind,
             "data-unit-count": "0",
             ClearIcon {}
-            ClearLabel {}
+            ClearLabel { text: "All clear." }
         }
     }
 }

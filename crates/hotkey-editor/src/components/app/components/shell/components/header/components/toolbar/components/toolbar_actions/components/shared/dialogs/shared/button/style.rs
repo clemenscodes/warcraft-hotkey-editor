@@ -8,7 +8,7 @@ classes! {
         "justify-center",
         "px-14",
         "py-6",
-        "rounded-lg",
+        "rounded-card",
         "text-2xl",
         "whitespace-nowrap",
         "cursor-pointer",

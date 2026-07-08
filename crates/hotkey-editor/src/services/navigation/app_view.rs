@@ -32,7 +32,6 @@ impl AppView {
 
     /// Builds an `AppView` from the raw `view` and `kind` query strings.
     /// Unknown values fall back to the editor.
-    #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
     pub fn from_query_params(view_param: Option<&str>, kind_param: Option<&str>) -> Self {
         let view_value = view_param.unwrap_or("editor");
         match view_value {
@@ -46,7 +45,6 @@ impl AppView {
     }
 
     /// The string written to the `view` URL parameter.
-    #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
     pub fn view_param(&self) -> &'static str {
         match self {
             Self::Editor => "editor",
@@ -57,7 +55,6 @@ impl AppView {
 
     /// The string written to the `kind` URL parameter, if applicable.
     /// `None` for views without a sub-kind.
-    #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
     pub fn kind_param(&self) -> Option<&'static str> {
         match self {
             Self::Collisions { kind } => Some(kind.kind_param()),
@@ -67,7 +64,6 @@ impl AppView {
 }
 
 impl CollisionKind {
-    #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
     pub(crate) fn from_query_param(kind_param: Option<&str>) -> Self {
         match kind_param.unwrap_or("positions") {
             "hotkeys" => Self::Hotkeys,
@@ -78,7 +74,6 @@ impl CollisionKind {
 
     /// The kind's canonical slug, used both as the URL `kind` query parameter and as
     /// the `data-breadcrumb` selection attribute on its breadcrumb tab.
-    #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
     pub(crate) fn kind_param(self) -> &'static str {
         match self {
             Self::Positions => "positions",

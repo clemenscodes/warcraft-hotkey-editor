@@ -6,7 +6,7 @@ classes! {
         "justify-center",
         "w-9",
         "h-9",
-        "rounded-md",
+        "rounded-tile",
         "border-0",
         "bg-transparent",
         "text-warcraft-text-muted",

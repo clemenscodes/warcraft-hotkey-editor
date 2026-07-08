@@ -1,5 +1,5 @@
 use super::hooks::KeyCaptureModel;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
+use crate::components::app::components::shell::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;
 
 impl From<&KeyCaptureModel> for TooltipProps {

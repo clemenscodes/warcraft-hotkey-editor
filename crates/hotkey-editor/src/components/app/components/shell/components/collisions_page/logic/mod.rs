@@ -1,9 +1,12 @@
-use crate::components::app::components::shell::components::shared::icons::IconUrl;
+mod breadcrumbs;
+
+pub(crate) use breadcrumbs::CollisionBreadcrumbsInputs;
+
+use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use std::collections::{HashMap, HashSet};
-use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{
     CrossUnitCollisionReport, CrossUnitPositionGroup, GridCoordinate, GridSlotId,
-    SharedAbilityEntry, UnitCollisionReport,
+    SharedAbilityEntry, UnitCollisionEntry, UnitCollisionReport,
 };
 
 /// One ability resolved to an icon, display name, and object id. Two abilities
@@ -52,13 +55,9 @@ pub struct UnitIconView {
 
 impl From<&str> for UnitIconView {
     fn from(unit_id_value: &str) -> Self {
-        let object_option = ObjectLookup::by_id(unit_id_value);
-        let icon_url = object_option
-            .and_then(|object| object.icons().first().copied())
-            .map(IconUrl::from_database_path)
-            .map(|icon| icon.to_string());
-        let name_option = object_option.and_then(|object| object.names().first().copied());
-        let name = name_option.unwrap_or(unit_id_value).to_owned();
+        let resolved = ResolvedIcon::lookup(unit_id_value);
+        let icon_url = resolved.icon_url().map(str::to_owned);
+        let name = resolved.name_or(unit_id_value);
         let unit_id = unit_id_value.to_owned();
         Self {
             unit_id,
@@ -295,13 +294,9 @@ struct AbilityResolution {
 impl From<GridSlotId> for AbilityResolution {
     fn from(slot_id: GridSlotId) -> Self {
         let id_value = slot_id.id().value();
-        let object_option = ObjectLookup::by_id(id_value);
-        let icon_url = object_option
-            .and_then(|object| object.icons().first().copied())
-            .map(IconUrl::from_database_path)
-            .map(|icon| icon.to_string());
-        let name_option = object_option.and_then(|object| object.names().first().copied());
-        let name = match name_option {
+        let resolved = ResolvedIcon::lookup(id_value);
+        let icon_url = resolved.icon_url().map(str::to_owned);
+        let name = match resolved.name() {
             Some(name) => name.to_owned(),
             None => slot_id.display_name(None, None),
         };
@@ -349,17 +344,19 @@ impl HotkeyConflictView {
     }
 }
 
-/// One unit that has hotkey collisions, flattened into display-ready data: the
-/// unit header plus every shared-letter conflict across its command cards.
+/// One unit that has collisions, flattened into display-ready data: the unit
+/// header, how many conflicts it holds, and the conflicts themselves. Generic over
+/// the conflict shape — shared-hotkey-letter clashes ([`HotkeyUnitView`]) or
+/// per-cell position clashes ([`UnitPositionUnitView`]).
 #[derive(Clone, PartialEq)]
-pub struct HotkeyUnitView {
+pub struct CollisionUnitView<Conflict> {
     key: String,
     unit: UnitIconView,
     collision_count: usize,
-    conflicts: Vec<HotkeyConflictView>,
+    conflicts: Vec<Conflict>,
 }
 
-impl HotkeyUnitView {
+impl<Conflict> CollisionUnitView<Conflict> {
     pub fn key(&self) -> &str {
         &self.key
     }
@@ -372,57 +369,31 @@ impl HotkeyUnitView {
         self.collision_count
     }
 
-    pub fn conflicts(&self) -> &[HotkeyConflictView] {
+    pub fn conflicts(&self) -> &[Conflict] {
         &self.conflicts
     }
-}
 
-/// Turns the domain's `UnitCollisionReport` into a flat list of units with
-/// hotkey collisions, each carrying its shared-letter conflicts. Sorted by
-/// collision count descending to mirror the position-collision sidebar.
-pub(crate) struct HotkeyCollisionPageModel;
-
-impl HotkeyCollisionPageModel {
-    pub(crate) fn compute(report: &UnitCollisionReport) -> Vec<HotkeyUnitView> {
+    /// Builds the sorted per-unit collision list from a report: every entry whose
+    /// `shape` yields conflicts becomes a view keyed by that unit, and the list is
+    /// sorted by collision count descending. This is the shared derivation both
+    /// collision kinds run; each kind supplies only how a unit's conflicts are shaped.
+    fn from_report(
+        report: &UnitCollisionReport,
+        shape: impl Fn(&UnitCollisionEntry) -> Vec<Conflict>,
+    ) -> Vec<Self> {
         let entries = report.entries();
-        let mut units: Vec<HotkeyUnitView> = Vec::with_capacity(entries.len());
+        let mut units: Vec<Self> = Vec::with_capacity(entries.len());
         for entry in entries {
-            let hotkey_cards = entry.hotkey_cards();
-            let mut conflicts: Vec<HotkeyConflictView> = Vec::new();
-            for card in hotkey_cards {
-                if card.is_empty() {
-                    continue;
-                }
-                let role = card.role();
-                let role_label = role.label().to_owned();
-                for (_grid_coordinate, collision_cell) in card {
-                    let token = collision_cell.token();
-                    let hotkey_label = token.display_label();
-                    let collision_slots = collision_cell.slots();
-                    let mut abilities: Vec<AbilityIconView> =
-                        Vec::with_capacity(collision_slots.len());
-                    for slot_id in collision_slots.iter() {
-                        let ability = AbilityIconView::from(slot_id);
-                        abilities.push(ability);
-                    }
-                    let conflict = HotkeyConflictView {
-                        hotkey_label,
-                        role_label: role_label.clone(),
-                        abilities,
-                    };
-                    conflicts.push(conflict);
-                }
-            }
+            let conflicts = shape(entry);
             if conflicts.is_empty() {
                 continue;
             }
-            conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();
             let unit = UnitIconView::from(unit_id_value);
             let key = unit_id_value.to_owned();
-            let unit_view = HotkeyUnitView {
+            let unit_view = Self {
                 key,
                 unit,
                 collision_count,
@@ -432,6 +403,55 @@ impl HotkeyCollisionPageModel {
         }
         units.sort_by_key(|unit_view| std::cmp::Reverse(unit_view.collision_count));
         units
+    }
+}
+
+/// A unit's shared-hotkey-letter collisions across its command cards.
+pub type HotkeyUnitView = CollisionUnitView<HotkeyConflictView>;
+
+/// A unit's per-cell position collisions (its own abilities clashing on a slot).
+pub type UnitPositionUnitView = CollisionUnitView<UnitPositionConflictView>;
+
+/// Turns the domain's `UnitCollisionReport` into a flat list of units with
+/// hotkey collisions, each carrying its shared-letter conflicts. Sorted by
+/// collision count descending to mirror the position-collision sidebar.
+pub(crate) struct HotkeyCollisionPageModel;
+
+impl HotkeyCollisionPageModel {
+    pub(crate) fn compute(report: &UnitCollisionReport) -> Vec<HotkeyUnitView> {
+        HotkeyUnitView::from_report(report, Self::shape_conflicts)
+    }
+
+    /// One unit's shared-hotkey-letter conflicts across its command cards, ordered
+    /// by how many abilities clash on each letter (the widest clash first).
+    fn shape_conflicts(entry: &UnitCollisionEntry) -> Vec<HotkeyConflictView> {
+        let hotkey_cards = entry.hotkey_cards();
+        let mut conflicts: Vec<HotkeyConflictView> = Vec::new();
+        for card in hotkey_cards {
+            if card.is_empty() {
+                continue;
+            }
+            let role = card.role();
+            let role_label = role.label().to_owned();
+            for (_grid_coordinate, collision_cell) in card {
+                let token = collision_cell.token();
+                let hotkey_label = token.display_label();
+                let collision_slots = collision_cell.slots();
+                let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
+                for slot_id in collision_slots.iter() {
+                    let ability = AbilityIconView::from(slot_id);
+                    abilities.push(ability);
+                }
+                let conflict = HotkeyConflictView {
+                    hotkey_label,
+                    role_label: role_label.clone(),
+                    abilities,
+                };
+                conflicts.push(conflict);
+            }
+        }
+        conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
+        conflicts
     }
 }
 
@@ -458,34 +478,6 @@ impl UnitPositionConflictView {
     }
 }
 
-/// One unit with per-unit position collisions: the unit header plus each cell
-/// where its own abilities clash on the same slot.
-#[derive(Clone, PartialEq)]
-pub struct UnitPositionUnitView {
-    key: String,
-    unit: UnitIconView,
-    collision_count: usize,
-    conflicts: Vec<UnitPositionConflictView>,
-}
-
-impl UnitPositionUnitView {
-    pub fn key(&self) -> &str {
-        &self.key
-    }
-
-    pub fn unit(&self) -> &UnitIconView {
-        &self.unit
-    }
-
-    pub fn collision_count(&self) -> usize {
-        self.collision_count
-    }
-
-    pub fn conflicts(&self) -> &[UnitPositionConflictView] {
-        &self.conflicts
-    }
-}
-
 /// Turns the domain's `UnitCollisionReport` into a flat list of units whose own
 /// abilities collide on a command-card cell, each carrying its per-cell
 /// conflicts. Sorted by collision count descending.
@@ -493,50 +485,35 @@ pub(crate) struct UnitPositionPageModel;
 
 impl UnitPositionPageModel {
     pub(crate) fn compute(report: &UnitCollisionReport) -> Vec<UnitPositionUnitView> {
-        let entries = report.entries();
-        let mut units: Vec<UnitPositionUnitView> = Vec::with_capacity(entries.len());
-        for entry in entries {
-            let position_cards = entry.position_cards();
-            let mut conflicts: Vec<UnitPositionConflictView> = Vec::new();
-            for card in position_cards {
-                if card.is_empty() {
-                    continue;
-                }
-                let role = card.role();
-                let role_label = role.label().to_owned();
-                for (coordinate, collision_slots) in card {
-                    let mut abilities: Vec<AbilityIconView> =
-                        Vec::with_capacity(collision_slots.len());
-                    for slot_id in collision_slots.iter() {
-                        let ability = AbilityIconView::from(slot_id);
-                        abilities.push(ability);
-                    }
-                    let conflict = UnitPositionConflictView {
-                        coordinate,
-                        role_label: role_label.clone(),
-                        abilities,
-                    };
-                    conflicts.push(conflict);
-                }
-            }
-            if conflicts.is_empty() {
+        UnitPositionUnitView::from_report(report, Self::shape_conflicts)
+    }
+
+    /// One unit's per-cell position conflicts across its command cards, ordered by
+    /// how many of the unit's own abilities clash on each cell (widest clash first).
+    fn shape_conflicts(entry: &UnitCollisionEntry) -> Vec<UnitPositionConflictView> {
+        let position_cards = entry.position_cards();
+        let mut conflicts: Vec<UnitPositionConflictView> = Vec::new();
+        for card in position_cards {
+            if card.is_empty() {
                 continue;
             }
-            conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
-            let collision_count = conflicts.len();
-            let unit_object_id = entry.unit_id();
-            let unit_id_value = unit_object_id.value();
-            let unit = UnitIconView::from(unit_id_value);
-            let key = unit_id_value.to_owned();
-            let unit_view = UnitPositionUnitView {
-                key,
-                unit,
-                collision_count,
-                conflicts,
-            };
-            units.push(unit_view);
+            let role = card.role();
+            let role_label = role.label().to_owned();
+            for (coordinate, collision_slots) in card {
+                let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
+                for slot_id in collision_slots.iter() {
+                    let ability = AbilityIconView::from(slot_id);
+                    abilities.push(ability);
+                }
+                let conflict = UnitPositionConflictView {
+                    coordinate,
+                    role_label: role_label.clone(),
+                    abilities,
+                };
+                conflicts.push(conflict);
+            }
         }
-        units.sort_by_key(|unit_view| std::cmp::Reverse(unit_view.collision_count));
-        units
+        conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
+        conflicts
     }
 }

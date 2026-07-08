@@ -1,7 +1,6 @@
-pub mod components;
 mod style;
-use components::clear_icon::ClearIcon;
-use components::clear_label::ClearLabel;
+use crate::components::app::components::shell::components::shared::clear_icon::ClearIcon;
+use crate::components::app::components::shell::components::shared::clear_label::ClearLabel;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -15,7 +14,7 @@ pub fn ClearState() -> Element {
             class: CLASS,
             "data-resolve-state": "clear",
             ClearIcon {}
-            ClearLabel {}
+            ClearLabel { text: "Nothing to resolve." }
         }
     }
 }

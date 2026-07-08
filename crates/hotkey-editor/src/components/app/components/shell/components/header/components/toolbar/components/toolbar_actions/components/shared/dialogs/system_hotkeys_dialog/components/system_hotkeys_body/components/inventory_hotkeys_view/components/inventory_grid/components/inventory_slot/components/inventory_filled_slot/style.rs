@@ -5,6 +5,8 @@ classes! {
     base: tw![
         "relative",
         "group/tooltip",
+        "[anchor-name:--tooltip-anchor]",
+        "[anchor-scope:--tooltip-anchor]",
         "flex",
         "flex-col",
         "items-center",

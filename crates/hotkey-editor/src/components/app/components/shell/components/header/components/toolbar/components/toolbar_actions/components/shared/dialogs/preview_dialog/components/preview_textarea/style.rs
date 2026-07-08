@@ -6,7 +6,7 @@ classes! {
         "min-h-80",
         "px-8",
         "py-6",
-        "rounded-md",
+        "rounded-tile",
         "border",
         "border-warcraft-blue",
         "bg-warcraft-bg-base/85",

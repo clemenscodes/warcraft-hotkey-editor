@@ -16,13 +16,11 @@ classes! {
         "mobile:grid-cols-[minmax(0,1fr)]",
         "mobile:gap-6",
         "mobile:items-start",
-        "mobile:mt-3.5",
     ],
     tablet: tw![
         "tablet:grid",
         "tablet:grid-cols-[minmax(0,1fr)]",
         "tablet:gap-6",
         "tablet:items-start",
-        "tablet:mt-3.5",
     ],
 }

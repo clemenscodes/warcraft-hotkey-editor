@@ -10,7 +10,7 @@ classes! {
         "px-2",
         "py-1",
         "whitespace-nowrap",
-        "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_60%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent)_100%)]",
+        "bg-panel-gold-resting",
         "border",
         "border-warcraft-gold/45",
         "rounded-tile",

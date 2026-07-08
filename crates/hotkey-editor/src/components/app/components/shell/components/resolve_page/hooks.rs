@@ -1,8 +1,8 @@
-use super::components::breadcrumbs::BreadcrumbsProps;
 use super::components::plan_body::PlanBodyProps;
 use super::components::plan_header::PlanHeaderProps;
 use super::logic::{ActivePlanInputs, ActivePlanView, PlanCounts, PlanView};
 use super::props::ResolvePageProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_loaded_keys};
 use crate::services::navigation::app_view::AppView;

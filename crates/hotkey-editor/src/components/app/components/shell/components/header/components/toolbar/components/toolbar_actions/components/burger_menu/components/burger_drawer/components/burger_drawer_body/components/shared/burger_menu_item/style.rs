@@ -35,7 +35,7 @@ states! {
     BurgerItemState,
     Idle => tw![],
     Active => tw![
-        "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-gold)_22%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_60%,transparent)_100%)]",
+        "bg-panel-gold-active",
         "border-warcraft-gold",
         "text-warcraft-gold",
         "shadow-ring",

@@ -10,7 +10,7 @@ classes! {
         "border-solid",
         "border-12",
         "select-none",
-        "[background:linear-gradient(180deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_95%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
+        "bg-panel-toast",
         "[border-image-source:var(--wc3-slot-frame)]",
         "[border-image-slice:12_fill]",
         "[border-image-repeat:stretch]",

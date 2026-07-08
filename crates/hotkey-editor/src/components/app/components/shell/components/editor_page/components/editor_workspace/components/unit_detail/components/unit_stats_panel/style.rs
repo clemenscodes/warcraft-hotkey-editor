@@ -7,8 +7,6 @@ classes! {
         "items-stretch",
         "gap-x-8",
         "gap-y-10",
-        "mt-10",
-        "mb-3",
         "py-6", "px-7",
         "bg-warcraft-bg-base/55",
         "border",

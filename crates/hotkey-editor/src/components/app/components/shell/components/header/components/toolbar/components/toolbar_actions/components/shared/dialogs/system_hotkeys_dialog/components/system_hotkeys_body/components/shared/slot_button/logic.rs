@@ -1,5 +1,5 @@
 use super::hooks::SlotButtonModel;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
+use crate::components::app::components::shell::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_key::SystemSlotKeyProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabelProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;

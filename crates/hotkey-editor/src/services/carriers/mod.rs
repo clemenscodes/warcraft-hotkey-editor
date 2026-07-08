@@ -1,5 +1,4 @@
-use crate::components::app::components::shell::components::shared::icons::IconUrl;
-use warcraft_database::ObjectLookup;
+use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 
 /// The identity of the ability whose carriers are to be shown: its display name and
 /// the ids of the units that carry it (the query input). A lean value a trigger stashes
@@ -38,13 +37,9 @@ pub struct CarrierUnitView {
 
 impl From<&str> for CarrierUnitView {
     fn from(unit_id_value: &str) -> Self {
-        let object_option = ObjectLookup::by_id(unit_id_value);
-        let icon_url = object_option
-            .and_then(|object| object.icons().first().copied())
-            .map(IconUrl::from_database_path)
-            .map(|icon| icon.to_string());
-        let name_option = object_option.and_then(|object| object.names().first().copied());
-        let name = name_option.unwrap_or(unit_id_value).to_owned();
+        let resolved = ResolvedIcon::lookup(unit_id_value);
+        let icon_url = resolved.icon_url().map(str::to_owned);
+        let name = resolved.name_or(unit_id_value);
         let unit_id = unit_id_value.to_owned();
         Self {
             unit_id,

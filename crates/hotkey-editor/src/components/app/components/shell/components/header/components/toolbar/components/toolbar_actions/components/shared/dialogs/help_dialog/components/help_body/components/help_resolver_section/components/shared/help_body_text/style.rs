@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "m-0",
         "text-xl",
-        "leading-relaxed",
+        "leading-prose",
         "text-warcraft-text-primary",
     ],
     mobile: tw!["mobile:text-lg", "mobile:leading-prose"],

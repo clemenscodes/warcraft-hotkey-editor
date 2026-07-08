@@ -14,7 +14,7 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::{
     SystemKeyPickerDialog, SystemKeyPickerDialogProps,
 };
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::tooltip::{
+use crate::components::app::components::shell::components::shared::tooltip::{
     Tooltip, TooltipProps,
 };
 use dioxus::prelude::*;

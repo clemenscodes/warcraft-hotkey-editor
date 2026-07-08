@@ -1,8 +1,7 @@
-pub mod components;
 mod logic;
 mod props;
 
-use self::components::island_card::IslandCard;
+use super::shared::collision_card::CollisionCard;
 use super::sidebar::components::collision_list_scroll::CollisionScroll;
 use super::sidebar::{Sidebar, SidebarProps};
 use dioxus::prelude::*;
@@ -18,7 +17,7 @@ pub fn IslandSidebar(props: IslandSidebarProps) -> Element {
     let cards = cards(&props);
     let children = rsx! {
         for card in cards {
-            IslandCard { ..card }
+            CollisionCard { ..card }
         }
     };
     let kind = CollisionScroll;

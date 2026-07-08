@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "text-xl",
-        "leading-relaxed",
+        "leading-prose",
         "text-warcraft-text-secondary",
     ],
     mobile: tw!["mobile:text-lg", "mobile:leading-prose"],

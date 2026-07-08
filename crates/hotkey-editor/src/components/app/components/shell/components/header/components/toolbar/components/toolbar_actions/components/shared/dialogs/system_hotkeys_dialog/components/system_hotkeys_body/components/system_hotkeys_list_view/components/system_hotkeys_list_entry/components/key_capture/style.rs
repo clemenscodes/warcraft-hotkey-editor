@@ -26,6 +26,8 @@ classes! {
         "kb-focus:filter-[drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent))]",
         "relative",
         "group/tooltip",
+        "[anchor-name:--tooltip-anchor]",
+        "[anchor-scope:--tooltip-anchor]",
     ],
     mobile: tw![
         "mobile:min-w-22",

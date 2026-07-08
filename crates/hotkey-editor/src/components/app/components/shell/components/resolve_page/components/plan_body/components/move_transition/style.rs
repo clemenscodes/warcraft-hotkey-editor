@@ -7,6 +7,5 @@ classes! {
         "justify-center",
         "gap-6",
         "w-full",
-        "mt-6",
     ],
 }

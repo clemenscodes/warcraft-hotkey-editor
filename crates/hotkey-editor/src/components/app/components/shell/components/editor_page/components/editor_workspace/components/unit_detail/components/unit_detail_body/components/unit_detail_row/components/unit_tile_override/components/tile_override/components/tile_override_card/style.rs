@@ -16,7 +16,7 @@ classes! {
         "border",
         "border-warcraft-gold",
         "rounded-panel",
-        "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-shadow)_55%,transparent)_100%)]",
+        "bg-panel-gold-resting",
         "shadow-glow-soft",
     ],
     mobile: tw![

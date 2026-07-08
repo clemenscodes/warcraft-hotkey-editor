@@ -2,8 +2,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "mx-0",
-        "mt-2",
-        "mb-3",
         "text-md",
         "font-normal",
         "uppercase",

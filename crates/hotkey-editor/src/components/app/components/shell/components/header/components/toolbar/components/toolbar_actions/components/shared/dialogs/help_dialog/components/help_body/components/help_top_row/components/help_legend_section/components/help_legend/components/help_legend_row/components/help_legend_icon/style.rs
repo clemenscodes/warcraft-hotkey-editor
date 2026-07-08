@@ -9,7 +9,7 @@ classes! {
         "h-12",
         "border",
         "border-warcraft-gold/40",
-        "rounded-lg",
+        "rounded-card",
         "bg-panel-gold-resting",
         "text-warcraft-gold",
         "[&_svg]:w-8",

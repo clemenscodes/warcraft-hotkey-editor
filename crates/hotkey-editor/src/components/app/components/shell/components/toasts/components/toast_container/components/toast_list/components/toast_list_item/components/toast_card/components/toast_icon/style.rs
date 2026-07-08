@@ -19,19 +19,19 @@ classes! {
 states! {
     ToastType,
     Success => tw![
-        "bg-[color-mix(in_oklab,var(--color-warcraft-success)_18%,transparent)]",
+        "bg-warcraft-success/18",
         "text-warcraft-success",
     ],
     Error => tw![
-        "bg-[color-mix(in_oklab,var(--color-race-orc)_20%,transparent)]",
+        "bg-race-orc/20",
         "text-race-orc",
     ],
     Warning => tw![
-        "bg-[color-mix(in_oklab,var(--color-warcraft-gold)_20%,transparent)]",
+        "bg-warcraft-gold/20",
         "text-warcraft-gold",
     ],
     Info => tw![
-        "bg-[color-mix(in_oklab,var(--color-race-human)_18%,transparent)]",
+        "bg-race-human/18",
         "text-race-human",
     ],
 }

@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "px-8",
         "py-4",
-        "rounded-md",
+        "rounded-tile",
         "border",
         "border-warcraft-gold/35",
         "bg-warcraft-bg-base/85",

@@ -10,7 +10,7 @@ classes! {
         "flex-col",
         "gap-0.5",
         "p-1",
-        "[background:linear-gradient(170deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
+        "bg-panel-toast",
         "border",
         "border-warcraft-gold/45",
         "rounded-card",

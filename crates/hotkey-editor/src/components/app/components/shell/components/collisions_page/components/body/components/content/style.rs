@@ -7,7 +7,6 @@ classes! {
         "grid-cols-[34rem_minmax(0,1fr)]",
         "gap-10",
         "items-stretch",
-        "mt-6",
         "flex-[1_1_0]",
         "min-h-0",
     ],

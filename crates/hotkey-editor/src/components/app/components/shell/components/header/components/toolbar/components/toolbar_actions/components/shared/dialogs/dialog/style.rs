@@ -10,10 +10,10 @@ classes! {
         "p-0",
         "gap-0",
         "overflow-hidden",
-        "rounded-xl",
+        "rounded-container",
         "border",
         "border-warcraft-gold",
-        "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-bg-mid)_98%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-bg-base)_98%,transparent)_100%)]",
+        "bg-panel-toast",
         "shadow-overlay",
     ],
     mobile: tw![

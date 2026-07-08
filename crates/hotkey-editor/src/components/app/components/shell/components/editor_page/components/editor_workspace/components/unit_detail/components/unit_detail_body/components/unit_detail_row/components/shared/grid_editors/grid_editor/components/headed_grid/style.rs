@@ -9,6 +9,8 @@ classes! {
         "flex",
         "flex-col",
         "items-center",
+        "gap-3",
+        "pt-2",
         "flex-[1_1_0]",
         "min-w-0",
         "self-stretch",

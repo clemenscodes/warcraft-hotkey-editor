@@ -7,7 +7,7 @@ classes! {
         "uppercase",
         "tracking-widest",
         "text-2xl",
-        "leading-snug",
+        "leading-body",
         "text-warcraft-gold/75",
         "text-shadow-drop",
     ],

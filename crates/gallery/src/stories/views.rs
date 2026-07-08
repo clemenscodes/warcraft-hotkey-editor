@@ -5,12 +5,12 @@ use hotkey_editor::components::app::components::shell::components::toasts::Toast
 
 use hotkey_editor::components::app::components::shell::components::collisions_page::CollisionsPage;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
-use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::hotkey_unit_sidebar::HotkeyUnitSidebar;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::island_detail::IslandDetail;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
 use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;
-use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::unit_position_sidebar::UnitPositionSidebar;
+use hotkey_editor::components::app::components::shell::components::collisions_page::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebar;
+use hotkey_editor::components::app::components::shell::components::collisions_page::logic::{HotkeyUnitView, UnitPositionUnitView};
 
 use hotkey_editor::components::app::components::shell::components::resolve_page::ResolvePage;
 use hotkey_editor::services::collision_selection::CollisionSelection;
@@ -133,10 +133,10 @@ fn island_detail_empty() -> Element {
 }
 
 fn hotkey_unit_sidebar_empty() -> Element {
-    let units = Vec::new();
+    let units: Vec<HotkeyUnitView> = Vec::new();
     let selected_unit = use_signal(|| None::<String>);
     rsx! {
-        HotkeyUnitSidebar { units, selected_unit }
+        UnitCardsSidebar { units, selected_unit }
     }
 }
 
@@ -150,10 +150,10 @@ fn hotkey_unit_detail_empty() -> Element {
 }
 
 fn unit_position_sidebar_empty() -> Element {
-    let units = Vec::new();
+    let units: Vec<UnitPositionUnitView> = Vec::new();
     let selected_unit = use_signal(|| None::<String>);
     rsx! {
-        UnitPositionSidebar { units, selected_unit }
+        UnitCardsSidebar { units, selected_unit }
     }
 }
 
@@ -197,9 +197,19 @@ pub fn stories() -> Vec<Story> {
         ),
         Story::single("Views", "IslandSidebar", island_sidebar_empty),
         Story::single("Views", "IslandDetail", island_detail_empty),
-        Story::single("Views", "HotkeyUnitSidebar", hotkey_unit_sidebar_empty),
+        Story::new(
+            "Views",
+            "UnitCardsSidebar",
+            "Hotkey (empty)",
+            hotkey_unit_sidebar_empty,
+        ),
         Story::single("Views", "HotkeyUnitDetail", hotkey_unit_detail_empty),
-        Story::single("Views", "UnitPositionSidebar", unit_position_sidebar_empty),
+        Story::new(
+            "Views",
+            "UnitCardsSidebar",
+            "Unit positions (empty)",
+            unit_position_sidebar_empty,
+        ),
         Story::single("Views", "UnitPositionDetail", unit_position_detail_empty),
     ]
 }
