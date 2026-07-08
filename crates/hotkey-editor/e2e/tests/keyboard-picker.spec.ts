@@ -62,7 +62,7 @@ test.describe("Ability hotkey picker keyboard input", () => {
     await openBlizzardPicker(page);
     // 'W' is taken by Summon Water Elemental on the Archmage, so it renders as a
     // disabled conflict cell and must not be selectable from the keyboard.
-    await expect(page.locator('.key-picker-key[data-label="W"]')).toBeDisabled();
+    await expect(page.locator('.key-picker-board [data-label="W"]')).toBeDisabled();
     await page.keyboard.press("w");
     await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(page.locator(".override-key")).toContainText("B");

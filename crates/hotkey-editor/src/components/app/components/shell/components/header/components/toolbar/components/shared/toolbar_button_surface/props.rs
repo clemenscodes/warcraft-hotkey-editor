@@ -1,4 +1,3 @@
-use super::components::toolbar_button_icon::ToolbarButtonIconProps;
 use super::state::SurfaceState;
 use dioxus::prelude::*;
 
@@ -22,11 +21,4 @@ pub struct ToolbarButtonSurfaceProps {
     #[props(default)]
     pub aria_pressed: Option<bool>,
     pub onclick: EventHandler<MouseEvent>,
-}
-
-impl From<&ToolbarButtonSurfaceProps> for ToolbarButtonIconProps {
-    fn from(props: &ToolbarButtonSurfaceProps) -> Self {
-        let icon = props.icon;
-        Self { icon }
-    }
 }

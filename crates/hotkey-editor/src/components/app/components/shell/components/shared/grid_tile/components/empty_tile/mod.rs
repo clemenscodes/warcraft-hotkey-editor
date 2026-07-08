@@ -1,20 +1,31 @@
+pub mod components;
 mod props;
 mod state;
 mod style;
 
 use super::super::TileChrome;
+use components::blocked_drop_target_overlay::{
+    BlockedDropTargetOverlay, BlockedDropTargetOverlayProps,
+};
+use components::drop_target_overlay::{DropTargetOverlay, DropTargetOverlayProps};
+use components::highlight_overlay::{HighlightOverlay, HighlightOverlayProps};
 use dioxus::prelude::*;
 pub use props::EmptyTileProps;
+pub use state::EmptyTileState;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(EmptyTile);
 
-/// An empty command slot. Purely presentational: it draws its state look, its race
-/// accent, and its coordinate attributes. It knows nothing of hotkeys, focus, or
-/// dragging — `GridEditorTile` layers all interaction on top of this base tile.
+/// An empty command slot. Purely presentational: it draws its resting look, its race
+/// accent, and its coordinate attributes, and — during a drag or a mini-grid highlight
+/// — mounts the matching overlay child whose presence turns the tile's own border into
+/// the drop-target / blocked / highlight look. It knows nothing of hotkeys, focus, or
+/// dragging; `GridEditorTile` layers all interaction on top of this base tile.
 #[component]
 pub fn EmptyTile(props: EmptyTileProps) -> Element {
-    let class = style::class(props.state);
-    let drop_target = props.drop_target;
+    let drop_target = DropTargetOverlayProps::from(&props);
+    let blocked_drop_target = BlockedDropTargetOverlayProps::from(&props);
+    let highlight = HighlightOverlayProps::from(&props);
     let TileChrome {
         race_attribute,
         row,
@@ -22,11 +33,13 @@ pub fn EmptyTile(props: EmptyTileProps) -> Element {
     } = props.chrome;
     rsx! {
         div {
-            class,
+            class: CLASS,
             "data-race": race_attribute,
             "data-grid-row": row,
             "data-grid-col": column,
-            "data-drop-target": drop_target,
+            DropTargetOverlay { ..drop_target }
+            BlockedDropTargetOverlay { ..blocked_drop_target }
+            HighlightOverlay { ..highlight }
         }
     }
 }

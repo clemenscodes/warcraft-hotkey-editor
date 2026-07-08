@@ -1,9 +1,11 @@
 pub mod components;
+mod logic;
 mod props;
 mod state;
-mod style;
 
-use components::toolbar_button_icon::{ToolbarButtonIcon, ToolbarButtonIconProps};
+use components::attention_surface::{AttentionSurface, AttentionSurfaceProps};
+use components::clear_surface::{ClearSurface, ClearSurfaceProps};
+use components::interactive_surface::{InteractiveSurface, InteractiveSurfaceProps};
 use dioxus::prelude::*;
 pub use props::ToolbarButtonSurfaceProps;
 pub use state::SurfaceState;
@@ -11,28 +13,34 @@ use tw_macro::assert_component;
 assert_component!(ToolbarButtonSurface);
 
 /// The clickable surface of a toolbar button: the single source of truth for how a
-/// toolbar action button looks. It fills the container it sits in and draws its entire
-/// chrome — border, radius, gradient, focus and hover treatment, glyph size — in `cqi`
-/// off that container, so the whole button scales as one drawing when the container is
-/// resized. Consumers swap the icon, the click handler, aria/disabled state, and the
-/// resting [`SurfaceState`] look (the inline actions use `Interactive`; the collisions
+/// toolbar action button looks. A pure dispatcher — from the resting [`SurfaceState`]
+/// it renders the matching look: `InteractiveSurface` xor `AttentionSurface` xor
+/// `ClearSurface`. Each look owns its own `<button>` root and its full chrome, drawn in
+/// `cqi` off the container so the whole button scales as one drawing; this dispatcher
+/// only builds each look's props from the shared `ToolbarButtonSurfaceProps` and renders
+/// the one the state selects. Consumers swap the icon, the click handler, aria/disabled
+/// state, and the resting look (the inline actions use `Interactive`; the collisions
 /// button uses `Attention` / `Clear`).
 #[component]
 pub fn ToolbarButtonSurface(props: ToolbarButtonSurfaceProps) -> Element {
-    let glyph = ToolbarButtonIconProps::from(&props);
-    let class = style::class(props.state);
-    rsx! {
-        button {
-            class,
-            r#type: "button",
-            aria_label: props.aria_label,
-            aria_haspopup: props.aria_haspopup,
-            aria_expanded: props.aria_expanded,
-            aria_pressed: props.aria_pressed,
-            "data-action": props.data_action,
-            disabled: props.disabled,
-            onclick: props.onclick,
-            ToolbarButtonIcon { ..glyph }
+    match props.state {
+        SurfaceState::Interactive => {
+            let surface = InteractiveSurfaceProps::from(&props);
+            rsx! {
+                InteractiveSurface { ..surface }
+            }
+        }
+        SurfaceState::Attention => {
+            let surface = AttentionSurfaceProps::from(&props);
+            rsx! {
+                AttentionSurface { ..surface }
+            }
+        }
+        SurfaceState::Clear => {
+            let surface = ClearSurfaceProps::from(&props);
+            rsx! {
+                ClearSurface { ..surface }
+            }
         }
     }
 }

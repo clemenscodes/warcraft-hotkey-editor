@@ -11,7 +11,7 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct IdleSlotProps {
     pub label: SystemSlotLabelProps,
-    pub key: SystemSlotKeyProps,
+    pub slot_key: SystemSlotKeyProps,
     pub tooltip: TooltipProps,
     pub compact: bool,
     pub dragging: bool,

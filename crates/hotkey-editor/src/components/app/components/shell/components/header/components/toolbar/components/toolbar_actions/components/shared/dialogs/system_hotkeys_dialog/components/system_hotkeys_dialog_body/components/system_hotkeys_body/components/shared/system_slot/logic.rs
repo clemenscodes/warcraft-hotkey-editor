@@ -43,13 +43,13 @@ impl From<&SystemSlotProps> for TooltipProps {
 impl From<&SystemSlotProps> for IdleSlotProps {
     fn from(props: &SystemSlotProps) -> Self {
         let label = SystemSlotLabelProps::from(props);
-        let key = SystemSlotKeyProps::from(props);
+        let slot_key = SystemSlotKeyProps::from(props);
         let tooltip = TooltipProps::from(props);
         let compact = props.compact;
         let dragging = props.dragging;
         Self {
             label,
-            key,
+            slot_key,
             tooltip,
             compact,
             dragging,
@@ -60,13 +60,13 @@ impl From<&SystemSlotProps> for IdleSlotProps {
 impl From<&SystemSlotProps> for HighlightedSlotProps {
     fn from(props: &SystemSlotProps) -> Self {
         let label = SystemSlotLabelProps::from(props);
-        let key = SystemSlotKeyProps::from(props);
+        let slot_key = SystemSlotKeyProps::from(props);
         let tooltip = TooltipProps::from(props);
         let compact = props.compact;
         let dragging = props.dragging;
         Self {
             label,
-            key,
+            slot_key,
             tooltip,
             compact,
             dragging,
@@ -77,13 +77,13 @@ impl From<&SystemSlotProps> for HighlightedSlotProps {
 impl From<&SystemSlotProps> for ConflictSlotProps {
     fn from(props: &SystemSlotProps) -> Self {
         let label = SystemSlotLabelProps::from(props);
-        let key = SystemSlotKeyProps::from(props);
+        let slot_key = SystemSlotKeyProps::from(props);
         let tooltip = TooltipProps::from(props);
         let compact = props.compact;
         let dragging = props.dragging;
         Self {
             label,
-            key,
+            slot_key,
             tooltip,
             compact,
             dragging,

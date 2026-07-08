@@ -1,11 +1,16 @@
-use super::state::EmptyTileState;
 use tw_macro::tw;
-
-// Border and corner in `cqi` off the tile-face container (one tile), so they read
-// as production's 2px border / 6px radius on a full-size editor tile. Mini grids
-// render this painter with NO tile-face, so their frame overrides both back down
-// (see each `mini_grid/style.rs`).
-
+// The empty tile's own look. The resting empty slot (dark panel, solid deep-blue
+// border, bevel) lives on this root. The drop-target / blocked / highlight looks are
+// each a conditionally-mounted overlay child, and the ROOT reacts to which one is
+// present with `:has(...)` — turning its OWN border dashed/danger/gold and its shadow
+// to the glow — so the look replaces the border instead of stacking a second one, and
+// the root never remounts on a state change (pointer-capture stays put through a drag).
+//
+// Border width and radius read `--tile-border-width` / `--tile-corner-radius` (a mini
+// grid shrinks them), defaulting to the full editor tile's 2cqi / 5.2cqi. The
+// drop-target look is the editor's fixed deep-blue dashed target that turns gold under
+// the cursor; a parent that recolors it (the off-state picker) styles the tile through
+// the `:has(.drop-target-overlay)` selector.
 classes! {
     base: tw![
         "relative",
@@ -13,48 +18,21 @@ classes! {
         "aspect-square",
         "@container",
         "overflow-hidden",
-        "border-[2cqi]",
-        "rounded-[5.2cqi]",
+        "border-[length:var(--tile-border-width,2cqi)]",
+        "rounded-[var(--tile-corner-radius,5.2cqi)]",
+        "bg-panel-dark",
+        "border-warcraft-blue-deep",
+        "shadow-bevel",
         "touch-pan-y",
         "outline-none",
         "[body:has([data-dragging-source=true])_&]:transition-none",
-    ],
-}
-
-// A drop target during a drag looks exactly like the lifted source tile: a
-// muted-slate dashed border of the same weight, no differentiation. Under the
-// cursor (`data-drag-over` on the wrapping Host) the same border turns gold —
-// replacing the slate, not stacking a ring over it, matching production.
-
-// The mini grid marks one coordinate: a gold-accented border, gold wash, and glow,
-// all scaling with the grid via `cqi`. Mini grids sit outside any race context, so
-// the accent is the fixed warcraft gold (there is no race to tint it).
-
-states! {
-    EmptyTileState,
-    Empty => tw![
-        "bg-panel-dark",
-        "border-warcraft-blue-deep",
-        "shadow-bevel",
-    ],
-    DropTarget => tw![
-        "bg-panel-dark",
-        "border-warcraft-blue-deep",
-        "border-dashed",
-        "shadow-bevel",
-        "cursor-pointer",
-        "in-data-[drag-over=true]:border-warcraft-gold",
-    ],
-    BlockedDropTarget => tw![
-        "[background:color-mix(in_oklab,var(--color-warcraft-danger)_4%,transparent)]",
-        "border-warcraft-danger/55",
-        "border-dashed",
-        "shadow-bevel",
-        "cursor-not-allowed",
-    ],
-    Highlighted => tw![
-        "border-warcraft-gold",
-        "bg-warcraft-gold/20",
-        "[box-shadow:0_0_7cqi_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+        "[&:has(.drop-target-overlay)]:border-dashed",
+        "[&:has(.drop-target-overlay)]:cursor-pointer",
+        "[&:has(.drop-target-overlay)]:in-data-[drag-over=true]:border-warcraft-gold",
+        "[&:has(.blocked-drop-target-overlay)]:border-warcraft-danger/55",
+        "[&:has(.blocked-drop-target-overlay)]:border-dashed",
+        "[&:has(.blocked-drop-target-overlay)]:cursor-not-allowed",
+        "[&:has(.highlight-overlay)]:border-warcraft-gold",
+        "[&:has(.highlight-overlay)]:[box-shadow:0_0_7cqi_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
     ],
 }

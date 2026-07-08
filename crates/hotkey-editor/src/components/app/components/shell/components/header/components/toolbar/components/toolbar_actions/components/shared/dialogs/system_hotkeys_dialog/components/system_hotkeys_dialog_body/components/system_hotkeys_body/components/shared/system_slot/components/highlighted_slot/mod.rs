@@ -17,7 +17,7 @@ assert_component!(HighlightedSlot);
 #[component]
 pub fn HighlightedSlot(props: HighlightedSlotProps) -> Element {
     let label = props.label;
-    let key = props.key;
+    let slot_key = props.slot_key;
     let tooltip = props.tooltip;
     rsx! {
         div {
@@ -25,7 +25,7 @@ pub fn HighlightedSlot(props: HighlightedSlotProps) -> Element {
             "data-compact": props.compact,
             "data-dragging": props.dragging,
             SystemSlotLabel { ..label }
-            SystemSlotKey { ..key }
+            SystemSlotKey { ..slot_key }
             Tooltip { ..tooltip }
         }
     }

@@ -751,59 +751,40 @@ are imported from it directly (`use tw_macro::ClassList;`). `classes!`/`states!`
 are generated crate-global by `define_styling!` at the crate root, and their
 `const fn` helpers ship with the crate.
 
-## Stateful components and the `states!` macro
+## Mutually-exclusive looks are components, never a state table
 
-Some components have mutually-exclusive visual states on one element: a grid tile
-is idle **xor** the drag source **xor** a drop target. A `ClassList` is opaque,
-so the body cannot conditionally swap classes — and wrappers do not fit, because
-the state is runtime and N-way on the *same* element (wrapping would re-render
-the whole subtree per state). These use `states!` alongside `classes!`.
-
-`classes!` produces the base look; `states!` layers one **flat (non-responsive)
-overlay** per state on top of it. State overlays carry no band prefix (the
-macro rejects one): a state's appearance is the same at every width, while the
-element's *sizing* lives in the base bands. The component's state enum lives in
-`state.rs`; the match is exhaustive, so every state must be styled.
+A component that can wear one of several mutually-exclusive looks — a slot that is
+idle **xor** highlighted **xor** in conflict, a key that is available **xor** current
+**xor** taken, a tab that is active **xor** inactive — does **not** select its look
+from an enum-keyed class table. Each look is its **own component**, and the parent is
+a thin **dispatcher** that `match`es the state value and renders the matching one:
 
 ```rust
-// grid_tile/state.rs
-#[derive(Clone, Copy, PartialEq)]
-pub enum TileState { Idle, DragSource, DropTarget }
-
-// grid_tile/style.rs
-use tw_macro::tw;
-
-classes! {
-    base: tw!["relative", "flex", "items-center"],
-    // ... plus the bands that carry the tile's sizing ...
+// system_slot/mod.rs — the dispatcher owns no class; it names the look per state
+#[component]
+pub fn SystemSlot(props: SystemSlotProps) -> Element {
+    match props.state {
+        SystemSlotState::Idle => { let idle = IdleSlotProps::from(&props); rsx! { IdleSlot { ..idle } } }
+        SystemSlotState::Highlighted => { let it = HighlightedSlotProps::from(&props); rsx! { HighlightedSlot { ..it } } }
+        SystemSlotState::Conflict => { let it = ConflictSlotProps::from(&props); rsx! { ConflictSlot { ..it } } }
+    }
 }
-
-states! {
-    TileState,
-    Idle => tw![],
-    DragSource => tw!["opacity-40", "ring-2", "ring-warcraft-gold"],
-    DropTarget => tw!["bg-warcraft-gold-dim"],
-}
-// → pub(super) fn class(state: TileState) -> ClassList
 ```
 
-The state is chosen in `From<&Props>` (logic stays out of the body); the body
-just places the result:
+Each look-component owns its classed root, writes the **shared base utility values**
+in its own `style.rs` plus that look's overlay (share values, not looks), and nests
+the shared child leaves by name. A **runtime overlay** look (a drop-target ring, a
+selection ring, a highlight) is a **conditionally-mounted child overlay component** so
+the parent's root DOM node stays mounted — never a class swap on a live element, so a
+pointer-capture drag is never interrupted.
 
-```rust
-// grid_tile/mod.rs
-let presentation = GridTilePresentation::from(&props);  // computes style::class(state)
-rsx! { div { class: presentation.class, /* ... */ } }
-```
-
-The joined class per state is built at compile time, so the selector is a plain
-match returning a precomputed `ClassList`. The body never branches, `ClassList`
-stays opaque, and every token stays a literal for the scanner — the same
-guarantees as `classes!`.
-
-Both macros are generated crate-global by `define_styling!` (from the `tw-macro`
-crate); their `const fn` helpers ship with that crate. State overlays are keyed
-by variant with inline literal lists, exactly like `classes!`.
+There is **no `states!` macro** and there is no hand-written `fn class(state) ->
+ClassList` (that is a state table without the macro — equally forbidden). The one
+exception is a genuine **domain-color axis**: a color driven purely by a domain value
+(the five **races**) may be a plain `fn(Race) -> ClassList` match — a data→token
+function — or, better, a single `--race-color` custom property published by one theme
+container that descendants read through generic `var(--race-color)` utilities. Every
+*UI* state (active/idle, editing, conflict, selected, drop-target) is components.
 
 ---
 

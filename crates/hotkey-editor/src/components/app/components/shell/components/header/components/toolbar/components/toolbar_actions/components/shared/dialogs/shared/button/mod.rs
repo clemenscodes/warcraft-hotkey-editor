@@ -1,20 +1,32 @@
+pub mod components;
+mod logic;
 mod props;
-mod style;
 
+use components::primary_button::{PrimaryButton, PrimaryButtonProps};
+use components::secondary_button::{SecondaryButton, SecondaryButtonProps};
 use dioxus::prelude::*;
 pub use props::{ButtonProps, ButtonVariant};
 use tw_macro::assert_component;
 assert_component!(Button);
 
-/// A WC3 action button in primary or secondary weight. A leaf: it owns the
-/// `.button` class family and forwards one click. Callers pick the variant and pass
+/// A WC3 action button in primary or secondary weight. A pure dispatcher: from the
+/// variant it renders `PrimaryButton` xor `SecondaryButton`. Each look owns its own
+/// classed `button` root and forwards one click; callers pick the variant and pass
 /// the label text.
 #[component]
 pub fn Button(props: ButtonProps) -> Element {
-    let class = style::class(props.variant);
-    let onclick = props.onclick;
-    let label = props.label.clone();
-    rsx! {
-        button { class, r#type: "button", onclick, {label} }
+    match props.variant {
+        ButtonVariant::Primary => {
+            let button = PrimaryButtonProps::from(&props);
+            rsx! {
+                PrimaryButton { ..button }
+            }
+        }
+        ButtonVariant::Secondary => {
+            let button = SecondaryButtonProps::from(&props);
+            rsx! {
+                SecondaryButton { ..button }
+            }
+        }
     }
 }

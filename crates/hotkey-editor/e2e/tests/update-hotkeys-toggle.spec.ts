@@ -38,7 +38,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".override-key").waitFor();
     await page.locator(".override-key").click();
     await page.locator(".key-picker-board").waitFor();
-    await page.locator('.key-picker-key[data-label="Q"]').click();
+    await page.locator('.key-picker-board [data-label="Q"]').click();
     await expect(page.locator(".override-key")).toContainText("Q");
 
     // Turn the toggle off.

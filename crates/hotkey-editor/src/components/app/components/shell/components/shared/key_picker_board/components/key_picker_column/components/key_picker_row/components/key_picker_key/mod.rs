@@ -1,42 +1,44 @@
+pub mod components;
 mod logic;
 mod props;
 mod state;
-mod style;
 
-use crate::components::app::components::shell::components::shared::tooltip::{
-    Tooltip, TooltipProps,
-};
+use components::available_key::{AvailableKey, AvailableKeyProps};
+use components::conflict_key::{ConflictKey, ConflictKeyProps};
+use components::current_key::{CurrentKey, CurrentKeyProps};
 use dioxus::prelude::*;
 use logic::KeyPickerKeyPresentation;
 pub use props::KeyPickerKeyProps;
+use state::KeyPickerKeyState;
 use tw_macro::assert_component;
 assert_component!(KeyPickerKey);
 
-/// A single key on the picker board: an on-screen keyboard button that assigns its
-/// key when clicked. Its look and behaviour arrive shaped through
-/// `KeyPickerKeyPresentation`; its conflict tooltip through the shared `Tooltip`
-/// leaf. The body only places them.
+/// A single key on the picker board: an on-screen keyboard button that assigns its key
+/// when clicked. It carries no look of its own — it is the dispatcher that derives the
+/// key's visual state from its cell and renders the matching look component
+/// (`AvailableKey` xor `CurrentKey` xor `ConflictKey`), each of which owns its own
+/// button, styling, and conflict tooltip. The body only chooses which look to render.
 #[component]
 pub fn KeyPickerKey(props: KeyPickerKeyProps) -> Element {
-    let KeyPickerKeyPresentation {
-        class,
-        label,
-        data_label,
-        data_wide,
-        disabled,
-        onclick,
-    } = KeyPickerKeyPresentation::from(&props);
-    let tooltip = TooltipProps::from(&props);
-    rsx! {
-        button {
-            class,
-            r#type: "button",
-            disabled,
-            "data-wide": data_wide,
-            "data-label": data_label,
-            onclick,
-            {label}
-            Tooltip { ..tooltip }
+    let presentation = KeyPickerKeyPresentation::from(&props);
+    match presentation.state {
+        KeyPickerKeyState::Available => {
+            let available = AvailableKeyProps::from(&presentation);
+            rsx! {
+                AvailableKey { ..available }
+            }
+        }
+        KeyPickerKeyState::Current => {
+            let current = CurrentKeyProps::from(&presentation);
+            rsx! {
+                CurrentKey { ..current }
+            }
+        }
+        KeyPickerKeyState::Conflict => {
+            let conflict = ConflictKeyProps::from(&presentation);
+            rsx! {
+                ConflictKey { ..conflict }
+            }
         }
     }
 }

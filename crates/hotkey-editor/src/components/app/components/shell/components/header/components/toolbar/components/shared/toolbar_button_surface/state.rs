@@ -1,7 +1,9 @@
-/// The three resting looks a gold toolbar surface can wear. The chrome (box, border
-/// width, radius, resting gradient, focus ring) is shared across all of them in
-/// `classes!`; each variant layers only the text color, resting border/glow, and hover
-/// treatment on top via `states!`.
+/// The three resting looks a gold toolbar surface can wear. The dispatcher matches on
+/// this to render the matching look component — `InteractiveSurface`,
+/// `AttentionSurface`, or `ClearSurface`. Each look owns its own `<button>` root: the
+/// chrome (box, border width, radius, resting gradient, focus ring) is shared as the
+/// same utility-class values in every look's `style.rs`, and each layers its own text
+/// color, resting border/glow, and hover treatment on top.
 ///
 /// - `Interactive` — the default file-action look every inline toolbar button wears:
 ///   muted text at rest that brightens to gold on hover.

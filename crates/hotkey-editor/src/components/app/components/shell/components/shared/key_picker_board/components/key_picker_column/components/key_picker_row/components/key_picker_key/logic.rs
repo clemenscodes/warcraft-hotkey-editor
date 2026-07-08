@@ -1,6 +1,8 @@
+use super::components::available_key::AvailableKeyProps;
+use super::components::conflict_key::ConflictKeyProps;
+use super::components::current_key::CurrentKeyProps;
 use super::props::KeyPickerKeyProps;
 use super::state::KeyPickerKeyState;
-use super::style;
 use crate::components::app::components::shell::components::shared::key_picker_board::{
     KeyCellState, KeyWidth,
 };
@@ -8,22 +10,25 @@ use crate::components::app::components::shell::components::shared::tooltip::{
     TooltipAnchor, TooltipPlacement, TooltipProps,
 };
 use dioxus::prelude::*;
-use tw_macro::ClassList;
 
-/// A picker key's fully shaped presentation: the state class, the cap label, the
-/// `data-wide` flag that widens oversized caps, the `data-label` selector hook, the
-/// disabled flag, and the click handler. Built by `From` so the body only places
-/// these and never derives them.
+/// A picker key's fully shaped presentation: the visual state the dispatcher matches on
+/// to pick a look, plus the button attributes and children every look renders the same
+/// way (the cap label, the `data-label` selector hook, the `data-wide` flag that widens
+/// oversized caps, the disabled flag, the click handler, and the conflict tooltip).
+/// Built by `From` so the body only reads the state and spreads the rest, never deriving
+/// them. The three looks differ only in their own color styling; every attribute here is
+/// shared.
 pub(super) struct KeyPickerKeyPresentation {
-    pub(super) class: ClassList,
+    pub(super) state: KeyPickerKeyState,
     pub(super) label: String,
-    /// The label again, for the `data-label` selector hook (e2e picks a specific key
-    /// by it). Kept separate so the body can place the label as both text and
-    /// attribute without cloning in the markup.
+    /// The label again, for the `data-label` selector hook (e2e picks a specific key by
+    /// it). Kept separate so a look can place the label as both text and attribute
+    /// without cloning in the markup.
     pub(super) data_label: String,
     pub(super) data_wide: &'static str,
     pub(super) disabled: bool,
     pub(super) onclick: EventHandler<MouseEvent>,
+    pub(super) tooltip: TooltipProps,
 }
 
 impl From<&KeyPickerKeyProps> for KeyPickerKeyPresentation {
@@ -45,19 +50,77 @@ impl From<&KeyPickerKeyProps> for KeyPickerKeyPresentation {
             KeyCellState::Conflict { .. } => KeyPickerKeyState::Conflict,
         };
         let disabled = !cell.pickable();
-        let class = style::class(state);
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             if !disabled {
                 on_pick.call(key_code);
             }
         });
+        let tooltip = TooltipProps::from(props);
         Self {
-            class,
+            state,
             label,
             data_label,
             data_wide,
             disabled,
             onclick,
+            tooltip,
+        }
+    }
+}
+
+impl From<&KeyPickerKeyPresentation> for AvailableKeyProps {
+    fn from(presentation: &KeyPickerKeyPresentation) -> Self {
+        let label = presentation.label.clone();
+        let data_label = presentation.data_label.clone();
+        let data_wide = presentation.data_wide;
+        let disabled = presentation.disabled;
+        let onclick = presentation.onclick;
+        let tooltip = presentation.tooltip.clone();
+        Self {
+            label,
+            data_label,
+            data_wide,
+            disabled,
+            onclick,
+            tooltip,
+        }
+    }
+}
+
+impl From<&KeyPickerKeyPresentation> for CurrentKeyProps {
+    fn from(presentation: &KeyPickerKeyPresentation) -> Self {
+        let label = presentation.label.clone();
+        let data_label = presentation.data_label.clone();
+        let data_wide = presentation.data_wide;
+        let disabled = presentation.disabled;
+        let onclick = presentation.onclick;
+        let tooltip = presentation.tooltip.clone();
+        Self {
+            label,
+            data_label,
+            data_wide,
+            disabled,
+            onclick,
+            tooltip,
+        }
+    }
+}
+
+impl From<&KeyPickerKeyPresentation> for ConflictKeyProps {
+    fn from(presentation: &KeyPickerKeyPresentation) -> Self {
+        let label = presentation.label.clone();
+        let data_label = presentation.data_label.clone();
+        let data_wide = presentation.data_wide;
+        let disabled = presentation.disabled;
+        let onclick = presentation.onclick;
+        let tooltip = presentation.tooltip.clone();
+        Self {
+            label,
+            data_label,
+            data_wide,
+            disabled,
+            onclick,
+            tooltip,
         }
     }
 }

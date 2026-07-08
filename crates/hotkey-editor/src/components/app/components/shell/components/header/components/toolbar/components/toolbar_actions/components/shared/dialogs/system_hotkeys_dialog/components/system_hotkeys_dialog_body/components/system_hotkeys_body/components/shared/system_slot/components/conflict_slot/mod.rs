@@ -17,7 +17,7 @@ assert_component!(ConflictSlot);
 #[component]
 pub fn ConflictSlot(props: ConflictSlotProps) -> Element {
     let label = props.label;
-    let key = props.key;
+    let slot_key = props.slot_key;
     let tooltip = props.tooltip;
     rsx! {
         div {
@@ -25,7 +25,7 @@ pub fn ConflictSlot(props: ConflictSlotProps) -> Element {
             "data-compact": props.compact,
             "data-dragging": props.dragging,
             SystemSlotLabel { ..label }
-            SystemSlotKey { ..key }
+            SystemSlotKey { ..slot_key }
             Tooltip { ..tooltip }
         }
     }

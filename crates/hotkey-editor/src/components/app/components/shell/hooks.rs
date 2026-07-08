@@ -48,6 +48,7 @@ struct AppSignals {
     dragging_slot: Signal<Option<DraggingSlot>>,
     drop_target_tile: Signal<Option<DropTargetTile>>,
     drag_follower: Signal<Option<DragFollower>>,
+    selected_slot: Signal<Option<GridSlotId>>,
     preview_open: Signal<bool>,
     system_hotkeys_open: Signal<bool>,
 }
@@ -263,6 +264,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
         dragging_slot,
         drop_target_tile,
         drag_follower,
+        selected_slot,
         preview_open,
         system_hotkeys_open,
     }
@@ -363,6 +365,7 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
     let mut dragging_slot = signals.dragging_slot;
     let mut drop_target_tile = signals.drop_target_tile;
     let mut drag_follower = signals.drag_follower;
+    let selected_slot = signals.selected_slot;
     let mut preview_open = signals.preview_open;
     let mut system_hotkeys_open = signals.system_hotkeys_open;
     EventHandler::new(move |event: Event<KeyboardData>| {
@@ -412,11 +415,21 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
             return;
         }
         if let Some(info) = active_info {
+            // The selected slot is known from application state (`selected_slot`), never
+            // re-derived from a `data-selected` attribute. When something is selected,
+            // walk focus to the tile carrying the mounted `SelectionRing`; otherwise the
+            // first occupied tile. (Mirrors the focus-coordinator's state-driven hand-off:
+            // the app knows which tile is selected, so it does not ask a look-flag attr.)
+            let slot_is_selected = selected_slot.read().is_some();
             let target_selectors: &[&str] = if info.classes().contains("override-key") {
-                &[
-                    ".grid-editor-tile:has(.filled-tile[data-selected=\"true\"])",
-                    ".grid-editor-tile:has(.filled-tile)",
-                ]
+                if slot_is_selected {
+                    &[
+                        ".grid-editor-tile:has(.selection-ring)",
+                        ".grid-editor-tile:has(.filled-tile)",
+                    ]
+                } else {
+                    &[".grid-editor-tile:has(.filled-tile)"]
+                }
             } else if info.classes().contains("grid-editor-tile") {
                 &[".unit-card[data-selected=\"true\"]", ".unit-card"]
             } else if info.classes().contains("unit-card")

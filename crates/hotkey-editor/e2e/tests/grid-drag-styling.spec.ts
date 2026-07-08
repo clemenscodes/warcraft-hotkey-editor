@@ -214,7 +214,14 @@ test.describe("Off-state position picker styling matches production", () => {
   ) {
     return page.locator(`${ANCHOR} .empty-tile`).first().evaluate((painter, m) => {
       const host = painter.closest(".grid-editor-tile") as HTMLElement;
-      if (m.dropTarget) painter.setAttribute("data-drop-target", "true");
+      // The drop-target look is now driven by a mounted `.drop-target-overlay` child
+      // the tile root reacts to via `:has(...)`, not a `data-drop-target` attribute.
+      let overlay: HTMLElement | null = null;
+      if (m.dropTarget) {
+        overlay = document.createElement("div");
+        overlay.className = "drop-target-overlay";
+        painter.appendChild(overlay);
+      }
       if (m.dragOver) host.setAttribute("data-drag-over", "true");
       const parent = painter.parentNode!;
       const next = painter.nextSibling;
@@ -228,7 +235,7 @@ test.describe("Off-state position picker styling matches production", () => {
         shadow: style.boxShadow,
         backgroundImage: style.backgroundImage,
       };
-      painter.setAttribute("data-drop-target", "false");
+      if (overlay) painter.removeChild(overlay);
       host.setAttribute("data-drag-over", "false");
       return result;
     }, markers);
