@@ -1,49 +1,30 @@
 use tw_macro::tw;
-// The hotkey-capture button in the override panel. A square gold-bordered key cap; it
-// lights up with a static gold glow while capturing (`data-editing`) and widens for
-// multi-character special tokens like Esc / Mouse4 (`data-special`). Class
-// `.override-key` is load-bearing (keyboard navigation).
+// The override key's host button: the focusable, keyboard-navigable box around the
+// shared `EditableKeycap`. It owns only the *box* — the square size (and the widening
+// for multi-character special tokens like Esc / Mouse4, via `data-special`), the font
+// size the cap inherits, focus suppression, and the soft focus glow. The gold cap look
+// and the capture pulse live on the nested `EditableKeycap`; the `group/editable-keycap`
+// marker lets that cap reflect this button's keyboard focus. Class `.override-key` is
+// load-bearing (keyboard navigation).
 
 classes! {
     base: tw![
-        "w-20",
-        "h-20",
-        "p-0",
+        "group/editable-keycap",
         "flex",
         "items-center",
         "justify-center",
-        "bg-warcraft-gold-dark/75",
-        "border-2",
-        "border-warcraft-gold",
-        "rounded-tile",
-        "text-warcraft-gold",
+        "w-20",
+        "h-20",
+        "p-0",
         "text-2xl",
-        "leading-none",
-        "uppercase",
-        "text-center",
         "cursor-pointer",
-        "text-shadow-outline",
-        "transition-[box-shadow,border-color]",
-        "duration-base",
-        "hover:border-warcraft-gold",
-        "hover:bg-warcraft-gold/12",
-        "hover:shadow-glow-soft",
-        "focus:outline-none",
-        "focus:shadow-glow-soft",
-        "kb-focus:border-white",
-        "kb-focus:text-white",
-        "kb-focus:shadow-focus",
-        "data-[editing=true]:bg-panel-gold",
-        "data-[editing=true]:border-warcraft-gold",
-        "data-[editing=true]:text-warcraft-gold",
-        "data-[editing=true]:shadow-glow-strong",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-glow-soft",
         "data-[special=true]:w-auto",
         "data-[special=true]:min-w-20",
-        "data-[special=true]:px-3.5",
         "data-[special=true]:text-xl",
-        "data-[special=true]:normal-case",
-        "data-[special=true]:tracking-normal",
         "data-[special=true]:whitespace-nowrap",
+        "data-[special=true]:tracking-normal",
     ],
     mobile: tw![
         "mobile:w-[4.6rem]",
@@ -53,7 +34,6 @@ classes! {
         "mobile:text-2xl",
         "mobile:data-[special=true]:w-auto",
         "mobile:data-[special=true]:min-w-[4.6rem]",
-        "mobile:data-[special=true]:px-3",
         "mobile:data-[special=true]:text-xl",
     ],
 }

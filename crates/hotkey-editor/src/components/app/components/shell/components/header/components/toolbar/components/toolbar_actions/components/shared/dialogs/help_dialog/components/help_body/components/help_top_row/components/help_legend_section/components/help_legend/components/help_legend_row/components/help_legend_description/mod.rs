@@ -8,11 +8,11 @@ use tw_macro::assert_component;
 assert_component!(HelpLegendDescription);
 
 /// The toolbar button's one-line description in a legend row. A leaf: the row
-/// passes the copy as children.
+/// passes the copy, and the leaf renders it after the label with a leading gap.
 #[component]
 pub fn HelpLegendDescription(props: HelpLegendDescriptionProps) -> Element {
-    let description = props.children.clone();
+    let description = props.description.clone();
     rsx! {
-        span { class: CLASS, {description} }
+        span { class: CLASS, " {description}" }
     }
 }

@@ -32,7 +32,7 @@ classes! {
         "flex-wrap",
         "items-center",
         "justify-center",
-        "tracking-wide",
+        "tracking-snug",
         "select-none",
         "mt-auto",
         "px-4",

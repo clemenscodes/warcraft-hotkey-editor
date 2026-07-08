@@ -17,8 +17,8 @@ pub fn HelpGlossaryEntry(props: HelpGlossaryEntryProps) -> Element {
     let description = props.description;
     rsx! {
         div { class: CLASS,
-            HelpTerm { "{term}" }
-            HelpBodyText { "{description}" }
+            HelpTerm { term }
+            HelpBodyText { text: description }
         }
     }
 }

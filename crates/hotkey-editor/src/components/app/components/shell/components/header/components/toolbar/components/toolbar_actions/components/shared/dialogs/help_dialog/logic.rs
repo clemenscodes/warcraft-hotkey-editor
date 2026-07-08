@@ -13,17 +13,14 @@ impl From<&HelpDialogProps> for DialogProps {
         let body = HelpBodyProps {
             content: HELP_CONTENT,
         };
-        let footer = Some(rsx! {
-            HelpDismiss { ..dismiss }
-        });
         let children = rsx! {
             HelpBody { ..body }
+            HelpDismiss { ..dismiss }
         };
         Self {
             open,
             title,
             children,
-            footer,
             on_open_change: None,
         }
     }

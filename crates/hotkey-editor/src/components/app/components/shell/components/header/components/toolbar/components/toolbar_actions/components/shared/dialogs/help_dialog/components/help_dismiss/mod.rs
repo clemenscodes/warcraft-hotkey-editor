@@ -7,8 +7,8 @@ use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(HelpDismiss);
 
-/// The footer button that closes the guide and records that the player has seen
-/// it, so it stops auto-opening.
+/// The button below the guide body that closes the guide and records that the
+/// player has seen it, so it stops auto-opening.
 #[component]
 pub fn HelpDismiss(props: HelpDismissProps) -> Element {
     rsx! {

@@ -7,7 +7,7 @@ classes! {
         "text-center",
         "max-w-360",
         "uppercase",
-        "tracking-widest",
+        "tracking-heading",
         "text-warcraft-gold/75",
         "text-2xl",
         "leading-body",

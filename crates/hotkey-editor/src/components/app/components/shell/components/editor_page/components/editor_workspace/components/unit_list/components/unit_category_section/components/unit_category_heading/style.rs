@@ -10,7 +10,7 @@ classes! {
         "px-1",
         "text-md",
         "uppercase",
-        "tracking-[0.12em]",
+        "tracking-heading",
         "border-b",
         "border-warcraft-blue-deep",
         "cursor-pointer",

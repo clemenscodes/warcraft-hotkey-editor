@@ -13,7 +13,7 @@ classes! {
         "rounded-card",
         "text-warcraft-text-secondary",
         "text-sm",
-        "tracking-[0.04em]",
+        "tracking-label",
         "uppercase",
         "text-center",
         "cursor-pointer",

@@ -4,7 +4,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "uppercase",
-        "tracking-widest",
+        "tracking-heading",
         "text-2xl",
         "leading-none",
         "px-3",
@@ -27,7 +27,7 @@ classes! {
         "group-data-[open=true]:py-3",
         "group-data-[open=true]:px-3.5",
         "group-data-[open=true]:text-base",
-        "group-data-[open=true]:tracking-wider",
+        "group-data-[open=true]:tracking-label",
         "group-data-[open=true]:min-h-11",
         "group-data-[open=true]:rounded-tile",
         "group-data-[open=true]:whitespace-normal",

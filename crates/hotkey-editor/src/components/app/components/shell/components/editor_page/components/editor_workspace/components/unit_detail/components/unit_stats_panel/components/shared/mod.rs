@@ -1,5 +1,6 @@
 pub mod matchup;
-pub mod stat_column;
+pub mod regen_qualifier;
+pub mod stat_figure;
+pub mod stat_gain;
 pub mod stat_icon_frame;
-pub mod stat_row;
-pub mod stat_rows;
+pub mod stat_value;

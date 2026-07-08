@@ -12,6 +12,8 @@ classes! {
         "border-none",
         "cursor-pointer",
         "leading-0",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
         "disabled:cursor-default",
     ],
     mobile: tw![

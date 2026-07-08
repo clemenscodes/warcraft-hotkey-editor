@@ -1,25 +1,29 @@
 mod props;
+mod style;
 
-use super::super::kinds::EvasionKind;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_detail::components::unit_stats_panel::components::shared::stat_row::{
-    StatRow, StatRowProps,
-};
+use super::super::super::shared::stat_value::StatValue;
 use dioxus::prelude::*;
 pub use props::EvasionRowProps;
-
-/// The evasion row, shown only when the unit can dodge. A unit with no evasion source
-/// has no row at all — the base row would otherwise print a muted "0%". A guarded
-/// leaf that early-returns, asking the domain whether there is any evasion.
+use style::{CLASS, LABEL};
 use tw_macro::assert_component;
 assert_component!(EvasionRow);
+
+const LABEL_TEXT: &str = "Evasion";
+
+/// The evasion row, shown only when the unit can dodge. A unit with no evasion source
+/// has no row at all — it would otherwise print a muted "0%". A guarded leaf that
+/// early-returns, asking the domain whether there is any evasion.
 #[component]
 pub fn EvasionRow(props: EvasionRowProps) -> Element {
-    let evasion = props.evasion;
-    if evasion.is_zero() {
+    let value = props.value;
+    if value.is_zero() {
         return rsx! {};
     }
-    let row = StatRowProps::<EvasionKind> { value: evasion };
     rsx! {
-        StatRow { ..row }
+        div {
+            class: CLASS,
+            span { class: LABEL, {LABEL_TEXT} }
+            StatValue { value }
+        }
     }
 }

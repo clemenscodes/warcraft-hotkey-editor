@@ -1,39 +1,27 @@
 use super::hooks::SlotButtonModel;
-use crate::components::app::components::shell::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_key::SystemSlotKeyProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabelProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot::SystemSlotProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 
-impl From<&SlotButtonModel> for SystemSlotLabelProps {
+impl From<&SlotButtonModel> for SystemSlotProps {
     fn from(model: &SlotButtonModel) -> Self {
-        let text = model.slot_label.clone();
-        let compact = model.compact;
-        Self { text, compact }
-    }
-}
-
-impl From<&SlotButtonModel> for SystemSlotKeyProps {
-    fn from(model: &SlotButtonModel) -> Self {
-        let label = model.key_label.clone();
-        let compact = model.compact;
+        let state = model.state;
+        let slot_label = model.slot_label.clone();
+        let key_label = model.key_label.clone();
         let conflict = model.is_conflict;
+        let tooltip_text = model.conflict_title.clone();
+        let tooltip_placement = TooltipPlacement::Below;
+        let compact = model.compact;
+        let dragging = false;
         Self {
-            label,
-            compact,
+            state,
+            slot_label,
+            key_label,
             conflict,
-        }
-    }
-}
-
-impl From<&SlotButtonModel> for TooltipProps {
-    fn from(model: &SlotButtonModel) -> Self {
-        let text = model.conflict_title.clone();
-        let placement = TooltipPlacement::Below;
-        let anchor = TooltipAnchor::Center;
-        Self {
-            text,
-            placement,
-            anchor,
+            tooltip_text,
+            tooltip_placement,
+            compact,
+            dragging,
         }
     }
 }

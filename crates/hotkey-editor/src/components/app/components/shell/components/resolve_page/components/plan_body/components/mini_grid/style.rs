@@ -1,24 +1,15 @@
 use tw_macro::tw;
-// The move's mini grid frame: a query container the reused `Grid` fills. Its width
-// sets the whole grid's scale (the tiles size in `cqi` off it), its height comes
-// from the three rows of square tiles, and it is display-only, so pointer events
-// pass through.
+// The resolve page's outer box for the shared mini grid frame: it grows to fill the
+// move row, spans the full width (which sets the frame's scale), and rounds the
+// corners at the control radius. `overflow-hidden` clips the frame's panel surface
+// and border to that radius.
 
 classes! {
     base: tw![
         "flex-[1_1_auto]",
         "w-full",
         "min-w-0",
-        "@container",
-        "pointer-events-none",
-        "p-1",
-        "bg-warcraft-bg-panel/70",
-        "border",
-        "border-warcraft-blue",
         "rounded-control",
-        "[&_.empty-tile]:border-[0.35cqi]!",
-        "[&_.filled-tile]:border-[0.35cqi]!",
-        "[&_.empty-tile]:rounded-[1.04cqi]!",
-        "[&_.filled-tile]:rounded-[1.04cqi]!",
+        "overflow-hidden",
     ],
 }

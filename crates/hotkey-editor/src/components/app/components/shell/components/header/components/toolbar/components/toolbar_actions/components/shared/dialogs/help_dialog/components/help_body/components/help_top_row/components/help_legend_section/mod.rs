@@ -16,7 +16,7 @@ pub fn HelpLegendSection(props: HelpLegendSectionProps) -> Element {
     let legend = HelpLegendProps::from(&props);
     rsx! {
         section { class: CLASS,
-            HelpSectionTitle { "Button legend" }
+            HelpSectionTitle { title: "Button legend" }
             HelpLegend { ..legend }
         }
     }

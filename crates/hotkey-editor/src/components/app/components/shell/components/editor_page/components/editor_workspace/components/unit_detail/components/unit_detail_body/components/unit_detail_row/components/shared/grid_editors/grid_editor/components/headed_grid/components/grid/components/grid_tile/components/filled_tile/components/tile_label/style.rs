@@ -10,7 +10,7 @@ classes! {
         "text-[13cqi]/[1.1]",
         "text-center",
         "uppercase",
-        "tracking-[0.04em]",
+        "tracking-label",
         "text-warcraft-gold",
         "text-shadow-outline",
     ],

@@ -16,7 +16,7 @@ classes! {
         "rounded-card",
         "text-warcraft-text-secondary",
         "text-sm",
-        "tracking-wider",
+        "tracking-label",
         "text-left",
         "cursor-pointer",
         "transition-[border-color,color,background,box-shadow]",
@@ -25,9 +25,9 @@ classes! {
         "hover:bg-panel-gold-active",
         "hover:shadow-glow",
         "focus:outline-none",
-        "focus-visible:border-white",
-        "focus-visible:text-white",
-        "focus-visible:[--focus-color:var(--color-warcraft-highlight)]", "focus-visible:shadow-focus",
+        "kb-focus:border-white",
+        "kb-focus:text-white",
+        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]", "kb-focus:shadow-focus",
     ],
 }
 

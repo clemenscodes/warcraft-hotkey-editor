@@ -49,6 +49,83 @@ not in the component body.
 
 ---
 
+## `Element` is never a prop and never a value — compose typed components
+
+A corollary of "a component renders, it does not compute," and the single most
+important composition rule: **`Element` is produced by exactly one thing, a
+`#[component] fn`, and it is never passed around as data.** You compose a UI out
+of well-typed components nested by name — never out of blobs of pre-rendered
+markup.
+
+This is absolute. There is no "structural wrapper" exception, no "framework
+children slot" exception, no "it's just glue" exception. The following are all
+**forbidden, everywhere, with no exceptions**:
+
+- **`children: Element`** as a prop — and equally `Option<Element>`,
+  `Vec<Element>`, or any other prop field, struct field, or enum variant whose
+  type is `Element`. A component never *receives* the markup it wraps. A
+  `#[component] fn Foo(children: Element)` inline-children parameter is the same
+  violation.
+- **`fn … -> Element` that is not itself a `#[component]`** — no trait method
+  returning `Element` (`trait XKind { fn tile/cells/scroll/header(…) -> Element }`
+  is the classic offender), no free function or `logic.rs`/`hooks.rs` function
+  returning `Element`. Logic returns **data** (line 33: *"a component renders, it
+  does not compute"*). Only a component renders.
+- **Binding markup to a variable and threading it as a prop** —
+  `let children = rsx! { … }; Foo { children }`. Building an `Element` in a body
+  or a `logic.rs` and handing it to another component is exactly the same sin as
+  a `children: Element` prop; it just hides it in a local.
+
+**How you compose instead.** A parent *names* its children; it never *receives*
+them. Its body is a flat list of specific typed components — or a `for` loop over
+typed **data** that renders one specific typed component per item:
+
+```rust
+rsx! {
+    section {
+        class: CLASS,
+        DamageMatchupHeader { unit }          // a specific typed leaf, by name
+        for attack_type in ALL_ATTACK_TYPES {
+            DefenseMatchup { attack_type, defense_type }   // a for-loop over DATA
+        }
+    }
+}
+```
+
+**Sharing a look is not sharing a component.** When two components look the same,
+they do not share a wrapper that takes `children` — that wrapper's `children:
+Element` is the violation, and the "reuse" it buys is illusory. They each write
+the **same utility-class values** in their own `style.rs` (see "Styling: shared
+values, individual looks" — *sharing a value is not coupling*). A scaffold `div`
+that both a damage row and a defense row want is not a `MatchupGrid { children }`
+leaf; it is the same `grid grid-cols-2 …` class list written in each row, each
+rendering its own typed cells directly.
+
+**Reusing a piece is nesting a specific typed leaf.** Genuine reuse is a leaf
+component with **typed props** that parents nest by name — the way `Grid` drops
+in `HotkeyBadge`, or `ToolbarButton` is nested by all nine action buttons. The
+leaf takes `HotkeyToken`, `KeyCode`, a `count: usize` — never `children`.
+
+**A generic base selects DATA, never `Element`.** When a base is generic over a
+variant (`XProps<B> { behavior: B, config }`, per "Generic components and their
+props"), the marker `B` chooses **typed data**, and the base's `#[component]`
+body renders a **fixed** typed component from props built by `From`. A
+`trait Kind { fn render(…) -> Element }` is not a generic base — it is logic
+producing `Element`, forbidden above. Where variants must render *genuinely
+different* components, there is no generic base at all: they are separate
+components (per "The render tree IS the directory tree"), each composing shared
+typed leaves by nesting.
+
+**The test, and it is mechanical:** grep the crate for `-> Element` — every hit
+must be on a `#[component]`. Grep for `: Element` in a props/struct/param
+position — there must be none. Grep for `let … = rsx!` threaded into a prop —
+there must be none. Only `#[component] fn`s make `Element`; everything else makes
+data and nests typed components. (The `spec-lint.sh` pre-commit hook enforces the
+`children: Element` half of this; the rest is enforced by review the same way the
+`super::` test is.)
+
+---
+
 ## The render tree IS the directory tree — the law you will be tempted to break
 
 Read this twice. It is the single most-violated rule in this codebase, every

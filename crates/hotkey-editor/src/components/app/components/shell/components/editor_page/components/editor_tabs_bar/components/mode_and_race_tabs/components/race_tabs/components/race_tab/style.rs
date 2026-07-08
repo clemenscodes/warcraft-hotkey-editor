@@ -18,7 +18,7 @@ classes! {
         "text-warcraft-text-primary",
         "text-xl",
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "text-center",
         "transition-[border-color,box-shadow,transform]",
         "duration-base",

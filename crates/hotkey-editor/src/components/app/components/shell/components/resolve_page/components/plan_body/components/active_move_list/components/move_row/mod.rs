@@ -11,7 +11,7 @@ use crate::components::app::components::shell::components::resolve_page::compone
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_transition::MoveTransition;
 use components::anchor_column::AnchorColumn;
 use components::fight_name_button::FightNameButton;
-use components::grid_column::GridColumn;
+use components::transition_column::TransitionColumn;
 use components::move_arrow::MoveArrow;
 use dioxus::prelude::*;
 use logic::MoveRowModel;
@@ -36,11 +36,11 @@ pub fn MoveRow(props: MoveRowProps) -> Element {
                 AnchorColumn { ..model.anchor }
             }
             MoveTransition {
-                GridColumn {
+                TransitionColumn {
                     MiniGrid { placements: model.from_placements }
                 }
                 MoveArrow {}
-                GridColumn {
+                TransitionColumn {
                     MiniGrid { placements: model.to_placements }
                 }
             }

@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "m-0",
         "uppercase",
-        "tracking-[0.12em]",
+        "tracking-heading",
         "text-warcraft-gold",
         "text-shadow-drop",
     ],

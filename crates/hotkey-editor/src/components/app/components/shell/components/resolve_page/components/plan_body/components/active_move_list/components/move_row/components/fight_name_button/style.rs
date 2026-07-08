@@ -16,5 +16,7 @@ classes! {
         "[font:inherit]",
         "text-center",
         "cursor-default",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

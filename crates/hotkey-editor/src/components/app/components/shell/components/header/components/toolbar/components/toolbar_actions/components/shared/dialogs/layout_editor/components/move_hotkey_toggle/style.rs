@@ -5,7 +5,7 @@ classes! {
         "items-center",
         "gap-3",
         "uppercase",
-        "tracking-[0.06em]",
+        "tracking-caps",
         "text-2xl",
         "text-warcraft-gold",
         "cursor-pointer",

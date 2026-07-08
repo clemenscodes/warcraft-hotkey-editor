@@ -19,7 +19,7 @@ pub fn HelpResolverSection(props: HelpResolverSectionProps) -> Element {
     let glossary = HelpGlossaryColumnsProps::from(&props);
     rsx! {
         section { class: CLASS,
-            HelpSectionTitle { "What the resolver is doing" }
+            HelpSectionTitle { title: "What the resolver is doing" }
             HelpResolverProse { ..prose }
             HelpGlossaryColumns { ..glossary }
         }

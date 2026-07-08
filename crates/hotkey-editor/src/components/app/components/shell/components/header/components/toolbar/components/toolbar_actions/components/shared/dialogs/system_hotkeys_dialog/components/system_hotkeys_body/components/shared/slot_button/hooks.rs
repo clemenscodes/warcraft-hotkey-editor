@@ -1,5 +1,5 @@
 use super::props::SlotButtonProps;
-use super::state::SlotButtonState;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot::SystemSlotState;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -9,10 +9,9 @@ use warcraft_keybinds::KeyCode;
 /// compact flag, the key label and conflict tooltip, whether its picker is open
 /// (and the picker's inputs), and the click / pick / close handlers.
 pub(super) struct SlotButtonModel {
-    pub(super) state: SlotButtonState,
+    pub(super) state: SystemSlotState,
     pub(super) slot_label: String,
     pub(super) compact: bool,
-    pub(super) compact_attr: &'static str,
     pub(super) key_label: String,
     pub(super) conflict_title: String,
     pub(super) is_conflict: bool,
@@ -56,13 +55,12 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
         binding.effective_label().to_string()
     };
     let state = if is_editing {
-        SlotButtonState::Editing
+        SystemSlotState::Highlighted
     } else if is_conflict {
-        SlotButtonState::Conflict
+        SystemSlotState::Conflict
     } else {
-        SlotButtonState::Idle
+        SystemSlotState::Idle
     };
-    let compact_attr = if compact { "true" } else { "false" };
     let current_code = binding.current_code();
     let picker_conflicts = binding.picker_conflicts().clone();
 
@@ -77,7 +75,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
         state,
         slot_label,
         compact,
-        compact_attr,
         key_label,
         conflict_title,
         is_conflict,

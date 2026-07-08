@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 
-/// The description line's only input: the template description, passed as
-/// children.
+/// The description line's only input: the template description.
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplateCardDescriptionProps {
-    pub children: Element,
+    #[props(into)]
+    pub description: String,
 }

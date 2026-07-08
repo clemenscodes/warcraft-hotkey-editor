@@ -1,5 +1,5 @@
-use super::components::inventory_drag_key::InventoryDragKeyProps;
 use super::props::InventoryDragOverlayProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::shared::system_slot_key::SystemSlotKeyProps;
 use dioxus::prelude::*;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
@@ -11,10 +11,16 @@ pub(super) struct DragFollowerView {
     pub(super) label: String,
 }
 
-impl From<&DragFollowerView> for InventoryDragKeyProps {
+impl From<&DragFollowerView> for SystemSlotKeyProps {
     fn from(view: &DragFollowerView) -> Self {
         let label = view.label.clone();
-        Self { label }
+        let compact = false;
+        let conflict = false;
+        Self {
+            label,
+            compact,
+            conflict,
+        }
     }
 }
 

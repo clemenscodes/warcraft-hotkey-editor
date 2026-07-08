@@ -10,7 +10,7 @@ assert_component!(TemplateCardDescription);
 /// A template card's description line. Owns `.template-card-description`.
 #[component]
 pub fn TemplateCardDescription(props: TemplateCardDescriptionProps) -> Element {
-    let description = props.children.clone();
+    let description = props.description.clone();
     rsx! {
         p { class: CLASS, {description} }
     }

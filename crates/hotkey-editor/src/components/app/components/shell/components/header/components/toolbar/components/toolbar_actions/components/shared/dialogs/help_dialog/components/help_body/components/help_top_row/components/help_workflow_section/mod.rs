@@ -17,7 +17,7 @@ pub fn HelpWorkflowSection(props: HelpWorkflowSectionProps) -> Element {
     let callout = HelpCalloutProps::from(&props);
     rsx! {
         section { class: CLASS,
-            HelpSectionTitle { "The workflow" }
+            HelpSectionTitle { title: "The workflow" }
             HelpCallout { ..callout }
         }
     }

@@ -21,7 +21,7 @@ pub fn DialogHeader(props: DialogHeaderProps) -> Element {
     rsx! {
         header { class: CLASS,
             DialogHeaderDecorationLeading {}
-            DialogTitle { {title} }
+            DialogTitle { title }
             DialogHeaderDecorationTrailing {}
             DialogClose { ..close }
         }

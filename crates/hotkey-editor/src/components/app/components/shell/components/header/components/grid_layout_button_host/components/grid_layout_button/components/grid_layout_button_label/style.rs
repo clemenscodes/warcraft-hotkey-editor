@@ -4,7 +4,7 @@ classes! {
         "font-normal",
         "uppercase",
         "whitespace-nowrap",
-        "tracking-[0.12em]",
+        "tracking-heading",
         "text-shadow-drop",
     ],
 }

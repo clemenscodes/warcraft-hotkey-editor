@@ -11,7 +11,7 @@ classes! {
         "bg-warcraft-gold-dark/45",
         "text-center",
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "text-xl",
         "leading-prose",
         "text-warcraft-gold/85",

@@ -1,50 +1,50 @@
 pub mod components;
-mod data;
-mod kinds;
 mod logic;
 mod props;
+mod style;
 
-use super::shared::stat_column::{StatColumn, StatColumnKind};
 use super::shared::stat_icon_frame::StatIconFrame;
-use super::shared::stat_row::StatRow;
-use super::shared::stat_rows::StatRows;
+use components::attack_speed_row::AttackSpeedRow;
+use components::attack_type_row::AttackTypeRow;
 use components::damage_matchup_row::DamageMatchupRow;
 use components::damage_per_second_row::DamagePerSecondRow;
+use components::damage_row::DamageRow;
 use components::range_row::RangeRow;
 use dioxus::prelude::*;
-use logic::CombatRows;
+use logic::CombatFigures;
 pub use props::CombatColumnProps;
-
-/// The combat column: the attack-type icon beside the damage/range/speed rows and the
-/// damage matchup grid. Present only when the unit has an attack; a unit that cannot
-/// attack renders nothing here.
+use style::{CLASS, ROWS};
 use tw_macro::assert_component;
 assert_component!(CombatColumn);
+
+/// The combat column: the attack-type icon beside the damage/range/speed rows and the
+/// damage matchup grid, laid into the `combat` grid area. Present only when the unit
+/// has an attack; a unit that cannot attack renders nothing here. It names its rows
+/// directly — each row owns its own look.
 #[component]
 pub fn CombatColumn(props: CombatColumnProps) -> Element {
     let Some(attack) = props.attack else {
         return rsx! {};
     };
-    let CombatRows {
+    let CombatFigures {
         icon,
-        damage_row,
+        damage,
         range,
-        speed_row,
+        speed,
         damage_per_second,
-        attack_type_row,
         attack_type,
-    } = CombatRows::from(&attack);
+    } = CombatFigures::from(&attack);
     rsx! {
-        StatColumn {
-            kind: StatColumnKind::Combat,
-            with_icon: true,
+        div {
+            class: CLASS,
             StatIconFrame { ..icon }
-            StatRows {
-                StatRow { ..damage_row }
-                RangeRow { range }
-                StatRow { ..speed_row }
-                DamagePerSecondRow { damage_per_second }
-                StatRow { ..attack_type_row }
+            div {
+                class: ROWS,
+                DamageRow { value: damage }
+                RangeRow { value: range }
+                AttackSpeedRow { value: speed }
+                DamagePerSecondRow { value: damage_per_second }
+                AttackTypeRow { value: attack_type }
                 DamageMatchupRow { attack_type }
             }
         }

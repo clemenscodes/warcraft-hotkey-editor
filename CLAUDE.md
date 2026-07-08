@@ -19,6 +19,25 @@ invent, guess, or "try" any other target, and do not fall back to bare
   Never `dx serve`, never `moon run hotkey-editor:dx/serve`, never anything
   else.
 
+  **THE DEV URL IS `http://localhost:8123/warcraft-hotkey-editor/` — NOT `/`.**
+  The app is served under the base path `warcraft-hotkey-editor`
+  (`base_path` in `crates/hotkey-editor/Dioxus.toml`). The bare root `/`
+  and `/index.html` return **404** — that is not a broken server, it is you
+  using the wrong URL. ALWAYS open/navigate/screenshot
+  `http://localhost:8123/warcraft-hotkey-editor/` (trailing slash included).
+  Routes hang off that base: editor `…/warcraft-hotkey-editor/`, collisions
+  `…/warcraft-hotkey-editor/collisions`, resolve `…/warcraft-hotkey-editor/resolve`.
+  (The gallery — `crates/gallery`, port 8200 — has no base path and serves at `/`.)
+
+  **DO NOT wait on the "Your app is being rebuilt" overlay.** The dev server
+  hot-rebuilds Rust *and* CSS, and `dx` regularly gets STUCK showing that
+  overlay (or a stale page) long after the build is actually done — it will
+  never "finish" if you sit polling `dev.log` for a new "Build completed" line.
+  The fix is almost always a **page refresh** (re-navigate to the base URL),
+  NOT waiting. Refresh first; only investigate a real build error (a compiler
+  error printed in `dev.log`) if the refresh still shows the overlay. Hours have
+  been wasted waiting on a `dx` stuck state that one reload cleared.
+
 Any other command shape is wrong by definition. If `moon run :ci` fails, fix
 the code and run `moon run :ci` again — never route around it with a
 narrower command.

@@ -1,9 +1,10 @@
-pub mod components;
 mod hooks;
 mod props;
 mod style;
 
-use components::inventory_drag_key::{InventoryDragKey, InventoryDragKeyProps};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::shared::system_slot_key::{
+    SystemSlotKey, SystemSlotKeyProps,
+};
 use dioxus::prelude::*;
 use hooks::use_inventory_drag_overlay;
 pub use props::InventoryDragOverlayProps;
@@ -19,12 +20,12 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
     let Some(view) = use_inventory_drag_overlay(&props) else {
         return rsx! {};
     };
-    let key = InventoryDragKeyProps::from(&view);
+    let key = SystemSlotKeyProps::from(&view);
     rsx! {
         div {
             class: CLASS,
             style: view.placement,
-            InventoryDragKey { ..key }
+            SystemSlotKey { ..key }
         }
     }
 }

@@ -7,7 +7,7 @@ classes! {
         "border-warcraft-gold-border",
         "rounded-panel",
         "text-2xl",
-        "tracking-[0.06em]",
+        "tracking-caps",
         "uppercase",
         "text-warcraft-gold",
         "cursor-pointer",
@@ -18,6 +18,8 @@ classes! {
         "hover:bg-panel-gold-active",
         "hover:shadow-glow",
         "active:translate-y-px",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
     mobile: tw![
         "mobile:w-full",

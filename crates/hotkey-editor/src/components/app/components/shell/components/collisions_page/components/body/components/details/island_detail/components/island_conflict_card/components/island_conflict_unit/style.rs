@@ -11,5 +11,7 @@ classes! {
         "items-center",
         "gap-2",
         "max-w-full",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

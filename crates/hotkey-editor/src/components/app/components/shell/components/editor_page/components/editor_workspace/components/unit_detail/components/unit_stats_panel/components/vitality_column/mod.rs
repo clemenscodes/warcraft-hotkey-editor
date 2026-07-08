@@ -1,33 +1,34 @@
-mod data;
-mod kinds;
-mod logic;
+pub mod components;
 mod props;
+mod style;
 
-use super::shared::stat_column::{StatColumn, StatColumnKind};
-use super::shared::stat_row::StatRow;
+use components::hit_points_regen_row::HitPointsRegenRow;
+use components::hit_points_row::HitPointsRow;
+use components::mana_regen_row::ManaRegenRow;
+use components::mana_row::ManaRow;
 use dioxus::prelude::*;
-use logic::VitalityRows;
 pub use props::VitalityColumnProps;
-
-/// The vitality column: the unit's hit points and mana rows with their regeneration.
-/// Always present; every unit has vitality figures.
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(VitalityColumn);
+
+/// The vitality column: the unit's hit points and mana rows with their regeneration,
+/// laid into the `vitality` grid area. Always present; every unit has vitality
+/// figures. It names its four rows directly — each row owns its own look — rather than
+/// configuring one shared row through variant flags.
 #[component]
 pub fn VitalityColumn(props: VitalityColumnProps) -> Element {
-    let VitalityRows {
-        hit_points_row,
-        hit_points_regen_row,
-        mana_row,
-        mana_regen_row,
-    } = VitalityRows::from(&props);
+    let hit_points = props.hit_points;
+    let hit_points_regen = props.hit_points_regen;
+    let mana = props.mana;
+    let mana_regen = props.mana_regen;
     rsx! {
-        StatColumn {
-            kind: StatColumnKind::Vitality,
-            StatRow { ..hit_points_row }
-            StatRow { ..hit_points_regen_row }
-            StatRow { ..mana_row }
-            StatRow { ..mana_regen_row }
+        div {
+            class: CLASS,
+            HitPointsRow { value: hit_points }
+            HitPointsRegenRow { value: hit_points_regen }
+            ManaRow { value: mana }
+            ManaRegenRow { value: mana_regen }
         }
     }
 }

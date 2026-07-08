@@ -1,6 +1,9 @@
 mod props;
 mod style;
 
+use crate::components::app::components::shell::components::shared::editable_keycap::{
+    EditableKeycap, EditableKeycapProps,
+};
 use crate::services::focus::context::use_focus_coordinator;
 use dioxus::prelude::*;
 use std::rc::Rc;
@@ -13,12 +16,13 @@ pub use props::OverrideKeyProps;
 assert_component!(OverrideKey);
 
 /// The hotkey-capture button shown in the override panel header (and the alt/upgrade
-/// sections).
+/// sections). The focusable, keyboard-navigable host: it owns the box size, the special
+/// token widening, focus, the mount-time focus registration, and the click handler,
+/// and wraps the shared `EditableKeycap` that draws the gold cap.
 #[component]
 pub fn OverrideKey(props: OverrideKeyProps) -> Element {
-    let label = props.label;
-    let is_editing = props.is_editing;
     let is_special = props.is_special;
+    let keycap = EditableKeycapProps::from(&props);
     let title = props.title;
     let is_focus_target = props.is_focus_target;
     let on_activate = props.on_activate;
@@ -40,12 +44,11 @@ pub fn OverrideKey(props: OverrideKeyProps) -> Element {
     rsx! {
         button {
             class: CLASS,
-            "data-editing": is_editing,
             "data-special": is_special,
             title,
             onmounted: on_mounted,
             onclick: handle_click,
-            {label}
+            EditableKeycap { ..keycap }
         }
     }
 }

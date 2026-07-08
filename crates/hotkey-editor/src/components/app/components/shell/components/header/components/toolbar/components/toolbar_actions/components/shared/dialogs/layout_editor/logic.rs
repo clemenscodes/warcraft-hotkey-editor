@@ -39,13 +39,11 @@ impl From<&LayoutEditorModel> for DialogProps {
                 ApplyButton { ..apply }
             }
         };
-        let footer: Option<Element> = None;
         let on_open_change = Some(model.on_dialog_open_change);
         Self {
             open,
             title,
             children,
-            footer,
             on_open_change,
         }
     }
@@ -89,21 +87,18 @@ impl GridCellContext {
     /// shows, and the five drag/click handlers. The drag-drop handler routes a cell
     /// swap through the
     /// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
-    fn cell(&self, row: u8, column: u8) -> LayoutTileProps {
+    fn cell(&self, coordinate: GridCoordinate) -> LayoutTileProps {
         let mut editing_layout_tile = self.editing_layout_tile;
         let mut dragging_layout_tile = self.dragging_layout_tile;
         let grid_layout = self.grid_layout;
         let grid_layout_service = self.grid_layout_service;
-        let column_index = ColumnIndex::try_from(column).ok();
-        let row_index = RowIndex::try_from(row).ok();
-        let coordinate_option = column_index
-            .zip(row_index)
-            .map(|(col, row_idx)| GridCoordinate::new(col, row_idx));
-        let current_letter = coordinate_option
-            .and_then(|coordinate| self.layout.letter_at(coordinate.column(), coordinate.row()))
+        let column_index = coordinate.column();
+        let row_index = coordinate.row();
+        let letter_option = self.layout.letter_at(column_index, row_index);
+        let current_letter = letter_option
             .map(|letter| letter.to_string())
             .unwrap_or_default();
-        let is_editing = self.editing_snapshot == coordinate_option;
+        let is_editing = self.editing_snapshot == Some(coordinate);
         let state = if is_editing {
             LayoutTileState::Editing
         } else {
@@ -115,9 +110,7 @@ impl GridCellContext {
             current_letter
         };
         let ondragstart = EventHandler::new(move |_event: Event<DragData>| {
-            if let Some(coordinate) = coordinate_option {
-                dragging_layout_tile.set(Some(coordinate));
-            }
+            dragging_layout_tile.set(Some(coordinate));
         });
         let ondragend = EventHandler::new(move |_event: Event<DragData>| {
             dragging_layout_tile.set(None);
@@ -133,25 +126,24 @@ impl GridCellContext {
             };
             let source_column = u8::from(source_cell.column());
             let source_row = u8::from(source_cell.row());
-            if source_column == column && source_row == row {
+            let target_column = u8::from(coordinate.column());
+            let target_row = u8::from(coordinate.row());
+            if source_column == target_column && source_row == target_row {
                 dragging_layout_tile.set(None);
                 return;
             }
             let mut next_layout = *grid_layout.read();
-            next_layout.swap_cells(source_column, source_row, column, row);
+            next_layout.swap_cells(source_column, source_row, target_column, target_row);
             grid_layout_service.select(next_layout);
             dragging_layout_tile.set(None);
         });
         let onclick = EventHandler::new(move |_event: MouseEvent| {
-            if let Some(coordinate) = coordinate_option {
-                editing_layout_tile.set(Some(coordinate));
-            }
+            editing_layout_tile.set(Some(coordinate));
         });
         LayoutTileProps {
             state,
             label,
-            row,
-            column,
+            coordinate,
             ondragstart,
             ondragend,
             ondragover,
@@ -173,7 +165,11 @@ impl LayoutGridCells {
         let mut cells: Vec<LayoutTileProps> = Vec::new();
         for row in 0..COMMAND_GRID_ROWS {
             for column in 0..COMMAND_GRID_COLUMNS {
-                let cell = context.cell(row, column);
+                let column_index =
+                    ColumnIndex::try_from(column).expect("column is within the command grid");
+                let row_index = RowIndex::try_from(row).expect("row is within the command grid");
+                let coordinate = GridCoordinate::new(column_index, row_index);
+                let cell = context.cell(coordinate);
                 cells.push(cell);
             }
         }

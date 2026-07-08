@@ -1,13 +1,13 @@
 use super::props::UnitCardProps;
-use super::style;
+use crate::components::app::components::shell::components::shared::selectable_entity_card::CardAccent;
 use crate::services::focus::context::use_focus_coordinator;
 use crate::services::focus::coordinator::FocusTarget;
 use dioxus::prelude::*;
 
-/// The card's shaped view: its full class string (base plus the mobile carousel
-/// filter for its kind), the kind data attribute, and the select handlers.
+/// The card's shaped view: its race accent, the kind data attribute the wrapper's
+/// carousel filter reads, and the select handlers.
 pub(super) struct UnitCardModel {
-    pub(super) class: tw_macro::ClassList,
+    pub(super) accent: CardAccent,
     pub(super) kind_attr: &'static str,
     pub(super) on_click: EventHandler<MouseEvent>,
     pub(super) on_keydown: EventHandler<KeyboardEvent>,
@@ -17,7 +17,7 @@ pub(super) struct UnitCardModel {
 /// selected slot, and switches the active category to the card's kind.
 pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let unit_kind = props.unit_kind;
-    let class = style::class(props.race);
+    let accent = CardAccent::from(props.race);
     let kind_attr = crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::unit_list::unit_kind_data_attr(unit_kind);
     let mut selected_unit_id = props.selected_unit_id;
     let mut selected_slot = props.selected_slot;
@@ -41,7 +41,7 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
         }
     });
     UnitCardModel {
-        class,
+        accent,
         kind_attr,
         on_click,
         on_keydown,

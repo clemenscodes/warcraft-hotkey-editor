@@ -16,5 +16,7 @@ classes! {
         "text-2xl",
         "leading-none",
         "hover:text-warcraft-gold",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

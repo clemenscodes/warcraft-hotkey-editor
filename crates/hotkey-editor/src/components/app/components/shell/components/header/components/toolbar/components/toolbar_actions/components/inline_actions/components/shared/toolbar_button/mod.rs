@@ -1,8 +1,9 @@
-pub mod components;
 mod props;
 mod style;
 
-use components::toolbar_button_surface::{ToolbarButtonSurface, ToolbarButtonSurfaceProps};
+use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::{
+    ToolbarButtonSurface, ToolbarButtonSurfaceProps,
+};
 use dioxus::prelude::*;
 pub use props::ToolbarButtonProps;
 use style::CLASS;

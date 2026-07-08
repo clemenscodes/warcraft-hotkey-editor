@@ -1,4 +1,3 @@
-use super::components::reason_badge::ReasonBadgeProps;
 use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
 use dioxus::prelude::*;
 
@@ -8,13 +7,4 @@ pub struct MoveReasonRowProps {
     pub kind: ReasonKind,
     #[props(into)]
     pub label: String,
-}
-
-impl From<&MoveReasonRowProps> for ReasonBadgeProps {
-    fn from(props: &MoveReasonRowProps) -> Self {
-        Self {
-            kind: props.kind,
-            label: props.label.clone(),
-        }
-    }
 }

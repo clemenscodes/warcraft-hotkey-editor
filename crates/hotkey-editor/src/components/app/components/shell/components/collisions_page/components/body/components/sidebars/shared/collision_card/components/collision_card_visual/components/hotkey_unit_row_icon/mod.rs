@@ -1,25 +1,36 @@
-pub mod components;
 mod props;
 mod style;
 
-use components::hotkey_unit_row_image::{HotkeyUnitRowImage, HotkeyUnitRowImageProps};
+use crate::components::app::components::shell::components::shared::framed_icon::{
+    FramedIcon, FramedIconProps, IconRadius,
+};
 use dioxus::prelude::*;
 pub use props::HotkeyUnitRowIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(HotkeyUnitRowIcon);
-/// A unit's portrait on a collision card. A guarded host: renders nothing when
-/// the unit has no icon; otherwise a framed slot whose image fills it.
+
+/// A unit's portrait on a collision card. It owns its per-band slot; the shared
+/// `FramedIcon` draws the bordered, rounded image and renders nothing when the unit
+/// has no icon.
 #[component]
 pub fn HotkeyUnitRowIcon(props: HotkeyUnitRowIconProps) -> Element {
     let Some(source) = props.icon_url else {
         return rsx! {};
     };
+    let src = Some(source);
     let alt = props.alt;
-    let image_props = HotkeyUnitRowImageProps { source, alt };
+    let framed = FramedIconProps {
+        src,
+        alt,
+        radius: IconRadius::Control,
+        hover_glow: false,
+        placeholder: false,
+    };
     rsx! {
-        div { class: CLASS,
-            HotkeyUnitRowImage { ..image_props }
+        div {
+            class: CLASS,
+            FramedIcon { ..framed }
         }
     }
 }

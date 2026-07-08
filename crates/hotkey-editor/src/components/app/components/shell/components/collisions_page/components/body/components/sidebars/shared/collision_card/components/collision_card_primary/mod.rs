@@ -3,7 +3,7 @@ mod props;
 use super::super::state::CollisionCardContent;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::coordinate::Coordinate;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::hotkey_unit_name::HotkeyUnitName;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_unit_name::ConflictUnitName;
 use dioxus::prelude::*;
 pub use props::CollisionCardPrimaryProps;
 use tw_macro::assert_component;
@@ -16,7 +16,7 @@ assert_component!(CollisionCardPrimary);
 pub fn CollisionCardPrimary(props: CollisionCardPrimaryProps) -> Element {
     match props.content {
         CollisionCardContent::Unit { name, unit_id, .. } => rsx! {
-            HotkeyUnitName { text: name }
+            ConflictUnitName { text: name }
             ConflictObjectId { text: unit_id }
         },
         CollisionCardContent::Island { coordinate } => rsx! {

@@ -5,7 +5,7 @@ classes! {
         "max-w-360",
         "text-center",
         "uppercase",
-        "tracking-widest",
+        "tracking-heading",
         "text-2xl",
         "leading-body",
         "text-warcraft-gold/75",

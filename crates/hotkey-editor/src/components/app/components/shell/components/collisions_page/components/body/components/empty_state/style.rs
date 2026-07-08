@@ -1,15 +1,7 @@
 use tw_macro::tw;
+// A layout-neutral identity wrapper: it carries the e2e data attributes and no box
+// of its own, so the shared `PageState` shell it wraps becomes the fill item that
+// centers the upload prompt.
 classes! {
-    base: tw![
-        "flex",
-        "flex-col",
-        "items-center",
-        "justify-center",
-        "gap-5",
-        "flex-[1_1_0]",
-        "min-h-0",
-        "text-center",
-        "p-8",
-        "text-warcraft-text-secondary",
-    ],
+    base: tw!["contents"],
 }

@@ -58,7 +58,7 @@ test.describe("Collision page entry deep-linking", () => {
     await expect(targetRow).toHaveAttribute("data-selected", "true");
 
     // Open the affected unit in the editor.
-    await page.locator(".hotkey-detail-unit").click();
+    await page.locator(".conflict-detail-unit").click();
     await expect(page).not.toHaveURL(/\/collisions/);
     await expect(page.locator(".filled-tile").first()).toBeVisible();
 

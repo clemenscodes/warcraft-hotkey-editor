@@ -1,57 +1,24 @@
 use tw_macro::tw;
+
+// The collision card is now a thin identity wrapper around the shared
+// `SelectableEntityCard` surface: it owns only the card's placement box (full width in
+// the vertical sidebar; a fixed carousel item on mobile/tablet) and carries the
+// `data-collision-key` and `data-selected` attributes the deep-link e2e suite reads.
+// All of the card's look — border, fill, hover, focus, and the fixed gold selected
+// accent — lives on the shared surface.
+
 classes! {
-    base: tw![
-        "group",
-        "flex",
-        "items-center",
-        "gap-4",
-        "p-4",
-        "w-full",
-        "min-w-0",
-        "text-left",
-        "text-lg",
-        "tracking-[0.02em]",
-        "border",
-        "rounded-tile",
-        "transition-all",
-        "duration-fast",
-        "bg-warcraft-bg-mid/55",
-        "border-warcraft-blue-deep",
-        "text-warcraft-text-primary",
-        "hover:bg-warcraft-blue-deep/70",
-        "hover:border-warcraft-blue",
-        "hover:text-white",
-        "kb-focus:border-white",
-        "kb-focus:text-white",
-        "kb-focus:bg-warcraft-blue/85",
-        "kb-focus:shadow-focus",
-        "data-[selected=true]:bg-panel-blue",
-        "data-[selected=true]:border-warcraft-gold",
-        "data-[selected=true]:text-warcraft-gold",
-        "data-[selected=true]:shadow-glow-soft",
-    ],
+    base: tw!["w-full"],
     mobile: tw![
         "mobile:flex-[1_0_auto]",
         "mobile:w-[min(54cqi,260px)]",
         "mobile:h-full",
-        "mobile:py-2", "mobile:px-2.5",
-        "mobile:gap-2.5",
         "mobile:snap-start",
-        "mobile:box-border",
-        "mobile:overflow-hidden",
-        "mobile:bg-panel-dark",
-        "mobile:border-warcraft-blue/60",
     ],
     tablet: tw![
         "tablet:flex-[1_0_auto]",
         "tablet:w-[min(54cqi,260px)]",
         "tablet:h-full",
-        "tablet:py-2", "tablet:px-2.5",
-        "tablet:gap-2.5",
         "tablet:snap-start",
-        "tablet:box-border",
-        "tablet:overflow-hidden",
-        "tablet:bg-panel-dark",
-        "tablet:border-warcraft-blue/60",
     ],
 }

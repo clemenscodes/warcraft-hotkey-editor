@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 
-/// The body text's only input: the paragraph copy, passed as children.
+/// The body text's only input: the paragraph copy.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpBodyTextProps {
-    pub children: Element,
+    #[props(into)]
+    pub text: String,
 }

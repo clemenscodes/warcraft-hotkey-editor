@@ -4,7 +4,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "uppercase",
-        "tracking-[0.06em]",
+        "tracking-caps",
         "text-lg",
         "text-warcraft-text-secondary",
     ],

@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "text-3xl",
         "leading-title",
         "text-warcraft-text-secondary",
@@ -12,7 +12,7 @@ classes! {
         "mobile:flex-[1_1_auto]",
         "mobile:min-w-0",
         "mobile:text-xs",
-        "mobile:tracking-[0.04em]",
+        "mobile:tracking-label",
         "mobile:leading-title",
         "mobile:whitespace-normal",
         "mobile:wrap-break-word",
@@ -22,7 +22,7 @@ classes! {
         "tablet:flex-[1_1_auto]",
         "tablet:min-w-0",
         "tablet:text-xs",
-        "tablet:tracking-[0.04em]",
+        "tablet:tracking-label",
         "tablet:leading-title",
         "tablet:whitespace-normal",
         "tablet:wrap-break-word",

@@ -2,12 +2,8 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "m-0",
-        "uppercase",
-        "tracking-widest",
         "text-2xl",
         "leading-title",
-        "text-warcraft-gold",
-        "text-shadow-drop",
     ],
     mobile: tw![
         "mobile:text-2xl",

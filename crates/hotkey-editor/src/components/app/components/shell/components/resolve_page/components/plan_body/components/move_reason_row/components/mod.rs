@@ -1,1 +1,1 @@
-pub mod reason_badge;
+pub mod reason_badges;

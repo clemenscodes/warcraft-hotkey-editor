@@ -1,10 +1,8 @@
 use super::hooks::InventoryFilledSlotModel;
 use super::props::InventoryFilledSlotProps;
-use super::state::InventoryFilledSlotState;
-use crate::components::app::components::shell::components::shared::tooltip::{TooltipAnchor, TooltipPlacement, TooltipProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_key::SystemSlotKeyProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabelProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot::{SystemSlotProps, SystemSlotState};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialogProps;
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use crate::services::customkeys::queries::slot_binding_query::SlotBindingView;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -15,8 +13,8 @@ use warcraft_keybinds::KeyCode;
 /// comes from the CustomKeys query; the drag/editing half from the shared UI
 /// signals. Pure derivation — no signals owned, no handlers.
 pub(super) struct InventoryFilledSlotView {
-    pub(super) state: InventoryFilledSlotState,
-    pub(super) dragging_attr: &'static str,
+    pub(super) state: SystemSlotState,
+    pub(super) dragging: bool,
     pub(super) slot_label: String,
     pub(super) key_label: String,
     pub(super) conflict_title: String,
@@ -57,13 +55,13 @@ impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
             .unwrap_or(false);
         let is_drop_target = *drop_target.read() == Some(section_id);
         let state = if is_conflict {
-            InventoryFilledSlotState::Conflict
+            SystemSlotState::Conflict
         } else if is_editing || is_drop_target {
-            InventoryFilledSlotState::Active
+            SystemSlotState::Highlighted
         } else {
-            InventoryFilledSlotState::Idle
+            SystemSlotState::Idle
         };
-        let dragging_attr = if is_being_dragged { "true" } else { "false" };
+        let dragging = is_being_dragged;
         let key_label = if is_editing {
             String::from("…")
         } else {
@@ -73,7 +71,7 @@ impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
         let current_code = binding.current_code();
         Self {
             state,
-            dragging_attr,
+            dragging,
             slot_label,
             key_label,
             conflict_title,
@@ -85,36 +83,25 @@ impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
     }
 }
 
-impl From<&InventoryFilledSlotModel> for TooltipProps {
+impl From<&InventoryFilledSlotModel> for SystemSlotProps {
     fn from(model: &InventoryFilledSlotModel) -> Self {
-        let text = model.conflict_title.clone();
-        let placement = TooltipPlacement::Above;
-        let anchor = TooltipAnchor::Center;
-        Self {
-            text,
-            placement,
-            anchor,
-        }
-    }
-}
-
-impl From<&InventoryFilledSlotModel> for SystemSlotLabelProps {
-    fn from(model: &InventoryFilledSlotModel) -> Self {
-        let text = model.slot_label.clone();
-        let compact = false;
-        Self { text, compact }
-    }
-}
-
-impl From<&InventoryFilledSlotModel> for SystemSlotKeyProps {
-    fn from(model: &InventoryFilledSlotModel) -> Self {
-        let label = model.key_label.clone();
-        let compact = false;
+        let state = model.state;
+        let slot_label = model.slot_label.clone();
+        let key_label = model.key_label.clone();
         let conflict = model.is_conflict;
+        let tooltip_text = model.conflict_title.clone();
+        let tooltip_placement = TooltipPlacement::Above;
+        let compact = false;
+        let dragging = model.dragging;
         Self {
-            label,
-            compact,
+            state,
+            slot_label,
+            key_label,
             conflict,
+            tooltip_text,
+            tooltip_placement,
+            compact,
+            dragging,
         }
     }
 }

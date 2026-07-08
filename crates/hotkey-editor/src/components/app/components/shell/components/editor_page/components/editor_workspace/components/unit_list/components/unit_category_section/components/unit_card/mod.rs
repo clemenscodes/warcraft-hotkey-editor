@@ -3,6 +3,9 @@ mod hooks;
 mod props;
 mod style;
 
+use crate::components::app::components::shell::components::shared::selectable_entity_card::{
+    SelectableEntityCard, SelectableEntityCardProps,
+};
 use crate::services::focus::context::use_focus_coordinator;
 use components::unit_card_icon::{UnitCardIcon, UnitCardIconProps};
 use components::unit_card_info::{UnitCardInfo, UnitCardInfoProps};
@@ -10,11 +13,14 @@ use dioxus::prelude::*;
 use hooks::use_unit_card;
 pub use props::UnitCardProps;
 use std::rc::Rc;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(UnitCard);
 
 /// One selectable unit in the list: portrait plus name and id. Selecting it drives
-/// the unit-detail panel.
+/// the unit-detail panel. A thin identity wrapper that owns the card's placement box
+/// and per-kind carousel filter and renders the shared `SelectableEntityCard` surface
+/// for the actual button, look, and per-race accent.
 #[component]
 pub fn UnitCard(props: UnitCardProps) -> Element {
     let model = use_unit_card(&props);
@@ -33,16 +39,26 @@ pub fn UnitCard(props: UnitCardProps) -> Element {
             focus.set_unit_card_handle(handle);
         }
     });
+    let on_mounted = EventHandler::new(move |event: Event<MountedData>| {
+        mounted_handle.set(Some(event.data()));
+    });
+    let children = rsx! {
+        UnitCardIcon { ..icon }
+        UnitCardInfo { ..info }
+    };
+    let card = SelectableEntityCardProps {
+        accent: model.accent,
+        is_selected,
+        onclick: model.on_click,
+        onkeydown: Some(model.on_keydown),
+        onmounted: Some(on_mounted),
+        children,
+    };
     rsx! {
-        button {
-            class: model.class,
+        div {
+            class: CLASS,
             "data-unit-kind": model.kind_attr,
-            "data-selected": is_selected,
-            onmounted: move |event: Event<MountedData>| mounted_handle.set(Some(event.data())),
-            onclick: model.on_click,
-            onkeydown: model.on_keydown,
-            UnitCardIcon { ..icon }
-            UnitCardInfo { ..info }
+            SelectableEntityCard { ..card }
         }
     }
 }

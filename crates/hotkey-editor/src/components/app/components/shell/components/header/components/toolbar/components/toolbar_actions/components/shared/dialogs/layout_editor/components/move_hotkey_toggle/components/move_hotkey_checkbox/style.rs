@@ -28,8 +28,8 @@ classes! {
         "checked:after:[border-width:0_0.3rem_0.3rem_0]",
         "checked:after:rotate-45",
         "checked:after:filter-[drop-shadow(1px_1px_0_var(--color-warcraft-shadow))]",
-        "focus-visible:outline-none",
-        "focus-visible:shadow-focus",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
     mobile: tw![
         "mobile:w-5.5",

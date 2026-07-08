@@ -15,7 +15,7 @@ pub fn HelpResolverProse(props: HelpResolverProseProps) -> Element {
     rsx! {
         div { class: CLASS,
             for (index, paragraph) in props.paragraphs.iter().copied().enumerate() {
-                HelpBodyText { key: "{index}", "{paragraph}" }
+                HelpBodyText { key: "{index}", text: paragraph }
             }
         }
     }

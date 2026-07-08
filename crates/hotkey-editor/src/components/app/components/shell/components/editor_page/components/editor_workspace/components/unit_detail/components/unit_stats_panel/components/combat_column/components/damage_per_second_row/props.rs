@@ -5,5 +5,5 @@ use warcraft_keybinds::DamagePerSecond;
 /// no real cooldown (so a rate is undefined and the row is absent).
 #[derive(Props, Clone, PartialEq)]
 pub struct DamagePerSecondRowProps {
-    pub damage_per_second: Option<DamagePerSecond>,
+    pub value: Option<DamagePerSecond>,
 }

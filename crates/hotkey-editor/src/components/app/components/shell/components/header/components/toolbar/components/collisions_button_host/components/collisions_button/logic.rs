@@ -1,19 +1,17 @@
 use super::props::CollisionsButtonProps;
-use super::state::CollisionState;
-use super::style;
+use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::SurfaceState;
 use crate::components::app::components::shell::components::shared::icons::{
     ICON_COLLISIONS, ICON_COLLISIONS_CLEAR,
 };
 use dioxus::prelude::*;
-use tw_macro::ClassList;
 
 /// Everything the button renders, shaped once from the domain-computed collision
-/// summary: the styled class for its state, each collision class's count
-/// (published as a `data-*` attribute for e2e), the badge label, the aria label,
-/// the state attribute, the icon glyph, and the click handler. The body never
-/// computes any of this — it destructures this and places the values.
+/// summary: the surface's visual state, each collision class's count (published as a
+/// `data-*` attribute for e2e), the badge label, the aria label, the state attribute,
+/// the icon glyph, and the click handler. The body never computes any of this — it
+/// destructures this and places the values.
 pub struct CollisionsButtonPresentation {
-    pub(super) class: ClassList,
+    pub(super) surface_state: SurfaceState,
     pub(super) collision_count: usize,
     pub(super) cross_unit_count: usize,
     pub(super) per_unit_position_count: usize,
@@ -27,8 +25,8 @@ pub struct CollisionsButtonPresentation {
 
 impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
     /// Map the domain-counted summary to presentation. The counting already
-    /// happened in `warcraft-keybinds`; this only shapes counts into the class,
-    /// badge, aria label, and glyph. The click handler is supplied by the host.
+    /// happened in `warcraft-keybinds`; this only shapes counts into the surface
+    /// state, badge, aria label, and glyph. The click handler is supplied by the host.
     fn from(props: &CollisionsButtonProps) -> Self {
         let summary = props.summary;
         let onclick = props.onclick;
@@ -37,12 +35,11 @@ impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
         let per_unit_position_count = summary.per_unit_position();
         let per_unit_hotkey_count = summary.per_unit_hotkey();
         let has_collisions = !summary.is_clean();
-        let state = if has_collisions {
-            CollisionState::Attention
+        let surface_state = if has_collisions {
+            SurfaceState::Attention
         } else {
-            CollisionState::Clear
+            SurfaceState::Clear
         };
-        let class = style::class(state);
         let count_label = if collision_count >= 100 {
             String::from("99+")
         } else {
@@ -60,7 +57,7 @@ impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
             ICON_COLLISIONS_CLEAR
         };
         Self {
-            class,
+            surface_state,
             collision_count,
             cross_unit_count,
             per_unit_position_count,

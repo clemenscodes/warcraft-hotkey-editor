@@ -2,7 +2,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "uppercase",
-        "tracking-[0.18em]",
+        "tracking-eyebrow",
         "text-3xl",
         "leading-none",
         "text-warcraft-gold/55",
@@ -10,12 +10,12 @@ classes! {
     ],
     mobile: tw![
         "mobile:text-xs",
-        "mobile:tracking-[0.08em]",
+        "mobile:tracking-caps",
         "mobile:data-[compact=true]:text-xs",
     ],
     tablet: tw![
         "tablet:text-xs",
-        "tablet:tracking-[0.08em]",
+        "tablet:tracking-caps",
         "tablet:data-[compact=true]:text-xs",
     ],
 }

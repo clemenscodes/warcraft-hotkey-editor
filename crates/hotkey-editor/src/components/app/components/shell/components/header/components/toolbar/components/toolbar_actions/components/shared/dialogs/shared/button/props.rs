@@ -12,5 +12,6 @@ pub enum ButtonVariant {
 pub struct ButtonProps {
     pub variant: ButtonVariant,
     pub onclick: EventHandler<MouseEvent>,
-    pub children: Element,
+    #[props(into)]
+    pub label: String,
 }

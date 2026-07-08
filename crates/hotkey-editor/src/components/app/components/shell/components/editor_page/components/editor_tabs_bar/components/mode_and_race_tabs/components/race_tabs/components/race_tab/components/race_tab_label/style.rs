@@ -17,14 +17,14 @@ classes! {
         "mobile:px-0.5",
         "mobile:pb-2",
         "mobile:text-xs",
-        "mobile:tracking-[0.03em]",
+        "mobile:tracking-snug",
     ],
     tablet: tw![
         "tablet:pt-1",
         "tablet:px-0.5",
         "tablet:pb-2",
         "tablet:text-xs",
-        "tablet:tracking-[0.03em]",
+        "tablet:tracking-snug",
     ],
 }
 

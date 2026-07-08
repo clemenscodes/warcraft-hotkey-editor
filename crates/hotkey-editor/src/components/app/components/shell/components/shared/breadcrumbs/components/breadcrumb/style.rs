@@ -16,6 +16,8 @@ classes! {
         "hover:text-warcraft-text-primary",
         "data-[active=true]:text-warcraft-gold",
         "data-[active=true]:text-shadow-drop",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
     mobile: tw![
         "mobile:flex-none",

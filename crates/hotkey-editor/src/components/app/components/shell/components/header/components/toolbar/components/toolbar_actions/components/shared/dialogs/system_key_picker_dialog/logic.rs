@@ -103,7 +103,6 @@ impl From<&SystemKeyPickerModel> for DialogProps {
             open,
             title,
             children,
-            footer: None,
             on_open_change: None,
         }
     }

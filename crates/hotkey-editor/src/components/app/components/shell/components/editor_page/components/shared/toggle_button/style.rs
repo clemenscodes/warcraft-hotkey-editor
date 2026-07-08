@@ -17,7 +17,7 @@ classes! {
         "text-warcraft-text-secondary",
         "text-xl",
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "whitespace-nowrap",
         "text-shadow-drop",
         "cursor-pointer",

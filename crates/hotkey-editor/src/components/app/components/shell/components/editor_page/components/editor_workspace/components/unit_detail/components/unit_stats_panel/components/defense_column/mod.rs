@@ -1,44 +1,44 @@
 pub mod components;
-mod data;
-mod kinds;
 mod logic;
 mod props;
+mod style;
 
-use super::shared::stat_column::{StatColumn, StatColumnKind};
 use super::shared::stat_icon_frame::StatIconFrame;
-use super::shared::stat_row::StatRow;
-use super::shared::stat_rows::StatRows;
+use components::armor_row::ArmorRow;
 use components::defense_matchup_row::DefenseMatchupRow;
+use components::defense_type_row::DefenseTypeRow;
+use components::effective_hit_points_row::EffectiveHitPointsRow;
 use components::evasion_row::EvasionRow;
 use dioxus::prelude::*;
-use logic::DefenseRows;
+use logic::DefenseFigures;
 pub use props::DefenseColumnProps;
-
-/// The defense column: the defense-type icon beside the armor/defense-type/effective
-/// hit points rows, the guarded evasion row, and the defender's matchup grid. Always
-/// present; every unit has defense figures.
+use style::{CLASS, ROWS};
 use tw_macro::assert_component;
 assert_component!(DefenseColumn);
+
+/// The defense column: the defense-type icon beside the armor/defense-type/effective
+/// hit points rows, the guarded evasion row, and the defender's matchup grid, laid
+/// into the `defense` grid area. Always present; every unit has defense figures. It
+/// names its rows directly — each row owns its own look.
 #[component]
 pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
-    let DefenseRows {
+    let DefenseFigures {
         defense_icon,
-        armor_row,
-        defense_type_row,
-        effective_hit_points_row,
-        evasion,
+        armor,
         defense_type,
-    } = DefenseRows::from(&props);
+        effective_hit_points,
+        evasion,
+    } = DefenseFigures::from(&props);
     rsx! {
-        StatColumn {
-            kind: StatColumnKind::Defense,
-            with_icon: true,
+        div {
+            class: CLASS,
             StatIconFrame { ..defense_icon }
-            StatRows {
-                StatRow { ..armor_row }
-                StatRow { ..defense_type_row }
-                StatRow { ..effective_hit_points_row }
-                EvasionRow { evasion }
+            div {
+                class: ROWS,
+                ArmorRow { value: armor }
+                DefenseTypeRow { value: defense_type }
+                EffectiveHitPointsRow { value: effective_hit_points }
+                EvasionRow { value: evasion }
                 DefenseMatchupRow { defense_type }
             }
         }

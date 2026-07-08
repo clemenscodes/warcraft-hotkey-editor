@@ -3,11 +3,6 @@ classes! {
     base: tw![
         "size-20",
         "shrink-0",
-        "overflow-hidden",
-        "border",
-        "border-warcraft-blue",
-        "rounded-hairline",
-        "bg-warcraft-bg-panel/70",
     ],
     mobile: tw![
         "mobile:size-[62cqh]",

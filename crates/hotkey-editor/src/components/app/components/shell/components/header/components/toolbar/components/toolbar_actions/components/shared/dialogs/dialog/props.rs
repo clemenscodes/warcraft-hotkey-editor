@@ -9,10 +9,6 @@ pub struct DialogProps {
     #[props(into)]
     pub title: String,
     pub children: Element,
-    /// An optional pinned footer below the scrolling body, for dialogs with an
-    /// action bar. `None` for dialogs without one, where nothing is rendered.
-    #[props(default)]
-    pub footer: Option<Element>,
     /// An optional override for the open-change handler. `None` writes the open
     /// signal directly. A dialog with a nested child dialog passes one that
     /// guards the close, so dismissing the child does not also dismiss this one.

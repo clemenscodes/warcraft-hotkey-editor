@@ -1,74 +1,37 @@
-use super::state::SlotButtonState;
 use tw_macro::tw;
 
+// The hero-selection / control-group slot host: the focusable, clickable outer
+// button. It owns the cell's size (aspect ratio, min-height, the `compact`
+// control-group cell) and interaction, and is the named `group/tooltip` positioning
+// context the framed `SystemSlot` it wraps reacts to for its hover/keyboard-focus
+// glows and reveals its tooltip against. It draws no frame itself — the button
+// chrome is reset so the `SystemSlot` fills it edge to edge.
 classes! {
     base: tw![
         "relative",
         "group/tooltip",
         "[anchor-name:--tooltip-anchor]",
         "[anchor-scope:--tooltip-anchor]",
-        "flex",
-        "flex-col",
-        "items-center",
-        "justify-center",
-        "gap-2",
-        "px-2.5",
-        "py-3.5",
+        "appearance-none",
+        "border-0",
+        "bg-transparent",
+        "p-0",
         "cursor-pointer",
-        "text-center",
-        "select-none",
-        "border-solid",
-        "border-12",
-        "bg-panel-dark",
-        "[border-image-source:var(--wc3-slot-frame)]",
-        "[border-image-slice:12_fill]",
-        "[border-image-repeat:stretch]",
         "touch-manipulation",
-        "transition-[filter]",
-        "[&:hover]:filter-[brightness(1.18)_drop-shadow(0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent))]",
         "focus:outline-none",
         "kb-focus:outline-none",
-        "kb-focus:filter-[brightness(1.25)_drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent))]",
-        "data-[compact=true]:border-8",
-        "data-[compact=true]:[border-image-slice:12]",
-        "data-[compact=true]:px-1.5",
-        "data-[compact=true]:py-3",
-        "data-[compact=true]:gap-1.5",
         "data-[compact=true]:min-h-44",
     ],
     mobile: tw![
-        "mobile:border-8",
-        "mobile:px-1",
-        "mobile:py-2",
-        "mobile:gap-1",
         "mobile:aspect-[1/0.95]",
         "mobile:min-h-19",
-        "mobile:data-[compact=true]:border-[6px]",
-        "mobile:data-[compact=true]:px-1",
-        "mobile:data-[compact=true]:py-1.5",
-        "mobile:data-[compact=true]:gap-1",
         "mobile:data-[compact=true]:min-h-0",
         "mobile:data-[compact=true]:aspect-square",
     ],
     tablet: tw![
-        "tablet:border-8",
-        "tablet:px-1",
-        "tablet:py-2",
-        "tablet:gap-1",
         "tablet:aspect-[1/0.95]",
         "tablet:min-h-19",
-        "tablet:data-[compact=true]:border-[6px]",
-        "tablet:data-[compact=true]:px-1",
-        "tablet:data-[compact=true]:py-1.5",
-        "tablet:data-[compact=true]:gap-1",
         "tablet:data-[compact=true]:min-h-0",
         "tablet:data-[compact=true]:aspect-square",
     ],
-}
-
-states! {
-    SlotButtonState,
-    Idle => tw![],
-    Editing => tw!["filter-[brightness(1.32)_drop-shadow(0_0_14px_color-mix(in_oklab,var(--color-warcraft-gold)_75%,transparent))]"],
-    Conflict => tw!["filter-[drop-shadow(0_0_12px_color-mix(in_oklab,var(--color-warcraft-danger)_55%,transparent))]"],
 }

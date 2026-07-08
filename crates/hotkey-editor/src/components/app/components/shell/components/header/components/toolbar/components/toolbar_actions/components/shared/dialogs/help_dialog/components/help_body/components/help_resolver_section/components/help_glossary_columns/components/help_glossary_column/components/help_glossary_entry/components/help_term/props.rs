@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 
-/// The glossary term's only input: the term text, passed as children.
+/// The glossary term's only input: the term text.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpTermProps {
-    pub children: Element,
+    #[props(into)]
+    pub term: String,
 }

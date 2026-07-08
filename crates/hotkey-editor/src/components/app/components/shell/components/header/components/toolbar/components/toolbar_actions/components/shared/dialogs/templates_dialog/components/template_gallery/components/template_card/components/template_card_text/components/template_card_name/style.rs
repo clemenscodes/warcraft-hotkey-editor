@@ -4,18 +4,18 @@ classes! {
         "m-0",
         "text-3xl",
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "text-inherit",
         "text-shadow-drop",
     ],
     mobile: tw![
         "mobile:text-lg",
-        "mobile:tracking-[0.06em]",
+        "mobile:tracking-caps",
         "mobile:text-warcraft-gold",
     ],
     tablet: tw![
         "tablet:text-lg",
-        "tablet:tracking-[0.06em]",
+        "tablet:tracking-caps",
         "tablet:text-warcraft-gold",
     ],
 }

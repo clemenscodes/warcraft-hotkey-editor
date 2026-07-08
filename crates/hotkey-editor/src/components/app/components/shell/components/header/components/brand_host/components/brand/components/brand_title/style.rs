@@ -10,7 +10,7 @@ classes! {
         "font-normal",
         "text-[5cqi]",
         "leading-flush",
-        "tracking-[0.04em]",
+        "tracking-label",
         "text-warcraft-gold",
         "whitespace-nowrap",
         "text-left",

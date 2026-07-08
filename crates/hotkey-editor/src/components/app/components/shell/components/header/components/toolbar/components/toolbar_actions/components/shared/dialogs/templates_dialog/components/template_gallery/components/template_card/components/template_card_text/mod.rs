@@ -17,8 +17,8 @@ pub fn TemplateCardText(props: TemplateCardTextProps) -> Element {
     let description = props.description.clone();
     rsx! {
         div { class: CLASS,
-            TemplateCardName { {name} }
-            TemplateCardDescription { {description} }
+            TemplateCardName { name }
+            TemplateCardDescription { description }
         }
     }
 }

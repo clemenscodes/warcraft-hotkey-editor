@@ -21,8 +21,8 @@ pub fn HelpLegendRow(props: HelpLegendRowProps) -> Element {
         li { class: CLASS,
             HelpLegendIcon { icon }
             span {
-                HelpLegendLabel { "{label}" }
-                HelpLegendDescription { " {description}" }
+                HelpLegendLabel { label }
+                HelpLegendDescription { description }
             }
         }
     }

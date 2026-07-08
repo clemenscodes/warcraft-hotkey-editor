@@ -14,6 +14,8 @@ classes! {
         "cursor-pointer",
         "select-none",
         "transition-all", "duration-fast",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }
 

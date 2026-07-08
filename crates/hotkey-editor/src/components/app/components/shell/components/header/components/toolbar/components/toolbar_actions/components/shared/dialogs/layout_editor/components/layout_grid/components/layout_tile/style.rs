@@ -1,49 +1,27 @@
-use super::state::LayoutTileState;
 use tw_macro::tw;
+// The layout tile's host button: the focusable, draggable, keyboard-navigable box
+// around the shared `EditableKeycap`. It owns only the *box* — it fills the grid cell
+// it is given (`size-full`), sets the font size the cap inherits, and suppresses the
+// focus outline. The gold cap look and the capture pulse live on the nested
+// `EditableKeycap`; the `group/editable-keycap` marker lets that cap reflect this
+// button's keyboard focus. Class `.layout-tile` is load-bearing (keyboard navigation).
 
 classes! {
     base: tw![
-        "size-full",
+        "group/editable-keycap",
         "flex",
         "items-center",
         "justify-center",
+        "size-full",
         "p-0",
-        "border-2",
-        "rounded-panel",
         "text-5xl",
-        "leading-none",
-        "uppercase",
-        "border-warcraft-gold",
-        "text-warcraft-gold",
-        "bg-warcraft-gold-dark/75",
-        "text-shadow-outline",
-        "hover:shadow-glow-soft",
-        "hover:bg-warcraft-gold/12",
         "focus:outline-none",
         "kb-focus:outline-none",
-        "kb-focus:border-white",
-        "kb-focus:bg-warcraft-highlight/12",
-        "kb-focus:shadow-focus",
-        "[@media(hover:none)]:kb-focus:border-warcraft-gold",
-        "[@media(hover:none)]:kb-focus:bg-warcraft-gold-dark/75",
-        "[@media(hover:none)]:kb-focus:shadow-none",
-        "[@media(hover:none)]:kb-focus:text-warcraft-gold",
     ],
     mobile: tw![
         "mobile:text-2xl",
     ],
     tablet: tw![
         "tablet:text-2xl",
-    ],
-}
-
-states! {
-    LayoutTileState,
-    Idle => tw![],
-    Editing => tw![
-        "bg-panel-gold",
-        "border-warcraft-gold",
-        "text-warcraft-gold",
-        "shadow-glow-strong",
     ],
 }

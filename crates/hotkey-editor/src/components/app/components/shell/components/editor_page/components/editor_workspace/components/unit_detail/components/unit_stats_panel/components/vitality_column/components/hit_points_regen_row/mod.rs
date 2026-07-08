@@ -1,0 +1,34 @@
+mod logic;
+mod props;
+mod style;
+
+use super::super::super::shared::regen_qualifier::RegenQualifier;
+use dioxus::prelude::*;
+use logic::HitPointsRegenPresentation;
+pub use props::HitPointsRegenRowProps;
+use style::{CLASS, GAIN, LABEL};
+use tw_macro::assert_component;
+assert_component!(HitPointsRegenRow);
+
+const LABEL_TEXT: &str = "Regeneration";
+
+/// The unit's health regeneration: an indented companion to the hit points row. It
+/// carries its own conditional qualifier ("at night", "on blight") and its green gain,
+/// dimmed when the unit does not regenerate.
+#[component]
+pub fn HitPointsRegenRow(props: HitPointsRegenRowProps) -> Element {
+    let value = props.value;
+    let HitPointsRegenPresentation {
+        qualifier,
+        gain_text,
+        gain_muted,
+    } = HitPointsRegenPresentation::from(value);
+    rsx! {
+        div {
+            class: CLASS,
+            span { class: LABEL, {LABEL_TEXT} }
+            RegenQualifier { text: qualifier }
+            span { class: GAIN, "data-zero": gain_muted, {gain_text} }
+        }
+    }
+}

@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 
-/// The legend label's only input: the button name, passed as children.
+/// The legend label's only input: the button name.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendLabelProps {
-    pub children: Element,
+    #[props(into)]
+    pub label: String,
 }

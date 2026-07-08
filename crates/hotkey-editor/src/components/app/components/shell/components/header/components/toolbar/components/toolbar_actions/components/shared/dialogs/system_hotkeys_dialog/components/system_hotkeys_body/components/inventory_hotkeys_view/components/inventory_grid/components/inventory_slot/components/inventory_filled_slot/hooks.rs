@@ -6,7 +6,7 @@ use crate::components::app::components::shell::components::header::components::t
 
 use super::logic::{InventoryFilledSlotInputs, InventoryFilledSlotView};
 use super::props::InventoryFilledSlotProps;
-use super::state::InventoryFilledSlotState;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_body::components::shared::system_slot::SystemSlotState;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
@@ -23,9 +23,9 @@ use wasm_bindgen::closure::Closure;
 /// pointer/click/pick handlers that drive the drag-to-swap and edit-on-click
 /// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryFilledSlotModel {
-    pub(super) state: InventoryFilledSlotState,
+    pub(super) state: SystemSlotState,
     pub(super) slot_id: &'static str,
-    pub(super) dragging_attr: &'static str,
+    pub(super) dragging: bool,
     pub(super) slot_label: String,
     pub(super) key_label: String,
     pub(super) conflict_title: String,
@@ -243,7 +243,7 @@ pub(super) fn use_inventory_filled_slot(
     InventoryFilledSlotModel {
         state: view.state,
         slot_id,
-        dragging_attr: view.dragging_attr,
+        dragging: view.dragging,
         slot_label: view.slot_label,
         key_label: view.key_label,
         conflict_title: view.conflict_title,

@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "text-lg",
         "uppercase",
-        "tracking-[0.08em]",
+        "tracking-caps",
         "text-race-orc",
         "text-shadow-drop",
     ],

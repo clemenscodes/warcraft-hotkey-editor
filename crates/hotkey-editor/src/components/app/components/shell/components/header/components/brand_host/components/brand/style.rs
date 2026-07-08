@@ -22,7 +22,7 @@ classes! {
         "transition-[filter,text-shadow]", "duration-fast",
         "hover:filter-[brightness(1.15)]",
         "focus:outline-none",
-        "focus-visible:[outline:2px_solid_var(--color-warcraft-highlight)]",
-        "focus-visible:outline-offset-2",
+        "kb-focus:[outline:2px_solid_var(--color-warcraft-highlight)]",
+        "kb-focus:outline-offset-2",
     ],
 }

@@ -8,8 +8,8 @@ use dioxus::prelude::*;
 pub use props::HelpDialogProps;
 
 /// The onboarding guide. Just a component that composes the `Dialog` base: it
-/// sources the guide content, hands the body its data, and puts a dismiss button
-/// in the footer slot. It renders no element of its own.
+/// sources the guide content and hands the body its data followed by a dismiss
+/// button. It renders no element of its own.
 use tw_macro::assert_component;
 assert_component!(HelpDialog);
 #[component]

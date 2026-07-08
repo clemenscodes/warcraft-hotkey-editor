@@ -14,5 +14,7 @@ classes! {
         "cursor-pointer",
         "hover:border-warcraft-gold",
         "hover:shadow-glow-soft",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

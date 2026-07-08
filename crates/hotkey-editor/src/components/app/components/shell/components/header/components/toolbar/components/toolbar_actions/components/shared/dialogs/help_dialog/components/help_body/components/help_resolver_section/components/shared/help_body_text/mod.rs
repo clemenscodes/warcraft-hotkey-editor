@@ -8,10 +8,11 @@ use tw_macro::assert_component;
 assert_component!(HelpBodyText);
 
 /// A paragraph of explanatory help copy. A leaf reused by the resolver prose and
-/// every glossary entry; the parent passes the text as children.
+/// every glossary entry; the parent passes the text.
 #[component]
 pub fn HelpBodyText(props: HelpBodyTextProps) -> Element {
+    let text = props.text.clone();
     rsx! {
-        p { class: CLASS, {props.children} }
+        p { class: CLASS, {text} }
     }
 }

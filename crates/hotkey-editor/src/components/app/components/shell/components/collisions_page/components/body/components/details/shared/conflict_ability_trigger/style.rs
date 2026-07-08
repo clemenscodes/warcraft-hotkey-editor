@@ -10,5 +10,7 @@ classes! {
         "size-18",
         "leading-0",
         "group",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

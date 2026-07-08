@@ -20,6 +20,8 @@ classes! {
         "duration-fast",
         "hover:border-warcraft-gold",
         "hover:bg-warcraft-gold/12",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
         "[&>span]:block",
         "[&_svg]:w-[1.7rem]",
         "[&_svg]:h-[1.7rem]",

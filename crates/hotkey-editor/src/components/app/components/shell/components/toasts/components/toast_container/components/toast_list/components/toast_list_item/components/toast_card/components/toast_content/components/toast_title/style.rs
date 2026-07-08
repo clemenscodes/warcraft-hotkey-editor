@@ -3,12 +3,9 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "text-warcraft-gold",
-        "uppercase",
-        "tracking-[0.06em]",
         "text-2xl",
         "leading-title",
-        "text-shadow-drop",
+        "text-warcraft-gold",
     ],
 }
 

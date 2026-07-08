@@ -7,7 +7,7 @@ classes! {
         "text-warcraft-gold",
         "text-shadow-drop",
         "m-0",
-        "tracking-[0.03em]",
+        "tracking-snug",
     ],
     mobile: tw![
         "mobile:flex-auto",

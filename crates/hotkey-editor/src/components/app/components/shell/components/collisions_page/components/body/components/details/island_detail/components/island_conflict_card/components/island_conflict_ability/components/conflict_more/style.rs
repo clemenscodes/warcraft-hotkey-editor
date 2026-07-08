@@ -11,5 +11,7 @@ classes! {
         "underline",
         "underline-offset-2",
         "hover:text-warcraft-gold",
+        "kb-focus:outline-none",
+        "kb-focus:shadow-focus",
     ],
 }

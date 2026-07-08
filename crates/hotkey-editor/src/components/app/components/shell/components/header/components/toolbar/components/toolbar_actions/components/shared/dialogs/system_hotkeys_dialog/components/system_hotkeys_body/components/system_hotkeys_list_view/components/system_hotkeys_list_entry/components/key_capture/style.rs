@@ -7,7 +7,7 @@ classes! {
         "items-center",
         "justify-center",
         "uppercase",
-        "tracking-[0.04em]",
+        "tracking-label",
         "text-3xl",
         "leading-none",
         "px-6",

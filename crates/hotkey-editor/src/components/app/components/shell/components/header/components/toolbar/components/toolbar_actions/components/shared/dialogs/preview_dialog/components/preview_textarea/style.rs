@@ -16,9 +16,9 @@ classes! {
         "whitespace-pre",
         "overflow-auto",
         "resize-y",
-        "focus:outline-none",
-        "focus:border-warcraft-gold",
-        "focus:shadow-glow-soft",
+        "kb-focus:outline-none",
+        "kb-focus:border-warcraft-gold",
+        "kb-focus:shadow-glow-soft",
     ],
     mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
 }

@@ -14,7 +14,7 @@ classes! {
         "bg-warcraft-gold/12",
         "border-2",
         "border-warcraft-gold",
-        "rounded-card",
+        "rounded-tile",
         "text-shadow-drop",
     ],
     mobile: tw![

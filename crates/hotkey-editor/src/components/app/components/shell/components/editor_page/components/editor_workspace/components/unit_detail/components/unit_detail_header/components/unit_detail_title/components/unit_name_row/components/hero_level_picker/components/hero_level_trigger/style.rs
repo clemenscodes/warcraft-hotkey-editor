@@ -17,7 +17,7 @@ classes! {
         "text-warcraft-gold",
         "text-md",
         "uppercase",
-        "tracking-[0.06em]",
+        "tracking-caps",
         "text-shadow-drop",
         "cursor-pointer",
         "transition-[border-color,box-shadow]",
@@ -36,7 +36,7 @@ classes! {
         "mobile:py-1",
         "mobile:min-h-8",
         "mobile:text-base",
-        "mobile:tracking-[0.04em]",
+        "mobile:tracking-label",
     ],
     tablet: tw![
         "tablet:w-full",
@@ -44,6 +44,6 @@ classes! {
         "tablet:py-1",
         "tablet:min-h-8",
         "tablet:text-sm",
-        "tablet:tracking-[0.04em]",
+        "tablet:tracking-label",
     ],
 }

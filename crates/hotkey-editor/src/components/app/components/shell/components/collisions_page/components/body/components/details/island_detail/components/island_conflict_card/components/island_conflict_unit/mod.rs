@@ -5,7 +5,7 @@ mod style;
 use tw_macro::assert_component;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use components::conflict_unit_icon::{ConflictUnitIcon, ConflictUnitIconProps};
-use components::conflict_unit_name::ConflictUnitName;
+use components::island_conflict_unit_name::IslandConflictUnitName;
 use dioxus::prelude::*;
 pub use props::IslandConflictUnitProps;
 use style::CLASS;
@@ -30,7 +30,7 @@ pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
             r#type: "button",
             onclick,
             ConflictUnitIcon { ..icon }
-            ConflictUnitName { text: name }
+            IslandConflictUnitName { text: name }
             ConflictObjectId { text: unit_id_label }
         }
     }

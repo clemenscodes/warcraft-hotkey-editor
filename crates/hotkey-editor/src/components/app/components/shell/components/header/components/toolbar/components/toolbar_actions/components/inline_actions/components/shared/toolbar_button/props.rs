@@ -1,4 +1,6 @@
-use super::components::toolbar_button_surface::ToolbarButtonSurfaceProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::{
+    SurfaceState, ToolbarButtonSurfaceProps,
+};
 use dioxus::prelude::*;
 
 /// Consumers swap only the icon, click handler, and aria/disabled state; the look is
@@ -25,6 +27,7 @@ impl From<&ToolbarButtonProps> for ToolbarButtonSurfaceProps {
     fn from(props: &ToolbarButtonProps) -> Self {
         let icon = props.icon;
         let aria_label = props.aria_label;
+        let state = SurfaceState::Interactive;
         let disabled = props.disabled;
         let data_action = props.data_action;
         let aria_haspopup = props.aria_haspopup;
@@ -34,6 +37,7 @@ impl From<&ToolbarButtonProps> for ToolbarButtonSurfaceProps {
         Self {
             icon,
             aria_label,
+            state,
             disabled,
             data_action,
             aria_haspopup,

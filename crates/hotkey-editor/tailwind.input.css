@@ -73,6 +73,12 @@
   --leading-body: 1.4;
   --leading-prose: 1.5;
 
+  --tracking-snug: 0.025em;
+  --tracking-label: 0.04em;
+  --tracking-caps: 0.08em;
+  --tracking-heading: 0.1em;
+  --tracking-eyebrow: 0.16em;
+
   --default-transition-timing-function: ease;
   --default-transition-duration: 0.15s;
 
