@@ -1,22 +1,23 @@
 pub mod components;
-mod props;
 mod style;
 
-use tw_macro::assert_component;
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::{ModeAndRaceTabs, ModeAndRaceTabsProps};
+use components::mode_tabs_host::ModeTabsHost;
+use components::race_tabs_host::RaceTabsHost;
 use dioxus::prelude::*;
-pub use props::EditorTabsBarProps;
 use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(EditorTabsBar);
 
-/// The editor's top bar: the game-mode toggle beside the race tabs.
+/// The editor's top navigation bar: the game-mode column beside the race tabs. Pure
+/// layout — each side is a connected host that sources its one concern (the active mode,
+/// the active race) from context, so this bar threads no props at all.
 #[component]
-pub fn EditorTabsBar(props: EditorTabsBarProps) -> Element {
-    let tabs = ModeAndRaceTabsProps::from(&props);
+pub fn EditorTabsBar() -> Element {
     rsx! {
         div {
             class: CLASS,
-            ModeAndRaceTabs { ..tabs }
+            ModeTabsHost {}
+            RaceTabsHost {}
         }
     }
 }

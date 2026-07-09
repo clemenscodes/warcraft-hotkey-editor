@@ -9,7 +9,7 @@ use super::logic::ResolvedUnit;
 use super::state::UnitDetailModel;
 use dioxus::prelude::*;
 use std::rc::Rc;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::{GridSlotId, InspectorDetail};
 
 /// The unit detail panel's inputs: the active race and the selected unit. The editor
@@ -18,7 +18,7 @@ use warcraft_keybinds::{GridSlotId, InspectorDetail};
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailProps {
     pub active_race: Signal<Race>,
-    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
 }
 
 /// Every computed intermediate the loaded panel's props tree is built from. The hook
@@ -27,7 +27,7 @@ pub struct UnitDetailProps {
 /// below, so the hook never assembles a props struct by hand.
 pub(super) struct UnitDetailInputs {
     pub(super) race: Race,
-    pub(super) unit_id: String,
+    pub(super) unit_id: WarcraftObjectId,
     pub(super) resolved_unit: ResolvedUnit,
     pub(super) selected_hero_level: Signal<u32>,
     pub(super) command_card_slots: Rc<[GridSlotId]>,
@@ -61,7 +61,7 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             evasion,
         } = resolved_unit;
         let has_hero_attributes = hero_attributes.is_some();
-        let header_unit_id = unit_id.clone();
+        let header_unit_id = unit_id.value().to_string();
         let header = UnitDetailHeaderProps {
             unit_name,
             unit_id: header_unit_id,
@@ -77,8 +77,9 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             selected_hero_level,
             evasion,
         };
+        let grids_unit_id = unit_id.value().to_string();
         let grids = UnitCommandGridsProps {
-            unit_id,
+            unit_id: grids_unit_id,
             race,
             command_card_slots,
             build_menu_slots,

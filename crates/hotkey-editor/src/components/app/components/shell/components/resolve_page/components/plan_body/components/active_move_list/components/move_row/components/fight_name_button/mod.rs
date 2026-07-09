@@ -20,7 +20,7 @@ pub fn FightNameButton(props: FightNameButtonProps) -> Element {
             disabled: !has_unit,
             onclick,
             MoveName { text: name, is_link: has_unit }
-            ObjectId { text: object_id }
+            ObjectId { text: object_id.value() }
         }
     }
 }

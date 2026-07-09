@@ -10,11 +10,11 @@ assert_component!(ConflictObjectId);
 /// A unit's object id caption.
 #[component]
 pub fn ConflictObjectId(props: ConflictObjectIdProps) -> Element {
-    let text = props.text;
+    let object_id = props.object_id;
     rsx! {
         code {
             class: CLASS,
-            {text}
+            {object_id.value()}
         }
     }
 }

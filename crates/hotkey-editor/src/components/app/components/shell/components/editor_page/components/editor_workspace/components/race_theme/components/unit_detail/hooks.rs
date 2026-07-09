@@ -6,6 +6,7 @@ use super::state::{UnitDetailModel, UnitDetailView};
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, UnitSlotContainers};
 
 /// The hero-level picker state: the currently-chosen level, reset to its default
@@ -14,7 +15,7 @@ pub(super) struct HeroLevelState {
     pub(super) selected_hero_level: Signal<u32>,
 }
 
-fn use_hero_level_state(selected_unit_id: Signal<Option<String>>) -> HeroLevelState {
+fn use_hero_level_state(selected_unit_id: Signal<Option<WarcraftObjectId>>) -> HeroLevelState {
     let mut selected_hero_level = use_editor_state().selected_hero_level();
     use_effect(move || {
         let _ = selected_unit_id.read();
@@ -39,15 +40,15 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailProps) -> UnitDetailView {
     let loaded_keys = use_loaded_keys();
     let hero_level = use_hero_level_state(selected_unit_id);
     let slot_data_memo = use_memo(move || {
-        let unit_id_option = selected_unit_id.read().clone();
-        let unit_id_str = unit_id_option.as_deref().unwrap_or("");
+        let unit_id_option = *selected_unit_id.read();
+        let unit_id_str = unit_id_option.map(|unit_id| unit_id.value()).unwrap_or("");
         UnitSlotContainers::resolve(unit_id_str)
     });
-    let unit_id_option = selected_unit_id.read().clone();
+    let unit_id_option = *selected_unit_id.read();
     let Some(unit_id) = unit_id_option else {
         return UnitDetailView::Empty("Select a unit to view its command card.");
     };
-    let unit_id_ref = unit_id.as_str();
+    let unit_id_ref = unit_id.value();
     let resolved_unit = match ResolvedUnit::try_from(unit_id_ref) {
         Ok(resolved) => resolved,
         Err(message) => return UnitDetailView::Empty(message),
@@ -63,7 +64,7 @@ pub(super) fn use_unit_detail_panel(props: &UnitDetailProps) -> UnitDetailView {
     let keys_guard = loaded_keys.read();
     let train_upgrades = slot_containers.train_upgrades();
     let custom_keys_ref: &Option<CustomKeys> = &keys_guard;
-    let host_unit_id_ref: &str = &unit_id;
+    let host_unit_id_ref: &str = unit_id.value();
     let inspector_inputs = InspectorPanelInputs {
         inspector_slot: &inspector_slot,
         custom_keys: custom_keys_ref,

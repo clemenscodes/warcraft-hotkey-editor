@@ -48,8 +48,7 @@ impl From<&NavSnapshot> for Route {
                 let mode = Some(nav.unit_mode().to_string());
                 let unit = nav
                     .selected_unit_id()
-                    .clone()
-                    .filter(|value| !value.is_empty());
+                    .map(|unit_id| unit_id.value().to_string());
                 let search_query = if nav.search_query().is_empty() {
                     None
                 } else {

@@ -1,4 +1,5 @@
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
+use warcraft_api::WarcraftObjectId;
 
 /// The identity of the ability whose carriers are to be shown: its display name and
 /// the ids of the units that carry it (the query input). A lean value a trigger stashes
@@ -6,11 +7,11 @@ use crate::components::app::components::shell::components::shared::icons::Resolv
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct InspectedAbility {
     ability_name: String,
-    carrier_unit_ids: Vec<String>,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
 }
 
 impl InspectedAbility {
-    pub(crate) fn new(ability_name: String, carrier_unit_ids: Vec<String>) -> Self {
+    pub(crate) fn new(ability_name: String, carrier_unit_ids: Vec<WarcraftObjectId>) -> Self {
         Self {
             ability_name,
             carrier_unit_ids,
@@ -21,7 +22,7 @@ impl InspectedAbility {
         &self.ability_name
     }
 
-    pub(crate) fn carrier_unit_ids(&self) -> &[String] {
+    pub(crate) fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
     }
 }
@@ -30,17 +31,17 @@ impl InspectedAbility {
 /// deep-link into the editor focused on that unit.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct CarrierUnitView {
-    unit_id: String,
+    unit_id: WarcraftObjectId,
     name: String,
     icon_url: Option<String>,
 }
 
-impl From<&str> for CarrierUnitView {
-    fn from(unit_id_value: &str) -> Self {
+impl From<WarcraftObjectId> for CarrierUnitView {
+    fn from(unit_id: WarcraftObjectId) -> Self {
+        let unit_id_value = unit_id.value();
         let resolved = ResolvedIcon::lookup(unit_id_value);
         let icon_url = resolved.icon_url().map(str::to_owned);
         let name = resolved.name_or(unit_id_value);
-        let unit_id = unit_id_value.to_owned();
         Self {
             unit_id,
             name,
@@ -50,8 +51,8 @@ impl From<&str> for CarrierUnitView {
 }
 
 impl CarrierUnitView {
-    pub(crate) fn unit_id(&self) -> &str {
-        &self.unit_id
+    pub(crate) fn unit_id(&self) -> WarcraftObjectId {
+        self.unit_id
     }
 
     pub(crate) fn name(&self) -> &str {
@@ -70,11 +71,11 @@ impl CarrierUnitView {
 pub struct Carriers;
 
 impl Carriers {
-    pub(crate) fn for_unit_ids(carrier_unit_ids: &[String]) -> Vec<CarrierUnitView> {
+    pub(crate) fn for_unit_ids(carrier_unit_ids: &[WarcraftObjectId]) -> Vec<CarrierUnitView> {
         let mut views: Vec<CarrierUnitView> = Vec::with_capacity(carrier_unit_ids.len());
         for carrier_unit_id in carrier_unit_ids {
-            let carrier_unit_id_value = carrier_unit_id.as_str();
-            let view = CarrierUnitView::from(carrier_unit_id_value);
+            let carrier_unit_id = *carrier_unit_id;
+            let view = CarrierUnitView::from(carrier_unit_id);
             views.push(view);
         }
         views

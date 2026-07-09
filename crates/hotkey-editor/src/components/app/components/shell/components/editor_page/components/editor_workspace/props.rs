@@ -1,7 +1,7 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::RaceThemeProps;
 use dioxus::prelude::*;
 use std::collections::HashSet;
-use warcraft_api::{Race, UnitKind};
+use warcraft_api::{Race, UnitKind, WarcraftObjectId};
 use warcraft_database::{SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
@@ -14,7 +14,7 @@ use warcraft_keybinds::GridSlotId;
 pub struct EditorWorkspaceProps {
     pub active_race: Signal<Race>,
     pub unit_mode: Signal<UnitMode>,
-    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub search_query: Signal<String>,
     pub search_field: Signal<SearchField>,

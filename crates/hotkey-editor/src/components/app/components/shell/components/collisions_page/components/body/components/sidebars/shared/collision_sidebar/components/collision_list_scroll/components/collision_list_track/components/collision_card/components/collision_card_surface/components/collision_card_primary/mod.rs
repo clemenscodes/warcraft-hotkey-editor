@@ -17,7 +17,7 @@ pub fn CollisionCardPrimary(props: CollisionCardPrimaryProps) -> Element {
     match props.content {
         CollisionCardContent::Unit { name, unit_id, .. } => rsx! {
             ConflictUnitName { text: name }
-            ConflictObjectId { text: unit_id }
+            ConflictObjectId { object_id: unit_id }
         },
         CollisionCardContent::Island { coordinate } => rsx! {
             Coordinate { coordinate }

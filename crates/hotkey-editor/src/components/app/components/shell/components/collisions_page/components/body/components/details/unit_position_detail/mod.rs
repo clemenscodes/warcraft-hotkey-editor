@@ -34,14 +34,14 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
     let UnitPositionDetailData {
         unit,
         name,
-        unit_id_label,
+        unit_id,
         count,
         cards,
     } = data;
     let header = UnitPositionDetailHeaderProps {
         unit,
         name,
-        unit_id_label,
+        unit_id,
         count,
     };
     let grid = UnitPositionConflictGridProps { cards };

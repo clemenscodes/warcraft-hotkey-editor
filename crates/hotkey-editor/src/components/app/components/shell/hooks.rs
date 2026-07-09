@@ -23,6 +23,7 @@ use crate::services::undo::UndoHistory;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use tw_macro::ClassList;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
@@ -174,7 +175,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let initial_view = view;
     let initial_race = nav.race();
     let initial_mode = nav.unit_mode();
-    let initial_unit_id = nav.selected_unit_id().clone();
+    let initial_unit_id = nav.selected_unit_id();
     let initial_search = nav.search_query().to_owned();
     let initial_island = selected_island;
     let initial_hotkey_unit = selected_hotkey_unit;
@@ -185,7 +186,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let current_view = use_signal::<AppView>(move || initial_view);
     let active_race = use_signal(move || initial_race);
     let unit_mode = use_signal(move || initial_mode);
-    let selected_unit_id = use_signal::<Option<String>>(move || initial_unit_id);
+    let selected_unit_id = use_signal::<Option<WarcraftObjectId>>(move || initial_unit_id);
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
@@ -296,7 +297,7 @@ fn use_url_sync(signals: &AppSignals) {
             AppView::Editor => {
                 let race = *active_race.read();
                 let unit_mode_value = *unit_mode.read();
-                let selected_unit = selected_unit_id.read().clone();
+                let selected_unit = *selected_unit_id.read();
                 let query = search_query.read().clone();
                 let nav = DecodedEditorNav::new(race, unit_mode_value, selected_unit, query);
                 NavSnapshot::Editor(nav)
@@ -435,7 +436,7 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
             } else if info.classes().contains("unit-card")
                 || info.classes().contains("unit-category-heading")
             {
-                &[".race-tab[data-active=\"true\"]", ".race-tab"]
+                &[".active-race-tab .race-tab", ".race-tab"]
             } else if info.classes().contains("race-tab") {
                 &[".mode-tab[data-active=\"true\"]", ".mode-tab"]
             } else if info.classes().contains("mode-tab") {

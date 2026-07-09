@@ -35,7 +35,7 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
             class: CLASS,
             ConflictAbilityTrigger { ..trigger }
             ConflictAbilityName { text: ability_name }
-            ConflictObjectId { text: ability_id }
+            ConflictObjectId { object_id: ability_id }
             if extra_count > 0 {
                 ConflictMore { count: extra_count, onclick }
             }

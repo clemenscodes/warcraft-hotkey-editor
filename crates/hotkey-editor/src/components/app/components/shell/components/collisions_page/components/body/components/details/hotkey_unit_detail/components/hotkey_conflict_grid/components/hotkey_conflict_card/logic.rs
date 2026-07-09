@@ -13,9 +13,9 @@ impl From<&HotkeyConflictCardProps> for ConflictCardModel {
             .iter()
             .map(|ability| ConflictAbilityProps {
                 ability_name: ability.name().to_owned(),
-                ability_id: ability.object_id().to_owned(),
+                ability_id: ability.object_id(),
                 icon_url: ability.icon_url().map(str::to_owned),
-                unit_id: props.unit_id.clone(),
+                unit_id: props.unit_id,
                 view_navigation: props.view_navigation,
             })
             .collect();

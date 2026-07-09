@@ -22,14 +22,15 @@ pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
     };
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
-    let onclick = EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(&unit_id));
+    let onclick =
+        EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(unit_id.value()));
     let trigger = ConflictAbilityTriggerProps { onclick, icon };
     rsx! {
         div {
             class: CLASS,
             ConflictAbilityTrigger { ..trigger }
             ConflictAbilityName { text: ability_name }
-            ConflictObjectId { text: ability_id }
+            ConflictObjectId { object_id: ability_id }
         }
     }
 }

@@ -84,9 +84,7 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
                 }
             }
             "Enter" => {
-                if let (Some(unit_id), Some(unit_kind)) =
-                    (first_result_id.clone(), first_result_kind)
-                {
+                if let (Some(unit_id), Some(unit_kind)) = (first_result_id, first_result_kind) {
                     selected_unit_id.set(Some(unit_id));
                     selected_slot.set(None);
                     active_category.set(unit_kind);
@@ -155,7 +153,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let active_category = state.active_category();
     let active_kind = state.active_kind();
     let search_active = state.search_active();
-    let first_result_id = state.first_result_id().map(str::to_owned);
+    let first_result_id = state.first_result_id();
     let first_result_kind = state.first_result_kind();
     let raw_query = search.raw_query;
     let on_clear = search.on_clear;

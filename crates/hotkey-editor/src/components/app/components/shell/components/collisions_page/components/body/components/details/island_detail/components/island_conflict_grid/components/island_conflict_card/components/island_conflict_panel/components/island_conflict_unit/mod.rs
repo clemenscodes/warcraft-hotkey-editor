@@ -16,14 +16,13 @@ assert_component!(IslandConflictUnit);
 #[component]
 pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
     let name = props.name;
-    let unit_id_label = props.unit_id.clone();
     let unit_id = props.unit_id;
     let view_navigation = props.view_navigation;
     let icon = ConflictUnitIconProps {
         src: props.icon_url,
         alt: name.clone(),
     };
-    let onclick = move |_event: MouseEvent| view_navigation.open_unit(&unit_id);
+    let onclick = move |_event: MouseEvent| view_navigation.open_unit(unit_id.value());
     rsx! {
         button {
             class: CLASS,
@@ -31,7 +30,7 @@ pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
             onclick,
             ConflictUnitIcon { ..icon }
             IslandConflictUnitName { text: name }
-            ConflictObjectId { text: unit_id_label }
+            ConflictObjectId { object_id: unit_id }
         }
     }
 }

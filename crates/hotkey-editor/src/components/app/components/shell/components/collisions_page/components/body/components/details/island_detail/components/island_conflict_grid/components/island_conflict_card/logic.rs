@@ -16,7 +16,7 @@ impl From<&IslandConflictCardProps> for IslandConflictCardModel {
         let conflict = &props.conflict;
         let affected_unit = conflict.unit();
         let unit = IslandConflictUnitProps {
-            unit_id: affected_unit.unit_id().to_owned(),
+            unit_id: affected_unit.unit_id(),
             icon_url: affected_unit.icon_url().map(str::to_owned),
             name: affected_unit.name().to_owned(),
             view_navigation: props.view_navigation,
@@ -37,7 +37,7 @@ impl IslandConflictCardModel {
     fn ability(view: &ConflictAbilityView) -> IslandConflictAbilityProps {
         let ability_view = view.ability();
         let ability_name = ability_view.name().to_owned();
-        let ability_id = ability_view.object_id().to_owned();
+        let ability_id = ability_view.object_id();
         let icon_url = ability_view.icon_url().map(str::to_owned);
         let extra_count = view.extra_count();
         let carrier_unit_ids = view.carrier_unit_ids().to_vec();

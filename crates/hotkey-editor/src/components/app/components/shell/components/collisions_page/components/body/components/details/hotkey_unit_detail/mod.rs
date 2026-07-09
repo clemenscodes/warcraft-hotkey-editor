@@ -30,14 +30,14 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let HotkeyUnitDetailData {
         unit,
         name,
-        unit_id_label,
+        unit_id,
         count,
         cards,
     } = data;
     let header = HotkeyDetailHeaderProps {
         unit,
         name,
-        unit_id_label,
+        unit_id,
         count,
     };
     let grid = HotkeyConflictGridProps { cards };

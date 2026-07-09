@@ -23,16 +23,16 @@ pub fn UnitCard(props: UnitCardProps) -> Element {
     let is_selected = props.is_selected;
     let icon_path = props.icon_path.clone();
     let display_name = props.display_name.clone();
-    let unit_id = props.unit_id.clone();
+    let unit_id = props.unit_id.value().to_string();
     let race = props.race;
     let focus = use_focus_coordinator();
     let mut mounted_handle = use_signal(|| None::<Rc<MountedData>>);
-    let unit_id_for_focus = props.unit_id.clone();
+    let unit_id_for_focus = props.unit_id;
     let selected_unit_id = props.selected_unit_id;
     // Register this card as the unit-card focus target exactly while it is the selected
     // unit — read from the selection signal, never from a `data-selected` DOM query.
     use_effect(move || {
-        if selected_unit_id.read().as_deref() == Some(unit_id_for_focus.as_str()) {
+        if *selected_unit_id.read() == Some(unit_id_for_focus) {
             let handle = mounted_handle.read().clone();
             focus.set_unit_card_handle(handle);
         }

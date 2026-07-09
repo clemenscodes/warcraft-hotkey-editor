@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
-use warcraft_api::{Race, UnitKind};
+use warcraft_api::{Race, UnitKind, WarcraftObjectId};
 use warcraft_database::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
@@ -18,8 +18,8 @@ pub struct UnitCategorySectionProps {
     pub query: String,
     pub search_field: SearchField,
     pub visibility: CatalogVisibility,
-    pub active_unit_id: Option<String>,
-    pub selected_unit_id: Signal<Option<String>>,
+    pub active_unit_id: Option<WarcraftObjectId>,
+    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub active_category: Signal<UnitKind>,
 }

@@ -19,11 +19,11 @@ use tw_macro::assert_component;
 assert_component!(EditorPage);
 #[component]
 pub fn EditorPage(props: EditorPageProps) -> Element {
-    let EditorPageModel { tabs, workspace } = use_editor_page(&props);
+    let EditorPageModel { workspace } = use_editor_page(&props);
     rsx! {
         div {
             class: CLASS,
-            EditorTabsBar { ..tabs }
+            EditorTabsBar {}
             EditorWorkspace { ..workspace }
         }
     }

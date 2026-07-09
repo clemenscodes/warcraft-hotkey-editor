@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 #[derive(Props, Clone, PartialEq)]
 pub struct CarrierObjectIdProps {
-    #[props(into)]
-    pub text: String,
+    pub unit_id: WarcraftObjectId,
 }

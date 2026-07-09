@@ -1,5 +1,6 @@
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
 /// One ability of a hotkey conflict: an icon button that deep-links into the editor
 /// focused on the owning unit, with the ability name and id below.
@@ -7,10 +8,8 @@ use dioxus::prelude::*;
 pub struct ConflictAbilityProps {
     #[props(into)]
     pub ability_name: String,
-    #[props(into)]
-    pub ability_id: String,
+    pub ability_id: WarcraftObjectId,
     pub icon_url: Option<String>,
-    #[props(into)]
-    pub unit_id: String,
+    pub unit_id: WarcraftObjectId,
     pub view_navigation: ViewNavigationContext,
 }

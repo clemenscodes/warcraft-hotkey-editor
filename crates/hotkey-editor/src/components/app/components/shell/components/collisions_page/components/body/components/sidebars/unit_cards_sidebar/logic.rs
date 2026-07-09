@@ -17,7 +17,7 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
             let unit = unit_view.unit();
             let icon_url = unit.icon_url().map(str::to_owned);
             let name = unit.name().to_owned();
-            let unit_id = unit.unit_id().to_owned();
+            let unit_id = unit.unit_id();
             let collision_count = unit_view.collision_count();
             let key_for_click = collision_key.clone();
             let onclick = EventHandler::new(move |_event: MouseEvent| {

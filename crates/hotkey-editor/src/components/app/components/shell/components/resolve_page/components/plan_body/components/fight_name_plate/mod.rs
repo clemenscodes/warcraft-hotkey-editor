@@ -15,7 +15,7 @@ pub fn FightNamePlate(props: FightNamePlateProps) -> Element {
         div {
             class: CLASS,
             MoveName { text: name, is_link: false }
-            ObjectId { text: object_id }
+            ObjectId { text: object_id.value() }
         }
     }
 }

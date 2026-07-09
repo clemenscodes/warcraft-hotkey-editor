@@ -24,7 +24,7 @@ impl From<&UnresolvedRowProps> for UnresolvedRowModel {
         };
         let ability_display = view.ability();
         let ability_name = ability_display.name().to_owned();
-        let ability_object_id = ability_display.object_id().to_owned();
+        let ability_object_id = ability_display.object_id();
         let ability_icon_url_ref = ability_display.icon_url();
         let ability_icon_url = ability_icon_url_ref.map(str::to_owned);
         let ability_name_for_plate = ability_name.clone();

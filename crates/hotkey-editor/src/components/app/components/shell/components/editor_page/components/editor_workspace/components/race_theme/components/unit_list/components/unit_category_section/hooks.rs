@@ -46,8 +46,8 @@ pub(super) fn use_unit_category_section(
         .into_iter()
         .map(|entry| {
             let icon_path = entry.icon_database_path().map(IconUrl::from_database_path);
-            let is_selected = props.active_unit_id.as_deref() == Some(entry.unit_id());
-            let unit_id = entry.unit_id().to_owned();
+            let unit_id = entry.unit_id();
+            let is_selected = props.active_unit_id == Some(unit_id);
             let display_name = entry.display_name().to_owned();
             let unit_kind = entry.unit_kind();
             let selected_unit_id = props.selected_unit_id;

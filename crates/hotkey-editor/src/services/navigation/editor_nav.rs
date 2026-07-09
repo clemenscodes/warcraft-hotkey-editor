@@ -1,5 +1,6 @@
-use warcraft_api::Race;
-use warcraft_database::{UnitKindHelpers, UnitMode};
+use super::default_unit::DefaultUnit;
+use warcraft_api::{Race, WarcraftObjectId};
+use warcraft_database::{ObjectLookup, UnitMode};
 
 /// The editor navigation state decoded from the `?race=`/`?mode=`/`?unit=`/`?q=`
 /// query parameters every route carries. Each page reconciles its URL into the
@@ -9,12 +10,14 @@ use warcraft_database::{UnitKindHelpers, UnitMode};
 ///
 /// The fallbacks mirror the app's long-standing URL contract: an unknown or empty
 /// race/mode falls back to Human/Melee, and an empty unit falls back to the
-/// race+mode default unit.
+/// race+mode default unit. A unit id is a [`WarcraftObjectId`]; the `?unit=` string is
+/// resolved against the catalog here, at the URL boundary, so the rest of the app never
+/// carries a stringly unit id.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct DecodedEditorNav {
     race: Race,
     unit_mode: UnitMode,
-    selected_unit_id: Option<String>,
+    selected_unit_id: Option<WarcraftObjectId>,
     search_query: String,
 }
 
@@ -27,8 +30,8 @@ impl DecodedEditorNav {
         self.unit_mode
     }
 
-    pub fn selected_unit_id(&self) -> &Option<String> {
-        &self.selected_unit_id
+    pub fn selected_unit_id(&self) -> Option<WarcraftObjectId> {
+        self.selected_unit_id
     }
 
     pub fn search_query(&self) -> &str {
@@ -40,7 +43,7 @@ impl DecodedEditorNav {
     pub fn new(
         race: Race,
         unit_mode: UnitMode,
-        selected_unit_id: Option<String>,
+        selected_unit_id: Option<WarcraftObjectId>,
         search_query: String,
     ) -> Self {
         Self {
@@ -64,9 +67,11 @@ impl DecodedEditorNav {
         let unit_mode = UnitMode::try_from(mode_param).unwrap_or(UnitMode::Melee);
         let unit_param = unit.unwrap_or_default();
         let selected_unit_id = if unit_param.is_empty() {
-            UnitKindHelpers::default_unit_id_for(race, unit_mode)
+            let default_unit = DefaultUnit::new(race, unit_mode);
+            default_unit.resolve()
         } else {
-            Some(unit_param.to_string())
+            let resolved = ObjectLookup::by_id(unit_param);
+            resolved.map(|object| object.id())
         };
         let search_query = query.unwrap_or_default().to_string();
         Self {

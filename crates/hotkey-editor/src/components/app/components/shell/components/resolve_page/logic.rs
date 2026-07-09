@@ -7,26 +7,27 @@ use crate::components::app::components::shell::components::shared::icons::Resolv
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CascadePlan, GridSlotId, MoveReason};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, PartialEq)]
 pub struct AbilityDisplay {
-    object_id: String,
+    object_id: WarcraftObjectId,
     name: String,
     icon_url: Option<String>,
 }
 
 impl From<GridSlotId> for AbilityDisplay {
     fn from(slot_id: GridSlotId) -> Self {
-        let id_value = slot_id.id().value();
+        let object_id = slot_id.id();
+        let id_value = object_id.value();
         let resolved = ResolvedIcon::lookup(id_value);
         let icon_url = resolved.icon_url().map(str::to_owned);
         let name = match resolved.name() {
             Some(name) => name.to_owned(),
             None => slot_id.display_name(None, None),
         };
-        let object_id = slot_id.as_str().to_owned();
         Self {
             object_id,
             name,
@@ -109,7 +110,7 @@ pub struct ReasonParts {
     label: &'static str,
     other_ability: Option<AbilityDisplay>,
     other_carriers: Option<usize>,
-    other_carrier_unit_ids: Vec<String>,
+    other_carrier_unit_ids: Vec<WarcraftObjectId>,
     is_swap: bool,
     category: MoveCategory,
 }
@@ -122,12 +123,8 @@ impl From<&MoveReason> for ReasonParts {
                 anchor_carrier_unit_ids,
             } => {
                 let anchor = AbilityDisplay::from(*anchor_slot);
-                let mut other_carrier_unit_ids: Vec<String> =
-                    Vec::with_capacity(anchor_carrier_unit_ids.len());
-                for anchor_carrier_object in anchor_carrier_unit_ids {
-                    let anchor_carrier_value = anchor_carrier_object.value().to_owned();
-                    other_carrier_unit_ids.push(anchor_carrier_value);
-                }
+                let other_carrier_unit_ids: Vec<WarcraftObjectId> =
+                    anchor_carrier_unit_ids.to_vec();
                 let anchor_carrier_count = other_carrier_unit_ids.len();
                 Self {
                     label: "Fight",
@@ -175,8 +172,8 @@ impl From<&MoveReason> for ReasonParts {
 pub struct MoveView {
     mover: AbilityDisplay,
     mover_carriers: usize,
-    mover_unit_id: Option<String>,
-    mover_carrier_unit_ids: Vec<String>,
+    mover_unit_id: Option<WarcraftObjectId>,
+    mover_carrier_unit_ids: Vec<WarcraftObjectId>,
     from_column: u8,
     from_row: u8,
     to_column: u8,
@@ -198,7 +195,7 @@ impl MoveView {
 pub struct UnresolvedView {
     ability: AbilityDisplay,
     carrier_count: usize,
-    carrier_unit_ids: Vec<String>,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
     column: u8,
     row: u8,
 }
@@ -232,25 +229,21 @@ impl PlanView {
         let plan_moves = plan.moves();
         let mut moves_by_slot = HashMap::new();
         for planned_move in plan_moves {
-            let slot_key = planned_move.slot_id().as_str().to_owned();
+            let slot_key = planned_move.slot_id().id();
             moves_by_slot.insert(slot_key, planned_move);
         }
-        let mut consumed_swap_slots: HashSet<String> = HashSet::new();
+        let mut consumed_swap_slots: HashSet<WarcraftObjectId> = HashSet::new();
         let mut moves: Vec<MoveView> = Vec::with_capacity(plan.move_count());
         for planned_move in plan_moves {
-            let mover_slot_key = planned_move.slot_id().as_str().to_owned();
+            let mover_slot_key = planned_move.slot_id().id();
             if consumed_swap_slots.contains(&mover_slot_key) {
                 continue;
             }
             let mover = AbilityDisplay::from(planned_move.slot_id());
             let mover_carriers = planned_move.carrier_count();
             let carrier_objects = planned_move.carrier_unit_ids();
-            let mut mover_carrier_unit_ids: Vec<String> = Vec::with_capacity(carrier_objects.len());
-            for carrier_object in carrier_objects {
-                let carrier_value = carrier_object.value().to_owned();
-                mover_carrier_unit_ids.push(carrier_value);
-            }
-            let mover_unit_id = mover_carrier_unit_ids.first().cloned();
+            let mover_carrier_unit_ids: Vec<WarcraftObjectId> = carrier_objects.to_vec();
+            let mover_unit_id = mover_carrier_unit_ids.first().copied();
             let old_position = planned_move.old_position();
             let new_position = planned_move.new_position();
             let from_column = u8::from(old_position.column());
@@ -259,16 +252,12 @@ impl PlanView {
             let to_row = u8::from(new_position.row());
             let mut reason = ReasonParts::from(planned_move.reason());
             if let MoveReason::Swap { swapped_with } = planned_move.reason() {
-                let partner_key = swapped_with.as_str().to_owned();
-                consumed_swap_slots.insert(partner_key.clone());
+                let partner_key = swapped_with.id();
+                consumed_swap_slots.insert(partner_key);
                 if let Some(partner_move) = moves_by_slot.get(&partner_key) {
                     let partner_carrier_objects = partner_move.carrier_unit_ids();
-                    let mut partner_carrier_unit_ids: Vec<String> =
-                        Vec::with_capacity(partner_carrier_objects.len());
-                    for partner_carrier_object in partner_carrier_objects {
-                        let partner_carrier_value = partner_carrier_object.value().to_owned();
-                        partner_carrier_unit_ids.push(partner_carrier_value);
-                    }
+                    let partner_carrier_unit_ids: Vec<WarcraftObjectId> =
+                        partner_carrier_objects.to_vec();
                     let partner_carrier_count = partner_move.carrier_count();
                     reason.other_carriers = Some(partner_carrier_count);
                     reason.other_carrier_unit_ids = partner_carrier_unit_ids;
@@ -295,11 +284,7 @@ impl PlanView {
             let row = u8::from(position.row());
             let carrier_count = stuck.carrier_count();
             let carrier_objects = stuck.carrier_unit_ids();
-            let mut carrier_unit_ids: Vec<String> = Vec::with_capacity(carrier_objects.len());
-            for carrier_object in carrier_objects {
-                let carrier_value = carrier_object.value().to_owned();
-                carrier_unit_ids.push(carrier_value);
-            }
+            let carrier_unit_ids: Vec<WarcraftObjectId> = carrier_objects.to_vec();
             let unresolved_view = UnresolvedView {
                 ability,
                 carrier_count,
@@ -511,8 +496,8 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
 }
 
 impl AbilityDisplay {
-    pub fn object_id(&self) -> &str {
-        &self.object_id
+    pub fn object_id(&self) -> WarcraftObjectId {
+        self.object_id
     }
     pub fn name(&self) -> &str {
         &self.name
@@ -532,7 +517,7 @@ impl ReasonParts {
     pub fn other_carriers(&self) -> Option<usize> {
         self.other_carriers
     }
-    pub fn other_carrier_unit_ids(&self) -> &[String] {
+    pub fn other_carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.other_carrier_unit_ids
     }
     pub fn is_swap(&self) -> bool {
@@ -550,10 +535,10 @@ impl MoveView {
     pub fn mover_carriers(&self) -> usize {
         self.mover_carriers
     }
-    pub fn mover_unit_id(&self) -> Option<&str> {
-        self.mover_unit_id.as_deref()
+    pub fn mover_unit_id(&self) -> Option<WarcraftObjectId> {
+        self.mover_unit_id
     }
-    pub fn mover_carrier_unit_ids(&self) -> &[String] {
+    pub fn mover_carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.mover_carrier_unit_ids
     }
     pub fn from_column(&self) -> u8 {
@@ -580,7 +565,7 @@ impl UnresolvedView {
     pub fn carrier_count(&self) -> usize {
         self.carrier_count
     }
-    pub fn carrier_unit_ids(&self) -> &[String] {
+    pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
     }
     pub fn column(&self) -> u8 {

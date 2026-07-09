@@ -4,6 +4,7 @@ pub(crate) use breadcrumbs::CollisionBreadcrumbsInputs;
 
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use std::collections::{HashMap, HashSet};
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
     CrossUnitCollisionReport, CrossUnitPositionGroup, GridCoordinate, GridSlotId,
     SharedAbilityEntry, UnitCollisionEntry, UnitCollisionReport,
@@ -13,7 +14,7 @@ use warcraft_keybinds::{
 /// can share an icon and name yet be distinct objects, so the id is shown too.
 #[derive(Clone, PartialEq)]
 pub struct AbilityIconView {
-    object_id: String,
+    object_id: WarcraftObjectId,
     icon_url: Option<String>,
     name: String,
 }
@@ -21,7 +22,7 @@ pub struct AbilityIconView {
 impl From<GridSlotId> for AbilityIconView {
     fn from(slot_id: GridSlotId) -> Self {
         let resolution = AbilityResolution::from(slot_id);
-        let object_id = slot_id.as_str().to_owned();
+        let object_id = slot_id.id();
         Self {
             object_id,
             icon_url: resolution.icon_url,
@@ -31,8 +32,8 @@ impl From<GridSlotId> for AbilityIconView {
 }
 
 impl AbilityIconView {
-    pub fn object_id(&self) -> &str {
-        &self.object_id
+    pub fn object_id(&self) -> WarcraftObjectId {
+        self.object_id
     }
 
     pub fn icon_url(&self) -> Option<&str> {
@@ -48,17 +49,17 @@ impl AbilityIconView {
 /// icon click can deep-link into the editor focused on that unit.
 #[derive(Clone, PartialEq)]
 pub struct UnitIconView {
-    unit_id: String,
+    unit_id: WarcraftObjectId,
     name: String,
     icon_url: Option<String>,
 }
 
-impl From<&str> for UnitIconView {
-    fn from(unit_id_value: &str) -> Self {
+impl From<WarcraftObjectId> for UnitIconView {
+    fn from(unit_id: WarcraftObjectId) -> Self {
+        let unit_id_value = unit_id.value();
         let resolved = ResolvedIcon::lookup(unit_id_value);
         let icon_url = resolved.icon_url().map(str::to_owned);
         let name = resolved.name_or(unit_id_value);
-        let unit_id = unit_id_value.to_owned();
         Self {
             unit_id,
             name,
@@ -68,8 +69,8 @@ impl From<&str> for UnitIconView {
 }
 
 impl UnitIconView {
-    pub fn unit_id(&self) -> &str {
-        &self.unit_id
+    pub fn unit_id(&self) -> WarcraftObjectId {
+        self.unit_id
     }
 
     pub fn name(&self) -> &str {
@@ -87,7 +88,7 @@ impl UnitIconView {
 #[derive(Clone, PartialEq)]
 pub struct ConflictAbilityView {
     ability: AbilityIconView,
-    carrier_unit_ids: Vec<String>,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
     carrier_count: usize,
 }
 
@@ -96,7 +97,7 @@ impl ConflictAbilityView {
         &self.ability
     }
 
-    pub fn carrier_unit_ids(&self) -> &[String] {
+    pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
     }
 
@@ -133,10 +134,10 @@ impl ConflictView {
 /// the same mover/anchor pair can appear on many units (every unit that
 /// carries both abilities at the cell); they are the same collision with the
 /// same fix, so the display collapses them to a single card keyed by this.
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct AbilityPairKey {
-    mover_object_id: String,
-    anchor_object_id: String,
+    mover_object_id: WarcraftObjectId,
+    anchor_object_id: WarcraftObjectId,
 }
 
 /// A single cross-unit collision island, flattened into display-ready data.
@@ -195,12 +196,12 @@ impl IslandView {
                 .unwrap_or(shared_slot);
             let own_ability_icon = AbilityIconView::from(own_slot);
             let shared_ability_icon = AbilityIconView::from(shared_slot);
-            let affected_unit_id_value = affected.unit_id().value();
-            let affected_unit = UnitIconView::from(affected_unit_id_value);
-            let mut shared_carrier_unit_ids: Vec<String> =
+            let affected_unit_object_id = affected.unit_id();
+            let affected_unit = UnitIconView::from(affected_unit_object_id);
+            let mut shared_carrier_unit_ids: Vec<WarcraftObjectId> =
                 Vec::with_capacity(shared_entry.unit_ids().len());
             for carrier_object in shared_entry.unit_ids() {
-                let carrier_value = carrier_object.value().to_owned();
+                let carrier_value = *carrier_object;
                 shared_carrier_unit_ids.push(carrier_value);
             }
             let shared_carrier_count = shared_entry.unit_count();
@@ -211,14 +212,10 @@ impl IslandView {
             };
             let own_slot_key = own_slot.as_str();
             let own_shared_entry_option = shared_map.get(own_slot_key).copied();
-            let own_carrier_unit_ids: Vec<String> = match own_shared_entry_option {
-                Some(entry) => entry
-                    .unit_ids()
-                    .iter()
-                    .map(|carrier_object| carrier_object.value().to_owned())
-                    .collect(),
+            let own_carrier_unit_ids: Vec<WarcraftObjectId> = match own_shared_entry_option {
+                Some(entry) => entry.unit_ids().to_vec(),
                 None => {
-                    let single = affected_unit_id_value.to_owned();
+                    let single = affected_unit_object_id;
                     vec![single]
                 }
             };
@@ -246,8 +243,8 @@ impl IslandView {
         });
         let mut seen_ability_pairs: HashSet<AbilityPairKey> = HashSet::new();
         conflicts.retain(|conflict| {
-            let mover_object_id = conflict.own_ability.ability.object_id.clone();
-            let anchor_object_id = conflict.shared_ability.ability.object_id.clone();
+            let mover_object_id = conflict.own_ability.ability.object_id;
+            let anchor_object_id = conflict.shared_ability.ability.object_id;
             let pair_key = AbilityPairKey {
                 mover_object_id,
                 anchor_object_id,
@@ -391,7 +388,7 @@ impl<Conflict> CollisionUnitView<Conflict> {
             let collision_count = conflicts.len();
             let unit_object_id = entry.unit_id();
             let unit_id_value = unit_object_id.value();
-            let unit = UnitIconView::from(unit_id_value);
+            let unit = UnitIconView::from(unit_object_id);
             let key = unit_id_value.to_owned();
             let unit_view = Self {
                 key,

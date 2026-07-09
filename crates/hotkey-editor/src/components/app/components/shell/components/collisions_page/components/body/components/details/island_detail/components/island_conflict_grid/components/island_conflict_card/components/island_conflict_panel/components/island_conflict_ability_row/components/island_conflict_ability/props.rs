@@ -1,5 +1,6 @@
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
 /// One ability of an island conflict: a big icon and name that open the carriers
 /// dialog, plus an optional "+N more" link when the ability is carried by more units
@@ -9,8 +10,7 @@ use dioxus::prelude::*;
 pub struct IslandConflictAbilityProps {
     #[props(into)]
     pub ability_name: String,
-    #[props(into)]
-    pub ability_id: String,
+    pub ability_id: WarcraftObjectId,
     pub icon_url: Option<String>,
     pub extra_count: usize,
     pub inspected: InspectedAbility,

@@ -2,6 +2,7 @@ use super::components::unit_position_conflict_grid::components::unit_position_co
 use super::props::UnitPositionDetailProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnitProps;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
 /// The selected unit's header data and its position-conflict cards, shaped for the
 /// detail pane to render.
@@ -9,7 +10,7 @@ use dioxus::prelude::*;
 pub(super) struct UnitPositionDetailData {
     pub(super) unit: ConflictDetailUnitProps,
     pub(super) name: String,
-    pub(super) unit_id_label: String,
+    pub(super) unit_id: WarcraftObjectId,
     pub(super) count: usize,
     pub(super) cards: Vec<UnitPositionConflictCardProps>,
 }
@@ -26,12 +27,12 @@ pub(super) fn selected(props: &UnitPositionDetailProps) -> Option<UnitPositionDe
         .clone();
     let unit = unit_view.unit();
     let name = unit.name().to_owned();
-    let unit_id_label = unit.unit_id().to_owned();
+    let unit_id = unit.unit_id();
     let icon_url = unit.icon_url().map(str::to_owned);
-    let unit_id_for_navigation = unit.unit_id().to_owned();
+    let unit_id_for_navigation = unit.unit_id();
     let view_navigation = props.view_navigation;
     let onclick = EventHandler::new(move |_event: MouseEvent| {
-        view_navigation.open_unit(&unit_id_for_navigation)
+        view_navigation.open_unit(unit_id_for_navigation.value())
     });
     let unit_button = ConflictDetailUnitProps {
         onclick,
@@ -44,14 +45,14 @@ pub(super) fn selected(props: &UnitPositionDetailProps) -> Option<UnitPositionDe
         .iter()
         .map(|conflict| UnitPositionConflictCardProps {
             conflict: conflict.clone(),
-            unit_id: unit_view.key().to_owned(),
+            unit_id,
             view_navigation,
         })
         .collect();
     let data = UnitPositionDetailData {
         unit: unit_button,
         name,
-        unit_id_label,
+        unit_id,
         count: collision_count,
         cards,
     };

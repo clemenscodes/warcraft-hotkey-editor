@@ -7,6 +7,7 @@ use crate::components::app::components::shell::components::resolve_page::compone
 use crate::components::app::components::shell::components::resolve_page::logic::{MiniGridPlacement, ReasonKind};
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
 /// The fully shaped move card: reason badge, mover column, rival column props (the
 /// rival is optional; the column renders itself away when absent), and the from →
@@ -26,8 +27,7 @@ impl From<&MoveRowProps> for MoveRowModel {
         let view_navigation = props.view_navigation;
         let mover = move_view.mover();
         let reason = move_view.reason();
-        let mover_unit_id_ref = move_view.mover_unit_id();
-        let mover_unit_id = mover_unit_id_ref.map(str::to_owned);
+        let mover_unit_id = move_view.mover_unit_id();
         let has_unit = mover_unit_id.is_some();
         let reason_category = reason.category();
         let reason_kind = ReasonKind::from(reason_category);
@@ -36,14 +36,15 @@ impl From<&MoveRowProps> for MoveRowModel {
             kind: reason_kind,
             label: reason_label,
         };
-        let open_unit_id = mover_unit_id.clone();
+        let open_unit_id = mover_unit_id;
         let open_mover = EventHandler::new(move |_event: MouseEvent| {
-            if let Some(unit_id) = open_unit_id.as_ref() {
-                view_navigation.open_unit(unit_id);
+            if let Some(unit_id) = open_unit_id {
+                let unit_id_value = unit_id.value();
+                view_navigation.open_unit(unit_id_value);
             }
         });
         let mover_name = mover.name().to_owned();
-        let mover_object_id = mover.object_id().to_owned();
+        let mover_object_id = mover.object_id();
         let mover_icon_url_ref = mover.icon_url();
         let mover_icon_url = mover_icon_url_ref.map(str::to_owned);
         let mover_name_for_button = mover_name.clone();
@@ -92,7 +93,7 @@ impl From<&MoveRowProps> for MoveRowModel {
         let anchor_parts = match other_ability_option {
             Some(anchor_ability) => {
                 let anchor_name = anchor_ability.name().to_owned();
-                let anchor_object_id = anchor_ability.object_id().to_owned();
+                let anchor_object_id = anchor_ability.object_id();
                 let anchor_icon_url_ref = anchor_ability.icon_url();
                 let anchor_icon_url = anchor_icon_url_ref.map(str::to_owned);
                 let anchor_icon_url_for_after = anchor_icon_url.clone();
@@ -152,7 +153,7 @@ impl MoveRowModel {
         name: String,
         icon_url: Option<String>,
         carrier_count: usize,
-        carrier_unit_ids: Vec<String>,
+        carrier_unit_ids: Vec<WarcraftObjectId>,
         is_winner: bool,
     ) -> AbilityIconProps {
         let disabled = carrier_unit_ids.is_empty();

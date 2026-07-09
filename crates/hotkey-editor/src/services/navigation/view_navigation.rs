@@ -1,8 +1,10 @@
+use super::default_unit::DefaultUnit;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::editor_nav::DecodedEditorNav;
 use dioxus::prelude::*;
-use warcraft_api::{Race, WarcraftObjectMeta};
+use warcraft_api::{Race, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_database::{ObjectLookup, UnitMode};
+use warcraft_keybinds::GridSlotId;
 
 /// Bundles every signal the header needs to write when the user
 /// switches views (clicks the brand to go home, or clicks the
@@ -14,7 +16,7 @@ pub struct ViewNavigationContext {
     current_view: Signal<AppView>,
     active_race: Signal<Race>,
     unit_mode: Signal<UnitMode>,
-    selected_unit_id: Signal<Option<String>>,
+    selected_unit_id: Signal<Option<WarcraftObjectId>>,
     search_query: Signal<String>,
 }
 
@@ -23,7 +25,7 @@ impl ViewNavigationContext {
         current_view: Signal<AppView>,
         active_race: Signal<Race>,
         unit_mode: Signal<UnitMode>,
-        selected_unit_id: Signal<Option<String>>,
+        selected_unit_id: Signal<Option<WarcraftObjectId>>,
         search_query: Signal<String>,
     ) -> Self {
         Self {
@@ -47,7 +49,7 @@ impl ViewNavigationContext {
         self.unit_mode
     }
 
-    pub fn selected_unit_id(&self) -> Signal<Option<String>> {
+    pub fn selected_unit_id(&self) -> Signal<Option<WarcraftObjectId>> {
         self.selected_unit_id
     }
 
@@ -65,6 +67,36 @@ impl ViewNavigationContext {
             return;
         }
         current_view.set(target);
+    }
+
+    /// Select `race`: make it the active race, land on that race's default unit for the
+    /// current mode, and clear the slot selection. Which unit is the default is a domain
+    /// decision, resolved through [`DefaultUnit`] (a `warcraft_keybinds` browse), never
+    /// computed in the renderer. The race tabs dispatch this; the default-unit + slot
+    /// reset is the cascade that used to be duplicated across the tab renderers.
+    pub fn select_race(self, race: Race, mut selected_slot: Signal<Option<GridSlotId>>) {
+        let mut active_race = self.active_race;
+        active_race.set(race);
+        let mode = *self.unit_mode.read();
+        let default_unit = DefaultUnit::new(race, mode);
+        let next_unit = default_unit.resolve();
+        let mut selected_unit_id = self.selected_unit_id;
+        selected_unit_id.set(next_unit);
+        selected_slot.set(None);
+    }
+
+    /// Select `mode`: switch to it, land on the current race's default unit for that
+    /// mode, and clear the slot selection. Symmetric with [`select_race`] — one cascade,
+    /// one home.
+    pub fn select_mode(self, mode: UnitMode, mut selected_slot: Signal<Option<GridSlotId>>) {
+        let mut unit_mode = self.unit_mode;
+        unit_mode.set(mode);
+        let race = *self.active_race.read();
+        let default_unit = DefaultUnit::new(race, mode);
+        let next_unit = default_unit.resolve();
+        let mut selected_unit_id = self.selected_unit_id;
+        selected_unit_id.set(next_unit);
+        selected_slot.set(None);
     }
 
     /// Reconcile the current view alone, without touching the editor selection. The
@@ -95,8 +127,8 @@ impl ViewNavigationContext {
             unit_mode.set(nav.unit_mode());
         }
         let mut selected_unit_id = self.selected_unit_id;
-        if *selected_unit_id.peek() != *nav.selected_unit_id() {
-            selected_unit_id.set(nav.selected_unit_id().clone());
+        if *selected_unit_id.peek() != nav.selected_unit_id() {
+            selected_unit_id.set(nav.selected_unit_id());
         }
         let mut search_query = self.search_query;
         if *search_query.peek() != nav.search_query() {
@@ -107,9 +139,8 @@ impl ViewNavigationContext {
     /// Deep-link into the editor focused on `unit_id`.  Resolves the
     /// unit's race and mode from the database when possible so the
     /// editor opens on the right race/mode tab, selects the unit, and
-    /// switches to the editor view.  When the unit cannot be resolved
-    /// it falls back to selecting the id alone — the editor detail still
-    /// shows the unit regardless.
+    /// switches to the editor view.  A unit id is a `WarcraftObjectId`, so
+    /// an unresolvable string selects nothing.
     pub fn open_unit(self, unit_id: &str) {
         let object_option = ObjectLookup::by_id(unit_id);
         if let Some(object) = object_option {
@@ -127,9 +158,9 @@ impl ViewNavigationContext {
                 unit_mode.set(resolved_mode);
             }
         }
-        let owned_unit_id = unit_id.to_owned();
+        let next_unit = object_option.map(|object| object.id());
         let mut selected_unit_id = self.selected_unit_id;
-        selected_unit_id.set(Some(owned_unit_id));
+        selected_unit_id.set(next_unit);
         self.apply(AppView::Editor);
     }
 }

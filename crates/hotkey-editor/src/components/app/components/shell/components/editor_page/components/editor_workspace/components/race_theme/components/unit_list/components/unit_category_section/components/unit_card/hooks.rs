@@ -20,10 +20,10 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let mut selected_slot = props.selected_slot;
     let mut active_category = props.active_category;
     let focus = use_focus_coordinator();
-    let unit_id_for_click = props.unit_id.clone();
-    let unit_id_for_keydown = props.unit_id.clone();
+    let unit_id_for_click = props.unit_id;
+    let unit_id_for_keydown = props.unit_id;
     let on_click = EventHandler::new(move |_event: MouseEvent| {
-        selected_unit_id.set(Some(unit_id_for_click.clone()));
+        selected_unit_id.set(Some(unit_id_for_click));
         selected_slot.set(None);
         active_category.set(unit_kind);
     });
@@ -31,7 +31,7 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
         let key_value = event.data().key().to_string();
         if key_value == " " || key_value == "Enter" {
             event.prevent_default();
-            selected_unit_id.set(Some(unit_id_for_keydown.clone()));
+            selected_unit_id.set(Some(unit_id_for_keydown));
             selected_slot.set(None);
             active_category.set(unit_kind);
             focus.request(FocusTarget::UnitCard);

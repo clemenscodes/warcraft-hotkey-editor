@@ -20,7 +20,7 @@ pub fn CarrierCard(props: CarrierCardProps) -> Element {
         icon,
         onclick,
         name,
-        unit_id_label,
+        unit_id,
     } = CarrierCardModel::from(&props);
     rsx! {
         button {
@@ -29,7 +29,7 @@ pub fn CarrierCard(props: CarrierCardProps) -> Element {
             onclick,
             CarrierCardIcon { ..icon }
             CarrierCardName { text: name }
-            CarrierObjectId { text: unit_id_label }
+            CarrierObjectId { unit_id }
         }
     }
 }

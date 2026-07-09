@@ -15,13 +15,13 @@ assert_component!(ConflictMeta);
 #[component]
 pub fn ConflictMeta(props: ConflictMetaProps) -> Element {
     let name = props.name;
-    let unit_id_label = props.unit_id_label;
+    let unit_id = props.unit_id;
     let count = props.count;
     rsx! {
         div {
             class: CLASS,
             ConflictUnitName { text: name }
-            ConflictObjectId { text: unit_id_label }
+            ConflictObjectId { object_id: unit_id }
             CollisionCount { count }
         }
     }

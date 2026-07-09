@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
-use warcraft_api::{Race, UnitKind};
+use warcraft_api::{Race, UnitKind, WarcraftObjectId};
 use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
@@ -26,7 +26,7 @@ pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
 pub struct UnitListProps {
     pub active_race: Signal<Race>,
     pub unit_mode: Signal<UnitMode>,
-    pub selected_unit_id: Signal<Option<String>>,
+    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub search_query: Signal<String>,
     pub search_field: Signal<SearchField>,
@@ -42,9 +42,9 @@ pub(super) struct SearchKeydownInputs {
     pub(super) raw_query: Signal<String>,
     pub(super) on_clear: EventHandler<()>,
     pub(super) focus: FocusCoordinator,
-    pub(super) first_result_id: Option<String>,
+    pub(super) first_result_id: Option<WarcraftObjectId>,
     pub(super) first_result_kind: Option<UnitKind>,
-    pub(super) selected_unit_id: Signal<Option<String>>,
+    pub(super) selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
     pub(super) active_category: Signal<UnitKind>,
 }
@@ -72,7 +72,7 @@ pub(super) struct UnitListInputs {
     pub(super) mode: UnitMode,
     pub(super) current_search_field: SearchField,
     pub(super) visibility: CatalogVisibility,
-    pub(super) selected_unit_id: Signal<Option<String>>,
+    pub(super) selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
     pub(super) collapsed_categories: Signal<HashSet<UnitKind>>,
     pub(super) search_field: Signal<SearchField>,
@@ -141,7 +141,7 @@ impl From<UnitListInputs> for UnitListModel {
                 let category_label = UnitKindHelpers::category_label(kind).to_owned();
                 let is_collapsed = state.collapsed_snapshot().contains(&kind);
                 let query = state.query_snapshot().to_owned();
-                let active_unit_id = state.active_unit_id().map(str::to_owned);
+                let active_unit_id = state.active_unit_id();
                 UnitCategorySectionProps {
                     category_kind: kind,
                     category_label,

@@ -11,7 +11,7 @@ pub(super) fn cards(props: &CarriersDialogProps) -> Vec<CarrierCardProps> {
         .carriers
         .iter()
         .map(|carrier| CarrierCardProps {
-            unit_id: carrier.unit_id().to_owned(),
+            unit_id: carrier.unit_id(),
             icon_url: carrier.icon_url().map(str::to_owned),
             name: carrier.name().to_owned(),
             view_navigation: props.view_navigation,

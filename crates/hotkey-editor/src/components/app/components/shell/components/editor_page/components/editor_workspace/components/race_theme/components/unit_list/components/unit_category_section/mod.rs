@@ -22,7 +22,7 @@ pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
         UnitCategoryHeading { ..model.heading }
         if !model.is_collapsed {
             for card in model.cards {
-                UnitCard { key: "{card.unit_id}", ..card }
+                UnitCard { key: "{card.unit_id.value()}", ..card }
             }
         }
     }

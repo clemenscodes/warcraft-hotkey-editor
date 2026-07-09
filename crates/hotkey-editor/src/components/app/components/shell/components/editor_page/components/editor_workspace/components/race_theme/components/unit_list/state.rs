@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
-use warcraft_api::UnitKind;
+use warcraft_api::{UnitKind, WarcraftObjectId};
 use warcraft_keybinds::UnitListing;
 
 pub(super) struct UnitListState {
@@ -8,10 +8,10 @@ pub(super) struct UnitListState {
     query_snapshot: String,
     search_active: bool,
     active_kind: UnitKind,
-    active_unit_id: Option<String>,
+    active_unit_id: Option<WarcraftObjectId>,
     collapsed_snapshot: HashSet<UnitKind>,
     category_kinds: Vec<UnitKind>,
-    first_result_id: Option<String>,
+    first_result_id: Option<WarcraftObjectId>,
     first_result_kind: Option<UnitKind>,
 }
 
@@ -21,18 +21,18 @@ impl UnitListState {
     /// re-runs it).
     pub(super) fn new(
         query_snapshot: String,
-        selected_unit_id: Signal<Option<String>>,
+        selected_unit_id: Signal<Option<WarcraftObjectId>>,
         collapsed_categories: Signal<HashSet<UnitKind>>,
         listing: UnitListing,
     ) -> Self {
         let active_category = use_signal::<UnitKind>(|| UnitKind::Soldier);
         let search_active = !query_snapshot.is_empty();
         let active_kind = *active_category.read();
-        let active_unit_id = selected_unit_id.read().clone();
+        let active_unit_id = *selected_unit_id.read();
         let collapsed_snapshot = collapsed_categories.read().clone();
         let category_kinds = listing.category_kinds().to_vec();
         let first_result = listing.first_result();
-        let first_result_id = first_result.map(|entry| entry.unit_id().to_owned());
+        let first_result_id = first_result.map(|entry| entry.unit_id());
         let first_result_kind = first_result.map(|entry| entry.unit_kind());
         Self {
             active_category,
@@ -63,8 +63,8 @@ impl UnitListState {
         self.active_kind
     }
 
-    pub(super) fn active_unit_id(&self) -> Option<&str> {
-        self.active_unit_id.as_deref()
+    pub(super) fn active_unit_id(&self) -> Option<WarcraftObjectId> {
+        self.active_unit_id
     }
 
     pub(super) fn collapsed_snapshot(&self) -> &HashSet<UnitKind> {
@@ -75,8 +75,8 @@ impl UnitListState {
         &self.category_kinds
     }
 
-    pub(super) fn first_result_id(&self) -> Option<&str> {
-        self.first_result_id.as_deref()
+    pub(super) fn first_result_id(&self) -> Option<WarcraftObjectId> {
+        self.first_result_id
     }
 
     pub(super) fn first_result_kind(&self) -> Option<UnitKind> {

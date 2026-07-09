@@ -1,4 +1,3 @@
-use super::components::editor_tabs_bar::EditorTabsBarProps;
 use super::components::editor_workspace::EditorWorkspaceProps;
 use super::props::EditorPageProps;
 use crate::services::editor_state::context::use_editor_state;
@@ -12,7 +11,6 @@ use dioxus::prelude::*;
 /// from context (the navigation signals, the editor's UI state, the loaded document,
 /// the grid layout) so the page body is a flat compose of already-shaped props.
 pub(super) struct EditorPageModel {
-    pub(super) tabs: EditorTabsBarProps,
     pub(super) workspace: EditorWorkspaceProps,
 }
 
@@ -36,12 +34,6 @@ pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
         let snapshot = NavSnapshot::Editor(decoded.clone());
         synced_route.set(snapshot);
     }));
-    let tabs = EditorTabsBarProps {
-        unit_mode: navigation.unit_mode(),
-        active_race: navigation.active_race(),
-        selected_unit_id: navigation.selected_unit_id(),
-        selected_slot: editor.selected_slot(),
-    };
     let workspace = EditorWorkspaceProps {
         active_race: navigation.active_race(),
         unit_mode: navigation.unit_mode(),
@@ -53,5 +45,5 @@ pub(super) fn use_editor_page(props: &EditorPageProps) -> EditorPageModel {
         expand_variants: editor.expand_variants(),
         collapsed_categories: editor.collapsed_categories(),
     };
-    EditorPageModel { tabs, workspace }
+    EditorPageModel { workspace }
 }
