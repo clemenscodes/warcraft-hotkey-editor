@@ -1,6 +1,6 @@
 use super::props::SystemHotkeysBreadcrumbsProps;
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 
 /// The breadcrumbs' shaped view: the active category, the dropdown open signal and
 /// its `"true"`/`"false"` attribute string, the trigger caption, and the toggle

@@ -191,12 +191,12 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
     let hotkey_assign_request = use_signal::<bool>(|| false);
-    let tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let tier_overrides = use_signal::<HashMap<WarcraftObjectId, usize>>(HashMap::new);
     let dragging_slot = use_signal::<Option<DraggingSlot>>(|| None);
     let drop_target_tile = use_signal::<Option<DropTargetTile>>(|| None);
     let drag_follower = use_signal::<Option<DragFollower>>(|| None);
     let search_query = use_signal::<String>(move || initial_search);
-    let search_field = use_signal(warcraft_database::SearchField::default);
+    let search_field = use_signal(warcraft_api::SearchField::default);
     let selected_island = use_signal::<Option<String>>(move || initial_island);
     let selected_hotkey_unit = use_signal::<Option<String>>(move || initial_hotkey_unit);
     let selected_unit_position = use_signal::<Option<String>>(move || initial_unit_position);

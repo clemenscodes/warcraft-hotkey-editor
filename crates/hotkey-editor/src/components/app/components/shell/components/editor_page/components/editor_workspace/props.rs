@@ -2,7 +2,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind, WarcraftObjectId};
-use warcraft_database::{SearchField, UnitMode};
+use warcraft_api::{SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
 /// The editor workspace's input: the unit list's state, plus the active race and

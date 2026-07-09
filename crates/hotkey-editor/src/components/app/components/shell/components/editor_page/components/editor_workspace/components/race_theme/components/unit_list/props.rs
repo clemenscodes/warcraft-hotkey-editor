@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
+use warcraft_api::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
 use warcraft_api::{Race, UnitKind, WarcraftObjectId};
-use warcraft_database::{CatalogVisibility, SearchField, UnitKindHelpers, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
 use super::components::catalog_visibility_toggle::CatalogVisibilityToggleProps;

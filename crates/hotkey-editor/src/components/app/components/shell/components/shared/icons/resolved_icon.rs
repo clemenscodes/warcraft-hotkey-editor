@@ -1,5 +1,5 @@
 use super::IconUrl;
-use warcraft_database::ObjectLookup;
+use warcraft_api::{ObjectLookup, WarcraftObjectId};
 
 /// A database object resolved for display: its first icon URL and first name, if
 /// any. The single home for the `ObjectLookup → icon → name` resolution that the
@@ -13,8 +13,8 @@ pub struct ResolvedIcon {
 
 impl ResolvedIcon {
     /// Resolve a database object id to its first icon URL and first display name.
-    pub fn lookup(object_id: &str) -> Self {
-        let object_option = ObjectLookup::by_id(object_id);
+    pub fn lookup(object_id: WarcraftObjectId) -> Self {
+        let object_option = ObjectLookup::object(object_id);
         let icon_url = object_option
             .and_then(|object| object.icons().first().copied())
             .map(IconUrl::from_database_path)
@@ -31,10 +31,10 @@ impl ResolvedIcon {
     }
 
     /// The resolved display name, or `fallback` when the object has none.
-    pub fn name_or(&self, fallback: &str) -> String {
+    pub fn name_or(&self, fallback_id: WarcraftObjectId) -> String {
         match &self.name {
             Some(name) => name.clone(),
-            None => fallback.to_owned(),
+            None => fallback_id.value().to_owned(),
         }
     }
 

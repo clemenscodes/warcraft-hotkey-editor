@@ -5,7 +5,7 @@ use crate::services::focus::context::use_focus_coordinator;
 use crate::services::focus::coordinator::FocusTarget;
 use dioxus::prelude::*;
 use std::time::Duration;
-use warcraft_database::{CatalogVisibility, SearchField};
+use warcraft_api::{CatalogVisibility, SearchField};
 
 /// The debounced search box's shaped state: the immediate `raw_query` the input
 /// shows, plus its input and clear handlers. Owns the `raw_query` and generation-

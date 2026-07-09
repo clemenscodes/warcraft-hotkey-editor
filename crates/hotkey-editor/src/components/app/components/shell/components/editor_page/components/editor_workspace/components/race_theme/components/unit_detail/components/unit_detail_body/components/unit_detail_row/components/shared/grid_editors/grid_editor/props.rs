@@ -2,7 +2,7 @@ use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::{GridBehavior, GridLayout, GridSlotId};
 
@@ -22,7 +22,7 @@ pub struct GridEditorConfig {
     pub selected_slot: Signal<Option<GridSlotId>>,
     pub selected_from_research: Signal<bool>,
     pub selected_from_uprooted: Signal<bool>,
-    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
     pub dragging_slot: Signal<Option<DraggingSlot>>,
     pub drop_target_tile: Signal<Option<DropTargetTile>>,
     pub drag_follower: Signal<Option<DragFollower>>,
@@ -43,10 +43,11 @@ pub struct GridEditorConfig {
     #[props(default)]
     pub restrict_draggable_to: Vec<GridSlotId>,
     /// Unit ID of the host — used to block dragging of morph abilities on
-    /// alternate-form units (e.g. Burrowed Crypt Fiend). Empty string
-    /// disables the check (off-state picker, build menus without a unit).
+    /// alternate-form units (e.g. Burrowed Crypt Fiend). The default (empty
+    /// sentinel) id disables the check (off-state picker, build menus without
+    /// a unit).
     #[props(default)]
-    pub host_unit_id: String,
+    pub host_unit_id: WarcraftObjectId,
 }
 
 /// The `GridEditor` component's props: a [`GridEditorConfig`] bound to a concrete

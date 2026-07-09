@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::WarcraftObjectId;
 
 /// What the list editor needs: the category whose rows to list and the shared

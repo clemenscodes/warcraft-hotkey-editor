@@ -1,13 +1,12 @@
 use super::state::UnitCardIdState;
 use dioxus::prelude::*;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 
-/// The unit id text, the race whose accent it takes when selected, and whether its
+/// The unit id, the race whose accent it takes when selected, and whether its
 /// card is selected (which tints it).
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardIdProps {
-    #[props(into)]
-    pub text: String,
+    pub unit_id: WarcraftObjectId,
     pub race: Race,
     pub is_selected: bool,
 }

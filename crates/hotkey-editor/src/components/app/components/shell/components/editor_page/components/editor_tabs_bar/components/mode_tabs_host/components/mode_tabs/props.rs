@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_database::UnitMode;
+use warcraft_api::UnitMode;
 
 /// The mode column's only concern: which mode is active (to mark the current button),
 /// and a select handler to dispatch when a mode is chosen. The cascade the selection

@@ -1,5 +1,5 @@
+use warcraft_api::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_api::{Race, WarcraftObjectId};
-use warcraft_database::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_keybinds::{UnitListing, UnitListingRequest};
 
 /// The default unit to select for a race-and-mode context — the first unit the domain's

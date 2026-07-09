@@ -13,8 +13,7 @@ assert_component!(TileOverrideId);
 /// The object id shown under the name in the override panel.
 #[component]
 pub fn TileOverrideId(props: TileOverrideIdProps) -> Element {
-    let text = props.text;
     rsx! {
-        code { class: CLASS, {text} }
+        code { class: CLASS, {props.object_id.value()} }
     }
 }

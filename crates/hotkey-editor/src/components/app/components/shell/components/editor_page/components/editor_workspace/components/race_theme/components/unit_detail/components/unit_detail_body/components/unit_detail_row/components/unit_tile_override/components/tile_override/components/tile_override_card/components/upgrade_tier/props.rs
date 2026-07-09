@@ -11,5 +11,5 @@ pub struct UpgradeTierProps {
     pub total_tier_count: usize,
     #[props(into)]
     pub tier_label_text: String,
-    pub tier_overrides: Signal<HashMap<String, usize>>,
+    pub tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
 }

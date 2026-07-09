@@ -16,8 +16,9 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use super::editor_mount::EditorMount;
 use std::collections::HashMap;
 use std::rc::Rc;
+use warcraft_api::ObjectLookup;
+use warcraft_api::WARCRAFT_DATABASE;
 use warcraft_api::WarcraftObjectId;
-use warcraft_database::WARCRAFT_DATABASE;
 use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitCommandSlots};
 
 pub fn stories() -> Vec<Story> {
@@ -143,11 +144,11 @@ fn override_key_field_special() -> Element {
 }
 
 fn upgrade_tier_selector_default() -> Element {
-    let object_id = WarcraftObjectId::new("AHbz");
+    let object_id = ObjectLookup::resolve_raw("AHbz").expect("known object id");
     let active_tier_index: usize = 0;
     let total_tier_count: usize = 3;
     let tier_label_text = "Level 1 of 3".to_string();
-    let tier_overrides = use_signal(HashMap::<String, usize>::new);
+    let tier_overrides = use_signal(HashMap::<WarcraftObjectId, usize>::new);
     rsx! {
         UpgradeTier {
             object_id,
@@ -218,7 +219,7 @@ fn alt_state_section_no_controls() -> Element {
 }
 
 fn alt_position_picker_open() -> Element {
-    let object_id = WarcraftObjectId::new("Adef");
+    let object_id = ObjectLookup::resolve_raw("Adef").expect("known object id");
     let display_name = "Defend".to_string();
     let off_slot = GridSlotId::ability_off(object_id);
     let picker_slots_vec: Vec<GridSlotId> = vec![off_slot];
@@ -239,7 +240,7 @@ fn alt_position_picker_open() -> Element {
 }
 
 fn upgrade_position_picker_open() -> Element {
-    let upgrade_unit_id = WarcraftObjectId::new("hrtt");
+    let upgrade_unit_id = ObjectLookup::resolve_raw("hrtt").expect("known object id");
     let display_name = "Siege Engine (upgraded)".to_string();
     let upgrade_slot = GridSlotId::ability(upgrade_unit_id);
     let picker_slots_vec: Vec<GridSlotId> = vec![upgrade_slot];
@@ -261,7 +262,7 @@ fn upgrade_position_picker_open() -> Element {
 
 fn tile_override_panel_archmage_blizzard() -> Element {
     let hero_id = fixtures::sample_hero_id();
-    let blizzard_id = WarcraftObjectId::new("AHbz");
+    let blizzard_id = ObjectLookup::resolve_raw("AHbz").expect("known object id");
     let blizzard_slot = GridSlotId::ability(blizzard_id);
     let custom_keys: Option<CustomKeys> = None;
     let from_uprooted = false;
@@ -270,20 +271,15 @@ fn tile_override_panel_archmage_blizzard() -> Element {
     let detail = InspectorDetail::build(
         &blizzard_slot,
         &custom_keys,
-        &hero_id,
+        hero_id,
         from_uprooted,
         from_research,
         upgrade_unit_id,
     );
     let archmage_slots: Rc<[GridSlotId]> = WARCRAFT_DATABASE
-        .by_id_and_key(&hero_id)
-        .map(|(object_id, _)| {
-            WARCRAFT_DATABASE
-                .command_card(object_id)
-                .filled_slots()
-                .collect::<Rc<[GridSlotId]>>()
-        })
-        .unwrap_or_else(|| Rc::from(Vec::<GridSlotId>::new()));
+        .command_card(hero_id)
+        .filled_slots()
+        .collect::<Rc<[GridSlotId]>>();
     let loaded_keys = use_signal(|| None::<CustomKeys>);
     rsx! {
         CustomKeysMount {

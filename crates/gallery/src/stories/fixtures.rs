@@ -1,5 +1,5 @@
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
-use warcraft_database::ObjectLookup;
+use warcraft_api::{ObjectLookup, WarcraftObjectId};
 use warcraft_keybinds::{CustomKeys, GridLayout};
 
 /// A normalized empty CustomKeys (no overrides applied).
@@ -24,18 +24,18 @@ pub fn sample_grid_layout() -> GridLayout {
 }
 
 /// A real hero unit ID present in WARCRAFT_DATABASE — Human Archmage.
-pub fn sample_hero_id() -> String {
-    "Hamg".to_string()
+pub fn sample_hero_id() -> WarcraftObjectId {
+    ObjectLookup::resolve_raw("Hamg").expect("known object id")
 }
 
 /// A real basic unit ID present in WARCRAFT_DATABASE — Human Footman.
-pub fn sample_unit_id() -> String {
-    "hfoo".to_string()
+pub fn sample_unit_id() -> WarcraftObjectId {
+    ObjectLookup::resolve_raw("hfoo").expect("known object id")
 }
 
 /// A real icon for presentational previews — the Footman's icon.
 pub fn sample_icon() -> Option<IconUrl> {
-    let unit_object = ObjectLookup::by_id(&sample_unit_id());
+    let unit_object = ObjectLookup::object(sample_unit_id());
     unit_object
         .and_then(|object| object.icons().first().copied())
         .map(IconUrl::from_database_path)

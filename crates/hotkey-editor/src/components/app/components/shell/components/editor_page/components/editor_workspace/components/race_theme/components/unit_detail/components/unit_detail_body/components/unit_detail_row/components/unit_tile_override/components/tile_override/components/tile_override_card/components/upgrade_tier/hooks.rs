@@ -20,22 +20,20 @@ pub(super) fn use_upgrade_tier(props: &UpgradeTierProps) -> UpgradeTierModel {
     let total_tier_count = props.total_tier_count;
     let mut tier_overrides = props.tier_overrides;
     let on_prev = EventHandler::new(move |_event: MouseEvent| {
-        let id_key = object_id.value().to_string();
         let mut writable_guard = tier_overrides.write();
-        let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
+        let current = writable_guard.get(&object_id).copied().unwrap_or(0);
         let next = if current == 0 {
             total_tier_count - 1
         } else {
             current - 1
         };
-        writable_guard.insert(id_key, next);
+        writable_guard.insert(object_id, next);
     });
     let on_next = EventHandler::new(move |_event: MouseEvent| {
-        let id_key = object_id.value().to_string();
         let mut writable_guard = tier_overrides.write();
-        let current = writable_guard.get(id_key.as_str()).copied().unwrap_or(0);
+        let current = writable_guard.get(&object_id).copied().unwrap_or(0);
         let next = (current + 1) % total_tier_count;
-        writable_guard.insert(id_key, next);
+        writable_guard.insert(object_id, next);
     });
     let prev_button = TileOverrideTierButtonProps {
         aria_label: "Previous level",

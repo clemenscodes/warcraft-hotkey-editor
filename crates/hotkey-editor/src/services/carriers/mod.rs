@@ -38,10 +38,9 @@ pub struct CarrierUnitView {
 
 impl From<WarcraftObjectId> for CarrierUnitView {
     fn from(unit_id: WarcraftObjectId) -> Self {
-        let unit_id_value = unit_id.value();
-        let resolved = ResolvedIcon::lookup(unit_id_value);
+        let resolved = ResolvedIcon::lookup(unit_id);
         let icon_url = resolved.icon_url().map(str::to_owned);
-        let name = resolved.name_or(unit_id_value);
+        let name = resolved.name_or(unit_id);
         Self {
             unit_id,
             name,

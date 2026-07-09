@@ -21,7 +21,8 @@ use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use hotkey_editor::services::overlay_state::OverlayState;
 use hotkey_editor::services::undo::UndoHistory;
 use warcraft_api::Race;
-use warcraft_database::UnitMode;
+use warcraft_api::UnitMode;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::CollisionSummary;
 
 /// Provides the app-wide overlay open state a toolbar/burger button reads from
@@ -48,7 +49,7 @@ fn make_view_navigation() -> ViewNavigationContext {
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
+    let selected_unit_id = use_signal(|| None::<WarcraftObjectId>);
     let search_query = use_signal(String::new);
     ViewNavigationContext::new(
         current_view,

@@ -6,10 +6,10 @@ use warcraft_api::RaceLabels;
 impl From<&UnitCardIdProps> for NormalUnitCardIdProps {
     fn from(props: &UnitCardIdProps) -> Self {
         let race_attribute = RaceLabels::data_attribute(props.race);
-        let text = props.text.clone();
+        let unit_id = props.unit_id;
         Self {
             race_attribute,
-            text,
+            unit_id,
         }
     }
 }
@@ -17,10 +17,10 @@ impl From<&UnitCardIdProps> for NormalUnitCardIdProps {
 impl From<&UnitCardIdProps> for SelectedUnitCardIdProps {
     fn from(props: &UnitCardIdProps) -> Self {
         let race_attribute = RaceLabels::data_attribute(props.race);
-        let text = props.text.clone();
+        let unit_id = props.unit_id;
         Self {
             race_attribute,
-            text,
+            unit_id,
         }
     }
 }

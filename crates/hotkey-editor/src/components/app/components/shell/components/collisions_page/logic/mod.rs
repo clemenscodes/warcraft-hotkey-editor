@@ -56,10 +56,9 @@ pub struct UnitIconView {
 
 impl From<WarcraftObjectId> for UnitIconView {
     fn from(unit_id: WarcraftObjectId) -> Self {
-        let unit_id_value = unit_id.value();
-        let resolved = ResolvedIcon::lookup(unit_id_value);
+        let resolved = ResolvedIcon::lookup(unit_id);
         let icon_url = resolved.icon_url().map(str::to_owned);
-        let name = resolved.name_or(unit_id_value);
+        let name = resolved.name_or(unit_id);
         Self {
             unit_id,
             name,
@@ -290,8 +289,7 @@ struct AbilityResolution {
 
 impl From<GridSlotId> for AbilityResolution {
     fn from(slot_id: GridSlotId) -> Self {
-        let id_value = slot_id.id().value();
-        let resolved = ResolvedIcon::lookup(id_value);
+        let resolved = ResolvedIcon::lookup(slot_id.id());
         let icon_url = resolved.icon_url().map(str::to_owned);
         let name = match resolved.name() {
             Some(name) => name.to_owned(),

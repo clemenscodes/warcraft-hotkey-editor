@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
+use warcraft_api::SearchField;
 use warcraft_api::UnitKind;
-use warcraft_database::SearchField;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
 pub mod context;
@@ -28,7 +29,7 @@ pub struct EditorState {
     selected_from_research: Signal<bool>,
     selected_from_uprooted: Signal<bool>,
     hotkey_assign_request: Signal<bool>,
-    tier_overrides: Signal<HashMap<String, usize>>,
+    tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
     search_field: Signal<SearchField>,
     collapsed_categories: Signal<HashSet<UnitKind>>,
     show_abilityless_units: Signal<bool>,
@@ -47,7 +48,7 @@ impl EditorState {
         selected_from_research: Signal<bool>,
         selected_from_uprooted: Signal<bool>,
         hotkey_assign_request: Signal<bool>,
-        tier_overrides: Signal<HashMap<String, usize>>,
+        tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
         search_field: Signal<SearchField>,
         collapsed_categories: Signal<HashSet<UnitKind>>,
         show_abilityless_units: Signal<bool>,
@@ -95,7 +96,7 @@ impl EditorState {
         self.hotkey_assign_request
     }
 
-    pub fn tier_overrides(&self) -> Signal<HashMap<String, usize>> {
+    pub fn tier_overrides(&self) -> Signal<HashMap<WarcraftObjectId, usize>> {
         self.tier_overrides
     }
 

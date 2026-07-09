@@ -2,7 +2,7 @@ use super::components::search_field_button::SearchFieldButtonProps;
 use super::data;
 use super::props::SearchFieldToggleProps;
 use dioxus::prelude::*;
-use warcraft_database::SearchField;
+use warcraft_api::SearchField;
 
 /// The two search-field options, each finished with its active flag and select
 /// handler.

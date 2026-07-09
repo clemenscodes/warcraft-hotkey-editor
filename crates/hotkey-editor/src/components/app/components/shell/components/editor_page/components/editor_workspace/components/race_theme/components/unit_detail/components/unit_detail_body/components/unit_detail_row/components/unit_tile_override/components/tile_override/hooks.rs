@@ -77,10 +77,9 @@ fn use_override_editing(
         let is_research_check = matches!(active_target, OverrideEditTarget::ResearchHotkey);
         let read_guard = loaded_keys.peek();
         let custom_keys_ref = read_guard.as_ref();
-        let target_id = picker_object_id.value();
         let conflict = HotkeyOverride::detect_conflict(
             &picker_active_container,
-            target_id,
+            picker_object_id,
             token,
             custom_keys_ref,
             layout_snapshot_for_check,
@@ -156,11 +155,7 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
         alt_content: &alt_content,
     };
     let visibility = FieldVisibility::from(visibility_inputs);
-    let stored_tier_index = tier_overrides
-        .read()
-        .get(object_id.value())
-        .copied()
-        .unwrap_or(0);
+    let stored_tier_index = tier_overrides.read().get(&object_id).copied().unwrap_or(0);
     let tier_inputs = TierResolutionInputs {
         detail: &detail,
         stored_tier_index,

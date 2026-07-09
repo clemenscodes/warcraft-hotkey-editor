@@ -10,7 +10,7 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
 use std::collections::HashSet;
 use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};
-use warcraft_database::{CatalogVisibility, ObjectLookup, SearchField, UnitMode};
+use warcraft_api::{CatalogVisibility, ObjectLookup, SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
 pub fn stories() -> Vec<Story> {
@@ -53,7 +53,7 @@ pub fn stories() -> Vec<Story> {
 
 fn unit_card_info_footman() -> Element {
     let display_name = "Footman".to_string();
-    let unit_id = "hfoo".to_string();
+    let unit_id = ObjectLookup::resolve_raw("hfoo").expect("known object id");
     let race = Race::Human;
     rsx! {
         UnitCardInfo { display_name, unit_id, race, is_selected: false }
@@ -62,7 +62,7 @@ fn unit_card_info_footman() -> Element {
 
 fn unit_card_info_hero() -> Element {
     let display_name = "Archmage".to_string();
-    let unit_id = "Hamg".to_string();
+    let unit_id = ObjectLookup::resolve_raw("Hamg").expect("known object id");
     let race = Race::Human;
     rsx! {
         UnitCardInfo { display_name, unit_id, race, is_selected: true }
@@ -90,7 +90,7 @@ fn mobile_category_tab_inactive() -> Element {
 }
 
 fn unit_card_icon_footman() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_unit_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_unit_id());
     let icon_path = unit_object.and_then(|obj| {
         obj.icons()
             .first()
@@ -104,7 +104,7 @@ fn unit_card_icon_footman() -> Element {
 }
 
 fn unit_card_footman() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_unit_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_unit_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Footman not found in database." };
     };
@@ -145,7 +145,7 @@ fn unit_card_footman() -> Element {
 }
 
 fn unit_card_archmage_selected() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_hero_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_hero_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Archmage not found in database." };
     };

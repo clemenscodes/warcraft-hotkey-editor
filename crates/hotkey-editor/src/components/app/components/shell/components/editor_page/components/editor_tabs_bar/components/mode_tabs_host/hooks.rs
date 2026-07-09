@@ -2,7 +2,7 @@ use super::components::mode_tabs::ModeTabsProps;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
-use warcraft_database::UnitMode;
+use warcraft_api::UnitMode;
 
 /// The seam: source the active mode, and wire the select handler to the navigation
 /// service's `select_mode` cascade (set mode → default unit → clear slot). The

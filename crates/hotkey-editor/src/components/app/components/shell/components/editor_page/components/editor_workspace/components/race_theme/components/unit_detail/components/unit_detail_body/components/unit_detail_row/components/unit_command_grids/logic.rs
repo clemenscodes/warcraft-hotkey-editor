@@ -76,7 +76,7 @@ impl UnitCommandGridsModel {
         slot_ids: Rc<[GridSlotId]>,
     ) -> GridEditorConfig {
         let race = props.race;
-        let host_unit_id = props.unit_id.clone();
+        let host_unit_id = props.unit_id;
         GridEditorConfig {
             heading,
             race,

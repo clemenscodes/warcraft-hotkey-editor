@@ -23,7 +23,7 @@ pub fn UnitCard(props: UnitCardProps) -> Element {
     let is_selected = props.is_selected;
     let icon_path = props.icon_path.clone();
     let display_name = props.display_name.clone();
-    let unit_id = props.unit_id.value().to_string();
+    let unit_id = props.unit_id;
     let race = props.race;
     let focus = use_focus_coordinator();
     let mut mounted_handle = use_signal(|| None::<Rc<MountedData>>);

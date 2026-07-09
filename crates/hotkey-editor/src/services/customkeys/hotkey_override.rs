@@ -1,3 +1,4 @@
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 use warcraft_keybinds::{CustomKeys, HotkeyConflict, HotkeyToken};
@@ -7,7 +8,7 @@ pub(crate) struct HotkeyOverride;
 impl HotkeyOverride {
     pub(crate) fn detect_conflict(
         container_slots: &[GridSlotId],
-        target_object_id: &str,
+        target_object_id: WarcraftObjectId,
         proposed_token: HotkeyToken,
         custom_keys: Option<&CustomKeys>,
         layout: GridLayout,

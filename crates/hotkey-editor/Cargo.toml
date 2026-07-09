@@ -46,7 +46,6 @@ web-sys = { version = "0.3", features = [
 gloo-timers = { version = "0.4.0", features = ["futures"] }
 console_error_panic_hook = "0.1.7"
 warcraft-api = { workspace = true }
-warcraft-database = { workspace = true }
 ddd = { workspace = true }
 dioxus-kit = { workspace = true }
 tw-macro = { workspace = true, features = ["dioxus"] }

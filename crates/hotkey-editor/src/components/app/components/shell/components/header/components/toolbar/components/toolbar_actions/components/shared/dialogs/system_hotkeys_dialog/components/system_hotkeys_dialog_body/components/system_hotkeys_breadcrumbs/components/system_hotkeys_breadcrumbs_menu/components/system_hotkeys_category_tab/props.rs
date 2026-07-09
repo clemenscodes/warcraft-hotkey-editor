@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 
 /// One tab's inputs: which category it is, whether it is the active one, whether a
 /// separator follows it, and the signals it reads and writes on select.

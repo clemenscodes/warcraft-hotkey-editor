@@ -1,5 +1,5 @@
 use warcraft_api::Race;
-use warcraft_database::{CatalogVisibility, SearchField, UnitMode};
+use warcraft_api::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_keybinds::{UnitListing, UnitListingRequest};
 
 /// The inputs the memoized catalog walk reads — race, mode, committed query,

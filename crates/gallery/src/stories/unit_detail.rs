@@ -17,7 +17,7 @@ use std::rc::Rc;
 
 use warcraft_api::{AttackType, DefenseType, Race, UnitCombat, WarcraftObjectMeta};
 
-use warcraft_database::{ObjectLookup, WARCRAFT_DATABASE};
+use warcraft_api::{ObjectLookup, WARCRAFT_DATABASE};
 use warcraft_keybinds::{
     AttackRange, AttackSpeed, AttackStatistics, AttributeStatistic, DamageRange, Evasion,
     GridSlotId, HeroStatistics, UnitCommandSlots,
@@ -175,7 +175,7 @@ fn hero_level_option_unselected() -> Element {
 
 fn unit_detail_header_no_portrait() -> Element {
     let unit_name = "Footman";
-    let unit_id = "hfoo".to_string();
+    let unit_id = ObjectLookup::resolve_raw("hfoo").expect("known object id");
     let portrait_url = None;
     let has_hero_attributes = false;
     rsx! {
@@ -192,7 +192,7 @@ fn unit_detail_header_no_portrait() -> Element {
 
 fn unit_detail_header_hero() -> Element {
     let unit_name = "Archmage";
-    let unit_id = "Hamg".to_string();
+    let unit_id = ObjectLookup::resolve_raw("Hamg").expect("known object id");
     let portrait_url = None;
     let has_hero_attributes = true;
     rsx! {
@@ -224,7 +224,7 @@ fn unit_stats_panel_empty() -> Element {
 }
 
 fn unit_stats_panel_archmage() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_hero_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_hero_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Archmage not found in database." };
     };
@@ -247,7 +247,7 @@ fn unit_stats_panel_archmage() -> Element {
 }
 
 fn unit_stats_panel_footman() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_unit_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_unit_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Footman not found in database." };
     };
@@ -270,7 +270,7 @@ fn unit_stats_panel_footman() -> Element {
 }
 
 fn attributes_column_archmage() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_hero_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_hero_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Archmage not found in database." };
     };
@@ -298,7 +298,7 @@ fn attributes_column_archmage() -> Element {
 }
 
 fn combat_column_footman() -> Element {
-    let unit_object = ObjectLookup::by_id(&fixtures::sample_unit_id());
+    let unit_object = ObjectLookup::object(fixtures::sample_unit_id());
     let Some(unit_object) = unit_object else {
         return rsx! { "Footman not found in database." };
     };
@@ -328,15 +328,10 @@ fn combat_column_footman() -> Element {
 
 fn unit_command_grids_footman() -> Element {
     let unit_id = fixtures::sample_unit_id();
-    let lookup_result = WARCRAFT_DATABASE.by_id_and_key(&unit_id);
-    let command_card_slots: Rc<[GridSlotId]> = lookup_result
-        .map(|(obj_id, _)| {
-            WARCRAFT_DATABASE
-                .command_card(obj_id)
-                .filled_slots()
-                .collect::<Rc<[GridSlotId]>>()
-        })
-        .unwrap_or_else(|| Rc::from(Vec::<GridSlotId>::new()));
+    let command_card_slots: Rc<[GridSlotId]> = WARCRAFT_DATABASE
+        .command_card(unit_id)
+        .filled_slots()
+        .collect::<Rc<[GridSlotId]>>();
     rsx! {
         EditorMount {
             UnitCommandGrids {

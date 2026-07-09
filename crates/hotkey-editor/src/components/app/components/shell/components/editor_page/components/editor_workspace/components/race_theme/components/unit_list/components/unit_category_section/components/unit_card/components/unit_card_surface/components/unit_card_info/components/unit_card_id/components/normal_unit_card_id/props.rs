@@ -1,9 +1,9 @@
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
-/// The unit id text and the `data-race` attribute value the code element carries.
+/// The unit id and the `data-race` attribute value the code element carries.
 #[derive(Props, Clone, PartialEq)]
 pub struct NormalUnitCardIdProps {
     pub race_attribute: &'static str,
-    #[props(into)]
-    pub text: String,
+    pub unit_id: WarcraftObjectId,
 }

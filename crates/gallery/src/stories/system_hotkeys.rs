@@ -20,7 +20,7 @@ use hotkey_editor::components::app::components::shell::components::header::compo
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
 use super::keys_mount::CustomKeysMount;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, KeyCode, WarcraftObjectId};
 
 pub fn stories() -> Vec<Story> {
@@ -222,8 +222,7 @@ fn inventory_filled_slot_default() -> Element {
     let entries = SystemHotkeysCategory::Inventory.entries();
     let first_entry = entries[0];
     let slot_index: usize = 0;
-    let section_key = first_entry.section_id();
-    let section_id = WarcraftObjectId::from(section_key);
+    let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let dragging_source = use_signal(|| None::<InventoryDragSource>);
@@ -246,8 +245,7 @@ fn inventory_filled_slot_default() -> Element {
 fn key_capture_default() -> Element {
     let entries = SystemHotkeysCategory::GeneralCommands.entries();
     let first_entry = entries[0];
-    let section_key = first_entry.section_id();
-    let section_id = WarcraftObjectId::from(section_key);
+    let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
@@ -263,8 +261,7 @@ fn key_capture_default() -> Element {
 fn system_hotkeys_list_entry_default() -> Element {
     let entries = SystemHotkeysCategory::GeneralCommands.entries();
     let first_entry = entries[0];
-    let section_key = first_entry.section_id();
-    let section_id = WarcraftObjectId::from(section_key);
+    let section_id = first_entry.section_id();
     let comment = first_entry.comment().to_string();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
@@ -285,8 +282,7 @@ fn slot_button_default() -> Element {
     let entries = SystemHotkeysCategory::Inventory.entries();
     let first_entry = entries[0];
     let slot_label = "Slot 1".to_string();
-    let section_key = first_entry.section_id();
-    let section_id = WarcraftObjectId::from(section_key);
+    let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
     let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {

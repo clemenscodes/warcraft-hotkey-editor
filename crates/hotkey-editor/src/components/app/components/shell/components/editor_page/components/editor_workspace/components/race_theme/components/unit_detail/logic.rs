@@ -1,8 +1,8 @@
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use std::collections::HashMap;
 use std::rc::Rc;
+use warcraft_api::ObjectLookup;
 use warcraft_api::{HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_database::ObjectLookup;
 use warcraft_keybinds::{CustomKeys, Evasion, GridSlotId, InspectorDetail, UnitSlotContainers};
 
 /// The selected unit resolved from the game database: its name, portrait, flavor
@@ -18,11 +18,11 @@ pub(super) struct ResolvedUnit {
     pub(super) evasion: Evasion,
 }
 
-impl TryFrom<&str> for ResolvedUnit {
+impl TryFrom<WarcraftObjectId> for ResolvedUnit {
     type Error = &'static str;
 
-    fn try_from(unit_id: &str) -> Result<Self, Self::Error> {
-        let Some(unit_object) = ObjectLookup::by_id(unit_id) else {
+    fn try_from(unit_id: WarcraftObjectId) -> Result<Self, Self::Error> {
+        let Some(unit_object) = ObjectLookup::object(unit_id) else {
             return Err("Unit not found in database.");
         };
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
@@ -64,7 +64,7 @@ pub(super) struct InspectorPanel {
 pub(super) struct InspectorPanelInputs<'a> {
     pub(super) inspector_slot: &'a Option<GridSlotId>,
     pub(super) custom_keys: &'a Option<CustomKeys>,
-    pub(super) host_unit_id: &'a str,
+    pub(super) host_unit_id: WarcraftObjectId,
     pub(super) from_uprooted: bool,
     pub(super) from_research: bool,
     pub(super) train_upgrades: &'a HashMap<WarcraftObjectId, WarcraftObjectId>,

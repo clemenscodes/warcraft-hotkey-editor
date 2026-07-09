@@ -10,11 +10,10 @@ assert_component!(UnitId);
 /// The unit's database id.
 #[component]
 pub fn UnitId(props: UnitIdProps) -> Element {
-    let text = props.text;
     rsx! {
         code {
             class: CLASS,
-            {text}
+            {props.unit_id.value()}
         }
     }
 }

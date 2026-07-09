@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 
 /// The menu's inputs: the active category (read + written by its tabs), the shared
 /// open signal (tabs close it on select), and the open attribute string.

@@ -13,12 +13,11 @@ assert_component!(NormalUnitCardId);
 #[component]
 pub fn NormalUnitCardId(props: NormalUnitCardIdProps) -> Element {
     let race_attribute = props.race_attribute;
-    let text = props.text;
     rsx! {
         code {
             class: CLASS,
             "data-race": race_attribute,
-            {text}
+            {props.unit_id.value()}
         }
     }
 }

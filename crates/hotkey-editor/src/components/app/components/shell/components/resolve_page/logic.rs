@@ -21,8 +21,7 @@ pub struct AbilityDisplay {
 impl From<GridSlotId> for AbilityDisplay {
     fn from(slot_id: GridSlotId) -> Self {
         let object_id = slot_id.id();
-        let id_value = object_id.value();
-        let resolved = ResolvedIcon::lookup(id_value);
+        let resolved = ResolvedIcon::lookup(object_id);
         let icon_url = resolved.icon_url().map(str::to_owned);
         let name = match resolved.name() {
             Some(name) => name.to_owned(),

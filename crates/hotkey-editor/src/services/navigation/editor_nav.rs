@@ -1,6 +1,6 @@
 use super::default_unit::DefaultUnit;
+use warcraft_api::{ObjectLookup, UnitMode};
 use warcraft_api::{Race, WarcraftObjectId};
-use warcraft_database::{ObjectLookup, UnitMode};
 
 /// The editor navigation state decoded from the `?race=`/`?mode=`/`?unit=`/`?q=`
 /// query parameters every route carries. Each page reconciles its URL into the
@@ -70,8 +70,7 @@ impl DecodedEditorNav {
             let default_unit = DefaultUnit::new(race, unit_mode);
             default_unit.resolve()
         } else {
-            let resolved = ObjectLookup::by_id(unit_param);
-            resolved.map(|object| object.id())
+            ObjectLookup::resolve_raw(unit_param)
         };
         let search_query = query.unwrap_or_default().to_string();
         Self {

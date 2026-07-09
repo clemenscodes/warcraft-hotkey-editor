@@ -1,3 +1,4 @@
+use warcraft_api::WarcraftObjectId;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
     DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragRaf,
@@ -24,7 +25,7 @@ use wasm_bindgen::closure::Closure;
 /// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryFilledSlotModel {
     pub(super) state: SystemSlotState,
-    pub(super) slot_id: &'static str,
+    pub(super) section_id: WarcraftObjectId,
     pub(super) dragging: bool,
     pub(super) slot_label: String,
     pub(super) key_label: String,
@@ -239,10 +240,9 @@ pub(super) fn use_inventory_filled_slot(
     let label_for_drag = view.key_label.clone();
     let drag = use_inventory_drag(props, label_for_drag);
     let editing = use_inventory_editing(props);
-    let slot_id = props.section_id.value();
     InventoryFilledSlotModel {
         state: view.state,
-        slot_id,
+        section_id: props.section_id,
         dragging: view.dragging,
         slot_label: view.slot_label,
         key_label: view.key_label,

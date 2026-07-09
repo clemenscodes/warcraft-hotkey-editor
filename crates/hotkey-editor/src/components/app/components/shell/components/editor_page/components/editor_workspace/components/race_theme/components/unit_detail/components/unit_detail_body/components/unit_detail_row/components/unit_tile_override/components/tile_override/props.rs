@@ -86,7 +86,7 @@ pub(super) struct TileOverrideInputs {
     pub(super) upgrade_display_name: String,
     pub(super) alt_picker_slots: Rc<[GridSlotId]>,
     pub(super) upgrade_picker_slots: Rc<[GridSlotId]>,
-    pub(super) tier_overrides: Signal<HashMap<String, usize>>,
+    pub(super) tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
 }
 
 impl From<TileOverrideInputs> for TileOverrideModel {
@@ -110,13 +110,10 @@ impl From<TileOverrideInputs> for TileOverrideModel {
             upgrade_picker_slots,
             tier_overrides,
         } = inputs;
-        let object_id_text = object_id.value().to_string();
         let name = TileOverrideNameProps {
             text: tiers.active_tier_name,
         };
-        let id = TileOverrideIdProps {
-            text: object_id_text,
-        };
+        let id = TileOverrideIdProps { object_id };
         let hotkey_slot = TileOverrideHotkeySlotProps {
             show_hotkey_field: visibility.show_hotkey_field,
             hotkey_label: hotkey_view.label,

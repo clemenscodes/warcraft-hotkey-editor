@@ -13,7 +13,7 @@ impl From<&UnitDetailHeaderProps> for UnitPortraitProps {
 impl From<&UnitDetailHeaderProps> for UnitDetailTitleProps {
     fn from(props: &UnitDetailHeaderProps) -> Self {
         let unit_name = props.unit_name;
-        let unit_id = props.unit_id.clone();
+        let unit_id = props.unit_id;
         let has_hero_attributes = props.has_hero_attributes;
         Self {
             unit_name,

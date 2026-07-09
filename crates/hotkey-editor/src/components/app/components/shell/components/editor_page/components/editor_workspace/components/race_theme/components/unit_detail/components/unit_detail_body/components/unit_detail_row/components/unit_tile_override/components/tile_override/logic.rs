@@ -316,7 +316,7 @@ impl PickerBoard {
         let container = &context.container_slots;
         let layout = context.layout;
         let is_research_context = context.is_research_context;
-        let target = context.target_object_id.value();
+        let target = context.target_object_id;
         let rows = PICKER_ROWS
             .iter()
             .map(|row| {

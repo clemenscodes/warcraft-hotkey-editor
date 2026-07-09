@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
+use warcraft_api::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_api::{Race, UnitKind, WarcraftObjectId};
-use warcraft_database::{CatalogVisibility, SearchField, UnitMode};
 use warcraft_keybinds::GridSlotId;
 
 /// One collapsible category of units in the sidebar list: which kind it is, its

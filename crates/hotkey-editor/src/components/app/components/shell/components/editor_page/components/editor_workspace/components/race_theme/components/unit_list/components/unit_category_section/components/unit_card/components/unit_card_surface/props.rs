@@ -2,7 +2,7 @@ use super::components::unit_card_icon::UnitCardIconProps;
 use super::components::unit_card_info::UnitCardInfoProps;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 
 /// The unit card's selectable button surface: the portrait plus name/id it lays out,
 /// the selected flag that drives its `--race-color` accent, and the click, keydown,
@@ -14,8 +14,7 @@ pub struct UnitCardSurfaceProps {
     pub icon_path: Option<IconUrl>,
     #[props(into)]
     pub display_name: String,
-    #[props(into)]
-    pub unit_id: String,
+    pub unit_id: WarcraftObjectId,
     pub race: Race,
     pub is_selected: bool,
     pub onclick: EventHandler<MouseEvent>,
@@ -37,7 +36,7 @@ impl From<&UnitCardSurfaceProps> for UnitCardIconProps {
 impl From<&UnitCardSurfaceProps> for UnitCardInfoProps {
     fn from(props: &UnitCardSurfaceProps) -> Self {
         let display_name = props.display_name.clone();
-        let unit_id = props.unit_id.clone();
+        let unit_id = props.unit_id;
         let race = props.race;
         let is_selected = props.is_selected;
         Self {

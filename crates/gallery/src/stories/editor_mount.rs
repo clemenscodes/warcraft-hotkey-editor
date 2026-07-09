@@ -4,8 +4,9 @@ use hotkey_editor::services::editor_state::{
     DragFollower, DraggingSlot, DropTargetTile, EditorState,
 };
 use std::collections::{HashMap, HashSet};
+use warcraft_api::SearchField;
 use warcraft_api::UnitKind;
-use warcraft_database::SearchField;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, GridSlotId};
 
 /// App-specific story decorator that provides the three editor contexts the de-drilled
@@ -25,7 +26,7 @@ pub fn EditorMount(children: Element) -> Element {
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
     let hotkey_assign_request = use_signal::<bool>(|| false);
-    let tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let tier_overrides = use_signal::<HashMap<WarcraftObjectId, usize>>(HashMap::new);
     let search_field = use_signal(SearchField::default);
     let collapsed_categories = use_signal::<HashSet<UnitKind>>(HashSet::new);
     let show_abilityless_units = use_signal::<bool>(|| false);

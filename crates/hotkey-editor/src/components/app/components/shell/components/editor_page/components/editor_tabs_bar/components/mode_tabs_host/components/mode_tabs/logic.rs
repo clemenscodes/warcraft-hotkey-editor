@@ -2,7 +2,7 @@ use super::components::mode_tab::ModeTabProps;
 use super::props::ModeTabsProps;
 use crate::services::focus::coordinator::{FocusCoordinator, FocusTarget};
 use dioxus::prelude::*;
-use warcraft_database::UnitMode;
+use warcraft_api::UnitMode;
 
 /// The Melee and Campaign buttons, each finished with its label, active flag, and
 /// event handlers.

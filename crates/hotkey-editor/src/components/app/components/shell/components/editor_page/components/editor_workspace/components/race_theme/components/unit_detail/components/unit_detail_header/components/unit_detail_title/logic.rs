@@ -15,7 +15,7 @@ impl From<&UnitDetailTitleProps> for UnitNameRowProps {
 
 impl From<&UnitDetailTitleProps> for UnitIdProps {
     fn from(props: &UnitDetailTitleProps) -> Self {
-        let text = props.unit_id.clone();
-        Self { text }
+        let unit_id = props.unit_id;
+        Self { unit_id }
     }
 }

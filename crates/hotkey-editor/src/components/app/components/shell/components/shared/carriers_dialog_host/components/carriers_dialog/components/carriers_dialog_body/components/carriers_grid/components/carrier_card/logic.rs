@@ -22,7 +22,7 @@ impl From<&CarrierCardProps> for CarrierCardModel {
             alt: name.clone(),
         };
         let onclick =
-            EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(unit_id.value()));
+            EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(unit_id));
         Self {
             icon,
             onclick,

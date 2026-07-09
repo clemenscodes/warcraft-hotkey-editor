@@ -14,7 +14,8 @@ use hotkey_editor::services::navigation::view_navigation::ViewNavigationContext;
 use hotkey_editor::services::overlay_state::OverlayState;
 use hotkey_editor::services::undo::UndoHistory;
 use warcraft_api::Race;
-use warcraft_database::UnitMode;
+use warcraft_api::UnitMode;
+use warcraft_api::WarcraftObjectId;
 
 /// Provides the app-wide overlay open state the header, toolbar, and burger read
 /// from context, so those components can be shown in isolation.
@@ -40,7 +41,7 @@ fn provide_navigation() {
     let current_view = use_signal(|| AppView::Editor);
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| None::<String>);
+    let selected_unit_id = use_signal(|| None::<WarcraftObjectId>);
     let search_query = use_signal(String::new);
     let navigation = ViewNavigationContext::new(
         current_view,

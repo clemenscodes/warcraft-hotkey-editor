@@ -32,7 +32,7 @@ pub(super) fn selected(props: &HotkeyUnitDetailProps) -> Option<HotkeyUnitDetail
     let unit_id_for_navigation = unit.unit_id();
     let view_navigation = props.view_navigation;
     let onclick = EventHandler::new(move |_event: MouseEvent| {
-        view_navigation.open_unit(unit_id_for_navigation.value())
+        view_navigation.open_unit(unit_id_for_navigation)
     });
     let unit_button = ConflictDetailUnitProps {
         onclick,

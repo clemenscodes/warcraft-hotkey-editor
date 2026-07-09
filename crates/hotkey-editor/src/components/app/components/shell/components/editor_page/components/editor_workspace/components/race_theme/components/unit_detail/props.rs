@@ -61,10 +61,9 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             evasion,
         } = resolved_unit;
         let has_hero_attributes = hero_attributes.is_some();
-        let header_unit_id = unit_id.value().to_string();
         let header = UnitDetailHeaderProps {
             unit_name,
-            unit_id: header_unit_id,
+            unit_id,
             portrait_url,
             has_hero_attributes,
         };
@@ -77,9 +76,8 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             selected_hero_level,
             evasion,
         };
-        let grids_unit_id = unit_id.value().to_string();
         let grids = UnitCommandGridsProps {
-            unit_id: grids_unit_id,
+            unit_id,
             race,
             command_card_slots,
             build_menu_slots,

@@ -22,7 +22,7 @@ pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
         src: props.icon_url,
         alt: name.clone(),
     };
-    let onclick = move |_event: MouseEvent| view_navigation.open_unit(unit_id.value());
+    let onclick = move |_event: MouseEvent| view_navigation.open_unit(unit_id);
     rsx! {
         button {
             class: CLASS,

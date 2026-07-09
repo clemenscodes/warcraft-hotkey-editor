@@ -39,8 +39,7 @@ impl From<&MoveRowProps> for MoveRowModel {
         let open_unit_id = mover_unit_id;
         let open_mover = EventHandler::new(move |_event: MouseEvent| {
             if let Some(unit_id) = open_unit_id {
-                let unit_id_value = unit_id.value();
-                view_navigation.open_unit(unit_id_value);
+                view_navigation.open_unit(unit_id);
             }
         });
         let mover_name = mover.name().to_owned();

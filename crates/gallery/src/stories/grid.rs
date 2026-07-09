@@ -23,7 +23,8 @@ use hotkey_editor::services::editor_state::{
 
 use super::fixtures;
 use warcraft_api::Race;
-use warcraft_database::WARCRAFT_DATABASE;
+use warcraft_api::WARCRAFT_DATABASE;
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{GridSlotId, HotkeyToken, UnitCommandSlots};
 
 pub fn stories() -> Vec<Story> {
@@ -216,14 +217,9 @@ fn grid_tile_passive() -> Element {
 fn footman_command_slots() -> Rc<[GridSlotId]> {
     let unit_id = fixtures::sample_unit_id();
     WARCRAFT_DATABASE
-        .by_id_and_key(&unit_id)
-        .map(|(object_id, _)| {
-            WARCRAFT_DATABASE
-                .command_card(object_id)
-                .filled_slots()
-                .collect::<Rc<[GridSlotId]>>()
-        })
-        .unwrap_or_else(|| Rc::from(Vec::<GridSlotId>::new()))
+        .command_card(unit_id)
+        .filled_slots()
+        .collect::<Rc<[GridSlotId]>>()
 }
 
 fn grid_tile_selected_orc() -> Element {
@@ -296,7 +292,7 @@ fn grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let selected_slot = use_signal(|| None::<GridSlotId>);
     let selected_from_research = use_signal(|| false);
     let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
+    let tier_overrides: Signal<HashMap<WarcraftObjectId, usize>> = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
     let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);
@@ -336,7 +332,7 @@ fn grid_editor_footman() -> Element {
     let selected_slot = use_signal(|| None::<GridSlotId>);
     let selected_from_research = use_signal(|| false);
     let selected_from_uprooted = use_signal(|| false);
-    let tier_overrides: Signal<HashMap<String, usize>> = use_signal(HashMap::new);
+    let tier_overrides: Signal<HashMap<WarcraftObjectId, usize>> = use_signal(HashMap::new);
     let dragging_slot: Signal<Option<DraggingSlot>> = use_signal(|| None);
     let drop_target_tile: Signal<Option<DropTargetTile>> = use_signal(|| None);
     let drag_follower: Signal<Option<DragFollower>> = use_signal(|| None);

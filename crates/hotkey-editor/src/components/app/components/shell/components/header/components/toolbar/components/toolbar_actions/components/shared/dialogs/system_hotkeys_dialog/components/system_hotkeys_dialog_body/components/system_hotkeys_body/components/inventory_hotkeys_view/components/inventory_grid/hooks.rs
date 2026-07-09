@@ -3,7 +3,7 @@ use super::components::inventory_slot::components::inventory_filled_slot::Invent
 use super::props::InventoryGridProps;
 use super::{INVENTORY_COLUMNS, INVENTORY_ROWS, InventoryDragSource, SLOT_FRAME_GOLD};
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::WarcraftObjectId;
 
 /// The grid's shaped setup: the inline `--wc3-slot-frame` variable that feeds every
@@ -31,7 +31,7 @@ pub(super) fn use_inventory_grid(props: &InventoryGridProps) -> InventoryGridMod
             let entry_option = entries.get(slot_index).copied();
             let cell = entry_option.map(|entry| {
                 let section_key = entry.section_id();
-                let section_id = WarcraftObjectId::from(section_key);
+                let section_id = section_key;
                 InventoryFilledSlotProps {
                     slot_index,
                     section_id,

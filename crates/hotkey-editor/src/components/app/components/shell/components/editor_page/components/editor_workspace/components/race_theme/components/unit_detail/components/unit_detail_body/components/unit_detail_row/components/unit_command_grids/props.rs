@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::rc::Rc;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::GridSlotId;
 
 /// The unit's four command grids (command card, build menu, uprooted, research). Only
@@ -8,7 +8,7 @@ use warcraft_keybinds::GridSlotId;
 /// sourced from context by the component's hook.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCommandGridsProps {
-    pub unit_id: String,
+    pub unit_id: WarcraftObjectId,
     pub race: Race,
     pub command_card_slots: Rc<[GridSlotId]>,
     pub build_menu_slots: Option<Rc<[GridSlotId]>>,

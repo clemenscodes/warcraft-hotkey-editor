@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use warcraft_database::SystemHotkeysCategory;
+use warcraft_api::SystemHotkeysCategory;
 
 /// The breadcrumbs' only input: the active category signal it reads and its tabs
 /// write.

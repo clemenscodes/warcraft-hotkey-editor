@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashMap;
-use warcraft_api::Race;
+use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::GridSlotId;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::shared::alt_position_picker_body::components::alt_position_picker_explainer::AltPositionPickerExplainerProps;
@@ -32,7 +32,7 @@ pub(super) fn use_upgrade_position_picker(
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability(upgrade_unit_id)));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
-    let picker_tier_overrides = use_signal::<HashMap<String, usize>>(HashMap::new);
+    let picker_tier_overrides = use_signal::<HashMap<WarcraftObjectId, usize>>(HashMap::new);
     let update_hotkeys_on_move = use_signal(|| true);
     let hotkey_assign_request = use_signal(|| false);
     let dialog_title = format!("Position: {} (upgraded)", props.display_name);
@@ -54,7 +54,7 @@ pub(super) fn use_upgrade_position_picker(
         hotkey_assign_request,
         prevent_swap_on_drop: true,
         restrict_draggable_to: restrict_draggable,
-        host_unit_id: String::new(),
+        host_unit_id: WarcraftObjectId::default(),
     };
     UpgradePositionPickerModel {
         open,
