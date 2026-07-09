@@ -20,8 +20,8 @@ function unitCardById(page: any, unitId: string) {
 async function browseNeutralCampaign(page: any) {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
-  await page.locator('.race-tab[data-race="neutral"]').click();
-  await page.locator('.race-tab[data-race="neutral"][data-active="true"]').waitFor();
+  await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
+  await page.locator('.race-tabs .neutral-race-tab .active-race-tab').waitFor();
   const campaign = page.getByRole("button", { name: "Campaign" });
   await campaign.click();
   await expect(campaign).toHaveAttribute("data-active", "true");

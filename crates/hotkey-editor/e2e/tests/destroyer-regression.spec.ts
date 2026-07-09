@@ -39,7 +39,7 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
   test("Destroyer command card row 2 follows abilList priority after cascade", async ({
     page,
   }) => {
-    await page.locator('.race-tab[data-race="undead"]').click();
+    await page.locator('.race-tabs [class*="undead-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ubsp");
     await page.locator(".unit-card").filter({ hasText: "Destroyer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Destroyer" }).click();

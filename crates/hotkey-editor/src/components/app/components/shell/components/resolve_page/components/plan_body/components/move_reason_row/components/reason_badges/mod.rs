@@ -1,6 +1,6 @@
-pub mod fight_badge;
-pub mod gap_pull_badge;
-pub mod reason_badge;
-pub mod spill_badge;
-pub mod stuck_badge;
-pub mod swap_badge;
+pub mod fight_reason_badge;
+pub mod gap_pull_reason_badge;
+pub mod shared;
+pub mod spill_reason_badge;
+pub mod stuck_reason_badge;
+pub mod swap_reason_badge;

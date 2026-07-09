@@ -1,4 +1,4 @@
-use tw_macro::{ClassList, tw};
+use tw_macro::tw;
 classes! {
     base: tw![
         "flex",
@@ -10,6 +10,3 @@ classes! {
         "[grid-area:combat]",
     ],
 }
-
-/// The rows stacked beside the column's icon.
-pub(super) const ROWS: ClassList = ClassList::new("flex flex-col gap-2 min-w-0 flex-[1_1_auto]");

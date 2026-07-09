@@ -62,7 +62,7 @@ test.describe("Drag and drop on command grid", () => {
     //   values must follow their respective abilities.
     await applyTemplateAndCascade(page);
 
-    await page.locator('.race-tab[data-race="neutral"]').click();
+    await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
     await page.locator('input[type="search"]').fill("nkog");
     await page.locator(".unit-card").filter({ hasText: "Kobold Geomancer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Kobold Geomancer" }).click();

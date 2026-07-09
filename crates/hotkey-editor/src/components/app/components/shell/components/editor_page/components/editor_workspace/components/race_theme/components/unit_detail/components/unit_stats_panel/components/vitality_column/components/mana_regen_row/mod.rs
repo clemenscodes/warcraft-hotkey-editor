@@ -1,10 +1,12 @@
+mod components;
 mod props;
 mod style;
 
-use super::super::super::shared::stat_figure::StatFigure;
+use super::shared::regen_label::RegenLabel;
+use components::mana_regen_gain::ManaRegenGain;
 use dioxus::prelude::*;
 pub use props::ManaRegenRowProps;
-use style::{CLASS, GAIN, LABEL};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(ManaRegenRow);
 
@@ -15,13 +17,11 @@ const LABEL_TEXT: &str = "Regeneration";
 #[component]
 pub fn ManaRegenRow(props: ManaRegenRowProps) -> Element {
     let value = props.value;
-    let is_muted = value.is_muted();
-    let text = value.display();
     rsx! {
         div {
             class: CLASS,
-            span { class: LABEL, {LABEL_TEXT} }
-            span { class: GAIN, "data-zero": is_muted, {text} }
+            RegenLabel { text: LABEL_TEXT }
+            ManaRegenGain { value }
         }
     }
 }

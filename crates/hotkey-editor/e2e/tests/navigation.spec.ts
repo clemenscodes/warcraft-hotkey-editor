@@ -9,7 +9,7 @@ test.describe("Navigation", () => {
   });
 
   test("switching to Orc race shows a unit named Grunt", async ({ page }) => {
-    await page.locator('.race-tab[data-race="orc"]').click();
+    await page.locator('.race-tabs [class*="orc-race-tab"]').click();
     await page.locator(".unit-card").filter({ hasText: "Grunt" }).waitFor();
   });
 

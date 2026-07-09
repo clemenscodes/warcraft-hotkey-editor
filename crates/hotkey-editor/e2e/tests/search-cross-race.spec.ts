@@ -72,22 +72,22 @@ test.describe("Search ignores race filter (#23)", () => {
   });
 
   test("searching a Human unit while Orc is selected still returns it", async ({ page }) => {
-    await page.locator('.race-tab[data-race="orc"]').click();
-    await page.locator('.race-tab[data-race="orc"][data-active="true"]').waitFor();
+    await page.locator('.race-tabs [class*="orc-race-tab"]').click();
+    await page.locator('.race-tabs .orc-race-tab .active-race-tab').waitFor();
     await page.locator('input[type="search"]').fill("Footman");
     await page.locator(".unit-card").filter({ hasText: "Footman" }).waitFor();
   });
 
   test("searching an Orc unit while Night Elf is selected still returns it", async ({ page }) => {
-    await page.locator('.race-tab[data-race="nightelf"]').click();
-    await page.locator('.race-tab[data-race="nightelf"][data-active="true"]').waitFor();
+    await page.locator('.race-tabs [class*="nightelf-race-tab"]').click();
+    await page.locator('.race-tabs .nightelf-race-tab .active-race-tab').waitFor();
     await page.locator('input[type="search"]').fill("Grunt");
     await page.locator(".unit-card").filter({ hasText: "Grunt" }).first().waitFor();
   });
 
   test("clearing the query restores the race-filtered list", async ({ page }) => {
-    await page.locator('.race-tab[data-race="orc"]').click();
-    await page.locator('.race-tab[data-race="orc"][data-active="true"]').waitFor();
+    await page.locator('.race-tabs [class*="orc-race-tab"]').click();
+    await page.locator('.race-tabs .orc-race-tab .active-race-tab').waitFor();
     const orcCount = await page.locator(".unit-card").count();
 
     await page.locator('input[type="search"]').fill("Footman");
@@ -110,8 +110,8 @@ test.describe("Search ignores race filter (#23)", () => {
   });
 
   test("searching 'Footman' while Undead is selected returns results from Human race", async ({ page }) => {
-    await page.locator('.race-tab[data-race="undead"]').click();
-    await page.locator('.race-tab[data-race="undead"][data-active="true"]').waitFor();
+    await page.locator('.race-tabs [class*="undead-race-tab"]').click();
+    await page.locator('.race-tabs .undead-race-tab .active-race-tab').waitFor();
     await page.locator('input[type="search"]').fill("Footman");
     await page.locator(".unit-card").filter({ hasText: "Footman" }).first().waitFor();
     const count = await page.locator(".unit-card").count();

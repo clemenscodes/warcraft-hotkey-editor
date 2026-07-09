@@ -21,6 +21,6 @@ test("after switching to Orc race the URL contains 'orc'", async ({ page }) => {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
 
-  await page.locator('.race-tab[data-race="orc"]').click();
+  await page.locator('.race-tabs [class*="orc-race-tab"]').click();
   await page.waitForURL(/orc/);
 });

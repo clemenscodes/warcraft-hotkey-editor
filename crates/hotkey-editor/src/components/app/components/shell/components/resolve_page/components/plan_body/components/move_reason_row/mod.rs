@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
-use components::reason_badges::fight_badge::FightBadge;
-use components::reason_badges::gap_pull_badge::GapPullBadge;
-use components::reason_badges::spill_badge::SpillBadge;
-use components::reason_badges::stuck_badge::StuckBadge;
-use components::reason_badges::swap_badge::SwapBadge;
+use components::reason_badges::fight_reason_badge::FightReasonBadge;
+use components::reason_badges::gap_pull_reason_badge::GapPullReasonBadge;
+use components::reason_badges::spill_reason_badge::SpillReasonBadge;
+use components::reason_badges::stuck_reason_badge::StuckReasonBadge;
+use components::reason_badges::swap_reason_badge::SwapReasonBadge;
 use dioxus::prelude::*;
 pub use props::MoveReasonRowProps;
 use style::CLASS;
@@ -24,11 +24,11 @@ pub fn MoveReasonRow(props: MoveReasonRowProps) -> Element {
             class: CLASS,
             {
                 match kind {
-                    ReasonKind::Fight => rsx! { FightBadge { label } },
-                    ReasonKind::GapPull => rsx! { GapPullBadge { label } },
-                    ReasonKind::Spill => rsx! { SpillBadge { label } },
-                    ReasonKind::Swap => rsx! { SwapBadge { label } },
-                    ReasonKind::Stuck => rsx! { StuckBadge { label } },
+                    ReasonKind::Fight => rsx! { FightReasonBadge { label } },
+                    ReasonKind::GapPull => rsx! { GapPullReasonBadge { label } },
+                    ReasonKind::Spill => rsx! { SpillReasonBadge { label } },
+                    ReasonKind::Swap => rsx! { SwapReasonBadge { label } },
+                    ReasonKind::Stuck => rsx! { StuckReasonBadge { label } },
                 }
             }
         }

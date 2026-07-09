@@ -53,9 +53,9 @@ async function pickUnit(
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
   }
-  await page.locator(`.race-tab[data-race="${options.race}"]`).click();
+  await page.locator(`.race-tabs [class*="${options.race}-race-tab"]`).click();
   await page
-    .locator(`.race-tab[data-race="${options.race}"][data-active="true"]`)
+    .locator(`.race-tabs .${options.race}-race-tab .active-race-tab`)
     .waitFor();
   await page.locator('input[type="search"]').fill(options.query);
   const card = page.locator(".unit-card").filter({ hasText: options.cardText });

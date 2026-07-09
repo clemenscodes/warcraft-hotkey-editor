@@ -2,7 +2,8 @@ use dioxus::prelude::*;
 use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::ModeAndRaceTabs;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::RaceTabs;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::components::race_tab::RaceTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::components::human_race_tab::HumanRaceTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::mode_and_race_tabs::components::race_tabs::components::orc_race_tab::OrcRaceTab;
 use warcraft_api::Race;
 use warcraft_database::UnitMode;
 use warcraft_keybinds::GridSlotId;
@@ -22,8 +23,8 @@ pub fn stories() -> Vec<Story> {
             mode_and_race_tabs_campaign_orc,
         ),
         Story::single("Tabs", "RaceTabs", race_tabs_human_active),
-        Story::new("Tabs", "RaceTab", "Human active", race_tab_human_active),
-        Story::new("Tabs", "RaceTab", "Orc inactive", race_tab_orc_inactive),
+        Story::new("Tabs", "HumanRaceTab", "Active", human_race_tab_active),
+        Story::new("Tabs", "OrcRaceTab", "Inactive", orc_race_tab_inactive),
     ]
 }
 
@@ -72,17 +73,13 @@ fn race_tabs_human_active() -> Element {
     }
 }
 
-fn race_tab_human_active() -> Element {
-    let race = Race::Human;
-    let is_active = true;
+fn human_race_tab_active() -> Element {
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        RaceTab {
-            race,
-            is_active,
+        HumanRaceTab {
             active_race,
             unit_mode,
             selected_unit_id,
@@ -91,17 +88,13 @@ fn race_tab_human_active() -> Element {
     }
 }
 
-fn race_tab_orc_inactive() -> Element {
-    let race = Race::Orc;
-    let is_active = false;
+fn orc_race_tab_inactive() -> Element {
     let active_race = use_signal(|| Race::Human);
     let unit_mode = use_signal(|| UnitMode::Melee);
     let selected_unit_id = use_signal(|| None::<String>);
     let selected_slot = use_signal(|| None::<GridSlotId>);
     rsx! {
-        RaceTab {
-            race,
-            is_active,
+        OrcRaceTab {
             active_race,
             unit_mode,
             selected_unit_id,

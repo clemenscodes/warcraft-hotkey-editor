@@ -35,7 +35,7 @@ test.describe("Gargoyle regression: Prioritize renders at (1,1) after cascade", 
   test("Gargoyle command card shows Prioritize at (1,1) after cascade", async ({
     page,
   }) => {
-    await page.locator('.race-tab[data-race="undead"]').click();
+    await page.locator('.race-tabs [class*="undead-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ugar");
     const gargoyle = page.locator(".unit-card").filter({ hasText: "ugar" });
     await gargoyle.waitFor();

@@ -23,11 +23,11 @@ test.describe("Editor selection history (back/forward)", () => {
   }) => {
     await expect(page).toHaveURL(/race=human/);
 
-    await page.locator('.race-tab[data-race="orc"]').click();
+    await page.locator('.race-tabs [class*="orc-race-tab"]').click();
     await expect(page).toHaveURL(/race=orc/);
     await page.locator(".unit-card").filter({ hasText: "Grunt" }).first().waitFor();
 
-    await page.locator('.race-tab[data-race="undead"]').click();
+    await page.locator('.race-tabs [class*="undead-race-tab"]').click();
     await expect(page).toHaveURL(/race=undead/);
 
     await page.goBack();

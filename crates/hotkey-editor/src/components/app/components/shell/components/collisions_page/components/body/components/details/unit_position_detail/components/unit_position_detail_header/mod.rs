@@ -1,10 +1,9 @@
-mod components;
 mod props;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnit;
-use components::unit_position_conflict_meta::{
-    UnitPositionConflictMeta, UnitPositionConflictMetaProps,
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_meta::{
+    ConflictMeta, ConflictMetaProps,
 };
 use dioxus::prelude::*;
 pub use props::UnitPositionDetailHeaderProps;
@@ -16,13 +15,13 @@ assert_component!(UnitPositionDetailHeader);
 /// beside its text meta column.
 #[component]
 pub fn UnitPositionDetailHeader(props: UnitPositionDetailHeaderProps) -> Element {
-    let meta = UnitPositionConflictMetaProps::from(&props);
+    let meta = ConflictMetaProps::from(&props);
     let unit = props.unit;
     rsx! {
         header {
             class: CLASS,
             ConflictDetailUnit { ..unit }
-            UnitPositionConflictMeta { ..meta }
+            ConflictMeta { ..meta }
         }
     }
 }

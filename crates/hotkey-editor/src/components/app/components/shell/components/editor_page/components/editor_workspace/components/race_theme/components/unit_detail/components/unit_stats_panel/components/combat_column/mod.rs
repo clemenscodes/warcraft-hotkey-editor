@@ -4,23 +4,17 @@ mod props;
 mod style;
 
 use super::shared::stat_icon_frame::StatIconFrame;
-use components::attack_speed_row::AttackSpeedRow;
-use components::attack_type_row::AttackTypeRow;
-use components::damage_matchup_row::DamageMatchupRow;
-use components::damage_per_second_row::DamagePerSecondRow;
-use components::damage_row::DamageRow;
-use components::range_row::RangeRow;
+use components::combat_rows::{CombatRows, CombatRowsProps};
 use dioxus::prelude::*;
 use logic::CombatFigures;
 pub use props::CombatColumnProps;
-use style::{CLASS, ROWS};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(CombatColumn);
 
-/// The combat column: the attack-type icon beside the damage/range/speed rows and the
-/// damage matchup grid, laid into the `combat` grid area. Present only when the unit
-/// has an attack; a unit that cannot attack renders nothing here. It names its rows
-/// directly — each row owns its own look.
+/// The combat column: the attack-type icon beside its stat rows and matchup grid, laid
+/// into the `combat` grid area. Present only when the unit has an attack; a unit that
+/// cannot attack renders nothing here.
 #[component]
 pub fn CombatColumn(props: CombatColumnProps) -> Element {
     let Some(attack) = props.attack else {
@@ -34,19 +28,18 @@ pub fn CombatColumn(props: CombatColumnProps) -> Element {
         damage_per_second,
         attack_type,
     } = CombatFigures::from(&attack);
+    let rows = CombatRowsProps {
+        damage,
+        range,
+        speed,
+        damage_per_second,
+        attack_type,
+    };
     rsx! {
         div {
             class: CLASS,
             StatIconFrame { ..icon }
-            div {
-                class: ROWS,
-                DamageRow { value: damage }
-                RangeRow { value: range }
-                AttackSpeedRow { value: speed }
-                DamagePerSecondRow { value: damage_per_second }
-                AttackTypeRow { value: attack_type }
-                DamageMatchupRow { attack_type }
-            }
+            CombatRows { ..rows }
         }
     }
 }

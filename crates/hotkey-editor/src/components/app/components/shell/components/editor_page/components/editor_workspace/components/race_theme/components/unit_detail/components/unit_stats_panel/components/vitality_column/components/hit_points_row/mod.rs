@@ -1,10 +1,12 @@
+mod components;
 mod props;
 mod style;
 
-use super::super::super::shared::stat_figure::StatFigure;
+use super::super::super::shared::stat_label::StatLabel;
+use components::hit_points_value::HitPointsValue;
 use dioxus::prelude::*;
 pub use props::HitPointsRowProps;
-use style::{CLASS, LABEL, VALUE};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(HitPointsRow);
 
@@ -16,12 +18,11 @@ const LABEL_TEXT: &str = "Hit Points";
 #[component]
 pub fn HitPointsRow(props: HitPointsRowProps) -> Element {
     let value = props.value;
-    let text = value.display();
     rsx! {
         div {
             class: CLASS,
-            span { class: LABEL, {LABEL_TEXT} }
-            span { class: VALUE, {text} }
+            StatLabel { text: LABEL_TEXT }
+            HitPointsValue { value }
         }
     }
 }

@@ -1,12 +1,15 @@
+mod components;
 mod logic;
 mod props;
 mod style;
 
 use super::super::super::shared::regen_qualifier::RegenQualifier;
+use super::shared::regen_label::RegenLabel;
+use components::hit_points_regen_gain::HitPointsRegenGain;
 use dioxus::prelude::*;
 use logic::HitPointsRegenPresentation;
 pub use props::HitPointsRegenRowProps;
-use style::{CLASS, GAIN, LABEL};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(HitPointsRegenRow);
 
@@ -26,9 +29,12 @@ pub fn HitPointsRegenRow(props: HitPointsRegenRowProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            span { class: LABEL, {LABEL_TEXT} }
+            RegenLabel { text: LABEL_TEXT }
             RegenQualifier { text: qualifier }
-            span { class: GAIN, "data-zero": gain_muted, {gain_text} }
+            HitPointsRegenGain {
+                text: gain_text,
+                is_muted: gain_muted,
+            }
         }
     }
 }

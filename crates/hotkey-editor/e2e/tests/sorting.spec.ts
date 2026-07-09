@@ -36,8 +36,8 @@ test.describe("Category sort order (#26)", () => {
 
   test("Buildings section appears before Units section for all races", async ({ page }) => {
     for (const race of ["orc", "nightelf", "undead"]) {
-      await page.locator(`.race-tab[data-race="${race}"]`).click();
-      await page.locator(`.race-tab[data-race="${race}"][data-active="true"]`).waitFor();
+      await page.locator(`.race-tabs [class*="${race}-race-tab"]`).click();
+      await page.locator(`.race-tabs .${race}-race-tab .active-race-tab`).waitFor();
       const kinds = await headingKinds(page);
       const buildingIdx = kinds.indexOf("building");
       const soldierIdx = kinds.indexOf("soldier");
@@ -50,8 +50,8 @@ test.describe("Category sort order (#26)", () => {
   test("full category order is Heroes > Buildings > Workers > Units for all races", async ({ page }) => {
     for (const race of ["human", "orc", "nightelf", "undead"]) {
       if (race !== "human") {
-        await page.locator(`.race-tab[data-race="${race}"]`).click();
-        await page.locator(`.race-tab[data-race="${race}"][data-active="true"]`).waitFor();
+        await page.locator(`.race-tabs [class*="${race}-race-tab"]`).click();
+        await page.locator(`.race-tabs .${race}-race-tab .active-race-tab`).waitFor();
       }
       assertKindOrder(await headingKinds(page));
     }

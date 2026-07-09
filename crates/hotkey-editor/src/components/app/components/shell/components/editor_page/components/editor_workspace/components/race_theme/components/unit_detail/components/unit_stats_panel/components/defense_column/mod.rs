@@ -4,22 +4,17 @@ mod props;
 mod style;
 
 use super::shared::stat_icon_frame::StatIconFrame;
-use components::armor_row::ArmorRow;
-use components::defense_matchup_row::DefenseMatchupRow;
-use components::defense_type_row::DefenseTypeRow;
-use components::effective_hit_points_row::EffectiveHitPointsRow;
-use components::evasion_row::EvasionRow;
+use components::defense_rows::{DefenseRows, DefenseRowsProps};
 use dioxus::prelude::*;
 use logic::DefenseFigures;
 pub use props::DefenseColumnProps;
-use style::{CLASS, ROWS};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(DefenseColumn);
 
-/// The defense column: the defense-type icon beside the armor/defense-type/effective
-/// hit points rows, the guarded evasion row, and the defender's matchup grid, laid
-/// into the `defense` grid area. Always present; every unit has defense figures. It
-/// names its rows directly — each row owns its own look.
+/// The defense column: the defense-type icon beside its stat rows and the defender's
+/// matchup grid, laid into the `defense` grid area. Always present; every unit has
+/// defense figures.
 #[component]
 pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
     let DefenseFigures {
@@ -29,18 +24,17 @@ pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
         effective_hit_points,
         evasion,
     } = DefenseFigures::from(&props);
+    let rows = DefenseRowsProps {
+        armor,
+        defense_type,
+        effective_hit_points,
+        evasion,
+    };
     rsx! {
         div {
             class: CLASS,
             StatIconFrame { ..defense_icon }
-            div {
-                class: ROWS,
-                ArmorRow { value: armor }
-                DefenseTypeRow { value: defense_type }
-                EffectiveHitPointsRow { value: effective_hit_points }
-                EvasionRow { value: evasion }
-                DefenseMatchupRow { defense_type }
-            }
+            DefenseRows { ..rows }
         }
     }
 }

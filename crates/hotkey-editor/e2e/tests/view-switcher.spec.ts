@@ -168,7 +168,7 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
   }) => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
-    await page.locator('.race-tab[data-race="orc"]').click();
+    await page.locator('.race-tabs [class*="orc-race-tab"]').click();
     await page.waitForURL(/race=orc/);
     // Switching to collisions does not carry the editor's race in the URL — that is
     // the editor's state, not the collisions page's. It is preserved in memory.

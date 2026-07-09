@@ -1,10 +1,11 @@
-mod components;
 mod logic;
 mod props;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
-use components::hotkey_conflict_panel::{HotkeyConflictPanel, HotkeyConflictPanelProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_panel::{
+    ConflictPanel, ConflictPanelProps,
+};
 use dioxus::prelude::*;
 pub use props::HotkeyConflictCardProps;
 use style::CONFLICT_CARD;
@@ -17,7 +18,7 @@ assert_component!(HotkeyConflictCard);
 #[component]
 pub fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
     let model = ConflictCardModel::from(&props);
-    let panel = HotkeyConflictPanelProps {
+    let panel = ConflictPanelProps {
         caption: model.caption,
         pair_row: model.pair_row,
         multi_stack: model.multi_stack,
@@ -25,7 +26,7 @@ pub fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
     rsx! {
         div {
             class: CONFLICT_CARD,
-            HotkeyConflictPanel { ..panel }
+            ConflictPanel { ..panel }
         }
     }
 }

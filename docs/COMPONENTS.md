@@ -260,6 +260,119 @@ do not rationalize one, and do not believe any claim that a header, dialog, or
 toolbar is "100% compliant" until you have run the `super::` test on every
 `mod.rs` yourself.
 
+## Reuse a look ONLY by composing the component that owns it — NEVER by sharing its styles
+
+**Think graffiti: layer on layer on layer, always adding on top.** You never scrape
+paint off someone else's wall to reuse it — you tag *over* it. Every richer look is
+the base look with another layer stacked on top, by composition. That is the whole
+model; the rest of this section is just spelling out that you may not cheat it.
+
+This ranks with the render-tree rule for how often it is broken and how much it
+costs. Read it, then read it again. It is not negotiable, and there is no clever
+exception. If your change reuses a look by making one component's styles reachable
+from another, it is **reverted, not patched.**
+
+**A component's styles belong to it alone and are unreachable from anywhere else —
+by construction, enforced by the compiler.** Every component's `classes!` emits its
+`CLASS` into a **private `mod style`** that is never re-exported. Because the module
+is private, no other module in the crate can even *name*
+`…::that_component::style::…`. `ClassList` has no `Display`, no getter, no way to
+read the string back out. This is the entire reason the styling engine exists:
+**cross-component style coupling is made impossible to express.** Every rule here is
+about never re-opening that hole.
+
+**FORBIDDEN — each of these makes a component's styles nameable from outside, and
+each is an instant, non-negotiable reject:**
+
+- a shared `const CHROME: &[TailwindClass] = tw![…]` (in a `chrome.rs`, a `shared/`
+  file, a `data.rs`, *anywhere*) that two or more components pull in. **This is a
+  hand-written `@apply`** — the exact CSS-spaghetti coupling this project was built
+  to destroy. "But it's just the shared chrome / pill / banner" *is* the violation,
+  verbatim. There is no shared style bag.
+- **any visibility on a style item wider than the private module**: `pub`,
+  `pub(crate)`, or `pub(super)` on a style `const`, on `mod style`, or on a band
+  array. Styles never leave the private module. If you typed `pub` anywhere near a
+  class list, you are wrong.
+- **re-exporting styles**: `pub use style::CHROME;`, `pub(crate) use style::BASE;` —
+  lifting a style onto a nameable path is the same leak wearing a different hat.
+- **`classes! { extends: <another component's style> }`** — inheriting another
+  component's class list *is* sharing a look. Composition, below, is the only
+  sanctioned reuse; `extends` across components is banned.
+- **a `ClassList` or a class string as a prop, a struct field, or a return value.**
+
+**The ONE sanctioned way to reuse a look: render the component that owns it.** A
+shared look is a shared **component**, reused by **composition** — you nest it in
+your render tree by name. This is a direct corollary of "The render tree IS the
+directory tree": the look lives in exactly one component, in exactly one place, and
+everyone who wants it *renders it*.
+
+### The base is the most-nested leaf; a richer variant COMPOSES it and adds on top
+
+Turn the reuse around in your head until it clicks: the component that **owns a look
+is the base**, so the base is the **most-nested leaf** — a plain component with a
+private `mod style` that **nobody extends, because nobody can.** A variant that wants
+"the base, plus an accent" does **not** reach into the base and does **not** inherit
+its classes. It **renders the base and adds its own extra parts on top** — an overlay
+child, and/or a CSS custom property it sets on its *own* root that the base's
+descendants read. Because the variant renders the base, the base nests *under* the
+variant — exactly what the render-tree rule demands. **Base = deepest. Extension =
+wraps it.** Never the reverse.
+
+```
+race_tab_state/                dispatcher — the clean switch: `if active { ActiveRaceTab } else { InactiveRaceTab }`
+  components/
+    active_race_tab/           the EXTENSION — renders the base and adds the accent ON TOP
+      mod.rs
+      style.rs                 its OWN root only: `relative`, `[--label-color:var(--race-accent)]`
+      components/
+        active_accent/         the accent overlay ring — its own leaf, added on top
+    inactive_race_tab/         a semantic wrapper — renders the base and adds nothing
+    shared/
+      race_tab/                THE BASE — the most-nested leaf. Its `mod style` is private,
+        components/              never re-exported, extended by NOBODY. The look lives here, once.
+          race_tab_label/      reads `--label-color` (white by default)
+```
+
+```rust
+// active_race_tab/mod.rs — extend by COMPOSING: render the base, stack your extra on top.
+//                          You never see, name, or touch the base's classes.
+#[component]
+pub fn ActiveRaceTab(props: ActiveRaceTabProps) -> Element {
+    let base = RaceTabProps::from(&props);
+    rsx! {
+        div {
+            class: CLASS,          // this variant's own root — sets --label-color: var(--race-accent)
+            RaceTab { ..base }     // the base COMPONENT, rendered by name — its look reused, its classes untouched
+            ActiveAccent {}        // the extra, added on top as an overlay child
+        }
+    }
+}
+```
+
+```rust
+// inactive_race_tab/mod.rs — a named alias, for semantic clarity: renders the base, adds nothing.
+#[component]
+pub fn InactiveRaceTab(props: InactiveRaceTabProps) -> Element {
+    let base = RaceTabProps::from(&props);
+    rsx! {
+        RaceTab { ..base }
+    }
+}
+```
+
+The per-variant flavor that differs by *data* — each race's accent colour, banner
+image, label text — is not baked into these look-components either. It arrives as the
+`--race-color` / `--race-accent` / `--banner-image` custom properties and the label
+prop that a thin per-race wrapper publishes, so the base and the variants stay
+race-agnostic and every race reuses them by composition too.
+
+**The mechanical test.** After any look-reuse, grep your change: a
+`pub`/`pub(crate)`/`pub(super)` on a style item, a `const … : &[TailwindClass]`
+shared across components, a `pub use style::…`, an `extends:` pulling another
+component's classes, a `ClassList` prop — **any hit means you shared styles instead
+of composing a component.** Delete it, and render the component that owns the look
+instead. That is the only way, every time.
+
 ## Logic composes through hooks, the way markup composes through components
 
 Domain logic, `localStorage`, and web APIs are reached only through hooks, never

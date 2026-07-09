@@ -15,8 +15,8 @@ async function visibleUnitIds(page: any): Promise<string[]> {
 async function browseRace(page: any, race: string) {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
-  await page.locator(`.race-tab[data-race="${race}"]`).click();
-  await page.locator(`.race-tab[data-race="${race}"][data-active="true"]`).waitFor();
+  await page.locator(`.race-tabs [class*="${race}-race-tab"]`).click();
+  await page.locator(`.race-tabs .${race}-race-tab .active-race-tab`).waitFor();
 }
 
 test.describe("Variant unit dedup (#27 upgrade-swaps + #28 tiers)", () => {

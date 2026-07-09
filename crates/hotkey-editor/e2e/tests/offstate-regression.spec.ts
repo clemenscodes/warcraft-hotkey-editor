@@ -41,7 +41,7 @@ test.describe("Off-state regression: Healing Wave drag after cascade", () => {
   test("Healing Wave can be dragged to the Y cell without off-state blocking", async ({
     page,
   }) => {
-    await page.locator('.race-tab[data-race="neutral"]').click();
+    await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ndrs");
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).waitFor();
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).click();

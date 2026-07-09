@@ -1,11 +1,10 @@
-mod components;
 mod logic;
 mod props;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
-use components::unit_position_conflict_panel::{
-    UnitPositionConflictPanel, UnitPositionConflictPanelProps,
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_panel::{
+    ConflictPanel, ConflictPanelProps,
 };
 use dioxus::prelude::*;
 pub use props::UnitPositionConflictCardProps;
@@ -19,7 +18,7 @@ assert_component!(UnitPositionConflictCard);
 #[component]
 pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
     let model = ConflictCardModel::from(&props);
-    let panel = UnitPositionConflictPanelProps {
+    let panel = ConflictPanelProps {
         caption: model.caption,
         pair_row: model.pair_row,
         multi_stack: model.multi_stack,
@@ -27,7 +26,7 @@ pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element
     rsx! {
         div {
             class: CONFLICT_CARD,
-            UnitPositionConflictPanel { ..panel }
+            ConflictPanel { ..panel }
         }
     }
 }

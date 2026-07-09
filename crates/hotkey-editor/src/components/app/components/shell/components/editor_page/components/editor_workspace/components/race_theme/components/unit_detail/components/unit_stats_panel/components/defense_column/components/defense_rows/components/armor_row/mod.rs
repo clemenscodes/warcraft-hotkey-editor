@@ -1,0 +1,25 @@
+mod props;
+mod style;
+
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_label::StatLabel;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
+use dioxus::prelude::*;
+pub use props::ArmorRowProps;
+use style::CLASS;
+use tw_macro::assert_component;
+assert_component!(ArmorRow);
+
+const LABEL_TEXT: &str = "Armor";
+
+/// The unit's armor value.
+#[component]
+pub fn ArmorRow(props: ArmorRowProps) -> Element {
+    let value = props.value;
+    rsx! {
+        div {
+            class: CLASS,
+            StatLabel { text: LABEL_TEXT }
+            StatValue { value }
+        }
+    }
+}
