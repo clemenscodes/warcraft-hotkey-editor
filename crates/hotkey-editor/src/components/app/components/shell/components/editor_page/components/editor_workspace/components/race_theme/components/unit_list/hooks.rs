@@ -1,8 +1,10 @@
 use super::logic::CatalogListingInputs;
-use super::props::{SearchKeydownInputs, UnitListInputs, UnitListModel, UnitListProps};
+use super::props::{SearchKeydownInputs, UnitListInputs, UnitListModel};
 use super::state::UnitListState;
+use crate::services::editor_state::context::use_editor_state;
 use crate::services::focus::context::use_focus_coordinator;
 use crate::services::focus::coordinator::FocusTarget;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use std::time::Duration;
 use warcraft_api::{CatalogVisibility, SearchField};
@@ -66,8 +68,7 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
         raw_query,
         on_clear,
         focus,
-        first_result_id,
-        first_result_kind,
+        first_result,
         mut selected_unit_id,
         mut selected_slot,
         mut active_category,
@@ -84,10 +85,10 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
                 }
             }
             "Enter" => {
-                if let (Some(unit_id), Some(unit_kind)) = (first_result_id, first_result_kind) {
-                    selected_unit_id.set(Some(unit_id));
+                if let Some(first_result) = first_result {
+                    selected_unit_id.set(Some(first_result.id()));
                     selected_slot.set(None);
-                    active_category.set(unit_kind);
+                    active_category.set(first_result.kind());
                     focus.request(FocusTarget::UnitCard);
                 }
             }
@@ -96,30 +97,28 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
     })
 }
 
-/// Reads the list's signals, runs the debounced search, computes the derived
-/// catalog state, and shapes every child's props so the body stays pure RSX.
+/// Reads the list's signals from context, runs the debounced search, computes the
+/// derived catalog state, and shapes every child's props so the body stays pure RSX.
 ///
-/// The catalog walk itself (`UnitListing::resolve`) is memoized on the race,
-/// mode, committed query, search field, and visibility — the values it
-/// actually depends on — so it does not re-run on unrelated re-renders such as
-/// a unit selection.
-pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
-    let active_race = props.active_race;
-    let unit_mode = props.unit_mode;
-    let selected_unit_id = props.selected_unit_id;
-    let selected_slot = props.selected_slot;
-    let search_query = props.search_query;
-    let search_field = props.search_field;
-    let show_abilityless_units = props.show_abilityless_units;
-    let expand_variants = props.expand_variants;
-    let collapsed_categories = props.collapsed_categories;
-    let race = *active_race.read();
-    let mode = *unit_mode.read();
+/// The catalog walk itself (`UnitListing::resolve`) is memoized on the race, mode,
+/// committed query, search field, and visibility — the values it actually depends on —
+/// so it does not re-run on unrelated re-renders such as a unit selection.
+pub(super) fn use_unit_list() -> UnitListModel {
+    let navigation = use_view_navigation();
+    let editor = use_editor_state();
+    let active_race = navigation.active_race();
+    let unit_mode = navigation.unit_mode();
+    let selected_unit_id = navigation.selected_unit_id();
+    let search_query = navigation.search_query();
+    let selected_slot = editor.selected_slot();
+    let search_field = editor.search_field();
+    let show_abilityless_units = editor.show_abilityless_units();
+    let expand_variants = editor.expand_variants();
+    let active_category = editor.active_category();
     let committed_query = search_query.read().clone();
     let current_search_field = *search_field.read();
-    let show_abilityless_active = *show_abilityless_units.read();
-    let expand_variants_active = *expand_variants.read();
-    let visibility = CatalogVisibility::new(show_abilityless_active, expand_variants_active);
+    let active_kind = *active_category.read();
+    let search_active = !committed_query.is_empty();
     let search_placeholder = match current_search_field {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
@@ -144,17 +143,8 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
         inputs.into_listing()
     });
     let listing = listing_memo();
-    let state = UnitListState::new(
-        committed_query,
-        selected_unit_id,
-        collapsed_categories,
-        listing,
-    );
-    let active_category = state.active_category();
-    let active_kind = state.active_kind();
-    let search_active = state.search_active();
-    let first_result_id = state.first_result_id();
-    let first_result_kind = state.first_result_kind();
+    let state = UnitListState::new(listing);
+    let first_result = state.first_result();
     let raw_query = search.raw_query;
     let on_clear = search.on_clear;
     let on_input = search.on_input;
@@ -163,8 +153,7 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
         raw_query,
         on_clear,
         focus,
-        first_result_id,
-        first_result_kind,
+        first_result,
         selected_unit_id,
         selected_slot,
         active_category,
@@ -172,19 +161,8 @@ pub(super) fn use_unit_list(props: &UnitListProps) -> UnitListModel {
     let on_keydown = use_search_keydown(keydown_inputs);
     let inputs = UnitListInputs {
         state,
-        race,
-        mode,
-        current_search_field,
-        visibility,
-        selected_unit_id,
-        selected_slot,
-        collapsed_categories,
-        search_field,
-        show_abilityless_units,
-        expand_variants,
-        search_active,
         active_kind,
-        active_category,
+        search_active,
         raw_query,
         search_placeholder,
         on_input,

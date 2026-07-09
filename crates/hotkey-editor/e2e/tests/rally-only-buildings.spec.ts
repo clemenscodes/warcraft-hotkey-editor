@@ -24,7 +24,7 @@ async function browseNeutralCampaign(page: any) {
   await page.locator('.race-tabs .neutral-race-tab .active-race-tab').waitFor();
   const campaign = page.getByRole("button", { name: "Campaign" });
   await campaign.click();
-  await expect(campaign).toHaveAttribute("data-active", "true");
+  await expect(campaign).toHaveAttribute("aria-pressed", "true");
   await page.locator(".unit-card").first().waitFor();
 }
 
@@ -45,7 +45,7 @@ test.describe("Rally-only buildings are hidden by default", () => {
     await browseNeutralCampaign(page);
     const noAbilities = page.getByRole("button", { name: "No abilities" });
     await noAbilities.click();
-    await expect(noAbilities).toHaveAttribute("data-active", "true");
+    await expect(noAbilities).toHaveAttribute("aria-pressed", "true");
     for (const unitId of RALLY_ONLY_BUILDINGS) {
       await expect(
         unitCardById(page, unitId),

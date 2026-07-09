@@ -30,7 +30,6 @@ pub(super) fn selected(props: &IslandDetailProps) -> Option<IslandDetailData> {
         .iter()
         .map(|conflict| IslandConflictCardProps {
             conflict: conflict.clone(),
-            view_navigation: props.view_navigation,
         })
         .collect();
     let data = IslandDetailData {

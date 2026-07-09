@@ -1,12 +1,10 @@
 use crate::components::app::components::shell::components::collisions_page::logic::HotkeyUnitView;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 
-/// The hotkey-collision detail pane: the clashing units, the selected one, and the
-/// navigation context its links use.
+/// The hotkey-collision detail pane: the clashing units and the selected one. Its links
+/// read the navigation from context, so no navigation is threaded here.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyUnitDetailProps {
     pub units: Vec<HotkeyUnitView>,
     pub selected_unit: Signal<Option<String>>,
-    pub view_navigation: ViewNavigationContext,
 }

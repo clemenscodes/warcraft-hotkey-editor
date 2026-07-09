@@ -16,7 +16,6 @@ impl From<&UnitPositionConflictCardProps> for ConflictCardModel {
                 ability_id: ability.object_id(),
                 icon_url: ability.icon_url().map(str::to_owned),
                 unit_id: props.unit_id,
-                view_navigation: props.view_navigation,
             })
             .collect();
         let marker = ConflictMarker::Position { coordinate };

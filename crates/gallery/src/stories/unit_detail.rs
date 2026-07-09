@@ -347,27 +347,23 @@ fn unit_command_grids_footman() -> Element {
 }
 
 fn unit_detail_panel_footman() -> Element {
-    let selected_unit_id = use_signal(|| Some(fixtures::sample_unit_id()));
-    let active_race = use_signal(|| Race::Human);
+    let selected_unit_id = Some(fixtures::sample_unit_id());
     rsx! {
         EditorMount {
-            UnitDetail {
-                active_race,
-                selected_unit_id,
-            }
+            active_race: Race::Human,
+            selected_unit_id,
+            UnitDetail {}
         }
     }
 }
 
 fn unit_detail_panel_archmage() -> Element {
-    let selected_unit_id = use_signal(|| Some(fixtures::sample_hero_id()));
-    let active_race = use_signal(|| Race::Human);
+    let selected_unit_id = Some(fixtures::sample_hero_id());
     rsx! {
         EditorMount {
-            UnitDetail {
-                active_race,
-                selected_unit_id,
-            }
+            active_race: Race::Human,
+            selected_unit_id,
+            UnitDetail {}
         }
     }
 }

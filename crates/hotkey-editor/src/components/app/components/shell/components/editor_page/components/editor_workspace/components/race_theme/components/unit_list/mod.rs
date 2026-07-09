@@ -12,7 +12,6 @@ use components::unit_category_section::UnitCategorySection;
 use components::unit_list_search::UnitListSearch;
 use dioxus::prelude::*;
 use hooks::use_unit_list;
-pub use props::UnitListProps;
 use style::{CLASS, SCROLL, TABS, TRACK};
 use tw_macro::assert_component;
 use warcraft_api::UnitKind;
@@ -33,15 +32,15 @@ pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
 /// scrollable category sections. It owns its tab row, scroll region, and section
 /// track directly. Every child is fed by conversion from the composed hook.
 #[component]
-pub fn UnitList(props: UnitListProps) -> Element {
-    let model = use_unit_list(&props);
+pub fn UnitList() -> Element {
+    let model = use_unit_list();
     rsx! {
         aside {
             class: CLASS,
             "data-active-category": model.active_category_attr,
             "data-search-active": model.search_active,
-            SearchFieldToggle { ..model.search_field_toggle }
-            CatalogVisibilityToggle { ..model.catalog_visibility_toggle }
+            SearchFieldToggle {}
+            CatalogVisibilityToggle {}
             UnitListSearch { ..model.search }
             nav {
                 class: TABS,

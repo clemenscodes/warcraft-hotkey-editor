@@ -1,6 +1,5 @@
 use super::components::search_field_button::SearchFieldButtonProps;
 use super::data;
-use super::props::SearchFieldToggleProps;
 use dioxus::prelude::*;
 use warcraft_api::SearchField;
 
@@ -11,9 +10,9 @@ pub(super) struct SearchFieldToggleModel {
     pub(super) ability_button: SearchFieldButtonProps,
 }
 
-impl From<&SearchFieldToggleProps> for SearchFieldToggleModel {
-    fn from(props: &SearchFieldToggleProps) -> Self {
-        let mut search_field = props.search_field;
+impl From<Signal<SearchField>> for SearchFieldToggleModel {
+    fn from(search_field: Signal<SearchField>) -> Self {
+        let mut search_field = search_field;
         let current = *search_field.read();
         let select_unit = EventHandler::new(move |_event: MouseEvent| {
             search_field.set(SearchField::UnitName);

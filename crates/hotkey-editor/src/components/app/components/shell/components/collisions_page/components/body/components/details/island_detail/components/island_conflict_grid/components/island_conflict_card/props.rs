@@ -1,12 +1,10 @@
 use crate::components::app::components::shell::components::collisions_page::logic::ConflictView;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 
-/// One island conflict: the affected unit, its two clashing abilities, and the
-/// navigation context. Each ability owns and opens its own carriers dialog, so no
-/// open-signal is threaded through this card.
+/// One island conflict: the affected unit and its two clashing abilities. The affected
+/// unit and each ability read the navigation from context to deep-link, and each
+/// ability owns its own carriers dialog, so nothing is threaded through this card.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictCardProps {
     pub conflict: ConflictView,
-    pub view_navigation: ViewNavigationContext,
 }

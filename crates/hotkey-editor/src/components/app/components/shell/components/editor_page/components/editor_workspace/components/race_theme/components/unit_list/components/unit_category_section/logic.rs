@@ -1,15 +1,25 @@
 use super::components::unit_category_heading::UnitCategoryHeadingProps;
-use super::props::UnitCategorySectionProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::unit_kind_data_attr;
 use dioxus::prelude::*;
+use std::collections::HashSet;
+use warcraft_api::{UnitKind, UnitKindHelpers};
 
-impl From<&UnitCategorySectionProps> for UnitCategoryHeadingProps {
-    fn from(props: &UnitCategorySectionProps) -> Self {
-        let label = props.category_label.clone();
-        let kind_attr = unit_kind_data_attr(props.category_kind);
-        let is_collapsed = props.is_collapsed;
-        let category_kind = props.category_kind;
-        let mut collapsed_categories = props.collapsed_categories;
+/// The heading's inputs: which category it heads, whether it is collapsed, and the
+/// collapsed-set signal its toggle flips. The section reads the collapsed set from
+/// context and hands these to the heading builder.
+pub(super) struct UnitCategoryHeadingInputs {
+    pub(super) category_kind: UnitKind,
+    pub(super) is_collapsed: bool,
+    pub(super) collapsed_categories: Signal<HashSet<UnitKind>>,
+}
+
+impl From<UnitCategoryHeadingInputs> for UnitCategoryHeadingProps {
+    fn from(inputs: UnitCategoryHeadingInputs) -> Self {
+        let category_kind = inputs.category_kind;
+        let label = UnitKindHelpers::category_label(category_kind).to_owned();
+        let kind_attr = unit_kind_data_attr(category_kind);
+        let is_collapsed = inputs.is_collapsed;
+        let mut collapsed_categories = inputs.collapsed_categories;
         let on_toggle = EventHandler::new(move |_event: MouseEvent| {
             let mut categories = collapsed_categories.write();
             if categories.contains(&category_kind) {

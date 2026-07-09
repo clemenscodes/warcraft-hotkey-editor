@@ -1,6 +1,12 @@
 use super::components::catalog_visibility_button::CatalogVisibilityButtonProps;
-use super::props::CatalogVisibilityToggleProps;
 use dioxus::prelude::*;
+
+/// The two visibility signals the toggle reads and flips, read from editor context by
+/// the component and handed to the model builder.
+pub(super) struct CatalogVisibilitySignals {
+    pub(super) show_abilityless_units: Signal<bool>,
+    pub(super) expand_variants: Signal<bool>,
+}
 
 /// The two catalog-visibility options, each finished with its on/off state and
 /// flip handler.
@@ -9,10 +15,10 @@ pub(super) struct CatalogVisibilityToggleModel {
     pub(super) variants_button: CatalogVisibilityButtonProps,
 }
 
-impl From<&CatalogVisibilityToggleProps> for CatalogVisibilityToggleModel {
-    fn from(props: &CatalogVisibilityToggleProps) -> Self {
-        let mut show_abilityless_units = props.show_abilityless_units;
-        let mut expand_variants = props.expand_variants;
+impl From<CatalogVisibilitySignals> for CatalogVisibilityToggleModel {
+    fn from(signals: CatalogVisibilitySignals) -> Self {
+        let mut show_abilityless_units = signals.show_abilityless_units;
+        let mut expand_variants = signals.expand_variants;
         let show_abilityless_active = *show_abilityless_units.read();
         let expand_variants_active = *expand_variants.read();
         let toggle_abilityless = EventHandler::new(move |_event: MouseEvent| {

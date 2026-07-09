@@ -202,6 +202,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let selected_unit_position = use_signal::<Option<String>>(move || initial_unit_position);
     let selected_move_category = use_signal::<Option<String>>(move || initial_move_category);
     let collapsed_categories = use_signal::<HashSet<warcraft_api::UnitKind>>(HashSet::new);
+    let active_category = use_signal::<warcraft_api::UnitKind>(|| warcraft_api::UnitKind::Soldier);
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
@@ -238,6 +239,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
         tier_overrides,
         search_field,
         collapsed_categories,
+        active_category,
         show_abilityless_units,
         expand_variants,
         dragging_slot,
@@ -432,14 +434,14 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
                     &[".grid-editor-tile:has(.filled-tile)"]
                 }
             } else if info.classes().contains("grid-editor-tile") {
-                &[".unit-card[data-selected=\"true\"]", ".unit-card"]
+                &[".unit-card:has(.selected-unit-card-surface)", ".unit-card"]
             } else if info.classes().contains("unit-card")
                 || info.classes().contains("unit-category-heading")
             {
                 &[".active-race-tab .race-tab", ".race-tab"]
             } else if info.classes().contains("race-tab") {
-                &[".mode-tab[data-active=\"true\"]", ".mode-tab"]
-            } else if info.classes().contains("mode-tab") {
+                &[".mode-tabs .active-toggle-button", ".mode-tabs button"]
+            } else if info.is_inside_mode_tabs() {
                 &[".upload-button .toolbar-button-surface"]
             } else {
                 return;

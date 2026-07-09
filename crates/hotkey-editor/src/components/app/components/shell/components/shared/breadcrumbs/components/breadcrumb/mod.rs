@@ -1,36 +1,32 @@
 pub mod components;
 mod logic;
 mod props;
-mod style;
-use components::breadcrumb_count::{BreadcrumbCount, BreadcrumbCountProps};
-use components::breadcrumb_label::BreadcrumbLabel;
+
+use components::active_breadcrumb::{ActiveBreadcrumb, ActiveBreadcrumbProps};
+use components::idle_breadcrumb::{IdleBreadcrumb, IdleBreadcrumbProps};
 use dioxus::prelude::*;
-use logic::BreadcrumbModel;
 pub use props::BreadcrumbProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(Breadcrumb);
 
-/// A single breadcrumb tab: a label with its live count that runs its navigation
-/// handler when clicked. Highlighted when active.
+/// A single breadcrumb tab. A pure dispatcher: from whether it is the active tab it
+/// renders `ActiveBreadcrumb` xor `IdleBreadcrumb`. Each owns its `<button>`, writes its
+/// full look, and publishes the `--count-opacity` its count reads — no `data-active`, the
+/// look follows the component.
 #[component]
 pub fn Breadcrumb(props: BreadcrumbProps) -> Element {
-    let model = BreadcrumbModel::from(&props);
-    let active = props.active;
-    let data_breadcrumb = props.data_breadcrumb;
-    let label = props.label;
-    let onclick = props.onclick;
-    let count = BreadcrumbCountProps { count: props.count };
-    rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            "data-active": active,
-            "aria-current": model.aria_current,
-            "data-breadcrumb": data_breadcrumb,
-            onclick,
-            BreadcrumbLabel { text: label }
-            BreadcrumbCount { ..count }
+    match props.active {
+        true => {
+            let breadcrumb = ActiveBreadcrumbProps::from(&props);
+            rsx! {
+                ActiveBreadcrumb { ..breadcrumb }
+            }
+        }
+        false => {
+            let breadcrumb = IdleBreadcrumbProps::from(&props);
+            rsx! {
+                IdleBreadcrumb { ..breadcrumb }
+            }
         }
     }
 }

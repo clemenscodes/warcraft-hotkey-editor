@@ -19,7 +19,6 @@ impl From<&IslandConflictCardProps> for IslandConflictCardModel {
             unit_id: affected_unit.unit_id(),
             icon_url: affected_unit.icon_url().map(str::to_owned),
             name: affected_unit.name().to_owned(),
-            view_navigation: props.view_navigation,
         };
         let own = conflict.own_ability();
         let own_ability = Self::ability(own);

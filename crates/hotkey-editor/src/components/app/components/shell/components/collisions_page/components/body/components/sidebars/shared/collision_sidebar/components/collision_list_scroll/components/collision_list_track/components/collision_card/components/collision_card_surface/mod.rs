@@ -1,33 +1,37 @@
 pub mod components;
+mod logic;
 mod props;
-mod style;
 
-use components::collision_card_meta::{CollisionCardMeta, CollisionCardMetaProps};
-use components::collision_card_visual::{CollisionCardVisual, CollisionCardVisualProps};
+use components::idle_collision_card_surface::{
+    IdleCollisionCardSurface, IdleCollisionCardSurfaceProps,
+};
+use components::selected_collision_card_surface::{
+    SelectedCollisionCardSurface, SelectedCollisionCardSurfaceProps,
+};
 use dioxus::prelude::*;
 pub use props::CollisionCardSurfaceProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(CollisionCardSurface);
 
-/// The collision card's selectable `button`: the leading visual beside the meta line
-/// and count, wearing the shared entity-card look and the fixed collision-gold accent.
-/// Presentational — the selected flag and click handler arrive as props, so the
-/// gallery renders it directly and every state falls out.
+/// The collision card's selectable button. A pure dispatcher: from whether the card is
+/// selected it renders `SelectedCollisionCardSurface` xor `IdleCollisionCardSurface`.
+/// Each owns its `<button>` and its own look — the selected one wears the collision-gold
+/// accent and publishes `--coordinate-color`; there is no `data-selected`, the look
+/// follows the component.
 #[component]
 pub fn CollisionCardSurface(props: CollisionCardSurfaceProps) -> Element {
-    let visual = CollisionCardVisualProps::from(&props);
-    let meta = CollisionCardMetaProps::from(&props);
-    let is_selected = props.is_selected;
-    let onclick = props.onclick;
-    rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            "data-selected": is_selected,
-            onclick,
-            CollisionCardVisual { ..visual }
-            CollisionCardMeta { ..meta }
+    match props.is_selected {
+        true => {
+            let surface = SelectedCollisionCardSurfaceProps::from(&props);
+            rsx! {
+                SelectedCollisionCardSurface { ..surface }
+            }
+        }
+        false => {
+            let surface = IdleCollisionCardSurfaceProps::from(&props);
+            rsx! {
+                IdleCollisionCardSurface { ..surface }
+            }
         }
     }
 }

@@ -1,3 +1,3 @@
-pub mod collision_card_meta;
-pub mod collision_card_primary;
-pub mod collision_card_visual;
+pub mod idle_collision_card_surface;
+pub mod selected_collision_card_surface;
+pub mod shared;

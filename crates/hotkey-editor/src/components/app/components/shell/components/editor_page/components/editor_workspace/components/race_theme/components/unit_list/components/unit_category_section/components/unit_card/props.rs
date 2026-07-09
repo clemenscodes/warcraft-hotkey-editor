@@ -1,8 +1,10 @@
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::{Race, UnitKind, WarcraftObjectId};
-use warcraft_keybinds::GridSlotId;
 
+/// One unit's own catalog data: its id, display name, portrait, kind, and race. The
+/// selection it drives (whether it is selected, the selected slot, the active category)
+/// is read from context by the card's hook, so none of that is a prop.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardProps {
     pub unit_id: WarcraftObjectId,
@@ -10,8 +12,4 @@ pub struct UnitCardProps {
     pub icon_path: Option<IconUrl>,
     pub unit_kind: UnitKind,
     pub race: Race,
-    pub is_selected: bool,
-    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
-    pub selected_slot: Signal<Option<GridSlotId>>,
-    pub active_category: Signal<UnitKind>,
 }

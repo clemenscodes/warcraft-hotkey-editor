@@ -12,15 +12,6 @@ use std::rc::Rc;
 use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_keybinds::{GridSlotId, InspectorDetail};
 
-/// The unit detail panel's inputs: the active race and the selected unit. The editor
-/// signals its grids and override card drive are sourced from context by those
-/// children's own hooks, so the panel is fed no god-bag of signals as props.
-#[derive(Props, Clone, PartialEq)]
-pub struct UnitDetailProps {
-    pub active_race: Signal<Race>,
-    pub selected_unit_id: Signal<Option<WarcraftObjectId>>,
-}
-
 /// Every computed intermediate the loaded panel's props tree is built from. The hook
 /// resolves the selected unit, its slot containers, and the inspector detail into one
 /// of these; the whole child props tree then derives itself through the `From` impl

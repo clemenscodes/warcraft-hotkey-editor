@@ -1,2 +1,3 @@
-pub mod breadcrumb_count;
-pub mod breadcrumb_label;
+pub mod active_breadcrumb;
+pub mod idle_breadcrumb;
+pub mod shared;

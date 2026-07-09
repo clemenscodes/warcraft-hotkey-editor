@@ -1,0 +1,29 @@
+mod props;
+mod style;
+
+use dioxus::prelude::*;
+pub use props::IdleToggleButtonProps;
+use style::CLASS;
+use tw_macro::assert_component;
+assert_component!(IdleToggleButton);
+
+/// The idle toggle button: the shared gold pill in its resting look. Presentational —
+/// the dispatcher renders it for every button that is not the active one in its group.
+#[component]
+pub fn IdleToggleButton(props: IdleToggleButtonProps) -> Element {
+    let label = props.label;
+    let title = props.title;
+    let onclick = props.onclick;
+    let onkeydown = props.onkeydown;
+    rsx! {
+        button {
+            class: CLASS,
+            r#type: "button",
+            aria_pressed: false,
+            title,
+            onclick,
+            onkeydown,
+            {label}
+        }
+    }
+}

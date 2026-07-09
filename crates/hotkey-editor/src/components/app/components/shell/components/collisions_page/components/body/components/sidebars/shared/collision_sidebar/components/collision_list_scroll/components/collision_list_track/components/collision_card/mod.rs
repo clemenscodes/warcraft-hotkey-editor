@@ -33,7 +33,6 @@ pub fn CollisionCard(props: CollisionCardProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            "data-selected": is_selected,
             "data-collision-key": collision_key,
             CollisionCardSurface { ..surface }
         }

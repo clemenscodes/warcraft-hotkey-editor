@@ -1,17 +1,15 @@
+use super::editor_mount::EditorMount;
 use super::fixtures;
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::UnitList;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::unit_card_icon::UnitCardIcon;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_info::UnitCardInfo;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::UnitCategorySection;
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
-use std::collections::HashSet;
-use warcraft_api::{Race, UnitKind, WarcraftObjectMeta};
-use warcraft_api::{CatalogVisibility, ObjectLookup, SearchField, UnitMode};
-use warcraft_keybinds::GridSlotId;
+use warcraft_api::{ObjectLookup, Race, UnitKind, WarcraftObjectMeta};
 
 pub fn stories() -> Vec<Story> {
     vec![
@@ -70,22 +68,18 @@ fn unit_card_info_hero() -> Element {
 }
 
 fn mobile_category_tab_active() -> Element {
-    let kind = UnitKind::Soldier;
-    let is_active = true;
-    let race = Race::Orc;
-    let active_category = use_signal(|| UnitKind::Soldier);
     rsx! {
-        MobileCategoryTab { kind, is_active, race, active_category }
+        EditorMount {
+            MobileCategoryTab { kind: UnitKind::Soldier }
+        }
     }
 }
 
 fn mobile_category_tab_inactive() -> Element {
-    let kind = UnitKind::Hero;
-    let is_active = false;
-    let race = Race::Human;
-    let active_category = use_signal(|| UnitKind::Soldier);
     rsx! {
-        MobileCategoryTab { kind, is_active, race, active_category }
+        EditorMount {
+            MobileCategoryTab { kind: UnitKind::Hero }
+        }
     }
 }
 
@@ -125,21 +119,9 @@ fn unit_card_footman() -> Element {
     let unit_id = fixtures::sample_unit_id();
     let unit_kind = unit_meta.unit_kind();
     let race = Race::Human;
-    let is_selected = false;
-    let selected_unit_id = use_signal(|| None);
-    let selected_slot: Signal<Option<GridSlotId>> = use_signal(|| None);
-    let active_category = use_signal(|| UnitKind::Soldier);
     rsx! {
-        UnitCard {
-            unit_id,
-            display_name,
-            icon_path,
-            unit_kind,
-            race,
-            is_selected,
-            selected_unit_id,
-            selected_slot,
-            active_category,
+        EditorMount {
+            UnitCard { unit_id, display_name, icon_path, unit_kind, race }
         }
     }
 }
@@ -166,82 +148,36 @@ fn unit_card_archmage_selected() -> Element {
     let unit_id = fixtures::sample_hero_id();
     let unit_kind = unit_meta.unit_kind();
     let race = Race::Human;
-    let is_selected = true;
-    let selected_unit_id = use_signal(|| Some(fixtures::sample_hero_id()));
-    let selected_slot: Signal<Option<GridSlotId>> = use_signal(|| None);
-    let active_category = use_signal(|| UnitKind::Hero);
+    let selected_unit_id = Some(fixtures::sample_hero_id());
     rsx! {
-        div {
-            class: "[--race-color:var(--color-race-human)]",
-            UnitCard {
-                unit_id,
-                display_name,
-                icon_path,
-                unit_kind,
-                race,
-                is_selected,
-                selected_unit_id,
-                selected_slot,
-                active_category,
+        EditorMount {
+            active_race: Race::Human,
+            selected_unit_id,
+            div {
+                class: "[--race-color:var(--color-race-human)]",
+                UnitCard { unit_id, display_name, icon_path, unit_kind, race }
             }
         }
     }
 }
 
 fn unit_category_section_human_soldiers() -> Element {
-    let category_kind = UnitKind::Soldier;
-    let category_label = "Soldiers".to_string();
-    let is_collapsed = false;
-    let collapsed_categories = use_signal(HashSet::new);
-    let race = Race::Human;
-    let mode = UnitMode::Melee;
-    let query = String::new();
-    let search_field = SearchField::UnitName;
-    let visibility = CatalogVisibility::new(false, false);
-    let active_unit_id = Some(fixtures::sample_unit_id());
-    let selected_unit_id = use_signal(|| Some(fixtures::sample_unit_id()));
-    let selected_slot: Signal<Option<GridSlotId>> = use_signal(|| None);
-    let active_category = use_signal(|| UnitKind::Soldier);
+    let selected_unit_id = Some(fixtures::sample_unit_id());
     rsx! {
-        UnitCategorySection {
-            category_kind,
-            category_label,
-            is_collapsed,
-            collapsed_categories,
-            race,
-            mode,
-            query,
-            search_field,
-            visibility,
-            active_unit_id,
+        EditorMount {
             selected_unit_id,
-            selected_slot,
-            active_category,
+            UnitCategorySection { category_kind: UnitKind::Soldier }
         }
     }
 }
 
 fn unit_list_panel_human_melee() -> Element {
-    let active_race = use_signal(|| Race::Human);
-    let unit_mode = use_signal(|| UnitMode::Melee);
-    let selected_unit_id = use_signal(|| Some(fixtures::sample_unit_id()));
-    let selected_slot: Signal<Option<GridSlotId>> = use_signal(|| None);
-    let search_query = use_signal(String::new);
-    let search_field = use_signal(|| SearchField::UnitName);
-    let show_abilityless_units = use_signal(|| false);
-    let expand_variants = use_signal(|| false);
-    let collapsed_categories = use_signal(HashSet::new);
+    let selected_unit_id = Some(fixtures::sample_unit_id());
     rsx! {
-        UnitList {
-            active_race,
-            unit_mode,
+        EditorMount {
+            active_race: Race::Human,
             selected_unit_id,
-            selected_slot,
-            search_query,
-            search_field,
-            show_abilityless_units,
-            expand_variants,
-            collapsed_categories,
+            UnitList {}
         }
     }
 }

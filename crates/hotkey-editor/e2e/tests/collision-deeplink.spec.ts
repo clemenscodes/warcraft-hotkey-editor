@@ -55,7 +55,7 @@ test.describe("Collision page entry deep-linking", () => {
     const targetRow = page.locator(`[data-collision-key="${target}"]`);
     await targetRow.click();
     await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
-    await expect(targetRow).toHaveAttribute("data-selected", "true");
+    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
 
     // Open the affected unit in the editor.
     await page.locator(".conflict-detail-unit").click();
@@ -68,8 +68,8 @@ test.describe("Collision page entry deep-linking", () => {
       new RegExp(`kind=unit-positions&entry=${target}`),
     );
     await expect(
-      page.locator(`[data-collision-key="${target}"]`),
-    ).toHaveAttribute("data-selected", "true");
+      page.locator(`[data-collision-key="${target}"] .selected-collision-card-surface`),
+    ).toBeVisible();
   });
 
   // Each kind keeps its own last selection in memory; switching tabs and back
@@ -83,8 +83,8 @@ test.describe("Collision page entry deep-linking", () => {
     const unitPositionTarget = unitPositionKeys[3];
     await page.locator(`[data-collision-key="${unitPositionTarget}"]`).click();
     await expect(
-      page.locator(`[data-collision-key="${unitPositionTarget}"]`),
-    ).toHaveAttribute("data-selected", "true");
+      page.locator(`[data-collision-key="${unitPositionTarget}"] .selected-collision-card-surface`),
+    ).toBeVisible();
 
     // Switch to hotkeys and pick a different entry there.
     await page.locator('[data-breadcrumb="hotkeys"]').click();
@@ -94,14 +94,14 @@ test.describe("Collision page entry deep-linking", () => {
     const hotkeyTarget = hotkeyKeys[3];
     await page.locator(`[data-collision-key="${hotkeyTarget}"]`).click();
     await expect(
-      page.locator(`[data-collision-key="${hotkeyTarget}"]`),
-    ).toHaveAttribute("data-selected", "true");
+      page.locator(`[data-collision-key="${hotkeyTarget}"] .selected-collision-card-surface`),
+    ).toBeVisible();
 
     // Back to unit-positions: the earlier selection is still there.
     await page.locator('[data-breadcrumb="unit-positions"]').click();
     await expect(
-      page.locator(`[data-collision-key="${unitPositionTarget}"]`),
-    ).toHaveAttribute("data-selected", "true");
+      page.locator(`[data-collision-key="${unitPositionTarget}"] .selected-collision-card-surface`),
+    ).toBeVisible();
     await expect(page).toHaveURL(
       new RegExp(`kind=unit-positions&entry=${unitPositionTarget}`),
     );
@@ -109,8 +109,8 @@ test.describe("Collision page entry deep-linking", () => {
     // And hotkeys still remembers its own.
     await page.locator('[data-breadcrumb="hotkeys"]').click();
     await expect(
-      page.locator(`[data-collision-key="${hotkeyTarget}"]`),
-    ).toHaveAttribute("data-selected", "true");
+      page.locator(`[data-collision-key="${hotkeyTarget}"] .selected-collision-card-surface`),
+    ).toBeVisible();
   });
 
   // A pasted/bookmarked deep-link to an entry far down the list selects it. The
@@ -129,7 +129,7 @@ test.describe("Collision page entry deep-linking", () => {
 
     await page.goto(`${APP}collisions?kind=unit-positions&entry=${target}`);
     const targetRow = page.locator(`[data-collision-key="${target}"]`);
-    await expect(targetRow).toHaveAttribute("data-selected", "true");
+    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
   });
 
   // The same round-trip for cross-unit position islands, whose key contains
@@ -146,7 +146,7 @@ test.describe("Collision page entry deep-linking", () => {
 
     const targetRow = page.locator(`[data-collision-key="${target}"]`);
     await targetRow.click();
-    await expect(targetRow).toHaveAttribute("data-selected", "true");
+    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
     await expect(page).toHaveURL(/entry=/);
 
     // Open one of the affected units from the island detail, then back.
@@ -154,6 +154,6 @@ test.describe("Collision page entry deep-linking", () => {
     await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     await page.goBack();
-    await expect(page.locator(`[data-collision-key="${target}"]`)).toHaveAttribute("data-selected", "true");
+    await expect(page.locator(`[data-collision-key="${target}"] .selected-collision-card-surface`)).toBeVisible();
   });
 });

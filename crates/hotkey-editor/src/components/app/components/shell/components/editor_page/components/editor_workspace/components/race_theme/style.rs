@@ -28,17 +28,30 @@ macro_rules! race_theme_class {
 
 pub(super) fn theme(race: Race) -> ClassList {
     match race {
-        Race::Human => race_theme_class!["contents", "[--race-color:var(--color-race-human)]"],
-        Race::Orc => race_theme_class!["contents", "[--race-color:var(--color-race-orc-strong)]"],
-        Race::Undead => race_theme_class!["contents", "[--race-color:var(--color-race-undead)]"],
-        Race::Nightelf => {
-            race_theme_class!["contents", "[--race-color:var(--color-race-nightelf)]"]
-        }
-        Race::Neutral => {
-            race_theme_class![
-                "contents",
-                "[--race-color:var(--color-race-neutral-strong)]"
-            ]
-        }
+        Race::Human => race_theme_class![
+            "contents",
+            "[--race-color:var(--color-race-human)]",
+            "[--race-accent:var(--color-race-human)]"
+        ],
+        Race::Orc => race_theme_class![
+            "contents",
+            "[--race-color:var(--color-race-orc-strong)]",
+            "[--race-accent:var(--color-race-orc)]"
+        ],
+        Race::Undead => race_theme_class![
+            "contents",
+            "[--race-color:var(--color-race-undead)]",
+            "[--race-accent:var(--color-race-undead)]"
+        ],
+        Race::Nightelf => race_theme_class![
+            "contents",
+            "[--race-color:var(--color-race-nightelf)]",
+            "[--race-accent:var(--color-race-nightelf)]"
+        ],
+        Race::Neutral => race_theme_class![
+            "contents",
+            "[--race-color:var(--color-race-neutral-strong)]",
+            "[--race-accent:var(--color-warcraft-gold)]"
+        ],
     }
 }

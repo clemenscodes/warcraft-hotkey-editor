@@ -32,6 +32,7 @@ pub struct EditorState {
     tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
     search_field: Signal<SearchField>,
     collapsed_categories: Signal<HashSet<UnitKind>>,
+    active_category: Signal<UnitKind>,
     show_abilityless_units: Signal<bool>,
     expand_variants: Signal<bool>,
     dragging_slot: Signal<Option<DraggingSlot>>,
@@ -51,6 +52,7 @@ impl EditorState {
         tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
         search_field: Signal<SearchField>,
         collapsed_categories: Signal<HashSet<UnitKind>>,
+        active_category: Signal<UnitKind>,
         show_abilityless_units: Signal<bool>,
         expand_variants: Signal<bool>,
         dragging_slot: Signal<Option<DraggingSlot>>,
@@ -67,6 +69,7 @@ impl EditorState {
             tier_overrides,
             search_field,
             collapsed_categories,
+            active_category,
             show_abilityless_units,
             expand_variants,
             dragging_slot,
@@ -106,6 +109,10 @@ impl EditorState {
 
     pub fn collapsed_categories(&self) -> Signal<HashSet<UnitKind>> {
         self.collapsed_categories
+    }
+
+    pub fn active_category(&self) -> Signal<UnitKind> {
+        self.active_category
     }
 
     pub fn show_abilityless_units(&self) -> Signal<bool> {

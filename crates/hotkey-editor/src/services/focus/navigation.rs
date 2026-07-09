@@ -2,6 +2,7 @@ pub(crate) struct FocusedElementInfo {
     classes: String,
     is_inside_grid_panel: bool,
     is_inside_system_dialog: bool,
+    is_inside_mode_tabs: bool,
 }
 
 impl FocusedElementInfo {
@@ -17,10 +18,16 @@ impl FocusedElementInfo {
             .flatten()
             .and_then(|dialog| dialog.query_selector(".key-capture").ok().flatten())
             .is_some();
+        let is_inside_mode_tabs = active_element
+            .closest(".mode-tabs")
+            .ok()
+            .flatten()
+            .is_some();
         let info = Self {
             classes,
             is_inside_grid_panel,
             is_inside_system_dialog,
+            is_inside_mode_tabs,
         };
         Some(info)
     }
@@ -35,6 +42,10 @@ impl FocusedElementInfo {
 
     pub(crate) fn is_inside_system_dialog(&self) -> bool {
         self.is_inside_system_dialog
+    }
+
+    pub(crate) fn is_inside_mode_tabs(&self) -> bool {
+        self.is_inside_mode_tabs
     }
 }
 

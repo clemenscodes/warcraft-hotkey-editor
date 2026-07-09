@@ -5,13 +5,15 @@ use super::conflict_ability_icon::ConflictAbilityIconProps;
 use super::conflict_ability_name::ConflictAbilityName;
 use super::conflict_ability_trigger::{ConflictAbilityTrigger, ConflictAbilityTriggerProps};
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
+use crate::services::navigation::context::use_view_navigation;
 use tw_macro::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityProps;
 use style::CLASS;
 assert_component!(ConflictAbility);
 
-/// One ability of a conflict: icon (deep-link button), name, and object id.
+/// One ability of a conflict: icon (deep-link button), name, and object id. The icon
+/// button opens the owning unit through the navigation read from context.
 #[component]
 pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
     let ability_name = props.ability_name;
@@ -21,7 +23,7 @@ pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
         alt: ability_name.clone(),
     };
     let unit_id = props.unit_id;
-    let view_navigation = props.view_navigation;
+    let view_navigation = use_view_navigation();
     let onclick = EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(unit_id));
     let trigger = ConflictAbilityTriggerProps { onclick, icon };
     rsx! {

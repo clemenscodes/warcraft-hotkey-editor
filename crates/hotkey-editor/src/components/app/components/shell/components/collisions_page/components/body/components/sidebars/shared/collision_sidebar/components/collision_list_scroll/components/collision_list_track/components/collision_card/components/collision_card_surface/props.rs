@@ -1,31 +1,13 @@
-use super::super::super::state::CollisionCardContent;
-use super::components::collision_card_meta::CollisionCardMetaProps;
-use super::components::collision_card_visual::CollisionCardVisualProps;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
 use dioxus::prelude::*;
 
-/// The collision card's selectable button surface: the leading visual (unit portrait
-/// or island mini grid) beside the meta line and count, the selected flag that drives
-/// its fixed collision-gold accent, and the click handler the card wires onto its own
-/// button.
+/// The collision card's selectable button surface's input: the selected flag the
+/// dispatcher reads to pick the look, the click handler, the live count, and the content
+/// that fills it (a unit portrait with name/id, or an island's coordinate).
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionCardSurfaceProps {
     pub is_selected: bool,
     pub onclick: EventHandler<MouseEvent>,
     pub count: usize,
     pub content: CollisionCardContent,
-}
-
-impl From<&CollisionCardSurfaceProps> for CollisionCardVisualProps {
-    fn from(props: &CollisionCardSurfaceProps) -> Self {
-        let content = props.content.clone();
-        Self { content }
-    }
-}
-
-impl From<&CollisionCardSurfaceProps> for CollisionCardMetaProps {
-    fn from(props: &CollisionCardSurfaceProps) -> Self {
-        let content = props.content.clone();
-        let count = props.count;
-        Self { content, count }
-    }
 }

@@ -1,39 +1,35 @@
 pub mod components;
+mod logic;
 mod props;
-mod style;
 
-use components::unit_card_icon::{UnitCardIcon, UnitCardIconProps};
-use components::unit_card_info::{UnitCardInfo, UnitCardInfoProps};
+use components::idle_unit_card_surface::{IdleUnitCardSurface, IdleUnitCardSurfaceProps};
+use components::selected_unit_card_surface::{
+    SelectedUnitCardSurface, SelectedUnitCardSurfaceProps,
+};
 use dioxus::prelude::*;
 pub use props::UnitCardSurfaceProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(UnitCardSurface);
 
-/// The unit card's selectable `button`: the portrait beside the name/id, wearing the
-/// shared entity-card look and the generic `--race-color` accent. Click and
-/// Space/Enter select the unit; the mount handler registers the button with the focus
-/// coordinator. Presentational — its accent comes from the `--race-color` an ancestor
-/// publishes, so the gallery can render it under any race theme and every state falls
-/// out.
+/// The unit card's selectable button. A pure dispatcher: from whether the card is the
+/// selected unit it renders `SelectedUnitCardSurface` xor `IdleUnitCardSurface`. Each
+/// owns its `<button>` and its own look — the selected one wears the generic
+/// `--race-color` accent and publishes `--name-color`; there is no `data-selected`, the
+/// look follows the component.
 #[component]
 pub fn UnitCardSurface(props: UnitCardSurfaceProps) -> Element {
-    let icon = UnitCardIconProps::from(&props);
-    let info = UnitCardInfoProps::from(&props);
-    let is_selected = props.is_selected;
-    let onclick = props.onclick;
-    let onkeydown = props.onkeydown;
-    let onmounted = props.onmounted;
-    rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            "data-selected": is_selected,
-            onclick,
-            onkeydown,
-            onmounted,
-            UnitCardIcon { ..icon }
-            UnitCardInfo { ..info }
+    match props.is_selected {
+        true => {
+            let surface = SelectedUnitCardSurfaceProps::from(&props);
+            rsx! {
+                SelectedUnitCardSurface { ..surface }
+            }
+        }
+        false => {
+            let surface = IdleUnitCardSurfaceProps::from(&props);
+            rsx! {
+                IdleUnitCardSurface { ..surface }
+            }
         }
     }
 }

@@ -1,10 +1,11 @@
 use super::logic::{
     ActiveContainer, ActiveContainerInputs, InspectorPanel, InspectorPanelInputs, ResolvedUnit,
 };
-use super::props::{UnitDetailInputs, UnitDetailProps};
+use super::props::UnitDetailInputs;
 use super::state::{UnitDetailModel, UnitDetailView};
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, UnitSlotContainers};
@@ -30,9 +31,10 @@ fn use_hero_level_state(selected_unit_id: Signal<Option<WarcraftObjectId>>) -> H
 /// grouped into the [`ResolvedUnit`], [`InspectorPanel`], and [`ActiveContainer`]
 /// derivations plus the memoized [`UnitSlotContainers`]; this hook only orchestrates
 /// them, gathers the [`UnitDetailInputs`], and lets the props tree derive itself.
-pub(super) fn use_unit_detail_panel(props: &UnitDetailProps) -> UnitDetailView {
-    let race = *props.active_race.read();
-    let selected_unit_id = props.selected_unit_id;
+pub(super) fn use_unit_detail_panel() -> UnitDetailView {
+    let navigation = use_view_navigation();
+    let race = *navigation.active_race().read();
+    let selected_unit_id = navigation.selected_unit_id();
     let editor = use_editor_state();
     let selected_slot = editor.selected_slot();
     let selected_from_research = editor.selected_from_research();

@@ -1,32 +1,34 @@
+pub mod components;
+mod logic;
 mod props;
-mod style;
 
+use components::active_toggle_button::{ActiveToggleButton, ActiveToggleButtonProps};
+use components::idle_toggle_button::{IdleToggleButton, IdleToggleButtonProps};
 use dioxus::prelude::*;
 pub use props::ToggleButtonProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(ToggleButton);
 
-/// The shared labeled pill button (mode, search-field, catalog-visibility). Its look
-/// is its own; its size is the parent's, flowing through the box it fills — see
-/// `style.rs`.
+/// The shared labeled pill button (mode, search-field, catalog-visibility). A pure
+/// dispatcher: from whether it is the active button in its group it renders the one
+/// matching look — `ActiveToggleButton` xor `IdleToggleButton`. Each look owns its own
+/// `<button>` and writes the shared pill chrome values plus its own state accent; this
+/// dispatcher owns no class and there is no `data-active`, so the look follows the
+/// component, not an attribute.
 #[component]
 pub fn ToggleButton(props: ToggleButtonProps) -> Element {
-    let label = props.label;
-    let active = props.active;
-    let title = props.title;
-    let onclick = props.onclick;
-    let onkeydown = props.onkeydown;
-    rsx! {
-        button {
-            class: CLASS,
-            r#type: "button",
-            "data-active": active,
-            aria_pressed: active,
-            title,
-            onclick,
-            onkeydown,
-            {label}
+    match props.active {
+        true => {
+            let active = ActiveToggleButtonProps::from(&props);
+            rsx! {
+                ActiveToggleButton { ..active }
+            }
+        }
+        false => {
+            let idle = IdleToggleButtonProps::from(&props);
+            rsx! {
+                IdleToggleButton { ..idle }
+            }
         }
     }
 }
