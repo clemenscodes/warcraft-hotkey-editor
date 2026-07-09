@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
@@ -86,7 +85,6 @@ pub(super) struct TileOverrideInputs {
     pub(super) upgrade_display_name: String,
     pub(super) alt_picker_slots: Rc<[GridSlotId]>,
     pub(super) upgrade_picker_slots: Rc<[GridSlotId]>,
-    pub(super) tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,
 }
 
 impl From<TileOverrideInputs> for TileOverrideModel {
@@ -108,7 +106,6 @@ impl From<TileOverrideInputs> for TileOverrideModel {
             upgrade_display_name,
             alt_picker_slots,
             upgrade_picker_slots,
-            tier_overrides,
         } = inputs;
         let name = TileOverrideNameProps {
             text: tiers.active_tier_name,
@@ -153,7 +150,6 @@ impl From<TileOverrideInputs> for TileOverrideModel {
             active_tier_index: tiers.active_tier_index,
             total_tier_count: tiers.total_tier_count,
             tier_label_text: tiers.tier_label_text,
-            tier_overrides,
         };
         let header_text = TileOverrideHeaderTextProps { name, id };
         let header = TileOverrideHeaderProps {

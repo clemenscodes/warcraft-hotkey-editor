@@ -1,7 +1,15 @@
 use super::components::carrier_card_icon::CarrierCardIconProps;
 use super::props::CarrierCardProps;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
+
+/// The carrier card's inputs: its own data plus the navigation read from context by the
+/// component's hook.
+pub(super) struct CarrierCardInputs {
+    pub(super) props: CarrierCardProps,
+    pub(super) view_navigation: ViewNavigationContext,
+}
 
 /// The shaped carrier card: the icon props, the deep-link click handler, and the name
 /// and id text the card places directly.
@@ -12,11 +20,12 @@ pub(super) struct CarrierCardModel {
     pub(super) unit_id: WarcraftObjectId,
 }
 
-impl From<&CarrierCardProps> for CarrierCardModel {
-    fn from(props: &CarrierCardProps) -> Self {
+impl From<CarrierCardInputs> for CarrierCardModel {
+    fn from(inputs: CarrierCardInputs) -> Self {
+        let props = inputs.props;
+        let view_navigation = inputs.view_navigation;
         let name = props.name.clone();
         let unit_id = props.unit_id;
-        let view_navigation = props.view_navigation;
         let icon = CarrierCardIconProps {
             src: props.icon_url.clone(),
             alt: name.clone(),

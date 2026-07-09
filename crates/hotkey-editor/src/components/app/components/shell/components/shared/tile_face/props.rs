@@ -4,7 +4,6 @@ use crate::components::app::components::shell::components::shared::grid_tile::{
 };
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
-use warcraft_api::Race;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
 
 /// The tile painter's props: only the resting visual of a command-grid slot — its
@@ -16,8 +15,6 @@ use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, 
 pub struct TileFaceProps {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
     pub coordinate: GridCoordinate,
-    #[props(default = Race::Neutral)]
-    pub race: Race,
     #[props(default)]
     pub icon: Option<String>,
     #[props(default)]
@@ -34,13 +31,11 @@ impl From<&TileFaceProps> for GridTileProps {
     /// The inert base tile: the presentational fields, minus the hotkey badge.
     fn from(props: &TileFaceProps) -> Self {
         let coordinate = props.coordinate;
-        let race = props.race;
         let icon = props.icon.clone();
         let label = props.label.clone();
         let state = props.state;
         Self {
             coordinate,
-            race,
             icon,
             label,
             state,
@@ -79,7 +74,6 @@ impl From<&RenderedTile> for TileFaceProps {
         };
         Self {
             coordinate,
-            race: Race::Neutral,
             icon,
             label,
             hotkey,

@@ -1,4 +1,4 @@
-use super::components::island_conflict_grid::components::island_conflict_card::IslandConflictCardProps;
+use super::components::filled_island_detail::components::island_conflict_grid::components::island_conflict_card::IslandConflictCardProps;
 use super::props::IslandDetailProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
@@ -15,8 +15,11 @@ pub(super) struct IslandDetailData {
 
 /// Resolves the selected island and shapes its header coordinate and conflict cards,
 /// or `None` when nothing is selected.
-pub(super) fn selected(props: &IslandDetailProps) -> Option<IslandDetailData> {
-    let selected_key = props.selected_island.read().clone();
+pub(super) fn selected(
+    props: &IslandDetailProps,
+    selected_island: Signal<Option<String>>,
+) -> Option<IslandDetailData> {
+    let selected_key = selected_island.read().clone();
     let key = selected_key?;
     let island = props
         .islands

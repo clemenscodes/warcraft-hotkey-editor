@@ -28,15 +28,10 @@ pub fn FilledTile(props: FilledTileProps) -> Element {
     let selection_ring = SelectionRingProps::from(&props);
     let icon = TileIconProps::from(&props);
     let label = TileLabelProps::from(&props);
-    let TileChrome {
-        race_attribute,
-        row,
-        column,
-    } = props.chrome;
+    let TileChrome { row, column } = props.chrome;
     rsx! {
         div {
             class: CLASS,
-            "data-race": race_attribute,
             "data-grid-row": row,
             "data-grid-col": column,
             AbilityFill { ..ability_fill }

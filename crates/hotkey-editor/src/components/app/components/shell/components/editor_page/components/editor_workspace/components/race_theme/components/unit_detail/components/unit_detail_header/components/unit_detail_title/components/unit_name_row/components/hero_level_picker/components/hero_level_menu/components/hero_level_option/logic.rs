@@ -1,7 +1,15 @@
 use super::components::active_hero_level_option::ActiveHeroLevelOptionProps;
 use super::components::idle_hero_level_option::IdleHeroLevelOptionProps;
-use super::props::HeroLevelOptionProps;
 use dioxus::prelude::*;
+
+/// The option's inputs: which level it offers, the selected-level signal it reads (to
+/// mark the active option) and writes on select, and the menu's open signal it closes.
+/// The component reads the selected-level signal from context and hands these in.
+pub(super) struct HeroLevelOptionInputs {
+    pub(super) level_index: u32,
+    pub(super) selected_hero_level: Signal<u32>,
+    pub(super) level_picker_open: Signal<bool>,
+}
 
 /// The option's shaped view: whether it is the active level, its label, and the
 /// select handler. The dispatcher reads `is_active` to pick the look, then builds the
@@ -18,13 +26,13 @@ impl HeroLevelOptionPresentation {
     }
 }
 
-impl From<&HeroLevelOptionProps> for HeroLevelOptionPresentation {
-    fn from(props: &HeroLevelOptionProps) -> Self {
-        let level_index = props.level_index;
-        let is_active = level_index == props.current_level;
+impl From<HeroLevelOptionInputs> for HeroLevelOptionPresentation {
+    fn from(inputs: HeroLevelOptionInputs) -> Self {
+        let level_index = inputs.level_index;
+        let mut selected_hero_level = inputs.selected_hero_level;
+        let is_active = level_index == *selected_hero_level.read();
         let label = format!("Level {level_index}");
-        let mut selected_hero_level = props.selected_hero_level;
-        let mut level_picker_open = props.level_picker_open;
+        let mut level_picker_open = inputs.level_picker_open;
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             selected_hero_level.set(level_index);
             level_picker_open.set(false);

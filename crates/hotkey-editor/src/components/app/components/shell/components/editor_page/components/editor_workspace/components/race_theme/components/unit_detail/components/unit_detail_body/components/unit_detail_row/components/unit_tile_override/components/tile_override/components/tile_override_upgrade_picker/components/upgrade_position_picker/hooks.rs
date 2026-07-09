@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashMap;
-use warcraft_api::{Race, WarcraftObjectId};
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::shared::alt_position_picker_body::components::alt_position_picker_explainer::AltPositionPickerExplainerProps;
@@ -39,7 +39,6 @@ pub(super) fn use_upgrade_position_picker(
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability(upgrade_unit_id)];
     let grid_config = GridEditorConfig {
         heading: "Upgraded-form position",
-        race: Race::Neutral,
         slot_ids: props.picker_slots.clone(),
         loaded_keys,
         selected_slot: picker_selected_slot,

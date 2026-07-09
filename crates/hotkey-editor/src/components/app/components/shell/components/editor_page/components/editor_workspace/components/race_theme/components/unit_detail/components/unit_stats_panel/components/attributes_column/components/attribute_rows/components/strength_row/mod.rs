@@ -1,32 +1,27 @@
+pub mod components;
 mod props;
-mod style;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_gain::StatGain;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
-use super::shared::primary_attribute_label::PrimaryAttributeLabel;
+use components::primary_strength_row::{PrimaryStrengthRow, PrimaryStrengthRowProps};
+use components::regular_strength_row::{RegularStrengthRow, RegularStrengthRowProps};
 use dioxus::prelude::*;
 pub use props::StrengthRowProps;
-use style::CLASS;
 use tw_macro::assert_component;
-use warcraft_api::PrimaryAttribute;
 assert_component!(StrengthRow);
 
-/// The hero's strength attribute: its value and per-level growth, wearing a gold glow
-/// when strength is the hero's primary attribute.
+/// The hero's strength attribute row. A dispatcher: when strength is the hero's primary
+/// attribute it renders the glowing primary row, otherwise the resting regular row — each
+/// owns its own look, so there is no `data-primary` attribute.
 #[component]
 pub fn StrengthRow(props: StrengthRowProps) -> Element {
-    let statistic = props.statistic;
-    let growth = statistic.growth();
-    let is_primary = props.is_primary;
-    let attribute = PrimaryAttribute::Strength;
-    let label = attribute.to_string();
-    rsx! {
-        div {
-            class: CLASS,
-            "data-primary": is_primary,
-            PrimaryAttributeLabel { text: label }
-            StatValue { value: statistic }
-            StatGain { value: growth }
+    if props.is_primary {
+        let row = PrimaryStrengthRowProps::from(&props);
+        rsx! {
+            PrimaryStrengthRow { ..row }
+        }
+    } else {
+        let row = RegularStrengthRowProps::from(&props);
+        rsx! {
+            RegularStrengthRow { ..row }
         }
     }
 }

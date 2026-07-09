@@ -26,15 +26,10 @@ pub fn EmptyTile(props: EmptyTileProps) -> Element {
     let drop_target = DropTargetOverlayProps::from(&props);
     let blocked_drop_target = BlockedDropTargetOverlayProps::from(&props);
     let highlight = HighlightOverlayProps::from(&props);
-    let TileChrome {
-        race_attribute,
-        row,
-        column,
-    } = props.chrome;
+    let TileChrome { row, column } = props.chrome;
     rsx! {
         div {
             class: CLASS,
-            "data-race": race_attribute,
             "data-grid-row": row,
             "data-grid-col": column,
             DropTargetOverlay { ..drop_target }

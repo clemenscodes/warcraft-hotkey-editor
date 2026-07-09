@@ -222,14 +222,28 @@ fn footman_command_slots() -> Rc<[GridSlotId]> {
         .collect::<Rc<[GridSlotId]>>()
 }
 
+/// The `--race-accent` custom property a preview sets so a raceless tile (which reads
+/// the accent from context in the live app) shows the given race's colour in isolation.
+fn race_accent_class(race: Race) -> &'static str {
+    match race {
+        Race::Human => "[--race-accent:var(--color-race-human)]",
+        Race::Orc => "[--race-accent:var(--color-race-orc)]",
+        Race::Nightelf => "[--race-accent:var(--color-race-nightelf)]",
+        Race::Undead => "[--race-accent:var(--color-race-undead)]",
+        Race::Neutral => "[--race-accent:var(--color-warcraft-gold)]",
+    }
+}
+
 fn grid_tile_selected_orc() -> Element {
     rsx! {
-        TileFace {
-            race: Race::Orc,
-            state: GridTileState::Selected,
-            icon: fixtures::sample_icon_url(),
-            label: "Grunt".to_string(),
-            hotkey: HotkeyToken::try_from('Q').expect("letter"),
+        div {
+            class: race_accent_class(Race::Orc),
+            TileFace {
+                state: GridTileState::Selected,
+                icon: fixtures::sample_icon_url(),
+                label: "Grunt".to_string(),
+                hotkey: HotkeyToken::try_from('Q').expect("letter"),
+            }
         }
     }
 }
@@ -241,7 +255,10 @@ fn drag_follower_with_ability() -> Element {
     let follower = DragFollower::new(visual, 0.0, 0.0, 120.0, 120.0, 96.0, 96.0);
     let drag_follower = use_signal(|| Some(follower));
     rsx! {
-        DragFollowerOverlay { drag_follower, race: Race::Orc }
+        div {
+            class: race_accent_class(Race::Orc),
+            DragFollowerOverlay { drag_follower }
+        }
     }
 }
 
@@ -301,25 +318,27 @@ fn grid_footman(update_hotkeys: bool, race: Race) -> Element {
     let update_hotkeys_on_move = use_signal(move || update_hotkeys);
     let hotkey_assign_request = use_signal(|| false);
     rsx! {
-        ToastMount {
-            CustomKeysMount {
-                loaded_keys,
-                CommandGridEditor {
-                    heading: "Main Commands",
-                    race,
-                    slot_ids,
+        div {
+            class: race_accent_class(race),
+            ToastMount {
+                CustomKeysMount {
                     loaded_keys,
-                    selected_slot,
-                    selected_from_research,
-                    selected_from_uprooted,
-                    tier_overrides,
-                    dragging_slot,
-                    drop_target_tile,
-                    drag_follower,
-                    grid_layout,
-                    host_unit_id,
-                    update_hotkeys_on_move,
-                    hotkey_assign_request,
+                    CommandGridEditor {
+                        heading: "Main Commands",
+                        slot_ids,
+                        loaded_keys,
+                        selected_slot,
+                        selected_from_research,
+                        selected_from_uprooted,
+                        tier_overrides,
+                        dragging_slot,
+                        drop_target_tile,
+                        drag_follower,
+                        grid_layout,
+                        host_unit_id,
+                        update_hotkeys_on_move,
+                        hotkey_assign_request,
+                    }
                 }
             }
         }

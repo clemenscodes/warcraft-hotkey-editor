@@ -144,7 +144,6 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         plan: &plan,
         selected_slug: selected_slug.as_deref(),
         selection: selected_move_category,
-        view_navigation,
     };
     let active = ActivePlanView::from(active_inputs);
     let move_count = counts.move_count;

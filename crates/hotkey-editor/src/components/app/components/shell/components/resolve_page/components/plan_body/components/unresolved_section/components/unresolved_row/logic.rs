@@ -32,13 +32,11 @@ impl From<&UnresolvedRowProps> for UnresolvedRowModel {
             name: ability_name_for_plate,
             object_id: ability_object_id,
         };
-        let column = view.column();
-        let row = view.row();
+        let position = view.position();
         let ability_icon_url_for_placement = ability_icon_url.clone();
         let ability_name_for_placement = ability_name.clone();
         let placement = MiniGridPlacement::new(
-            column,
-            row,
+            position,
             ability_icon_url_for_placement,
             ability_name_for_placement,
         );

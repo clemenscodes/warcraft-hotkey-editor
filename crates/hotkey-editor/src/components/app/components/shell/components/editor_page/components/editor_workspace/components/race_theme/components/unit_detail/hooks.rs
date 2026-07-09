@@ -10,21 +10,15 @@ use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, UnitSlotContainers};
 
-/// The hero-level picker state: the currently-chosen level, reset to its default
-/// whenever the selected unit changes. (The picker owns its own open state.)
-pub(super) struct HeroLevelState {
-    pub(super) selected_hero_level: Signal<u32>,
-}
-
-fn use_hero_level_state(selected_unit_id: Signal<Option<WarcraftObjectId>>) -> HeroLevelState {
+/// Resets the selected hero level to its default whenever the selected unit changes.
+/// The picker owns its own open state, and the stats panel reads the chosen level from
+/// context, so this hook only owns the reset effect.
+fn use_hero_level_reset(selected_unit_id: Signal<Option<WarcraftObjectId>>) {
     let mut selected_hero_level = use_editor_state().selected_hero_level();
     use_effect(move || {
         let _ = selected_unit_id.read();
         selected_hero_level.set(1);
     });
-    HeroLevelState {
-        selected_hero_level,
-    }
 }
 
 /// Resolves the selected unit and shapes every child's props. The domain work is
@@ -33,14 +27,13 @@ fn use_hero_level_state(selected_unit_id: Signal<Option<WarcraftObjectId>>) -> H
 /// them, gathers the [`UnitDetailInputs`], and lets the props tree derive itself.
 pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let navigation = use_view_navigation();
-    let race = *navigation.active_race().read();
     let selected_unit_id = navigation.selected_unit_id();
     let editor = use_editor_state();
     let selected_slot = editor.selected_slot();
     let selected_from_research = editor.selected_from_research();
     let selected_from_uprooted = editor.selected_from_uprooted();
     let loaded_keys = use_loaded_keys();
-    let hero_level = use_hero_level_state(selected_unit_id);
+    use_hero_level_reset(selected_unit_id);
     let slot_data_memo = use_memo(move || {
         let unit_id_option = *selected_unit_id.read();
         let unit_id = unit_id_option.unwrap_or_default();
@@ -84,13 +77,10 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     };
     let active_container = ActiveContainer::from(active_container_inputs);
     let active_container_slots = active_container.slots;
-    let selected_hero_level = hero_level.selected_hero_level;
     let detail = inspector_panel.detail;
     let inputs = UnitDetailInputs {
-        race,
         unit_id,
         resolved_unit,
-        selected_hero_level,
         command_card_slots,
         build_menu_slots,
         uprooted_menu_slots,

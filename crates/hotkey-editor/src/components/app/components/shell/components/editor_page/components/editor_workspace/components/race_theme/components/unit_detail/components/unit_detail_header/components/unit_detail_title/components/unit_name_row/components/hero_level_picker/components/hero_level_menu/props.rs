@@ -1,10 +1,8 @@
 use dioxus::prelude::*;
 
-/// The hero-level dropdown menu: the current level (to mark the active option) and
-/// the signals its options write when chosen.
+/// The hero-level dropdown menu: the open signal its options close when chosen. Each
+/// option reads the selected level from context to mark the active one and to write.
 #[derive(Props, Clone, PartialEq)]
 pub struct HeroLevelMenuProps {
-    pub current_level: u32,
-    pub selected_hero_level: Signal<u32>,
     pub level_picker_open: Signal<bool>,
 }

@@ -3,9 +3,12 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use dioxus::prelude::*;
 
 /// One card's data per collision island: its selected state, key, click handler,
-/// highlighted coordinate, and collision-count line.
-pub(super) fn cards(props: &IslandSidebarProps) -> Vec<CollisionCardProps> {
-    let mut selected_island = props.selected_island;
+/// highlighted coordinate, and collision-count line. The selection is read from context
+/// by the caller and passed in.
+pub(super) fn cards(
+    props: &IslandSidebarProps,
+    mut selected_island: Signal<Option<String>>,
+) -> Vec<CollisionCardProps> {
     let selected_key = selected_island.read().clone();
     props
         .islands

@@ -75,11 +75,9 @@ impl UnitCommandGridsModel {
         heading: &'static str,
         slot_ids: Rc<[GridSlotId]>,
     ) -> GridEditorConfig {
-        let race = props.race;
         let host_unit_id = props.unit_id;
         GridEditorConfig {
             heading,
-            race,
             slot_ids,
             loaded_keys,
             selected_slot: editor.selected_slot(),

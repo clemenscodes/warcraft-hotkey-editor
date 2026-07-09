@@ -3,7 +3,7 @@ use warcraft_keybinds::UnitListing;
 
 /// The first search result the Enter key selects: the unit's id and its kind (so the
 /// list can both select it and switch to its category in one step).
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub(super) struct FirstResult {
     id: WarcraftObjectId,
     kind: UnitKind,
@@ -23,6 +23,7 @@ impl FirstResult {
 /// and the first search result (the unit Enter selects). Everything else the list
 /// draws — the active category, the collapsed set, the selection — is read from
 /// context by the sections and cards, so it is not snapshotted here.
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub(super) struct UnitListState {
     category_kinds: Vec<UnitKind>,
     first_result: Option<FirstResult>,

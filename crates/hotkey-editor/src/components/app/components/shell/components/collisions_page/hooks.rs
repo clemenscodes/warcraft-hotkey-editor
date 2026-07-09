@@ -135,7 +135,6 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
                 has_file,
                 list: hotkey_units,
                 selected_unit: selected_hotkey_unit,
-                view_navigation,
             };
             ContentModel::from(inputs)
         }
@@ -144,7 +143,6 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
                 has_file,
                 list: unit_positions,
                 selected_unit: selected_unit_position,
-                view_navigation,
             };
             ContentModel::from(inputs)
         }
@@ -152,8 +150,6 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
             let inputs = PositionsContent {
                 has_file,
                 list: islands,
-                selected_island,
-                view_navigation,
             };
             ContentModel::from(inputs)
         }

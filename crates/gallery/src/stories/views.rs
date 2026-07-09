@@ -117,19 +117,18 @@ fn island_mini_grid_bottom_right() -> Element {
 }
 
 fn island_sidebar_empty() -> Element {
+    provide_page_contexts();
     let islands = Vec::new();
-    let selected_island = use_signal(|| None::<String>);
     rsx! {
-        IslandSidebar { islands, selected_island }
+        IslandSidebar { islands }
     }
 }
 
 fn island_detail_empty() -> Element {
+    provide_page_contexts();
     let islands = Vec::new();
-    let selected_island = use_signal(|| None::<String>);
-    let view_navigation = make_view_navigation();
     rsx! {
-        IslandDetail { islands, selected_island, view_navigation }
+        IslandDetail { islands }
     }
 }
 
@@ -142,11 +141,10 @@ fn hotkey_unit_sidebar_empty() -> Element {
 }
 
 fn hotkey_unit_detail_empty() -> Element {
+    provide_page_contexts();
     let units = Vec::new();
-    let selected_unit = use_signal(|| None::<String>);
-    let view_navigation = make_view_navigation();
     rsx! {
-        HotkeyUnitDetail { units, selected_unit, view_navigation }
+        HotkeyUnitDetail { units }
     }
 }
 
@@ -159,11 +157,10 @@ fn unit_position_sidebar_empty() -> Element {
 }
 
 fn unit_position_detail_empty() -> Element {
+    provide_page_contexts();
     let units = Vec::new();
-    let selected_unit = use_signal(|| None::<String>);
-    let view_navigation = make_view_navigation();
     rsx! {
-        UnitPositionDetail { units, selected_unit, view_navigation }
+        UnitPositionDetail { units }
     }
 }
 

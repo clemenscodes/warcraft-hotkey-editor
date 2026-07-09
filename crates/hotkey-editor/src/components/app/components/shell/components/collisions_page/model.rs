@@ -10,7 +10,6 @@ use super::components::body::components::sidebars::unit_cards_sidebar::UnitCards
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 use super::logic::{CollisionUnitView, HotkeyUnitView, IslandView, UnitPositionUnitView};
 use crate::services::navigation::app_view::CollisionKind;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 /// A collision view that carries a stable selection key and a conflict count.
 /// Formalises the two facts every collision list needs — its selection identity
@@ -64,14 +63,12 @@ impl<View: CollisionEntry> From<Vec<View>> for CollisionList<View> {
 }
 
 /// The inputs that resolve the position-collision kind's active content: whether a
-/// file is loaded, the island list, the selection signal, and the navigation
-/// context the detail links use.
+/// file is loaded and the island list. The sidebar and detail read the selection and
+/// the navigation from context, so neither is carried here.
 #[derive(Clone, PartialEq)]
 pub(super) struct PositionsContent {
     pub(super) has_file: bool,
     pub(super) list: CollisionList<IslandView>,
-    pub(super) selected_island: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
 }
 
 impl From<PositionsContent> for ContentModel {
@@ -92,12 +89,9 @@ impl From<PositionsContent> for ContentModel {
         let sidebar_islands = content.list.views.clone();
         let sidebar = IslandSidebarProps {
             islands: sidebar_islands,
-            selected_island: content.selected_island,
         };
         let detail = IslandDetailProps {
             islands: content.list.views,
-            selected_island: content.selected_island,
-            view_navigation: content.view_navigation,
         };
         let count = content.list.unit_count;
         let pane = PositionsPane::new(count, sidebar, detail);
@@ -112,7 +106,6 @@ pub(super) struct HotkeysContent {
     pub(super) has_file: bool,
     pub(super) list: CollisionList<HotkeyUnitView>,
     pub(super) selected_unit: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
 }
 
 impl From<HotkeysContent> for ContentModel {
@@ -137,8 +130,6 @@ impl From<HotkeysContent> for ContentModel {
         };
         let detail = HotkeyUnitDetailProps {
             units: content.list.views,
-            selected_unit: content.selected_unit,
-            view_navigation: content.view_navigation,
         };
         let count = content.list.unit_count;
         let pane = HotkeysPane::new(count, sidebar, detail);
@@ -153,7 +144,6 @@ pub(super) struct UnitPositionsContent {
     pub(super) has_file: bool,
     pub(super) list: CollisionList<UnitPositionUnitView>,
     pub(super) selected_unit: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
 }
 
 impl From<UnitPositionsContent> for ContentModel {
@@ -178,8 +168,6 @@ impl From<UnitPositionsContent> for ContentModel {
         };
         let detail = UnitPositionDetailProps {
             units: content.list.views,
-            selected_unit: content.selected_unit,
-            view_navigation: content.view_navigation,
         };
         let count = content.list.unit_count;
         let pane = UnitPositionsPane::new(count, sidebar, detail);

@@ -1,2 +1,2 @@
-pub mod hotkey_conflict_grid;
-pub mod hotkey_detail_header;
+pub mod empty_hotkey_unit_detail;
+pub mod filled_hotkey_unit_detail;

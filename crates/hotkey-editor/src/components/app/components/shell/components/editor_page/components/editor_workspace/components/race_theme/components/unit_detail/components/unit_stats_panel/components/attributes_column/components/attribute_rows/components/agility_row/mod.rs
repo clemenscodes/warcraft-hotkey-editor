@@ -1,32 +1,27 @@
+pub mod components;
 mod props;
-mod style;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_gain::StatGain;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
-use super::shared::primary_attribute_label::PrimaryAttributeLabel;
+use components::primary_agility_row::{PrimaryAgilityRow, PrimaryAgilityRowProps};
+use components::regular_agility_row::{RegularAgilityRow, RegularAgilityRowProps};
 use dioxus::prelude::*;
 pub use props::AgilityRowProps;
-use style::CLASS;
 use tw_macro::assert_component;
-use warcraft_api::PrimaryAttribute;
 assert_component!(AgilityRow);
 
-/// The hero's agility attribute: its value and per-level growth, wearing a gold glow
-/// when agility is the hero's primary attribute.
+/// The hero's agility attribute row. A dispatcher: when agility is the hero's primary
+/// attribute it renders the glowing primary row, otherwise the resting regular row — each
+/// owns its own look, so there is no `data-primary` attribute.
 #[component]
 pub fn AgilityRow(props: AgilityRowProps) -> Element {
-    let statistic = props.statistic;
-    let growth = statistic.growth();
-    let is_primary = props.is_primary;
-    let attribute = PrimaryAttribute::Agility;
-    let label = attribute.to_string();
-    rsx! {
-        div {
-            class: CLASS,
-            "data-primary": is_primary,
-            PrimaryAttributeLabel { text: label }
-            StatValue { value: statistic }
-            StatGain { value: growth }
+    if props.is_primary {
+        let row = PrimaryAgilityRowProps::from(&props);
+        rsx! {
+            PrimaryAgilityRow { ..row }
+        }
+    } else {
+        let row = RegularAgilityRowProps::from(&props);
+        rsx! {
+            RegularAgilityRow { ..row }
         }
     }
 }

@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 
 pub use props::EditableKeycapProps;
-pub use state::{EditableKeycapRadius, EditableKeycapState};
+pub use state::EditableKeycapState;
 
 assert_component!(EditableKeycap);
 

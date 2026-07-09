@@ -1,52 +1,30 @@
-mod components;
+pub mod components;
 mod data;
 mod logic;
 mod props;
-mod style;
 
-use components::hotkey_conflict_grid::{HotkeyConflictGrid, HotkeyConflictGridProps};
-use components::hotkey_detail_header::{HotkeyDetailHeader, HotkeyDetailHeaderProps};
+use crate::services::collision_selection::context::use_collision_selection;
+use components::empty_hotkey_unit_detail::EmptyHotkeyUnitDetail;
+use components::filled_hotkey_unit_detail::{FilledHotkeyUnitDetail, FilledHotkeyUnitDetailProps};
 use dioxus::prelude::*;
-use logic::HotkeyUnitDetailData;
 pub use props::HotkeyUnitDetailProps;
-use style::DETAIL;
 use tw_macro::assert_component;
 assert_component!(HotkeyUnitDetail);
 
-/// The shared-hotkey detail pane: the selected unit's header over its conflict cards.
-/// It owns its own pane element directly and composes the header and grid children;
-/// renders the empty prompt when nothing is selected.
+/// The shared-hotkey detail pane. A dispatcher: when a unit is selected it renders the
+/// filled pane (the unit header over its conflict cards), otherwise the empty prompt.
+/// The selection is read from collision-selection context.
 #[component]
 pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
-    let Some(data) = logic::selected(&props) else {
-        return rsx! {
-            section {
-                class: DETAIL,
-                "data-empty": true,
-                p { {data::EMPTY_PROMPT} }
-            }
-        };
-    };
-    let HotkeyUnitDetailData {
-        unit,
-        name,
-        unit_id,
-        count,
-        cards,
-    } = data;
-    let header = HotkeyDetailHeaderProps {
-        unit,
-        name,
-        unit_id,
-        count,
-    };
-    let grid = HotkeyConflictGridProps { cards };
-    rsx! {
-        section {
-            class: DETAIL,
-            "data-empty": false,
-            HotkeyDetailHeader { ..header }
-            HotkeyConflictGrid { ..grid }
+    let selected_unit = use_collision_selection().selected_hotkey_unit();
+    if let Some(data) = logic::selected(&props, selected_unit) {
+        let filled = FilledHotkeyUnitDetailProps::from(&data);
+        rsx! {
+            FilledHotkeyUnitDetail { ..filled }
+        }
+    } else {
+        rsx! {
+            EmptyHotkeyUnitDetail {}
         }
     }
 }

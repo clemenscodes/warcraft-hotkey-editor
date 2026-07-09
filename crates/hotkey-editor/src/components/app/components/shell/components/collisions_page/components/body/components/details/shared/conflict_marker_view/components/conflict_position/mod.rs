@@ -1,25 +1,31 @@
+pub mod components;
+mod logic;
 mod props;
-mod style;
 
-use tw_macro::assert_component;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::{
-    MiniGrid, MiniGridProps,
-};
+use components::inline_conflict_position::{InlineConflictPosition, InlineConflictPositionProps};
+use components::top_conflict_position::{TopConflictPosition, TopConflictPositionProps};
 use dioxus::prelude::*;
 pub use props::ConflictPositionProps;
-use style::CLASS;
+use tw_macro::assert_component;
 assert_component!(ConflictPosition);
 
+/// The colliding command-card cell shown between (or above) a conflict's abilities. A
+/// dispatcher: from whether it stacks over a multi-way row it renders
+/// `TopConflictPosition` xor `InlineConflictPosition`; there is no `data-top` attribute.
 #[component]
 pub fn ConflictPosition(props: ConflictPositionProps) -> Element {
-    let is_top = props.is_top;
-    let coordinate = props.coordinate;
-    let mini_grid = MiniGridProps { coordinate };
-    rsx! {
-        span {
-            class: CLASS,
-            "data-top": is_top,
-            MiniGrid { ..mini_grid }
+    match props.is_top {
+        true => {
+            let position = TopConflictPositionProps::from(&props);
+            rsx! {
+                TopConflictPosition { ..position }
+            }
+        }
+        false => {
+            let position = InlineConflictPositionProps::from(&props);
+            rsx! {
+                InlineConflictPosition { ..position }
+            }
         }
     }
 }

@@ -20,22 +20,15 @@ pub fn DragFollowerGhost(props: DragFollowerGhostProps) -> Element {
     let Some(presentation) = props.presentation else {
         return rsx! {};
     };
-    let race_attribute = props.race_attribute;
     match presentation.state {
         GhostState::Default => {
-            let ghost = AbilityFollowerGhostProps {
-                race_attribute,
-                presentation,
-            };
+            let ghost = AbilityFollowerGhostProps { presentation };
             rsx! {
                 AbilityFollowerGhost { ..ghost }
             }
         }
         GhostState::Command => {
-            let ghost = CommandFollowerGhostProps {
-                race_attribute,
-                presentation,
-            };
+            let ghost = CommandFollowerGhostProps { presentation };
             rsx! {
                 CommandFollowerGhost { ..ghost }
             }

@@ -1,13 +1,22 @@
-use super::components::anchor_column::{AnchorColumnProps, AnchorParts};
-use super::components::fight_name_button::FightNameButtonProps;
-use super::props::MoveRowProps;
+use super::components::move_panel::components::fight_row::components::anchor_column::{
+    AnchorColumnProps, AnchorParts,
+};
+use super::components::move_panel::components::fight_row::components::fight_column::components::fight_name_button::FightNameButtonProps;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon::AbilityIconProps;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::fight_name_plate::FightNamePlateProps;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRowProps;
-use crate::components::app::components::shell::components::resolve_page::logic::{MiniGridPlacement, ReasonKind};
+use crate::components::app::components::shell::components::resolve_page::logic::{MiniGridPlacement, MoveView, ReasonKind};
 use crate::services::carriers::InspectedAbility;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
+
+/// The move row's inputs: the shaped move and the navigation its name links through,
+/// read from context by the component's hook.
+pub(super) struct MoveRowInputs {
+    pub(super) move_view: MoveView,
+    pub(super) view_navigation: ViewNavigationContext,
+}
 
 /// The fully shaped move card: reason badge, mover column, rival column props (the
 /// rival is optional; the column renders itself away when absent), and the from →
@@ -21,10 +30,10 @@ pub(super) struct MoveRowModel {
     pub(super) to_placements: Vec<MiniGridPlacement>,
 }
 
-impl From<&MoveRowProps> for MoveRowModel {
-    fn from(props: &MoveRowProps) -> Self {
-        let move_view = props.move_view.clone();
-        let view_navigation = props.view_navigation;
+impl From<MoveRowInputs> for MoveRowModel {
+    fn from(inputs: MoveRowInputs) -> Self {
+        let move_view = inputs.move_view;
+        let view_navigation = inputs.view_navigation;
         let mover = move_view.mover();
         let reason = move_view.reason();
         let mover_unit_id = move_view.mover_unit_id();
@@ -70,22 +79,16 @@ impl From<&MoveRowProps> for MoveRowModel {
         let anchor_carriers = anchor_carrier_option.unwrap_or(0);
         let anchor_carrier_unit_ids_ref = reason.other_carrier_unit_ids();
         let anchor_carrier_unit_ids = anchor_carrier_unit_ids_ref.to_vec();
-        let from_column = move_view.from_column();
-        let from_row = move_view.from_row();
-        let to_column = move_view.to_column();
-        let to_row = move_view.to_row();
+        let from = move_view.from();
+        let to = move_view.to();
         let mover_icon_url_for_from = mover_icon_url.clone();
         let mover_name_for_from = mover_name.clone();
-        let mover_from_placement = MiniGridPlacement::new(
-            from_column,
-            from_row,
-            mover_icon_url_for_from,
-            mover_name_for_from,
-        );
+        let mover_from_placement =
+            MiniGridPlacement::new(from, mover_icon_url_for_from, mover_name_for_from);
         let mover_icon_url_for_to = mover_icon_url.clone();
         let mover_name_for_to = mover_name.clone();
         let mover_to_placement =
-            MiniGridPlacement::new(to_column, to_row, mover_icon_url_for_to, mover_name_for_to);
+            MiniGridPlacement::new(to, mover_icon_url_for_to, mover_name_for_to);
         let mut from_placements: Vec<MiniGridPlacement> = vec![mover_from_placement];
         let mut to_placements: Vec<MiniGridPlacement> = vec![mover_to_placement];
         let other_ability_option = reason.other_ability();
@@ -97,19 +100,14 @@ impl From<&MoveRowProps> for MoveRowModel {
                 let anchor_icon_url = anchor_icon_url_ref.map(str::to_owned);
                 let anchor_icon_url_for_after = anchor_icon_url.clone();
                 let anchor_name_for_after = anchor_name.clone();
-                let anchor_after_placement = MiniGridPlacement::new(
-                    from_column,
-                    from_row,
-                    anchor_icon_url_for_after,
-                    anchor_name_for_after,
-                );
+                let anchor_after_placement =
+                    MiniGridPlacement::new(from, anchor_icon_url_for_after, anchor_name_for_after);
                 to_placements.push(anchor_after_placement);
                 if is_swap {
                     let anchor_icon_url_for_before = anchor_icon_url.clone();
                     let anchor_name_for_before = anchor_name.clone();
                     let anchor_before_placement = MiniGridPlacement::new(
-                        to_column,
-                        to_row,
+                        to,
                         anchor_icon_url_for_before,
                         anchor_name_for_before,
                     );

@@ -38,11 +38,7 @@ pub(super) fn use_hero_level_picker() -> HeroLevelPickerView {
         is_open,
         onclick: toggle,
     };
-    let menu = HeroLevelMenuProps {
-        current_level,
-        selected_hero_level,
-        level_picker_open,
-    };
+    let menu = HeroLevelMenuProps { level_picker_open };
     let mut close_open = level_picker_open;
     let dismiss = EventHandler::new(move |_event: MouseEvent| close_open.set(false));
     let backdrop = HeroLevelBackdropProps { onclick: dismiss };

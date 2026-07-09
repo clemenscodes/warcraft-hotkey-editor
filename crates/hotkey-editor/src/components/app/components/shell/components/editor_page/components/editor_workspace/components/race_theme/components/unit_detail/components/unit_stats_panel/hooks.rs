@@ -3,6 +3,7 @@ use super::components::combat_column::CombatColumnProps;
 use super::components::defense_column::DefenseColumnProps;
 use super::components::vitality_column::VitalityColumnProps;
 use super::props::UnitStatsPanelProps;
+use crate::services::editor_state::context::use_editor_state;
 use warcraft_keybinds::UnitStatistics;
 
 /// Every child column's finished props for the stats panel. The panel body
@@ -20,7 +21,7 @@ pub(super) struct UnitStatsPanelModel {
 pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelProps) -> UnitStatsPanelModel {
     let unit_combat = props.combat;
     let hero_attributes = props.hero_attributes;
-    let selected_hero_level = props.selected_hero_level;
+    let selected_hero_level = use_editor_state().selected_hero_level();
     let evasion = props.evasion;
     let current_level = if hero_attributes.is_some() {
         selected_hero_level()

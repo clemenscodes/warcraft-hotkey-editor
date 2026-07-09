@@ -1,11 +1,11 @@
+mod hooks;
 mod props;
 mod style;
 
-use super::conflict_ability_icon::ConflictAbilityIconProps;
 use super::conflict_ability_name::ConflictAbilityName;
-use super::conflict_ability_trigger::{ConflictAbilityTrigger, ConflictAbilityTriggerProps};
+use super::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use crate::services::navigation::context::use_view_navigation;
+use hooks::use_conflict_ability;
 use tw_macro::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityProps;
@@ -16,22 +16,13 @@ assert_component!(ConflictAbility);
 /// button opens the owning unit through the navigation read from context.
 #[component]
 pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
-    let ability_name = props.ability_name;
-    let ability_id = props.ability_id;
-    let icon = ConflictAbilityIconProps {
-        src: props.icon_url,
-        alt: ability_name.clone(),
-    };
-    let unit_id = props.unit_id;
-    let view_navigation = use_view_navigation();
-    let onclick = EventHandler::new(move |_event: MouseEvent| view_navigation.open_unit(unit_id));
-    let trigger = ConflictAbilityTriggerProps { onclick, icon };
+    let model = use_conflict_ability(&props);
     rsx! {
         div {
             class: CLASS,
-            ConflictAbilityTrigger { ..trigger }
-            ConflictAbilityName { text: ability_name }
-            ConflictObjectId { object_id: ability_id }
+            ConflictAbilityTrigger { ..model.trigger }
+            ConflictAbilityName { text: model.name }
+            ConflictObjectId { object_id: model.ability_id }
         }
     }
 }

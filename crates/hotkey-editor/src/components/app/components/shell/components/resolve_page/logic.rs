@@ -4,14 +4,13 @@ use super::components::plan_body::components::active_move_list::components::move
 use super::components::plan_body::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
 use super::components::plan_body::{PlanBodyProps, PlanBodySection};
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::{CascadePlan, GridSlotId, MoveReason};
+use warcraft_keybinds::{CascadePlan, GridCoordinate, GridSlotId, MoveReason};
 
 /// One ability resolved to an icon, display name, and object id for the plan.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct AbilityDisplay {
     object_id: WarcraftObjectId,
     name: String,
@@ -37,7 +36,7 @@ impl From<GridSlotId> for AbilityDisplay {
 
 /// Which kind of move this is. Drives both grouping into sections and the order
 /// the sections render in (Fights first, then Gap pulls, Spills, Swaps).
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum MoveCategory {
     Fight,
     GapPull,
@@ -82,7 +81,7 @@ impl MoveCategory {
 
 /// The visual kind of a move's reason badge — the four move categories plus the
 /// "Stuck" badge shown on unresolved abilities. Selects the badge's colour.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum ReasonKind {
     Fight,
     GapPull,
@@ -104,7 +103,7 @@ impl From<MoveCategory> for ReasonKind {
 
 /// The display-ready pieces of a move's rationale: a short badge label + kind
 /// and, for Fight/Swap, the rival ability and its carrier count.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct ReasonParts {
     label: &'static str,
     other_ability: Option<AbilityDisplay>,
@@ -167,16 +166,14 @@ impl From<&MoveReason> for ReasonParts {
 
 /// One planned move, display-ready: the moved ability (with carriers + a unit to
 /// link to), the old → new cell, and the rival ability that displaced it.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MoveView {
     mover: AbilityDisplay,
     mover_carriers: usize,
     mover_unit_id: Option<WarcraftObjectId>,
     mover_carrier_unit_ids: Vec<WarcraftObjectId>,
-    from_column: u8,
-    from_row: u8,
-    to_column: u8,
-    to_row: u8,
+    from: GridCoordinate,
+    to: GridCoordinate,
     reason: ReasonParts,
 }
 
@@ -190,18 +187,17 @@ impl MoveView {
 }
 
 /// One ability the cascade could not place, with the cell it is stuck on.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UnresolvedView {
     ability: AbilityDisplay,
     carrier_count: usize,
     carrier_unit_ids: Vec<WarcraftObjectId>,
-    column: u8,
-    row: u8,
+    position: GridCoordinate,
 }
 
 /// One titled group of moves of the same category (e.g. all Fights), in render
 /// order.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MoveSection {
     category: MoveCategory,
     title: &'static str,
@@ -209,7 +205,7 @@ pub struct MoveSection {
 }
 
 /// The cascade preview grouped into titled move sections and unresolved entries.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct PlanView {
     sections: Vec<MoveSection>,
     unresolved: Vec<UnresolvedView>,
@@ -243,12 +239,8 @@ impl PlanView {
             let carrier_objects = planned_move.carrier_unit_ids();
             let mover_carrier_unit_ids: Vec<WarcraftObjectId> = carrier_objects.to_vec();
             let mover_unit_id = mover_carrier_unit_ids.first().copied();
-            let old_position = planned_move.old_position();
-            let new_position = planned_move.new_position();
-            let from_column = u8::from(old_position.column());
-            let from_row = u8::from(old_position.row());
-            let to_column = u8::from(new_position.column());
-            let to_row = u8::from(new_position.row());
+            let from = planned_move.old_position();
+            let to = planned_move.new_position();
             let mut reason = ReasonParts::from(planned_move.reason());
             if let MoveReason::Swap { swapped_with } = planned_move.reason() {
                 let partner_key = swapped_with.id();
@@ -267,10 +259,8 @@ impl PlanView {
                 mover_carriers,
                 mover_unit_id,
                 mover_carrier_unit_ids,
-                from_column,
-                from_row,
-                to_column,
-                to_row,
+                from,
+                to,
                 reason,
             };
             moves.push(move_view);
@@ -279,8 +269,6 @@ impl PlanView {
         for stuck in plan.unresolved() {
             let ability = AbilityDisplay::from(stuck.slot_id());
             let position = stuck.collision_position();
-            let column = u8::from(position.column());
-            let row = u8::from(position.row());
             let carrier_count = stuck.carrier_count();
             let carrier_objects = stuck.carrier_unit_ids();
             let carrier_unit_ids: Vec<WarcraftObjectId> = carrier_objects.to_vec();
@@ -288,8 +276,7 @@ impl PlanView {
                 ability,
                 carrier_count,
                 carrier_unit_ids,
-                column,
-                row,
+                position,
             };
             unresolved.push(unresolved_view);
         }
@@ -357,30 +344,24 @@ impl PlanView {
 }
 
 /// One ability icon pinned to a cell inside a `MiniGrid`.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MiniGridPlacement {
-    column: u8,
-    row: u8,
+    coordinate: GridCoordinate,
     icon_url: Option<String>,
     name: String,
 }
 
 impl MiniGridPlacement {
-    pub fn new(column: u8, row: u8, icon_url: Option<String>, name: String) -> Self {
+    pub fn new(coordinate: GridCoordinate, icon_url: Option<String>, name: String) -> Self {
         Self {
-            column,
-            row,
+            coordinate,
             icon_url,
             name,
         }
     }
 
-    pub fn column(&self) -> u8 {
-        self.column
-    }
-
-    pub fn row(&self) -> u8 {
-        self.row
+    pub fn coordinate(&self) -> GridCoordinate {
+        self.coordinate
     }
 
     pub fn icon_url(&self) -> Option<&str> {
@@ -395,7 +376,7 @@ impl MiniGridPlacement {
 /// The move counts derived from the cascade preview: how many slots the plan moves
 /// and how many abilities it cannot place. The plan state tags its root element with
 /// these and the header phrases them; both `0` is the all-clear state.
-#[derive(Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub(super) struct PlanCounts {
     pub(super) move_count: usize,
     pub(super) unresolved_count: usize,
@@ -429,7 +410,6 @@ pub(super) struct ActivePlanInputs<'a> {
     pub(super) plan: &'a PlanView,
     pub(super) selected_slug: Option<&'a str>,
     pub(super) selection: Signal<Option<String>>,
-    pub(super) view_navigation: ViewNavigationContext,
 }
 
 impl From<ActivePlanInputs<'_>> for ActivePlanView {
@@ -438,7 +418,6 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             plan,
             selected_slug,
             selection,
-            view_navigation,
         } = inputs;
         let active = plan.active_section(selected_slug);
         let active_category = active.map(|section| section.category);
@@ -473,7 +452,6 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
                 .iter()
                 .map(|move_view| MoveRowProps {
                     move_view: move_view.clone(),
-                    view_navigation,
                 })
                 .collect();
             let data_category = section.category.data_breadcrumb();
@@ -540,17 +518,11 @@ impl MoveView {
     pub fn mover_carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.mover_carrier_unit_ids
     }
-    pub fn from_column(&self) -> u8 {
-        self.from_column
+    pub fn from(&self) -> GridCoordinate {
+        self.from
     }
-    pub fn from_row(&self) -> u8 {
-        self.from_row
-    }
-    pub fn to_column(&self) -> u8 {
-        self.to_column
-    }
-    pub fn to_row(&self) -> u8 {
-        self.to_row
+    pub fn to(&self) -> GridCoordinate {
+        self.to
     }
     pub fn reason(&self) -> &ReasonParts {
         &self.reason
@@ -567,11 +539,8 @@ impl UnresolvedView {
     pub fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
         &self.carrier_unit_ids
     }
-    pub fn column(&self) -> u8 {
-        self.column
-    }
-    pub fn row(&self) -> u8 {
-        self.row
+    pub fn position(&self) -> GridCoordinate {
+        self.position
     }
 }
 

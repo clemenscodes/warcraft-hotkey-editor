@@ -3,11 +3,11 @@ use super::fixtures;
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::UnitList;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::mobile_category_tab::MobileCategoryTab;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::UnitCard;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_info::UnitCardInfo;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::unit_category_section::UnitCategorySection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::UnitCard;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::UnitCategorySection;
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
 use warcraft_api::{ObjectLookup, Race, UnitKind, WarcraftObjectMeta};
 
@@ -52,18 +52,19 @@ pub fn stories() -> Vec<Story> {
 fn unit_card_info_footman() -> Element {
     let display_name = "Footman".to_string();
     let unit_id = ObjectLookup::resolve_raw("hfoo").expect("known object id");
-    let race = Race::Human;
     rsx! {
-        UnitCardInfo { display_name, unit_id, race, is_selected: false }
+        UnitCardInfo { display_name, unit_id, is_selected: false }
     }
 }
 
 fn unit_card_info_hero() -> Element {
     let display_name = "Archmage".to_string();
     let unit_id = ObjectLookup::resolve_raw("Hamg").expect("known object id");
-    let race = Race::Human;
     rsx! {
-        UnitCardInfo { display_name, unit_id, race, is_selected: true }
+        div {
+            class: "[--race-accent:var(--color-race-human)]",
+            UnitCardInfo { display_name, unit_id, is_selected: true }
+        }
     }
 }
 
@@ -118,10 +119,9 @@ fn unit_card_footman() -> Element {
         .map(IconUrl::from_database_path);
     let unit_id = fixtures::sample_unit_id();
     let unit_kind = unit_meta.unit_kind();
-    let race = Race::Human;
     rsx! {
         EditorMount {
-            UnitCard { unit_id, display_name, icon_path, unit_kind, race }
+            UnitCard { unit_id, display_name, icon_path, unit_kind }
         }
     }
 }
@@ -147,15 +147,14 @@ fn unit_card_archmage_selected() -> Element {
         .map(IconUrl::from_database_path);
     let unit_id = fixtures::sample_hero_id();
     let unit_kind = unit_meta.unit_kind();
-    let race = Race::Human;
     let selected_unit_id = Some(fixtures::sample_hero_id());
     rsx! {
         EditorMount {
             active_race: Race::Human,
             selected_unit_id,
             div {
-                class: "[--race-color:var(--color-race-human)]",
-                UnitCard { unit_id, display_name, icon_path, unit_kind, race }
+                class: "[--race-color:var(--color-race-human)] [--race-accent:var(--color-race-human)]",
+                UnitCard { unit_id, display_name, icon_path, unit_kind }
             }
         }
     }

@@ -1,45 +1,30 @@
-mod components;
+pub mod components;
 mod data;
 mod logic;
 mod props;
-mod style;
 
-use components::island_conflict_grid::{IslandConflictGrid, IslandConflictGridProps};
-use components::island_detail_header::{IslandDetailHeader, IslandDetailHeaderProps};
+use crate::services::collision_selection::context::use_collision_selection;
+use components::empty_island_detail::EmptyIslandDetail;
+use components::filled_island_detail::{FilledIslandDetail, FilledIslandDetailProps};
 use dioxus::prelude::*;
-use logic::IslandDetailData;
 pub use props::IslandDetailProps;
-use style::DETAIL;
 use tw_macro::assert_component;
 assert_component!(IslandDetail);
 
-/// The position-island detail pane: the island's mini-grid and coordinate header over
-/// its conflict cards. It owns its own pane element directly; renders the empty prompt
-/// when nothing is selected.
+/// The position-island detail pane. A dispatcher: when an island is selected it renders
+/// the filled pane (its mini-grid coordinate header over the conflict cards), otherwise
+/// the empty prompt. The selection is read from collision-selection context.
 #[component]
 pub fn IslandDetail(props: IslandDetailProps) -> Element {
-    let Some(data) = logic::selected(&props) else {
-        return rsx! {
-            section {
-                class: DETAIL,
-                "data-empty": true,
-                p { {data::EMPTY_PROMPT} }
-            }
-        };
-    };
-    let IslandDetailData {
-        coordinate,
-        count,
-        cards,
-    } = data;
-    let header = IslandDetailHeaderProps { coordinate, count };
-    let grid = IslandConflictGridProps { cards };
-    rsx! {
-        section {
-            class: DETAIL,
-            "data-empty": false,
-            IslandDetailHeader { ..header }
-            IslandConflictGrid { ..grid }
+    let selected_island = use_collision_selection().selected_island();
+    if let Some(data) = logic::selected(&props, selected_island) {
+        let filled = FilledIslandDetailProps::from(&data);
+        rsx! {
+            FilledIslandDetail { ..filled }
+        }
+    } else {
+        rsx! {
+            EmptyIslandDetail {}
         }
     }
 }

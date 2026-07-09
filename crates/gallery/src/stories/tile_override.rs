@@ -14,7 +14,6 @@ use hotkey_editor::components::app::components::shell::components::editor_page::
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_tile_override::components::tile_override::components::tile_override_upgrade_picker::components::upgrade_position_picker::UpgradePositionPicker;
 
 use super::editor_mount::EditorMount;
-use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::ObjectLookup;
 use warcraft_api::WARCRAFT_DATABASE;
@@ -148,14 +147,14 @@ fn upgrade_tier_selector_default() -> Element {
     let active_tier_index: usize = 0;
     let total_tier_count: usize = 3;
     let tier_label_text = "Level 1 of 3".to_string();
-    let tier_overrides = use_signal(HashMap::<WarcraftObjectId, usize>::new);
     rsx! {
-        UpgradeTier {
-            object_id,
-            active_tier_index,
-            total_tier_count,
-            tier_label_text,
-            tier_overrides,
+        EditorMount {
+            UpgradeTier {
+                object_id,
+                active_tier_index,
+                total_tier_count,
+                tier_label_text,
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ use tw_macro::tw;
 // gold fill, gold border and glyph, and the strong glow. It fills the box its host
 // button hands it (`size-full`); font *size* inherits from the host. Focus is a pseudo
 // of the *host* button, reflected through its `group/editable-keycap` marker. The corner
-// radius is the one look variant, driven by `data-radius`.
+// radius comes from the inherited `--keycap-radius` (panel when the host leaves it unset).
 
 classes! {
     base: tw![
@@ -24,8 +24,7 @@ classes! {
         "text-center",
         "transition-[box-shadow,border-color,background,color]",
         "duration-base",
-        "data-[radius=tile]:rounded-tile",
-        "data-[radius=panel]:rounded-panel",
+        "rounded-[var(--keycap-radius,var(--radius-panel))]",
         "hover:border-warcraft-gold",
         "hover:bg-warcraft-gold/12",
         "hover:shadow-glow-soft",

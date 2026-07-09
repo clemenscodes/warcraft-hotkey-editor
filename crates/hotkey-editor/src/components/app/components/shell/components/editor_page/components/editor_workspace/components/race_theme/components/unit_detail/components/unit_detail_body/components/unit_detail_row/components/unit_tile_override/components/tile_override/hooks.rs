@@ -234,7 +234,6 @@ pub(super) fn use_tile_override(props: &TileOverrideProps) -> TileOverrideModel 
         upgrade_display_name,
         alt_picker_slots,
         upgrade_picker_slots,
-        tier_overrides,
     };
     TileOverrideModel::from(inputs)
 }

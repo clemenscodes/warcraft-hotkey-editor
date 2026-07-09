@@ -2,7 +2,6 @@ use crate::components::app::components::shell::components::shared::tile_face::Ti
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
 use dioxus::prelude::*;
-use warcraft_api::Race;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
 
 /// The interactive editor tile's props: the `TileFace` painter's visual fields plus the
@@ -13,8 +12,6 @@ use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, 
 pub struct GridEditorTileProps {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
     pub coordinate: GridCoordinate,
-    #[props(default = Race::Neutral)]
-    pub race: Race,
     #[props(default)]
     pub icon: Option<String>,
     #[props(default)]
@@ -55,7 +52,6 @@ impl From<&GridEditorTileProps> for TileFaceProps {
     /// The painter's slice of the editor tile: the visual fields, none of the interaction.
     fn from(props: &GridEditorTileProps) -> Self {
         let coordinate = props.coordinate;
-        let race = props.race;
         let icon = props.icon.clone();
         let label = props.label.clone();
         let hotkey = props.hotkey;
@@ -63,7 +59,6 @@ impl From<&GridEditorTileProps> for TileFaceProps {
         let state = props.state;
         Self {
             coordinate,
-            race,
             icon,
             label,
             hotkey,
@@ -82,7 +77,6 @@ impl From<&RenderedTile> for GridEditorTileProps {
         let face = TileFaceProps::from(rendered);
         let TileFaceProps {
             coordinate,
-            race,
             icon,
             label,
             hotkey,
@@ -93,7 +87,6 @@ impl From<&RenderedTile> for GridEditorTileProps {
         let draggable = rendered.draggable();
         Self {
             coordinate,
-            race,
             icon,
             label,
             hotkey,

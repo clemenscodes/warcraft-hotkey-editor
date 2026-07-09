@@ -1,6 +1,6 @@
 use super::state::LayoutTileState;
 use crate::components::app::components::shell::components::shared::editable_keycap::{
-    EditableKeycapProps, EditableKeycapRadius, EditableKeycapState,
+    EditableKeycapProps, EditableKeycapState,
 };
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
@@ -26,10 +26,6 @@ impl From<&LayoutTileProps> for EditableKeycapProps {
             LayoutTileState::Idle => EditableKeycapState::Idle,
             LayoutTileState::Editing => EditableKeycapState::Editing,
         };
-        Self {
-            label,
-            radius: EditableKeycapRadius::Panel,
-            state,
-        }
+        Self { label, state }
     }
 }

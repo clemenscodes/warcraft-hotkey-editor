@@ -140,35 +140,22 @@ fn defense_matchup_row_heavy() -> Element {
 }
 
 fn hero_level_option_selected() -> Element {
-    let level_index: u32 = 5;
-    let current_level: u32 = 5;
-    let initial_level: u32 = 5;
-    let initial_open: bool = false;
-    let selected_hero_level = use_signal(|| initial_level);
-    let level_picker_open = use_signal(|| initial_open);
+    // EditorMount seeds the selected hero level to 1, so level 1 renders as active.
+    let level_index: u32 = 1;
+    let level_picker_open = use_signal(|| false);
     rsx! {
-        HeroLevelOption {
-            level_index,
-            current_level,
-            selected_hero_level,
-            level_picker_open,
+        EditorMount {
+            HeroLevelOption { level_index, level_picker_open }
         }
     }
 }
 
 fn hero_level_option_unselected() -> Element {
     let level_index: u32 = 3;
-    let current_level: u32 = 5;
-    let initial_level: u32 = 5;
-    let initial_open: bool = false;
-    let selected_hero_level = use_signal(|| initial_level);
-    let level_picker_open = use_signal(|| initial_open);
+    let level_picker_open = use_signal(|| false);
     rsx! {
-        HeroLevelOption {
-            level_index,
-            current_level,
-            selected_hero_level,
-            level_picker_open,
+        EditorMount {
+            HeroLevelOption { level_index, level_picker_open }
         }
     }
 }
@@ -210,15 +197,10 @@ fn unit_detail_header_hero() -> Element {
 fn unit_stats_panel_empty() -> Element {
     let combat = UnitCombat::EMPTY;
     let hero_attributes = None;
-    let initial_level: u32 = 1;
-    let selected_hero_level = use_signal(|| initial_level);
     let evasion = Evasion::default();
     rsx! {
-        UnitStatsPanel {
-            combat,
-            hero_attributes,
-            selected_hero_level,
-            evasion,
+        EditorMount {
+            UnitStatsPanel { combat, hero_attributes, evasion }
         }
     }
 }
@@ -233,15 +215,10 @@ fn unit_stats_panel_archmage() -> Element {
     };
     let combat = *unit_meta.combat();
     let hero_attributes = unit_meta.hero_attributes().copied();
-    let initial_level: u32 = 1;
-    let selected_hero_level = use_signal(|| initial_level);
     let evasion = Evasion::default();
     rsx! {
-        UnitStatsPanel {
-            combat,
-            hero_attributes,
-            selected_hero_level,
-            evasion,
+        EditorMount {
+            UnitStatsPanel { combat, hero_attributes, evasion }
         }
     }
 }
@@ -256,15 +233,10 @@ fn unit_stats_panel_footman() -> Element {
     };
     let combat = *unit_meta.combat();
     let hero_attributes = None;
-    let initial_level: u32 = 1;
-    let selected_hero_level = use_signal(|| initial_level);
     let evasion = Evasion::default();
     rsx! {
-        UnitStatsPanel {
-            combat,
-            hero_attributes,
-            selected_hero_level,
-            evasion,
+        EditorMount {
+            UnitStatsPanel { combat, hero_attributes, evasion }
         }
     }
 }
@@ -334,13 +306,15 @@ fn unit_command_grids_footman() -> Element {
         .collect::<Rc<[GridSlotId]>>();
     rsx! {
         EditorMount {
-            UnitCommandGrids {
-                unit_id,
-                race: Race::Human,
-                command_card_slots,
-                build_menu_slots: None,
-                uprooted_menu_slots: None,
-                research_menu_slots: None,
+            div {
+                class: "[--race-accent:var(--color-race-human)]",
+                UnitCommandGrids {
+                    unit_id,
+                    command_card_slots,
+                    build_menu_slots: None,
+                    uprooted_menu_slots: None,
+                    research_menu_slots: None,
+                }
             }
         }
     }

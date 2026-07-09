@@ -1,2 +1,2 @@
-pub mod unit_position_conflict_grid;
-pub mod unit_position_detail_header;
+pub mod empty_unit_position_detail;
+pub mod filled_unit_position_detail;

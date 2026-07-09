@@ -3,7 +3,6 @@ use crate::services::customkeys::service::CustomKeysService;
 use dioxus::prelude::*;
 use std::ops::Range;
 
-use warcraft_api::Race;
 use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, ColumnIndex, GridBehavior, GridCoordinate, HotkeyToken, RenderedTile,
     RowIndex,
@@ -43,7 +42,6 @@ impl EditorHeadedGridProps {
         let config = &props.config;
         let toast = consume_toast();
         let grid_id = config.heading;
-        let race = config.race;
         let loaded_keys = config.loaded_keys;
         let grid_layout = config.grid_layout;
         let selected_slot = config.selected_slot;
@@ -152,7 +150,6 @@ impl EditorHeadedGridProps {
                 mechanics::lost_pointer_capture(dragging_slot, drop_target_tile, drag_follower);
             let click = mechanics::click(on_select, coordinate);
             let double_click = mechanics::double_click(on_activate, coordinate);
-            tile.race = race;
             tile.is_dragging_source = is_dragging_source;
             tile.is_drag_over = is_drag_over;
             tile.state = final_state;
@@ -183,7 +180,6 @@ fn placeholder_tile() -> GridEditorTileProps {
     let coordinate = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
     GridEditorTileProps {
         coordinate,
-        race: Race::Neutral,
         icon: None,
         label: String::new(),
         hotkey: HotkeyToken::Escape,

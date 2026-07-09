@@ -7,9 +7,8 @@ use super::components::unit_detail_header::UnitDetailHeaderProps;
 use super::components::unit_stats_panel::UnitStatsPanelProps;
 use super::logic::ResolvedUnit;
 use super::state::UnitDetailModel;
-use dioxus::prelude::*;
 use std::rc::Rc;
-use warcraft_api::{Race, WarcraftObjectId};
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{GridSlotId, InspectorDetail};
 
 /// Every computed intermediate the loaded panel's props tree is built from. The hook
@@ -17,10 +16,8 @@ use warcraft_keybinds::{GridSlotId, InspectorDetail};
 /// of these; the whole child props tree then derives itself through the `From` impl
 /// below, so the hook never assembles a props struct by hand.
 pub(super) struct UnitDetailInputs {
-    pub(super) race: Race,
     pub(super) unit_id: WarcraftObjectId,
     pub(super) resolved_unit: ResolvedUnit,
-    pub(super) selected_hero_level: Signal<u32>,
     pub(super) command_card_slots: Rc<[GridSlotId]>,
     pub(super) build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
@@ -32,10 +29,8 @@ pub(super) struct UnitDetailInputs {
 impl From<UnitDetailInputs> for UnitDetailModel {
     fn from(inputs: UnitDetailInputs) -> Self {
         let UnitDetailInputs {
-            race,
             unit_id,
             resolved_unit,
-            selected_hero_level,
             command_card_slots,
             build_menu_slots,
             uprooted_menu_slots,
@@ -64,12 +59,10 @@ impl From<UnitDetailInputs> for UnitDetailModel {
         let stats = UnitStatsPanelProps {
             combat,
             hero_attributes,
-            selected_hero_level,
             evasion,
         };
         let grids = UnitCommandGridsProps {
             unit_id,
-            race,
             command_card_slots,
             build_menu_slots,
             uprooted_menu_slots,

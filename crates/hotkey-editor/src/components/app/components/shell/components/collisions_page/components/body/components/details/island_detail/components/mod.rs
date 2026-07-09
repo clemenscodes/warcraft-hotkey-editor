@@ -1,2 +1,2 @@
-pub mod island_conflict_grid;
-pub mod island_detail_header;
+pub mod empty_island_detail;
+pub mod filled_island_detail;

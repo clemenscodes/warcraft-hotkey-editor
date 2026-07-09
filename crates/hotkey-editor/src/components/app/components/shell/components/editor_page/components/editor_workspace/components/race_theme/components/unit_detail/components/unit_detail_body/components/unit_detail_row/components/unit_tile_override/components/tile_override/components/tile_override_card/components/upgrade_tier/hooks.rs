@@ -6,6 +6,7 @@ use super::props::UpgradeTierProps;
 use crate::components::app::components::shell::components::shared::icons::{
     ICON_TIER_NEXT, ICON_TIER_PREV,
 };
+use crate::services::editor_state::context::use_editor_state;
 
 /// The tier selector's finished children: the prev/next arrow buttons (each with
 /// its wrapping cycle handler) around the caption.
@@ -18,7 +19,7 @@ pub(super) struct UpgradeTierModel {
 pub(super) fn use_upgrade_tier(props: &UpgradeTierProps) -> UpgradeTierModel {
     let object_id = props.object_id;
     let total_tier_count = props.total_tier_count;
-    let mut tier_overrides = props.tier_overrides;
+    let mut tier_overrides = use_editor_state().tier_overrides();
     let on_prev = EventHandler::new(move |_event: MouseEvent| {
         let mut writable_guard = tier_overrides.write();
         let current = writable_guard.get(&object_id).copied().unwrap_or(0);

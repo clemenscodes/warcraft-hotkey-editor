@@ -1,5 +1,5 @@
 use crate::components::app::components::shell::components::shared::editable_keycap::{
-    EditableKeycapProps, EditableKeycapRadius, EditableKeycapState,
+    EditableKeycapProps, EditableKeycapState,
 };
 use dioxus::prelude::*;
 
@@ -35,10 +35,6 @@ impl From<&OverrideKeyProps> for EditableKeycapProps {
         } else {
             EditableKeycapState::Idle
         };
-        Self {
-            label,
-            radius: EditableKeycapRadius::Tile,
-            state,
-        }
+        Self { label, state }
     }
 }

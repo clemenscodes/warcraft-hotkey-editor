@@ -10,6 +10,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "group/editable-keycap",
+        "[--keycap-radius:var(--radius-tile)]",
         "flex",
         "items-center",
         "justify-center",

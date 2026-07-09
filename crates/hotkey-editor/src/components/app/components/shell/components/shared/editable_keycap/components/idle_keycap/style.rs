@@ -6,8 +6,8 @@ use tw_macro::tw;
 // each host picks its own scale (`text-2xl` vs `text-5xl`) while the cap look stays
 // shared. Focus is a pseudo of the *host* button (the focusable, keyboard-navigable
 // element), so the keycap reflects it through the host's `group/editable-keycap` marker
-// rather than its own `:focus-visible`. The corner radius is the one look variant,
-// driven by `data-radius`.
+// rather than its own `:focus-visible`. The corner radius comes from the inherited
+// `--keycap-radius` (panel when the host leaves it unset).
 
 classes! {
     base: tw![
@@ -26,8 +26,7 @@ classes! {
         "text-center",
         "transition-[box-shadow,border-color,background,color]",
         "duration-base",
-        "data-[radius=tile]:rounded-tile",
-        "data-[radius=panel]:rounded-panel",
+        "rounded-[var(--keycap-radius,var(--radius-panel))]",
         "hover:border-warcraft-gold",
         "hover:bg-warcraft-gold/12",
         "hover:shadow-glow-soft",

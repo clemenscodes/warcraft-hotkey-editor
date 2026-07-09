@@ -7,18 +7,8 @@ pub enum MatchupStrength {
     Weak,
 }
 
-impl MatchupStrength {
-    pub(super) fn data_attribute(self) -> &'static str {
-        match self {
-            Self::Neutral => "neutral",
-            Self::Strong => "strong",
-            Self::Weak => "weak",
-        }
-    }
-}
-
 /// The domain decides the strength band (the balance call); this is only the
-/// renderer's presentation view of it, carrying the `data-matchup` tint.
+/// renderer's presentation view of it, dispatching the tinted cell variant.
 impl From<warcraft_keybinds::MatchupStrength> for MatchupStrength {
     fn from(strength: warcraft_keybinds::MatchupStrength) -> Self {
         match strength {

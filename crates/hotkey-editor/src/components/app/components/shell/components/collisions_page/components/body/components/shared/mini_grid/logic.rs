@@ -2,7 +2,6 @@ use super::props::MiniGridProps;
 use crate::components::app::components::shell::components::shared::grid_tile::{
     GridTileProps, GridTileState,
 };
-use warcraft_api::Race;
 use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_TILE_COUNT};
 
 /// The twelve read-only base tiles: the command grid's cells in row-major order, all
@@ -21,12 +20,10 @@ pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_C
         } else {
             GridTileState::Empty
         };
-        let race = Race::Neutral;
         let icon = None;
         let label = String::new();
         let tile = GridTileProps {
             coordinate,
-            race,
             icon,
             label,
             state,

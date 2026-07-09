@@ -1,4 +1,4 @@
-use super::components::unit_position_conflict_grid::components::unit_position_conflict_card::UnitPositionConflictCardProps;
+use super::components::filled_unit_position_detail::components::unit_position_conflict_grid::components::unit_position_conflict_card::UnitPositionConflictCardProps;
 use super::props::UnitPositionDetailProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnitProps;
 use dioxus::prelude::*;
@@ -17,8 +17,11 @@ pub(super) struct UnitPositionDetailData {
 
 /// Resolves the selected unit and shapes its header and conflict cards, or `None`
 /// when nothing is selected.
-pub(super) fn selected(props: &UnitPositionDetailProps) -> Option<UnitPositionDetailData> {
-    let selected_key = props.selected_unit.read().clone();
+pub(super) fn selected(
+    props: &UnitPositionDetailProps,
+    selected_unit: Signal<Option<String>>,
+) -> Option<UnitPositionDetailData> {
+    let selected_key = selected_unit.read().clone();
     let key = selected_key?;
     let unit_view = props
         .units

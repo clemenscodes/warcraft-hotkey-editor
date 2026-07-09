@@ -1,56 +1,29 @@
 pub mod components;
+mod hooks;
 mod logic;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon::AbilityIcon;
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::mini_grid::MiniGrid;
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRow;
-use components::anchor_column::AnchorColumn;
-use components::fight_name_button::FightNameButton;
-use components::move_arrow::MoveArrow;
+use components::move_panel::{MovePanel, MovePanelProps};
 use dioxus::prelude::*;
-use logic::MoveRowModel;
+use hooks::use_move_row;
 pub use props::MoveRowProps;
-use style::{CLASS, FIGHT_COLUMN, FIGHT_ROW, MOVE_TRANSITION, PANEL, TRANSITION_COLUMN};
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(MoveRow);
 
 /// One move card: the reason badge, the fighting abilities (names over icons), and
-/// the from -> to grids drawing where each ability lands. It owns its own card surface
-/// and layout directly. The rival column renders itself away when the move has no
-/// anchor.
+/// the from -> to grids drawing where each ability lands. It owns only the grid root
+/// and hands the shaped move to the panel that lays the card out. Its mover-name link
+/// opens the unit through the navigation read from context.
 #[component]
 pub fn MoveRow(props: MoveRowProps) -> Element {
-    let model = MoveRowModel::from(&props);
+    let model = use_move_row(&props);
+    let panel = MovePanelProps::from(model);
     rsx! {
         div {
             class: CLASS,
-            div {
-                class: PANEL,
-                MoveReasonRow { ..model.reason_row }
-                div {
-                    class: FIGHT_ROW,
-                    div {
-                        class: FIGHT_COLUMN,
-                        FightNameButton { ..model.mover_name_btn }
-                        AbilityIcon { ..model.mover_ability }
-                    }
-                    AnchorColumn { ..model.anchor }
-                }
-                div {
-                    class: MOVE_TRANSITION,
-                    div {
-                        class: TRANSITION_COLUMN,
-                        MiniGrid { placements: model.from_placements }
-                    }
-                    MoveArrow {}
-                    div {
-                        class: TRANSITION_COLUMN,
-                        MiniGrid { placements: model.to_placements }
-                    }
-                }
-            }
+            MovePanel { ..panel }
         }
     }
 }

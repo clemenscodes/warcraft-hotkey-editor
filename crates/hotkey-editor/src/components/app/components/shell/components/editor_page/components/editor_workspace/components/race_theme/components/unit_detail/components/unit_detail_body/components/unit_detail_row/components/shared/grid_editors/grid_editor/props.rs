@@ -2,7 +2,7 @@ use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
 use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
-use warcraft_api::{Race, WarcraftObjectId};
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::{GridBehavior, GridLayout, GridSlotId};
 
@@ -13,10 +13,6 @@ use warcraft_keybinds::{GridBehavior, GridLayout, GridSlotId};
 #[derive(Props, Clone, PartialEq)]
 pub struct GridEditorConfig {
     pub heading: &'static str,
-    /// The owning unit's race, forwarded to every tile for accent theming. One
-    /// race per grid.
-    #[props(default = Race::Neutral)]
-    pub race: Race,
     pub slot_ids: Rc<[GridSlotId]>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub selected_slot: Signal<Option<GridSlotId>>,

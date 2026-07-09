@@ -2,7 +2,6 @@ use super::props::MiniGridProps;
 use crate::components::app::components::shell::components::shared::grid_tile::{
     GridTileProps, GridTileState,
 };
-use warcraft_api::Race;
 use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, COMMAND_GRID_TILE_COUNT, GridCoordinate,
 };
@@ -16,21 +15,21 @@ pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_C
     let mut tile_list: Vec<GridTileProps> = Vec::with_capacity(COMMAND_GRID_TILE_COUNT);
     for grid_row in 0..COMMAND_GRID_ROWS {
         for grid_column in 0..COMMAND_GRID_COLUMNS {
-            let placement = props
-                .placements
-                .iter()
-                .find(|placed| placed.column() == grid_column && placed.row() == grid_row);
+            let placement = props.placements.iter().find(|placed| {
+                let coordinate = placed.coordinate();
+                let placed_column = u8::from(coordinate.column());
+                let placed_row = u8::from(coordinate.row());
+                placed_column == grid_column && placed_row == grid_row
+            });
             let icon = placement.and_then(|placed| placed.icon_url().map(str::to_owned));
             let state = if placement.is_some() {
                 GridTileState::Filled
             } else {
                 GridTileState::Empty
             };
-            let race = Race::Neutral;
             let label = String::new();
             let tile = GridTileProps {
                 coordinate,
-                race,
                 icon,
                 label,
                 state,

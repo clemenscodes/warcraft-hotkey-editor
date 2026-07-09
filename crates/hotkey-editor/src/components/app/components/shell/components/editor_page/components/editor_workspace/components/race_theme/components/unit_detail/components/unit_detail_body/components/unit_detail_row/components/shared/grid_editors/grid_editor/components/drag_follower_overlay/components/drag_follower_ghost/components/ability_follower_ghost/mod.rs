@@ -15,13 +15,11 @@ assert_component!(AbilityFollowerGhost);
 pub fn AbilityFollowerGhost(props: AbilityFollowerGhostProps) -> Element {
     let figure = FollowerFigureProps::from(&props.presentation);
     let badge = FollowerBadgeProps::from(&props.presentation);
-    let race = props.race_attribute;
     let style = props.presentation.style;
     rsx! {
         div {
             class: CLASS,
             style,
-            "data-race": race,
             FollowerFigure { ..figure }
             FollowerBadge { ..badge }
         }

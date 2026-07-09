@@ -1,31 +1,42 @@
 pub mod components;
+mod logic;
 mod props;
 mod state;
-mod style;
+mod subject;
 
-use components::matchup_label::{MatchupLabel, MatchupLabelProps};
-use components::matchup_value::{MatchupValue, MatchupValueProps};
+use components::neutral_matchup::{NeutralMatchup, NeutralMatchupProps};
+use components::strong_matchup::{StrongMatchup, StrongMatchupProps};
+use components::weak_matchup::{WeakMatchup, WeakMatchupProps};
 use dioxus::prelude::*;
 pub use props::MatchupProps;
 pub use state::MatchupStrength;
-use style::CLASS;
+pub use subject::MatchupSubject;
 use tw_macro::assert_component;
 assert_component!(Matchup);
 
-/// One matchup cell: label and value, tinted by the matchup strength (the `group`).
+/// One matchup cell. A dispatcher: from the matchup strength it renders the strong,
+/// weak, or neutral cell — each owns its own tint and publishes the `--matchup-color`
+/// its value reads, so there is no `data-matchup` attribute.
 #[component]
 pub fn Matchup(props: MatchupProps) -> Element {
-    let label = MatchupLabelProps::from(&props);
-    let value = MatchupValueProps::from(&props);
-    let strength = props.strength.data_attribute();
-    let title = props.title;
-    rsx! {
-        div {
-            class: CLASS,
-            "data-matchup": strength,
-            title,
-            MatchupLabel { ..label }
-            MatchupValue { ..value }
+    match props.strength {
+        MatchupStrength::Strong => {
+            let cell = StrongMatchupProps::from(&props);
+            rsx! {
+                StrongMatchup { ..cell }
+            }
+        }
+        MatchupStrength::Weak => {
+            let cell = WeakMatchupProps::from(&props);
+            rsx! {
+                WeakMatchup { ..cell }
+            }
+        }
+        MatchupStrength::Neutral => {
+            let cell = NeutralMatchupProps::from(&props);
+            rsx! {
+                NeutralMatchup { ..cell }
+            }
         }
     }
 }

@@ -1,56 +1,32 @@
-mod components;
+pub mod components;
 mod data;
 mod logic;
 mod props;
-mod style;
 
-use components::unit_position_conflict_grid::{
-    UnitPositionConflictGrid, UnitPositionConflictGridProps,
-};
-use components::unit_position_detail_header::{
-    UnitPositionDetailHeader, UnitPositionDetailHeaderProps,
+use crate::services::collision_selection::context::use_collision_selection;
+use components::empty_unit_position_detail::EmptyUnitPositionDetail;
+use components::filled_unit_position_detail::{
+    FilledUnitPositionDetail, FilledUnitPositionDetailProps,
 };
 use dioxus::prelude::*;
-use logic::UnitPositionDetailData;
 pub use props::UnitPositionDetailProps;
-use style::DETAIL;
 use tw_macro::assert_component;
 assert_component!(UnitPositionDetail);
 
-/// The position-collision detail pane: the selected unit's header over its conflict
-/// cards. It owns its own pane element directly; renders the empty prompt when nothing
-/// is selected.
+/// The position-collision detail pane. A dispatcher: when a unit is selected it renders
+/// the filled pane (the unit header over its position-conflict cards), otherwise the
+/// empty prompt. The selection is read from collision-selection context.
 #[component]
 pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
-    let Some(data) = logic::selected(&props) else {
-        return rsx! {
-            section {
-                class: DETAIL,
-                "data-empty": true,
-                p { {data::EMPTY_PROMPT} }
-            }
-        };
-    };
-    let UnitPositionDetailData {
-        unit,
-        name,
-        unit_id,
-        count,
-        cards,
-    } = data;
-    let header = UnitPositionDetailHeaderProps {
-        unit,
-        name,
-        unit_id,
-        count,
-    };
-    let grid = UnitPositionConflictGridProps { cards };
-    rsx! {
-        section {
-            class: DETAIL,
-            "data-empty": false,
-            UnitPositionDetailHeader { ..header }
-            UnitPositionConflictGrid { ..grid }
+    let selected_unit = use_collision_selection().selected_unit_position();
+    if let Some(data) = logic::selected(&props, selected_unit) {
+        let filled = FilledUnitPositionDetailProps::from(&data);
+        rsx! {
+            FilledUnitPositionDetail { ..filled }
+        }
+    } else {
+        rsx! {
+            EmptyUnitPositionDetail {}
         }
     }
 }

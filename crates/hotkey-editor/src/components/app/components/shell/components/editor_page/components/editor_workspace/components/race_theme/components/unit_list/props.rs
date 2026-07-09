@@ -3,8 +3,10 @@ use warcraft_api::UnitKind;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-use super::components::mobile_category_tab::MobileCategoryTabProps;
-use super::components::unit_category_section::UnitCategorySectionProps;
+use super::components::category_scroll::CategoryScrollProps;
+use super::components::category_scroll::components::category_track::components::unit_category_section::UnitCategorySectionProps;
+use super::components::mobile_category_tabs::MobileCategoryTabsProps;
+use super::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTabProps;
 use super::components::unit_list_search::UnitListSearchProps;
 use super::state::{FirstResult, UnitListState};
 use crate::services::focus::coordinator::FocusCoordinator;
@@ -31,14 +33,14 @@ pub(super) struct SearchKeydownInputs {
 }
 
 /// The unit list's shaped view: the data attributes for the panel, and the finished
-/// props for the search box, the mobile category tabs, and the category sections. The
+/// props for the search box, the mobile category tab row, and the scroll region. The
 /// two toggles read their own context, so they are rendered without props.
 pub(super) struct UnitListModel {
     pub(super) active_category_attr: &'static str,
     pub(super) search_active: bool,
     pub(super) search: UnitListSearchProps,
-    pub(super) mobile_tabs: Vec<MobileCategoryTabProps>,
-    pub(super) sections: Vec<UnitCategorySectionProps>,
+    pub(super) tabs: MobileCategoryTabsProps,
+    pub(super) scroll: CategoryScrollProps,
 }
 
 /// Every computed intermediate the unit list's child props are built from. The hook
@@ -78,17 +80,21 @@ impl From<UnitListInputs> for UnitListModel {
             .iter()
             .map(|&kind| MobileCategoryTabProps { kind })
             .collect();
-        let sections = state
+        let tabs = MobileCategoryTabsProps { tabs: mobile_tabs };
+        let category_sections = state
             .category_kinds()
             .iter()
             .map(|&category_kind| UnitCategorySectionProps { category_kind })
             .collect();
+        let scroll = CategoryScrollProps {
+            sections: category_sections,
+        };
         Self {
             active_category_attr,
             search_active,
             search,
-            mobile_tabs,
-            sections,
+            tabs,
+            scroll,
         }
     }
 }
