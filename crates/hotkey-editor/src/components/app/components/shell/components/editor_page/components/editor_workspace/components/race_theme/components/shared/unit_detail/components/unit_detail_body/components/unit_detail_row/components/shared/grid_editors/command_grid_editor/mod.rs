@@ -1,13 +1,13 @@
-use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use super::grid_editor::{GridEditor, GridEditorView};
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_keybinds::CommandBehavior;
 
 /// The ordinary command card, build menus, and off-state position pickers.
 #[component]
-pub fn CommandGridEditor(props: GridEditorConfig) -> Element {
+pub fn CommandGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor { ..GridEditorProps::<CommandBehavior>::from(&props) }
+        GridEditor::<CommandBehavior> { config: props }
     }
 }
 

@@ -310,11 +310,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783702793,
-        "narHash": "sha256-AQWbQGDL2Imh4SYkHugvpdoIWXA3QL91nrvWj3aQe9U=",
+        "lastModified": 1783703812,
+        "narHash": "sha256-d1SdQqhtnx3e4CMO7FcRcxz/5XOqo0bspK69BTjPgJU=",
         "owner": "clemenscodes",
         "repo": "tw-lint",
-        "rev": "9572e0fe986a4b3fb57f1a51c68a9e50c00458c9",
+        "rev": "c7cc4f7fea55044485539bb3270ac847e1d3ccb0",
         "type": "github"
       },
       "original": {

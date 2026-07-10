@@ -1,5 +1,5 @@
 use super::hooks::AltPositionPickerModel;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorConfig;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
 use dioxus::prelude::*;
 
 /// The off-state picker's own shell, shaped from its model: the open value driving the
@@ -12,7 +12,7 @@ pub(super) struct AltPositionPickerShell {
     pub(super) title: String,
     pub(super) on_close: EventHandler<()>,
     pub(super) explainer_text: String,
-    pub(super) grid_config: GridEditorConfig,
+    pub(super) grid_config: GridEditorView,
 }
 
 impl From<&AltPositionPickerModel> for AltPositionPickerShell {

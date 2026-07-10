@@ -2,7 +2,6 @@ pub mod components;
 mod props;
 mod style;
 
-
 use components::mini_grid::MiniGrid;
 use dioxus::prelude::*;
 use props::MiniGridFrameProps;

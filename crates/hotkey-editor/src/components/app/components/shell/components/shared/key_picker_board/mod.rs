@@ -36,8 +36,12 @@ pub fn KeyPickerBoard(props: KeyPickerBoardProps) -> Element {
             tabindex: "-1",
             onkeydown,
             for column in columns {
-                let rows = column.into_rows();
-                KeyPickerColumn { rows, on_pick }
+                {
+                    let rows = column.into_rows();
+                    rsx! {
+                        KeyPickerColumn { rows, on_pick }
+                    }
+                }
             }
         }
     }

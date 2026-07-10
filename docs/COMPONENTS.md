@@ -1036,6 +1036,40 @@ from a *domain* type the component itself renders.
 - A leaf with no shaping needs no hook: its body places its own props' fields
   directly (`img { src, alt }`).
 
+### The `View` — a component's Published Language (`ddd::View` in `view.rs`)
+
+A component is a small **bounded context**. Its `Props` are its *internal model*:
+private, in `props.rs`, named only inside the component's own module — never `pub`,
+never re-exported, never a field of another props type. When a component is consumed
+**outside its own subtree**, it publishes a **contract** its consumers integrate
+against: a `pub struct XView` in a dedicated **`view.rs`**, which **is** the
+component's input (`#[component] fn X(view: XView)`) and implements `ddd::View`.
+
+Consumers build and pass the `View` (it is a public API); they never name another
+component's private `Props`. A `View` that is byte-identical to a `Props` is **not**
+duplication — it is an API surface, free to diverge tomorrow without breaking
+callers. In DDD terms the `View` is an **Open Host Service / Published Language** and
+the private `Props` is the internal model; keeping them separate is what stops one
+component coupling to another's internals.
+
+**Two shapes:**
+
+- **View is the input** (default). The component takes its `View` directly and reads
+  its fields. No separate `Props`. Most shared leaves (`TileFace`, `GridTile`,
+  `Breadcrumb`) are this: `#[component] fn TileFace(view: TileFaceView)`.
+- **View + internal `Props`** (only when the component *translates* the contract into
+  a richer internal model — a deliberate **Anti-Corruption Layer**). Then `XProps`
+  (private) implements **`ddd::Props`** — which *requires* `for<'a> From<&'a XView>` —
+  so a private model **cannot exist without publishing the `View` it is `From`**. The
+  generic grid editor is the worked example: `GridEditorView` (public, `ddd::View`)
+  is the caller contract; `GridEditorProps<B>` (private, `ddd::Props<View =
+  GridEditorView>`) is the behavior-bound internal model, and the variant renders
+  `GridEditor::<CommandBehavior> { config: view }` — turbofish binds `B`, the `View`
+  crosses as a named field, and `GridEditorProps` is never named outside its module.
+
+The invariant, made structural: **a consumer names only `View`s (public) and domain
+values; never a `Props` (private).** `grep` for `pub use props::` must return zero.
+
 ## Markup has no branches that build values
 
 No `if let` in the body to decide what to render. Push the optional or branching

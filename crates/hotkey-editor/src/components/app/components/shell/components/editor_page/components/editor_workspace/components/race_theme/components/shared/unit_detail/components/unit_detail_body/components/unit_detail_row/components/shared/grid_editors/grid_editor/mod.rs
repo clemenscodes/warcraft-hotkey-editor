@@ -2,12 +2,16 @@ pub mod components;
 mod logic;
 mod props;
 mod style;
+mod view;
+
+pub use view::GridEditorView;
+
+use props::GridEditorProps;
 
 use components::drag_follower_overlay::DragFollowerOverlay;
 use components::editor_headed_grid::EditorHeadedGrid;
 use components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
-use props::{GridEditorConfig, GridEditorProps};
 use std::rc::Rc;
 use style::CLASS;
 use tw_macro::assert_component;

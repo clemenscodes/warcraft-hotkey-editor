@@ -1,6 +1,6 @@
 use super::props::MiniGridProps;
 use crate::components::app::components::shell::components::shared::grid_tile::{
-    GridTileView, GridTileState,
+    GridTileState, GridTileView,
 };
 use warcraft_keybinds::{COMMAND_GRID_COLUMNS, COMMAND_GRID_TILE_COUNT};
 

@@ -4,7 +4,7 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
 use super::props::AltPositionPickerProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorConfig;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
@@ -16,7 +16,7 @@ pub(super) struct AltPositionPickerModel {
     pub(super) open: Signal<bool>,
     pub(super) dialog_title: String,
     pub(super) explainer_text: String,
-    pub(super) grid_config: GridEditorConfig,
+    pub(super) grid_config: GridEditorView,
 }
 
 pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPositionPickerModel {
@@ -37,7 +37,7 @@ pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPosi
     let hotkey_assign_request = use_signal(|| false);
     let dialog_title = format!("Position: {}", props.display_name);
     let restrict_draggable: Vec<GridSlotId> = vec![GridSlotId::ability_off(object_id)];
-    let grid_config = GridEditorConfig {
+    let grid_config = GridEditorView {
         heading: "Off-state position",
         slot_ids: props.picker_slots.clone(),
         loaded_keys,

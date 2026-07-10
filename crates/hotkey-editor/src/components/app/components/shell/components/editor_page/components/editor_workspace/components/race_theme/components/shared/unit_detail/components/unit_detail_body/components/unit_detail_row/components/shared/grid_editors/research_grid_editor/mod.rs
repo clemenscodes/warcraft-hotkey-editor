@@ -1,13 +1,13 @@
-use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use super::grid_editor::{GridEditor, GridEditorView};
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_keybinds::ResearchBehavior;
 
 /// A research menu: positions and hotkeys live in the secondary namespace.
 #[component]
-pub fn ResearchGridEditor(props: GridEditorConfig) -> Element {
+pub fn ResearchGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor { ..GridEditorProps::<ResearchBehavior>::from(&props) }
+        GridEditor::<ResearchBehavior> { config: props }
     }
 }
 

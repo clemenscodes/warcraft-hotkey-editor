@@ -1,6 +1,6 @@
 use super::data;
 use super::props::UnitCommandGridsProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorConfig;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
 use crate::services::editor_state::EditorState;
 use dioxus::prelude::Signal;
 use std::rc::Rc;
@@ -9,10 +9,10 @@ use warcraft_keybinds::{CustomKeys, GridLayout, GridSlotId};
 /// The four finished grid-editor configs: the always-present command card, and the
 /// build/uprooted/research menus when the unit has them.
 pub(super) struct UnitCommandGridsModel {
-    pub(super) command_card: GridEditorConfig,
-    pub(super) build_menu: Option<GridEditorConfig>,
-    pub(super) uprooted: Option<GridEditorConfig>,
-    pub(super) research: Option<GridEditorConfig>,
+    pub(super) command_card: GridEditorView,
+    pub(super) build_menu: Option<GridEditorView>,
+    pub(super) uprooted: Option<GridEditorView>,
+    pub(super) research: Option<GridEditorView>,
 }
 
 impl UnitCommandGridsModel {
@@ -74,9 +74,9 @@ impl UnitCommandGridsModel {
         editor: EditorState,
         heading: &'static str,
         slot_ids: Rc<[GridSlotId]>,
-    ) -> GridEditorConfig {
+    ) -> GridEditorView {
         let host_unit_id = props.unit_id;
-        GridEditorConfig {
+        GridEditorView {
             heading,
             slot_ids,
             loaded_keys,

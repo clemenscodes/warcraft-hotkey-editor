@@ -1,13 +1,13 @@
-use super::grid_editor::{GridEditor, GridEditorConfig, GridEditorProps};
+use super::grid_editor::{GridEditor, GridEditorView};
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_keybinds::AlternateFormBehavior;
 
 /// An alternate-form menu (an uprooted Ancient).
 #[component]
-pub fn UprootedGridEditor(props: GridEditorConfig) -> Element {
+pub fn UprootedGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor { ..GridEditorProps::<AlternateFormBehavior>::from(&props) }
+        GridEditor::<AlternateFormBehavior> { config: props }
     }
 }
 

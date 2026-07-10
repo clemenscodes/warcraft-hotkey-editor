@@ -76,6 +76,22 @@ tasks:
       runFromWorkspaceRoot: true
       cache: false
 
+  # Interactively resolve conflicts: for each conflict tw-lint shows the file and
+  # the two clashing classes and asks which to keep. You decide; it applies your
+  # choice. Run `cargo fmt --all` after (tw-lint reformats the blocks it touches).
+  tailwind/resolve:
+    toolchain: system
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.input.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\['
+      --class-regex '"([^"]*)"' --resolve && cargo fmt --all
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      interactive: true
+      cache: false
+
   ci:
     deps:
       - tailwind/lint
