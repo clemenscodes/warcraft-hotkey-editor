@@ -13,7 +13,7 @@ classes! {
         "mobile:sticky",
         "mobile:bottom-0",
         "mobile:z-100",
-        "mobile:-left-[0.85rem]",
+        "mobile:left-[-0.85rem]",
         "mobile:w-[calc(100%+1.7rem)]",
         "mobile:pt-0",
     ],

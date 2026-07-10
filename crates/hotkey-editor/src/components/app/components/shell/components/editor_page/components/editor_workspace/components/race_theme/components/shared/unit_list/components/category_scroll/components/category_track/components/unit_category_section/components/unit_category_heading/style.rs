@@ -21,6 +21,10 @@ classes! {
         "focus:outline-none",
         "kb-focus:text-warcraft-gold",
     ],
-    mobile: tw!["mobile:hidden"],
-    tablet: tw!["tablet:hidden"],
+    mobile: tw![
+        "mobile:hidden",
+    ],
+    tablet: tw![
+        "tablet:hidden",
+    ],
 }

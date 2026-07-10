@@ -9,5 +9,7 @@ classes! {
         "gap-2",
         "[&>button]:min-h-[6.7rem]!",
     ],
-    mobile: tw!["mobile:[&>button]:min-h-14!"],
+    mobile: tw![
+        "mobile:[&>button]:min-h-14!",
+    ],
 }

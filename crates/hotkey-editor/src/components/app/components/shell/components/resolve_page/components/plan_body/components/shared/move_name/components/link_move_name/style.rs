@@ -11,5 +11,7 @@ classes! {
         "group-[:not(:disabled):hover]:underline",
         "group-[:not(:disabled):hover]:underline-offset-2",
     ],
-    mobile: tw!["mobile:text-base"],
+    mobile: tw![
+        "mobile:text-base",
+    ],
 }

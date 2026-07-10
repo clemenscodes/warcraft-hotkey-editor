@@ -15,8 +15,12 @@ classes! {
         "min-h-0",
         "gap-4",
     ],
-    mobile: tw!["mobile:flex-none"],
-    tablet: tw!["tablet:flex-none"],
+    mobile: tw![
+        "mobile:flex-none",
+    ],
+    tablet: tw![
+        "tablet:flex-none",
+    ],
     laptop: tw![
         "laptop:grid-cols-[34rem_minmax(0,1fr)]",
         "laptop:grid-rows-[1fr]",

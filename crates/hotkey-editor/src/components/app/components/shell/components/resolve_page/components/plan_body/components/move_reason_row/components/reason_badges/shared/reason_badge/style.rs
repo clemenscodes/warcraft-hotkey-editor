@@ -19,7 +19,7 @@ classes! {
         "border-solid",
         "text-shadow-drop",
         "whitespace-nowrap",
-        "text-[var(--reason-color)]",
+        "text-(--reason-color)",
         "border-[color-mix(in_oklab,var(--reason-color)_60%,transparent)]",
         "bg-[color-mix(in_oklab,var(--reason-color)_12%,transparent)]",
     ],

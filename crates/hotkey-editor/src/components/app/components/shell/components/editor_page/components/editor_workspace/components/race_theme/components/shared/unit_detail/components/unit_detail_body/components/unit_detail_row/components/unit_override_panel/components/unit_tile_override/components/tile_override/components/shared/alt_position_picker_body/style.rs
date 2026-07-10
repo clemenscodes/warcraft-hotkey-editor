@@ -12,6 +12,8 @@ classes! {
         "items-center",
         "gap-6",
         "overflow-y-auto",
-        "pt-8", "px-10", "pb-10",
+        "pt-8",
+        "px-10",
+        "pb-10",
     ],
 }

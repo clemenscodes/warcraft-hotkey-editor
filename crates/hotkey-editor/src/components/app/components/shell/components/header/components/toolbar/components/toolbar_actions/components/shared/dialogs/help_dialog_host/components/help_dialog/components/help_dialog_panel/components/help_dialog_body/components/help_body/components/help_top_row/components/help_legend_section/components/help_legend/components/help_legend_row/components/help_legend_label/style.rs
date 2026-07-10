@@ -6,6 +6,12 @@ classes! {
         "text-warcraft-gold",
         "text-shadow-drop",
     ],
-    mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
-    tablet: tw!["tablet:text-lg", "tablet:leading-prose"],
+    mobile: tw![
+        "mobile:text-lg",
+        "mobile:leading-prose",
+    ],
+    tablet: tw![
+        "tablet:text-lg",
+        "tablet:leading-prose",
+    ],
 }

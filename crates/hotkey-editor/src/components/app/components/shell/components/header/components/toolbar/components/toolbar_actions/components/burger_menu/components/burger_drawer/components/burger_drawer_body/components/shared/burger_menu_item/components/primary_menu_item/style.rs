@@ -28,7 +28,6 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
         "kb-focus:shadow-focus",
-        "bg-panel-gold-resting",
         "border-warcraft-gold",
         "text-warcraft-gold",
         "shadow-glow",

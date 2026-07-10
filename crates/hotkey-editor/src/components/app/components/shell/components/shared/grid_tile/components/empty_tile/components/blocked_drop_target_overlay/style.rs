@@ -8,7 +8,7 @@ classes! {
         "absolute",
         "inset-0",
         "pointer-events-none",
-        "rounded-[var(--tile-corner-radius,5.2cqi)]",
+        "rounded-(--tile-corner-radius,5.2cqi)",
         "[background:color-mix(in_oklab,var(--color-warcraft-danger)_4%,transparent)]",
     ],
 }

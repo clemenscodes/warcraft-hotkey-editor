@@ -19,9 +19,15 @@ classes! {
         "starting:opacity-0",
         "starting:translate-x-8",
         "starting:scale-95",
-        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]", "kb-focus:shadow-toast-focus",
-        "border-warcraft-gold", "shadow-overlay",
+        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
+        "kb-focus:shadow-toast-focus",
+        "border-warcraft-gold",
+        "shadow-overlay",
     ],
-    mobile: tw!["mobile:max-w-[calc(100vw-1.5rem)]"],
-    tablet: tw!["tablet:max-w-[calc(100vw-1.5rem)]"],
+    mobile: tw![
+        "mobile:max-w-[calc(100vw-1.5rem)]",
+    ],
+    tablet: tw![
+        "tablet:max-w-[calc(100vw-1.5rem)]",
+    ],
 }

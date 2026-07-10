@@ -12,6 +12,7 @@ classes! {
         "self-center",
         "[&>svg]:w-8",
         "[&>svg]:h-8",
-        "bg-warcraft-success/18", "text-warcraft-success",
+        "bg-warcraft-success/18",
+        "text-warcraft-success",
     ],
 }

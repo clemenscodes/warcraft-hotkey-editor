@@ -1,4 +1,4 @@
-use crate::components::app::components::shell::components::shared::grid_tile::GridTileProps;
+use crate::components::app::components::shell::components::shared::grid_tile::GridTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -6,5 +6,5 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 /// exactly `COMMAND_GRID_TILE_COUNT` of them.
 #[derive(Props, Clone, PartialEq)]
 pub struct MiniGridProps {
-    pub tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT],
+    pub tiles: [GridTileView; COMMAND_GRID_TILE_COUNT],
 }

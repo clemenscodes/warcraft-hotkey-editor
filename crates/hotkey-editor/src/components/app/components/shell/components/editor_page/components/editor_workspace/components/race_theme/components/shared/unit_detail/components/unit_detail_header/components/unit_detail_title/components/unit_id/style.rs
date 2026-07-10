@@ -4,6 +4,10 @@ classes! {
         "text-warcraft-text-faint",
         "text-base",
     ],
-    mobile: tw!["mobile:text-xs"],
-    tablet: tw!["tablet:text-xs"],
+    mobile: tw![
+        "mobile:text-xs",
+    ],
+    tablet: tw![
+        "tablet:text-xs",
+    ],
 }

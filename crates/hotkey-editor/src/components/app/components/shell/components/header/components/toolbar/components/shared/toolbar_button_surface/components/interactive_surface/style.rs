@@ -31,6 +31,10 @@ classes! {
         "hover:bg-panel-gold-active",
         "hover:shadow-glow",
     ],
-    mobile: tw!["mobile:border-[2.8cqi]"],
-    tablet: tw!["tablet:border-[2.8cqi]"],
+    mobile: tw![
+        "mobile:border-[2.8cqi]",
+    ],
+    tablet: tw![
+        "tablet:border-[2.8cqi]",
+    ],
 }

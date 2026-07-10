@@ -10,5 +10,8 @@ classes! {
         "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
         "[--attribute-label-color:var(--color-warcraft-gold)]",
     ],
-    mobile: tw!["mobile:text-2xl", "mobile:leading-heading"],
+    mobile: tw![
+        "mobile:text-2xl",
+        "mobile:leading-heading",
+    ],
 }

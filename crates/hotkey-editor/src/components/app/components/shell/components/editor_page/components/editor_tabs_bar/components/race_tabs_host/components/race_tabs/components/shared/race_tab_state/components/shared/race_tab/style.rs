@@ -51,7 +51,7 @@ classes! {
         "after:pointer-events-none",
         "after:block",
         "hover:text-white",
-        "hover:border-[var(--race-accent)]",
+        "hover:border-(--race-accent)",
         "hover:[--glow-color:var(--race-accent)]",
         "hover:shadow-glow",
         "focus:outline-none",

@@ -4,7 +4,8 @@ classes! {
         "text-md",
         "leading-none",
         "shrink-0",
-        "transition-[transform]", "duration-slow",
+        "transition-[transform]",
+        "duration-slow",
         "rotate-180",
     ],
 }

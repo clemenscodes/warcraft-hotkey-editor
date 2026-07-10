@@ -7,6 +7,10 @@ classes! {
         "items-start",
         "gap-8",
     ],
-    mobile: tw!["mobile:gap-2"],
-    tablet: tw!["tablet:gap-2"],
+    mobile: tw![
+        "mobile:gap-2",
+    ],
+    tablet: tw![
+        "tablet:gap-2",
+    ],
 }

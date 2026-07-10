@@ -3,7 +3,11 @@ use tw_macro::tw;
 // a horizontal fixed-height carousel on small screens.
 
 classes! {
-    base: tw!["flex", "flex-col", "gap-2"],
+    base: tw![
+        "flex",
+        "flex-col",
+        "gap-2",
+    ],
     mobile: tw![
         "mobile:flex-row",
         "mobile:flex-nowrap",

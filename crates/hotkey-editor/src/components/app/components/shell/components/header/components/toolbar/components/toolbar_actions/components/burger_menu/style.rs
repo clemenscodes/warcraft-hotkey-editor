@@ -30,8 +30,16 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:shadow-focus",
     ],
-    laptop: tw!["laptop:hidden"],
-    desktop: tw!["desktop:hidden"],
-    qhd: tw!["qhd:hidden"],
-    uhd: tw!["uhd:hidden"],
+    laptop: tw![
+        "laptop:hidden",
+    ],
+    desktop: tw![
+        "desktop:hidden",
+    ],
+    qhd: tw![
+        "qhd:hidden",
+    ],
+    uhd: tw![
+        "uhd:hidden",
+    ],
 }

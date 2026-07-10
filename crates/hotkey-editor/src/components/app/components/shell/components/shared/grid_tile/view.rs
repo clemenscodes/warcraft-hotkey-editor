@@ -9,7 +9,7 @@ use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
 /// tile; the drag flags it forwards drive the mounted overlay children. Its address is
 /// the domain `GridCoordinate`.
 #[derive(Props, Clone, PartialEq)]
-pub struct GridTileProps {
+pub struct GridTileView {
     /// The tile's address in the grid, the domain `GridCoordinate`.
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
     pub coordinate: GridCoordinate,
@@ -30,3 +30,5 @@ pub struct GridTileProps {
     #[props(default)]
     pub is_drag_over: bool,
 }
+
+impl ddd::View for GridTileView {}

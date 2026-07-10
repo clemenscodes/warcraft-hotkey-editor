@@ -22,14 +22,14 @@ classes! {
         "touch-manipulation",
         "focus:outline-none",
         "kb-focus:outline-none",
-        "min-h-[var(--slot-host-min-h,auto)]",
+        "min-h-(--slot-host-min-h,auto)",
     ],
     mobile: tw![
-        "mobile:aspect-[var(--slot-host-aspect,1/0.95)]",
-        "mobile:min-h-[var(--slot-host-min-h,calc(var(--spacing)*19))]",
+        "mobile:aspect-(--slot-host-aspect,1/0.95)",
+        "mobile:min-h-(--slot-host-min-h,--spacing(19))",
     ],
     tablet: tw![
-        "tablet:aspect-[var(--slot-host-aspect,1/0.95)]",
-        "tablet:min-h-[var(--slot-host-min-h,calc(var(--spacing)*19))]",
+        "tablet:aspect-(--slot-host-aspect,1/0.95)",
+        "tablet:min-h-(--slot-host-min-h,--spacing(19))",
     ],
 }

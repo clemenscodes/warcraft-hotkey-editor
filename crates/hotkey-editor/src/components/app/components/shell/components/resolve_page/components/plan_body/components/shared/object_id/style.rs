@@ -5,5 +5,7 @@ classes! {
         "text-lg",
         "flex-none",
     ],
-    mobile: tw!["mobile:text-xs"],
+    mobile: tw![
+        "mobile:text-xs",
+    ],
 }

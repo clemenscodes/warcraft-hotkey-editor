@@ -26,7 +26,7 @@ classes! {
         "text-center",
         "transition-[box-shadow,border-color,background,color]",
         "duration-base",
-        "rounded-[var(--keycap-radius,var(--radius-panel))]",
+        "rounded-(--keycap-radius,var(--radius-panel))",
         "hover:border-warcraft-gold",
         "hover:bg-warcraft-gold/12",
         "hover:shadow-glow-soft",

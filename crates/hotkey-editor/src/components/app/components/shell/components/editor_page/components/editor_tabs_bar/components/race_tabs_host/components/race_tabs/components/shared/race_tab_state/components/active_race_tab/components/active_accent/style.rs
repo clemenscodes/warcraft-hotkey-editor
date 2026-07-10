@@ -10,7 +10,7 @@ classes! {
         "z-3",
         "rounded-card",
         "border",
-        "border-[var(--race-accent)]",
+        "border-(--race-accent)",
         "[--glow-color:var(--race-accent)]",
         "shadow-glow-strong",
         "pointer-events-none",

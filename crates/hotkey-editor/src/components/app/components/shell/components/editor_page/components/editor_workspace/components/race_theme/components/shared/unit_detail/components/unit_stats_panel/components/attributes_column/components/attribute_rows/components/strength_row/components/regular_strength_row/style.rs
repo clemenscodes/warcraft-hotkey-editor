@@ -10,5 +10,8 @@ classes! {
         "min-w-0",
         "[--attribute-label-color:color-mix(in_oklab,var(--color-warcraft-gold)_90%,transparent)]",
     ],
-    mobile: tw!["mobile:text-2xl", "mobile:leading-heading"],
+    mobile: tw![
+        "mobile:text-2xl",
+        "mobile:leading-heading",
+    ],
 }

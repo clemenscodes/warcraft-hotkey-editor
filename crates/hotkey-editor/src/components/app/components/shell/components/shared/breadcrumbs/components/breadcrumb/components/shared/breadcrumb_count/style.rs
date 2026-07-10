@@ -5,7 +5,7 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "text-xl",
-        "opacity-[var(--count-opacity,0.8)]",
+        "opacity-(--count-opacity,0.8)",
         "before:content-['(']",
         "after:content-[')']",
     ],

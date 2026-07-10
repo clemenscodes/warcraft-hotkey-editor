@@ -21,6 +21,7 @@ classes! {
         "focus:outline-none",
         "kb-focus:border-white",
         "kb-focus:text-white",
-        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]", "kb-focus:shadow-focus",
+        "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
+        "kb-focus:shadow-focus",
     ],
 }

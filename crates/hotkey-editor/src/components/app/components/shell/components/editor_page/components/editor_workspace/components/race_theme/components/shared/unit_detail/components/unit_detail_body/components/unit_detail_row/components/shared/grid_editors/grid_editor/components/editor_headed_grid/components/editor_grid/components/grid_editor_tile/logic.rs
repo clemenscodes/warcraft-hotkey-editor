@@ -1,7 +1,7 @@
 use super::props::GridEditorTileProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
-use crate::components::app::components::shell::components::shared::tile_face::TileFaceProps;
+use crate::components::app::components::shell::components::shared::tile_face::TileFaceView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{GridCoordinate, HotkeyToken, RenderedTile};
 
@@ -33,13 +33,13 @@ pub(crate) struct EditorTile {
 }
 
 impl From<&RenderedTile> for EditorTile {
-    /// The read-only base from a domain tile: the paint comes from `TileFaceProps`, and
+    /// The read-only base from a domain tile: the paint comes from `TileFaceView`, and
     /// the editor overlays behavior on top. Every handler starts at its default (the
     /// `GridEditor` wires them); only the two interaction flags the domain decides —
     /// focusability and draggability — are read from the rendered tile.
     fn from(rendered: &RenderedTile) -> Self {
-        let face = TileFaceProps::from(rendered);
-        let TileFaceProps {
+        let face = TileFaceView::from(rendered);
+        let TileFaceView {
             coordinate,
             icon,
             label,

@@ -7,5 +7,7 @@ classes! {
         "whitespace-nowrap",
         "min-w-0",
     ],
-    mobile: tw!["mobile:text-base"],
+    mobile: tw![
+        "mobile:text-base",
+    ],
 }

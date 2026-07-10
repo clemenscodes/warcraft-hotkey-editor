@@ -11,7 +11,7 @@ classes! {
         "text-ellipsis",
         "whitespace-nowrap",
         "opacity-70",
-        "text-[color:var(--race-accent,var(--color-warcraft-gold))]",
+        "text-(--race-accent,var(--color-warcraft-gold))",
     ],
     mobile: tw![
         "mobile:block",

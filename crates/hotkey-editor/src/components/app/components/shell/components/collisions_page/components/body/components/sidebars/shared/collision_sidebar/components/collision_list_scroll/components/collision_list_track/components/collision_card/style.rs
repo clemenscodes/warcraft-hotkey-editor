@@ -7,7 +7,9 @@ use tw_macro::tw;
 // focus, and the fixed gold selected accent — lives on the surface.
 
 classes! {
-    base: tw!["w-full"],
+    base: tw![
+        "w-full",
+    ],
     mobile: tw![
         "mobile:flex-[1_0_auto]",
         "mobile:w-[min(54cqi,260px)]",

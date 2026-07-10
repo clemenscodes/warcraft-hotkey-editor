@@ -7,6 +7,10 @@ classes! {
         "flex-1",
         "min-w-0",
     ],
-    mobile: tw!["mobile:flex-none"],
-    tablet: tw!["tablet:flex-none"],
+    mobile: tw![
+        "mobile:flex-none",
+    ],
+    tablet: tw![
+        "tablet:flex-none",
+    ],
 }

@@ -7,7 +7,8 @@ classes! {
         "items-stretch",
         "gap-x-8",
         "gap-y-10",
-        "py-6", "px-7",
+        "py-6",
+        "px-7",
         "bg-warcraft-bg-base/55",
         "border",
         "border-warcraft-blue-deep",
@@ -21,6 +22,7 @@ classes! {
     ],
     tablet: tw![
         "tablet:gap-y-7",
-        "tablet:py-6", "tablet:px-7",
+        "tablet:py-6",
+        "tablet:px-7",
     ],
 }

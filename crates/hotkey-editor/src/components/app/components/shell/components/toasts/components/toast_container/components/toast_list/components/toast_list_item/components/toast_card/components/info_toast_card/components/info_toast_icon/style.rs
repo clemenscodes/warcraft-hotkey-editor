@@ -12,6 +12,7 @@ classes! {
         "self-center",
         "[&>svg]:w-8",
         "[&>svg]:h-8",
-        "bg-race-human/18", "text-race-human",
+        "bg-race-human/18",
+        "text-race-human",
     ],
 }

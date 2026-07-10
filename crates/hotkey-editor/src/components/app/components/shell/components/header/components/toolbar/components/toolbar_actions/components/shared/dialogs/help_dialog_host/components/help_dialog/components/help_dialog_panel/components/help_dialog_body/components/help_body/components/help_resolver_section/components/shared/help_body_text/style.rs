@@ -5,6 +5,12 @@ classes! {
         "leading-prose",
         "text-warcraft-text-primary",
     ],
-    mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
-    tablet: tw!["tablet:text-lg", "tablet:leading-prose"],
+    mobile: tw![
+        "mobile:text-lg",
+        "mobile:leading-prose",
+    ],
+    tablet: tw![
+        "tablet:text-lg",
+        "tablet:leading-prose",
+    ],
 }

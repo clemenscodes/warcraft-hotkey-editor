@@ -9,5 +9,7 @@ classes! {
         "text-2xl",
         "[font-variant-numeric:tabular-nums]",
     ],
-    mobile: tw!["mobile:text-3xl"],
+    mobile: tw![
+        "mobile:text-3xl",
+    ],
 }

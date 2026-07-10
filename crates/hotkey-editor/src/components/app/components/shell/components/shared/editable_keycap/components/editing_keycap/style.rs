@@ -24,7 +24,7 @@ classes! {
         "text-center",
         "transition-[box-shadow,border-color,background,color]",
         "duration-base",
-        "rounded-[var(--keycap-radius,var(--radius-panel))]",
+        "rounded-(--keycap-radius,var(--radius-panel))",
         "hover:border-warcraft-gold",
         "hover:bg-warcraft-gold/12",
         "hover:shadow-glow-soft",
@@ -36,8 +36,6 @@ classes! {
         "[@media(hover:none)]:group-focus-visible/editable-keycap:text-warcraft-gold",
         "[@media(hover:none)]:group-focus-visible/editable-keycap:shadow-none",
         "bg-panel-gold",
-        "border-warcraft-gold",
-        "text-warcraft-gold",
         "shadow-glow-strong",
     ],
 }

@@ -3,7 +3,8 @@ use tw_macro::tw;
 // opacity. Shared values with the idle sibling, each written in its own style.rs.
 classes! {
     base: tw![
-        "py-1", "px-0.5",
+        "py-1",
+        "px-0.5",
         "bg-transparent",
         "border-none",
         "cursor-pointer",
@@ -18,6 +19,12 @@ classes! {
         "kb-focus:outline-none",
         "kb-focus:shadow-focus",
     ],
-    mobile: tw!["mobile:flex-none", "mobile:snap-start"],
-    tablet: tw!["tablet:flex-none", "tablet:snap-start"],
+    mobile: tw![
+        "mobile:flex-none",
+        "mobile:snap-start",
+    ],
+    tablet: tw![
+        "tablet:flex-none",
+        "tablet:snap-start",
+    ],
 }

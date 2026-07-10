@@ -16,16 +16,22 @@ classes! {
         "mobile:w-full",
         "mobile:text-xs",
         "mobile:leading-title",
-        "mobile:text-[color:var(--name-color,inherit)]",
+        "mobile:text-(--name-color,inherit)",
     ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",
         "tablet:text-xs",
         "tablet:leading-title",
-        "tablet:text-[color:var(--name-color,inherit)]",
+        "tablet:text-(--name-color,inherit)",
     ],
-    desktop: tw!["desktop:text-lg"],
-    qhd: tw!["qhd:text-lg"],
-    uhd: tw!["uhd:text-lg"],
+    desktop: tw![
+        "desktop:text-lg",
+    ],
+    qhd: tw![
+        "qhd:text-lg",
+    ],
+    uhd: tw![
+        "uhd:text-lg",
+    ],
 }

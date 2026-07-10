@@ -1,4 +1,6 @@
 use tw_macro::tw;
 classes! {
-    base: tw!["grid"],
+    base: tw![
+        "grid",
+    ],
 }

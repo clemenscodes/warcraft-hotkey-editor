@@ -27,8 +27,20 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:shadow-focus",
     ],
-    mobile: tw!["mobile:text-base", "mobile:px-2.5"],
-    tablet: tw!["tablet:text-md", "tablet:px-4"],
-    laptop: tw!["laptop:text-md", "laptop:px-4"],
-    desktop: tw!["desktop:text-md", "desktop:px-4"],
+    mobile: tw![
+        "mobile:text-base",
+        "mobile:px-2.5",
+    ],
+    tablet: tw![
+        "tablet:text-md",
+        "tablet:px-4",
+    ],
+    laptop: tw![
+        "laptop:text-md",
+        "laptop:px-4",
+    ],
+    desktop: tw![
+        "desktop:text-md",
+        "desktop:px-4",
+    ],
 }

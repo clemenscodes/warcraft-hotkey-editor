@@ -1,4 +1,4 @@
-use crate::components::app::components::shell::components::shared::grid_tile::GridTileProps;
+use crate::components::app::components::shell::components::shared::grid_tile::GridTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -8,5 +8,5 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 /// only the surrounding chrome and the tile-scoped border/radius overrides.
 #[derive(Props, Clone, PartialEq)]
 pub struct MiniGridFrameProps {
-    pub tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT],
+    pub tiles: [GridTileView; COMMAND_GRID_TILE_COUNT],
 }

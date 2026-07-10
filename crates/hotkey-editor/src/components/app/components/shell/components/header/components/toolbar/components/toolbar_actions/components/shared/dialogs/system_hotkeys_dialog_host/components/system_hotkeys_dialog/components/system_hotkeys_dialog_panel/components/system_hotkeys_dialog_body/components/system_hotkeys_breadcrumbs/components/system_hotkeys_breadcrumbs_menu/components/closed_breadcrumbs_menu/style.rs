@@ -8,6 +8,10 @@ classes! {
         "gap-3",
         "flex-[1_1_auto]",
     ],
-    mobile: tw!["mobile:hidden"],
-    tablet: tw!["tablet:hidden"],
+    mobile: tw![
+        "mobile:hidden",
+    ],
+    tablet: tw![
+        "tablet:hidden",
+    ],
 }

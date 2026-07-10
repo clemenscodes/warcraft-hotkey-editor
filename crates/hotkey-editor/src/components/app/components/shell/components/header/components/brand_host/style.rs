@@ -13,6 +13,10 @@ classes! {
         "min-w-0",
         "w-[26cqi]",
     ],
-    mobile: tw!["mobile:w-[72cqi]"],
-    tablet: tw!["tablet:w-[55cqi]"],
+    mobile: tw![
+        "mobile:w-[72cqi]",
+    ],
+    tablet: tw![
+        "tablet:w-[55cqi]",
+    ],
 }

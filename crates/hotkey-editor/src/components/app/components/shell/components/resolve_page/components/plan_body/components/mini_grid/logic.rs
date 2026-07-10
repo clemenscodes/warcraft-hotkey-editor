@@ -1,6 +1,6 @@
 use super::props::MiniGridProps;
 use crate::components::app::components::shell::components::shared::grid_tile::{
-    GridTileProps, GridTileState,
+    GridTileView, GridTileState,
 };
 use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, COMMAND_GRID_TILE_COUNT, GridCoordinate,
@@ -10,9 +10,9 @@ use warcraft_keybinds::{
 /// each drawn filled with its ability's icon where a move places one and empty
 /// everywhere else. The mini is read-only, so the tiles carry no meaningful
 /// coordinate — the default stands in for the unused display address.
-pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_COUNT] {
+pub(super) fn grid(props: &MiniGridProps) -> [GridTileView; COMMAND_GRID_TILE_COUNT] {
     let coordinate = GridCoordinate::default();
-    let mut tile_list: Vec<GridTileProps> = Vec::with_capacity(COMMAND_GRID_TILE_COUNT);
+    let mut tile_list: Vec<GridTileView> = Vec::with_capacity(COMMAND_GRID_TILE_COUNT);
     for grid_row in 0..COMMAND_GRID_ROWS {
         for grid_column in 0..COMMAND_GRID_COLUMNS {
             let placement = props.placements.iter().find(|placed| {
@@ -28,7 +28,7 @@ pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_C
                 GridTileState::Empty
             };
             let label = String::new();
-            let tile = GridTileProps {
+            let tile = GridTileView {
                 coordinate,
                 icon,
                 label,
@@ -39,10 +39,10 @@ pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_C
             tile_list.push(tile);
         }
     }
-    let tiles: [GridTileProps; COMMAND_GRID_TILE_COUNT] =
+    let tiles: [GridTileView; COMMAND_GRID_TILE_COUNT] =
         tile_list
             .try_into()
-            .unwrap_or_else(|list: Vec<GridTileProps>| {
+            .unwrap_or_else(|list: Vec<GridTileView>| {
                 panic!(
                     "mini grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
                     list.len(),

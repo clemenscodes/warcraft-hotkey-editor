@@ -4,6 +4,6 @@ classes! {
         "flex-[0_1_auto]",
         "min-w-0",
         "text-inherit",
-        "text-[color:var(--attribute-label-color,var(--color-warcraft-gold))]",
+        "text-(--attribute-label-color,var(--color-warcraft-gold))",
     ],
 }

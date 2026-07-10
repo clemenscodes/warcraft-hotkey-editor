@@ -11,6 +11,10 @@ classes! {
         "rounded-hairline",
         "overflow-hidden",
     ],
-    mobile: tw!["mobile:w-[88px]"],
-    tablet: tw!["tablet:w-[122.67px]"],
+    mobile: tw![
+        "mobile:w-22",
+    ],
+    tablet: tw![
+        "tablet:w-[122.67px]",
+    ],
 }

@@ -7,6 +7,10 @@ classes! {
         "gap-8",
         "w-full",
     ],
-    mobile: tw!["mobile:gap-3.5"],
-    tablet: tw!["tablet:gap-3.5"],
+    mobile: tw![
+        "mobile:gap-3.5",
+    ],
+    tablet: tw![
+        "tablet:gap-3.5",
+    ],
 }

@@ -12,6 +12,7 @@ classes! {
         "self-center",
         "[&>svg]:w-8",
         "[&>svg]:h-8",
-        "bg-race-orc/20", "text-race-orc",
+        "bg-race-orc/20",
+        "text-race-orc",
     ],
 }

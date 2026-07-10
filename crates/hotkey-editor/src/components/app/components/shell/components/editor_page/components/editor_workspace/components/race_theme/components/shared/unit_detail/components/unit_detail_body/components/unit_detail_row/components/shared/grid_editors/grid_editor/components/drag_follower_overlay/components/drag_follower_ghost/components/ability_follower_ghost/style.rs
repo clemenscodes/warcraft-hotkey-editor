@@ -14,7 +14,7 @@ classes! {
         "select-none",
         "border-2",
         "rounded-tile",
-        "border-[color:var(--race-accent,var(--color-warcraft-gold))]",
+        "border-(--race-accent,var(--color-warcraft-gold))",
         "[--glow-color:var(--race-accent,var(--color-warcraft-gold))]",
         "shadow-glow-raised",
         "bg-warcraft-bg-panel/95",

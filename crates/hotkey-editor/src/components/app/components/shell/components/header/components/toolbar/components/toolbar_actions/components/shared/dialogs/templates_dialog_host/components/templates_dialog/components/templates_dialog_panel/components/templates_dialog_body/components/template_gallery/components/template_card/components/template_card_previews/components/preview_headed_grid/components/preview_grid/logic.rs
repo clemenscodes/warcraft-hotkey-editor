@@ -1,6 +1,6 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
-use crate::components::app::components::shell::components::shared::tile_face::TileFaceProps;
+use crate::components::app::components::shell::components::shared::tile_face::TileFaceView;
 use warcraft_keybinds::{GridCoordinate, HotkeyToken, RenderedTile};
 
 /// One preview tile's painted values: the read-only slice of a `TileFace` a preview
@@ -18,8 +18,8 @@ pub(super) struct PreviewTile {
 
 impl From<&RenderedTile> for PreviewTile {
     fn from(rendered: &RenderedTile) -> Self {
-        let face = TileFaceProps::from(rendered);
-        let TileFaceProps {
+        let face = TileFaceView::from(rendered);
+        let TileFaceView {
             coordinate,
             icon,
             label,

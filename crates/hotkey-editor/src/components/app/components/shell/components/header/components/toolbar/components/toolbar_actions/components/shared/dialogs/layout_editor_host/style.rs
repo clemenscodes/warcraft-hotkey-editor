@@ -4,5 +4,7 @@ use tw_macro::tw;
 // grouping wrapper carrying only the identity class, adding no box to the toolbar row.
 
 classes! {
-    base: tw!["contents"],
+    base: tw![
+        "contents",
+    ],
 }

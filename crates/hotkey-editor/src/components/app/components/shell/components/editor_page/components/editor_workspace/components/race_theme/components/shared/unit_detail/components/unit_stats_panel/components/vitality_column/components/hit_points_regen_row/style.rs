@@ -9,8 +9,11 @@ classes! {
         "leading-title",
         "text-shadow-drop",
         "min-w-0",
-        "-translate-y-[0.2rem]",
+        "translate-y-[-0.2rem]",
         "pl-5",
     ],
-    mobile: tw!["mobile:text-2xl", "mobile:leading-heading"],
+    mobile: tw![
+        "mobile:text-2xl",
+        "mobile:leading-heading",
+    ],
 }

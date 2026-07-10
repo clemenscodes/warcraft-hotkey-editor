@@ -7,5 +7,7 @@ classes! {
         "text-warcraft-text-secondary/55",
         "text-shadow-drop",
     ],
-    mobile: tw!["mobile:text-xl"],
+    mobile: tw![
+        "mobile:text-xl",
+    ],
 }

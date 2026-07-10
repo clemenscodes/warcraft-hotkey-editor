@@ -6,7 +6,7 @@ classes! {
         "items-center",
         "justify-center",
         "*:h-15",
-        "*:w-[80px]",
+        "*:w-20",
         "self-center",
         "h-auto",
         "pb-2.5",

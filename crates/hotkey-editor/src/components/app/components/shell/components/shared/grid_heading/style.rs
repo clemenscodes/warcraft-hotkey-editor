@@ -8,9 +8,19 @@ classes! {
         "text-warcraft-gold",
         "text-shadow-drop",
     ],
-    mobile: tw!["mobile:text-base"],
-    tablet: tw!["tablet:text-md"],
-    desktop: tw!["desktop:text-lg"],
-    qhd: tw!["qhd:text-xl"],
-    uhd: tw!["uhd:text-2xl"],
+    mobile: tw![
+        "mobile:text-base",
+    ],
+    tablet: tw![
+        "tablet:text-md",
+    ],
+    desktop: tw![
+        "desktop:text-lg",
+    ],
+    qhd: tw![
+        "qhd:text-xl",
+    ],
+    uhd: tw![
+        "uhd:text-2xl",
+    ],
 }

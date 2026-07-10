@@ -16,7 +16,10 @@ classes! {
     mobile: tw![
         "mobile:grid-cols-[1fr_auto]",
         "mobile:gap-2",
-        "mobile:pt-0", "mobile:pr-0", "mobile:pb-2.5", "mobile:pl-0",
+        "mobile:pt-0",
+        "mobile:pr-0",
+        "mobile:pb-2.5",
+        "mobile:pl-0",
         "mobile:flex-[0_0_auto]",
         "mobile:overflow-hidden",
         "mobile:w-full",
@@ -24,7 +27,10 @@ classes! {
     tablet: tw![
         "tablet:grid-cols-[1fr_auto]",
         "tablet:gap-2",
-        "tablet:pt-0", "tablet:pr-0", "tablet:pb-2.5", "tablet:pl-0",
+        "tablet:pt-0",
+        "tablet:pr-0",
+        "tablet:pb-2.5",
+        "tablet:pl-0",
         "tablet:flex-[0_0_auto]",
         "tablet:overflow-hidden",
         "tablet:w-full",

@@ -20,5 +20,8 @@ classes! {
         "kb-focus:border-warcraft-gold",
         "kb-focus:shadow-glow-soft",
     ],
-    mobile: tw!["mobile:text-lg", "mobile:leading-prose"],
+    mobile: tw![
+        "mobile:text-lg",
+        "mobile:leading-prose",
+    ],
 }

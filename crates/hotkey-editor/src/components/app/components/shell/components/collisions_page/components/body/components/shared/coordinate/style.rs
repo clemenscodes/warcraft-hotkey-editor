@@ -6,7 +6,7 @@ classes! {
     base: tw![
         "text-xl",
         "leading-flush",
-        "text-[color:var(--coordinate-color,var(--color-warcraft-text-primary))]",
+        "text-(--coordinate-color,var(--color-warcraft-text-primary))",
         "whitespace-nowrap",
     ],
 }

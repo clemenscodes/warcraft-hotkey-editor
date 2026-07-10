@@ -9,7 +9,7 @@ classes! {
         "pb-2",
         "w-full",
         "min-w-0",
-        "text-[var(--label-color,var(--color-white))]",
+        "text-(--label-color,var(--color-white))",
     ],
     mobile: tw![
         "mobile:pt-1",

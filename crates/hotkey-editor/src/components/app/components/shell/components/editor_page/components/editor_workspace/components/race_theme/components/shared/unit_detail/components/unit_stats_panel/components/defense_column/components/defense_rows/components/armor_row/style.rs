@@ -9,5 +9,8 @@ classes! {
         "text-shadow-drop",
         "min-w-0",
     ],
-    mobile: tw!["mobile:text-2xl", "mobile:leading-heading"],
+    mobile: tw![
+        "mobile:text-2xl",
+        "mobile:leading-heading",
+    ],
 }

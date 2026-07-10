@@ -3,7 +3,9 @@ use tw_macro::tw;
 // flex strip of tabs on small screens.
 
 classes! {
-    base: tw!["hidden"],
+    base: tw![
+        "hidden",
+    ],
     mobile: tw![
         "mobile:flex",
         "mobile:flex-row",

@@ -21,7 +21,7 @@ classes! {
         "checked:after:content-['']",
         "checked:after:w-[0.6rem]",
         "checked:after:h-[1.05rem]",
-        "checked:after:-translate-y-[0.18rem]",
+        "checked:after:translate-y-[-0.18rem]",
         "checked:after:border-solid",
         "checked:after:border-warcraft-gold",
         "checked:after:[border-width:0_0.3rem_0.3rem_0]",

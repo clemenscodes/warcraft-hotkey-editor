@@ -4,13 +4,13 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
 
-/// The tile painter's props: only the resting visual of a command-grid slot — its
-/// address, icon, label, hotkey, and the badge/tile states. No interaction: no
-/// handlers, no drag flags, no focus. The editor's `GridEditorTile` Host carries
-/// those and converts down into this; a read-only consumer (templates preview,
-/// gallery) builds it straight from a `RenderedTile`.
+/// The tile painter's published contract (a `ddd::View`): the resting visual of a
+/// command-grid slot — its address, icon, label, hotkey, and the badge/tile states.
+/// No interaction: no handlers, no drag flags, no focus. The editor's
+/// `GridEditorTile` Host carries those and converts down into this; a read-only
+/// consumer (templates preview) builds it straight from a `RenderedTile`.
 #[derive(Props, Clone, PartialEq)]
-pub struct TileFaceProps {
+pub struct TileFaceView {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
     pub coordinate: GridCoordinate,
     #[props(default)]
@@ -33,7 +33,7 @@ pub struct TileFaceProps {
     pub is_drag_over: bool,
 }
 
-impl From<&RenderedTile> for TileFaceProps {
+impl From<&RenderedTile> for TileFaceView {
     /// The one adaptation the UI performs on a domain tile: a raw icon path becomes
     /// an asset URL and the domain flags pick the widget's visual enums. No
     /// decision is made here — this is pure paint, which the editor Host wraps with
@@ -74,3 +74,5 @@ impl From<&RenderedTile> for TileFaceProps {
         }
     }
 }
+
+impl ddd::View for TileFaceView {}

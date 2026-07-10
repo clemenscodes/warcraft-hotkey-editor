@@ -38,3 +38,8 @@ opt-level = "z"
 lto = "fat"
 panic = "abort"
 strip = "symbols"
+
+# Local override so the in-progress `ddd::View` trait (Published Language marker) is
+# available before the ddd repo is retagged. Points at the sibling checkout.
+[patch."https://github.com/clemenscodes/ddd"]
+ddd = { path = "/home/clemens/.local/src/ddd/crates/ddd" }
