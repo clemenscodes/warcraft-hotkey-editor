@@ -5,7 +5,7 @@ use ddd::Repository;
 use std::str::FromStr;
 use warcraft_keybinds::EditorHistory;
 
-use crate::persistence::editor_history_persistence::EditorHistoryPersistence;
+use crate::persistence::editor_history_persistence;
 
 /// Infrastructure adapter that persists the [`EditorHistory`] aggregate to
 /// localStorage, bridging the aggregate's canonical text form and the compressed
@@ -21,12 +21,12 @@ impl Adapter for EditorHistoryRepository {}
 
 impl Repository<EditorHistory> for EditorHistoryRepository {
     fn load(&self) -> Option<EditorHistory> {
-        let stored_text = EditorHistoryPersistence::load_text()?;
+        let stored_text = editor_history_persistence::load_text()?;
         EditorHistory::from_str(stored_text.as_str()).ok()
     }
 
     fn save(&self, aggregate: &EditorHistory) {
         let canonical_text = aggregate.to_string();
-        EditorHistoryPersistence::save_text(&canonical_text);
+        editor_history_persistence::save_text(&canonical_text);
     }
 }

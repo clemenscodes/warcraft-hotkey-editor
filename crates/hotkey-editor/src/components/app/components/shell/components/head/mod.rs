@@ -1,5 +1,6 @@
 use crate::components::app::{FAVICON, KEYBOARD_NAVIGATION_SCRIPT, TAILWIND_STYLES};
 use dioxus::prelude::*;
+use tw_macro::assert_component;
 
 const OG_DESCRIPTION: &str = "Visual command-card editor for Warcraft III: Reforged. \
                               Drag keys, export CustomKeys.txt — runs entirely in your browser.";
@@ -15,10 +16,8 @@ const OG_URL: &str = "https://clemenscodes.github.io/warcraft-hotkey-editor/";
 /// app inside the safe area, so no shell component has to re-inset itself with
 /// `env(safe-area-inset-*)`. `theme-color` paints the browser chrome (and, with the `html`
 /// background, the safe-area strips on a notched phone) the app's own dark blue.
-use tw_macro::assert_component;
-assert_component!(DocumentHead);
 #[component]
-pub fn DocumentHead() -> Element {
+pub fn Head() -> Element {
     rsx! {
         document::Meta {
             name: "viewport",
@@ -27,6 +26,10 @@ pub fn DocumentHead() -> Element {
         document::Meta {
             name: "theme-color",
             content: "#050a1a"
+        }
+        document::Meta {
+            name: "twitter:card",
+            content: "summary_large_image"
         }
         document::Meta {
             property: "og:type",
@@ -48,16 +51,26 @@ pub fn DocumentHead() -> Element {
             property: "og:url",
             content: OG_URL
         }
-        document::Meta {
-            name: "twitter:card",
-            content: "summary_large_image"
-        }
         document::Link {
             rel: "preload",
             href: "/warcraft-hotkey-editor/fonts/frizqt.ttf",
             r#as: "font",
             r#type: "font/ttf",
             crossorigin: "anonymous",
+        }
+        document::Link {
+            rel: "apple-touch-icon",
+            href: "icon-192.png"
+        }
+        document::Link {
+            rel: "icon",
+            r#type: "image/x-icon",
+            href: "favicon.ico",
+        }
+        document::Link {
+            rel: "icon",
+            r#type: "image/svg+xml",
+            href: FAVICON,
         }
         document::Stylesheet {
             href: TAILWIND_STYLES
@@ -66,19 +79,7 @@ pub fn DocumentHead() -> Element {
             src: KEYBOARD_NAVIGATION_SCRIPT,
             r#type: "module",
         }
-        document::Link {
-            rel: "icon",
-            r#type: "image/svg+xml",
-            href: FAVICON,
-        }
-        document::Link {
-            rel: "icon",
-            r#type: "image/x-icon",
-            href: "favicon.ico",
-        }
-        document::Link {
-            rel: "apple-touch-icon",
-            href: "icon-192.png"
-        }
     }
 }
+
+assert_component!(Head);

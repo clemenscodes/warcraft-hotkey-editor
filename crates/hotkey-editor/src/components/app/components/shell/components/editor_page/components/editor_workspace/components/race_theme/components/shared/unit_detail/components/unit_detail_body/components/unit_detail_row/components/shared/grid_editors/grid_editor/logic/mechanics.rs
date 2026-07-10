@@ -1,9 +1,10 @@
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
-    DRAG_SOURCE_GRID_ELEMENT, DragMovePoint, DragOrigin, DragRafClosure, DragThreadState,
-    LATEST_DRAG_MOVE, LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK,
-    SUPPRESS_NEXT_DOUBLE_CLICK, TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE,
-    TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
+    DRAG_SOURCE_GRID_ELEMENT, DragMovePoint, DragOrigin, DragRafClosure, LATEST_DRAG_MOVE,
+    LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
+    TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE, TOUCH_LONG_PRESS_TIMER_ID,
+    TOUCH_STARTED, cancel_drag_raf, cancel_long_press, install_scroll_lock, remove_scroll_lock,
+    reset,
 };
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
@@ -71,7 +72,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         if !is_touch && TOUCH_STARTED.with(|c| c.replace(false)) {
             return;
         }
-        DragThreadState::reset();
+        reset();
         if is_touch {
             TOUCH_STARTED.with(|c| c.set(true));
         }
@@ -140,7 +141,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
                 {
                     return;
                 }
-                DragThreadState::install_scroll_lock();
+                install_scroll_lock();
                 DID_DRAG_MOVE.with(|c| c.set(true));
                 let source_grid_element = pending.grid_element.clone();
                 DRAG_SOURCE_GRID_ELEMENT
@@ -195,7 +196,7 @@ pub(crate) fn pointer_move(
             let pending_pointer_id =
                 PENDING_DRAG.with(|cell| cell.borrow().as_ref().map(|pending| pending.pointer_id));
             if pending_pointer_id != Some(current_pointer_id) {
-                DragThreadState::cancel_long_press();
+                cancel_long_press();
                 PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
                 DRAG_ORIGIN.with(|cell| cell.set(None));
                 return;
@@ -215,7 +216,7 @@ pub(crate) fn pointer_move(
                     if horizontal_delta * horizontal_delta + vertical_delta * vertical_delta
                         > TOUCH_CANCEL_THRESHOLD_PIXELS * TOUCH_CANCEL_THRESHOLD_PIXELS
                     {
-                        DragThreadState::cancel_long_press();
+                        cancel_long_press();
                         PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
                         DRAG_ORIGIN.with(|cell| cell.set(None));
                         return;
@@ -427,7 +428,7 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
         grid_id,
     } = args;
     move |_event: Event<PointerData>| {
-        DragThreadState::cancel_long_press();
+        cancel_long_press();
         if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
             flush_drag_move(
                 dragging_slot,
@@ -437,7 +438,7 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
                 final_point,
             );
         }
-        DragThreadState::cancel_drag_raf();
+        cancel_drag_raf();
         let dragging_clone = *dragging_slot.read();
         let mut committed = false;
         let mut fell_back = false;
@@ -461,7 +462,7 @@ pub(crate) fn pointer_up(args: PointerUpArgs) -> impl FnMut(Event<PointerData>) 
         let did_move = DID_DRAG_MOVE.with(|cell| cell.replace(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
         PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
-        DragThreadState::remove_scroll_lock();
+        remove_scroll_lock();
         if fell_back
             && did_move
             && let Some(dragging) = dragging_clone.as_ref()
@@ -485,7 +486,7 @@ pub(crate) fn pointer_cancel(
     mut drag_follower: Signal<Option<DragFollower>>,
 ) -> impl FnMut(Event<PointerData>) + 'static {
     move |_event: Event<PointerData>| {
-        DragThreadState::reset();
+        reset();
         dragging_slot.set(None);
         drop_target_tile.set(None);
         drag_follower.set(None);
@@ -498,7 +499,7 @@ pub(crate) fn lost_pointer_capture(
     mut drag_follower: Signal<Option<DragFollower>>,
 ) -> impl FnMut(Event<PointerData>) + 'static {
     move |_event: Event<PointerData>| {
-        DragThreadState::reset();
+        reset();
         dragging_slot.set(None);
         drop_target_tile.set(None);
         drag_follower.set(None);

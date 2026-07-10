@@ -67,16 +67,12 @@ impl CarrierUnitView {
 /// resolve each to a display view. It knows nothing about where it is called from or
 /// how the result is shown — only the data. Both the collisions and resolve pages feed
 /// the carriers dialog from it.
-pub struct Carriers;
-
-impl Carriers {
-    pub(crate) fn for_unit_ids(carrier_unit_ids: &[WarcraftObjectId]) -> Vec<CarrierUnitView> {
-        let mut views: Vec<CarrierUnitView> = Vec::with_capacity(carrier_unit_ids.len());
-        for carrier_unit_id in carrier_unit_ids {
-            let carrier_unit_id = *carrier_unit_id;
-            let view = CarrierUnitView::from(carrier_unit_id);
-            views.push(view);
-        }
-        views
+pub(crate) fn for_unit_ids(carrier_unit_ids: &[WarcraftObjectId]) -> Vec<CarrierUnitView> {
+    let mut views: Vec<CarrierUnitView> = Vec::with_capacity(carrier_unit_ids.len());
+    for carrier_unit_id in carrier_unit_ids {
+        let carrier_unit_id = *carrier_unit_id;
+        let view = CarrierUnitView::from(carrier_unit_id);
+        views.push(view);
     }
+    views
 }

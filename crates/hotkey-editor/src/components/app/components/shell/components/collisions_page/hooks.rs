@@ -2,7 +2,8 @@ use dioxus::prelude::*;
 
 use super::components::body::ContentModel;
 use super::logic::{
-    CollisionBreadcrumbsInputs, CollisionPageModel, HotkeyCollisionPageModel, UnitPositionPageModel,
+    CollisionBreadcrumbsInputs, compute_hotkey_unit_views, compute_island_views,
+    compute_unit_position_views,
 };
 use super::model::{
     CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
@@ -93,17 +94,17 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
 
     let islands_memo = use_memo(move || {
         let report = custom_keys_service.cross_unit_collisions();
-        CollisionPageModel::compute(&report)
+        compute_island_views(&report)
     });
     let hotkey_units_memo = use_memo(move || {
         let layout = *grid_layout.read();
         let report = custom_keys_service.unit_collisions(layout);
-        HotkeyCollisionPageModel::compute(&report)
+        compute_hotkey_unit_views(&report)
     });
     let unit_positions_memo = use_memo(move || {
         let layout = *grid_layout.read();
         let report = custom_keys_service.unit_collisions(layout);
-        UnitPositionPageModel::compute(&report)
+        compute_unit_position_views(&report)
     });
 
     let selected_island = selection.selected_island();

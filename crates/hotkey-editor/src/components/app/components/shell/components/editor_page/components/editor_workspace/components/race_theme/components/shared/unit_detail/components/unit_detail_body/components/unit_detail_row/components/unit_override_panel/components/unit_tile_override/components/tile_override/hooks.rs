@@ -12,7 +12,7 @@ use super::props::{
 use super::state::OverrideEditTarget;
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::customkeys::context::use_loaded_keys;
-use crate::services::customkeys::hotkey_override::HotkeyOverride;
+use crate::services::customkeys::hotkey_override;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
 
@@ -77,7 +77,7 @@ fn use_override_editing(
         let is_research_check = matches!(active_target, OverrideEditTarget::ResearchHotkey);
         let read_guard = loaded_keys.peek();
         let custom_keys_ref = read_guard.as_ref();
-        let conflict = HotkeyOverride::detect_conflict(
+        let conflict = hotkey_override::detect_conflict(
             &picker_active_container,
             picker_object_id,
             token,

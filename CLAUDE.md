@@ -42,7 +42,7 @@ Any other command shape is wrong by definition. If `moon run :ci` fails, fix
 the code and run `moon run :ci` again — never route around it with a
 narrower command.
 
-Three documents define the rules of this project. All are mandatory reading
+Four documents define the rules of this project. All are mandatory reading
 before any non-trivial change:
 
 - `docs/ARCHITECTURE.md` — _where_ code lives (the wall between renderer
@@ -53,6 +53,10 @@ before any non-trivial change:
   disk, and written (directory equals component equals class, pure-RSX
   bodies, props via `From<&ParentProps>`, base/variant layout). Distilled
   from the `grid_editor` subsystem, the worked example for every rule.
+- `docs/AGENTS.md` — _how you work_: the commands/CI rules (never run a
+  second `moon run :ci` concurrently — there is no CPU-load flakiness), the
+  dev/e2e loop and its traps, and the hard-won technical gotchas
+  (pointer-capture click-vs-drag, snapshot `peek`, coupled e2e selectors).
 
 If you skip these and "just patch the bug", you will almost certainly
 violate one of the rules below and reintroduce a bug we already fixed.

@@ -1,5 +1,5 @@
 use super::components::carriers_dialog::CarriersDialogProps;
-use crate::services::carriers::{Carriers, InspectedAbility};
+use crate::services::carriers::{self, InspectedAbility};
 use dioxus::prelude::*;
 
 /// The host's seam: read the ability the trigger opened (if any), resolve its carriers
@@ -11,7 +11,7 @@ pub(super) fn use_carriers_dialog_host(
     let current = open_state.read().clone();
     let ability = current?;
     let title = ability.ability_name().to_owned();
-    let carriers = Carriers::for_unit_ids(ability.carrier_unit_ids());
+    let carriers = carriers::for_unit_ids(ability.carrier_unit_ids());
     let props = CarriersDialogProps {
         title,
         carriers,

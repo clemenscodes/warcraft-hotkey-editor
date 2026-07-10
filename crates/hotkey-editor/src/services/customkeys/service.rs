@@ -14,7 +14,7 @@ use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::MoveRequest;
 use warcraft_keybinds::WarcraftObjectId;
 
-use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
+use crate::persistence::custom_keys_persistence;
 use crate::repository::custom_keys_repository::CustomKeysRepository;
 use crate::services::customkeys::commands::apply_grid_layout_command::ApplyGridLayoutCommand;
 use crate::services::customkeys::commands::move_slot_command::MoveSlotCommand;
@@ -130,7 +130,7 @@ impl CustomKeysService {
     /// caller re-reads on every mutation, then returns the authoritative stored text.
     pub fn exported_text(&self) -> String {
         let _subscribe = self.keys.read();
-        let stored_text = CustomKeysPersistence::load_text();
+        let stored_text = custom_keys_persistence::load_text();
         stored_text.unwrap_or_default()
     }
 

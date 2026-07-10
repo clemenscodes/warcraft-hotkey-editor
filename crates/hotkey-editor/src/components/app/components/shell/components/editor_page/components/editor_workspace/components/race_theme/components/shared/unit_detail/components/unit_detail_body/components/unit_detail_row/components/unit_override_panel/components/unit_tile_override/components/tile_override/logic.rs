@@ -6,7 +6,7 @@ use warcraft_keybinds::{CustomKeys, GridLayout, GridSlotId, HotkeyToken, Inspect
 
 use super::state::OverrideEditTarget;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{KeyPickerCell, KeyPickerCellState};
-use crate::services::customkeys::hotkey_override::HotkeyOverride;
+use crate::services::customkeys::hotkey_override;
 
 /// The four hotkey tokens this override can edit, resolved from the ability's own
 /// bindings with a fallback to whatever letter the active grid layout assigns to the
@@ -307,7 +307,7 @@ impl PickerBoard {
                         let token_value = *token;
                         let state = if Some(token_value) == context.current_token {
                             KeyPickerCellState::Current
-                        } else if let Some(conflict) = HotkeyOverride::detect_conflict(
+                        } else if let Some(conflict) = hotkey_override::detect_conflict(
                             container,
                             target,
                             token_value,

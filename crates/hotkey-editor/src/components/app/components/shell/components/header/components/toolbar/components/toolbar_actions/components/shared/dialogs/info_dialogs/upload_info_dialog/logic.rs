@@ -1,7 +1,7 @@
 use super::data::{INTRO, PRIMARY_LABEL, TITLE};
 use super::props::UploadInfoDialogProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::InfoDialogConfig;
-use crate::services::files::upload::UploadPicker;
+use crate::services::files::upload;
 use dioxus::prelude::*;
 
 impl From<&UploadInfoDialogProps> for InfoDialogConfig {
@@ -10,7 +10,7 @@ impl From<&UploadInfoDialogProps> for InfoDialogConfig {
         let on_cancel = EventHandler::new(move |_event: MouseEvent| open.set(false));
         let on_primary = EventHandler::new(move |_event: MouseEvent| {
             open.set(false);
-            UploadPicker::trigger();
+            upload::trigger();
         });
         let title = TITLE;
         let intro = INTRO;

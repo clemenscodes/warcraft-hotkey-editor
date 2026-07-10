@@ -110,20 +110,16 @@ thread_local! {
     };
 }
 
-pub(crate) struct InventoryDragRaf;
-
-impl InventoryDragRaf {
-    /// Cancels any pending animation frame and drops its state, so a stale
-    /// frame cannot fire after the drag has ended.
-    pub(crate) fn cancel() {
-        if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
-            && let Some(window) = web_sys::window()
-        {
-            let _ = window.cancel_animation_frame(handle);
-        }
-        LATEST_DRAG_MOVE.with(|cell| cell.set(None));
-        DRAG_RAF_CLOSURE.with(|cell| cell.borrow_mut().take());
+/// Cancels any pending animation frame and drops its state, so a stale
+/// frame cannot fire after the drag has ended.
+pub(crate) fn cancel_drag_raf() {
+    if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
+        && let Some(window) = web_sys::window()
+    {
+        let _ = window.cancel_animation_frame(handle);
     }
+    LATEST_DRAG_MOVE.with(|cell| cell.set(None));
+    DRAG_RAF_CLOSURE.with(|cell| cell.borrow_mut().take());
 }
 
 pub(crate) const SLOT_FRAME_GOLD: Asset =

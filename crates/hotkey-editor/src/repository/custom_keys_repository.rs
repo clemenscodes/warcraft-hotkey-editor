@@ -4,7 +4,7 @@ use ddd::Layered;
 use ddd::Repository;
 use warcraft_keybinds::CustomKeys;
 
-use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
+use crate::persistence::custom_keys_persistence;
 
 /// Infrastructure adapter that persists the [`CustomKeys`] aggregate to
 /// localStorage. Its `save` funnels through the canonical `Display` text, so only
@@ -20,13 +20,13 @@ impl Adapter for CustomKeysRepository {}
 
 impl Repository<CustomKeys> for CustomKeysRepository {
     fn load(&self) -> Option<CustomKeys> {
-        let stored_text = CustomKeysPersistence::load_text()?;
+        let stored_text = custom_keys_persistence::load_text()?;
         let parsed_keys = CustomKeys::from_text(stored_text.as_str());
         Some(parsed_keys)
     }
 
     fn save(&self, aggregate: &CustomKeys) {
         let canonical_text = aggregate.to_string();
-        CustomKeysPersistence::save_text(&canonical_text);
+        custom_keys_persistence::save_text(&canonical_text);
     }
 }

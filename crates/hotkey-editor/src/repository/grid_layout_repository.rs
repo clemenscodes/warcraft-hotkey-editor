@@ -4,7 +4,7 @@ use ddd::Layered;
 use ddd::Repository;
 use warcraft_keybinds::GridLayout;
 
-use crate::persistence::grid_layout_persistence::GridLayoutPersistence;
+use crate::persistence::grid_layout_persistence;
 
 /// Infrastructure adapter that persists the selected [`GridLayout`] to
 /// localStorage as its fixed twelve-character storage string.
@@ -19,11 +19,11 @@ impl Adapter for GridLayoutRepository {}
 
 impl Repository<GridLayout> for GridLayoutRepository {
     fn load(&self) -> Option<GridLayout> {
-        GridLayoutPersistence::load_grid_layout()
+        grid_layout_persistence::load_grid_layout()
     }
 
     fn save(&self, aggregate: &GridLayout) {
         let layout = *aggregate;
-        GridLayoutPersistence::save_grid_layout(layout);
+        grid_layout_persistence::save_grid_layout(layout);
     }
 }

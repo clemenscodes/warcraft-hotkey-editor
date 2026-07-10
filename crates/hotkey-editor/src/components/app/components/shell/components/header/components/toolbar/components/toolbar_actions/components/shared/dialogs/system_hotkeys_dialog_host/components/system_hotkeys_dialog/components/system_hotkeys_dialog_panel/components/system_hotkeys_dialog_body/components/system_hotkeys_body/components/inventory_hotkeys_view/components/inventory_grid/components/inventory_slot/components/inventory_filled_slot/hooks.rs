@@ -1,9 +1,9 @@
 use warcraft_api::WarcraftObjectId;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
-    DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragRaf,
-    InventoryDragSource, LATEST_DRAG_MOVE, PENDING_INVENTORY_DRAG, PendingInventoryDrag,
-    SUPPRESS_NEXT_CLICK,
+    DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragSource,
+    LATEST_DRAG_MOVE, PENDING_INVENTORY_DRAG, PendingInventoryDrag, SUPPRESS_NEXT_CLICK,
+    cancel_drag_raf,
 };
 
 use super::logic::{InventoryFilledSlotInputs, InventoryFilledSlotView};
@@ -207,7 +207,7 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         if let Some(final_point) = LATEST_DRAG_MOVE.with(|cell| cell.take()) {
             final_point.flush(drop_target, drag_follower, section_id_for_pointerup);
         }
-        InventoryDragRaf::cancel();
+        cancel_drag_raf();
         let drop_clone = *drop_target.read();
         let mut performed_swap = false;
         if let Some(target_id) = drop_clone
@@ -229,7 +229,7 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         drag_follower.set(None);
     });
     let on_pointercancel = EventHandler::new(move |_event: Event<PointerData>| {
-        InventoryDragRaf::cancel();
+        cancel_drag_raf();
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
         PENDING_INVENTORY_DRAG.with(|cell| *cell.borrow_mut() = None);

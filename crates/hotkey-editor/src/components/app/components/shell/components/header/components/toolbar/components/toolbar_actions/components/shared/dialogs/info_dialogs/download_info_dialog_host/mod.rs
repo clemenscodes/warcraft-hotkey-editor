@@ -2,7 +2,7 @@ use crate::components::app::components::shell::components::header::components::t
     DownloadInfoDialog, DownloadInfoDialogProps,
 };
 use crate::services::customkeys::context::use_custom_keys_service;
-use crate::services::files::download::BlobDownload;
+use crate::services::files::download;
 use dioxus::prelude::*;
 
 /// Connected wrapper for the download dialog: reads the live document from the
@@ -19,7 +19,7 @@ pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
         // R5: the download IS the stored CustomKeys.txt text — read it back, never
         // re-serialize or re-normalize the in-memory aggregate.
         let serialized = custom_keys_service.exported_text();
-        BlobDownload::trigger("CustomKeys.txt", &serialized);
+        download::trigger("CustomKeys.txt", &serialized);
     });
     let dialog = DownloadInfoDialogProps { open, on_confirm };
     rsx! {

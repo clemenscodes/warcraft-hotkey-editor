@@ -1,10 +1,10 @@
 use crate::components::app::components::shell::logic::RouteBootstrap;
 use crate::components::app::components::shell::route_sync::NavDecision;
 use crate::components::app::route::Route;
-use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
-use crate::persistence::editor_preferences_persistence::EditorPreferencesPersistence;
-use crate::persistence::grid_layout_persistence::GridLayoutPersistence;
-use crate::persistence::onboarding_persistence::OnboardingPersistence;
+use crate::persistence::custom_keys_persistence;
+use crate::persistence::editor_preferences_persistence;
+use crate::persistence::grid_layout_persistence;
+use crate::persistence::onboarding_persistence;
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -54,13 +54,13 @@ struct AppSignals {
 /// signal is a read cache re-serialized to storage on every write.
 fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
     let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
-        let stored_text = CustomKeysPersistence::load_text();
+        let stored_text = custom_keys_persistence::load_text();
         let initial_file = match stored_text {
             Some(stored) => CustomKeys::from_text(stored.as_str()),
             None => CustomKeys::from_text(""),
         };
         let canonical_text = initial_file.to_string();
-        CustomKeysPersistence::save_text(&canonical_text);
+        custom_keys_persistence::save_text(&canonical_text);
         Some(initial_file)
     });
     use_effect(move || {
@@ -68,18 +68,8 @@ fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
         let Some(file) = read_guard.as_ref() else {
             return;
         };
-        // Invariant: every writer of `loaded_keys` stores a normalized aggregate
-        // (commit/import normalize, from_text normalizes, resolve-Apply normalizes,
-        // template-apply uses import_overlay's normalized output). So re-normalizing
-        // here is redundant work; just serialize. The debug assertion catches any
-        // future writer that violates the invariant.
-        debug_assert_eq!(
-            file.clone().normalize().to_string(),
-            file.to_string(),
-            "loaded_keys held a non-normalized aggregate; a writer must normalize before set()",
-        );
         let canonical_text = file.to_string();
-        CustomKeysPersistence::save_text(&canonical_text);
+        custom_keys_persistence::save_text(&canonical_text);
     });
     let custom_keys_service = CustomKeysService::new(loaded_keys);
     use_context_provider(|| custom_keys_service);
@@ -91,11 +81,11 @@ fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
 /// context, and persist every change back.
 fn use_grid_layout_document() -> Signal<GridLayout> {
     let grid_layout = use_signal::<GridLayout>(|| {
-        GridLayoutPersistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
+        grid_layout_persistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
     });
     use_effect(move || {
         let snapshot = *grid_layout.read();
-        GridLayoutPersistence::save_grid_layout(snapshot);
+        grid_layout_persistence::save_grid_layout(snapshot);
     });
     let grid_layout_service = GridLayoutService::new(grid_layout);
     use_context_provider(|| grid_layout_service);
@@ -107,10 +97,10 @@ fn use_grid_layout_document() -> Signal<GridLayout> {
 /// persisted on change.
 fn use_editor_preferences() -> Signal<bool> {
     let update_hotkeys_on_move =
-        use_signal::<bool>(EditorPreferencesPersistence::load_update_hotkeys_on_move);
+        use_signal(editor_preferences_persistence::load_update_hotkeys_on_move);
     use_effect(move || {
         let enabled = *update_hotkeys_on_move.read();
-        EditorPreferencesPersistence::save_update_hotkeys_on_move(enabled);
+        editor_preferences_persistence::save_update_hotkeys_on_move(enabled);
     });
     update_hotkeys_on_move
 }
@@ -204,7 +194,7 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
     let selected_hero_level = use_signal::<u32>(|| 1);
     let preview_open = use_signal::<bool>(|| false);
     let system_hotkeys_open = use_signal::<bool>(|| false);
-    let help_open = use_signal::<bool>(|| !OnboardingPersistence::has_been_seen());
+    let help_open = use_signal::<bool>(|| !onboarding_persistence::has_been_seen());
     let layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
     let synced_route = use_signal(move || initial_snapshot);

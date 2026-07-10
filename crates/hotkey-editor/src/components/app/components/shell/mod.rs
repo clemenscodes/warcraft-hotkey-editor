@@ -5,7 +5,7 @@ mod route_sync;
 mod style;
 
 use crate::components::app::route::Route;
-use components::document_head::DocumentHead;
+use components::head::Head;
 use components::footer::Footer;
 use components::header::Header;
 use components::toasts::{ToastContainer, ToastContainerProps, use_toast_provider};
@@ -32,7 +32,7 @@ pub fn Shell() -> Element {
     let toast_model = use_toast_provider();
     let toast_container = ToastContainerProps::from(&toast_model);
     rsx! {
-        DocumentHead {}
+        Head {}
         div {
             class: CLASS,
             onkeydown: handle_keydown,

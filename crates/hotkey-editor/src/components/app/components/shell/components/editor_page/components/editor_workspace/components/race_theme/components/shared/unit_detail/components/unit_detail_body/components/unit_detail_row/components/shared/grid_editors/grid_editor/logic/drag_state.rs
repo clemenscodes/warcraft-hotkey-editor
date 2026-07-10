@@ -109,78 +109,74 @@ thread_local! {
     };
 }
 
-pub(crate) struct DragThreadState;
+pub(crate) fn cancel_long_press() {
+    if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|cell| cell.replace(None))
+        && let Some(window) = web_sys::window()
+    {
+        window.clear_timeout_with_handle(id);
+    }
+    TOUCH_LONG_PRESS_CLOSURE.with(|cell| cell.borrow_mut().take());
+}
 
-impl DragThreadState {
-    pub(crate) fn cancel_long_press() {
-        if let Some(id) = TOUCH_LONG_PRESS_TIMER_ID.with(|cell| cell.replace(None))
-            && let Some(window) = web_sys::window()
-        {
-            window.clear_timeout_with_handle(id);
+pub(crate) fn install_scroll_lock() {
+    TOUCH_SCROLL_LOCK.with(|cell| {
+        if cell.borrow().is_some() {
+            return;
         }
-        TOUCH_LONG_PRESS_CLOSURE.with(|cell| cell.borrow_mut().take());
-    }
-
-    pub(crate) fn install_scroll_lock() {
-        TOUCH_SCROLL_LOCK.with(|cell| {
-            if cell.borrow().is_some() {
-                return;
-            }
-            let Some(document) = web_sys::window().and_then(|window| window.document()) else {
-                return;
-            };
-            let cb = Closure::<dyn FnMut(web_sys::Event)>::new(|event: web_sys::Event| {
-                event.prevent_default();
-            });
-            let options = web_sys::AddEventListenerOptions::new();
-            options.set_capture(true);
-            options.set_passive(false);
-            if document
-                .add_event_listener_with_callback_and_add_event_listener_options(
-                    "touchmove",
-                    cb.as_ref().unchecked_ref(),
-                    &options,
-                )
-                .is_ok()
-            {
-                *cell.borrow_mut() = Some(cb);
-            }
-        });
-    }
-
-    pub(crate) fn remove_scroll_lock() {
-        let cb_option = TOUCH_SCROLL_LOCK.with(|cell| cell.borrow_mut().take());
-        let Some(cb) = cb_option else {
+        let Some(document) = web_sys::window().and_then(|window| window.document()) else {
             return;
         };
-        if let Some(document) = web_sys::window().and_then(|window| window.document()) {
-            let _ = document.remove_event_listener_with_callback_and_bool(
+        let cb = Closure::<dyn FnMut(web_sys::Event)>::new(|event: web_sys::Event| {
+            event.prevent_default();
+        });
+        let options = web_sys::AddEventListenerOptions::new();
+        options.set_capture(true);
+        options.set_passive(false);
+        if document
+            .add_event_listener_with_callback_and_add_event_listener_options(
                 "touchmove",
                 cb.as_ref().unchecked_ref(),
-                true,
-            );
-        }
-    }
-
-    pub(crate) fn cancel_drag_raf() {
-        if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
-            && let Some(window) = web_sys::window()
+                &options,
+            )
+            .is_ok()
         {
-            let _ = window.cancel_animation_frame(handle);
+            *cell.borrow_mut() = Some(cb);
         }
-        LATEST_DRAG_MOVE.with(|cell| cell.set(None));
-        DRAG_RAF_CLOSURE.with(|cell| cell.borrow_mut().take());
-    }
+    });
+}
 
-    pub(crate) fn reset() {
-        Self::cancel_long_press();
-        Self::remove_scroll_lock();
-        Self::cancel_drag_raf();
-        TOUCH_STARTED.with(|cell| cell.set(false));
-        DID_DRAG_MOVE.with(|cell| cell.set(false));
-        DRAG_ORIGIN.with(|cell| cell.set(None));
-        PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
-        DRAG_SOURCE_GRID_ELEMENT.with(|cell| *cell.borrow_mut() = None);
-        SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
+pub(crate) fn remove_scroll_lock() {
+    let cb_option = TOUCH_SCROLL_LOCK.with(|cell| cell.borrow_mut().take());
+    let Some(cb) = cb_option else {
+        return;
+    };
+    if let Some(document) = web_sys::window().and_then(|window| window.document()) {
+        let _ = document.remove_event_listener_with_callback_and_bool(
+            "touchmove",
+            cb.as_ref().unchecked_ref(),
+            true,
+        );
     }
+}
+
+pub(crate) fn cancel_drag_raf() {
+    if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
+        && let Some(window) = web_sys::window()
+    {
+        let _ = window.cancel_animation_frame(handle);
+    }
+    LATEST_DRAG_MOVE.with(|cell| cell.set(None));
+    DRAG_RAF_CLOSURE.with(|cell| cell.borrow_mut().take());
+}
+
+pub(crate) fn reset() {
+    cancel_long_press();
+    remove_scroll_lock();
+    cancel_drag_raf();
+    TOUCH_STARTED.with(|cell| cell.set(false));
+    DID_DRAG_MOVE.with(|cell| cell.set(false));
+    DRAG_ORIGIN.with(|cell| cell.set(None));
+    PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
+    DRAG_SOURCE_GRID_ELEMENT.with(|cell| *cell.borrow_mut() = None);
+    SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
 }
