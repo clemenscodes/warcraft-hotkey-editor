@@ -1,17 +1,15 @@
 pub mod components;
+mod logic;
 mod props;
-mod state;
 mod style;
 
-use super::shared::drag_over_ring::{DragOverRing, DragOverRingProps};
-use components::blocked_drop_target_overlay::{
-    BlockedDropTargetOverlay, BlockedDropTargetOverlayProps,
-};
-use components::drop_target_overlay::{DropTargetOverlay, DropTargetOverlayProps};
-use components::highlight_overlay::{HighlightOverlay, HighlightOverlayProps};
+use super::shared::drag_over_ring::DragOverRing;
+use components::blocked_drop_target_overlay::BlockedDropTargetOverlay;
+use components::drop_target_overlay::DropTargetOverlay;
+use components::highlight_overlay::HighlightOverlay;
 use dioxus::prelude::*;
-pub use props::EmptyTileProps;
-pub use state::EmptyTileState;
+use logic::EmptyTileModel;
+use props::EmptyTileProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -22,17 +20,19 @@ use tw_macro::assert_component;
 /// hotkeys, focus, or dragging; `GridEditorTile` layers all interaction on top.
 #[component]
 pub fn EmptyTile(props: EmptyTileProps) -> Element {
-    let drop_target = DropTargetOverlayProps::from(&props);
-    let blocked_drop_target = BlockedDropTargetOverlayProps::from(&props);
-    let highlight = HighlightOverlayProps::from(&props);
-    let drag_over_ring = DragOverRingProps::from(&props);
+    let EmptyTileModel {
+        drop_target_active,
+        blocked_drop_target_active,
+        highlight_active,
+        is_drag_over,
+    } = EmptyTileModel::from(props);
     rsx! {
         div {
             class: CLASS,
-            DropTargetOverlay { ..drop_target }
-            BlockedDropTargetOverlay { ..blocked_drop_target }
-            HighlightOverlay { ..highlight }
-            DragOverRing { ..drag_over_ring }
+            DropTargetOverlay { active: drop_target_active }
+            BlockedDropTargetOverlay { active: blocked_drop_target_active }
+            HighlightOverlay { active: highlight_active }
+            DragOverRing { active: is_drag_over }
         }
     }
 }

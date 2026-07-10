@@ -4,12 +4,12 @@ mod logic;
 mod props;
 mod style;
 
-use components::fight_row::{FightRow, FightRowProps};
-use components::move_transition::{MoveTransition, MoveTransitionProps};
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRow;
+use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
+use components::fight_row::FightRow;
+use components::move_transition::MoveTransition;
 use dioxus::prelude::*;
-use logic::UnresolvedRowModel;
-pub use props::UnresolvedRowProps;
+use props::UnresolvedRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,22 +18,17 @@ use tw_macro::assert_component;
 /// its own child component.
 #[component]
 pub fn UnresolvedRow(props: UnresolvedRowProps) -> Element {
-    let model = UnresolvedRowModel::from(&props);
-    let reason_row = model.reason_row;
-    let name_plate = model.name_plate;
-    let ability = model.ability;
-    let placements = model.placements;
-    let fight_row = FightRowProps {
-        name_plate,
-        ability,
-    };
-    let move_transition = MoveTransitionProps { placements };
+    let unresolved_view = props.unresolved_view;
+    let placements = logic::placements(&unresolved_view);
     rsx! {
         div {
             class: CLASS,
-            MoveReasonRow { ..reason_row }
-            FightRow { ..fight_row }
-            MoveTransition { ..move_transition }
+            MoveReasonRow {
+                kind: ReasonKind::Stuck,
+                label: data::STUCK_LABEL,
+            }
+            FightRow { unresolved_view }
+            MoveTransition { placements }
         }
     }
 }

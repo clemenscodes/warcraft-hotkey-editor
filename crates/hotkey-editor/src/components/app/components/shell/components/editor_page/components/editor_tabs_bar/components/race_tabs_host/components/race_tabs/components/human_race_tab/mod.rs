@@ -13,10 +13,14 @@ use tw_macro::assert_component;
 /// `style.rs`; the binding it forwards carries no navigation.
 #[component]
 pub fn HumanRaceTab(props: RaceTabBinding) -> Element {
+    let is_active = props.is_active;
+    let label = props.label;
+    let onclick = props.onclick;
+    let onkeydown = props.onkeydown;
     rsx! {
         div {
             class: CLASS,
-            RaceTabState { ..props }
+            RaceTabState { is_active, label, onclick, onkeydown }
         }
     }
 }

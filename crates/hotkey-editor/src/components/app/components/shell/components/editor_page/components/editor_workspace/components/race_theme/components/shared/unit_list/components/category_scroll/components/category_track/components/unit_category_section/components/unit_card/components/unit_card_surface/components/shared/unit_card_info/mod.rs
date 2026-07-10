@@ -2,23 +2,24 @@ pub mod components;
 mod props;
 mod style;
 
-use components::unit_card_id::{UnitCardId, UnitCardIdProps};
-use components::unit_card_name::{UnitCardName, UnitCardNameProps};
+use components::unit_card_id::UnitCardId;
+use components::unit_card_name::UnitCardName;
 use dioxus::prelude::*;
-pub use props::UnitCardInfoProps;
+use props::UnitCardInfoProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The text column of a unit card: name over database id.
 #[component]
 pub fn UnitCardInfo(props: UnitCardInfoProps) -> Element {
-    let name = UnitCardNameProps::from(&props);
-    let id = UnitCardIdProps::from(&props);
+    let display_name = props.display_name.clone();
+    let unit_id = props.unit_id;
+    let is_selected = props.is_selected;
     rsx! {
         div {
             class: CLASS,
-            UnitCardName { ..name }
-            UnitCardId { ..id }
+            UnitCardName { text: display_name }
+            UnitCardId { unit_id, is_selected }
         }
     }
 }

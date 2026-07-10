@@ -11,9 +11,9 @@ use tw_macro::assert_component;
 
 pub(crate) use logic::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
-    DragMovePoint, DragOrigin, DragRafClosure, INVENTORY_COLUMNS, INVENTORY_ROWS, LATEST_DRAG_MOVE,
-    PENDING_INVENTORY_DRAG, PendingInventoryDrag, SLOT_FRAME_GOLD, SUPPRESS_NEXT_CLICK,
-    cancel_drag_raf,
+    DragMovePoint, DragOrigin, DragRafClosure, INVENTORY_COLUMNS, INVENTORY_ROWS,
+    InventoryFilledSlotEntry, InventorySlotEntry, LATEST_DRAG_MOVE, PENDING_INVENTORY_DRAG,
+    PendingInventoryDrag, SLOT_FRAME_GOLD, SUPPRESS_NEXT_CLICK, cancel_drag_raf,
 };
 pub use logic::{InventoryDragFollower, InventoryDragSource};
 
@@ -27,8 +27,8 @@ pub fn InventoryGrid() -> Element {
         div {
             class: CLASS,
             style: model.frame,
-            for slot in model.slots {
-                InventorySlot { ..slot }
+            for InventorySlotEntry { filled } in model.entries {
+                InventorySlot { filled }
             }
         }
     }

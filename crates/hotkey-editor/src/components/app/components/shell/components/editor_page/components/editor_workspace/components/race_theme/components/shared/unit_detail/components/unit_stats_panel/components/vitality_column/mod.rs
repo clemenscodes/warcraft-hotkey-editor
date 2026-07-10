@@ -7,7 +7,7 @@ use components::hit_points_row::HitPointsRow;
 use components::mana_regen_row::ManaRegenRow;
 use components::mana_row::ManaRow;
 use dioxus::prelude::*;
-pub use props::VitalityColumnProps;
+use props::VitalityColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

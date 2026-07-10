@@ -1,12 +1,11 @@
-use super::super::shared::matchup_label::MatchupLabelProps;
-use super::super::shared::matchup_value::MatchupValueProps;
+use super::super::super::subject::MatchupSubject;
 use dioxus::prelude::*;
 
 /// The strong matchup cell: a success-green tint.
 #[derive(Props, Clone, PartialEq)]
 pub struct StrongMatchupProps {
-    pub label: MatchupLabelProps,
-    pub value: MatchupValueProps,
+    pub subject: MatchupSubject,
+    pub multiplier: f32,
     #[props(into)]
     pub title: String,
 }

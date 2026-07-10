@@ -20,16 +20,18 @@ pub fn CatalogVisibilityToggle() -> Element {
         expand_variants: editor.expand_variants(),
     };
     let CatalogVisibilityToggleModel {
-        abilityless_button,
-        variants_button,
+        abilityless_is_active,
+        variants_is_active,
+        toggle_abilityless,
+        toggle_variants,
     } = CatalogVisibilityToggleModel::from(signals);
     rsx! {
         div {
             class: CLASS,
             role: "group",
             aria_label: "Catalog visibility",
-            CatalogVisibilityButton { ..abilityless_button }
-            CatalogVisibilityButton { ..variants_button }
+            CatalogVisibilityButton { label: "No abilities", title: "Show units without abilities (for stats)", is_active: abilityless_is_active, on_toggle: toggle_abilityless }
+            CatalogVisibilityButton { label: "All variants", title: "List every tier / upgrade variant separately", is_active: variants_is_active, on_toggle: toggle_variants }
         }
     }
 }

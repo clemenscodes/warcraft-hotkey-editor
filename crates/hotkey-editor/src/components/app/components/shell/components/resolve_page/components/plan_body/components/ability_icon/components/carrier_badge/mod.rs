@@ -1,11 +1,10 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::regular_carrier_badge::{RegularCarrierBadge, RegularCarrierBadgeProps};
-use components::winner_carrier_badge::{WinnerCarrierBadge, WinnerCarrierBadgeProps};
+use components::regular_carrier_badge::RegularCarrierBadge;
+use components::winner_carrier_badge::WinnerCarrierBadge;
 use dioxus::prelude::*;
-pub use props::CarrierBadgeProps;
+use props::CarrierBadgeProps;
 use tw_macro::assert_component;
 
 /// The carrier-count badge on an ability icon. A dispatcher: from whether its ability
@@ -13,19 +12,14 @@ use tw_macro::assert_component;
 /// `RegularCarrierBadge`; there is no `data-win` attribute.
 #[component]
 pub fn CarrierBadge(props: CarrierBadgeProps) -> Element {
+    let count = props.count;
     match props.is_winner {
-        true => {
-            let badge = WinnerCarrierBadgeProps::from(&props);
-            rsx! {
-                WinnerCarrierBadge { ..badge }
-            }
-        }
-        false => {
-            let badge = RegularCarrierBadgeProps::from(&props);
-            rsx! {
-                RegularCarrierBadge { ..badge }
-            }
-        }
+        true => rsx! {
+            WinnerCarrierBadge { count }
+        },
+        false => rsx! {
+            RegularCarrierBadge { count }
+        },
     }
 }
 

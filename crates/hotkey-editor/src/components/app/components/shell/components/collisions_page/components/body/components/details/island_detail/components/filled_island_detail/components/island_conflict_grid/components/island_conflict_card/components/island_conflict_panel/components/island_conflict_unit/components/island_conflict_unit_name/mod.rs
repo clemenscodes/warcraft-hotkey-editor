@@ -1,7 +1,7 @@
 mod props;
 mod style;
 use dioxus::prelude::*;
-pub use props::IslandConflictUnitNameProps;
+use props::IslandConflictUnitNameProps;
 use style::CLASS;
 use tw_macro::assert_component;
 #[component]

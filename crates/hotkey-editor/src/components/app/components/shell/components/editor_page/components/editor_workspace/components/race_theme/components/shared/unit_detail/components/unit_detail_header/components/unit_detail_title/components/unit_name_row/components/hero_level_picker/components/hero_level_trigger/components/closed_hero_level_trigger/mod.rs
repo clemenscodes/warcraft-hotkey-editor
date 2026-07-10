@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use super::hero_level_trigger_number::{HeroLevelTriggerNumber, HeroLevelTriggerNumberProps};
+use super::hero_level_trigger_number::HeroLevelTriggerNumber;
 use super::shared::hero_level_trigger_label::HeroLevelTriggerLabel;
 use components::closed_hero_level_trigger_chevron::ClosedHeroLevelTriggerChevron;
 use dioxus::prelude::*;
-pub use props::ClosedHeroLevelTriggerProps;
+use props::ClosedHeroLevelTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// root and composes the shared label and number leaves plus its upright caret.
 #[component]
 pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerProps) -> Element {
-    let number = HeroLevelTriggerNumberProps::from(&props);
+    let number = props.number;
     let onclick = props.onclick;
     rsx! {
         button {
@@ -23,7 +23,7 @@ pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerProps) -> Element {
             r#type: "button",
             onclick,
             HeroLevelTriggerLabel {}
-            HeroLevelTriggerNumber { ..number }
+            HeroLevelTriggerNumber { number }
             ClosedHeroLevelTriggerChevron {}
         }
     }

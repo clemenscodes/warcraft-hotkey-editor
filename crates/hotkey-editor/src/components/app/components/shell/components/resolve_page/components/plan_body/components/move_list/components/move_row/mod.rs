@@ -1,28 +1,23 @@
 pub mod components;
-mod hooks;
-mod logic;
 mod props;
 mod style;
 
-use components::move_panel::{MovePanel, MovePanelProps};
+use components::move_panel::MovePanel;
 use dioxus::prelude::*;
-use hooks::use_move_row;
-pub use props::MoveRowProps;
+use props::MoveRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One move card: the reason badge, the fighting abilities (names over icons), and
 /// the from -> to grids drawing where each ability lands. It owns only the grid root
-/// and hands the shaped move to the panel that lays the card out. Its mover-name link
-/// opens the unit through the navigation read from context.
+/// and hands the move down to the panel that lays the card out.
 #[component]
 pub fn MoveRow(props: MoveRowProps) -> Element {
-    let model = use_move_row(&props);
-    let panel = MovePanelProps::from(model);
+    let move_view = props.move_view;
     rsx! {
         div {
             class: CLASS,
-            MovePanel { ..panel }
+            MovePanel { move_view }
         }
     }
 }

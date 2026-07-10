@@ -8,7 +8,7 @@ use super::shared::regen_label::RegenLabel;
 use components::hit_points_regen_gain::HitPointsRegenGain;
 use dioxus::prelude::*;
 use logic::HitPointsRegenPresentation;
-pub use props::HitPointsRegenRowProps;
+use props::HitPointsRegenRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideNameProps;
+use props::TileOverrideNameProps;
 
 /// The ability / unit name heading in the override panel.
 #[component]

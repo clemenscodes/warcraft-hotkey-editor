@@ -4,7 +4,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::mini_grid_frame::MiniGridFrame;
 use dioxus::prelude::*;
-pub use props::MiniGridProps;
+use props::MiniGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -5,17 +5,8 @@ use std::rc::Rc;
 
 use warcraft_keybinds::{CustomKeys, GridBehavior, GridCoordinate, GridLayout, GridSlotId};
 
-use super::super::props::GridEditorProps;
-use crate::components::app::components::shell::components::shared::grid_heading::GridHeadingProps;
 use crate::services::customkeys::service::CustomKeysService;
 use warcraft_keybinds::MoveRequest;
-
-impl<B: GridBehavior> From<&GridEditorProps<B>> for GridHeadingProps {
-    fn from(props: &GridEditorProps<B>) -> Self {
-        let heading = props.config.heading;
-        Self { heading }
-    }
-}
 
 pub(super) fn occupant_at<B: GridBehavior>(
     behavior: &B,

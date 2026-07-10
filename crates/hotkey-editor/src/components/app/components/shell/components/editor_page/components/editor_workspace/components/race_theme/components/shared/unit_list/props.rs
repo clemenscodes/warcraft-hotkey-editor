@@ -3,11 +3,6 @@ use warcraft_api::UnitKind;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-use super::components::category_scroll::CategoryScrollProps;
-use super::components::category_scroll::components::category_track::components::unit_category_section::UnitCategorySectionProps;
-use super::components::mobile_category_tabs::MobileCategoryTabsProps;
-use super::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTabProps;
-use super::components::unit_list_search::UnitListSearchProps;
 use super::state::{FirstResult, UnitListState};
 
 /// The categories the mobile tab bar shows, in display order.
@@ -30,19 +25,23 @@ pub(super) struct SearchKeydownInputs {
     pub(super) active_category: Signal<UnitKind>,
 }
 
-/// The unit list's shaped view: the finished props for the search box, the mobile
-/// category tab row, and the scroll region. The two toggles read their own context,
-/// so they are rendered without props.
+/// The unit list's shaped view: the search box's bound value, placeholder, and
+/// handlers; the mobile tab row's category kinds; and the scroll region's category
+/// kinds — all as domain values. The two toggles read their own context, so they are
+/// rendered without any of this.
 pub(super) struct UnitListModel {
-    pub(super) search: UnitListSearchProps,
-    pub(super) tabs: MobileCategoryTabsProps,
-    pub(super) scroll: CategoryScrollProps,
+    pub(super) search_value: ReadSignal<String>,
+    pub(super) search_placeholder: &'static str,
+    pub(super) on_input: EventHandler<FormEvent>,
+    pub(super) on_keydown: EventHandler<KeyboardEvent>,
+    pub(super) mobile_categories: Vec<UnitKind>,
+    pub(super) category_kinds: Vec<UnitKind>,
 }
 
-/// Every computed intermediate the unit list's child props are built from. The hook
+/// Every computed intermediate the unit list's shaped view is built from. The hook
 /// wires the derived catalog state and the two shaped handlers into one of these; the
-/// child-props tree then derives itself through the `From` impl below, so the hook
-/// never assembles a props struct by hand.
+/// model derives itself through the `From` impl below, so the hook never assembles the
+/// view by hand.
 pub(super) struct UnitListInputs {
     pub(super) state: UnitListState,
     pub(super) raw_query: Signal<String>,
@@ -61,29 +60,15 @@ impl From<UnitListInputs> for UnitListModel {
             on_keydown,
         } = inputs;
         let search_value: ReadSignal<String> = raw_query.into();
-        let search = UnitListSearchProps {
-            value: search_value,
-            placeholder: search_placeholder,
+        let mobile_categories = MOBILE_CATEGORY_ORDER.to_vec();
+        let category_kinds = state.category_kinds().to_vec();
+        Self {
+            search_value,
+            search_placeholder,
             on_input,
             on_keydown,
-        };
-        let mobile_tabs = MOBILE_CATEGORY_ORDER
-            .iter()
-            .map(|&kind| MobileCategoryTabProps { kind })
-            .collect();
-        let tabs = MobileCategoryTabsProps { tabs: mobile_tabs };
-        let category_sections = state
-            .category_kinds()
-            .iter()
-            .map(|&category_kind| UnitCategorySectionProps { category_kind })
-            .collect();
-        let scroll = CategoryScrollProps {
-            sections: category_sections,
-        };
-        Self {
-            search,
-            tabs,
-            scroll,
+            mobile_categories,
+            category_kinds,
         }
     }
 }

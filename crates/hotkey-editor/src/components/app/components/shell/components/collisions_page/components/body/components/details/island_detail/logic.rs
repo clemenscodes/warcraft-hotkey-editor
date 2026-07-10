@@ -1,24 +1,12 @@
-use super::components::filled_island_detail::components::island_conflict_grid::components::island_conflict_card::IslandConflictCardProps;
 use super::props::IslandDetailProps;
+use crate::components::app::components::shell::components::collisions_page::logic::IslandView;
 use dioxus::prelude::*;
-use warcraft_keybinds::GridCoordinate;
 
-/// The selected island's header coordinate and its per-unit conflict cards, shaped for
-/// the detail pane to render. Each conflict ability owns and opens its own carriers
-/// dialog, so this data knows nothing about it.
-#[derive(Clone, PartialEq)]
-pub(super) struct IslandDetailData {
-    pub(super) coordinate: GridCoordinate,
-    pub(super) count: usize,
-    pub(super) cards: Vec<IslandConflictCardProps>,
-}
-
-/// Resolves the selected island and shapes its header coordinate and conflict cards,
-/// or `None` when nothing is selected.
+/// Resolves the selected island, or `None` when nothing is selected.
 pub(super) fn selected(
     props: &IslandDetailProps,
     selected_island: Signal<Option<String>>,
-) -> Option<IslandDetailData> {
+) -> Option<IslandView> {
     let selected_key = selected_island.read().clone();
     let key = selected_key?;
     let island = props
@@ -26,19 +14,5 @@ pub(super) fn selected(
         .iter()
         .find(|island| island.key() == key)?
         .clone();
-    let coordinate = island.coordinate();
-    let collision_count = island.collision_count();
-    let cards = island
-        .conflicts()
-        .iter()
-        .map(|conflict| IslandConflictCardProps {
-            conflict: conflict.clone(),
-        })
-        .collect();
-    let data = IslandDetailData {
-        coordinate,
-        count: collision_count,
-        cards,
-    };
-    Some(data)
+    Some(island)
 }

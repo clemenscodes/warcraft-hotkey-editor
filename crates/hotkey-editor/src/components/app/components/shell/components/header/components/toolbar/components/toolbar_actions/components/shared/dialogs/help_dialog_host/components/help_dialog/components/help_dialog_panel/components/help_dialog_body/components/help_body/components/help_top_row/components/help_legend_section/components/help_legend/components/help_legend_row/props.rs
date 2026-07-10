@@ -1,10 +1,8 @@
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpLegendEntry;
 use dioxus::prelude::*;
 
-/// One legend row's inputs: the toolbar glyph, the button's name, and its
-/// one-line description.
+/// One legend row's only input: the legend entry to render.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendRowProps {
-    pub icon: &'static str,
-    pub label: &'static str,
-    pub description: &'static str,
+    pub entry: HelpLegendEntry,
 }

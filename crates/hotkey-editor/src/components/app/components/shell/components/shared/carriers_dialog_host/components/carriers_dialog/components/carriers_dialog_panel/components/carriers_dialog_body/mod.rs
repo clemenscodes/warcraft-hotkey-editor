@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::carriers_grid::{CarriersGrid, CarriersGridProps};
+use components::carriers_grid::CarriersGrid;
 use dioxus::prelude::*;
-pub use props::CarriersDialogBodyProps;
+use props::CarriersDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,11 @@ use tw_macro::assert_component;
 /// edge, holding the scrollable grid of carrier cards.
 #[component]
 pub fn CarriersDialogBody(props: CarriersDialogBodyProps) -> Element {
-    let grid = CarriersGridProps::from(&props);
+    let carriers = props.carriers;
     rsx! {
         div {
             class: CLASS,
-            CarriersGrid { ..grid }
+            CarriersGrid { carriers }
         }
     }
 }

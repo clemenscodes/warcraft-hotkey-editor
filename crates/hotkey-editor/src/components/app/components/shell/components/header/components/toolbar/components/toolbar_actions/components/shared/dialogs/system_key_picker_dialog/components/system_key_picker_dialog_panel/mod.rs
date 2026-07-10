@@ -2,13 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use components::system_key_picker_dialog_body::{
-    SystemKeyPickerDialogBody, SystemKeyPickerDialogBodyProps,
-};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use components::system_key_picker_dialog_body::SystemKeyPickerDialogBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::SystemKeyPickerDialogPanelProps;
+use props::SystemKeyPickerDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,14 +16,21 @@ use tw_macro::assert_component;
 /// scrolling board body.
 #[component]
 pub fn SystemKeyPickerDialogPanel(props: SystemKeyPickerDialogPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
-    let body = SystemKeyPickerDialogBodyProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
+    let columns = props.columns;
+    let on_pick = props.on_pick;
+    let board_on_close = props.board_on_close;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
-                SystemKeyPickerDialogBody { ..body }
+                DialogHeader { title, on_close }
+                SystemKeyPickerDialogBody {
+                    columns,
+                    on_pick,
+                    on_close: board_on_close,
+                }
             }
         }
     }

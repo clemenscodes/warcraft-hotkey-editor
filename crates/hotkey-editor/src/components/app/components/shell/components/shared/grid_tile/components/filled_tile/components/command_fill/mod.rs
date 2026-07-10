@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::CommandFillProps;
+use props::CommandFillProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

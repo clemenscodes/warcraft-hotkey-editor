@@ -4,8 +4,8 @@ mod style;
 
 use components::preview_headed_grid::PreviewHeadedGrid;
 use dioxus::prelude::*;
-pub use props::TemplateCardPreviewsProps;
-use props::{command_preview, research_preview};
+use props::TemplateCardPreviewsProps;
+use props::{TemplatePreview, command_preview, research_preview};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,12 +14,25 @@ use tw_macro::assert_component;
 /// Owns `.template-card-previews`.
 #[component]
 pub fn TemplateCardPreviews(props: TemplateCardPreviewsProps) -> Element {
-    let command = command_preview(&props.resolved);
-    let research = research_preview(&props.resolved);
+    let resolved = props.resolved;
+    let TemplatePreview {
+        heading: command_heading,
+        tiles: command_tiles,
+    } = command_preview(&resolved);
+    let TemplatePreview {
+        heading: research_heading,
+        tiles: research_tiles,
+    } = research_preview(&resolved);
     rsx! {
         div { class: CLASS,
-            PreviewHeadedGrid { ..command }
-            PreviewHeadedGrid { ..research }
+            PreviewHeadedGrid {
+                heading: command_heading,
+                tiles: command_tiles,
+            }
+            PreviewHeadedGrid {
+                heading: research_heading,
+                tiles: research_tiles,
+            }
         }
     }
 }

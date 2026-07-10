@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideTierLabelProps;
+use props::TileOverrideTierLabelProps;
 
 /// The "Level N of M" caption in the tier-cycling footer.
 #[component]

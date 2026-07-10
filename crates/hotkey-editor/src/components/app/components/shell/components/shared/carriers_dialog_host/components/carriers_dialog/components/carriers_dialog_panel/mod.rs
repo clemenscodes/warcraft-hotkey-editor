@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use components::carriers_dialog_body::{CarriersDialogBody, CarriersDialogBodyProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use components::carriers_dialog_body::CarriersDialogBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::CarriersDialogPanelProps;
+use props::CarriersDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,14 +16,18 @@ use tw_macro::assert_component;
 /// scrolling grid of carrier cards.
 #[component]
 pub fn CarriersDialogPanel(props: CarriersDialogPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
-    let body = CarriersDialogBodyProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
+    let carriers = props.carriers;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
-                CarriersDialogBody { ..body }
+                DialogHeader {
+                    title,
+                    on_close,
+                }
+                CarriersDialogBody { carriers }
             }
         }
     }

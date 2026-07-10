@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::UnitListSearchInputProps;
+use props::UnitListSearchInputProps;
 
 /// The search text field in the unit list.
 #[component]

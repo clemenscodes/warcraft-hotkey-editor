@@ -10,7 +10,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_preview_dialog;
 use logic::PreviewDialogShell;
-pub use props::PreviewDialogProps;
+use props::PreviewDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +26,9 @@ pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
     let PreviewDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        text,
     } = PreviewDialogShell::from(&view);
     if !open {
         return rsx! {};
@@ -37,7 +39,7 @@ pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                PreviewDialogPanel { ..panel }
+                PreviewDialogPanel { title, on_close, text }
             }
         }
     }

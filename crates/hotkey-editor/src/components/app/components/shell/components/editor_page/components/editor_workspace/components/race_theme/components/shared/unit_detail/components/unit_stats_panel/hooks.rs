@@ -1,23 +1,29 @@
-use super::components::attributes_column::AttributesColumnProps;
-use super::components::combat_column::CombatColumnProps;
-use super::components::defense_column::DefenseColumnProps;
-use super::components::vitality_column::VitalityColumnProps;
 use super::props::UnitStatsPanelProps;
 use crate::services::editor_state::context::use_editor_state;
-use warcraft_keybinds::UnitStatistics;
+use warcraft_api::DefenseType;
+use warcraft_keybinds::{
+    Armor, AttackStatistics, EffectiveHitPoints, Evasion, HeroStatistics, HitPoints,
+    HitPointsRegen, Mana, ManaRegen, UnitStatistics,
+};
 
-/// Every child column's finished props for the stats panel. The panel body
-/// destructures this and only places the four columns.
+/// Every resolved stat figure the four columns render. The panel body destructures this
+/// and places the four columns, handing each its figures as named fields.
 pub(super) struct UnitStatsPanelModel {
-    pub(super) vitality: VitalityColumnProps,
-    pub(super) combat: CombatColumnProps,
-    pub(super) defense: DefenseColumnProps,
-    pub(super) attributes: AttributesColumnProps,
+    pub(super) hit_points: HitPoints,
+    pub(super) hit_points_regen: HitPointsRegen,
+    pub(super) mana: Mana,
+    pub(super) mana_regen: ManaRegen,
+    pub(super) attack: Option<AttackStatistics>,
+    pub(super) armor: Armor,
+    pub(super) defense_type: DefenseType,
+    pub(super) effective_hit_points: EffectiveHitPoints,
+    pub(super) evasion: Evasion,
+    pub(super) hero: Option<HeroStatistics>,
 }
 
 /// Resolves every stat figure through the domain's [`UnitStatistics::compute`], then
-/// shapes each column's props. All the arithmetic lives in the domain; this only reads
-/// the resolved figures and wraps them into column props.
+/// hands the panel the resolved figures. All the arithmetic lives in the domain; this
+/// only reads the resolved figures.
 pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelProps) -> UnitStatsPanelModel {
     let unit_combat = props.combat;
     let hero_attributes = props.hero_attributes;
@@ -46,24 +52,16 @@ pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelProps) -> UnitStatsPane
     let resolved_evasion = statistics.evasion();
     let attack = statistics.attack();
     let hero = statistics.hero();
-    let vitality = VitalityColumnProps {
+    UnitStatsPanelModel {
         hit_points,
         hit_points_regen,
         mana,
         mana_regen,
-    };
-    let combat = CombatColumnProps { attack };
-    let defense = DefenseColumnProps {
+        attack,
         armor,
         defense_type,
         effective_hit_points,
         evasion: resolved_evasion,
-    };
-    let attributes = AttributesColumnProps { hero };
-    UnitStatsPanelModel {
-        vitality,
-        combat,
-        defense,
-        attributes,
+        hero,
     }
 }

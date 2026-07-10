@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::MobileCategoryTabsProps;
+use props::MobileCategoryTabsProps;
 
 /// The mobile/tablet category tab row (hidden on the sidebar): a `tablist` of one
 /// `MobileCategoryTab` per category. The tabs arrive already shaped as props.
@@ -19,8 +19,8 @@ pub fn MobileCategoryTabs(props: MobileCategoryTabsProps) -> Element {
             class: CLASS,
             role: "tablist",
             aria_label: "Unit categories",
-            for tab in props.tabs {
-                MobileCategoryTab { key: "{unit_kind_key(tab.kind)}", ..tab }
+            for kind in props.tabs {
+                MobileCategoryTab { key: "{unit_kind_key(kind)}", kind }
             }
         }
     }

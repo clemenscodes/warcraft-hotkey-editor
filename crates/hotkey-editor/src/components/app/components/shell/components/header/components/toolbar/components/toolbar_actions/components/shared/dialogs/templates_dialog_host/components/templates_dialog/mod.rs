@@ -10,7 +10,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_templates_dialog;
 use logic::TemplatesDialogShell;
-pub use props::TemplatesDialogProps;
+use props::TemplatesDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +26,9 @@ pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
     let TemplatesDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        cards,
     } = TemplatesDialogShell::from(&view);
     if !open {
         return rsx! {};
@@ -37,7 +39,7 @@ pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                TemplatesDialogPanel { ..panel }
+                TemplatesDialogPanel { title, on_close, cards }
             }
         }
     }

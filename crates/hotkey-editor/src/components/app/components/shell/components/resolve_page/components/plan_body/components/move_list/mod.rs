@@ -4,7 +4,7 @@ mod style;
 
 use components::move_row::MoveRow;
 use dioxus::prelude::*;
-pub use props::MoveListProps;
+use props::MoveListProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,12 +16,12 @@ pub fn MoveList(props: MoveListProps) -> Element {
     let Some(section) = props.section else {
         return rsx! {};
     };
-    let rows = section.rows().to_vec();
+    let moves = section.moves().to_vec();
     rsx! {
         div {
             class: CLASS,
-            for row in rows {
-                MoveRow { ..row }
+            for move_view in moves {
+                MoveRow { move_view }
             }
         }
     }

@@ -1,4 +1,3 @@
-use super::components::unit_category_heading::UnitCategoryHeadingProps;
 use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::{UnitKind, UnitKindHelpers};
@@ -12,7 +11,15 @@ pub(super) struct UnitCategoryHeadingInputs {
     pub(super) collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
-impl From<UnitCategoryHeadingInputs> for UnitCategoryHeadingProps {
+/// The heading's shaped data: its label, collapsed state, and the toggle handler the
+/// section hands down to `UnitCategoryHeading` as named fields.
+pub(super) struct CategoryHeadingData {
+    pub(super) label: String,
+    pub(super) is_collapsed: bool,
+    pub(super) on_toggle: EventHandler<MouseEvent>,
+}
+
+impl From<UnitCategoryHeadingInputs> for CategoryHeadingData {
     fn from(inputs: UnitCategoryHeadingInputs) -> Self {
         let category_kind = inputs.category_kind;
         let label = UnitKindHelpers::category_label(category_kind).to_owned();

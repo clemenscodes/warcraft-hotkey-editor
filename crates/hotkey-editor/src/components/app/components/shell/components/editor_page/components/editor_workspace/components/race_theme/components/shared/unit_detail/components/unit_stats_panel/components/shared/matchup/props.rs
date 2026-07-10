@@ -1,5 +1,3 @@
-use super::components::shared::matchup_label::MatchupLabelProps;
-use super::components::shared::matchup_value::MatchupValueProps;
 use super::state::MatchupStrength;
 use super::subject::MatchupSubject;
 use dioxus::prelude::*;
@@ -15,18 +13,4 @@ pub struct MatchupProps {
     pub title: String,
     #[props(default)]
     pub strength: MatchupStrength,
-}
-
-impl From<&MatchupProps> for MatchupLabelProps {
-    fn from(props: &MatchupProps) -> Self {
-        let subject = props.subject;
-        Self { subject }
-    }
-}
-
-impl From<&MatchupProps> for MatchupValueProps {
-    fn from(props: &MatchupProps) -> Self {
-        let multiplier = props.multiplier;
-        Self { multiplier }
-    }
 }

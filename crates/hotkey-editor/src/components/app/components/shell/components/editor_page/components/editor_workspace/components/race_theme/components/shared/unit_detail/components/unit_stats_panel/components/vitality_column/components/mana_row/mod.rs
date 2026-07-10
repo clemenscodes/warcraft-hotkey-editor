@@ -5,7 +5,7 @@ mod style;
 use super::super::super::shared::stat_label::StatLabel;
 use components::mana_value::ManaValue;
 use dioxus::prelude::*;
-pub use props::ManaRowProps;
+use props::ManaRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

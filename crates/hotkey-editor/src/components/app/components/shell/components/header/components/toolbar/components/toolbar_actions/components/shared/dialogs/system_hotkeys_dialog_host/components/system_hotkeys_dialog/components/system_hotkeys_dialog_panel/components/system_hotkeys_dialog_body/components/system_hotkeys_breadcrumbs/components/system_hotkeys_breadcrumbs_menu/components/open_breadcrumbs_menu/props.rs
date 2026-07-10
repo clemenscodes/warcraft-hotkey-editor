@@ -1,10 +1,10 @@
-use super::super::shared::system_hotkeys_category_tab::SystemHotkeysCategoryTabProps;
+use super::super::super::hooks::SystemHotkeysCategoryTabDescriptor;
 use dioxus::prelude::*;
 
-/// The open menu's input: the shaped tab props, each carrying `menu_open = true` so
-/// the tabs render their popover look. Carrying the child props as data is passing
-/// data, not `Element`.
+/// The open menu's input: one tab descriptor per category, each carrying
+/// `menu_open = true` so the tabs render their popover look. Carrying domain
+/// descriptors as data is passing data, not `Element`.
 #[derive(Props, Clone, PartialEq)]
 pub struct OpenBreadcrumbsMenuProps {
-    pub tabs: Vec<SystemHotkeysCategoryTabProps>,
+    pub tabs: Vec<SystemHotkeysCategoryTabDescriptor>,
 }

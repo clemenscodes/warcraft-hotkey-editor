@@ -4,7 +4,7 @@ mod style;
 
 use components::template_card::TemplateCard;
 use dioxus::prelude::*;
-pub use props::TemplateGalleryProps;
+use props::TemplateGalleryProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,13 @@ pub fn TemplateGallery(props: TemplateGalleryProps) -> Element {
     rsx! {
         div { class: CLASS,
             for card in cards {
-                TemplateCard { key: "{card.name}", ..card }
+                TemplateCard {
+                    key: "{card.name}",
+                    name: card.name.clone(),
+                    description: card.description.clone(),
+                    resolved: card.resolved.clone(),
+                    on_apply: card.on_apply,
+                }
             }
         }
     }

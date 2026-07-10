@@ -5,7 +5,7 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_unit_name::ConflictUnitName;
 use dioxus::prelude::*;
-pub use props::ConflictMetaProps;
+use props::ConflictMetaProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

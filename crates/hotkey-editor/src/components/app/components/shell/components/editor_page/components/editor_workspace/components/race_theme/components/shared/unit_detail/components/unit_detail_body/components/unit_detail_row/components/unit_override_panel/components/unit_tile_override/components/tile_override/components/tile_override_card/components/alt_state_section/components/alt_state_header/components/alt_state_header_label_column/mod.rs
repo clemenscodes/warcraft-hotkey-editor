@@ -1,20 +1,20 @@
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_label::{AltStateLabel, AltStateLabelProps};
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_label::AltStateLabel;
 use dioxus::prelude::*;
-pub use props::AltStateHeaderLabelColumnProps;
+use props::AltStateHeaderLabelColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The label column of the off-state header row: holds the off-state name label.
 #[component]
 pub fn AltStateHeaderLabelColumn(props: AltStateHeaderLabelColumnProps) -> Element {
-    let label = AltStateLabelProps::from(&props);
+    let AltStateHeaderLabelColumnProps { text } = props;
     rsx! {
         div {
             class: CLASS,
-            AltStateLabel { ..label }
+            AltStateLabel { text }
         }
     }
 }

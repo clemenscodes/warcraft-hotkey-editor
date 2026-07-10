@@ -1,9 +1,3 @@
-use super::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
-use super::components::body::components::details::island_detail::IslandDetailProps;
-use super::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
-use super::components::body::components::empty_state::EmptyStateProps;
-use super::components::body::components::sidebars::island_sidebar::IslandSidebarProps;
-use super::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 use super::logic::{CollisionUnitView, HotkeyUnitView, IslandView, UnitPositionUnitView};
 
@@ -70,22 +64,14 @@ pub(super) struct PositionsContent {
 impl From<PositionsContent> for ContentModel {
     fn from(content: PositionsContent) -> Self {
         if !content.has_file {
-            let state = EmptyStateProps {
-                message: super::data::POSITIONS_UPLOAD_PROMPT.to_owned(),
-            };
-            return Self::Empty(state);
+            let message = super::data::POSITIONS_UPLOAD_PROMPT.to_owned();
+            return Self::Empty(message);
         }
         if content.list.unit_count == 0 {
             return Self::Clear;
         }
-        let sidebar_islands = content.list.views.clone();
-        let sidebar = IslandSidebarProps {
-            islands: sidebar_islands,
-        };
-        let detail = IslandDetailProps {
-            islands: content.list.views,
-        };
-        let pane = PositionsPane::new(sidebar, detail);
+        let islands = content.list.views;
+        let pane = PositionsPane::new(islands);
         let boxed = Box::new(pane);
         Self::Positions(boxed)
     }
@@ -101,22 +87,14 @@ pub(super) struct HotkeysContent {
 impl From<HotkeysContent> for ContentModel {
     fn from(content: HotkeysContent) -> Self {
         if !content.has_file {
-            let state = EmptyStateProps {
-                message: super::data::HOTKEYS_UPLOAD_PROMPT.to_owned(),
-            };
-            return Self::Empty(state);
+            let message = super::data::HOTKEYS_UPLOAD_PROMPT.to_owned();
+            return Self::Empty(message);
         }
         if content.list.unit_count == 0 {
             return Self::Clear;
         }
-        let sidebar_units = content.list.views.clone();
-        let sidebar = UnitCardsSidebarProps {
-            units: sidebar_units,
-        };
-        let detail = HotkeyUnitDetailProps {
-            units: content.list.views,
-        };
-        let pane = HotkeysPane::new(sidebar, detail);
+        let units = content.list.views;
+        let pane = HotkeysPane::new(units);
         let boxed = Box::new(pane);
         Self::Hotkeys(boxed)
     }
@@ -132,22 +110,14 @@ pub(super) struct UnitPositionsContent {
 impl From<UnitPositionsContent> for ContentModel {
     fn from(content: UnitPositionsContent) -> Self {
         if !content.has_file {
-            let state = EmptyStateProps {
-                message: super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned(),
-            };
-            return Self::Empty(state);
+            let message = super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned();
+            return Self::Empty(message);
         }
         if content.list.unit_count == 0 {
             return Self::Clear;
         }
-        let sidebar_units = content.list.views.clone();
-        let sidebar = UnitCardsSidebarProps {
-            units: sidebar_units,
-        };
-        let detail = UnitPositionDetailProps {
-            units: content.list.views,
-        };
-        let pane = UnitPositionsPane::new(sidebar, detail);
+        let units = content.list.views;
+        let pane = UnitPositionsPane::new(units);
         let boxed = Box::new(pane);
         Self::UnitPositions(boxed)
     }

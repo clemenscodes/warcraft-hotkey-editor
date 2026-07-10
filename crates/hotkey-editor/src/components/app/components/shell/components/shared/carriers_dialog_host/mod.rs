@@ -6,6 +6,7 @@ use crate::services::carriers::InspectedAbility;
 use components::carriers_dialog::CarriersDialog;
 use dioxus::prelude::*;
 use hooks::use_carriers_dialog_host;
+use hooks::OpenCarriersDialog;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,10 +21,19 @@ pub fn CarriersDialogHost(open_state: Signal<Option<InspectedAbility>>) -> Eleme
     let Some(dialog) = dialog else {
         return rsx! {};
     };
+    let OpenCarriersDialog {
+        title,
+        carriers,
+        open_state,
+    } = dialog;
     rsx! {
         div {
             class: CLASS,
-            CarriersDialog { ..dialog }
+            CarriersDialog {
+                title,
+                carriers,
+                open_state,
+            }
         }
     }
 }

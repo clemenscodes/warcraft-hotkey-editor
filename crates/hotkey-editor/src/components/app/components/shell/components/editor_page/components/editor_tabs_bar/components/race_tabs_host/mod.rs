@@ -4,7 +4,7 @@ mod style;
 
 use components::race_tabs::RaceTabs;
 use dioxus::prelude::*;
-use hooks::use_race_tabs_host;
+use hooks::{use_race_tabs_host, RaceTabsInputs};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +14,14 @@ use tw_macro::assert_component;
 /// they take those inputs as props; only this host reaches for context.
 #[component]
 pub fn RaceTabsHost() -> Element {
-    let race_tabs = use_race_tabs_host();
+    let RaceTabsInputs {
+        active_race,
+        on_select,
+    } = use_race_tabs_host();
     rsx! {
         div {
             class: CLASS,
-            RaceTabs { ..race_tabs }
+            RaceTabs { active_race, on_select }
         }
     }
 }

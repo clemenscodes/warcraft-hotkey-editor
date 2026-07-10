@@ -1,12 +1,11 @@
 pub mod components;
-mod logic;
 mod props;
 
 use super::stat_figure::StatFigure;
-use components::active_stat_gain::{ActiveStatGain, ActiveStatGainProps};
-use components::muted_stat_gain::{MutedStatGain, MutedStatGainProps};
+use components::active_stat_gain::ActiveStatGain;
+use components::muted_stat_gain::MutedStatGain;
 use dioxus::prelude::*;
-pub use props::StatGainProps;
+use props::StatGainProps;
 use tw_macro::assert_component;
 
 /// A stat row's per-level growth in the default treatment: green, tabular text sitting
@@ -15,16 +14,16 @@ use tw_macro::assert_component;
 /// (`MutedStatGain`), each built by `From`.
 #[component]
 pub fn StatGain<Figure: StatFigure>(props: StatGainProps<Figure>) -> Element {
-    let is_muted = props.value.is_muted();
+    let value = props.value;
+    let is_muted = value.is_muted();
+    let text = value.display();
     if is_muted {
-        let muted = MutedStatGainProps::from(&props);
         rsx! {
-            MutedStatGain { ..muted }
+            MutedStatGain { text }
         }
     } else {
-        let active = ActiveStatGainProps::from(&props);
         rsx! {
-            ActiveStatGain { ..active }
+            ActiveStatGain { text }
         }
     }
 }

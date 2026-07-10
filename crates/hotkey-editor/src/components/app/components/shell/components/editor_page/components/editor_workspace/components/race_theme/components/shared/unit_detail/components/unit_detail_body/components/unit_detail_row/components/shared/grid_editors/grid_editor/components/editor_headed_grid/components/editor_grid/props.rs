@@ -1,4 +1,4 @@
-use super::components::grid_editor_tile::GridEditorTileProps;
+use super::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -7,5 +7,5 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 /// interaction; `EditorGrid` only arranges them.
 #[derive(Props, Clone, PartialEq)]
 pub struct EditorGridProps {
-    pub tiles: [GridEditorTileProps; COMMAND_GRID_TILE_COUNT],
+    pub tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
 }

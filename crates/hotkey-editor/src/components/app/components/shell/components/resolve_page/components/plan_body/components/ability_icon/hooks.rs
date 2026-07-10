@@ -1,5 +1,3 @@
-use super::components::carrier_badge::CarrierBadgeProps;
-use super::components::fight_icon::FightIconProps;
 use super::props::AbilityIconProps;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
@@ -9,8 +7,10 @@ use dioxus::prelude::*;
 /// ability's carriers dialog.
 pub(super) struct AbilityIconView {
     pub(super) open_state: Signal<Option<InspectedAbility>>,
-    pub(super) icon: FightIconProps,
-    pub(super) badge: CarrierBadgeProps,
+    pub(super) icon_src: Option<String>,
+    pub(super) icon_alt: String,
+    pub(super) count: usize,
+    pub(super) is_winner: bool,
     pub(super) title: String,
     pub(super) disabled: bool,
     pub(super) onclick: EventHandler<MouseEvent>,
@@ -28,19 +28,17 @@ pub(super) fn use_ability_icon(props: &AbilityIconProps) -> AbilityIconView {
     let name = props.name.clone();
     let carrier_count = props.carrier_count;
     let title = format!("{name} — {carrier_count} carriers");
-    let icon = FightIconProps {
-        src: props.icon_url.clone(),
-        alt: name,
-    };
-    let badge = CarrierBadgeProps {
-        count: carrier_count,
-        is_winner: props.is_winner,
-    };
+    let icon_src = props.icon_url.clone();
+    let icon_alt = name;
+    let count = carrier_count;
+    let is_winner = props.is_winner;
     let disabled = props.disabled;
     AbilityIconView {
         open_state,
-        icon,
-        badge,
+        icon_src,
+        icon_alt,
+        count,
+        is_winner,
         title,
         disabled,
         onclick,

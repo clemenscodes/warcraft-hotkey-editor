@@ -17,17 +17,22 @@ use tw_macro::assert_component;
 pub fn HeroLevelPicker() -> Element {
     let HeroLevelPickerView {
         is_open,
-        trigger,
-        menu,
-        backdrop,
+        level_number,
+        toggle,
+        level_picker_open,
+        dismiss,
     } = use_hero_level_picker();
     rsx! {
         div {
             class: CLASS,
-            HeroLevelTrigger { ..trigger }
+            HeroLevelTrigger {
+                number: level_number,
+                is_open,
+                onclick: toggle,
+            }
             if is_open {
-                HeroLevelMenu { ..menu }
-                HeroLevelBackdrop { ..backdrop }
+                HeroLevelMenu { level_picker_open }
+                HeroLevelBackdrop { onclick: dismiss }
             }
         }
     }

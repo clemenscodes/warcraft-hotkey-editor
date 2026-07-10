@@ -4,7 +4,7 @@ mod style;
 
 use components::help_workflow_step::HelpWorkflowStep;
 use dioxus::prelude::*;
-pub use props::HelpWorkflowProps;
+use props::HelpWorkflowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

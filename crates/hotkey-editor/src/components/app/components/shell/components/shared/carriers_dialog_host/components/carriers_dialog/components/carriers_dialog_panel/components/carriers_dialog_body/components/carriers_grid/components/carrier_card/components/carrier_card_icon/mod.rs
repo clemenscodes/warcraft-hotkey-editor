@@ -1,10 +1,10 @@
 mod props;
 mod style;
 use crate::components::app::components::shell::components::shared::framed_icon::{
-    FramedIcon, FramedIconProps, IconRadius,
+    FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-pub use props::CarrierCardIconProps;
+use props::CarrierCardIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,17 +17,16 @@ pub fn CarrierCardIcon(props: CarrierCardIconProps) -> Element {
     };
     let src = Some(source);
     let alt = props.alt;
-    let framed = FramedIconProps {
-        src,
-        alt,
-        radius: IconRadius::Tile,
-        hover_glow: false,
-        placeholder: false,
-    };
     rsx! {
         div {
             class: CLASS,
-            FramedIcon { ..framed }
+            FramedIcon {
+                src,
+                alt,
+                radius: IconRadius::Tile,
+                hover_glow: false,
+                placeholder: false,
+            }
         }
     }
 }

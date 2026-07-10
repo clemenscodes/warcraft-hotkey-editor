@@ -3,9 +3,9 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;
-use components::preview_grid::{PreviewGrid, PreviewGridProps};
+use components::preview_grid::PreviewGrid;
 use dioxus::prelude::*;
-pub use props::PreviewHeadedGridProps;
+use props::PreviewHeadedGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,11 +15,11 @@ use tw_macro::assert_component;
 #[component]
 pub fn PreviewHeadedGrid(props: PreviewHeadedGridProps) -> Element {
     let heading = props.heading;
-    let grid = PreviewGridProps::from(&props);
+    let tiles = props.tiles;
     rsx! {
         div { class: CLASS,
             GridHeading { heading }
-            PreviewGrid { ..grid }
+            PreviewGrid { tiles }
         }
     }
 }

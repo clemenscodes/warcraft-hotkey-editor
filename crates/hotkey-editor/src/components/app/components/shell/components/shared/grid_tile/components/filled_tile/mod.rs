@@ -1,18 +1,18 @@
 pub mod components;
+mod logic;
 mod props;
-mod state;
 mod style;
 
-use super::shared::drag_over_ring::{DragOverRing, DragOverRingProps};
-use components::ability_fill::{AbilityFill, AbilityFillProps};
-use components::command_fill::{CommandFill, CommandFillProps};
-use components::dragging_source_ghost::{DraggingSourceGhost, DraggingSourceGhostProps};
-use components::selection_ring::{SelectionRing, SelectionRingProps};
-use components::tile_icon::{TileIcon, TileIconProps};
-use components::tile_label::{TileLabel, TileLabelProps};
+use super::shared::drag_over_ring::DragOverRing;
+use components::ability_fill::AbilityFill;
+use components::command_fill::CommandFill;
+use components::dragging_source_ghost::DraggingSourceGhost;
+use components::selection_ring::SelectionRing;
+use components::tile_icon::TileIcon;
+use components::tile_label::TileLabel;
 use dioxus::prelude::*;
-pub use props::FilledTileProps;
-pub use state::FilledTileKind;
+use logic::FilledTileModel;
+use props::FilledTileProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,23 +23,26 @@ use tw_macro::assert_component;
 /// `GridEditorTile` layers all interaction on top of this base tile.
 #[component]
 pub fn FilledTile(props: FilledTileProps) -> Element {
-    let ability_fill = AbilityFillProps::from(&props);
-    let command_fill = CommandFillProps::from(&props);
-    let selection_ring = SelectionRingProps::from(&props);
-    let icon = TileIconProps::from(&props);
-    let label = TileLabelProps::from(&props);
-    let dragging_source_ghost = DraggingSourceGhostProps::from(&props);
-    let drag_over_ring = DragOverRingProps::from(&props);
+    let FilledTileModel {
+        ability_active,
+        command_active,
+        selected,
+        is_dragging_source,
+        is_drag_over,
+        icon_source,
+        icon_alt,
+        label_text,
+    } = FilledTileModel::from(props);
     rsx! {
         div {
             class: CLASS,
-            AbilityFill { ..ability_fill }
-            CommandFill { ..command_fill }
-            SelectionRing { ..selection_ring }
-            TileIcon { ..icon }
-            TileLabel { ..label }
-            DraggingSourceGhost { ..dragging_source_ghost }
-            DragOverRing { ..drag_over_ring }
+            AbilityFill { active: ability_active }
+            CommandFill { active: command_active }
+            SelectionRing { selected }
+            TileIcon { src: icon_source, alt: icon_alt }
+            TileLabel { text: label_text }
+            DraggingSourceGhost { active: is_dragging_source }
+            DragOverRing { active: is_drag_over }
         }
     }
 }

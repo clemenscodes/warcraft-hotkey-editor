@@ -1,6 +1,3 @@
-use super::super::super::TemplateCardProps;
-use super::components::preview_headed_grid::PreviewHeadedGridProps;
-use crate::components::app::components::shell::components::shared::tile_face::TileFaceProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile, ResolvedTemplate};
 
@@ -10,35 +7,37 @@ pub struct TemplateCardPreviewsProps {
     pub resolved: ResolvedTemplate,
 }
 
-impl From<&TemplateCardProps> for TemplateCardPreviewsProps {
-    fn from(props: &TemplateCardProps) -> Self {
-        let resolved = props.resolved.clone();
-        Self { resolved }
-    }
+/// One captioned mini-grid: its heading and the twelve resolved domain tiles it draws.
+/// The `PreviewGrid` adapts each tile to the shared `TileFace` painter at render time.
+pub(super) struct TemplatePreview {
+    pub(super) heading: &'static str,
+    pub(super) tiles: [RenderedTile; COMMAND_GRID_TILE_COUNT],
 }
 
-/// The command card preview: a headed grid of read-only `TileFace` painters — the same
+/// The command card preview: a headed grid of the resolved command tiles — the same
 /// tiles the editor draws, without any of its behaviour — captioned "Command card".
-pub(super) fn command_preview(resolved: &ResolvedTemplate) -> PreviewHeadedGridProps {
-    let tiles = preview_tiles(resolved.command_tiles());
+pub(super) fn command_preview(resolved: &ResolvedTemplate) -> TemplatePreview {
+    let source = resolved.command_tiles();
+    let tiles = preview_tiles(source);
     let heading = "Command card";
-    PreviewHeadedGridProps { heading, tiles }
+    TemplatePreview { heading, tiles }
 }
 
 /// The research menu preview, captioned "Research menu".
-pub(super) fn research_preview(resolved: &ResolvedTemplate) -> PreviewHeadedGridProps {
-    let tiles = preview_tiles(resolved.research_tiles());
+pub(super) fn research_preview(resolved: &ResolvedTemplate) -> TemplatePreview {
+    let source = resolved.research_tiles();
+    let tiles = preview_tiles(source);
     let heading = "Research menu";
-    PreviewHeadedGridProps { heading, tiles }
+    TemplatePreview { heading, tiles }
 }
 
-/// Adapts a template's resolved tiles into read-only `TileFaceProps` — pure paint, no
-/// handlers — so the preview draws the same tiles the editor does without its behaviour.
-fn preview_tiles(source: &[RenderedTile]) -> [TileFaceProps; COMMAND_GRID_TILE_COUNT] {
-    let tile_list: Vec<TileFaceProps> = source.iter().map(TileFaceProps::from).collect();
+/// Collects a template's resolved tiles into the fixed-size grid array the preview
+/// draws, so the mini-grid always renders exactly `COMMAND_GRID_TILE_COUNT` tiles.
+fn preview_tiles(source: &[RenderedTile]) -> [RenderedTile; COMMAND_GRID_TILE_COUNT] {
+    let tile_list = source.to_vec();
     tile_list
         .try_into()
-        .unwrap_or_else(|list: Vec<TileFaceProps>| {
+        .unwrap_or_else(|list: Vec<RenderedTile>| {
             panic!(
                 "template preview grid must render exactly {COMMAND_GRID_TILE_COUNT} tiles, got {}",
                 list.len(),

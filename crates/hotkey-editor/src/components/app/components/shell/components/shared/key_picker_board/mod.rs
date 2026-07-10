@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 
 pub use cell::{KeyCell, KeyCellState, KeyColumn, KeyWidth};
 pub(crate) use key_event::BrowserKeyEvent;
-pub use props::KeyPickerBoardProps;
+use props::KeyPickerBoardProps;
 
 /// An on-screen keyboard that assigns a key when one is clicked or typed. It is
 /// dialog-agnostic and side-effect-free: a focusable board of key rows with one
@@ -26,6 +26,7 @@ pub use props::KeyPickerBoardProps;
 pub fn KeyPickerBoard(props: KeyPickerBoardProps) -> Element {
     let presentation = KeyPickerBoardPresentation::from(&props);
     let columns = presentation.columns;
+    let on_pick = presentation.on_pick;
     let onkeydown = presentation.onkeydown;
     rsx! {
         div {
@@ -35,7 +36,8 @@ pub fn KeyPickerBoard(props: KeyPickerBoardProps) -> Element {
             tabindex: "-1",
             onkeydown,
             for column in columns {
-                KeyPickerColumn { ..column }
+                let rows = column.into_rows();
+                KeyPickerColumn { rows, on_pick }
             }
         }
     }

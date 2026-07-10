@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::upgrade_section_header::{UpgradeSectionHeader, UpgradeSectionHeaderProps};
+use components::upgrade_section_header::UpgradeSectionHeader;
 use dioxus::prelude::*;
-pub use props::UpgradeSectionProps;
+use props::UpgradeSectionProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,11 +16,24 @@ pub fn UpgradeSection(props: UpgradeSectionProps) -> Element {
     if !props.show {
         return rsx! {};
     }
-    let header = UpgradeSectionHeaderProps::from(&props);
+    let UpgradeSectionProps {
+        show: _,
+        upgrade_hotkey_label,
+        upgrade_is_editing,
+        upgrade_hotkey_is_special,
+        on_position_click,
+        on_hotkey_activate,
+    } = props;
     rsx! {
         div {
             class: CLASS,
-            UpgradeSectionHeader { ..header }
+            UpgradeSectionHeader {
+                hotkey_label: upgrade_hotkey_label,
+                is_editing: upgrade_is_editing,
+                is_special: upgrade_hotkey_is_special,
+                on_position_click,
+                on_hotkey_activate,
+            }
         }
     }
 }

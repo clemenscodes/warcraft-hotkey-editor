@@ -1,10 +1,10 @@
 mod props;
 mod style;
 use crate::components::app::components::shell::components::shared::framed_icon::{
-    FramedIcon, FramedIconProps, IconRadius,
+    FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-pub use props::ConflictDetailUnitIconProps;
+use props::ConflictDetailUnitIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,17 +17,17 @@ pub fn ConflictDetailUnitIcon(props: ConflictDetailUnitIconProps) -> Element {
     };
     let src = Some(source);
     let alt = props.alt;
-    let framed = FramedIconProps {
-        src,
-        alt,
-        radius: IconRadius::Control,
-        hover_glow: false,
-        placeholder: false,
-    };
+    let radius = IconRadius::Control;
     rsx! {
         div {
             class: CLASS,
-            FramedIcon { ..framed }
+            FramedIcon {
+                src,
+                alt,
+                radius,
+                hover_glow: false,
+                placeholder: false,
+            }
         }
     }
 }

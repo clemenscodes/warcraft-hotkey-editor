@@ -4,17 +4,19 @@ mod style;
 
 use components::unit_detail_row::UnitDetailRow;
 use dioxus::prelude::*;
-pub use props::UnitDetailBodyProps;
+use props::UnitDetailBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The card body: the grids-and-override row.
 #[component]
 pub fn UnitDetailBody(props: UnitDetailBodyProps) -> Element {
+    let grid_slots = props.grid_slots;
+    let override_target = props.override_target;
     rsx! {
         div {
             class: CLASS,
-            UnitDetailRow { ..props.row }
+            UnitDetailRow { grid_slots, override_target }
         }
     }
 }

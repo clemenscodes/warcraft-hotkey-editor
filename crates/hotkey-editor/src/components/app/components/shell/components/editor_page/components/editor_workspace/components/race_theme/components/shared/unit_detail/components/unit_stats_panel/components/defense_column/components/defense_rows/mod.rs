@@ -8,7 +8,7 @@ use components::defense_type_row::DefenseTypeRow;
 use components::effective_hit_points_row::EffectiveHitPointsRow;
 use components::evasion_row::EvasionRow;
 use dioxus::prelude::*;
-pub use props::DefenseRowsProps;
+use props::DefenseRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

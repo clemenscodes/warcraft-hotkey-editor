@@ -1,8 +1,11 @@
-use super::components::key_picker_row::KeyPickerRowProps;
+use crate::components::app::components::shell::components::shared::key_picker_board::KeyCell;
 use dioxus::prelude::*;
+use warcraft_keybinds::KeyCode;
 
-/// One column of the board: its already-shaped rows, built by the board's `From`.
+/// One column of the board: its rows of domain key cells and the handler a pick fires.
+/// The board threads the domain down; the column renders each row.
 #[derive(Props, Clone, PartialEq)]
 pub struct KeyPickerColumnProps {
-    pub rows: Vec<KeyPickerRowProps>,
+    pub rows: Vec<Vec<KeyCell>>,
+    pub on_pick: EventHandler<KeyCode>,
 }

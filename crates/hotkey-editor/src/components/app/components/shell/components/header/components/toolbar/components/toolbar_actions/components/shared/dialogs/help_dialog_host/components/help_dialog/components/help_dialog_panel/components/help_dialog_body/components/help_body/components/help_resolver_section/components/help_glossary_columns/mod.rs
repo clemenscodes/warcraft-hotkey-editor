@@ -4,7 +4,7 @@ mod style;
 
 use components::help_glossary_column::HelpGlossaryColumn;
 use dioxus::prelude::*;
-pub use props::HelpGlossaryColumnsProps;
+use props::HelpGlossaryColumnsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

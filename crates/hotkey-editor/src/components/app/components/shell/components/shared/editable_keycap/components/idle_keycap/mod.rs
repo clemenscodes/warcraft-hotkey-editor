@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::IdleKeycapProps;
+use props::IdleKeycapProps;
 
 /// The resting gold key-cap surface: the editable keycap's `Idle` look. Presentational —
 /// the host owns size, focus, drag, and the click handler; this leaf draws the whole

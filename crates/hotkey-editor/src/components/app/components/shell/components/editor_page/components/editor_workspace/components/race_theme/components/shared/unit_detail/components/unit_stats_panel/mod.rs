@@ -10,7 +10,7 @@ use components::defense_column::DefenseColumn;
 use components::vitality_column::VitalityColumn;
 use dioxus::prelude::*;
 use hooks::{UnitStatsPanelModel, use_unit_stats_panel};
-pub use props::UnitStatsPanelProps;
+use props::UnitStatsPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -21,20 +21,25 @@ use tw_macro::assert_component;
 /// hero.
 #[component]
 pub fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
-    let model = use_unit_stats_panel(&props);
     let UnitStatsPanelModel {
-        vitality,
-        combat,
-        defense,
-        attributes,
-    } = model;
+        hit_points,
+        hit_points_regen,
+        mana,
+        mana_regen,
+        attack,
+        armor,
+        defense_type,
+        effective_hit_points,
+        evasion,
+        hero,
+    } = use_unit_stats_panel(&props);
     rsx! {
         div {
             class: CLASS,
-            VitalityColumn { ..vitality }
-            CombatColumn { ..combat }
-            DefenseColumn { ..defense }
-            AttributesColumn { ..attributes }
+            VitalityColumn { hit_points, hit_points_regen, mana, mana_regen }
+            CombatColumn { attack }
+            DefenseColumn { armor, defense_type, effective_hit_points, evasion }
+            AttributesColumn { hero }
         }
     }
 }

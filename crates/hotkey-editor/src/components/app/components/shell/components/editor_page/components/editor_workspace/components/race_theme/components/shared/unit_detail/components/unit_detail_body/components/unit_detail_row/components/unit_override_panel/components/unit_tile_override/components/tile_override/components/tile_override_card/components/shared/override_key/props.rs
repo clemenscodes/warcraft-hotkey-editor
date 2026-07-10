@@ -1,6 +1,3 @@
-use crate::components::app::components::shell::components::shared::editable_keycap::{
-    EditableKeycapProps, EditableKeycapState,
-};
 use dioxus::prelude::*;
 
 /// A single key-capture button in the override panel header. Clicking it activates
@@ -20,16 +17,4 @@ pub struct OverrideKeyProps {
     pub title: String,
     /// Called when the player clicks to start editing.
     pub on_activate: EventHandler<()>,
-}
-
-impl From<&OverrideKeyProps> for EditableKeycapProps {
-    fn from(props: &OverrideKeyProps) -> Self {
-        let label = props.label.clone();
-        let state = if props.is_editing {
-            EditableKeycapState::Editing
-        } else {
-            EditableKeycapState::Idle
-        };
-        Self { label, state }
-    }
 }

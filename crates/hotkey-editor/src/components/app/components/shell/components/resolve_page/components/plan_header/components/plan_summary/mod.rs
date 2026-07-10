@@ -1,22 +1,23 @@
 pub mod components;
 mod props;
 mod style;
-use components::plan_counts::{PlanCounts, PlanCountsProps};
+use components::plan_counts::PlanCounts;
 use components::plan_title::PlanTitle;
 use dioxus::prelude::*;
-pub use props::PlanSummaryProps;
+use props::PlanSummaryProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The plan title over its move/unresolved counts.
 #[component]
 pub fn PlanSummary(props: PlanSummaryProps) -> Element {
-    let counts = PlanCountsProps::from(&props);
+    let moves_text = props.moves_text;
+    let unresolved_count = props.unresolved_count;
     rsx! {
         div {
             class: CLASS,
             PlanTitle {}
-            PlanCounts { ..counts }
+            PlanCounts { moves_text, unresolved_count }
         }
     }
 }

@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::CollisionCountProps;
+use props::CollisionCountProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

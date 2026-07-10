@@ -1,5 +1,5 @@
 use super::props::UnitCardsSidebarProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardData};
 use crate::components::app::components::shell::components::collisions_page::logic::{
     HotkeyConflictView, UnitPositionConflictView,
 };
@@ -31,7 +31,7 @@ impl SelectedCollisionUnit for UnitPositionConflictView {
 pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
     props: &UnitCardsSidebarProps<Conflict>,
     mut selected_unit: Signal<Option<String>>,
-) -> Vec<CollisionCardProps> {
+) -> Vec<CollisionCardData> {
     let selected_key = selected_unit.read().clone();
     props
         .units
@@ -52,7 +52,7 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
                 name,
                 unit_id,
             };
-            CollisionCardProps {
+            CollisionCardData {
                 is_selected,
                 onclick,
                 count: collision_count,

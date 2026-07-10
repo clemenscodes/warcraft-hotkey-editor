@@ -4,7 +4,7 @@ mod style;
 
 use components::conflict_ability_icon::ConflictAbilityIcon;
 use dioxus::prelude::*;
-pub use props::ConflictAbilityTriggerProps;
+use props::ConflictAbilityTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,13 +14,17 @@ use tw_macro::assert_component;
 #[component]
 pub fn ConflictAbilityTrigger(props: ConflictAbilityTriggerProps) -> Element {
     let onclick = props.onclick;
-    let icon = props.icon;
+    let icon_src = props.icon_src;
+    let icon_alt = props.icon_alt;
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
             onclick,
-            ConflictAbilityIcon { ..icon }
+            ConflictAbilityIcon {
+                src: icon_src,
+                alt: icon_alt,
+            }
         }
     }
 }

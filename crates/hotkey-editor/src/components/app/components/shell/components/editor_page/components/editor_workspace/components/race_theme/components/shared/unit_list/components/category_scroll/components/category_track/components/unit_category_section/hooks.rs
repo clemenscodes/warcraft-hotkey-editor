@@ -1,20 +1,26 @@
-use super::components::unit_card::UnitCardProps;
-use super::components::unit_category_heading::UnitCategoryHeadingProps;
-use super::logic::UnitCategoryHeadingInputs;
+use super::logic::{CategoryHeadingData, UnitCategoryHeadingInputs};
 use super::props::UnitCategorySectionProps;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
-use warcraft_api::CatalogVisibility;
+use warcraft_api::{CatalogVisibility, UnitKind, WarcraftObjectId};
 use warcraft_keybinds::{UnitCategoryListing, UnitCategoryRequest};
+
+/// One unit's shaped catalog data for a card: its id, display name, portrait, and kind.
+pub(super) struct UnitCardEntry {
+    pub(super) unit_id: WarcraftObjectId,
+    pub(super) display_name: String,
+    pub(super) icon_path: Option<IconUrl>,
+    pub(super) unit_kind: UnitKind,
+}
 
 /// The section's shaped view: its heading (with the collapse toggle) and the unit
 /// cards to draw when expanded.
 pub(super) struct UnitCategorySectionModel {
-    pub(super) heading: UnitCategoryHeadingProps,
+    pub(super) heading: CategoryHeadingData,
     pub(super) is_collapsed: bool,
-    pub(super) cards: Vec<UnitCardProps>,
+    pub(super) cards: Vec<UnitCardEntry>,
 }
 
 /// Reads the race, mode, search, visibility, and collapsed state from context, shapes
@@ -35,7 +41,7 @@ pub(super) fn use_unit_category_section(
         is_collapsed,
         collapsed_categories,
     };
-    let heading = UnitCategoryHeadingProps::from(heading_inputs);
+    let heading = CategoryHeadingData::from(heading_inputs);
     let race = *navigation.active_race().read();
     let mode = *navigation.unit_mode().read();
     let query = navigation.search_query().read().clone();
@@ -64,7 +70,7 @@ pub(super) fn use_unit_category_section(
             let unit_id = entry.unit_id();
             let display_name = entry.display_name().to_owned();
             let unit_kind = entry.unit_kind();
-            UnitCardProps {
+            UnitCardEntry {
                 unit_id,
                 display_name,
                 icon_path,

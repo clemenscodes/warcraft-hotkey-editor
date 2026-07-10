@@ -1,11 +1,11 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::normal_override_key::{NormalOverrideKey, NormalOverrideKeyProps};
-use components::special_override_key::{SpecialOverrideKey, SpecialOverrideKeyProps};
+use components::normal_override_key::NormalOverrideKey;
+use components::special_override_key::SpecialOverrideKey;
+use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
-pub use props::OverrideKeyProps;
+use props::OverrideKeyProps;
 use tw_macro::assert_component;
 
 /// The hotkey-capture button shown in the override panel header (and the alt/upgrade
@@ -15,16 +15,19 @@ use tw_macro::assert_component;
 /// `on_activate` on click.
 #[component]
 pub fn OverrideKey(props: OverrideKeyProps) -> Element {
-    let is_special = props.is_special;
+    let OverrideKeyProps { label, is_editing, is_special, title, on_activate } = props;
+    let state = if is_editing {
+        EditableKeycapState::Editing
+    } else {
+        EditableKeycapState::Idle
+    };
     if is_special {
-        let special = SpecialOverrideKeyProps::from(&props);
         rsx! {
-            SpecialOverrideKey { ..special }
+            SpecialOverrideKey { label, state, title, on_activate }
         }
     } else {
-        let normal = NormalOverrideKeyProps::from(&props);
         rsx! {
-            NormalOverrideKey { ..normal }
+            NormalOverrideKey { label, state, title, on_activate }
         }
     }
 }

@@ -2,7 +2,7 @@ mod data;
 mod props;
 mod style;
 use dioxus::prelude::*;
-pub use props::ConflictMoreProps;
+use props::ConflictMoreProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

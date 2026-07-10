@@ -15,16 +15,23 @@ use tw_macro::assert_component;
 /// upload status from context itself, so nothing is threaded in.
 #[component]
 pub fn UploadButton() -> Element {
-    let model = use_upload_button();
-    let input = UploadButtonInputProps::from(&model);
-    let button = ToolbarButtonProps::from(&model);
-    let dialog = UploadInfoDialogProps::from(&model);
+    let UploadButtonModel {
+        info_open: open,
+        on_file_change: on_change,
+        on_open_info: onclick,
+        icon,
+        aria_label,
+    } = use_upload_button();
     rsx! {
         div {
             class: CLASS,
-            UploadButtonInput { ..input }
-            ToolbarButton { ..button }
-            UploadInfoDialog { ..dialog }
+            UploadButtonInput { on_change }
+            ToolbarButton {
+                icon,
+                aria_label,
+                onclick,
+            }
+            UploadInfoDialog { open }
         }
     }
 }

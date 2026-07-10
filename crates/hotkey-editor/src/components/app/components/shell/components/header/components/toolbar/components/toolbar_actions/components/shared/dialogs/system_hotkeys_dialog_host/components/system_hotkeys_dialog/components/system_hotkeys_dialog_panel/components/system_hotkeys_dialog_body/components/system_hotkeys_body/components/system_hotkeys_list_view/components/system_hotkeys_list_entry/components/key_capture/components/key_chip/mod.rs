@@ -1,10 +1,10 @@
 pub mod components;
 mod props;
 
-use components::conflict_key_chip::{ConflictKeyChip, ConflictKeyChipProps};
-use components::normal_key_chip::{NormalKeyChip, NormalKeyChipProps};
+use components::conflict_key_chip::ConflictKeyChip;
+use components::normal_key_chip::NormalKeyChip;
 use dioxus::prelude::*;
-pub use props::KeyChipProps;
+use props::KeyChipProps;
 use tw_macro::assert_component;
 
 /// A pure dispatcher for the system-hotkey chip: from the row's domain conflict
@@ -13,14 +13,30 @@ use tw_macro::assert_component;
 #[component]
 pub fn KeyChip(props: KeyChipProps) -> Element {
     if props.conflict {
-        let look = ConflictKeyChipProps::from(&props);
+        let label = props.label.clone();
+        let onclick = props.onclick;
+        let tooltip_text = props.tooltip_text.clone();
+        let tooltip_placement = props.tooltip_placement;
         return rsx! {
-            ConflictKeyChip { ..look }
+            ConflictKeyChip {
+                label,
+                onclick,
+                tooltip_text,
+                tooltip_placement,
+            }
         };
     }
-    let look = NormalKeyChipProps::from(&props);
+    let label = props.label.clone();
+    let onclick = props.onclick;
+    let tooltip_text = props.tooltip_text.clone();
+    let tooltip_placement = props.tooltip_placement;
     rsx! {
-        NormalKeyChip { ..look }
+        NormalKeyChip {
+            label,
+            onclick,
+            tooltip_text,
+            tooltip_placement,
+        }
     }
 }
 

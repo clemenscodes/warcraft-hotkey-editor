@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::BelowLeftTooltipProps;
+use props::BelowLeftTooltipProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

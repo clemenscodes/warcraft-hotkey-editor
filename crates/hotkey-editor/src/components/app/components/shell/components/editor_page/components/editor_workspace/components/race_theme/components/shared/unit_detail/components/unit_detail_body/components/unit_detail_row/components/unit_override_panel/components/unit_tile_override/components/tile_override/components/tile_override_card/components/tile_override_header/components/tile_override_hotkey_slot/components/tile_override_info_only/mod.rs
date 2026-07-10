@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideInfoOnlyProps;
+use props::TileOverrideInfoOnlyProps;
 
 /// The muted note shown for a passive ability in place of a hotkey field.
 #[component]

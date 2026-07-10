@@ -4,7 +4,7 @@ mod style;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebar;
 use dioxus::prelude::*;
-pub use props::HotkeysContentProps;
+use props::HotkeysContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,13 +12,13 @@ use tw_macro::assert_component;
 /// fluid hotkey unit detail pane.
 #[component]
 pub fn HotkeysContent(props: HotkeysContentProps) -> Element {
-    let sidebar = props.sidebar;
-    let detail = props.detail;
+    let sidebar_units = props.units.clone();
+    let detail_units = props.units;
     rsx! {
         div {
             class: CLASS,
-            UnitCardsSidebar { ..sidebar }
-            HotkeyUnitDetail { ..detail }
+            UnitCardsSidebar { units: sidebar_units }
+            HotkeyUnitDetail { units: detail_units }
         }
     }
 }

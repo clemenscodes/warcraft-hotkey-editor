@@ -1,5 +1,4 @@
-use super::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::TemplateGalleryProps;
-use super::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardProps;
+use super::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardView;
 use super::props::TemplatesDialogProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::upload_status::UploadStatus;
@@ -7,10 +6,10 @@ use dioxus::prelude::*;
 use warcraft_keybinds::{CustomKeys, ResolvedTemplate};
 
 /// The templates dialog's shaped view: the open signal driving the shell and the
-/// gallery of resolved template cards, each with its apply handler.
+/// resolved template card views, each with its apply handler.
 pub(super) struct TemplatesDialogView {
     pub(super) open: Signal<bool>,
-    pub(super) gallery: TemplateGalleryProps,
+    pub(super) cards: Vec<TemplateCardView>,
 }
 
 /// Composes the templates dialog's cards. Resolves every bundled template and,
@@ -24,7 +23,7 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> TemplatesDia
     let mut dialog_open = props.open;
     let toast_api = use_toast();
     let resolved_templates = use_hook(ResolvedTemplate::resolve_all);
-    let cards: Vec<TemplateCardProps> = resolved_templates
+    let cards: Vec<TemplateCardView> = resolved_templates
         .iter()
         .map(|resolved| {
             let name = resolved.name().to_string();
@@ -50,14 +49,14 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> TemplatesDia
                 toast_api.success(title, options);
                 dialog_open.set(false);
             });
-            TemplateCardProps {
+            let card = TemplateCardView {
                 name,
                 description,
                 resolved: resolved_template,
                 on_apply,
-            }
+            };
+            card
         })
         .collect();
-    let gallery = TemplateGalleryProps { cards };
-    TemplatesDialogView { open, gallery }
+    TemplatesDialogView { open, cards }
 }

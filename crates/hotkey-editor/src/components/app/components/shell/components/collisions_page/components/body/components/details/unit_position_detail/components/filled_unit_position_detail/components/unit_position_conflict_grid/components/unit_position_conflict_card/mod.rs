@@ -3,11 +3,9 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_panel::{
-    ConflictPanel, ConflictPanelProps,
-};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_panel::ConflictPanel;
 use dioxus::prelude::*;
-pub use props::UnitPositionConflictCardProps;
+use props::UnitPositionConflictCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,11 +15,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
     let model = ConflictCardModel::from(&props);
-    let panel = ConflictPanelProps::from(model);
     rsx! {
         div {
             class: CLASS,
-            ConflictPanel { ..panel }
+            ConflictPanel { model }
         }
     }
 }

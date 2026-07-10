@@ -1,9 +1,9 @@
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::{HotkeyBadge, HotkeyBadgeProps};
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadge;
 use dioxus::prelude::*;
-pub use props::TileBadgeProps;
+use props::TileBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -11,10 +11,14 @@ use tw_macro::assert_component;
 /// Shared by both the filled and empty tiles.
 #[component]
 pub fn TileBadge(props: TileBadgeProps) -> Element {
-    let badge = HotkeyBadgeProps::from(&props);
+    let letter = props.letter;
+    let state = props.state;
     rsx! {
         div { class: CLASS,
-            HotkeyBadge { ..badge }
+            HotkeyBadge {
+                letter,
+                state,
+            }
         }
     }
 }

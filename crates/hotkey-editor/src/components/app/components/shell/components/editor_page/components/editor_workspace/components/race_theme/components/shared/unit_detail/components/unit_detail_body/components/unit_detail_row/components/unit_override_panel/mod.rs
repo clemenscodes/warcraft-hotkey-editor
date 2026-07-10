@@ -1,13 +1,13 @@
 pub mod components;
+mod data;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::shared::grid_heading::{
-    GridHeading, GridHeadingProps,
-};
-use components::unit_tile_override::{UnitTileOverride, UnitTileOverrideProps};
+use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;
+use components::unit_tile_override::UnitTileOverride;
+use data::HEADING;
 use dioxus::prelude::*;
-pub use props::UnitOverridePanelProps;
+use props::UnitOverridePanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,13 +15,14 @@ use tw_macro::assert_component;
 /// Its own classed `aside`, sticky at the bottom on phones.
 #[component]
 pub fn UnitOverridePanel(props: UnitOverridePanelProps) -> Element {
-    let heading = GridHeadingProps::from(&props);
-    let tile_override = UnitTileOverrideProps::from(&props);
+    let override_target = props.override_target;
+    let detail = override_target.detail;
+    let active_container_slots = override_target.active_container_slots;
     rsx! {
         aside {
             class: CLASS,
-            GridHeading { ..heading }
-            UnitTileOverride { ..tile_override }
+            GridHeading { heading: HEADING }
+            UnitTileOverride { detail, active_container_slots }
         }
     }
 }

@@ -1,38 +1,45 @@
-use super::components::island_conflict_panel::IslandConflictPanelProps;
-use super::components::island_conflict_panel::components::island_conflict_ability_row::components::island_conflict_ability::IslandConflictAbilityProps;
-use super::components::island_conflict_panel::components::island_conflict_unit::IslandConflictUnitProps;
 use super::props::IslandConflictCardProps;
 use crate::components::app::components::shell::components::collisions_page::logic::ConflictAbilityView;
 use crate::services::carriers::InspectedAbility;
+use warcraft_api::WarcraftObjectId;
+
+/// The affected unit heading a conflict card: its id, icon, and display name.
+#[derive(Clone, PartialEq)]
+pub(super) struct IslandUnitData {
+    pub(super) unit_id: WarcraftObjectId,
+    pub(super) icon_url: Option<String>,
+    pub(super) name: String,
+}
+
+/// One clashing ability of a conflict card: its display name, id, icon, the count of
+/// further carriers, and the opaque identity it opens its carriers dialog on.
+#[derive(Clone, PartialEq)]
+pub(super) struct IslandAbilityData {
+    pub(super) ability_name: String,
+    pub(super) ability_id: WarcraftObjectId,
+    pub(super) icon_url: Option<String>,
+    pub(super) extra_count: usize,
+    pub(super) inspected: InspectedAbility,
+}
 
 /// The shaped card: the affected unit heading it, and the two abilities that clash.
 pub(super) struct IslandConflictCardModel {
-    pub(super) unit: IslandConflictUnitProps,
-    pub(super) own_ability: IslandConflictAbilityProps,
-    pub(super) shared_ability: IslandConflictAbilityProps,
-}
-
-impl From<IslandConflictCardModel> for IslandConflictPanelProps {
-    fn from(model: IslandConflictCardModel) -> Self {
-        let unit = model.unit;
-        let own_ability = model.own_ability;
-        let shared_ability = model.shared_ability;
-        Self {
-            unit,
-            own_ability,
-            shared_ability,
-        }
-    }
+    pub(super) unit: IslandUnitData,
+    pub(super) own_ability: IslandAbilityData,
+    pub(super) shared_ability: IslandAbilityData,
 }
 
 impl From<&IslandConflictCardProps> for IslandConflictCardModel {
     fn from(props: &IslandConflictCardProps) -> Self {
         let conflict = &props.conflict;
         let affected_unit = conflict.unit();
-        let unit = IslandConflictUnitProps {
-            unit_id: affected_unit.unit_id(),
-            icon_url: affected_unit.icon_url().map(str::to_owned),
-            name: affected_unit.name().to_owned(),
+        let unit_id = affected_unit.unit_id();
+        let icon_url = affected_unit.icon_url().map(str::to_owned);
+        let name = affected_unit.name().to_owned();
+        let unit = IslandUnitData {
+            unit_id,
+            icon_url,
+            name,
         };
         let own = conflict.own_ability();
         let own_ability = Self::ability(own);
@@ -47,7 +54,7 @@ impl From<&IslandConflictCardProps> for IslandConflictCardModel {
 }
 
 impl IslandConflictCardModel {
-    fn ability(view: &ConflictAbilityView) -> IslandConflictAbilityProps {
+    fn ability(view: &ConflictAbilityView) -> IslandAbilityData {
         let ability_view = view.ability();
         let ability_name = ability_view.name().to_owned();
         let ability_id = ability_view.object_id();
@@ -55,7 +62,7 @@ impl IslandConflictCardModel {
         let extra_count = view.extra_count();
         let carrier_unit_ids = view.carrier_unit_ids().to_vec();
         let inspected = InspectedAbility::new(ability_name.clone(), carrier_unit_ids);
-        IslandConflictAbilityProps {
+        IslandAbilityData {
             ability_name,
             ability_id,
             icon_url,

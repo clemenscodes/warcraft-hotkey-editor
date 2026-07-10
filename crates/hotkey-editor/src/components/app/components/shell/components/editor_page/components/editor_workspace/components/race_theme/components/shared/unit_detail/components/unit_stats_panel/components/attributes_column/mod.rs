@@ -1,11 +1,13 @@
 pub mod components;
+mod logic;
 mod props;
 mod style;
 
-use super::shared::stat_icon_frame::{StatIconFrame, StatIconFrameProps};
-use components::attribute_rows::{AttributeRows, AttributeRowsProps};
+use super::shared::stat_icon_frame::StatIconFrame;
+use components::attribute_rows::AttributeRows;
 use dioxus::prelude::*;
-pub use props::AttributesColumnProps;
+use logic::AttributeFigures;
+use props::AttributesColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,13 +19,28 @@ pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
     let Some(hero) = props.hero else {
         return rsx! {};
     };
-    let icon = StatIconFrameProps::from(&hero);
-    let rows = AttributeRowsProps::from(&hero);
+    let AttributeFigures {
+        icon_src,
+        icon_alt,
+        strength,
+        strength_is_primary,
+        agility,
+        agility_is_primary,
+        intelligence,
+        intelligence_is_primary,
+    } = AttributeFigures::from(&hero);
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame { ..icon }
-            AttributeRows { ..rows }
+            StatIconFrame { src: icon_src, alt: icon_alt }
+            AttributeRows {
+                strength,
+                strength_is_primary,
+                agility,
+                agility_is_primary,
+                intelligence,
+                intelligence_is_primary,
+            }
         }
     }
 }

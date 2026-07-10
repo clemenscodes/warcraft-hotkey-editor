@@ -10,15 +10,15 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_carriers_dialog;
 use logic::CarriersDialogShell;
-pub use props::CarriersDialogProps;
+use props::CarriersDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// Lists every unit that carries an ability in a scrollable grid; closing the dialog
 /// clears the open state that summoned it. It owns its own dialog shell: the hook shapes
-/// the cards and open state, the shell struct names the panel, and this places the panel
-/// inside its own backdrop `div` within the library `DialogRoot`. No project class touches
-/// the library element — the backdrop is this component's own classed `div`.
+/// the open state, title, and carriers, the shell struct exposes them, and this places the
+/// panel inside its own backdrop `div` within the library `DialogRoot`. No project class
+/// touches the library element — the backdrop is this component's own classed `div`.
 #[component]
 pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
     let view = use_carriers_dialog(&props);
@@ -26,7 +26,9 @@ pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
     let CarriersDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        carriers,
     } = CarriersDialogShell::from(&view);
     if !open {
         return rsx! {};
@@ -37,7 +39,11 @@ pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                CarriersDialogPanel { ..panel }
+                CarriersDialogPanel {
+                    title,
+                    on_close,
+                    carriers,
+                }
             }
         }
     }

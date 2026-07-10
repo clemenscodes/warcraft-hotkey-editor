@@ -3,9 +3,9 @@ mod props;
 mod style;
 
 use components::anchor_column::AnchorColumn;
-use components::fight_column::{FightColumn, FightColumnProps};
+use components::fight_column::FightColumn;
 use dioxus::prelude::*;
-pub use props::FightRowProps;
+use props::FightRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,13 +13,13 @@ use tw_macro::assert_component;
 /// rival renders itself away when the move has no anchor).
 #[component]
 pub fn FightRow(props: FightRowProps) -> Element {
-    let fight_column = FightColumnProps::from(&props);
-    let anchor = props.anchor;
+    let move_view = props.move_view;
+    let mover_view = move_view.clone();
     rsx! {
         div {
             class: CLASS,
-            FightColumn { ..fight_column }
-            AnchorColumn { ..anchor }
+            FightColumn { move_view: mover_view }
+            AnchorColumn { move_view }
         }
     }
 }

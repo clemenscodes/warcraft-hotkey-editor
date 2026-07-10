@@ -1,15 +1,15 @@
 use super::props::IslandConflictAbilityProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::components::conflict_ability_icon::ConflictAbilityIconProps;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
 /// The conflict ability's shaped state: the open-state signal the column owns, the icon
-/// props, the click handler that opens this ability's carriers dialog, and the display
-/// text the column places directly.
+/// source and alt text, the click handler that opens this ability's carriers dialog, and
+/// the display text the column places directly.
 pub(super) struct IslandConflictAbilityView {
     pub(super) open_state: Signal<Option<InspectedAbility>>,
-    pub(super) icon: ConflictAbilityIconProps,
+    pub(super) icon_src: Option<String>,
+    pub(super) icon_alt: String,
     pub(super) onclick: EventHandler<MouseEvent>,
     pub(super) ability_name: String,
     pub(super) ability_id: WarcraftObjectId,
@@ -28,15 +28,14 @@ pub(super) fn use_island_conflict_ability(
         open_state.set(Some(opened));
     });
     let ability_name = props.ability_name.clone();
-    let icon = ConflictAbilityIconProps {
-        src: props.icon_url.clone(),
-        alt: ability_name.clone(),
-    };
+    let icon_src = props.icon_url.clone();
+    let icon_alt = ability_name.clone();
     let ability_id = props.ability_id;
     let extra_count = props.extra_count;
     IslandConflictAbilityView {
         open_state,
-        icon,
+        icon_src,
+        icon_alt,
         onclick,
         ability_name,
         ability_id,

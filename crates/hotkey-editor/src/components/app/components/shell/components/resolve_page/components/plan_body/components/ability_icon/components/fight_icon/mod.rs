@@ -1,10 +1,10 @@
 mod props;
 mod style;
 use crate::components::app::components::shell::components::shared::framed_icon::{
-    FramedIcon, FramedIconProps, IconRadius,
+    FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-pub use props::FightIconProps;
+use props::FightIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,17 +18,16 @@ pub fn FightIcon(props: FightIconProps) -> Element {
     };
     let src = Some(source);
     let alt = props.alt;
-    let framed = FramedIconProps {
-        src,
-        alt,
-        radius: IconRadius::Card,
-        hover_glow: true,
-        placeholder: false,
-    };
     rsx! {
         div {
             class: CLASS,
-            FramedIcon { ..framed }
+            FramedIcon {
+                src,
+                alt,
+                radius: IconRadius::Card,
+                hover_glow: true,
+                placeholder: false,
+            }
         }
     }
 }

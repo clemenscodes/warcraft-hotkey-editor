@@ -5,7 +5,7 @@ mod style;
 use super::shared::regen_label::RegenLabel;
 use components::mana_regen_gain::ManaRegenGain;
 use dioxus::prelude::*;
-pub use props::ManaRegenRowProps;
+use props::ManaRegenRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

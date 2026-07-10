@@ -1,13 +1,15 @@
 pub mod components;
+mod model;
 mod props;
 
 use components::clear_state::ClearState;
 use components::empty_state::EmptyState;
-use components::hotkeys_content::{HotkeysContent, HotkeysContentProps};
-use components::positions_content::{PositionsContent, PositionsContentProps};
-use components::unit_positions_content::{UnitPositionsContent, UnitPositionsContentProps};
+use components::hotkeys_content::HotkeysContent;
+use components::positions_content::PositionsContent;
+use components::unit_positions_content::UnitPositionsContent;
 use dioxus::prelude::*;
-pub use props::{BodyProps, ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
+pub use model::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
+use props::BodyProps;
 use tw_macro::assert_component;
 
 /// The active collision content: dispatches the shaped `ContentModel` to
@@ -16,9 +18,9 @@ use tw_macro::assert_component;
 #[component]
 pub fn Body(props: BodyProps) -> Element {
     match props.content {
-        ContentModel::Empty(state) => {
+        ContentModel::Empty(message) => {
             rsx! {
-                EmptyState { ..state }
+                EmptyState { message }
             }
         }
         ContentModel::Clear => {
@@ -27,27 +29,21 @@ pub fn Body(props: BodyProps) -> Element {
             }
         }
         ContentModel::Positions(pane) => {
-            let sidebar = pane.sidebar().clone();
-            let detail = pane.detail().clone();
-            let content = PositionsContentProps { sidebar, detail };
+            let islands = pane.islands().to_vec();
             rsx! {
-                PositionsContent { ..content }
+                PositionsContent { islands }
             }
         }
         ContentModel::Hotkeys(pane) => {
-            let sidebar = pane.sidebar().clone();
-            let detail = pane.detail().clone();
-            let content = HotkeysContentProps { sidebar, detail };
+            let units = pane.units().to_vec();
             rsx! {
-                HotkeysContent { ..content }
+                HotkeysContent { units }
             }
         }
         ContentModel::UnitPositions(pane) => {
-            let sidebar = pane.sidebar().clone();
-            let detail = pane.detail().clone();
-            let content = UnitPositionsContentProps { sidebar, detail };
+            let units = pane.units().to_vec();
             rsx! {
-                UnitPositionsContent { ..content }
+                UnitPositionsContent { units }
             }
         }
     }

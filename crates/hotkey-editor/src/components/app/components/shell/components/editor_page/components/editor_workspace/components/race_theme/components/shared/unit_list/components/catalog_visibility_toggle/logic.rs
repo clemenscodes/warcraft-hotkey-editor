@@ -1,4 +1,3 @@
-use super::components::catalog_visibility_button::CatalogVisibilityButtonProps;
 use dioxus::prelude::*;
 
 /// The two visibility signals the toggle reads and flips, read from editor context by
@@ -11,37 +10,29 @@ pub(super) struct CatalogVisibilitySignals {
 /// The two catalog-visibility options, each finished with its on/off state and
 /// flip handler.
 pub(super) struct CatalogVisibilityToggleModel {
-    pub(super) abilityless_button: CatalogVisibilityButtonProps,
-    pub(super) variants_button: CatalogVisibilityButtonProps,
+    pub(super) abilityless_is_active: bool,
+    pub(super) variants_is_active: bool,
+    pub(super) toggle_abilityless: EventHandler<MouseEvent>,
+    pub(super) toggle_variants: EventHandler<MouseEvent>,
 }
 
 impl From<CatalogVisibilitySignals> for CatalogVisibilityToggleModel {
     fn from(signals: CatalogVisibilitySignals) -> Self {
         let mut show_abilityless_units = signals.show_abilityless_units;
         let mut expand_variants = signals.expand_variants;
-        let show_abilityless_active = *show_abilityless_units.read();
-        let expand_variants_active = *expand_variants.read();
+        let abilityless_is_active = *show_abilityless_units.read();
+        let variants_is_active = *expand_variants.read();
         let toggle_abilityless = EventHandler::new(move |_event: MouseEvent| {
-            show_abilityless_units.set(!show_abilityless_active);
+            show_abilityless_units.set(!abilityless_is_active);
         });
         let toggle_variants = EventHandler::new(move |_event: MouseEvent| {
-            expand_variants.set(!expand_variants_active);
+            expand_variants.set(!variants_is_active);
         });
-        let abilityless_button = CatalogVisibilityButtonProps {
-            label: "No abilities",
-            title: "Show units without abilities (for stats)",
-            is_active: show_abilityless_active,
-            on_toggle: toggle_abilityless,
-        };
-        let variants_button = CatalogVisibilityButtonProps {
-            label: "All variants",
-            title: "List every tier / upgrade variant separately",
-            is_active: expand_variants_active,
-            on_toggle: toggle_variants,
-        };
         Self {
-            abilityless_button,
-            variants_button,
+            abilityless_is_active,
+            variants_is_active,
+            toggle_abilityless,
+            toggle_variants,
         }
     }
 }

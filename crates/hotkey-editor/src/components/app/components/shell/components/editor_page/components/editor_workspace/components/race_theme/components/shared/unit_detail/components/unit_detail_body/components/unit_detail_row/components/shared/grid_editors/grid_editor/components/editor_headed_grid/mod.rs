@@ -3,9 +3,9 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;
-use components::editor_grid::{EditorGrid, EditorGridProps};
+use components::editor_grid::EditorGrid;
 use dioxus::prelude::*;
-pub use props::EditorHeadedGridProps;
+use props::EditorHeadedGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,11 +16,11 @@ use tw_macro::assert_component;
 #[component]
 pub fn EditorHeadedGrid(props: EditorHeadedGridProps) -> Element {
     let heading = props.heading;
-    let grid = EditorGridProps::from(&props);
+    let tiles = props.tiles;
     rsx! {
         div { class: CLASS,
             GridHeading { heading }
-            EditorGrid { ..grid }
+            EditorGrid { tiles }
         }
     }
 }

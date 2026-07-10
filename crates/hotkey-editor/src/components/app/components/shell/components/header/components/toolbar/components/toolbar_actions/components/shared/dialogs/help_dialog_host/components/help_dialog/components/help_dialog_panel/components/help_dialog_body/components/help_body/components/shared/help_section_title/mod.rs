@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::HelpSectionTitleProps;
+use props::HelpSectionTitleProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

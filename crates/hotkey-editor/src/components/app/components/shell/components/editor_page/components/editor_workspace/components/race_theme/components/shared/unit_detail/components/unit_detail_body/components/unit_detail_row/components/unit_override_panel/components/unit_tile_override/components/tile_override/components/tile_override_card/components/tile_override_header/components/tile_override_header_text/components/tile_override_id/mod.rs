@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideIdProps;
+use props::TileOverrideIdProps;
 
 /// The object id shown under the name in the override panel.
 #[component]

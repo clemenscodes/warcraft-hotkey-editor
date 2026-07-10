@@ -17,15 +17,15 @@ use tw_macro::assert_component;
 #[component]
 pub fn SystemHotkeysDialogBody() -> Element {
     let SystemHotkeysDialogBodyModel {
-        breadcrumbs,
-        overlay,
+        active_category,
+        drag_follower,
     } = use_system_hotkeys_dialog_body();
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysBreadcrumbs { ..breadcrumbs }
+            SystemHotkeysBreadcrumbs { active_category }
             SystemHotkeysBody {}
-            InventoryDragOverlay { ..overlay }
+            InventoryDragOverlay { drag_follower }
         }
     }
 }

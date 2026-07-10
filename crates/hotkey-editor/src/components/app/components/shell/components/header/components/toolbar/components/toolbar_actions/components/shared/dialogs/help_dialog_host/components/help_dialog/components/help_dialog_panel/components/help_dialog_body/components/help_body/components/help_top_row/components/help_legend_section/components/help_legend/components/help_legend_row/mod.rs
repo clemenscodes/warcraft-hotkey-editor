@@ -6,16 +6,17 @@ use components::help_legend_description::HelpLegendDescription;
 use components::help_legend_icon::HelpLegendIcon;
 use components::help_legend_label::HelpLegendLabel;
 use dioxus::prelude::*;
-pub use props::HelpLegendRowProps;
+use props::HelpLegendRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One legend entry: a framed glyph beside its label and description.
 #[component]
 pub fn HelpLegendRow(props: HelpLegendRowProps) -> Element {
-    let icon = props.icon;
-    let label = props.label;
-    let description = props.description;
+    let entry = props.entry;
+    let icon = entry.icon();
+    let label = entry.label();
+    let description = entry.description();
     rsx! {
         li { class: CLASS,
             HelpLegendIcon { icon }

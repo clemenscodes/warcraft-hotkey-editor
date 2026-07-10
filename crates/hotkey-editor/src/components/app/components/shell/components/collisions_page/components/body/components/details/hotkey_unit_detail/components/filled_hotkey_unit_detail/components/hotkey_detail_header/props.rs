@@ -1,26 +1,10 @@
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnitProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_meta::ConflictMetaProps;
+use crate::components::app::components::shell::components::collisions_page::logic::UnitIconView;
 use dioxus::prelude::*;
-use warcraft_api::WarcraftObjectId;
 
-/// The detail-pane header row: the selected unit button and its text meta column.
+/// The detail-pane header row: the selected unit and its collision count. The header
+/// builds the unit button and the text meta column from the unit view.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyDetailHeaderProps {
-    pub unit: ConflictDetailUnitProps,
-    pub name: String,
-    pub unit_id: WarcraftObjectId,
+    pub unit: UnitIconView,
     pub count: usize,
-}
-
-impl From<&HotkeyDetailHeaderProps> for ConflictMetaProps {
-    fn from(props: &HotkeyDetailHeaderProps) -> Self {
-        let name = props.name.clone();
-        let unit_id = props.unit_id;
-        let count = props.count;
-        Self {
-            name,
-            unit_id,
-            count,
-        }
-    }
 }

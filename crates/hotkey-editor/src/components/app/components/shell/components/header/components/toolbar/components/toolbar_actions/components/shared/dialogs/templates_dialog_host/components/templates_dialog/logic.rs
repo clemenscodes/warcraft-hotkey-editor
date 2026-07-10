@@ -1,16 +1,16 @@
-use super::components::templates_dialog_panel::TemplatesDialogPanelProps;
-use super::components::templates_dialog_panel::components::templates_dialog_body::TemplatesDialogBodyProps;
+use super::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardView;
 use super::hooks::TemplatesDialogView;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
 /// The templates dialog's own shell, shaped from its view: the open value driving
-/// the backdrop, the change handler that writes the open signal, and the bordered
-/// panel (its header and scroll-region body holding the card gallery).
+/// the backdrop, the change handler that writes the open signal, and the panel's own
+/// domain values — its header title, the close handler, and the resolved card views.
 pub(super) struct TemplatesDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: TemplatesDialogPanelProps,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) cards: Vec<TemplateCardView>,
 }
 
 impl From<&TemplatesDialogView> for TemplatesDialogShell {
@@ -21,14 +21,13 @@ impl From<&TemplatesDialogView> for TemplatesDialogShell {
         let mut close_signal = view.open;
         let title = String::from("Layout Templates");
         let on_close = EventHandler::new(move |()| close_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let gallery = view.gallery.clone();
-        let body = TemplatesDialogBodyProps { gallery };
-        let panel = TemplatesDialogPanelProps { header, body };
+        let cards = view.cards.clone();
         Self {
             open,
             on_open_change,
-            panel,
+            title,
+            on_close,
+            cards,
         }
     }
 }

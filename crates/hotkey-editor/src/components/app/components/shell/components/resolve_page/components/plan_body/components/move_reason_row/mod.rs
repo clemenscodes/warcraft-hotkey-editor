@@ -8,7 +8,7 @@ use components::reason_badges::spill_reason_badge::SpillReasonBadge;
 use components::reason_badges::stuck_reason_badge::StuckReasonBadge;
 use components::reason_badges::swap_reason_badge::SwapReasonBadge;
 use dioxus::prelude::*;
-pub use props::MoveReasonRowProps;
+use props::MoveReasonRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

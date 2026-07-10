@@ -1,9 +1,9 @@
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::{MiniGrid, MiniGridProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
 use dioxus::prelude::*;
-pub use props::InlineConflictPositionProps;
+use props::InlineConflictPositionProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -11,11 +11,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn InlineConflictPosition(props: InlineConflictPositionProps) -> Element {
     let coordinate = props.coordinate;
-    let mini_grid = MiniGridProps { coordinate };
     rsx! {
         span {
             class: CLASS,
-            MiniGrid { ..mini_grid }
+            MiniGrid { coordinate }
         }
     }
 }

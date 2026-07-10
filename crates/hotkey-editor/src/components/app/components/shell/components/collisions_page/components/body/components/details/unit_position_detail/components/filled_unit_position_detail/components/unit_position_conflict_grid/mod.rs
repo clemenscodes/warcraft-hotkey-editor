@@ -4,19 +4,23 @@ mod style;
 
 use components::unit_position_conflict_card::UnitPositionConflictCard;
 use dioxus::prelude::*;
-pub use props::UnitPositionConflictGridProps;
+use props::UnitPositionConflictGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The scrolling grid of position-collision cards for the selected unit.
 #[component]
 pub fn UnitPositionConflictGrid(props: UnitPositionConflictGridProps) -> Element {
-    let cards = props.cards;
+    let conflicts = props.conflicts;
+    let unit_id = props.unit_id;
     rsx! {
         div {
             class: CLASS,
-            for card in cards {
-                UnitPositionConflictCard { ..card }
+            for conflict in conflicts {
+                UnitPositionConflictCard {
+                    conflict,
+                    unit_id,
+                }
             }
         }
     }

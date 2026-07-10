@@ -4,7 +4,7 @@ mod style;
 
 use components::mode_tabs::ModeTabs;
 use dioxus::prelude::*;
-use hooks::use_mode_tabs_host;
+use hooks::{use_mode_tabs_host, ModeTabsInputs};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,11 +13,14 @@ use tw_macro::assert_component;
 /// presentational `ModeTabs` its two inputs. The tabs stay gallery-renderable.
 #[component]
 pub fn ModeTabsHost() -> Element {
-    let mode_tabs = use_mode_tabs_host();
+    let ModeTabsInputs {
+        unit_mode,
+        on_select,
+    } = use_mode_tabs_host();
     rsx! {
         div {
             class: CLASS,
-            ModeTabs { ..mode_tabs }
+            ModeTabs { unit_mode, on_select }
         }
     }
 }

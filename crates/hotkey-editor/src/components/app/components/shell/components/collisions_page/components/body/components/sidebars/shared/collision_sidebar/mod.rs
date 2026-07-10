@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::collision_list_scroll::{CollisionListScroll, CollisionListScrollProps};
+use components::collision_list_scroll::CollisionListScroll;
 use dioxus::prelude::*;
-pub use props::CollisionSidebarProps;
+use props::CollisionSidebarProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,11 +13,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn CollisionSidebar(props: CollisionSidebarProps) -> Element {
     let cards = props.cards;
-    let scroll = CollisionListScrollProps { cards };
     rsx! {
         aside {
             class: CLASS,
-            CollisionListScroll { ..scroll }
+            CollisionListScroll { cards }
         }
     }
 }

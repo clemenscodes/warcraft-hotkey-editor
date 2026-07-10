@@ -3,10 +3,10 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::components::help_dialog_panel::components::help_dialog_body::components::help_body::components::shared::help_section_title::HelpSectionTitle;
-use components::help_glossary_columns::{HelpGlossaryColumns, HelpGlossaryColumnsProps};
-use components::help_resolver_prose::{HelpResolverProse, HelpResolverProseProps};
+use components::help_glossary_columns::HelpGlossaryColumns;
+use components::help_resolver_prose::HelpResolverProse;
 use dioxus::prelude::*;
-pub use props::HelpResolverSectionProps;
+use props::HelpResolverSectionProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,13 +14,13 @@ use tw_macro::assert_component;
 /// resolver does, and the glossary that defines its terms.
 #[component]
 pub fn HelpResolverSection(props: HelpResolverSectionProps) -> Element {
-    let prose = HelpResolverProseProps::from(&props);
-    let glossary = HelpGlossaryColumnsProps::from(&props);
+    let paragraphs = props.prose;
+    let columns = props.glossary;
     rsx! {
         section { class: CLASS,
             HelpSectionTitle { title: "What the resolver is doing" }
-            HelpResolverProse { ..prose }
-            HelpGlossaryColumns { ..glossary }
+            HelpResolverProse { paragraphs }
+            HelpGlossaryColumns { columns }
         }
     }
 }

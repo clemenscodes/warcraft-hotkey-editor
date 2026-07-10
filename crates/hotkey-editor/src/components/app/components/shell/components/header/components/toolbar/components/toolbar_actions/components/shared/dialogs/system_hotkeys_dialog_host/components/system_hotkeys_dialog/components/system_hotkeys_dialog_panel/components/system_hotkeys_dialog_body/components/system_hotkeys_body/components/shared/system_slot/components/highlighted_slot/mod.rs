@@ -3,20 +3,32 @@ mod style;
 
 use super::shared::slot_contents::SlotContents;
 use dioxus::prelude::*;
-pub use props::HighlightedSlotProps;
+use props::HighlightedSlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The highlighted look of a system slot: the gold border-image frame with a gold
 /// glow overlay, composing the shared slot content. Presentational — the dispatcher
-/// builds its props and renders it when the slot's glow state is highlighted.
+/// renders it when the slot's glow state is highlighted.
 #[component]
 pub fn HighlightedSlot(props: HighlightedSlotProps) -> Element {
-    let contents = props.contents;
+    let slot_label = props.slot_label;
+    let key_label = props.key_label;
+    let conflict = props.conflict;
+    let tooltip_text = props.tooltip_text;
+    let tooltip_placement = props.tooltip_placement;
+    let dragging = props.dragging;
     rsx! {
         div {
             class: CLASS,
-            SlotContents { ..contents }
+            SlotContents {
+                slot_label,
+                key_label,
+                conflict,
+                tooltip_text,
+                tooltip_placement,
+                dragging,
+            }
         }
     }
 }

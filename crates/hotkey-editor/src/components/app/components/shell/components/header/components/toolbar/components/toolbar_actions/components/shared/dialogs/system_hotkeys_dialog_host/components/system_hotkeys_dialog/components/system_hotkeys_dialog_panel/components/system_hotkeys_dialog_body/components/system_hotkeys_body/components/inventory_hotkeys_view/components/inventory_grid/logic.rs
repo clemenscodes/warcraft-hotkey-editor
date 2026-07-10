@@ -164,6 +164,26 @@ pub struct InventoryDragSource {
     pub(crate) section_id: WarcraftObjectId,
 }
 
+/// The raw values one filled inventory cell needs: its index and section, plus the
+/// shared drag/drop signals the grid coordinates. A plain domain descriptor read by
+/// field access, never spread into a child component's props.
+#[derive(Clone, PartialEq)]
+pub(crate) struct InventoryFilledSlotEntry {
+    pub(crate) slot_index: usize,
+    pub(crate) section_id: WarcraftObjectId,
+    pub(crate) dragging_source: Signal<Option<InventoryDragSource>>,
+    pub(crate) drop_target: Signal<Option<WarcraftObjectId>>,
+    pub(crate) drag_follower: Signal<Option<InventoryDragFollower>>,
+}
+
+/// One finished grid position handed to a single `InventorySlot`: the filled cell's
+/// raw values when the position is occupied, or `None` for an empty placeholder. A
+/// plain domain descriptor read by field access.
+#[derive(Clone, PartialEq)]
+pub(crate) struct InventorySlotEntry {
+    pub(crate) filled: Option<InventoryFilledSlotEntry>,
+}
+
 /// A drag that has begun (pointer down on a slot) but not yet crossed the movement
 /// threshold, so it is still ambiguous with a click. Held here until the first
 /// past-threshold move promotes it into a real drag — capturing the pointer and

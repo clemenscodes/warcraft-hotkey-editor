@@ -9,15 +9,16 @@ use components::tile_override_name::TileOverrideName;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideHeaderTextProps;
+use props::TileOverrideHeaderTextProps;
 
 /// The name-and-id column of the override panel header.
 #[component]
 pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextProps) -> Element {
+    let TileOverrideHeaderTextProps { name_text, object_id } = props;
     rsx! {
         div { class: CLASS,
-            TileOverrideName { ..props.name }
-            TileOverrideId { ..props.id }
+            TileOverrideName { text: name_text }
+            TileOverrideId { object_id }
         }
     }
 }

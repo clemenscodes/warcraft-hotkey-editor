@@ -1,10 +1,12 @@
 pub mod components;
+mod hooks;
 mod props;
 
-use components::primary_agility_row::{PrimaryAgilityRow, PrimaryAgilityRowProps};
-use components::regular_agility_row::{RegularAgilityRow, RegularAgilityRowProps};
+use components::primary_agility_row::PrimaryAgilityRow;
+use components::regular_agility_row::RegularAgilityRow;
 use dioxus::prelude::*;
-pub use props::AgilityRowProps;
+use hooks::{AgilityRowModel, use_agility_row};
+use props::AgilityRowProps;
 use tw_macro::assert_component;
 
 /// The hero's agility attribute row. A dispatcher: when agility is the hero's primary
@@ -12,15 +14,18 @@ use tw_macro::assert_component;
 /// owns its own look, so there is no `data-primary` attribute.
 #[component]
 pub fn AgilityRow(props: AgilityRowProps) -> Element {
+    let AgilityRowModel {
+        statistic,
+        growth,
+        label,
+    } = use_agility_row(&props);
     if props.is_primary {
-        let row = PrimaryAgilityRowProps::from(&props);
         rsx! {
-            PrimaryAgilityRow { ..row }
+            PrimaryAgilityRow { statistic, growth, label }
         }
     } else {
-        let row = RegularAgilityRowProps::from(&props);
         rsx! {
-            RegularAgilityRow { ..row }
+            RegularAgilityRow { statistic, growth, label }
         }
     }
 }

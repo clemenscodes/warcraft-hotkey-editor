@@ -1,15 +1,18 @@
 pub mod components;
+mod hooks;
 mod props;
 
-use components::drag_follower_ghost::{DragFollowerGhost, DragFollowerGhostProps};
+use components::drag_follower_ghost::DragFollowerGhost;
 use dioxus::prelude::*;
-pub use props::DragFollowerOverlayProps;
+use hooks::use_drag_follower_overlay;
+use props::DragFollowerOverlayProps;
 use tw_macro::assert_component;
 
 #[component]
 pub fn DragFollowerOverlay(props: DragFollowerOverlayProps) -> Element {
+    let presentation = use_drag_follower_overlay(&props);
     rsx! {
-        DragFollowerGhost { ..DragFollowerGhostProps::from(&props) }
+        DragFollowerGhost { presentation }
     }
 }
 

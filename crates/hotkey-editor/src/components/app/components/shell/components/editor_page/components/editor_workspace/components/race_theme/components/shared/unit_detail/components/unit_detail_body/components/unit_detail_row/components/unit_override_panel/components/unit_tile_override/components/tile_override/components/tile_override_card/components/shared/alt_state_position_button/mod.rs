@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AltStatePositionButtonProps;
+use props::AltStatePositionButtonProps;
 
 /// The crosshair button that opens the command-card position picker for an off-state
 /// or upgraded-form button.

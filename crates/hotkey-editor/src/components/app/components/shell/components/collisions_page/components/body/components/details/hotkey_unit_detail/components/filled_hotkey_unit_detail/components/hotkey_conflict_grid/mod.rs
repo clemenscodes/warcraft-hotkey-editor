@@ -4,19 +4,23 @@ mod style;
 
 use components::hotkey_conflict_card::HotkeyConflictCard;
 use dioxus::prelude::*;
-pub use props::HotkeyConflictGridProps;
+use props::HotkeyConflictGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The scrolling grid of shared-hotkey conflict cards for the selected unit.
 #[component]
 pub fn HotkeyConflictGrid(props: HotkeyConflictGridProps) -> Element {
-    let cards = props.cards;
+    let conflicts = props.conflicts;
+    let unit_id = props.unit_id;
     rsx! {
         div {
             class: CLASS,
-            for card in cards {
-                HotkeyConflictCard { ..card }
+            for conflict in conflicts {
+                HotkeyConflictCard {
+                    conflict,
+                    unit_id,
+                }
             }
         }
     }

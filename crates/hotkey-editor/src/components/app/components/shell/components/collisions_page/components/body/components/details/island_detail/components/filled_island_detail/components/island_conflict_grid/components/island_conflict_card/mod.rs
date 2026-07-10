@@ -3,10 +3,10 @@ mod logic;
 mod props;
 mod style;
 
-use components::island_conflict_panel::{IslandConflictPanel, IslandConflictPanelProps};
+use components::island_conflict_panel::IslandConflictPanel;
 use dioxus::prelude::*;
 use logic::IslandConflictCardModel;
-pub use props::IslandConflictCardProps;
+use props::IslandConflictCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,11 +15,15 @@ use tw_macro::assert_component;
 #[component]
 pub fn IslandConflictCard(props: IslandConflictCardProps) -> Element {
     let model = IslandConflictCardModel::from(&props);
-    let panel = IslandConflictPanelProps::from(model);
+    let IslandConflictCardModel {
+        unit,
+        own_ability,
+        shared_ability,
+    } = model;
     rsx! {
         div {
             class: CLASS,
-            IslandConflictPanel { ..panel }
+            IslandConflictPanel { unit, own_ability, shared_ability }
         }
     }
 }

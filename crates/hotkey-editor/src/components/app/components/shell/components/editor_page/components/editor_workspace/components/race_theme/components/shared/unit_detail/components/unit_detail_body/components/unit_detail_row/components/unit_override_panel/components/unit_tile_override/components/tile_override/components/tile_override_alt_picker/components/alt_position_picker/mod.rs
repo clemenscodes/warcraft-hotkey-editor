@@ -10,7 +10,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_alt_position_picker;
 use logic::AltPositionPickerShell;
-pub use props::AltPositionPickerProps;
+use props::AltPositionPickerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +26,10 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
     let AltPositionPickerShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        explainer_text,
+        grid_config,
     } = AltPositionPickerShell::from(&model);
     rsx! {
         DialogRoot {
@@ -34,7 +37,12 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                AltPositionPickerPanel { ..panel }
+                AltPositionPickerPanel {
+                    title,
+                    on_close,
+                    explainer_text,
+                    grid_config,
+                }
             }
         }
     }

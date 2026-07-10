@@ -1,31 +1,16 @@
-use super::components::carriers_dialog_panel::CarriersDialogPanelProps;
-use super::components::carriers_dialog_panel::components::carriers_dialog_body::CarriersDialogBodyProps;
-use super::components::carriers_dialog_panel::components::carriers_dialog_body::components::carriers_grid::components::carrier_card::CarrierCardProps;
 use super::hooks::CarriersDialogView;
-use super::props::CarriersDialogProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
+use crate::services::carriers::CarrierUnitView;
 use dioxus::prelude::*;
 
-/// One card per resolved carrier of the ability.
-pub(super) fn cards(props: &CarriersDialogProps) -> Vec<CarrierCardProps> {
-    props
-        .carriers
-        .iter()
-        .map(|carrier| CarrierCardProps {
-            unit_id: carrier.unit_id(),
-            icon_url: carrier.icon_url().map(str::to_owned),
-            name: carrier.name().to_owned(),
-        })
-        .collect()
-}
-
 /// The carriers dialog's own shell, shaped from its view: the open value driving the
-/// backdrop, the change handler that writes the open signal, and the bordered panel (its
-/// header row above the scroll body carrying the carrier cards).
+/// backdrop, the change handler that writes the open signal, the close handler its header
+/// fires, the title, and the carriers the panel lays out below.
 pub(super) struct CarriersDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: CarriersDialogPanelProps,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) carriers: Vec<CarrierUnitView>,
 }
 
 impl From<&CarriersDialogView> for CarriersDialogShell {
@@ -34,16 +19,15 @@ impl From<&CarriersDialogView> for CarriersDialogShell {
         let open = open_signal();
         let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
         let mut close_signal = view.open;
-        let title = view.title.clone();
         let on_close = EventHandler::new(move |()| close_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let cards = view.cards.clone();
-        let body = CarriersDialogBodyProps { cards };
-        let panel = CarriersDialogPanelProps { header, body };
+        let title = view.title.clone();
+        let carriers = view.carriers.clone();
         Self {
             open,
             on_open_change,
-            panel,
+            title,
+            on_close,
+            carriers,
         }
     }
 }

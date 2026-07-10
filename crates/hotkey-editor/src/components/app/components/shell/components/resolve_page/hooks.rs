@@ -1,6 +1,6 @@
-use super::components::plan_body::PlanBodyProps;
-use super::components::plan_header::PlanHeaderProps;
-use super::logic::{ActivePlanInputs, ActivePlanView, PlanCounts, PlanView};
+use super::logic::{
+    ActivePlanInputs, ActivePlanView, MoveSection, PlanCounts, PlanView, UnresolvedView,
+};
 use super::props::ResolvePageProps;
 use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
@@ -27,12 +27,17 @@ pub(super) enum ResolvePageView {
     Plan(Box<ResolvePlanPresentation>),
 }
 
-/// Everything the plan state needs, fully shaped: the header, breadcrumb bar, and
-/// body child props.
+/// Everything the plan state needs, fully shaped: the header's summary text and Apply
+/// control, the breadcrumb bar, and the domain the body renders (the active section's
+/// moves and the unresolved abilities).
 pub(super) struct ResolvePlanPresentation {
-    pub header: PlanHeaderProps,
+    pub moves_text: String,
+    pub unresolved_count: usize,
+    pub running: bool,
+    pub on_apply: EventHandler<MouseEvent>,
     pub breadcrumbs: BreadcrumbsProps,
-    pub body: PlanBodyProps,
+    pub section: Option<MoveSection>,
+    pub unresolved: Vec<UnresolvedView>,
 }
 
 /// The Apply control's state: whether the cascade is currently running and the
@@ -147,16 +152,14 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let move_count = counts.move_count;
     let move_noun = if move_count == 1 { "move" } else { "moves" };
     let moves_text = format!("{move_count} {move_noun}");
-    let header = PlanHeaderProps {
+    let presentation = ResolvePlanPresentation {
         moves_text,
         unresolved_count: counts.unresolved_count,
         running: apply.running,
         on_apply: apply.on_apply,
-    };
-    let presentation = ResolvePlanPresentation {
-        header,
         breadcrumbs: active.breadcrumbs,
-        body: active.body,
+        section: active.section,
+        unresolved: active.unresolved,
     };
     ResolvePageView::Plan(Box::new(presentation))
 }

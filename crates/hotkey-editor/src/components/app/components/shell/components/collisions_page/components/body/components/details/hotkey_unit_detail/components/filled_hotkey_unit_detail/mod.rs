@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::hotkey_conflict_grid::{HotkeyConflictGrid, HotkeyConflictGridProps};
-use components::hotkey_detail_header::{HotkeyDetailHeader, HotkeyDetailHeaderProps};
+use components::hotkey_conflict_grid::HotkeyConflictGrid;
+use components::hotkey_detail_header::HotkeyDetailHeader;
 use dioxus::prelude::*;
-pub use props::FilledHotkeyUnitDetailProps;
+use props::FilledHotkeyUnitDetailProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,13 +13,22 @@ use tw_macro::assert_component;
 /// shared-hotkey conflict cards.
 #[component]
 pub fn FilledHotkeyUnitDetail(props: FilledHotkeyUnitDetailProps) -> Element {
-    let header = HotkeyDetailHeaderProps::from(&props);
-    let grid = HotkeyConflictGridProps::from(&props);
+    let unit_view = props.unit_view;
+    let unit = unit_view.unit().clone();
+    let count = unit_view.collision_count();
+    let unit_id = unit.unit_id();
+    let conflicts = unit_view.conflicts().to_vec();
     rsx! {
         section {
             class: CLASS,
-            HotkeyDetailHeader { ..header }
-            HotkeyConflictGrid { ..grid }
+            HotkeyDetailHeader {
+                unit,
+                count,
+            }
+            HotkeyConflictGrid {
+                conflicts,
+                unit_id,
+            }
         }
     }
 }

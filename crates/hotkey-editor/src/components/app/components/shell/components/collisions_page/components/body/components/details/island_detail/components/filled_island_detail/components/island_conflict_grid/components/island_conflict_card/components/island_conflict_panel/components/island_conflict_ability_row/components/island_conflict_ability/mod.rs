@@ -4,13 +4,13 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::{ConflictAbilityTrigger, ConflictAbilityTriggerProps};
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;
 use hooks::{IslandConflictAbilityView, use_island_conflict_ability};
-pub use props::IslandConflictAbilityProps;
+use props::IslandConflictAbilityProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -22,17 +22,17 @@ use tw_macro::assert_component;
 pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
     let IslandConflictAbilityView {
         open_state,
-        icon,
+        icon_src,
+        icon_alt,
         onclick,
         ability_name,
         ability_id,
         extra_count,
     } = use_island_conflict_ability(&props);
-    let trigger = ConflictAbilityTriggerProps { onclick, icon };
     rsx! {
         div {
             class: CLASS,
-            ConflictAbilityTrigger { ..trigger }
+            ConflictAbilityTrigger { onclick, icon_src, icon_alt }
             ConflictAbilityName { text: ability_name }
             ConflictObjectId { object_id: ability_id }
             if extra_count > 0 {

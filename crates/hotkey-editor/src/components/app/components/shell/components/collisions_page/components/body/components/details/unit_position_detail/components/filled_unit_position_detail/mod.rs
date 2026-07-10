@@ -2,14 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::unit_position_conflict_grid::{
-    UnitPositionConflictGrid, UnitPositionConflictGridProps,
-};
-use components::unit_position_detail_header::{
-    UnitPositionDetailHeader, UnitPositionDetailHeaderProps,
-};
+use components::unit_position_conflict_grid::UnitPositionConflictGrid;
+use components::unit_position_detail_header::UnitPositionDetailHeader;
 use dioxus::prelude::*;
-pub use props::FilledUnitPositionDetailProps;
+use props::FilledUnitPositionDetailProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,13 +13,22 @@ use tw_macro::assert_component;
 /// position-conflict cards.
 #[component]
 pub fn FilledUnitPositionDetail(props: FilledUnitPositionDetailProps) -> Element {
-    let header = UnitPositionDetailHeaderProps::from(&props);
-    let grid = UnitPositionConflictGridProps::from(&props);
+    let unit_view = props.unit_view;
+    let unit = unit_view.unit().clone();
+    let count = unit_view.collision_count();
+    let unit_id = unit.unit_id();
+    let conflicts = unit_view.conflicts().to_vec();
     rsx! {
         section {
             class: CLASS,
-            UnitPositionDetailHeader { ..header }
-            UnitPositionConflictGrid { ..grid }
+            UnitPositionDetailHeader {
+                unit,
+                count,
+            }
+            UnitPositionConflictGrid {
+                conflicts,
+                unit_id,
+            }
         }
     }
 }

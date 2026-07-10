@@ -8,7 +8,7 @@ use components::conflict_unit_icon::ConflictUnitIcon;
 use components::island_conflict_unit_name::IslandConflictUnitName;
 use dioxus::prelude::*;
 use hooks::use_island_conflict_unit;
-pub use props::IslandConflictUnitProps;
+use props::IslandConflictUnitProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +23,7 @@ pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
             class: CLASS,
             r#type: "button",
             onclick: model.onclick,
-            ConflictUnitIcon { ..model.icon }
+            ConflictUnitIcon { src: model.icon_src, alt: model.icon_alt }
             IslandConflictUnitName { text: model.name }
             ConflictObjectId { object_id: model.unit_id }
         }

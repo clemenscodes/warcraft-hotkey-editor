@@ -1,11 +1,10 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::conflict_slot_key::{ConflictSlotKey, ConflictSlotKeyProps};
-use components::plain_slot_key::{PlainSlotKey, PlainSlotKeyProps};
+use components::conflict_slot_key::ConflictSlotKey;
+use components::plain_slot_key::PlainSlotKey;
 use dioxus::prelude::*;
-pub use props::SystemSlotKeyProps;
+use props::SystemSlotKeyProps;
 use tw_macro::assert_component;
 
 /// The bound-key glyph shown on a system hotkey slot. A pure dispatcher: from the
@@ -16,15 +15,15 @@ use tw_macro::assert_component;
 pub fn SystemSlotKey(props: SystemSlotKeyProps) -> Element {
     match props.conflict {
         false => {
-            let plain = PlainSlotKeyProps::from(&props);
+            let label = props.label.clone();
             rsx! {
-                PlainSlotKey { ..plain }
+                PlainSlotKey { label }
             }
         }
         true => {
-            let conflict = ConflictSlotKeyProps::from(&props);
+            let label = props.label.clone();
             rsx! {
-                ConflictSlotKey { ..conflict }
+                ConflictSlotKey { label }
             }
         }
     }

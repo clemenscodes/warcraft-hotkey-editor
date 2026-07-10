@@ -2,20 +2,20 @@ pub mod components;
 mod props;
 mod style;
 
-use components::fight_column::{FightColumn, FightColumnProps};
+use components::fight_column::FightColumn;
 use dioxus::prelude::*;
-pub use props::FightRowProps;
+use props::FightRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The stuck ability's row: it centers the ability's column.
 #[component]
 pub fn FightRow(props: FightRowProps) -> Element {
-    let fight_column = FightColumnProps::from(&props);
+    let unresolved_view = props.unresolved_view;
     rsx! {
         div {
             class: CLASS,
-            FightColumn { ..fight_column }
+            FightColumn { unresolved_view }
         }
     }
 }

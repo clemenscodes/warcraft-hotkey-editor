@@ -100,6 +100,13 @@ impl KeyColumn {
         &self.rows
     }
 
+    /// This column's rows, taken by value. The board hands each column's rows straight
+    /// to the column component as owned domain data, so no other component ever names
+    /// the column's props.
+    pub fn into_rows(self) -> Vec<Vec<KeyCell>> {
+        self.rows
+    }
+
     /// The key codes in this column that may be chosen. The board offers these to a
     /// keyboard press: a physical key resolves to a pick only when it names one of
     /// them. A conflict the caller forbade (`pickable == false`) is left out.

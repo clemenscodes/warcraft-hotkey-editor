@@ -6,8 +6,9 @@ use crate::services::navigation::context::use_view_navigation;
 /// and the open-unit handler the card's button fires.
 pub(super) fn use_carrier_card(props: &CarrierCardProps) -> CarrierCardModel {
     let view_navigation = use_view_navigation();
+    let carrier = props.carrier.clone();
     let inputs = CarrierCardInputs {
-        props: props.clone(),
+        carrier,
         view_navigation,
     };
     CarrierCardModel::from(inputs)

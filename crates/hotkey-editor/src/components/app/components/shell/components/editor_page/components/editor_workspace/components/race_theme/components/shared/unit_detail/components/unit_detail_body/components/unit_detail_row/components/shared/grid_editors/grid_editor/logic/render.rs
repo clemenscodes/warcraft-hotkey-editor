@@ -8,10 +8,8 @@ use warcraft_keybinds::{
     RowIndex,
 };
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::EditorHeadedGridProps;
-
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::GridEditorTileProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 
 use super::super::props::GridEditorProps;
@@ -23,21 +21,19 @@ use super::handlers::{
 
 use super::mechanics;
 
-/// Builds the editor's captioned grid: its heading plus the finished tiles.
-/// `rendered_tiles` is already resolved by the caller (`GridEditor`, in a
-/// `use_memo` in its own reactive scope) — that is what lets one grid's edit
-/// avoid re-rendering its siblings, so this constructor must not itself read
-/// `loaded_keys` or any other grid-state signal. It only adapts each rendered
-/// tile into its presentational `GridEditorTileProps` and overlays the drag
-/// state plus every pointer handler on top. This is all the grid's behavior,
-/// kept in the editor; the `EditorHeadedGrid` and the `EditorGrid` only draw what
-/// comes out. Always exactly `COMMAND_GRID_TILE_COUNT` tiles, so the result is
-/// a fixed-size array.
-impl EditorHeadedGridProps {
-    pub(crate) fn from_parts<B: GridBehavior>(
+/// Builds the editor's finished tiles. `rendered_tiles` is already resolved by the
+/// caller (`GridEditor`, in a `use_memo` in its own reactive scope) — that is what lets
+/// one grid's edit avoid re-rendering its siblings, so this builder must not itself read
+/// `loaded_keys` or any other grid-state signal. It only adapts each rendered tile into
+/// an `EditorTile` and overlays the drag state plus every pointer handler on top. This
+/// is all the grid's behavior, kept in the editor; the `EditorHeadedGrid` and the
+/// `EditorGrid` only draw what comes out. Always exactly `COMMAND_GRID_TILE_COUNT` tiles,
+/// so the result is a fixed-size array.
+impl EditorTile {
+    pub(crate) fn grid<B: GridBehavior>(
         props: &GridEditorProps<B>,
         rendered_tiles: Vec<RenderedTile>,
-    ) -> Self {
+    ) -> [Self; COMMAND_GRID_TILE_COUNT] {
         let behavior = props.behavior.clone();
         let config = &props.config;
         let toast = consume_toast();
@@ -90,10 +86,9 @@ impl EditorHeadedGridProps {
             .filter(|detail| detail.grid_id() == grid_id)
             .map(|detail| detail.coordinate());
         let drag_active_here = dragging_source_coordinate.is_some();
-        let mut tile_props_list: Vec<GridEditorTileProps> =
-            Vec::with_capacity(rendered_tiles.len());
+        let mut tile_props_list: Vec<Self> = Vec::with_capacity(rendered_tiles.len());
         for rendered in rendered_tiles.iter() {
-            let mut tile = GridEditorTileProps::from(rendered);
+            let mut tile = Self::from(rendered);
             let coordinate = tile.coordinate;
             let base_state = tile.state;
             let draggable = tile.draggable;
@@ -162,11 +157,10 @@ impl EditorHeadedGridProps {
             tile.ondoubleclick = EventHandler::new(double_click);
             tile_props_list.push(tile);
         }
-        let tiles: [GridEditorTileProps; COMMAND_GRID_TILE_COUNT] = tile_props_list
+        let tiles: [Self; COMMAND_GRID_TILE_COUNT] = tile_props_list
             .try_into()
             .unwrap_or_else(|_| std::array::from_fn(|_| placeholder_tile()));
-        let heading = grid_id;
-        Self { heading, tiles }
+        tiles
     }
 }
 
@@ -175,9 +169,9 @@ impl EditorHeadedGridProps {
 /// first frame before boot has resolved `loaded_keys`). Renders an empty,
 /// non-interactive square instead of panicking; the installed panic hook
 /// still surfaces the real cause if this path is ever hit outside boot.
-fn placeholder_tile() -> GridEditorTileProps {
+fn placeholder_tile() -> EditorTile {
     let coordinate = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
-    GridEditorTileProps {
+    EditorTile {
         coordinate,
         icon: None,
         label: String::new(),

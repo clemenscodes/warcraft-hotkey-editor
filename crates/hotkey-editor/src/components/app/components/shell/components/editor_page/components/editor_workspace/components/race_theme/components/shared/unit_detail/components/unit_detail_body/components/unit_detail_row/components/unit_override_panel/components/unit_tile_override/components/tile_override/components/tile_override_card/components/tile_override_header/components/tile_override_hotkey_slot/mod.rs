@@ -6,10 +6,10 @@ use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKey;
 use components::tile_override_info_only::TileOverrideInfoOnly;
-use logic::TileOverrideHotkeySlotDispatch;
+use logic::{HotkeySlotKeyCell, TileOverrideHotkeySlotDispatch};
 use tw_macro::assert_component;
 
-pub use props::TileOverrideHotkeySlotProps;
+use props::TileOverrideHotkeySlotProps;
 
 /// The hotkey / research-hotkey / passive-note slot in the override header. Renders
 /// exactly the one that applies, or nothing.
@@ -17,13 +17,14 @@ pub use props::TileOverrideHotkeySlotProps;
 pub fn TileOverrideHotkeySlot(props: TileOverrideHotkeySlotProps) -> Element {
     let dispatch = TileOverrideHotkeySlotDispatch::from(&props);
     if let Some(key_cell) = dispatch.key_cell {
+        let HotkeySlotKeyCell { label, is_editing, is_special, title, on_activate } = key_cell;
         return rsx! {
-            OverrideKey { ..key_cell }
+            OverrideKey { label, is_editing, is_special, title, on_activate }
         };
     }
-    if let Some(info) = dispatch.info {
+    if let Some(text) = dispatch.info_text {
         return rsx! {
-            TileOverrideInfoOnly { ..info }
+            TileOverrideInfoOnly { text }
         };
     }
     rsx! {}

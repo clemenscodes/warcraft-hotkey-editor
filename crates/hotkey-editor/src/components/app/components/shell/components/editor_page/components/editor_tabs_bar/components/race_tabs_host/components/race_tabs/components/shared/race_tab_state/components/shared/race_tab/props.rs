@@ -1,13 +1,12 @@
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::components::shared::race_tab_state::components::shared::race_tab::components::race_tab_label::RaceTabLabelProps;
 use dioxus::prelude::*;
 
-/// The base race tab's props: the already-shaped label child props plus the
-/// pointer/keyboard handlers the `<button>` needs. The active and inactive variants each
-/// build this and render `RaceTab`; carrying the label child props as data is passing
-/// data, not `Element`.
+/// The base race tab's props: the display name to show, plus the pointer/keyboard
+/// handlers the `<button>` needs. The active and inactive variants each build this and
+/// render `RaceTab`; the label is a plain display string, and the base wraps it in its
+/// own `RaceTabLabel` child.
 #[derive(Props, Clone, PartialEq)]
 pub struct RaceTabProps {
-    pub label: RaceTabLabelProps,
+    pub label: String,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
 }

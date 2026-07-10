@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::move_list::{MoveList, MoveListProps};
-use components::unresolved_section::{UnresolvedSection, UnresolvedSectionProps};
+use components::move_list::MoveList;
+use components::unresolved_section::UnresolvedSection;
 use dioxus::prelude::*;
-pub use props::{PlanBodyProps, PlanBodySection};
+use props::PlanBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,18 +15,14 @@ use tw_macro::assert_component;
 #[component]
 pub fn PlanBody(props: PlanBodyProps) -> Element {
     let section = props.section;
-    let unresolved_rows = props.unresolved_rows;
-    let has_unresolved = !unresolved_rows.is_empty();
-    let active = MoveListProps { section };
-    let unresolved = UnresolvedSectionProps {
-        rows: unresolved_rows,
-    };
+    let unresolved = props.unresolved;
+    let has_unresolved = !unresolved.is_empty();
     rsx! {
         div {
             class: CLASS,
-            MoveList { ..active }
+            MoveList { section }
             if has_unresolved {
-                UnresolvedSection { ..unresolved }
+                UnresolvedSection { unresolved }
             }
         }
     }

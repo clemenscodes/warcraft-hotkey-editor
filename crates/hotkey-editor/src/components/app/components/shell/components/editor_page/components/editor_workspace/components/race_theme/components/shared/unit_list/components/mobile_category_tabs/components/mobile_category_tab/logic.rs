@@ -1,5 +1,3 @@
-use super::components::active_mobile_category_tab::ActiveMobileCategoryTabProps;
-use super::components::idle_mobile_category_tab::IdleMobileCategoryTabProps;
 use dioxus::prelude::*;
 use warcraft_api::{UnitKind, UnitKindHelpers};
 
@@ -29,18 +27,12 @@ impl From<MobileCategoryTabInputs> for MobileCategoryTabModel {
     }
 }
 
-impl From<&MobileCategoryTabModel> for ActiveMobileCategoryTabProps {
-    fn from(model: &MobileCategoryTabModel) -> Self {
-        let label = model.label;
-        let onclick = model.onclick;
-        Self { label, onclick }
+impl MobileCategoryTabModel {
+    pub(super) fn label(&self) -> &'static str {
+        self.label
     }
-}
 
-impl From<&MobileCategoryTabModel> for IdleMobileCategoryTabProps {
-    fn from(model: &MobileCategoryTabModel) -> Self {
-        let label = model.label;
-        let onclick = model.onclick;
-        Self { label, onclick }
+    pub(super) fn onclick(&self) -> EventHandler<MouseEvent> {
+        self.onclick
     }
 }

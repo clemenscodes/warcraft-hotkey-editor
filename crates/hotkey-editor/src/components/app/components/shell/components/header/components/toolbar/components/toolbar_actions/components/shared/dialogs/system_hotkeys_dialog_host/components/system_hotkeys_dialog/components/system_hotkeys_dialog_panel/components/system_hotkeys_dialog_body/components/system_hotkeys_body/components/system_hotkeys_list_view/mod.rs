@@ -4,7 +4,7 @@ mod style;
 
 use components::system_hotkeys_list_entry::SystemHotkeysListEntry;
 use dioxus::prelude::*;
-pub use props::SystemHotkeysListViewProps;
+use props::SystemHotkeysListViewProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

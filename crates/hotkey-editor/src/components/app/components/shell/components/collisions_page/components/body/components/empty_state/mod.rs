@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::empty_message::EmptyMessage;
 use dioxus::prelude::*;
-pub use props::EmptyStateProps;
+use props::EmptyStateProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

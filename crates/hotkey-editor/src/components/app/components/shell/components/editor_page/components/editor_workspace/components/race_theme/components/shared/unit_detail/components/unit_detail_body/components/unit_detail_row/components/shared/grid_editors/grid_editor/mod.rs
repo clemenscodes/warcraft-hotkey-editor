@@ -3,8 +3,9 @@ mod logic;
 mod props;
 mod style;
 
-use components::drag_follower_overlay::{DragFollowerOverlay, DragFollowerOverlayProps};
-use components::editor_headed_grid::{EditorHeadedGrid, EditorHeadedGridProps};
+use components::drag_follower_overlay::DragFollowerOverlay;
+use components::editor_headed_grid::EditorHeadedGrid;
+use components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
 pub use props::{GridEditorConfig, GridEditorProps};
 use std::rc::Rc;
@@ -16,11 +17,10 @@ use warcraft_keybinds::{CommandGridRenderInput, GridBehavior, GridSlotId, Render
 /// the presentational [`EditorHeadedGrid`] verbatim and adds only behavior: it builds
 /// the finished tiles with their drag handlers and renders the drag follower.
 /// Generic over the [`GridBehavior`] that decides how moves cascade; the three
-/// variant wrappers bind it. Pure RSX, every child's props is a `From`
-/// conversion.
+/// variant wrappers bind it. Pure RSX: it hands each child its data by named fields.
 ///
 /// The rendered tiles are computed in a `use_memo` here, in this component's own
-/// reactive scope, rather than inside `EditorHeadedGridProps::from_parts`. That is what
+/// reactive scope, rather than inside `EditorTile::grid`. That is what
 /// makes the memoization work: only this closure subscribes to `loaded_keys` and
 /// the other grid-state signals, so `GridEditor` itself re-renders only when its
 /// own memoized `Vec<RenderedTile>` compares unequal — not whenever any sibling
@@ -55,10 +55,17 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element 
         );
         file.rendered_command_grid(&behavior, &input)
     });
+    let heading = config.heading;
+    let drag_follower = config.drag_follower;
+    let dragging_value = *config.dragging_slot.read();
+    let visible = dragging_value
+        .map(|detail| detail.grid_id() == heading)
+        .unwrap_or(false);
+    let tiles = EditorTile::grid(&props, rendered_tiles.read().clone());
     rsx! {
         div { class: CLASS,
-            EditorHeadedGrid { ..EditorHeadedGridProps::from_parts(&props, rendered_tiles.read().clone()) }
-            DragFollowerOverlay { ..DragFollowerOverlayProps::from(&props) }
+            EditorHeadedGrid { heading, tiles }
+            DragFollowerOverlay { drag_follower, visible }
         }
     }
 }

@@ -2,8 +2,8 @@ pub mod components;
 mod props;
 mod state;
 
-use components::editing_keycap::{EditingKeycap, EditingKeycapProps};
-use components::idle_keycap::{IdleKeycap, IdleKeycapProps};
+use components::editing_keycap::EditingKeycap;
+use components::idle_keycap::IdleKeycap;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
@@ -20,15 +20,15 @@ pub use state::EditableKeycapState;
 pub fn EditableKeycap(props: EditableKeycapProps) -> Element {
     match props.state {
         EditableKeycapState::Editing => {
-            let look = EditingKeycapProps::from(&props);
+            let label = props.label.clone();
             rsx! {
-                EditingKeycap { ..look }
+                EditingKeycap { label }
             }
         }
         EditableKeycapState::Idle => {
-            let look = IdleKeycapProps::from(&props);
+            let label = props.label.clone();
             rsx! {
-                IdleKeycap { ..look }
+                IdleKeycap { label }
             }
         }
     }

@@ -9,7 +9,7 @@ use components::carrier_object_id::CarrierObjectId;
 use dioxus::prelude::*;
 use hooks::use_carrier_card;
 use logic::CarrierCardModel;
-pub use props::CarrierCardProps;
+use props::CarrierCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,8 @@ use tw_macro::assert_component;
 #[component]
 pub fn CarrierCard(props: CarrierCardProps) -> Element {
     let CarrierCardModel {
-        icon,
+        icon_src,
+        icon_alt,
         onclick,
         name,
         unit_id,
@@ -28,7 +29,10 @@ pub fn CarrierCard(props: CarrierCardProps) -> Element {
             class: CLASS,
             r#type: "button",
             onclick,
-            CarrierCardIcon { ..icon }
+            CarrierCardIcon {
+                src: icon_src,
+                alt: icon_alt,
+            }
             CarrierCardName { text: name }
             CarrierObjectId { unit_id }
         }

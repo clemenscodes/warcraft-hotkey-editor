@@ -1,4 +1,3 @@
-use super::super::super::props::FilledTileProps;
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
@@ -7,12 +6,4 @@ pub struct TileIconProps {
     /// sibling `TileLabel` renders the text fallback instead).
     pub src: Option<String>,
     pub alt: String,
-}
-
-impl From<&FilledTileProps> for TileIconProps {
-    fn from(props: &FilledTileProps) -> Self {
-        let src = props.icon.clone();
-        let alt = props.label.clone();
-        Self { src, alt }
-    }
 }

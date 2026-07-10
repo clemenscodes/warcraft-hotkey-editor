@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-pub use props::NormalKeyChipProps;
+use props::NormalKeyChipProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,14 +13,15 @@ use tw_macro::assert_component;
 pub fn NormalKeyChip(props: NormalKeyChipProps) -> Element {
     let label = props.label;
     let onclick = props.onclick;
-    let tooltip = props.tooltip;
+    let text = props.tooltip_text;
+    let placement = props.tooltip_placement;
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
             onclick,
             {label}
-            Tooltip { ..tooltip }
+            Tooltip { text, placement }
         }
     }
 }

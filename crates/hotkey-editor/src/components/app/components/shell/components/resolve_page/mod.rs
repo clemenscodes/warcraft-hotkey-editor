@@ -10,8 +10,8 @@ use components::empty_state::EmptyState;
 use components::plan_body::PlanBody;
 use components::plan_header::PlanHeader;
 use dioxus::prelude::*;
-use hooks::{ResolvePageView, use_resolve_page};
-pub use props::ResolvePageProps;
+use hooks::{ResolvePageView, ResolvePlanPresentation, use_resolve_page};
+use props::ResolvePageProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -35,12 +35,29 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
         }
         ResolvePageView::Plan(plan) => *plan,
     };
+    let ResolvePlanPresentation {
+        moves_text,
+        unresolved_count,
+        running,
+        on_apply,
+        breadcrumbs,
+        section,
+        unresolved,
+    } = plan;
     rsx! {
         section {
             class: CLASS,
-            PlanHeader { ..plan.header }
-            Breadcrumbs { ..plan.breadcrumbs }
-            PlanBody { ..plan.body }
+            PlanHeader {
+                moves_text,
+                unresolved_count,
+                running,
+                on_apply,
+            }
+            Breadcrumbs { ..breadcrumbs }
+            PlanBody {
+                section,
+                unresolved,
+            }
         }
     }
 }

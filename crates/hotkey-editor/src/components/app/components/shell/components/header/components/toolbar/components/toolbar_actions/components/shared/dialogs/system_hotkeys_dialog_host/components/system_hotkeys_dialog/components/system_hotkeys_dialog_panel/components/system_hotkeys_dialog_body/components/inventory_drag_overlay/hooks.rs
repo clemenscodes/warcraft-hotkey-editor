@@ -1,5 +1,4 @@
 use super::props::InventoryDragOverlayProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::shared::system_slot_key::SystemSlotKeyProps;
 use dioxus::prelude::*;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
@@ -9,14 +8,6 @@ const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item
 pub(super) struct DragFollowerView {
     pub(super) placement: String,
     pub(super) label: String,
-}
-
-impl From<&DragFollowerView> for SystemSlotKeyProps {
-    fn from(view: &DragFollowerView) -> Self {
-        let label = view.label.clone();
-        let conflict = false;
-        Self { label, conflict }
-    }
 }
 
 /// Shapes the drag follower for rendering, or returns `None` when nothing is being

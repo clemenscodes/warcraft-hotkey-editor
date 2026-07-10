@@ -4,18 +4,18 @@ mod style;
 
 use components::carrier_card::CarrierCard;
 use dioxus::prelude::*;
-pub use props::CarriersGridProps;
+use props::CarriersGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
 pub fn CarriersGrid(props: CarriersGridProps) -> Element {
-    let cards = props.cards;
+    let carriers = props.carriers;
     rsx! {
         div {
             class: CLASS,
-            for card in cards {
-                CarrierCard { ..card }
+            for carrier in carriers {
+                CarrierCard { carrier }
             }
         }
     }

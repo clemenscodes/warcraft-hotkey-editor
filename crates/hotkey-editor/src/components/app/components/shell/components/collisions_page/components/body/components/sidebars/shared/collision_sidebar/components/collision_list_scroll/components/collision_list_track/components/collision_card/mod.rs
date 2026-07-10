@@ -3,10 +3,10 @@ mod props;
 pub mod state;
 mod style;
 
-use components::collision_card_surface::{CollisionCardSurface, CollisionCardSurfaceProps};
+use components::collision_card_surface::CollisionCardSurface;
 use dioxus::prelude::*;
-pub use props::CollisionCardProps;
-pub use state::CollisionCardContent;
+use props::CollisionCardProps;
+pub use state::{CollisionCardContent, CollisionCardData};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -22,16 +22,10 @@ pub fn CollisionCard(props: CollisionCardProps) -> Element {
     let onclick = props.onclick;
     let count = props.count;
     let content = props.content;
-    let surface = CollisionCardSurfaceProps {
-        is_selected,
-        onclick,
-        count,
-        content,
-    };
     rsx! {
         div {
             class: CLASS,
-            CollisionCardSurface { ..surface }
+            CollisionCardSurface { is_selected, onclick, count, content }
         }
     }
 }

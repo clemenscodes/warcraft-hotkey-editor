@@ -9,7 +9,7 @@ use components::damage_per_second_row::DamagePerSecondRow;
 use components::damage_row::DamageRow;
 use components::range_row::RangeRow;
 use dioxus::prelude::*;
-pub use props::CombatRowsProps;
+use props::CombatRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -1,29 +1,29 @@
 pub mod components;
 mod data;
-mod logic;
 mod props;
 
-use components::tile_override::{TileOverride, TileOverrideProps};
-use components::tile_override_empty::{TileOverrideEmpty, TileOverrideEmptyProps};
+use components::tile_override::TileOverride;
+use components::tile_override_empty::TileOverrideEmpty;
 use dioxus::prelude::*;
-pub use props::UnitTileOverrideProps;
+use props::UnitTileOverrideProps;
 use tw_macro::assert_component;
 
 /// The override slot: the override card for the selected tile, or the empty prompt
 /// when nothing is selected. A pure dispatcher with no class of its own.
 #[component]
 pub fn UnitTileOverride(props: UnitTileOverrideProps) -> Element {
-    if props.detail.is_none() {
-        let empty = TileOverrideEmptyProps {
-            message: data::EMPTY_PROMPT.to_string(),
-        };
+    let UnitTileOverrideProps {
+        detail,
+        active_container_slots,
+    } = props;
+    let Some(detail) = detail else {
+        let message = data::EMPTY_PROMPT.to_string();
         return rsx! {
-            TileOverrideEmpty { ..empty }
+            TileOverrideEmpty { message }
         };
-    }
-    let tile = TileOverrideProps::from(&props);
+    };
     rsx! {
-        TileOverride { ..tile }
+        TileOverride { detail, active_container_slots }
     }
 }
 

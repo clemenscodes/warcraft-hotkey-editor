@@ -1,13 +1,19 @@
-use super::components::unit_card_surface::UnitCardSurfaceProps;
 use super::props::UnitCardProps;
+use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
+use warcraft_api::WarcraftObjectId;
 
-/// The card's shaped view: the finished button surface (its selected look and select
-/// handlers).
+/// The card's shaped view: the portrait, name, id, whether it is selected, and its
+/// select handlers — the finished domain values the button surface renders.
 pub(super) struct UnitCardModel {
-    pub(super) surface: UnitCardSurfaceProps,
+    pub(super) icon_path: Option<IconUrl>,
+    pub(super) display_name: String,
+    pub(super) unit_id: WarcraftObjectId,
+    pub(super) is_selected: bool,
+    pub(super) onclick: EventHandler<MouseEvent>,
+    pub(super) onkeydown: EventHandler<KeyboardEvent>,
 }
 
 /// Reads the selection from context: the card is selected when it is the selected unit,
@@ -38,13 +44,12 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     });
     let icon_path = props.icon_path.clone();
     let display_name = props.display_name.clone();
-    let surface = UnitCardSurfaceProps {
+    UnitCardModel {
         icon_path,
         display_name,
         unit_id,
         is_selected,
         onclick: on_click,
         onkeydown: on_keydown,
-    };
-    UnitCardModel { surface }
+    }
 }

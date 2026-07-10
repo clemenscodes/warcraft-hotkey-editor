@@ -1,10 +1,11 @@
 mod props;
 mod style;
 
-use super::shared::follower_badge::{FollowerBadge, FollowerBadgeProps};
-use super::shared::follower_figure::{FollowerFigure, FollowerFigureProps};
+use super::super::logic::FollowerPresentation;
+use super::shared::follower_badge::FollowerBadge;
+use super::shared::follower_figure::FollowerFigure;
 use dioxus::prelude::*;
-pub use props::CommandFollowerGhostProps;
+use props::CommandFollowerGhostProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,15 +13,23 @@ use tw_macro::assert_component;
 /// command surface, the dragged icon, and its hotkey badge, pinned to the cursor.
 #[component]
 pub fn CommandFollowerGhost(props: CommandFollowerGhostProps) -> Element {
-    let figure = FollowerFigureProps::from(&props.presentation);
-    let badge = FollowerBadgeProps::from(&props.presentation);
-    let style = props.presentation.style;
+    let FollowerPresentation {
+        style,
+        badge_state,
+        src,
+        alt,
+        letter,
+        ..
+    } = props.presentation;
     rsx! {
         div {
             class: CLASS,
             style,
-            FollowerFigure { ..figure }
-            FollowerBadge { ..badge }
+            FollowerFigure { src, alt }
+            FollowerBadge {
+                letter,
+                state: badge_state,
+            }
         }
     }
 }

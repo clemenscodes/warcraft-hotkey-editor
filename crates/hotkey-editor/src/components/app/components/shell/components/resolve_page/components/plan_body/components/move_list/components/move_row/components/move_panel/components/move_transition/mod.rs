@@ -5,7 +5,7 @@ mod style;
 use components::move_arrow::MoveArrow;
 use components::transition_column::TransitionColumn;
 use dioxus::prelude::*;
-pub use props::MoveTransitionProps;
+use props::MoveTransitionProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -1,7 +1,5 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
-use crate::components::app::components::shell::components::shared::grid_tile::{
-    GridTileProps, GridTileState,
-};
+use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
@@ -33,26 +31,6 @@ pub struct TileFaceProps {
     /// read-only consumers leave it false.
     #[props(default)]
     pub is_drag_over: bool,
-}
-
-impl From<&TileFaceProps> for GridTileProps {
-    /// The inert base tile: the presentational fields, minus the hotkey badge.
-    fn from(props: &TileFaceProps) -> Self {
-        let coordinate = props.coordinate;
-        let icon = props.icon.clone();
-        let label = props.label.clone();
-        let state = props.state;
-        let is_dragging_source = props.is_dragging_source;
-        let is_drag_over = props.is_drag_over;
-        Self {
-            coordinate,
-            icon,
-            label,
-            state,
-            is_dragging_source,
-            is_drag_over,
-        }
-    }
 }
 
 impl From<&RenderedTile> for TileFaceProps {

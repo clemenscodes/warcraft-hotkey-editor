@@ -5,7 +5,7 @@ mod style;
 use components::template_card_description::TemplateCardDescription;
 use components::template_card_name::TemplateCardName;
 use dioxus::prelude::*;
-pub use props::TemplateCardTextProps;
+use props::TemplateCardTextProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

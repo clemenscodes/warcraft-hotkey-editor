@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideEmptyProps;
+use props::TileOverrideEmptyProps;
 
 /// The placeholder shown in the override panel before a grid tile is selected.
 #[component]

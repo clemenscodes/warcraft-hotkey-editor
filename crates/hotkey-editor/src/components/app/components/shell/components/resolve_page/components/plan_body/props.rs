@@ -1,26 +1,12 @@
-use super::components::move_list::components::move_row::MoveRowProps;
-use super::components::unresolved_section::components::unresolved_move_list::components::unresolved_row::UnresolvedRowProps;
+use crate::components::app::components::shell::components::resolve_page::logic::{
+    MoveSection, UnresolvedView,
+};
 use dioxus::prelude::*;
 
-/// The active section's move cards.
-#[derive(Clone, PartialEq)]
-pub struct PlanBodySection {
-    rows: Vec<MoveRowProps>,
-}
-
-impl PlanBodySection {
-    pub fn new(rows: Vec<MoveRowProps>) -> Self {
-        Self { rows }
-    }
-
-    pub fn rows(&self) -> &[MoveRowProps] {
-        &self.rows
-    }
-}
-
-/// The scrollable plan body: the active move section and the unresolved section.
+/// The scrollable plan body: the active move section (absent when the plan has only
+/// unresolved abilities) and every unresolved ability.
 #[derive(Props, Clone, PartialEq)]
 pub struct PlanBodyProps {
-    pub section: Option<PlanBodySection>,
-    pub unresolved_rows: Vec<UnresolvedRowProps>,
+    pub section: Option<MoveSection>,
+    pub unresolved: Vec<UnresolvedView>,
 }

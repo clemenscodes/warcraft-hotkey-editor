@@ -1,9 +1,8 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::active_breadcrumb::{ActiveBreadcrumb, ActiveBreadcrumbProps};
-use components::idle_breadcrumb::{IdleBreadcrumb, IdleBreadcrumbProps};
+use components::active_breadcrumb::ActiveBreadcrumb;
+use components::idle_breadcrumb::IdleBreadcrumb;
 use dioxus::prelude::*;
 pub use props::BreadcrumbProps;
 use tw_macro::assert_component;
@@ -16,15 +15,19 @@ use tw_macro::assert_component;
 pub fn Breadcrumb(props: BreadcrumbProps) -> Element {
     match props.active {
         true => {
-            let breadcrumb = ActiveBreadcrumbProps::from(&props);
+            let label = props.label.clone();
+            let count = props.count;
+            let onclick = props.onclick;
             rsx! {
-                ActiveBreadcrumb { ..breadcrumb }
+                ActiveBreadcrumb { label, count, onclick }
             }
         }
         false => {
-            let breadcrumb = IdleBreadcrumbProps::from(&props);
+            let label = props.label.clone();
+            let count = props.count;
+            let onclick = props.onclick;
             rsx! {
-                IdleBreadcrumb { ..breadcrumb }
+                IdleBreadcrumb { label, count, onclick }
             }
         }
     }

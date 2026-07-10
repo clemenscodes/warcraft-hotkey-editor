@@ -1,9 +1,8 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::active_toggle_button::{ActiveToggleButton, ActiveToggleButtonProps};
-use components::idle_toggle_button::{IdleToggleButton, IdleToggleButtonProps};
+use components::active_toggle_button::ActiveToggleButton;
+use components::idle_toggle_button::IdleToggleButton;
 use dioxus::prelude::*;
 pub use props::ToggleButtonProps;
 use tw_macro::assert_component;
@@ -16,19 +15,17 @@ use tw_macro::assert_component;
 /// component, not an attribute.
 #[component]
 pub fn ToggleButton(props: ToggleButtonProps) -> Element {
+    let label = props.label;
+    let title = props.title;
+    let onclick = props.onclick;
+    let onkeydown = props.onkeydown;
     match props.active {
-        true => {
-            let active = ActiveToggleButtonProps::from(&props);
-            rsx! {
-                ActiveToggleButton { ..active }
-            }
-        }
-        false => {
-            let idle = IdleToggleButtonProps::from(&props);
-            rsx! {
-                IdleToggleButton { ..idle }
-            }
-        }
+        true => rsx! {
+            ActiveToggleButton { label, title, onclick, onkeydown }
+        },
+        false => rsx! {
+            IdleToggleButton { label, title, onclick, onkeydown }
+        },
     }
 }
 

@@ -12,7 +12,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_system_key_picker;
 use logic::SystemKeyPickerDialogShell;
-pub use props::SystemKeyPickerDialogProps;
+use props::SystemKeyPickerDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -30,7 +30,11 @@ pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
     let SystemKeyPickerDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        columns,
+        on_pick,
+        board_on_close,
     } = SystemKeyPickerDialogShell::from(&model);
     rsx! {
         DialogRoot {
@@ -38,7 +42,13 @@ pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                SystemKeyPickerDialogPanel { ..panel }
+                SystemKeyPickerDialogPanel {
+                    title,
+                    on_close,
+                    columns,
+                    on_pick,
+                    board_on_close,
+                }
             }
         }
     }

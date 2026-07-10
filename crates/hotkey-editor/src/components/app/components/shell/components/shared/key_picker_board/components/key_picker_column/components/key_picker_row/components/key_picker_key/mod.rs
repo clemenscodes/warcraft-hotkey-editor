@@ -3,11 +3,11 @@ mod logic;
 mod props;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyWidth;
-use components::narrow_key_slot::{NarrowKeySlot, NarrowKeySlotProps};
-use components::wide_key_slot::{WideKeySlot, WideKeySlotProps};
+use components::narrow_key_slot::NarrowKeySlot;
+use components::wide_key_slot::WideKeySlot;
 use dioxus::prelude::*;
 use logic::KeyPickerKeyPresentation;
-pub use props::KeyPickerKeyProps;
+use props::KeyPickerKeyProps;
 use tw_macro::assert_component;
 
 /// A single key on the picker board: an on-screen keyboard button that assigns its key
@@ -18,17 +18,38 @@ use tw_macro::assert_component;
 #[component]
 pub fn KeyPickerKey(props: KeyPickerKeyProps) -> Element {
     let presentation = KeyPickerKeyPresentation::from(&props);
+    let state = presentation.state;
+    let label = presentation.label;
+    let disabled = presentation.disabled;
+    let onclick = presentation.onclick;
+    let tooltip_text = presentation.tooltip_text;
+    let tooltip_placement = presentation.tooltip_placement;
+    let tooltip_anchor = presentation.tooltip_anchor;
     match presentation.width {
         KeyWidth::Standard => {
-            let narrow = NarrowKeySlotProps::from(&presentation);
             rsx! {
-                NarrowKeySlot { ..narrow }
+                NarrowKeySlot {
+                    state,
+                    label,
+                    disabled,
+                    onclick,
+                    tooltip_text,
+                    tooltip_placement,
+                    tooltip_anchor,
+                }
             }
         }
         KeyWidth::Wide => {
-            let wide = WideKeySlotProps::from(&presentation);
             rsx! {
-                WideKeySlot { ..wide }
+                WideKeySlot {
+                    state,
+                    label,
+                    disabled,
+                    onclick,
+                    tooltip_text,
+                    tooltip_placement,
+                    tooltip_anchor,
+                }
             }
         }
     }

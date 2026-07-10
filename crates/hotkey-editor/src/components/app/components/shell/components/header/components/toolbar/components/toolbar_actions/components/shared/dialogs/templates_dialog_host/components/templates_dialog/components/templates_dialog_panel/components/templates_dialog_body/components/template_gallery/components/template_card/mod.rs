@@ -1,12 +1,14 @@
 pub mod components;
 mod props;
 mod style;
+mod view;
 
-use components::template_card_previews::{TemplateCardPreviews, TemplateCardPreviewsProps};
-use components::template_card_text::{TemplateCardText, TemplateCardTextProps};
+use components::template_card_previews::TemplateCardPreviews;
+use components::template_card_text::TemplateCardText;
 use dioxus::prelude::*;
 use props::TemplateCardPresentation;
-pub use props::TemplateCardProps;
+use props::TemplateCardProps;
+pub use view::TemplateCardView;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,13 +16,14 @@ use tw_macro::assert_component;
 /// command card and research menu it would apply. Owns `.template-card`.
 #[component]
 pub fn TemplateCard(props: TemplateCardProps) -> Element {
-    let text = TemplateCardTextProps::from(&props);
-    let previews = TemplateCardPreviewsProps::from(&props);
+    let name = props.name.clone();
+    let description = props.description.clone();
+    let resolved = props.resolved.clone();
     let TemplateCardPresentation { onclick } = TemplateCardPresentation::from(&props);
     rsx! {
         button { class: CLASS, r#type: "button", onclick,
-            TemplateCardText { ..text }
-            TemplateCardPreviews { ..previews }
+            TemplateCardText { name, description }
+            TemplateCardPreviews { resolved }
         }
     }
 }

@@ -3,7 +3,7 @@ mod style;
 
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
 use dioxus::prelude::*;
-pub use props::UploadButtonInputProps;
+use props::UploadButtonInputProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

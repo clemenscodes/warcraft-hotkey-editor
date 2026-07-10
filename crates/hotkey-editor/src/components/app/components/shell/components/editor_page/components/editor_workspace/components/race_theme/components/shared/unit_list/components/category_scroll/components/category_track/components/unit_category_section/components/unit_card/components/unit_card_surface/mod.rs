@@ -1,13 +1,10 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::idle_unit_card_surface::{IdleUnitCardSurface, IdleUnitCardSurfaceProps};
-use components::selected_unit_card_surface::{
-    SelectedUnitCardSurface, SelectedUnitCardSurfaceProps,
-};
+use components::idle_unit_card_surface::IdleUnitCardSurface;
+use components::selected_unit_card_surface::SelectedUnitCardSurface;
 use dioxus::prelude::*;
-pub use props::UnitCardSurfaceProps;
+use props::UnitCardSurfaceProps;
 use tw_macro::assert_component;
 
 /// The unit card's selectable button. A pure dispatcher: from whether the card is the
@@ -17,19 +14,30 @@ use tw_macro::assert_component;
 /// look follows the component.
 #[component]
 pub fn UnitCardSurface(props: UnitCardSurfaceProps) -> Element {
+    let icon_path = props.icon_path.clone();
+    let display_name = props.display_name.clone();
+    let unit_id = props.unit_id;
+    let onclick = props.onclick;
+    let onkeydown = props.onkeydown;
     match props.is_selected {
-        true => {
-            let surface = SelectedUnitCardSurfaceProps::from(&props);
-            rsx! {
-                SelectedUnitCardSurface { ..surface }
+        true => rsx! {
+            SelectedUnitCardSurface {
+                icon_path,
+                display_name,
+                unit_id,
+                onclick,
+                onkeydown,
             }
-        }
-        false => {
-            let surface = IdleUnitCardSurfaceProps::from(&props);
-            rsx! {
-                IdleUnitCardSurface { ..surface }
+        },
+        false => rsx! {
+            IdleUnitCardSurface {
+                icon_path,
+                display_name,
+                unit_id,
+                onclick,
+                onkeydown,
             }
-        }
+        },
     }
 }
 

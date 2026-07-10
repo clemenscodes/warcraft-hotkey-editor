@@ -1,7 +1,7 @@
 mod props;
 mod style;
 use dioxus::prelude::*;
-pub use props::CarrierObjectIdProps;
+use props::CarrierObjectIdProps;
 use style::CLASS;
 use tw_macro::assert_component;
 #[component]

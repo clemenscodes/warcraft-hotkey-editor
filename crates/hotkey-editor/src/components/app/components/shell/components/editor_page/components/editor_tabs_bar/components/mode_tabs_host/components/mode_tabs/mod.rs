@@ -5,8 +5,8 @@ mod style;
 
 use components::mode_tab::ModeTab;
 use dioxus::prelude::*;
-use logic::ModeTabPair;
-pub use props::ModeTabsProps;
+use logic::{ModeTabBinding, ModeTabPair};
+use props::ModeTabsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,11 +16,33 @@ use tw_macro::assert_component;
 #[component]
 pub fn ModeTabs(props: ModeTabsProps) -> Element {
     let ModeTabPair { melee, campaign } = ModeTabPair::build(&props);
+    let ModeTabBinding {
+        label: melee_label,
+        active: melee_active,
+        onclick: melee_onclick,
+        onkeydown: melee_onkeydown,
+    } = melee;
+    let ModeTabBinding {
+        label: campaign_label,
+        active: campaign_active,
+        onclick: campaign_onclick,
+        onkeydown: campaign_onkeydown,
+    } = campaign;
     rsx! {
         div {
             class: CLASS,
-            ModeTab { ..melee }
-            ModeTab { ..campaign }
+            ModeTab {
+                label: melee_label,
+                active: melee_active,
+                onclick: melee_onclick,
+                onkeydown: melee_onkeydown,
+            }
+            ModeTab {
+                label: campaign_label,
+                active: campaign_active,
+                onclick: campaign_onclick,
+                onkeydown: campaign_onkeydown,
+            }
         }
     }
 }

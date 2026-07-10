@@ -4,7 +4,7 @@ mod style;
 
 use components::templates_dialog::TemplatesDialog;
 use dioxus::prelude::*;
-use hooks::use_templates_dialog_host;
+use hooks::{TemplatesDialogHostModel, use_templates_dialog_host};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,11 +13,15 @@ use tw_macro::assert_component;
 /// burger drawer. The dialog self-gates on the shared open signal.
 #[component]
 pub fn TemplatesDialogHost() -> Element {
-    let dialog = use_templates_dialog_host();
+    let TemplatesDialogHostModel {
+        loaded_keys,
+        upload_status,
+        open,
+    } = use_templates_dialog_host();
     rsx! {
         div {
             class: CLASS,
-            TemplatesDialog { ..dialog }
+            TemplatesDialog { loaded_keys, upload_status, open }
         }
     }
 }

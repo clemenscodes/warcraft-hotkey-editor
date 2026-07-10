@@ -3,10 +3,10 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::toasts::components::toast_container::components::toast_list::components::toast_list_item::components::toast_card::components::shared::toast_close::ToastClose;
-use components::info_toast_content::{InfoToastContent, InfoToastContentProps};
+use components::info_toast_content::InfoToastContent;
 use components::info_toast_icon::InfoToastIcon;
 use dioxus::prelude::*;
-pub use props::InfoToastCardProps;
+use props::InfoToastCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,8 +15,10 @@ use tw_macro::assert_component;
 /// only; the dispatcher builds its props from the toast record.
 #[component]
 pub fn InfoToastCard(props: InfoToastCardProps) -> Element {
-    let content = InfoToastContentProps::from(&props);
-    let close = props.close;
+    let title = props.record.title().to_string();
+    let description = props.record.description();
+    let id = props.record.id();
+    let on_remove = props.on_remove;
     rsx! {
         div {
             class: CLASS,
@@ -24,8 +26,8 @@ pub fn InfoToastCard(props: InfoToastCardProps) -> Element {
             "aria-modal": "false",
             tabindex: "0",
             InfoToastIcon {}
-            InfoToastContent { ..content }
-            ToastClose { ..close }
+            InfoToastContent { title, description }
+            ToastClose { id, on_remove }
         }
     }
 }

@@ -1,9 +1,12 @@
+mod hooks;
+mod logic;
 mod props;
 mod style;
 
 use crate::components::app::components::shell::components::shared::tile_face::TileFace;
 use dioxus::prelude::*;
-pub use props::PreviewGridProps;
+use hooks::use_preview_grid;
+use props::PreviewGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +17,19 @@ use tw_macro::assert_component;
 /// handed.
 #[component]
 pub fn PreviewGrid(props: PreviewGridProps) -> Element {
-    let tiles = props.tiles;
+    let tiles = use_preview_grid(&props);
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for tile in tiles {
-                TileFace { ..tile }
+                TileFace {
+                    coordinate: tile.coordinate,
+                    icon: tile.icon,
+                    label: tile.label,
+                    hotkey: tile.hotkey,
+                    badge_state: tile.badge_state,
+                    state: tile.state,
+                }
             }
         }
     }

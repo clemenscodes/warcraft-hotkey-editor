@@ -6,7 +6,7 @@ use components::agility_row::AgilityRow;
 use components::intelligence_row::IntelligenceRow;
 use components::strength_row::StrengthRow;
 use dioxus::prelude::*;
-pub use props::AttributeRowsProps;
+use props::AttributeRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

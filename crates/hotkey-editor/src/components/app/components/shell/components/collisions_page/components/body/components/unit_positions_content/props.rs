@@ -1,12 +1,9 @@
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
-use crate::components::app::components::shell::components::collisions_page::logic::UnitPositionConflictView;
+use crate::components::app::components::shell::components::collisions_page::logic::UnitPositionUnitView;
 use dioxus::prelude::*;
 
-/// The per-unit position-collision two-pane content: the clashing-units sidebar beside
-/// the unit position detail pane.
+/// The per-unit position-collision two-pane content: the clashing units the sidebar and
+/// the unit position detail pane both render.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitPositionsContentProps {
-    pub sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
-    pub detail: UnitPositionDetailProps,
+    pub units: Vec<UnitPositionUnitView>,
 }

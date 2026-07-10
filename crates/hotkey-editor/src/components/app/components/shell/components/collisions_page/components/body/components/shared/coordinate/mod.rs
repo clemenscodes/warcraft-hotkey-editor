@@ -1,7 +1,7 @@
 mod props;
 mod style;
 use dioxus::prelude::*;
-pub use props::CoordinateProps;
+use props::CoordinateProps;
 use style::CLASS;
 use tw_macro::assert_component;
 /// A command-card coordinate: displays the column and row of the domain

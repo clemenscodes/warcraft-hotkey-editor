@@ -1,4 +1,3 @@
-use super::super::super::super::logic::FollowerPresentation;
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
@@ -7,12 +6,4 @@ pub struct FollowerFigureProps {
     /// without an icon.
     pub src: String,
     pub alt: String,
-}
-
-impl From<&FollowerPresentation> for FollowerFigureProps {
-    fn from(presentation: &FollowerPresentation) -> Self {
-        let src = presentation.src.clone();
-        let alt = presentation.alt.clone();
-        Self { src, alt }
-    }
 }

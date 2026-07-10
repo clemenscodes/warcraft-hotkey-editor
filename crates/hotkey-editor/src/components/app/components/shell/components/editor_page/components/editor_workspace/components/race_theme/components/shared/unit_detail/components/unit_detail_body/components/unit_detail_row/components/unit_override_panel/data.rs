@@ -1,3 +1,3 @@
-//! The override row's grid heading.
+//! The override panel's grid heading.
 
 pub(super) const HEADING: &str = "Hotkey override";

@@ -3,10 +3,10 @@ mod props;
 
 use dioxus::prelude::*;
 
-use components::alt_position_picker::{AltPositionPicker, AltPositionPickerProps};
+use components::alt_position_picker::AltPositionPicker;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideAltPickerProps;
+use props::TileOverrideAltPickerProps;
 
 /// Mounts the off-state position picker only while it is open, reading its own open
 /// signal to decide — the way `CarriersDialogHost` reads its open state.
@@ -15,8 +15,19 @@ pub fn TileOverrideAltPicker(props: TileOverrideAltPickerProps) -> Element {
     if !*props.alt_position_picker_open.read() {
         return rsx! {};
     }
+    let TileOverrideAltPickerProps {
+        object_id,
+        display_name,
+        picker_slots,
+        alt_position_picker_open,
+    } = props;
     rsx! {
-        AltPositionPicker { ..AltPositionPickerProps::from(&props) }
+        AltPositionPicker {
+            object_id,
+            display_name,
+            picker_slots,
+            alt_position_picker_open,
+        }
     }
 }
 

@@ -1,10 +1,10 @@
-use super::super::shared::system_hotkeys_category_tab::SystemHotkeysCategoryTabProps;
+use super::super::super::hooks::SystemHotkeysCategoryTabDescriptor;
 use dioxus::prelude::*;
 
-/// The closed menu's input: the shaped tab props, each carrying `menu_open = false`
-/// so the tabs render their tab-bar look. Carrying the child props as data is passing
-/// data, not `Element`.
+/// The closed menu's input: one tab descriptor per category, each carrying
+/// `menu_open = false` so the tabs render their tab-bar look. Carrying domain
+/// descriptors as data is passing data, not `Element`.
 #[derive(Props, Clone, PartialEq)]
 pub struct ClosedBreadcrumbsMenuProps {
-    pub tabs: Vec<SystemHotkeysCategoryTabProps>,
+    pub tabs: Vec<SystemHotkeysCategoryTabDescriptor>,
 }

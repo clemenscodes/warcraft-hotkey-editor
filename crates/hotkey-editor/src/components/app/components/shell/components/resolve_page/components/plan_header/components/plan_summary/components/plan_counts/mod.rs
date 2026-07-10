@@ -3,7 +3,7 @@ mod props;
 mod style;
 use components::plan_unresolved::PlanUnresolved;
 use dioxus::prelude::*;
-pub use props::PlanCountsProps;
+use props::PlanCountsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -1,16 +1,15 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
-use components::above_center_tooltip::{AboveCenterTooltip, AboveCenterTooltipProps};
-use components::above_left_tooltip::{AboveLeftTooltip, AboveLeftTooltipProps};
-use components::above_right_tooltip::{AboveRightTooltip, AboveRightTooltipProps};
-use components::below_center_tooltip::{BelowCenterTooltip, BelowCenterTooltipProps};
-use components::below_left_tooltip::{BelowLeftTooltip, BelowLeftTooltipProps};
-use components::below_right_tooltip::{BelowRightTooltip, BelowRightTooltipProps};
+use components::above_center_tooltip::AboveCenterTooltip;
+use components::above_left_tooltip::AboveLeftTooltip;
+use components::above_right_tooltip::AboveRightTooltip;
+use components::below_center_tooltip::BelowCenterTooltip;
+use components::below_left_tooltip::BelowLeftTooltip;
+use components::below_right_tooltip::BelowRightTooltip;
 use dioxus::prelude::*;
-pub use props::TooltipProps;
+use props::TooltipProps;
 pub use state::{TooltipAnchor, TooltipPlacement};
 use tw_macro::assert_component;
 
@@ -32,41 +31,41 @@ pub fn Tooltip(props: TooltipProps) -> Element {
     match props.placement {
         TooltipPlacement::Above => match props.anchor {
             TooltipAnchor::Left => {
-                let leaf = AboveLeftTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    AboveLeftTooltip { ..leaf }
+                    AboveLeftTooltip { text }
                 }
             }
             TooltipAnchor::Center => {
-                let leaf = AboveCenterTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    AboveCenterTooltip { ..leaf }
+                    AboveCenterTooltip { text }
                 }
             }
             TooltipAnchor::Right => {
-                let leaf = AboveRightTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    AboveRightTooltip { ..leaf }
+                    AboveRightTooltip { text }
                 }
             }
         },
         TooltipPlacement::Below => match props.anchor {
             TooltipAnchor::Left => {
-                let leaf = BelowLeftTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    BelowLeftTooltip { ..leaf }
+                    BelowLeftTooltip { text }
                 }
             }
             TooltipAnchor::Center => {
-                let leaf = BelowCenterTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    BelowCenterTooltip { ..leaf }
+                    BelowCenterTooltip { text }
                 }
             }
             TooltipAnchor::Right => {
-                let leaf = BelowRightTooltipProps::from(&props);
+                let text = props.text.clone();
                 rsx! {
-                    BelowRightTooltip { ..leaf }
+                    BelowRightTooltip { text }
                 }
             }
         },

@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AltPositionPickerExplainerProps;
+use props::AltPositionPickerExplainerProps;
 
 /// The instruction line at the top of a position-picker dialog.
 #[component]

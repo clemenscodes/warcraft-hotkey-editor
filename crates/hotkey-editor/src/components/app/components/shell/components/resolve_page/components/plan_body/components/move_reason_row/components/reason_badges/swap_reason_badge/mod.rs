@@ -1,11 +1,9 @@
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::components::reason_badges::shared::reason_badge::{
-    ReasonBadge, ReasonBadgeProps,
-};
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::components::reason_badges::shared::reason_badge::ReasonBadge;
 use dioxus::prelude::*;
-pub use props::SwapReasonBadgeProps;
+use props::SwapReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +12,11 @@ use tw_macro::assert_component;
 /// names the pill's classes.
 #[component]
 pub fn SwapReasonBadge(props: SwapReasonBadgeProps) -> Element {
-    let badge = ReasonBadgeProps::from(&props);
+    let label = props.label;
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { ..badge }
+            ReasonBadge { label }
         }
     }
 }

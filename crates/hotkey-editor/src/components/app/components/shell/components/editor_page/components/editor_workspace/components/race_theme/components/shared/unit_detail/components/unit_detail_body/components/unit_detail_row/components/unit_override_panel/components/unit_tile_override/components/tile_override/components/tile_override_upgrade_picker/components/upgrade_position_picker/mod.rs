@@ -10,7 +10,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_upgrade_position_picker;
 use logic::UpgradePositionPickerShell;
-pub use props::UpgradePositionPickerProps;
+use props::UpgradePositionPickerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +26,10 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
     let UpgradePositionPickerShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        explainer_text,
+        grid_config,
     } = UpgradePositionPickerShell::from(&model);
     rsx! {
         DialogRoot {
@@ -34,7 +37,12 @@ pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                UpgradePositionPickerPanel { ..panel }
+                UpgradePositionPickerPanel {
+                    title,
+                    on_close,
+                    explainer_text,
+                    grid_config,
+                }
             }
         }
     }

@@ -17,16 +17,18 @@ use tw_macro::assert_component;
 pub fn SearchFieldToggle() -> Element {
     let search_field = use_editor_state().search_field();
     let SearchFieldToggleModel {
-        unit_button,
-        ability_button,
+        unit_is_active,
+        ability_is_active,
+        select_unit,
+        select_ability,
     } = SearchFieldToggleModel::from(search_field);
     rsx! {
         div {
             class: CLASS,
             role: "group",
             aria_label: "Search by",
-            SearchFieldButton { ..unit_button }
-            SearchFieldButton { ..ability_button }
+            SearchFieldButton { label: data::UNIT, is_active: unit_is_active, on_select: select_unit }
+            SearchFieldButton { label: data::ABILITY, is_active: ability_is_active, on_select: select_ability }
         }
     }
 }

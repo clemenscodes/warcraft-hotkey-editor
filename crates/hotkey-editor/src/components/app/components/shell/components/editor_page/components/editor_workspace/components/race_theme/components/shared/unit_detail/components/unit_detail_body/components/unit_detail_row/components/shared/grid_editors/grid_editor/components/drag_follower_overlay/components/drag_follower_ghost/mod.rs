@@ -3,10 +3,11 @@ mod logic;
 mod props;
 mod state;
 
-use components::ability_follower_ghost::{AbilityFollowerGhost, AbilityFollowerGhostProps};
-use components::command_follower_ghost::{CommandFollowerGhost, CommandFollowerGhostProps};
+use components::ability_follower_ghost::AbilityFollowerGhost;
+use components::command_follower_ghost::CommandFollowerGhost;
 use dioxus::prelude::*;
-pub use props::DragFollowerGhostProps;
+pub(crate) use logic::FollowerPresentation;
+use props::DragFollowerGhostProps;
 use state::GhostState;
 use tw_macro::assert_component;
 
@@ -21,15 +22,13 @@ pub fn DragFollowerGhost(props: DragFollowerGhostProps) -> Element {
     };
     match presentation.state {
         GhostState::Default => {
-            let ghost = AbilityFollowerGhostProps { presentation };
             rsx! {
-                AbilityFollowerGhost { ..ghost }
+                AbilityFollowerGhost { presentation }
             }
         }
         GhostState::Command => {
-            let ghost = CommandFollowerGhostProps { presentation };
             rsx! {
-                CommandFollowerGhost { ..ghost }
+                CommandFollowerGhost { presentation }
             }
         }
     }

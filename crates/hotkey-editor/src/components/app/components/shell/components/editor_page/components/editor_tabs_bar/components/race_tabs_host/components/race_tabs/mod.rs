@@ -10,7 +10,8 @@ use components::orc_race_tab::OrcRaceTab;
 use components::undead_race_tab::UndeadRaceTab;
 use dioxus::prelude::*;
 use logic::RaceTabBindings;
-pub use props::{RaceTabBinding, RaceTabsProps};
+pub use props::RaceTabBinding;
+use props::RaceTabsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -27,14 +28,69 @@ pub fn RaceTabs(props: RaceTabsProps) -> Element {
         undead,
         neutral,
     } = RaceTabBindings::build(&props);
+    let RaceTabBinding {
+        is_active: human_is_active,
+        label: human_label,
+        onclick: human_onclick,
+        onkeydown: human_onkeydown,
+    } = human;
+    let RaceTabBinding {
+        is_active: orc_is_active,
+        label: orc_label,
+        onclick: orc_onclick,
+        onkeydown: orc_onkeydown,
+    } = orc;
+    let RaceTabBinding {
+        is_active: nightelf_is_active,
+        label: nightelf_label,
+        onclick: nightelf_onclick,
+        onkeydown: nightelf_onkeydown,
+    } = nightelf;
+    let RaceTabBinding {
+        is_active: undead_is_active,
+        label: undead_label,
+        onclick: undead_onclick,
+        onkeydown: undead_onkeydown,
+    } = undead;
+    let RaceTabBinding {
+        is_active: neutral_is_active,
+        label: neutral_label,
+        onclick: neutral_onclick,
+        onkeydown: neutral_onkeydown,
+    } = neutral;
     rsx! {
         nav {
             class: CLASS,
-            HumanRaceTab { ..human }
-            OrcRaceTab { ..orc }
-            NightelfRaceTab { ..nightelf }
-            UndeadRaceTab { ..undead }
-            NeutralRaceTab { ..neutral }
+            HumanRaceTab {
+                is_active: human_is_active,
+                label: human_label,
+                onclick: human_onclick,
+                onkeydown: human_onkeydown,
+            }
+            OrcRaceTab {
+                is_active: orc_is_active,
+                label: orc_label,
+                onclick: orc_onclick,
+                onkeydown: orc_onkeydown,
+            }
+            NightelfRaceTab {
+                is_active: nightelf_is_active,
+                label: nightelf_label,
+                onclick: nightelf_onclick,
+                onkeydown: nightelf_onkeydown,
+            }
+            UndeadRaceTab {
+                is_active: undead_is_active,
+                label: undead_label,
+                onclick: undead_onclick,
+                onkeydown: undead_onkeydown,
+            }
+            NeutralRaceTab {
+                is_active: neutral_is_active,
+                label: neutral_label,
+                onclick: neutral_onclick,
+                onkeydown: neutral_onkeydown,
+            }
         }
     }
 }

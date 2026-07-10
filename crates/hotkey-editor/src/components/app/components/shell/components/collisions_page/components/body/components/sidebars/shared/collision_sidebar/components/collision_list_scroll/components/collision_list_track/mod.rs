@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::collision_card::CollisionCard;
+use components::collision_card::{CollisionCard, CollisionCardData};
 use dioxus::prelude::*;
-pub use props::CollisionListTrackProps;
+use props::CollisionListTrackProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,8 +15,8 @@ pub fn CollisionListTrack(props: CollisionListTrackProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            for card in cards {
-                CollisionCard { ..card }
+            for CollisionCardData { is_selected, onclick, count, content } in cards {
+                CollisionCard { is_selected, onclick, count, content }
             }
         }
     }

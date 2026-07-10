@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::help_legend_section::{HelpLegendSection, HelpLegendSectionProps};
-use components::help_workflow_section::{HelpWorkflowSection, HelpWorkflowSectionProps};
+use components::help_legend_section::HelpLegendSection;
+use components::help_workflow_section::HelpWorkflowSection;
 use dioxus::prelude::*;
-pub use props::HelpTopRowProps;
+use props::HelpTopRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,12 +13,13 @@ use tw_macro::assert_component;
 /// right; stacked on small screens, side by side on laptop and up.
 #[component]
 pub fn HelpTopRow(props: HelpTopRowProps) -> Element {
-    let workflow = HelpWorkflowSectionProps::from(&props);
-    let legend = HelpLegendSectionProps::from(&props);
+    let content = props.content;
+    let steps = content.workflow();
+    let rows = content.legend();
     rsx! {
         div { class: CLASS,
-            HelpWorkflowSection { ..workflow }
-            HelpLegendSection { ..legend }
+            HelpWorkflowSection { steps }
+            HelpLegendSection { rows }
         }
     }
 }

@@ -1,5 +1,3 @@
-use super::components::active_hero_level_option::ActiveHeroLevelOptionProps;
-use super::components::idle_hero_level_option::IdleHeroLevelOptionProps;
 use dioxus::prelude::*;
 
 /// The option's inputs: which level it offers, the selected-level signal it reads (to
@@ -24,6 +22,14 @@ impl HeroLevelOptionPresentation {
     pub(super) fn is_active(&self) -> bool {
         self.is_active
     }
+
+    pub(super) fn label(&self) -> &str {
+        &self.label
+    }
+
+    pub(super) fn onclick(&self) -> EventHandler<MouseEvent> {
+        self.onclick
+    }
 }
 
 impl From<HeroLevelOptionInputs> for HeroLevelOptionPresentation {
@@ -42,21 +48,5 @@ impl From<HeroLevelOptionInputs> for HeroLevelOptionPresentation {
             label,
             onclick,
         }
-    }
-}
-
-impl From<&HeroLevelOptionPresentation> for ActiveHeroLevelOptionProps {
-    fn from(presentation: &HeroLevelOptionPresentation) -> Self {
-        let label = presentation.label.clone();
-        let onclick = presentation.onclick;
-        Self { label, onclick }
-    }
-}
-
-impl From<&HeroLevelOptionPresentation> for IdleHeroLevelOptionProps {
-    fn from(presentation: &HeroLevelOptionPresentation) -> Self {
-        let label = presentation.label.clone();
-        let onclick = presentation.onclick;
-        Self { label, onclick }
     }
 }

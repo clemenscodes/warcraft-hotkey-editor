@@ -4,7 +4,7 @@ mod style;
 
 use components::help_legend_row::HelpLegendRow;
 use dioxus::prelude::*;
-pub use props::HelpLegendProps;
+use props::HelpLegendProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,10 +12,14 @@ use tw_macro::assert_component;
 /// in.
 #[component]
 pub fn HelpLegend(props: HelpLegendProps) -> Element {
+    let rows = props.rows;
     rsx! {
         ul { class: CLASS,
-            for row in props.rows.iter().cloned() {
-                HelpLegendRow { key: "{row.label}", ..row }
+            for (index, entry) in rows.iter().copied().enumerate() {
+                HelpLegendRow {
+                    key: "{index}",
+                    entry,
+                }
             }
         }
     }

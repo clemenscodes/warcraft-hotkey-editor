@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::mini_grid::MiniGrid;
 use dioxus::prelude::*;
-pub use props::MoveTransitionProps;
+use props::MoveTransitionProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

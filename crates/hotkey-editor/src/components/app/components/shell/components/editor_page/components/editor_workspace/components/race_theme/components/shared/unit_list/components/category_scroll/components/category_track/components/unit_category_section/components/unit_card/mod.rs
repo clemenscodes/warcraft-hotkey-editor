@@ -5,8 +5,8 @@ mod style;
 
 use components::unit_card_surface::UnitCardSurface;
 use dioxus::prelude::*;
-use hooks::use_unit_card;
-pub use props::UnitCardProps;
+use hooks::{use_unit_card, UnitCardModel};
+use props::UnitCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,11 +17,25 @@ use tw_macro::assert_component;
 /// and select handlers are shaped from context by `use_unit_card`.
 #[component]
 pub fn UnitCard(props: UnitCardProps) -> Element {
-    let model = use_unit_card(&props);
+    let UnitCardModel {
+        icon_path,
+        display_name,
+        unit_id,
+        is_selected,
+        onclick,
+        onkeydown,
+    } = use_unit_card(&props);
     rsx! {
         div {
             class: CLASS,
-            UnitCardSurface { ..model.surface }
+            UnitCardSurface {
+                icon_path,
+                display_name,
+                unit_id,
+                is_selected,
+                onclick,
+                onkeydown,
+            }
         }
     }
 }

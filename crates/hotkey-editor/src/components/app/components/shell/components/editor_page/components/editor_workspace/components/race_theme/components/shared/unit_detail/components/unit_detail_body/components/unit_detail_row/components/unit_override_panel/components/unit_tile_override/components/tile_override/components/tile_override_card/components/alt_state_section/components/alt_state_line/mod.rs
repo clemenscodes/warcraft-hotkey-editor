@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AltStateLineProps;
+use props::AltStateLineProps;
 
 /// One description line under the alt-state header.
 #[component]

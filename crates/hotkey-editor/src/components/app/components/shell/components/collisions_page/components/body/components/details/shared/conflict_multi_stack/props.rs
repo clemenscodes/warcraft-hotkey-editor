@@ -1,4 +1,4 @@
-use super::super::conflict_ability::ConflictAbilityProps;
+use super::super::conflict_card_model::ConflictAbilityData;
 use super::super::conflict_marker_view::ConflictMarker;
 use dioxus::prelude::*;
 
@@ -6,6 +6,6 @@ use dioxus::prelude::*;
 /// ability, or nothing when the clash is a two-ability pair.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictMultiStackProps {
-    pub abilities: Vec<ConflictAbilityProps>,
+    pub abilities: Vec<ConflictAbilityData>,
     pub marker: ConflictMarker,
 }

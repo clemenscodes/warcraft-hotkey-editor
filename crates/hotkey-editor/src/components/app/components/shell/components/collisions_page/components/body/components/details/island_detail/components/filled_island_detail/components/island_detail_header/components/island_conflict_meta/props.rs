@@ -1,4 +1,3 @@
-use super::super::super::IslandDetailHeaderProps;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -8,12 +7,4 @@ use warcraft_keybinds::GridCoordinate;
 pub struct IslandConflictMetaProps {
     pub coordinate: GridCoordinate,
     pub count: usize,
-}
-
-impl From<&IslandDetailHeaderProps> for IslandConflictMetaProps {
-    fn from(props: &IslandDetailHeaderProps) -> Self {
-        let coordinate = props.coordinate;
-        let count = props.count;
-        Self { coordinate, count }
-    }
 }

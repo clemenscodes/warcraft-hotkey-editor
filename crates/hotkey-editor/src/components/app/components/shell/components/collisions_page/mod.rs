@@ -10,7 +10,7 @@ use crate::components::app::components::shell::components::shared::breadcrumbs::
 use components::body::Body;
 use dioxus::prelude::*;
 use hooks::use_collisions_page;
-pub use props::CollisionsPageProps;
+use props::CollisionsPageProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

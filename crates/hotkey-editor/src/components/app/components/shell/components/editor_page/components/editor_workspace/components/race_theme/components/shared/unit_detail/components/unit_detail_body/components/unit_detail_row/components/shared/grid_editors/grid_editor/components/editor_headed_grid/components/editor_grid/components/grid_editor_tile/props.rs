@@ -1,8 +1,7 @@
-use crate::components::app::components::shell::components::shared::tile_face::TileFaceProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
 use dioxus::prelude::*;
-use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
+use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RowIndex};
 
 /// The interactive editor tile's props: the `TileFace` painter's visual fields plus the
 /// editor's interaction — focus, drag state, and the event handlers. This is the only
@@ -46,71 +45,4 @@ pub struct GridEditorTileProps {
     pub onclick: EventHandler<MouseEvent>,
     #[props(default)]
     pub ondoubleclick: EventHandler<MouseEvent>,
-}
-
-impl From<&GridEditorTileProps> for TileFaceProps {
-    /// The painter's slice of the editor tile: the visual fields plus the two drag flags
-    /// the painter turns into its mounted `DraggingSourceGhost` / `DragOverRing`. None of
-    /// the pointer interaction crosses — that stays on the Host.
-    fn from(props: &GridEditorTileProps) -> Self {
-        let coordinate = props.coordinate;
-        let icon = props.icon.clone();
-        let label = props.label.clone();
-        let hotkey = props.hotkey;
-        let badge_state = props.badge_state;
-        let state = props.state;
-        let is_dragging_source = props.is_dragging_source;
-        let is_drag_over = props.is_drag_over;
-        Self {
-            coordinate,
-            icon,
-            label,
-            hotkey,
-            badge_state,
-            state,
-            is_dragging_source,
-            is_drag_over,
-        }
-    }
-}
-
-impl From<&RenderedTile> for GridEditorTileProps {
-    /// The read-only adaptation from a domain tile: the paint comes from `TileFaceProps`,
-    /// and the editor overlays behavior on top. Here every handler stays at its default
-    /// (`render.rs` wires them); only the two interaction flags the domain decides —
-    /// focusability and draggability — are read from the rendered tile.
-    fn from(rendered: &RenderedTile) -> Self {
-        let face = TileFaceProps::from(rendered);
-        let TileFaceProps {
-            coordinate,
-            icon,
-            label,
-            hotkey,
-            badge_state,
-            state,
-            ..
-        } = face;
-        let is_focusable = rendered.occupant().is_some();
-        let draggable = rendered.draggable();
-        Self {
-            coordinate,
-            icon,
-            label,
-            hotkey,
-            badge_state,
-            state,
-            is_dragging_source: false,
-            is_drag_over: false,
-            is_focusable,
-            draggable,
-            onkeydown: EventHandler::default(),
-            onpointerdown: EventHandler::default(),
-            onpointermove: EventHandler::default(),
-            onpointerup: EventHandler::default(),
-            onpointercancel: EventHandler::default(),
-            onlostpointercapture: EventHandler::default(),
-            onclick: EventHandler::default(),
-            ondoubleclick: EventHandler::default(),
-        }
-    }
 }

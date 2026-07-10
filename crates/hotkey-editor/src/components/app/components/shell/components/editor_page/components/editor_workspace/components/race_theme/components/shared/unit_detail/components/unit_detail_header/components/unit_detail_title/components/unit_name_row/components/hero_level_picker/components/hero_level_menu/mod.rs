@@ -6,7 +6,7 @@ mod style;
 use components::hero_level_option::HeroLevelOption;
 use dioxus::prelude::*;
 use logic::hero_level_options;
-pub use props::HeroLevelMenuProps;
+use props::HeroLevelMenuProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,11 @@ pub fn HeroLevelMenu(props: HeroLevelMenuProps) -> Element {
         div {
             class: CLASS,
             for option in options {
-                HeroLevelOption { key: "{option.level_index}", ..option }
+                HeroLevelOption {
+                    key: "{option.level_index}",
+                    level_index: option.level_index,
+                    level_picker_open: option.level_picker_open,
+                }
             }
         }
     }

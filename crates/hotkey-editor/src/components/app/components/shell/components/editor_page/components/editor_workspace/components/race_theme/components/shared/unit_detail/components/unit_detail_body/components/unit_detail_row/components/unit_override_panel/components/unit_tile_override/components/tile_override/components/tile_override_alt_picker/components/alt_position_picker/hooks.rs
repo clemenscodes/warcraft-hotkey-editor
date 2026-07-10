@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::shared::alt_position_picker_body::components::alt_position_picker_explainer::AltPositionPickerExplainerProps;
 use super::props::AltPositionPickerProps;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorConfig;
 use crate::services::customkeys::context::use_loaded_keys;
@@ -16,7 +15,7 @@ use crate::services::grid_layout::context::use_grid_layout;
 pub(super) struct AltPositionPickerModel {
     pub(super) open: Signal<bool>,
     pub(super) dialog_title: String,
-    pub(super) explainer: AltPositionPickerExplainerProps,
+    pub(super) explainer_text: String,
     pub(super) grid_config: GridEditorConfig,
 }
 
@@ -25,7 +24,9 @@ pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPosi
     let grid_layout = use_grid_layout();
     let editor = use_editor_state();
     let open = props.alt_position_picker_open;
-    let explainer = AltPositionPickerExplainerProps::from(props);
+    let explainer_text = String::from(
+        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact.",
+    );
     let object_id = props.object_id;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability_off(object_id)));
@@ -57,7 +58,7 @@ pub(super) fn use_alt_position_picker(props: &AltPositionPickerProps) -> AltPosi
     AltPositionPickerModel {
         open,
         dialog_title,
-        explainer,
+        explainer_text,
         grid_config,
     }
 }

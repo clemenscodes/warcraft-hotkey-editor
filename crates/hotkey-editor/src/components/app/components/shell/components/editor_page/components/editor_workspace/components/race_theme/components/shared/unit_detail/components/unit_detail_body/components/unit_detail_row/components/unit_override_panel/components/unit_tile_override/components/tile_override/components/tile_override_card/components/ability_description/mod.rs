@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AbilityDescriptionProps;
+use props::AbilityDescriptionProps;
 
 /// The primary ubertip / tip text block for an ability or upgrade; renders nothing
 /// when there is no description.

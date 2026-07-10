@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AltStateLabelProps;
+use props::AltStateLabelProps;
 
 /// The caption naming an off-state or upgraded form; renders nothing when the form
 /// has no distinct name.

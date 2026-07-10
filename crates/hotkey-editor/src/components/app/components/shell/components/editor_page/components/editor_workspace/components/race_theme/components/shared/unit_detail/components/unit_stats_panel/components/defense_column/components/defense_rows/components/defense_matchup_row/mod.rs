@@ -1,24 +1,24 @@
 pub mod components;
-mod logic;
+mod data;
 mod props;
 mod style;
 
 use components::defense_matchup::DefenseMatchup;
+use data::ALL_ATTACK_TYPES;
 use dioxus::prelude::*;
-use logic::cells;
-pub use props::DefenseMatchupRowProps;
+use props::DefenseMatchupRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The defender's matchup grid.
 #[component]
 pub fn DefenseMatchupRow(props: DefenseMatchupRowProps) -> Element {
-    let cells = cells(&props);
+    let defense_type = props.defense_type;
     rsx! {
         div {
             class: CLASS,
-            for cell in cells {
-                DefenseMatchup { ..cell }
+            for attack_type in ALL_ATTACK_TYPES {
+                DefenseMatchup { attack_type, defense_type }
             }
         }
     }

@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::EditingKeycapProps;
+use props::EditingKeycapProps;
 
 /// The pulsing gold key-cap surface: the editable keycap's `Editing` look, lit while its
 /// key picker is open. Presentational — the host owns size, focus, drag, and the click

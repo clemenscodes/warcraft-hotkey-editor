@@ -7,7 +7,7 @@ use components::carrier_badge::CarrierBadge;
 use components::fight_icon::FightIcon;
 use dioxus::prelude::*;
 use hooks::{AbilityIconView, use_ability_icon};
-pub use props::AbilityIconProps;
+use props::AbilityIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,8 +18,10 @@ use tw_macro::assert_component;
 pub fn AbilityIcon(props: AbilityIconProps) -> Element {
     let AbilityIconView {
         open_state,
-        icon,
-        badge,
+        icon_src,
+        icon_alt,
+        count,
+        is_winner,
         title,
         disabled,
         onclick,
@@ -31,8 +33,8 @@ pub fn AbilityIcon(props: AbilityIconProps) -> Element {
             disabled,
             title,
             onclick,
-            FightIcon { ..icon }
-            CarrierBadge { ..badge }
+            FightIcon { src: icon_src, alt: icon_alt }
+            CarrierBadge { count, is_winner }
         }
         CarriersDialogHost { open_state }
     }

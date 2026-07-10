@@ -3,11 +3,11 @@ mod hooks;
 mod logic;
 mod props;
 
-use components::active_hero_level_option::{ActiveHeroLevelOption, ActiveHeroLevelOptionProps};
-use components::idle_hero_level_option::{IdleHeroLevelOption, IdleHeroLevelOptionProps};
+use components::active_hero_level_option::ActiveHeroLevelOption;
+use components::idle_hero_level_option::IdleHeroLevelOption;
 use dioxus::prelude::*;
 use hooks::use_hero_level_option;
-pub use props::HeroLevelOptionProps;
+use props::HeroLevelOptionProps;
 use tw_macro::assert_component;
 
 /// One selectable hero level in the dropdown. A pure dispatcher: from whether it is the
@@ -17,19 +17,15 @@ use tw_macro::assert_component;
 #[component]
 pub fn HeroLevelOption(props: HeroLevelOptionProps) -> Element {
     let presentation = use_hero_level_option(&props);
+    let label = presentation.label().to_owned();
+    let onclick = presentation.onclick();
     match presentation.is_active() {
-        true => {
-            let option = ActiveHeroLevelOptionProps::from(&presentation);
-            rsx! {
-                ActiveHeroLevelOption { ..option }
-            }
-        }
-        false => {
-            let option = IdleHeroLevelOptionProps::from(&presentation);
-            rsx! {
-                IdleHeroLevelOption { ..option }
-            }
-        }
+        true => rsx! {
+            ActiveHeroLevelOption { label, onclick }
+        },
+        false => rsx! {
+            IdleHeroLevelOption { label, onclick }
+        },
     }
 }
 

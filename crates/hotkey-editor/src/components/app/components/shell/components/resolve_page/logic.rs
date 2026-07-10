@@ -1,8 +1,5 @@
 use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
 use crate::components::app::components::shell::components::shared::breadcrumbs::components::breadcrumb::BreadcrumbProps;
-use super::components::plan_body::components::move_list::components::move_row::MoveRowProps;
-use super::components::plan_body::components::unresolved_section::components::unresolved_move_list::components::unresolved_row::UnresolvedRowProps;
-use super::components::plan_body::{PlanBodyProps, PlanBodySection};
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
@@ -395,12 +392,13 @@ impl From<Option<&PlanView>> for PlanCounts {
 
 /// The active section of the plan shaped for the body: the breadcrumb bar (one tab
 /// per section, the selected one flagged, each closing over the selection signal so
-/// a click reselects) and the scrollable body (the active section's move rows plus
-/// every unresolved row). Shaping the breadcrumbs and rows needs the Copy navigation
-/// and dialog signals, which arrive as inputs.
+/// a click reselects) and the domain the scrollable body renders (the active section's
+/// moves plus every unresolved ability). Shaping the breadcrumbs needs the Copy
+/// selection signal, which arrives as an input.
 pub(super) struct ActivePlanView {
     pub(super) breadcrumbs: BreadcrumbsProps,
-    pub(super) body: PlanBodyProps,
+    pub(super) section: Option<MoveSection>,
+    pub(super) unresolved: Vec<UnresolvedView>,
 }
 
 /// The inputs that shape an [`ActivePlanView`]: the plan to render, the selected
@@ -444,28 +442,13 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             breadcrumbs: breadcrumb_list,
             aria_label: "Move categories",
         };
-        let section = active.map(|section| {
-            let rows: Vec<MoveRowProps> = section
-                .moves
-                .iter()
-                .map(|move_view| MoveRowProps {
-                    move_view: move_view.clone(),
-                })
-                .collect();
-            PlanBodySection::new(rows)
-        });
-        let unresolved_rows: Vec<UnresolvedRowProps> = plan
-            .unresolved
-            .iter()
-            .map(|unresolved_view| UnresolvedRowProps {
-                unresolved_view: unresolved_view.clone(),
-            })
-            .collect();
-        let body = PlanBodyProps {
+        let section = active.cloned();
+        let unresolved = plan.unresolved.clone();
+        Self {
+            breadcrumbs,
             section,
-            unresolved_rows,
-        };
-        Self { breadcrumbs, body }
+            unresolved,
+        }
     }
 }
 

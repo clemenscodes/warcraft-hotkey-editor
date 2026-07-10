@@ -4,7 +4,7 @@ mod props;
 use components::closed_breadcrumbs_trigger_caret::ClosedBreadcrumbsTriggerCaret;
 use components::open_breadcrumbs_trigger_caret::OpenBreadcrumbsTriggerCaret;
 use dioxus::prelude::*;
-pub use props::SystemHotkeysBreadcrumbsTriggerCaretProps;
+use props::SystemHotkeysBreadcrumbsTriggerCaretProps;
 use tw_macro::assert_component;
 
 /// The trigger's caret glyph. A pure dispatcher: from the dropdown's open flag it

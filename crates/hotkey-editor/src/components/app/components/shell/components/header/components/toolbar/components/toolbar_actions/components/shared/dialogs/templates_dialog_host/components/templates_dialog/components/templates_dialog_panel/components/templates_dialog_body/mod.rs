@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::template_gallery::{TemplateGallery, TemplateGalleryProps};
+use components::template_gallery::TemplateGallery;
 use dioxus::prelude::*;
-pub use props::TemplatesDialogBodyProps;
+use props::TemplatesDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,11 @@ use tw_macro::assert_component;
 /// edge, holding the gallery of bundled template cards.
 #[component]
 pub fn TemplatesDialogBody(props: TemplatesDialogBodyProps) -> Element {
-    let gallery = TemplateGalleryProps::from(&props);
+    let cards = props.cards;
     rsx! {
         div {
             class: CLASS,
-            TemplateGallery { ..gallery }
+            TemplateGallery { cards }
         }
     }
 }

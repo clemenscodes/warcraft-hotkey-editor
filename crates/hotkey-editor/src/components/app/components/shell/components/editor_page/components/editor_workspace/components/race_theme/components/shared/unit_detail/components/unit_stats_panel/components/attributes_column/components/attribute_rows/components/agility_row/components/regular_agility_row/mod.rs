@@ -5,7 +5,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_gain::StatGain;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
 use dioxus::prelude::*;
-pub use props::RegularAgilityRowProps;
+use props::RegularAgilityRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

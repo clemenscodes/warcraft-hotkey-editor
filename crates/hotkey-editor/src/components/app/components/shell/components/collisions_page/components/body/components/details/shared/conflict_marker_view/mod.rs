@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod state;
 
-use components::conflict_position::{ConflictPosition, ConflictPositionProps};
-use components::inline_hotkey_marker::{InlineHotkeyMarker, InlineHotkeyMarkerProps};
-use components::top_hotkey_marker::{TopHotkeyMarker, TopHotkeyMarkerProps};
+use components::conflict_position::ConflictPosition;
+use components::inline_hotkey_marker::InlineHotkeyMarker;
+use components::top_hotkey_marker::TopHotkeyMarker;
 use dioxus::prelude::*;
-pub use props::ConflictMarkerViewProps;
+use props::ConflictMarkerViewProps;
 pub use state::ConflictMarker;
 use tw_macro::assert_component;
 
@@ -19,25 +19,19 @@ pub fn ConflictMarkerView(props: ConflictMarkerViewProps) -> Element {
     let is_top = props.is_top;
     match props.marker {
         ConflictMarker::Hotkey { label } => match is_top {
-            true => {
-                let marker = TopHotkeyMarkerProps { label };
-                rsx! {
-                    TopHotkeyMarker { ..marker }
-                }
-            }
-            false => {
-                let marker = InlineHotkeyMarkerProps { label };
-                rsx! {
-                    InlineHotkeyMarker { ..marker }
-                }
+            true => rsx! {
+                TopHotkeyMarker { label }
+            },
+            false => rsx! {
+                InlineHotkeyMarker { label }
+            },
+        },
+        ConflictMarker::Position { coordinate } => rsx! {
+            ConflictPosition {
+                coordinate,
+                is_top,
             }
         },
-        ConflictMarker::Position { coordinate } => {
-            let position = ConflictPositionProps { coordinate, is_top };
-            rsx! {
-                ConflictPosition { ..position }
-            }
-        }
     }
 }
 

@@ -4,10 +4,10 @@ mod props;
 mod style;
 
 use super::shared::stat_icon_frame::StatIconFrame;
-use components::combat_rows::{CombatRows, CombatRowsProps};
+use components::combat_rows::CombatRows;
 use dioxus::prelude::*;
 use logic::CombatFigures;
-pub use props::CombatColumnProps;
+use props::CombatColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,25 +20,19 @@ pub fn CombatColumn(props: CombatColumnProps) -> Element {
         return rsx! {};
     };
     let CombatFigures {
-        icon,
+        icon_src,
+        icon_alt,
         damage,
         range,
         speed,
         damage_per_second,
         attack_type,
     } = CombatFigures::from(&attack);
-    let rows = CombatRowsProps {
-        damage,
-        range,
-        speed,
-        damage_per_second,
-        attack_type,
-    };
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame { ..icon }
-            CombatRows { ..rows }
+            StatIconFrame { src: icon_src, alt: icon_alt }
+            CombatRows { damage, range, speed, damage_per_second, attack_type }
         }
     }
 }

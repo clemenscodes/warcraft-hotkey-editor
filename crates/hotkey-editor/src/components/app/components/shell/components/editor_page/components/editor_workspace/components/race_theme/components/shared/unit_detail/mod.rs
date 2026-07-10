@@ -12,7 +12,7 @@ use components::unit_detail_header::UnitDetailHeader;
 use components::unit_stats_panel::UnitStatsPanel;
 use dioxus::prelude::*;
 use hooks::use_unit_detail_panel;
-use state::UnitDetailView;
+use state::{UnitDetailModel, UnitDetailView};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -30,13 +30,25 @@ pub fn UnitDetail() -> Element {
             };
         }
     };
+    let UnitDetailModel {
+        unit_name,
+        unit_id,
+        portrait_url,
+        has_hero_attributes,
+        description_text,
+        combat,
+        hero_attributes,
+        evasion,
+        grid_slots,
+        override_target,
+    } = model;
     rsx! {
         section {
             class: CLASS,
-            UnitDetailHeader { ..model.header }
-            UnitDescription { ..model.description }
-            UnitStatsPanel { ..model.stats }
-            UnitDetailBody { ..model.body }
+            UnitDetailHeader { unit_name, unit_id, portrait_url, has_hero_attributes }
+            UnitDescription { text: description_text }
+            UnitStatsPanel { combat, hero_attributes, evasion }
+            UnitDetailBody { grid_slots, override_target }
         }
     }
 }

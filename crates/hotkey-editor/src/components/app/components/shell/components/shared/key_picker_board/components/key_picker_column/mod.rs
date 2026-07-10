@@ -4,7 +4,7 @@ mod style;
 
 use components::key_picker_row::KeyPickerRow;
 use dioxus::prelude::*;
-pub use props::KeyPickerColumnProps;
+use props::KeyPickerColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,10 +14,11 @@ use tw_macro::assert_component;
 #[component]
 pub fn KeyPickerColumn(props: KeyPickerColumnProps) -> Element {
     let rows = props.rows;
+    let on_pick = props.on_pick;
     rsx! {
         div { class: CLASS,
-            for row in rows {
-                KeyPickerRow { ..row }
+            for keys in rows {
+                KeyPickerRow { keys, on_pick }
             }
         }
     }

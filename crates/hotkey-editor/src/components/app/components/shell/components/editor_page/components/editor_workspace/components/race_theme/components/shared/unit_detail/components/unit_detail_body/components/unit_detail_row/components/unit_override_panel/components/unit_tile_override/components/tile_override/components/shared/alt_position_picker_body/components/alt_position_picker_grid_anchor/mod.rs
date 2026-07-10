@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::AltPositionPickerGridAnchorProps;
+use props::AltPositionPickerGridAnchorProps;
 
 /// Centers and picker-restyles the embedded command grid inside a position picker.
 #[component]

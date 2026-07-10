@@ -5,9 +5,9 @@ mod props;
 
 use crate::services::collision_selection::context::use_collision_selection;
 use components::empty_hotkey_unit_detail::EmptyHotkeyUnitDetail;
-use components::filled_hotkey_unit_detail::{FilledHotkeyUnitDetail, FilledHotkeyUnitDetailProps};
+use components::filled_hotkey_unit_detail::FilledHotkeyUnitDetail;
 use dioxus::prelude::*;
-pub use props::HotkeyUnitDetailProps;
+use props::HotkeyUnitDetailProps;
 use tw_macro::assert_component;
 
 /// The shared-hotkey detail pane. A dispatcher: when a unit is selected it renders the
@@ -16,10 +16,9 @@ use tw_macro::assert_component;
 #[component]
 pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
     let selected_unit = use_collision_selection().selected_hotkey_unit();
-    if let Some(data) = logic::selected(&props, selected_unit) {
-        let filled = FilledHotkeyUnitDetailProps::from(&data);
+    if let Some(unit_view) = logic::selected(&props, selected_unit) {
         rsx! {
-            FilledHotkeyUnitDetail { ..filled }
+            FilledHotkeyUnitDetail { unit_view }
         }
     } else {
         rsx! {

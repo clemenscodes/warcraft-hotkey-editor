@@ -1,13 +1,12 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
-use components::card_glow_icon::{CardGlowIcon, CardGlowIconProps};
-use components::control_plain_icon::{ControlPlainIcon, ControlPlainIconProps};
-use components::placeholder_icon::{PlaceholderIcon, PlaceholderIconProps};
-use components::tile_glow_icon::{TileGlowIcon, TileGlowIconProps};
-use components::tile_plain_icon::{TilePlainIcon, TilePlainIconProps};
+use components::card_glow_icon::CardGlowIcon;
+use components::control_plain_icon::ControlPlainIcon;
+use components::placeholder_icon::PlaceholderIcon;
+use components::tile_glow_icon::TileGlowIcon;
+use components::tile_plain_icon::TilePlainIcon;
 use dioxus::prelude::*;
 pub use props::{FramedIconProps, IconRadius};
 use state::FramedIconStyle;
@@ -28,33 +27,38 @@ pub fn FramedIcon(props: FramedIconProps) -> Element {
     }
     match look {
         FramedIconStyle::TilePlain => {
-            let icon = TilePlainIconProps::from(&props);
+            let source = props.src.clone();
+            let alt = props.alt.clone();
             rsx! {
-                TilePlainIcon { ..icon }
+                TilePlainIcon { source, alt }
             }
         }
         FramedIconStyle::TileGlow => {
-            let icon = TileGlowIconProps::from(&props);
+            let source = props.src.clone();
+            let alt = props.alt.clone();
             rsx! {
-                TileGlowIcon { ..icon }
+                TileGlowIcon { source, alt }
             }
         }
         FramedIconStyle::ControlPlain => {
-            let icon = ControlPlainIconProps::from(&props);
+            let source = props.src.clone();
+            let alt = props.alt.clone();
             rsx! {
-                ControlPlainIcon { ..icon }
+                ControlPlainIcon { source, alt }
             }
         }
         FramedIconStyle::CardGlow => {
-            let icon = CardGlowIconProps::from(&props);
+            let source = props.src.clone();
+            let alt = props.alt.clone();
             rsx! {
-                CardGlowIcon { ..icon }
+                CardGlowIcon { source, alt }
             }
         }
         FramedIconStyle::Placeholder => {
-            let icon = PlaceholderIconProps::from(&props);
+            let source = props.src.clone();
+            let alt = props.alt.clone();
             rsx! {
-                PlaceholderIcon { ..icon }
+                PlaceholderIcon { source, alt }
             }
         }
     }

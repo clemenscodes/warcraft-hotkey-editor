@@ -1,10 +1,12 @@
-use super::components::unit_command_grids::UnitCommandGridsProps;
-use super::components::unit_override_panel::components::unit_tile_override::UnitTileOverrideProps;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::logic::{
+    UnitCommandGridSlots, UnitOverrideTarget,
+};
 use dioxus::prelude::*;
 
-/// The grids-and-override row: the command grids beside the override panel.
+/// The grids-and-override row: the command grids beside the override panel. Threads the
+/// unit's grid slots and override target, splitting them between its two children.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailRowProps {
-    pub grids: UnitCommandGridsProps,
-    pub tile_override: UnitTileOverrideProps,
+    pub grid_slots: UnitCommandGridSlots,
+    pub override_target: UnitOverrideTarget,
 }

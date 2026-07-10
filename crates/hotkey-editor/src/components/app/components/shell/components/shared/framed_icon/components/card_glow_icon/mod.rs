@@ -1,11 +1,9 @@
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::shared::framed_icon::components::shared::framed_icon_image::{
-    FramedIconImage, FramedIconImageProps,
-};
+use crate::components::app::components::shell::components::shared::framed_icon::components::shared::framed_icon_image::FramedIconImage;
 use dioxus::prelude::*;
-pub use props::CardGlowIconProps;
+use props::CardGlowIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,11 +18,10 @@ pub fn CardGlowIcon(props: CardGlowIconProps) -> Element {
         };
     };
     let alt = props.alt;
-    let image = FramedIconImageProps { source, alt };
     rsx! {
         div {
             class: CLASS,
-            FramedIconImage { ..image }
+            FramedIconImage { source, alt }
         }
     }
 }

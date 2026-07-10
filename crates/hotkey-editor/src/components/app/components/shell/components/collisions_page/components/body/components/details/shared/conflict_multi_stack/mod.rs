@@ -2,9 +2,10 @@ mod props;
 mod style;
 
 use super::conflict_ability::ConflictAbility;
-use super::conflict_marker_view::{ConflictMarkerView, ConflictMarkerViewProps};
+use super::conflict_card_model::ConflictAbilityData;
+use super::conflict_marker_view::ConflictMarkerView;
 use dioxus::prelude::*;
-pub use props::ConflictMultiStackProps;
+use props::ConflictMultiStackProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,16 +18,21 @@ pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
     if abilities.is_empty() {
         return rsx! {};
     }
-    let marker = ConflictMarkerViewProps {
-        marker: props.marker,
-        is_top: true,
-    };
+    let marker = props.marker;
     rsx! {
-        ConflictMarkerView { ..marker }
+        ConflictMarkerView {
+            marker,
+            is_top: true,
+        }
         div {
             class: CLASS,
-            for ability in abilities {
-                ConflictAbility { ..ability }
+            for ConflictAbilityData { name, ability_id, icon_url, unit_id } in abilities {
+                ConflictAbility {
+                    ability_name: name,
+                    ability_id,
+                    icon_url,
+                    unit_id,
+                }
             }
         }
     }

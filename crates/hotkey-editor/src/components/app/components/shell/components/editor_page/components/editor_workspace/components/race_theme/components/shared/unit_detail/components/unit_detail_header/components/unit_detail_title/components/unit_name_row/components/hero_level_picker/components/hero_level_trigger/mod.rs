@@ -1,10 +1,10 @@
 pub mod components;
 mod props;
 
-use components::closed_hero_level_trigger::{ClosedHeroLevelTrigger, ClosedHeroLevelTriggerProps};
-use components::open_hero_level_trigger::{OpenHeroLevelTrigger, OpenHeroLevelTriggerProps};
+use components::closed_hero_level_trigger::ClosedHeroLevelTrigger;
+use components::open_hero_level_trigger::OpenHeroLevelTrigger;
 use dioxus::prelude::*;
-pub use props::HeroLevelTriggerProps;
+use props::HeroLevelTriggerProps;
 use tw_macro::assert_component;
 
 /// The hero-level dropdown trigger button. A pure dispatcher: from the menu's open
@@ -14,15 +14,15 @@ use tw_macro::assert_component;
 /// caret leaves.
 #[component]
 pub fn HeroLevelTrigger(props: HeroLevelTriggerProps) -> Element {
+    let number = props.number;
+    let onclick = props.onclick;
     if props.is_open {
-        let open = OpenHeroLevelTriggerProps::from(&props);
         rsx! {
-            OpenHeroLevelTrigger { ..open }
+            OpenHeroLevelTrigger { number, onclick }
         }
     } else {
-        let closed = ClosedHeroLevelTriggerProps::from(&props);
         rsx! {
-            ClosedHeroLevelTrigger { ..closed }
+            ClosedHeroLevelTrigger { number, onclick }
         }
     }
 }

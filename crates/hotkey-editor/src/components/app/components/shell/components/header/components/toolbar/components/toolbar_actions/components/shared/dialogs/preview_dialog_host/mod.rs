@@ -4,7 +4,7 @@ mod style;
 
 use components::preview_dialog::PreviewDialog;
 use dioxus::prelude::*;
-use hooks::use_preview_dialog_host;
+use hooks::{PreviewDialogHostModel, use_preview_dialog_host};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +14,14 @@ use tw_macro::assert_component;
 /// The dialog self-gates on that signal, so this host renders nothing until it opens.
 #[component]
 pub fn PreviewDialogHost() -> Element {
-    let dialog = use_preview_dialog_host();
+    let PreviewDialogHostModel {
+        loaded_keys,
+        preview_open,
+    } = use_preview_dialog_host();
     rsx! {
         div {
             class: CLASS,
-            PreviewDialog { ..dialog }
+            PreviewDialog { loaded_keys, preview_open }
         }
     }
 }

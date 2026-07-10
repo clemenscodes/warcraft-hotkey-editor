@@ -11,7 +11,7 @@ use components::research_menu::ResearchMenu;
 use components::uprooted_menu::UprootedMenu;
 use dioxus::prelude::*;
 use hooks::use_unit_command_grids;
-pub use props::UnitCommandGridsProps;
+use props::UnitCommandGridsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

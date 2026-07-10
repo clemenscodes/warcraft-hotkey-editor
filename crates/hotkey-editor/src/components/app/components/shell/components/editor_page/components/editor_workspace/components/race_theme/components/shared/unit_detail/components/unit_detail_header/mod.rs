@@ -1,12 +1,11 @@
 pub mod components;
-mod logic;
 mod props;
 mod style;
 
-use components::unit_detail_title::{UnitDetailTitle, UnitDetailTitleProps};
-use components::unit_portrait::{UnitPortrait, UnitPortraitProps};
+use components::unit_detail_title::UnitDetailTitle;
+use components::unit_portrait::UnitPortrait;
 use dioxus::prelude::*;
-pub use props::UnitDetailHeaderProps;
+use props::UnitDetailHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,13 +13,15 @@ use tw_macro::assert_component;
 /// optional hero level picker).
 #[component]
 pub fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
-    let portrait = UnitPortraitProps::from(&props);
-    let title = UnitDetailTitleProps::from(&props);
+    let portrait_source = props.portrait_url;
+    let unit_name = props.unit_name;
+    let unit_id = props.unit_id;
+    let has_hero_attributes = props.has_hero_attributes;
     rsx! {
         header {
             class: CLASS,
-            UnitPortrait { ..portrait }
-            UnitDetailTitle { ..title }
+            UnitPortrait { src: portrait_source, alt: unit_name }
+            UnitDetailTitle { unit_name, unit_id, has_hero_attributes }
         }
     }
 }

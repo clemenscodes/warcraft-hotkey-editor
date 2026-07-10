@@ -1,6 +1,6 @@
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::deferred_focus::use_deferred_focus;
+use super::props::KeyPickerBoardHostProps;
 use crate::components::app::components::shell::components::shared::key_picker_board::BrowserKeyEvent;
-use crate::components::app::components::shell::components::shared::key_picker_board::KeyPickerBoardProps;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_keybinds::KeyCode;
@@ -12,7 +12,7 @@ use wasm_bindgen::closure::Closure;
 /// before that focus lands — when a keypress would otherwise reach `document.body` and
 /// be dropped. Both live on the picker, not on any dialog, so the board behaves
 /// identically wherever it is placed.
-pub(super) fn use_board_keyboard(props: &KeyPickerBoardProps) {
+pub(super) fn use_board_keyboard(props: &KeyPickerBoardHostProps) {
     use_deferred_focus(".key-picker-board");
     use_focus_gap_keyboard(props);
 }
@@ -35,7 +35,7 @@ enum PendingKeyPress {
 /// board's own handler takes over, so the two never double-fire. Off the browser
 /// `web_sys::window()` is `None`, so the listener is never installed and the hook is a
 /// no-op.
-fn use_focus_gap_keyboard(props: &KeyPickerBoardProps) {
+fn use_focus_gap_keyboard(props: &KeyPickerBoardHostProps) {
     let mut offered: Vec<KeyCode> = Vec::new();
     for column in &props.columns {
         let column_codes = column.pickable_codes();

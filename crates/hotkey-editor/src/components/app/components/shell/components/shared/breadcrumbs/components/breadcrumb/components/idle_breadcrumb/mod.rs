@@ -1,10 +1,10 @@
 mod props;
 mod style;
 
-use super::shared::breadcrumb_count::{BreadcrumbCount, BreadcrumbCountProps};
-use super::shared::breadcrumb_label::{BreadcrumbLabel, BreadcrumbLabelProps};
+use super::shared::breadcrumb_count::BreadcrumbCount;
+use super::shared::breadcrumb_label::BreadcrumbLabel;
 use dioxus::prelude::*;
-pub use props::IdleBreadcrumbProps;
+use props::IdleBreadcrumbProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,8 +13,8 @@ use tw_macro::assert_component;
 /// it for every tab that is not the current page.
 #[component]
 pub fn IdleBreadcrumb(props: IdleBreadcrumbProps) -> Element {
-    let label = BreadcrumbLabelProps { text: props.label };
-    let count = BreadcrumbCountProps { count: props.count };
+    let text = props.label;
+    let count = props.count;
     let onclick = props.onclick;
     rsx! {
         button {
@@ -22,8 +22,8 @@ pub fn IdleBreadcrumb(props: IdleBreadcrumbProps) -> Element {
             r#type: "button",
             "aria-current": "false",
             onclick,
-            BreadcrumbLabel { ..label }
-            BreadcrumbCount { ..count }
+            BreadcrumbLabel { text }
+            BreadcrumbCount { count }
         }
     }
 }

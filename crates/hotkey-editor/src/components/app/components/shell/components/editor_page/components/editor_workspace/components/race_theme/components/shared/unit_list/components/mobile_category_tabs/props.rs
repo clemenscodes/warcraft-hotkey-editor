@@ -1,8 +1,8 @@
-use super::components::mobile_category_tab::MobileCategoryTabProps;
 use dioxus::prelude::*;
+use warcraft_api::UnitKind;
 
-/// The tab row's props: the finished props for each category tab, in display order.
+/// The tab row's props: the unit kinds to render as category tabs, in display order.
 #[derive(Props, Clone, PartialEq)]
 pub struct MobileCategoryTabsProps {
-    pub tabs: Vec<MobileCategoryTabProps>,
+    pub tabs: Vec<UnitKind>,
 }

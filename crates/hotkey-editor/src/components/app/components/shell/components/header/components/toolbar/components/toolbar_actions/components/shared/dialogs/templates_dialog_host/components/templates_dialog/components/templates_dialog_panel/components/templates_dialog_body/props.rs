@@ -1,14 +1,9 @@
-use super::components::template_gallery::TemplateGalleryProps;
+use super::components::template_gallery::components::template_card::TemplateCardView;
 use dioxus::prelude::*;
 
-/// The templates dialog's scroll region input: the gallery of template cards it holds.
+/// The templates dialog's scroll region input: the resolved template card views its
+/// gallery lays out.
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplatesDialogBodyProps {
-    pub gallery: TemplateGalleryProps,
-}
-
-impl From<&TemplatesDialogBodyProps> for TemplateGalleryProps {
-    fn from(props: &TemplatesDialogBodyProps) -> Self {
-        props.gallery.clone()
-    }
+    pub cards: Vec<TemplateCardView>,
 }

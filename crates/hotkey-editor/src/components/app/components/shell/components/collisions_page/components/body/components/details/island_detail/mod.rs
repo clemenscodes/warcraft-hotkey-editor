@@ -5,9 +5,9 @@ mod props;
 
 use crate::services::collision_selection::context::use_collision_selection;
 use components::empty_island_detail::EmptyIslandDetail;
-use components::filled_island_detail::{FilledIslandDetail, FilledIslandDetailProps};
+use components::filled_island_detail::FilledIslandDetail;
 use dioxus::prelude::*;
-pub use props::IslandDetailProps;
+use props::IslandDetailProps;
 use tw_macro::assert_component;
 
 /// The position-island detail pane. A dispatcher: when an island is selected it renders
@@ -16,10 +16,9 @@ use tw_macro::assert_component;
 #[component]
 pub fn IslandDetail(props: IslandDetailProps) -> Element {
     let selected_island = use_collision_selection().selected_island();
-    if let Some(data) = logic::selected(&props, selected_island) {
-        let filled = FilledIslandDetailProps::from(&data);
+    if let Some(island) = logic::selected(&props, selected_island) {
         rsx! {
-            FilledIslandDetail { ..filled }
+            FilledIslandDetail { island }
         }
     } else {
         rsx! {

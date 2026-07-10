@@ -5,7 +5,7 @@ mod style;
 use super::super::super::shared::stat_label::StatLabel;
 use components::hit_points_value::HitPointsValue;
 use dioxus::prelude::*;
-pub use props::HitPointsRowProps;
+use props::HitPointsRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

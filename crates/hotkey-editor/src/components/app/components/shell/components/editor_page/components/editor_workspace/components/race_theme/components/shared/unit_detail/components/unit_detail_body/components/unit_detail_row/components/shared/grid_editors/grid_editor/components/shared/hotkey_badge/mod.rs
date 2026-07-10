@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod state;
 
-use components::conflict_hotkey_badge::{ConflictHotkeyBadge, ConflictHotkeyBadgeProps};
-use components::normal_hotkey_badge::{NormalHotkeyBadge, NormalHotkeyBadgeProps};
-use components::passive_hotkey_badge::{PassiveHotkeyBadge, PassiveHotkeyBadgeProps};
+use components::conflict_hotkey_badge::ConflictHotkeyBadge;
+use components::normal_hotkey_badge::NormalHotkeyBadge;
+use components::passive_hotkey_badge::PassiveHotkeyBadge;
 use dioxus::prelude::*;
-pub use props::HotkeyBadgeProps;
+use props::HotkeyBadgeProps;
 pub use state::HotkeyBadgeState;
 use tw_macro::assert_component;
 
@@ -16,23 +16,21 @@ use tw_macro::assert_component;
 /// body only routes, it computes no look of its own.
 #[component]
 pub fn HotkeyBadge(props: HotkeyBadgeProps) -> Element {
+    let letter = props.letter;
     match props.state {
         HotkeyBadgeState::Normal => {
-            let badge = NormalHotkeyBadgeProps::from(&props);
             rsx! {
-                NormalHotkeyBadge { ..badge }
+                NormalHotkeyBadge { letter }
             }
         }
         HotkeyBadgeState::Passive => {
-            let badge = PassiveHotkeyBadgeProps::from(&props);
             rsx! {
-                PassiveHotkeyBadge { ..badge }
+                PassiveHotkeyBadge { letter }
             }
         }
         HotkeyBadgeState::Conflict => {
-            let badge = ConflictHotkeyBadgeProps::from(&props);
             rsx! {
-                ConflictHotkeyBadge { ..badge }
+                ConflictHotkeyBadge { letter }
             }
         }
     }

@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-pub use props::ConflictKeyProps;
+use props::ConflictKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,9 @@ pub fn ConflictKey(props: ConflictKeyProps) -> Element {
         label,
         disabled,
         onclick,
-        tooltip,
+        tooltip_text,
+        tooltip_placement,
+        tooltip_anchor,
     } = props;
     rsx! {
         button {
@@ -25,7 +27,11 @@ pub fn ConflictKey(props: ConflictKeyProps) -> Element {
             disabled,
             onclick,
             {label}
-            Tooltip { ..tooltip }
+            Tooltip {
+                text: tooltip_text,
+                placement: tooltip_placement,
+                anchor: tooltip_anchor,
+            }
         }
     }
 }

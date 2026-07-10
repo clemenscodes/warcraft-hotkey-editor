@@ -1,6 +1,7 @@
-use super::components::inventory_slot::InventorySlotProps;
-use super::components::inventory_slot::components::inventory_filled_slot::InventoryFilledSlotProps;
-use super::{INVENTORY_COLUMNS, INVENTORY_ROWS, InventoryDragSource, SLOT_FRAME_GOLD};
+use super::{
+    INVENTORY_COLUMNS, INVENTORY_ROWS, InventoryDragSource, InventoryFilledSlotEntry,
+    InventorySlotEntry, SLOT_FRAME_GOLD,
+};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
@@ -10,7 +11,7 @@ use warcraft_keybinds::WarcraftObjectId;
 /// slot's border-image, and the six finished grid positions (filled cell or empty).
 pub(super) struct InventoryGridModel {
     pub(super) frame: String,
-    pub(super) slots: Vec<InventorySlotProps>,
+    pub(super) entries: Vec<InventorySlotEntry>,
 }
 
 /// Builds the grid's drag signals, gold-frame variable, and the six slot positions
@@ -24,16 +25,15 @@ pub(super) fn use_inventory_grid() -> InventoryGridModel {
     let drop_target = use_signal::<Option<WarcraftObjectId>>(|| None);
     let frame_url = SLOT_FRAME_GOLD;
     let frame = format!("--wc3-slot-frame: url('{frame_url}');");
-    let entries = SystemHotkeysCategory::Inventory.entries();
-    let mut slots: Vec<InventorySlotProps> = Vec::new();
+    let inventory_entries = SystemHotkeysCategory::Inventory.entries();
+    let mut entries: Vec<InventorySlotEntry> = Vec::new();
     for row in 0..INVENTORY_ROWS {
         for column in 0..INVENTORY_COLUMNS {
             let slot_index = row * INVENTORY_COLUMNS + column;
-            let entry_option = entries.get(slot_index).copied();
-            let cell = entry_option.map(|entry| {
-                let section_key = entry.section_id();
-                let section_id = section_key;
-                InventoryFilledSlotProps {
+            let entry_option = inventory_entries.get(slot_index).copied();
+            let filled = entry_option.map(|entry| {
+                let section_id = entry.section_id();
+                InventoryFilledSlotEntry {
                     slot_index,
                     section_id,
                     dragging_source,
@@ -41,9 +41,9 @@ pub(super) fn use_inventory_grid() -> InventoryGridModel {
                     drag_follower,
                 }
             });
-            let slot = InventorySlotProps { cell };
-            slots.push(slot);
+            let slot_entry = InventorySlotEntry { filled };
+            entries.push(slot_entry);
         }
     }
-    InventoryGridModel { frame, slots }
+    InventoryGridModel { frame, entries }
 }

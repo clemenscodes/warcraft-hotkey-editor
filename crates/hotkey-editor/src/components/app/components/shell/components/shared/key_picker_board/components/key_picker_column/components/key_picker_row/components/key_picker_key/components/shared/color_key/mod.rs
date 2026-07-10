@@ -1,15 +1,15 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
-use components::available_key::{AvailableKey, AvailableKeyProps};
-use components::conflict_key::{ConflictKey, ConflictKeyProps};
-use components::current_key::{CurrentKey, CurrentKeyProps};
+use components::available_key::AvailableKey;
+use components::conflict_key::ConflictKey;
+use components::current_key::CurrentKey;
 use dioxus::prelude::*;
-pub use props::ColorKeyProps;
-pub use state::ColorKeyState;
+use props::ColorKeyProps;
 use tw_macro::assert_component;
+
+pub use state::ColorKeyState;
 
 /// A picker key's color look, chosen from its state. A pure dispatcher that carries no
 /// look of its own: from the key's visual state it renders the matching color
@@ -18,23 +18,47 @@ use tw_macro::assert_component;
 /// renders it; this only chooses the color and fills the box it is given.
 #[component]
 pub fn ColorKey(props: ColorKeyProps) -> Element {
+    let label = props.label;
+    let disabled = props.disabled;
+    let onclick = props.onclick;
+    let tooltip_text = props.tooltip_text;
+    let tooltip_placement = props.tooltip_placement;
+    let tooltip_anchor = props.tooltip_anchor;
     match props.state {
         ColorKeyState::Available => {
-            let available = AvailableKeyProps::from(&props);
             rsx! {
-                AvailableKey { ..available }
+                AvailableKey {
+                    label,
+                    disabled,
+                    onclick,
+                    tooltip_text,
+                    tooltip_placement,
+                    tooltip_anchor,
+                }
             }
         }
         ColorKeyState::Current => {
-            let current = CurrentKeyProps::from(&props);
             rsx! {
-                CurrentKey { ..current }
+                CurrentKey {
+                    label,
+                    disabled,
+                    onclick,
+                    tooltip_text,
+                    tooltip_placement,
+                    tooltip_anchor,
+                }
             }
         }
         ColorKeyState::Conflict => {
-            let conflict = ConflictKeyProps::from(&props);
             rsx! {
-                ConflictKey { ..conflict }
+                ConflictKey {
+                    label,
+                    disabled,
+                    onclick,
+                    tooltip_text,
+                    tooltip_placement,
+                    tooltip_anchor,
+                }
             }
         }
     }

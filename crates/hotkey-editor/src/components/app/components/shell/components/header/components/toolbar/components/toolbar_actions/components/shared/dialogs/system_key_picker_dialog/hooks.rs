@@ -2,18 +2,19 @@ use super::data::{KEYBOARD_ROWS, NUMPAD_ROWS};
 use super::logic::ColumnInputs;
 use super::props::SystemKeyPickerDialogProps;
 use super::state::BoardSection;
-use crate::components::app::components::shell::components::shared::key_picker_board::{
-    KeyColumn, KeyPickerBoardProps,
-};
+use crate::components::app::components::shell::components::shared::key_picker_board::KeyColumn;
 use dioxus::prelude::*;
+use warcraft_keybinds::KeyCode;
 
 /// The system key picker's shaped view: the open signal that drives the dialog shell,
-/// its title, and the fully built board props (both keyboard columns plus the pick
-/// and dismiss handlers).
+/// its title, and the raw board values (both laid-out columns plus the pick and Escape
+/// handlers) the body hands to the shared board host.
 pub(super) struct SystemKeyPickerModel {
     pub(super) open: Signal<bool>,
     pub(super) title: String,
-    pub(super) board: KeyPickerBoardProps,
+    pub(super) columns: Vec<KeyColumn>,
+    pub(super) on_pick: EventHandler<KeyCode>,
+    pub(super) board_on_close: EventHandler<()>,
 }
 
 /// Composes the picker: mirrors the caller's open flag into a signal the dialog shell
@@ -46,10 +47,11 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogProps) -> Syste
     let keyboard = KeyColumn::from(&keyboard_inputs);
     let numpad = KeyColumn::from(&numpad_inputs);
     let columns: Vec<KeyColumn> = vec![keyboard, numpad];
-    let board = KeyPickerBoardProps {
+    SystemKeyPickerModel {
+        open,
+        title,
         columns,
         on_pick,
-        on_close: board_on_close,
-    };
-    SystemKeyPickerModel { open, title, board }
+        board_on_close,
+    }
 }

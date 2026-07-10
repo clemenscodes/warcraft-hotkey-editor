@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::TileOverrideTierButtonProps;
+use props::TileOverrideTierButtonProps;
 
 /// A prev/next arrow button in the tier-cycling footer.
 #[component]

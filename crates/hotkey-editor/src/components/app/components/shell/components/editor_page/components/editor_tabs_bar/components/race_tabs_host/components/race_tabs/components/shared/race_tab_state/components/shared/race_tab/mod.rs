@@ -4,7 +4,7 @@ mod style;
 
 use components::race_tab_label::RaceTabLabel;
 use dioxus::prelude::*;
-pub use props::RaceTabProps;
+use props::RaceTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -25,7 +25,7 @@ pub fn RaceTab(props: RaceTabProps) -> Element {
             class: CLASS,
             onclick,
             onkeydown,
-            RaceTabLabel { ..label }
+            RaceTabLabel { label }
         }
     }
 }

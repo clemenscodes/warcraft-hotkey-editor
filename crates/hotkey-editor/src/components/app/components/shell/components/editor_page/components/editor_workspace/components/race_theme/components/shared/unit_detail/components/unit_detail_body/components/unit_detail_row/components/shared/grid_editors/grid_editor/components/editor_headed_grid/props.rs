@@ -1,5 +1,4 @@
-use super::components::editor_grid::EditorGridProps;
-use super::components::editor_grid::components::grid_editor_tile::GridEditorTileProps;
+use super::components::editor_grid::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -9,12 +8,5 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 #[derive(Props, Clone, PartialEq)]
 pub struct EditorHeadedGridProps {
     pub heading: &'static str,
-    pub tiles: [GridEditorTileProps; COMMAND_GRID_TILE_COUNT],
-}
-
-impl From<&EditorHeadedGridProps> for EditorGridProps {
-    fn from(props: &EditorHeadedGridProps) -> Self {
-        let tiles = props.tiles.clone();
-        Self { tiles }
-    }
+    pub tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
 }

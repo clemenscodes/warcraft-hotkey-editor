@@ -3,13 +3,11 @@ mod hooks;
 mod logic;
 mod props;
 
-use components::active_mobile_category_tab::{
-    ActiveMobileCategoryTab, ActiveMobileCategoryTabProps,
-};
-use components::idle_mobile_category_tab::{IdleMobileCategoryTab, IdleMobileCategoryTabProps};
+use components::active_mobile_category_tab::ActiveMobileCategoryTab;
+use components::idle_mobile_category_tab::IdleMobileCategoryTab;
 use dioxus::prelude::*;
 use hooks::{MobileCategoryTabView, use_mobile_category_tab};
-pub use props::MobileCategoryTabProps;
+use props::MobileCategoryTabProps;
 use tw_macro::assert_component;
 
 /// A single category tab in the mobile unit picker. A pure dispatcher: from whether its
@@ -20,19 +18,15 @@ use tw_macro::assert_component;
 #[component]
 pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
     let MobileCategoryTabView { is_active, model } = use_mobile_category_tab(props.kind);
+    let label = model.label();
+    let onclick = model.onclick();
     match is_active {
-        true => {
-            let tab = ActiveMobileCategoryTabProps::from(&model);
-            rsx! {
-                ActiveMobileCategoryTab { ..tab }
-            }
-        }
-        false => {
-            let tab = IdleMobileCategoryTabProps::from(&model);
-            rsx! {
-                IdleMobileCategoryTab { ..tab }
-            }
-        }
+        true => rsx! {
+            ActiveMobileCategoryTab { label, onclick }
+        },
+        false => rsx! {
+            IdleMobileCategoryTab { label, onclick }
+        },
     }
 }
 

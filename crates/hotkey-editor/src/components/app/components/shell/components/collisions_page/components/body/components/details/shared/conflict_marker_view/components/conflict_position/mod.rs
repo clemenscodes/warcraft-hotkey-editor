@@ -1,11 +1,10 @@
 pub mod components;
-mod logic;
 mod props;
 
-use components::inline_conflict_position::{InlineConflictPosition, InlineConflictPositionProps};
-use components::top_conflict_position::{TopConflictPosition, TopConflictPositionProps};
+use components::inline_conflict_position::InlineConflictPosition;
+use components::top_conflict_position::TopConflictPosition;
 use dioxus::prelude::*;
-pub use props::ConflictPositionProps;
+use props::ConflictPositionProps;
 use tw_macro::assert_component;
 
 /// The colliding command-card cell shown between (or above) a conflict's abilities. A
@@ -13,19 +12,14 @@ use tw_macro::assert_component;
 /// `TopConflictPosition` xor `InlineConflictPosition`; there is no `data-top` attribute.
 #[component]
 pub fn ConflictPosition(props: ConflictPositionProps) -> Element {
+    let coordinate = props.coordinate;
     match props.is_top {
-        true => {
-            let position = TopConflictPositionProps::from(&props);
-            rsx! {
-                TopConflictPosition { ..position }
-            }
-        }
-        false => {
-            let position = InlineConflictPositionProps::from(&props);
-            rsx! {
-                InlineConflictPosition { ..position }
-            }
-        }
+        true => rsx! {
+            TopConflictPosition { coordinate }
+        },
+        false => rsx! {
+            InlineConflictPosition { coordinate }
+        },
     }
 }
 

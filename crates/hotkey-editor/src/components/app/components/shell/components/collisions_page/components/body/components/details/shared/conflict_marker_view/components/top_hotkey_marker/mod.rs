@@ -3,7 +3,7 @@ mod style;
 
 use super::shared::conflict_hotkey_key::ConflictHotkeyKey;
 use dioxus::prelude::*;
-pub use props::TopHotkeyMarkerProps;
+use props::TopHotkeyMarkerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

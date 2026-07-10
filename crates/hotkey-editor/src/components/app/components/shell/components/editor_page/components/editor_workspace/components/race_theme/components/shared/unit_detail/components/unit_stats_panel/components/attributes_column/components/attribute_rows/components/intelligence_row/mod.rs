@@ -1,10 +1,12 @@
 pub mod components;
+mod hooks;
 mod props;
 
-use components::primary_intelligence_row::{PrimaryIntelligenceRow, PrimaryIntelligenceRowProps};
-use components::regular_intelligence_row::{RegularIntelligenceRow, RegularIntelligenceRowProps};
+use components::primary_intelligence_row::PrimaryIntelligenceRow;
+use components::regular_intelligence_row::RegularIntelligenceRow;
 use dioxus::prelude::*;
-pub use props::IntelligenceRowProps;
+use hooks::{IntelligenceRowModel, use_intelligence_row};
+use props::IntelligenceRowProps;
 use tw_macro::assert_component;
 
 /// The hero's intelligence attribute row. A dispatcher: when intelligence is the hero's primary
@@ -12,15 +14,18 @@ use tw_macro::assert_component;
 /// owns its own look, so there is no `data-primary` attribute.
 #[component]
 pub fn IntelligenceRow(props: IntelligenceRowProps) -> Element {
+    let IntelligenceRowModel {
+        statistic,
+        growth,
+        label,
+    } = use_intelligence_row(&props);
     if props.is_primary {
-        let row = PrimaryIntelligenceRowProps::from(&props);
         rsx! {
-            PrimaryIntelligenceRow { ..row }
+            PrimaryIntelligenceRow { statistic, growth, label }
         }
     } else {
-        let row = RegularIntelligenceRowProps::from(&props);
         rsx! {
-            RegularIntelligenceRow { ..row }
+            RegularIntelligenceRow { statistic, growth, label }
         }
     }
 }

@@ -2,12 +2,10 @@ mod hooks;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::shared::system_slot_key::{
-    SystemSlotKey, SystemSlotKeyProps,
-};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::shared::system_slot_key::SystemSlotKey;
 use dioxus::prelude::*;
 use hooks::use_inventory_drag_overlay;
-pub use props::InventoryDragOverlayProps;
+use props::InventoryDragOverlayProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,12 +17,14 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
     let Some(view) = use_inventory_drag_overlay(&props) else {
         return rsx! {};
     };
-    let key = SystemSlotKeyProps::from(&view);
+    let placement = view.placement;
+    let label = view.label;
+    let conflict = false;
     rsx! {
         div {
             class: CLASS,
-            style: view.placement,
-            SystemSlotKey { ..key }
+            style: placement,
+            SystemSlotKey { label, conflict }
         }
     }
 }

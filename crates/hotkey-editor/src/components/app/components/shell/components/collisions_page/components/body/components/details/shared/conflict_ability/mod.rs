@@ -5,9 +5,9 @@ mod style;
 use super::conflict_ability_name::ConflictAbilityName;
 use super::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use hooks::use_conflict_ability;
+use hooks::{ConflictAbilityModel, use_conflict_ability};
 use dioxus::prelude::*;
-pub use props::ConflictAbilityProps;
+use props::ConflictAbilityProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,13 +15,23 @@ use tw_macro::assert_component;
 /// button opens the owning unit through the navigation read from context.
 #[component]
 pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
-    let model = use_conflict_ability(&props);
+    let ConflictAbilityModel {
+        onclick,
+        icon_src,
+        icon_alt,
+        name,
+        ability_id,
+    } = use_conflict_ability(&props);
     rsx! {
         div {
             class: CLASS,
-            ConflictAbilityTrigger { ..model.trigger }
-            ConflictAbilityName { text: model.name }
-            ConflictObjectId { object_id: model.ability_id }
+            ConflictAbilityTrigger {
+                onclick,
+                icon_src,
+                icon_alt,
+            }
+            ConflictAbilityName { text: name }
+            ConflictObjectId { object_id: ability_id }
         }
     }
 }

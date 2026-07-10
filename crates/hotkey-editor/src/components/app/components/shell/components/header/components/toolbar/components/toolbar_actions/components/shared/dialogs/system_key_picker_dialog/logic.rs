@@ -1,9 +1,6 @@
-use super::components::system_key_picker_dialog_panel::SystemKeyPickerDialogPanelProps;
-use super::components::system_key_picker_dialog_panel::components::system_key_picker_dialog_body::SystemKeyPickerDialogBodyProps;
 use super::data::BoardKey;
 use super::hooks::SystemKeyPickerModel;
 use super::state::BoardSection;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use crate::components::app::components::shell::components::shared::tooltip::{
     TooltipAnchor, TooltipPlacement,
 };
@@ -92,14 +89,19 @@ impl From<&ColumnInputs<'_>> for KeyColumn {
     }
 }
 
-/// The system key picker's own shell, shaped from its model: the open value
-/// driving the backdrop, the change handler that writes the open signal, and the
-/// bordered panel (its header and scroll-region board body). Every dialog owns its
-/// shell now — there is no base.
+/// The system key picker's own shell, shaped from its model: the open value driving
+/// the backdrop, the change handler that writes the open signal, the header's title
+/// and close handler, and the raw board values (both laid-out columns plus the pick
+/// and Escape handlers) the bordered panel threads to its header and board body.
+/// Every dialog owns its shell now — there is no base.
 pub(super) struct SystemKeyPickerDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: SystemKeyPickerDialogPanelProps,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) columns: Vec<KeyColumn>,
+    pub(super) on_pick: EventHandler<KeyCode>,
+    pub(super) board_on_close: EventHandler<()>,
 }
 
 impl From<&SystemKeyPickerModel> for SystemKeyPickerDialogShell {
@@ -110,14 +112,17 @@ impl From<&SystemKeyPickerModel> for SystemKeyPickerDialogShell {
         let mut close_signal = model.open;
         let title = model.title.clone();
         let on_close = EventHandler::new(move |()| close_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let board = model.board.clone();
-        let body = SystemKeyPickerDialogBodyProps { board };
-        let panel = SystemKeyPickerDialogPanelProps { header, body };
+        let columns = model.columns.clone();
+        let on_pick = model.on_pick;
+        let board_on_close = model.board_on_close;
         Self {
             open,
             on_open_change,
-            panel,
+            title,
+            on_close,
+            columns,
+            on_pick,
+            board_on_close,
         }
     }
 }
