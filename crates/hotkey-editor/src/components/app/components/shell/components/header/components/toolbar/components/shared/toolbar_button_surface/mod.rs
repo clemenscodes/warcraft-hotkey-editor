@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::ToolbarButtonSurfaceProps;
 pub use state::SurfaceState;
 use tw_macro::assert_component;
-assert_component!(ToolbarButtonSurface);
 
 /// The clickable surface of a toolbar button: the single source of truth for how a
 /// toolbar action button looks. A pure dispatcher — from the resting [`SurfaceState`]
@@ -44,3 +43,5 @@ pub fn ToolbarButtonSurface(props: ToolbarButtonSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(ToolbarButtonSurface);

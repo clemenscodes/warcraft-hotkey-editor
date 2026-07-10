@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::DamageRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DamageRow);
 
 const LABEL_TEXT: &str = "Damage";
 
@@ -23,3 +22,5 @@ pub fn DamageRow(props: DamageRowProps) -> Element {
         }
     }
 }
+
+assert_component!(DamageRow);

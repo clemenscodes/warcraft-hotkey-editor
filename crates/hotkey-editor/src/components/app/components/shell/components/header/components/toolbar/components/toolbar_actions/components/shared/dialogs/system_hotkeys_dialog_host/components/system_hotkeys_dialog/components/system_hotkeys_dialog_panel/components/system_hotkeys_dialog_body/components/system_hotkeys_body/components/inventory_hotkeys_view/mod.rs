@@ -6,7 +6,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InventoryHotkeysView);
 
 /// The inventory hotkey editor: the intro caption above the six-slot grid,
 /// reorderable by drag. It reads the editing section and drag follower from the
@@ -21,3 +20,5 @@ pub fn InventoryHotkeysView() -> Element {
         }
     }
 }
+
+assert_component!(InventoryHotkeysView);

@@ -13,7 +13,6 @@ use components::upload_button::UploadButton;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InlineActions);
 
 /// The inline file-action buttons, shown at laptop width and up. Below that these
 /// same actions collapse into the burger drawer that sits beside this row. Pure
@@ -34,3 +33,5 @@ pub fn InlineActions() -> Element {
         }
     }
 }
+
+assert_component!(InlineActions);

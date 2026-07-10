@@ -3,12 +3,11 @@ mod props;
 use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{KeyPicker, KeyPickerProps};
+use tw_macro::assert_component;
 
 pub use props::TileOverrideKeyPickerProps;
 
 /// Mounts the hotkey picker only while a hotkey field is being edited.
-use tw_macro::assert_component;
-assert_component!(TileOverrideKeyPicker);
 #[component]
 pub fn TileOverrideKeyPicker(props: TileOverrideKeyPickerProps) -> Element {
     if !props.visible {
@@ -18,3 +17,5 @@ pub fn TileOverrideKeyPicker(props: TileOverrideKeyPickerProps) -> Element {
         KeyPicker { ..KeyPickerProps::from(&props) }
     }
 }
+
+assert_component!(TileOverrideKeyPicker);

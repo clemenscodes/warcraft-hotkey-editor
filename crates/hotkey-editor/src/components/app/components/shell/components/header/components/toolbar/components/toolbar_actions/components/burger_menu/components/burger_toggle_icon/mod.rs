@@ -4,7 +4,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_B
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerToggleIcon);
 
 #[component]
 pub fn BurgerToggleIcon() -> Element {
@@ -16,3 +15,5 @@ pub fn BurgerToggleIcon() -> Element {
         }
     }
 }
+
+assert_component!(BurgerToggleIcon);

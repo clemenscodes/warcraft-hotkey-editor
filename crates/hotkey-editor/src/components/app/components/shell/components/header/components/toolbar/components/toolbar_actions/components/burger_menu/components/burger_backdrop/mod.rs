@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BurgerBackdropProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerBackdrop);
 
 /// The dimmed click-catcher behind the drawer; clicking it closes the menu.
 #[component]
@@ -21,3 +20,5 @@ pub fn BurgerBackdrop(props: BurgerBackdropProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerBackdrop);

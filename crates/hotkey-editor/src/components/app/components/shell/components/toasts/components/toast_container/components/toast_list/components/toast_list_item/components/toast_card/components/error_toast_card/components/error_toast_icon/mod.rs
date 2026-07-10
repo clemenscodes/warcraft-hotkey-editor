@@ -5,7 +5,6 @@ use data::ICON;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ErrorToastIcon);
 
 /// The circular cross glyph at the leading edge of a error toast.
 #[component]
@@ -18,3 +17,5 @@ pub fn ErrorToastIcon() -> Element {
         }
     }
 }
+
+assert_component!(ErrorToastIcon);

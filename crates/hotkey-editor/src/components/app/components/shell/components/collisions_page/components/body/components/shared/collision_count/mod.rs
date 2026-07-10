@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::CollisionCountProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionCount);
 
 /// The collision-count line on a collision card.
 #[component]
@@ -24,3 +23,5 @@ pub fn CollisionCount(props: CollisionCountProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionCount);

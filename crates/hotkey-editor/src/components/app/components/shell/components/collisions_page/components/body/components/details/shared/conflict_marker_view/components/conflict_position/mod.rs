@@ -7,7 +7,6 @@ use components::top_conflict_position::{TopConflictPosition, TopConflictPosition
 use dioxus::prelude::*;
 pub use props::ConflictPositionProps;
 use tw_macro::assert_component;
-assert_component!(ConflictPosition);
 
 /// The colliding command-card cell shown between (or above) a conflict's abilities. A
 /// dispatcher: from whether it stacks over a multi-way row it renders
@@ -29,3 +28,5 @@ pub fn ConflictPosition(props: ConflictPositionProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictPosition);

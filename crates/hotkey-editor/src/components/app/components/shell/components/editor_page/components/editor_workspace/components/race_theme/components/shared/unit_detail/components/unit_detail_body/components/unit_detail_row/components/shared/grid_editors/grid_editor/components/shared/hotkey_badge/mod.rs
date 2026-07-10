@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::HotkeyBadgeProps;
 pub use state::HotkeyBadgeState;
 use tw_macro::assert_component;
-assert_component!(HotkeyBadge);
 
 /// The hotkey-letter badge. A pure dispatcher: the domain-derived tone — an ordinary
 /// binding, a passive ability, or a conflicting one — selects which per-tone badge
@@ -38,3 +37,5 @@ pub fn HotkeyBadge(props: HotkeyBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyBadge);

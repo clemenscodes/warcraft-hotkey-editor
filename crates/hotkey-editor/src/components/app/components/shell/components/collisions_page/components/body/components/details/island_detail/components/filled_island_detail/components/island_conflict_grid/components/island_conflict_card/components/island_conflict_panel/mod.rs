@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::IslandConflictPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictPanel);
 
 /// The card surface: the affected unit heading its two clashing abilities. It owns its
 /// own bordered, tinted, centered panel element directly.
@@ -26,3 +25,5 @@ pub fn IslandConflictPanel(props: IslandConflictPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandConflictPanel);

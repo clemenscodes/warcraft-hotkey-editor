@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MutedStatGainProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MutedStatGain);
 
 /// The muted (zero-figure) gain look: faint, tabular text. Rendered by the
 /// [`StatGain`](super::super::StatGain) dispatcher when the figure reports itself
@@ -17,3 +16,5 @@ pub fn MutedStatGain(props: MutedStatGainProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(MutedStatGain);

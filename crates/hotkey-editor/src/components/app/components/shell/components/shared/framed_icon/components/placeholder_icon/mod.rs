@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::PlaceholderIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PlaceholderIcon);
 
 /// The empty-placeholder look of a framed icon: the hairline-radius blue frame filled
 /// with the panel surface. Presentational — the dispatcher builds its props and renders
@@ -30,3 +29,5 @@ pub fn PlaceholderIcon(props: PlaceholderIconProps) -> Element {
         }
     }
 }
+
+assert_component!(PlaceholderIcon);

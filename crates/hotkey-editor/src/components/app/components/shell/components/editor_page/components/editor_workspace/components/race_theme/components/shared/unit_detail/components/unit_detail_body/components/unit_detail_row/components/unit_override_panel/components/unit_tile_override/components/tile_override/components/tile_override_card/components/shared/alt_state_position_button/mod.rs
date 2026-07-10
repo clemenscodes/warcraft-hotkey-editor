@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::AltStatePositionButtonProps;
 
-assert_component!(AltStatePositionButton);
-
 /// The crosshair button that opens the command-card position picker for an off-state
 /// or upgraded-form button.
 #[component]
@@ -81,3 +79,5 @@ pub fn AltStatePositionButton(props: AltStatePositionButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(AltStatePositionButton);

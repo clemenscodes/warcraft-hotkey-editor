@@ -12,7 +12,6 @@ use dioxus::prelude::*;
 use hooks::use_toast_auto_dismiss;
 pub use props::ToastCardProps;
 use tw_macro::assert_component;
-assert_component!(ToastCard);
 
 /// A single toast, dispatched by its type. The surface tint, icon, and title all
 /// differ per kind, so each kind is its own card component. This dispatcher carries
@@ -50,3 +49,5 @@ pub fn ToastCard(props: ToastCardProps) -> Element {
         }
     }
 }
+
+assert_component!(ToastCard);

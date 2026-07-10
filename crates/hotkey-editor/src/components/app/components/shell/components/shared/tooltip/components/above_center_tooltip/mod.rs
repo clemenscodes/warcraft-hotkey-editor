@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::AboveCenterTooltipProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AboveCenterTooltip);
 
 /// The tooltip bubble placed above its trigger and anchored center. It owns
 /// its own bubble and the positioning utilities for this placement and anchor across
@@ -20,3 +19,5 @@ pub fn AboveCenterTooltip(props: AboveCenterTooltipProps) -> Element {
         }
     }
 }
+
+assert_component!(AboveCenterTooltip);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::MoveListProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveList);
 
 /// The active category's move list: the grid of move cards for the selected section. It
 /// owns the auto-fill grid directly. Renders nothing when the plan has no moves (only
@@ -27,3 +26,5 @@ pub fn MoveList(props: MoveListProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveList);

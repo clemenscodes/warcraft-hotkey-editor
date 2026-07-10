@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 use hooks::{SystemHotkeysDialogBodyModel, use_system_hotkeys_dialog_body};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysDialogBody);
 
 /// The system-hotkeys dialog's scrolling content region between the header and the
 /// panel edge: the category breadcrumbs above the active category's editor, with the
@@ -30,3 +29,5 @@ pub fn SystemHotkeysDialogBody() -> Element {
         }
     }
 }
+
+assert_component!(SystemHotkeysDialogBody);

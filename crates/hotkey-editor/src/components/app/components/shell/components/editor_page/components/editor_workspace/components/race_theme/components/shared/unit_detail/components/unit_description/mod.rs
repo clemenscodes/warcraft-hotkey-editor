@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::UnitDescriptionProps;
 
-assert_component!(UnitDescription);
-
 /// The unit's flavor text under the detail header.
 #[component]
 pub fn UnitDescription(props: UnitDescriptionProps) -> Element {
@@ -18,3 +16,5 @@ pub fn UnitDescription(props: UnitDescriptionProps) -> Element {
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(UnitDescription);

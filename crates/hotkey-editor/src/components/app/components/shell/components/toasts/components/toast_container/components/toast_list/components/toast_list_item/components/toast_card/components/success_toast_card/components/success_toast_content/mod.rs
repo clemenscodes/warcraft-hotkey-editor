@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::SuccessToastContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SuccessToastContent);
 
 /// The text column of a success toast: its success title above the optional description.
 #[component]
@@ -23,3 +22,5 @@ pub fn SuccessToastContent(props: SuccessToastContentProps) -> Element {
         }
     }
 }
+
+assert_component!(SuccessToastContent);

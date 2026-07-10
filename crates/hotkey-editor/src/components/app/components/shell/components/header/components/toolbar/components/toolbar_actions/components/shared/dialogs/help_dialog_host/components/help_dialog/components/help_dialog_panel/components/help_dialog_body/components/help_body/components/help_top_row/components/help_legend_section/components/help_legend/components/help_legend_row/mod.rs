@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::HelpLegendRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpLegendRow);
 
 /// One legend entry: a framed glyph beside its label and description.
 #[component]
@@ -27,3 +26,5 @@ pub fn HelpLegendRow(props: HelpLegendRowProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpLegendRow);

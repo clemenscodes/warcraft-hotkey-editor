@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::TileIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TileIcon);
 
 /// The ability icon, filling the tile. Rendered only when the occupant has an
 /// icon; an iconless occupant falls back to the sibling `TileLabel`.
@@ -29,3 +28,5 @@ pub fn TileIcon(props: TileIconProps) -> Element {
         }
     }
 }
+
+assert_component!(TileIcon);

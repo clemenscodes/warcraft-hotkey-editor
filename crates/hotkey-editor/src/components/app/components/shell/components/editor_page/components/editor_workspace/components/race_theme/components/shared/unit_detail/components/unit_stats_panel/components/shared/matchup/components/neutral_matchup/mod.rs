@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::NeutralMatchupProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NeutralMatchup);
 
 /// The neutral matchup cell: no tint. The value reads its colour from the `--matchup-color` this cell publishes.
 #[component]
@@ -24,3 +23,5 @@ pub fn NeutralMatchup(props: NeutralMatchupProps) -> Element {
         }
     }
 }
+
+assert_component!(NeutralMatchup);

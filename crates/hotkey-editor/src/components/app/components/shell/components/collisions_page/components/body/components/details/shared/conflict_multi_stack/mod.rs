@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ConflictMultiStackProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictMultiStack);
 
 /// The stacked layout for a shared-key clash carried by three or more abilities: the
 /// key badge over a wrapping row of ability icons. It owns its own abilities row.
@@ -32,3 +31,5 @@ pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictMultiStack);

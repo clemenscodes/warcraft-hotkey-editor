@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::FightNamePlateProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightNamePlate);
 #[component]
 pub fn FightNamePlate(props: FightNamePlateProps) -> Element {
     let name = props.name;
@@ -19,3 +18,5 @@ pub fn FightNamePlate(props: FightNamePlateProps) -> Element {
         }
     }
 }
+
+assert_component!(FightNamePlate);

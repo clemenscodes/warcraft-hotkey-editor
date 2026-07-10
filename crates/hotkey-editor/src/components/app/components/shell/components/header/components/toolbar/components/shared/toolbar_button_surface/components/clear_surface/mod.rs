@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::ClearSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ClearSurface);
 
 /// The clear resting look of a toolbar button: a gold-bordered surface with a soft
 /// resting glow, the affirmative "all clear" look. Presentational — the dispatcher
@@ -28,3 +27,5 @@ pub fn ClearSurface(props: ClearSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(ClearSurface);

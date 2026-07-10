@@ -8,13 +8,12 @@ use components::unit_category_heading::UnitCategoryHeading;
 use dioxus::prelude::*;
 use hooks::use_unit_category_section;
 pub use props::UnitCategorySectionProps;
+use tw_macro::assert_component;
 
 /// One category of the unit list: a collapsible heading followed by the matching
 /// unit cards. The heading, collapsed state, and cards are all built by the
 /// composed hook (memoized on the catalog inputs); this component is a thin
 /// renderer with no own class.
-use tw_macro::assert_component;
-assert_component!(UnitCategorySection);
 #[component]
 pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
     let model = use_unit_category_section(&props);
@@ -27,3 +26,5 @@ pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCategorySection);

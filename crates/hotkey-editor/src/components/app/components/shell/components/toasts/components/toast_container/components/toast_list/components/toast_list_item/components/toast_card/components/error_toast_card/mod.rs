@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::ErrorToastCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ErrorToastCard);
 
 /// The error toast card: its tinted surface owning the alertdialog root, the
 /// error icon and title, the description, and the close control. Presentational
@@ -30,3 +29,5 @@ pub fn ErrorToastCard(props: ErrorToastCardProps) -> Element {
         }
     }
 }
+
+assert_component!(ErrorToastCard);

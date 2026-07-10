@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::SecondaryButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SecondaryButton);
 
 /// The secondary (dismissive) weight of a WC3 action button. Presentational — the
 /// dispatcher builds its props and renders it when the variant is secondary.
@@ -22,3 +21,5 @@ pub fn SecondaryButton(props: SecondaryButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(SecondaryButton);

@@ -11,7 +11,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::SystemKeyPickerDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemKeyPickerDialogPanel);
 
 /// The system key picker's bordered box: it wraps the library `DialogContent` (focus
 /// trap and dialog semantics) and styles a real `div` of its own with the box `CLASS`,
@@ -31,3 +30,5 @@ pub fn SystemKeyPickerDialogPanel(props: SystemKeyPickerDialogPanelProps) -> Ele
         }
     }
 }
+
+assert_component!(SystemKeyPickerDialogPanel);

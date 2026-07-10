@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::PrimaryIntelligenceRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PrimaryIntelligenceRow);
 
 /// The hero's intelligence row when intelligence is the hero's primary attribute: it wears the
 /// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn PrimaryIntelligenceRow(props: PrimaryIntelligenceRowProps) -> Element {
         }
     }
 }
+
+assert_component!(PrimaryIntelligenceRow);

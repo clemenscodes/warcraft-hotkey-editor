@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::HelpInlineIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpInlineIcon);
 
 /// A toolbar glyph dropped inline into a workflow sentence. A leaf: the step
 /// passes which icon to draw.
@@ -19,3 +18,5 @@ pub fn HelpInlineIcon(props: HelpInlineIconProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpInlineIcon);

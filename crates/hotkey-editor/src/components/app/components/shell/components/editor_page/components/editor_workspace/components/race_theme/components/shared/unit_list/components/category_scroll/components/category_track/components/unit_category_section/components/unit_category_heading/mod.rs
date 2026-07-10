@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UnitCategoryHeadingProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitCategoryHeading);
 
 /// The clickable heading for a unit category in the sidebar list.
 #[component]
@@ -24,3 +23,5 @@ pub fn UnitCategoryHeading(props: UnitCategoryHeadingProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCategoryHeading);

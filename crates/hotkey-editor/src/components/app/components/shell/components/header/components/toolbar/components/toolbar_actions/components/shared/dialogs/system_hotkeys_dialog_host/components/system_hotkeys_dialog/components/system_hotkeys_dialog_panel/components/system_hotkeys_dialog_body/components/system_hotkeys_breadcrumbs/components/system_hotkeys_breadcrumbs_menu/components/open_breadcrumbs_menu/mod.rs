@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::OpenBreadcrumbsMenuProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(OpenBreadcrumbsMenu);
 
 /// The open look of the category menu: the small-viewport floating popover. Rendered
 /// by the dispatcher while the dropdown is open; owns its listbox root and stacks the
@@ -22,3 +21,5 @@ pub fn OpenBreadcrumbsMenu(props: OpenBreadcrumbsMenuProps) -> Element {
         }
     }
 }
+
+assert_component!(OpenBreadcrumbsMenu);

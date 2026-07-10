@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::InfoToastCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InfoToastCard);
 
 /// The info toast card: its tinted surface owning the alertdialog root, the
 /// info icon and title, the description, and the close control. Presentational
@@ -30,3 +29,5 @@ pub fn InfoToastCard(props: InfoToastCardProps) -> Element {
         }
     }
 }
+
+assert_component!(InfoToastCard);

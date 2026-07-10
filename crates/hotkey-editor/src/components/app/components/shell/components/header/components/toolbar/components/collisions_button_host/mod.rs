@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 use hooks::use_collisions_button;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionsButtonHost);
 
 /// Connected wrapper and container: reads the live document and grid layout, asks the
 /// domain to count collisions, and hands the presentational button that summary plus
@@ -24,3 +23,5 @@ pub fn CollisionsButtonHost() -> Element {
         }
     }
 }
+
+assert_component!(CollisionsButtonHost);

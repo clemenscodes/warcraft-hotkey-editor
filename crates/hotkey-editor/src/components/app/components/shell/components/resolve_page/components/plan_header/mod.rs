@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::PlanHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PlanHeader);
 
 /// The plan header row: cascade summary on the left, Apply button on the right.
 #[component]
@@ -22,3 +21,5 @@ pub fn PlanHeader(props: PlanHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(PlanHeader);

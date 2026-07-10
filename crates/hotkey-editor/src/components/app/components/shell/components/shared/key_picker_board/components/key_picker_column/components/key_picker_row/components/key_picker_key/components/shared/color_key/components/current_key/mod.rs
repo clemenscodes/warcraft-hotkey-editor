@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::CurrentKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CurrentKey);
 
 /// The look for the key currently bound here: a filled gold panel with a steady glow. It
 /// owns its own button and shares only the shaped attributes and the conflict tooltip
@@ -30,3 +29,5 @@ pub fn CurrentKey(props: CurrentKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(CurrentKey);

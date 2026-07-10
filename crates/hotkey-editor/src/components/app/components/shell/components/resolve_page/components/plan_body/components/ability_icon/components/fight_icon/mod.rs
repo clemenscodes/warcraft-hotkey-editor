@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::FightIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightIcon);
 
 /// The ability's square icon inside its carrier button: it owns its slot and lifts
 /// to a gold glow when the enabled button `.group` is hovered. The shared
@@ -33,3 +32,5 @@ pub fn FightIcon(props: FightIconProps) -> Element {
         }
     }
 }
+
+assert_component!(FightIcon);

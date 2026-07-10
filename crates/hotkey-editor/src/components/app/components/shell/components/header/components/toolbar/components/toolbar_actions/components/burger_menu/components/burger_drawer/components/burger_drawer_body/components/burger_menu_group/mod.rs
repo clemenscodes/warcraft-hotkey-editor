@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::BurgerMenuGroupProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerMenuGroup);
 
 /// The scrolling list of file actions inside the drawer.
 #[component]
@@ -20,3 +19,5 @@ pub fn BurgerMenuGroup(props: BurgerMenuGroupProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerMenuGroup);

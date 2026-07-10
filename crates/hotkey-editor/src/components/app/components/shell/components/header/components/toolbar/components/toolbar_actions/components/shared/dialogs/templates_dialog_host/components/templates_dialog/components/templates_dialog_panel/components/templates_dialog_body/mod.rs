@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::TemplatesDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TemplatesDialogBody);
 
 /// The templates dialog's scrolling content region between the header and the panel
 /// edge, holding the gallery of bundled template cards.
@@ -21,3 +20,5 @@ pub fn TemplatesDialogBody(props: TemplatesDialogBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplatesDialogBody);

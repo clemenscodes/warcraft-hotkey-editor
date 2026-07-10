@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::FooterLinkProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FooterLink);
 
 #[component]
 pub fn FooterLink(props: FooterLinkProps) -> Element {
@@ -25,3 +24,5 @@ pub fn FooterLink(props: FooterLinkProps) -> Element {
         }
     }
 }
+
+assert_component!(FooterLink);

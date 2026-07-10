@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::FilledIslandDetailProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FilledIslandDetail);
 
 /// The populated island detail pane: the island's mini-grid coordinate header over its
 /// per-unit conflict cards.
@@ -24,3 +23,5 @@ pub fn FilledIslandDetail(props: FilledIslandDetailProps) -> Element {
         }
     }
 }
+
+assert_component!(FilledIslandDetail);

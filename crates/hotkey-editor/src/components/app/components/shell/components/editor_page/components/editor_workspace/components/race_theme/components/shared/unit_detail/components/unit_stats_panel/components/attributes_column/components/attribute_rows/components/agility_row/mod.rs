@@ -6,7 +6,6 @@ use components::regular_agility_row::{RegularAgilityRow, RegularAgilityRowProps}
 use dioxus::prelude::*;
 pub use props::AgilityRowProps;
 use tw_macro::assert_component;
-assert_component!(AgilityRow);
 
 /// The hero's agility attribute row. A dispatcher: when agility is the hero's primary
 /// attribute it renders the glowing primary row, otherwise the resting regular row — each
@@ -25,3 +24,5 @@ pub fn AgilityRow(props: AgilityRowProps) -> Element {
         }
     }
 }
+
+assert_component!(AgilityRow);

@@ -6,13 +6,12 @@ use crate::services::collision_selection::context::use_collision_selection;
 use dioxus::prelude::*;
 use logic::{SelectedCollisionUnit, cards};
 pub use props::UnitCardsSidebarProps;
+use tw_macro::assert_component;
 
 /// The unit-collision sidebar: one card per clashing unit, handed to the collision
 /// sidebar. Generic over the conflict shape, so the hotkey and unit-position kinds
 /// render this one sidebar. The selected unit is read from collision-selection context
 /// (the conflict kind names which field), mirroring `IslandSidebar`.
-use tw_macro::assert_component;
-assert_component!(UnitCardsSidebar);
 #[component]
 pub fn UnitCardsSidebar<Conflict: Clone + PartialEq + SelectedCollisionUnit + 'static>(
     props: UnitCardsSidebarProps<Conflict>,
@@ -25,3 +24,5 @@ pub fn UnitCardsSidebar<Conflict: Clone + PartialEq + SelectedCollisionUnit + 's
         CollisionSidebar { ..sidebar }
     }
 }
+
+assert_component!(UnitCardsSidebar);

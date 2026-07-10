@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::EffectiveHitPointsRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EffectiveHitPointsRow);
 
 const LABEL_TEXT: &str = "Effective Hit Points";
 
@@ -23,3 +22,5 @@ pub fn EffectiveHitPointsRow(props: EffectiveHitPointsRowProps) -> Element {
         }
     }
 }
+
+assert_component!(EffectiveHitPointsRow);

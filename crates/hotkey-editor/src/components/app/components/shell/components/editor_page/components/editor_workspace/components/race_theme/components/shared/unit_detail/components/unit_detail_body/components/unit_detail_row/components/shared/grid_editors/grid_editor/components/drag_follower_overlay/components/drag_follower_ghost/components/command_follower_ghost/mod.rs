@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::CommandFollowerGhostProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CommandFollowerGhost);
 
 /// The drag-follower ghost for a tile lifted from a built-in command menu: the blue
 /// command surface, the dragged icon, and its hotkey badge, pinned to the cursor.
@@ -25,3 +24,5 @@ pub fn CommandFollowerGhost(props: CommandFollowerGhostProps) -> Element {
         }
     }
 }
+
+assert_component!(CommandFollowerGhost);

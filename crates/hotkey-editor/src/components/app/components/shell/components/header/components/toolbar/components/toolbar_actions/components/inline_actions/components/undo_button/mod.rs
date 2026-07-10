@@ -1,13 +1,11 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
 use hooks::use_undo_button;
 use style::CLASS;
-
-assert_component!(UndoButton);
+use tw_macro::assert_component;
 
 /// Toolbar undo control. Reads the global [`UndoHistory`](crate::services::undo::UndoHistory)
 /// from context and disables itself when the undo stack is empty. Its slot is hidden below
@@ -22,3 +20,5 @@ pub fn UndoButton() -> Element {
         }
     }
 }
+
+assert_component!(UndoButton);

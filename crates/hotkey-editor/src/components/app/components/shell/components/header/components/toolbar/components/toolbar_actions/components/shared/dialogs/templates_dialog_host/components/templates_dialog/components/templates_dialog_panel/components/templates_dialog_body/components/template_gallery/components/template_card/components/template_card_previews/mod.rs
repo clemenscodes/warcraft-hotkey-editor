@@ -8,7 +8,6 @@ pub use props::TemplateCardPreviewsProps;
 use props::{command_preview, research_preview};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TemplateCardPreviews);
 
 /// The row of two layout previews under a card: the command card and the
 /// research menu, each a read-only `PreviewHeadedGrid` drawing the template.
@@ -24,3 +23,5 @@ pub fn TemplateCardPreviews(props: TemplateCardPreviewsProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplateCardPreviews);

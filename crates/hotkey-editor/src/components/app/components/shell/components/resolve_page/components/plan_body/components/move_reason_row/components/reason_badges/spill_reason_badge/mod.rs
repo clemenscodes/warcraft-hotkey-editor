@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::SpillReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SpillReasonBadge);
 
 /// The "Spill" reason badge: publishes the Spill accent colour and composes the base
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
@@ -23,3 +22,5 @@ pub fn SpillReasonBadge(props: SpillReasonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(SpillReasonBadge);

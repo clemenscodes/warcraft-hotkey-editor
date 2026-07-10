@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::PreviewHeadedGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PreviewHeadedGrid);
 
 /// A captioned template preview: the shared `GridHeading` above the read-only
 /// `PreviewGrid`. Owns `.preview-headed-grid`, which stacks the two and establishes
@@ -24,3 +23,5 @@ pub fn PreviewHeadedGrid(props: PreviewHeadedGridProps) -> Element {
         }
     }
 }
+
+assert_component!(PreviewHeadedGrid);

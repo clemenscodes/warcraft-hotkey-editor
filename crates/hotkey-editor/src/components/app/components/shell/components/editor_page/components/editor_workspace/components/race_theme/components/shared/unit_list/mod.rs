@@ -15,7 +15,6 @@ use hooks::use_unit_list;
 use style::CLASS;
 use tw_macro::assert_component;
 use warcraft_api::UnitKind;
-assert_component!(UnitList);
 
 /// The stable per-category key string used to identify a category's row in the
 /// mobile tabs and the category sections (a Dioxus list `key`).
@@ -46,3 +45,5 @@ pub fn UnitList() -> Element {
         }
     }
 }
+
+assert_component!(UnitList);

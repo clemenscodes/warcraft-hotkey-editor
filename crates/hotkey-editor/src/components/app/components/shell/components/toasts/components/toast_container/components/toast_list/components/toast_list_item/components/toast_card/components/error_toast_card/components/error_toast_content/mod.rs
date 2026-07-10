@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ErrorToastContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ErrorToastContent);
 
 /// The text column of a error toast: its error title above the optional description.
 #[component]
@@ -23,3 +22,5 @@ pub fn ErrorToastContent(props: ErrorToastContentProps) -> Element {
         }
     }
 }
+
+assert_component!(ErrorToastContent);

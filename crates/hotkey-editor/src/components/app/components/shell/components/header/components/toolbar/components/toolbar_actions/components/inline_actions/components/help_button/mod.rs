@@ -1,14 +1,12 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::HelpDialogHost;
 use dioxus::prelude::*;
 use hooks::use_help_button;
 use style::CLASS;
-
-assert_component!(HelpButton);
+use tw_macro::assert_component;
 
 /// Toolbar button that opens the onboarding help dialog, carrying the dialog it opens.
 /// The button flips the shared open signal and the co-located host renders the dialog
@@ -24,3 +22,5 @@ pub fn HelpButton() -> Element {
         HelpDialogHost {}
     }
 }
+
+assert_component!(HelpButton);

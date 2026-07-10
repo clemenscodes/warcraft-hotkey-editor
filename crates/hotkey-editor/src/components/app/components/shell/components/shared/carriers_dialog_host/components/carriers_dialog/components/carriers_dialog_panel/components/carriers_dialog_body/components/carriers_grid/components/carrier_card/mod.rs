@@ -12,7 +12,6 @@ use logic::CarrierCardModel;
 pub use props::CarrierCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CarrierCard);
 
 /// One unit that carries the ability; clicking deep-links into the editor focused on
 /// that unit through the navigation read from context.
@@ -35,3 +34,5 @@ pub fn CarrierCard(props: CarrierCardProps) -> Element {
         }
     }
 }
+
+assert_component!(CarrierCard);

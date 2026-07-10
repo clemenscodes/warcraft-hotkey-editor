@@ -17,8 +17,6 @@ pub(crate) use logic::{
 };
 pub use logic::{InventoryDragFollower, InventoryDragSource};
 
-assert_component!(InventoryGrid);
-
 /// The two-by-three inventory slot grid. Each filled slot is an editable,
 /// draggable `InventoryFilledSlot`; the grid seeds the gold-frame CSS variable and holds
 /// the drag/drop signals its cells share.
@@ -35,3 +33,5 @@ pub fn InventoryGrid() -> Element {
         }
     }
 }
+
+assert_component!(InventoryGrid);

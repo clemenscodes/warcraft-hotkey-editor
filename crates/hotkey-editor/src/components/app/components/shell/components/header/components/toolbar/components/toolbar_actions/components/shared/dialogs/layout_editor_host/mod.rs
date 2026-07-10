@@ -8,8 +8,6 @@ use hooks::use_layout_editor_host;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(LayoutEditorHost);
-
 /// Connects the global hotkey-layout editor to app state and places it in the
 /// always-mounted toolbar, so it opens from either the centered grid-layout button
 /// (laptop and up) or the burger drawer. The dialog self-gates on the shared open
@@ -24,3 +22,5 @@ pub fn LayoutEditorHost() -> Element {
         }
     }
 }
+
+assert_component!(LayoutEditorHost);

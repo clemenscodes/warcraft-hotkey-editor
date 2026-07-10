@@ -14,8 +14,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideCardProps;
 
-assert_component!(TileOverrideCard);
-
 /// The gold-edged card holding the override panel's header and ability sections.
 #[component]
 pub fn TileOverrideCard(props: TileOverrideCardProps) -> Element {
@@ -29,3 +27,5 @@ pub fn TileOverrideCard(props: TileOverrideCardProps) -> Element {
         }
     }
 }
+
+assert_component!(TileOverrideCard);

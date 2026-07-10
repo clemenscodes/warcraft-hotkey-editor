@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::SelectedUnitCardIdProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SelectedUnitCardId);
 
 /// The selected look of a unit card's database id: it takes the card's race accent at
 /// reduced opacity, read from the theme container's `--race-accent`. Presentational —
@@ -19,3 +18,5 @@ pub fn SelectedUnitCardId(props: SelectedUnitCardIdProps) -> Element {
         }
     }
 }
+
+assert_component!(SelectedUnitCardId);

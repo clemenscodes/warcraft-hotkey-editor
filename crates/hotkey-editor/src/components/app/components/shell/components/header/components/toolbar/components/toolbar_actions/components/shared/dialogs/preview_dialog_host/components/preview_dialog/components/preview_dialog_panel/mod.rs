@@ -9,7 +9,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::PreviewDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PreviewDialogPanel);
 
 /// The preview dialog's bordered box: it wraps the library `DialogContent` (focus trap
 /// and dialog semantics) and styles a real `div` of its own with the box `CLASS`, so no
@@ -29,3 +28,5 @@ pub fn PreviewDialogPanel(props: PreviewDialogPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(PreviewDialogPanel);

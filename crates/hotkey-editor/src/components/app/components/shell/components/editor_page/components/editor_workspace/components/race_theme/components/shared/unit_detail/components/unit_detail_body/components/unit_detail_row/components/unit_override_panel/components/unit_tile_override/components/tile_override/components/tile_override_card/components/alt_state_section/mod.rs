@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::AltStateSectionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AltStateSection);
 
 /// The off-state block of a tile override: its header (label and controls) over any
 /// description lines. It owns its own block directly and delegates the header row to its
@@ -31,3 +30,5 @@ pub fn AltStateSection(props: AltStateSectionProps) -> Element {
         }
     }
 }
+
+assert_component!(AltStateSection);

@@ -9,7 +9,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::TemplatesDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TemplatesDialogPanel);
 
 /// The templates dialog's bordered box: it wraps the library `DialogContent` (focus trap
 /// and dialog semantics) and styles a real `div` of its own with the box `CLASS`, so no
@@ -29,3 +28,5 @@ pub fn TemplatesDialogPanel(props: TemplatesDialogPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplatesDialogPanel);

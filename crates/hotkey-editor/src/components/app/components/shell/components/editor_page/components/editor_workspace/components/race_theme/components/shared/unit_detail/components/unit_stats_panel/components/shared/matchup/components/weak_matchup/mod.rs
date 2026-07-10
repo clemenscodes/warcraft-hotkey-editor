@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::WeakMatchupProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(WeakMatchup);
 
 /// The weak matchup cell: a danger tint. The value reads its colour from the `--matchup-color` this cell publishes.
 #[component]
@@ -24,3 +23,5 @@ pub fn WeakMatchup(props: WeakMatchupProps) -> Element {
         }
     }
 }
+
+assert_component!(WeakMatchup);

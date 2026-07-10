@@ -15,8 +15,6 @@ pub use cell::{KeyCell, KeyCellState, KeyColumn, KeyWidth};
 pub(crate) use key_event::BrowserKeyEvent;
 pub use props::KeyPickerBoardProps;
 
-assert_component!(KeyPickerBoard);
-
 /// An on-screen keyboard that assigns a key when one is clicked or typed. It is
 /// dialog-agnostic and side-effect-free: a focusable board of key rows with one
 /// `onkeydown` on its own element — no document listeners, no focus effect, no dialog,
@@ -42,3 +40,5 @@ pub fn KeyPickerBoard(props: KeyPickerBoardProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPickerBoard);

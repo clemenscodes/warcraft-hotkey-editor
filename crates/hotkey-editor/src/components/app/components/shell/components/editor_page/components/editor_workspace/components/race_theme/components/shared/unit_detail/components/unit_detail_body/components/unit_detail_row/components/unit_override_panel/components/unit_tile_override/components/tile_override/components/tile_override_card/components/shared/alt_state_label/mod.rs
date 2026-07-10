@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::AltStateLabelProps;
 
-assert_component!(AltStateLabel);
-
 /// The caption naming an off-state or upgraded form; renders nothing when the form
 /// has no distinct name.
 #[component]
@@ -21,3 +19,5 @@ pub fn AltStateLabel(props: AltStateLabelProps) -> Element {
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(AltStateLabel);

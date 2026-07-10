@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::DamagePerSecondRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DamagePerSecondRow);
 
 const LABEL_TEXT: &str = "Damage per Second";
 
@@ -26,3 +25,5 @@ pub fn DamagePerSecondRow(props: DamagePerSecondRowProps) -> Element {
         }
     }
 }
+
+assert_component!(DamagePerSecondRow);

@@ -7,11 +7,10 @@ use components::tile_override::{TileOverride, TileOverrideProps};
 use components::tile_override_empty::{TileOverrideEmpty, TileOverrideEmptyProps};
 use dioxus::prelude::*;
 pub use props::UnitTileOverrideProps;
+use tw_macro::assert_component;
 
 /// The override slot: the override card for the selected tile, or the empty prompt
 /// when nothing is selected. A pure dispatcher with no class of its own.
-use tw_macro::assert_component;
-assert_component!(UnitTileOverride);
 #[component]
 pub fn UnitTileOverride(props: UnitTileOverrideProps) -> Element {
     if props.detail.is_none() {
@@ -27,3 +26,5 @@ pub fn UnitTileOverride(props: UnitTileOverrideProps) -> Element {
         TileOverride { ..tile }
     }
 }
+
+assert_component!(UnitTileOverride);

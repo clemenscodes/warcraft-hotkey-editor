@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::EmptyStateProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EmptyState);
 
 /// The centered upload prompt for a collision kind with no file loaded. It centers its
 /// prompt message in the available space.
@@ -20,3 +19,5 @@ pub fn EmptyState(props: EmptyStateProps) -> Element {
         }
     }
 }
+
+assert_component!(EmptyState);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::CollisionCardMetaProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionCardMeta);
 
 /// The text column of a collision card: the primary meta line above the collision count.
 #[component]
@@ -23,3 +22,5 @@ pub fn CollisionCardMeta(props: CollisionCardMetaProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionCardMeta);

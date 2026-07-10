@@ -8,8 +8,6 @@ pub use props::CarriersGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(CarriersGrid);
-
 #[component]
 pub fn CarriersGrid(props: CarriersGridProps) -> Element {
     let cards = props.cards;
@@ -22,3 +20,5 @@ pub fn CarriersGrid(props: CarriersGridProps) -> Element {
         }
     }
 }
+
+assert_component!(CarriersGrid);

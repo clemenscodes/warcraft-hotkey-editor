@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::UnitOverridePanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitOverridePanel);
 
 /// The override panel column: the "Hotkey override" heading above the override card.
 /// Its own classed `aside`, sticky at the bottom on phones.
@@ -26,3 +25,5 @@ pub fn UnitOverridePanel(props: UnitOverridePanelProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitOverridePanel);

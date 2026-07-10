@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ManaRegenRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ManaRegenRow);
 
 const LABEL_TEXT: &str = "Regeneration";
 
@@ -25,3 +24,5 @@ pub fn ManaRegenRow(props: ManaRegenRowProps) -> Element {
         }
     }
 }
+
+assert_component!(ManaRegenRow);

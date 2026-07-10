@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ConflictAbilityTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictAbilityTrigger);
 
 /// The transparent icon button wrapping a conflict ability's icon: the click target
 /// that deep-links to the carrying unit. Its `.conflict-ability-trigger` identity class
@@ -25,3 +24,5 @@ pub fn ConflictAbilityTrigger(props: ConflictAbilityTriggerProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictAbilityTrigger);

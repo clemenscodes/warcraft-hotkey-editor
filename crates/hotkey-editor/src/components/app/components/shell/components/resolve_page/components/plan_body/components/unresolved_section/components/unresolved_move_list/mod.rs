@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UnresolvedMoveListProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnresolvedMoveList);
 
 /// The unresolved section's auto-fill grid: one stuck-ability card per unresolved row.
 #[component]
@@ -22,3 +21,5 @@ pub fn UnresolvedMoveList(props: UnresolvedMoveListProps) -> Element {
         }
     }
 }
+
+assert_component!(UnresolvedMoveList);

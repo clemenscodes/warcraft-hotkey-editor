@@ -4,7 +4,6 @@ use super::super::data::EMPTY_PROMPT;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EmptyIslandDetail);
 
 /// The empty island detail pane: the base pane surface, centered and muted, showing the
 /// prompt to select a collision.
@@ -17,3 +16,5 @@ pub fn EmptyIslandDetail() -> Element {
         }
     }
 }
+
+assert_component!(EmptyIslandDetail);

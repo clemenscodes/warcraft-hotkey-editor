@@ -9,8 +9,6 @@ use logic::{CatalogVisibilitySignals, CatalogVisibilityToggleModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(CatalogVisibilityToggle);
-
 /// The No-abilities / All-variants toggle that widens which units the list shows. It
 /// reads and flips the two visibility signals from editor context, so it needs no
 /// props: each button is built from the context signals directly.
@@ -35,3 +33,5 @@ pub fn CatalogVisibilityToggle() -> Element {
         }
     }
 }
+
+assert_component!(CatalogVisibilityToggle);

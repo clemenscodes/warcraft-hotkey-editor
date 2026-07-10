@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::FooterCreditProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FooterCredit);
 
 #[component]
 pub fn FooterCredit(props: FooterCreditProps) -> Element {
@@ -22,3 +21,5 @@ pub fn FooterCredit(props: FooterCreditProps) -> Element {
         }
     }
 }
+
+assert_component!(FooterCredit);

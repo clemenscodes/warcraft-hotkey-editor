@@ -10,7 +10,6 @@ use logic::DefenseFigures;
 pub use props::DefenseColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DefenseColumn);
 
 /// The defense column: the defense-type icon beside its stat rows and the defender's
 /// matchup grid, laid into the `defense` grid area. Always present; every unit has
@@ -38,3 +37,5 @@ pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(DefenseColumn);

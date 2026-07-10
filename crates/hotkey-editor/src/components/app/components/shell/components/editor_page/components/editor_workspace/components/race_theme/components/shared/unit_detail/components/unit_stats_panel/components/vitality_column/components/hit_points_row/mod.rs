@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::HitPointsRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HitPointsRow);
 
 const LABEL_TEXT: &str = "Hit Points";
 
@@ -26,3 +25,5 @@ pub fn HitPointsRow(props: HitPointsRowProps) -> Element {
         }
     }
 }
+
+assert_component!(HitPointsRow);

@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 use logic::KeyPickerKeyPresentation;
 pub use props::KeyPickerKeyProps;
 use tw_macro::assert_component;
-assert_component!(KeyPickerKey);
 
 /// A single key on the picker board: an on-screen keyboard button that assigns its key
 /// when clicked. It carries no look of its own — it is the dispatcher that derives the
@@ -34,3 +33,5 @@ pub fn KeyPickerKey(props: KeyPickerKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPickerKey);

@@ -5,7 +5,6 @@ use crate::components::app::components::shell::components::editor_page::componen
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UndeadRaceTab);
 
 /// The Undead race tab: publishes Undead's banner colour, accent, strength, and
 /// banner image as the `--race-*`/`--banner-*` custom properties the shared chrome reads,
@@ -21,3 +20,5 @@ pub fn UndeadRaceTab(props: RaceTabBinding) -> Element {
         }
     }
 }
+
+assert_component!(UndeadRaceTab);

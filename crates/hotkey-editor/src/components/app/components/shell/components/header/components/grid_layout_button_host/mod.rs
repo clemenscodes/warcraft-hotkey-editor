@@ -2,13 +2,12 @@ pub mod components;
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor_host::LayoutEditorHost;
 use components::grid_layout_button::GridLayoutButton;
 use dioxus::prelude::*;
 use hooks::use_grid_layout_button;
 use style::CLASS;
-assert_component!(GridLayoutButtonHost);
+use tw_macro::assert_component;
 
 /// Connects the global grid-layout button to the overlay state and gives it its
 /// centered, laptop-and-up box, carrying the layout editor it opens. Hidden in the
@@ -25,3 +24,5 @@ pub fn GridLayoutButtonHost() -> Element {
         LayoutEditorHost {}
     }
 }
+
+assert_component!(GridLayoutButtonHost);

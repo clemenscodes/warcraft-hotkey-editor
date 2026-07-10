@@ -5,7 +5,6 @@ use crate::components::app::components::shell::components::editor_page::componen
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NightelfRaceTheme);
 
 /// The Night Elf race-themed container. A `display:contents` wrapper that publishes the
 /// Night Elf colour as `--race-color` and `--race-accent` for its descendants — the unit
@@ -22,3 +21,5 @@ pub fn NightelfRaceTheme() -> Element {
         }
     }
 }
+
+assert_component!(NightelfRaceTheme);

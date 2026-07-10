@@ -13,8 +13,6 @@ pub use props::InfoDialogConfig;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(InfoDialog);
-
 /// The shared shell for the download and import info dialogs: a centered
 /// instruction block above a cancel/primary action row. Variants fill in the
 /// title, copy, warning, and handlers via `InfoDialogConfig`; this owns its own
@@ -40,3 +38,5 @@ pub fn InfoDialog(props: InfoDialogConfig) -> Element {
         }
     }
 }
+
+assert_component!(InfoDialog);

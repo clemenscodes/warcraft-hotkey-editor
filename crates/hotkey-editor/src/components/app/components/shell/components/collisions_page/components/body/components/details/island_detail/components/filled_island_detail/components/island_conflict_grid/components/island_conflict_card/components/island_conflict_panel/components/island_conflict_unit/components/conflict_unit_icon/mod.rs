@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ConflictUnitIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictUnitIcon);
 
 /// A conflicting unit's portrait. It owns its slot (a hover `.group`) and lifts to a
 /// gold glow on hover; the shared `FramedIcon` draws the bordered, rounded image and
@@ -33,3 +32,5 @@ pub fn ConflictUnitIcon(props: ConflictUnitIconProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictUnitIcon);

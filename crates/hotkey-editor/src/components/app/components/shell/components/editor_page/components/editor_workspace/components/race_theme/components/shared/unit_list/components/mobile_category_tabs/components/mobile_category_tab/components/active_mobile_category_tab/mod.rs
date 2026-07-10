@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ActiveMobileCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveMobileCategoryTab);
 
 /// The active mobile category tab: the current category, wearing the race accent
 /// (border, text, glow read from the theme's `--race-accent`). Presentational.
@@ -24,3 +23,5 @@ pub fn ActiveMobileCategoryTab(props: ActiveMobileCategoryTabProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveMobileCategoryTab);

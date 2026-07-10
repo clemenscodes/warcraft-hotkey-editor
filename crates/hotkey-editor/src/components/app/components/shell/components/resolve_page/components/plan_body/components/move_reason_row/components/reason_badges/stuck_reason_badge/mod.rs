@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::StuckReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(StuckReasonBadge);
 
 /// The "Stuck" reason badge: publishes the Stuck accent colour and composes the base
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
@@ -23,3 +22,5 @@ pub fn StuckReasonBadge(props: StuckReasonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(StuckReasonBadge);

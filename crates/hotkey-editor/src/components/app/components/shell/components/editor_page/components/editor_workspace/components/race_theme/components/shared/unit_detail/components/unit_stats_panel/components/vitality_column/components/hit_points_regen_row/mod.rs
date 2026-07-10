@@ -11,7 +11,6 @@ use logic::HitPointsRegenPresentation;
 pub use props::HitPointsRegenRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HitPointsRegenRow);
 
 const LABEL_TEXT: &str = "Regeneration";
 
@@ -31,3 +30,5 @@ pub fn HitPointsRegenRow(props: HitPointsRegenRowProps) -> Element {
         }
     }
 }
+
+assert_component!(HitPointsRegenRow);

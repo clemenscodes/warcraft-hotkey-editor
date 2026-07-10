@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::CollisionSidebarProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionSidebar);
 
 /// The collision sidebar: the aside shell around the scrolling list of collision
 /// cards. It owns the chrome and hands the card data down into the scroll region.
@@ -22,3 +21,5 @@ pub fn CollisionSidebar(props: CollisionSidebarProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionSidebar);

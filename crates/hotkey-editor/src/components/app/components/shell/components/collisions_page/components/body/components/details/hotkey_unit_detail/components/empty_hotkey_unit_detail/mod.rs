@@ -4,7 +4,6 @@ use super::super::data::EMPTY_PROMPT;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EmptyHotkeyUnitDetail);
 
 /// The empty shared-hotkey detail pane: the base pane surface, centered and muted,
 /// showing the prompt to select a unit.
@@ -17,3 +16,5 @@ pub fn EmptyHotkeyUnitDetail() -> Element {
         }
     }
 }
+
+assert_component!(EmptyHotkeyUnitDetail);

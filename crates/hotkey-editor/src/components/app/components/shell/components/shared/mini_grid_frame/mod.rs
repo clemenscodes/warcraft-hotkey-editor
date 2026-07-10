@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::MiniGridFrameProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MiniGridFrame);
 
 /// The shared mini command-grid frame: the chrome around a shrunk read-only
 /// `MiniGrid`. It owns the query container, the panel surface, and the tile-scope
@@ -23,3 +22,5 @@ pub fn MiniGridFrame(props: MiniGridFrameProps) -> Element {
         }
     }
 }
+
+assert_component!(MiniGridFrame);

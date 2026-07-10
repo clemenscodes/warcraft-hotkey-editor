@@ -13,7 +13,6 @@ use logic::RaceTabBindings;
 pub use props::{RaceTabBinding, RaceTabsProps};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RaceTabs);
 
 /// The race tabs: one banner tab per supported race. It is the consumer of the active
 /// race — it reads it once to mark each tab active and bakes the select handler into
@@ -39,3 +38,5 @@ pub fn RaceTabs(props: RaceTabsProps) -> Element {
         }
     }
 }
+
+assert_component!(RaceTabs);

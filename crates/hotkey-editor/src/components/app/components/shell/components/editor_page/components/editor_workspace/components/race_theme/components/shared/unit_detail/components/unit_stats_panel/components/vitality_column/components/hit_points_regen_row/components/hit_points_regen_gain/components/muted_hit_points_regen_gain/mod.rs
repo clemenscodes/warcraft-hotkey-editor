@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MutedHitPointsRegenGainProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MutedHitPointsRegenGain);
 
 /// The muted health-regeneration look: faint text. Rendered by the
 /// [`HitPointsRegenGain`](super::super::HitPointsRegenGain) dispatcher when the unit
@@ -17,3 +16,5 @@ pub fn MutedHitPointsRegenGain(props: MutedHitPointsRegenGainProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(MutedHitPointsRegenGain);

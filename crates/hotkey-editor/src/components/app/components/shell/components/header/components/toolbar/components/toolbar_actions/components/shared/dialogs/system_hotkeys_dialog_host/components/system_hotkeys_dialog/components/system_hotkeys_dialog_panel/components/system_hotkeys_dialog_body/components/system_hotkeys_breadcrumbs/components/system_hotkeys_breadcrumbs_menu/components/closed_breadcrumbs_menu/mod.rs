@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::ClosedBreadcrumbsMenuProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ClosedBreadcrumbsMenu);
 
 /// The closed look of the category menu: the desktop tab bar (hidden on small
 /// viewports, where the trigger stands in). Rendered by the dispatcher while the
@@ -22,3 +21,5 @@ pub fn ClosedBreadcrumbsMenu(props: ClosedBreadcrumbsMenuProps) -> Element {
         }
     }
 }
+
+assert_component!(ClosedBreadcrumbsMenu);

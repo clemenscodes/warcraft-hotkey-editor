@@ -6,11 +6,10 @@ use super::conflict_ability_name::ConflictAbilityName;
 use super::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use hooks::use_conflict_ability;
-use tw_macro::assert_component;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityProps;
 use style::CLASS;
-assert_component!(ConflictAbility);
+use tw_macro::assert_component;
 
 /// One ability of a conflict: icon (deep-link button), name, and object id. The icon
 /// button opens the owning unit through the navigation read from context.
@@ -26,3 +25,5 @@ pub fn ConflictAbility(props: ConflictAbilityProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictAbility);

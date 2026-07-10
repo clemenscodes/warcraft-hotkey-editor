@@ -6,7 +6,6 @@ use crate::components::app::components::shell::components::shared::key_picker_bo
 use dioxus::prelude::*;
 use hooks::use_board_keyboard;
 use tw_macro::assert_component;
-assert_component!(KeyPickerBoardHost);
 
 /// The interactive key picker: a [`KeyPickerBoard`] plus the keyboard listener and
 /// focus that make it a picker. None of that is a dialog concern — drop this wherever a
@@ -21,3 +20,5 @@ pub fn KeyPickerBoardHost(props: KeyPickerBoardProps) -> Element {
         KeyPickerBoard { ..props }
     }
 }
+
+assert_component!(KeyPickerBoardHost);

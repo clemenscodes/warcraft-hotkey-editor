@@ -10,8 +10,6 @@ use logic::SearchFieldToggleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(SearchFieldToggle);
-
 /// The Unit/Ability toggle that chooses which field the search box matches against.
 /// It reads and writes the search-field selection from editor context, so it needs
 /// no props: the buttons it renders are built from the context signal directly.
@@ -32,3 +30,5 @@ pub fn SearchFieldToggle() -> Element {
         }
     }
 }
+
+assert_component!(SearchFieldToggle);

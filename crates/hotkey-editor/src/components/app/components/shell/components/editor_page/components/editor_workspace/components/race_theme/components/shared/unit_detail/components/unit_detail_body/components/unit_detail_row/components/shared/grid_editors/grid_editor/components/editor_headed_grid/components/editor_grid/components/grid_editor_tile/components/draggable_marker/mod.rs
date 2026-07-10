@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::DraggableMarkerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DraggableMarker);
 
 /// The draggable marker. Mounted only when the tile may be dragged; the grab cursor is
 /// the tile root's own (via `:has(.draggable-marker)`), so this stays an inert,
@@ -19,3 +18,5 @@ pub fn DraggableMarker(props: DraggableMarkerProps) -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(DraggableMarker);

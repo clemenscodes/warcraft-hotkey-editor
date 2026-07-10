@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::RaceTabLabelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RaceTabLabel);
 
 /// The race name overlaid on the banner. Its colour is `--label-color`, defaulting to
 /// white; the active tab publishes its race accent into that variable, so the label
@@ -21,3 +20,5 @@ pub fn RaceTabLabel(props: RaceTabLabelProps) -> Element {
         }
     }
 }
+
+assert_component!(RaceTabLabel);

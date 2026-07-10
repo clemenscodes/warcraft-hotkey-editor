@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::TemplateCardTextProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TemplateCardText);
 
 /// The card's name-and-description block. Owns `.template-card-text`.
 #[component]
@@ -22,3 +21,5 @@ pub fn TemplateCardText(props: TemplateCardTextProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplateCardText);

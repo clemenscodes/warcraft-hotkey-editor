@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BelowRightTooltipProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BelowRightTooltip);
 
 /// The tooltip bubble placed below its trigger and anchored right. It owns
 /// its own bubble and the positioning utilities for this placement and anchor across
@@ -20,3 +19,5 @@ pub fn BelowRightTooltip(props: BelowRightTooltipProps) -> Element {
         }
     }
 }
+
+assert_component!(BelowRightTooltip);

@@ -8,8 +8,6 @@ use hooks::use_preview_dialog_host;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(PreviewDialogHost);
-
 /// Connects the serialized-keys preview dialog to app state and places it in the
 /// always-mounted toolbar, so it opens from either the inline preview button (laptop
 /// and up) or the burger drawer (below), which merely flip the shared open signal.
@@ -24,3 +22,5 @@ pub fn PreviewDialogHost() -> Element {
         }
     }
 }
+
+assert_component!(PreviewDialogHost);

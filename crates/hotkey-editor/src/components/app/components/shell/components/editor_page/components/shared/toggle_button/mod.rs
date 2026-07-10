@@ -7,7 +7,6 @@ use components::idle_toggle_button::{IdleToggleButton, IdleToggleButtonProps};
 use dioxus::prelude::*;
 pub use props::ToggleButtonProps;
 use tw_macro::assert_component;
-assert_component!(ToggleButton);
 
 /// The shared labeled pill button (mode, search-field, catalog-visibility). A pure
 /// dispatcher: from whether it is the active button in its group it renders the one
@@ -32,3 +31,5 @@ pub fn ToggleButton(props: ToggleButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(ToggleButton);

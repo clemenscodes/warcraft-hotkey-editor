@@ -3,7 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_C
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ClearIcon);
 
 /// The gold "all clear" glyph shown for a conflict-free state.
 #[component]
@@ -16,3 +15,5 @@ pub fn ClearIcon() -> Element {
         }
     }
 }
+
+assert_component!(ClearIcon);

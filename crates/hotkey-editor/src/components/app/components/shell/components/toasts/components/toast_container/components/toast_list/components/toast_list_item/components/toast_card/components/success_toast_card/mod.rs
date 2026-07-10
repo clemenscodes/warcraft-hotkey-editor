@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::SuccessToastCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SuccessToastCard);
 
 /// The success toast card: its tinted surface owning the alertdialog root, the
 /// success icon and title, the description, and the close control. Presentational
@@ -30,3 +29,5 @@ pub fn SuccessToastCard(props: SuccessToastCardProps) -> Element {
         }
     }
 }
+
+assert_component!(SuccessToastCard);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::CollisionListScrollProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionListScroll);
 
 /// The scrolling region of a collision sidebar: a vertical list, or the swipe
 /// carousel on small screens. Lays the cards out through the collision track.
@@ -22,3 +21,5 @@ pub fn CollisionListScroll(props: CollisionListScrollProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionListScroll);

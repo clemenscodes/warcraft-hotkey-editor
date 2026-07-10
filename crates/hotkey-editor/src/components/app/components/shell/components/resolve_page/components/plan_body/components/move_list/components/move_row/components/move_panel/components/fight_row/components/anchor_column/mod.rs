@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::{AnchorColumnProps, AnchorParts};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AnchorColumn);
 
 /// The rival column of a move card, shown only when the move has an anchor
 /// (Fight/Swap): the rival's name plate over its icon. Renders nothing otherwise.
@@ -26,3 +25,5 @@ pub fn AnchorColumn(props: AnchorColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(AnchorColumn);

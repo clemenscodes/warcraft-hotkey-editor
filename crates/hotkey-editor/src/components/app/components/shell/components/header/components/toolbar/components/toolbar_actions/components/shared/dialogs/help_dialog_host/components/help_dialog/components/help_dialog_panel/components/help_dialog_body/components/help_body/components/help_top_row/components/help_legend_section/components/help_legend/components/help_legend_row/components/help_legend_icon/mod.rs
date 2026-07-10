@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::HelpLegendIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpLegendIcon);
 
 /// The framed toolbar glyph in a legend row. A leaf: the row passes which icon
 /// to draw.
@@ -16,3 +15,5 @@ pub fn HelpLegendIcon(props: HelpLegendIconProps) -> Element {
         span { class: CLASS, aria_hidden: "true", dangerous_inner_html: icon }
     }
 }
+
+assert_component!(HelpLegendIcon);

@@ -11,7 +11,6 @@ use components::selected_collision_card_surface::{
 use dioxus::prelude::*;
 pub use props::CollisionCardSurfaceProps;
 use tw_macro::assert_component;
-assert_component!(CollisionCardSurface);
 
 /// The collision card's selectable button. A pure dispatcher: from whether the card is
 /// selected it renders `SelectedCollisionCardSurface` xor `IdleCollisionCardSurface`.
@@ -35,3 +34,5 @@ pub fn CollisionCardSurface(props: CollisionCardSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionCardSurface);

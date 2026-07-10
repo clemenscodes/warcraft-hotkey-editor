@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::DefenseTypeRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DefenseTypeRow);
 
 const LABEL_TEXT: &str = "Defense Type";
 
@@ -23,3 +22,5 @@ pub fn DefenseTypeRow(props: DefenseTypeRowProps) -> Element {
         }
     }
 }
+
+assert_component!(DefenseTypeRow);

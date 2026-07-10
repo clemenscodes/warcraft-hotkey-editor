@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::AttackSpeedRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AttackSpeedRow);
 
 const LABEL_TEXT: &str = "Attack Speed";
 
@@ -23,3 +22,5 @@ pub fn AttackSpeedRow(props: AttackSpeedRowProps) -> Element {
         }
     }
 }
+
+assert_component!(AttackSpeedRow);

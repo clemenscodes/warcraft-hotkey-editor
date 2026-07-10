@@ -6,7 +6,6 @@ use components::inline_actions::InlineActions;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToolbarActions);
 
 /// The adaptive file-action controls: the inline button row at laptop width and up,
 /// collapsing into the burger drawer on narrower screens. A layout-neutral grouping
@@ -24,3 +23,5 @@ pub fn ToolbarActions() -> Element {
         }
     }
 }
+
+assert_component!(ToolbarActions);

@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::HotkeyDetailHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HotkeyDetailHeader);
 
 /// The detail-pane header: the selected unit button beside its text meta column.
 #[component]
@@ -24,3 +23,5 @@ pub fn HotkeyDetailHeader(props: HotkeyDetailHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyDetailHeader);

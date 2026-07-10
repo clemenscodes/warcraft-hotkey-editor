@@ -7,7 +7,6 @@ use components::inactive_race_tab::{InactiveRaceTab, InactiveRaceTabProps};
 use dioxus::prelude::*;
 use logic::RaceTabBehavior;
 use tw_macro::assert_component;
-assert_component!(RaceTabState);
 
 /// The active-vs-inactive dispatcher for one race tab, shared by all five per-race
 /// wrappers. It takes the finished `RaceTabBinding` (no navigation — the handlers are
@@ -33,3 +32,5 @@ pub fn RaceTabState(props: RaceTabBinding) -> Element {
         }
     }
 }
+
+assert_component!(RaceTabState);

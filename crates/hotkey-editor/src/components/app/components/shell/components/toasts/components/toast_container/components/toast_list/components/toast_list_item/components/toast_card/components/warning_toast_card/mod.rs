@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::WarningToastCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(WarningToastCard);
 
 /// The warning toast card: its tinted surface owning the alertdialog root, the
 /// warning icon and title, the description, and the close control. Presentational
@@ -30,3 +29,5 @@ pub fn WarningToastCard(props: WarningToastCardProps) -> Element {
         }
     }
 }
+
+assert_component!(WarningToastCard);

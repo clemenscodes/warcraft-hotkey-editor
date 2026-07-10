@@ -10,8 +10,6 @@ use tw_macro::assert_component;
 pub use props::EditableKeycapProps;
 pub use state::EditableKeycapState;
 
-assert_component!(EditableKeycap);
-
 /// The shared gold key-cap surface worn by both editable hotkey cells: the editor's
 /// override key and the layout-grid tile. A pure dispatcher: from the cap's state it
 /// renders the resting cap (`IdleKeycap`) or the pulsing one (`EditingKeycap`), each of
@@ -35,3 +33,5 @@ pub fn EditableKeycap(props: EditableKeycapProps) -> Element {
         }
     }
 }
+
+assert_component!(EditableKeycap);

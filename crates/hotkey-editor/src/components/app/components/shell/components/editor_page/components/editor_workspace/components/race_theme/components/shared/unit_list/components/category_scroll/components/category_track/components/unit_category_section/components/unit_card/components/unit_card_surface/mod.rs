@@ -9,7 +9,6 @@ use components::selected_unit_card_surface::{
 use dioxus::prelude::*;
 pub use props::UnitCardSurfaceProps;
 use tw_macro::assert_component;
-assert_component!(UnitCardSurface);
 
 /// The unit card's selectable button. A pure dispatcher: from whether the card is the
 /// selected unit it renders `SelectedUnitCardSurface` xor `IdleUnitCardSurface`. Each
@@ -33,3 +32,5 @@ pub fn UnitCardSurface(props: UnitCardSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCardSurface);

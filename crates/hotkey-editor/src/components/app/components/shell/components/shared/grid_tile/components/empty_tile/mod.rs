@@ -14,7 +14,6 @@ pub use props::EmptyTileProps;
 pub use state::EmptyTileState;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EmptyTile);
 
 /// An empty command slot. Purely presentational: it draws its resting look and its race
 /// accent, and — during a drag or a mini-grid highlight — mounts the matching overlay
@@ -37,3 +36,5 @@ pub fn EmptyTile(props: EmptyTileProps) -> Element {
         }
     }
 }
+
+assert_component!(EmptyTile);

@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ConflictMetaProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictMeta);
 
 /// The text meta column of a detail-pane header: the unit name, its object id, and the
 /// collision count. Shared by the hotkey and unit-position detail headers.
@@ -26,3 +25,5 @@ pub fn ConflictMeta(props: ConflictMetaProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictMeta);

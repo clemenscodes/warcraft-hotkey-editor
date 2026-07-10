@@ -10,7 +10,6 @@ pub use props::LayoutTileProps;
 pub use state::LayoutTileState;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(LayoutTile);
 
 /// A single editable cell in the global hotkey grid. Draggable to swap, clickable
 /// to open the key picker, and pulses while being edited. The focusable, keyboard-
@@ -37,3 +36,5 @@ pub fn LayoutTile(props: LayoutTileProps) -> Element {
         }
     }
 }
+
+assert_component!(LayoutTile);

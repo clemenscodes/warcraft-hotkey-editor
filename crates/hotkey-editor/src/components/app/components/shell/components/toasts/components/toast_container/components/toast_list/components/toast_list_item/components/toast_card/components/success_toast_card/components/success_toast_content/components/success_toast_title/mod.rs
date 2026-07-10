@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::SuccessToastTitleProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SuccessToastTitle);
 
 /// The success toast headline: the uppercase gold heading look tinted for success.
 #[component]
@@ -18,3 +17,5 @@ pub fn SuccessToastTitle(props: SuccessToastTitleProps) -> Element {
         }
     }
 }
+
+assert_component!(SuccessToastTitle);

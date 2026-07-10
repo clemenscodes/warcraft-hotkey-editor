@@ -6,7 +6,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HeroSelectionHotkeysView);
 
 /// The hero-selection hotkey editor: the intro caption above three big slots for
 /// selecting heroes by index. Its slots read the editing section from the dialog
@@ -21,3 +20,5 @@ pub fn HeroSelectionHotkeysView() -> Element {
         }
     }
 }
+
+assert_component!(HeroSelectionHotkeysView);

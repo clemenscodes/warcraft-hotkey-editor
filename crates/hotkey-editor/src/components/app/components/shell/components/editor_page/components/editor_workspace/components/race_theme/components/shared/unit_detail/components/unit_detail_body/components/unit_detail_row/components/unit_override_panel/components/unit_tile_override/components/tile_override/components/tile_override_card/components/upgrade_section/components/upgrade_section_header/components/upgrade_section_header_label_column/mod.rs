@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::UpgradeSectionHeaderLabelColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UpgradeSectionHeaderLabelColumn);
 
 /// The label column of the upgraded-form header row: holds the "Upgraded form" label.
 #[component]
@@ -19,3 +18,5 @@ pub fn UpgradeSectionHeaderLabelColumn(props: UpgradeSectionHeaderLabelColumnPro
         }
     }
 }
+
+assert_component!(UpgradeSectionHeaderLabelColumn);

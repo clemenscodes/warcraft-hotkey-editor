@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::FilledHotkeyUnitDetailProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FilledHotkeyUnitDetail);
 
 /// The populated shared-hotkey detail pane: the selected unit's header over its
 /// shared-hotkey conflict cards.
@@ -24,3 +23,5 @@ pub fn FilledHotkeyUnitDetail(props: FilledHotkeyUnitDetailProps) -> Element {
         }
     }
 }
+
+assert_component!(FilledHotkeyUnitDetail);

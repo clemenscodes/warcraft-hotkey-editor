@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::PlanSummaryProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PlanSummary);
 
 /// The plan title over its move/unresolved counts.
 #[component]
@@ -21,3 +20,5 @@ pub fn PlanSummary(props: PlanSummaryProps) -> Element {
         }
     }
 }
+
+assert_component!(PlanSummary);

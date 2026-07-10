@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::UnitListSearchInputProps;
 
-assert_component!(UnitListSearchInput);
-
 /// The search text field in the unit list.
 #[component]
 pub fn UnitListSearchInput(props: UnitListSearchInputProps) -> Element {
@@ -28,3 +26,5 @@ pub fn UnitListSearchInput(props: UnitListSearchInputProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitListSearchInput);

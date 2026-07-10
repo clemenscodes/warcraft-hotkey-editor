@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IdleMenuItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleMenuItem);
 
 /// The idle (plain) look of a drawer row: the resting gold panel button that composes
 /// the icon and label. Presentational — the dispatcher builds its props and renders it
@@ -39,3 +38,5 @@ pub fn IdleMenuItem(props: IdleMenuItemProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleMenuItem);

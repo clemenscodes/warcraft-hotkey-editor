@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IdleCollisionCardSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleCollisionCardSurface);
 
 /// The idle collision card surface: the card button in its idle look, composing the
 /// shared visual and meta line. Presentational — the dispatcher renders it.
@@ -26,3 +25,5 @@ pub fn IdleCollisionCardSurface(props: IdleCollisionCardSurfaceProps) -> Element
         }
     }
 }
+
+assert_component!(IdleCollisionCardSurface);

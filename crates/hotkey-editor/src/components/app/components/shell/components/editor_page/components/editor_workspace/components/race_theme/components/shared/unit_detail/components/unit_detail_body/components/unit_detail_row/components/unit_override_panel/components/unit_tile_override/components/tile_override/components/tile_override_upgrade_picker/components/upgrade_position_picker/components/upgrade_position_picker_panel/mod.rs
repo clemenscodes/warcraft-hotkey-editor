@@ -8,7 +8,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::UpgradePositionPickerPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UpgradePositionPickerPanel);
 
 /// The upgraded-form position picker's bordered box: it wraps the library
 /// `DialogContent` and styles a real `div` of its own with the box `CLASS`, so no
@@ -28,3 +27,5 @@ pub fn UpgradePositionPickerPanel(props: UpgradePositionPickerPanelProps) -> Ele
         }
     }
 }
+
+assert_component!(UpgradePositionPickerPanel);

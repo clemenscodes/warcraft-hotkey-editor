@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::CollisionsButtonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionsButtonBadge);
 
 #[component]
 pub fn CollisionsButtonBadge(props: CollisionsButtonBadgeProps) -> Element {
@@ -18,3 +17,5 @@ pub fn CollisionsButtonBadge(props: CollisionsButtonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionsButtonBadge);

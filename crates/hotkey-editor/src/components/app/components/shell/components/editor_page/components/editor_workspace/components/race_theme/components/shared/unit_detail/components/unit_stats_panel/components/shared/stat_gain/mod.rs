@@ -8,7 +8,6 @@ use components::muted_stat_gain::{MutedStatGain, MutedStatGainProps};
 use dioxus::prelude::*;
 pub use props::StatGainProps;
 use tw_macro::assert_component;
-assert_component!(StatGain);
 
 /// A stat row's per-level growth in the default treatment: green, tabular text sitting
 /// inline after the value. A thin dispatcher — the figure reports whether it is muted
@@ -29,3 +28,5 @@ pub fn StatGain<Figure: StatFigure>(props: StatGainProps<Figure>) -> Element {
         }
     }
 }
+
+assert_component!(StatGain);

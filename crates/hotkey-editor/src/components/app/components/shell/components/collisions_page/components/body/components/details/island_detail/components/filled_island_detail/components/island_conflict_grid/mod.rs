@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IslandConflictGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictGrid);
 
 /// The scrolling grid of conflict cards for the selected island.
 #[component]
@@ -22,3 +21,5 @@ pub fn IslandConflictGrid(props: IslandConflictGridProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandConflictGrid);

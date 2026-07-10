@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::PreviewGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PreviewGrid);
 
 /// The template preview's read-only command grid: the three-by-four square of
 /// `TileFace` painters — the same tiles the editor draws, without any interaction.
@@ -24,3 +23,5 @@ pub fn PreviewGrid(props: PreviewGridProps) -> Element {
         }
     }
 }
+
+assert_component!(PreviewGrid);

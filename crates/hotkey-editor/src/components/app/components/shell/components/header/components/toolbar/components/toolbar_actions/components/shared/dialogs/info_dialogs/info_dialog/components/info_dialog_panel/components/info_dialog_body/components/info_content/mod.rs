@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::InfoContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InfoContent);
 
 /// Every info dialog's centered instruction block: the intro line, the filename
 /// chip, and the optional warning callout.
@@ -25,3 +24,5 @@ pub fn InfoContent(props: InfoContentProps) -> Element {
         }
     }
 }
+
+assert_component!(InfoContent);

@@ -6,7 +6,6 @@ use components::normal_key_chip::{NormalKeyChip, NormalKeyChipProps};
 use dioxus::prelude::*;
 pub use props::KeyChipProps;
 use tw_macro::assert_component;
-assert_component!(KeyChip);
 
 /// A pure dispatcher for the system-hotkey chip: from the row's domain conflict
 /// fact it renders the red `ConflictKeyChip` or the gold `NormalKeyChip`. It carries
@@ -24,3 +23,5 @@ pub fn KeyChip(props: KeyChipProps) -> Element {
         NormalKeyChip { ..look }
     }
 }
+
+assert_component!(KeyChip);

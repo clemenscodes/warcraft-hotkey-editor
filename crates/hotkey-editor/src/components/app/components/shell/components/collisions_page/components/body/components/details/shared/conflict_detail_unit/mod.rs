@@ -8,7 +8,6 @@ use hooks::use_conflict_detail_unit;
 pub use props::ConflictDetailUnitProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictDetailUnit);
 /// The clickable unit portrait in the detail header. It deep-links into the editor
 /// focused on its unit through the navigation read from context.
 #[component]
@@ -23,3 +22,5 @@ pub fn ConflictDetailUnit(props: ConflictDetailUnitProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictDetailUnit);

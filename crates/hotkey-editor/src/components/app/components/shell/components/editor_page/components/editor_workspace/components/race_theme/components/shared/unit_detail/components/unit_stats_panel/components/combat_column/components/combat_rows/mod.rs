@@ -12,7 +12,6 @@ use dioxus::prelude::*;
 pub use props::CombatRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CombatRows);
 
 /// The combat column's stat rows stacked beside its icon: the damage, range, speed, and
 /// damage-per-second rows, the attack-type row, and the damage matchup grid. It names
@@ -36,3 +35,5 @@ pub fn CombatRows(props: CombatRowsProps) -> Element {
         }
     }
 }
+
+assert_component!(CombatRows);

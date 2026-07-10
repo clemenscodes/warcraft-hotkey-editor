@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideInfoOnlyProps;
 
-assert_component!(TileOverrideInfoOnly);
-
 /// The muted note shown for a passive ability in place of a hotkey field.
 #[component]
 pub fn TileOverrideInfoOnly(props: TileOverrideInfoOnlyProps) -> Element {
@@ -18,3 +16,5 @@ pub fn TileOverrideInfoOnly(props: TileOverrideInfoOnlyProps) -> Element {
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(TileOverrideInfoOnly);

@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::AltPositionPickerExplainerProps;
 
-assert_component!(AltPositionPickerExplainer);
-
 /// The instruction line at the top of a position-picker dialog.
 #[component]
 pub fn AltPositionPickerExplainer(props: AltPositionPickerExplainerProps) -> Element {
@@ -18,3 +16,5 @@ pub fn AltPositionPickerExplainer(props: AltPositionPickerExplainerProps) -> Ele
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(AltPositionPickerExplainer);

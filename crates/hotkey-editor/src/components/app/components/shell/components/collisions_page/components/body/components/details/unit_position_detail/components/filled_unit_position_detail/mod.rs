@@ -12,7 +12,6 @@ use dioxus::prelude::*;
 pub use props::FilledUnitPositionDetailProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FilledUnitPositionDetail);
 
 /// The populated position-collision detail pane: the selected unit's header over its
 /// position-conflict cards.
@@ -28,3 +27,5 @@ pub fn FilledUnitPositionDetail(props: FilledUnitPositionDetailProps) -> Element
         }
     }
 }
+
+assert_component!(FilledUnitPositionDetail);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::RangeRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RangeRow);
 
 const LABEL_TEXT: &str = "Range";
 
@@ -27,3 +26,5 @@ pub fn RangeRow(props: RangeRowProps) -> Element {
         }
     }
 }
+
+assert_component!(RangeRow);

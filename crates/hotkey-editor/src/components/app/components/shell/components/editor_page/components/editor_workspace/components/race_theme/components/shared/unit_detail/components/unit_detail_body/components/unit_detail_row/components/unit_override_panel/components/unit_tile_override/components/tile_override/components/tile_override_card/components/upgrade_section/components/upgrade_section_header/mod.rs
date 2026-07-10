@@ -11,7 +11,6 @@ use dioxus::prelude::*;
 pub use props::UpgradeSectionHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UpgradeSectionHeader);
 
 /// The upgraded-form block's top row: the label column beside the position button and
 /// hotkey cell.
@@ -29,3 +28,5 @@ pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(UpgradeSectionHeader);

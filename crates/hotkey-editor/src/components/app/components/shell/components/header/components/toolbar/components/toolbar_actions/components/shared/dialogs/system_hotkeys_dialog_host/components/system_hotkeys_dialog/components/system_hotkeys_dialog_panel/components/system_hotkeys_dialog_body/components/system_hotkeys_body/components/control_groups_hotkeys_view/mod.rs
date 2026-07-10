@@ -6,7 +6,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ControlGroupsHotkeysView);
 
 /// The control-groups (1–10) hotkey editor: the intro caption above a ten-cell
 /// strip of editable slots. Its slots read the editing section from the dialog state
@@ -21,3 +20,5 @@ pub fn ControlGroupsHotkeysView() -> Element {
         }
     }
 }
+
+assert_component!(ControlGroupsHotkeysView);

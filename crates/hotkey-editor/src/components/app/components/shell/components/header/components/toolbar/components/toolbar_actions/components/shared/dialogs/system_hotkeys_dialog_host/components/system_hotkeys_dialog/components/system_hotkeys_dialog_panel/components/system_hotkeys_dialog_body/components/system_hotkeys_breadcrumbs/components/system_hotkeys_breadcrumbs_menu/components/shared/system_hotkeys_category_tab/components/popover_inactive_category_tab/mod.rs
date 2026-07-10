@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::PopoverInactiveCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PopoverInactiveCategoryTab);
 
 /// An unselected category tab in the small-viewport popover: a full-width, dimmed gold
 /// row, not the current page.
@@ -25,3 +24,5 @@ pub fn PopoverInactiveCategoryTab(props: PopoverInactiveCategoryTabProps) -> Ele
         }
     }
 }
+
+assert_component!(PopoverInactiveCategoryTab);

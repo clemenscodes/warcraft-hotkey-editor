@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::RegularAgilityRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RegularAgilityRow);
 
 /// The hero's agility row when agility is not the primary attribute: resting drop shadow,
 /// and it publishes the dimmer `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn RegularAgilityRow(props: RegularAgilityRowProps) -> Element {
         }
     }
 }
+
+assert_component!(RegularAgilityRow);

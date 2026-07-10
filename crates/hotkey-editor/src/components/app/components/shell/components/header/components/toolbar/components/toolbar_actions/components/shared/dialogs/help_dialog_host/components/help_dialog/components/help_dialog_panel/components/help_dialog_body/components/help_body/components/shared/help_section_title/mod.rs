@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::HelpSectionTitleProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpSectionTitle);
 
 /// A section heading inside the help guide: an `h3` wearing the uppercase gold
 /// heading look, with its own per-band sizing.
@@ -19,3 +18,5 @@ pub fn HelpSectionTitle(props: HelpSectionTitleProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpSectionTitle);

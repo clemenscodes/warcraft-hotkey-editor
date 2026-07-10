@@ -5,7 +5,6 @@ mod logic;
 mod state;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog_host::DownloadInfoDialogHost;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::{
     UploadInfoDialog, UploadInfoDialogProps,
@@ -16,7 +15,7 @@ use components::burger_toggle_icon::BurgerToggleIcon;
 use dioxus::prelude::*;
 use hooks::{BurgerMenuView, use_burger_menu};
 use style::CLASS;
-assert_component!(BurgerMenu);
+use tw_macro::assert_component;
 
 /// The compact-layout menu: a hamburger button that opens a slide-in drawer with
 /// every file action. Shown only in the compact header (the full header shows the
@@ -55,3 +54,5 @@ pub fn BurgerMenu() -> Element {
         DownloadInfoDialogHost { open: download_info_open }
     }
 }
+
+assert_component!(BurgerMenu);

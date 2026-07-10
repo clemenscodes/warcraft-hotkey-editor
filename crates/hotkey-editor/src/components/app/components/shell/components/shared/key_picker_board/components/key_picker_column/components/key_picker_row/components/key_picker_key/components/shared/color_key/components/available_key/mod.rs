@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::AvailableKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AvailableKey);
 
 /// The look for a free, pickable key: gold-bordered, brightening on hover. It owns its
 /// own button and shares only the shaped attributes and the conflict tooltip leaf.
@@ -29,3 +28,5 @@ pub fn AvailableKey(props: AvailableKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(AvailableKey);

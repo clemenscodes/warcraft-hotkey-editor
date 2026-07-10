@@ -5,16 +5,14 @@ mod route_sync;
 mod style;
 
 use crate::components::app::route::Route;
-use components::head::Head;
 use components::footer::Footer;
+use components::head::Head;
 use components::header::Header;
 use components::toasts::{ToastContainer, ToastContainerProps, use_toast_provider};
 use dioxus::prelude::*;
 use hooks::{ShellModel, use_shell};
 use style::CLASS;
 use tw_macro::assert_component;
-
-assert_component!(Shell);
 
 /// The persistent application frame: the header, the routed page (via `Outlet`), the
 /// footer, and the overlay dialogs, wrapped in the toast provider and the app-root
@@ -43,3 +41,5 @@ pub fn Shell() -> Element {
         ToastContainer { ..toast_container }
     }
 }
+
+assert_component!(Shell);

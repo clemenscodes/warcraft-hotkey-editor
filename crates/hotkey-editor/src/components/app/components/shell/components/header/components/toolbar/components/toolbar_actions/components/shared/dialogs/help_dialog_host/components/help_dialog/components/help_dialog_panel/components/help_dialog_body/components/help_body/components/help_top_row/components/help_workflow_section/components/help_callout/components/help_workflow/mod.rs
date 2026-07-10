@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HelpWorkflowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpWorkflow);
 
 /// The ordered list of workflow steps. A pure loop: the steps and their inline
 /// glyphs are data, passed in, never baked into this markup.
@@ -21,3 +20,5 @@ pub fn HelpWorkflow(props: HelpWorkflowProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpWorkflow);

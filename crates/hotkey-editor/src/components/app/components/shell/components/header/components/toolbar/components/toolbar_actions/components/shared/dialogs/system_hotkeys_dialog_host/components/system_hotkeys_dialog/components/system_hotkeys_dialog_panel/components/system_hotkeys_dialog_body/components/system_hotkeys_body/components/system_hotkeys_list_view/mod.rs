@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::SystemHotkeysListViewProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysListView);
 
 /// A plain list editor: one row per hotkey in the category, each a binding name
 /// beside its editable key chip.
@@ -27,3 +26,5 @@ pub fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
         }
     }
 }
+
+assert_component!(SystemHotkeysListView);

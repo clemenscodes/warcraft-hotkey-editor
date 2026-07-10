@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::SystemHotkeysSectionIntroProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysSectionIntro);
 
 /// The caption introducing a system-hotkeys category editor.
 #[component]
@@ -15,3 +14,5 @@ pub fn SystemHotkeysSectionIntro(props: SystemHotkeysSectionIntroProps) -> Eleme
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(SystemHotkeysSectionIntro);

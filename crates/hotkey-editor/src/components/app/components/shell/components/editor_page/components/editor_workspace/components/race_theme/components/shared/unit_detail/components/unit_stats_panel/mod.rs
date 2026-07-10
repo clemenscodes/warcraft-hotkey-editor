@@ -13,7 +13,6 @@ use hooks::{UnitStatsPanelModel, use_unit_stats_panel};
 pub use props::UnitStatsPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitStatsPanel);
 
 /// The four stat-category columns (vitality, combat, defense, attributes) in a 2×2
 /// grid. Every figure is resolved through the domain in the composed hook and shaped
@@ -39,3 +38,5 @@ pub fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitStatsPanel);

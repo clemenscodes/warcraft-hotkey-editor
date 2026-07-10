@@ -14,8 +14,6 @@ pub use props::CarriersDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(CarriersDialog);
-
 /// Lists every unit that carries an ability in a scrollable grid; closing the dialog
 /// clears the open state that summoned it. It owns its own dialog shell: the hook shapes
 /// the cards and open state, the shell struct names the panel, and this places the panel
@@ -44,3 +42,5 @@ pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(CarriersDialog);

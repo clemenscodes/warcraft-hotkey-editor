@@ -9,7 +9,6 @@ use components::filled_hotkey_unit_detail::{FilledHotkeyUnitDetail, FilledHotkey
 use dioxus::prelude::*;
 pub use props::HotkeyUnitDetailProps;
 use tw_macro::assert_component;
-assert_component!(HotkeyUnitDetail);
 
 /// The shared-hotkey detail pane. A dispatcher: when a unit is selected it renders the
 /// filled pane (the unit header over its conflict cards), otherwise the empty prompt.
@@ -28,3 +27,5 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyUnitDetail);

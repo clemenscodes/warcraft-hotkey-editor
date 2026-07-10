@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::OpenHeroLevelTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(OpenHeroLevelTrigger);
 
 /// The open look of the hero-level trigger: an accented gold border and glow, with a
 /// flipped caret. Rendered by the dispatcher while the menu is open; owns its button
@@ -29,3 +28,5 @@ pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerProps) -> Element {
         }
     }
 }
+
+assert_component!(OpenHeroLevelTrigger);

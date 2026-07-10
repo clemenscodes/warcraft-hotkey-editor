@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::InactiveCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InactiveCategoryTab);
 
 /// An unselected category tab: dimmed gold, not the current page.
 #[component]
@@ -24,3 +23,5 @@ pub fn InactiveCategoryTab(props: InactiveCategoryTabProps) -> Element {
         }
     }
 }
+
+assert_component!(InactiveCategoryTab);

@@ -12,7 +12,6 @@ use dioxus::prelude::*;
 pub use props::{FramedIconProps, IconRadius};
 use state::FramedIconStyle;
 use tw_macro::assert_component;
-assert_component!(FramedIcon);
 
 /// The shared square-icon painter behind every ability and unit thumbnail across the
 /// collisions, resolve, editor, and shared-dialog pages. A pure dispatcher: from the
@@ -60,3 +59,5 @@ pub fn FramedIcon(props: FramedIconProps) -> Element {
         }
     }
 }
+
+assert_component!(FramedIcon);

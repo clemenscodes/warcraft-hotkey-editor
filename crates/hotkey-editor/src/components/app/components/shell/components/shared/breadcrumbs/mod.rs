@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::BreadcrumbsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Breadcrumbs);
 
 /// The shared breadcrumb bar, reused by the collisions and resolve pages. Purely
 /// presentational: it renders the prepared tabs its owning page hands it, with a
@@ -30,3 +29,5 @@ pub fn Breadcrumbs(props: BreadcrumbsProps) -> Element {
         }
     }
 }
+
+assert_component!(Breadcrumbs);

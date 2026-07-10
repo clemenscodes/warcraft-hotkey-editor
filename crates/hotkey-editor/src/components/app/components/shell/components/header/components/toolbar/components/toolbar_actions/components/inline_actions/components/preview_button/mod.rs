@@ -1,14 +1,12 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog_host::PreviewDialogHost;
 use dioxus::prelude::*;
 use hooks::use_preview_button;
 use style::CLASS;
-
-assert_component!(PreviewButton);
+use tw_macro::assert_component;
 
 /// Toolbar button that toggles the export preview pane, carrying the preview dialog it
 /// opens. The button flips the shared open signal and the co-located host renders the
@@ -25,3 +23,5 @@ pub fn PreviewButton() -> Element {
         PreviewDialogHost {}
     }
 }
+
+assert_component!(PreviewButton);

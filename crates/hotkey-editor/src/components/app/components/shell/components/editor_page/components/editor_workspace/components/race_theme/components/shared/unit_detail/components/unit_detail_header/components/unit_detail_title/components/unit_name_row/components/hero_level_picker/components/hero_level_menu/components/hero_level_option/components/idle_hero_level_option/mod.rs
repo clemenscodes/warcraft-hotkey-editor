@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::IdleHeroLevelOptionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleHeroLevelOption);
 
 /// The idle hero-level option button. Presentational — the dispatcher renders it.
 #[component]
@@ -21,3 +20,5 @@ pub fn IdleHeroLevelOption(props: IdleHeroLevelOptionProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleHeroLevelOption);

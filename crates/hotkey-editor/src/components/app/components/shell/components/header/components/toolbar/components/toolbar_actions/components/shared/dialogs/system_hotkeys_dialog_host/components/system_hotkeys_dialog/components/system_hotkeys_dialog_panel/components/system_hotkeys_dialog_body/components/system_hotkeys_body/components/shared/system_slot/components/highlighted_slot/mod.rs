@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::HighlightedSlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HighlightedSlot);
 
 /// The highlighted look of a system slot: the gold border-image frame with a gold
 /// glow overlay, composing the shared slot content. Presentational — the dispatcher
@@ -21,3 +20,5 @@ pub fn HighlightedSlot(props: HighlightedSlotProps) -> Element {
         }
     }
 }
+
+assert_component!(HighlightedSlot);

@@ -7,7 +7,6 @@ use components::idle_breadcrumb::{IdleBreadcrumb, IdleBreadcrumbProps};
 use dioxus::prelude::*;
 pub use props::BreadcrumbProps;
 use tw_macro::assert_component;
-assert_component!(Breadcrumb);
 
 /// A single breadcrumb tab. A pure dispatcher: from whether it is the active tab it
 /// renders `ActiveBreadcrumb` xor `IdleBreadcrumb`. Each owns its `<button>`, writes its
@@ -30,3 +29,5 @@ pub fn Breadcrumb(props: BreadcrumbProps) -> Element {
         }
     }
 }
+
+assert_component!(Breadcrumb);

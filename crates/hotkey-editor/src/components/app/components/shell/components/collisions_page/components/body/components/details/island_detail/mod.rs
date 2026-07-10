@@ -9,7 +9,6 @@ use components::filled_island_detail::{FilledIslandDetail, FilledIslandDetailPro
 use dioxus::prelude::*;
 pub use props::IslandDetailProps;
 use tw_macro::assert_component;
-assert_component!(IslandDetail);
 
 /// The position-island detail pane. A dispatcher: when an island is selected it renders
 /// the filled pane (its mini-grid coordinate header over the conflict cards), otherwise
@@ -28,3 +27,5 @@ pub fn IslandDetail(props: IslandDetailProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandDetail);

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::FollowerFigureProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FollowerFigure);
 
 #[component]
 pub fn FollowerFigure(props: FollowerFigureProps) -> Element {
@@ -19,3 +18,5 @@ pub fn FollowerFigure(props: FollowerFigureProps) -> Element {
         }
     }
 }
+
+assert_component!(FollowerFigure);

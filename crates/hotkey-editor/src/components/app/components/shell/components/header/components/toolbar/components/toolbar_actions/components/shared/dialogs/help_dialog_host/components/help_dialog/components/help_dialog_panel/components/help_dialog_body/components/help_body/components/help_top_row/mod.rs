@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::HelpTopRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpTopRow);
 
 /// The split upper region: the workflow on the left, the button legend on the
 /// right; stacked on small screens, side by side on laptop and up.
@@ -23,3 +22,5 @@ pub fn HelpTopRow(props: HelpTopRowProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpTopRow);

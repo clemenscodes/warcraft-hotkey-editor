@@ -10,7 +10,6 @@ use hooks::use_move_row;
 pub use props::MoveRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveRow);
 
 /// One move card: the reason badge, the fighting abilities (names over icons), and
 /// the from -> to grids drawing where each ability lands. It owns only the grid root
@@ -27,3 +26,5 @@ pub fn MoveRow(props: MoveRowProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveRow);

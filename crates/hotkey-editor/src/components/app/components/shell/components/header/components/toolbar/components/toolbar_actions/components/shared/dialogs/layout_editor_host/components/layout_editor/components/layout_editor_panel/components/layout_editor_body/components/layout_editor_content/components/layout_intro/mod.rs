@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 use logic::intro_lines;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(LayoutIntro);
 
 /// The instruction block above the grid: one line per entry in the intro data.
 #[component]
@@ -22,3 +21,5 @@ pub fn LayoutIntro() -> Element {
         }
     }
 }
+
+assert_component!(LayoutIntro);

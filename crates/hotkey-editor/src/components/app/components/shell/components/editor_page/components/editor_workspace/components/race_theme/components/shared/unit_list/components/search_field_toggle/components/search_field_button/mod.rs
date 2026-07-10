@@ -4,12 +4,9 @@ use crate::components::app::components::shell::components::editor_page::componen
     ToggleButton, ToggleButtonProps,
 };
 use dioxus::prelude::*;
-
 use tw_macro::assert_component;
 
 pub use props::SearchFieldButtonProps;
-
-assert_component!(SearchFieldButton);
 
 /// One button of the search-field toggle. It is the shared [`ToggleButton`]
 /// configured for the Unit / Ability field switch.
@@ -20,3 +17,5 @@ pub fn SearchFieldButton(props: SearchFieldButtonProps) -> Element {
         ToggleButton { ..button }
     }
 }
+
+assert_component!(SearchFieldButton);

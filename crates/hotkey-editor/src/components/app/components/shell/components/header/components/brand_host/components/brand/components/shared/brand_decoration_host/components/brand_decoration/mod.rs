@@ -5,7 +5,6 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 const HEADER_GOLD_DECORATION: Asset = asset!("/assets/webui/common/header-decoration-gold.png");
-assert_component!(BrandDecoration);
 
 /// The gold flourish itself. It scales to fill its host container via container-query
 /// units and keeps its aspect ratio, so it never distorts; the host owns the box and
@@ -21,3 +20,5 @@ pub fn BrandDecoration() -> Element {
         }
     }
 }
+
+assert_component!(BrandDecoration);

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BlockedDropTargetOverlayProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BlockedDropTargetOverlay);
 
 /// The blocked-drop-target overlay. Mounted only when a drop here is refused; the
 /// danger border and not-allowed cursor are the tile root's own (via
@@ -19,3 +18,5 @@ pub fn BlockedDropTargetOverlay(props: BlockedDropTargetOverlayProps) -> Element
         div { class: CLASS }
     }
 }
+
+assert_component!(BlockedDropTargetOverlay);

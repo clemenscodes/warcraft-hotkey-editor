@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::HotkeyConflictCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HotkeyConflictCard);
 
 /// One shared-hotkey conflict card: the e2e-coupled `.conflict-card` shell wrapping the
 /// conflict panel. It shapes the card model and hands the panel its caption and the two
@@ -26,3 +25,5 @@ pub fn HotkeyConflictCard(props: HotkeyConflictCardProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyConflictCard);

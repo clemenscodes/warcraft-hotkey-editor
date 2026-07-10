@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::KeyPickerColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(KeyPickerColumn);
 
 /// One column of the picker board: a vertical stack of key rows. The letter picker
 /// renders a single column; the system keyboard renders the main keyboard and the
@@ -23,3 +22,5 @@ pub fn KeyPickerColumn(props: KeyPickerColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPickerColumn);

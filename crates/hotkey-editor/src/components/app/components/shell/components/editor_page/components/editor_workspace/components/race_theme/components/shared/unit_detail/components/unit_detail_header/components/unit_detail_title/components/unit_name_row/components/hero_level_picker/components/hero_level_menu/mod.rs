@@ -9,7 +9,6 @@ use logic::hero_level_options;
 pub use props::HeroLevelMenuProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HeroLevelMenu);
 
 /// The dropdown list of selectable hero levels.
 #[component]
@@ -24,3 +23,5 @@ pub fn HeroLevelMenu(props: HeroLevelMenuProps) -> Element {
         }
     }
 }
+
+assert_component!(HeroLevelMenu);

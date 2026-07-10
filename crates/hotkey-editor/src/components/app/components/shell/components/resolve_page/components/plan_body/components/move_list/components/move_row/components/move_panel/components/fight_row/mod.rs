@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::FightRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightRow);
 
 /// The fighting-abilities row: the mover column beside the optional rival column (the
 /// rival renders itself away when the move has no anchor).
@@ -24,3 +23,5 @@ pub fn FightRow(props: FightRowProps) -> Element {
         }
     }
 }
+
+assert_component!(FightRow);

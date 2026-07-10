@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnitDetailHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitDetailHeader);
 
 /// The unit detail header: the portrait beside the title column (name, id, and the
 /// optional hero level picker).
@@ -25,3 +24,5 @@ pub fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitDetailHeader);

@@ -11,13 +11,12 @@ use components::tile_override_card::TileOverrideCard;
 use components::tile_override_key_picker::TileOverrideKeyPicker;
 use components::tile_override_upgrade_picker::TileOverrideUpgradePicker;
 use hooks::use_tile_override;
+use tw_macro::assert_component;
 
 pub use props::TileOverrideProps;
 
 /// The per-tile override editor. A pure renderer: the composed hook shapes the
 /// card's whole nested props tree and the pickers, and the body only places them.
-use tw_macro::assert_component;
-assert_component!(TileOverride);
 #[component]
 pub fn TileOverride(props: TileOverrideProps) -> Element {
     let model = use_tile_override(&props);
@@ -28,3 +27,5 @@ pub fn TileOverride(props: TileOverrideProps) -> Element {
         TileOverrideUpgradePicker { ..model.upgrade_picker }
     }
 }
+
+assert_component!(TileOverride);

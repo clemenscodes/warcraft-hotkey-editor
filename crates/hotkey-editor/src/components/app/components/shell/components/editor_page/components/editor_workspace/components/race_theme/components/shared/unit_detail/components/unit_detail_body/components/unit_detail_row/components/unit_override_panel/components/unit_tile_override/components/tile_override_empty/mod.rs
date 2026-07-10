@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideEmptyProps;
 
-assert_component!(TileOverrideEmpty);
-
 /// The placeholder shown in the override panel before a grid tile is selected.
 #[component]
 pub fn TileOverrideEmpty(props: TileOverrideEmptyProps) -> Element {
@@ -20,3 +18,5 @@ pub fn TileOverrideEmpty(props: TileOverrideEmptyProps) -> Element {
         }
     }
 }
+
+assert_component!(TileOverrideEmpty);

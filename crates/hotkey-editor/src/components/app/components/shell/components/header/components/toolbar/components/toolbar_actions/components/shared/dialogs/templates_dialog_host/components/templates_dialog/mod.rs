@@ -14,8 +14,6 @@ pub use props::TemplatesDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(TemplatesDialog);
-
 /// Lets the player apply a bundled layout template. It owns its own dialog shell:
 /// the hook resolves the template cards and apply handlers, the shell struct shapes
 /// the panel, and this places the panel inside its own backdrop `div` (the dimmed,
@@ -44,3 +42,5 @@ pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplatesDialog);

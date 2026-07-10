@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IdleUnitCardSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleUnitCardSurface);
 
 /// The idle unit card surface: the card button in its idle look, composing the shared
 /// portrait and text column. Presentational — the dispatcher renders it.
@@ -28,3 +27,5 @@ pub fn IdleUnitCardSurface(props: IdleUnitCardSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleUnitCardSurface);

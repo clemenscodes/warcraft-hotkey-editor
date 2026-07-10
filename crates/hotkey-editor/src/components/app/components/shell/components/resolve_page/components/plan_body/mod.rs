@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::{PlanBodyProps, PlanBodySection};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PlanBody);
 
 /// The scrollable plan body: the active category's move cards, then the unresolved
 /// abilities (when any). The active move list renders itself away when the plan has
@@ -32,3 +31,5 @@ pub fn PlanBody(props: PlanBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(PlanBody);

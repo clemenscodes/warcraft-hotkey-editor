@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::SpecialOverrideKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SpecialOverrideKey);
 
 /// The multi-character override key: a widened capture button around the shared gold cap,
 /// for special tokens (Esc, Mouse4, Mouse5) whose labels do not fit the square letter
@@ -27,3 +26,5 @@ pub fn SpecialOverrideKey(props: SpecialOverrideKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(SpecialOverrideKey);

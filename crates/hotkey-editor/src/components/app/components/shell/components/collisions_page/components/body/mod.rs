@@ -8,12 +8,11 @@ use components::positions_content::{PositionsContent, PositionsContentProps};
 use components::unit_positions_content::{UnitPositionsContent, UnitPositionsContentProps};
 use dioxus::prelude::*;
 pub use props::{BodyProps, ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
+use tw_macro::assert_component;
 
 /// The active collision content: dispatches the shaped `ContentModel` to
 /// the upload prompt, the all-clear state, or the kind's two-pane view. Pure
 /// data-driven render — the hook decides which variant, this only places it.
-use tw_macro::assert_component;
-assert_component!(Body);
 #[component]
 pub fn Body(props: BodyProps) -> Element {
     match props.content {
@@ -53,3 +52,5 @@ pub fn Body(props: BodyProps) -> Element {
         }
     }
 }
+
+assert_component!(Body);

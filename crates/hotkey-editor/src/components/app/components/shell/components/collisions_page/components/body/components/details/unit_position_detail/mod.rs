@@ -11,7 +11,6 @@ use components::filled_unit_position_detail::{
 use dioxus::prelude::*;
 pub use props::UnitPositionDetailProps;
 use tw_macro::assert_component;
-assert_component!(UnitPositionDetail);
 
 /// The position-collision detail pane. A dispatcher: when a unit is selected it renders
 /// the filled pane (the unit header over its position-conflict cards), otherwise the
@@ -30,3 +29,5 @@ pub fn UnitPositionDetail(props: UnitPositionDetailProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitPositionDetail);

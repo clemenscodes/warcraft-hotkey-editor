@@ -10,7 +10,6 @@ use logic::CombatFigures;
 pub use props::CombatColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CombatColumn);
 
 /// The combat column: the attack-type icon beside its stat rows and matchup grid, laid
 /// into the `combat` grid area. Present only when the unit has an attack; a unit that
@@ -43,3 +42,5 @@ pub fn CombatColumn(props: CombatColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(CombatColumn);

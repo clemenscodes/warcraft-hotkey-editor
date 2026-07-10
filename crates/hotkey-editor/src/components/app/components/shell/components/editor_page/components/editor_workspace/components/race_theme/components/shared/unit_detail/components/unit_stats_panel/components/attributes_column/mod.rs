@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::AttributesColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AttributesColumn);
 
 /// The hero attributes column: the primary-attribute icon beside the three attribute
 /// rows, laid into the `attributes` grid area. Present only for a hero unit; an
@@ -28,3 +27,5 @@ pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(AttributesColumn);

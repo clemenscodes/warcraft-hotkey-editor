@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HelpLegendProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpLegend);
 
 /// The list of toolbar buttons with what each one does, one row per entry passed
 /// in.
@@ -21,3 +20,5 @@ pub fn HelpLegend(props: HelpLegendProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpLegend);

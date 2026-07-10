@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::SelectedUnitCardSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SelectedUnitCardSurface);
 
 /// The selected unit card surface: the card button in its selected look, composing the shared
 /// portrait and text column. Presentational — the dispatcher renders it.
@@ -28,3 +27,5 @@ pub fn SelectedUnitCardSurface(props: SelectedUnitCardSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(SelectedUnitCardSurface);

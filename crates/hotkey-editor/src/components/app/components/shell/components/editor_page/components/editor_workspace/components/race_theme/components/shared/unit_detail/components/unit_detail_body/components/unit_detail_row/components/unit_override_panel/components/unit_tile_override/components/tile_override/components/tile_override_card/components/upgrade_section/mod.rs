@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UpgradeSectionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UpgradeSection);
 
 /// The upgraded-form block of a tile override: it owns its own block directly and
 /// delegates the header row (label, position button, hotkey cell) to its child.
@@ -25,3 +24,5 @@ pub fn UpgradeSection(props: UpgradeSectionProps) -> Element {
         }
     }
 }
+
+assert_component!(UpgradeSection);

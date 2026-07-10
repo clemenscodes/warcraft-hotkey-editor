@@ -7,7 +7,6 @@ use components::toolbar::Toolbar;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Header);
 
 /// The app's top chrome: the brand on the left, the global grid-layout button
 /// centered, and the toolbar on the right. Below 1280px the centered button hides
@@ -24,3 +23,5 @@ pub fn Header() -> Element {
         }
     }
 }
+
+assert_component!(Header);

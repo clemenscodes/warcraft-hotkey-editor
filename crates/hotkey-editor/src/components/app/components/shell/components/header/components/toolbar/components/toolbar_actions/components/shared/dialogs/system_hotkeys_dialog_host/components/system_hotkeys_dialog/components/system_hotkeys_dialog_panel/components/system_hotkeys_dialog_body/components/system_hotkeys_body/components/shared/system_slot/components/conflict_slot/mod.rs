@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::ConflictSlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictSlot);
 
 /// The conflict look of a system slot: the gold border-image frame with a danger-red
 /// glow overlay, composing the shared slot content. Presentational — the dispatcher
@@ -21,3 +20,5 @@ pub fn ConflictSlot(props: ConflictSlotProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictSlot);

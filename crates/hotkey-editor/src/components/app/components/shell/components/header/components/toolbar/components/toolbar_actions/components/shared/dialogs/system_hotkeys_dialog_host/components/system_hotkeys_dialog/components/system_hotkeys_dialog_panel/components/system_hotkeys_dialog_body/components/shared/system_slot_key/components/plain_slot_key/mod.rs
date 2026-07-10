@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::PlainSlotKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PlainSlotKey);
 
 /// The plain gold key glyph shown when the slot's binding is not in conflict.
 /// Presentational — the `SystemSlotKey` dispatcher renders it for the non-conflict
@@ -20,3 +19,5 @@ pub fn PlainSlotKey(props: PlainSlotKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(PlainSlotKey);

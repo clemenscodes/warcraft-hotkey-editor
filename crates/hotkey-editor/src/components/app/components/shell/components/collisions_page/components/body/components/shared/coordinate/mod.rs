@@ -4,7 +4,6 @@ use dioxus::prelude::*;
 pub use props::CoordinateProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Coordinate);
 /// A command-card coordinate: displays the column and row of the domain
 /// `GridCoordinate` it is handed.
 #[component]
@@ -19,3 +18,5 @@ pub fn Coordinate(props: CoordinateProps) -> Element {
         }
     }
 }
+
+assert_component!(Coordinate);

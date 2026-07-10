@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::LayoutEditorContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(LayoutEditorContent);
 
 /// The centered body column of the layout editor: the intro block above the
 /// editable grid, the move-hotkey toggle, and the apply action.
@@ -29,3 +28,5 @@ pub fn LayoutEditorContent(props: LayoutEditorContentProps) -> Element {
         }
     }
 }
+
+assert_component!(LayoutEditorContent);

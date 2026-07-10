@@ -4,14 +4,15 @@ use crate::components::app::components::shell::components::editor_page::componen
     Matchup, MatchupProps,
 };
 use dioxus::prelude::*;
+use tw_macro::assert_component;
 pub use props::DefenseMatchupProps;
 
 /// One cell of a defender's matchup. A thin wrapper over `Matchup`.
-use tw_macro::assert_component;
-assert_component!(DefenseMatchup);
 #[component]
 pub fn DefenseMatchup(props: DefenseMatchupProps) -> Element {
     rsx! {
         Matchup { ..MatchupProps::from(&props) }
     }
 }
+
+assert_component!(DefenseMatchup);

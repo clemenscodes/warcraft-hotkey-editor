@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::HelpBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpBody);
 
 /// The help guide's scrolling content: the split top row above the full-width
 /// resolver explanation. Pure layout; it threads the content down.
@@ -23,3 +22,5 @@ pub fn HelpBody(props: HelpBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpBody);

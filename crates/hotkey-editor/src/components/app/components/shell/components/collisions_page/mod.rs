@@ -12,14 +12,13 @@ use dioxus::prelude::*;
 use hooks::use_collisions_page;
 pub use props::CollisionsPageProps;
 use style::CLASS;
+use tw_macro::assert_component;
 
 /// Top-level Collisions page: a breadcrumb bar above the two-pane content, filling
 /// the view height so the content pane keeps its own scroll. Each kind renders a
 /// sidebar (islands, hotkey units, or per-unit positions) beside a detail pane,
 /// under a breadcrumb bar that swaps the active kind. Empty and all-clear states
 /// replace the two-pane content when there is no file or no conflicts.
-use tw_macro::assert_component;
-assert_component!(CollisionsPage);
 #[component]
 pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     let model = use_collisions_page(&props);
@@ -31,3 +30,5 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionsPage);

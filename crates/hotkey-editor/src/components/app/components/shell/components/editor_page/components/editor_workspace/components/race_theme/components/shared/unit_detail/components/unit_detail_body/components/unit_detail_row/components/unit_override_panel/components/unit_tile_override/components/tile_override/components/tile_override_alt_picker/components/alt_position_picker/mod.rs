@@ -14,8 +14,6 @@ pub use props::AltPositionPickerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(AltPositionPicker);
-
 /// The off-state position picker dialog. It owns its own dialog shell: the hook shapes
 /// the grid config, the shell struct names the bordered panel, and this places the
 /// panel inside its own backdrop `div` within the library `DialogRoot`. No project
@@ -41,3 +39,5 @@ pub fn AltPositionPicker(props: AltPositionPickerProps) -> Element {
         }
     }
 }
+
+assert_component!(AltPositionPicker);

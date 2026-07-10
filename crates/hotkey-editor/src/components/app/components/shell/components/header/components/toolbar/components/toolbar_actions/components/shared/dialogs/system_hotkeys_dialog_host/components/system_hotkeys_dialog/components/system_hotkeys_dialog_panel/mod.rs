@@ -9,7 +9,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::SystemHotkeysDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysDialogPanel);
 
 /// The system-hotkeys dialog's bordered box: it wraps the library `DialogContent` (focus
 /// trap and dialog semantics) and styles a real `div` of its own with the box `CLASS`, so
@@ -28,3 +27,5 @@ pub fn SystemHotkeysDialogPanel(props: SystemHotkeysDialogPanelProps) -> Element
         }
     }
 }
+
+assert_component!(SystemHotkeysDialogPanel);

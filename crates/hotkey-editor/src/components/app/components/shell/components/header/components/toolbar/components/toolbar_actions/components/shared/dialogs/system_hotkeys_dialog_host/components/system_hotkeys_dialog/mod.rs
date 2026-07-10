@@ -15,8 +15,6 @@ pub use props::SystemHotkeysDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(SystemHotkeysDialog);
-
 /// Edits Warcraft III's system and menu hotkeys. It owns its own dialog shell: the
 /// hook holds the UI signals, the shell struct shapes the panel, and this places the
 /// panel inside its own backdrop `div` (the dimmed, centring layer) within the library
@@ -44,3 +42,5 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(SystemHotkeysDialog);

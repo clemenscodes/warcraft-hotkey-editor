@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::UnitIdProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitId);
 
 /// The unit's database id.
 #[component]
@@ -17,3 +16,5 @@ pub fn UnitId(props: UnitIdProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitId);

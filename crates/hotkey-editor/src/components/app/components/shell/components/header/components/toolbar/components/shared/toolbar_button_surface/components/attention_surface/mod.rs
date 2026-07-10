@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::AttentionSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AttentionSurface);
 
 /// The attention resting look of a toolbar button: a persistently gold surface used
 /// when the button is surfacing a condition that needs the user's eye. Presentational
@@ -29,3 +28,5 @@ pub fn AttentionSurface(props: AttentionSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(AttentionSurface);

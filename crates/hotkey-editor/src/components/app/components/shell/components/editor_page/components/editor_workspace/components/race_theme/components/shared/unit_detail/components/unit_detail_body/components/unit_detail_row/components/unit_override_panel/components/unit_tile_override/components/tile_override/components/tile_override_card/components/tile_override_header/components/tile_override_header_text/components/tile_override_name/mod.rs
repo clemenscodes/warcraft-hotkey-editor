@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideNameProps;
 
-assert_component!(TileOverrideName);
-
 /// The ability / unit name heading in the override panel.
 #[component]
 pub fn TileOverrideName(props: TileOverrideNameProps) -> Element {
@@ -18,3 +16,5 @@ pub fn TileOverrideName(props: TileOverrideNameProps) -> Element {
         h3 { class: CLASS, {text} }
     }
 }
+
+assert_component!(TileOverrideName);

@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::FightReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightReasonBadge);
 
 /// The "Fight" reason badge: publishes the Fight accent colour and composes the base
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
@@ -23,3 +22,5 @@ pub fn FightReasonBadge(props: FightReasonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(FightReasonBadge);

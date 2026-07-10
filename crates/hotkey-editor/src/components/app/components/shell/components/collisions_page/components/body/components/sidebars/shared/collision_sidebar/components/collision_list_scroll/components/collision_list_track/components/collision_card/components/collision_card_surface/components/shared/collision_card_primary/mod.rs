@@ -5,9 +5,8 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::coordinate::Coordinate;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_unit_name::ConflictUnitName;
 use dioxus::prelude::*;
-pub use props::CollisionCardPrimaryProps;
 use tw_macro::assert_component;
-assert_component!(CollisionCardPrimary);
+pub use props::CollisionCardPrimaryProps;
 
 /// The primary meta of a collision card: the unit's name and object id for a unit
 /// card, or the highlighted coordinate for an island card. A dedicated switch on
@@ -24,3 +23,5 @@ pub fn CollisionCardPrimary(props: CollisionCardPrimaryProps) -> Element {
         },
     }
 }
+
+assert_component!(CollisionCardPrimary);

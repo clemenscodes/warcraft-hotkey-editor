@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MatchupValueProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MatchupValue);
 
 /// A matchup cell's value: the damage multiplier rendered as a percentage. The
 /// strong/weak colour comes from the parent cell group.
@@ -19,3 +18,5 @@ pub fn MatchupValue(props: MatchupValueProps) -> Element {
         }
     }
 }
+
+assert_component!(MatchupValue);

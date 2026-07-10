@@ -9,7 +9,6 @@ use components::footer_separator::FooterSeparator;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Footer);
 
 #[component]
 pub fn Footer() -> Element {
@@ -26,3 +25,5 @@ pub fn Footer() -> Element {
         }
     }
 }
+
+assert_component!(Footer);

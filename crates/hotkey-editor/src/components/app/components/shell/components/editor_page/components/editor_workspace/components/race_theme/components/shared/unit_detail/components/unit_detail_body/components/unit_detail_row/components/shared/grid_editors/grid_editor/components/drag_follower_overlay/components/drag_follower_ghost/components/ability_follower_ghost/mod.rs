@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::AbilityFollowerGhostProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AbilityFollowerGhost);
 
 /// The drag-follower ghost for a tile lifted from an ordinary ability menu: the panel
 /// surface, the dragged icon, and its hotkey badge, pinned to the cursor.
@@ -25,3 +24,5 @@ pub fn AbilityFollowerGhost(props: AbilityFollowerGhostProps) -> Element {
         }
     }
 }
+
+assert_component!(AbilityFollowerGhost);

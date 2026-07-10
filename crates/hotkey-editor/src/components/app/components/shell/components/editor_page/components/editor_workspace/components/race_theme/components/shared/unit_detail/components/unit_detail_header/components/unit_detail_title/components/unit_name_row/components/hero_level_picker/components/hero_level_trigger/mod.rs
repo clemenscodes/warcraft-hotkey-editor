@@ -6,7 +6,6 @@ use components::open_hero_level_trigger::{OpenHeroLevelTrigger, OpenHeroLevelTri
 use dioxus::prelude::*;
 pub use props::HeroLevelTriggerProps;
 use tw_macro::assert_component;
-assert_component!(HeroLevelTrigger);
 
 /// The hero-level dropdown trigger button. A pure dispatcher: from the menu's open
 /// flag it renders the open look (`OpenHeroLevelTrigger`, an accented border and glow
@@ -27,3 +26,5 @@ pub fn HeroLevelTrigger(props: HeroLevelTriggerProps) -> Element {
         }
     }
 }
+
+assert_component!(HeroLevelTrigger);

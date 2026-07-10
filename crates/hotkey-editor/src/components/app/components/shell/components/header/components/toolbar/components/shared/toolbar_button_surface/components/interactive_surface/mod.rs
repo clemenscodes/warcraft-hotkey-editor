@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::InteractiveSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InteractiveSurface);
 
 /// The interactive resting look of a toolbar button: muted text at rest that
 /// brightens to gold on hover. Presentational — the dispatcher builds its props and
@@ -28,3 +27,5 @@ pub fn InteractiveSurface(props: InteractiveSurfaceProps) -> Element {
         }
     }
 }
+
+assert_component!(InteractiveSurface);

@@ -10,8 +10,6 @@ use tw_macro::assert_component;
 
 pub use props::MobileCategoryTabsProps;
 
-assert_component!(MobileCategoryTabs);
-
 /// The mobile/tablet category tab row (hidden on the sidebar): a `tablist` of one
 /// `MobileCategoryTab` per category. The tabs arrive already shaped as props.
 #[component]
@@ -27,3 +25,5 @@ pub fn MobileCategoryTabs(props: MobileCategoryTabsProps) -> Element {
         }
     }
 }
+
+assert_component!(MobileCategoryTabs);

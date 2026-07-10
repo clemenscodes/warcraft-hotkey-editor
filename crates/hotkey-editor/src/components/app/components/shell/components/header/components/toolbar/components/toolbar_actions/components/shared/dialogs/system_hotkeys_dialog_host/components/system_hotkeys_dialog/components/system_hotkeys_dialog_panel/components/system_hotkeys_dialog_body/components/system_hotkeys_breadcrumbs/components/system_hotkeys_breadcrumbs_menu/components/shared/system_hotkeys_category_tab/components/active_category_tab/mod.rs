@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ActiveCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveCategoryTab);
 
 /// The selected category tab: gold, highlighted, and marked as the current page.
 #[component]
@@ -24,3 +23,5 @@ pub fn ActiveCategoryTab(props: ActiveCategoryTabProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveCategoryTab);

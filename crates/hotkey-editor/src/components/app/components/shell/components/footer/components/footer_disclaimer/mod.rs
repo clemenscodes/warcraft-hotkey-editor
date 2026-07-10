@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::FooterDisclaimerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FooterDisclaimer);
 
 #[component]
 pub fn FooterDisclaimer(props: FooterDisclaimerProps) -> Element {
@@ -14,3 +13,5 @@ pub fn FooterDisclaimer(props: FooterDisclaimerProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(FooterDisclaimer);

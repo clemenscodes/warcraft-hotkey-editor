@@ -7,7 +7,6 @@ use components::secondary_button::{SecondaryButton, SecondaryButtonProps};
 use dioxus::prelude::*;
 pub use props::{ButtonProps, ButtonVariant};
 use tw_macro::assert_component;
-assert_component!(Button);
 
 /// A WC3 action button in primary or secondary weight. A pure dispatcher: from the
 /// variant it renders `PrimaryButton` xor `SecondaryButton`. Each look owns its own
@@ -30,3 +29,5 @@ pub fn Button(props: ButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(Button);

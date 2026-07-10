@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::PositionsContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PositionsContent);
 
 /// The position-collision two-pane content: the island sidebar column beside the
 /// fluid island detail pane.
@@ -23,3 +22,5 @@ pub fn PositionsContent(props: PositionsContentProps) -> Element {
         }
     }
 }
+
+assert_component!(PositionsContent);

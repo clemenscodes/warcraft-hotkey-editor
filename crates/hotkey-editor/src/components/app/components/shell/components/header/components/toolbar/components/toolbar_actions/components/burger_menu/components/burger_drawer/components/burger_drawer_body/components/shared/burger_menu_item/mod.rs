@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::BurgerMenuItemProps;
 pub use state::BurgerItemState;
 use tw_macro::assert_component;
-assert_component!(BurgerMenuItem);
 
 /// A single drawer row. A pure dispatcher: from the row's visual weight it renders
 /// the matching look — `IdleMenuItem` xor `ActiveMenuItem` xor `PrimaryMenuItem`.
@@ -40,3 +39,5 @@ pub fn BurgerMenuItem(props: BurgerMenuItemProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerMenuItem);

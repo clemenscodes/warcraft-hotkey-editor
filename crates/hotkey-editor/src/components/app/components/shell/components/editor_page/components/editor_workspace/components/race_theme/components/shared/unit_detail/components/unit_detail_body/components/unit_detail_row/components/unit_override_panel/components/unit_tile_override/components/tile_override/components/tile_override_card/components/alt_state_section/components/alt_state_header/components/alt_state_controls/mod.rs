@@ -1,6 +1,7 @@
 mod props;
 
 use dioxus::prelude::*;
+use tw_macro::assert_component;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::{
     AltStatePositionButton, AltStatePositionButtonProps,
@@ -14,8 +15,6 @@ pub use props::AltStateControlsProps;
 
 /// The position button and off-state hotkey cell of the alt-state block; renders
 /// nothing when the off-state is not editable in this context.
-use tw_macro::assert_component;
-assert_component!(AltStateControls);
 #[component]
 pub fn AltStateControls(props: AltStateControlsProps) -> Element {
     if !props.show {
@@ -28,3 +27,5 @@ pub fn AltStateControls(props: AltStateControlsProps) -> Element {
         OverrideKey { ..key_cell }
     }
 }
+
+assert_component!(AltStateControls);

@@ -9,7 +9,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::KeyPickerPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(KeyPickerPanel);
 
 /// The key picker's bordered box: it wraps the library `DialogContent` (focus trap and
 /// dialog semantics) and styles a real `div` of its own with the box `CLASS`, so no
@@ -29,3 +28,5 @@ pub fn KeyPickerPanel(props: KeyPickerPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPickerPanel);

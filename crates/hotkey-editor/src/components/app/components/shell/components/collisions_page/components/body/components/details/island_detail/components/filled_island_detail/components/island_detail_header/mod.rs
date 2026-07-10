@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::IslandDetailHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandDetailHeader);
 
 /// The island detail pane header row: the island's mini-grid beside its text meta
 /// column.
@@ -25,3 +24,5 @@ pub fn IslandDetailHeader(props: IslandDetailHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandDetailHeader);

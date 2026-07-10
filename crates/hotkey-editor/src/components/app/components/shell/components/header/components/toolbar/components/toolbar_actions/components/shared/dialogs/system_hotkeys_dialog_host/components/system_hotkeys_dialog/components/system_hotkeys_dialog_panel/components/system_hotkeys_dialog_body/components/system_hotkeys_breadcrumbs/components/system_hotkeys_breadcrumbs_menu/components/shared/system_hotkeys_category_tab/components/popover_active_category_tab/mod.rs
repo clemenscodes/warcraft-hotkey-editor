@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::PopoverActiveCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PopoverActiveCategoryTab);
 
 /// The selected category tab in the small-viewport popover: a full-width, ringed gold
 /// row marked as the current page.
@@ -25,3 +24,5 @@ pub fn PopoverActiveCategoryTab(props: PopoverActiveCategoryTabProps) -> Element
         }
     }
 }
+
+assert_component!(PopoverActiveCategoryTab);

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::CategoryChevronProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CategoryChevron);
 
 /// The disclosure triangle beside a category heading.
 #[component]
@@ -19,3 +18,5 @@ pub fn CategoryChevron(props: CategoryChevronProps) -> Element {
         span { class: CLASS, {glyph} }
     }
 }
+
+assert_component!(CategoryChevron);

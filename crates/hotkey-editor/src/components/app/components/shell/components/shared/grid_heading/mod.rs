@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::GridHeadingProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(GridHeading);
 
 /// A grid section heading: an `h3` wearing the uppercase gold heading look, with
 /// its own per-band sizing.
@@ -19,3 +18,5 @@ pub fn GridHeading(props: GridHeadingProps) -> Element {
         }
     }
 }
+
+assert_component!(GridHeading);

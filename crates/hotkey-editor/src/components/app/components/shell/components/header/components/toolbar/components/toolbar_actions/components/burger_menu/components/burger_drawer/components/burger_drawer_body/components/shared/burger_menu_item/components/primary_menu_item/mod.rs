@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::PrimaryMenuItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PrimaryMenuItem);
 
 /// The primary (call-to-action) look of a drawer row: the emphasised gold panel button
 /// carrying the drawer's headline action, composing the icon and label. Presentational
@@ -40,3 +39,5 @@ pub fn PrimaryMenuItem(props: PrimaryMenuItemProps) -> Element {
         }
     }
 }
+
+assert_component!(PrimaryMenuItem);

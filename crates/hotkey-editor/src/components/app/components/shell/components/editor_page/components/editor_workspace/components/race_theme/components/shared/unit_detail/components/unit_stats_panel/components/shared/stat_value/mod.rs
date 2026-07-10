@@ -8,7 +8,6 @@ use components::muted_stat_value::{MutedStatValue, MutedStatValueProps};
 use dioxus::prelude::*;
 pub use props::StatValueProps;
 use tw_macro::assert_component;
-assert_component!(StatValue);
 
 /// A stat row's value in the default treatment: the domain figure presented as
 /// tabular, right-aligned text. A thin dispatcher — the figure reports whether it is
@@ -30,3 +29,5 @@ pub fn StatValue<Figure: StatFigure>(props: StatValueProps<Figure>) -> Element {
         }
     }
 }
+
+assert_component!(StatValue);

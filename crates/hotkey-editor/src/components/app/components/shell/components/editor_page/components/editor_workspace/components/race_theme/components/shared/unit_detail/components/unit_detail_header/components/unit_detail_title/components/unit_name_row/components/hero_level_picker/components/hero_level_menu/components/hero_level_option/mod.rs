@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 use hooks::use_hero_level_option;
 pub use props::HeroLevelOptionProps;
 use tw_macro::assert_component;
-assert_component!(HeroLevelOption);
 
 /// One selectable hero level in the dropdown. A pure dispatcher: from whether it is the
 /// current level (read from editor context) it renders `ActiveHeroLevelOption` xor
@@ -33,3 +32,5 @@ pub fn HeroLevelOption(props: HeroLevelOptionProps) -> Element {
         }
     }
 }
+
+assert_component!(HeroLevelOption);

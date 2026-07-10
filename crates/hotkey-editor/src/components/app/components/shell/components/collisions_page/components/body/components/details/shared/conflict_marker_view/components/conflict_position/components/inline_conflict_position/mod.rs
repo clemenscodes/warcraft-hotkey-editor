@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::InlineConflictPositionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InlineConflictPosition);
 
 /// The colliding cell shown inline between a conflict's two abilities.
 #[component]
@@ -20,3 +19,5 @@ pub fn InlineConflictPosition(props: InlineConflictPositionProps) -> Element {
         }
     }
 }
+
+assert_component!(InlineConflictPosition);

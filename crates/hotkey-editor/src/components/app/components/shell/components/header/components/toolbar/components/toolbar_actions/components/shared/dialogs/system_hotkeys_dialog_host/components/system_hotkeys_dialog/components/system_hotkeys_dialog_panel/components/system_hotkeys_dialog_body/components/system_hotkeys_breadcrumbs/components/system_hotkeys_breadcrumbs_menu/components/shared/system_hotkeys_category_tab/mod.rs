@@ -16,7 +16,6 @@ use dioxus::prelude::*;
 use hooks::use_system_hotkeys_category_tab;
 pub use props::SystemHotkeysCategoryTabProps;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysCategoryTab);
 
 /// One selectable category in the breadcrumbs. A pure dispatcher: from the tab's
 /// popover and active flags it renders the matching look — the tab-bar
@@ -50,3 +49,5 @@ pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabProps) -> Element
         }
     }
 }
+
+assert_component!(SystemHotkeysCategoryTab);

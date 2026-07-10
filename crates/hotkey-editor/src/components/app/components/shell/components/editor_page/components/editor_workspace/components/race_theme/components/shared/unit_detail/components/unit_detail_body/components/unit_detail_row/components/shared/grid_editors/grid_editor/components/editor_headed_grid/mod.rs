@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::EditorHeadedGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EditorHeadedGrid);
 
 /// A captioned editor grid: the shared `GridHeading` above the interactive
 /// `EditorGrid`. Owns `.editor-headed-grid`, which stacks the two and establishes
@@ -25,3 +24,5 @@ pub fn EditorHeadedGrid(props: EditorHeadedGridProps) -> Element {
         }
     }
 }
+
+assert_component!(EditorHeadedGrid);

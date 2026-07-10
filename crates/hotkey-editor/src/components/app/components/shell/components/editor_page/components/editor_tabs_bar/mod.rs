@@ -6,7 +6,6 @@ use components::race_tabs_host::RaceTabsHost;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EditorTabsBar);
 
 /// The editor's top navigation bar: the game-mode column beside the race tabs. Pure
 /// layout — each side is a connected host that sources its one concern (the active mode,
@@ -21,3 +20,5 @@ pub fn EditorTabsBar() -> Element {
         }
     }
 }
+
+assert_component!(EditorTabsBar);

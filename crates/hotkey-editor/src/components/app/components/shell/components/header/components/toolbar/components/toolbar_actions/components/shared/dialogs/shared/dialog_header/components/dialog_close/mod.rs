@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::DialogCloseProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DialogClose);
 
 /// The close glyph in a dialog header; forwards one click.
 #[component]
@@ -21,3 +20,5 @@ pub fn DialogClose(props: DialogCloseProps) -> Element {
         }
     }
 }
+
+assert_component!(DialogClose);

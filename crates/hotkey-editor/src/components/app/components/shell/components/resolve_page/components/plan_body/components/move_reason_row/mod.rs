@@ -11,7 +11,6 @@ use dioxus::prelude::*;
 pub use props::MoveReasonRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveReasonRow);
 
 /// The reason-badge row atop a move card. It routes the move's kind to the
 /// matching per-kind badge wrapper, forwarding the domain label text.
@@ -34,3 +33,5 @@ pub fn MoveReasonRow(props: MoveReasonRowProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveReasonRow);

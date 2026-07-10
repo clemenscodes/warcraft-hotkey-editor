@@ -1,13 +1,11 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
 use hooks::use_resolve_button;
 use style::CLASS;
-
-assert_component!(ResolveButton);
+use tw_macro::assert_component;
 
 /// Toolbar button that navigates to the Resolve page, where the cascade plan is
 /// previewed and applied. Reads the live document and router from context: disabled
@@ -23,3 +21,5 @@ pub fn ResolveButton() -> Element {
         }
     }
 }
+
+assert_component!(ResolveButton);

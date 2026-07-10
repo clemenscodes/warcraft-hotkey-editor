@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::GridLayoutButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(GridLayoutButton);
 
 /// Prominent call-to-action that opens the global grid-layout editor. Deliberately
 /// styled apart from the icon-only toolbar buttons. Presentational: its open state
@@ -30,3 +29,5 @@ pub fn GridLayoutButton(props: GridLayoutButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(GridLayoutButton);

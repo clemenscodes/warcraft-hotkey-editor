@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::KeyPickerBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(KeyPickerBody);
 
 /// The key picker's scrolling content region between the header and the panel
 /// edge, holding the shared on-screen key picker board.
@@ -21,3 +20,5 @@ pub fn KeyPickerBody(props: KeyPickerBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPickerBody);

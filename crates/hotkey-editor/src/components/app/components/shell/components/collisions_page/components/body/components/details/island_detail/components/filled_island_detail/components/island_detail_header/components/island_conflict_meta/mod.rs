@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IslandConflictMetaProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictMeta);
 
 /// The text meta column of the island detail header: the island's coordinate line and
 /// its collision count.
@@ -23,3 +22,5 @@ pub fn IslandConflictMeta(props: IslandConflictMetaProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandConflictMeta);

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MoveHotkeyCheckboxProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveHotkeyCheckbox);
 
 /// The custom-styled checkbox inside the move-hotkey toggle: a gold check on a
 /// dark, gold-bordered tile matching the grid cells.
@@ -23,3 +22,5 @@ pub fn MoveHotkeyCheckbox(props: MoveHotkeyCheckboxProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveHotkeyCheckbox);

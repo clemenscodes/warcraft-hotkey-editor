@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::NarrowKeySlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NarrowKeySlot);
 
 /// The sizing box for a standard-width picker key. A component owns its look; its
 /// parent owns its size — so the key's width lives here, and the color leaf inside
@@ -23,3 +22,5 @@ pub fn NarrowKeySlot(props: NarrowKeySlotProps) -> Element {
         }
     }
 }
+
+assert_component!(NarrowKeySlot);

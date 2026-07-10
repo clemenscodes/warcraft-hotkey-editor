@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ConflictAbilityIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictAbilityIcon);
 
 /// One conflicting ability's square icon: it owns its slot and lifts to a gold glow
 /// when its trigger `.group` is hovered. The shared `FramedIcon` draws the bordered,
@@ -33,3 +32,5 @@ pub fn ConflictAbilityIcon(props: ConflictAbilityIconProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictAbilityIcon);

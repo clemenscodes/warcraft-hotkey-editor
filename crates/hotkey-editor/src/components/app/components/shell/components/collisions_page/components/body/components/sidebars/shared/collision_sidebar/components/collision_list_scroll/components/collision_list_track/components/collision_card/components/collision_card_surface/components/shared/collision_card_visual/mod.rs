@@ -5,9 +5,8 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use components::hotkey_unit_row_icon::{HotkeyUnitRowIcon, HotkeyUnitRowIconProps};
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::{MiniGrid, MiniGridProps};
 use dioxus::prelude::*;
-pub use props::CollisionCardVisualProps;
 use tw_macro::assert_component;
-assert_component!(CollisionCardVisual);
+pub use props::CollisionCardVisualProps;
 
 /// The leading visual of a collision card: the unit's portrait for a unit card, or
 /// the highlighted mini grid for an island card. A dedicated switch on the card
@@ -32,3 +31,5 @@ pub fn CollisionCardVisual(props: CollisionCardVisualProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionCardVisual);

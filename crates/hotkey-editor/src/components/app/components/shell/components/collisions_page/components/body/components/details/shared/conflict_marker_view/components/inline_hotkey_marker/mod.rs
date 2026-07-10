@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::InlineHotkeyMarkerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InlineHotkeyMarker);
 
 /// The shared-hotkey badge shown inline between two abilities.
 #[component]
@@ -19,3 +18,5 @@ pub fn InlineHotkeyMarker(props: InlineHotkeyMarkerProps) -> Element {
         }
     }
 }
+
+assert_component!(InlineHotkeyMarker);

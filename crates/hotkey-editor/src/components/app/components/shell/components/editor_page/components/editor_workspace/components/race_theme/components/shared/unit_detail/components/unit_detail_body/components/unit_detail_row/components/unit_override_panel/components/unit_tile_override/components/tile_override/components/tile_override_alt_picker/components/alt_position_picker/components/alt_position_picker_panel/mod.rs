@@ -8,7 +8,6 @@ use dioxus_primitives::dialog::DialogContent;
 pub use props::AltPositionPickerPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AltPositionPickerPanel);
 
 /// The off-state position picker's bordered box: it wraps the library `DialogContent`
 /// and styles a real `div` of its own with the box `CLASS`, so no project class ever
@@ -27,3 +26,5 @@ pub fn AltPositionPickerPanel(props: AltPositionPickerPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(AltPositionPickerPanel);

@@ -5,7 +5,6 @@ use components::brand_decoration::BrandDecoration;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BrandDecorationHost);
 
 /// The decoration's sizing container: it establishes the container-query context and
 /// owns the flourish's box per band, so the leaf scales to fill it. Brand decides how
@@ -19,3 +18,5 @@ pub fn BrandDecorationHost() -> Element {
         }
     }
 }
+
+assert_component!(BrandDecorationHost);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 use hooks::use_race_tabs_host;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RaceTabsHost);
 
 /// Connected host for the race tabs: sources the active race and wires the select
 /// handler (which dispatches the domain `select_race` cascade), then hands the
@@ -23,3 +22,5 @@ pub fn RaceTabsHost() -> Element {
         }
     }
 }
+
+assert_component!(RaceTabsHost);

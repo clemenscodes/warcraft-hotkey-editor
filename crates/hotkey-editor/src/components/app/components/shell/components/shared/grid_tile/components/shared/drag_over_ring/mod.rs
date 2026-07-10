@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::DragOverRingProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DragOverRing);
 
 /// The drag-over marker. Mounted only while the cursor hovers this tile during a drag;
 /// the gold border it produces is the tile root's own (via `:has(.drag-over-ring)`), so
@@ -20,3 +19,5 @@ pub fn DragOverRing(props: DragOverRingProps) -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(DragOverRing);

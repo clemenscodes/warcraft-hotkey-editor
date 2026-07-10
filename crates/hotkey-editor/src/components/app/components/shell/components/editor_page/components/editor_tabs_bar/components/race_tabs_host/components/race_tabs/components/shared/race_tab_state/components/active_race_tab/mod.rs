@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::ActiveRaceTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveRaceTab);
 
 /// The active race tab: the base look, extended by composition. It renders the base
 /// `RaceTab` unchanged and adds the accent ON TOP — the `ActiveAccent` overlay ring, plus
@@ -27,3 +26,5 @@ pub fn ActiveRaceTab(props: ActiveRaceTabProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveRaceTab);

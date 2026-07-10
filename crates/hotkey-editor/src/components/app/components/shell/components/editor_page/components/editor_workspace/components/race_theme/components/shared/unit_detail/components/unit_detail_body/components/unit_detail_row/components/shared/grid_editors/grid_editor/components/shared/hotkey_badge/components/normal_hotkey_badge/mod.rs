@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::NormalHotkeyBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NormalHotkeyBadge);
 
 /// The hotkey badge for an ordinary binding: the warcraft-gold letter on a dark chip.
 #[component]
@@ -18,3 +17,5 @@ pub fn NormalHotkeyBadge(props: NormalHotkeyBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(NormalHotkeyBadge);

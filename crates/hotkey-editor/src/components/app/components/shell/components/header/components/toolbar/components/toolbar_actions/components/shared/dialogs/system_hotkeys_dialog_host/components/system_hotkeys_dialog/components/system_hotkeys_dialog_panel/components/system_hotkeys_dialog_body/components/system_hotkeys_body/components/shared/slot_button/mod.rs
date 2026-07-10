@@ -14,7 +14,6 @@ use hooks::use_slot_button;
 pub use props::SlotButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SlotButton);
 
 /// A big WC3 slot for the hero-selection and control-group layouts: a framed cell
 /// showing a caption and its bound key, edited on click via the system key picker.
@@ -38,3 +37,5 @@ pub fn SlotButton(props: SlotButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(SlotButton);

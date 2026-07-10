@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::HitPointsValueProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HitPointsValue);
 
 /// The hit-points figure: green, semibold, enlarged — the vitality headline value worn
 /// directly rather than selected through a shared variant. Hit points are never muted,
@@ -22,3 +21,5 @@ pub fn HitPointsValue(props: HitPointsValueProps) -> Element {
         }
     }
 }
+
+assert_component!(HitPointsValue);

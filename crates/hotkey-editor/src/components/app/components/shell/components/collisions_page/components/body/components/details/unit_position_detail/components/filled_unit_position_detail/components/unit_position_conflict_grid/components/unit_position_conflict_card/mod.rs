@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::UnitPositionConflictCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitPositionConflictCard);
 
 /// One position-collision card: the abilities that land on the same command-card cell,
 /// flanking (or stacked under) a mini grid flagging that cell. It owns its own card
@@ -26,3 +25,5 @@ pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element
         }
     }
 }
+
+assert_component!(UnitPositionConflictCard);

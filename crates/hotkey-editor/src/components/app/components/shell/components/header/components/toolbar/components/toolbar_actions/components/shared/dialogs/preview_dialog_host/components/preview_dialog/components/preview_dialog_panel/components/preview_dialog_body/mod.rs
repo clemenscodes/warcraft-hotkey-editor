@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::PreviewDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PreviewDialogBody);
 
 /// The preview dialog's scrolling content region between the header and the panel
 /// edge, holding the read-only serialized-keys textarea.
@@ -21,3 +20,5 @@ pub fn PreviewDialogBody(props: PreviewDialogBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(PreviewDialogBody);

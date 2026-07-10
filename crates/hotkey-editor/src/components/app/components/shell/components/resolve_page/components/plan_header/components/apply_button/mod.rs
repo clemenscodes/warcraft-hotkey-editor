@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ApplyButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ApplyButton);
 
 #[component]
 pub fn ApplyButton(props: ApplyButtonProps) -> Element {
@@ -25,3 +24,5 @@ pub fn ApplyButton(props: ApplyButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(ApplyButton);

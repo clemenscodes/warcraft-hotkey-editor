@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::IslandConflictAbilityRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictAbilityRow);
 
 /// The two clashing abilities flanking the centered separator. It owns its own abilities
 /// row element directly.
@@ -25,3 +24,5 @@ pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowProps) -> Element
         }
     }
 }
+
+assert_component!(IslandConflictAbilityRow);

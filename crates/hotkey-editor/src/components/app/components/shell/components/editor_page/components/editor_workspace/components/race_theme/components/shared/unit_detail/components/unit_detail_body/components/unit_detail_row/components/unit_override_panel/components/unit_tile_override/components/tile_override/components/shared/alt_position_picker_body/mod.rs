@@ -15,8 +15,6 @@ use tw_macro::assert_component;
 
 pub use props::AltPositionPickerBodyProps;
 
-assert_component!(AltPositionPickerBody);
-
 /// The scroll body of a position-picker dialog: the instruction explainer above the
 /// embedded command grid, centered in the dialog's own scroll region. Shared by the
 /// off-state and upgraded-form pickers.
@@ -32,3 +30,5 @@ pub fn AltPositionPickerBody(props: AltPositionPickerBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(AltPositionPickerBody);

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::TileLabelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TileLabel);
 
 /// The centered text fallback shown when an occupied tile has no icon.
 #[component]
@@ -17,3 +16,5 @@ pub fn TileLabel(props: TileLabelProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(TileLabel);

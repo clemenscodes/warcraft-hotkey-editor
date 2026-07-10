@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ActiveToggleButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveToggleButton);
 
 /// The active toggle button: the shared gold pill lit to show it is the current choice
 /// in its group. Presentational — the dispatcher renders it for the one active button.
@@ -27,3 +26,5 @@ pub fn ActiveToggleButton(props: ActiveToggleButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveToggleButton);

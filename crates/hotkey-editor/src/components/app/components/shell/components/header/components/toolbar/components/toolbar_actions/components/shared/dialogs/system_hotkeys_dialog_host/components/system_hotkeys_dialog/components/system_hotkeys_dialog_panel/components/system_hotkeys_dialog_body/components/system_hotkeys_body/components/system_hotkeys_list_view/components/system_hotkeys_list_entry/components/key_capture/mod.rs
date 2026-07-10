@@ -9,9 +9,8 @@ use crate::components::app::components::shell::components::header::components::t
 };
 use dioxus::prelude::*;
 use hooks::use_key_capture;
-pub use props::KeyCaptureProps;
 use tw_macro::assert_component;
-assert_component!(KeyCapture);
+pub use props::KeyCaptureProps;
 
 /// The connected host for a system-hotkey list row: it sources the row's resolved
 /// binding through `use_key_capture`, renders the presentational `KeyChip`, and
@@ -28,3 +27,5 @@ pub fn KeyCapture(props: KeyCaptureProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyCapture);

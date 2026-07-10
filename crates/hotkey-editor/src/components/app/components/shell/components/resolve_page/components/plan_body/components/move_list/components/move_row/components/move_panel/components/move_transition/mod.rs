@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::MoveTransitionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveTransition);
 
 /// The from → to transition block: the "before" grid, the centred arrow, and the
 /// "after" grid.
@@ -25,3 +24,5 @@ pub fn MoveTransition(props: MoveTransitionProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveTransition);

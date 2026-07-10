@@ -1,12 +1,11 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
 use dioxus::prelude::*;
 use hooks::use_control_groups_row;
 use style::CLASS;
-assert_component!(ControlGroupsRow);
+use tw_macro::assert_component;
 
 /// The ten-cell control-group strip.
 #[component]
@@ -22,3 +21,5 @@ pub fn ControlGroupsRow() -> Element {
         }
     }
 }
+
+assert_component!(ControlGroupsRow);

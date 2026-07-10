@@ -4,9 +4,8 @@ use crate::components::app::components::shell::components::editor_page::componen
     ToggleButton, ToggleButtonProps,
 };
 use dioxus::prelude::*;
-pub use props::ModeTabProps;
 use tw_macro::assert_component;
-assert_component!(ModeTab);
+pub use props::ModeTabProps;
 
 /// One mode button (Melee or Campaign). It is the shared [`ToggleButton`] configured
 /// for the mode toggle: a gold pill with no tooltip, carrying the keyboard handler
@@ -18,3 +17,5 @@ pub fn ModeTab(props: ModeTabProps) -> Element {
         ToggleButton { ..button }
     }
 }
+
+assert_component!(ModeTab);

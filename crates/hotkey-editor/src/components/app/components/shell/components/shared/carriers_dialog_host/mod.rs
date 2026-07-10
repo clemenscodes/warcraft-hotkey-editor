@@ -9,8 +9,6 @@ use hooks::use_carriers_dialog_host;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(CarriersDialogHost);
-
 /// Connected wrapper for the carriers dialog: mounts it while `open_state` names an
 /// ability, resolving that ability's carriers through the query. The trigger that opens
 /// the dialog creates `open_state` and renders this host directly beneath itself — so
@@ -29,3 +27,5 @@ pub fn CarriersDialogHost(open_state: Signal<Option<InspectedAbility>>) -> Eleme
         }
     }
 }
+
+assert_component!(CarriersDialogHost);

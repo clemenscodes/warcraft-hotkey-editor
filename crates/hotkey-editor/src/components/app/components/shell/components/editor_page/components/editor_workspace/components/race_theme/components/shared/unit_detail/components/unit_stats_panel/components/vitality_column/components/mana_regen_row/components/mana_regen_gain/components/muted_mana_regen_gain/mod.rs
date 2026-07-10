@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MutedManaRegenGainProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MutedManaRegenGain);
 
 /// The muted mana-regeneration look: faint text. Rendered by the
 /// [`ManaRegenGain`](super::super::ManaRegenGain) dispatcher when the unit does not
@@ -17,3 +16,5 @@ pub fn MutedManaRegenGain(props: MutedManaRegenGainProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(MutedManaRegenGain);

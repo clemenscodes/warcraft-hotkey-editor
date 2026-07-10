@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::SelectedCollisionCardSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SelectedCollisionCardSurface);
 
 /// The selected collision card surface: the card button in its selected look, composing the
 /// shared visual and meta line. Presentational — the dispatcher renders it.
@@ -26,3 +25,5 @@ pub fn SelectedCollisionCardSurface(props: SelectedCollisionCardSurfaceProps) ->
         }
     }
 }
+
+assert_component!(SelectedCollisionCardSurface);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::FightRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightRow);
 
 /// The stuck ability's row: it centers the ability's column.
 #[component]
@@ -20,3 +19,5 @@ pub fn FightRow(props: FightRowProps) -> Element {
         }
     }
 }
+
+assert_component!(FightRow);

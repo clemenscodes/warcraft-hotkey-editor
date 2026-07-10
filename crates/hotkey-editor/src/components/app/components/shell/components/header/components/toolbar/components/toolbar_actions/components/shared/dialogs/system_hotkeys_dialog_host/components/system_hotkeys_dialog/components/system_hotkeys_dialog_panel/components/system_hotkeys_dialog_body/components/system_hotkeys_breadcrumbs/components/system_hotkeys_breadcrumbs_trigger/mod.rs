@@ -12,7 +12,6 @@ use dioxus::prelude::*;
 pub use props::SystemHotkeysBreadcrumbsTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysBreadcrumbsTrigger);
 
 /// The small-viewport dropdown trigger showing the active category.
 #[component]
@@ -33,3 +32,5 @@ pub fn SystemHotkeysBreadcrumbsTrigger(props: SystemHotkeysBreadcrumbsTriggerPro
         }
     }
 }
+
+assert_component!(SystemHotkeysBreadcrumbsTrigger);

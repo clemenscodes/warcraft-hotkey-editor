@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::MoveTransitionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveTransition);
 
 /// The block flagging the cell the stuck ability lands on.
 #[component]
@@ -19,3 +18,5 @@ pub fn MoveTransition(props: MoveTransitionProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveTransition);

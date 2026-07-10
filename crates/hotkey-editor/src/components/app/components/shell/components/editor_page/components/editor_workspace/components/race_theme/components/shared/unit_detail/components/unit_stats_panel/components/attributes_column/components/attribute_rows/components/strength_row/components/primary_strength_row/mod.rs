@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::PrimaryStrengthRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PrimaryStrengthRow);
 
 /// The hero's strength row when strength is the hero's primary attribute: it wears the
 /// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn PrimaryStrengthRow(props: PrimaryStrengthRowProps) -> Element {
         }
     }
 }
+
+assert_component!(PrimaryStrengthRow);

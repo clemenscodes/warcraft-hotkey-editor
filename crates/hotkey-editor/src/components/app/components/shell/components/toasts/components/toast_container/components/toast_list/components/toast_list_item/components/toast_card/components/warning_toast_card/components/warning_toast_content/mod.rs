@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::WarningToastContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(WarningToastContent);
 
 /// The text column of a warning toast: its warning title above the optional description.
 #[component]
@@ -23,3 +22,5 @@ pub fn WarningToastContent(props: WarningToastContentProps) -> Element {
         }
     }
 }
+
+assert_component!(WarningToastContent);

@@ -9,7 +9,6 @@ use logic::IslandConflictCardModel;
 pub use props::IslandConflictCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictCard);
 
 /// One conflict card: the affected unit on top, its two clashing abilities flanking
 /// the centered separator below. It owns its own card surface directly.
@@ -24,3 +23,5 @@ pub fn IslandConflictCard(props: IslandConflictCardProps) -> Element {
         }
     }
 }
+
+assert_component!(IslandConflictCard);

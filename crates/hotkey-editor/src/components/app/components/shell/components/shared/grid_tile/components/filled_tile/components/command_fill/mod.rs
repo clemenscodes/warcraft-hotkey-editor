@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::CommandFillProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CommandFill);
 
 /// The command tile's background fill. Rendered only for a built-in command
 /// occupant; an ability occupant draws `AbilityFill` instead.
@@ -18,3 +17,5 @@ pub fn CommandFill(props: CommandFillProps) -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(CommandFill);

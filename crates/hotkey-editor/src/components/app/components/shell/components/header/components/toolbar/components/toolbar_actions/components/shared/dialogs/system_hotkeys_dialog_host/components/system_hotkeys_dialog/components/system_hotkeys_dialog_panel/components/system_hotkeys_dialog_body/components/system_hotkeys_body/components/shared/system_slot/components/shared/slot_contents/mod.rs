@@ -4,9 +4,8 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabel;
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-pub use props::SlotContentsProps;
 use tw_macro::assert_component;
-assert_component!(SlotContents);
+pub use props::SlotContentsProps;
 
 /// The framed slot's inner content — caption, bound key, and conflict tooltip —
 /// shared by every slot look. While the slot is being dragged the content is
@@ -26,3 +25,5 @@ pub fn SlotContents(props: SlotContentsProps) -> Element {
         Tooltip { ..tooltip }
     }
 }
+
+assert_component!(SlotContents);

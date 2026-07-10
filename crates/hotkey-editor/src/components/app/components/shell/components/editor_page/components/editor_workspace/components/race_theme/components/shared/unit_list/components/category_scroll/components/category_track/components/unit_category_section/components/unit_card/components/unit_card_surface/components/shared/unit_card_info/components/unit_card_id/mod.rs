@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnitCardIdProps;
 use state::UnitCardIdState;
 use tw_macro::assert_component;
-assert_component!(UnitCardId);
 
 /// The unit's database id inside a card. A pure dispatcher: from the card's selected
 /// flag it renders the muted `NormalUnitCardId` xor the race-accented
@@ -32,3 +31,5 @@ pub fn UnitCardId(props: UnitCardIdProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCardId);

@@ -9,7 +9,6 @@ use components::undead_race_theme::UndeadRaceTheme;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_api::Race;
-assert_component!(RaceTheme);
 
 /// Dispatches to the per-race themed container for the active race. Each race has its
 /// own component publishing that race's colour as `--race-color` and `--race-accent`
@@ -27,3 +26,5 @@ pub fn RaceTheme() -> Element {
         Race::Neutral => rsx! { NeutralRaceTheme {} },
     }
 }
+
+assert_component!(RaceTheme);

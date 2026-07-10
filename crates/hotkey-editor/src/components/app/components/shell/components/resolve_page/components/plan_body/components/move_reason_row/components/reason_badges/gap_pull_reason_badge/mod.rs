@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::GapPullReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(GapPullReasonBadge);
 
 /// The "GapPull" reason badge: publishes the GapPull accent colour and composes the base
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
@@ -23,3 +22,5 @@ pub fn GapPullReasonBadge(props: GapPullReasonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(GapPullReasonBadge);

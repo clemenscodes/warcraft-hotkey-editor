@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::IdleToggleButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleToggleButton);
 
 /// The idle toggle button: the shared gold pill in its resting look. Presentational —
 /// the dispatcher renders it for every button that is not the active one in its group.
@@ -27,3 +26,5 @@ pub fn IdleToggleButton(props: IdleToggleButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleToggleButton);

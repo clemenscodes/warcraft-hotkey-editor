@@ -15,8 +15,6 @@ pub use props::ResolvePageProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(ResolvePage);
-
 /// The Resolve page: a transparent preview of the cascade plan — every move the
 /// algorithm would make and any unresolved abilities — with an Apply button that
 /// runs the cascade. Shows an upload prompt with no file and an all-clear state
@@ -46,3 +44,5 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
         }
     }
 }
+
+assert_component!(ResolvePage);

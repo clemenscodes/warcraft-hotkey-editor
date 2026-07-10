@@ -3,7 +3,6 @@ mod style;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveAccent);
 
 /// The active tab's accent ring: an overlay the active variant stacks on top of the base
 /// button to mark it current. It draws only the accent border and glow and captures no
@@ -14,3 +13,5 @@ pub fn ActiveAccent() -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(ActiveAccent);

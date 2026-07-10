@@ -7,7 +7,6 @@ use components::plain_move_name::{PlainMoveName, PlainMoveNameProps};
 use dioxus::prelude::*;
 pub use props::MoveNameProps;
 use tw_macro::assert_component;
-assert_component!(MoveName);
 
 /// A moved/rival ability's name. A dispatcher: from whether it links to an owning unit
 /// it renders the clickable `LinkMoveName` xor the `PlainMoveName`; there is no
@@ -29,3 +28,5 @@ pub fn MoveName(props: MoveNameProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveName);

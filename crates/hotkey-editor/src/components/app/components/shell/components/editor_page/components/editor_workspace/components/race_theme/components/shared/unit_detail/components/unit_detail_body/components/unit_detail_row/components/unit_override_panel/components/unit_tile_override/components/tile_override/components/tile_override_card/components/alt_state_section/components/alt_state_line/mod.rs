@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::AltStateLineProps;
 
-assert_component!(AltStateLine);
-
 /// One description line under the alt-state header.
 #[component]
 pub fn AltStateLine(props: AltStateLineProps) -> Element {
@@ -18,3 +16,5 @@ pub fn AltStateLine(props: AltStateLineProps) -> Element {
         p { class: CLASS, {text} }
     }
 }
+
+assert_component!(AltStateLine);

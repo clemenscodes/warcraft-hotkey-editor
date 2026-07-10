@@ -11,7 +11,6 @@ use std::rc::Rc;
 use style::CLASS;
 use tw_macro::assert_component;
 use warcraft_keybinds::{CommandGridRenderInput, GridBehavior, GridSlotId, RenderedTile};
-assert_component!(GridEditor);
 
 /// The grid editor: a labeled, editable grid of a unit's command slots. It wraps
 /// the presentational [`EditorHeadedGrid`] verbatim and adds only behavior: it builds
@@ -63,3 +62,5 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element 
         }
     }
 }
+
+assert_component!(GridEditor);

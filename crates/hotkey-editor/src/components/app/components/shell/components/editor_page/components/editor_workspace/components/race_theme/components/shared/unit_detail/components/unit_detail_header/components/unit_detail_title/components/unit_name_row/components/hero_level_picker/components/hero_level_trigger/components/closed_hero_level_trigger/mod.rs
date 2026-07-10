@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::ClosedHeroLevelTriggerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ClosedHeroLevelTrigger);
 
 /// The resting look of the hero-level trigger: a dim gold border and no glow, with an
 /// upright caret. Rendered by the dispatcher while the menu is closed; owns its button
@@ -29,3 +28,5 @@ pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerProps) -> Element {
         }
     }
 }
+
+assert_component!(ClosedHeroLevelTrigger);

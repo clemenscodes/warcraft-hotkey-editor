@@ -4,7 +4,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_G
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(GridLayoutButtonIcon);
 
 /// The grid glyph inside the grid-layout button.
 #[component]
@@ -17,3 +16,5 @@ pub fn GridLayoutButtonIcon() -> Element {
         }
     }
 }
+
+assert_component!(GridLayoutButtonIcon);

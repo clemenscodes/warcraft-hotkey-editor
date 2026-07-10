@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::LayoutIntroLineProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(LayoutIntroLine);
 
 /// A single instruction line in the layout editor's intro.
 #[component]
@@ -15,3 +14,5 @@ pub fn LayoutIntroLine(props: LayoutIntroLineProps) -> Element {
         p { class: CLASS, {line} }
     }
 }
+
+assert_component!(LayoutIntroLine);

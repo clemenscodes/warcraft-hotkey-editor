@@ -12,7 +12,6 @@ use logic::CollisionsButtonPresentation;
 pub use props::CollisionsButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionsButton);
 
 /// Toolbar control that surfaces collision health and routes to the Collisions page on
 /// click. It reuses the shared gold `ToolbarButtonSurface` for its entire look — amber
@@ -49,3 +48,5 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionsButton);

@@ -13,7 +13,6 @@ use dioxus::prelude::*;
 pub use props::TooltipProps;
 pub use state::{TooltipAnchor, TooltipPlacement};
 use tw_macro::assert_component;
-assert_component!(Tooltip);
 
 /// A hover/focus tooltip bubble, shown above or below its trigger. Rendered as a
 /// child of a `group/tooltip relative` trigger, it reveals on the trigger's hover
@@ -73,3 +72,5 @@ pub fn Tooltip(props: TooltipProps) -> Element {
         },
     }
 }
+
+assert_component!(Tooltip);

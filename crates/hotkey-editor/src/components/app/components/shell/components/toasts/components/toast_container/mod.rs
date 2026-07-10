@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ToastContainerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToastContainer);
 
 /// The fixed overlay anchoring the toast stack to the bottom-right of the
 /// viewport. Click-through itself; each toast re-enables pointer events.
@@ -24,3 +23,5 @@ pub fn ToastContainer(props: ToastContainerProps) -> Element {
         }
     }
 }
+
+assert_component!(ToastContainer);

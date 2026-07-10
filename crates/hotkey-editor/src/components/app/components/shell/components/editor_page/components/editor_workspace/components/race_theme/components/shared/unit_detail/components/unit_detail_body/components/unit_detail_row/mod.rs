@@ -11,7 +11,6 @@ use dioxus::prelude::*;
 pub use props::UnitDetailRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitDetailRow);
 
 /// The command grids beside the override panel (headed by "Hotkey override"). It owns
 /// the override panel column directly.
@@ -31,3 +30,5 @@ pub fn UnitDetailRow(props: UnitDetailRowProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitDetailRow);

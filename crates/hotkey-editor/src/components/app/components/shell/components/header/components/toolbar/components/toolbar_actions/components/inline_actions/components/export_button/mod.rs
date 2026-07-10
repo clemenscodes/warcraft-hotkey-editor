@@ -1,14 +1,12 @@
 mod hooks;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog_host::DownloadInfoDialogHost;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
 use hooks::{use_export_button, ExportButtonPresentation};
 use style::CLASS;
-
-assert_component!(ExportButton);
+use tw_macro::assert_component;
 
 /// Toolbar button that downloads the current `CustomKeys.txt`, with its info dialog.
 /// Reads the live document from context and hides itself until a file is loaded, since
@@ -32,3 +30,5 @@ pub fn ExportButton() -> Element {
         }
     }
 }
+
+assert_component!(ExportButton);

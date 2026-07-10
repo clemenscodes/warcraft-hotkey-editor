@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::ConflictKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictKey);
 
 /// The look for a key already taken by another binding: orc-red, escalating to danger on
 /// hover. It owns its own button and shares only the shaped attributes and the conflict
@@ -30,3 +29,5 @@ pub fn ConflictKey(props: ConflictKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictKey);

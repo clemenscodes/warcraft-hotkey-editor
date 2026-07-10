@@ -13,8 +13,6 @@ pub use props::HelpDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(HelpDialog);
-
 /// The onboarding guide. It owns its own dialog shell: the shell struct shapes the
 /// panel from props, and this places the panel inside its own backdrop `div` (the
 /// dimmed, centring layer) within the library `DialogRoot`. No project class touches
@@ -41,3 +39,5 @@ pub fn HelpDialog(props: HelpDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpDialog);

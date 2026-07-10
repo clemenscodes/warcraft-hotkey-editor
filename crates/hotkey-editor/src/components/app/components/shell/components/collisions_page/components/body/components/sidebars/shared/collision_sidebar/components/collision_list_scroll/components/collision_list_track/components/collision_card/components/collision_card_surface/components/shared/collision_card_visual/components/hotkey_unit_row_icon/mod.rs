@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::HotkeyUnitRowIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HotkeyUnitRowIcon);
 
 /// A unit's portrait on a collision card. It owns its per-band slot; the shared
 /// `FramedIcon` draws the bordered, rounded image and renders nothing when the unit
@@ -34,3 +33,5 @@ pub fn HotkeyUnitRowIcon(props: HotkeyUnitRowIconProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyUnitRowIcon);

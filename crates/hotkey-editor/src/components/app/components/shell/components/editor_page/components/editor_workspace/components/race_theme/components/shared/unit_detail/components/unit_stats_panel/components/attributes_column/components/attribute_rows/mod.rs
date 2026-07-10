@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::AttributeRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AttributeRows);
 
 /// The hero's three attribute rows stacked beside the column's primary-attribute icon.
 /// It names its rows directly — each attribute row owns its own look and its primary
@@ -31,3 +30,5 @@ pub fn AttributeRows(props: AttributeRowsProps) -> Element {
         }
     }
 }
+
+assert_component!(AttributeRows);

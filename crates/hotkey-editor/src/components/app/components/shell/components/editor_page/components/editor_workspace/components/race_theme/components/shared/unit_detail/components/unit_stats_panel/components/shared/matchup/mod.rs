@@ -12,7 +12,6 @@ pub use props::MatchupProps;
 pub use state::MatchupStrength;
 pub use subject::MatchupSubject;
 use tw_macro::assert_component;
-assert_component!(Matchup);
 
 /// One matchup cell. A dispatcher: from the matchup strength it renders the strong,
 /// weak, or neutral cell — each owns its own tint and publishes the `--matchup-color`
@@ -40,3 +39,5 @@ pub fn Matchup(props: MatchupProps) -> Element {
         }
     }
 }
+
+assert_component!(Matchup);

@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::AltStateHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AltStateHeader);
 
 /// The off-state block's top row: the label column beside the editable controls.
 #[component]
@@ -25,3 +24,5 @@ pub fn AltStateHeader(props: AltStateHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(AltStateHeader);

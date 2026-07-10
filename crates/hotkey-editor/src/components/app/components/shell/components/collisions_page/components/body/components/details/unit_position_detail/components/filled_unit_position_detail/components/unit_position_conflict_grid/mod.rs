@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UnitPositionConflictGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitPositionConflictGrid);
 
 /// The scrolling grid of position-collision cards for the selected unit.
 #[component]
@@ -22,3 +21,5 @@ pub fn UnitPositionConflictGrid(props: UnitPositionConflictGridProps) -> Element
         }
     }
 }
+
+assert_component!(UnitPositionConflictGrid);

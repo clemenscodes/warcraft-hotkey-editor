@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::RegularIntelligenceRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RegularIntelligenceRow);
 
 /// The hero's intelligence row when intelligence is not the primary attribute: resting drop shadow,
 /// and it publishes the dimmer `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn RegularIntelligenceRow(props: RegularIntelligenceRowProps) -> Element {
         }
     }
 }
+
+assert_component!(RegularIntelligenceRow);

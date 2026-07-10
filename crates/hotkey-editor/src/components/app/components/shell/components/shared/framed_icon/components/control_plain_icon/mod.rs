@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ControlPlainIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ControlPlainIcon);
 
 /// The plain control look of a framed icon: the control-radius blue frame with no
 /// hover glow. Presentational — the dispatcher builds its props and renders it when
@@ -29,3 +28,5 @@ pub fn ControlPlainIcon(props: ControlPlainIconProps) -> Element {
         }
     }
 }
+
+assert_component!(ControlPlainIcon);

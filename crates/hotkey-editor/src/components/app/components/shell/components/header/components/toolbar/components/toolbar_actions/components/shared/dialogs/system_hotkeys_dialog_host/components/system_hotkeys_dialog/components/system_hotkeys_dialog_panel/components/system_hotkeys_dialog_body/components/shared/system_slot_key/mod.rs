@@ -7,7 +7,6 @@ use components::plain_slot_key::{PlainSlotKey, PlainSlotKeyProps};
 use dioxus::prelude::*;
 pub use props::SystemSlotKeyProps;
 use tw_macro::assert_component;
-assert_component!(SystemSlotKey);
 
 /// The bound-key glyph shown on a system hotkey slot. A pure dispatcher: from the
 /// slot's conflict flag it renders the matching look — `PlainSlotKey` (gold) xor
@@ -30,3 +29,5 @@ pub fn SystemSlotKey(props: SystemSlotKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(SystemSlotKey);

@@ -11,7 +11,6 @@ use dioxus::prelude::*;
 pub use props::DefenseRowsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DefenseRows);
 
 /// The defense column's stat rows stacked beside its icon: the armor, defense-type, and
 /// effective-hit-points rows, the guarded evasion row, and the defender's matchup grid.
@@ -33,3 +32,5 @@ pub fn DefenseRows(props: DefenseRowsProps) -> Element {
         }
     }
 }
+
+assert_component!(DefenseRows);

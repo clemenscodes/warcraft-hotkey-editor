@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::{AbilityPair, ConflictPairRowProps};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictPairRow);
 
 /// The two-ability layout for a shared-key clash: the two abilities flanking the key
 /// badge. It owns its own abilities row. Renders nothing when there is no pair.
@@ -31,3 +30,5 @@ pub fn ConflictPairRow(props: ConflictPairRowProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictPairRow);

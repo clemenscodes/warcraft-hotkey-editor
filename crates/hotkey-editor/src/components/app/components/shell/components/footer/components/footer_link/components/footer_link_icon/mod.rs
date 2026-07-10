@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::FooterLinkIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FooterLinkIcon);
 
 /// The inline glyph a footer link may carry. A leaf that early-returns when the
 /// link has no icon, so the parent renders it unconditionally and never branches.
@@ -18,3 +17,5 @@ pub fn FooterLinkIcon(props: FooterLinkIconProps) -> Element {
         span { class: CLASS, aria_hidden: "true", dangerous_inner_html: svg }
     }
 }
+
+assert_component!(FooterLinkIcon);

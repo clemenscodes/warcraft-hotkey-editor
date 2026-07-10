@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::NormalOverrideKeyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NormalOverrideKey);
 
 /// The single-letter override key: the square capture button around the shared gold cap.
 /// The `OverrideKey` dispatcher renders it for an ordinary letter token; it wears its
@@ -26,3 +25,5 @@ pub fn NormalOverrideKey(props: NormalOverrideKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(NormalOverrideKey);

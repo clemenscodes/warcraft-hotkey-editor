@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideTierLabelProps;
 
-assert_component!(TileOverrideTierLabel);
-
 /// The "Level N of M" caption in the tier-cycling footer.
 #[component]
 pub fn TileOverrideTierLabel(props: TileOverrideTierLabelProps) -> Element {
@@ -18,3 +16,5 @@ pub fn TileOverrideTierLabel(props: TileOverrideTierLabelProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(TileOverrideTierLabel);

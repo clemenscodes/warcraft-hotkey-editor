@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::SystemKeyPickerDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SystemKeyPickerDialogBody);
 
 /// The system key picker's scrolling content region between the header and the
 /// panel edge, holding the shared full-bleed on-screen keyboard board.
@@ -21,3 +20,5 @@ pub fn SystemKeyPickerDialogBody(props: SystemKeyPickerDialogBodyProps) -> Eleme
         }
     }
 }
+
+assert_component!(SystemKeyPickerDialogBody);

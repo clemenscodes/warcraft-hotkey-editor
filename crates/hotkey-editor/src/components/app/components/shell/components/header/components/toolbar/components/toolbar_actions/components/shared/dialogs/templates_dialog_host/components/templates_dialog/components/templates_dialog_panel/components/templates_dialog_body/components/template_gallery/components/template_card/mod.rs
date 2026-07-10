@@ -9,7 +9,6 @@ use props::TemplateCardPresentation;
 pub use props::TemplateCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TemplateCard);
 
 /// A clickable template card: its name and description above a preview of the
 /// command card and research menu it would apply. Owns `.template-card`.
@@ -25,3 +24,5 @@ pub fn TemplateCard(props: TemplateCardProps) -> Element {
         }
     }
 }
+
+assert_component!(TemplateCard);

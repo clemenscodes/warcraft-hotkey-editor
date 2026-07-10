@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::BurgerDrawerHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerDrawerHeader);
 
 #[component]
 pub fn BurgerDrawerHeader(props: BurgerDrawerHeaderProps) -> Element {
@@ -18,3 +17,5 @@ pub fn BurgerDrawerHeader(props: BurgerDrawerHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerDrawerHeader);

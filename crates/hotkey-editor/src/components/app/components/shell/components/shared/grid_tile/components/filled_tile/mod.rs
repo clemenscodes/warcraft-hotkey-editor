@@ -15,7 +15,6 @@ pub use props::FilledTileProps;
 pub use state::FilledTileKind;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FilledTile);
 
 /// An occupied command tile. Purely presentational: it draws the ability icon (or its
 /// text fallback) over a per-kind background fill, themes its accent from the owning
@@ -44,3 +43,5 @@ pub fn FilledTile(props: FilledTileProps) -> Element {
         }
     }
 }
+
+assert_component!(FilledTile);

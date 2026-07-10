@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::TransitionColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TransitionColumn);
 
 /// One side (from or to) of the transition block: a single mini grid of placements.
 #[component]
@@ -19,3 +18,5 @@ pub fn TransitionColumn(props: TransitionColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(TransitionColumn);

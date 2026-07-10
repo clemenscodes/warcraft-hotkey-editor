@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::StatLabelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(StatLabel);
 
 /// A stat row's category label in the default treatment: the row's name in the shared
 /// gold gilding. Threads only its text; every plain row nests this leaf rather than
@@ -20,3 +19,5 @@ pub fn StatLabel(props: StatLabelProps) -> Element {
         }
     }
 }
+
+assert_component!(StatLabel);

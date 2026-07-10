@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::InfoDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InfoDialogBody);
 
 /// The info dialog's scrolling content region between the header and the panel
 /// edge, holding the centered instruction block and the action row.
@@ -24,3 +23,5 @@ pub fn InfoDialogBody(props: InfoDialogBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(InfoDialogBody);

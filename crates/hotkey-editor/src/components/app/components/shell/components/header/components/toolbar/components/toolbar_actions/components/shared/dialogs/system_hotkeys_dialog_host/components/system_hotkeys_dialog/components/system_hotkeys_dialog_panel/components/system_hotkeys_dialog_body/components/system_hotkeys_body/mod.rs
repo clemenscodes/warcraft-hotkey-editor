@@ -1,7 +1,6 @@
 pub mod components;
 mod hooks;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
@@ -9,7 +8,7 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use hooks::{use_system_hotkeys_body, SystemHotkeysBodyModel};
 use warcraft_api::SystemHotkeysCategory;
-assert_component!(SystemHotkeysBody);
+use tw_macro::assert_component;
 
 /// Renders the editor for the active category. Inventory, hero selection, and
 /// control groups have bespoke editors; every other category is a plain list of
@@ -43,3 +42,5 @@ pub fn SystemHotkeysBody() -> Element {
         }
     }
 }
+
+assert_component!(SystemHotkeysBody);

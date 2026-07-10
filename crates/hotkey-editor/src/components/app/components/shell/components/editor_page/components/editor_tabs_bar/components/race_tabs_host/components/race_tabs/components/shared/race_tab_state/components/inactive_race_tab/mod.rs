@@ -4,9 +4,8 @@ use crate::components::app::components::shell::components::editor_page::componen
     RaceTab, RaceTabProps,
 };
 use dioxus::prelude::*;
-pub use props::InactiveRaceTabProps;
 use tw_macro::assert_component;
-assert_component!(InactiveRaceTab);
+pub use props::InactiveRaceTabProps;
 
 /// The inactive race tab: a named alias that renders the base `RaceTab` as-is and adds
 /// nothing. It exists only so the dispatcher reads as a clean `if active { ActiveRaceTab }
@@ -19,3 +18,5 @@ pub fn InactiveRaceTab(props: InactiveRaceTabProps) -> Element {
         RaceTab { ..base }
     }
 }
+
+assert_component!(InactiveRaceTab);

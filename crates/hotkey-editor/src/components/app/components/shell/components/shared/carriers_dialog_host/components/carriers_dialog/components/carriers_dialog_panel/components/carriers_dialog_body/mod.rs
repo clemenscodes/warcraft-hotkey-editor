@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::CarriersDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CarriersDialogBody);
 
 /// The carriers dialog's scrolling content region between the header and the panel
 /// edge, holding the scrollable grid of carrier cards.
@@ -21,3 +20,5 @@ pub fn CarriersDialogBody(props: CarriersDialogBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(CarriersDialogBody);

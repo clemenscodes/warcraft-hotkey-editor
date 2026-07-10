@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::RaceTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RaceTab);
 
 /// The base race tab: the banner button itself, and the single owner of the race-tab
 /// look. It is the most-nested leaf — its `style.rs` is a private `mod style` that
@@ -30,3 +29,5 @@ pub fn RaceTab(props: RaceTabProps) -> Element {
         }
     }
 }
+
+assert_component!(RaceTab);

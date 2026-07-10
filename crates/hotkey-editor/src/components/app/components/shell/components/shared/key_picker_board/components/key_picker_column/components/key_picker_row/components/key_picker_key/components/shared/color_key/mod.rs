@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::ColorKeyProps;
 pub use state::ColorKeyState;
 use tw_macro::assert_component;
-assert_component!(ColorKey);
 
 /// A picker key's color look, chosen from its state. A pure dispatcher that carries no
 /// look of its own: from the key's visual state it renders the matching color
@@ -40,3 +39,5 @@ pub fn ColorKey(props: ColorKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(ColorKey);

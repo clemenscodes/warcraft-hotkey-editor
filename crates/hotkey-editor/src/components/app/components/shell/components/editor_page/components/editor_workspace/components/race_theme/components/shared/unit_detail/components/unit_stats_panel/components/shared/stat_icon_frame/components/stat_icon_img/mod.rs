@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::StatIconImgProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(StatIconImg);
 
 /// A stat column's icon image, filling its frame.
 #[component]
@@ -20,3 +19,5 @@ pub fn StatIconImg(props: StatIconImgProps) -> Element {
         }
     }
 }
+
+assert_component!(StatIconImg);

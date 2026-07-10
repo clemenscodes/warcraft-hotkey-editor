@@ -14,8 +14,6 @@ pub use props::{KeyPickerCell, KeyPickerCellState, KeyPickerProps};
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(KeyPicker);
-
 /// Assigns an ability hotkey from an on-screen letter keyboard. It owns its own
 /// dialog shell: the hook mirrors the open flag and shapes the board, the shell struct
 /// names the open flag and panel, and this places the panel inside its own backdrop
@@ -41,3 +39,5 @@ pub fn KeyPicker(props: KeyPickerProps) -> Element {
         }
     }
 }
+
+assert_component!(KeyPicker);

@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 use hooks::use_system_hotkeys_breadcrumbs_menu;
 pub use props::SystemHotkeysBreadcrumbsMenuProps;
 use tw_macro::assert_component;
-assert_component!(SystemHotkeysBreadcrumbsMenu);
 
 /// The category tab list. A pure dispatcher: from the dropdown's open flag it renders
 /// the small-viewport popover (`OpenBreadcrumbsMenu`) xor the tab bar
@@ -30,3 +29,5 @@ pub fn SystemHotkeysBreadcrumbsMenu(props: SystemHotkeysBreadcrumbsMenuProps) ->
         }
     }
 }
+
+assert_component!(SystemHotkeysBreadcrumbsMenu);

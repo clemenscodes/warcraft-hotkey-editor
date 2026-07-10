@@ -10,8 +10,6 @@ use tw_macro::assert_component;
 
 pub use props::AltPositionPickerGridAnchorProps;
 
-assert_component!(AltPositionPickerGridAnchor);
-
 /// Centers and picker-restyles the embedded command grid inside a position picker.
 #[component]
 pub fn AltPositionPickerGridAnchor(props: AltPositionPickerGridAnchorProps) -> Element {
@@ -20,3 +18,5 @@ pub fn AltPositionPickerGridAnchor(props: AltPositionPickerGridAnchorProps) -> E
         div { class: CLASS, CommandGridEditor { ..grid_config } }
     }
 }
+
+assert_component!(AltPositionPickerGridAnchor);

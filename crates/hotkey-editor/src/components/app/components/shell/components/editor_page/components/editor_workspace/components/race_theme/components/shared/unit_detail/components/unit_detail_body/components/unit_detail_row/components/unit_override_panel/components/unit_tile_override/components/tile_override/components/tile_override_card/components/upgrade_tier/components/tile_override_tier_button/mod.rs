@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideTierButtonProps;
 
-assert_component!(TileOverrideTierButton);
-
 /// A prev/next arrow button in the tier-cycling footer.
 #[component]
 pub fn TileOverrideTierButton(props: TileOverrideTierButtonProps) -> Element {
@@ -25,3 +23,5 @@ pub fn TileOverrideTierButton(props: TileOverrideTierButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(TileOverrideTierButton);

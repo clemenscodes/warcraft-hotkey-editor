@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BrandTitleProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BrandTitle);
 
 #[component]
 pub fn BrandTitle(props: BrandTitleProps) -> Element {
@@ -14,3 +13,5 @@ pub fn BrandTitle(props: BrandTitleProps) -> Element {
         h1 { class: CLASS, {title} }
     }
 }
+
+assert_component!(BrandTitle);

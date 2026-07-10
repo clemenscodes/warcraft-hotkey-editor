@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::UnitCardIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitCardIcon);
 
 /// The framed portrait slot of a unit card: it owns the per-band icon size, and the
 /// shared `FramedIcon` draws the bordered, rounded image — or the empty framed square
@@ -32,3 +31,5 @@ pub fn UnitCardIcon(props: UnitCardIconProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCardIcon);

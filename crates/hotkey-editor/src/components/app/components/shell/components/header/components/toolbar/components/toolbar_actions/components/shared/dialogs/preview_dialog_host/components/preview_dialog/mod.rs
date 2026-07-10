@@ -14,8 +14,6 @@ pub use props::PreviewDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(PreviewDialog);
-
 /// Shows the serialized CustomKeys.txt in a read-only textarea. It owns its own
 /// dialog shell: the hook shapes the text, the shell struct names the open flag and
 /// panel, and this places the panel inside its own backdrop `div` (the dimmed,
@@ -44,3 +42,5 @@ pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(PreviewDialog);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ActiveMenuItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveMenuItem);
 
 /// The active (open-toggle) look of a drawer row: the gold panel button lit to show
 /// its dialog/preview is open, composing the icon and label. Presentational — the
@@ -39,3 +38,5 @@ pub fn ActiveMenuItem(props: ActiveMenuItemProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveMenuItem);

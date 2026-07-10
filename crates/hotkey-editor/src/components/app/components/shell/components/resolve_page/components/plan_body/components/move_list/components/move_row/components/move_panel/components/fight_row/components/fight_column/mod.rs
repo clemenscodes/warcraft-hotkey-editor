@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::FightColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightColumn);
 
 /// The mover's fighter column: its name button over its ability icon.
 #[component]
@@ -23,3 +22,5 @@ pub fn FightColumn(props: FightColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(FightColumn);

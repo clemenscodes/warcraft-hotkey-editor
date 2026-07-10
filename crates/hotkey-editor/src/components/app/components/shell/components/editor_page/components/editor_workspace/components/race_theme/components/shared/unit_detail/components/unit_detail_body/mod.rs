@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UnitDetailBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitDetailBody);
 
 /// The card body: the grids-and-override row.
 #[component]
@@ -19,3 +18,5 @@ pub fn UnitDetailBody(props: UnitDetailBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitDetailBody);

@@ -10,7 +10,6 @@ use hooks::use_inventory_drag_overlay;
 pub use props::InventoryDragOverlayProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InventoryDragOverlay);
 
 /// The card that follows the cursor while an inventory slot is dragged. Renders
 /// nothing when no drag is in progress; otherwise a framed card at the cursor
@@ -29,3 +28,5 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayProps) -> Element {
         }
     }
 }
+
+assert_component!(InventoryDragOverlay);

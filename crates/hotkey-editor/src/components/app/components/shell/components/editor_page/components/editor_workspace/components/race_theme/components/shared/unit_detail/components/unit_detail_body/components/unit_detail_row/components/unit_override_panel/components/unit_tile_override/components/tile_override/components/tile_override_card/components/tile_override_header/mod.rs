@@ -11,8 +11,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideHeaderProps;
 
-assert_component!(TileOverrideHeader);
-
 /// The header row of the override panel: the name/id column and the hotkey slot.
 #[component]
 pub fn TileOverrideHeader(props: TileOverrideHeaderProps) -> Element {
@@ -23,3 +21,5 @@ pub fn TileOverrideHeader(props: TileOverrideHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(TileOverrideHeader);

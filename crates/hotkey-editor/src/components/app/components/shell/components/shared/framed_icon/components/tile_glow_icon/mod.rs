@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::TileGlowIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TileGlowIcon);
 
 /// The glowing tile look of a framed icon: the tile-radius blue frame that lifts to a
 /// gold hover glow. Presentational — the dispatcher builds its props and renders it
@@ -29,3 +28,5 @@ pub fn TileGlowIcon(props: TileGlowIconProps) -> Element {
         }
     }
 }
+
+assert_component!(TileGlowIcon);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HelpGlossaryColumnsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpGlossaryColumns);
 
 /// The side-by-side glossaries that define the resolver's vocabulary, one column
 /// per entry list passed in.
@@ -21,3 +20,5 @@ pub fn HelpGlossaryColumns(props: HelpGlossaryColumnsProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpGlossaryColumns);

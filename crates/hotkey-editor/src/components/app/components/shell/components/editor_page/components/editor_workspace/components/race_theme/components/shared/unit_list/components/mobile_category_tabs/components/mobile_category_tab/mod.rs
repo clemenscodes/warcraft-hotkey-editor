@@ -11,7 +11,6 @@ use dioxus::prelude::*;
 use hooks::{MobileCategoryTabView, use_mobile_category_tab};
 pub use props::MobileCategoryTabProps;
 use tw_macro::assert_component;
-assert_component!(MobileCategoryTab);
 
 /// A single category tab in the mobile unit picker. A pure dispatcher: from whether its
 /// kind is the active category (read from editor context) it renders
@@ -36,3 +35,5 @@ pub fn MobileCategoryTab(props: MobileCategoryTabProps) -> Element {
         }
     }
 }
+
+assert_component!(MobileCategoryTab);

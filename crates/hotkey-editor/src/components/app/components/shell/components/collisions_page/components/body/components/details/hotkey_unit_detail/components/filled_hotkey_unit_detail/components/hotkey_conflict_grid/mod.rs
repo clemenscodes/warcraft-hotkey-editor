@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HotkeyConflictGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HotkeyConflictGrid);
 
 /// The scrolling grid of shared-hotkey conflict cards for the selected unit.
 #[component]
@@ -22,3 +21,5 @@ pub fn HotkeyConflictGrid(props: HotkeyConflictGridProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeyConflictGrid);

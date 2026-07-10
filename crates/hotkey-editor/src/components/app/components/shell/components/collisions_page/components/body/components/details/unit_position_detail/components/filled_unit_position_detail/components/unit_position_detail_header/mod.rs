@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnitPositionDetailHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitPositionDetailHeader);
 
 /// The position-collision detail pane header row: the selected unit's icon button
 /// beside its text meta column.
@@ -25,3 +24,5 @@ pub fn UnitPositionDetailHeader(props: UnitPositionDetailHeaderProps) -> Element
         }
     }
 }
+
+assert_component!(UnitPositionDetailHeader);

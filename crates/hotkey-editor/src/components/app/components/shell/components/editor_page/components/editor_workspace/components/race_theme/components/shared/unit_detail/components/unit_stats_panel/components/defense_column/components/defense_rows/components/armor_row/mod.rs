@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ArmorRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ArmorRow);
 
 const LABEL_TEXT: &str = "Armor";
 
@@ -23,3 +22,5 @@ pub fn ArmorRow(props: ArmorRowProps) -> Element {
         }
     }
 }
+
+assert_component!(ArmorRow);

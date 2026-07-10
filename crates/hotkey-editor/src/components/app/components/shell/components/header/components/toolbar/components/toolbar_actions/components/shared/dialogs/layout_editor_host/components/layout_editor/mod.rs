@@ -16,8 +16,6 @@ pub use props::LayoutEditorProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(LayoutEditor);
-
 /// The global hotkey layout editor. It owns its own dialog shell: the hook resolves
 /// the grid cells, picker state, and handlers; the shell struct shapes the panel, and
 /// this places the panel inside its own backdrop `div` (the dimmed, centring layer)
@@ -52,3 +50,5 @@ pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
         }
     }
 }
+
+assert_component!(LayoutEditor);

@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::MiniGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MiniGrid);
 
 /// The shrunk read-only command grid: the three-by-four square of inert base
 /// `GridTile`s. A pure tile renderer that encodes the grid shape (shared with the
@@ -23,3 +22,5 @@ pub fn MiniGrid(props: MiniGridProps) -> Element {
         }
     }
 }
+
+assert_component!(MiniGrid);

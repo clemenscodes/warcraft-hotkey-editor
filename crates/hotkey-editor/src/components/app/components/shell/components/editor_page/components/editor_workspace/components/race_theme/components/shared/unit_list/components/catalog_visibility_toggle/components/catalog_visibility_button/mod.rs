@@ -4,12 +4,9 @@ use crate::components::app::components::shell::components::editor_page::componen
     ToggleButton, ToggleButtonProps,
 };
 use dioxus::prelude::*;
-
 use tw_macro::assert_component;
 
 pub use props::CatalogVisibilityButtonProps;
-
-assert_component!(CatalogVisibilityButton);
 
 /// One button of the catalog-visibility toggle. It is the shared [`ToggleButton`]
 /// configured for a visibility filter — the only one of the toggles that carries a
@@ -21,3 +18,5 @@ pub fn CatalogVisibilityButton(props: CatalogVisibilityButtonProps) -> Element {
         ToggleButton { ..button }
     }
 }
+
+assert_component!(CatalogVisibilityButton);

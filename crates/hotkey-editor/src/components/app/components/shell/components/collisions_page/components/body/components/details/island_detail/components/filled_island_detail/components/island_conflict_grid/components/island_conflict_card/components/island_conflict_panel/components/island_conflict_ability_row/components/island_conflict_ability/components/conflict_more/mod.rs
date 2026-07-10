@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ConflictMoreProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictMore);
 
 #[component]
 pub fn ConflictMore(props: ConflictMoreProps) -> Element {
@@ -21,3 +20,5 @@ pub fn ConflictMore(props: ConflictMoreProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictMore);

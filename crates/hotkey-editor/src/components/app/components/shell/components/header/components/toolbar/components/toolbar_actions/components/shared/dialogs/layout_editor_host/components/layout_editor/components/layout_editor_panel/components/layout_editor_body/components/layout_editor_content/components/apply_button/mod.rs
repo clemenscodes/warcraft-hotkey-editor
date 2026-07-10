@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::ApplyButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ApplyButton);
 
 /// The action that rewrites every ability hotkey to match the grid, centered
 /// in the editor body below the grid.
@@ -23,3 +22,5 @@ pub fn ApplyButton(props: ApplyButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(ApplyButton);

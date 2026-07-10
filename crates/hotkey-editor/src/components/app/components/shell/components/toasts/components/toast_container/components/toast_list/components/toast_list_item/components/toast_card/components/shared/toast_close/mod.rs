@@ -7,7 +7,6 @@ use logic::ToastClosePresentation;
 pub use props::ToastCloseProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToastClose);
 
 /// The dismiss control on a toast.
 #[component]
@@ -23,3 +22,5 @@ pub fn ToastClose(props: ToastCloseProps) -> Element {
         }
     }
 }
+
+assert_component!(ToastClose);

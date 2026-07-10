@@ -6,7 +6,6 @@ use components::toolbar_actions::ToolbarActions;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Toolbar);
 
 /// The editor action bar: a nav with the always-visible collisions button and the
 /// adaptive file actions (inline buttons at laptop width and up, a burger drawer
@@ -23,3 +22,5 @@ pub fn Toolbar() -> Element {
         }
     }
 }
+
+assert_component!(Toolbar);

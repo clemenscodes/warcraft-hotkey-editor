@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::MovePanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MovePanel);
 
 /// The move card's surface (bordered, tinted, blue-accented): the reason badge over the
 /// fighting-abilities row over the from → to transition block.
@@ -27,3 +26,5 @@ pub fn MovePanel(props: MovePanelProps) -> Element {
         }
     }
 }
+
+assert_component!(MovePanel);

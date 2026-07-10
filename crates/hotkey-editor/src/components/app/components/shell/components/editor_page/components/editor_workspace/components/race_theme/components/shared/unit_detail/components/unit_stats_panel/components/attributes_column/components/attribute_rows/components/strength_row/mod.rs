@@ -6,7 +6,6 @@ use components::regular_strength_row::{RegularStrengthRow, RegularStrengthRowPro
 use dioxus::prelude::*;
 pub use props::StrengthRowProps;
 use tw_macro::assert_component;
-assert_component!(StrengthRow);
 
 /// The hero's strength attribute row. A dispatcher: when strength is the hero's primary
 /// attribute it renders the glowing primary row, otherwise the resting regular row — each
@@ -25,3 +24,5 @@ pub fn StrengthRow(props: StrengthRowProps) -> Element {
         }
     }
 }
+
+assert_component!(StrengthRow);

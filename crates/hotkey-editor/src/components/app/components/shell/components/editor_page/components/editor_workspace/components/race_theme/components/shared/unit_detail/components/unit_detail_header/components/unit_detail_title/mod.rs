@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnitDetailTitleProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitDetailTitle);
 
 /// The title column of the header: the name row and the unit id.
 #[component]
@@ -24,3 +23,5 @@ pub fn UnitDetailTitle(props: UnitDetailTitleProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitDetailTitle);

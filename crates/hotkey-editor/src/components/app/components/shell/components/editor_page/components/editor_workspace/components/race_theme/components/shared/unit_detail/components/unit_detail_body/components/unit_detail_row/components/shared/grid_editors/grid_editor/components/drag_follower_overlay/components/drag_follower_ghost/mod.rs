@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::DragFollowerGhostProps;
 use state::GhostState;
 use tw_macro::assert_component;
-assert_component!(DragFollowerGhost);
 
 /// The drag-follower ghost. A pure dispatcher: it shows nothing when this grid owns no
 /// in-progress drag, and otherwise routes to the per-menu ghost component — the menu the
@@ -35,3 +34,5 @@ pub fn DragFollowerGhost(props: DragFollowerGhostProps) -> Element {
         }
     }
 }
+
+assert_component!(DragFollowerGhost);

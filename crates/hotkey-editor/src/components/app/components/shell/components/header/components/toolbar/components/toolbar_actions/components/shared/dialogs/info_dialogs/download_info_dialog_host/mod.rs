@@ -4,14 +4,13 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::files::download;
 use dioxus::prelude::*;
+use tw_macro::assert_component;
 
 /// Connected wrapper for the download dialog: reads the live document from the
 /// [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) and owns the confirm handler that serializes and
 /// downloads it. Neither the export button nor the burger menu touches the
 /// document to offer a download — they place this host and pass only the open
 /// signal. Owns no markup beyond the dialog it wraps.
-use tw_macro::assert_component;
-assert_component!(DownloadInfoDialogHost);
 #[component]
 pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
     let custom_keys_service = use_custom_keys_service();
@@ -26,3 +25,5 @@ pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
         DownloadInfoDialog { ..dialog }
     }
 }
+
+assert_component!(DownloadInfoDialogHost);

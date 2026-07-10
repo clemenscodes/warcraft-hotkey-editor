@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::TileFaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TileFace);
 
 /// The tile painter: the resting visual of a command-grid slot — the inert base
 /// `GridTile` (filled or empty) with the `TileBadge` hotkey letter layered on top,
@@ -30,3 +29,5 @@ pub fn TileFace(props: TileFaceProps) -> Element {
         }
     }
 }
+
+assert_component!(TileFace);

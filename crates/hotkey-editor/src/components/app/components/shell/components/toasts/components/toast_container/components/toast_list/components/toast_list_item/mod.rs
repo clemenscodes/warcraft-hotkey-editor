@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ToastListItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToastListItem);
 
 /// A single list slot. Re-enables pointer events (the container is click-through)
 /// and hosts one toast card.
@@ -21,3 +20,5 @@ pub fn ToastListItem(props: ToastListItemProps) -> Element {
         }
     }
 }
+
+assert_component!(ToastListItem);

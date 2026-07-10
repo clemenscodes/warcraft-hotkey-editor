@@ -16,8 +16,6 @@ pub use props::SystemKeyPickerDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
-assert_component!(SystemKeyPickerDialog);
-
 /// Assigns a system or menu hotkey from a full on-screen keyboard (including keys the
 /// letter picker does not offer, like function keys and the numpad). It owns its own
 /// dialog shell: the composed hook shapes the title and board, the shell struct names
@@ -45,3 +43,5 @@ pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
         }
     }
 }
+
+assert_component!(SystemKeyPickerDialog);

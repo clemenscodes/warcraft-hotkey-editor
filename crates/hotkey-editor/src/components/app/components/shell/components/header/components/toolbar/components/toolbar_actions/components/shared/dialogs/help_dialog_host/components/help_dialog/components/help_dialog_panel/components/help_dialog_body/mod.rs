@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::HelpDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpDialogBody);
 
 /// The help dialog's scrolling content region between the header and the panel
 /// edge, holding the guide body and the dismiss button.
@@ -24,3 +23,5 @@ pub fn HelpDialogBody(props: HelpDialogBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpDialogBody);

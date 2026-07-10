@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::SystemSlotProps;
 pub use state::SystemSlotState;
 use tw_macro::assert_component;
-assert_component!(SystemSlot);
 
 /// The framed WC3 slot cell shared by the inventory grid and the hero/control-group
 /// layouts. A pure dispatcher: from the slot's glow state it renders the matching
@@ -41,3 +40,5 @@ pub fn SystemSlot(props: SystemSlotProps) -> Element {
         }
     }
 }
+
+assert_component!(SystemSlot);

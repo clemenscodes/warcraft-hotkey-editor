@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::UploadButtonInputProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UploadButtonInput);
 
 /// The visually hidden `<input type="file">` that receives the CustomKeys.txt.
 #[component]
@@ -22,3 +21,5 @@ pub fn UploadButtonInput(props: UploadButtonInputProps) -> Element {
         }
     }
 }
+
+assert_component!(UploadButtonInput);

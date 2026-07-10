@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 use hooks::use_mode_tabs_host;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ModeTabsHost);
 
 /// Connected host for the mode column: sources the active mode and wires the select
 /// handler (which dispatches the domain `select_mode` cascade), then hands the
@@ -22,3 +21,5 @@ pub fn ModeTabsHost() -> Element {
         }
     }
 }
+
+assert_component!(ModeTabsHost);

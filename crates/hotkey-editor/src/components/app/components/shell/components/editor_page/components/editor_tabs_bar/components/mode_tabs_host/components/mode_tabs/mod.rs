@@ -9,7 +9,6 @@ use logic::ModeTabPair;
 pub use props::ModeTabsProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ModeTabs);
 
 /// The mode column: the Melee and Campaign buttons stacked (or laid in a row on
 /// phones). Each button's label, active flag, and handlers are built by
@@ -25,3 +24,5 @@ pub fn ModeTabs(props: ModeTabsProps) -> Element {
         }
     }
 }
+
+assert_component!(ModeTabs);

@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnresolvedSectionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnresolvedSection);
 
 /// The unresolved-abilities section under the move list. It stacks the section title over
 /// its own move-list grid of stuck-ability cards.
@@ -25,3 +24,5 @@ pub fn UnresolvedSection(props: UnresolvedSectionProps) -> Element {
         }
     }
 }
+
+assert_component!(UnresolvedSection);

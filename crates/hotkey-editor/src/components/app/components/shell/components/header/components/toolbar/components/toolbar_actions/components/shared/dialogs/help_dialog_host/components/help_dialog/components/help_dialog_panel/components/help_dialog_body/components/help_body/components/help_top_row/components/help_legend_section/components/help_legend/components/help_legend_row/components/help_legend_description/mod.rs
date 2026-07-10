@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::HelpLegendDescriptionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpLegendDescription);
 
 /// The toolbar button's one-line description in a legend row. A leaf: the row
 /// passes the copy, and the leaf renders it after the label with a leading gap.
@@ -16,3 +15,5 @@ pub fn HelpLegendDescription(props: HelpLegendDescriptionProps) -> Element {
         span { class: CLASS, " {description}" }
     }
 }
+
+assert_component!(HelpLegendDescription);

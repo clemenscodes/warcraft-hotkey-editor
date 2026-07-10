@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BurgerMenuItemLabelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerMenuItemLabel);
 
 #[component]
 pub fn BurgerMenuItemLabel(props: BurgerMenuItemLabelProps) -> Element {
@@ -14,3 +13,5 @@ pub fn BurgerMenuItemLabel(props: BurgerMenuItemLabelProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(BurgerMenuItemLabel);

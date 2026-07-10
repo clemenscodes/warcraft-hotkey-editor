@@ -9,7 +9,6 @@ use logic::cells;
 pub use props::DamageMatchupRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DamageMatchupRow);
 
 /// The attacker's damage matchup grid.
 #[component]
@@ -24,3 +23,5 @@ pub fn DamageMatchupRow(props: DamageMatchupRowProps) -> Element {
         }
     }
 }
+
+assert_component!(DamageMatchupRow);

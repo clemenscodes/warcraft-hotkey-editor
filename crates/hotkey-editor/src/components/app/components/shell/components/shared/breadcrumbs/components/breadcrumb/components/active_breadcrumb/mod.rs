@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ActiveBreadcrumbProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveBreadcrumb);
 
 /// The active breadcrumb tab: the current page's crumb, its label and count lit gold.
 /// It publishes `--count-opacity: 1` so its count reads full-strength. Presentational —
@@ -28,3 +27,5 @@ pub fn ActiveBreadcrumb(props: ActiveBreadcrumbProps) -> Element {
         }
     }
 }
+
+assert_component!(ActiveBreadcrumb);

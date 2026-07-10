@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::EvasionRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EvasionRow);
 
 const LABEL_TEXT: &str = "Evasion";
 
@@ -28,3 +27,5 @@ pub fn EvasionRow(props: EvasionRowProps) -> Element {
         }
     }
 }
+
+assert_component!(EvasionRow);

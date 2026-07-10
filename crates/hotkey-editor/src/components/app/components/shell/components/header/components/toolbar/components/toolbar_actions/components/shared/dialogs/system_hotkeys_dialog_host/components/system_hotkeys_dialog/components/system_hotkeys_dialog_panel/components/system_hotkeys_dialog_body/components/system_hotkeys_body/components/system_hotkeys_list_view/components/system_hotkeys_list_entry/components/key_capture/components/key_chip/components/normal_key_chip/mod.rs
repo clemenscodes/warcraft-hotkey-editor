@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::NormalKeyChipProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(NormalKeyChip);
 
 /// The gold, non-conflicting look of a system-hotkey chip: props in, markup out. It
 /// bakes its own gold colour into `style.rs` and owns the classed button root.
@@ -25,3 +24,5 @@ pub fn NormalKeyChip(props: NormalKeyChipProps) -> Element {
         }
     }
 }
+
+assert_component!(NormalKeyChip);

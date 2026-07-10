@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::ConflictDetailUnitIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictDetailUnitIcon);
 
 /// The unit portrait in the detail header: it owns its slot and the shared
 /// `FramedIcon` draws the bordered, rounded image.
@@ -32,3 +31,5 @@ pub fn ConflictDetailUnitIcon(props: ConflictDetailUnitIconProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictDetailUnitIcon);

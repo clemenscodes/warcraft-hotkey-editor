@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::InfoToastContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(InfoToastContent);
 
 /// The text column of a info toast: its info title above the optional description.
 #[component]
@@ -23,3 +22,5 @@ pub fn InfoToastContent(props: InfoToastContentProps) -> Element {
         }
     }
 }
+
+assert_component!(InfoToastContent);

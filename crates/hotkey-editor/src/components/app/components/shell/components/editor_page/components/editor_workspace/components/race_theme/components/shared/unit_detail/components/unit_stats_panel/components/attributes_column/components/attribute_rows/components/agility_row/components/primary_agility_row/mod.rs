@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::PrimaryAgilityRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(PrimaryAgilityRow);
 
 /// The hero's agility row when agility is the hero's primary attribute: it wears the
 /// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn PrimaryAgilityRow(props: PrimaryAgilityRowProps) -> Element {
         }
     }
 }
+
+assert_component!(PrimaryAgilityRow);

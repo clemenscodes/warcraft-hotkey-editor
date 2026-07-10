@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ToolbarButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToolbarButton);
 
 /// The container for a toolbar action button. It owns only the button's box: it fills
 /// the height it is given, locks itself square (`aspect-square`, so it is never
@@ -26,3 +25,5 @@ pub fn ToolbarButton(props: ToolbarButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(ToolbarButton);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::IdleBreadcrumbProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleBreadcrumb);
 
 /// The idle breadcrumb tab: a muted crumb that lightens on hover. It publishes
 /// `--count-opacity: 0.8` for its dimmed count. Presentational — the dispatcher renders
@@ -28,3 +27,5 @@ pub fn IdleBreadcrumb(props: IdleBreadcrumbProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleBreadcrumb);

@@ -12,7 +12,6 @@ use logic::EditorTileChrome;
 pub use props::GridEditorTileProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(GridEditorTile);
 
 /// The interactive command tile: the connected Host that wraps the presentational
 /// `TileFace` painter and owns all interaction — focus, the cursor, and every event
@@ -52,3 +51,5 @@ pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
         }
     }
 }
+
+assert_component!(GridEditorTile);

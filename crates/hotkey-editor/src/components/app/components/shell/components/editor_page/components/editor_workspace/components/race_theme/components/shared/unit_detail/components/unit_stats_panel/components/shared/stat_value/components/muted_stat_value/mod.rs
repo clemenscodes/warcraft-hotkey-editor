@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::MutedStatValueProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MutedStatValue);
 
 /// The muted (zero-figure) value look: faint text, normal weight. Rendered by the
 /// [`StatValue`](super::super::StatValue) dispatcher when the figure reports itself
@@ -17,3 +16,5 @@ pub fn MutedStatValue(props: MutedStatValueProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(MutedStatValue);

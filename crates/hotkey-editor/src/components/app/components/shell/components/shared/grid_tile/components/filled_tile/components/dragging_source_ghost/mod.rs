@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::DraggingSourceGhostProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DraggingSourceGhost);
 
 /// The dragging-source ghost. Mounted only while this tile is the lifted drag source;
 /// the dashed deep-blue ghost border is the tile root's own (via
@@ -21,3 +20,5 @@ pub fn DraggingSourceGhost(props: DraggingSourceGhostProps) -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(DraggingSourceGhost);

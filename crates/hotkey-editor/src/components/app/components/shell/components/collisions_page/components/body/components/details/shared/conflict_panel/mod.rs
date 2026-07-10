@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ConflictPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ConflictPanel);
 
 /// The conflict card surface: the role caption over exactly one of the two clash
 /// layouts (the pair row or the multi stack). Each layout renders itself away when it
@@ -27,3 +26,5 @@ pub fn ConflictPanel(props: ConflictPanelProps) -> Element {
         }
     }
 }
+
+assert_component!(ConflictPanel);

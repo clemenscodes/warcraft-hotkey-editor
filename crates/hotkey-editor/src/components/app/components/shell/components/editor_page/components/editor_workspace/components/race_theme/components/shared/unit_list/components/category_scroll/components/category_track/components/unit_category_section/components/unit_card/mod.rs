@@ -9,7 +9,6 @@ use hooks::use_unit_card;
 pub use props::UnitCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitCard);
 
 /// One selectable unit in the list: portrait plus name and id. Selecting it drives
 /// the unit-detail panel. A thin identity wrapper that owns the card's placement box
@@ -26,3 +25,5 @@ pub fn UnitCard(props: UnitCardProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCard);

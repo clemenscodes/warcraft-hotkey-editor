@@ -6,9 +6,8 @@ use components::active_mana_regen_gain::{ActiveManaRegenGain, ActiveManaRegenGai
 use components::muted_mana_regen_gain::{MutedManaRegenGain, MutedManaRegenGainProps};
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_figure::StatFigure;
 use dioxus::prelude::*;
-pub use props::ManaRegenGainProps;
 use tw_macro::assert_component;
-assert_component!(ManaRegenGain);
+pub use props::ManaRegenGainProps;
 
 /// The mana-regeneration gain: the human-blue accent, pushed to the row's end. A thin
 /// dispatcher — it renders the active look (`ActiveManaRegenGain`) xor the muted look
@@ -28,3 +27,5 @@ pub fn ManaRegenGain(props: ManaRegenGainProps) -> Element {
         }
     }
 }
+
+assert_component!(ManaRegenGain);

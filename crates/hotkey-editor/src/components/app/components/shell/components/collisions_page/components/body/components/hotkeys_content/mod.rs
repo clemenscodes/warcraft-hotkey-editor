@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HotkeysContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HotkeysContent);
 
 /// The shared-hotkey two-pane content: the clashing-units sidebar column beside the
 /// fluid hotkey unit detail pane.
@@ -23,3 +22,5 @@ pub fn HotkeysContent(props: HotkeysContentProps) -> Element {
         }
     }
 }
+
+assert_component!(HotkeysContent);

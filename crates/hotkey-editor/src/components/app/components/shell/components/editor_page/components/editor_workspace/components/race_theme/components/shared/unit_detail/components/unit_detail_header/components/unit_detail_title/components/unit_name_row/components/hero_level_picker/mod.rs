@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 use hooks::{HeroLevelPickerView, use_hero_level_picker};
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HeroLevelPicker);
 
 /// The hero-level dropdown: the trigger, and — while open — the menu and its
 /// dismissing backdrop. Owns its own open state, sources the selected level from
@@ -33,3 +32,5 @@ pub fn HeroLevelPicker() -> Element {
         }
     }
 }
+
+assert_component!(HeroLevelPicker);

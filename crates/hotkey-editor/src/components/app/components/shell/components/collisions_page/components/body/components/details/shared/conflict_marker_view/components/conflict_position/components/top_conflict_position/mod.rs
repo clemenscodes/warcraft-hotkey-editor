@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::TopConflictPositionProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TopConflictPosition);
 
 /// The colliding cell stacked over a multi-way ability row.
 #[component]
@@ -20,3 +19,5 @@ pub fn TopConflictPosition(props: TopConflictPositionProps) -> Element {
         }
     }
 }
+
+assert_component!(TopConflictPosition);

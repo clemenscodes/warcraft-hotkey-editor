@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::CardGlowIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CardGlowIcon);
 
 /// The glowing card look of a framed icon: the card-radius blue frame that lifts to a
 /// gold hover glow. Presentational — the dispatcher builds its props and renders it
@@ -29,3 +28,5 @@ pub fn CardGlowIcon(props: CardGlowIconProps) -> Element {
         }
     }
 }
+
+assert_component!(CardGlowIcon);

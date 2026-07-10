@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::EditorGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EditorGrid);
 
 /// The interactive command grid: the three-by-four square of editor tiles. A pure
 /// tile renderer that encodes the grid shape (shared with the preview and mini
@@ -24,3 +23,5 @@ pub fn EditorGrid(props: EditorGridProps) -> Element {
         }
     }
 }
+
+assert_component!(EditorGrid);

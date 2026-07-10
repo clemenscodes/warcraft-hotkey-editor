@@ -5,7 +5,6 @@ use components::race_theme::RaceTheme;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(EditorWorkspace);
 
 /// The editor's working area: the unit list laid out beside (or, on narrow widths,
 /// stacked above) the unit detail panel. It owns the responsive two-column grid and
@@ -22,3 +21,5 @@ pub fn EditorWorkspace() -> Element {
         }
     }
 }
+
+assert_component!(EditorWorkspace);

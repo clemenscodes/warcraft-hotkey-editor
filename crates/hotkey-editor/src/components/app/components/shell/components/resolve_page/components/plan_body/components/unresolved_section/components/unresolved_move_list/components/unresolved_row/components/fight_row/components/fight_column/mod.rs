@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::FightColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(FightColumn);
 
 /// The stuck ability's column: its name plate stacked over its ability icon.
 #[component]
@@ -22,3 +21,5 @@ pub fn FightColumn(props: FightColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(FightColumn);

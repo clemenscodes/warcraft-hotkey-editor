@@ -10,7 +10,6 @@ use hooks::{AbilityIconView, use_ability_icon};
 pub use props::AbilityIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AbilityIcon);
 
 /// One ability icon with a carrier-count badge; clicking opens this ability's carriers
 /// dialog. The icon owns the open state and mounts the dialog's host beneath itself, so
@@ -38,3 +37,5 @@ pub fn AbilityIcon(props: AbilityIconProps) -> Element {
         CarriersDialogHost { open_state }
     }
 }
+
+assert_component!(AbilityIcon);

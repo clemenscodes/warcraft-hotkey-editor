@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::HelpGlossaryColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(HelpGlossaryColumn);
 
 /// One glossary: a stack of term-and-definition entries, one per term it is
 /// handed.
@@ -22,3 +21,5 @@ pub fn HelpGlossaryColumn(props: HelpGlossaryColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(HelpGlossaryColumn);

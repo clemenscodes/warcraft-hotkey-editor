@@ -7,7 +7,6 @@ use components::special_override_key::{SpecialOverrideKey, SpecialOverrideKeyPro
 use dioxus::prelude::*;
 pub use props::OverrideKeyProps;
 use tw_macro::assert_component;
-assert_component!(OverrideKey);
 
 /// The hotkey-capture button shown in the override panel header (and the alt/upgrade
 /// sections). A thin dispatcher: a multi-character special token (Esc, Mouse4) needs a
@@ -29,3 +28,5 @@ pub fn OverrideKey(props: OverrideKeyProps) -> Element {
         }
     }
 }
+
+assert_component!(OverrideKey);

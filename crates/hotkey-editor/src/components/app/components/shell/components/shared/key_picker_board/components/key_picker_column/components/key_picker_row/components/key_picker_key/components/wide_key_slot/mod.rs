@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::WideKeySlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(WideKeySlot);
 
 /// The sizing box for a wide-width picker key. A component owns its look; its parent
 /// owns its size — so the key's width lives here, and the color leaf inside fills the
@@ -23,3 +22,5 @@ pub fn WideKeySlot(props: WideKeySlotProps) -> Element {
         }
     }
 }
+
+assert_component!(WideKeySlot);

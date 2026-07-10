@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::BurgerDrawerBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerDrawerBody);
 
 #[component]
 pub fn BurgerDrawerBody(props: BurgerDrawerBodyProps) -> Element {
@@ -21,3 +20,5 @@ pub fn BurgerDrawerBody(props: BurgerDrawerBodyProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerDrawerBody);

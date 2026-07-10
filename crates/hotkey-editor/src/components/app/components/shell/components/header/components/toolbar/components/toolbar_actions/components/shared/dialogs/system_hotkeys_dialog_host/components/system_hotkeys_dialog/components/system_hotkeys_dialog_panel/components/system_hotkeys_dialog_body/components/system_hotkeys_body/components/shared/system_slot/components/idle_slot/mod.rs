@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::IdleSlotProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleSlot);
 
 /// The idle (unglowed) look of a system slot: the gold border-image frame composing
 /// the shared slot content. Presentational — the dispatcher builds its props and
@@ -21,3 +20,5 @@ pub fn IdleSlot(props: IdleSlotProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleSlot);

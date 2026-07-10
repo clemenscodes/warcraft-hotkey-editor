@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::DialogHeaderProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DialogHeader);
 
 /// A dialog's title bar: mirrored gold decorations either side of the title,
 /// with the close control pinned right.
@@ -27,3 +26,5 @@ pub fn DialogHeader(props: DialogHeaderProps) -> Element {
         }
     }
 }
+
+assert_component!(DialogHeader);

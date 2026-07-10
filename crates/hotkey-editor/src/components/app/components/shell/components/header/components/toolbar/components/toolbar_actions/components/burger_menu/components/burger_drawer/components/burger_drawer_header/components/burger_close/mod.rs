@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::BurgerCloseProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerClose);
 
 #[component]
 pub fn BurgerClose(props: BurgerCloseProps) -> Element {
@@ -20,3 +19,5 @@ pub fn BurgerClose(props: BurgerCloseProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerClose);

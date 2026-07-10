@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::DropTargetOverlayProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(DropTargetOverlay);
 
 /// The drop-target marker overlay. Mounted only when the empty slot is the current
 /// drop-target candidate; the dashed accent border is the tile root's own (via
@@ -20,3 +19,5 @@ pub fn DropTargetOverlay(props: DropTargetOverlayProps) -> Element {
         div { class: CLASS }
     }
 }
+
+assert_component!(DropTargetOverlay);

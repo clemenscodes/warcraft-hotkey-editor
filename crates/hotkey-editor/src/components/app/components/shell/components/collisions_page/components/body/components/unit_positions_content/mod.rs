@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::UnitPositionsContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitPositionsContent);
 
 /// The per-unit position-collision two-pane content: the clashing-units sidebar column
 /// beside the fluid unit position detail pane.
@@ -23,3 +22,5 @@ pub fn UnitPositionsContent(props: UnitPositionsContentProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitPositionsContent);

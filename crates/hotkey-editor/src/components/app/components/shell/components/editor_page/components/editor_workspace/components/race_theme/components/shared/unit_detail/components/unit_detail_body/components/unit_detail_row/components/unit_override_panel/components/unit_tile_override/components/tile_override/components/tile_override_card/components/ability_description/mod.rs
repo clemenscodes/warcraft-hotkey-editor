@@ -8,8 +8,6 @@ use tw_macro::assert_component;
 
 pub use props::AbilityDescriptionProps;
 
-assert_component!(AbilityDescription);
-
 /// The primary ubertip / tip text block for an ability or upgrade; renders nothing
 /// when there is no description.
 #[component]
@@ -26,3 +24,5 @@ pub fn AbilityDescription(props: AbilityDescriptionProps) -> Element {
         }
     }
 }
+
+assert_component!(AbilityDescription);

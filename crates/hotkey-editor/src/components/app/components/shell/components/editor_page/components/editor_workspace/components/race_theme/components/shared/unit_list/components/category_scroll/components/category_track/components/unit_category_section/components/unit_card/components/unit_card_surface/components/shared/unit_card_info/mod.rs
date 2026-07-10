@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::UnitCardInfoProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitCardInfo);
 
 /// The text column of a unit card: name over database id.
 #[component]
@@ -23,3 +22,5 @@ pub fn UnitCardInfo(props: UnitCardInfoProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitCardInfo);

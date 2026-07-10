@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::RegenQualifierProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RegenQualifier);
 
 /// The italic regen qualifier parked before the regen gain.
 #[component]
@@ -20,3 +19,5 @@ pub fn RegenQualifier(props: RegenQualifierProps) -> Element {
         }
     }
 }
+
+assert_component!(RegenQualifier);

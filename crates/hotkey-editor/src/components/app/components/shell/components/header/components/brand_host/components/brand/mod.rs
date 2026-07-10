@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 use hooks::use_brand;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(Brand);
 
 /// The app's wordmark: the title flanked by mirrored gold flourishes, the whole
 /// thing a button that returns to the editor. It wires its own return-to-editor
@@ -31,3 +30,5 @@ pub fn Brand() -> Element {
         }
     }
 }
+
+assert_component!(Brand);

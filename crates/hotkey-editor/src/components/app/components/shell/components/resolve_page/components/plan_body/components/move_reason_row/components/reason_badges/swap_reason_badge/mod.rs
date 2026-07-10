@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::SwapReasonBadgeProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(SwapReasonBadge);
 
 /// The "Swap" reason badge: publishes the Swap accent colour and composes the base
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
@@ -23,3 +22,5 @@ pub fn SwapReasonBadge(props: SwapReasonBadgeProps) -> Element {
         }
     }
 }
+
+assert_component!(SwapReasonBadge);

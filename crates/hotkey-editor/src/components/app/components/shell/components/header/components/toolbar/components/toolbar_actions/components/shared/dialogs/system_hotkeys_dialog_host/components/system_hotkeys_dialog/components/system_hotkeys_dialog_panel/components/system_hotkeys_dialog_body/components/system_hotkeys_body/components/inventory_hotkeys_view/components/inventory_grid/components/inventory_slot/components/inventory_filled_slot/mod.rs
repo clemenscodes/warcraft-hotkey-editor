@@ -3,7 +3,6 @@ mod logic;
 mod props;
 mod style;
 
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot::{
     SystemSlot, SystemSlotProps,
 };
@@ -14,7 +13,7 @@ use dioxus::prelude::*;
 use hooks::use_inventory_filled_slot;
 pub use props::InventoryFilledSlotProps;
 use style::CLASS;
-assert_component!(InventoryFilledSlot);
+use tw_macro::assert_component;
 
 /// A single draggable inventory slot: shows its caption and bound key, edits on
 /// click via the system key picker, and swaps with another slot on drag. The host
@@ -41,3 +40,5 @@ pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
         }
     }
 }
+
+assert_component!(InventoryFilledSlot);

@@ -9,7 +9,6 @@ pub use props::CollisionCardProps;
 pub use state::CollisionCardContent;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(CollisionCard);
 
 /// The selectable card shared by every collision sidebar: its own button surface plus
 /// a leading visual (unit portrait or island mini grid) and a meta line (name and id,
@@ -36,3 +35,5 @@ pub fn CollisionCard(props: CollisionCardProps) -> Element {
         }
     }
 }
+
+assert_component!(CollisionCard);

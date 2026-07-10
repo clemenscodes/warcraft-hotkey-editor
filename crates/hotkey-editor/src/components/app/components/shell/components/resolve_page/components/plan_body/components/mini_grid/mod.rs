@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::MiniGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MiniGrid);
 
 /// A tiny command grid showing where a move's abilities land. A thin wrapper that
 /// owns the resolve page's outer box — full-width and control-radius — and shapes
@@ -23,3 +22,5 @@ pub fn MiniGrid(props: MiniGridProps) -> Element {
         }
     }
 }
+
+assert_component!(MiniGrid);

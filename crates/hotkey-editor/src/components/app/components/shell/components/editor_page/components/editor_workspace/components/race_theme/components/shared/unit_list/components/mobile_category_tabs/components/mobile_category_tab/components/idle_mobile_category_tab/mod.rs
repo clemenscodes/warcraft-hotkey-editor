@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::IdleMobileCategoryTabProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IdleMobileCategoryTab);
 
 /// The idle mobile category tab: a muted tab that takes the race accent border on hover
 /// (read from the theme's `--race-accent`). Presentational.
@@ -24,3 +23,5 @@ pub fn IdleMobileCategoryTab(props: IdleMobileCategoryTabProps) -> Element {
         }
     }
 }
+
+assert_component!(IdleMobileCategoryTab);

@@ -10,7 +10,6 @@ use dioxus::prelude::*;
 pub use props::VitalityColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(VitalityColumn);
 
 /// The vitality column: the unit's hit points and mana rows with their regeneration,
 /// laid into the `vitality` grid area. Always present; every unit has vitality
@@ -32,3 +31,5 @@ pub fn VitalityColumn(props: VitalityColumnProps) -> Element {
         }
     }
 }
+
+assert_component!(VitalityColumn);

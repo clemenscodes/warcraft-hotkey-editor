@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ToolbarButtonIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ToolbarButtonIcon);
 
 /// The glyph inside a toolbar button.
 #[component]
@@ -19,3 +18,5 @@ pub fn ToolbarButtonIcon(props: ToolbarButtonIconProps) -> Element {
         }
     }
 }
+
+assert_component!(ToolbarButtonIcon);

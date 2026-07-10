@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::ManaRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ManaRow);
 
 const LABEL_TEXT: &str = "Mana";
 
@@ -25,3 +24,5 @@ pub fn ManaRow(props: ManaRowProps) -> Element {
         }
     }
 }
+
+assert_component!(ManaRow);

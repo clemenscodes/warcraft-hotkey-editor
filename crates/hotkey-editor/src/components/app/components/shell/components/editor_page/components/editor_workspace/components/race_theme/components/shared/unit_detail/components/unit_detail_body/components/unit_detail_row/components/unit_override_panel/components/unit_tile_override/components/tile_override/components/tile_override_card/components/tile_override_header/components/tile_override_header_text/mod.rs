@@ -11,8 +11,6 @@ use tw_macro::assert_component;
 
 pub use props::TileOverrideHeaderTextProps;
 
-assert_component!(TileOverrideHeaderText);
-
 /// The name-and-id column of the override panel header.
 #[component]
 pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextProps) -> Element {
@@ -23,3 +21,5 @@ pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextProps) -> Element {
         }
     }
 }
+
+assert_component!(TileOverrideHeaderText);

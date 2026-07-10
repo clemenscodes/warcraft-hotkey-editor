@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::TilePlainIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(TilePlainIcon);
 
 /// The plain tile look of a framed icon: the tile-radius blue frame with no hover
 /// glow. Presentational — the dispatcher builds its props and renders it when the
@@ -29,3 +28,5 @@ pub fn TilePlainIcon(props: TilePlainIconProps) -> Element {
         }
     }
 }
+
+assert_component!(TilePlainIcon);

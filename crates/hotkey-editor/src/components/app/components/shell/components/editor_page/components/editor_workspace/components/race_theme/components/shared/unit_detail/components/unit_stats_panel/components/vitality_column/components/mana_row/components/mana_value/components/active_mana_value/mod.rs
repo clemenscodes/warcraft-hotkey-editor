@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub use props::ActiveManaValueProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(ActiveManaValue);
 
 /// The active mana look: the human-blue accent, semibold and enlarged. Rendered by the
 /// [`ManaValue`](super::super::ManaValue) dispatcher when the unit has a mana pool.
@@ -16,3 +15,5 @@ pub fn ActiveManaValue(props: ActiveManaValueProps) -> Element {
         span { class: CLASS, {text} }
     }
 }
+
+assert_component!(ActiveManaValue);

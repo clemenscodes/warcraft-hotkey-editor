@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::BurgerDrawerProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(BurgerDrawer);
 
 /// The slide-in navigation drawer. Keeps the `burger-drawer` id/class the global
 /// scroll-lock and `aria-controls` hook off.
@@ -27,3 +26,5 @@ pub fn BurgerDrawer(props: BurgerDrawerProps) -> Element {
         }
     }
 }
+
+assert_component!(BurgerDrawer);

@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::MoveHotkeyToggleProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(MoveHotkeyToggle);
 
 /// The labeled checkbox controlling whether moving an ability rewrites its hotkey
 /// to match the new cell.
@@ -25,3 +24,5 @@ pub fn MoveHotkeyToggle(props: MoveHotkeyToggleProps) -> Element {
         }
     }
 }
+
+assert_component!(MoveHotkeyToggle);

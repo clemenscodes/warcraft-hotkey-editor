@@ -13,8 +13,6 @@ use tw_macro::assert_component;
 
 pub use props::UpgradeTierProps;
 
-assert_component!(UpgradeTier);
-
 /// Tier-cycling footer for multi-level abilities: a prev/next arrow around a
 /// "Level N of M" caption.
 #[component]
@@ -32,3 +30,5 @@ pub fn UpgradeTier(props: UpgradeTierProps) -> Element {
         }
     }
 }
+
+assert_component!(UpgradeTier);

@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 pub use props::StrongMatchupProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(StrongMatchup);
 
 /// The strong matchup cell: a success-green tint. The value reads its colour from the `--matchup-color` this cell publishes.
 #[component]
@@ -24,3 +23,5 @@ pub fn StrongMatchup(props: StrongMatchupProps) -> Element {
         }
     }
 }
+
+assert_component!(StrongMatchup);

@@ -6,7 +6,6 @@ use dioxus::prelude::*;
 pub use props::AltStateHeaderLabelColumnProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(AltStateHeaderLabelColumn);
 
 /// The label column of the off-state header row: holds the off-state name label.
 #[component]
@@ -19,3 +18,5 @@ pub fn AltStateHeaderLabelColumn(props: AltStateHeaderLabelColumnProps) -> Eleme
         }
     }
 }
+
+assert_component!(AltStateHeaderLabelColumn);

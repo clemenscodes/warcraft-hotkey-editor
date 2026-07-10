@@ -13,7 +13,6 @@ use hooks::{IslandConflictAbilityView, use_island_conflict_ability};
 pub use props::IslandConflictAbilityProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(IslandConflictAbility);
 
 /// One ability column of an island conflict: a clickable icon over the name and id,
 /// with an optional "+N more" link. Both the icon and the link open this ability's
@@ -43,3 +42,5 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
         CarriersDialogHost { open_state }
     }
 }
+
+assert_component!(IslandConflictAbility);

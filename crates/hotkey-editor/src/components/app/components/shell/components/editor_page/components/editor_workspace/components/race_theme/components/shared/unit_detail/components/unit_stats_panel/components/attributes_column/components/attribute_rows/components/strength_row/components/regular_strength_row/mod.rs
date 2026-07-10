@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 pub use props::RegularStrengthRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(RegularStrengthRow);
 
 /// The hero's strength row when strength is not the primary attribute: resting drop shadow,
 /// and it publishes the dimmer `--attribute-label-color` its label reads.
@@ -26,3 +25,5 @@ pub fn RegularStrengthRow(props: RegularStrengthRowProps) -> Element {
         }
     }
 }
+
+assert_component!(RegularStrengthRow);

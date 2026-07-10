@@ -10,8 +10,6 @@ use tw_macro::assert_component;
 
 pub use props::CategoryTrackProps;
 
-assert_component!(CategoryTrack);
-
 /// The inner track laying out the category sections: a vertical stack on the sidebar,
 /// a horizontal fixed-height carousel on small screens. The sections arrive already
 /// shaped as props.
@@ -29,3 +27,5 @@ pub fn CategoryTrack(props: CategoryTrackProps) -> Element {
         }
     }
 }
+
+assert_component!(CategoryTrack);

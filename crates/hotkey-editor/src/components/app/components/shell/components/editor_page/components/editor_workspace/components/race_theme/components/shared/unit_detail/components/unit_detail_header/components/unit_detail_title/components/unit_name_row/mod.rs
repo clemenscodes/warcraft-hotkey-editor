@@ -9,7 +9,6 @@ use dioxus::prelude::*;
 pub use props::UnitNameRowProps;
 use style::CLASS;
 use tw_macro::assert_component;
-assert_component!(UnitNameRow);
 
 /// The unit name beside the optional hero level picker.
 #[component]
@@ -26,3 +25,5 @@ pub fn UnitNameRow(props: UnitNameRowProps) -> Element {
         }
     }
 }
+
+assert_component!(UnitNameRow);

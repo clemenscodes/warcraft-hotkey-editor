@@ -1,12 +1,11 @@
 mod props;
 mod style;
-use tw_macro::assert_component;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::move_name::MoveName;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::object_id::ObjectId;
 use dioxus::prelude::*;
 pub use props::FightNameButtonProps;
 use style::CLASS;
-assert_component!(FightNameButton);
+use tw_macro::assert_component;
 #[component]
 pub fn FightNameButton(props: FightNameButtonProps) -> Element {
     let name = props.name;
@@ -24,3 +23,5 @@ pub fn FightNameButton(props: FightNameButtonProps) -> Element {
         }
     }
 }
+
+assert_component!(FightNameButton);
