@@ -5,12 +5,12 @@ mod style;
 
 use dioxus::prelude::*;
 
-use components::tile_override_tier_button::TileOverrideTierButton;
-use components::tile_override_tier_label::TileOverrideTierLabel;
 use crate::components::app::components::shell::components::shared::icons::{
     ICON_TIER_NEXT, ICON_TIER_PREV,
 };
-use hooks::{use_upgrade_tier, UpgradeTierModel};
+use components::tile_override_tier_button::TileOverrideTierButton;
+use components::tile_override_tier_label::TileOverrideTierLabel;
+use hooks::{UpgradeTierModel, use_upgrade_tier};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +23,11 @@ pub fn UpgradeTier(props: UpgradeTierProps) -> Element {
     if props.total_tier_count <= 1 {
         return rsx! {};
     }
-    let UpgradeTierModel { on_prev, on_next, tier_label_text } = use_upgrade_tier(&props);
+    let UpgradeTierModel {
+        on_prev,
+        on_next,
+        tier_label_text,
+    } = use_upgrade_tier(&props);
     rsx! {
         div {
             class: CLASS,

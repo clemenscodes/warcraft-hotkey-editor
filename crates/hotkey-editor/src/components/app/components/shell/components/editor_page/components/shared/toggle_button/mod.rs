@@ -4,7 +4,7 @@ mod props;
 use components::active_toggle_button::ActiveToggleButton;
 use components::idle_toggle_button::IdleToggleButton;
 use dioxus::prelude::*;
-pub use props::ToggleButtonProps;
+use props::ToggleButtonProps;
 use tw_macro::assert_component;
 
 /// The shared labeled pill button (mode, search-field, catalog-visibility). A pure

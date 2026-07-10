@@ -7,7 +7,7 @@ use components::empty_tile::EmptyTile;
 use components::filled_tile::FilledTile;
 use dioxus::prelude::*;
 use logic::TileOccupancy;
-pub use props::GridTileProps;
+use props::GridTileProps;
 pub use state::GridTileState;
 use tw_macro::assert_component;
 

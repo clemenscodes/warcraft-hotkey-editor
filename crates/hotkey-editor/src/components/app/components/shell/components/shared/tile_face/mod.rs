@@ -5,7 +5,7 @@ mod style;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTile;
 use components::tile_badge::TileBadge;
 use dioxus::prelude::*;
-pub use props::TileFaceProps;
+use props::TileFaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

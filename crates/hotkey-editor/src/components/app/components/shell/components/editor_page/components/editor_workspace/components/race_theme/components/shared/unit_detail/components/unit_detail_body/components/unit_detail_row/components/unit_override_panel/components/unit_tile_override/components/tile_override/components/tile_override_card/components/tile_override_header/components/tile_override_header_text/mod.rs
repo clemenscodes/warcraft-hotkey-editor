@@ -14,7 +14,10 @@ use props::TileOverrideHeaderTextProps;
 /// The name-and-id column of the override panel header.
 #[component]
 pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextProps) -> Element {
-    let TileOverrideHeaderTextProps { name_text, object_id } = props;
+    let TileOverrideHeaderTextProps {
+        name_text,
+        object_id,
+    } = props;
     rsx! {
         div { class: CLASS,
             TileOverrideName { text: name_text }

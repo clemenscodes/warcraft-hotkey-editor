@@ -14,7 +14,12 @@ use tw_macro::assert_component;
 /// for the end-to-end selectors.
 #[component]
 pub fn SpecialOverrideKey(props: SpecialOverrideKeyProps) -> Element {
-    let SpecialOverrideKeyProps { label, state, title, on_activate } = props;
+    let SpecialOverrideKeyProps {
+        label,
+        state,
+        title,
+        on_activate,
+    } = props;
     rsx! {
         button {
             class: CLASS,

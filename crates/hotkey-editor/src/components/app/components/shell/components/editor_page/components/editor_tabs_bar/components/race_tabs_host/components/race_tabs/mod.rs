@@ -10,7 +10,7 @@ use components::orc_race_tab::OrcRaceTab;
 use components::undead_race_tab::UndeadRaceTab;
 use dioxus::prelude::*;
 use logic::RaceTabBindings;
-pub use props::RaceTabBinding;
+use props::RaceTabBinding;
 use props::RaceTabsProps;
 use style::CLASS;
 use tw_macro::assert_component;

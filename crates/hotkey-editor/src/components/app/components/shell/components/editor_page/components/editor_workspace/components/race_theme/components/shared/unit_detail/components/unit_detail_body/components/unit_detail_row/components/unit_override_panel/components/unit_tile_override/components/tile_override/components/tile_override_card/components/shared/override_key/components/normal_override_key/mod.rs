@@ -13,7 +13,12 @@ use tw_macro::assert_component;
 /// `.normal-override-key` is load-bearing for the end-to-end selectors.
 #[component]
 pub fn NormalOverrideKey(props: NormalOverrideKeyProps) -> Element {
-    let NormalOverrideKeyProps { label, state, title, on_activate } = props;
+    let NormalOverrideKeyProps {
+        label,
+        state,
+        title,
+        on_activate,
+    } = props;
     rsx! {
         button {
             class: CLASS,

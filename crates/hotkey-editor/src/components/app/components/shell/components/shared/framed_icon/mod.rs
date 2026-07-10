@@ -8,7 +8,7 @@ use components::placeholder_icon::PlaceholderIcon;
 use components::tile_glow_icon::TileGlowIcon;
 use components::tile_plain_icon::TilePlainIcon;
 use dioxus::prelude::*;
-pub use props::{FramedIconProps, IconRadius};
+use props::{FramedIconProps, IconRadius};
 use state::FramedIconStyle;
 use tw_macro::assert_component;
 

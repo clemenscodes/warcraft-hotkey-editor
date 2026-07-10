@@ -16,8 +16,7 @@ pub(super) struct EmptyTileModel {
 impl From<EmptyTileProps> for EmptyTileModel {
     fn from(props: EmptyTileProps) -> Self {
         let drop_target_active = matches!(props.state, GridTileState::DropTarget);
-        let blocked_drop_target_active =
-            matches!(props.state, GridTileState::BlockedDropTarget);
+        let blocked_drop_target_active = matches!(props.state, GridTileState::BlockedDropTarget);
         let highlight_active = matches!(props.state, GridTileState::Highlighted);
         let is_drag_over = props.is_drag_over;
         Self {

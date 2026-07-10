@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::UnitDescriptionProps;
+use props::UnitDescriptionProps;
 
 /// The unit's flavor text under the detail header.
 #[component]

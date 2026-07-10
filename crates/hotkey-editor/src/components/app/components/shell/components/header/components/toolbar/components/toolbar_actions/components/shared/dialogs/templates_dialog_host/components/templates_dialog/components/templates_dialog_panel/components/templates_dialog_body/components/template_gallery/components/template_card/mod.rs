@@ -8,9 +8,9 @@ use components::template_card_text::TemplateCardText;
 use dioxus::prelude::*;
 use props::TemplateCardPresentation;
 use props::TemplateCardProps;
-pub use view::TemplateCardView;
 use style::CLASS;
 use tw_macro::assert_component;
+pub use view::TemplateCardView;
 
 /// A clickable template card: its name and description above a preview of the
 /// command card and research menu it would apply. Owns `.template-card`.

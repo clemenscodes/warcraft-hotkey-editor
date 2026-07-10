@@ -7,7 +7,7 @@ use components::idle_keycap::IdleKeycap;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-pub use props::EditableKeycapProps;
+use props::EditableKeycapProps;
 pub use state::EditableKeycapState;
 
 /// The shared gold key-cap surface worn by both editable hotkey cells: the editor's

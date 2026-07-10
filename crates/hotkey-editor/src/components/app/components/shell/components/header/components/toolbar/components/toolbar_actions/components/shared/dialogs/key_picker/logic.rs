@@ -1,10 +1,10 @@
 use super::hooks::KeyPickerModel;
 use super::state::{KeyPickerCell, KeyPickerCellState};
-use crate::components::app::components::shell::components::shared::tooltip::{
-    TooltipAnchor, TooltipPlacement,
-};
 use crate::components::app::components::shell::components::shared::key_picker_board::{
     KeyCell, KeyCellState, KeyColumn, KeyWidth,
+};
+use crate::components::app::components::shell::components::shared::tooltip::{
+    TooltipAnchor, TooltipPlacement,
 };
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;

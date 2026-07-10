@@ -4,7 +4,7 @@ mod style;
 
 use components::toast_list::ToastList;
 use dioxus::prelude::*;
-pub use props::ToastContainerProps;
+use props::ToastContainerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

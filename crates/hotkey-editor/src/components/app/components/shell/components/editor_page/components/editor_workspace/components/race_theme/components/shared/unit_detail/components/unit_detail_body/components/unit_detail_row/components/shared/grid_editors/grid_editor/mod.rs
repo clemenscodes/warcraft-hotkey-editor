@@ -7,7 +7,7 @@ use components::drag_follower_overlay::DragFollowerOverlay;
 use components::editor_headed_grid::EditorHeadedGrid;
 use components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
-pub use props::{GridEditorConfig, GridEditorProps};
+use props::{GridEditorConfig, GridEditorProps};
 use std::rc::Rc;
 use style::CLASS;
 use tw_macro::assert_component;

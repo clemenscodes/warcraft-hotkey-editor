@@ -17,7 +17,13 @@ use props::TileOverrideHotkeySlotProps;
 pub fn TileOverrideHotkeySlot(props: TileOverrideHotkeySlotProps) -> Element {
     let dispatch = TileOverrideHotkeySlotDispatch::from(&props);
     if let Some(key_cell) = dispatch.key_cell {
-        let HotkeySlotKeyCell { label, is_editing, is_special, title, on_activate } = key_cell;
+        let HotkeySlotKeyCell {
+            label,
+            is_editing,
+            is_special,
+            title,
+            on_activate,
+        } = key_cell;
         return rsx! {
             OverrideKey { label, is_editing, is_special, title, on_activate }
         };

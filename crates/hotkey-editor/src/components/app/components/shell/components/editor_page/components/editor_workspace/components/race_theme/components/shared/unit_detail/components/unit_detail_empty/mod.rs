@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-pub use props::UnitDetailEmptyProps;
+use props::UnitDetailEmptyProps;
 
 /// The unit-detail card in its empty / not-found state.
 #[component]

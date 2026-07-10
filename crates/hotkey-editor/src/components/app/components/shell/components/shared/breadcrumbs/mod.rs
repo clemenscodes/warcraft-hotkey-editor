@@ -4,7 +4,7 @@ mod style;
 use components::breadcrumb::Breadcrumb;
 use components::breadcrumb_separator::BreadcrumbSeparator;
 use dioxus::prelude::*;
-pub use props::BreadcrumbsProps;
+use props::BreadcrumbsProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

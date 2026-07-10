@@ -7,7 +7,7 @@ use components::editor_tabs_bar::EditorTabsBar;
 use components::editor_workspace::EditorWorkspace;
 use dioxus::prelude::*;
 use hooks::use_editor_page;
-pub use props::EditorPageProps;
+use props::EditorPageProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

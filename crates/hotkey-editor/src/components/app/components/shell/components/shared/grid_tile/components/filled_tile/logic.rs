@@ -19,10 +19,7 @@ pub(super) struct FilledTileModel {
 
 impl From<FilledTileProps> for FilledTileModel {
     fn from(props: FilledTileProps) -> Self {
-        let ability_active = matches!(
-            props.state,
-            GridTileState::Filled | GridTileState::Selected
-        );
+        let ability_active = matches!(props.state, GridTileState::Filled | GridTileState::Selected);
         let command_active = matches!(props.state, GridTileState::Command);
         let selected = matches!(props.state, GridTileState::Selected);
         let is_dragging_source = props.is_dragging_source;

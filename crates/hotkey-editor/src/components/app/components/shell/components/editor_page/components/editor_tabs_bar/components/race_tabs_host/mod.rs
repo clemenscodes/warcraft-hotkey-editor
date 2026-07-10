@@ -4,7 +4,7 @@ mod style;
 
 use components::race_tabs::RaceTabs;
 use dioxus::prelude::*;
-use hooks::{use_race_tabs_host, RaceTabsInputs};
+use hooks::{RaceTabsInputs, use_race_tabs_host};
 use style::CLASS;
 use tw_macro::assert_component;
 

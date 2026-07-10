@@ -24,7 +24,8 @@ pub fn AltStateControls(props: AltStateControlsProps) -> Element {
     if !show {
         return rsx! {};
     }
-    let position_title = String::from("Pick where the off-state button appears on the command card");
+    let position_title =
+        String::from("Pick where the off-state button appears on the command card");
     let hotkey_title = String::from("Hotkey for the off state (writes Unhotkey)");
     rsx! {
         AltStatePositionButton {

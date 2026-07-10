@@ -5,7 +5,7 @@ mod style;
 
 use components::unit_card_surface::UnitCardSurface;
 use dioxus::prelude::*;
-use hooks::{use_unit_card, UnitCardModel};
+use hooks::{UnitCardModel, use_unit_card};
 use props::UnitCardProps;
 use style::CLASS;
 use tw_macro::assert_component;

@@ -4,7 +4,7 @@ mod style;
 
 use components::mode_tabs::ModeTabs;
 use dioxus::prelude::*;
-use hooks::{use_mode_tabs_host, ModeTabsInputs};
+use hooks::{ModeTabsInputs, use_mode_tabs_host};
 use style::CLASS;
 use tw_macro::assert_component;
 

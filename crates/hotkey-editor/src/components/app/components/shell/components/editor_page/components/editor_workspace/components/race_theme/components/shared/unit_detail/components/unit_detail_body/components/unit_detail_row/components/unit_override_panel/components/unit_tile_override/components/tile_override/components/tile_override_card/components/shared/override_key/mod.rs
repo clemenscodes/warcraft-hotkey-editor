@@ -1,9 +1,9 @@
 pub mod components;
 mod props;
 
+use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use components::normal_override_key::NormalOverrideKey;
 use components::special_override_key::SpecialOverrideKey;
-use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
 use props::OverrideKeyProps;
 use tw_macro::assert_component;
@@ -15,7 +15,13 @@ use tw_macro::assert_component;
 /// `on_activate` on click.
 #[component]
 pub fn OverrideKey(props: OverrideKeyProps) -> Element {
-    let OverrideKeyProps { label, is_editing, is_special, title, on_activate } = props;
+    let OverrideKeyProps {
+        label,
+        is_editing,
+        is_special,
+        title,
+        on_activate,
+    } = props;
     let state = if is_editing {
         EditableKeycapState::Editing
     } else {
