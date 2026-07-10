@@ -2,8 +2,6 @@ use super::logic::CatalogListingInputs;
 use super::props::{SearchKeydownInputs, UnitListInputs, UnitListModel};
 use super::state::UnitListState;
 use crate::services::editor_state::context::use_editor_state;
-use crate::services::focus::context::use_focus_coordinator;
-use crate::services::focus::coordinator::FocusTarget;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use std::time::Duration;
@@ -60,14 +58,12 @@ fn use_debounced_search(search_query: Signal<String>) -> DebouncedSearch {
     }
 }
 
-/// The search box's keydown handler: Escape either clears a non-empty query or
-/// hands focus to the unit card, and Enter selects the first result and hands
-/// focus to the unit card. Owns none of its inputs; the composed hook wires them.
+/// The search box's keydown handler: Escape clears a non-empty query, and Enter
+/// selects the first result. Owns none of its inputs; the composed hook wires them.
 fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent> {
     let SearchKeydownInputs {
         raw_query,
         on_clear,
-        focus,
         first_result,
         mut selected_unit_id,
         mut selected_slot,
@@ -78,9 +74,7 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
         match key_string.as_str() {
             "Escape" => {
                 let current_raw = raw_query.read().clone();
-                if current_raw.is_empty() {
-                    focus.request(FocusTarget::UnitCard);
-                } else {
+                if !current_raw.is_empty() {
                     on_clear.call(());
                 }
             }
@@ -89,7 +83,6 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
                     selected_unit_id.set(Some(first_result.id()));
                     selected_slot.set(None);
                     active_category.set(first_result.kind());
-                    focus.request(FocusTarget::UnitCard);
                 }
             }
             _ => {}
@@ -145,11 +138,9 @@ pub(super) fn use_unit_list() -> UnitListModel {
     let raw_query = search.raw_query;
     let on_clear = search.on_clear;
     let on_input = search.on_input;
-    let focus = use_focus_coordinator();
     let keydown_inputs = SearchKeydownInputs {
         raw_query,
         on_clear,
-        focus,
         first_result,
         selected_unit_id,
         selected_slot,

@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use components::mobile_category_tab::MobileCategoryTab;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_data_attr;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_key;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -22,7 +22,7 @@ pub fn MobileCategoryTabs(props: MobileCategoryTabsProps) -> Element {
             role: "tablist",
             aria_label: "Unit categories",
             for tab in props.tabs {
-                MobileCategoryTab { key: "{unit_kind_data_attr(tab.kind)}", ..tab }
+                MobileCategoryTab { key: "{unit_kind_key(tab.kind)}", ..tab }
             }
         }
     }

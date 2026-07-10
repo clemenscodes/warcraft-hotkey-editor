@@ -1,7 +1,8 @@
+pub mod components;
 mod hooks;
 mod style;
 
-use super::help_dialog::HelpDialog;
+use components::help_dialog::HelpDialog;
 use dioxus::prelude::*;
 use hooks::use_help_dialog_host;
 use style::CLASS;

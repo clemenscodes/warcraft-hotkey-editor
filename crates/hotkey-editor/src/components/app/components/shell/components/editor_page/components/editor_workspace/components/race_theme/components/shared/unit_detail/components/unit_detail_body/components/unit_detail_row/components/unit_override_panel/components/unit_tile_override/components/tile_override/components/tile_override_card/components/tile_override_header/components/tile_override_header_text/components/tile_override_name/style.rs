@@ -4,7 +4,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "m-0",
         "max-w-full",
         "overflow-hidden",
         "whitespace-nowrap",

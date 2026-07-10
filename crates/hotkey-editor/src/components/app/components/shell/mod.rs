@@ -11,6 +11,7 @@ use components::header::Header;
 use components::toasts::{ToastContainer, ToastContainerProps, use_toast_provider};
 use dioxus::prelude::*;
 use hooks::{ShellModel, use_shell};
+use style::CLASS;
 use tw_macro::assert_component;
 
 assert_component!(Shell);
@@ -27,16 +28,13 @@ assert_component!(Shell);
 /// wrapper carries pre-rendered markup.
 #[component]
 pub fn Shell() -> Element {
-    let ShellModel {
-        class,
-        handle_keydown,
-    } = use_shell();
+    let ShellModel { handle_keydown } = use_shell();
     let toast_model = use_toast_provider();
     let toast_container = ToastContainerProps::from(&toast_model);
     rsx! {
         DocumentHead {}
         div {
-            class,
+            class: CLASS,
             onkeydown: handle_keydown,
             Header {}
             Outlet::<Route> {}

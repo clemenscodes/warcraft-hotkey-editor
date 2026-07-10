@@ -14,7 +14,6 @@ pub struct IdleUnitCardSurfaceProps {
     pub unit_id: WarcraftObjectId,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
-    pub onmounted: EventHandler<Event<MountedData>>,
 }
 
 impl From<&IdleUnitCardSurfaceProps> for UnitCardIconProps {

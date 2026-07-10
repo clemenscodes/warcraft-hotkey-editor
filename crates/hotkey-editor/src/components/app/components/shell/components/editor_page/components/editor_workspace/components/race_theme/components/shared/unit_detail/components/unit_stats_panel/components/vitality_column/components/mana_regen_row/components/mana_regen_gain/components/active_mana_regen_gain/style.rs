@@ -2,7 +2,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex-[0_0_auto]",
-        "ml-auto",
         "text-right",
         "text-race-human",
         "text-xl",

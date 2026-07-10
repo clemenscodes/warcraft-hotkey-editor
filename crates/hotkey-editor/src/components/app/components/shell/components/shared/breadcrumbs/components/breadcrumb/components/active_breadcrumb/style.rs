@@ -3,7 +3,6 @@ use tw_macro::tw;
 // opacity. Shared values with the idle sibling, each written in its own style.rs.
 classes! {
     base: tw![
-        "m-0",
         "py-1", "px-0.5",
         "bg-transparent",
         "border-none",

@@ -17,7 +17,6 @@ impl From<&TileOverrideHotkeySlotProps> for TileOverrideHotkeySlotDispatch {
                 is_editing: props.hotkey_is_editing,
                 is_special: props.hotkey_is_special,
                 title: String::from("Hotkey"),
-                is_focus_target: true,
                 on_activate: props.on_hotkey_activate,
             };
             return Self {
@@ -31,7 +30,6 @@ impl From<&TileOverrideHotkeySlotProps> for TileOverrideHotkeySlotDispatch {
                 is_editing: props.research_is_editing,
                 is_special: props.research_is_special,
                 title: String::from("Research hotkey"),
-                is_focus_target: true,
                 on_activate: props.on_research_activate,
             };
             return Self {

@@ -8,7 +8,6 @@ classes! {
         "gap-1",
         "max-w-full",
         "min-w-0",
-        "m-0",
         "p-0",
         "bg-transparent",
         "border-none",

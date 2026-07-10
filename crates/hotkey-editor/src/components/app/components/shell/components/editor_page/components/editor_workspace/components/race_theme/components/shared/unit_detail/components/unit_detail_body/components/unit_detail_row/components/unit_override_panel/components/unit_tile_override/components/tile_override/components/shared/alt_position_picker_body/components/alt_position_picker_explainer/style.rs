@@ -3,7 +3,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "m-0",
         "text-center",
         "max-w-360",
         "uppercase",

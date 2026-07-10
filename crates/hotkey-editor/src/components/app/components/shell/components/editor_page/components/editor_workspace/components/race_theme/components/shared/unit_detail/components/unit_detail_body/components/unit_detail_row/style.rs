@@ -5,7 +5,6 @@ classes! {
         "flex-col",
         "items-stretch",
         "px-0",
-        "mt-0",
         "pt-0",
         "flex-none",
         "min-h-0",

@@ -3,7 +3,6 @@ use tw_macro::tw;
 // dimmed count opacity. Shared values with the active sibling.
 classes! {
     base: tw![
-        "m-0",
         "py-1", "px-0.5",
         "bg-transparent",
         "border-none",

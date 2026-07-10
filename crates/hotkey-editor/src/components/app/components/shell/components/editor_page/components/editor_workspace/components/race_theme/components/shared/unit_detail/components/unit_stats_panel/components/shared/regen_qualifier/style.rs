@@ -2,7 +2,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex-[0_0_auto]",
-        "ml-auto",
         "text-md",
         "italic",
         "text-warcraft-text-secondary/55",

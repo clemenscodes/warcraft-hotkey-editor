@@ -3,7 +3,6 @@ mod logic;
 mod props;
 mod style;
 
-use crate::services::focus::context::use_focus_coordinator;
 use components::human_race_tab::HumanRaceTab;
 use components::neutral_race_tab::NeutralRaceTab;
 use components::nightelf_race_tab::NightelfRaceTab;
@@ -22,14 +21,13 @@ assert_component!(RaceTabs);
 /// wrapper, never the navigation itself. Each wrapper adds only its own colours on top.
 #[component]
 pub fn RaceTabs(props: RaceTabsProps) -> Element {
-    let focus = use_focus_coordinator();
     let RaceTabBindings {
         human,
         orc,
         nightelf,
         undead,
         neutral,
-    } = RaceTabBindings::build(&props, focus);
+    } = RaceTabBindings::build(&props);
     rsx! {
         nav {
             class: CLASS,

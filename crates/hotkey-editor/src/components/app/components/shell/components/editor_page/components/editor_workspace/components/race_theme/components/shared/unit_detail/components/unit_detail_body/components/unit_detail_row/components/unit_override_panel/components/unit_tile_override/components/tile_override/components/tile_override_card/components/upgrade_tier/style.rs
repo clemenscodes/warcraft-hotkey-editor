@@ -4,7 +4,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "mt-auto",
         "flex",
         "items-center",
         "justify-center",

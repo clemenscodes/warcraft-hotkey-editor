@@ -84,7 +84,6 @@ impl EditorHeadedGridProps {
         };
         let on_move = move_handler(move_args);
         let drop_blocked = drop_blocked_callback(behavior.clone(), loaded_keys, slot_ids.clone());
-        let focus = consume_context::<crate::services::focus::coordinator::FocusCoordinator>();
         let dragging_value = *dragging_slot.read();
         let drop_target_value = *drop_target_tile.read();
         let dragging_source_coordinate = dragging_value
@@ -122,7 +121,7 @@ impl EditorHeadedGridProps {
                     is_command,
                 )
             });
-            let keydown = mechanics::keydown(on_select, coordinate, focus);
+            let keydown = mechanics::keydown(on_select, coordinate);
             let pointer_down_args = mechanics::PointerDownArgs {
                 draggable,
                 dragging_slot,

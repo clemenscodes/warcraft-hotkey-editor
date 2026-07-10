@@ -5,7 +5,6 @@ classes! {
         "grid-cols-[6.5rem_1fr]",
         "items-start",
         "gap-x-4",
-        "mb-0",
         "pb-2",
         "border-b",
         "border-warcraft-blue-deep",

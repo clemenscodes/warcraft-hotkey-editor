@@ -1,4 +1,4 @@
-use super::super::system_hotkeys_dialog::SystemHotkeysDialogProps;
+use super::components::system_hotkeys_dialog::SystemHotkeysDialogProps;
 use crate::services::overlay_state::context::use_overlay_state;
 
 /// Shapes the system-hotkeys dialog's props from context: the shared open signal the

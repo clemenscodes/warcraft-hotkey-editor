@@ -35,7 +35,6 @@ impl From<&AltStateControlsProps> for OverrideKeyProps {
             is_editing: props.is_editing,
             is_special: props.is_special,
             title,
-            is_focus_target: false,
             on_activate: props.on_hotkey_activate,
         }
     }

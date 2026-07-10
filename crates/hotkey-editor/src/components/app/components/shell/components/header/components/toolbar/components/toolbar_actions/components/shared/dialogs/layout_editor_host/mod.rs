@@ -1,7 +1,8 @@
+pub mod components;
 mod hooks;
 mod style;
 
-use super::layout_editor::LayoutEditor;
+use components::layout_editor::LayoutEditor;
 use dioxus::prelude::*;
 use hooks::use_layout_editor_host;
 use style::CLASS;

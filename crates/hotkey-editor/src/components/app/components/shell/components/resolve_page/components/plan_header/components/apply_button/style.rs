@@ -2,7 +2,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "flex-none",
-        "m-0",
         "px-6",
         "py-2",
         "border",

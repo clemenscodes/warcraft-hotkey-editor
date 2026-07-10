@@ -6,7 +6,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "m-0",
         "font-normal",
         "text-[5cqi]",
         "leading-flush",

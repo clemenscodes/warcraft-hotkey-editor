@@ -17,14 +17,12 @@ pub fn IdleUnitCardSurface(props: IdleUnitCardSurfaceProps) -> Element {
     let info = UnitCardInfoProps::from(&props);
     let onclick = props.onclick;
     let onkeydown = props.onkeydown;
-    let onmounted = props.onmounted;
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
             onclick,
             onkeydown,
-            onmounted,
             UnitCardIcon { ..icon }
             UnitCardInfo { ..info }
         }

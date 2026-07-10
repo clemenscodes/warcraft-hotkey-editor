@@ -1,0 +1,31 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "uppercase",
+        "leading-none",
+        "border-0",
+        "cursor-pointer",
+        "text-shadow-drop",
+        "transition-[color,text-shadow]",
+        "hover:text-warcraft-gold",
+        "hover:text-shadow-glow",
+        "kb-focus:outline-none",
+        "kb-focus:text-white",
+        "kb-focus:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-highlight)_65%,transparent)]",
+        "flex-none",
+        "w-full",
+        "text-left",
+        "py-3",
+        "px-3.5",
+        "text-base",
+        "tracking-label",
+        "min-h-11",
+        "rounded-tile",
+        "whitespace-normal",
+        "text-warcraft-gold",
+        "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_16px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+        "bg-warcraft-gold/14",
+        "shadow-ring",
+    ],
+}

@@ -5,7 +5,6 @@ classes! {
         "flex-col",
         "items-center",
         "gap-4",
-        "m-0",
         "py-8", "px-5",
         "bg-warcraft-bg-mid/50",
         "border",

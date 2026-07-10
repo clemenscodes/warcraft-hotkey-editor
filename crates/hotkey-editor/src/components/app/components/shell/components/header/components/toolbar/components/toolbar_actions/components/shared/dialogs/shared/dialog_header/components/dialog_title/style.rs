@@ -1,7 +1,6 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "m-0",
         "text-3xl",
         "leading-none",
         "uppercase",

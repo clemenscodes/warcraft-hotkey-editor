@@ -1,6 +1,5 @@
 use super::components::mode_tab::ModeTabProps;
 use super::props::ModeTabsProps;
-use crate::services::focus::coordinator::{FocusCoordinator, FocusTarget};
 use dioxus::prelude::*;
 use warcraft_api::UnitMode;
 
@@ -12,22 +11,17 @@ pub(super) struct ModeTabPair {
 }
 
 impl ModeTabPair {
-    pub(super) fn build(props: &ModeTabsProps, focus: FocusCoordinator) -> Self {
-        let melee = mode_tab(props, focus, UnitMode::Melee, "Melee");
-        let campaign = mode_tab(props, focus, UnitMode::Campaign, "Campaign");
+    pub(super) fn build(props: &ModeTabsProps) -> Self {
+        let melee = mode_tab(props, UnitMode::Melee, "Melee");
+        let campaign = mode_tab(props, UnitMode::Campaign, "Campaign");
         Self { melee, campaign }
     }
 }
 
-/// Builds one mode button: selecting it dispatches `on_select(mode)`; the keyboard
-/// activation additionally moves focus onto the race tabs. The mode-change cascade
-/// (default unit, slot reset) lives behind the handler, in the navigation service.
-fn mode_tab(
-    props: &ModeTabsProps,
-    focus: FocusCoordinator,
-    mode: UnitMode,
-    label: &'static str,
-) -> ModeTabProps {
+/// Builds one mode button: selecting it dispatches `on_select(mode)`. The mode-change
+/// cascade (default unit, slot reset) lives behind the handler, in the navigation
+/// service.
+fn mode_tab(props: &ModeTabsProps, mode: UnitMode, label: &'static str) -> ModeTabProps {
     let unit_mode = props.unit_mode;
     let on_select = props.on_select;
     let active = *unit_mode.read() == mode;
@@ -42,7 +36,6 @@ fn mode_tab(
         if is_space || is_enter {
             event.prevent_default();
             on_select.call(mode);
-            focus.request(FocusTarget::RaceTabs);
         }
     });
     ModeTabProps {

@@ -2,8 +2,8 @@ pub mod components;
 mod props;
 mod style;
 
-use super::hero_level_trigger_label::HeroLevelTriggerLabel;
 use super::hero_level_trigger_number::{HeroLevelTriggerNumber, HeroLevelTriggerNumberProps};
+use super::shared::hero_level_trigger_label::HeroLevelTriggerLabel;
 use components::closed_hero_level_trigger_chevron::ClosedHeroLevelTriggerChevron;
 use dioxus::prelude::*;
 pub use props::ClosedHeroLevelTriggerProps;

@@ -6,7 +6,6 @@ classes! {
         "font-normal",
         "text-warcraft-gold",
         "text-shadow-drop",
-        "m-0",
         "tracking-snug",
     ],
     mobile: tw![

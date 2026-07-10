@@ -12,7 +12,6 @@ classes! {
         "mobile:w-full",
         "mobile:min-w-0",
         "mobile:p-0",
-        "mobile:m-0",
     ],
     tablet: tw![
         "tablet:flex",
@@ -22,6 +21,5 @@ classes! {
         "tablet:w-full",
         "tablet:min-w-0",
         "tablet:p-0",
-        "tablet:m-0",
     ],
 }

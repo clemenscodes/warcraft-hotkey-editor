@@ -17,12 +17,10 @@ fn active_race_tab_story() -> Element {
     };
     let onclick = EventHandler::new(|_event: MouseEvent| {});
     let onkeydown = EventHandler::new(|_event: KeyboardEvent| {});
-    let onmounted = EventHandler::new(|_event: Event<MountedData>| {});
     let props = ActiveRaceTabProps {
         label,
         onclick,
         onkeydown,
-        onmounted,
     };
     rsx! {
         ActiveRaceTab { ..props }
@@ -35,12 +33,10 @@ fn inactive_race_tab_story() -> Element {
     };
     let onclick = EventHandler::new(|_event: MouseEvent| {});
     let onkeydown = EventHandler::new(|_event: KeyboardEvent| {});
-    let onmounted = EventHandler::new(|_event: Event<MountedData>| {});
     let props = InactiveRaceTabProps {
         label,
         onclick,
         onkeydown,
-        onmounted,
     };
     rsx! {
         InactiveRaceTab { ..props }

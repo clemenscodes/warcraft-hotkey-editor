@@ -21,11 +21,9 @@ pub fn RaceTab(props: RaceTabProps) -> Element {
     let label = props.label;
     let onclick = props.onclick;
     let onkeydown = props.onkeydown;
-    let onmounted = props.onmounted;
     rsx! {
         button {
             class: CLASS,
-            onmounted,
             onclick,
             onkeydown,
             RaceTabLabel { ..label }

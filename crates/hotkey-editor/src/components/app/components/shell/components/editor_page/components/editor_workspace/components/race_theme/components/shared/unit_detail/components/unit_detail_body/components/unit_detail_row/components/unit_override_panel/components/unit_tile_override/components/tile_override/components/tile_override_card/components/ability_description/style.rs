@@ -20,7 +20,6 @@ classes! {
         "text-warcraft-text-secondary",
         "text-xl",
         "leading-prose",
-        "[&>p]:m-0",
         "[&>p]:whitespace-pre-wrap",
     ],
     mobile: tw![

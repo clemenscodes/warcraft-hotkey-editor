@@ -9,6 +9,6 @@ classes! {
         "*:w-[80px]",
         "self-center",
         "h-auto",
-        "mb-2.5",
+        "pb-2.5",
     ],
 }

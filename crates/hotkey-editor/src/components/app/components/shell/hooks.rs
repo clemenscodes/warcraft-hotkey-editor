@@ -1,6 +1,5 @@
 use crate::components::app::components::shell::logic::RouteBootstrap;
 use crate::components::app::components::shell::route_sync::NavDecision;
-use crate::components::app::components::shell::style;
 use crate::components::app::route::Route;
 use crate::persistence::custom_keys_persistence::CustomKeysPersistence;
 use crate::persistence::editor_preferences_persistence::EditorPreferencesPersistence;
@@ -11,7 +10,6 @@ use crate::services::customkeys::service::CustomKeysService;
 use crate::services::customkeys::upload_status::UploadStatus;
 use crate::services::editor_state::EditorState;
 use crate::services::editor_state::{DragFollower, DraggingSlot, DropTargetTile};
-use crate::services::focus::navigation::{FocusNavigation, FocusedElementInfo};
 use crate::services::grid_layout::service::GridLayoutService;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::editor_nav::DecodedEditorNav;
@@ -22,19 +20,17 @@ use crate::services::resolve_selection::ResolveSelection;
 use crate::services::undo::UndoHistory;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
-use tw_macro::ClassList;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::GridSlotId;
 
-/// The two things the [`Shell`](super::Shell) body needs: the root class and the
+/// The one thing the [`Shell`](super::Shell) body needs beyond its own class: the
 /// app-level key handler. Every piece of app-wide state the shell owns is handed to
 /// the page tree, the header, and the header's dialog hosts through context, so the
 /// body is a flat list of children — no god-bag of props.
 pub(super) struct ShellModel {
-    pub(super) class: ClassList,
     pub(super) handle_keydown: EventHandler<KeyboardEvent>,
 }
 
@@ -49,7 +45,6 @@ struct AppSignals {
     dragging_slot: Signal<Option<DraggingSlot>>,
     drop_target_tile: Signal<Option<DropTargetTile>>,
     drag_follower: Signal<Option<DragFollower>>,
-    selected_slot: Signal<Option<GridSlotId>>,
     preview_open: Signal<bool>,
     system_hotkeys_open: Signal<bool>,
 }
@@ -267,7 +262,6 @@ fn use_app_signals(bootstrap: RouteBootstrap, update_hotkeys_on_move: Signal<boo
         dragging_slot,
         drop_target_tile,
         drag_follower,
-        selected_slot,
         preview_open,
         system_hotkeys_open,
     }
@@ -361,40 +355,16 @@ fn use_url_sync(signals: &AppSignals) {
     });
 }
 
-/// The app-level key handler: Tab cycles focus inside the grid panel and the system
-/// dialog, and Escape cancels a drag, closes the top overlay, or walks selection back
-/// up the editor's focus chain.
+/// The app-level Escape handler: cancels an in-progress drag, otherwise closes the top
+/// open overlay. All keyboard focus movement is the browser's native Tab order.
 fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
     let mut dragging_slot = signals.dragging_slot;
     let mut drop_target_tile = signals.drop_target_tile;
     let mut drag_follower = signals.drag_follower;
-    let selected_slot = signals.selected_slot;
     let mut preview_open = signals.preview_open;
     let mut system_hotkeys_open = signals.system_hotkeys_open;
     EventHandler::new(move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
-        let shift_held = event.data().modifiers().shift();
-        let active_info = FocusedElementInfo::current();
-        if key_value == "Tab"
-            && active_info
-                .as_ref()
-                .map(FocusedElementInfo::is_inside_grid_panel)
-                .unwrap_or(false)
-        {
-            event.prevent_default();
-            FocusNavigation::cycle_inside_unit_detail(shift_held);
-            return;
-        }
-        if key_value == "Tab"
-            && active_info
-                .as_ref()
-                .map(FocusedElementInfo::is_inside_system_dialog)
-                .unwrap_or(false)
-        {
-            event.prevent_default();
-            FocusNavigation::cycle_inside_system_dialog(shift_held);
-            return;
-        }
         if key_value != "Escape" {
             return;
         }
@@ -415,40 +385,6 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
         if preview_was_open {
             event.prevent_default();
             preview_open.set(false);
-            return;
-        }
-        if let Some(info) = active_info {
-            // The selected slot is known from application state (`selected_slot`), never
-            // re-derived from a `data-selected` attribute. When something is selected,
-            // walk focus to the tile carrying the mounted `SelectionRing`; otherwise the
-            // first occupied tile. (Mirrors the focus-coordinator's state-driven hand-off:
-            // the app knows which tile is selected, so it does not ask a look-flag attr.)
-            let slot_is_selected = selected_slot.read().is_some();
-            let target_selectors: &[&str] = if info.classes().contains("override-key") {
-                if slot_is_selected {
-                    &[
-                        ".grid-editor-tile:has(.selection-ring)",
-                        ".grid-editor-tile:has(.filled-tile)",
-                    ]
-                } else {
-                    &[".grid-editor-tile:has(.filled-tile)"]
-                }
-            } else if info.classes().contains("grid-editor-tile") {
-                &[".unit-card:has(.selected-unit-card-surface)", ".unit-card"]
-            } else if info.classes().contains("unit-card")
-                || info.classes().contains("unit-category-heading")
-            {
-                &[".active-race-tab .race-tab", ".race-tab"]
-            } else if info.classes().contains("race-tab") {
-                &[".mode-tabs .active-toggle-button", ".mode-tabs button"]
-            } else if info.is_inside_mode_tabs() {
-                &[".upload-button .toolbar-button-surface"]
-            } else {
-                return;
-            };
-            if FocusNavigation::first_matching(target_selectors) {
-                event.prevent_default();
-            }
         }
     })
 }
@@ -458,28 +394,14 @@ fn use_app_keydown(signals: &AppSignals) -> EventHandler<KeyboardEvent> {
 /// the header and the routed pages read, and run the URL-sync push effect. Each concern
 /// is its own sub-hook; the body composes them and returns the two things the body
 /// renders.
-/// Provide the keyboard focus coordinator at the shell root and run its single driver
-/// effect, so every editor region below can hand keyboard focus on to the next by
-/// application state instead of querying the DOM.
-fn use_focus_coordinator_provider() {
-    let coordinator = crate::services::focus::coordinator::FocusCoordinator::use_coordinator();
-    use_context_provider(|| coordinator);
-    coordinator.drive();
-}
-
 pub(super) fn use_shell() -> ShellModel {
     let loaded_keys = use_custom_keys_document();
     let grid_layout = use_grid_layout_document();
     let update_hotkeys_on_move = use_editor_preferences();
     use_editor_history(loaded_keys, grid_layout);
-    use_focus_coordinator_provider();
     let bootstrap = use_route_bootstrap();
     let signals = use_app_signals(bootstrap, update_hotkeys_on_move);
     use_url_sync(&signals);
     let handle_keydown = use_app_keydown(&signals);
-    let class = style::CLASS;
-    ShellModel {
-        class,
-        handle_keydown,
-    }
+    ShellModel { handle_keydown }
 }

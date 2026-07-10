@@ -4,7 +4,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "conflict-ability-trigger",
-        "m-0",
         "p-0",
         "bg-transparent",
         "border-none",

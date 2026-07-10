@@ -9,14 +9,12 @@ impl From<&UnitCardSurfaceProps> for SelectedUnitCardSurfaceProps {
         let unit_id = props.unit_id;
         let onclick = props.onclick;
         let onkeydown = props.onkeydown;
-        let onmounted = props.onmounted;
         Self {
             icon_path,
             display_name,
             unit_id,
             onclick,
             onkeydown,
-            onmounted,
         }
     }
 }
@@ -28,14 +26,12 @@ impl From<&UnitCardSurfaceProps> for IdleUnitCardSurfaceProps {
         let unit_id = props.unit_id;
         let onclick = props.onclick;
         let onkeydown = props.onkeydown;
-        let onmounted = props.onmounted;
         Self {
             icon_path,
             display_name,
             unit_id,
             onclick,
             onkeydown,
-            onmounted,
         }
     }
 }

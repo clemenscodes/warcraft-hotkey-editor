@@ -6,7 +6,6 @@ classes! {
         "inline-flex",
         "flex-none",
         "size-18",
-        "m-0",
         "p-0",
         "bg-transparent",
         "border-none",

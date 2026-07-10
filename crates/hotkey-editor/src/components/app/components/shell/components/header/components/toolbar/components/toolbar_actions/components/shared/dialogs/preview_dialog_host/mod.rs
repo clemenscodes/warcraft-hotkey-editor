@@ -1,7 +1,8 @@
+pub mod components;
 mod hooks;
 mod style;
 
-use super::preview_dialog::PreviewDialog;
+use components::preview_dialog::PreviewDialog;
 use dioxus::prelude::*;
 use hooks::use_preview_dialog_host;
 use style::CLASS;

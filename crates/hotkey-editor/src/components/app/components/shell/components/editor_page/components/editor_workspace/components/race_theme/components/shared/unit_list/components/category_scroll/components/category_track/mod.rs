@@ -3,7 +3,7 @@ mod props;
 mod style;
 
 use components::unit_category_section::UnitCategorySection;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_data_attr;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_key;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -22,7 +22,7 @@ pub fn CategoryTrack(props: CategoryTrackProps) -> Element {
             class: CLASS,
             for section in props.sections {
                 UnitCategorySection {
-                    key: "{unit_kind_data_attr(section.category_kind)}",
+                    key: "{unit_kind_key(section.category_kind)}",
                     ..section
                 }
             }

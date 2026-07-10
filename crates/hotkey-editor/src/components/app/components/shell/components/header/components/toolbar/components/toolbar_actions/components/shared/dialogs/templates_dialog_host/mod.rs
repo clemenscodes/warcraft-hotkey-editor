@@ -1,7 +1,8 @@
+pub mod components;
 mod hooks;
 mod style;
 
-use super::templates_dialog::TemplatesDialog;
+use components::templates_dialog::TemplatesDialog;
 use dioxus::prelude::*;
 use hooks::use_templates_dialog_host;
 use style::CLASS;

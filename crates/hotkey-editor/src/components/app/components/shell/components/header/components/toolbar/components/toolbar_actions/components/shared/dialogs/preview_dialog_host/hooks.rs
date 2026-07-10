@@ -1,4 +1,4 @@
-use super::super::preview_dialog::PreviewDialogProps;
+use super::components::preview_dialog::PreviewDialogProps;
 use crate::services::customkeys::context::use_loaded_keys;
 use crate::services::overlay_state::context::use_overlay_state;
 

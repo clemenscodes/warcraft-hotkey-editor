@@ -6,6 +6,8 @@ classes! {
         "right-6",
         "top-auto",
         "left-auto",
+        "flex",
+        "justify-end",
         "w-max",
         "max-w-[calc(100vw-3rem)]",
         "z-2000",

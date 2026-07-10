@@ -9,7 +9,6 @@ use super::components::mobile_category_tabs::MobileCategoryTabsProps;
 use super::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTabProps;
 use super::components::unit_list_search::UnitListSearchProps;
 use super::state::{FirstResult, UnitListState};
-use crate::services::focus::coordinator::FocusCoordinator;
 
 /// The categories the mobile tab bar shows, in display order.
 pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
@@ -20,12 +19,11 @@ pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
 ];
 
 /// The values the search box's keydown handler captures: the immediate query it
-/// reads, the clear handler, the focus coordinator, the first result to select on
-/// Enter, and the selection signals it writes.
+/// reads, the clear handler, the first result to select on Enter, and the selection
+/// signals it writes.
 pub(super) struct SearchKeydownInputs {
     pub(super) raw_query: Signal<String>,
     pub(super) on_clear: EventHandler<()>,
-    pub(super) focus: FocusCoordinator,
     pub(super) first_result: Option<FirstResult>,
     pub(super) selected_unit_id: Signal<Option<WarcraftObjectId>>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,

@@ -2,7 +2,6 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "w-full",
-        "m-0",
         "px-6",
         "py-5",
         "rounded-tile",

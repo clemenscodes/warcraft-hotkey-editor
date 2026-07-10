@@ -1,5 +1,4 @@
 use super::props::{RaceTabBinding, RaceTabsProps};
-use crate::services::focus::coordinator::{FocusCoordinator, FocusTarget};
 use dioxus::prelude::*;
 use warcraft_api::{Race, RaceLabels};
 
@@ -16,12 +15,12 @@ pub(super) struct RaceTabBindings {
 }
 
 impl RaceTabBindings {
-    pub(super) fn build(props: &RaceTabsProps, focus: FocusCoordinator) -> Self {
-        let human = race_tab(props, focus, Race::Human);
-        let orc = race_tab(props, focus, Race::Orc);
-        let nightelf = race_tab(props, focus, Race::Nightelf);
-        let undead = race_tab(props, focus, Race::Undead);
-        let neutral = race_tab(props, focus, Race::Neutral);
+    pub(super) fn build(props: &RaceTabsProps) -> Self {
+        let human = race_tab(props, Race::Human);
+        let orc = race_tab(props, Race::Orc);
+        let nightelf = race_tab(props, Race::Nightelf);
+        let undead = race_tab(props, Race::Undead);
+        let neutral = race_tab(props, Race::Neutral);
         Self {
             human,
             orc,
@@ -33,10 +32,9 @@ impl RaceTabBindings {
 }
 
 /// Build one tab's binding: mark it active when it is the current race, and bake the
-/// select handler (with the keyboard focus hand-off onto the unit card) into its
-/// pointer and keyboard handlers. The selection cascade itself lives behind `on_select`,
-/// in the navigation service.
-fn race_tab(props: &RaceTabsProps, focus: FocusCoordinator, race: Race) -> RaceTabBinding {
+/// select handler into its pointer and keyboard handlers. The selection cascade itself
+/// lives behind `on_select`, in the navigation service.
+fn race_tab(props: &RaceTabsProps, race: Race) -> RaceTabBinding {
     let active_race = props.active_race;
     let on_select = props.on_select;
     let current_race = *active_race.read();
@@ -54,7 +52,6 @@ fn race_tab(props: &RaceTabsProps, focus: FocusCoordinator, race: Race) -> RaceT
         if is_space || is_enter {
             event.prevent_default();
             on_select.call(race);
-            focus.request(FocusTarget::UnitCard);
         }
     });
     RaceTabBinding {

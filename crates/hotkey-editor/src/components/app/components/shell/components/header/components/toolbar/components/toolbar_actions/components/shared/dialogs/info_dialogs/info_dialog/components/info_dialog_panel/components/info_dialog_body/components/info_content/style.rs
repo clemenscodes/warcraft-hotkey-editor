@@ -9,6 +9,6 @@ classes! {
         "flex-1",
         "w-full",
         "max-w-280",
-        "mx-auto",
+        "self-center",
     ],
 }

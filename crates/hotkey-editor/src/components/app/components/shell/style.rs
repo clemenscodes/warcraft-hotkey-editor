@@ -12,7 +12,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "mx-auto",
         "flex",
         "flex-col",
         "min-h-dvh",

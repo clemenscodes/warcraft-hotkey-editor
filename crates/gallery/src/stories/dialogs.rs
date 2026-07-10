@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::HelpDialog;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use hotkey_editor::services::customkeys::upload_status::UploadStatus;
 
@@ -9,13 +9,14 @@ use hotkey_editor::components::app::components::shell::components::header::compo
     KeyPicker, KeyPickerCell, KeyPickerCellState,
 };
 
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor::LayoutEditor;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog::PreviewDialog;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCard;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor_host::components::layout_editor::LayoutEditor;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog_host::components::preview_dialog::PreviewDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog_host::components::templates_dialog::TemplatesDialog;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog_host::components::templates_dialog::components::templates_dialog_panel::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCard;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::EditorHeadedGrid;
 use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::GridEditorTileProps;
+use super::grid_layout_mount::GridLayoutMount;
 use super::keys_mount::CustomKeysMount;
 use super::toast_mount::ToastMount;
 
@@ -99,12 +100,15 @@ fn layout_editor_default() -> Element {
         ToastMount {
             CustomKeysMount {
                 loaded_keys,
-                LayoutEditor {
+                GridLayoutMount {
                     grid_layout,
-                    editing_layout_tile,
-                    dragging_layout_tile,
-                    open: layout_dialog_open,
-                    update_hotkeys_on_move,
+                    LayoutEditor {
+                        grid_layout,
+                        editing_layout_tile,
+                        dragging_layout_tile,
+                        open: layout_dialog_open,
+                        update_hotkeys_on_move,
+                    }
                 }
             }
         }

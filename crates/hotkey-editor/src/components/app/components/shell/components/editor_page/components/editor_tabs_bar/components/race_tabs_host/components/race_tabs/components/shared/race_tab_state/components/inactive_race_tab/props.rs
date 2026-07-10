@@ -10,7 +10,6 @@ pub struct InactiveRaceTabProps {
     pub label: RaceTabLabelProps,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
-    pub onmounted: EventHandler<Event<MountedData>>,
 }
 
 impl From<&InactiveRaceTabProps> for RaceTabProps {
@@ -18,12 +17,10 @@ impl From<&InactiveRaceTabProps> for RaceTabProps {
         let label = props.label.clone();
         let onclick = props.onclick;
         let onkeydown = props.onkeydown;
-        let onmounted = props.onmounted;
         Self {
             label,
             onclick,
             onkeydown,
-            onmounted,
         }
     }
 }

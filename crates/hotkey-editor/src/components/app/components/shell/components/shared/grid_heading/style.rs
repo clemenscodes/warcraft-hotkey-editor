@@ -1,7 +1,6 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "mx-0",
         "text-md",
         "uppercase",
         "tracking-heading",

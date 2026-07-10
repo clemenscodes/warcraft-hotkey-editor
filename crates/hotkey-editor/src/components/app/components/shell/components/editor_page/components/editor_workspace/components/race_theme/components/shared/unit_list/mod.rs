@@ -17,9 +17,9 @@ use tw_macro::assert_component;
 use warcraft_api::UnitKind;
 assert_component!(UnitList);
 
-/// The stable `data-unit-kind` attribute for a category, shared by the mobile
-/// tabs, the category sections, and the list's own active-category attribute.
-pub(super) fn unit_kind_data_attr(kind: UnitKind) -> &'static str {
+/// The stable per-category key string used to identify a category's row in the
+/// mobile tabs and the category sections (a Dioxus list `key`).
+pub(super) fn unit_kind_key(kind: UnitKind) -> &'static str {
     match kind {
         UnitKind::Hero => "hero",
         UnitKind::Soldier => "soldier",
