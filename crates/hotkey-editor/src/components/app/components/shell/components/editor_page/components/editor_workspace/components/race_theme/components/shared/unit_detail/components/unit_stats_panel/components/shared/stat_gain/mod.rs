@@ -1,26 +1,31 @@
+mod components;
+mod logic;
 mod props;
-mod style;
 
 use super::stat_figure::StatFigure;
+use components::active_stat_gain::{ActiveStatGain, ActiveStatGainProps};
+use components::muted_stat_gain::{MutedStatGain, MutedStatGainProps};
 use dioxus::prelude::*;
 pub use props::StatGainProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(StatGain);
 
 /// A stat row's per-level growth in the default treatment: green, tabular text sitting
-/// inline after the value, dimmed when the figure reports itself muted. The figure
-/// formats itself through [`StatFigure`]; this leaf only places it.
+/// inline after the value. A thin dispatcher — the figure reports whether it is muted
+/// and this leaf renders the active look (`ActiveStatGain`) xor the muted look
+/// (`MutedStatGain`), each built by `From`.
 #[component]
 pub fn StatGain<Figure: StatFigure>(props: StatGainProps<Figure>) -> Element {
-    let value = props.value;
-    let is_muted = value.is_muted();
-    let text = value.display();
-    rsx! {
-        span {
-            class: CLASS,
-            "data-zero": is_muted,
-            {text}
+    let is_muted = props.value.is_muted();
+    if is_muted {
+        let muted = MutedStatGainProps::from(&props);
+        rsx! {
+            MutedStatGain { ..muted }
+        }
+    } else {
+        let active = ActiveStatGainProps::from(&props);
+        rsx! {
+            ActiveStatGain { ..active }
         }
     }
 }

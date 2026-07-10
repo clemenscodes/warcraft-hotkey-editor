@@ -1,13 +1,11 @@
 pub mod components;
 mod hooks;
-mod props;
 mod style;
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
 use components::inventory_slot::InventorySlot;
 use dioxus::prelude::*;
 use hooks::use_inventory_grid;
-pub use props::InventoryGridProps;
 use std::cell::{Cell, RefCell};
 use style::CLASS;
 use tw_macro::assert_component;
@@ -172,8 +170,8 @@ assert_component!(InventoryGrid);
 /// draggable `InventoryFilledSlot`; the grid seeds the gold-frame CSS variable and holds
 /// the drag/drop signals its cells share.
 #[component]
-pub fn InventoryGrid(props: InventoryGridProps) -> Element {
-    let model = use_inventory_grid(&props);
+pub fn InventoryGrid() -> Element {
+    let model = use_inventory_grid();
     rsx! {
         div {
             class: CLASS,

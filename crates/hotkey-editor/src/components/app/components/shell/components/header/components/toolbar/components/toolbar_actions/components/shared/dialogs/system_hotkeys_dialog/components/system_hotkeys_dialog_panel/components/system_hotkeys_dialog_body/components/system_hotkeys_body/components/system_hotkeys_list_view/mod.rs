@@ -14,7 +14,6 @@ assert_component!(SystemHotkeysListView);
 #[component]
 pub fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
     let category = props.category;
-    let editing_section = props.editing_section;
     let entries = category.entries();
     rsx! {
         ul { class: CLASS,
@@ -23,7 +22,6 @@ pub fn SystemHotkeysListView(props: SystemHotkeysListViewProps) -> Element {
                     key: "{entry.section_id()}",
                     section_id: entry.section_id(),
                     comment: entry.comment().to_string(),
-                    editing_section,
                 }
             }
         }

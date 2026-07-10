@@ -1,4 +1,3 @@
-use super::props::HeroSelectionRowProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButtonProps;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
@@ -13,9 +12,9 @@ pub(super) struct HeroSelectionRowModel {
 }
 
 /// Builds the gold-frame variable and the three slot buttons. Each slot resolves
-/// its own binding from the CustomKeys query, so the row builds no binding map.
-pub(super) fn use_hero_selection_row(props: &HeroSelectionRowProps) -> HeroSelectionRowModel {
-    let editing_section = props.editing_section;
+/// its own binding from the CustomKeys query and its editing section from the dialog
+/// state context, so the row builds no binding map.
+pub(super) fn use_hero_selection_row() -> HeroSelectionRowModel {
     let frame_url = SLOT_FRAME_GOLD;
     let frame = format!("--wc3-slot-frame: url('{frame_url}');");
     let entries = SystemHotkeysCategory::HeroSelection.entries();
@@ -29,7 +28,6 @@ pub(super) fn use_hero_selection_row(props: &HeroSelectionRowProps) -> HeroSelec
             SlotButtonProps {
                 slot_label,
                 section_id,
-                editing_section,
                 compact: false,
             }
         })

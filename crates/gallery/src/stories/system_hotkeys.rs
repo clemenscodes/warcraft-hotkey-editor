@@ -123,7 +123,9 @@ fn system_hotkeys_body() -> Element {
 fn breadcrumbs_inventory() -> Element {
     let active_category = use_signal(|| SystemHotkeysCategory::Inventory);
     rsx! {
-        SystemHotkeysBreadcrumbs { active_category }
+        SystemHotkeysStateMount {
+            SystemHotkeysBreadcrumbs { active_category }
+        }
     }
 }
 
@@ -131,15 +133,15 @@ fn category_tab_active() -> Element {
     let category = SystemHotkeysCategory::Inventory;
     let is_active = true;
     let has_separator = true;
-    let active_category = use_signal(|| SystemHotkeysCategory::Inventory);
     let picker_open = use_signal(|| false);
     rsx! {
-        SystemHotkeysCategoryTab {
-            category,
-            is_active,
-            has_separator,
-            active_category,
-            picker_open,
+        SystemHotkeysStateMount {
+            SystemHotkeysCategoryTab {
+                category,
+                is_active,
+                has_separator,
+                picker_open,
+            }
         }
     }
 }
@@ -148,15 +150,15 @@ fn category_tab_inactive() -> Element {
     let category = SystemHotkeysCategory::Camera;
     let is_active = false;
     let has_separator = false;
-    let active_category = use_signal(|| SystemHotkeysCategory::Inventory);
     let picker_open = use_signal(|| false);
     rsx! {
-        SystemHotkeysCategoryTab {
-            category,
-            is_active,
-            has_separator,
-            active_category,
-            picker_open,
+        SystemHotkeysStateMount {
+            SystemHotkeysCategoryTab {
+                category,
+                is_active,
+                has_separator,
+                picker_open,
+            }
         }
     }
 }
@@ -170,42 +172,44 @@ fn inventory_drag_overlay_empty() -> Element {
 
 fn control_groups_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            ControlGroupsHotkeysView { editing_section }
+            SystemHotkeysStateMount {
+                ControlGroupsHotkeysView {}
+            }
         }
     }
 }
 
 fn hero_selection_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            HeroSelectionHotkeysView { editing_section }
+            SystemHotkeysStateMount {
+                HeroSelectionHotkeysView {}
+            }
         }
     }
 }
 
 fn inventory_view() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
-    let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            InventoryHotkeysView { editing_section, drag_follower }
+            SystemHotkeysStateMount {
+                InventoryHotkeysView {}
+            }
         }
     }
 }
 
 fn inventory_grid() -> Element {
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
-    let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            InventoryGrid { editing_section, drag_follower }
+            SystemHotkeysStateMount {
+                InventoryGrid {}
+            }
         }
     }
 }
@@ -231,10 +235,11 @@ fn key_picker_dialog_open() -> Element {
 fn list_view_general_commands() -> Element {
     let category = SystemHotkeysCategory::GeneralCommands;
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            SystemHotkeysListView { category, editing_section }
+            SystemHotkeysStateMount {
+                SystemHotkeysListView { category }
+            }
         }
     }
 }
@@ -255,19 +260,19 @@ fn inventory_filled_slot_default() -> Element {
     let slot_index: usize = 0;
     let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     let dragging_source = use_signal(|| None::<InventoryDragSource>);
     let drop_target = use_signal(|| None::<WarcraftObjectId>);
     let drag_follower = use_signal(|| None::<InventoryDragFollower>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            InventoryFilledSlot {
-                slot_index,
-                section_id,
-                editing_section,
-                dragging_source,
-                drop_target,
-                drag_follower,
+            SystemHotkeysStateMount {
+                InventoryFilledSlot {
+                    slot_index,
+                    section_id,
+                    dragging_source,
+                    drop_target,
+                    drag_follower,
+                }
             }
         }
     }
@@ -278,12 +283,10 @@ fn key_capture_default() -> Element {
     let first_entry = entries[0];
     let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            KeyCapture {
-                section_id,
-                editing_section,
+            SystemHotkeysStateMount {
+                KeyCapture { section_id }
             }
         }
     }
@@ -295,14 +298,14 @@ fn system_hotkeys_list_entry_default() -> Element {
     let section_id = first_entry.section_id();
     let comment = first_entry.comment().to_string();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            ul {
-                SystemHotkeysListEntry {
-                    section_id,
-                    comment,
-                    editing_section,
+            SystemHotkeysStateMount {
+                ul {
+                    SystemHotkeysListEntry {
+                        section_id,
+                        comment,
+                    }
                 }
             }
         }
@@ -315,13 +318,13 @@ fn slot_button_default() -> Element {
     let slot_label = "Slot 1".to_string();
     let section_id = first_entry.section_id();
     let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
-    let editing_section = use_signal(|| None::<WarcraftObjectId>);
     rsx! {
         CustomKeysMount { loaded_keys,
-            SlotButton {
-                slot_label,
-                section_id,
-                editing_section,
+            SystemHotkeysStateMount {
+                SlotButton {
+                    slot_label,
+                    section_id,
+                }
             }
         }
     }

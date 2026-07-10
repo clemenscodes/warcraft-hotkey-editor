@@ -1,5 +1,5 @@
-use super::super::conflict_ability_icon::ConflictAbilityIconProps;
 use super::super::conflict_ability_trigger::ConflictAbilityTriggerProps;
+use super::super::conflict_ability_trigger::components::conflict_ability_icon::ConflictAbilityIconProps;
 use super::props::ConflictAbilityProps;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;

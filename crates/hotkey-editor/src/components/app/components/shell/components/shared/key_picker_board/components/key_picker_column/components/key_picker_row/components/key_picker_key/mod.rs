@@ -1,43 +1,35 @@
 pub mod components;
 mod logic;
 mod props;
-mod state;
 
-use components::available_key::{AvailableKey, AvailableKeyProps};
-use components::conflict_key::{ConflictKey, ConflictKeyProps};
-use components::current_key::{CurrentKey, CurrentKeyProps};
+use crate::components::app::components::shell::components::shared::key_picker_board::KeyWidth;
+use components::narrow_key_slot::{NarrowKeySlot, NarrowKeySlotProps};
+use components::wide_key_slot::{WideKeySlot, WideKeySlotProps};
 use dioxus::prelude::*;
 use logic::KeyPickerKeyPresentation;
 pub use props::KeyPickerKeyProps;
-use state::KeyPickerKeyState;
 use tw_macro::assert_component;
 assert_component!(KeyPickerKey);
 
 /// A single key on the picker board: an on-screen keyboard button that assigns its key
 /// when clicked. It carries no look of its own — it is the dispatcher that derives the
-/// key's visual state from its cell and renders the matching look component
-/// (`AvailableKey` xor `CurrentKey` xor `ConflictKey`), each of which owns its own
-/// button, styling, and conflict tooltip. The body only chooses which look to render.
+/// key's width from its cell and renders the matching sizing slot (`NarrowKeySlot` xor
+/// `WideKeySlot`). Each slot owns the key's width and fills it with the color leaf that
+/// owns the look. The body only chooses the width; the color is chosen further down.
 #[component]
 pub fn KeyPickerKey(props: KeyPickerKeyProps) -> Element {
     let presentation = KeyPickerKeyPresentation::from(&props);
-    match presentation.state {
-        KeyPickerKeyState::Available => {
-            let available = AvailableKeyProps::from(&presentation);
+    match presentation.width {
+        KeyWidth::Standard => {
+            let narrow = NarrowKeySlotProps::from(&presentation);
             rsx! {
-                AvailableKey { ..available }
+                NarrowKeySlot { ..narrow }
             }
         }
-        KeyPickerKeyState::Current => {
-            let current = CurrentKeyProps::from(&presentation);
+        KeyWidth::Wide => {
+            let wide = WideKeySlotProps::from(&presentation);
             rsx! {
-                CurrentKey { ..current }
-            }
-        }
-        KeyPickerKeyState::Conflict => {
-            let conflict = ConflictKeyProps::from(&presentation);
-            rsx! {
-                ConflictKey { ..conflict }
+                WideKeySlot { ..wide }
             }
         }
     }

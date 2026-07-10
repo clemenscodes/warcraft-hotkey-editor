@@ -10,27 +10,27 @@ test.describe("Hotkey editing", () => {
     await page.locator(".unit-card").first().click();
     await page.locator(".filled-tile").first().waitFor();
     await page.locator(".filled-tile").first().click();
-    await page.locator(".override-key").waitFor();
+    await page.locator(".normal-override-key, .special-override-key").waitFor();
   });
 
   test("clicking the key cell opens the key picker", async ({ page }) => {
-    await page.locator(".override-key").click();
+    await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
   });
 
   test("picking a key updates the cell display and writes hotkey=Q to localStorage", async ({ page }) => {
-    await page.locator(".override-key").click();
+    await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-board [data-label="Q"]').click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(page.locator(".override-key")).toContainText("Q");
+    await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("hotkey=Q");
   });
 
   test("Escape while picker is open cancels without changing localStorage", async ({ page }) => {
     const storedBefore = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
-    await page.locator(".override-key").click();
+    await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
     await page.keyboard.press("Escape");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
@@ -72,7 +72,7 @@ test.describe("Hotkey editing", () => {
     await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-board [data-label="Q"]').click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(page.locator(".override-key")).toContainText("Q");
+    await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored).toContain("hotkey=Q");
   });

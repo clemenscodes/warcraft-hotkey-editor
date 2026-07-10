@@ -62,7 +62,7 @@ impl FocusNavigation {
     pub(crate) fn cycle_inside_unit_detail(reverse: bool) {
         browser_kit::dom::RovingFocus::cycle(
             ".unit-detail",
-            ".grid-editor-tile, .override-key, .tile-override-tier-button",
+            ".grid-editor-tile, .normal-override-key, .special-override-key, .tile-override-tier-button",
             reverse,
         );
     }

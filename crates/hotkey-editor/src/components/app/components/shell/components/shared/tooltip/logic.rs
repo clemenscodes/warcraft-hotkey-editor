@@ -1,34 +1,52 @@
+use super::components::above_center_tooltip::AboveCenterTooltipProps;
+use super::components::above_left_tooltip::AboveLeftTooltipProps;
+use super::components::above_right_tooltip::AboveRightTooltipProps;
+use super::components::below_center_tooltip::BelowCenterTooltipProps;
+use super::components::below_left_tooltip::BelowLeftTooltipProps;
+use super::components::below_right_tooltip::BelowRightTooltipProps;
 use super::props::TooltipProps;
-use super::state::{TooltipAnchor, TooltipPlacement};
 
-/// A tooltip's shaped presentation: its text, the `data-placement` / `data-anchor`
-/// tokens its style keys on, and whether it should render at all. Built by `From`
-/// so the body only places these.
-pub(super) struct TooltipPresentation {
-    pub(super) text: String,
-    pub(super) placement: &'static str,
-    pub(super) anchor: &'static str,
-    pub(super) is_empty: bool,
-}
+/// Each positioned bubble shows only the text; its placement and anchor are baked
+/// into its own component, so the dispatcher hands every look the same message.
 
-impl From<&TooltipProps> for TooltipPresentation {
+impl From<&TooltipProps> for AboveLeftTooltipProps {
     fn from(props: &TooltipProps) -> Self {
         let text = props.text.clone();
-        let is_empty = text.is_empty();
-        let placement = match props.placement {
-            TooltipPlacement::Below => "below",
-            TooltipPlacement::Above => "above",
-        };
-        let anchor = match props.anchor {
-            TooltipAnchor::Center => "center",
-            TooltipAnchor::Left => "left",
-            TooltipAnchor::Right => "right",
-        };
-        Self {
-            text,
-            placement,
-            anchor,
-            is_empty,
-        }
+        Self { text }
+    }
+}
+
+impl From<&TooltipProps> for AboveCenterTooltipProps {
+    fn from(props: &TooltipProps) -> Self {
+        let text = props.text.clone();
+        Self { text }
+    }
+}
+
+impl From<&TooltipProps> for AboveRightTooltipProps {
+    fn from(props: &TooltipProps) -> Self {
+        let text = props.text.clone();
+        Self { text }
+    }
+}
+
+impl From<&TooltipProps> for BelowLeftTooltipProps {
+    fn from(props: &TooltipProps) -> Self {
+        let text = props.text.clone();
+        Self { text }
+    }
+}
+
+impl From<&TooltipProps> for BelowCenterTooltipProps {
+    fn from(props: &TooltipProps) -> Self {
+        let text = props.text.clone();
+        Self { text }
+    }
+}
+
+impl From<&TooltipProps> for BelowRightTooltipProps {
+    fn from(props: &TooltipProps) -> Self {
+        let text = props.text.clone();
+        Self { text }
     }
 }

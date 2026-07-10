@@ -3,14 +3,13 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// One hotkey row: the binding's display name, its section, and the shared editing
-/// signal its key chip needs. The chip resolves its own binding from the query, so
-/// the row threads neither loaded keys nor a binding map.
+/// One hotkey row: the binding's display name and its section. The chip resolves its
+/// own binding from the query and reads the editing section from the dialog state
+/// context, so the row threads neither loaded keys nor a binding map.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysListEntryProps {
     pub section_id: WarcraftObjectId,
     pub comment: String,
-    pub editing_section: Signal<Option<WarcraftObjectId>>,
 }
 
 impl From<&SystemHotkeysListEntryProps> for SystemHotkeysListEntryLabelProps {
@@ -23,10 +22,6 @@ impl From<&SystemHotkeysListEntryProps> for SystemHotkeysListEntryLabelProps {
 impl From<&SystemHotkeysListEntryProps> for KeyCaptureProps {
     fn from(props: &SystemHotkeysListEntryProps) -> Self {
         let section_id = props.section_id;
-        let editing_section = props.editing_section;
-        Self {
-            section_id,
-            editing_section,
-        }
+        Self { section_id }
     }
 }

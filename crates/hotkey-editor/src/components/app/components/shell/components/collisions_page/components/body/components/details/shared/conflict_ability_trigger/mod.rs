@@ -1,7 +1,8 @@
+pub mod components;
 mod props;
 mod style;
 
-use super::conflict_ability_icon::ConflictAbilityIcon;
+use components::conflict_ability_icon::ConflictAbilityIcon;
 use dioxus::prelude::*;
 pub use props::ConflictAbilityTriggerProps;
 use style::CLASS;

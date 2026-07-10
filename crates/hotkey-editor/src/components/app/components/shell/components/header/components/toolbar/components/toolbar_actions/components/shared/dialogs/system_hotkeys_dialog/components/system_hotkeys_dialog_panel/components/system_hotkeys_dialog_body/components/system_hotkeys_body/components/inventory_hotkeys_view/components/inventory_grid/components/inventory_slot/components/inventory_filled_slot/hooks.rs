@@ -8,6 +8,7 @@ use crate::components::app::components::shell::components::header::components::t
 use super::logic::{InventoryFilledSlotInputs, InventoryFilledSlotView};
 use super::props::InventoryFilledSlotProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot::SystemSlotState;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;
@@ -203,9 +204,12 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
     }
 }
 
-fn use_inventory_editing(props: &InventoryFilledSlotProps) -> InventoryEditing {
+fn use_inventory_editing(
+    props: &InventoryFilledSlotProps,
+    editing_section: Signal<Option<WarcraftObjectId>>,
+) -> InventoryEditing {
     let custom_keys_service = use_custom_keys_service();
-    let mut editing_section = props.editing_section;
+    let mut editing_section = editing_section;
     let section_id_for_click = props.section_id;
     let section_id_for_pick = props.section_id;
     let on_click = EventHandler::new(move |_event: MouseEvent| {
@@ -231,15 +235,18 @@ pub(super) fn use_inventory_filled_slot(
     props: &InventoryFilledSlotProps,
 ) -> InventoryFilledSlotModel {
     let custom_keys_service = use_custom_keys_service();
+    let dialog_state = use_system_hotkeys_dialog_state();
+    let editing_section = dialog_state.editing_section();
     let binding = custom_keys_service.slot_binding(props.section_id);
     let view_inputs = InventoryFilledSlotInputs {
         props,
         binding: &binding,
+        editing_section,
     };
     let view = InventoryFilledSlotView::from(view_inputs);
     let label_for_drag = view.key_label.clone();
     let drag = use_inventory_drag(props, label_for_drag);
-    let editing = use_inventory_editing(props);
+    let editing = use_inventory_editing(props, editing_section);
     InventoryFilledSlotModel {
         state: view.state,
         section_id: props.section_id,

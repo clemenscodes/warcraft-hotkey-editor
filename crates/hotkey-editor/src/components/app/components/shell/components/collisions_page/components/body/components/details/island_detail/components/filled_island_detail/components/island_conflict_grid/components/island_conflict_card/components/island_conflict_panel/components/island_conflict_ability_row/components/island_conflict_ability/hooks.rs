@@ -1,5 +1,5 @@
 use super::props::IslandConflictAbilityProps;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_icon::ConflictAbilityIconProps;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::components::conflict_ability_icon::ConflictAbilityIconProps;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;

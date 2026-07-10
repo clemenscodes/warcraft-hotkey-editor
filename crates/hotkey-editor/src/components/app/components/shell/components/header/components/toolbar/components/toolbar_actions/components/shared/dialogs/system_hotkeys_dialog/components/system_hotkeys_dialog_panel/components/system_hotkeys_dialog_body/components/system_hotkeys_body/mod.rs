@@ -13,38 +13,32 @@ assert_component!(SystemHotkeysBody);
 
 /// Renders the editor for the active category. Inventory, hero selection, and
 /// control groups have bespoke editors; every other category is a plain list of
-/// key rows. A connected selector: it reads the dialog UI state from context, holds
-/// no class, and picks one child to render.
+/// key rows. A connected selector: it reads the active category from context, holds
+/// no class, and picks one child to render. Each editor reads the editing section and
+/// drag follower from the dialog state context itself, so nothing is threaded down.
 #[component]
 pub fn SystemHotkeysBody() -> Element {
-    let SystemHotkeysBodyModel {
-        active_category,
-        editing_section,
-        drag_follower,
-    } = use_system_hotkeys_body();
+    let SystemHotkeysBodyModel { active_category } = use_system_hotkeys_body();
     let active = *active_category.read();
     match active {
         SystemHotkeysCategory::Inventory => {
             rsx! {
-                InventoryHotkeysView { editing_section, drag_follower }
+                InventoryHotkeysView {}
             }
         }
         SystemHotkeysCategory::HeroSelection => {
             rsx! {
-                HeroSelectionHotkeysView { editing_section }
+                HeroSelectionHotkeysView {}
             }
         }
         SystemHotkeysCategory::ControlGroups => {
             rsx! {
-                ControlGroupsHotkeysView { editing_section }
+                ControlGroupsHotkeysView {}
             }
         }
         other_category => {
             rsx! {
-                SystemHotkeysListView {
-                    category: other_category,
-                    editing_section,
-                }
+                SystemHotkeysListView { category: other_category }
             }
         }
     }

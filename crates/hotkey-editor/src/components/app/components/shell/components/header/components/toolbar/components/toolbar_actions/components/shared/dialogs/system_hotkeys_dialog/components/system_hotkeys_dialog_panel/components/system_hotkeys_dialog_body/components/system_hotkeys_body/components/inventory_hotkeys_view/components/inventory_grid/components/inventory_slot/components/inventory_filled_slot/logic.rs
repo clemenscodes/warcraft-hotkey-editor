@@ -6,7 +6,7 @@ use crate::components::app::components::shell::components::shared::tooltip::Tool
 use crate::services::customkeys::queries::slot_binding_query::SlotBindingView;
 use dioxus::prelude::*;
 use std::collections::HashMap;
-use warcraft_keybinds::KeyCode;
+use warcraft_keybinds::{KeyCode, WarcraftObjectId};
 
 /// The presentational state of one inventory cell: its glow state, drag flag,
 /// caption/key labels, conflict tooltip, and picker conflict set. The binding half
@@ -25,16 +25,21 @@ pub(super) struct InventoryFilledSlotView {
 }
 
 /// The inputs that shape an [`InventoryFilledSlotView`]: the slot's props (its UI
-/// drag / editing signals) and the resolved binding from the CustomKeys query.
+/// drag signals), the editing section from the dialog state context, and the
+/// resolved binding from the CustomKeys query.
 pub(super) struct InventoryFilledSlotInputs<'a> {
     pub(super) props: &'a InventoryFilledSlotProps,
     pub(super) binding: &'a SlotBindingView,
+    pub(super) editing_section: Signal<Option<WarcraftObjectId>>,
 }
 
 impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
     fn from(inputs: InventoryFilledSlotInputs<'_>) -> Self {
-        let InventoryFilledSlotInputs { props, binding } = inputs;
-        let editing_section = props.editing_section;
+        let InventoryFilledSlotInputs {
+            props,
+            binding,
+            editing_section,
+        } = inputs;
         let dragging_source = props.dragging_source;
         let drop_target = props.drop_target;
         let section_id = props.section_id;

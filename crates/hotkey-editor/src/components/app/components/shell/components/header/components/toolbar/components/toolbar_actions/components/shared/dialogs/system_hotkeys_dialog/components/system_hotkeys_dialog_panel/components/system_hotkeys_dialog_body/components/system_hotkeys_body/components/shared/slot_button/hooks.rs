@@ -1,5 +1,6 @@
 use super::props::SlotButtonProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot::SystemSlotState;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -29,7 +30,8 @@ pub(super) struct SlotButtonModel {
 /// mutating the aggregate inline.
 pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let custom_keys_service = use_custom_keys_service();
-    let mut editing_section = props.editing_section;
+    let dialog_state = use_system_hotkeys_dialog_state();
+    let mut editing_section = dialog_state.editing_section();
     let lookup_id = props.section_id;
     let slot_label = props.slot_label.clone();
     let compact = props.compact;

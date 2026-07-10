@@ -21,7 +21,6 @@ pub(super) fn use_system_hotkeys_breadcrumbs_menu(
                 category,
                 is_active,
                 has_separator,
-                active_category: props.active_category,
                 picker_open: props.picker_open,
             }
         })

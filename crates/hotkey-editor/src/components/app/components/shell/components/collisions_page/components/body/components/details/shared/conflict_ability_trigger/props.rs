@@ -1,4 +1,4 @@
-use super::super::conflict_ability_icon::ConflictAbilityIconProps;
+use super::components::conflict_ability_icon::ConflictAbilityIconProps;
 use dioxus::prelude::*;
 
 /// The icon button that opens the carrying unit: the ability icon it shows and the

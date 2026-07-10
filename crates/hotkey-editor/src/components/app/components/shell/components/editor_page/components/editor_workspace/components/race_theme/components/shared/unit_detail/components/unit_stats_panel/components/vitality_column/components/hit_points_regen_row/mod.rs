@@ -21,20 +21,13 @@ const LABEL_TEXT: &str = "Regeneration";
 #[component]
 pub fn HitPointsRegenRow(props: HitPointsRegenRowProps) -> Element {
     let value = props.value;
-    let HitPointsRegenPresentation {
-        qualifier,
-        gain_text,
-        gain_muted,
-    } = HitPointsRegenPresentation::from(value);
+    let HitPointsRegenPresentation { qualifier } = HitPointsRegenPresentation::from(value);
     rsx! {
         div {
             class: CLASS,
             RegenLabel { text: LABEL_TEXT }
             RegenQualifier { text: qualifier }
-            HitPointsRegenGain {
-                text: gain_text,
-                is_muted: gain_muted,
-            }
+            HitPointsRegenGain { value }
         }
     }
 }

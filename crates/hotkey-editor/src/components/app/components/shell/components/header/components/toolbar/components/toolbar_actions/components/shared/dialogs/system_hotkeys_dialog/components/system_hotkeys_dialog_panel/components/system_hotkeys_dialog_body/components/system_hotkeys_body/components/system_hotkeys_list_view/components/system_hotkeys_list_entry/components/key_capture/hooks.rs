@@ -1,4 +1,5 @@
 use super::props::KeyCaptureProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -24,7 +25,8 @@ pub(super) struct KeyCaptureModel {
 /// `set_system_hotkey` command, never mutating the aggregate inline.
 pub(super) fn use_key_capture(props: &KeyCaptureProps) -> KeyCaptureModel {
     let custom_keys_service = use_custom_keys_service();
-    let mut editing_section = props.editing_section;
+    let dialog_state = use_system_hotkeys_dialog_state();
+    let mut editing_section = dialog_state.editing_section();
     let lookup_id = props.section_id;
 
     let binding = custom_keys_service.slot_binding(lookup_id);

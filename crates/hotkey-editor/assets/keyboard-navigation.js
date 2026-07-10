@@ -15,7 +15,8 @@ const NAV_SELECTORS = [
     ".unit-card",
     ".unit-category-heading",
     ".grid-editor-tile",
-    ".override-key",
+    ".normal-override-key",
+    ".special-override-key",
     ".tile-override-tier-button",
     ".layout-tile",
     ".key-capture",
@@ -27,7 +28,7 @@ const NAV_SELECTORS = [
 const NAV_SELECTOR = NAV_SELECTORS.join(", ");
 const PERPENDICULAR_WEIGHT = 2;
 const TOLERANCE_PIXELS = 2;
-const INSTALL_VERSION = 9;
+const INSTALL_VERSION = 10;
 const MIN_NAV_VIEWPORT_WIDTH = 1100;
 
 function isNavigationViewport() {
