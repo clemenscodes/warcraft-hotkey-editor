@@ -1,1 +1,1 @@
-pub mod info_dialog_body;
+pub mod info_dialog_panel;

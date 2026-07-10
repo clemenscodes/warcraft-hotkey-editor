@@ -1,28 +1,29 @@
 pub mod components;
-mod style;
 
 use crate::services::navigation::context::use_view_navigation;
-use components::unit_detail::UnitDetail;
-use components::unit_list::UnitList;
+use components::human_race_theme::HumanRaceTheme;
+use components::neutral_race_theme::NeutralRaceTheme;
+use components::nightelf_race_theme::NightelfRaceTheme;
+use components::orc_race_theme::OrcRaceTheme;
+use components::undead_race_theme::UndeadRaceTheme;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
+use warcraft_api::Race;
 assert_component!(RaceTheme);
 
-/// Publishes the active race's colour as `--race-color` for the race-themed content —
-/// the unit list and the unit detail panel. A `display:contents` wrapper, so it adds no
-/// box of its own: the custom property inherits down to the cards, which read it for
-/// their selected/hover accent, while the workspace grid still lays out the list and
-/// detail directly. It reads the active race from context, so it takes no props, and its
-/// children source their own state from context too.
+/// Dispatches to the per-race themed container for the active race. Each race has its
+/// own component publishing that race's colour as `--race-color` and `--race-accent`
+/// for the race-themed content — the unit list and unit detail panel. This reads the
+/// active race from context and renders the matching component; it holds no box or
+/// style of its own, so the themed container is the only wrapper the content sees.
 #[component]
 pub fn RaceTheme() -> Element {
     let race = *use_view_navigation().active_race().read();
-    let class = style::theme(race);
-    rsx! {
-        div {
-            class,
-            UnitList {}
-            UnitDetail {}
-        }
+    match race {
+        Race::Human => rsx! { HumanRaceTheme {} },
+        Race::Orc => rsx! { OrcRaceTheme {} },
+        Race::Undead => rsx! { UndeadRaceTheme {} },
+        Race::Nightelf => rsx! { NightelfRaceTheme {} },
+        Race::Neutral => rsx! { NeutralRaceTheme {} },
     }
 }

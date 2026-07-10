@@ -134,7 +134,6 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
             let inputs = HotkeysContent {
                 has_file,
                 list: hotkey_units,
-                selected_unit: selected_hotkey_unit,
             };
             ContentModel::from(inputs)
         }
@@ -142,7 +141,6 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
             let inputs = UnitPositionsContent {
                 has_file,
                 list: unit_positions,
-                selected_unit: selected_unit_position,
             };
             ContentModel::from(inputs)
         }

@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::collisions_page::comp
 };
 use dioxus::prelude::*;
 pub use props::UnitPositionConflictCardProps;
-use style::CONFLICT_CARD;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(UnitPositionConflictCard);
 
@@ -18,14 +18,10 @@ assert_component!(UnitPositionConflictCard);
 #[component]
 pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
     let model = ConflictCardModel::from(&props);
-    let panel = ConflictPanelProps {
-        caption: model.caption,
-        pair_row: model.pair_row,
-        multi_stack: model.multi_stack,
-    };
+    let panel = ConflictPanelProps::from(model);
     rsx! {
         div {
-            class: CONFLICT_CARD,
+            class: CLASS,
             ConflictPanel { ..panel }
         }
     }

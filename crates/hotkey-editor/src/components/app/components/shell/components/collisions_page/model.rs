@@ -1,5 +1,3 @@
-use dioxus::prelude::*;
-
 use super::components::body::components::clear_state::ClearStateProps;
 use super::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
 use super::components::body::components::details::island_detail::IslandDetailProps;
@@ -105,7 +103,6 @@ impl From<PositionsContent> for ContentModel {
 pub(super) struct HotkeysContent {
     pub(super) has_file: bool,
     pub(super) list: CollisionList<HotkeyUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
 }
 
 impl From<HotkeysContent> for ContentModel {
@@ -126,7 +123,6 @@ impl From<HotkeysContent> for ContentModel {
         let sidebar_units = content.list.views.clone();
         let sidebar = UnitCardsSidebarProps {
             units: sidebar_units,
-            selected_unit: content.selected_unit,
         };
         let detail = HotkeyUnitDetailProps {
             units: content.list.views,
@@ -143,7 +139,6 @@ impl From<HotkeysContent> for ContentModel {
 pub(super) struct UnitPositionsContent {
     pub(super) has_file: bool,
     pub(super) list: CollisionList<UnitPositionUnitView>,
-    pub(super) selected_unit: Signal<Option<String>>,
 }
 
 impl From<UnitPositionsContent> for ContentModel {
@@ -164,7 +159,6 @@ impl From<UnitPositionsContent> for ContentModel {
         let sidebar_units = content.list.views.clone();
         let sidebar = UnitCardsSidebarProps {
             units: sidebar_units,
-            selected_unit: content.selected_unit,
         };
         let detail = UnitPositionDetailProps {
             units: content.list.views,

@@ -5,7 +5,7 @@ use super::conflict_ability::ConflictAbility;
 use super::conflict_marker_view::{ConflictMarkerView, ConflictMarkerViewProps};
 use dioxus::prelude::*;
 pub use props::ConflictMultiStackProps;
-use style::ABILITY_ROW;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(ConflictMultiStack);
 
@@ -25,8 +25,7 @@ pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
     rsx! {
         ConflictMarkerView { ..marker }
         div {
-            class: ABILITY_ROW,
-            "data-multi": true,
+            class: CLASS,
             for ability in abilities {
                 ConflictAbility { ..ability }
             }

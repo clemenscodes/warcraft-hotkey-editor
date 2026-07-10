@@ -23,7 +23,7 @@ browser-kit = { git = "https://github.com/clemenscodes/browser-kit", tag = "v0.1
 ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.1.0" }
 dioxus-gallery = { git = "https://github.com/clemenscodes/dioxus-gallery", tag = "v0.1.0" }
 dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.1.0" }
-tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.1.0" }
+tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.2.0" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
 warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.4.0" }
 warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.4.0" }

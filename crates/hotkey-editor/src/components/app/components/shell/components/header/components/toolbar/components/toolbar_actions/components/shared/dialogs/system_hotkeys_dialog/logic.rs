@@ -1,17 +1,17 @@
-use super::components::system_hotkeys_dialog_body::SystemHotkeysDialogBodyProps;
+use super::components::system_hotkeys_dialog_panel::SystemHotkeysDialogPanelProps;
 use super::hooks::SystemHotkeysDialogModel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
 /// The system-hotkeys dialog's own shell, shaped from its model: the open value
-/// driving the backdrop, the change handler that writes the open signal, the header
-/// props, and the scroll-region body props carrying the category tab, the shared
-/// editing-section signal, and the inventory drag follower.
+/// driving the backdrop, the change handler that writes the open signal, and the
+/// bordered panel (its header row above the scroll body). The body reads its category
+/// tab, editing-section, and inventory drag follower from context, so the panel carries
+/// only the header.
 pub(super) struct SystemHotkeysDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: SystemHotkeysDialogBodyProps,
+    pub(super) panel: SystemHotkeysDialogPanelProps,
 }
 
 impl From<&SystemHotkeysDialogModel> for SystemHotkeysDialogShell {
@@ -23,16 +23,11 @@ impl From<&SystemHotkeysDialogModel> for SystemHotkeysDialogShell {
         let title = String::from("System Hotkeys");
         let on_close = EventHandler::new(move |()| close_signal.set(false));
         let header = DialogHeaderProps { title, on_close };
-        let body = SystemHotkeysDialogBodyProps {
-            active_category: model.active_category,
-            editing_section: model.editing_section,
-            drag_follower: model.drag_follower,
-        };
+        let panel = SystemHotkeysDialogPanelProps { header };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

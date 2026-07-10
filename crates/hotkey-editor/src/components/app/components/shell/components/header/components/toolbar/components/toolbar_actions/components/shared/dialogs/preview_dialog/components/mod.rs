@@ -1,1 +1,1 @@
-pub mod preview_dialog_body;
+pub mod preview_dialog_panel;

@@ -5,7 +5,7 @@ use super::conflict_ability::ConflictAbility;
 use super::conflict_marker_view::{ConflictMarkerView, ConflictMarkerViewProps};
 use dioxus::prelude::*;
 pub use props::{AbilityPair, ConflictPairRowProps};
-use style::ABILITY_ROW;
+use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(ConflictPairRow);
 
@@ -24,8 +24,7 @@ pub fn ConflictPairRow(props: ConflictPairRowProps) -> Element {
     };
     rsx! {
         div {
-            class: ABILITY_ROW,
-            "data-multi": false,
+            class: CLASS,
             ConflictAbility { ..left }
             ConflictMarkerView { ..marker }
             ConflictAbility { ..right }

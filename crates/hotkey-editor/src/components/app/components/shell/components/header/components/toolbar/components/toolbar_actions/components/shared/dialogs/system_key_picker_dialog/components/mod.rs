@@ -1,1 +1,1 @@
-pub mod system_key_picker_dialog_body;
+pub mod system_key_picker_dialog_panel;

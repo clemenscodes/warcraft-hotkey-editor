@@ -5,13 +5,12 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
-use components::info_dialog_body::InfoDialogBody;
+use components::info_dialog_panel::InfoDialogPanel;
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::{DialogContent, DialogRoot};
+use dioxus_primitives::dialog::DialogRoot;
 use logic::InfoDialogShell;
 pub use props::InfoDialogConfig;
-use style::{CLASS, OVERLAY};
+use style::CLASS;
 use tw_macro::assert_component;
 
 assert_component!(InfoDialog);
@@ -19,25 +18,24 @@ assert_component!(InfoDialog);
 /// The shared shell for the download and import info dialogs: a centered
 /// instruction block above a cancel/primary action row. Variants fill in the
 /// title, copy, warning, and handlers via `InfoDialogConfig`; this owns its own
-/// dialog shell — the header and scroll body nest under it directly.
+/// dialog shell — the shell struct shapes the panel, and this places the panel
+/// inside its own backdrop `div` (the dimmed, centring layer) within the library
+/// `DialogRoot`. No project class touches the library element.
 #[component]
 pub fn InfoDialog(props: InfoDialogConfig) -> Element {
     use_body_scroll_lock(props.open);
     let InfoDialogShell {
         open,
         on_open_change,
-        header,
-        body,
+        panel,
     } = InfoDialogShell::from(&props);
     rsx! {
         DialogRoot {
-            class: OVERLAY,
             open,
             on_open_change,
-            DialogContent {
-                class: CLASS.to_library_class(),
-                DialogHeader { ..header }
-                InfoDialogBody { ..body }
+            div {
+                class: CLASS,
+                InfoDialogPanel { ..panel }
             }
         }
     }

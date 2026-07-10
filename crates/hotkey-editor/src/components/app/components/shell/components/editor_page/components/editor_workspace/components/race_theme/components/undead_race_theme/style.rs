@@ -1,0 +1,9 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "contents",
+        "[--race-color:var(--color-race-undead)]",
+        "[--race-accent:var(--color-race-undead)]",
+    ],
+}

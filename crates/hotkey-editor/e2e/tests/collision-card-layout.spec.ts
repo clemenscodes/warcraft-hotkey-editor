@@ -24,7 +24,10 @@ async function openPositionCollisions(page: Page): Promise<void> {
 
   await page.locator('[data-action="view-collisions"]').click();
   await page.locator('[data-collision-kind="positions"]').waitFor();
-  await page.locator(".conflict-card").first().waitFor();
+  await page
+    .locator(".island-conflict-card, .hotkey-conflict-card, .unit-position-conflict-card")
+    .first()
+    .waitFor();
 }
 
 async function dialogCarrierNames(page: Page): Promise<string[]> {
@@ -46,7 +49,9 @@ test.describe("Collision card layout", () => {
   test("every conflict card has exactly one unit, two abilities and one separator", async ({
     page,
   }) => {
-    const shapes = await page.locator(".conflict-card").evaluateAll((cards: Element[]) =>
+    const shapes = await page
+      .locator(".island-conflict-card, .hotkey-conflict-card, .unit-position-conflict-card")
+      .evaluateAll((cards: Element[]) =>
       cards.map((card) => ({
         units: card.querySelectorAll(".island-conflict-unit").length,
         abilities: card.querySelectorAll(".island-conflict-ability").length,

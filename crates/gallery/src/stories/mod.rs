@@ -1,6 +1,7 @@
 use dioxus_gallery::{Story, StoryRegistry};
 
 mod buttons;
+mod carriers;
 mod dialogs;
 mod editor_mount;
 pub mod fixtures;
@@ -8,6 +9,7 @@ mod grid;
 mod keys_mount;
 mod shell;
 mod system_hotkeys;
+mod system_hotkeys_state_mount;
 mod tabs;
 mod tile_override;
 mod toast_mount;
@@ -23,6 +25,7 @@ pub fn registry() -> StoryRegistry {
     stories.extend(buttons::stories());
     stories.extend(grid::stories());
     stories.extend(dialogs::stories());
+    stories.extend(carriers::stories());
     stories.extend(shell::stories());
     stories.extend(system_hotkeys::stories());
     stories.extend(tabs::stories());

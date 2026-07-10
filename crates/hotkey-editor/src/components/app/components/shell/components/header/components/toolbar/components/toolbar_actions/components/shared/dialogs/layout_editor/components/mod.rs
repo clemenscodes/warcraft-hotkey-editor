@@ -1,1 +1,1 @@
-pub mod layout_editor_body;
+pub mod layout_editor_panel;

@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use components::active_move_list::{ActiveMoveList, ActiveMoveListProps};
+use components::move_list::{MoveList, MoveListProps};
 use components::unresolved_section::{UnresolvedSection, UnresolvedSectionProps};
 use dioxus::prelude::*;
 pub use props::{PlanBodyProps, PlanBodySection};
@@ -18,14 +18,14 @@ pub fn PlanBody(props: PlanBodyProps) -> Element {
     let section = props.section;
     let unresolved_rows = props.unresolved_rows;
     let has_unresolved = !unresolved_rows.is_empty();
-    let active = ActiveMoveListProps { section };
+    let active = MoveListProps { section };
     let unresolved = UnresolvedSectionProps {
         rows: unresolved_rows,
     };
     rsx! {
         div {
             class: CLASS,
-            ActiveMoveList { ..active }
+            MoveList { ..active }
             if has_unresolved {
                 UnresolvedSection { ..unresolved }
             }

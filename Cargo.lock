@@ -3282,8 +3282,8 @@ dependencies = [
 
 [[package]]
 name = "tw-macro"
-version = "0.1.0"
-source = "git+https://github.com/clemenscodes/tw-macro?tag=v0.1.0#808419381ac46c32e1abc3a9a344c346dd9fa800"
+version = "0.2.0"
+source = "git+https://github.com/clemenscodes/tw-macro?tag=v0.2.0#f4b2915e9b02381075b588d15ba63a5c6a498b20"
 dependencies = [
  "dioxus",
 ]

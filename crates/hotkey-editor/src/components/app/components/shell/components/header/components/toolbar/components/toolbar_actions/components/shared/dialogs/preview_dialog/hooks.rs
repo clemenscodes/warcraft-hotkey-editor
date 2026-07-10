@@ -1,4 +1,4 @@
-use super::components::preview_dialog_body::components::preview_textarea::PreviewTextareaProps;
+use super::components::preview_dialog_panel::components::preview_dialog_body::components::preview_textarea::PreviewTextareaProps;
 use super::props::PreviewDialogProps;
 use dioxus::prelude::*;
 

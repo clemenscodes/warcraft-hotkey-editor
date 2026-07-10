@@ -1,1 +1,1 @@
-pub mod key_picker_body;
+pub mod key_picker_panel;

@@ -1,4 +1,5 @@
-use super::components::key_picker_body::KeyPickerBodyProps;
+use super::components::key_picker_panel::KeyPickerPanelProps;
+use super::components::key_picker_panel::components::key_picker_body::KeyPickerBodyProps;
 use super::hooks::KeyPickerModel;
 use super::props::{KeyPickerCell, KeyPickerCellState};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
@@ -74,13 +75,13 @@ impl From<LetterColumnInputs> for KeyColumn {
 }
 
 /// The key picker's own shell, shaped from its model: the open value driving the
-/// backdrop, the change handler that writes the open signal, the header props, and
-/// the scroll-region body props. Every dialog owns its shell now — there is no base.
+/// backdrop, the change handler that writes the open signal, and the bordered panel
+/// (its header and scroll-region board body). Every dialog owns its shell now — there
+/// is no base.
 pub(super) struct KeyPickerShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: KeyPickerBodyProps,
+    pub(super) panel: KeyPickerPanelProps,
 }
 
 impl From<&KeyPickerModel> for KeyPickerShell {
@@ -94,11 +95,11 @@ impl From<&KeyPickerModel> for KeyPickerShell {
         let header = DialogHeaderProps { title, on_close };
         let board = model.board.clone();
         let body = KeyPickerBodyProps { board };
+        let panel = KeyPickerPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

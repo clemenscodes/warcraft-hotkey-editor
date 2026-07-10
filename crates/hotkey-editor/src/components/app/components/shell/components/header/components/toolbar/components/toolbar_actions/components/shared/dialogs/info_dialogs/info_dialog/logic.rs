@@ -1,18 +1,19 @@
-use super::components::info_dialog_body::InfoDialogBodyProps;
-use super::components::info_dialog_body::components::info_actions::InfoActionsProps;
-use super::components::info_dialog_body::components::info_content::InfoContentProps;
+use super::components::info_dialog_panel::InfoDialogPanelProps;
+use super::components::info_dialog_panel::components::info_dialog_body::InfoDialogBodyProps;
+use super::components::info_dialog_panel::components::info_dialog_body::components::info_actions::InfoActionsProps;
+use super::components::info_dialog_panel::components::info_dialog_body::components::info_content::InfoContentProps;
 use super::props::InfoDialogConfig;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
 /// The info dialog's own shell, shaped from its config: the open value driving the
-/// backdrop, the change handler that writes the open signal, the header props, and
-/// the scroll-region body props. Every dialog owns its shell now — there is no base.
+/// backdrop, the change handler that writes the open signal, and the bordered panel
+/// (its header and scroll-region body). Every dialog owns its shell now — there is no
+/// base.
 pub(super) struct InfoDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: InfoDialogBodyProps,
+    pub(super) panel: InfoDialogPanelProps,
 }
 
 impl From<&InfoDialogConfig> for InfoDialogShell {
@@ -27,11 +28,11 @@ impl From<&InfoDialogConfig> for InfoDialogShell {
         let content = InfoContentProps::from(props);
         let actions = InfoActionsProps::from(props);
         let body = InfoDialogBodyProps { content, actions };
+        let panel = InfoDialogPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

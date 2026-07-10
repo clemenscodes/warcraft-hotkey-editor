@@ -1,20 +1,20 @@
-use super::components::help_dialog_body::HelpDialogBodyProps;
-use super::components::help_dialog_body::components::help_body::HelpBodyProps;
-use super::components::help_dialog_body::components::help_dismiss::HelpDismissProps;
+use super::components::help_dialog_panel::HelpDialogPanelProps;
+use super::components::help_dialog_panel::components::help_dialog_body::HelpDialogBodyProps;
+use super::components::help_dialog_panel::components::help_dialog_body::components::help_body::HelpBodyProps;
+use super::components::help_dialog_panel::components::help_dialog_body::components::help_dismiss::HelpDismissProps;
 use super::data::HELP_CONTENT;
 use super::props::HelpDialogProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use dioxus::prelude::*;
 
-/// The help dialog's own shell, shaped directly from its props: the open value
-/// driving the backdrop, the change handler that writes the open signal, the
-/// header props, and the scroll-region body props. Every dialog owns its shell
-/// now — there is no base.
+/// The help dialog's own shell, shaped directly from its props: the open value driving
+/// the backdrop, the change handler that writes the open signal, and the bordered panel
+/// (its header and scroll-region body). Every dialog owns its shell now — there is no
+/// base.
 pub(super) struct HelpDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: HelpDialogBodyProps,
+    pub(super) panel: HelpDialogPanelProps,
 }
 
 impl From<&HelpDialogProps> for HelpDialogShell {
@@ -34,11 +34,11 @@ impl From<&HelpDialogProps> for HelpDialogShell {
             body: help_body_props,
             dismiss,
         };
+        let panel = HelpDialogPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

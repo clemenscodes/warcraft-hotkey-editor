@@ -1,3 +1,4 @@
+use super::components::island_conflict_panel::IslandConflictPanelProps;
 use super::components::island_conflict_panel::components::island_conflict_ability_row::components::island_conflict_ability::IslandConflictAbilityProps;
 use super::components::island_conflict_panel::components::island_conflict_unit::IslandConflictUnitProps;
 use super::props::IslandConflictCardProps;
@@ -9,6 +10,19 @@ pub(super) struct IslandConflictCardModel {
     pub(super) unit: IslandConflictUnitProps,
     pub(super) own_ability: IslandConflictAbilityProps,
     pub(super) shared_ability: IslandConflictAbilityProps,
+}
+
+impl From<IslandConflictCardModel> for IslandConflictPanelProps {
+    fn from(model: IslandConflictCardModel) -> Self {
+        let unit = model.unit;
+        let own_ability = model.own_ability;
+        let shared_ability = model.shared_ability;
+        Self {
+            unit,
+            own_ability,
+            shared_ability,
+        }
+    }
 }
 
 impl From<&IslandConflictCardProps> for IslandConflictCardModel {

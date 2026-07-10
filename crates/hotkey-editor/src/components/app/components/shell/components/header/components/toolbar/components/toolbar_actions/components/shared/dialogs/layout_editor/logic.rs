@@ -1,11 +1,12 @@
-use super::components::layout_editor_body::LayoutEditorBodyProps;
-use super::components::layout_editor_body::components::layout_editor_content::LayoutEditorContentProps;
-use super::components::layout_editor_body::components::layout_editor_content::components::apply_button::ApplyButtonProps;
-use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::LayoutGridProps;
-use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::{
+use super::components::layout_editor_panel::LayoutEditorPanelProps;
+use super::components::layout_editor_panel::components::layout_editor_body::LayoutEditorBodyProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::LayoutEditorContentProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::apply_button::ApplyButtonProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::LayoutGridProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::{
     LayoutTileProps, LayoutTileState,
 };
-use super::components::layout_editor_body::components::layout_editor_content::components::move_hotkey_toggle::MoveHotkeyToggleProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::move_hotkey_toggle::MoveHotkeyToggleProps;
 use super::data::QWERTY_ROWS;
 use super::hooks::LayoutEditorModel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{
@@ -26,8 +27,7 @@ use warcraft_keybinds::{
 pub(super) struct LayoutEditorShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: LayoutEditorBodyProps,
+    pub(super) panel: LayoutEditorPanelProps,
 }
 
 impl From<&LayoutEditorModel> for LayoutEditorShell {
@@ -54,11 +54,11 @@ impl From<&LayoutEditorModel> for LayoutEditorShell {
             apply,
         };
         let body = LayoutEditorBodyProps { content };
+        let panel = LayoutEditorPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

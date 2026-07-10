@@ -1,7 +1,7 @@
 use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
 use crate::components::app::components::shell::components::shared::breadcrumbs::components::breadcrumb::BreadcrumbProps;
-use super::components::plan_body::components::active_move_list::components::move_row::MoveRowProps;
-use super::components::plan_body::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
+use super::components::plan_body::components::move_list::components::move_row::MoveRowProps;
+use super::components::plan_body::components::unresolved_section::components::unresolved_move_list::components::unresolved_row::UnresolvedRowProps;
 use super::components::plan_body::{PlanBodyProps, PlanBodySection};
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use dioxus::prelude::*;

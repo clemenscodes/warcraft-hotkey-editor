@@ -1,12 +1,37 @@
 use super::props::UnitCardsSidebarProps;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardProps};
+use crate::components::app::components::shell::components::collisions_page::logic::{
+    HotkeyConflictView, UnitPositionConflictView,
+};
+use crate::services::collision_selection::CollisionSelection;
 use dioxus::prelude::*;
 
-/// One card's data per clashing unit: its portrait, name, id, and clash count.
+/// Maps a collision conflict kind to the collision-selection field that names the
+/// selected unit for that kind, so the shared generic sidebar reads its own selection
+/// from context instead of receiving it drilled as a prop — mirroring how
+/// `IslandSidebar` and the detail panes read their selection.
+pub(super) trait SelectedCollisionUnit {
+    fn selected_unit(collision_selection: CollisionSelection) -> Signal<Option<String>>;
+}
+
+impl SelectedCollisionUnit for HotkeyConflictView {
+    fn selected_unit(collision_selection: CollisionSelection) -> Signal<Option<String>> {
+        collision_selection.selected_hotkey_unit()
+    }
+}
+
+impl SelectedCollisionUnit for UnitPositionConflictView {
+    fn selected_unit(collision_selection: CollisionSelection) -> Signal<Option<String>> {
+        collision_selection.selected_unit_position()
+    }
+}
+
+/// One card's data per clashing unit: its portrait, name, id, and clash count. The
+/// selected unit arrives already read from context by the component.
 pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
     props: &UnitCardsSidebarProps<Conflict>,
+    mut selected_unit: Signal<Option<String>>,
 ) -> Vec<CollisionCardProps> {
-    let mut selected_unit = props.selected_unit;
     let selected_key = selected_unit.read().clone();
     props
         .units

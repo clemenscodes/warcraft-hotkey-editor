@@ -1,5 +1,5 @@
-use super::components::active_move_list::components::move_row::MoveRowProps;
-use super::components::unresolved_section::components::unresolved_row::UnresolvedRowProps;
+use super::components::move_list::components::move_row::MoveRowProps;
+use super::components::unresolved_section::components::unresolved_move_list::components::unresolved_row::UnresolvedRowProps;
 use dioxus::prelude::*;
 
 /// The active section's move cards, tagged with its category slug.

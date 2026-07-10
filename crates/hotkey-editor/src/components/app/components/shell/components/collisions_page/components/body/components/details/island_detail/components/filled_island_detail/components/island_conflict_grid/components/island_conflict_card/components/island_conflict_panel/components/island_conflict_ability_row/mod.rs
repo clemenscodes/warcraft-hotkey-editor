@@ -19,7 +19,6 @@ pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowProps) -> Element
     rsx! {
         div {
             class: CLASS,
-            "data-multi": false,
             IslandConflictAbility { ..own_ability }
             ConflictSeparator {}
             IslandConflictAbility { ..shared_ability }

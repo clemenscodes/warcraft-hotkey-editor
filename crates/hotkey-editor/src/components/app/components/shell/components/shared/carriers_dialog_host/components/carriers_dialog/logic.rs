@@ -1,5 +1,6 @@
-use super::components::carriers_dialog_body::CarriersDialogBodyProps;
-use super::components::carriers_dialog_body::components::carriers_grid::components::carrier_card::CarrierCardProps;
+use super::components::carriers_dialog_panel::CarriersDialogPanelProps;
+use super::components::carriers_dialog_panel::components::carriers_dialog_body::CarriersDialogBodyProps;
+use super::components::carriers_dialog_panel::components::carriers_dialog_body::components::carriers_grid::components::carrier_card::CarrierCardProps;
 use super::hooks::CarriersDialogView;
 use super::props::CarriersDialogProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
@@ -19,13 +20,12 @@ pub(super) fn cards(props: &CarriersDialogProps) -> Vec<CarrierCardProps> {
 }
 
 /// The carriers dialog's own shell, shaped from its view: the open value driving the
-/// backdrop, the change handler that writes the open signal, the header props, and
-/// the scroll-region body props carrying the carrier cards.
+/// backdrop, the change handler that writes the open signal, and the bordered panel (its
+/// header row above the scroll body carrying the carrier cards).
 pub(super) struct CarriersDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: CarriersDialogBodyProps,
+    pub(super) panel: CarriersDialogPanelProps,
 }
 
 impl From<&CarriersDialogView> for CarriersDialogShell {
@@ -39,11 +39,11 @@ impl From<&CarriersDialogView> for CarriersDialogShell {
         let header = DialogHeaderProps { title, on_close };
         let cards = view.cards.clone();
         let body = CarriersDialogBodyProps { cards };
+        let panel = CarriersDialogPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

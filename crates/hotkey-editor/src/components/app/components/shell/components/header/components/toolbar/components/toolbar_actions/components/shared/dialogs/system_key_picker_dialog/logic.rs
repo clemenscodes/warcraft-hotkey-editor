@@ -1,4 +1,5 @@
-use super::components::system_key_picker_dialog_body::SystemKeyPickerDialogBodyProps;
+use super::components::system_key_picker_dialog_panel::SystemKeyPickerDialogPanelProps;
+use super::components::system_key_picker_dialog_panel::components::system_key_picker_dialog_body::SystemKeyPickerDialogBodyProps;
 use super::data::BoardKey;
 use super::hooks::SystemKeyPickerModel;
 use super::state::BoardSection;
@@ -92,14 +93,13 @@ impl From<&ColumnInputs<'_>> for KeyColumn {
 }
 
 /// The system key picker's own shell, shaped from its model: the open value
-/// driving the backdrop, the change handler that writes the open signal, the
-/// header props, and the scroll-region body props. Every dialog owns its shell
-/// now — there is no base.
+/// driving the backdrop, the change handler that writes the open signal, and the
+/// bordered panel (its header and scroll-region board body). Every dialog owns its
+/// shell now — there is no base.
 pub(super) struct SystemKeyPickerDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) header: DialogHeaderProps,
-    pub(super) body: SystemKeyPickerDialogBodyProps,
+    pub(super) panel: SystemKeyPickerDialogPanelProps,
 }
 
 impl From<&SystemKeyPickerModel> for SystemKeyPickerDialogShell {
@@ -113,11 +113,11 @@ impl From<&SystemKeyPickerModel> for SystemKeyPickerDialogShell {
         let header = DialogHeaderProps { title, on_close };
         let board = model.board.clone();
         let body = SystemKeyPickerDialogBodyProps { board };
+        let panel = SystemKeyPickerDialogPanelProps { header, body };
         Self {
             open,
             on_open_change,
-            header,
-            body,
+            panel,
         }
     }
 }

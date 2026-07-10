@@ -562,12 +562,18 @@ So `GridHeading` lives in `grid_heading/`, and its markup carries
 name, fix it. Prefer renaming the directory when the component name is public
 API, otherwise rename the component. Fix the CSS class to match in the same pass.
 
-This rule governs our own components. Library components are exempt: the
-`dioxus_primitives` dialog parts (`DialogRoot`, `DialogContent`) are external
-building blocks, not project code, so they have no directory here and may appear
-in a body directly. A project class we put on a library component is still ours:
-it is that element's identity, and its styling is the named utilities beside it,
-exactly as for our own elements.
+This rule governs our own components. **A library element never carries a project
+class directly** — there is no "library exemption". The `dioxus_primitives` dialog
+parts (`DialogRoot`, `DialogContent`) are external building blocks, and each one is
+**wrapped in one of our own components** whose private `mod style` `classes!` `CLASS`
+styles a real element of ours (a `div`) placed inside the library element. The same
+mechanism as every other component — `class: CLASS` via `IntoAttributeValue`. There
+is no `ClassList::new` and no `to_library_class` bridge in `tw-macro` (both were
+removed): a class assembled any other way than the `classes!` macro does not compile.
+A dialog therefore splits into an outer component (its `CLASS` is the backdrop `div`
+inside `DialogRoot`) and an inner panel component (its `CLASS` is the box `div` inside
+`DialogContent`), each a proper `directory == component == class` with one classed
+element.
 
 ## One class per component
 

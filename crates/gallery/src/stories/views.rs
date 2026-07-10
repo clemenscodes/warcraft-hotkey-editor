@@ -133,10 +133,10 @@ fn island_detail_empty() -> Element {
 }
 
 fn hotkey_unit_sidebar_empty() -> Element {
+    provide_page_contexts();
     let units: Vec<HotkeyUnitView> = Vec::new();
-    let selected_unit = use_signal(|| None::<String>);
     rsx! {
-        UnitCardsSidebar { units, selected_unit }
+        UnitCardsSidebar { units }
     }
 }
 
@@ -149,10 +149,10 @@ fn hotkey_unit_detail_empty() -> Element {
 }
 
 fn unit_position_sidebar_empty() -> Element {
+    provide_page_contexts();
     let units: Vec<UnitPositionUnitView> = Vec::new();
-    let selected_unit = use_signal(|| None::<String>);
     rsx! {
-        UnitCardsSidebar { units, selected_unit }
+        UnitCardsSidebar { units }
     }
 }
 

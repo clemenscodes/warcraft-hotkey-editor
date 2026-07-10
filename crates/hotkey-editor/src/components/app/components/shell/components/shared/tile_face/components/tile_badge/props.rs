@@ -1,5 +1,5 @@
 use super::super::super::TileFaceProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::{HotkeyBadgeProps, HotkeyBadgeState};
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 

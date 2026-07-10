@@ -2,24 +2,27 @@ use std::collections::HashMap;
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::control_groups_hotkeys_view::ControlGroupsHotkeysView;
 use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::inventory_drag_overlay::InventoryDragOverlay;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_breadcrumbs::SystemHotkeysBreadcrumbs;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_breadcrumbs::components::system_hotkeys_breadcrumbs_menu::components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::inventory_drag_overlay::InventoryDragOverlay;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_breadcrumbs::SystemHotkeysBreadcrumbs;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_breadcrumbs::components::system_hotkeys_breadcrumbs_menu::components::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::hero_selection_hotkeys_view::HeroSelectionHotkeysView;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::InventoryHotkeysView;
 
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     InventoryDragFollower, InventoryDragSource, InventoryGrid,
 };
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::components::inventory_slot::components::inventory_filled_slot::InventoryFilledSlot;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::components::inventory_slot::components::inventory_filled_slot::InventoryFilledSlot;
 
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture::KeyCapture;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::SystemHotkeysListView;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
-use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::components::key_capture::KeyCapture;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::SystemHotkeysListView;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::system_hotkeys_list_view::components::system_hotkeys_list_entry::SystemHotkeysListEntry;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButton;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::SystemHotkeysDialogBody;
+use hotkey_editor::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::SystemHotkeysBody;
 use super::keys_mount::CustomKeysMount;
+use super::system_hotkeys_state_mount::SystemHotkeysStateMount;
 use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::{CustomKeys, KeyCode, WarcraftObjectId};
 
@@ -86,7 +89,35 @@ pub fn stories() -> Vec<Story> {
             "SystemHotkeysDialog",
             system_hotkeys_dialog_open,
         ),
+        Story::single(
+            "System hotkeys",
+            "SystemHotkeysDialogBody",
+            system_hotkeys_dialog_body,
+        ),
+        Story::single("System hotkeys", "SystemHotkeysBody", system_hotkeys_body),
     ]
+}
+
+fn system_hotkeys_dialog_body() -> Element {
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
+    rsx! {
+        CustomKeysMount { loaded_keys,
+            SystemHotkeysStateMount {
+                SystemHotkeysDialogBody {}
+            }
+        }
+    }
+}
+
+fn system_hotkeys_body() -> Element {
+    let loaded_keys = use_signal(|| Some(CustomKeys::from_text("")));
+    rsx! {
+        CustomKeysMount { loaded_keys,
+            SystemHotkeysStateMount {
+                SystemHotkeysBody {}
+            }
+        }
+    }
 }
 
 fn breadcrumbs_inventory() -> Element {

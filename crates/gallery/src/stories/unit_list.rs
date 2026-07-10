@@ -2,12 +2,12 @@ use super::editor_mount::EditorMount;
 use super::fixtures;
 use dioxus::prelude::*;
 use dioxus_gallery::Story;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::UnitList;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTab;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::UnitCard;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_info::UnitCardInfo;
-use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_list::components::category_scroll::components::category_track::components::unit_category_section::UnitCategorySection;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::UnitList;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::mobile_category_tabs::components::mobile_category_tab::MobileCategoryTab;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::UnitCard;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_info::UnitCardInfo;
+use hotkey_editor::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::category_scroll::components::category_track::components::unit_category_section::UnitCategorySection;
 use hotkey_editor::components::app::components::shell::components::shared::icons::IconUrl;
 use warcraft_api::{ObjectLookup, Race, UnitKind, WarcraftObjectMeta};
 
