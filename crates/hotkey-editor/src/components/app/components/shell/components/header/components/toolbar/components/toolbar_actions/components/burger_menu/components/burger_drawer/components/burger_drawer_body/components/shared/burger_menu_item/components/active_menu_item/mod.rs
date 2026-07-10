@@ -18,7 +18,6 @@ pub fn ActiveMenuItem(props: ActiveMenuItemProps) -> Element {
     let label = props.label;
     let disabled = props.disabled;
     let role = props.role;
-    let data_action = props.data_action;
     let aria_haspopup = props.aria_haspopup;
     let aria_expanded = props.aria_expanded;
     let aria_pressed = props.aria_pressed;
@@ -29,7 +28,6 @@ pub fn ActiveMenuItem(props: ActiveMenuItemProps) -> Element {
             class: CLASS,
             r#type: "button",
             role,
-            "data-action": data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,

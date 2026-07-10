@@ -14,7 +14,6 @@ assert_component!(AvailableKey);
 pub fn AvailableKey(props: AvailableKeyProps) -> Element {
     let AvailableKeyProps {
         label,
-        data_label,
         disabled,
         onclick,
         tooltip,
@@ -24,7 +23,6 @@ pub fn AvailableKey(props: AvailableKeyProps) -> Element {
             class: CLASS,
             r#type: "button",
             disabled,
-            "data-label": data_label,
             onclick,
             {label}
             Tooltip { ..tooltip }

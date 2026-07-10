@@ -1,19 +1,27 @@
+pub mod components;
 mod props;
-mod style;
 
+use components::closed_breadcrumbs_trigger_caret::ClosedBreadcrumbsTriggerCaret;
+use components::open_breadcrumbs_trigger_caret::OpenBreadcrumbsTriggerCaret;
 use dioxus::prelude::*;
 pub use props::SystemHotkeysBreadcrumbsTriggerCaretProps;
-use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(SystemHotkeysBreadcrumbsTriggerCaret);
 
-/// The trigger's caret glyph, flipped when the dropdown is open.
+/// The trigger's caret glyph. A pure dispatcher: from the dropdown's open flag it
+/// renders the flipped look (`OpenBreadcrumbsTriggerCaret`) xor the resting look
+/// (`ClosedBreadcrumbsTriggerCaret`).
 #[component]
 pub fn SystemHotkeysBreadcrumbsTriggerCaret(
     props: SystemHotkeysBreadcrumbsTriggerCaretProps,
 ) -> Element {
-    let open = props.open;
-    rsx! {
-        span { class: CLASS, "data-open": open, aria_hidden: "true", "\u{25BE}" }
+    if props.is_open {
+        rsx! {
+            OpenBreadcrumbsTriggerCaret {}
+        }
+    } else {
+        rsx! {
+            ClosedBreadcrumbsTriggerCaret {}
+        }
     }
 }

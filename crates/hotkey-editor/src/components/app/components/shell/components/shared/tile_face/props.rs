@@ -25,6 +25,14 @@ pub struct TileFaceProps {
     pub badge_state: HotkeyBadgeState,
     #[props(default)]
     pub state: GridTileState,
+    /// True while this tile is the lifted source of a drag. The editor Host sets it; the
+    /// read-only consumers (templates preview, gallery) leave it false.
+    #[props(default)]
+    pub is_dragging_source: bool,
+    /// True while the drag cursor hovers this tile. The editor Host sets it; the
+    /// read-only consumers leave it false.
+    #[props(default)]
+    pub is_drag_over: bool,
 }
 
 impl From<&TileFaceProps> for GridTileProps {
@@ -34,11 +42,15 @@ impl From<&TileFaceProps> for GridTileProps {
         let icon = props.icon.clone();
         let label = props.label.clone();
         let state = props.state;
+        let is_dragging_source = props.is_dragging_source;
+        let is_drag_over = props.is_drag_over;
         Self {
             coordinate,
             icon,
             label,
             state,
+            is_dragging_source,
+            is_drag_over,
         }
     }
 }
@@ -79,6 +91,8 @@ impl From<&RenderedTile> for TileFaceProps {
             hotkey,
             badge_state,
             state,
+            is_dragging_source: false,
+            is_drag_over: false,
         }
     }
 }

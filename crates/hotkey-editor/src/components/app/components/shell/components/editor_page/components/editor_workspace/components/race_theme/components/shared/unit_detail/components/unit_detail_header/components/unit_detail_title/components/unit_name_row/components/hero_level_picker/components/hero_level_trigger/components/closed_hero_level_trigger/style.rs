@@ -1,7 +1,6 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "group",
         "flex",
         "items-center",
         "justify-between",
@@ -23,8 +22,6 @@ classes! {
         "transition-[border-color,box-shadow]",
         "hover:border-warcraft-gold",
         "hover:shadow-glow-soft",
-        "data-[open=true]:border-warcraft-gold",
-        "data-[open=true]:shadow-glow",
         "kb-focus:outline-none",
         "kb-focus:border-white",
         "kb-focus:text-white",

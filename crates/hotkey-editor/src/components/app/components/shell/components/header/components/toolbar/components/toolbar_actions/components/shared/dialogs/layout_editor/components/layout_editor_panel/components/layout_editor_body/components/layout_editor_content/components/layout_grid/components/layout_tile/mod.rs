@@ -1,4 +1,3 @@
-mod logic;
 mod props;
 mod state;
 mod style;
@@ -7,7 +6,6 @@ use crate::components::app::components::shell::components::shared::editable_keyc
     EditableKeycap, EditableKeycapProps,
 };
 use dioxus::prelude::*;
-use logic::LayoutTileAddress;
 pub use props::LayoutTileProps;
 pub use state::LayoutTileState;
 use style::CLASS;
@@ -20,7 +18,6 @@ assert_component!(LayoutTile);
 /// font size, and wraps the shared `EditableKeycap` that draws the gold cap and pulse.
 #[component]
 pub fn LayoutTile(props: LayoutTileProps) -> Element {
-    let LayoutTileAddress { row, column } = LayoutTileAddress::from(&props);
     let ondragstart = props.ondragstart;
     let ondragend = props.ondragend;
     let ondragover = props.ondragover;
@@ -31,8 +28,6 @@ pub fn LayoutTile(props: LayoutTileProps) -> Element {
         button {
             class: CLASS,
             draggable: "true",
-            "data-layout-row": row,
-            "data-layout-col": column,
             ondragstart,
             ondragend,
             ondragover,

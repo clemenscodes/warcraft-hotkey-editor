@@ -15,7 +15,7 @@ test.describe("Navigation", () => {
 
   test("search input filters units to show only matches", async ({ page }) => {
     await page.locator('input[type="search"]').fill("Footman");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=Footman/);
     const remaining = page.locator(".unit-card");
     const count = await remaining.count();
     expect(count).toBeGreaterThanOrEqual(1);
@@ -25,9 +25,9 @@ test.describe("Navigation", () => {
   test("clearing search restores the full unit count", async ({ page }) => {
     const countBefore = await page.locator(".unit-card").count();
     await page.locator('input[type="search"]').fill("Footman");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=Footman/);
     await page.locator('input[type="search"]').clear();
-    await page.locator('.unit-list[data-search-active="false"]').waitFor();
+    await expect(page).not.toHaveURL(/search_query=/);
     await expect(page.locator(".unit-card")).toHaveCount(countBefore);
   });
 

@@ -28,10 +28,8 @@ pub(super) enum ResolvePageView {
 }
 
 /// Everything the plan state needs, fully shaped: the header, breadcrumb bar, and
-/// body child props, plus the counts the root element tags itself with.
+/// body child props.
 pub(super) struct ResolvePlanPresentation {
-    pub move_count: usize,
-    pub unresolved_count: usize,
     pub header: PlanHeaderProps,
     pub breadcrumbs: BreadcrumbsProps,
     pub body: PlanBodyProps,
@@ -156,8 +154,6 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         on_apply: apply.on_apply,
     };
     let presentation = ResolvePlanPresentation {
-        move_count: counts.move_count,
-        unresolved_count: counts.unresolved_count,
         header,
         breadcrumbs: active.breadcrumbs,
         body: active.body,

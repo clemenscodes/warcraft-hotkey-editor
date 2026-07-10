@@ -22,7 +22,6 @@ pub fn UnitCard(props: UnitCardProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            "data-unit-kind": model.kind_attr,
             UnitCardSurface { ..model.surface }
         }
     }

@@ -9,6 +9,7 @@ pub(super) fn use_system_hotkeys_breadcrumbs_menu(
     props: &SystemHotkeysBreadcrumbsMenuProps,
 ) -> Vec<SystemHotkeysCategoryTabProps> {
     let active = *props.active_category.read();
+    let menu_open = props.is_open;
     let category_count = SystemHotkeysCategory::ALL.len();
     SystemHotkeysCategory::ALL
         .iter()
@@ -21,6 +22,7 @@ pub(super) fn use_system_hotkeys_breadcrumbs_menu(
                 category,
                 is_active,
                 has_separator,
+                menu_open,
                 picker_open: props.picker_open,
             }
         })

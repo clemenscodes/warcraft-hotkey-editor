@@ -1,7 +1,7 @@
+use super::super::stat_figure::StatFigure;
 use super::components::active_stat_value::ActiveStatValueProps;
 use super::components::muted_stat_value::MutedStatValueProps;
 use super::props::StatValueProps;
-use super::stat_figure::StatFigure;
 
 impl<Figure: StatFigure> From<&StatValueProps<Figure>> for ActiveStatValueProps {
     fn from(props: &StatValueProps<Figure>) -> Self {

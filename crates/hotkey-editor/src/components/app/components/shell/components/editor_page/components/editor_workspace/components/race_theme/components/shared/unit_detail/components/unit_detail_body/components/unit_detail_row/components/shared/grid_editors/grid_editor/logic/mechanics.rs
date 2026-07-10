@@ -1,9 +1,9 @@
 use super::drag_state::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
-    DragMovePoint, DragOrigin, DragRafClosure, DragThreadState, LATEST_DRAG_MOVE, LONG_PRESS_MS,
-    PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK, SUPPRESS_NEXT_DOUBLE_CLICK,
-    TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE, TOUCH_LONG_PRESS_TIMER_ID,
-    TOUCH_STARTED,
+    DRAG_SOURCE_GRID_ELEMENT, DragMovePoint, DragOrigin, DragRafClosure, DragThreadState,
+    LATEST_DRAG_MOVE, LONG_PRESS_MS, PENDING_DRAG, PendingDragData, SUPPRESS_NEXT_CLICK,
+    SUPPRESS_NEXT_DOUBLE_CLICK, TOUCH_CANCEL_THRESHOLD_PIXELS, TOUCH_LONG_PRESS_CLOSURE,
+    TOUCH_LONG_PRESS_TIMER_ID, TOUCH_STARTED,
 };
 
 use crate::services::editor_state::{CursorPoint, HitTestPoint};
@@ -15,7 +15,7 @@ use dioxus::html::point_interaction::PointerInteraction;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use std::ops::Range;
-use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
+use warcraft_keybinds::{COMMAND_GRID_COLUMNS, ColumnIndex, GridCoordinate, RowIndex};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
@@ -92,8 +92,12 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
         let Ok(target_element) = target_element_result else {
             return;
         };
-        let tile_lookup = target_element.closest("[data-grid-row]");
+        let tile_lookup = target_element.closest(".grid-editor-tile");
         let Ok(Some(tile_element)) = tile_lookup else {
+            return;
+        };
+        let grid_lookup = tile_element.closest(".editor-grid");
+        let Ok(Some(grid_element)) = grid_lookup else {
             return;
         };
         let tile_rect = tile_element.get_bounding_client_rect();
@@ -119,6 +123,7 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
             tile_width,
             tile_height,
             tile_element,
+            grid_element,
             pointer_id,
             last_cursor_horizontal_position: cursor_horizontal_position,
             last_cursor_vertical_position: cursor_vertical_position,
@@ -142,6 +147,9 @@ pub(crate) fn pointer_down(args: PointerDownArgs) -> impl FnMut(Event<PointerDat
                 }
                 DragThreadState::install_scroll_lock();
                 DID_DRAG_MOVE.with(|c| c.set(true));
+                let source_grid_element = pending.grid_element.clone();
+                DRAG_SOURCE_GRID_ELEMENT
+                    .with(|cell| *cell.borrow_mut() = Some(source_grid_element));
                 let dragging = DraggingSlot::new(pending.grid_id, pending.coordinate);
                 dragging_slot_cb.set(Some(dragging));
                 let initial_target = DropTargetTile::new(pending.grid_id, pending.coordinate);
@@ -252,6 +260,9 @@ pub(crate) fn pointer_move(
                             }
                             let pending_grid_id = pending.grid_id;
                             let pending_coordinate = pending.coordinate;
+                            let pending_grid_element = pending.grid_element.clone();
+                            DRAG_SOURCE_GRID_ELEMENT
+                                .with(|cell| *cell.borrow_mut() = Some(pending_grid_element));
                             let pending_visual = pending.visual;
                             let pending_click_offset_horizontal = pending.click_offset_horizontal;
                             let pending_click_offset_vertical = pending.click_offset_vertical;
@@ -336,41 +347,58 @@ fn flush_drag_move(
     let hit_test_vertical = hit_test_point.vertical_position();
     let elem_under_option = document.element_from_point(hit_test_horizontal, hit_test_vertical);
     let tile_under_option =
-        elem_under_option.and_then(|elem| elem.closest("[data-grid-row]").ok().flatten());
+        elem_under_option.and_then(|elem| elem.closest(".grid-editor-tile").ok().flatten());
     let Some(tile_under) = tile_under_option else {
         if drop_target_tile.read().is_some() {
             drop_target_tile.set(None);
         }
         return;
     };
-    let grid_id_host_option = tile_under.closest("[data-grid-id]").ok().flatten();
-    let grid_id_attribute = grid_id_host_option.and_then(|host| host.get_attribute("data-grid-id"));
-    let Some(grid_id_under) = grid_id_attribute else {
+    // The grid under the cursor is compared to the drag's source grid by DOM element
+    // reference (JS `===`), not a `data-grid-id` string, so a drop is accepted only
+    // within the grid the drag started in.
+    let grid_under_option = tile_under.closest(".editor-grid").ok().flatten();
+    let Some(grid_under) = grid_under_option else {
         if drop_target_tile.read().is_some() {
             drop_target_tile.set(None);
         }
         return;
     };
-    if grid_id_under != grid_id {
+    let source_grid_option = DRAG_SOURCE_GRID_ELEMENT.with(|cell| cell.borrow().clone());
+    let Some(source_grid) = source_grid_option else {
+        if drop_target_tile.read().is_some() {
+            drop_target_tile.set(None);
+        }
+        return;
+    };
+    if grid_under != source_grid {
         if drop_target_tile.read().is_some() {
             drop_target_tile.set(None);
         }
         return;
     }
-    let row_attr = tile_under.get_attribute("data-grid-row");
-    let col_attr = tile_under.get_attribute("data-grid-col");
-    let Some(under_row) = row_attr
-        .as_deref()
-        .and_then(|raw| raw.parse::<u8>().ok())
-        .and_then(|value| RowIndex::try_from(value).ok())
-    else {
+    // The tile's coordinate is its row-major index among its grid's tile children — no
+    // `data-grid-row`/`-col`. The grid lays the tiles out row-major, so the count of
+    // preceding element siblings gives `row = index / columns`, `column = index % columns`.
+    let mut tile_index: u32 = 0;
+    let mut previous_sibling_option = tile_under.previous_element_sibling();
+    while let Some(previous_sibling) = previous_sibling_option {
+        tile_index += 1;
+        previous_sibling_option = previous_sibling.previous_element_sibling();
+    }
+    let columns_per_row = u32::from(COMMAND_GRID_COLUMNS);
+    let row_number = tile_index / columns_per_row;
+    let column_number = tile_index % columns_per_row;
+    let Ok(row_value) = u8::try_from(row_number) else {
         return;
     };
-    let Some(under_column) = col_attr
-        .as_deref()
-        .and_then(|raw| raw.parse::<u8>().ok())
-        .and_then(|value| ColumnIndex::try_from(value).ok())
-    else {
+    let Ok(column_value) = u8::try_from(column_number) else {
+        return;
+    };
+    let Ok(under_row) = RowIndex::try_from(row_value) else {
+        return;
+    };
+    let Ok(under_column) = ColumnIndex::try_from(column_value) else {
         return;
     };
     let under_coordinate = GridCoordinate::new(under_column, under_row);

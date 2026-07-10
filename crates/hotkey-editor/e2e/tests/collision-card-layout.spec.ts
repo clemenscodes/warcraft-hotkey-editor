@@ -22,8 +22,8 @@ async function openPositionCollisions(page: Page): Promise<void> {
     .click();
   await page.locator('[role="alertdialog"]').first().waitFor();
 
-  await page.locator('[data-action="view-collisions"]').click();
-  await page.locator('[data-collision-kind="positions"]').waitFor();
+  await page.locator('.collisions-button').click();
+  await page.locator(".positions-content").waitFor();
   await page
     .locator(".island-conflict-card, .hotkey-conflict-card, .unit-position-conflict-card")
     .first()

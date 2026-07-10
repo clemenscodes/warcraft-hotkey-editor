@@ -85,7 +85,6 @@ impl From<CollisionBreadcrumb> for BreadcrumbProps {
             active_kind,
             view_navigation,
         } = input;
-        let data_breadcrumb = kind.kind_param();
         let active = active_kind == kind;
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             let target = AppView::Collisions { kind };
@@ -95,7 +94,6 @@ impl From<CollisionBreadcrumb> for BreadcrumbProps {
         Self {
             label,
             count,
-            data_breadcrumb,
             active,
             onclick,
         }

@@ -1,3 +1,4 @@
+mod components;
 mod logic;
 mod props;
 mod style;
@@ -5,6 +6,7 @@ mod style;
 use crate::components::app::components::shell::components::shared::tile_face::{
     TileFace, TileFaceProps,
 };
+use components::draggable_marker::{DraggableMarker, DraggableMarkerProps};
 use dioxus::prelude::*;
 use logic::EditorTileChrome;
 pub use props::GridEditorTileProps;
@@ -13,17 +15,17 @@ use tw_macro::assert_component;
 assert_component!(GridEditorTile);
 
 /// The interactive command tile: the connected Host that wraps the presentational
-/// `TileFace` painter and owns all interaction — focus, drag state, the cursor, and
-/// every event handler. The painter draws the tile; this wrapper is the drag/click
-/// target and layers the drag-over ring, dragging-source ghost, and focus ring over it.
+/// `TileFace` painter and owns all interaction — focus, the cursor, and every event
+/// handler. The painter draws the tile and, from the drag flags this Host forwards into
+/// it, mounts the dragging-source ghost and drag-over ring itself; this wrapper mounts
+/// the `DraggableMarker` (the grab-cursor and off-state-picker signal that replaced the
+/// `data-draggable` attribute) and layers the focus ring over the tile.
 #[component]
 pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
     let face = TileFaceProps::from(&props);
+    let draggable_marker = DraggableMarkerProps::from(&props);
     let EditorTileChrome {
         tabindex,
-        draggable_attribute,
-        dragging_source,
-        drag_over,
         onkeydown,
         onpointerdown,
         onpointermove,
@@ -37,9 +39,6 @@ pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
         div {
             class: CLASS,
             tabindex,
-            "data-draggable": draggable_attribute,
-            "data-dragging-source": dragging_source,
-            "data-drag-over": drag_over,
             onkeydown,
             onpointerdown,
             onpointermove,
@@ -49,6 +48,7 @@ pub fn GridEditorTile(props: GridEditorTileProps) -> Element {
             onclick,
             ondoubleclick,
             TileFace { ..face }
+            DraggableMarker { ..draggable_marker }
         }
     }
 }

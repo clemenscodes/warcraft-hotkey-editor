@@ -28,7 +28,6 @@ pub(super) fn use_control_groups_row() -> ControlGroupsRowModel {
             SlotButtonProps {
                 slot_label,
                 section_id,
-                compact: true,
             }
         })
         .collect();

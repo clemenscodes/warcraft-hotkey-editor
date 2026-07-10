@@ -38,7 +38,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".normal-override-key, .special-override-key").waitFor();
     await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
-    await page.locator('.key-picker-board [data-label="Q"]').click();
+    await page.locator('.key-picker-board').getByRole('button', { name: /^Q/ }).click();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
 
     // Turn the toggle off.
@@ -61,16 +61,30 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     // .first() after the swap is ambiguous).
     const targetSection = await tiles
       .nth(1)
-      .evaluate((el) => el.closest("[data-grid-id]")?.getAttribute("data-grid-id"));
-    const targetCol = await tiles.nth(1).getAttribute("data-grid-col");
-    const targetRow = await tiles.nth(1).getAttribute("data-grid-row");
+      .evaluate(
+        (el) =>
+          el.closest(".grid-editor")?.querySelector(".grid-heading")?.textContent?.trim() ?? "",
+      );
+    const targetIndex = await tiles.nth(1).evaluate((el) => {
+      const host = el.closest(".grid-editor-tile");
+      let index = 0;
+      let sibling = host ? host.previousElementSibling : null;
+      while (sibling) {
+        index += 1;
+        sibling = sibling.previousElementSibling;
+      }
+      return index;
+    });
 
     await tiles.first().dragTo(tiles.nth(1));
 
     // After the swap the Q-ability is at the TARGET cell's original position.
-    const movedAbilityCell = page.locator(
-      `[data-grid-id="${targetSection}"] [data-grid-col="${targetCol}"][data-grid-row="${targetRow}"]`,
-    );
+    const movedAbilityCell = page
+      .locator(".grid-editor", {
+        has: page.locator(".grid-heading", { hasText: targetSection }),
+      })
+      .locator(".grid-editor-tile")
+      .nth(targetIndex);
     await movedAbilityCell.click();
     await page.locator(".normal-override-key, .special-override-key").waitFor();
     // The moved ability still shows Q (hotkey not snapped to the new cell).

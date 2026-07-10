@@ -32,12 +32,10 @@ pub(super) struct SearchKeydownInputs {
     pub(super) active_category: Signal<UnitKind>,
 }
 
-/// The unit list's shaped view: the data attributes for the panel, and the finished
-/// props for the search box, the mobile category tab row, and the scroll region. The
-/// two toggles read their own context, so they are rendered without props.
+/// The unit list's shaped view: the finished props for the search box, the mobile
+/// category tab row, and the scroll region. The two toggles read their own context,
+/// so they are rendered without props.
 pub(super) struct UnitListModel {
-    pub(super) active_category_attr: &'static str,
-    pub(super) search_active: bool,
     pub(super) search: UnitListSearchProps,
     pub(super) tabs: MobileCategoryTabsProps,
     pub(super) scroll: CategoryScrollProps,
@@ -49,8 +47,6 @@ pub(super) struct UnitListModel {
 /// never assembles a props struct by hand.
 pub(super) struct UnitListInputs {
     pub(super) state: UnitListState,
-    pub(super) active_kind: UnitKind,
-    pub(super) search_active: bool,
     pub(super) raw_query: Signal<String>,
     pub(super) search_placeholder: &'static str,
     pub(super) on_input: EventHandler<FormEvent>,
@@ -61,14 +57,11 @@ impl From<UnitListInputs> for UnitListModel {
     fn from(inputs: UnitListInputs) -> Self {
         let UnitListInputs {
             state,
-            active_kind,
-            search_active,
             raw_query,
             search_placeholder,
             on_input,
             on_keydown,
         } = inputs;
-        let active_category_attr = super::unit_kind_data_attr(active_kind);
         let search_value: ReadSignal<String> = raw_query.into();
         let search = UnitListSearchProps {
             value: search_value,
@@ -90,8 +83,6 @@ impl From<UnitListInputs> for UnitListModel {
             sections: category_sections,
         };
         Self {
-            active_category_attr,
-            search_active,
             search,
             tabs,
             scroll,

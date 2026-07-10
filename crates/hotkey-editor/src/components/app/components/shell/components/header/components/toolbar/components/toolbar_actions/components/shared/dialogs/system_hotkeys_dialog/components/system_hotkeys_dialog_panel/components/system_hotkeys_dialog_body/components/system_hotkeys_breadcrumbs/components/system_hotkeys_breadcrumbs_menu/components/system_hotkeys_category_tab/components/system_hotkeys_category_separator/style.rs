@@ -5,6 +5,5 @@ classes! {
         "leading-none",
         "select-none",
         "text-warcraft-gold/45",
-        "group-data-[open=true]:hidden",
     ],
 }

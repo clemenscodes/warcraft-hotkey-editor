@@ -13,7 +13,6 @@ pub(super) fn use_redo_button() -> ToolbarButtonProps {
         icon: ICON_REDO,
         aria_label: "Redo",
         disabled,
-        data_action: Some("redo"),
         onclick,
         ..ToolbarButtonProps::default()
     }

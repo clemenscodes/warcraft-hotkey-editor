@@ -12,17 +12,13 @@ use dioxus::prelude::*;
 
 /// A picker key's fully shaped presentation: the width the dispatcher matches on to pick
 /// a sizing slot, plus the color state and the button attributes and children every look
-/// renders the same way (the cap label, the `data-label` selector hook, the disabled
-/// flag, the click handler, and the conflict tooltip). Built by `From` so the body only
+/// renders the same way (the cap label, the disabled flag, the click handler, and the
+/// conflict tooltip). Built by `From` so the body only
 /// reads the width and spreads the rest, never deriving them. The width is owned by the
 /// slot, the color by the leaf; every attribute here is shared by both.
 pub(super) struct KeyPickerKeyPresentation {
     pub(super) state: ColorKeyState,
     pub(super) label: String,
-    /// The label again, for the `data-label` selector hook (e2e picks a specific key by
-    /// it). Kept separate so a look can place the label as both text and attribute
-    /// without cloning in the markup.
-    pub(super) data_label: String,
     pub(super) disabled: bool,
     pub(super) onclick: EventHandler<MouseEvent>,
     pub(super) tooltip: TooltipProps,
@@ -35,7 +31,6 @@ impl From<&KeyPickerKeyProps> for KeyPickerKeyPresentation {
         let on_pick = props.on_pick;
         let key_code = cell.key_code();
         let label = cell.label().to_string();
-        let data_label = label.clone();
         let width = cell.width();
         let cell_state = cell.state();
         let state = match cell_state {
@@ -53,7 +48,6 @@ impl From<&KeyPickerKeyProps> for KeyPickerKeyPresentation {
         Self {
             state,
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,
@@ -66,14 +60,12 @@ impl From<&KeyPickerKeyPresentation> for NarrowKeySlotProps {
     fn from(presentation: &KeyPickerKeyPresentation) -> Self {
         let state = presentation.state;
         let label = presentation.label.clone();
-        let data_label = presentation.data_label.clone();
         let disabled = presentation.disabled;
         let onclick = presentation.onclick;
         let tooltip = presentation.tooltip.clone();
         Self {
             state,
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,
@@ -85,14 +77,12 @@ impl From<&KeyPickerKeyPresentation> for WideKeySlotProps {
     fn from(presentation: &KeyPickerKeyPresentation) -> Self {
         let state = presentation.state;
         let label = presentation.label.clone();
-        let data_label = presentation.data_label.clone();
         let disabled = presentation.disabled;
         let onclick = presentation.onclick;
         let tooltip = presentation.tooltip.clone();
         Self {
             state,
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,

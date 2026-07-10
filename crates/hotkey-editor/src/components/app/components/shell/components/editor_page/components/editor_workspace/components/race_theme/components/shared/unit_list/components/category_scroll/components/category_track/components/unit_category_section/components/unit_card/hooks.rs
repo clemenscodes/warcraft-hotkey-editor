@@ -1,6 +1,5 @@
 use super::components::unit_card_surface::UnitCardSurfaceProps;
 use super::props::UnitCardProps;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_data_attr;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::focus::context::use_focus_coordinator;
 use crate::services::focus::coordinator::FocusTarget;
@@ -8,11 +7,9 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use std::rc::Rc;
 
-/// The card's shaped view: the kind data attribute the wrapper's carousel filter reads,
-/// and the finished button surface (its selected look, select handlers, and mount
-/// registration).
+/// The card's shaped view: the finished button surface (its selected look, select
+/// handlers, and mount registration).
 pub(super) struct UnitCardModel {
-    pub(super) kind_attr: &'static str,
     pub(super) surface: UnitCardSurfaceProps,
 }
 
@@ -23,7 +20,6 @@ pub(super) struct UnitCardModel {
 pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
     let unit_id = props.unit_id;
     let unit_kind = props.unit_kind;
-    let kind_attr = unit_kind_data_attr(unit_kind);
     let navigation = use_view_navigation();
     let editor = use_editor_state();
     let mut selected_unit_id = navigation.selected_unit_id();
@@ -67,5 +63,5 @@ pub(super) fn use_unit_card(props: &UnitCardProps) -> UnitCardModel {
         onkeydown: on_keydown,
         onmounted: on_mounted,
     };
-    UnitCardModel { kind_attr, surface }
+    UnitCardModel { surface }
 }

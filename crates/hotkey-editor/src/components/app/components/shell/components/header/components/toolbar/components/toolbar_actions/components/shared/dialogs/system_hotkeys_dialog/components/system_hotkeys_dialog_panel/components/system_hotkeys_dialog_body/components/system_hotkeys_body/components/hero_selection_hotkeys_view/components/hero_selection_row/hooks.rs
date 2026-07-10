@@ -28,7 +28,6 @@ pub(super) fn use_hero_selection_row() -> HeroSelectionRowModel {
             SlotButtonProps {
                 slot_label,
                 section_id,
-                compact: false,
             }
         })
         .collect();

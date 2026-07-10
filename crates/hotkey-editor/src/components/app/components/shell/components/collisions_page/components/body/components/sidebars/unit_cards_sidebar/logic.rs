@@ -37,14 +37,13 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
         .units
         .iter()
         .map(|unit_view| {
-            let collision_key = unit_view.key().to_owned();
             let is_selected = selected_key.as_deref() == Some(unit_view.key());
             let unit = unit_view.unit();
             let icon_url = unit.icon_url().map(str::to_owned);
             let name = unit.name().to_owned();
             let unit_id = unit.unit_id();
             let collision_count = unit_view.collision_count();
-            let key_for_click = collision_key.clone();
+            let key_for_click = unit_view.key().to_owned();
             let onclick = EventHandler::new(move |_event: MouseEvent| {
                 selected_unit.set(Some(key_for_click.clone()))
             });
@@ -55,7 +54,6 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
             };
             CollisionCardProps {
                 is_selected,
-                collision_key,
                 onclick,
                 count: collision_count,
                 content,

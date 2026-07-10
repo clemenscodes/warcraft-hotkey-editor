@@ -2,21 +2,31 @@ import { expect, test } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
+// The Collisions button surfaces its live count only through its corner badge:
+// the badge text is the exact count while it is below 100, reads "99+" at or
+// above 100, and the badge is absent entirely when the config is clean (0).
 async function collisionCount(
   page: import("@playwright/test").Page,
 ): Promise<number> {
-  const text = await page
-    .locator('[data-action="view-collisions"]')
-    .getAttribute("data-collision-count");
-  return Number(text);
+  const badge = page.locator(".collisions-button .collisions-button-badge");
+  if ((await badge.count()) === 0) {
+    return 0;
+  }
+  const text = ((await badge.textContent()) ?? "").trim();
+  return text === "99+" ? 100 : Number(text);
 }
 
-async function collisionState(
+// The attention state is exactly "the count badge is present"; the clean/clear
+// state drops the badge and switches the button's aria-label to the all-clear
+// message.
+async function inAttentionState(
   page: import("@playwright/test").Page,
-): Promise<string | null> {
-  return page
-    .locator('[data-action="view-collisions"]')
-    .getAttribute("data-collision-state");
+): Promise<boolean> {
+  return (
+    (await page
+      .locator(".collisions-button .collisions-button-badge")
+      .count()) > 0
+  );
 }
 
 // Regression test: the Collisions button's count must shrink across the
@@ -48,15 +58,15 @@ test.describe("Collision count progression across the resolve workflow", () => {
     expect(initialCount).toBeGreaterThanOrEqual(100);
     await expect(
       page
-        .locator('[data-action="view-collisions"]')
-        .locator('[data-collision-badge="true"]'),
+        .locator('.collisions-button')
+        .locator('.collisions-button-badge'),
     ).toHaveText("99+");
-    expect(await collisionState(page)).toBe("attention");
+    expect(await inAttentionState(page)).toBe(true);
 
     // Step 1 — Resolve cascade.  Cross-unit + intra-unit position
     // collisions go away, hotkey collisions remain.
     await page.locator('[aria-label="Resolve conflicts"]').click();
-    await page.locator('[data-action="apply-cascade"]').click();
+    await page.locator(".apply-button", { hasText: /apply/i }).click();
     await page
       .locator('[role="alertdialog"]')
       .filter({ hasText: "Cascade applied" })
@@ -80,7 +90,7 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // one more clash.)
     expect(afterResolve).toBe(55);
     expect(afterResolve).toBeLessThan(initialCount);
-    expect(await collisionState(page)).toBe("attention");
+    expect(await inAttentionState(page)).toBe(true);
 
     // Step 2 — Apply Grid: rewrites every ability hotkey so it lines up
     // with the (now deconflicted) positions.  Final state must be zero
@@ -92,13 +102,13 @@ test.describe("Collision count progression across the resolve workflow", () => {
 
     const finalCount = await collisionCount(page);
     expect(finalCount).toBe(0);
-    expect(await collisionState(page)).toBe("clear");
+    expect(await inAttentionState(page)).toBe(false);
     await expect(
       page
-        .locator('[data-action="view-collisions"]')
-        .locator('[data-collision-badge="true"]'),
+        .locator('.collisions-button')
+        .locator('.collisions-button-badge'),
     ).toHaveCount(0);
-    await expect(page.locator('[data-action="view-collisions"]')).toHaveAttribute(
+    await expect(page.locator('.collisions-button')).toHaveAttribute(
       "aria-label",
       /your config is clean/i,
     );

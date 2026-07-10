@@ -32,7 +32,7 @@ test.describe("Global hotkey layout editor", () => {
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
     await page.locator(".layout-editor-content").waitFor();
 
-    await page.locator('[data-layout-col="0"][data-layout-row="0"]').click();
+    await page.locator(".layout-tile").nth(0).click();
     await page.locator(".key-picker-board").waitFor();
     await expect(page.locator(".layout-editor-content")).toBeVisible();
   });
@@ -48,9 +48,7 @@ test.describe("Global hotkey layout editor", () => {
     await page.locator(".unit-card").first().waitFor();
 
     const openButton = page.locator('[aria-label="Edit global hotkey layout"]');
-    const firstCell = page.locator(
-      '[data-layout-col="0"][data-layout-row="0"]',
-    );
+    const firstCell = page.locator(".layout-tile").nth(0);
 
     await openButton.click();
     await page.locator(".layout-editor-content").waitFor();
@@ -69,7 +67,7 @@ test.describe("Global hotkey layout editor", () => {
     await expect(page.locator(".layout-editor-content")).toBeVisible();
 
     // And it is still interactive: a cell still opens its picker.
-    await page.locator('[data-layout-col="1"][data-layout-row="0"]').click();
+    await page.locator(".layout-tile").nth(1).click();
     await page.locator(".key-picker-board").waitFor();
     await expect(page.locator(".layout-editor-content")).toBeVisible();
   });

@@ -19,7 +19,6 @@ pub(super) fn use_resolve_button() -> ToolbarButtonProps {
         icon: ICON_RESOLVE,
         aria_label: "Resolve conflicts",
         disabled,
-        data_action: Some("view-resolve"),
         onclick,
         ..ToolbarButtonProps::default()
     }

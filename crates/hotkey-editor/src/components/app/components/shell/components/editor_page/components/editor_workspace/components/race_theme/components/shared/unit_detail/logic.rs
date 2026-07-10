@@ -134,18 +134,13 @@ impl From<ActiveContainerInputs<'_>> for ActiveContainer {
                 .research()
                 .unwrap_or_else(|| empty_slot_list.clone())
         } else {
-            let inspector_slot_id = inspector_slot
+            let in_build_menu = inspector_slot
                 .as_ref()
-                .map(|slot| slot.as_str().to_string());
-            let build_menu_slots = containers.build_menu();
-            let in_build_menu = inspector_slot_id.as_deref().is_some_and(|id_value| {
-                build_menu_slots.as_ref().is_some_and(|list| {
-                    list.iter()
-                        .any(|candidate| candidate.as_str().eq_ignore_ascii_case(id_value))
-                })
-            });
+                .is_some_and(|slot| containers.build_menu_contains(slot));
             if in_build_menu {
-                build_menu_slots.unwrap_or_else(|| empty_slot_list.clone())
+                containers
+                    .build_menu()
+                    .unwrap_or_else(|| empty_slot_list.clone())
             } else {
                 containers.command_card()
             }

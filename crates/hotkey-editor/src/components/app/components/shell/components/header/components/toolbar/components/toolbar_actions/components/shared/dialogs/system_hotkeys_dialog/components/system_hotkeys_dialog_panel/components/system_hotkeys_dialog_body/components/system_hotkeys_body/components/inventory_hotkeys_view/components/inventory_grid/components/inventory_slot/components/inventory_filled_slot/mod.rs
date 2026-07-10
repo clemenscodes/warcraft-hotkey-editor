@@ -28,7 +28,6 @@ pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            "data-inventory-slot": model.section_id.value(),
             tabindex: "0",
             onpointerdown: model.on_pointerdown,
             onpointermove: model.on_pointermove,

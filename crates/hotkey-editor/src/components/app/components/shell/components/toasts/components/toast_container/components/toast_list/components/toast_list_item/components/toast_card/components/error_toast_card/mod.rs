@@ -22,7 +22,6 @@ pub fn ErrorToastCard(props: ErrorToastCardProps) -> Element {
         div {
             class: CLASS,
             role: "alertdialog",
-            "data-type": "error",
             "aria-modal": "false",
             tabindex: "0",
             ErrorToastIcon {}

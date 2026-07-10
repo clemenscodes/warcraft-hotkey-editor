@@ -6,17 +6,14 @@ use super::props::ColorKeyProps;
 /// The three colors share every button attribute and the conflict tooltip; they arrive
 /// already shaped on `ColorKeyProps`, so each color's props is just the same data minus
 /// the state the dispatcher already matched on.
-
 impl From<&ColorKeyProps> for AvailableKeyProps {
     fn from(props: &ColorKeyProps) -> Self {
         let label = props.label.clone();
-        let data_label = props.data_label.clone();
         let disabled = props.disabled;
         let onclick = props.onclick;
         let tooltip = props.tooltip.clone();
         Self {
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,
@@ -27,13 +24,11 @@ impl From<&ColorKeyProps> for AvailableKeyProps {
 impl From<&ColorKeyProps> for CurrentKeyProps {
     fn from(props: &ColorKeyProps) -> Self {
         let label = props.label.clone();
-        let data_label = props.data_label.clone();
         let disabled = props.disabled;
         let onclick = props.onclick;
         let tooltip = props.tooltip.clone();
         Self {
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,
@@ -44,13 +39,11 @@ impl From<&ColorKeyProps> for CurrentKeyProps {
 impl From<&ColorKeyProps> for ConflictKeyProps {
     fn from(props: &ColorKeyProps) -> Self {
         let label = props.label.clone();
-        let data_label = props.data_label.clone();
         let disabled = props.disabled;
         let onclick = props.onclick;
         let tooltip = props.tooltip.clone();
         Self {
             label,
-            data_label,
             disabled,
             onclick,
             tooltip,

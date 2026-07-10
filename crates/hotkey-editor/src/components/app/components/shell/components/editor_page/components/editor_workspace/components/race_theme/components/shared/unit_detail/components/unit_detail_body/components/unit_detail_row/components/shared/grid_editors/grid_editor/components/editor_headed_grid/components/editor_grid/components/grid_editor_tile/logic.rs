@@ -1,17 +1,15 @@
 use super::props::GridEditorTileProps;
 use dioxus::prelude::*;
 
-/// Everything the editor tile's interactive wrapper renders: the focus and
-/// draggable attributes, the drag-state markers, and every forwarded event
-/// handler. Field names match the attributes they feed, so the wrapper spreads
-/// them with RSX shorthand. This is the interaction that the inert base `GridTile`
-/// deliberately does not carry.
+/// Everything the editor tile's interactive wrapper renders: the focus tabindex and
+/// every forwarded event handler. Field names match the attributes they feed, so the
+/// wrapper spreads them with RSX shorthand. This is the interaction that the inert base
+/// `GridTile` deliberately does not carry; the drag-state looks are the painter's own
+/// mounted overlays, and draggability is the `DraggableMarker`, so no look-flag
+/// attributes live here.
 #[derive(Clone, PartialEq)]
 pub struct EditorTileChrome {
     pub(super) tabindex: &'static str,
-    pub(super) draggable_attribute: &'static str,
-    pub(super) dragging_source: &'static str,
-    pub(super) drag_over: &'static str,
     pub(super) onkeydown: EventHandler<KeyboardEvent>,
     pub(super) onpointerdown: EventHandler<PointerEvent>,
     pub(super) onpointermove: EventHandler<PointerEvent>,
@@ -25,13 +23,6 @@ pub struct EditorTileChrome {
 impl From<&GridEditorTileProps> for EditorTileChrome {
     fn from(props: &GridEditorTileProps) -> Self {
         let tabindex = if props.is_focusable { "0" } else { "-1" };
-        let draggable_attribute = if props.draggable { "true" } else { "false" };
-        let dragging_source = if props.is_dragging_source {
-            "true"
-        } else {
-            "false"
-        };
-        let drag_over = if props.is_drag_over { "true" } else { "false" };
         let onkeydown = props.onkeydown;
         let onpointerdown = props.onpointerdown;
         let onpointermove = props.onpointermove;
@@ -42,9 +33,6 @@ impl From<&GridEditorTileProps> for EditorTileChrome {
         let ondoubleclick = props.ondoubleclick;
         Self {
             tabindex,
-            draggable_attribute,
-            dragging_source,
-            drag_over,
             onkeydown,
             onpointerdown,
             onpointermove,

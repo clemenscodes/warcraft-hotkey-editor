@@ -1,17 +1,18 @@
 use super::super::super::GridTileProps;
 use super::super::super::GridTileState;
-use super::super::super::TileChrome;
 use super::state::EmptyTileState;
 use dioxus::prelude::*;
 
-/// An empty command slot: the shared tile chrome and, during a drag, an overlay child
-/// that makes it a drop target (or a blocked one), or a mini-grid highlight. The
-/// overlay is what the tile root's own border keys off, so no look-flag attribute lives
-/// on the root.
+/// An empty command slot. During a drag it mounts an overlay child that makes it a drop
+/// target (or a blocked one), or a mini-grid highlight, and — when the cursor is over it
+/// — the `DragOverRing`. The overlays are what the tile root's own border keys off, so
+/// no look-flag attribute lives on the root.
 #[derive(Props, Clone, PartialEq)]
 pub struct EmptyTileProps {
-    pub chrome: TileChrome,
     pub state: EmptyTileState,
+    /// True while the drag cursor hovers this drop target: it mounts the `DragOverRing`,
+    /// and its dashed border turns gold.
+    pub is_drag_over: bool,
 }
 
 impl From<&GridTileProps> for EmptyTileProps {
@@ -22,7 +23,10 @@ impl From<&GridTileProps> for EmptyTileProps {
             GridTileState::Highlighted => EmptyTileState::Highlighted,
             _ => EmptyTileState::Empty,
         };
-        let chrome = TileChrome::from(props);
-        Self { chrome, state }
+        let is_drag_over = props.is_drag_over;
+        Self {
+            state,
+            is_drag_over,
+        }
     }
 }

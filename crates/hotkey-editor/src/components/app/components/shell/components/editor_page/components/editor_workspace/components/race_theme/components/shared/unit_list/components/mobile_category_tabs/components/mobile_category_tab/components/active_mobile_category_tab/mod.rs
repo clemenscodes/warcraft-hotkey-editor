@@ -12,7 +12,6 @@ assert_component!(ActiveMobileCategoryTab);
 #[component]
 pub fn ActiveMobileCategoryTab(props: ActiveMobileCategoryTabProps) -> Element {
     let label = props.label;
-    let kind_attr = props.kind_attr;
     let onclick = props.onclick;
     rsx! {
         button {
@@ -20,7 +19,6 @@ pub fn ActiveMobileCategoryTab(props: ActiveMobileCategoryTabProps) -> Element {
             role: "tab",
             r#type: "button",
             aria_selected: true,
-            "data-unit-kind": kind_attr,
             onclick,
             {label}
         }

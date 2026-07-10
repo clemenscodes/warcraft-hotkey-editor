@@ -21,16 +21,35 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 
 async function openResolvePlan(page: Page): Promise<void> {
   await page.goto(`${APP}resolve`);
-  await page.locator('[data-resolve-state="plan"]').waitFor();
-  await page.locator(".breadcrumbs [data-breadcrumb]").first().waitFor();
+  await page.locator('.resolve-page').waitFor();
+  await page.locator(".breadcrumbs button").first().waitFor();
 }
 
-function categorySlugs(page: Page): Promise<string[]> {
-  return page
-    .locator(".breadcrumbs [data-breadcrumb]")
-    .evaluateAll((elements) =>
-      elements.map((element) => element.getAttribute("data-breadcrumb") ?? ""),
-    );
+function breadcrumbs(page: Page) {
+  return page.locator(".breadcrumbs button");
+}
+
+// A breadcrumb tab is identified by its visible label text (its slug is no longer
+// exposed as a DOM attribute). Section titles are unique and not substrings of one
+// another, so `hasText` uniquely and stably picks the tab; the count child does
+// not interfere.
+function breadcrumbByLabel(page: Page, label: string) {
+  return page.locator(".breadcrumbs button", { hasText: label });
+}
+
+// The move-category slug is not a DOM attribute; it is what the app writes to
+// `?entry=` when a tab is picked. Click the last tab, then read back both its
+// visible label (to re-find it) and its slug (from the URL). This mirrors how the
+// collision suite discovers an entry's key by reading it out of the URL.
+async function selectLastCategory(
+  page: Page,
+): Promise<{ slug: string; label: string }> {
+  const last = breadcrumbs(page).last();
+  const label = ((await last.locator(".breadcrumb-label").textContent()) ?? "").trim();
+  await last.click();
+  await expect(page).toHaveURL(/entry=/);
+  const slug = new URL(page.url()).searchParams.get("entry") ?? "";
+  return { slug, label };
 }
 
 test.describe("Resolve page move-category deep-linking", () => {
@@ -42,12 +61,10 @@ test.describe("Resolve page move-category deep-linking", () => {
     await applyDefaultTemplate(page);
     await openResolvePlan(page);
 
-    const slugs = await categorySlugs(page);
-    expect(slugs.length).toBeGreaterThan(0);
+    const tabs = breadcrumbs(page);
+    expect(await tabs.count()).toBeGreaterThan(0);
 
-    await expect(
-      page.locator(`.breadcrumbs [data-breadcrumb="${slugs[0]}"]`),
-    ).toHaveAttribute("aria-current", "page");
+    await expect(tabs.first()).toHaveAttribute("aria-current", "page");
     await expect(page).not.toHaveURL(/entry=/);
   });
 
@@ -59,15 +76,14 @@ test.describe("Resolve page move-category deep-linking", () => {
     await applyDefaultTemplate(page);
     await openResolvePlan(page);
 
-    const slugs = await categorySlugs(page);
     // Pick the last category so the assertion is meaningful even when it is not
     // the default first section.
-    const target = slugs[slugs.length - 1];
-
-    const breadcrumb = page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`);
-    await breadcrumb.click();
-    await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
-    await expect(breadcrumb).toHaveAttribute("aria-current", "page");
+    const { slug, label } = await selectLastCategory(page);
+    await expect(page).toHaveURL(new RegExp(`entry=${slug}(&|$)`));
+    await expect(breadcrumbByLabel(page, label)).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
   // A pasted/bookmarked deep-link to a move category selects that section on
@@ -76,13 +92,13 @@ test.describe("Resolve page move-category deep-linking", () => {
     await applyDefaultTemplate(page);
     await openResolvePlan(page);
 
-    const slugs = await categorySlugs(page);
-    const target = slugs[slugs.length - 1];
+    const { slug, label } = await selectLastCategory(page);
 
-    await page.goto(`${APP}resolve?entry=${target}`);
-    await expect(
-      page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`),
-    ).toHaveAttribute("aria-current", "page");
+    await page.goto(`${APP}resolve?entry=${slug}`);
+    await expect(breadcrumbByLabel(page, label)).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
   // Selecting a category, leaving for the editor, then browser-back lands on the
@@ -93,21 +109,19 @@ test.describe("Resolve page move-category deep-linking", () => {
     await applyDefaultTemplate(page);
     await openResolvePlan(page);
 
-    const slugs = await categorySlugs(page);
-    const target = slugs[slugs.length - 1];
-
-    await page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`).click();
-    await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
+    const { slug, label } = await selectLastCategory(page);
+    await expect(page).toHaveURL(new RegExp(`entry=${slug}(&|$)`));
 
     // Leave for the editor (pushes a history entry), then go back.
-    await page.locator('[data-action="view-editor"]').click();
+    await page.locator('.brand').click();
     await page.locator(".unit-card").first().waitFor();
 
     await page.goBack();
-    await page.locator('[data-resolve-state="plan"]').waitFor();
-    await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
-    await expect(
-      page.locator(`.breadcrumbs [data-breadcrumb="${target}"]`),
-    ).toHaveAttribute("aria-current", "page");
+    await page.locator('.resolve-page').waitFor();
+    await expect(page).toHaveURL(new RegExp(`entry=${slug}(&|$)`));
+    await expect(breadcrumbByLabel(page, label)).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 });

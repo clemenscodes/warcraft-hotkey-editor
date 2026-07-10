@@ -7,13 +7,12 @@ use tw_macro::assert_component;
 assert_component!(EmptyState);
 
 /// The "upload a file" prompt shown before any CustomKeys.txt is loaded. It centers
-/// its prompt message in the available space and tags the resolve state for e2e.
+/// its prompt message in the available space.
 #[component]
 pub fn EmptyState() -> Element {
     rsx! {
         section {
             class: CLASS,
-            "data-resolve-state": "no-file",
             EmptyMessage { text: data::UPLOAD_PROMPT }
         }
     }

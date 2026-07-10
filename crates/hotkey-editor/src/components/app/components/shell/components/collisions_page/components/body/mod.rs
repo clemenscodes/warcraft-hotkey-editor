@@ -22,46 +22,31 @@ pub fn Body(props: BodyProps) -> Element {
                 EmptyState { ..state }
             }
         }
-        ContentModel::Clear(state) => {
+        ContentModel::Clear => {
             rsx! {
-                ClearState { ..state }
+                ClearState {}
             }
         }
         ContentModel::Positions(pane) => {
-            let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
-            let content = PositionsContentProps {
-                count,
-                sidebar,
-                detail,
-            };
+            let content = PositionsContentProps { sidebar, detail };
             rsx! {
                 PositionsContent { ..content }
             }
         }
         ContentModel::Hotkeys(pane) => {
-            let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
-            let content = HotkeysContentProps {
-                count,
-                sidebar,
-                detail,
-            };
+            let content = HotkeysContentProps { sidebar, detail };
             rsx! {
                 HotkeysContent { ..content }
             }
         }
         ContentModel::UnitPositions(pane) => {
-            let count = pane.count();
             let sidebar = pane.sidebar().clone();
             let detail = pane.detail().clone();
-            let content = UnitPositionsContentProps {
-                count,
-                sidebar,
-                detail,
-            };
+            let content = UnitPositionsContentProps { sidebar, detail };
             rsx! {
                 UnitPositionsContent { ..content }
             }

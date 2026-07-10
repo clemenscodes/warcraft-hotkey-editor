@@ -13,7 +13,7 @@ async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -47,20 +47,19 @@ test.describe("Off-state regression: Healing Wave drag after cascade", () => {
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).click();
     await page.locator(".filled-tile").first().waitFor();
 
-    const sourceCell = page.locator(
-      '[data-grid-id="Command card"] [data-grid-col="3"][data-grid-row="2"]',
-    );
-    const targetCell = page.locator(
-      '[data-grid-id="Command card"] [data-grid-col="0"][data-grid-row="2"]',
-    );
+    const commandCard = page.locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: "Command card" }),
+    });
+    const sourceCell = commandCard.locator(".grid-editor-tile").nth(11);
+    const targetCell = commandCard.locator(".grid-editor-tile").nth(8);
 
-    await expect(sourceCell).toHaveClass(/filled-tile/);
-    await expect(targetCell).not.toHaveClass(/filled-tile/);
+    await expect(sourceCell.locator(".filled-tile")).toHaveCount(1);
+    await expect(targetCell.locator(".filled-tile")).toHaveCount(0);
 
     await sourceCell.dragTo(targetCell);
 
-    await expect(targetCell).toHaveClass(/filled-tile/);
-    await expect(sourceCell).not.toHaveClass(/filled-tile/);
+    await expect(targetCell.locator(".filled-tile")).toHaveCount(1);
+    await expect(sourceCell.locator(".filled-tile")).toHaveCount(0);
 
     await expect(
       page.locator('[role="alertdialog"]').filter({ hasText: /reserved.*off-state/i }),

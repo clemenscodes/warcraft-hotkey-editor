@@ -15,7 +15,6 @@ assert_component!(CurrentKey);
 pub fn CurrentKey(props: CurrentKeyProps) -> Element {
     let CurrentKeyProps {
         label,
-        data_label,
         disabled,
         onclick,
         tooltip,
@@ -25,7 +24,6 @@ pub fn CurrentKey(props: CurrentKeyProps) -> Element {
             class: CLASS,
             r#type: "button",
             disabled,
-            "data-label": data_label,
             onclick,
             {label}
             Tooltip { ..tooltip }

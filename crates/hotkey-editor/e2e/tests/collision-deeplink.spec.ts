@@ -18,24 +18,32 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
   await page.locator('[role="alertdialog"]').first().waitFor();
 }
 
-async function openCollisionKind(
-  page: Page,
-  kind: string,
-  rowAttribute: string,
-): Promise<void> {
+async function openCollisionKind(page: Page, kind: string): Promise<void> {
   await page.goto(`${APP}collisions?kind=${kind}`);
-  await page.locator(`[data-collision-kind="${kind}"]`).waitFor();
-  await page.locator(`[${rowAttribute}]`).first().waitFor();
+  // Each kind renders its own two-pane content component whose identity class is
+  // `<kind>-content` (positions-content, hotkeys-content, unit-positions-content).
+  await page.locator(`.${kind}-content`).waitFor();
+  await page.locator(".collision-card").first().waitFor();
 }
 
-function rowKeys(page: Page, rowAttribute: string): Promise<string[]> {
-  return page
-    .locator(`[${rowAttribute}]`)
-    .evaluateAll(
-      (elements, attribute) =>
-        elements.map((element) => element.getAttribute(attribute) ?? ""),
-      rowAttribute,
-    );
+function collisionCards(page: Page) {
+  return page.locator(".collision-card");
+}
+
+// A breadcrumb tab is identified by its visible label text (its slug is no longer
+// exposed as a DOM attribute). Labels are unique and not substrings of one
+// another, so `hasText` uniquely and stably picks the tab; the count child does
+// not interfere.
+function collisionBreadcrumb(page: Page, label: string) {
+  return page.locator(".breadcrumbs button", { hasText: label });
+}
+
+// The selected entry's stable key is not exposed as an attribute; it is the value
+// the app writes to `?entry=` when a card is picked. Read it back from the URL.
+async function selectedEntry(page: Page): Promise<string> {
+  const entry = new URL(page.url()).searchParams.get("entry");
+  expect(entry, "expected an ?entry= param after selecting a card").not.toBeNull();
+  return entry as string;
 }
 
 test.describe("Collision page entry deep-linking", () => {
@@ -46,16 +54,16 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-collision-key");
+    await openCollisionKind(page, "unit-positions");
 
-    const keys = await rowKeys(page, "data-collision-key");
-    expect(keys.length).toBeGreaterThan(3);
-    const target = keys[3];
+    const cards = collisionCards(page);
+    expect(await cards.count()).toBeGreaterThan(3);
+    const targetCard = cards.nth(3);
 
-    const targetRow = page.locator(`[data-collision-key="${target}"]`);
-    await targetRow.click();
-    await expect(page).toHaveURL(new RegExp(`entry=${target}(&|$)`));
-    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
+    await targetCard.click();
+    await expect(page).toHaveURL(/entry=/);
+    const target = await selectedEntry(page);
+    await expect(targetCard.locator(".selected-collision-card-surface")).toBeVisible();
 
     // Open the affected unit in the editor.
     await page.locator(".conflict-detail-unit").click();
@@ -64,11 +72,11 @@ test.describe("Collision page entry deep-linking", () => {
 
     // Browser back restores the collisions view on the very same entry.
     await page.goBack();
-    await expect(page).toHaveURL(
-      new RegExp(`kind=unit-positions&entry=${target}`),
-    );
+    const restored = new URL(page.url());
+    expect(restored.searchParams.get("kind")).toBe("unit-positions");
+    expect(restored.searchParams.get("entry")).toBe(target);
     await expect(
-      page.locator(`[data-collision-key="${target}"] .selected-collision-card-surface`),
+      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
     ).toBeVisible();
   });
 
@@ -76,40 +84,43 @@ test.describe("Collision page entry deep-linking", () => {
   // returns to where you were, and the URL carries the active kind's entry.
   test("each collision tab remembers its own selected entry", async ({ page }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-collision-key");
+    await openCollisionKind(page, "unit-positions");
 
-    const unitPositionKeys = await rowKeys(page, "data-collision-key");
-    expect(unitPositionKeys.length).toBeGreaterThan(3);
-    const unitPositionTarget = unitPositionKeys[3];
-    await page.locator(`[data-collision-key="${unitPositionTarget}"]`).click();
+    const unitPositionCards = collisionCards(page);
+    expect(await unitPositionCards.count()).toBeGreaterThan(3);
+    const unitPositionCard = unitPositionCards.nth(3);
+    await unitPositionCard.click();
+    await expect(page).toHaveURL(/entry=/);
+    const unitPositionTarget = await selectedEntry(page);
     await expect(
-      page.locator(`[data-collision-key="${unitPositionTarget}"] .selected-collision-card-surface`),
+      unitPositionCard.locator(".selected-collision-card-surface"),
     ).toBeVisible();
 
     // Switch to hotkeys and pick a different entry there.
-    await page.locator('[data-breadcrumb="hotkeys"]').click();
-    await page.locator("[data-collision-key]").first().waitFor();
-    const hotkeyKeys = await rowKeys(page, "data-collision-key");
-    expect(hotkeyKeys.length).toBeGreaterThan(3);
-    const hotkeyTarget = hotkeyKeys[3];
-    await page.locator(`[data-collision-key="${hotkeyTarget}"]`).click();
+    await collisionBreadcrumb(page, "Hotkey Collisions").click();
+    await collisionCards(page).first().waitFor();
+    const hotkeyCards = collisionCards(page);
+    expect(await hotkeyCards.count()).toBeGreaterThan(3);
+    const hotkeyCard = hotkeyCards.nth(3);
+    await hotkeyCard.click();
+    await expect(page).toHaveURL(/entry=/);
     await expect(
-      page.locator(`[data-collision-key="${hotkeyTarget}"] .selected-collision-card-surface`),
+      hotkeyCard.locator(".selected-collision-card-surface"),
     ).toBeVisible();
 
     // Back to unit-positions: the earlier selection is still there.
-    await page.locator('[data-breadcrumb="unit-positions"]').click();
+    await collisionBreadcrumb(page, "Intra Collisions").click();
     await expect(
-      page.locator(`[data-collision-key="${unitPositionTarget}"] .selected-collision-card-surface`),
+      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
     ).toBeVisible();
-    await expect(page).toHaveURL(
-      new RegExp(`kind=unit-positions&entry=${unitPositionTarget}`),
-    );
+    const backUrl = new URL(page.url());
+    expect(backUrl.searchParams.get("kind")).toBe("unit-positions");
+    expect(backUrl.searchParams.get("entry")).toBe(unitPositionTarget);
 
     // And hotkeys still remembers its own.
-    await page.locator('[data-breadcrumb="hotkeys"]').click();
+    await collisionBreadcrumb(page, "Hotkey Collisions").click();
     await expect(
-      page.locator(`[data-collision-key="${hotkeyTarget}"] .selected-collision-card-surface`),
+      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
     ).toBeVisible();
   });
 
@@ -121,15 +132,26 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "unit-positions", "data-collision-key");
+    await openCollisionKind(page, "unit-positions");
 
-    const keys = await rowKeys(page, "data-collision-key");
-    expect(keys.length).toBeGreaterThan(20);
-    const target = keys[keys.length - 1];
+    const cards = collisionCards(page);
+    const count = await cards.count();
+    expect(count).toBeGreaterThan(20);
+    const lastCard = cards.nth(count - 1);
 
-    await page.goto(`${APP}collisions?kind=unit-positions&entry=${target}`);
-    const targetRow = page.locator(`[data-collision-key="${target}"]`);
-    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
+    // Discover the far-down entry's key by selecting it (the app writes it to
+    // ?entry=), then prove a fresh navigation to that URL re-selects the same
+    // far-down card.
+    await lastCard.click();
+    await expect(page).toHaveURL(/entry=/);
+    const target = await selectedEntry(page);
+
+    await page.goto(
+      `${APP}collisions?kind=unit-positions&entry=${encodeURIComponent(target)}`,
+    );
+    await expect(
+      collisionCards(page).nth(count - 1).locator(".selected-collision-card-surface"),
+    ).toBeVisible();
   });
 
   // The same round-trip for cross-unit position islands, whose key contains
@@ -138,15 +160,14 @@ test.describe("Collision page entry deep-linking", () => {
     page,
   }) => {
     await applyDefaultTemplate(page);
-    await openCollisionKind(page, "positions", "data-collision-key");
+    await openCollisionKind(page, "positions");
 
-    const keys = await rowKeys(page, "data-collision-key");
-    expect(keys.length).toBeGreaterThan(2);
-    const target = keys[2];
+    const cards = collisionCards(page);
+    expect(await cards.count()).toBeGreaterThan(2);
+    const targetCard = cards.nth(2);
 
-    const targetRow = page.locator(`[data-collision-key="${target}"]`);
-    await targetRow.click();
-    await expect(targetRow.locator(".selected-collision-card-surface")).toBeVisible();
+    await targetCard.click();
+    await expect(targetCard.locator(".selected-collision-card-surface")).toBeVisible();
     await expect(page).toHaveURL(/entry=/);
 
     // Open one of the affected units from the island detail, then back.
@@ -154,6 +175,8 @@ test.describe("Collision page entry deep-linking", () => {
     await expect(page.locator(".filled-tile").first()).toBeVisible();
 
     await page.goBack();
-    await expect(page.locator(`[data-collision-key="${target}"] .selected-collision-card-surface`)).toBeVisible();
+    await expect(
+      collisionCards(page).nth(2).locator(".selected-collision-card-surface"),
+    ).toBeVisible();
   });
 });

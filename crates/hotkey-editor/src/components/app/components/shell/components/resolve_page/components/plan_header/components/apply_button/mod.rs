@@ -16,7 +16,6 @@ pub fn ApplyButton(props: ApplyButtonProps) -> Element {
             class: CLASS,
             r#type: "button",
             disabled: running,
-            "data-action": "apply-cascade",
             onclick,
             if running {
                 {data::APPLYING}

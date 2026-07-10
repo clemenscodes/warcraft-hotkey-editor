@@ -82,7 +82,6 @@ test.describe("Editor selection history (back/forward)", () => {
     const before = await page.evaluate(() => history.length);
 
     await search.pressSequentially("Footman", { delay: 60 });
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
     await expect(page).toHaveURL(/search_query=Footman/);
 
     const after = await page.evaluate(() => history.length);

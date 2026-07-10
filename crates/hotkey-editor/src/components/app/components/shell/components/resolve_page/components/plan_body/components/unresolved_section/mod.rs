@@ -16,8 +16,7 @@ assert_component!(UnresolvedSection);
 #[component]
 pub fn UnresolvedSection(props: UnresolvedSectionProps) -> Element {
     let rows = props.rows;
-    let category = data::CATEGORY_SLUG;
-    let move_list = UnresolvedMoveListProps { category, rows };
+    let move_list = UnresolvedMoveListProps { rows };
     rsx! {
         div {
             class: CLASS,

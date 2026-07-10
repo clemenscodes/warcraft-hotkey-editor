@@ -2,7 +2,8 @@ use warcraft_api::WarcraftObjectId;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::{
     DID_DRAG_MOVE, DRAG_MOVEMENT_THRESHOLD_PIXELS, DRAG_ORIGIN, DRAG_RAF_CLOSURE, DRAG_RAF_HANDLE,
     DragMovePoint, DragOrigin, DragRafClosure, InventoryDragFollower, InventoryDragRaf,
-    InventoryDragSource, LATEST_DRAG_MOVE, SUPPRESS_NEXT_CLICK,
+    InventoryDragSource, LATEST_DRAG_MOVE, PENDING_INVENTORY_DRAG, PendingInventoryDrag,
+    SUPPRESS_NEXT_CLICK,
 };
 
 use super::logic::{InventoryFilledSlotInputs, InventoryFilledSlotView};
@@ -26,7 +27,6 @@ use wasm_bindgen::closure::Closure;
 /// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryFilledSlotModel {
     pub(super) state: SystemSlotState,
-    pub(super) section_id: WarcraftObjectId,
     pub(super) dragging: bool,
     pub(super) slot_label: String,
     pub(super) key_label: String,
@@ -98,32 +98,34 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         let click_offset_horizontal = cursor_horizontal_position - cell_rect.left();
         let click_offset_vertical = cursor_vertical_position - cell_rect.top();
         let pointer_id = web_event.pointer_id();
-        let _ = cell_element.set_pointer_capture(pointer_id);
+        // The drag is only recorded as pending here; the state change (capture, drag
+        // signals, follower) is deferred to the first past-threshold pointermove (see
+        // `on_pointermove`). Mutating the drag signals on pointerdown unmounts the slot
+        // content under the cursor, detaching the mousedown target so the browser drops
+        // the `click` and swallows the click-to-edit gesture. Mirrors the grid editor's
+        // drag mechanics.
         let drag_origin = DragOrigin {
             cursor_horizontal_position,
             cursor_vertical_position,
         };
         DRAG_ORIGIN.with(|cell| cell.set(Some(drag_origin)));
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
-        let drag_source = InventoryDragSource {
-            section_id: section_id_for_pointerdown,
-        };
-        dragging_source.set(Some(drag_source));
-        drop_target.set(None);
-        let follower = InventoryDragFollower {
+        let pending = PendingInventoryDrag {
             section_id: section_id_for_pointerdown,
             label: label_for_drag.clone(),
             click_offset_horizontal,
             click_offset_vertical,
-            cursor_horizontal_position,
-            cursor_vertical_position,
             width: cell_rect.width(),
             height: cell_rect.height(),
+            cell_element,
+            pointer_id,
         };
-        drag_follower.set(Some(follower));
+        PENDING_INVENTORY_DRAG.with(|cell| *cell.borrow_mut() = Some(pending));
     });
     let on_pointermove = EventHandler::new(move |event: Event<PointerData>| {
-        if dragging_source.read().is_none() {
+        let drag_is_active = dragging_source.read().is_some();
+        let has_pending = PENDING_INVENTORY_DRAG.with(|cell| cell.borrow().is_some());
+        if !drag_is_active && !has_pending {
             return;
         }
         let Some(web_event) = event.data().try_as_web_event() else {
@@ -131,15 +133,50 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         };
         let cursor_horizontal_position = f64::from(web_event.client_x());
         let cursor_vertical_position = f64::from(web_event.client_y());
-        if let Some(origin) = DRAG_ORIGIN.with(|cell| cell.get()) {
+        if !drag_is_active {
+            // A pending drag: promote it into a real drag once movement crosses the
+            // threshold — capturing the pointer, marking the source, and mounting the
+            // follower. Below-threshold moves leave it pending so a release still reads
+            // as a click.
+            let Some(origin) = DRAG_ORIGIN.with(|cell| cell.get()) else {
+                return;
+            };
             let horizontal_delta = cursor_horizontal_position - origin.cursor_horizontal_position;
             let vertical_delta = cursor_vertical_position - origin.cursor_vertical_position;
             let distance_squared =
                 horizontal_delta * horizontal_delta + vertical_delta * vertical_delta;
             let threshold_squared = DRAG_MOVEMENT_THRESHOLD_PIXELS * DRAG_MOVEMENT_THRESHOLD_PIXELS;
-            if distance_squared > threshold_squared {
-                DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(true));
+            if distance_squared <= threshold_squared {
+                return;
             }
+            let Some(pending) = PENDING_INVENTORY_DRAG.with(|cell| cell.borrow_mut().take()) else {
+                return;
+            };
+            if pending
+                .cell_element
+                .set_pointer_capture(pending.pointer_id)
+                .is_err()
+            {
+                DRAG_ORIGIN.with(|cell| cell.set(None));
+                return;
+            }
+            DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(true));
+            let drag_source = InventoryDragSource {
+                section_id: pending.section_id,
+            };
+            dragging_source.set(Some(drag_source));
+            drop_target.set(None);
+            let follower = InventoryDragFollower {
+                section_id: pending.section_id,
+                label: pending.label,
+                click_offset_horizontal: pending.click_offset_horizontal,
+                click_offset_vertical: pending.click_offset_vertical,
+                cursor_horizontal_position,
+                cursor_vertical_position,
+                width: pending.width,
+                height: pending.height,
+            };
+            drag_follower.set(Some(follower));
         }
         let point = DragMovePoint {
             client_horizontal: cursor_horizontal_position,
@@ -181,6 +218,9 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         }
         let did_move = DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.replace(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
+        // A never-promoted pending drag means the pointer was released without crossing
+        // the threshold: it was a click, so drop it and let the click through.
+        PENDING_INVENTORY_DRAG.with(|cell| *cell.borrow_mut() = None);
         if did_move || performed_swap {
             SUPPRESS_NEXT_CLICK.with(|cell: &Cell<bool>| cell.set(true));
         }
@@ -192,6 +232,7 @@ fn use_inventory_drag(props: &InventoryFilledSlotProps, label_for_drag: String) 
         InventoryDragRaf::cancel();
         DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
+        PENDING_INVENTORY_DRAG.with(|cell| *cell.borrow_mut() = None);
         dragging_source.set(None);
         drop_target.set(None);
         drag_follower.set(None);
@@ -249,7 +290,6 @@ pub(super) fn use_inventory_filled_slot(
     let editing = use_inventory_editing(props, editing_section);
     InventoryFilledSlotModel {
         state: view.state,
-        section_id: props.section_id,
         dragging: view.dragging,
         slot_label: view.slot_label,
         key_label: view.key_label,

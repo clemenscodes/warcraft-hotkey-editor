@@ -1,7 +1,7 @@
 use tw_macro::tw;
 
 // The auto-fill grid of move cards. The identity class (`move-list`, derived from this
-// directory) and its `data-category` attribute are coupled to the e2e suite.
+// directory) is coupled to the e2e suite.
 classes! {
     base: tw![
         "grid",

@@ -22,7 +22,6 @@ pub fn WarningToastCard(props: WarningToastCardProps) -> Element {
         div {
             class: CLASS,
             role: "alertdialog",
-            "data-type": "warning",
             "aria-modal": "false",
             tabindex: "0",
             WarningToastIcon {}

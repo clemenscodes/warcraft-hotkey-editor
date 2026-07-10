@@ -13,8 +13,6 @@ pub struct ToolbarButtonProps {
     #[props(default)]
     pub disabled: bool,
     #[props(default)]
-    pub data_action: Option<&'static str>,
-    #[props(default)]
     pub aria_haspopup: Option<&'static str>,
     #[props(default)]
     pub aria_expanded: Option<bool>,
@@ -29,7 +27,6 @@ impl From<&ToolbarButtonProps> for ToolbarButtonSurfaceProps {
         let aria_label = props.aria_label;
         let state = SurfaceState::Interactive;
         let disabled = props.disabled;
-        let data_action = props.data_action;
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
@@ -39,7 +36,6 @@ impl From<&ToolbarButtonProps> for ToolbarButtonSurfaceProps {
             aria_label,
             state,
             disabled,
-            data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,

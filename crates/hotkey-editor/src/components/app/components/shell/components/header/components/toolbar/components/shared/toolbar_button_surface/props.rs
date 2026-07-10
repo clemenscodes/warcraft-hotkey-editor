@@ -13,8 +13,6 @@ pub struct ToolbarButtonSurfaceProps {
     #[props(default)]
     pub disabled: bool,
     #[props(default)]
-    pub data_action: Option<&'static str>,
-    #[props(default)]
     pub aria_haspopup: Option<&'static str>,
     #[props(default)]
     pub aria_expanded: Option<bool>,

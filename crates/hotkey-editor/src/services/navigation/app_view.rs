@@ -72,8 +72,8 @@ impl CollisionKind {
         }
     }
 
-    /// The kind's canonical slug, used both as the URL `kind` query parameter and as
-    /// the `data-breadcrumb` selection attribute on its breadcrumb tab.
+    /// The kind's canonical slug, written to the URL `kind` query parameter that
+    /// selects which collision sub-page — and its breadcrumb tab — is active.
     pub(crate) fn kind_param(self) -> &'static str {
         match self {
             Self::Positions => "positions",

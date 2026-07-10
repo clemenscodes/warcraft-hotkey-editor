@@ -49,7 +49,9 @@ pub struct GridEditorTileProps {
 }
 
 impl From<&GridEditorTileProps> for TileFaceProps {
-    /// The painter's slice of the editor tile: the visual fields, none of the interaction.
+    /// The painter's slice of the editor tile: the visual fields plus the two drag flags
+    /// the painter turns into its mounted `DraggingSourceGhost` / `DragOverRing`. None of
+    /// the pointer interaction crosses — that stays on the Host.
     fn from(props: &GridEditorTileProps) -> Self {
         let coordinate = props.coordinate;
         let icon = props.icon.clone();
@@ -57,6 +59,8 @@ impl From<&GridEditorTileProps> for TileFaceProps {
         let hotkey = props.hotkey;
         let badge_state = props.badge_state;
         let state = props.state;
+        let is_dragging_source = props.is_dragging_source;
+        let is_drag_over = props.is_drag_over;
         Self {
             coordinate,
             icon,
@@ -64,6 +68,8 @@ impl From<&GridEditorTileProps> for TileFaceProps {
             hotkey,
             badge_state,
             state,
+            is_dragging_source,
+            is_drag_over,
         }
     }
 }
@@ -82,6 +88,7 @@ impl From<&RenderedTile> for GridEditorTileProps {
             hotkey,
             badge_state,
             state,
+            ..
         } = face;
         let is_focusable = rendered.occupant().is_some();
         let draggable = rendered.draggable();

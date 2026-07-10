@@ -22,7 +22,6 @@ pub fn InfoToastCard(props: InfoToastCardProps) -> Element {
         div {
             class: CLASS,
             role: "alertdialog",
-            "data-type": "info",
             "aria-modal": "false",
             tabindex: "0",
             InfoToastIcon {}

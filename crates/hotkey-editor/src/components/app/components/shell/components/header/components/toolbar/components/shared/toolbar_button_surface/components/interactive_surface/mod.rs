@@ -22,7 +22,6 @@ pub fn InteractiveSurface(props: InteractiveSurfaceProps) -> Element {
             aria_haspopup: props.aria_haspopup,
             aria_expanded: props.aria_expanded,
             aria_pressed: props.aria_pressed,
-            "data-action": props.data_action,
             disabled: props.disabled,
             onclick: props.onclick,
             ToolbarButtonIcon { ..glyph }

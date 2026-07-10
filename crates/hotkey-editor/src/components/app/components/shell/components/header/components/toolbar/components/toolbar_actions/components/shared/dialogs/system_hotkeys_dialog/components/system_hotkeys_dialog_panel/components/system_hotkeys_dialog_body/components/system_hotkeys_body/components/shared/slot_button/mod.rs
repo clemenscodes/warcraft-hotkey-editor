@@ -30,7 +30,6 @@ pub fn SlotButton(props: SlotButtonProps) -> Element {
             class: CLASS,
             r#type: "button",
             tabindex: "0",
-            "data-compact": model.compact,
             onclick: model.on_click,
             SystemSlot { ..slot }
         }

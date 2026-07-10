@@ -11,11 +11,9 @@ classes! {
     mobile: tw![
         "mobile:text-xs",
         "mobile:tracking-caps",
-        "mobile:data-[compact=true]:text-xs",
     ],
     tablet: tw![
         "tablet:text-xs",
         "tablet:tracking-caps",
-        "tablet:data-[compact=true]:text-xs",
     ],
 }

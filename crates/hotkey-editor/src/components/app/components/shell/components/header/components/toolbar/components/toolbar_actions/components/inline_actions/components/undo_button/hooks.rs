@@ -13,7 +13,6 @@ pub(super) fn use_undo_button() -> ToolbarButtonProps {
         icon: ICON_UNDO,
         aria_label: "Undo",
         disabled,
-        data_action: Some("undo"),
         onclick,
         ..ToolbarButtonProps::default()
     }

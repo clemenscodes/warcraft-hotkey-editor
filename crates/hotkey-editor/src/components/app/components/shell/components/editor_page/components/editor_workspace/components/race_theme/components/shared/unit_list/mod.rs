@@ -38,8 +38,6 @@ pub fn UnitList() -> Element {
     rsx! {
         aside {
             class: CLASS,
-            "data-active-category": model.active_category_attr,
-            "data-search-active": model.search_active,
             SearchFieldToggle {}
             CatalogVisibilityToggle {}
             UnitListSearch { ..model.search }

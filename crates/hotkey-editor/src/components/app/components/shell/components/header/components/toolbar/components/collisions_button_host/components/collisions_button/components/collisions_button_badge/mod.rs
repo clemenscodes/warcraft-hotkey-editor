@@ -13,7 +13,6 @@ pub fn CollisionsButtonBadge(props: CollisionsButtonBadgeProps) -> Element {
     rsx! {
         span {
             class: CLASS,
-            "data-collision-badge": "true",
             aria_hidden: "true",
             {label}
         }

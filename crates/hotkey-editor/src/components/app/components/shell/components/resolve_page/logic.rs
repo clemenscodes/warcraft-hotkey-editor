@@ -56,7 +56,7 @@ impl MoveCategory {
         }
     }
 
-    pub fn data_breadcrumb(self) -> &'static str {
+    pub fn entry_slug(self) -> &'static str {
         match self {
             Self::Fight => "fights",
             Self::GapPull => "gap-pulls",
@@ -65,10 +65,10 @@ impl MoveCategory {
         }
     }
 
-    /// Parses the `data_breadcrumb` slug back into a category — used to restore
-    /// the selected move section from the `?entry=` URL parameter. Unknown slugs
-    /// yield `None` (the page then falls back to the first section).
-    pub fn from_data_breadcrumb(slug: &str) -> Option<Self> {
+    /// Parses the `?entry=` slug back into a category — used to restore the
+    /// selected move section from the URL parameter. Unknown slugs yield `None`
+    /// (the page then falls back to the first section).
+    pub fn from_entry_slug(slug: &str) -> Option<Self> {
         match slug {
             "fights" => Some(Self::Fight),
             "gap-pulls" => Some(Self::GapPull),
@@ -322,7 +322,7 @@ impl PlanView {
     /// The section matching the selected breadcrumb slug, falling back to the
     /// first section when the slug is missing or names an absent category.
     pub fn active_section(&self, selected_slug: Option<&str>) -> Option<&MoveSection> {
-        let selected = selected_slug.and_then(MoveCategory::from_data_breadcrumb);
+        let selected = selected_slug.and_then(MoveCategory::from_entry_slug);
         let selected_exists = selected
             .map(|category| {
                 self.sections
@@ -425,18 +425,16 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
         for section in &plan.sections {
             let category = section.category;
             let is_active = active_category == Some(category);
-            let data_breadcrumb = category.data_breadcrumb();
             let label = section.title.to_owned();
             let count = section.moves.len();
             let mut selection = selection;
             let onclick = EventHandler::new(move |_event: MouseEvent| {
-                let slug = category.data_breadcrumb().to_owned();
+                let slug = category.entry_slug().to_owned();
                 selection.set(Some(slug));
             });
             let breadcrumb = BreadcrumbProps {
                 label,
                 count,
-                data_breadcrumb,
                 active: is_active,
                 onclick,
             };
@@ -454,8 +452,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
                     move_view: move_view.clone(),
                 })
                 .collect();
-            let data_category = section.category.data_breadcrumb();
-            PlanBodySection::new(data_category, rows)
+            PlanBodySection::new(rows)
         });
         let unresolved_rows: Vec<UnresolvedRowProps> = plan
             .unresolved

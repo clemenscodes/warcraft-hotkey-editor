@@ -16,14 +16,12 @@ assert_component!(ActiveBreadcrumb);
 pub fn ActiveBreadcrumb(props: ActiveBreadcrumbProps) -> Element {
     let label = BreadcrumbLabelProps { text: props.label };
     let count = BreadcrumbCountProps { count: props.count };
-    let data_breadcrumb = props.data_breadcrumb;
     let onclick = props.onclick;
     rsx! {
         button {
             class: CLASS,
             r#type: "button",
             "aria-current": "page",
-            "data-breadcrumb": data_breadcrumb,
             onclick,
             BreadcrumbLabel { ..label }
             BreadcrumbCount { ..count }

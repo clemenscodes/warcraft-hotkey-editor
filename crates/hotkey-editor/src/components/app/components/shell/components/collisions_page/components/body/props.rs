@@ -1,4 +1,3 @@
-use super::components::clear_state::ClearStateProps;
 use super::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
 use super::components::details::island_detail::IslandDetailProps;
 use super::components::details::unit_position_detail::UnitPositionDetailProps;
@@ -10,26 +9,16 @@ use crate::components::app::components::shell::components::collisions_page::logi
 };
 use dioxus::prelude::*;
 
-/// The position-collision two-pane content: the island sidebar and detail, tagged
-/// with the conflict count for the surrounding content wrapper.
+/// The position-collision two-pane content: the island sidebar and detail.
 #[derive(Clone, PartialEq)]
 pub struct PositionsPane {
-    count: usize,
     sidebar: IslandSidebarProps,
     detail: IslandDetailProps,
 }
 
 impl PositionsPane {
-    pub fn new(count: usize, sidebar: IslandSidebarProps, detail: IslandDetailProps) -> Self {
-        Self {
-            count,
-            sidebar,
-            detail,
-        }
-    }
-
-    pub fn count(&self) -> usize {
-        self.count
+    pub fn new(sidebar: IslandSidebarProps, detail: IslandDetailProps) -> Self {
+        Self { sidebar, detail }
     }
 
     pub fn sidebar(&self) -> &IslandSidebarProps {
@@ -44,26 +33,16 @@ impl PositionsPane {
 /// The hotkey-collision two-pane content: the clashing-units sidebar and detail.
 #[derive(Clone, PartialEq)]
 pub struct HotkeysPane {
-    count: usize,
     sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
     detail: HotkeyUnitDetailProps,
 }
 
 impl HotkeysPane {
     pub fn new(
-        count: usize,
         sidebar: UnitCardsSidebarProps<HotkeyConflictView>,
         detail: HotkeyUnitDetailProps,
     ) -> Self {
-        Self {
-            count,
-            sidebar,
-            detail,
-        }
-    }
-
-    pub fn count(&self) -> usize {
-        self.count
+        Self { sidebar, detail }
     }
 
     pub fn sidebar(&self) -> &UnitCardsSidebarProps<HotkeyConflictView> {
@@ -78,26 +57,16 @@ impl HotkeysPane {
 /// The per-unit position-collision two-pane content.
 #[derive(Clone, PartialEq)]
 pub struct UnitPositionsPane {
-    count: usize,
     sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
     detail: UnitPositionDetailProps,
 }
 
 impl UnitPositionsPane {
     pub fn new(
-        count: usize,
         sidebar: UnitCardsSidebarProps<UnitPositionConflictView>,
         detail: UnitPositionDetailProps,
     ) -> Self {
-        Self {
-            count,
-            sidebar,
-            detail,
-        }
-    }
-
-    pub fn count(&self) -> usize {
-        self.count
+        Self { sidebar, detail }
     }
 
     pub fn sidebar(&self) -> &UnitCardsSidebarProps<UnitPositionConflictView> {
@@ -115,7 +84,7 @@ impl UnitPositionsPane {
 #[derive(Clone, PartialEq)]
 pub enum ContentModel {
     Empty(EmptyStateProps),
-    Clear(ClearStateProps),
+    Clear,
     Positions(Box<PositionsPane>),
     Hotkeys(Box<HotkeysPane>),
     UnitPositions(Box<UnitPositionsPane>),

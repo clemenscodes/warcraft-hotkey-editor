@@ -6,13 +6,12 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// Everything the slot's markup needs, already shaped: its visual state and
-/// compact flag, the key label and conflict tooltip, whether its picker is open
-/// (and the picker's inputs), and the click / pick / close handlers.
+/// Everything the slot's markup needs, already shaped: its visual state, the key
+/// label and conflict tooltip, whether its picker is open (and the picker's inputs),
+/// and the click / pick / close handlers.
 pub(super) struct SlotButtonModel {
     pub(super) state: SystemSlotState,
     pub(super) slot_label: String,
-    pub(super) compact: bool,
     pub(super) key_label: String,
     pub(super) conflict_title: String,
     pub(super) is_conflict: bool,
@@ -34,7 +33,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     let mut editing_section = dialog_state.editing_section();
     let lookup_id = props.section_id;
     let slot_label = props.slot_label.clone();
-    let compact = props.compact;
 
     // Firebreak: `slot_binding` reads the whole CustomKeys document, so calling it
     // bare re-renders this slot on every edit anywhere. Memoizing on the returned
@@ -76,7 +74,6 @@ pub(super) fn use_slot_button(props: &SlotButtonProps) -> SlotButtonModel {
     SlotButtonModel {
         state,
         slot_label,
-        compact,
         key_label,
         conflict_title,
         is_conflict,

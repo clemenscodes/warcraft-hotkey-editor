@@ -11,7 +11,6 @@ impl From<&SlotButtonModel> for SystemSlotProps {
         let conflict = model.is_conflict;
         let tooltip_text = model.conflict_title.clone();
         let tooltip_placement = TooltipPlacement::Below;
-        let compact = model.compact;
         let dragging = false;
         Self {
             state,
@@ -20,7 +19,6 @@ impl From<&SlotButtonModel> for SystemSlotProps {
             conflict,
             tooltip_text,
             tooltip_placement,
-            compact,
             dragging,
         }
     }

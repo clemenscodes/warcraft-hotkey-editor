@@ -25,8 +25,8 @@ dioxus-gallery = { git = "https://github.com/clemenscodes/dioxus-gallery", tag =
 dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.1.0" }
 tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.2.0" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
-warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.4.0" }
-warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.4.0" }
+warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.5.0" }
+warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.5.0" }
 
 # Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
 # DOM-bound (per-frame Rust work is light), so trading compile time and raw

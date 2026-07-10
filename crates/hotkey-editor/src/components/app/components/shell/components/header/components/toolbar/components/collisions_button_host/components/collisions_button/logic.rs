@@ -6,19 +6,14 @@ use crate::components::app::components::shell::components::shared::icons::{
 use dioxus::prelude::*;
 
 /// Everything the button renders, shaped once from the domain-computed collision
-/// summary: the surface's visual state, each collision class's count (published as a
-/// `data-*` attribute for e2e), the badge label, the aria label, the state attribute,
-/// the icon glyph, and the click handler. The body never computes any of this — it
-/// destructures this and places the values.
+/// summary: the surface's visual state, the total collision count that gates the
+/// badge, the badge label, the aria label, the icon glyph, and the click handler.
+/// The body never computes any of this — it destructures this and places the values.
 pub struct CollisionsButtonPresentation {
     pub(super) surface_state: SurfaceState,
     pub(super) collision_count: usize,
-    pub(super) cross_unit_count: usize,
-    pub(super) per_unit_position_count: usize,
-    pub(super) per_unit_hotkey_count: usize,
     pub(super) count_label: String,
     pub(super) aria_label: String,
-    pub(super) state_attribute: &'static str,
     pub(super) icon: &'static str,
     pub(super) onclick: EventHandler<MouseEvent>,
 }
@@ -31,9 +26,6 @@ impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
         let summary = props.summary;
         let onclick = props.onclick;
         let collision_count = summary.total();
-        let cross_unit_count = summary.cross_unit();
-        let per_unit_position_count = summary.per_unit_position();
-        let per_unit_hotkey_count = summary.per_unit_hotkey();
         let has_collisions = !summary.is_clean();
         let surface_state = if has_collisions {
             SurfaceState::Attention
@@ -50,7 +42,6 @@ impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
         } else {
             String::from("Collisions \u{2014} your config is clean")
         };
-        let state_attribute = if has_collisions { "attention" } else { "clear" };
         let icon = if has_collisions {
             ICON_COLLISIONS
         } else {
@@ -59,12 +50,8 @@ impl From<&CollisionsButtonProps> for CollisionsButtonPresentation {
         Self {
             surface_state,
             collision_count,
-            cross_unit_count,
-            per_unit_position_count,
-            per_unit_hotkey_count,
             count_label,
             aria_label,
-            state_attribute,
             icon,
             onclick,
         }

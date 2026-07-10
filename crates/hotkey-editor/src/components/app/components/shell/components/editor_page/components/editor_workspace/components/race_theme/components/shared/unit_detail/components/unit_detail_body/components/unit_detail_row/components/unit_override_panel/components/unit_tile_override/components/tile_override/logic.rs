@@ -29,26 +29,8 @@ pub(super) struct OverrideTokensInputs<'a> {
 impl From<OverrideTokensInputs<'_>> for OverrideTokens {
     fn from(inputs: OverrideTokensInputs<'_>) -> Self {
         let OverrideTokensInputs { detail, layout } = inputs;
-        let layout_hotkey = detail
-            .button_position()
-            .and_then(|position| {
-                let column = position.column();
-                let row = position.row();
-                layout.letter_at(column, row)
-            })
-            .and_then(|character| HotkeyToken::try_from(character).ok());
-        let research_position = detail
-            .research_button_position()
-            .or(detail.button_position());
-        let layout_research = research_position
-            .and_then(|position| {
-                let column = position.column();
-                let row = position.row();
-                layout.letter_at(column, row)
-            })
-            .and_then(|character| HotkeyToken::try_from(character).ok());
-        let hotkey = detail.hotkey_token().or(layout_hotkey);
-        let research = detail.research_hotkey_token().or(layout_research);
+        let hotkey = detail.effective_hotkey(&layout);
+        let research = detail.effective_research_hotkey(&layout);
         let alt = detail.alt_hotkey_token();
         let upgrade = detail.upgrade_hotkey_token();
         Self {

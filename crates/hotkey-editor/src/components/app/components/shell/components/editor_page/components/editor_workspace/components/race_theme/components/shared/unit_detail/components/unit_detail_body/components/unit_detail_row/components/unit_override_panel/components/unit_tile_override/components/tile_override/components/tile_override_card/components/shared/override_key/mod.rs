@@ -1,4 +1,4 @@
-mod components;
+pub mod components;
 mod hooks;
 mod logic;
 mod props;

@@ -22,7 +22,6 @@ pub fn SuccessToastCard(props: SuccessToastCardProps) -> Element {
         div {
             class: CLASS,
             role: "alertdialog",
-            "data-type": "success",
             "aria-modal": "false",
             tabindex: "0",
             SuccessToastIcon {}

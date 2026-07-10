@@ -27,7 +27,7 @@ async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -62,7 +62,10 @@ async function pickUnit(
 
 function commandCardSlotAlts(page: Page): Promise<string[]> {
   return page
-    .locator('[data-grid-id="Command card"] .filled-tile img')
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: "Command card" }),
+    })
+    .locator(".filled-tile img")
     .evaluateAll((nodes: Element[]) =>
       nodes
         .map((node) => node.getAttribute("alt"))

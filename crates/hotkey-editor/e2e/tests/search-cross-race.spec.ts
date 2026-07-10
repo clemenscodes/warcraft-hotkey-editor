@@ -30,14 +30,14 @@ test.describe("Trailing-space narrows search to word boundary", () => {
 
   test("'dark' matches both Dark Ranger and Altar of Darkness", async ({ page }) => {
     await page.locator('input[type="search"]').fill("dark");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=dark/);
     await page.locator(".unit-card").filter({ hasText: "Dark Ranger" }).first().waitFor();
     await page.locator(".unit-card").filter({ hasText: "Altar of Darkness" }).first().waitFor();
   });
 
   test("'dark ' (trailing space) matches Dark Ranger but not Altar of Darkness", async ({ page }) => {
     await page.locator('input[type="search"]').fill("dark ");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=dark/);
     await page.locator(".unit-card").filter({ hasText: "Dark Ranger" }).first().waitFor();
     await expect(page.locator(".unit-card").filter({ hasText: "Altar of Darkness" })).toHaveCount(0);
   });
@@ -99,7 +99,7 @@ test.describe("Search ignores race filter (#23)", () => {
 
   test("searching 'footman' does not return units whose name merely contains 'man' as a substring", async ({ page }) => {
     await page.locator('input[type="search"]').fill("footman");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=footman/);
     const cards = page.locator(".unit-card");
     await cards.first().waitFor();
     const count = await cards.count();

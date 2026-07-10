@@ -7,7 +7,6 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct AvailableKeyProps {
     pub label: String,
-    pub data_label: String,
     pub disabled: bool,
     pub onclick: EventHandler<MouseEvent>,
     pub tooltip: TooltipProps,

@@ -19,7 +19,10 @@ async function openBlizzardPicker(page: Page) {
   await archmage.waitFor();
   await archmage.click();
   const blizzardTile = page
-    .locator('[data-grid-id="Command card"] .filled-tile')
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: "Command card" }),
+    })
+    .locator(".filled-tile")
     .filter({ has: page.locator('img[alt="Blizzard"]') });
   await blizzardTile.waitFor();
   await blizzardTile.click();
@@ -62,7 +65,7 @@ test.describe("Ability hotkey picker keyboard input", () => {
     await openBlizzardPicker(page);
     // 'W' is taken by Summon Water Elemental on the Archmage, so it renders as a
     // disabled conflict cell and must not be selectable from the keyboard.
-    await expect(page.locator('.key-picker-board [data-label="W"]')).toBeDisabled();
+    await expect(page.locator('.key-picker-board').getByRole('button', { name: /^W/ })).toBeDisabled();
     await page.keyboard.press("w");
     await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("B");
@@ -79,7 +82,8 @@ test.describe("Ability hotkey picker keyboard input", () => {
 test.describe("Global grid layout picker keyboard input", () => {
   async function openGridCellPicker(page: Page, column: number, row: number) {
     await page
-      .locator(`[data-layout-col="${column}"][data-layout-row="${row}"]`)
+      .locator(".layout-tile")
+      .nth(row * 4 + column)
       .click();
     await page.locator(".key-picker-board").waitFor();
     await expect(page.locator(".key-picker-board")).toBeFocused();
@@ -96,17 +100,13 @@ test.describe("Global grid layout picker keyboard input", () => {
     await openGridCellPicker(page, 0, 0);
     await page.keyboard.press("h");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(
-      page.locator('[data-layout-col="0"][data-layout-row="0"]'),
-    ).toHaveText("H");
+    await expect(page.locator(".layout-tile").nth(0)).toHaveText("H");
 
     // A second cell, another navigation-letter pick — proves focus is restored
     // on reopen and that J/K/L also reach the picker.
     await openGridCellPicker(page, 1, 0);
     await page.keyboard.press("j");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
-    await expect(
-      page.locator('[data-layout-col="1"][data-layout-row="0"]'),
-    ).toHaveText("J");
+    await expect(page.locator(".layout-tile").nth(1)).toHaveText("J");
   });
 });

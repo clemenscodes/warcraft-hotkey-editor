@@ -25,12 +25,8 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
     let CollisionsButtonPresentation {
         surface_state,
         collision_count,
-        cross_unit_count,
-        per_unit_position_count,
-        per_unit_hotkey_count,
         count_label,
         aria_label,
-        state_attribute,
         icon,
         onclick,
     } = CollisionsButtonPresentation::from(&props);
@@ -46,12 +42,6 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
         div {
             class: CLASS,
             "aria-label": aria_label,
-            "data-action": "view-collisions",
-            "data-collision-count": collision_count,
-            "data-collision-cross-unit": cross_unit_count,
-            "data-collision-per-unit-position": per_unit_position_count,
-            "data-collision-per-unit-hotkey": per_unit_hotkey_count,
-            "data-collision-state": state_attribute,
             ToolbarButtonSurface { ..surface }
             if collision_count > 0 {
                 CollisionsButtonBadge { ..badge_props }

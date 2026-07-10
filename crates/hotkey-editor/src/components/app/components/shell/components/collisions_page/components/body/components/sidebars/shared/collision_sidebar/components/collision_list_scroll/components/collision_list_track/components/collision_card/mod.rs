@@ -15,12 +15,11 @@ assert_component!(CollisionCard);
 /// a leading visual (unit portrait or island mini grid) and a meta line (name and id,
 /// or the coordinate) with the collision count. The unit/island shape is chosen by its
 /// [`CollisionCardContent`], so the three sidebars all render this one card. A thin
-/// identity wrapper that carries the deep-link data attributes and nests its own
+/// identity wrapper (its `collision-card` root class) that nests its own
 /// `CollisionCardSurface` button for the look and the fixed gold accent.
 #[component]
 pub fn CollisionCard(props: CollisionCardProps) -> Element {
     let is_selected = props.is_selected;
-    let collision_key = props.collision_key;
     let onclick = props.onclick;
     let count = props.count;
     let content = props.content;
@@ -33,7 +32,6 @@ pub fn CollisionCard(props: CollisionCardProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            "data-collision-key": collision_key,
             CollisionCardSurface { ..surface }
         }
     }

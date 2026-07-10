@@ -31,7 +31,7 @@ async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -70,9 +70,13 @@ function slotImg(
   col: number,
   row: number,
 ): import("@playwright/test").Locator {
-  return page.locator(
-    `[data-grid-id="${section}"] [data-grid-col="${col}"][data-grid-row="${row}"].filled-tile img`,
-  );
+  return page
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: section }),
+    })
+    .locator(".grid-editor-tile")
+    .nth(row * 4 + col)
+    .locator(".filled-tile img");
 }
 
 test.describe("Balance-patch ability dedup regression", () => {

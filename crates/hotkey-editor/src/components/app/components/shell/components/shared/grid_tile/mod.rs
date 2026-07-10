@@ -1,12 +1,10 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
 use components::empty_tile::{EmptyTile, EmptyTileProps};
 use components::filled_tile::{FilledTile, FilledTileProps};
 use dioxus::prelude::*;
-pub use logic::TileChrome;
 pub use props::GridTileProps;
 pub use state::GridTileState;
 

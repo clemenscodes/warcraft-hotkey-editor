@@ -25,7 +25,6 @@ impl From<&BurgerMenuItemProps> for IdleMenuItemProps {
         let label = BurgerMenuItemLabelProps::from(props);
         let disabled = props.disabled;
         let role = props.role;
-        let data_action = props.data_action;
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
@@ -36,7 +35,6 @@ impl From<&BurgerMenuItemProps> for IdleMenuItemProps {
             label,
             disabled,
             role,
-            data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,
@@ -52,7 +50,6 @@ impl From<&BurgerMenuItemProps> for ActiveMenuItemProps {
         let label = BurgerMenuItemLabelProps::from(props);
         let disabled = props.disabled;
         let role = props.role;
-        let data_action = props.data_action;
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
@@ -63,7 +60,6 @@ impl From<&BurgerMenuItemProps> for ActiveMenuItemProps {
             label,
             disabled,
             role,
-            data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,
@@ -79,7 +75,6 @@ impl From<&BurgerMenuItemProps> for PrimaryMenuItemProps {
         let label = BurgerMenuItemLabelProps::from(props);
         let disabled = props.disabled;
         let role = props.role;
-        let data_action = props.data_action;
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
@@ -90,7 +85,6 @@ impl From<&BurgerMenuItemProps> for PrimaryMenuItemProps {
             label,
             disabled,
             role,
-            data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,

@@ -1,4 +1,3 @@
-use super::components::body::components::clear_state::ClearStateProps;
 use super::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetailProps;
 use super::components::body::components::details::island_detail::IslandDetailProps;
 use super::components::body::components::details::unit_position_detail::UnitPositionDetailProps;
@@ -7,7 +6,6 @@ use super::components::body::components::sidebars::island_sidebar::IslandSidebar
 use super::components::body::components::sidebars::unit_cards_sidebar::UnitCardsSidebarProps;
 use super::components::body::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 use super::logic::{CollisionUnitView, HotkeyUnitView, IslandView, UnitPositionUnitView};
-use crate::services::navigation::app_view::CollisionKind;
 
 /// A collision view that carries a stable selection key and a conflict count.
 /// Formalises the two facts every collision list needs — its selection identity
@@ -73,16 +71,12 @@ impl From<PositionsContent> for ContentModel {
     fn from(content: PositionsContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: CollisionKind::Positions,
                 message: super::data::POSITIONS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
-            let state = ClearStateProps {
-                collision_kind: CollisionKind::Positions,
-            };
-            return Self::Clear(state);
+            return Self::Clear;
         }
         let sidebar_islands = content.list.views.clone();
         let sidebar = IslandSidebarProps {
@@ -91,8 +85,7 @@ impl From<PositionsContent> for ContentModel {
         let detail = IslandDetailProps {
             islands: content.list.views,
         };
-        let count = content.list.unit_count;
-        let pane = PositionsPane::new(count, sidebar, detail);
+        let pane = PositionsPane::new(sidebar, detail);
         let boxed = Box::new(pane);
         Self::Positions(boxed)
     }
@@ -109,16 +102,12 @@ impl From<HotkeysContent> for ContentModel {
     fn from(content: HotkeysContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: CollisionKind::Hotkeys,
                 message: super::data::HOTKEYS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
-            let state = ClearStateProps {
-                collision_kind: CollisionKind::Hotkeys,
-            };
-            return Self::Clear(state);
+            return Self::Clear;
         }
         let sidebar_units = content.list.views.clone();
         let sidebar = UnitCardsSidebarProps {
@@ -127,8 +116,7 @@ impl From<HotkeysContent> for ContentModel {
         let detail = HotkeyUnitDetailProps {
             units: content.list.views,
         };
-        let count = content.list.unit_count;
-        let pane = HotkeysPane::new(count, sidebar, detail);
+        let pane = HotkeysPane::new(sidebar, detail);
         let boxed = Box::new(pane);
         Self::Hotkeys(boxed)
     }
@@ -145,16 +133,12 @@ impl From<UnitPositionsContent> for ContentModel {
     fn from(content: UnitPositionsContent) -> Self {
         if !content.has_file {
             let state = EmptyStateProps {
-                collision_kind: CollisionKind::UnitPositions,
                 message: super::data::UNIT_POSITIONS_UPLOAD_PROMPT.to_owned(),
             };
             return Self::Empty(state);
         }
         if content.list.unit_count == 0 {
-            let state = ClearStateProps {
-                collision_kind: CollisionKind::UnitPositions,
-            };
-            return Self::Clear(state);
+            return Self::Clear;
         }
         let sidebar_units = content.list.views.clone();
         let sidebar = UnitCardsSidebarProps {
@@ -163,8 +147,7 @@ impl From<UnitPositionsContent> for ContentModel {
         let detail = UnitPositionDetailProps {
             units: content.list.views,
         };
-        let count = content.list.unit_count;
-        let pane = UnitPositionsPane::new(count, sidebar, detail);
+        let pane = UnitPositionsPane::new(sidebar, detail);
         let boxed = Box::new(pane);
         Self::UnitPositions(boxed)
     }

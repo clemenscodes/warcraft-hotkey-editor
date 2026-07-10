@@ -21,7 +21,7 @@ test.describe("Hotkey editing", () => {
   test("picking a key updates the cell display and writes hotkey=Q to localStorage", async ({ page }) => {
     await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
-    await page.locator('.key-picker-board [data-label="Q"]').click();
+    await page.locator('.key-picker-board').getByRole('button', { name: /^Q/ }).click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
@@ -49,14 +49,17 @@ test.describe("Hotkey editing", () => {
     await page.locator(".unit-card").filter({ hasText: "Archmage" }).first().click();
 
     const researchTile = page
-      .locator('[data-grid-id="Research menu"] .filled-tile')
+      .locator(".grid-editor", {
+        has: page.locator(".grid-heading", { hasText: "Research menu" }),
+      })
+      .locator(".filled-tile")
       .first();
     await researchTile.waitFor();
     await researchTile.dblclick();
 
     // The picker must open (it did not, for research items, before the fix).
     await page.locator(".key-picker-board").waitFor();
-    await page.locator('.key-picker-board [data-label="Y"]').click();
+    await page.locator('.key-picker-board').getByRole('button', { name: /^Y/ }).click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
 
     // It must write the RESEARCH hotkey field, proving the research picker opened
@@ -70,7 +73,7 @@ test.describe("Hotkey editing", () => {
     // above) so the assertion exercises the double-click path, not fixture luck.
     await page.locator(".filled-tile").first().dblclick();
     await page.locator(".key-picker-board").waitFor();
-    await page.locator('.key-picker-board [data-label="Q"]').click();
+    await page.locator('.key-picker-board').getByRole('button', { name: /^Q/ }).click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);

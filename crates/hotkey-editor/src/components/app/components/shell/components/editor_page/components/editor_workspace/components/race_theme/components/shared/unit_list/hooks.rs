@@ -115,10 +115,7 @@ pub(super) fn use_unit_list() -> UnitListModel {
     let show_abilityless_units = editor.show_abilityless_units();
     let expand_variants = editor.expand_variants();
     let active_category = editor.active_category();
-    let committed_query = search_query.read().clone();
     let current_search_field = *search_field.read();
-    let active_kind = *active_category.read();
-    let search_active = !committed_query.is_empty();
     let search_placeholder = match current_search_field {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
@@ -161,8 +158,6 @@ pub(super) fn use_unit_list() -> UnitListModel {
     let on_keydown = use_search_keydown(keydown_inputs);
     let inputs = UnitListInputs {
         state,
-        active_kind,
-        search_active,
         raw_query,
         search_placeholder,
         on_input,

@@ -37,14 +37,9 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
         }
         ResolvePageView::Plan(plan) => *plan,
     };
-    let move_count = plan.move_count;
-    let unresolved_count = plan.unresolved_count;
     rsx! {
         section {
             class: CLASS,
-            "data-resolve-state": "plan",
-            "data-move-count": "{move_count}",
-            "data-unresolved-count": "{unresolved_count}",
             PlanHeader { ..plan.header }
             Breadcrumbs { ..plan.breadcrumbs }
             PlanBody { ..plan.body }

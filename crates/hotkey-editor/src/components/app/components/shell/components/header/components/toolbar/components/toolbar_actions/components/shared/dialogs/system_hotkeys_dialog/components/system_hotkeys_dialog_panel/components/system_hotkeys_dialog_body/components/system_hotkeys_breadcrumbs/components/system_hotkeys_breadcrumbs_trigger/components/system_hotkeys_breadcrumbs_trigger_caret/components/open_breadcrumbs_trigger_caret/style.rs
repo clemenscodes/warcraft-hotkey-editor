@@ -1,6 +1,6 @@
 use tw_macro::tw;
 classes! {
-    base: tw!["data-[open=true]:rotate-180"],
+    base: tw!["rotate-180"],
     mobile: tw![
         "mobile:flex-none",
         "mobile:text-[0.9em]",

@@ -9,7 +9,6 @@ pub struct SystemHotkeysBreadcrumbsTriggerProps {
     #[props(into)]
     pub label: String,
     pub is_open: bool,
-    pub open: &'static str,
     pub on_toggle: EventHandler<MouseEvent>,
 }
 
@@ -22,7 +21,7 @@ impl From<&SystemHotkeysBreadcrumbsTriggerProps> for SystemHotkeysBreadcrumbsTri
 
 impl From<&SystemHotkeysBreadcrumbsTriggerProps> for SystemHotkeysBreadcrumbsTriggerCaretProps {
     fn from(props: &SystemHotkeysBreadcrumbsTriggerProps) -> Self {
-        let open = props.open;
-        Self { open }
+        let is_open = props.is_open;
+        Self { is_open }
     }
 }

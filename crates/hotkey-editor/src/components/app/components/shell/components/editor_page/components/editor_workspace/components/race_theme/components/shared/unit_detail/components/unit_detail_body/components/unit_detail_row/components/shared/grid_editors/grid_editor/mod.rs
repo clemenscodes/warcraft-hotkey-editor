@@ -57,7 +57,7 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorProps<B>) -> Element 
         file.rendered_command_grid(&behavior, &input)
     });
     rsx! {
-        div { class: CLASS, "data-grid-id": props.config.heading,
+        div { class: CLASS,
             EditorHeadedGrid { ..EditorHeadedGridProps::from_parts(&props, rendered_tiles.read().clone()) }
             DragFollowerOverlay { ..DragFollowerOverlayProps::from(&props) }
         }

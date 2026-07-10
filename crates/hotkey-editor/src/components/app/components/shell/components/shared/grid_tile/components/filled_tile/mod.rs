@@ -3,9 +3,10 @@ mod props;
 mod state;
 mod style;
 
-use super::super::TileChrome;
+use super::shared::drag_over_ring::{DragOverRing, DragOverRingProps};
 use components::ability_fill::{AbilityFill, AbilityFillProps};
 use components::command_fill::{CommandFill, CommandFillProps};
+use components::dragging_source_ghost::{DraggingSourceGhost, DraggingSourceGhostProps};
 use components::selection_ring::{SelectionRing, SelectionRingProps};
 use components::tile_icon::{TileIcon, TileIconProps};
 use components::tile_label::{TileLabel, TileLabelProps};
@@ -28,17 +29,18 @@ pub fn FilledTile(props: FilledTileProps) -> Element {
     let selection_ring = SelectionRingProps::from(&props);
     let icon = TileIconProps::from(&props);
     let label = TileLabelProps::from(&props);
-    let TileChrome { row, column } = props.chrome;
+    let dragging_source_ghost = DraggingSourceGhostProps::from(&props);
+    let drag_over_ring = DragOverRingProps::from(&props);
     rsx! {
         div {
             class: CLASS,
-            "data-grid-row": row,
-            "data-grid-col": column,
             AbilityFill { ..ability_fill }
             CommandFill { ..command_fill }
             SelectionRing { ..selection_ring }
             TileIcon { ..icon }
             TileLabel { ..label }
+            DraggingSourceGhost { ..dragging_source_ghost }
+            DragOverRing { ..drag_over_ring }
         }
     }
 }

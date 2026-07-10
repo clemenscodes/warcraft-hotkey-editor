@@ -1,13 +1,17 @@
 use tw_macro::tw;
 // The occupied tile's own look. The resting filled border (deep blue) and bevel live
 // on this root; the ability-vs-command BACKGROUND is a child fill (`AbilityFill` /
-// `CommandFill`), and SELECTION is the mounted `SelectionRing` child — the root turns
-// its own border gold and glows via `:has(.selection-ring)`, so the selected look
-// replaces the border instead of stacking a ring, and the root never remounts on a
-// state change. Border width and corner radius read `--tile-border-width` /
-// `--tile-corner-radius` (a parent may shrink them for a mini grid), defaulting to the
-// full editor tile's 2cqi / 5.2cqi. `isolate` scopes the fills' `-z-10` behind the
-// glyph.
+// `CommandFill`). Every other state is a mounted overlay child the root reacts to with
+// `:has(...)`, never a class swap, so the root never remounts (pointer capture stays put
+// through a drag):
+//   - SELECTION (`SelectionRing`) turns the border gold and glows.
+//   - the DRAGGING SOURCE (`DraggingSourceGhost`, an opaque cover) turns the border into
+//     the dashed deep-blue ghost, matching an empty drop target.
+//   - the drag cursor being over this tile (`DragOverRing`) turns the border gold — solid
+//     on a swap target, dashed when the hovered tile is the source itself.
+// Border width and corner radius read `--tile-border-width` / `--tile-corner-radius` (a
+// parent may shrink them for a mini grid), defaulting to the full editor tile's 2cqi /
+// 5.2cqi. `isolate` scopes the fills' `-z-10` behind the glyph.
 classes! {
     base: tw![
         "relative",
@@ -30,15 +34,14 @@ classes! {
         "[&:has(.selection-ring)]:border-[color:var(--race-accent,var(--color-warcraft-gold))]",
         "[&:has(.selection-ring)]:shadow-glow",
         "[&:has(.selection-ring)]:[--glow-color:var(--race-accent,var(--color-warcraft-gold))]",
-        "in-data-[drag-over=true]:border-warcraft-gold",
-        "in-data-[drag-over=true]:border-solid",
-        "data-[dragging-source=true]:bg-panel-dark",
-        "data-[dragging-source=true]:border-warcraft-blue",
-        "data-[dragging-source=true]:border-dashed",
-        "data-[dragging-source=true]:shadow-bevel",
-        "data-[dragging-source=true]:*:invisible",
-        "data-[dragging-source=true]:data-[drag-over=true]:border-warcraft-gold",
-        "data-[dragging-source=true]:data-[drag-over=true]:border-dashed",
-        "[body:has([data-dragging-source=true])_&]:transition-none",
+        "[&:has(.dragging-source-ghost)]:border-warcraft-blue-deep",
+        "[&:has(.dragging-source-ghost)]:border-dashed",
+        "[&:has(.dragging-source-ghost)]:bg-panel-dark",
+        "[&:has(.dragging-source-ghost)>*]:invisible",
+        "[&:has(.drag-over-ring)]:border-warcraft-gold",
+        "[&:has(.drag-over-ring)]:border-solid",
+        "[&:has(.dragging-source-ghost):has(.drag-over-ring)]:border-warcraft-gold",
+        "[&:has(.dragging-source-ghost):has(.drag-over-ring)]:border-dashed",
+        "[body:has(.dragging-source-ghost)_&]:transition-none",
     ],
 }

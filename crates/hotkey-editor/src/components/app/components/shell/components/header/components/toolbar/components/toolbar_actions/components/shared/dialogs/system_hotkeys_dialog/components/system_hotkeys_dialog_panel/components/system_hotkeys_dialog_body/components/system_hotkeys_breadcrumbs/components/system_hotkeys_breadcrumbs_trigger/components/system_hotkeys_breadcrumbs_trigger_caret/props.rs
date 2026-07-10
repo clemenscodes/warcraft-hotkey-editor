@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
-/// The caret indicator; `open` drives the flip when the dropdown is expanded.
+/// The caret indicator; `is_open` selects the flipped xor resting look.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerCaretProps {
-    pub open: &'static str,
+    pub is_open: bool,
 }

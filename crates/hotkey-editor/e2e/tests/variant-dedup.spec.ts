@@ -106,7 +106,7 @@ test.describe("Variant unit dedup (#27 upgrade-swaps + #28 tiers)", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('input[type="search"]').fill("osp1");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=osp1/);
     const ids = await visibleUnitIds(page);
     expect(ids).toContain("osp4");
     expect(ids).not.toContain("osp1");

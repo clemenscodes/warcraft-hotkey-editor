@@ -5,6 +5,6 @@ classes! {
         "leading-none",
         "shrink-0",
         "transition-[transform]", "duration-slow",
-        "group-data-[open=true]:rotate-180",
+        "rotate-180",
     ],
 }

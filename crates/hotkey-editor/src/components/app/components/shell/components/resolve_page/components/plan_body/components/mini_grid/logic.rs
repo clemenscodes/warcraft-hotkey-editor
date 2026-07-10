@@ -33,6 +33,8 @@ pub(super) fn grid(props: &MiniGridProps) -> [GridTileProps; COMMAND_GRID_TILE_C
                 icon,
                 label,
                 state,
+                is_dragging_source: false,
+                is_drag_over: false,
             };
             tile_list.push(tile);
         }

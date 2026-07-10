@@ -24,7 +24,6 @@ pub fn Brand() -> Element {
             class: CLASS,
             r#type: "button",
             "aria-label": "Warcraft III Hotkey Editor \u{2014} return to editor",
-            "data-action": "view-editor",
             onclick,
             BrandDecorationLeading {}
             BrandTitle { ..data::TITLE }

@@ -19,7 +19,7 @@ async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -60,11 +60,14 @@ async function pickUnit(
 }
 
 function commandCardSlotAlts(page: Page): Promise<string[]> {
-  // `data-grid-id` lives on the `GridEditor` wrapper, while `data-grid-col`,
-  // `data-grid-row`, and the `filled-tile` class live on each tile `<div>`
-  // inside it. Address tiles as descendants of the identified grid wrapper.
+  // Grids carry no positional attributes; a grid is located structurally by its
+  // `.grid-heading` text, and each tile is the row-major nth `.grid-editor-tile`
+  // inside it. Address the filled tiles as descendants of the identified grid.
   return page
-    .locator('[data-grid-id="Command card"] .filled-tile img')
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: "Command card" }),
+    })
+    .locator(".filled-tile img")
     .evaluateAll((nodes: Element[]) =>
       nodes
         .map((node) => node.getAttribute("alt"))
@@ -73,9 +76,12 @@ function commandCardSlotAlts(page: Page): Promise<string[]> {
 }
 
 function commandCardCell(page: Page, column: number, row: number): Locator {
-  return page.locator(
-    `[data-grid-id="Command card"] [data-grid-col="${column}"][data-grid-row="${row}"]`,
-  );
+  return page
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: "Command card" }),
+    })
+    .locator(".grid-editor-tile")
+    .nth(row * 4 + column);
 }
 
 // The balance overlays under `war3.w3mod:_balance/<variant>.w3mod:units/` are

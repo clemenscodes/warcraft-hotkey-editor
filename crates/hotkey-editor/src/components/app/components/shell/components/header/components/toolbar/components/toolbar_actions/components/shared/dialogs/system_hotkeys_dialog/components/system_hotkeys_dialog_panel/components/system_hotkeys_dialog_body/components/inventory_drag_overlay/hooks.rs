@@ -14,13 +14,8 @@ pub(super) struct DragFollowerView {
 impl From<&DragFollowerView> for SystemSlotKeyProps {
     fn from(view: &DragFollowerView) -> Self {
         let label = view.label.clone();
-        let compact = false;
         let conflict = false;
-        Self {
-            label,
-            compact,
-            conflict,
-        }
+        Self { label, conflict }
     }
 }
 

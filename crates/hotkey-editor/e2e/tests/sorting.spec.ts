@@ -11,12 +11,26 @@ function assertKindOrder(kinds: (string | null)[]) {
   }
 }
 
+// The category heading renders a chevron glyph followed by the category label
+// (Heroes/Buildings/Workers/Units). Derive the unit kind from that visible label
+// rather than a data attribute.
+const LABEL_TO_KIND: Record<string, string> = {
+  Heroes: "hero",
+  Buildings: "building",
+  Workers: "worker",
+  Units: "soldier",
+};
+
 async function headingKinds(page: any) {
   const headings = page.locator(".unit-category-heading");
   await headings.first().waitFor();
-  return headings.evaluateAll((els: Element[]) =>
-    els.map((el) => el.getAttribute("data-unit-kind")),
+  const texts: string[] = await headings.evaluateAll((els: Element[]) =>
+    els.map((el) => el.textContent ?? ""),
   );
+  return texts.map((text) => {
+    const match = Object.keys(LABEL_TO_KIND).find((label) => text.includes(label));
+    return match ? LABEL_TO_KIND[match] : null;
+  });
 }
 
 test.describe("Category sort order (#26)", () => {
@@ -59,7 +73,7 @@ test.describe("Category sort order (#26)", () => {
 
   test("search results category order is Heroes > Buildings > Workers > Units", async ({ page }) => {
     await page.locator('input[type="search"]').fill("elf");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=elf/);
     const kinds = await headingKinds(page);
     expect(kinds.filter(Boolean).length).toBeGreaterThanOrEqual(2);
     assertKindOrder(kinds);
@@ -78,13 +92,13 @@ test.describe("Passive-only units hidden from unit list (#29)", () => {
 
   test("Farm does not appear in search results either", async ({ page }) => {
     await page.locator('input[type="search"]').fill("Farm");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=Farm/);
     await expect(page.locator(".unit-card").filter({ hasText: /^Farm$/ })).toHaveCount(0);
   });
 
   test("Water Elemental (passive summon) is not visible in search", async ({ page }) => {
     await page.locator('input[type="search"]').fill("Water Elemental");
-    await page.locator('.unit-list[data-search-active="true"]').waitFor();
+    await expect(page).toHaveURL(/search_query=Water/);
     await expect(page.locator(".unit-card").filter({ hasText: "Water Elemental" })).toHaveCount(0);
   });
 

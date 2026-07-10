@@ -22,7 +22,7 @@ async function applyDefaultTemplate(page: Page): Promise<void> {
 
 async function openResolveSection(page: Page, slug: string): Promise<void> {
   await page.goto(`${APP}resolve?entry=${slug}`);
-  await page.locator('[data-resolve-state="plan"]').waitFor();
+  await page.locator('.resolve-page').waitFor();
 }
 
 const ACFR = /^ACfr$/;
@@ -32,11 +32,13 @@ test.describe("Cascade plan move classification", () => {
     await applyDefaultTemplate(page);
     await openResolveSection(page, "gap-pulls");
 
+    // The "Gap pulls" tab (?entry=gap-pulls) is the active one, identified by its
+    // visible label text rather than a DOM slug attribute.
     await expect(
-      page.locator('.breadcrumbs [data-breadcrumb="gap-pulls"]'),
+      page.locator(".breadcrumbs button", { hasText: "Gap pulls" }),
     ).toHaveAttribute("aria-current", "page");
 
-    const gapPulls = page.locator('.move-list[data-category="gap-pulls"]');
+    const gapPulls = page.locator(".move-list");
     await expect(gapPulls).toBeVisible();
     await expect(
       gapPulls.locator("code.object-id", { hasText: ACFR }),
@@ -50,7 +52,7 @@ test.describe("Cascade plan move classification", () => {
     // The default plan still has genuine cross-row spills, so the section must
     // exist — that is what makes the absence of ACfr meaningful rather than a
     // missing tab.
-    const spills = page.locator('.move-list[data-category="spills"]');
+    const spills = page.locator(".move-list");
     await expect(spills).toBeVisible();
     await expect(
       spills.locator("code.object-id", { hasText: ACFR }),

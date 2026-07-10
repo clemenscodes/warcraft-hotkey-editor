@@ -80,7 +80,6 @@ impl MenuRowBuilder {
         let action = content.action;
         let icon = content.icon;
         let role = content.role;
-        let data_action = content.data_action;
         let aria_haspopup = content.aria_haspopup;
         let aria_label = content.aria_label;
         let label = self.label(action, content.label);
@@ -95,7 +94,6 @@ impl MenuRowBuilder {
             state,
             disabled,
             role,
-            data_action,
             aria_haspopup,
             aria_expanded,
             aria_pressed,

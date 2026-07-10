@@ -12,7 +12,6 @@ pub struct PrimaryMenuItemProps {
     pub label: BurgerMenuItemLabelProps,
     pub disabled: bool,
     pub role: Option<&'static str>,
-    pub data_action: Option<&'static str>,
     pub aria_haspopup: Option<&'static str>,
     pub aria_expanded: Option<&'static str>,
     pub aria_pressed: Option<&'static str>,

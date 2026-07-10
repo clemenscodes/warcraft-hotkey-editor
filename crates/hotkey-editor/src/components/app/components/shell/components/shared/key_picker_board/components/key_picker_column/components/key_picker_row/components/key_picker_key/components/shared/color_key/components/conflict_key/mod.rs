@@ -15,7 +15,6 @@ assert_component!(ConflictKey);
 pub fn ConflictKey(props: ConflictKeyProps) -> Element {
     let ConflictKeyProps {
         label,
-        data_label,
         disabled,
         onclick,
         tooltip,
@@ -25,7 +24,6 @@ pub fn ConflictKey(props: ConflictKeyProps) -> Element {
             class: CLASS,
             r#type: "button",
             disabled,
-            "data-label": data_label,
             onclick,
             {label}
             Tooltip { ..tooltip }

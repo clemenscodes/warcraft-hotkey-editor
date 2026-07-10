@@ -18,7 +18,6 @@ impl From<&ToolbarButtonSurfaceProps> for InteractiveSurfaceProps {
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
-        let data_action = props.data_action;
         let disabled = props.disabled;
         let onclick = props.onclick;
         Self {
@@ -27,7 +26,6 @@ impl From<&ToolbarButtonSurfaceProps> for InteractiveSurfaceProps {
             aria_haspopup,
             aria_expanded,
             aria_pressed,
-            data_action,
             disabled,
             onclick,
         }
@@ -41,7 +39,6 @@ impl From<&ToolbarButtonSurfaceProps> for AttentionSurfaceProps {
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
-        let data_action = props.data_action;
         let disabled = props.disabled;
         let onclick = props.onclick;
         Self {
@@ -50,7 +47,6 @@ impl From<&ToolbarButtonSurfaceProps> for AttentionSurfaceProps {
             aria_haspopup,
             aria_expanded,
             aria_pressed,
-            data_action,
             disabled,
             onclick,
         }
@@ -64,7 +60,6 @@ impl From<&ToolbarButtonSurfaceProps> for ClearSurfaceProps {
         let aria_haspopup = props.aria_haspopup;
         let aria_expanded = props.aria_expanded;
         let aria_pressed = props.aria_pressed;
-        let data_action = props.data_action;
         let disabled = props.disabled;
         let onclick = props.onclick;
         Self {
@@ -73,7 +68,6 @@ impl From<&ToolbarButtonSurfaceProps> for ClearSurfaceProps {
             aria_haspopup,
             aria_expanded,
             aria_pressed,
-            data_action,
             disabled,
             onclick,
         }

@@ -16,8 +16,8 @@ function storedKeys(page: Page): Promise<string | null> {
 // Applies the cascade (a discrete keys-mutating action) and returns the new
 // stored keys text.
 async function applyCascade(page: Page): Promise<string> {
-  await page.locator('[data-action="view-resolve"]').first().click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator('.resolve-button').first().click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -33,8 +33,8 @@ test.describe("Undo / redo", () => {
   });
 
   test("toolbar undo reverts an action and redo re-applies it", async ({ page }) => {
-    const undoButton = page.locator('[data-action="undo"]').first();
-    const redoButton = page.locator('[data-action="redo"]').first();
+    const undoButton = page.locator('.undo-button button');
+    const redoButton = page.locator('.redo-button button');
     await expect(undoButton).toBeDisabled();
 
     const initial = await storedKeys(page);
@@ -53,7 +53,7 @@ test.describe("Undo / redo", () => {
   test("Ctrl+Z undoes and Ctrl+Shift+Z redoes", async ({ page }) => {
     const initial = await storedKeys(page);
     const afterAction = await applyCascade(page);
-    await page.locator('[data-action="view-editor"]').first().click();
+    await page.locator('.brand').first().click();
     await page.locator(".unit-card").first().waitFor();
     // Focus a non-editable element so the shortcut is not suppressed.
     await page.locator(".unit-card").first().click();
@@ -67,7 +67,7 @@ test.describe("Undo / redo", () => {
 
   test("Ctrl+Z inside the search field does not trigger app undo", async ({ page }) => {
     await applyCascade(page);
-    await page.locator('[data-action="view-editor"]').first().click();
+    await page.locator('.brand').first().click();
     await page.locator(".unit-card").first().waitFor();
 
     const before = await storedKeys(page);
@@ -86,7 +86,7 @@ test.describe("Undo / redo", () => {
     test.setTimeout(30_000);
     const initial = await storedKeys(page);
     const afterAction = await applyCascade(page);
-    await page.locator('[data-action="view-editor"]').first().click();
+    await page.locator('.brand').first().click();
     await page.locator(".unit-card").first().waitFor();
 
     // Wait out the persistence debounce, then confirm a compressed blob exists.
@@ -99,7 +99,7 @@ test.describe("Undo / redo", () => {
     await page.reload();
     await page.locator(".unit-card").first().waitFor();
 
-    const undoButton = page.locator('[data-action="undo"]').first();
+    const undoButton = page.locator('.undo-button button');
     await expect(undoButton).toBeEnabled();
     await undoButton.click();
     await expect.poll(() => storedKeys(page)).toBe(initial);
@@ -112,7 +112,7 @@ test.describe("Undo / redo", () => {
     // write an empty-stack blob after the ~1s debounce — and a later reload would
     // restore it as a history with nothing to undo (undo button wrongly disabled
     // was the symptom; the empty blob is the cause). No action ⇒ no undo blob.
-    await expect(page.locator('[data-action="undo"]').first()).toBeDisabled();
+    await expect(page.locator('.undo-button button')).toBeDisabled();
 
     // Wait well past the 1s persist debounce without interacting.
     await page.waitForTimeout(2000);

@@ -10,7 +10,7 @@ const APP = "/warcraft-hotkey-editor/";
 // shows.
 
 async function openFirstSlotPicker(page: Page) {
-  await page.locator('[data-inventory-slot]').first().click();
+  await page.locator('.inventory-filled-slot').first().click();
   await page.locator(".key-picker-board").waitFor();
   await expect(page.locator(".key-picker-board")).toBeFocused();
 }
@@ -20,11 +20,11 @@ test.describe("System hotkey picker keyboard input", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[aria-label="General hotkeys"]').click();
-    await page.locator('[data-inventory-slot]').first().waitFor();
+    await page.locator('.inventory-filled-slot').first().waitFor();
   });
 
   test("pressing a board key assigns it to the slot", async ({ page }) => {
-    const slotKey = page.locator('[data-inventory-slot]').first().locator(".system-slot-key");
+    const slotKey = page.locator('.inventory-filled-slot').first().locator(".plain-slot-key");
     await openFirstSlotPicker(page);
     await page.keyboard.press("g");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
@@ -32,7 +32,7 @@ test.describe("System hotkey picker keyboard input", () => {
   });
 
   test("keyboard selection still works after reopening the picker", async ({ page }) => {
-    const slotKey = page.locator('[data-inventory-slot]').first().locator(".system-slot-key");
+    const slotKey = page.locator('.inventory-filled-slot').first().locator(".plain-slot-key");
     await openFirstSlotPicker(page);
     await page.keyboard.press("g");
     await expect(slotKey).toHaveText("G");
@@ -51,7 +51,7 @@ test.describe("System hotkey picker keyboard input", () => {
     // was not accepted as a hotkey.
     await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(
-      page.locator('[data-inventory-slot]').first().locator(".system-slot-key"),
+      page.locator('.inventory-filled-slot').first().locator(".plain-slot-key"),
     ).toHaveText("…");
   });
 });

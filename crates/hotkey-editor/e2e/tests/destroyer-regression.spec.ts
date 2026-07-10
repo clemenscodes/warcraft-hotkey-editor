@@ -11,7 +11,7 @@ async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
   await page.locator('[role="alertdialog"]').first().waitFor();
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page
     .locator('[role="alertdialog"]')
     .filter({ hasText: "Cascade applied" })
@@ -46,9 +46,12 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
     await page.locator(".filled-tile").first().waitFor();
 
     const cell = (col: number, row: number) =>
-      page.locator(
-        `[data-grid-id="Command card"] [data-grid-col="${col}"][data-grid-row="${row}"]`,
-      );
+      page
+        .locator(".grid-editor", {
+          has: page.locator(".grid-heading", { hasText: "Command card" }),
+        })
+        .locator(".grid-editor-tile")
+        .nth(row * 4 + col);
 
     await expect(cell(0, 2).locator("img")).toHaveAttribute("alt", "Devour Magic");
     await expect(cell(1, 2).locator("img")).toHaveAttribute("alt", "Orb of Annihilation");

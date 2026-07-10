@@ -9,7 +9,8 @@ use hooks::use_inventory_grid;
 use std::cell::{Cell, RefCell};
 use style::CLASS;
 use tw_macro::assert_component;
-use warcraft_keybinds::{SystemBindingMap, WarcraftObjectId};
+use warcraft_api::SystemHotkeysCategory;
+use warcraft_keybinds::WarcraftObjectId;
 use wasm_bindgen::closure::Closure;
 
 pub(super) const DRAG_MOVEMENT_THRESHOLD_PIXELS: f64 = 4.0;
@@ -62,20 +63,24 @@ impl DragMovePoint {
             }
             return;
         };
-        let target_id_attribute = cell_under.get_attribute("data-inventory-slot");
-        let Some(target_id_string) = target_id_attribute else {
+        // The target slot's section is its row-major position among the grid's slots:
+        // counting the cell's preceding siblings gives its slot index, which maps to the
+        // inventory section rendered there (the same order the grid builds them). No DOM
+        // attribute is read.
+        let mut slot_index_under: usize = 0;
+        let mut previous_sibling_option = cell_under.previous_element_sibling();
+        while let Some(previous_sibling) = previous_sibling_option {
+            slot_index_under += 1;
+            previous_sibling_option = previous_sibling.previous_element_sibling();
+        }
+        let inventory_entries = SystemHotkeysCategory::Inventory.entries();
+        let Some(target_entry) = inventory_entries.get(slot_index_under) else {
             if drop_target.read().is_some() {
                 drop_target.set(None);
             }
             return;
         };
-        let resolved_target = SystemBindingMap::resolve_section(&target_id_string);
-        let Some(target_id) = resolved_target else {
-            if drop_target.read().is_some() {
-                drop_target.set(None);
-            }
-            return;
-        };
+        let target_id = target_entry.section_id();
         if target_id == section_id {
             if drop_target.read().is_some() {
                 drop_target.set(None);
@@ -104,6 +109,11 @@ thread_local! {
 
     /// The rAF callback closure, kept alive while a frame is pending.
     pub(super) static DRAG_RAF_CLOSURE: RefCell<Option<DragRafClosure>> = const {
+        RefCell::new(None)
+    };
+
+    /// A begun-but-not-yet-promoted drag, awaiting the first past-threshold move.
+    pub(super) static PENDING_INVENTORY_DRAG: RefCell<Option<PendingInventoryDrag>> = const {
         RefCell::new(None)
     };
 }
@@ -163,6 +173,24 @@ impl InventoryDragFollower {
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct InventoryDragSource {
     pub(crate) section_id: WarcraftObjectId,
+}
+
+/// A drag that has begun (pointer down on a slot) but not yet crossed the movement
+/// threshold, so it is still ambiguous with a click. Held here until the first
+/// past-threshold move promotes it into a real drag — capturing the pointer and
+/// mounting the follower. Deferring the state change is what keeps a plain click from
+/// unmounting the slot content under the cursor: mutating the drag signals on
+/// pointerdown detaches the mousedown target, which makes the browser drop the click and
+/// swallow the click-to-edit gesture.
+pub(super) struct PendingInventoryDrag {
+    pub(super) section_id: WarcraftObjectId,
+    pub(super) label: String,
+    pub(super) click_offset_horizontal: f64,
+    pub(super) click_offset_vertical: f64,
+    pub(super) width: f64,
+    pub(super) height: f64,
+    pub(super) cell_element: web_sys::Element,
+    pub(super) pointer_id: i32,
 }
 assert_component!(InventoryGrid);
 

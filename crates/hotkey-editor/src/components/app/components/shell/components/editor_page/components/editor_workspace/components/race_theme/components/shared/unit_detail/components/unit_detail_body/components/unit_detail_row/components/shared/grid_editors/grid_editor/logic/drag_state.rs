@@ -31,6 +31,9 @@ pub(crate) struct PendingDragData {
     pub(crate) tile_width: f64,
     pub(crate) tile_height: f64,
     pub(crate) tile_element: web_sys::Element,
+    /// The `.editor-grid` element the drag started in, so the hit-test can accept a drop
+    /// only within the same grid by comparing DOM elements — no `data-grid-id` read.
+    pub(crate) grid_element: web_sys::Element,
     pub(crate) pointer_id: i32,
     pub(crate) last_cursor_horizontal_position: f64,
     pub(crate) last_cursor_vertical_position: f64,
@@ -63,6 +66,14 @@ thread_local! {
 
     /// Drag setup data captured at `pointerdown`, not yet committed to signals.
     pub(crate) static PENDING_DRAG: RefCell<Option<PendingDragData>> = const {
+        RefCell::new(None)
+    };
+
+    /// The `.editor-grid` element the active drag started in, captured when the drag
+    /// activates. `flush_drag_move` compares the grid element under the cursor to this by
+    /// JS reference so a drop is accepted only within the same grid — the structural
+    /// replacement for the old `data-grid-id` attribute read.
+    pub(crate) static DRAG_SOURCE_GRID_ELEMENT: RefCell<Option<web_sys::Element>> = const {
         RefCell::new(None)
     };
 
@@ -169,6 +180,7 @@ impl DragThreadState {
         DID_DRAG_MOVE.with(|cell| cell.set(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
         PENDING_DRAG.with(|cell| *cell.borrow_mut() = None);
+        DRAG_SOURCE_GRID_ELEMENT.with(|cell| *cell.borrow_mut() = None);
         SUPPRESS_NEXT_CLICK.with(|cell| cell.set(false));
     }
 }

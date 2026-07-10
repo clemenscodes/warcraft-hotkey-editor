@@ -12,7 +12,6 @@ pub struct ClearSurfaceProps {
     pub aria_haspopup: Option<&'static str>,
     pub aria_expanded: Option<bool>,
     pub aria_pressed: Option<bool>,
-    pub data_action: Option<&'static str>,
     pub disabled: bool,
     pub onclick: EventHandler<MouseEvent>,
 }

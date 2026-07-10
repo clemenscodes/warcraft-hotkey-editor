@@ -1,3 +1,4 @@
-pub mod hero_level_trigger_chevron;
+pub mod closed_hero_level_trigger;
 pub mod hero_level_trigger_label;
 pub mod hero_level_trigger_number;
+pub mod open_hero_level_trigger;

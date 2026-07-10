@@ -65,9 +65,12 @@ const EMPTY_CELLS: GridCoordinate[] = [
 ];
 
 function cell(page: Page, coordinate: GridCoordinate): Locator {
-  return page.locator(
-    `[data-grid-id="${SECTION}"] [data-grid-col="${coordinate.col}"][data-grid-row="${coordinate.row}"]`,
-  );
+  return page
+    .locator(".grid-editor", {
+      has: page.locator(".grid-heading", { hasText: SECTION }),
+    })
+    .locator(".grid-editor-tile")
+    .nth(coordinate.row * 4 + coordinate.col);
 }
 
 function coordinateKey(coordinate: GridCoordinate): string {
@@ -77,8 +80,7 @@ function coordinateKey(coordinate: GridCoordinate): string {
 // The visible label of whatever occupies a cell (icon alt text), or null if empty.
 async function labelAt(page: Page, coordinate: GridCoordinate): Promise<string | null> {
   const target = cell(page, coordinate);
-  const className = (await target.getAttribute("class")) ?? "";
-  if (!className.includes("filled-tile")) return null;
+  if ((await target.locator(".filled-tile").count()) === 0) return null;
   const icon = target.locator("img");
   if ((await icon.count()) > 0) return (await icon.getAttribute("alt"))?.trim() ?? null;
   const label = target.locator(".tile-label");
@@ -287,7 +289,7 @@ test("rearranged layout resolves with no stuck build/root commands on the resolv
   await performSwaps(page);
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-resolve-state="plan"]').waitFor();
+  await page.locator('.resolve-page').waitFor();
 
   const cards = await stuckCards(page);
   expect(
@@ -312,15 +314,24 @@ test("applying the cascade clears every position collision, including toggle off
   await performSwaps(page);
 
   await page.locator('[aria-label="Resolve conflicts"]').click();
-  await page.locator('[data-resolve-state="plan"]').waitFor();
-  await page.locator('[data-action="apply-cascade"]').click();
+  await page.locator('.resolve-page').waitFor();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
   await page.locator('[role="alertdialog"]').filter({ hasText: "Cascade applied" }).waitFor();
 
   await page.goto(`${APP}collisions?kind=positions`);
-  await page.locator('[data-collision-kind="positions"]').waitFor();
+  // The breadcrumb bar is always present on the collisions page; the two-pane
+  // `.positions-content` collapses to the all-clear state once the counts hit
+  // zero (exactly what this test asserts), so wait on the always-present bar.
+  await page.locator(".breadcrumbs").waitFor();
 
-  const crossCount = page.locator('[data-breadcrumb="positions"] .breadcrumb-count');
-  const intraCount = page.locator('[data-breadcrumb="unit-positions"] .breadcrumb-count');
+  // The cross- and intra-unit position tabs are picked by their visible label
+  // text; their count child reports the live collision total.
+  const crossCount = page
+    .locator(".breadcrumbs button", { hasText: "Cross Collisions" })
+    .locator(".breadcrumb-count");
+  const intraCount = page
+    .locator(".breadcrumbs button", { hasText: "Intra Collisions" })
+    .locator(".breadcrumb-count");
   await expect(crossCount).toHaveText("0");
   await expect(intraCount).toHaveText("0");
 });

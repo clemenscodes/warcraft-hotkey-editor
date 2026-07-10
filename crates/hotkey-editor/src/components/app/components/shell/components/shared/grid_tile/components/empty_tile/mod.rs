@@ -3,7 +3,7 @@ mod props;
 mod state;
 mod style;
 
-use super::super::TileChrome;
+use super::shared::drag_over_ring::{DragOverRing, DragOverRingProps};
 use components::blocked_drop_target_overlay::{
     BlockedDropTargetOverlay, BlockedDropTargetOverlayProps,
 };
@@ -16,25 +16,24 @@ use style::CLASS;
 use tw_macro::assert_component;
 assert_component!(EmptyTile);
 
-/// An empty command slot. Purely presentational: it draws its resting look, its race
-/// accent, and its coordinate attributes, and — during a drag or a mini-grid highlight
-/// — mounts the matching overlay child whose presence turns the tile's own border into
-/// the drop-target / blocked / highlight look. It knows nothing of hotkeys, focus, or
-/// dragging; `GridEditorTile` layers all interaction on top of this base tile.
+/// An empty command slot. Purely presentational: it draws its resting look and its race
+/// accent, and — during a drag or a mini-grid highlight — mounts the matching overlay
+/// child (drop-target / blocked / highlight, plus the `DragOverRing` under the cursor)
+/// whose presence turns the tile's own border into that look. It knows nothing of
+/// hotkeys, focus, or dragging; `GridEditorTile` layers all interaction on top.
 #[component]
 pub fn EmptyTile(props: EmptyTileProps) -> Element {
     let drop_target = DropTargetOverlayProps::from(&props);
     let blocked_drop_target = BlockedDropTargetOverlayProps::from(&props);
     let highlight = HighlightOverlayProps::from(&props);
-    let TileChrome { row, column } = props.chrome;
+    let drag_over_ring = DragOverRingProps::from(&props);
     rsx! {
         div {
             class: CLASS,
-            "data-grid-row": row,
-            "data-grid-col": column,
             DropTargetOverlay { ..drop_target }
             BlockedDropTargetOverlay { ..blocked_drop_target }
             HighlightOverlay { ..highlight }
+            DragOverRing { ..drag_over_ring }
         }
     }
 }

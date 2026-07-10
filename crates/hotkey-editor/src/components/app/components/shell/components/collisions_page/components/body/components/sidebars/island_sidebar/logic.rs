@@ -14,18 +14,16 @@ pub(super) fn cards(
         .islands
         .iter()
         .map(|island| {
-            let collision_key = island.key().to_owned();
             let is_selected = selected_key.as_deref() == Some(island.key());
             let coordinate = island.coordinate();
             let collision_count = island.collision_count();
-            let key_for_click = collision_key.clone();
+            let key_for_click = island.key().to_owned();
             let onclick = EventHandler::new(move |_event: MouseEvent| {
                 selected_island.set(Some(key_for_click.clone()))
             });
             let content = CollisionCardContent::Island { coordinate };
             CollisionCardProps {
                 is_selected,
-                collision_key,
                 onclick,
                 count: collision_count,
                 content,
