@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::preview_textarea::{PreviewTextarea, PreviewTextareaProps};
+use components::preview_textarea::PreviewTextarea;
 use dioxus::prelude::*;
-pub use props::PreviewDialogBodyProps;
+use props::PreviewDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,11 @@ use tw_macro::assert_component;
 /// edge, holding the read-only serialized-keys textarea.
 #[component]
 pub fn PreviewDialogBody(props: PreviewDialogBodyProps) -> Element {
-    let textarea = PreviewTextareaProps::from(&props);
+    let text = props.text;
     rsx! {
         div {
             class: CLASS,
-            PreviewTextarea { ..textarea }
+            PreviewTextarea { text }
         }
     }
 }

@@ -1,17 +1,17 @@
-use super::components::upload_button_input::UploadButtonInputProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialogProps;
 use crate::components::app::components::shell::components::shared::icons::ICON_UPLOAD;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButtonProps;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_upload_status};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 
-/// The upload button's shaped view: the info dialog signal and the two handlers.
+/// The upload button's shaped view: the info dialog signal, the two handlers, and the
+/// toolbar button's icon and label.
 pub(super) struct UploadButtonModel {
     pub(super) info_open: Signal<bool>,
     pub(super) on_file_change: EventHandler<FormEvent>,
     pub(super) on_open_info: EventHandler<MouseEvent>,
+    pub(super) icon: &'static str,
+    pub(super) aria_label: &'static str,
 }
 
 /// Reads the document service and the upload status from context itself, reads the
@@ -61,31 +61,7 @@ pub(super) fn use_upload_button() -> UploadButtonModel {
         info_open,
         on_file_change,
         on_open_info,
-    }
-}
-
-impl From<&UploadButtonModel> for UploadButtonInputProps {
-    fn from(model: &UploadButtonModel) -> Self {
-        let on_change = model.on_file_change;
-        Self { on_change }
-    }
-}
-
-impl From<&UploadButtonModel> for ToolbarButtonProps {
-    fn from(model: &UploadButtonModel) -> Self {
-        let onclick = model.on_open_info;
-        Self {
-            icon: ICON_UPLOAD,
-            aria_label: "Upload CustomKeys.txt",
-            onclick,
-            ..Self::default()
-        }
-    }
-}
-
-impl From<&UploadButtonModel> for UploadInfoDialogProps {
-    fn from(model: &UploadButtonModel) -> Self {
-        let open = model.info_open;
-        Self { open }
+        icon: ICON_UPLOAD,
+        aria_label: "Upload CustomKeys.txt",
     }
 }

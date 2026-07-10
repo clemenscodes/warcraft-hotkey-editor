@@ -1,13 +1,12 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
-use components::attention_surface::{AttentionSurface, AttentionSurfaceProps};
-use components::clear_surface::{ClearSurface, ClearSurfaceProps};
-use components::interactive_surface::{InteractiveSurface, InteractiveSurfaceProps};
+use components::attention_surface::AttentionSurface;
+use components::clear_surface::ClearSurface;
+use components::interactive_surface::InteractiveSurface;
 use dioxus::prelude::*;
-pub use props::ToolbarButtonSurfaceProps;
+use props::ToolbarButtonSurfaceProps;
 pub use state::SurfaceState;
 use tw_macro::assert_component;
 
@@ -22,25 +21,47 @@ use tw_macro::assert_component;
 /// button uses `Attention` / `Clear`).
 #[component]
 pub fn ToolbarButtonSurface(props: ToolbarButtonSurfaceProps) -> Element {
+    let icon = props.icon;
+    let aria_label = props.aria_label;
+    let aria_haspopup = props.aria_haspopup;
+    let aria_expanded = props.aria_expanded;
+    let aria_pressed = props.aria_pressed;
+    let disabled = props.disabled;
+    let onclick = props.onclick;
     match props.state {
-        SurfaceState::Interactive => {
-            let surface = InteractiveSurfaceProps::from(&props);
-            rsx! {
-                InteractiveSurface { ..surface }
+        SurfaceState::Interactive => rsx! {
+            InteractiveSurface {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                disabled,
+                onclick,
             }
-        }
-        SurfaceState::Attention => {
-            let surface = AttentionSurfaceProps::from(&props);
-            rsx! {
-                AttentionSurface { ..surface }
+        },
+        SurfaceState::Attention => rsx! {
+            AttentionSurface {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                disabled,
+                onclick,
             }
-        }
-        SurfaceState::Clear => {
-            let surface = ClearSurfaceProps::from(&props);
-            rsx! {
-                ClearSurface { ..surface }
+        },
+        SurfaceState::Clear => rsx! {
+            ClearSurface {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                disabled,
+                onclick,
             }
-        }
+        },
     }
 }
 

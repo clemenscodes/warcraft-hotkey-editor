@@ -16,7 +16,7 @@ pub fn LayoutIntro() -> Element {
         div {
             class: CLASS,
             for entry in lines {
-                LayoutIntroLine { ..entry }
+                LayoutIntroLine { line: entry.line }
             }
         }
     }

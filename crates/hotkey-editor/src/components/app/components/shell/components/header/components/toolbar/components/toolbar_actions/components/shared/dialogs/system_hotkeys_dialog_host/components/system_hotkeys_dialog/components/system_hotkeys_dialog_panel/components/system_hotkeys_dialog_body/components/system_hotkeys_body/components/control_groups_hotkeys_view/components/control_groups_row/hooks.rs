@@ -1,14 +1,22 @@
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::slot_button::SlotButtonProps;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
+use warcraft_keybinds::WarcraftObjectId;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
+
+/// A finished control-group slot descriptor: its caption and the section id whose
+/// binding the slot resolves. Plain domain values the row hands to each `SlotButton`.
+#[derive(Clone, PartialEq)]
+pub(super) struct SlotButtonEntry {
+    pub(super) slot_label: String,
+    pub(super) section_id: WarcraftObjectId,
+}
 
 /// The row's shaped setup: the gold-frame variable the container reads and the ten
 /// finished control-group slots.
 pub(super) struct ControlGroupsRowModel {
     pub(super) frame: String,
-    pub(super) slots: Vec<SlotButtonProps>,
+    pub(super) slots: Vec<SlotButtonEntry>,
 }
 
 /// Builds the gold-frame variable and the ten slot buttons. Each slot resolves its
@@ -25,7 +33,7 @@ pub(super) fn use_control_groups_row() -> ControlGroupsRowModel {
             let slot_label = format!("{}", slot_index + 1);
             let section_key = entry.section_id();
             let section_id = section_key;
-            SlotButtonProps {
+            SlotButtonEntry {
                 slot_label,
                 section_id,
             }

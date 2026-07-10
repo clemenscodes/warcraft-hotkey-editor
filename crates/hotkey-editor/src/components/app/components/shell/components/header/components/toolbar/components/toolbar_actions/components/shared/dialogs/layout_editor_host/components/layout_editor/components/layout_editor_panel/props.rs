@@ -1,24 +1,15 @@
-use super::components::layout_editor_body::LayoutEditorBodyProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
+use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileView;
 use dioxus::prelude::*;
 
-/// The layout editor's bordered box: the header row above the scrolling body, wrapped
-/// in the library `DialogContent` (which carries no project class — this panel's own
-/// classed `div` is the box).
+/// The layout editor's bordered box data: the header title and close handler above
+/// the scrolling body's grid cells, move-hotkey toggle, and apply action.
 #[derive(Props, Clone, PartialEq)]
 pub struct LayoutEditorPanelProps {
-    pub header: DialogHeaderProps,
-    pub body: LayoutEditorBodyProps,
-}
-
-impl From<&LayoutEditorPanelProps> for DialogHeaderProps {
-    fn from(props: &LayoutEditorPanelProps) -> Self {
-        props.header.clone()
-    }
-}
-
-impl From<&LayoutEditorPanelProps> for LayoutEditorBodyProps {
-    fn from(props: &LayoutEditorPanelProps) -> Self {
-        props.body.clone()
-    }
+    #[props(into)]
+    pub title: String,
+    pub on_close: EventHandler<()>,
+    pub cells: Vec<LayoutTileView>,
+    pub toggle_checked: bool,
+    pub on_toggle: EventHandler<FormEvent>,
+    pub on_apply: EventHandler<MouseEvent>,
 }

@@ -2,6 +2,7 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod state;
 mod style;
 
 use components::key_picker_panel::KeyPickerPanel;
@@ -10,7 +11,8 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_key_picker;
 use logic::KeyPickerShell;
-pub use props::{KeyPickerCell, KeyPickerCellState, KeyPickerProps};
+use props::KeyPickerProps;
+pub use state::{KeyPickerCell, KeyPickerCellState};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +28,11 @@ pub fn KeyPicker(props: KeyPickerProps) -> Element {
     let KeyPickerShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        columns,
+        on_pick,
+        on_board_close,
     } = KeyPickerShell::from(&model);
     rsx! {
         DialogRoot {
@@ -34,7 +40,13 @@ pub fn KeyPicker(props: KeyPickerProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                KeyPickerPanel { ..panel }
+                KeyPickerPanel {
+                    title,
+                    on_close,
+                    columns,
+                    on_pick,
+                    on_board_close,
+                }
             }
         }
     }

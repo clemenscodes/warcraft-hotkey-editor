@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
-use hooks::use_undo_button;
+use hooks::{use_undo_button, UndoButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,21 @@ use tw_macro::assert_component;
 /// laptop, where the burger drawer offers undo instead.
 #[component]
 pub fn UndoButton() -> Element {
-    let button = use_undo_button();
+    let UndoButtonModel {
+        icon,
+        aria_label,
+        disabled,
+        onclick,
+    } = use_undo_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                disabled,
+                onclick,
+            }
         }
     }
 }

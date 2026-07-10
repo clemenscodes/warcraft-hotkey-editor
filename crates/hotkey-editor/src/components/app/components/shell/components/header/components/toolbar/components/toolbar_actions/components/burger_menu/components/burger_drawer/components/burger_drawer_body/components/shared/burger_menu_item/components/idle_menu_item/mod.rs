@@ -4,12 +4,12 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_icon::BurgerMenuItemIcon;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_label::BurgerMenuItemLabel;
 use dioxus::prelude::*;
-pub use props::IdleMenuItemProps;
+use props::IdleMenuItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The idle (plain) look of a drawer row: the resting gold panel button that composes
-/// the icon and label. Presentational — the dispatcher builds its props and renders it
+/// the icon and label. Presentational — the dispatcher names its fields and renders it
 /// when the row's visual weight is idle.
 #[component]
 pub fn IdleMenuItem(props: IdleMenuItemProps) -> Element {
@@ -33,8 +33,8 @@ pub fn IdleMenuItem(props: IdleMenuItemProps) -> Element {
             aria_label,
             disabled,
             onclick,
-            BurgerMenuItemIcon { ..icon }
-            BurgerMenuItemLabel { ..label }
+            BurgerMenuItemIcon { svg: icon }
+            BurgerMenuItemLabel { text: label }
         }
     }
 }

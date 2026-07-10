@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::components::shared::toolbar_button_icon::ToolbarButtonIcon;
 use dioxus::prelude::*;
-pub use props::ClearSurfaceProps;
+use props::ClearSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,7 +12,7 @@ use tw_macro::assert_component;
 /// builds its props and renders it when the surface state is `Clear`.
 #[component]
 pub fn ClearSurface(props: ClearSurfaceProps) -> Element {
-    let glyph = props.glyph;
+    let icon = props.icon;
     rsx! {
         button {
             class: CLASS,
@@ -23,7 +23,7 @@ pub fn ClearSurface(props: ClearSurfaceProps) -> Element {
             aria_pressed: props.aria_pressed,
             disabled: props.disabled,
             onclick: props.onclick,
-            ToolbarButtonIcon { ..glyph }
+            ToolbarButtonIcon { icon }
         }
     }
 }

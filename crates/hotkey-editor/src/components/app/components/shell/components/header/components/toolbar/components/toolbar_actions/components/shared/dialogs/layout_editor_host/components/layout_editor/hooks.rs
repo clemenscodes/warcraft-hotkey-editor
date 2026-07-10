@@ -1,4 +1,4 @@
-use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileProps;
+use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileView;
 use super::logic::{GridCellContext, LayoutGridCells, LayoutPickerBoard, LayoutPickerContext};
 use super::props::LayoutEditorProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::KeyPickerCell;
@@ -9,20 +9,25 @@ use dioxus::prelude::*;
 
 use warcraft_keybinds::HotkeyToken;
 
-/// Everything the layout editor's markup needs, already shaped: the grid cells,
-/// the key-picker state, the toggle state, and every handler. The body only
-/// places these; all the work happens here.
+/// Everything the layout editor's markup needs, already shaped: the dialog open
+/// state and guard, the panel header, the grid cells, the key-picker state, the
+/// toggle state, and every handler. The body only places these; all the work
+/// happens here.
 pub(super) struct LayoutEditorModel {
     pub(super) open: Signal<bool>,
-    pub(super) cells: Vec<LayoutTileProps>,
-    pub(super) picker_open: bool,
-    pub(super) picker_rows: Vec<Vec<KeyPickerCell>>,
-    pub(super) on_pick: EventHandler<HotkeyToken>,
-    pub(super) on_picker_close: EventHandler<()>,
-    pub(super) on_apply: EventHandler<MouseEvent>,
-    pub(super) on_dialog_open_change: Callback<bool>,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) cells: Vec<LayoutTileView>,
     pub(super) toggle_checked: bool,
     pub(super) on_toggle: EventHandler<FormEvent>,
+    pub(super) on_apply: EventHandler<MouseEvent>,
+    pub(super) picker_open: bool,
+    pub(super) picker_title: String,
+    pub(super) picker_rows: Vec<Vec<KeyPickerCell>>,
+    pub(super) picker_allow_conflict_pick: bool,
+    pub(super) on_pick: EventHandler<HotkeyToken>,
+    pub(super) on_picker_close: EventHandler<()>,
 }
 
 /// The apply / pick / picker-close / move-toggle handlers plus the toggle's current
@@ -148,16 +153,26 @@ pub(super) fn use_layout_editor(props: &LayoutEditorProps) -> LayoutEditorModel 
 
     let actions = use_layout_actions(props);
 
+    let mut open_signal = props.open;
+    let title = String::from("Global Hotkey Layout");
+    let on_close = EventHandler::new(move |_event: ()| open_signal.set(false));
+    let picker_title = String::from("Pick a grid key");
+    let picker_allow_conflict_pick = true;
+
     LayoutEditorModel {
         open,
+        on_open_change: actions.on_dialog_open_change,
+        title,
+        on_close,
         cells,
-        picker_open,
-        picker_rows,
-        on_pick: actions.on_pick,
-        on_picker_close: actions.on_picker_close,
-        on_apply: actions.on_apply,
-        on_dialog_open_change: actions.on_dialog_open_change,
         toggle_checked: actions.toggle_checked,
         on_toggle: actions.on_toggle,
+        on_apply: actions.on_apply,
+        picker_open,
+        picker_title,
+        picker_rows,
+        picker_allow_conflict_pick,
+        on_pick: actions.on_pick,
+        on_picker_close: actions.on_picker_close,
     }
 }

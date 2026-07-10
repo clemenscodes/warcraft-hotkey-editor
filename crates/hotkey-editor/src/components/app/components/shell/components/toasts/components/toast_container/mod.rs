@@ -2,7 +2,7 @@ pub mod components;
 mod props;
 mod style;
 
-use components::toast_list::{ToastList, ToastListProps};
+use components::toast_list::ToastList;
 use dioxus::prelude::*;
 pub use props::ToastContainerProps;
 use style::CLASS;
@@ -12,14 +12,15 @@ use tw_macro::assert_component;
 /// viewport. Click-through itself; each toast re-enables pointer events.
 #[component]
 pub fn ToastContainer(props: ToastContainerProps) -> Element {
-    let list_props = ToastListProps::from(&props);
+    let toasts = props.toasts;
+    let on_remove = props.on_remove;
     rsx! {
         div {
             class: CLASS,
             role: "region",
             "aria-label": "notifications",
             tabindex: "-1",
-            ToastList { ..list_props }
+            ToastList { toasts, on_remove }
         }
     }
 }

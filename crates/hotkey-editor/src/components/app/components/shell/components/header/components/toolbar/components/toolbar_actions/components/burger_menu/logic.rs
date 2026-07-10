@@ -1,10 +1,26 @@
 use dioxus::prelude::*;
 
-use super::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::{
-    BurgerItemState, BurgerMenuItemProps,
-};
+use super::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::BurgerItemState;
 use super::data::{self, BurgerRowContent};
 use super::state::BurgerAction;
+
+/// A fully-resolved drawer row as plain data: the static content merged with the
+/// live signal state and the wired click handler. It carries no component props —
+/// each leaf reads these fields and names its own children. This is what the
+/// builder produces and what the drawer subtree threads down.
+#[derive(Clone, PartialEq)]
+pub struct BurgerMenuRow {
+    pub icon: &'static str,
+    pub label: String,
+    pub state: BurgerItemState,
+    pub disabled: bool,
+    pub role: Option<&'static str>,
+    pub aria_haspopup: Option<&'static str>,
+    pub aria_expanded: Option<&'static str>,
+    pub aria_pressed: Option<&'static str>,
+    pub aria_label: Option<&'static str>,
+    pub onclick: EventHandler<MouseEvent>,
+}
 
 /// The live, signal-derived inputs every row resolves against: undo/redo
 /// availability, which toggles are currently active, and which dialogs are open.
@@ -55,8 +71,8 @@ impl BurgerActionHandlers {
 
 /// Resolves each drawer row: it pairs the static [`BurgerRowContent`] with the
 /// live [`RowDynamics`] and the wired [`BurgerActionHandlers`], producing a
-/// finished [`BurgerMenuItemProps`]. This replaces the ten hand-built row
-/// literals with one construction site driven by the `data.rs` table.
+/// finished [`BurgerMenuRow`]. This replaces the ten hand-built row literals with
+/// one construction site driven by the `data.rs` table.
 pub(super) struct MenuRowBuilder {
     pub(super) dynamics: RowDynamics,
     pub(super) handlers: BurgerActionHandlers,
@@ -64,19 +80,19 @@ pub(super) struct MenuRowBuilder {
 
 impl MenuRowBuilder {
     /// The primary Grid Layout row.
-    pub(super) fn layout(&self) -> BurgerMenuItemProps {
+    pub(super) fn layout(&self) -> BurgerMenuRow {
         self.row(&data::LAYOUT_ROW)
     }
 
     /// The grouped file-action rows, in render order.
-    pub(super) fn items(&self) -> Vec<BurgerMenuItemProps> {
+    pub(super) fn items(&self) -> Vec<BurgerMenuRow> {
         data::ITEM_ROWS
             .iter()
             .map(|content| self.row(content))
             .collect()
     }
 
-    fn row(&self, content: &BurgerRowContent) -> BurgerMenuItemProps {
+    fn row(&self, content: &BurgerRowContent) -> BurgerMenuRow {
         let action = content.action;
         let icon = content.icon;
         let role = content.role;
@@ -88,7 +104,7 @@ impl MenuRowBuilder {
         let aria_expanded = self.aria_expanded(action);
         let aria_pressed = self.aria_pressed(action);
         let onclick = self.handlers.onclick_for(action);
-        BurgerMenuItemProps {
+        BurgerMenuRow {
             icon,
             label,
             state,

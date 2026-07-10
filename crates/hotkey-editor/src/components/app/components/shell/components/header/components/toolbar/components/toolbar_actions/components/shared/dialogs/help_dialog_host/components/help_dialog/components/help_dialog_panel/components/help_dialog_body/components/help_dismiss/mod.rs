@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::HelpDismissProps;
+use props::HelpDismissProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -10,8 +10,9 @@ use tw_macro::assert_component;
 /// player has seen it, so it stops auto-opening.
 #[component]
 pub fn HelpDismiss(props: HelpDismissProps) -> Element {
+    let on_dismiss = props.on_dismiss;
     rsx! {
-        button { class: CLASS, r#type: "button", onclick: props.on_dismiss,
+        button { class: CLASS, r#type: "button", onclick: on_dismiss,
             "Got it, don't show this again"
         }
     }

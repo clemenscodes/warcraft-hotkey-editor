@@ -4,7 +4,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::HelpDialogHost;
 use dioxus::prelude::*;
-use hooks::use_help_button;
+use hooks::{use_help_button, HelpButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,11 +13,23 @@ use tw_macro::assert_component;
 /// for the desktop trigger; the burger renders its own copy for the compact layout.
 #[component]
 pub fn HelpButton() -> Element {
-    let button = use_help_button();
+    let HelpButtonModel {
+        icon,
+        aria_label,
+        aria_haspopup,
+        aria_expanded,
+        onclick,
+    } = use_help_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                onclick,
+            }
         }
         HelpDialogHost {}
     }

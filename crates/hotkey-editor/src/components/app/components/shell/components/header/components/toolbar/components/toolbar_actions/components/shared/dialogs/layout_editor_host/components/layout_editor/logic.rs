@@ -1,86 +1,16 @@
-use super::components::layout_editor_panel::LayoutEditorPanelProps;
-use super::components::layout_editor_panel::components::layout_editor_body::LayoutEditorBodyProps;
-use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::LayoutEditorContentProps;
-use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::apply_button::ApplyButtonProps;
-use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::LayoutGridProps;
 use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::{
-    LayoutTileProps, LayoutTileState,
+    LayoutTileState, LayoutTileView,
 };
-use super::components::layout_editor_panel::components::layout_editor_body::components::layout_editor_content::components::move_hotkey_toggle::MoveHotkeyToggleProps;
 use super::data::QWERTY_ROWS;
-use super::hooks::LayoutEditorModel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker::{
-    KeyPickerCell, KeyPickerCellState, KeyPickerProps,
+    KeyPickerCell, KeyPickerCellState,
 };
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
 use crate::services::grid_layout::service::GridLayoutService;
 use dioxus::prelude::*;
 use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, ColumnIndex, GridCoordinate, GridLayout, HotkeyToken,
     RowIndex,
 };
-
-/// The layout editor's own shell, shaped from its model: the open value, the
-/// change handler (the nested-picker close guard — a focus-steal close while the
-/// picker is open must be ignored), the header props, and the scroll-region body
-/// holding the centered editor column.
-pub(super) struct LayoutEditorShell {
-    pub(super) open: bool,
-    pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: LayoutEditorPanelProps,
-}
-
-impl From<&LayoutEditorModel> for LayoutEditorShell {
-    fn from(model: &LayoutEditorModel) -> Self {
-        let mut open_signal = model.open;
-        let open = open_signal();
-        let on_open_change = model.on_dialog_open_change;
-        let title = String::from("Global Hotkey Layout");
-        let on_close = EventHandler::new(move |()| open_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let apply = ApplyButtonProps {
-            on_apply: model.on_apply,
-        };
-        let grid = LayoutGridProps {
-            cells: model.cells.clone(),
-        };
-        let toggle = MoveHotkeyToggleProps {
-            checked: model.toggle_checked,
-            on_toggle: model.on_toggle,
-        };
-        let content = LayoutEditorContentProps {
-            grid,
-            toggle,
-            apply,
-        };
-        let body = LayoutEditorBodyProps { content };
-        let panel = LayoutEditorPanelProps { header, body };
-        Self {
-            open,
-            on_open_change,
-            panel,
-        }
-    }
-}
-
-impl From<&LayoutEditorModel> for KeyPickerProps {
-    fn from(model: &LayoutEditorModel) -> Self {
-        let title = String::from("Pick a grid key");
-        let rows = model.picker_rows.clone();
-        let open = true;
-        let allow_conflict_pick = true;
-        let on_pick = model.on_pick;
-        let on_close = model.on_picker_close;
-        Self {
-            title,
-            rows,
-            open,
-            allow_conflict_pick,
-            on_pick,
-            on_close,
-        }
-    }
-}
 
 /// The signals, service, and snapshots every grid cell resolves against. Shared by
 /// all twelve cells the [`LayoutGridCells`] builder produces: the two snapshots
@@ -101,7 +31,7 @@ impl GridCellContext {
     /// shows, and the five drag/click handlers. The drag-drop handler routes a cell
     /// swap through the
     /// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
-    fn cell(&self, coordinate: GridCoordinate) -> LayoutTileProps {
+    fn cell(&self, coordinate: GridCoordinate) -> LayoutTileView {
         let mut editing_layout_tile = self.editing_layout_tile;
         let mut dragging_layout_tile = self.dragging_layout_tile;
         let grid_layout = self.grid_layout;
@@ -154,7 +84,7 @@ impl GridCellContext {
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             editing_layout_tile.set(Some(coordinate));
         });
-        LayoutTileProps {
+        LayoutTileView {
             state,
             label,
             coordinate,
@@ -171,12 +101,12 @@ impl GridCellContext {
 /// over the command-grid positions. Mirrors the key picker's board: one fielded
 /// carrier the body places, built from data rather than twelve copy-pasted blocks.
 pub(super) struct LayoutGridCells {
-    pub(super) cells: Vec<LayoutTileProps>,
+    pub(super) cells: Vec<LayoutTileView>,
 }
 
 impl LayoutGridCells {
     pub(super) fn build(context: &GridCellContext) -> Self {
-        let mut cells: Vec<LayoutTileProps> = Vec::new();
+        let mut cells: Vec<LayoutTileView> = Vec::new();
         for row in 0..COMMAND_GRID_ROWS {
             for column in 0..COMMAND_GRID_COLUMNS {
                 let column_index =
@@ -190,7 +120,7 @@ impl LayoutGridCells {
         Self { cells }
     }
 
-    pub(super) fn into_cells(self) -> Vec<LayoutTileProps> {
+    pub(super) fn into_cells(self) -> Vec<LayoutTileView> {
         self.cells
     }
 }

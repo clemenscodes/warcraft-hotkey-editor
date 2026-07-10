@@ -4,7 +4,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog_host::PreviewDialogHost;
 use dioxus::prelude::*;
-use hooks::use_preview_button;
+use hooks::{use_preview_button, PreviewButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +14,21 @@ use tw_macro::assert_component;
 /// layout, where this button is hidden.
 #[component]
 pub fn PreviewButton() -> Element {
-    let button = use_preview_button();
+    let PreviewButtonModel {
+        icon,
+        aria_label,
+        aria_pressed,
+        onclick,
+    } = use_preview_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                aria_pressed,
+                onclick,
+            }
         }
         PreviewDialogHost {}
     }

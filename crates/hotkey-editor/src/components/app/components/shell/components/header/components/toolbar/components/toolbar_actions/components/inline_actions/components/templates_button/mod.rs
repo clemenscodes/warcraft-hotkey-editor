@@ -4,7 +4,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog_host::TemplatesDialogHost;
 use dioxus::prelude::*;
-use hooks::use_templates_button;
+use hooks::{use_templates_button, TemplatesButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +14,23 @@ use tw_macro::assert_component;
 /// layout.
 #[component]
 pub fn TemplatesButton() -> Element {
-    let button = use_templates_button();
+    let TemplatesButtonModel {
+        icon,
+        aria_label,
+        aria_haspopup,
+        aria_expanded,
+        onclick,
+    } = use_templates_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                onclick,
+            }
         }
         TemplatesDialogHost {}
     }

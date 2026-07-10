@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use components::layout_editor_body::{LayoutEditorBody, LayoutEditorBodyProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use components::layout_editor_body::LayoutEditorBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::LayoutEditorPanelProps;
+use props::LayoutEditorPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,14 +16,18 @@ use tw_macro::assert_component;
 /// scrolling body.
 #[component]
 pub fn LayoutEditorPanel(props: LayoutEditorPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
-    let body = LayoutEditorBodyProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
+    let cells = props.cells;
+    let toggle_checked = props.toggle_checked;
+    let on_toggle = props.on_toggle;
+    let on_apply = props.on_apply;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
-                LayoutEditorBody { ..body }
+                DialogHeader { title, on_close }
+                LayoutEditorBody { cells, toggle_checked, on_toggle, on_apply }
             }
         }
     }

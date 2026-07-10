@@ -1,28 +1,28 @@
 use super::props::InfoActionsProps;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::data::CANCEL;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::button::{ButtonProps, ButtonVariant};
+use dioxus::prelude::*;
 
-/// The action row's two buttons, each finished with its variant, label, and
-/// handler.
+/// The action row's two buttons as plain domain values: each label and click
+/// handler. The variant is fixed per slot (cancel is secondary, primary is
+/// primary), so the row places each `Button` with these named fields.
 pub(super) struct InfoActionsButtons {
-    pub(super) cancel: ButtonProps,
-    pub(super) primary: ButtonProps,
+    pub(super) cancel_label: String,
+    pub(super) on_cancel: EventHandler<MouseEvent>,
+    pub(super) primary_label: String,
+    pub(super) on_primary: EventHandler<MouseEvent>,
 }
 
 impl From<&InfoActionsProps> for InfoActionsButtons {
     fn from(props: &InfoActionsProps) -> Self {
         let cancel_label = String::from(CANCEL);
         let primary_label = String::from(props.primary_label);
-        let cancel = ButtonProps {
-            variant: ButtonVariant::Secondary,
-            onclick: props.on_cancel,
-            label: cancel_label,
-        };
-        let primary = ButtonProps {
-            variant: ButtonVariant::Primary,
-            onclick: props.on_primary,
-            label: primary_label,
-        };
-        Self { cancel, primary }
+        let on_cancel = props.on_cancel;
+        let on_primary = props.on_primary;
+        Self {
+            cancel_label,
+            on_cancel,
+            primary_label,
+            on_primary,
+        }
     }
 }

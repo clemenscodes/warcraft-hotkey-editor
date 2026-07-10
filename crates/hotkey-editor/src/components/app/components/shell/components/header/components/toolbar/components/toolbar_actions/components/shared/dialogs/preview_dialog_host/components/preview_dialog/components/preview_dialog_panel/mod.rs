@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use components::preview_dialog_body::{PreviewDialogBody, PreviewDialogBodyProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use components::preview_dialog_body::PreviewDialogBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::PreviewDialogPanelProps;
+use props::PreviewDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,14 +16,15 @@ use tw_macro::assert_component;
 /// scrolling textarea body.
 #[component]
 pub fn PreviewDialogPanel(props: PreviewDialogPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
-    let body = PreviewDialogBodyProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
+    let text = props.text;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
-                PreviewDialogBody { ..body }
+                DialogHeader { title, on_close }
+                PreviewDialogBody { text }
             }
         }
     }

@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use logic::HelpDialogShell;
-pub use props::HelpDialogProps;
+use props::HelpDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +23,10 @@ pub fn HelpDialog(props: HelpDialogProps) -> Element {
     let HelpDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        content,
+        on_dismiss,
     } = HelpDialogShell::from(&props);
     if !open {
         return rsx! {};
@@ -34,7 +37,12 @@ pub fn HelpDialog(props: HelpDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                HelpDialogPanel { ..panel }
+                HelpDialogPanel {
+                    title,
+                    on_close,
+                    content,
+                    on_dismiss,
+                }
             }
         }
     }

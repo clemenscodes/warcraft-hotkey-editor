@@ -5,7 +5,7 @@ mod style;
 use components::grid_layout_button_icon::GridLayoutButtonIcon;
 use components::grid_layout_button_label::GridLayoutButtonLabel;
 use dioxus::prelude::*;
-pub use props::GridLayoutButtonProps;
+use props::GridLayoutButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

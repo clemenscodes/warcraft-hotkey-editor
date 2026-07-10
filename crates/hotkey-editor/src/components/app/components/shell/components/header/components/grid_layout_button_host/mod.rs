@@ -16,10 +16,12 @@ use tw_macro::assert_component;
 #[component]
 pub fn GridLayoutButtonHost() -> Element {
     let button = use_grid_layout_button();
+    let is_open = button.is_open;
+    let onclick = button.onclick;
     rsx! {
         div {
             class: CLASS,
-            GridLayoutButton { ..button }
+            GridLayoutButton { is_open, onclick }
         }
         LayoutEditorHost {}
     }

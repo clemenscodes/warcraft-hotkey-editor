@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::DialogCloseProps;
+use props::DialogCloseProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

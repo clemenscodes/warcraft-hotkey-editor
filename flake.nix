@@ -18,6 +18,10 @@
     crane.url = "github:ipetkov/crane";
     playwright.url = "github:pietdevries94/playwright-web-flake";
     moon-tui.url = "github:clemenscodes/moon-tui";
+    tw-lint = {
+      url = "github:clemenscodes/tw-lint";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -29,6 +33,7 @@
       crane,
       playwright,
       moon-tui,
+      tw-lint,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
@@ -151,6 +156,7 @@
         # with "command not found".
         inherit (playwright.packages.${system}) playwright-test playwright-driver;
         moonTui = moon-tui.packages.${system}.moon-tui;
+        twLint = tw-lint.packages.${system}.default;
 
         # Packages needed to run moon tasks in CI and dev. moonTui is a
         # TUI wrapper for the interactive dev experience — not needed in CI.
@@ -166,6 +172,7 @@
           pnpm
           playwright-test
           playwright-driver
+          twLint
         ];
         moonRuntimeInputs = ciRuntimeInputs ++ [ moonTui ];
 

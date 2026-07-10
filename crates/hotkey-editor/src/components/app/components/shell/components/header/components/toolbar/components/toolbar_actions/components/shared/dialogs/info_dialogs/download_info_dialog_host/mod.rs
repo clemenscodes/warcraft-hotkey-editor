@@ -1,6 +1,4 @@
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::{
-    DownloadInfoDialog, DownloadInfoDialogProps,
-};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::files::download;
 use dioxus::prelude::*;
@@ -20,9 +18,8 @@ pub fn DownloadInfoDialogHost(open: Signal<bool>) -> Element {
         let serialized = custom_keys_service.exported_text();
         download::trigger("CustomKeys.txt", &serialized);
     });
-    let dialog = DownloadInfoDialogProps { open, on_confirm };
     rsx! {
-        DownloadInfoDialog { ..dialog }
+        DownloadInfoDialog { open, on_confirm }
     }
 }
 

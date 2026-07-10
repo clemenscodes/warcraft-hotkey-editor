@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
-use hooks::use_redo_button;
+use hooks::{use_redo_button, RedoButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,21 @@ use tw_macro::assert_component;
 /// laptop, where the burger drawer offers redo instead.
 #[component]
 pub fn RedoButton() -> Element {
-    let button = use_redo_button();
+    let RedoButtonModel {
+        icon,
+        aria_label,
+        disabled,
+        onclick,
+    } = use_redo_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                disabled,
+                onclick,
+            }
         }
     }
 }

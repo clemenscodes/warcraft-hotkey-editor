@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::help_body::{HelpBody, HelpBodyProps};
-use components::help_dismiss::{HelpDismiss, HelpDismissProps};
+use components::help_body::HelpBody;
+use components::help_dismiss::HelpDismiss;
 use dioxus::prelude::*;
-pub use props::HelpDialogBodyProps;
+use props::HelpDialogBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,13 +13,13 @@ use tw_macro::assert_component;
 /// edge, holding the guide body and the dismiss button.
 #[component]
 pub fn HelpDialogBody(props: HelpDialogBodyProps) -> Element {
-    let body = HelpBodyProps::from(&props);
-    let dismiss = HelpDismissProps::from(&props);
+    let content = props.content;
+    let on_dismiss = props.on_dismiss;
     rsx! {
         div {
             class: CLASS,
-            HelpBody { ..body }
-            HelpDismiss { ..dismiss }
+            HelpBody { content }
+            HelpDismiss { on_dismiss }
         }
     }
 }

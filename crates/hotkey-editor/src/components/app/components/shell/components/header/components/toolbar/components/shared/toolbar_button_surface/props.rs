@@ -1,9 +1,9 @@
 use super::state::SurfaceState;
 use dioxus::prelude::*;
 
-/// The surface carries every attribute of the clickable button. Its parent
-/// `ToolbarButton` builds it by conversion and spreads it, so callers never pass loose
-/// attributes by hand.
+/// The surface carries every attribute of the clickable button: the icon, the resting
+/// look, the click handler, and the aria/disabled state. Callers set the fields they
+/// need by name; the rest default.
 #[derive(Props, Clone, PartialEq, Default)]
 pub struct ToolbarButtonSurfaceProps {
     pub icon: &'static str,

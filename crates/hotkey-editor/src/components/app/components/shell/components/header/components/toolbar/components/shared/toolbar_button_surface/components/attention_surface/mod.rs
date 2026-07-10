@@ -3,7 +3,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::components::shared::toolbar_button_icon::ToolbarButtonIcon;
 use dioxus::prelude::*;
-pub use props::AttentionSurfaceProps;
+use props::AttentionSurfaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// `Attention`.
 #[component]
 pub fn AttentionSurface(props: AttentionSurfaceProps) -> Element {
-    let glyph = props.glyph;
+    let icon = props.icon;
     rsx! {
         button {
             class: CLASS,
@@ -24,7 +24,7 @@ pub fn AttentionSurface(props: AttentionSurfaceProps) -> Element {
             aria_pressed: props.aria_pressed,
             disabled: props.disabled,
             onclick: props.onclick,
-            ToolbarButtonIcon { ..glyph }
+            ToolbarButtonIcon { icon }
         }
     }
 }

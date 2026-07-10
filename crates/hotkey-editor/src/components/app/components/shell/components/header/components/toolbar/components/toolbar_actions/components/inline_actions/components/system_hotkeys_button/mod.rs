@@ -4,7 +4,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::SystemHotkeysDialogHost;
 use dioxus::prelude::*;
-use hooks::use_system_hotkeys_button;
+use hooks::{use_system_hotkeys_button, SystemHotkeysButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,11 +14,23 @@ use tw_macro::assert_component;
 /// layout.
 #[component]
 pub fn SystemHotkeysButton() -> Element {
-    let button = use_system_hotkeys_button();
+    let SystemHotkeysButtonModel {
+        icon,
+        aria_label,
+        aria_haspopup,
+        aria_expanded,
+        onclick,
+    } = use_system_hotkeys_button();
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                onclick,
+            }
         }
         SystemHotkeysDialogHost {}
     }

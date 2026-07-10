@@ -4,13 +4,13 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_icon::BurgerMenuItemIcon;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_label::BurgerMenuItemLabel;
 use dioxus::prelude::*;
-pub use props::PrimaryMenuItemProps;
+use props::PrimaryMenuItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The primary (call-to-action) look of a drawer row: the emphasised gold panel button
 /// carrying the drawer's headline action, composing the icon and label. Presentational
-/// — the dispatcher builds its props and renders it when the row's visual weight is
+/// — the dispatcher names its fields and renders it when the row's visual weight is
 /// primary.
 #[component]
 pub fn PrimaryMenuItem(props: PrimaryMenuItemProps) -> Element {
@@ -34,8 +34,8 @@ pub fn PrimaryMenuItem(props: PrimaryMenuItemProps) -> Element {
             aria_label,
             disabled,
             onclick,
-            BurgerMenuItemIcon { ..icon }
-            BurgerMenuItemLabel { ..label }
+            BurgerMenuItemIcon { svg: icon }
+            BurgerMenuItemLabel { text: label }
         }
     }
 }

@@ -2,12 +2,12 @@ pub mod components;
 mod props;
 mod style;
 
-use components::apply_button::{ApplyButton, ApplyButtonProps};
-use components::layout_grid::{LayoutGrid, LayoutGridProps};
+use components::apply_button::ApplyButton;
+use components::layout_grid::LayoutGrid;
 use components::layout_intro::LayoutIntro;
-use components::move_hotkey_toggle::{MoveHotkeyToggle, MoveHotkeyToggleProps};
+use components::move_hotkey_toggle::MoveHotkeyToggle;
 use dioxus::prelude::*;
-pub use props::LayoutEditorContentProps;
+use props::LayoutEditorContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,16 +15,17 @@ use tw_macro::assert_component;
 /// editable grid, the move-hotkey toggle, and the apply action.
 #[component]
 pub fn LayoutEditorContent(props: LayoutEditorContentProps) -> Element {
-    let grid = LayoutGridProps::from(&props);
-    let toggle = MoveHotkeyToggleProps::from(&props);
-    let apply = ApplyButtonProps::from(&props);
+    let cells = props.cells;
+    let toggle_checked = props.toggle_checked;
+    let on_toggle = props.on_toggle;
+    let on_apply = props.on_apply;
     rsx! {
         div {
             class: CLASS,
             LayoutIntro {}
-            LayoutGrid { ..grid }
-            MoveHotkeyToggle { ..toggle }
-            ApplyButton { ..apply }
+            LayoutGrid { cells }
+            MoveHotkeyToggle { checked: toggle_checked, on_toggle }
+            ApplyButton { on_apply }
         }
     }
 }

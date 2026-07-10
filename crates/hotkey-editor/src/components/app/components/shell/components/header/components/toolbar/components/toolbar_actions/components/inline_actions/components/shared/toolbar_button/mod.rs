@@ -2,10 +2,10 @@ mod props;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::{
-    ToolbarButtonSurface, ToolbarButtonSurfaceProps,
+    SurfaceState, ToolbarButtonSurface,
 };
 use dioxus::prelude::*;
-pub use props::ToolbarButtonProps;
+use props::ToolbarButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,11 +17,27 @@ use tw_macro::assert_component;
 /// this box in `cqi`, like one drawing.
 #[component]
 pub fn ToolbarButton(props: ToolbarButtonProps) -> Element {
-    let surface = ToolbarButtonSurfaceProps::from(&props);
+    let icon = props.icon;
+    let aria_label = props.aria_label;
+    let state = SurfaceState::Interactive;
+    let disabled = props.disabled;
+    let aria_haspopup = props.aria_haspopup;
+    let aria_expanded = props.aria_expanded;
+    let aria_pressed = props.aria_pressed;
+    let onclick = props.onclick;
     rsx! {
         div {
             class: CLASS,
-            ToolbarButtonSurface { ..surface }
+            ToolbarButtonSurface {
+                icon,
+                aria_label,
+                state,
+                disabled,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                onclick,
+            }
         }
     }
 }

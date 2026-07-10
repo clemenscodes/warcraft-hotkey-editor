@@ -9,14 +9,14 @@ use components::info_dialog_panel::InfoDialogPanel;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use logic::InfoDialogShell;
-pub use props::InfoDialogConfig;
+use props::InfoDialogConfig;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The shared shell for the download and import info dialogs: a centered
 /// instruction block above a cancel/primary action row. Variants fill in the
 /// title, copy, warning, and handlers via `InfoDialogConfig`; this owns its own
-/// dialog shell — the shell struct shapes the panel, and this places the panel
+/// dialog shell — the shell struct shapes the panel data, and this places the panel
 /// inside its own backdrop `div` (the dimmed, centring layer) within the library
 /// `DialogRoot`. No project class touches the library element.
 #[component]
@@ -25,7 +25,13 @@ pub fn InfoDialog(props: InfoDialogConfig) -> Element {
     let InfoDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
+        intro,
+        warning,
+        primary_label,
+        on_primary,
+        on_cancel,
     } = InfoDialogShell::from(&props);
     rsx! {
         DialogRoot {
@@ -33,7 +39,15 @@ pub fn InfoDialog(props: InfoDialogConfig) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                InfoDialogPanel { ..panel }
+                InfoDialogPanel {
+                    title,
+                    on_close,
+                    intro,
+                    warning,
+                    primary_label,
+                    on_primary,
+                    on_cancel,
+                }
             }
         }
     }

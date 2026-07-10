@@ -1,8 +1,5 @@
-use super::components::key_picker_panel::KeyPickerPanelProps;
-use super::components::key_picker_panel::components::key_picker_body::KeyPickerBodyProps;
 use super::hooks::KeyPickerModel;
-use super::props::{KeyPickerCell, KeyPickerCellState};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
+use super::state::{KeyPickerCell, KeyPickerCellState};
 use crate::components::app::components::shell::components::shared::tooltip::{
     TooltipAnchor, TooltipPlacement,
 };
@@ -75,13 +72,18 @@ impl From<LetterColumnInputs> for KeyColumn {
 }
 
 /// The key picker's own shell, shaped from its model: the open value driving the
-/// backdrop, the change handler that writes the open signal, and the bordered panel
-/// (its header and scroll-region board body). Every dialog owns its shell now — there
-/// is no base.
+/// backdrop, the change handler that writes the open signal, the title and close
+/// handler its header shows, and the board (its column of letter keys plus the pick
+/// and keyboard-dismiss handlers) its body places. Every dialog owns its shell now —
+/// there is no base.
 pub(super) struct KeyPickerShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: KeyPickerPanelProps,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) columns: Vec<KeyColumn>,
+    pub(super) on_pick: EventHandler<KeyCode>,
+    pub(super) on_board_close: EventHandler<()>,
 }
 
 impl From<&KeyPickerModel> for KeyPickerShell {
@@ -92,14 +94,17 @@ impl From<&KeyPickerModel> for KeyPickerShell {
         let mut close_signal = model.open;
         let title = model.title.clone();
         let on_close = EventHandler::new(move |()| close_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let board = model.board.clone();
-        let body = KeyPickerBodyProps { board };
-        let panel = KeyPickerPanelProps { header, body };
+        let columns = model.columns.clone();
+        let on_pick = model.on_pick;
+        let on_board_close = model.on_close;
         Self {
             open,
             on_open_change,
-            panel,
+            title,
+            on_close,
+            columns,
+            on_pick,
+            on_board_close,
         }
     }
 }

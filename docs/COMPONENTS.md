@@ -424,19 +424,21 @@ any slip):
 // The leaf lives at collisions_button_host/components/collisions_button/.
 #[component]
 pub fn CollisionsButtonHost() -> Element {
-    let button = use_collisions_button();   // calls use_custom_keys + use_grid_layout, shapes the count
+    // the hook returns shaped DOMAIN data — a model, never the leaf's props.
+    let CollisionsButtonModel { summary, onclick } = use_collisions_button();
     rsx! {
-        CollisionsButton { ..button }
+        CollisionsButton { summary, onclick }   // named fields, no spread, no props type named
     }
 }
 ```
 
 ```rust
-// collisions_button/mod.rs — presentational: props in, markup out. No hook, no context.
+// collisions_button/mod.rs — presentational: props in, markup out. No context.
 #[component]
 pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
-    let CollisionsButtonPresentation { count, onclick, .. } = CollisionsButtonPresentation::from(&props);
-    rsx! { /* renders the count and badge from props alone */ }
+    // any shaping is a hook over its OWN props — reads no context, fetches nothing.
+    let CollisionsButtonModel { count, onclick } = use_collisions_button(&props);
+    rsx! { /* renders the count and badge */ }
 }
 ```
 
@@ -457,8 +459,8 @@ places the hosts.
 
 Three roles, never merged:
 
-- **presentational leaf** — props in, markup out; no hook, no context. The gallery
-  renders this directly.
+- **presentational leaf** — props in, markup out; no context (a hook may shape its
+  own props, but fetches nothing). Renderable in isolation from domain values alone.
 - **connected wrapper (`<Leaf>Host`)** — one hook call, shape, render the leaf. The
   only markup it owns is the single classed container root it wraps the leaf in. The
   app renders this.
@@ -478,11 +480,11 @@ container.
 // export_button_host/mod.rs — the Host is the seam AND the container.
 #[component]
 pub fn ExportButtonHost() -> Element {
-    let button = use_export_button();        // the seam: shapes the leaf's props
+    let ExportButtonModel { onclick } = use_export_button();   // the seam: shapes the leaf's inputs as domain data
     rsx! {
         div {
             class: CLASS,                    // the container: owns the leaf's space
-            ExportButton { ..button }
+            ExportButton { onclick }         // named field, no spread
         }
     }
 }
@@ -914,8 +916,8 @@ example:
 
 ```
 grid_tile/
-  mod.rs            the component function, flat hooks then pure RSX, plus the pub use re-exports
-  props.rs          the Props struct and its From conversions
+  mod.rs            the component function, flat hooks then pure RSX; private `use props::XProps`, never re-exported
+  props.rs          the Props struct (private); at most a From from a domain type this component renders
   data.rs           the static content/data this component sources (optional)
   hooks.rs          the component's composed hook, wiring primitive hooks together (optional)
   logic.rs          everything the body is not allowed to do (optional)
@@ -948,46 +950,91 @@ data of its shape.
 
 ---
 
-## Props flow by conversion, never by hand
+## Props are private; data flows as named fields — never by conversion or spread
 
-Each child's props are produced by a `From<&ParentProps>` impl, and the parent
-spreads them in. This is the only sanctioned way to pass props down.
+This is a hard-learned law, and it reverses an earlier convention in this file.
+Read it carefully; the old `From<&ParentProps>` + `..spread` rule is **deleted**,
+and code written to it is now wrong.
+
+> **A component's `Props` are its own internals. No other component may name them,
+> in either direction. A parent hands a child data by naming the child and setting
+> its fields with domain values — never by building or spreading the child's props.**
+
+### The mechanics
+
+`mod props;` is **private** and is **never re-exported**. There is no
+`pub use props::XProps`, no `pub(crate)`, no `pub(in …)` — nothing. The props
+struct is reachable only inside its own component's module (for the `#[component]`
+function's own signature and its own hook). A `grep` for `pub use props::` across
+the crate must return **zero** hits.
+
+A parent passes data down by **naming the child component and setting its fields**
+in RSX, with plain domain values (or primitives) it already holds:
 
 ```rust
 #[component]
-pub fn GridTile(props: GridTileProps) -> Element {
-    let figure = TileFigureProps::from(&props);
-    let badge = TileBadgeProps::from(&props);
-    let GridTilePresentation { class, tabindex, row, column, onclick, .. } =
-        GridTilePresentation::from(&props);
+pub fn HotkeyConflictGrid(props: HotkeyConflictGridProps) -> Element {
+    let HotkeyConflictGridModel { conflicts, unit_id } = use_hotkey_conflict_grid(&props);
     rsx! {
         div {
-            class, 
-            tabindex, 
-            "data-grid-row": row, 
-            "data-grid-col": column, 
-            onclick,
-            TileFigure { ..figure }
-            TileBadge { ..badge }
+            class: CLASS,
+            for conflict in conflicts {                    // conflicts: Vec<HotkeyConflictView> — domain data
+                HotkeyConflictCard { conflict, unit_id }   // named fields, domain values
+            }
         }
     }
 }
 ```
 
-Rules inside this pattern:
+Dioxus's `rsx!` builder keys off the component **function**, not the props type,
+so the parent never writes `HotkeyConflictCardProps`. It sets the child's fields
+by name from the domain data it holds.
 
-- Conversions take `&ParentProps` by reference. `EventHandler` and `Signal` are
-  `Copy`, so the parent props is never moved and one borrow feeds every child.
-- The `From` impl is the home for the work the body may not do: building class
-  strings, resolving attributes, wiring event handlers, calling the domain.
-  Put it in `props.rs` for plain prop mapping, or in `logic.rs` when it carries
-  real work.
-- Spread the result: `Child { ..ChildProps::from(&props) }`. Do not list fields
-  by hand at the call site.
-- Use RSX shorthand. Name the local exactly as the prop so `Foo { bar }` works
-  instead of `Foo { bar: bar }`. Name a struct field after the attribute or
-  child prop it feeds (for example an image alt text field is named `alt`, not
-  `label`, so `img { src, alt }` is all shorthand).
+### Forbidden — each an instant, non-negotiable reject
+
+- **`pub use props::XProps`** (at any visibility). Props are private; a
+  re-export is the leak.
+- **`impl From<&ParentProps> for ChildProps`** — a component naming another
+  component's props type. Gone. A `From` on a props type may exist only *from a
+  domain type* the component itself consumes (`From<&HotkeyConflictView>`), never
+  from another component's props.
+- **`Child { ..some_props }`** — spreading a props value. Set named fields.
+- **a props type as a field of another props type** — `cards:
+  Vec<HotkeyConflictCardProps>` is the drilling this law exists to kill. Thread
+  the **domain view** (`Vec<HotkeyConflictView>`) and let each level render its
+  child from named fields. If a props struct field's type is another `…Props`,
+  it is wrong.
+
+### Why (the lesson)
+
+The `From<&ParentProps>` + spread convention made props **first-class data**. So a
+whole subtree's props got built at the very top and drilled down through
+intermediates whose only job was to pass them along — a grandparent hoarding a
+`Vec<GrandchildProps>`, a "grid" that just spread pre-built card props. Every such
+hand-off forced the child's props to be visible to the parent, and every
+`From<&ParentProps>` made a child depend on its parent's shape. The coupling ran
+both directions and metastasized.
+
+Named fields + domain data makes it **impossible to express**: there is no
+`ChildProps` value to hoard, no props type to import, no conversion coupling a
+child to a parent. Each component is an isolated function of the data it is
+handed. Composition is enforced by **isolation**, not by a visibility annotation —
+which is why the target is `mod props;` (private), not `pub(in …) use props`.
+
+### Where the shaping goes: the component's own hook
+
+The work the old `From` impls did — reading context, converting a domain view
+into the concrete values a body places in the tree — now lives in the component's
+**`hooks.rs`**, its one composed hook, returning already-shaped **domain data**
+(never another component's props). This unifies the two plumbing paths that used
+to disagree (`hooks.rs` vs `From`-in-`props.rs`): there is now exactly one, the
+hook. `props.rs` holds only the `#[derive(Props)]` struct and, at most, a `From`
+from a *domain* type the component itself renders.
+
+- Use RSX shorthand: name the hook-result field exactly as the child's field so
+  `Card { conflict }` works instead of `Card { conflict: conflict }`.
+- A leaf with no shaping needs no hook: its body places its own props' fields
+  directly (`img { src, alt }`).
 
 ## Markup has no branches that build values
 
@@ -1056,10 +1103,17 @@ wrappers bind the behavior:
 #[component]
 pub fn CommandGridEditor(props: GridEditorConfig) -> Element {
     rsx! {
-        GridEditor { ..GridEditorProps::<CommandBehavior>::from(&props) }
+        GridEditor::<CommandBehavior> { config: props }   // named field; the turbofish binds the behavior
     }
 }
 ```
+
+This is the **sole** place one component names a type from another: a variant binds
+its base's behavior parameter. Even here it stays within "Base and variants are flat"
+(base + variants are one flat group, reached by `super::grid_editor::…`) — no
+*unrelated* component ever names `GridEditor`'s props, and the caller-facing
+`GridEditorConfig` is the only thing crossing in, as a named field. There is still no
+`..spread` of a props value and no `From<&ParentProps>`.
 
 ## Base and variants are flat, not nested
 
@@ -1144,19 +1198,21 @@ you exactly where the component lives.
 Do not re-export descendants up the tree. A `mod.rs` that lists
 `pub use child::{A, B, C, ...}` to surface a grandchild forces every new layer to
 copy that list into yet another file. It does not scale, and it erases where each
-name actually lives, the import path loses all ordering. The only re-export a
-component may carry is its own public surface from its own sibling files:
-`pub use props::XProps;`, and `pub use state::XState;` when it has visual state.
-Children are reached by traversing `pub mod`, never through a flattened list.
+name actually lives, the import path loses all ordering. Children are reached by
+traversing `pub mod`, never through a flattened list.
 
-So a component's `mod.rs` carries exactly: the `pub` component function, its own
-`pub use props::XProps` (and `state`), `pub mod components` for its children, and
-private `use` imports of the specific children it renders. Nothing is re-exported
-that the component does not itself own.
+**Props are the exception that proves the rule: they are never re-exported at
+all.** `mod props;` is private (see "Props are private; data flows as named
+fields"). A component's `mod.rs` therefore carries exactly: the `pub` component
+function, a **private** `use props::XProps;` for its own signature, `pub mod
+components` for its children, and private `use` imports of the specific children
+it renders. Nothing is re-exported. A `pub use props::XProps` — or any visibility
+on the props re-export — is a leak and does not appear anywhere in the crate.
 
-The crate root may still expose a curated public surface for an external consumer
-(the `gallery` showcase), but it does so with full-path `pub use`s, and the
-intermediate modules stay free of flattening.
+(An earlier version of this section had each `mod.rs` carry `pub use
+props::XProps` so a separate `gallery` crate could name a leaf's props. That crate
+is gone and that re-export is deleted; a showcase renders a component through its
+own `pub` function and hands it domain data, never by naming its props.)
 
 ## Types at the props boundary
 
@@ -1212,18 +1268,22 @@ reaches its children with `use components::…`, never `super::`. Run the `super
 test on any file in the tree and it passes.
 
 **Connected hosts feed presentational leaves; nothing drills props.** A `<Leaf>Host`
-calls one composed hook, shapes the result, and spreads it into a pure leaf.
-`CollisionsButtonHost` (`hooks.rs::use_collisions_button`) asks the domain for the
-collision count and hands `CollisionsButton { ..button }` its summary and click
-handler; `CollisionsButton` is props-in / markup-out and reads no context. The host's
-classed `div` is also the leaf's box and its query container. Uninvolved containers
-thread nothing: `Toolbar` and `ToolbarActions` are pure layout and pass no document
-down. Because the leaf is pure, the gallery renders it directly with any value.
+calls one composed hook, shapes the result into domain data, and renders a pure leaf
+with **named fields**. `CollisionsButtonHost` (`hooks.rs::use_collisions_button`) asks
+the domain for the collision count and renders `CollisionsButton { summary, onclick }`
+from the shaped model — never a spread, never naming the leaf's props type;
+`CollisionsButton` is props-in / markup-out and reads no context. The host's classed
+`div` is also the leaf's box and its query container. Uninvolved containers thread
+nothing: `Toolbar` and `ToolbarActions` are pure layout and pass no document down.
+Because the leaf is a pure function of domain values, it renders in isolation with any
+value.
 
-**Static content lives in `data.rs` and arrives as typed props.** `brand/data.rs`
-holds `const TITLE: BrandTitleProps = BrandTitleProps { title: "Warcraft III Hotkey
-Editor" }`, and `Brand` renders `BrandTitle { ..data::TITLE }`. No sentence is ever
-baked into a body — the copy is a typed constant in `data.rs`, spread in as props.
+**Static content lives in `data.rs` and arrives as named fields.** `brand/data.rs`
+holds `const TITLE: &str = "Warcraft III Hotkey Editor"`, and `Brand` renders
+`BrandTitle { title: data::TITLE }`. No sentence is ever baked into a body — the
+copy is a constant in `data.rs`, passed as a named field. `data.rs` never holds a
+child's `Props` type (that would name another component's internals); it holds the
+domain values the parent hands down.
 
 **One shared leaf, many thin connected wrappers.** `ToolbarButton` lives once at
 `inline_actions/components/shared/toolbar_button/` and is reused by all nine action
@@ -1331,10 +1391,12 @@ is one class, one concern.
 A component change is not done until all of these are green:
 
 ```
-nix develop -c cargo clippy -p hotkey-editor -p gallery --target wasm32-unknown-unknown
-nix develop -c cargo test -p warcraft-keybinds
-nix develop -c cargo fmt --check
+moon run :ci    # fmt + clippy (wasm) + keybinds tests + wasm build + e2e
 ```
+
+The old per-crate `cargo` invocations (and the separate `-p gallery` clippy pass)
+are superseded: `moon run :ci` is the one gate, and the `gallery` crate no longer
+exists.
 
 Also confirm the global layer stayed clean: no new `@utility` for a component's
 look, and `@theme` gained nothing that is not shared design vocabulary — bespoke

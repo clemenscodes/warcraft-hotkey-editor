@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::toast_card::{ToastCard, ToastCardProps};
+use components::toast_card::ToastCard;
 use dioxus::prelude::*;
-pub use props::ToastListItemProps;
+use props::ToastListItemProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,12 @@ use tw_macro::assert_component;
 /// and hosts one toast card.
 #[component]
 pub fn ToastListItem(props: ToastListItemProps) -> Element {
-    let card_props = ToastCardProps::from(&props);
+    let record = props.record;
+    let on_remove = props.on_remove;
     rsx! {
         li {
             class: CLASS,
-            ToastCard { ..card_props }
+            ToastCard { record, on_remove }
         }
     }
 }

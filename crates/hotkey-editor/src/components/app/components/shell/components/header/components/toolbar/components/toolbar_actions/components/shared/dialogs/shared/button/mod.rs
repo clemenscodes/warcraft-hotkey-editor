@@ -1,11 +1,12 @@
 pub mod components;
-mod logic;
 mod props;
+mod state;
 
-use components::primary_button::{PrimaryButton, PrimaryButtonProps};
-use components::secondary_button::{SecondaryButton, SecondaryButtonProps};
+use components::primary_button::PrimaryButton;
+use components::secondary_button::SecondaryButton;
 use dioxus::prelude::*;
-pub use props::{ButtonProps, ButtonVariant};
+use props::ButtonProps;
+pub use state::ButtonVariant;
 use tw_macro::assert_component;
 
 /// A WC3 action button in primary or secondary weight. A pure dispatcher: from the
@@ -16,15 +17,17 @@ use tw_macro::assert_component;
 pub fn Button(props: ButtonProps) -> Element {
     match props.variant {
         ButtonVariant::Primary => {
-            let button = PrimaryButtonProps::from(&props);
+            let onclick = props.onclick;
+            let label = props.label.clone();
             rsx! {
-                PrimaryButton { ..button }
+                PrimaryButton { onclick, label }
             }
         }
         ButtonVariant::Secondary => {
-            let button = SecondaryButtonProps::from(&props);
+            let onclick = props.onclick;
+            let label = props.label.clone();
             rsx! {
-                SecondaryButton { ..button }
+                SecondaryButton { onclick, label }
             }
         }
     }

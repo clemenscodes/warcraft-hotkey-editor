@@ -1,22 +1,22 @@
 use dioxus::prelude::*;
 
-use super::components::burger_drawer::BurgerDrawerProps;
-use super::logic::{BurgerActionHandlers, MenuRowBuilder, RowDynamics};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialogProps;
+use super::logic::{BurgerActionHandlers, BurgerMenuRow, MenuRowBuilder, RowDynamics};
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::context::use_view_navigation;
 use crate::services::overlay_state::context::use_overlay_state;
 use crate::services::undo::context::use_undo_history;
 
 /// The already-shaped controller state the body renders: the drawer open flags,
-/// the toggle and download handlers, and the fully-built drawer props (primary
-/// row plus grouped action rows, each with its handler and state).
+/// the toggle and close handlers, and the fully-built drawer rows (the primary
+/// Grid Layout row plus the grouped action rows, each with its handler and state).
 pub struct BurgerMenuView {
     pub(super) burger_open: Signal<bool>,
     pub(super) upload_info_open: Signal<bool>,
     pub(super) download_info_open: Signal<bool>,
     pub(super) toggle: EventHandler<MouseEvent>,
-    pub(super) drawer: BurgerDrawerProps,
+    pub(super) on_close: EventHandler<MouseEvent>,
+    pub(super) layout: BurgerMenuRow,
+    pub(super) items: Vec<BurgerMenuRow>,
 }
 
 /// The drawer's open state and the body-scroll lock it drives: owns the
@@ -177,23 +177,13 @@ pub fn use_burger_menu() -> BurgerMenuView {
     let layout = builder.layout();
     let items = builder.items();
     let on_close = drawer.close;
-    let drawer_props = BurgerDrawerProps {
-        on_close,
-        layout,
-        items,
-    };
     BurgerMenuView {
         burger_open: drawer.burger_open,
         upload_info_open: actions.upload_info_open,
         download_info_open: actions.download_info_open,
         toggle: drawer.toggle,
-        drawer: drawer_props,
-    }
-}
-
-impl From<&BurgerMenuView> for UploadInfoDialogProps {
-    fn from(view: &BurgerMenuView) -> Self {
-        let open = view.upload_info_open;
-        Self { open }
+        on_close,
+        layout,
+        items,
     }
 }

@@ -1,15 +1,17 @@
 mod props;
 mod state;
 mod style;
+mod view;
 
 use crate::components::app::components::shell::components::shared::editable_keycap::{
-    EditableKeycap, EditableKeycapProps,
+    EditableKeycap, EditableKeycapState,
 };
 use dioxus::prelude::*;
-pub use props::LayoutTileProps;
+use props::LayoutTileProps;
 pub use state::LayoutTileState;
 use style::CLASS;
 use tw_macro::assert_component;
+pub use view::LayoutTileView;
 
 /// A single editable cell in the global hotkey grid. Draggable to swap, clickable
 /// to open the key picker, and pulses while being edited. The focusable, keyboard-
@@ -22,7 +24,11 @@ pub fn LayoutTile(props: LayoutTileProps) -> Element {
     let ondragover = props.ondragover;
     let ondrop = props.ondrop;
     let onclick = props.onclick;
-    let keycap = EditableKeycapProps::from(&props);
+    let label = props.label;
+    let keycap_state = match props.state {
+        LayoutTileState::Idle => EditableKeycapState::Idle,
+        LayoutTileState::Editing => EditableKeycapState::Editing,
+    };
     rsx! {
         button {
             class: CLASS,
@@ -32,7 +38,7 @@ pub fn LayoutTile(props: LayoutTileProps) -> Element {
             ondragover,
             ondrop,
             onclick,
-            EditableKeycap { ..keycap }
+            EditableKeycap { label, state: keycap_state }
         }
     }
 }

@@ -38,6 +38,48 @@ tasks:
       - "tailwind.input.css"
       - "src/**/*.rs"
 
+  # Fail if any Tailwind class in a `tw![…]` macro is non-canonical or
+  # conflicting, per the real language server (tw-lint drives it). The
+  # container regex scopes extraction to `tw![…]` blocks — bracket-aware so it
+  # spans arbitrary values like `w-[26cqi]` — so prose strings are never linted.
+  tailwind/lint:
+    toolchain: system
+    # `script` (not command+args): moon runs system tasks through a shell, so
+    # the regex metacharacters must stay single-quoted or the shell mangles
+    # them. Single quotes also stop `crates/**/*.rs` from glob-expanding —
+    # tw-lint does its own globbing relative to --root.
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.input.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\[((?:[^\[\]]|\[[^\]]*\])*)\]'
+      --class-regex '"([^"]*)"'
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+    inputs:
+      - "/crates/**/*.rs"
+      - "tailwind.input.css"
+
+  # Auto-fix every deterministic class issue: rewrites non-canonical classes to
+  # canonical form and drops exact duplicates, in place, then reformats (tw-lint
+  # collapses each block to one line). Semantic conflicts between two different
+  # classes have no safe auto-fix and still need manual resolution.
+  tailwind/lint/fix:
+    toolchain: system
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.input.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\[((?:[^\[\]]|\[[^\]]*\])*)\]'
+      --class-regex '"([^"]*)"' --fix && cargo fmt --all
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  ci:
+    deps:
+      - tailwind/lint
+
   tailwind/watch:
     toolchain: system
     command: tailwindcss -i tailwind.input.css -o assets/tailwind.css --watch

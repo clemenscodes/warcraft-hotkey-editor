@@ -4,7 +4,7 @@ mod style;
 
 use dioxus::prelude::*;
 use logic::ToastClosePresentation;
-pub use props::ToastCloseProps;
+use props::ToastCloseProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

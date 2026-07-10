@@ -1,9 +1,21 @@
 use super::data::{INTRO, PRIMARY_LABEL, TITLE, WARNING};
 use super::props::DownloadInfoDialogProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::InfoDialogConfig;
 use dioxus::prelude::*;
 
-impl From<&DownloadInfoDialogProps> for InfoDialogConfig {
+/// The download dialog's shaped data: the open signal it drives, the shared copy
+/// and warning, and the cancel and confirm handlers. The shared `InfoDialog` is
+/// placed with these as named fields.
+pub(super) struct DownloadInfoDialogModel {
+    pub(super) open: Signal<bool>,
+    pub(super) title: &'static str,
+    pub(super) intro: &'static str,
+    pub(super) warning: Option<&'static str>,
+    pub(super) primary_label: &'static str,
+    pub(super) on_primary: EventHandler<MouseEvent>,
+    pub(super) on_cancel: EventHandler<MouseEvent>,
+}
+
+impl From<&DownloadInfoDialogProps> for DownloadInfoDialogModel {
     fn from(props: &DownloadInfoDialogProps) -> Self {
         let mut open = props.open;
         let on_confirm = props.on_confirm;

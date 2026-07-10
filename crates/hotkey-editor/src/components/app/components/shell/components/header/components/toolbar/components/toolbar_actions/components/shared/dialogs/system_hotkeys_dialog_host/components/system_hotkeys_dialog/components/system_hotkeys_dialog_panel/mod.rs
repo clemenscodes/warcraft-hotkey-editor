@@ -3,10 +3,10 @@ mod props;
 mod style;
 
 use components::system_hotkeys_dialog_body::SystemHotkeysDialogBody;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::SystemHotkeysDialogPanelProps;
+use props::SystemHotkeysDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,12 +16,13 @@ use tw_macro::assert_component;
 /// scrolling body, which reads its own state from context.
 #[component]
 pub fn SystemHotkeysDialogPanel(props: SystemHotkeysDialogPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
+                DialogHeader { title, on_close }
                 SystemHotkeysDialogBody {}
             }
         }

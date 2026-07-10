@@ -2,7 +2,7 @@ mod props;
 mod style;
 
 use dioxus::prelude::*;
-pub use props::SecondaryButtonProps;
+use props::SecondaryButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

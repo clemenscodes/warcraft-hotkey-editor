@@ -1,6 +1,4 @@
-use super::components::burger_drawer_body::BurgerDrawerBodyProps;
-use super::components::burger_drawer_body::components::shared::burger_menu_item::BurgerMenuItemProps;
-use super::components::burger_drawer_header::BurgerDrawerHeaderProps;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::logic::BurgerMenuRow;
 use dioxus::prelude::*;
 
 /// The slide-in drawer: everything the drawer subtree needs, threaded from the
@@ -9,21 +7,6 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerDrawerProps {
     pub on_close: EventHandler<MouseEvent>,
-    pub layout: BurgerMenuItemProps,
-    pub items: Vec<BurgerMenuItemProps>,
-}
-
-impl From<&BurgerDrawerProps> for BurgerDrawerHeaderProps {
-    fn from(props: &BurgerDrawerProps) -> Self {
-        let onclick = props.on_close;
-        Self { onclick }
-    }
-}
-
-impl From<&BurgerDrawerProps> for BurgerDrawerBodyProps {
-    fn from(props: &BurgerDrawerProps) -> Self {
-        let layout = props.layout.clone();
-        let items = props.items.clone();
-        Self { layout, items }
-    }
+    pub layout: BurgerMenuRow,
+    pub items: Vec<BurgerMenuRow>,
 }

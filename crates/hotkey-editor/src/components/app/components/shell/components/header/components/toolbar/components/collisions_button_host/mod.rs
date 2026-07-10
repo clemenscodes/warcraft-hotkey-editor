@@ -15,11 +15,13 @@ use tw_macro::assert_component;
 /// button's own border and radius resolve against its real size, not the viewport.
 #[component]
 pub fn CollisionsButtonHost() -> Element {
-    let button = use_collisions_button();
+    let model = use_collisions_button();
+    let summary = model.summary;
+    let onclick = model.onclick;
     rsx! {
         div {
             class: CLASS,
-            CollisionsButton { ..button }
+            CollisionsButton { summary, onclick }
         }
     }
 }

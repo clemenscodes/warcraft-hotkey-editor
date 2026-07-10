@@ -3,8 +3,48 @@ use crate::components::app::components::shell::components::shared::icons::{
     ICON_RESOLVE, ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
 
-use super::components::help_dialog_panel::components::help_dialog_body::components::help_body::components::help_resolver_section::components::help_glossary_columns::components::help_glossary_column::components::help_glossary_entry::HelpGlossaryEntryProps;
-use super::components::help_dialog_panel::components::help_dialog_body::components::help_body::components::help_top_row::components::help_legend_section::components::help_legend::components::help_legend_row::HelpLegendRowProps;
+/// One toolbar button in the legend: its glyph, its name, and its one-line
+/// description. Plain guide content, threaded into the legend row component as a
+/// named field — never a component's props.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct HelpLegendEntry {
+    icon: &'static str,
+    label: &'static str,
+    description: &'static str,
+}
+
+impl HelpLegendEntry {
+    pub fn icon(&self) -> &'static str {
+        self.icon
+    }
+
+    pub fn label(&self) -> &'static str {
+        self.label
+    }
+
+    pub fn description(&self) -> &'static str {
+        self.description
+    }
+}
+
+/// One glossary item: a term paired with its definition. Plain guide content,
+/// threaded into the glossary entry component as a named field — never a
+/// component's props.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct HelpGlossaryItem {
+    term: &'static str,
+    description: &'static str,
+}
+
+impl HelpGlossaryItem {
+    pub fn term(&self) -> &'static str {
+        self.term
+    }
+
+    pub fn description(&self) -> &'static str {
+        self.description
+    }
+}
 
 /// One piece of a workflow step: either a run of text or an inline toolbar glyph.
 /// A step is a sequence of these, so the renderer is a pure loop and never bakes
@@ -20,9 +60,9 @@ pub enum HelpSegment {
 #[derive(Clone, Copy, PartialEq)]
 pub struct HelpContent {
     workflow: &'static [&'static [HelpSegment]],
-    legend: &'static [HelpLegendRowProps],
+    legend: &'static [HelpLegendEntry],
     resolver_prose: &'static [&'static str],
-    glossary: &'static [&'static [HelpGlossaryEntryProps]],
+    glossary: &'static [&'static [HelpGlossaryItem]],
 }
 
 impl HelpContent {
@@ -30,7 +70,7 @@ impl HelpContent {
         self.workflow
     }
 
-    pub fn legend(&self) -> &'static [HelpLegendRowProps] {
+    pub fn legend(&self) -> &'static [HelpLegendEntry] {
         self.legend
     }
 
@@ -38,7 +78,7 @@ impl HelpContent {
         self.resolver_prose
     }
 
-    pub fn glossary(&self) -> &'static [&'static [HelpGlossaryEntryProps]] {
+    pub fn glossary(&self) -> &'static [&'static [HelpGlossaryItem]] {
         self.glossary
     }
 }
@@ -146,58 +186,58 @@ const WORKFLOW: &[&[HelpSegment]] = &[
     }],
 ];
 
-const LEGEND: &[HelpLegendRowProps] = &[
-    HelpLegendRowProps {
+const LEGEND: &[HelpLegendEntry] = &[
+    HelpLegendEntry {
         icon: ICON_GRID,
         label: "Grid Layout",
         description: "Define a global grid and apply it to every unit.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_COLLISIONS,
         label: "Collisions",
         description: "Review the conflicts the editor found.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_TEMPLATES,
         label: "Templates",
         description: "Apply a prepared keybind set.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_UPLOAD,
         label: "Upload",
         description: "Import a CustomKeys.txt file from your computer.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_COG,
         label: "System Hotkeys",
         description: "Edit the system and menu hotkeys.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_RESOLVE,
         label: "Resolve",
         description: "Display and settle all positional conflicts at once.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_PREVIEW,
         label: "Preview",
         description: "See the text the editor will export.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_DOWNLOAD,
         label: "Export",
         description: "Download your CustomKeys.txt file.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_UNDO,
         label: "Undo",
         description: "Step backward through your changes.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_REDO,
         label: "Redo",
         description: "Step forward through your changes.",
     },
-    HelpLegendRowProps {
+    HelpLegendEntry {
         icon: ICON_HELP,
         label: "Help",
         description: "Reopen this guide at any time.",
@@ -208,52 +248,52 @@ const RESOLVER_PROSE: &[&str] = &[
     "The whole clash is modeled as a conflict graph. Every ability is a node, and two of them share an edge whenever a single unit carries both. The tangled clusters those edges form are the islands. Each island is solved on its own. Within one, an anchor is crowned at every contested button, the ability the most units carry, while the losers slide aside. A slide can land on another taken button and spark a fresh fight, so the moves cascade across the row. When a row runs out of room, the stranded ability spills onto another row or swaps with what sits there, and gap pulls tidy the holes left behind. The board is swept round after round until that island settles. Every island found is resolved the same way, so the whole grid lands in one go.",
 ];
 
-const GLOSSARY: &[&[HelpGlossaryEntryProps]] = &[CONFLICT_KINDS, RESOLVER_PARTS, RESOLVER_MOVES];
+const GLOSSARY: &[&[HelpGlossaryItem]] = &[CONFLICT_KINDS, RESOLVER_PARTS, RESOLVER_MOVES];
 
-const CONFLICT_KINDS: &[HelpGlossaryEntryProps] = &[
-    HelpGlossaryEntryProps {
+const CONFLICT_KINDS: &[HelpGlossaryItem] = &[
+    HelpGlossaryItem {
         term: "Cross unit collisions",
         description: "Two or more different units want to place an ability in the same grid cell. A popular ability can pull a whole crowd of units into one knot. This is a position conflict between units.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Intra unit collisions",
         description: "One unit has two or more abilities competing for the same grid cell. This is a position conflict inside a single unit.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Hotkey collisions",
         description: "Two or more abilities on the same unit are bound to the same hotkey letter.",
     },
 ];
 
-const RESOLVER_PARTS: &[HelpGlossaryEntryProps] = &[
-    HelpGlossaryEntryProps {
+const RESOLVER_PARTS: &[HelpGlossaryItem] = &[
+    HelpGlossaryItem {
         term: "Island",
         description: "A connected cluster of abilities that collide on one button. Two abilities are linked when a single unit carries both, and the links can chain from one ability to the next across several units.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Anchor",
         description: "The ability that wins a contested button and stays put. The editor keeps the ability that the most units carry, because moving it would disturb the most cards, so the rarer ability gives way instead.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Mover",
         description: "An ability that steps aside so the anchor can keep the button. It slides one button to the right.",
     },
 ];
 
-const RESOLVER_MOVES: &[HelpGlossaryEntryProps] = &[
-    HelpGlossaryEntryProps {
+const RESOLVER_MOVES: &[HelpGlossaryItem] = &[
+    HelpGlossaryItem {
         term: "Fights",
         description: "Two or more abilities want the same button. The most shared one stays, the others slide to the right.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Gap pulls",
         description: "When a slide leaves an empty button with a filled one further along the same row, the editor pulls that ability back to close the gap and keep the row tidy.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Spills",
         description: "If an ability still has nowhere to go in its own row, the editor rehomes it to a free button in another row.",
     },
-    HelpGlossaryEntryProps {
+    HelpGlossaryItem {
         term: "Swaps",
         description: "Two abilities swap positions in a single move.",
     },

@@ -5,7 +5,7 @@ mod style;
 
 use components::move_hotkey_checkbox::MoveHotkeyCheckbox;
 use dioxus::prelude::*;
-pub use props::MoveHotkeyToggleProps;
+use props::MoveHotkeyToggleProps;
 use style::CLASS;
 use tw_macro::assert_component;
 

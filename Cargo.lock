@@ -840,14 +840,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dioxus-gallery"
-version = "0.1.0"
-source = "git+https://github.com/clemenscodes/dioxus-gallery?tag=v0.1.0#169e3ad2e403ff5bcc1c9eba4af20fb9ca810747"
-dependencies = [
- "dioxus",
-]
-
-[[package]]
 name = "dioxus-history"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1298,19 +1290,6 @@ dependencies = [
  "memchr",
  "pin-project-lite",
  "slab",
-]
-
-[[package]]
-name = "gallery"
-version = "0.1.0"
-dependencies = [
- "dioxus",
- "dioxus-gallery",
- "hotkey-editor",
- "warcraft-api",
- "warcraft-keybinds",
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]
@@ -2778,9 +2757,9 @@ dependencies = [
 
 [[package]]
 name = "sha1"
-version = "0.10.6"
+version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3bf829a2d51ab4a5ddf1352d8470c140cadc8301b2ae1789db023f01cedd6ba"
+checksum = "a978451301f4db1d02937a4ab3ccce137717b81826e79b7d49ffe3244a13c3b8"
 dependencies = [
  "cfg-if",
  "cpufeatures 0.2.17",

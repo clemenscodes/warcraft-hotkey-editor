@@ -1,11 +1,7 @@
-use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::{
-    SurfaceState, ToolbarButtonSurfaceProps,
-};
 use dioxus::prelude::*;
 
 /// Consumers swap only the icon, click handler, and aria/disabled state; the look is
-/// fixed. Every attribute is a typed field so callers build these props by
-/// conversion and spread them, rather than passing loose attributes by hand.
+/// fixed. Every attribute is a typed field, set by name where the button is rendered.
 #[derive(Props, Clone, PartialEq, Default)]
 pub struct ToolbarButtonProps {
     pub icon: &'static str,
@@ -19,27 +15,4 @@ pub struct ToolbarButtonProps {
     #[props(default)]
     pub aria_pressed: Option<bool>,
     pub onclick: EventHandler<MouseEvent>,
-}
-
-impl From<&ToolbarButtonProps> for ToolbarButtonSurfaceProps {
-    fn from(props: &ToolbarButtonProps) -> Self {
-        let icon = props.icon;
-        let aria_label = props.aria_label;
-        let state = SurfaceState::Interactive;
-        let disabled = props.disabled;
-        let aria_haspopup = props.aria_haspopup;
-        let aria_expanded = props.aria_expanded;
-        let aria_pressed = props.aria_pressed;
-        let onclick = props.onclick;
-        Self {
-            icon,
-            aria_label,
-            state,
-            disabled,
-            aria_haspopup,
-            aria_expanded,
-            aria_pressed,
-            onclick,
-        }
-    }
 }

@@ -12,16 +12,24 @@ use tw_macro::assert_component;
 
 #[component]
 pub fn Footer() -> Element {
+    let credit = data::CREDIT;
+    let lead = credit.lead;
+    let tail = credit.tail;
+    let heart = credit.heart;
     rsx! {
         footer { class: CLASS,
-            FooterCredit { ..data::CREDIT }
-            for (index, link) in data::LINKS.iter().cloned().enumerate() {
+            FooterCredit { lead, tail, heart }
+            for (index, link) in data::LINKS.iter().enumerate() {
                 if index > 0 {
                     FooterSeparator {}
                 }
-                FooterLink { ..link }
+                FooterLink {
+                    label: link.label,
+                    href: link.href,
+                    icon: link.icon,
+                }
             }
-            FooterDisclaimer { ..data::DISCLAIMER }
+            FooterDisclaimer { text: data::DISCLAIMER }
         }
     }
 }

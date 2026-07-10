@@ -1,20 +1,20 @@
-use super::components::help_dialog_panel::HelpDialogPanelProps;
-use super::components::help_dialog_panel::components::help_dialog_body::HelpDialogBodyProps;
-use super::components::help_dialog_panel::components::help_dialog_body::components::help_body::HelpBodyProps;
-use super::components::help_dialog_panel::components::help_dialog_body::components::help_dismiss::HelpDismissProps;
-use super::data::HELP_CONTENT;
+use super::data::{HELP_CONTENT, HelpContent};
 use super::props::HelpDialogProps;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeaderProps;
+use crate::persistence::onboarding_persistence;
 use dioxus::prelude::*;
 
 /// The help dialog's own shell, shaped directly from its props: the open value driving
-/// the backdrop, the change handler that writes the open signal, and the bordered panel
-/// (its header and scroll-region body). Every dialog owns its shell now — there is no
-/// base.
+/// the backdrop, the change handler that writes the open signal, the header title and
+/// close handler, the guide content, and the dismiss handler. The panel is built from
+/// these plain values at the render site, not carried as its props. Every dialog owns
+/// its shell now — there is no base.
 pub(super) struct HelpDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
-    pub(super) panel: HelpDialogPanelProps,
+    pub(super) title: String,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) content: HelpContent,
+    pub(super) on_dismiss: EventHandler<MouseEvent>,
 }
 
 impl From<&HelpDialogProps> for HelpDialogShell {
@@ -25,20 +25,19 @@ impl From<&HelpDialogProps> for HelpDialogShell {
         let mut close_signal = props.help_open;
         let title = String::from("How to use this editor");
         let on_close = EventHandler::new(move |()| close_signal.set(false));
-        let header = DialogHeaderProps { title, on_close };
-        let help_body_props = HelpBodyProps {
-            content: HELP_CONTENT,
-        };
-        let dismiss = HelpDismissProps::from(props);
-        let body = HelpDialogBodyProps {
-            body: help_body_props,
-            dismiss,
-        };
-        let panel = HelpDialogPanelProps { header, body };
+        let content = HELP_CONTENT;
+        let mut dismiss_signal = props.help_open;
+        let on_dismiss = EventHandler::new(move |_event: MouseEvent| {
+            onboarding_persistence::mark_seen();
+            dismiss_signal.set(false);
+        });
         Self {
             open,
             on_open_change,
-            panel,
+            title,
+            on_close,
+            content,
+            on_dismiss,
         }
     }
 }

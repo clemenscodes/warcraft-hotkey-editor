@@ -13,11 +13,11 @@ use tw_macro::assert_component;
 /// burger drawer. The dialog self-gates on the shared open signal.
 #[component]
 pub fn SystemHotkeysDialogHost() -> Element {
-    let dialog = use_system_hotkeys_dialog_host();
+    let system_hotkeys_open = use_system_hotkeys_dialog_host();
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysDialog { ..dialog }
+            SystemHotkeysDialog { system_hotkeys_open }
         }
     }
 }

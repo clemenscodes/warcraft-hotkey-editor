@@ -11,7 +11,7 @@ use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
 use hooks::use_system_hotkeys_dialog;
 use logic::SystemHotkeysDialogShell;
-pub use props::SystemHotkeysDialogProps;
+use props::SystemHotkeysDialogProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -26,7 +26,8 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
     let SystemHotkeysDialogShell {
         open,
         on_open_change,
-        panel,
+        title,
+        on_close,
     } = SystemHotkeysDialogShell::from(&model);
     if !open {
         return rsx! {};
@@ -37,7 +38,7 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
             on_open_change,
             div {
                 class: CLASS,
-                SystemHotkeysDialogPanel { ..panel }
+                SystemHotkeysDialogPanel { title, on_close }
             }
         }
     }

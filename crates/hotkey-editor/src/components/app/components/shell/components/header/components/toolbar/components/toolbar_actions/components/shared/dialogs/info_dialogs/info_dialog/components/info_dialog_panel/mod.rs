@@ -2,11 +2,11 @@ pub mod components;
 mod props;
 mod style;
 
-use components::info_dialog_body::{InfoDialogBody, InfoDialogBodyProps};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::{DialogHeader, DialogHeaderProps};
+use components::info_dialog_body::InfoDialogBody;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-pub use props::InfoDialogPanelProps;
+use props::InfoDialogPanelProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,14 +16,25 @@ use tw_macro::assert_component;
 /// scrolling body.
 #[component]
 pub fn InfoDialogPanel(props: InfoDialogPanelProps) -> Element {
-    let header = DialogHeaderProps::from(&props);
-    let body = InfoDialogBodyProps::from(&props);
+    let title = props.title;
+    let on_close = props.on_close;
+    let intro = props.intro;
+    let warning = props.warning;
+    let primary_label = props.primary_label;
+    let on_primary = props.on_primary;
+    let on_cancel = props.on_cancel;
     rsx! {
         DialogContent {
             div {
                 class: CLASS,
-                DialogHeader { ..header }
-                InfoDialogBody { ..body }
+                DialogHeader { title, on_close }
+                InfoDialogBody {
+                    intro,
+                    warning,
+                    primary_label,
+                    on_primary,
+                    on_cancel,
+                }
             }
         }
     }

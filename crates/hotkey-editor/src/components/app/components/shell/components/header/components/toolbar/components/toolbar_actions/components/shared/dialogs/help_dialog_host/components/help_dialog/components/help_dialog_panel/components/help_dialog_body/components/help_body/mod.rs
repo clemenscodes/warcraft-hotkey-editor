@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::help_resolver_section::{HelpResolverSection, HelpResolverSectionProps};
-use components::help_top_row::{HelpTopRow, HelpTopRowProps};
+use components::help_resolver_section::HelpResolverSection;
+use components::help_top_row::HelpTopRow;
 use dioxus::prelude::*;
-pub use props::HelpBodyProps;
+use props::HelpBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,12 +13,16 @@ use tw_macro::assert_component;
 /// resolver explanation. Pure layout; it threads the content down.
 #[component]
 pub fn HelpBody(props: HelpBodyProps) -> Element {
-    let top_row = HelpTopRowProps::from(&props);
-    let resolver = HelpResolverSectionProps::from(&props);
+    let content = props.content;
+    let prose = content.resolver_prose();
+    let glossary = content.glossary();
     rsx! {
         div { class: CLASS,
-            HelpTopRow { ..top_row }
-            HelpResolverSection { ..resolver }
+            HelpTopRow { content }
+            HelpResolverSection {
+                prose,
+                glossary,
+            }
         }
     }
 }

@@ -3,10 +3,10 @@ mod props;
 mod style;
 
 use components::info_filename::InfoFilename;
-use components::info_intro::{InfoIntro, InfoIntroProps};
-use components::info_warning::{InfoWarning, InfoWarningProps};
+use components::info_intro::InfoIntro;
+use components::info_warning::InfoWarning;
 use dioxus::prelude::*;
-pub use props::InfoContentProps;
+use props::InfoContentProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,13 +14,13 @@ use tw_macro::assert_component;
 /// chip, and the optional warning callout.
 #[component]
 pub fn InfoContent(props: InfoContentProps) -> Element {
-    let intro = InfoIntroProps::from(&props);
-    let warning = InfoWarningProps::from(&props);
+    let intro = props.intro;
+    let warning = props.warning;
     rsx! {
         div { class: CLASS,
-            InfoIntro { ..intro }
+            InfoIntro { intro }
             InfoFilename {}
-            InfoWarning { ..warning }
+            InfoWarning { warning }
         }
     }
 }

@@ -3,13 +3,11 @@ mod logic;
 mod props;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::{
-    ToolbarButtonSurface, ToolbarButtonSurfaceProps,
-};
-use components::collisions_button_badge::{CollisionsButtonBadge, CollisionsButtonBadgeProps};
+use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::ToolbarButtonSurface;
+use components::collisions_button_badge::CollisionsButtonBadge;
 use dioxus::prelude::*;
 use logic::CollisionsButtonPresentation;
-pub use props::CollisionsButtonProps;
+use props::CollisionsButtonProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -29,21 +27,18 @@ pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
         icon,
         onclick,
     } = CollisionsButtonPresentation::from(&props);
-    let surface = ToolbarButtonSurfaceProps {
-        icon,
-        aria_label: "View collisions",
-        state: surface_state,
-        onclick,
-        ..ToolbarButtonSurfaceProps::default()
-    };
-    let badge_props = CollisionsButtonBadgeProps { label: count_label };
     rsx! {
         div {
             class: CLASS,
             "aria-label": aria_label,
-            ToolbarButtonSurface { ..surface }
+            ToolbarButtonSurface {
+                icon,
+                aria_label: "View collisions",
+                state: surface_state,
+                onclick,
+            }
             if collision_count > 0 {
-                CollisionsButtonBadge { ..badge_props }
+                CollisionsButtonBadge { label: count_label }
             }
         }
     }

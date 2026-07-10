@@ -15,8 +15,11 @@ pub fn HeroSelectionRow() -> Element {
         div {
             class: CLASS,
             style: model.frame,
-            for slot in model.slots {
-                SlotButton { ..slot }
+            for entry in model.slots {
+                SlotButton {
+                    slot_label: entry.slot_label.clone(),
+                    section_id: entry.section_id,
+                }
             }
         }
     }

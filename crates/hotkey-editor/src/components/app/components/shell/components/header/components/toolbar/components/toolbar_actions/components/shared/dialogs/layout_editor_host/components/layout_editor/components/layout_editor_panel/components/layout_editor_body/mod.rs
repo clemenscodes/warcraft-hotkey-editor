@@ -2,9 +2,9 @@ pub mod components;
 mod props;
 mod style;
 
-use components::layout_editor_content::{LayoutEditorContent, LayoutEditorContentProps};
+use components::layout_editor_content::LayoutEditorContent;
 use dioxus::prelude::*;
-pub use props::LayoutEditorBodyProps;
+use props::LayoutEditorBodyProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,11 +12,14 @@ use tw_macro::assert_component;
 /// edge, holding the centered editor column.
 #[component]
 pub fn LayoutEditorBody(props: LayoutEditorBodyProps) -> Element {
-    let content = LayoutEditorContentProps::from(&props);
+    let cells = props.cells;
+    let toggle_checked = props.toggle_checked;
+    let on_toggle = props.on_toggle;
+    let on_apply = props.on_apply;
     rsx! {
         div {
             class: CLASS,
-            LayoutEditorContent { ..content }
+            LayoutEditorContent { cells, toggle_checked, on_toggle, on_apply }
         }
     }
 }

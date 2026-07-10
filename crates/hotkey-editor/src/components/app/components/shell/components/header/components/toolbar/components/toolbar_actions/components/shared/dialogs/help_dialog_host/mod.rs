@@ -14,11 +14,11 @@ use tw_macro::assert_component;
 /// open signal.
 #[component]
 pub fn HelpDialogHost() -> Element {
-    let dialog = use_help_dialog_host();
+    let help_open = use_help_dialog_host();
     rsx! {
         div {
             class: CLASS,
-            HelpDialog { ..dialog }
+            HelpDialog { help_open }
         }
     }
 }

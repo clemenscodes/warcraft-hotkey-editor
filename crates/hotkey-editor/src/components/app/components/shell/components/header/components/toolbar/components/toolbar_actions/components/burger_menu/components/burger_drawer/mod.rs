@@ -2,10 +2,10 @@ pub mod components;
 mod props;
 mod style;
 
-use components::burger_drawer_body::{BurgerDrawerBody, BurgerDrawerBodyProps};
-use components::burger_drawer_header::{BurgerDrawerHeader, BurgerDrawerHeaderProps};
+use components::burger_drawer_body::BurgerDrawerBody;
+use components::burger_drawer_header::BurgerDrawerHeader;
 use dioxus::prelude::*;
-pub use props::BurgerDrawerProps;
+use props::BurgerDrawerProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,16 +13,20 @@ use tw_macro::assert_component;
 /// scroll-lock and `aria-controls` hook off.
 #[component]
 pub fn BurgerDrawer(props: BurgerDrawerProps) -> Element {
-    let header = BurgerDrawerHeaderProps::from(&props);
-    let body = BurgerDrawerBodyProps::from(&props);
+    let on_close = props.on_close;
+    let layout = props.layout;
+    let items = props.items;
     rsx! {
         aside {
             class: CLASS,
             id: "burger-drawer",
             role: "navigation",
             aria_label: "Menu",
-            BurgerDrawerHeader { ..header }
-            BurgerDrawerBody { ..body }
+            BurgerDrawerHeader { onclick: on_close }
+            BurgerDrawerBody {
+                layout,
+                items,
+            }
         }
     }
 }

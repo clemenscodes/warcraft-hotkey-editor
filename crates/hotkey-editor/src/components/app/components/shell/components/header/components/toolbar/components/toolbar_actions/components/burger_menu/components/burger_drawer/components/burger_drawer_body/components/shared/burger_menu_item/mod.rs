@@ -1,42 +1,71 @@
 pub mod components;
-mod logic;
 mod props;
 mod state;
 
-use components::active_menu_item::{ActiveMenuItem, ActiveMenuItemProps};
-use components::idle_menu_item::{IdleMenuItem, IdleMenuItemProps};
-use components::primary_menu_item::{PrimaryMenuItem, PrimaryMenuItemProps};
+use components::active_menu_item::ActiveMenuItem;
+use components::idle_menu_item::IdleMenuItem;
+use components::primary_menu_item::PrimaryMenuItem;
 use dioxus::prelude::*;
-pub use props::BurgerMenuItemProps;
+use props::BurgerMenuItemProps;
 pub use state::BurgerItemState;
 use tw_macro::assert_component;
 
 /// A single drawer row. A pure dispatcher: from the row's visual weight it renders
 /// the matching look — `IdleMenuItem` xor `ActiveMenuItem` xor `PrimaryMenuItem`.
 /// Each look owns the same `<button>` markup and its own weight styling; this
-/// dispatcher only builds each look's props from the shared `BurgerMenuItemProps`
+/// dispatcher only names each look's fields from the shared `BurgerMenuItemProps`
 /// and renders the one the state selects.
 #[component]
 pub fn BurgerMenuItem(props: BurgerMenuItemProps) -> Element {
+    let icon = props.icon;
+    let label = props.label;
+    let disabled = props.disabled;
+    let role = props.role;
+    let aria_haspopup = props.aria_haspopup;
+    let aria_expanded = props.aria_expanded;
+    let aria_pressed = props.aria_pressed;
+    let aria_label = props.aria_label;
+    let onclick = props.onclick;
     match props.state {
-        BurgerItemState::Idle => {
-            let item = IdleMenuItemProps::from(&props);
-            rsx! {
-                IdleMenuItem { ..item }
+        BurgerItemState::Idle => rsx! {
+            IdleMenuItem {
+                icon,
+                label,
+                disabled,
+                role,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                aria_label,
+                onclick,
             }
-        }
-        BurgerItemState::Active => {
-            let item = ActiveMenuItemProps::from(&props);
-            rsx! {
-                ActiveMenuItem { ..item }
+        },
+        BurgerItemState::Active => rsx! {
+            ActiveMenuItem {
+                icon,
+                label,
+                disabled,
+                role,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                aria_label,
+                onclick,
             }
-        }
-        BurgerItemState::Primary => {
-            let item = PrimaryMenuItemProps::from(&props);
-            rsx! {
-                PrimaryMenuItem { ..item }
+        },
+        BurgerItemState::Primary => rsx! {
+            PrimaryMenuItem {
+                icon,
+                label,
+                disabled,
+                role,
+                aria_haspopup,
+                aria_expanded,
+                aria_pressed,
+                aria_label,
+                onclick,
             }
-        }
+        },
     }
 }
 

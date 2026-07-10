@@ -6,10 +6,8 @@ mod state;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog_host::DownloadInfoDialogHost;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::{
-    UploadInfoDialog, UploadInfoDialogProps,
-};
-use components::burger_backdrop::{BurgerBackdrop, BurgerBackdropProps};
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
+use components::burger_backdrop::BurgerBackdrop;
 use components::burger_drawer::BurgerDrawer;
 use components::burger_toggle_icon::BurgerToggleIcon;
 use dioxus::prelude::*;
@@ -25,16 +23,14 @@ use tw_macro::assert_component;
 #[component]
 pub fn BurgerMenu() -> Element {
     let view = use_burger_menu();
-    let backdrop = BurgerBackdropProps {
-        onclick: view.drawer.on_close,
-    };
-    let upload_dialog = UploadInfoDialogProps::from(&view);
     let BurgerMenuView {
         burger_open,
+        upload_info_open,
         download_info_open,
         toggle,
-        drawer,
-        ..
+        on_close,
+        layout,
+        items,
     } = view;
     rsx! {
         button {
@@ -47,10 +43,14 @@ pub fn BurgerMenu() -> Element {
             BurgerToggleIcon {}
         }
         if burger_open() {
-            BurgerBackdrop { ..backdrop }
-            BurgerDrawer { ..drawer }
+            BurgerBackdrop { onclick: on_close }
+            BurgerDrawer {
+                on_close,
+                layout,
+                items,
+            }
         }
-        UploadInfoDialog { ..upload_dialog }
+        UploadInfoDialog { open: upload_info_open }
         DownloadInfoDialogHost { open: download_info_open }
     }
 }

@@ -17,7 +17,9 @@ pub fn ExportButton() -> Element {
     let ExportButtonPresentation {
         visible,
         info_open: open,
-        button,
+        icon,
+        aria_label,
+        onclick,
     } = use_export_button();
     if !visible {
         return rsx! {};
@@ -25,7 +27,11 @@ pub fn ExportButton() -> Element {
     rsx! {
         div {
             class: CLASS,
-            ToolbarButton { ..button }
+            ToolbarButton {
+                icon,
+                aria_label,
+                onclick,
+            }
             DownloadInfoDialogHost { open }
         }
     }

@@ -4,7 +4,7 @@ mod style;
 
 use components::layout_tile::LayoutTile;
 use dioxus::prelude::*;
-pub use props::LayoutGridProps;
+use props::LayoutGridProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,16 @@ pub fn LayoutGrid(props: LayoutGridProps) -> Element {
     rsx! {
         div { class: CLASS,
             for cell in cells {
-                LayoutTile { ..cell }
+                LayoutTile {
+                    state: cell.state,
+                    label: cell.label,
+                    coordinate: cell.coordinate,
+                    ondragstart: cell.ondragstart,
+                    ondragend: cell.ondragend,
+                    ondragover: cell.ondragover,
+                    ondrop: cell.ondrop,
+                    onclick: cell.onclick,
+                }
             }
         }
     }

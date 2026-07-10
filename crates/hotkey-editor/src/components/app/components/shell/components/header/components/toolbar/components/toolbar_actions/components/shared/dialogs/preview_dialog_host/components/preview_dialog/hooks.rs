@@ -1,12 +1,11 @@
-use super::components::preview_dialog_panel::components::preview_dialog_body::components::preview_textarea::PreviewTextareaProps;
 use super::props::PreviewDialogProps;
 use dioxus::prelude::*;
 
 /// The preview dialog's shaped view: the open signal driving the shell and the
-/// serialized-text textarea props, recomputed whenever the loaded keys change.
+/// serialized text, recomputed whenever the loaded keys change.
 pub(super) struct PreviewDialogView {
     pub(super) open: Signal<bool>,
-    pub(super) textarea: PreviewTextareaProps,
+    pub(super) text: ReadSignal<String>,
 }
 
 /// Composes the preview dialog's body data. The one piece of work the body is not
@@ -25,6 +24,6 @@ pub(super) fn use_preview_dialog(props: &PreviewDialogProps) -> PreviewDialogVie
             None => String::new(),
         }
     });
-    let textarea = PreviewTextareaProps { text: text.into() };
-    PreviewDialogView { open, textarea }
+    let text = text.into();
+    PreviewDialogView { open, text }
 }

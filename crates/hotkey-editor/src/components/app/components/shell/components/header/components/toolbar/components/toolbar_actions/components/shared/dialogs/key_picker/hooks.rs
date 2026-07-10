@@ -1,8 +1,6 @@
 use super::logic::LetterColumnInputs;
 use super::props::KeyPickerProps;
-use crate::components::app::components::shell::components::shared::key_picker_board::{
-    KeyColumn, KeyPickerBoardProps,
-};
+use crate::components::app::components::shell::components::shared::key_picker_board::KeyColumn;
 use dioxus::prelude::*;
 use warcraft_keybinds::{HotkeyToken, KeyCode};
 
@@ -12,7 +10,9 @@ use warcraft_keybinds::{HotkeyToken, KeyCode};
 pub(super) struct KeyPickerModel {
     pub(super) open: Signal<bool>,
     pub(super) title: String,
-    pub(super) board: KeyPickerBoardProps,
+    pub(super) columns: Vec<KeyColumn>,
+    pub(super) on_pick: EventHandler<KeyCode>,
+    pub(super) on_close: EventHandler<()>,
 }
 
 /// Composes the picker: mirrors the caller's open flag into a signal the dialog shell
@@ -30,22 +30,23 @@ pub(super) fn use_key_picker(props: &KeyPickerProps) -> KeyPickerModel {
             parent_on_close.call(());
         }
     });
-    let board_on_close = EventHandler::new(move |_event: ()| open.set(false));
+    let on_close = EventHandler::new(move |_event: ()| open.set(false));
     let column_inputs = LetterColumnInputs {
         rows: props.rows.clone(),
         allow_conflict_pick: props.allow_conflict_pick,
     };
     let column = KeyColumn::from(column_inputs);
     let columns: Vec<KeyColumn> = vec![column];
-    let board_on_pick = EventHandler::new(move |code: KeyCode| {
+    let on_pick = EventHandler::new(move |code: KeyCode| {
         if let Ok(token) = HotkeyToken::try_from(code) {
             letter_on_pick.call(token);
         }
     });
-    let board = KeyPickerBoardProps {
+    KeyPickerModel {
+        open,
+        title,
         columns,
-        on_pick: board_on_pick,
-        on_close: board_on_close,
-    };
-    KeyPickerModel { open, title, board }
+        on_pick,
+        on_close,
+    }
 }
