@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::IntelligenceRowView;
 
 use components::primary_intelligence_row::PrimaryIntelligenceRow;
 use components::regular_intelligence_row::RegularIntelligenceRow;

@@ -1,3 +1,4 @@
+use super::view::AltPositionPickerGridAnchorView;
 use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
@@ -12,4 +13,15 @@ impl From<&AltPositionPickerGridAnchorProps> for GridEditorView {
     fn from(props: &AltPositionPickerGridAnchorProps) -> Self {
         props.grid_config.clone()
     }
+}
+
+impl From<&AltPositionPickerGridAnchorView> for AltPositionPickerGridAnchorProps {
+    fn from(view: &AltPositionPickerGridAnchorView) -> Self {
+        let AltPositionPickerGridAnchorView { grid_config } = view.clone();
+        Self { grid_config }
+    }
+}
+
+impl ddd::Props for AltPositionPickerGridAnchorProps {
+    type View = AltPositionPickerGridAnchorView;
 }

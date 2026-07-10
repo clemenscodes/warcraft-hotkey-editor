@@ -49,13 +49,12 @@ pub(super) fn use_templates_dialog(props: &TemplatesDialogProps) -> TemplatesDia
                 toast_api.success(title, options);
                 dialog_open.set(false);
             });
-            let card = TemplateCardView {
+            TemplateCardView {
                 name,
                 description,
                 resolved: resolved_template,
                 on_apply,
-            };
-            card
+            }
         })
         .collect();
     TemplatesDialogView { open, cards }

@@ -1,3 +1,4 @@
+use super::view::ActiveMobileCategoryTabView;
 use dioxus::prelude::*;
 
 /// The active mobile category tab's props: its label and the tap handler.
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 pub struct ActiveMobileCategoryTabProps {
     pub label: &'static str,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&ActiveMobileCategoryTabView> for ActiveMobileCategoryTabProps {
+    fn from(view: &ActiveMobileCategoryTabView) -> Self {
+        let ActiveMobileCategoryTabView { label, onclick } = view.clone();
+        Self { label, onclick }
+    }
+}
+
+impl ddd::Props for ActiveMobileCategoryTabProps {
+    type View = ActiveMobileCategoryTabView;
 }

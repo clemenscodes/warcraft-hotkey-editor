@@ -1,6 +1,9 @@
 mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::HitPointsRegenRowView;
 mod style;
 
 use super::super::super::shared::regen_qualifier::RegenQualifier;

@@ -1,3 +1,4 @@
+use super::view::GridEditorTileView;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
 use dioxus::prelude::*;
@@ -45,4 +46,53 @@ pub struct GridEditorTileProps {
     pub onclick: EventHandler<MouseEvent>,
     #[props(default)]
     pub ondoubleclick: EventHandler<MouseEvent>,
+}
+
+impl From<&GridEditorTileView> for GridEditorTileProps {
+    fn from(view: &GridEditorTileView) -> Self {
+        let GridEditorTileView {
+            coordinate,
+            icon,
+            label,
+            hotkey,
+            badge_state,
+            state,
+            is_dragging_source,
+            is_drag_over,
+            is_focusable,
+            draggable,
+            onkeydown,
+            onpointerdown,
+            onpointermove,
+            onpointerup,
+            onpointercancel,
+            onlostpointercapture,
+            onclick,
+            ondoubleclick,
+        } = view.clone();
+        Self {
+            coordinate,
+            icon,
+            label,
+            hotkey,
+            badge_state,
+            state,
+            is_dragging_source,
+            is_drag_over,
+            is_focusable,
+            draggable,
+            onkeydown,
+            onpointerdown,
+            onpointermove,
+            onpointerup,
+            onpointercancel,
+            onlostpointercapture,
+            onclick,
+            ondoubleclick,
+        }
+    }
+}
+
+impl ddd::Props for GridEditorTileProps {
+    type View = GridEditorTileView;
 }

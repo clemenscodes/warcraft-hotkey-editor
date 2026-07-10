@@ -10,7 +10,6 @@ classes! {
         "object-cover",
         "bg-warcraft-bg-panel/70",
         "text-transparent",
-        "text-[0]",
         "leading-0",
     ],
     mobile: tw![

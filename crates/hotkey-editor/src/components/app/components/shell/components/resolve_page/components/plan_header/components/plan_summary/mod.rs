@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PlanSummaryView;
 mod style;
 use components::plan_counts::PlanCounts;
 use components::plan_title::PlanTitle;

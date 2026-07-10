@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PlanHeaderView;
 mod style;
 use components::apply_button::ApplyButton;
 use components::plan_summary::PlanSummary;

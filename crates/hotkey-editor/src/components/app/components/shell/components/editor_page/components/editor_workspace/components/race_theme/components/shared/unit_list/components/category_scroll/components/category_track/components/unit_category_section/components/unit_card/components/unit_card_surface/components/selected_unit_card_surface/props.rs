@@ -1,3 +1,4 @@
+use super::view::SelectedUnitCardSurfaceView;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
@@ -12,4 +13,27 @@ pub struct SelectedUnitCardSurfaceProps {
     pub unit_id: WarcraftObjectId,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
+}
+
+impl From<&SelectedUnitCardSurfaceView> for SelectedUnitCardSurfaceProps {
+    fn from(view: &SelectedUnitCardSurfaceView) -> Self {
+        let SelectedUnitCardSurfaceView {
+            icon_path,
+            display_name,
+            unit_id,
+            onclick,
+            onkeydown,
+        } = view.clone();
+        Self {
+            icon_path,
+            display_name,
+            unit_id,
+            onclick,
+            onkeydown,
+        }
+    }
+}
+
+impl ddd::Props for SelectedUnitCardSurfaceProps {
+    type View = SelectedUnitCardSurfaceView;
 }

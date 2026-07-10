@@ -3,7 +3,6 @@ classes! {
     base: tw![
         "flex-[0_1_auto]",
         "min-w-0",
-        "text-inherit",
         "text-(--attribute-label-color,var(--color-warcraft-gold))",
     ],
 }

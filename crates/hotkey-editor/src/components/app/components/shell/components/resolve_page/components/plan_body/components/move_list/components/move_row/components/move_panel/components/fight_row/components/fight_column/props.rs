@@ -1,3 +1,4 @@
+use super::view::FightColumnView;
 use crate::components::app::components::shell::components::resolve_page::logic::MoveView;
 use dioxus::prelude::*;
 
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct FightColumnProps {
     pub move_view: MoveView,
+}
+
+impl From<&FightColumnView> for FightColumnProps {
+    fn from(view: &FightColumnView) -> Self {
+        let FightColumnView { move_view } = view.clone();
+        Self { move_view }
+    }
+}
+
+impl ddd::Props for FightColumnProps {
+    type View = FightColumnView;
 }

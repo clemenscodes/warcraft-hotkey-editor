@@ -18,7 +18,6 @@ classes! {
         "transition-all",
         "duration-fast",
         "bg-warcraft-bg-mid/55",
-        "text-warcraft-text-primary",
         "kb-focus:border-white",
         "kb-focus:text-white",
         "kb-focus:bg-warcraft-blue/85",

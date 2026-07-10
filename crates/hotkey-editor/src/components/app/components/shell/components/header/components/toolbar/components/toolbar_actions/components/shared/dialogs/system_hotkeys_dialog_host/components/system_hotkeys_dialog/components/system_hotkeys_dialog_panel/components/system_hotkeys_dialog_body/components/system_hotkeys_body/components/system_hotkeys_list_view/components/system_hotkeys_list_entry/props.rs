@@ -1,3 +1,4 @@
+use super::view::SystemHotkeysListEntryView;
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
@@ -8,4 +9,21 @@ use warcraft_keybinds::WarcraftObjectId;
 pub struct SystemHotkeysListEntryProps {
     pub section_id: WarcraftObjectId,
     pub comment: String,
+}
+
+impl From<&SystemHotkeysListEntryView> for SystemHotkeysListEntryProps {
+    fn from(view: &SystemHotkeysListEntryView) -> Self {
+        let SystemHotkeysListEntryView {
+            section_id,
+            comment,
+        } = view.clone();
+        Self {
+            section_id,
+            comment,
+        }
+    }
+}
+
+impl ddd::Props for SystemHotkeysListEntryProps {
+    type View = SystemHotkeysListEntryView;
 }

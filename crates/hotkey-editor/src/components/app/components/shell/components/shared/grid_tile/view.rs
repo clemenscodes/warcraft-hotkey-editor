@@ -4,7 +4,7 @@ use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
 
 /// Everything the base command tile needs to render. It is purely presentational
 /// and entirely inert: it draws the look of its state and its icon or label; its race
-/// accent is read from the inherited `--race-accent`. It has no hotkey, no focus, and no
+/// accent is read from the inherited `--race-color`. It has no hotkey, no focus, and no
 /// event handlers — `GridEditorTile` layers all of that on top by wrapping this base
 /// tile; the drag flags it forwards drive the mounted overlay children. Its address is
 /// the domain `GridCoordinate`.

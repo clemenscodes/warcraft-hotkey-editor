@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::CoordinateView;
 mod style;
 use dioxus::prelude::*;
 use props::CoordinateProps;

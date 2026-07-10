@@ -1,3 +1,4 @@
+use super::view::AltPositionPickerBodyView;
 use dioxus::prelude::*;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
@@ -8,4 +9,21 @@ use crate::components::app::components::shell::components::editor_page::componen
 pub struct AltPositionPickerBodyProps {
     pub explainer_text: String,
     pub grid_config: GridEditorView,
+}
+
+impl From<&AltPositionPickerBodyView> for AltPositionPickerBodyProps {
+    fn from(view: &AltPositionPickerBodyView) -> Self {
+        let AltPositionPickerBodyView {
+            explainer_text,
+            grid_config,
+        } = view.clone();
+        Self {
+            explainer_text,
+            grid_config,
+        }
+    }
+}
+
+impl ddd::Props for AltPositionPickerBodyProps {
+    type View = AltPositionPickerBodyView;
 }

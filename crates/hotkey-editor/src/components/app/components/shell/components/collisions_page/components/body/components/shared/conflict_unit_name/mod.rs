@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictUnitNameView;
 mod style;
 use dioxus::prelude::*;
 use props::ConflictUnitNameProps;

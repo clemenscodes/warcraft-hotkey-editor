@@ -1,3 +1,4 @@
+use super::view::IslandConflictMetaView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -7,4 +8,15 @@ use warcraft_keybinds::GridCoordinate;
 pub struct IslandConflictMetaProps {
     pub coordinate: GridCoordinate,
     pub count: usize,
+}
+
+impl From<&IslandConflictMetaView> for IslandConflictMetaProps {
+    fn from(view: &IslandConflictMetaView) -> Self {
+        let IslandConflictMetaView { coordinate, count } = view.clone();
+        Self { coordinate, count }
+    }
+}
+
+impl ddd::Props for IslandConflictMetaProps {
+    type View = IslandConflictMetaView;
 }

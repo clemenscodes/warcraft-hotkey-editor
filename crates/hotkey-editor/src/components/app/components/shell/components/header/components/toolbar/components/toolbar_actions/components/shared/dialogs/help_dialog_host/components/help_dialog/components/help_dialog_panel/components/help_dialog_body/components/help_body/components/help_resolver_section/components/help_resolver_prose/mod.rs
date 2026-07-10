@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::HelpResolverProseView;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::components::help_dialog_panel::components::help_dialog_body::components::help_body::components::help_resolver_section::components::shared::help_body_text::HelpBodyText;

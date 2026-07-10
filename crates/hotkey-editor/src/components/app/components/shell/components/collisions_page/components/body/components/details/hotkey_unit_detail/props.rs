@@ -1,3 +1,4 @@
+use super::view::HotkeyUnitDetailView;
 use crate::components::app::components::shell::components::collisions_page::logic::HotkeyUnitView;
 use dioxus::prelude::*;
 
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyUnitDetailProps {
     pub units: Vec<HotkeyUnitView>,
+}
+
+impl From<&HotkeyUnitDetailView> for HotkeyUnitDetailProps {
+    fn from(view: &HotkeyUnitDetailView) -> Self {
+        let HotkeyUnitDetailView { units } = view.clone();
+        Self { units }
+    }
+}
+
+impl ddd::Props for HotkeyUnitDetailProps {
+    type View = HotkeyUnitDetailView;
 }

@@ -1,3 +1,4 @@
+use super::view::DraggingSourceGhostView;
 use dioxus::prelude::*;
 
 /// Mounts only for the tile currently lifted as a drag's source; every other tile
@@ -7,4 +8,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct DraggingSourceGhostProps {
     pub active: bool,
+}
+
+impl From<&DraggingSourceGhostView> for DraggingSourceGhostProps {
+    fn from(view: &DraggingSourceGhostView) -> Self {
+        let DraggingSourceGhostView { active } = view.clone();
+        Self { active }
+    }
+}
+
+impl ddd::Props for DraggingSourceGhostProps {
+    type View = DraggingSourceGhostView;
 }

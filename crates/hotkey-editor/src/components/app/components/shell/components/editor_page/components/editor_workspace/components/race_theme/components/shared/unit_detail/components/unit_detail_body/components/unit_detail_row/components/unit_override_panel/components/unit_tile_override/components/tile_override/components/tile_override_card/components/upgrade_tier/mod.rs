@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::UpgradeTierView;
 mod style;
 
 use dioxus::prelude::*;

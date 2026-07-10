@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::InlineConflictPositionView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;

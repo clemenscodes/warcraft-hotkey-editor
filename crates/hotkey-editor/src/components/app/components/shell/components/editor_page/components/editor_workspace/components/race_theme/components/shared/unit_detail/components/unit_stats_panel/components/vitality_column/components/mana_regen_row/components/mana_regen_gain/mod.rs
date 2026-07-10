@@ -1,5 +1,6 @@
 pub mod components;
 mod props;
+mod view;
 
 use components::active_mana_regen_gain::ActiveManaRegenGain;
 use components::muted_mana_regen_gain::MutedManaRegenGain;

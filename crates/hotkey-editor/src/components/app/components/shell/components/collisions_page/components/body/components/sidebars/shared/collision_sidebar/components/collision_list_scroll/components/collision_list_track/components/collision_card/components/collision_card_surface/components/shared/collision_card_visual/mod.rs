@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CollisionCardVisualView;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
 use components::hotkey_unit_row_icon::HotkeyUnitRowIcon;

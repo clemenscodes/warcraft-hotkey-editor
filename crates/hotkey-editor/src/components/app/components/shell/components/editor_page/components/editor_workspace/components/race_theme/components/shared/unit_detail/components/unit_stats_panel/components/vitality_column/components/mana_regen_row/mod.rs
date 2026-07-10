@@ -1,5 +1,8 @@
 mod components;
 mod props;
+mod view;
+
+pub use view::ManaRegenRowView;
 mod style;
 
 use super::shared::regen_label::RegenLabel;

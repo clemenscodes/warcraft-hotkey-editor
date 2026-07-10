@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::OpenBreadcrumbsMenuView;
 mod style;
 
 use super::shared::system_hotkeys_category_tab::SystemHotkeysCategoryTab;

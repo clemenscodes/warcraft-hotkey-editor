@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::SystemSlotKeyView;
 
 use components::conflict_slot_key::ConflictSlotKey;
 use components::plain_slot_key::PlainSlotKey;

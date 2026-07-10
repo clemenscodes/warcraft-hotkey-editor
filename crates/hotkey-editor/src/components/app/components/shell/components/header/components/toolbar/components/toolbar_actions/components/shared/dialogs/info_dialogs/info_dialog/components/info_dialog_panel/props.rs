@@ -1,3 +1,4 @@
+use super::view::InfoDialogPanelView;
 use dioxus::prelude::*;
 
 /// The info dialog's bordered box inputs: the header title and close handler above
@@ -13,4 +14,31 @@ pub struct InfoDialogPanelProps {
     pub primary_label: &'static str,
     pub on_primary: EventHandler<MouseEvent>,
     pub on_cancel: EventHandler<MouseEvent>,
+}
+
+impl From<&InfoDialogPanelView> for InfoDialogPanelProps {
+    fn from(view: &InfoDialogPanelView) -> Self {
+        let InfoDialogPanelView {
+            title,
+            on_close,
+            intro,
+            warning,
+            primary_label,
+            on_primary,
+            on_cancel,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            intro,
+            warning,
+            primary_label,
+            on_primary,
+            on_cancel,
+        }
+    }
+}
+
+impl ddd::Props for InfoDialogPanelProps {
+    type View = InfoDialogPanelView;
 }

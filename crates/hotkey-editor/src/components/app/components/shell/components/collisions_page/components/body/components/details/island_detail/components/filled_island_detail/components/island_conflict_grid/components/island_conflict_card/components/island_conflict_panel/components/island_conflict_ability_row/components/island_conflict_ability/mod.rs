@@ -1,6 +1,10 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::IslandConflictAbilityView;
+
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
@@ -9,7 +13,7 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;
-use hooks::{IslandConflictAbilityView, use_island_conflict_ability};
+use hooks::{IslandConflictAbilityModel, use_island_conflict_ability};
 use props::IslandConflictAbilityProps;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -20,7 +24,7 @@ use tw_macro::assert_component;
 /// itself, so no ancestor knows the dialog exists.
 #[component]
 pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
-    let IslandConflictAbilityView {
+    let IslandConflictAbilityModel {
         open_state,
         icon_src,
         icon_alt,

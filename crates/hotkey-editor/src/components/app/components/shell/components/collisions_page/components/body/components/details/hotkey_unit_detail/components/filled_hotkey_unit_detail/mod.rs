@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FilledHotkeyUnitDetailView;
 mod style;
 
 use components::hotkey_conflict_grid::HotkeyConflictGrid;

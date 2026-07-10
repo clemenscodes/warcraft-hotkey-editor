@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CollisionCardSurfaceView;
 
 use components::idle_collision_card_surface::IdleCollisionCardSurface;
 use components::selected_collision_card_surface::SelectedCollisionCardSurface;

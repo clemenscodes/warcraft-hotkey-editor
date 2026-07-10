@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::UploadButtonInputView;
 mod style;
 
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;

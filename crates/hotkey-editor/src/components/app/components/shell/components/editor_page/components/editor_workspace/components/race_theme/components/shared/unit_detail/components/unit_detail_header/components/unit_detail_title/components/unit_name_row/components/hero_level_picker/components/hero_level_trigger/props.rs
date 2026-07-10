@@ -1,3 +1,4 @@
+use super::view::HeroLevelTriggerView;
 use dioxus::prelude::*;
 
 /// The hero-level dropdown trigger: the current level shown, whether the menu is
@@ -8,4 +9,23 @@ pub struct HeroLevelTriggerProps {
     pub number: String,
     pub is_open: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&HeroLevelTriggerView> for HeroLevelTriggerProps {
+    fn from(view: &HeroLevelTriggerView) -> Self {
+        let HeroLevelTriggerView {
+            number,
+            is_open,
+            onclick,
+        } = view.clone();
+        Self {
+            number,
+            is_open,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for HeroLevelTriggerProps {
+    type View = HeroLevelTriggerView;
 }

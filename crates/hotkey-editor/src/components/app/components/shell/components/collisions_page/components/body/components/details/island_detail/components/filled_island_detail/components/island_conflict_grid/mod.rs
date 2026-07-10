@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::IslandConflictGridView;
 mod style;
 
 use components::island_conflict_card::IslandConflictCard;

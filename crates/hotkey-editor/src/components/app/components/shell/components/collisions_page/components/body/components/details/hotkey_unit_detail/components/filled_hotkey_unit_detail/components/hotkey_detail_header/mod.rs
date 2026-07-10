@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::HotkeyDetailHeaderView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_detail_unit::ConflictDetailUnit;

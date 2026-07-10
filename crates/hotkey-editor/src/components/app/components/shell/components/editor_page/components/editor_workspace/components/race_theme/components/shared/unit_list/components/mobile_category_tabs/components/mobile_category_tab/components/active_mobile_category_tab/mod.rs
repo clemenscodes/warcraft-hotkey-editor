@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ActiveMobileCategoryTabView;
 mod style;
 
 use dioxus::prelude::*;
@@ -7,7 +10,7 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 /// The active mobile category tab: the current category, wearing the race accent
-/// (border, text, glow read from the theme's `--race-accent`). Presentational.
+/// (border, text, glow read from the theme's `--race-color`). Presentational.
 #[component]
 pub fn ActiveMobileCategoryTab(props: ActiveMobileCategoryTabProps) -> Element {
     let label = props.label;

@@ -1,3 +1,4 @@
+use super::view::CommandFillView;
 use dioxus::prelude::*;
 
 /// The command fill draws only when the occupant is a built-in command; every other
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct CommandFillProps {
     pub active: bool,
+}
+
+impl From<&CommandFillView> for CommandFillProps {
+    fn from(view: &CommandFillView) -> Self {
+        let CommandFillView { active } = view.clone();
+        Self { active }
+    }
+}
+
+impl ddd::Props for CommandFillProps {
+    type View = CommandFillView;
 }

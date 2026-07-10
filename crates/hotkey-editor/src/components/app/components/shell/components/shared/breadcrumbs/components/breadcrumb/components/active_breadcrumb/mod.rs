@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ActiveBreadcrumbView;
 mod style;
 
 use super::shared::breadcrumb_count::BreadcrumbCount;

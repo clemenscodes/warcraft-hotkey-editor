@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::HotkeysContentView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::hotkey_unit_detail::HotkeyUnitDetail;

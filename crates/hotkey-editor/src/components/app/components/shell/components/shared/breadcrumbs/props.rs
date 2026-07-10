@@ -1,4 +1,5 @@
 use super::breadcrumb_view::BreadcrumbView;
+use super::view::BreadcrumbsView;
 use dioxus::prelude::*;
 
 /// A breadcrumb bar: one prepared tab per entry, separated by "|". The tabs are
@@ -9,4 +10,21 @@ use dioxus::prelude::*;
 pub struct BreadcrumbsProps {
     pub breadcrumbs: Vec<BreadcrumbView>,
     pub aria_label: &'static str,
+}
+
+impl From<&BreadcrumbsView> for BreadcrumbsProps {
+    fn from(view: &BreadcrumbsView) -> Self {
+        let BreadcrumbsView {
+            breadcrumbs,
+            aria_label,
+        } = view.clone();
+        Self {
+            breadcrumbs,
+            aria_label,
+        }
+    }
+}
+
+impl ddd::Props for BreadcrumbsProps {
+    type View = BreadcrumbsView;
 }

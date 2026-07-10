@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::UnitCardView;
 mod style;
 
 use components::unit_card_surface::UnitCardSurface;

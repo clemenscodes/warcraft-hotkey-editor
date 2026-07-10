@@ -1,3 +1,4 @@
+use super::view::SystemHotkeysDialogPanelView;
 use dioxus::prelude::*;
 
 /// The system-hotkeys dialog's bordered box: the header row above the scrolling body,
@@ -10,4 +11,15 @@ pub struct SystemHotkeysDialogPanelProps {
     #[props(into)]
     pub title: String,
     pub on_close: EventHandler<()>,
+}
+
+impl From<&SystemHotkeysDialogPanelView> for SystemHotkeysDialogPanelProps {
+    fn from(view: &SystemHotkeysDialogPanelView) -> Self {
+        let SystemHotkeysDialogPanelView { title, on_close } = view.clone();
+        Self { title, on_close }
+    }
+}
+
+impl ddd::Props for SystemHotkeysDialogPanelProps {
+    type View = SystemHotkeysDialogPanelView;
 }

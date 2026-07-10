@@ -1,4 +1,5 @@
 use super::components::editor_grid::components::grid_editor_tile::EditorTile;
+use super::view::EditorHeadedGridView;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -8,5 +9,16 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 #[derive(Props, Clone, PartialEq)]
 pub struct EditorHeadedGridProps {
     pub heading: &'static str,
-    pub tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
+    pub(crate) tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
+}
+
+impl From<&EditorHeadedGridView> for EditorHeadedGridProps {
+    fn from(view: &EditorHeadedGridView) -> Self {
+        let EditorHeadedGridView { heading, tiles } = view.clone();
+        Self { heading, tiles }
+    }
+}
+
+impl ddd::Props for EditorHeadedGridProps {
+    type View = EditorHeadedGridView;
 }

@@ -1,6 +1,9 @@
 pub mod components;
-mod logic;
+pub mod logic;
 mod props;
+mod view;
+
+pub use view::IslandConflictCardView;
 mod style;
 
 use components::island_conflict_panel::IslandConflictPanel;

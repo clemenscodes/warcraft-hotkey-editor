@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::SystemHotkeysBreadcrumbsTriggerCaretView;
 
 use components::closed_breadcrumbs_trigger_caret::ClosedBreadcrumbsTriggerCaret;
 use components::open_breadcrumbs_trigger_caret::OpenBreadcrumbsTriggerCaret;

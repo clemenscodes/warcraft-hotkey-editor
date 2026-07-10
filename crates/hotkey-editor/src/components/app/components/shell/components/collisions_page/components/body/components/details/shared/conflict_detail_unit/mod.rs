@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::ConflictDetailUnitView;
 mod style;
 use components::conflict_detail_unit_icon::ConflictDetailUnitIcon;
 use dioxus::prelude::*;

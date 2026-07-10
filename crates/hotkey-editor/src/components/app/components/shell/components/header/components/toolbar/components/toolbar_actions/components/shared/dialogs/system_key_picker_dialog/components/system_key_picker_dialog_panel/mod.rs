@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::SystemKeyPickerDialogPanelView;
 mod style;
 
 use components::system_key_picker_dialog_body::SystemKeyPickerDialogBody;

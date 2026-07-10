@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpWorkflowView;
 mod style;
 
 use components::help_workflow_step::HelpWorkflowStep;

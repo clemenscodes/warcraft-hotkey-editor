@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::VitalityColumnView;
 mod style;
 
 use components::hit_points_regen_row::HitPointsRegenRow;

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpDialogBodyView;
 mod style;
 
 use components::help_body::HelpBody;

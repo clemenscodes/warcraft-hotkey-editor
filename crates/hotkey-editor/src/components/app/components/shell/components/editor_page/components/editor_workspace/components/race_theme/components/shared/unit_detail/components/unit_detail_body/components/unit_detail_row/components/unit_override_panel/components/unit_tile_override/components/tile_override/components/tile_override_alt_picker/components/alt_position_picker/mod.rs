@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::AltPositionPickerView;
 mod style;
 
 use components::alt_position_picker_panel::AltPositionPickerPanel;

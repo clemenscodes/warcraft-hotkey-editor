@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::AltStateControlsView;
 
 use dioxus::prelude::*;
 use tw_macro::assert_component;

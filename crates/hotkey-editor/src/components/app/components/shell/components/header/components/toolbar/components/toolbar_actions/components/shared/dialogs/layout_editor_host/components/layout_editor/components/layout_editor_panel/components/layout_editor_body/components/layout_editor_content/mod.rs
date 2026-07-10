@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::LayoutEditorContentView;
 mod style;
 
 use components::apply_button::ApplyButton;

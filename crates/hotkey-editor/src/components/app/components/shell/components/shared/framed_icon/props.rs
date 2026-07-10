@@ -1,4 +1,5 @@
 use super::icon_radius::IconRadius;
+use super::view::FramedIconView;
 use dioxus::prelude::*;
 
 /// A square, blue-bordered, `object-cover` icon image that fills the box its parent
@@ -13,4 +14,27 @@ pub struct FramedIconProps {
     pub radius: IconRadius,
     pub hover_glow: bool,
     pub placeholder: bool,
+}
+
+impl From<&FramedIconView> for FramedIconProps {
+    fn from(view: &FramedIconView) -> Self {
+        let FramedIconView {
+            src,
+            alt,
+            radius,
+            hover_glow,
+            placeholder,
+        } = view.clone();
+        Self {
+            src,
+            alt,
+            radius,
+            hover_glow,
+            placeholder,
+        }
+    }
+}
+
+impl ddd::Props for FramedIconProps {
+    type View = FramedIconView;
 }

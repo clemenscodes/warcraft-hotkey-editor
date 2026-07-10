@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitCardIdView;
 mod state;
 
 use components::normal_unit_card_id::NormalUnitCardId;

@@ -1,6 +1,6 @@
 use tw_macro::tw;
 // The active category tab: shared chrome values on the blue active surface, wearing the
-// race accent border/text/glow read from the theme's `--race-accent`. Shared values
+// race accent border/text/glow read from the theme's `--race-color`. Shared values
 // with the idle sibling.
 classes! {
     base: tw![
@@ -25,9 +25,9 @@ classes! {
         "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
         "kb-focus:shadow-focus",
         "bg-panel-blue",
-        "border-(--race-accent)",
-        "text-(--race-accent)",
-        "[--glow-color:var(--race-accent)]",
+        "border-(--race-color)",
+        "text-(--race-color)",
+        "[--glow-color:var(--race-color)]",
         "shadow-glow-soft",
     ],
     mobile: tw![

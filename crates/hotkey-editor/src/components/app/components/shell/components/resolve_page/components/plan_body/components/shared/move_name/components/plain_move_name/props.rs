@@ -1,3 +1,4 @@
+use super::view::PlainMoveNameView;
 use dioxus::prelude::*;
 
 /// The non-clickable ability name (no owning unit to link to).
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 pub struct PlainMoveNameProps {
     #[props(into)]
     pub text: String,
+}
+
+impl From<&PlainMoveNameView> for PlainMoveNameProps {
+    fn from(view: &PlainMoveNameView) -> Self {
+        let PlainMoveNameView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Props for PlainMoveNameProps {
+    type View = PlainMoveNameView;
 }

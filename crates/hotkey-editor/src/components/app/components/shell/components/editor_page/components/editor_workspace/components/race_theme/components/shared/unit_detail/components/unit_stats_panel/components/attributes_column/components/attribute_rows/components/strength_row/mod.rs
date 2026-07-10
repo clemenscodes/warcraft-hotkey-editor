@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::StrengthRowView;
 
 use components::primary_strength_row::PrimaryStrengthRow;
 use components::regular_strength_row::RegularStrengthRow;

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::FightNameButtonView;
 mod style;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::move_name::MoveName;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::object_id::ObjectId;

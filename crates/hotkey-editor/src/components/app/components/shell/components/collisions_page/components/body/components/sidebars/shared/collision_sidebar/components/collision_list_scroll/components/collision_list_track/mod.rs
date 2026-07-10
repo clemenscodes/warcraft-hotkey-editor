@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CollisionListTrackView;
 mod style;
 
 use components::collision_card::{CollisionCard, CollisionCardData};

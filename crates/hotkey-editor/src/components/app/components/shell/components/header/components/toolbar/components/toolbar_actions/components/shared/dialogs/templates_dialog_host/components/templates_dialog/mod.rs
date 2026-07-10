@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::TemplatesDialogView;
 mod style;
 
 use components::templates_dialog_panel::TemplatesDialogPanel;

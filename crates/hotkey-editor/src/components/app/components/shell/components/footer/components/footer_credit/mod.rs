@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FooterCreditView;
 mod style;
 
 use components::footer_heart::FooterHeart;

@@ -1,3 +1,4 @@
+use super::view::TileOverrideCardView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -36,4 +37,79 @@ pub struct TileOverrideCardProps {
     pub active_tier_index: usize,
     pub total_tier_count: usize,
     pub tier_label_text: String,
+}
+
+impl From<&TileOverrideCardView> for TileOverrideCardProps {
+    fn from(view: &TileOverrideCardView) -> Self {
+        let TileOverrideCardView {
+            name_text,
+            object_id,
+            show_hotkey_field,
+            hotkey_label,
+            hotkey_is_editing,
+            hotkey_is_special,
+            on_hotkey_activate,
+            show_research_field,
+            research_label,
+            research_is_editing,
+            research_is_special,
+            on_research_activate,
+            is_info_only,
+            description_lines,
+            alt_name_text,
+            alt_description_lines,
+            show_alt_controls,
+            alt_hotkey_label,
+            alt_hotkey_is_editing,
+            alt_hotkey_is_special_token,
+            on_alt_position_click,
+            on_alt_hotkey_activate,
+            upgrade_show,
+            upgrade_hotkey_label,
+            upgrade_is_editing,
+            upgrade_hotkey_is_special,
+            on_upgrade_position_click,
+            on_upgrade_hotkey_activate,
+            active_tier_index,
+            total_tier_count,
+            tier_label_text,
+        } = view.clone();
+        Self {
+            name_text,
+            object_id,
+            show_hotkey_field,
+            hotkey_label,
+            hotkey_is_editing,
+            hotkey_is_special,
+            on_hotkey_activate,
+            show_research_field,
+            research_label,
+            research_is_editing,
+            research_is_special,
+            on_research_activate,
+            is_info_only,
+            description_lines,
+            alt_name_text,
+            alt_description_lines,
+            show_alt_controls,
+            alt_hotkey_label,
+            alt_hotkey_is_editing,
+            alt_hotkey_is_special_token,
+            on_alt_position_click,
+            on_alt_hotkey_activate,
+            upgrade_show,
+            upgrade_hotkey_label,
+            upgrade_is_editing,
+            upgrade_hotkey_is_special,
+            on_upgrade_position_click,
+            on_upgrade_hotkey_activate,
+            active_tier_index,
+            total_tier_count,
+            tier_label_text,
+        }
+    }
+}
+
+impl ddd::Props for TileOverrideCardProps {
+    type View = TileOverrideCardView;
 }

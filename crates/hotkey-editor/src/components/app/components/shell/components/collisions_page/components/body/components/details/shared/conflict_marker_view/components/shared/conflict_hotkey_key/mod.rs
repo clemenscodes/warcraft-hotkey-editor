@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictHotkeyKeyView;
 mod style;
 use dioxus::prelude::*;
 use props::ConflictHotkeyKeyProps;

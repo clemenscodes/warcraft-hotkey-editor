@@ -10,7 +10,7 @@ pub struct AbilityPair {
 }
 
 impl AbilityPair {
-    pub fn new(
+    pub(crate) fn new(
         left: ConflictAbilityData,
         right: ConflictAbilityData,
         marker: ConflictMarker,

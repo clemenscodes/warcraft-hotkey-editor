@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::InlineHotkeyMarkerView;
 mod style;
 
 use super::shared::conflict_hotkey_key::ConflictHotkeyKey;

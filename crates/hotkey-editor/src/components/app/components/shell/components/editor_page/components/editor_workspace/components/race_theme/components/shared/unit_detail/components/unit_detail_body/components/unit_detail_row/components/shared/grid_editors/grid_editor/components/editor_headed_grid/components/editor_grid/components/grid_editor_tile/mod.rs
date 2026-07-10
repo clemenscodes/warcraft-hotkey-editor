@@ -1,6 +1,9 @@
 mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::GridEditorTileView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::tile_face::TileFace;

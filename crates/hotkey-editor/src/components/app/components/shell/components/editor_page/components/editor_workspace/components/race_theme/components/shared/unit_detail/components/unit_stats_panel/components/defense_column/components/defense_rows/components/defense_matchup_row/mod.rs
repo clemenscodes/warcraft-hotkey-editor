@@ -1,6 +1,9 @@
 pub mod components;
 mod data;
 mod props;
+mod view;
+
+pub use view::DefenseMatchupRowView;
 mod style;
 
 use components::defense_matchup::DefenseMatchup;

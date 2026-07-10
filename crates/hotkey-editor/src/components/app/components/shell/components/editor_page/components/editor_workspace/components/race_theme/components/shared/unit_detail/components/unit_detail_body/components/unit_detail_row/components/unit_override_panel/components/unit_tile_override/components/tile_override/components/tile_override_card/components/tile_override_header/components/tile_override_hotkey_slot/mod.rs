@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::TileOverrideHotkeySlotView;
 
 use dioxus::prelude::*;
 

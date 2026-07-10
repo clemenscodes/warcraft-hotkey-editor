@@ -1,4 +1,5 @@
 use super::state::ColorKeyState;
+use super::view::ColorKeyView;
 use crate::components::app::components::shell::components::shared::tooltip::{
     TooltipAnchor, TooltipPlacement,
 };
@@ -17,4 +18,31 @@ pub struct ColorKeyProps {
     pub tooltip_text: String,
     pub tooltip_placement: TooltipPlacement,
     pub tooltip_anchor: TooltipAnchor,
+}
+
+impl From<&ColorKeyView> for ColorKeyProps {
+    fn from(view: &ColorKeyView) -> Self {
+        let ColorKeyView {
+            state,
+            label,
+            disabled,
+            onclick,
+            tooltip_text,
+            tooltip_placement,
+            tooltip_anchor,
+        } = view.clone();
+        Self {
+            state,
+            label,
+            disabled,
+            onclick,
+            tooltip_text,
+            tooltip_placement,
+            tooltip_anchor,
+        }
+    }
+}
+
+impl ddd::Props for ColorKeyProps {
+    type View = ColorKeyView;
 }

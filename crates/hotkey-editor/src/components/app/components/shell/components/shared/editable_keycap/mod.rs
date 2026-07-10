@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::EditableKeycapView;
 mod state;
 
 use components::editing_keycap::EditingKeycap;

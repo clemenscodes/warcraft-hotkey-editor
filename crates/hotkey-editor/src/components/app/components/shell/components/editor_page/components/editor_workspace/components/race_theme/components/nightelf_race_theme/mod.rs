@@ -7,7 +7,7 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 /// The Night Elf race-themed container. A `display:contents` wrapper that publishes the
-/// Night Elf colour as `--race-color` and `--race-accent` for its descendants — the unit
+/// Night Elf colour as `--race-color` for its descendants — the unit
 /// list and the unit detail panel — which read them for their selected and hover accents.
 /// Being `contents`, it adds no box: the custom properties inherit down while the
 /// workspace grid still lays out the list and detail directly.

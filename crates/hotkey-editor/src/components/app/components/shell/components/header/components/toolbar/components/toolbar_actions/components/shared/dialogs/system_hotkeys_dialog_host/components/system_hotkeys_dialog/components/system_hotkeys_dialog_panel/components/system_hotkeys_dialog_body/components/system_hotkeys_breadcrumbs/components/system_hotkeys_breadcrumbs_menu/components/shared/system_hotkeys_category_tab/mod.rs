@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::SystemHotkeysCategoryTabView;
 
 use components::active_category_tab::ActiveCategoryTab;
 use components::inactive_category_tab::InactiveCategoryTab;

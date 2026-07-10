@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitDetailRowView;
 mod style;
 
 use components::unit_command_grids::UnitCommandGrids;

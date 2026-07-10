@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::KeyPickerPanelView;
 mod style;
 
 use components::key_picker_body::KeyPickerBody;

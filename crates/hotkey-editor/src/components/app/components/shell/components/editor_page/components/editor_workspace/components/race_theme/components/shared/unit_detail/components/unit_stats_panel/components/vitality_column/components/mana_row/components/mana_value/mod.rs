@@ -1,5 +1,6 @@
 pub mod components;
 mod props;
+mod view;
 
 use components::active_mana_value::ActiveManaValue;
 use components::muted_mana_value::MutedManaValue;

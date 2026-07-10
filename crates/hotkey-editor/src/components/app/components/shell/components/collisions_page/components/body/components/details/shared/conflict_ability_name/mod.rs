@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictAbilityNameView;
 mod style;
 use dioxus::prelude::*;
 use props::ConflictAbilityNameProps;

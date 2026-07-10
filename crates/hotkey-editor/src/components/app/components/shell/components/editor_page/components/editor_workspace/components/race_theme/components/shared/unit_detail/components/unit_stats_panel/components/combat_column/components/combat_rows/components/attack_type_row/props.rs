@@ -1,3 +1,4 @@
+use super::view::AttackTypeRowView;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
 
@@ -5,4 +6,15 @@ use warcraft_api::AttackType;
 #[derive(Props, Clone, PartialEq)]
 pub struct AttackTypeRowProps {
     pub value: AttackType,
+}
+
+impl From<&AttackTypeRowView> for AttackTypeRowProps {
+    fn from(view: &AttackTypeRowView) -> Self {
+        let AttackTypeRowView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Props for AttackTypeRowProps {
+    type View = AttackTypeRowView;
 }

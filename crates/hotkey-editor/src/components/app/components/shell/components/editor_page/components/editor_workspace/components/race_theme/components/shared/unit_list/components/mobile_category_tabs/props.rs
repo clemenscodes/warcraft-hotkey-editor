@@ -1,3 +1,4 @@
+use super::view::MobileCategoryTabsView;
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
 
@@ -5,4 +6,15 @@ use warcraft_api::UnitKind;
 #[derive(Props, Clone, PartialEq)]
 pub struct MobileCategoryTabsProps {
     pub tabs: Vec<UnitKind>,
+}
+
+impl From<&MobileCategoryTabsView> for MobileCategoryTabsProps {
+    fn from(view: &MobileCategoryTabsView) -> Self {
+        let MobileCategoryTabsView { tabs } = view.clone();
+        Self { tabs }
+    }
+}
+
+impl ddd::Props for MobileCategoryTabsProps {
+    type View = MobileCategoryTabsView;
 }

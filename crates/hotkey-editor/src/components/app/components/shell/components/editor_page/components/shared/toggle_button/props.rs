@@ -1,3 +1,4 @@
+use super::view::ToggleButtonView;
 use dioxus::prelude::*;
 
 /// The one labeled pill button, shared by the mode toggle, the search-field toggle,
@@ -21,4 +22,27 @@ pub struct ToggleButtonProps {
     /// focus onto the race tabs); the others leave it at the no-op default.
     #[props(default)]
     pub onkeydown: EventHandler<KeyboardEvent>,
+}
+
+impl From<&ToggleButtonView> for ToggleButtonProps {
+    fn from(view: &ToggleButtonView) -> Self {
+        let ToggleButtonView {
+            label,
+            active,
+            title,
+            onclick,
+            onkeydown,
+        } = view.clone();
+        Self {
+            label,
+            active,
+            title,
+            onclick,
+            onkeydown,
+        }
+    }
+}
+
+impl ddd::Props for ToggleButtonProps {
+    type View = ToggleButtonView;
 }

@@ -18,7 +18,7 @@ use gloo_timers::future::TimeoutFuture;
 /// The three states the Resolve page renders, each as already shaped data. The
 /// component body matches on this and places the data; the hook never builds
 /// markup.
-pub(super) enum ResolvePageView {
+pub(super) enum ResolvePageModel {
     /// No CustomKeys.txt is loaded yet — the upload prompt.
     NoFile,
     /// A file is loaded but has no conflicts — the all-clear state.
@@ -114,7 +114,7 @@ fn use_apply_plan() -> ApplyPlan {
 /// Computes the cascade preview (memoised on the loaded keys), reconciles the route,
 /// wires the Apply handler, and shapes the active section, breadcrumbs, and header —
 /// returning the state's data for the body to render.
-pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
+pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageModel {
     let view_navigation = use_view_navigation();
     let resolve_selection = use_resolve_selection();
     let custom_keys_service = use_custom_keys_service();
@@ -136,10 +136,10 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
     let plan_option = plan_memo();
     let counts = PlanCounts::from(plan_option.as_ref());
     if !has_file {
-        return ResolvePageView::NoFile;
+        return ResolvePageModel::NoFile;
     }
     if counts.move_count == 0 && counts.unresolved_count == 0 {
-        return ResolvePageView::Clear;
+        return ResolvePageModel::Clear;
     }
     let plan = plan_option.expect("plan present when a file is loaded");
     let selected_slug = selected_move_category.read().clone();
@@ -161,5 +161,5 @@ pub(super) fn use_resolve_page(props: &ResolvePageProps) -> ResolvePageView {
         section: active.section,
         unresolved: active.unresolved,
     };
-    ResolvePageView::Plan(Box::new(presentation))
+    ResolvePageModel::Plan(Box::new(presentation))
 }

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::IdleCollisionCardSurfaceView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::components::collision_card_surface::components::shared::collision_card_meta::CollisionCardMeta;

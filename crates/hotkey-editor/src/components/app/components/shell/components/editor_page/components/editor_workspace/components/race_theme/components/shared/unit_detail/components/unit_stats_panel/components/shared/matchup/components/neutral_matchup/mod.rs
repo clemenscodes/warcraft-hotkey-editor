@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::NeutralMatchupView;
 mod style;
 
 use super::shared::matchup_label::MatchupLabel;

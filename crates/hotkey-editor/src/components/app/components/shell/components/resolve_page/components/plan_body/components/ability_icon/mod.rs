@@ -1,12 +1,16 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::AbilityIconView;
+
 mod style;
 use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::carrier_badge::CarrierBadge;
 use components::fight_icon::FightIcon;
 use dioxus::prelude::*;
-use hooks::{AbilityIconView, use_ability_icon};
+use hooks::{AbilityIconModel, use_ability_icon};
 use props::AbilityIconProps;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -16,7 +20,7 @@ use tw_macro::assert_component;
 /// no ancestor knows the dialog exists.
 #[component]
 pub fn AbilityIcon(props: AbilityIconProps) -> Element {
-    let AbilityIconView {
+    let AbilityIconModel {
         open_state,
         icon_src,
         icon_alt,

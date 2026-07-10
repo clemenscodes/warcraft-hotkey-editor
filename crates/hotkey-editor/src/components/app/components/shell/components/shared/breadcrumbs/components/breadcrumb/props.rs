@@ -1,3 +1,4 @@
+use super::view::BreadcrumbView;
 use dioxus::prelude::*;
 
 /// One breadcrumb tab: its label, live count, active flag, and the navigation
@@ -9,4 +10,25 @@ pub struct BreadcrumbProps {
     pub count: usize,
     pub active: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&BreadcrumbView> for BreadcrumbProps {
+    fn from(view: &BreadcrumbView) -> Self {
+        let BreadcrumbView {
+            label,
+            count,
+            active,
+            onclick,
+        } = view.clone();
+        Self {
+            label,
+            count,
+            active,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for BreadcrumbProps {
+    type View = BreadcrumbView;
 }

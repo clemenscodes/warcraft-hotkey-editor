@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::PreviewDialogView;
 mod style;
 
 use components::preview_dialog_panel::PreviewDialogPanel;

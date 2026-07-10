@@ -1,3 +1,4 @@
+use super::view::CollisionCardVisualView;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
 use dioxus::prelude::*;
 
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionCardVisualProps {
     pub content: CollisionCardContent,
+}
+
+impl From<&CollisionCardVisualView> for CollisionCardVisualProps {
+    fn from(view: &CollisionCardVisualView) -> Self {
+        let CollisionCardVisualView { content } = view.clone();
+        Self { content }
+    }
+}
+
+impl ddd::Props for CollisionCardVisualProps {
+    type View = CollisionCardVisualView;
 }

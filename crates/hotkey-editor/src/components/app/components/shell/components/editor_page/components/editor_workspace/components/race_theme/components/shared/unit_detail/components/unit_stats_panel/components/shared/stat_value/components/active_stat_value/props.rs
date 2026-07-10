@@ -1,3 +1,4 @@
+use super::view::ActiveStatValueView;
 use dioxus::prelude::*;
 
 /// The active value leaf's input: the shaped display text, built by the dispatcher
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 pub struct ActiveStatValueProps {
     #[props(into)]
     pub text: String,
+}
+
+impl From<&ActiveStatValueView> for ActiveStatValueProps {
+    fn from(view: &ActiveStatValueView) -> Self {
+        let ActiveStatValueView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Props for ActiveStatValueProps {
+    type View = ActiveStatValueView;
 }

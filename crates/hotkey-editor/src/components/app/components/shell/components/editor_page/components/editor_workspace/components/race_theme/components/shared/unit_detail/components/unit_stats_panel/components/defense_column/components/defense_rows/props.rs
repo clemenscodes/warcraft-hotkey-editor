@@ -1,3 +1,4 @@
+use super::view::DefenseRowsView;
 use dioxus::prelude::*;
 use warcraft_api::DefenseType;
 use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
@@ -11,4 +12,25 @@ pub struct DefenseRowsProps {
     pub defense_type: DefenseType,
     pub effective_hit_points: EffectiveHitPoints,
     pub evasion: Evasion,
+}
+
+impl From<&DefenseRowsView> for DefenseRowsProps {
+    fn from(view: &DefenseRowsView) -> Self {
+        let DefenseRowsView {
+            armor,
+            defense_type,
+            effective_hit_points,
+            evasion,
+        } = view.clone();
+        Self {
+            armor,
+            defense_type,
+            effective_hit_points,
+            evasion,
+        }
+    }
+}
+
+impl ddd::Props for DefenseRowsProps {
+    type View = DefenseRowsView;
 }

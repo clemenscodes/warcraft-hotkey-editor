@@ -17,7 +17,7 @@ classes! {
         "font-normal",
         "pointer-events-none",
         "text-shadow-drop",
-        "bg-race-orc-strong/85",
+        "bg-warcraft-danger/85",
         "border-warcraft-danger",
         "text-warcraft-danger",
     ],

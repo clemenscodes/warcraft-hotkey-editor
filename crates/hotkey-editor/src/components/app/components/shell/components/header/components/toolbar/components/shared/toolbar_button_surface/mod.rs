@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ToolbarButtonSurfaceView;
 mod state;
 
 use components::attention_surface::AttentionSurface;

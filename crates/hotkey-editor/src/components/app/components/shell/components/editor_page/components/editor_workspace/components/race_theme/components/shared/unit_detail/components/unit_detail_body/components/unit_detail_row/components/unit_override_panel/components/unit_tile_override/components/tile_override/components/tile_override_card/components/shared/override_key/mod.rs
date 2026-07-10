@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::OverrideKeyView;
 
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use components::normal_override_key::NormalOverrideKey;

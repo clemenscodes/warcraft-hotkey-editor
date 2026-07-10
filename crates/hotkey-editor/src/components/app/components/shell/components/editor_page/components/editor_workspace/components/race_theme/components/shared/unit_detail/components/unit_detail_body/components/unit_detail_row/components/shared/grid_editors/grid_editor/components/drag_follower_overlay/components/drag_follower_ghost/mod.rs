@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::DragFollowerGhostView;
 mod state;
 
 use components::ability_follower_ghost::AbilityFollowerGhost;

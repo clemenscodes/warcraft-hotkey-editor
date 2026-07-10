@@ -1,7 +1,8 @@
 pub mod components;
 mod props;
-mod style;
 mod view;
+pub use view::TemplateCardView;
+mod style;
 
 use components::template_card_previews::TemplateCardPreviews;
 use components::template_card_text::TemplateCardText;
@@ -10,7 +11,6 @@ use props::TemplateCardPresentation;
 use props::TemplateCardProps;
 use style::CLASS;
 use tw_macro::assert_component;
-pub use view::TemplateCardView;
 
 /// A clickable template card: its name and description above a preview of the
 /// command card and research menu it would apply. Owns `.template-card`.

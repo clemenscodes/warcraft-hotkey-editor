@@ -1,7 +1,7 @@
 use tw_macro::tw;
 
 // The selected id look: the shared id typography plus the race accent at reduced
-// opacity, read from the theme container's `--race-accent` (gold when unthemed).
+// opacity, read from the theme container's `--race-color` (gold when unthemed).
 
 classes! {
     base: tw![
@@ -11,7 +11,7 @@ classes! {
         "text-ellipsis",
         "whitespace-nowrap",
         "opacity-70",
-        "text-(--race-accent,var(--color-warcraft-gold))",
+        "text-(--race-color,var(--color-warcraft-gold))",
     ],
     mobile: tw![
         "mobile:block",

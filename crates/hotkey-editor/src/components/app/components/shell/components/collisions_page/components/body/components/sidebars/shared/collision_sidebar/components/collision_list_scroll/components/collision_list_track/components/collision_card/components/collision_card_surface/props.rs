@@ -1,3 +1,4 @@
+use super::view::CollisionCardSurfaceView;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
 use dioxus::prelude::*;
 
@@ -10,4 +11,25 @@ pub struct CollisionCardSurfaceProps {
     pub onclick: EventHandler<MouseEvent>,
     pub count: usize,
     pub content: CollisionCardContent,
+}
+
+impl From<&CollisionCardSurfaceView> for CollisionCardSurfaceProps {
+    fn from(view: &CollisionCardSurfaceView) -> Self {
+        let CollisionCardSurfaceView {
+            is_selected,
+            onclick,
+            count,
+            content,
+        } = view.clone();
+        Self {
+            is_selected,
+            onclick,
+            count,
+            content,
+        }
+    }
+}
+
+impl ddd::Props for CollisionCardSurfaceProps {
+    type View = CollisionCardSurfaceView;
 }

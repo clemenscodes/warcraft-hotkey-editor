@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MoveNameView;
 
 use components::link_move_name::LinkMoveName;
 use components::plain_move_name::PlainMoveName;

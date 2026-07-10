@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::HelpTermView;
 mod style;
 
 use dioxus::prelude::*;

@@ -1,3 +1,4 @@
+use super::view::DropTargetOverlayView;
 use dioxus::prelude::*;
 
 /// Mounts only while the empty slot is the drag's drop-target candidate; every other
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct DropTargetOverlayProps {
     pub active: bool,
+}
+
+impl From<&DropTargetOverlayView> for DropTargetOverlayProps {
+    fn from(view: &DropTargetOverlayView) -> Self {
+        let DropTargetOverlayView { active } = view.clone();
+        Self { active }
+    }
+}
+
+impl ddd::Props for DropTargetOverlayProps {
+    type View = DropTargetOverlayView;
 }

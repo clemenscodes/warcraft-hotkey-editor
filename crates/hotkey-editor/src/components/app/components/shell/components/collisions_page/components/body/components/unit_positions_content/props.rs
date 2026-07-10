@@ -1,3 +1,4 @@
+use super::view::UnitPositionsContentView;
 use crate::components::app::components::shell::components::collisions_page::logic::UnitPositionUnitView;
 use dioxus::prelude::*;
 
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitPositionsContentProps {
     pub units: Vec<UnitPositionUnitView>,
+}
+
+impl From<&UnitPositionsContentView> for UnitPositionsContentProps {
+    fn from(view: &UnitPositionsContentView) -> Self {
+        let UnitPositionsContentView { units } = view.clone();
+        Self { units }
+    }
+}
+
+impl ddd::Props for UnitPositionsContentProps {
+    type View = UnitPositionsContentView;
 }

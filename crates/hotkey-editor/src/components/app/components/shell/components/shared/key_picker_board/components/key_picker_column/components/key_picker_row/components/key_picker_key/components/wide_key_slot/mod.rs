@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::WideKeySlotView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::components::key_picker_column::components::key_picker_row::components::key_picker_key::components::shared::color_key::ColorKey;

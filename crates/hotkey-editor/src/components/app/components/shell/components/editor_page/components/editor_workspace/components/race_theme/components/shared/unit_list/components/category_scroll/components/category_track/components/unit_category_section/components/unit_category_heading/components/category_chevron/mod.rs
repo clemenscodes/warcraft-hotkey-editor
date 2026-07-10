@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::CategoryChevronView;
 mod style;
 
 use dioxus::prelude::*;

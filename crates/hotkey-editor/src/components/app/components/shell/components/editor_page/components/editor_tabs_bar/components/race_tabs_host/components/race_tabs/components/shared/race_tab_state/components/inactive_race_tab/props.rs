@@ -1,3 +1,4 @@
+use super::view::InactiveRaceTabView;
 use dioxus::prelude::*;
 
 /// The inactive variant's props: the tab's display name and handlers, forwarded to the
@@ -8,4 +9,23 @@ pub struct InactiveRaceTabProps {
     pub label: String,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
+}
+
+impl From<&InactiveRaceTabView> for InactiveRaceTabProps {
+    fn from(view: &InactiveRaceTabView) -> Self {
+        let InactiveRaceTabView {
+            label,
+            onclick,
+            onkeydown,
+        } = view.clone();
+        Self {
+            label,
+            onclick,
+            onkeydown,
+        }
+    }
+}
+
+impl ddd::Props for InactiveRaceTabProps {
+    type View = InactiveRaceTabView;
 }

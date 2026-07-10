@@ -1,3 +1,4 @@
+use super::view::OverrideKeyView;
 use dioxus::prelude::*;
 
 /// A single key-capture button in the override panel header. Clicking it activates
@@ -17,4 +18,27 @@ pub struct OverrideKeyProps {
     pub title: String,
     /// Called when the player clicks to start editing.
     pub on_activate: EventHandler<()>,
+}
+
+impl From<&OverrideKeyView> for OverrideKeyProps {
+    fn from(view: &OverrideKeyView) -> Self {
+        let OverrideKeyView {
+            label,
+            is_editing,
+            is_special,
+            title,
+            on_activate,
+        } = view.clone();
+        Self {
+            label,
+            is_editing,
+            is_special,
+            title,
+            on_activate,
+        }
+    }
+}
+
+impl ddd::Props for OverrideKeyProps {
+    type View = OverrideKeyView;
 }

@@ -1,3 +1,4 @@
+use super::view::DefenseMatchupRowView;
 use dioxus::prelude::*;
 use warcraft_api::DefenseType;
 
@@ -5,4 +6,15 @@ use warcraft_api::DefenseType;
 #[derive(Props, Clone, PartialEq)]
 pub struct DefenseMatchupRowProps {
     pub defense_type: DefenseType,
+}
+
+impl From<&DefenseMatchupRowView> for DefenseMatchupRowProps {
+    fn from(view: &DefenseMatchupRowView) -> Self {
+        let DefenseMatchupRowView { defense_type } = view.clone();
+        Self { defense_type }
+    }
+}
+
+impl ddd::Props for DefenseMatchupRowProps {
+    type View = DefenseMatchupRowView;
 }

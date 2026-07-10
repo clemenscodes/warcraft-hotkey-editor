@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpGlossaryColumnsView;
 mod style;
 
 use components::help_glossary_column::HelpGlossaryColumn;

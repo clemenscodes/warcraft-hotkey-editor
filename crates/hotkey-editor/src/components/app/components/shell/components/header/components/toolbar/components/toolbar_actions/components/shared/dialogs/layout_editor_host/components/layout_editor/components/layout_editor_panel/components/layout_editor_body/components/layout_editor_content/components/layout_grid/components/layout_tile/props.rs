@@ -1,4 +1,5 @@
 use super::state::LayoutTileState;
+use super::view::LayoutTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -14,4 +15,33 @@ pub struct LayoutTileProps {
     pub ondragover: EventHandler<Event<DragData>>,
     pub ondrop: EventHandler<Event<DragData>>,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&LayoutTileView> for LayoutTileProps {
+    fn from(view: &LayoutTileView) -> Self {
+        let LayoutTileView {
+            state,
+            label,
+            coordinate,
+            ondragstart,
+            ondragend,
+            ondragover,
+            ondrop,
+            onclick,
+        } = view.clone();
+        Self {
+            state,
+            label,
+            coordinate,
+            ondragstart,
+            ondragend,
+            ondragover,
+            ondrop,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for LayoutTileProps {
+    type View = LayoutTileView;
 }

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictCardCaptionView;
 mod style;
 use dioxus::prelude::*;
 use props::ConflictCardCaptionProps;

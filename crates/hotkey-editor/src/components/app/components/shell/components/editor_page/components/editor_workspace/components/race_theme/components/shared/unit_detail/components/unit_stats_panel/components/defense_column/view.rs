@@ -1,0 +1,13 @@
+use warcraft_api::DefenseType;
+use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
+
+/// The published `View` contract mirroring [`DefenseColumnProps`], threaded to this component as data.
+#[derive(Clone, PartialEq)]
+pub struct DefenseColumnView {
+    pub armor: Armor,
+    pub defense_type: DefenseType,
+    pub effective_hit_points: EffectiveHitPoints,
+    pub evasion: Evasion,
+}
+
+impl ddd::View for DefenseColumnView {}

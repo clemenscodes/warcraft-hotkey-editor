@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::GridLayoutButtonView;
 mod style;
 
 use components::grid_layout_button_icon::GridLayoutButtonIcon;

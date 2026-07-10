@@ -1,3 +1,4 @@
+use super::view::HotkeyConflictGridView;
 use crate::components::app::components::shell::components::collisions_page::logic::HotkeyConflictView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
@@ -8,4 +9,15 @@ use warcraft_api::WarcraftObjectId;
 pub struct HotkeyConflictGridProps {
     pub conflicts: Vec<HotkeyConflictView>,
     pub unit_id: WarcraftObjectId,
+}
+
+impl From<&HotkeyConflictGridView> for HotkeyConflictGridProps {
+    fn from(view: &HotkeyConflictGridView) -> Self {
+        let HotkeyConflictGridView { conflicts, unit_id } = view.clone();
+        Self { conflicts, unit_id }
+    }
+}
+
+impl ddd::Props for HotkeyConflictGridProps {
+    type View = HotkeyConflictGridView;
 }

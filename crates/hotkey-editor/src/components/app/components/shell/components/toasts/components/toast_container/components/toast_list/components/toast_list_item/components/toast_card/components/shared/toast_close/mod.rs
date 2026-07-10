@@ -1,5 +1,8 @@
 mod logic;
 mod props;
+mod view;
+
+pub use view::ToastCloseView;
 mod style;
 
 use dioxus::prelude::*;

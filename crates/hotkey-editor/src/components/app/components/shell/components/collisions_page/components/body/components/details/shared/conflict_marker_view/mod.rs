@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ConflictMarkerViewView;
 mod state;
 
 use components::conflict_position::ConflictPosition;

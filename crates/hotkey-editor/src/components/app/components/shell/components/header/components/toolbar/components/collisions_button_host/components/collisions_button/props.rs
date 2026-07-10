@@ -1,3 +1,4 @@
+use super::view::CollisionsButtonView;
 use dioxus::prelude::*;
 use warcraft_keybinds::CollisionSummary;
 
@@ -7,4 +8,15 @@ use warcraft_keybinds::CollisionSummary;
 pub struct CollisionsButtonProps {
     pub summary: CollisionSummary,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&CollisionsButtonView> for CollisionsButtonProps {
+    fn from(view: &CollisionsButtonView) -> Self {
+        let CollisionsButtonView { summary, onclick } = view.clone();
+        Self { summary, onclick }
+    }
+}
+
+impl ddd::Props for CollisionsButtonProps {
+    type View = CollisionsButtonView;
 }

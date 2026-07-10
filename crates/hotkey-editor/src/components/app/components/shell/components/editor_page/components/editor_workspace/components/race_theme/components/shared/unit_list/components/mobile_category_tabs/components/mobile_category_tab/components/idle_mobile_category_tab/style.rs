@@ -1,6 +1,6 @@
 use tw_macro::tw;
 // The idle category tab: shared chrome values, muted, taking the race accent border on
-// hover (generic `var(--race-accent)` from the theme container — no per-race arm, no
+// hover (generic `var(--race-color)` from the theme container — no per-race arm, no
 // join macro). Shared values with the active sibling.
 classes! {
     base: tw![
@@ -29,7 +29,7 @@ classes! {
         "text-warcraft-text-secondary",
         "hover:bg-warcraft-blue-deep/70",
         "hover:text-white",
-        "hover:border-(--race-accent)",
+        "hover:border-(--race-color)",
     ],
     mobile: tw![
         "mobile:text-xs",

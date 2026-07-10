@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::CarriersDialogView;
 mod style;
 
 use components::carriers_dialog_panel::CarriersDialogPanel;

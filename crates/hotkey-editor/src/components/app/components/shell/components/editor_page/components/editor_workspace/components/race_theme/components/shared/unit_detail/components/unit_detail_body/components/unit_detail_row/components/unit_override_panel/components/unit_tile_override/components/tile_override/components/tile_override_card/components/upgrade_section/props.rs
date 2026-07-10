@@ -1,3 +1,4 @@
+use super::view::UpgradeSectionView;
 use dioxus::prelude::*;
 
 /// The upgraded-form block: the position button and hotkey cell for the unit that
@@ -11,4 +12,29 @@ pub struct UpgradeSectionProps {
     pub upgrade_hotkey_is_special: bool,
     pub on_position_click: EventHandler<()>,
     pub on_hotkey_activate: EventHandler<()>,
+}
+
+impl From<&UpgradeSectionView> for UpgradeSectionProps {
+    fn from(view: &UpgradeSectionView) -> Self {
+        let UpgradeSectionView {
+            show,
+            upgrade_hotkey_label,
+            upgrade_is_editing,
+            upgrade_hotkey_is_special,
+            on_position_click,
+            on_hotkey_activate,
+        } = view.clone();
+        Self {
+            show,
+            upgrade_hotkey_label,
+            upgrade_is_editing,
+            upgrade_hotkey_is_special,
+            on_position_click,
+            on_hotkey_activate,
+        }
+    }
+}
+
+impl ddd::Props for UpgradeSectionProps {
+    type View = UpgradeSectionView;
 }

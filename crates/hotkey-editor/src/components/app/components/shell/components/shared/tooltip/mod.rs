@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::TooltipView;
 mod state;
 
 use components::above_center_tooltip::AboveCenterTooltip;

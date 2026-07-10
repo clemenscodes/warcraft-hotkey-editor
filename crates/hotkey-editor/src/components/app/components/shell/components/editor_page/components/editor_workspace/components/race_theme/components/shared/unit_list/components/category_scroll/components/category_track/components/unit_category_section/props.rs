@@ -1,3 +1,4 @@
+use super::view::UnitCategorySectionView;
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
 
@@ -8,4 +9,15 @@ use warcraft_api::UnitKind;
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCategorySectionProps {
     pub category_kind: UnitKind,
+}
+
+impl From<&UnitCategorySectionView> for UnitCategorySectionProps {
+    fn from(view: &UnitCategorySectionView) -> Self {
+        let UnitCategorySectionView { category_kind } = view.clone();
+        Self { category_kind }
+    }
+}
+
+impl ddd::Props for UnitCategorySectionProps {
+    type View = UnitCategorySectionView;
 }

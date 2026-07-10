@@ -1,5 +1,8 @@
 mod logic;
 mod props;
+mod view;
+
+pub use view::MiniGridView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::mini_grid_frame::MiniGridFrame;

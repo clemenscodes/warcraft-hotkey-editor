@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::StatIconFrameView;
 mod style;
 
 use components::stat_icon_img::StatIconImg;

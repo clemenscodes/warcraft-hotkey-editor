@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::AttributesColumnView;
 mod style;
 
 use super::shared::stat_icon_frame::StatIconFrame;

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ModeTabView;
 
 use crate::components::app::components::shell::components::editor_page::components::shared::toggle_button::ToggleButton;
 use dioxus::prelude::*;

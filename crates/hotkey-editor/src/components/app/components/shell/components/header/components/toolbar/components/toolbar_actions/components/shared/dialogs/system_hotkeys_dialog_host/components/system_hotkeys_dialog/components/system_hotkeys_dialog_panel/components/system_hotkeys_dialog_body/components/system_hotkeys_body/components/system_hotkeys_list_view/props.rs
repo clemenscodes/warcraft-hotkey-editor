@@ -1,3 +1,4 @@
+use super::view::SystemHotkeysListViewView;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
@@ -7,4 +8,15 @@ use warcraft_api::SystemHotkeysCategory;
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysListViewProps {
     pub category: SystemHotkeysCategory,
+}
+
+impl From<&SystemHotkeysListViewView> for SystemHotkeysListViewProps {
+    fn from(view: &SystemHotkeysListViewView) -> Self {
+        let SystemHotkeysListViewView { category } = view.clone();
+        Self { category }
+    }
+}
+
+impl ddd::Props for SystemHotkeysListViewProps {
+    type View = SystemHotkeysListViewView;
 }

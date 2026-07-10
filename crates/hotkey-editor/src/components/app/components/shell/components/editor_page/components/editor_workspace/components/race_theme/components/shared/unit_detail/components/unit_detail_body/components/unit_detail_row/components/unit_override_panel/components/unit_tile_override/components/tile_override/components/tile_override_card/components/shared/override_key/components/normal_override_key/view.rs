@@ -1,0 +1,13 @@
+use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
+use dioxus::prelude::*;
+
+/// The published `View` contract mirroring [`NormalOverrideKeyProps`], threaded to this component as data.
+#[derive(Clone, PartialEq)]
+pub struct NormalOverrideKeyView {
+    pub label: String,
+    pub state: EditableKeycapState,
+    pub title: String,
+    pub on_activate: EventHandler<()>,
+}
+
+impl ddd::View for NormalOverrideKeyView {}

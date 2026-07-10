@@ -1,3 +1,4 @@
+use super::view::LayoutEditorPanelView;
 use super::components::layout_editor_body::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileView;
 use dioxus::prelude::*;
 
@@ -12,4 +13,29 @@ pub struct LayoutEditorPanelProps {
     pub toggle_checked: bool,
     pub on_toggle: EventHandler<FormEvent>,
     pub on_apply: EventHandler<MouseEvent>,
+}
+
+impl From<&LayoutEditorPanelView> for LayoutEditorPanelProps {
+    fn from(view: &LayoutEditorPanelView) -> Self {
+        let LayoutEditorPanelView {
+            title,
+            on_close,
+            cells,
+            toggle_checked,
+            on_toggle,
+            on_apply,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            cells,
+            toggle_checked,
+            on_toggle,
+            on_apply,
+        }
+    }
+}
+
+impl ddd::Props for LayoutEditorPanelProps {
+    type View = LayoutEditorPanelView;
 }

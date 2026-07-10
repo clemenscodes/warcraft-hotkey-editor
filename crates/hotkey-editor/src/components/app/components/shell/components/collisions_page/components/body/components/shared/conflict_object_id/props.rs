@@ -1,3 +1,4 @@
+use super::view::ConflictObjectIdView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -6,4 +7,15 @@ use warcraft_api::WarcraftObjectId;
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictObjectIdProps {
     pub object_id: WarcraftObjectId,
+}
+
+impl From<&ConflictObjectIdView> for ConflictObjectIdProps {
+    fn from(view: &ConflictObjectIdView) -> Self {
+        let ConflictObjectIdView { object_id } = view.clone();
+        Self { object_id }
+    }
+}
+
+impl ddd::Props for ConflictObjectIdProps {
+    type View = ConflictObjectIdView;
 }

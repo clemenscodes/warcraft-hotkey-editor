@@ -1,3 +1,4 @@
+use super::view::HelpDialogPanelView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpContent;
 use dioxus::prelude::*;
 
@@ -11,4 +12,25 @@ pub struct HelpDialogPanelProps {
     pub on_close: EventHandler<()>,
     pub content: HelpContent,
     pub on_dismiss: EventHandler<MouseEvent>,
+}
+
+impl From<&HelpDialogPanelView> for HelpDialogPanelProps {
+    fn from(view: &HelpDialogPanelView) -> Self {
+        let HelpDialogPanelView {
+            title,
+            on_close,
+            content,
+            on_dismiss,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            content,
+            on_dismiss,
+        }
+    }
+}
+
+impl ddd::Props for HelpDialogPanelProps {
+    type View = HelpDialogPanelView;
 }

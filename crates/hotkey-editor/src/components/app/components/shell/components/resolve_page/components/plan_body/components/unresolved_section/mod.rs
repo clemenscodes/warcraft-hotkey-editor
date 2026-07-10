@@ -1,6 +1,9 @@
 pub mod components;
 mod data;
 mod props;
+mod view;
+
+pub use view::UnresolvedSectionView;
 mod style;
 
 use components::unresolved_move_list::UnresolvedMoveList;

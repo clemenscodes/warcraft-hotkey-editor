@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UpgradeSectionHeaderView;
 mod style;
 
 use components::upgrade_section_header_label_column::UpgradeSectionHeaderLabelColumn;

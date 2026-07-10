@@ -1,3 +1,4 @@
+use super::view::HitPointsRegenRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HitPointsRegen;
 
@@ -6,4 +7,15 @@ use warcraft_keybinds::HitPointsRegen;
 #[derive(Props, Clone, PartialEq)]
 pub struct HitPointsRegenRowProps {
     pub value: HitPointsRegen,
+}
+
+impl From<&HitPointsRegenRowView> for HitPointsRegenRowProps {
+    fn from(view: &HitPointsRegenRowView) -> Self {
+        let HitPointsRegenRowView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Props for HitPointsRegenRowProps {
+    type View = HitPointsRegenRowView;
 }

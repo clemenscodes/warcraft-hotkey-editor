@@ -1,3 +1,4 @@
+use super::view::MiniGridFrameView;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
@@ -9,4 +10,15 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 #[derive(Props, Clone, PartialEq)]
 pub struct MiniGridFrameProps {
     pub tiles: [GridTileView; COMMAND_GRID_TILE_COUNT],
+}
+
+impl From<&MiniGridFrameView> for MiniGridFrameProps {
+    fn from(view: &MiniGridFrameView) -> Self {
+        let MiniGridFrameView { tiles } = view.clone();
+        Self { tiles }
+    }
+}
+
+impl ddd::Props for MiniGridFrameProps {
+    type View = MiniGridFrameView;
 }

@@ -3,6 +3,9 @@ mod data;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::LayoutEditorView;
 mod style;
 
 use components::layout_editor_panel::LayoutEditorPanel;

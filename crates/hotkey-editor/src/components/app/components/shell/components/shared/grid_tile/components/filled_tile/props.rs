@@ -1,4 +1,5 @@
 use super::super::super::GridTileState;
+use super::view::FilledTileView;
 use dioxus::prelude::*;
 
 /// An occupied command tile: the ability/command icon (or its text fallback). Its
@@ -19,4 +20,27 @@ pub struct FilledTileProps {
     /// True while the drag cursor hovers this tile: it mounts the `DragOverRing`, and
     /// its root's border turns gold.
     pub is_drag_over: bool,
+}
+
+impl From<&FilledTileView> for FilledTileProps {
+    fn from(view: &FilledTileView) -> Self {
+        let FilledTileView {
+            state,
+            icon,
+            label,
+            is_dragging_source,
+            is_drag_over,
+        } = view.clone();
+        Self {
+            state,
+            icon,
+            label,
+            is_dragging_source,
+            is_drag_over,
+        }
+    }
+}
+
+impl ddd::Props for FilledTileProps {
+    type View = FilledTileView;
 }

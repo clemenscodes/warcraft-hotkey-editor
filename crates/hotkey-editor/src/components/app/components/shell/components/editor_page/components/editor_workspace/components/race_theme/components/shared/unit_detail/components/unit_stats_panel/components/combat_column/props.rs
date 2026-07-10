@@ -1,3 +1,4 @@
+use super::view::CombatColumnView;
 use dioxus::prelude::*;
 use warcraft_keybinds::AttackStatistics;
 
@@ -6,4 +7,15 @@ use warcraft_keybinds::AttackStatistics;
 #[derive(Props, Clone, PartialEq)]
 pub struct CombatColumnProps {
     pub attack: Option<AttackStatistics>,
+}
+
+impl From<&CombatColumnView> for CombatColumnProps {
+    fn from(view: &CombatColumnView) -> Self {
+        let CombatColumnView { attack } = view.clone();
+        Self { attack }
+    }
+}
+
+impl ddd::Props for CombatColumnProps {
+    type View = CombatColumnView;
 }

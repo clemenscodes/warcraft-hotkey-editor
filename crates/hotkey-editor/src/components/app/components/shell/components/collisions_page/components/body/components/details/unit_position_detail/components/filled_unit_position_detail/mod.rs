@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FilledUnitPositionDetailView;
 mod style;
 
 use components::unit_position_conflict_grid::UnitPositionConflictGrid;

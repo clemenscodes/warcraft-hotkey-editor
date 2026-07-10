@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::TemplateGalleryView;
 mod style;
 
 use components::template_card::TemplateCard;

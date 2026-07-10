@@ -1,3 +1,4 @@
+use super::view::CategoryScrollView;
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
 
@@ -6,4 +7,15 @@ use warcraft_api::UnitKind;
 #[derive(Props, Clone, PartialEq)]
 pub struct CategoryScrollProps {
     pub sections: Vec<UnitKind>,
+}
+
+impl From<&CategoryScrollView> for CategoryScrollProps {
+    fn from(view: &CategoryScrollView) -> Self {
+        let CategoryScrollView { sections } = view.clone();
+        Self { sections }
+    }
+}
+
+impl ddd::Props for CategoryScrollProps {
+    type View = CategoryScrollView;
 }

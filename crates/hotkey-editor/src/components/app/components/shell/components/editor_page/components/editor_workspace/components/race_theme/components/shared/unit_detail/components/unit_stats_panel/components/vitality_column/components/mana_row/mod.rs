@@ -1,5 +1,8 @@
 mod components;
 mod props;
+mod view;
+
+pub use view::ManaRowView;
 mod style;
 
 use super::super::super::shared::stat_label::StatLabel;

@@ -1,4 +1,6 @@
 mod props;
+mod view;
+
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::collision_count::CollisionCount;

@@ -1,3 +1,4 @@
+use super::view::UnitStatsPanelView;
 use dioxus::prelude::*;
 use warcraft_api::{HeroAttributes, UnitCombat};
 use warcraft_keybinds::Evasion;
@@ -10,4 +11,23 @@ pub struct UnitStatsPanelProps {
     pub combat: UnitCombat,
     pub hero_attributes: Option<HeroAttributes>,
     pub evasion: Evasion,
+}
+
+impl From<&UnitStatsPanelView> for UnitStatsPanelProps {
+    fn from(view: &UnitStatsPanelView) -> Self {
+        let UnitStatsPanelView {
+            combat,
+            hero_attributes,
+            evasion,
+        } = view.clone();
+        Self {
+            combat,
+            hero_attributes,
+            evasion,
+        }
+    }
+}
+
+impl ddd::Props for UnitStatsPanelProps {
+    type View = UnitStatsPanelView;
 }

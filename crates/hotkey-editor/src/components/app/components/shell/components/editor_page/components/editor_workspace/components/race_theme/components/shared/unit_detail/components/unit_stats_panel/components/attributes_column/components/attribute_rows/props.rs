@@ -1,3 +1,4 @@
+use super::view::AttributeRowsView;
 use dioxus::prelude::*;
 use warcraft_keybinds::AttributeStatistic;
 
@@ -12,4 +13,29 @@ pub struct AttributeRowsProps {
     pub agility_is_primary: bool,
     pub intelligence: AttributeStatistic,
     pub intelligence_is_primary: bool,
+}
+
+impl From<&AttributeRowsView> for AttributeRowsProps {
+    fn from(view: &AttributeRowsView) -> Self {
+        let AttributeRowsView {
+            strength,
+            strength_is_primary,
+            agility,
+            agility_is_primary,
+            intelligence,
+            intelligence_is_primary,
+        } = view.clone();
+        Self {
+            strength,
+            strength_is_primary,
+            agility,
+            agility_is_primary,
+            intelligence,
+            intelligence_is_primary,
+        }
+    }
+}
+
+impl ddd::Props for AttributeRowsProps {
+    type View = AttributeRowsView;
 }

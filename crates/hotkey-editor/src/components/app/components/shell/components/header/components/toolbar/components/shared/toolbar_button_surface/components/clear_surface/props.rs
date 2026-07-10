@@ -1,3 +1,4 @@
+use super::view::ClearSurfaceView;
 use dioxus::prelude::*;
 
 /// The clear resting look of a toolbar surface: a gold-bordered surface with a soft
@@ -13,4 +14,31 @@ pub struct ClearSurfaceProps {
     pub aria_pressed: Option<bool>,
     pub disabled: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&ClearSurfaceView> for ClearSurfaceProps {
+    fn from(view: &ClearSurfaceView) -> Self {
+        let ClearSurfaceView {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for ClearSurfaceProps {
+    type View = ClearSurfaceView;
 }

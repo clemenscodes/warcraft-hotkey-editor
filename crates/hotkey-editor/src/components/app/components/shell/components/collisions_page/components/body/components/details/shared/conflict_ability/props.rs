@@ -1,3 +1,4 @@
+use super::view::ConflictAbilityView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -11,4 +12,25 @@ pub struct ConflictAbilityProps {
     pub ability_id: WarcraftObjectId,
     pub icon_url: Option<String>,
     pub unit_id: WarcraftObjectId,
+}
+
+impl From<&ConflictAbilityView> for ConflictAbilityProps {
+    fn from(view: &ConflictAbilityView) -> Self {
+        let ConflictAbilityView {
+            ability_name,
+            ability_id,
+            icon_url,
+            unit_id,
+        } = view.clone();
+        Self {
+            ability_name,
+            ability_id,
+            icon_url,
+            unit_id,
+        }
+    }
+}
+
+impl ddd::Props for ConflictAbilityProps {
+    type View = ConflictAbilityView;
 }

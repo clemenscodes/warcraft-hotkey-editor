@@ -1,3 +1,4 @@
+use super::view::PlanBodyView;
 use crate::components::app::components::shell::components::resolve_page::logic::{
     MoveSection, UnresolvedView,
 };
@@ -9,4 +10,21 @@ use dioxus::prelude::*;
 pub struct PlanBodyProps {
     pub section: Option<MoveSection>,
     pub unresolved: Vec<UnresolvedView>,
+}
+
+impl From<&PlanBodyView> for PlanBodyProps {
+    fn from(view: &PlanBodyView) -> Self {
+        let PlanBodyView {
+            section,
+            unresolved,
+        } = view.clone();
+        Self {
+            section,
+            unresolved,
+        }
+    }
+}
+
+impl ddd::Props for PlanBodyProps {
+    type View = PlanBodyView;
 }

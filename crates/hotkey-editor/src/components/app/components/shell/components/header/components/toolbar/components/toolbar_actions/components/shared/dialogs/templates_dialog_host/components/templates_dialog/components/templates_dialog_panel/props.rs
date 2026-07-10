@@ -1,3 +1,4 @@
+use super::view::TemplatesDialogPanelView;
 use super::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardView;
 use dioxus::prelude::*;
 
@@ -10,4 +11,23 @@ pub struct TemplatesDialogPanelProps {
     pub title: String,
     pub on_close: EventHandler<()>,
     pub cards: Vec<TemplateCardView>,
+}
+
+impl From<&TemplatesDialogPanelView> for TemplatesDialogPanelProps {
+    fn from(view: &TemplatesDialogPanelView) -> Self {
+        let TemplatesDialogPanelView {
+            title,
+            on_close,
+            cards,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            cards,
+        }
+    }
+}
+
+impl ddd::Props for TemplatesDialogPanelProps {
+    type View = TemplatesDialogPanelView;
 }

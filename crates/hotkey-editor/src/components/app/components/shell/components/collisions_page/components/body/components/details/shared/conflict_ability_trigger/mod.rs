@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ConflictAbilityTriggerView;
 mod style;
 
 use components::conflict_ability_icon::ConflictAbilityIcon;

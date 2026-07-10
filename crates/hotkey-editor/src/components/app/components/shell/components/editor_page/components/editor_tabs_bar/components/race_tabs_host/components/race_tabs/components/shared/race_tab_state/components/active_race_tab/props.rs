@@ -1,3 +1,4 @@
+use super::view::ActiveRaceTabView;
 use dioxus::prelude::*;
 
 /// The active variant's props: the tab's display name and handlers, forwarded to the
@@ -8,4 +9,23 @@ pub struct ActiveRaceTabProps {
     pub label: String,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
+}
+
+impl From<&ActiveRaceTabView> for ActiveRaceTabProps {
+    fn from(view: &ActiveRaceTabView) -> Self {
+        let ActiveRaceTabView {
+            label,
+            onclick,
+            onkeydown,
+        } = view.clone();
+        Self {
+            label,
+            onclick,
+            onkeydown,
+        }
+    }
+}
+
+impl ddd::Props for ActiveRaceTabProps {
+    type View = ActiveRaceTabView;
 }

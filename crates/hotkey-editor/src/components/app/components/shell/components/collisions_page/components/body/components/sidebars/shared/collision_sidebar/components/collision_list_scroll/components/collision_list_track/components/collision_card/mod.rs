@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CollisionCardView;
 pub mod state;
 mod style;
 

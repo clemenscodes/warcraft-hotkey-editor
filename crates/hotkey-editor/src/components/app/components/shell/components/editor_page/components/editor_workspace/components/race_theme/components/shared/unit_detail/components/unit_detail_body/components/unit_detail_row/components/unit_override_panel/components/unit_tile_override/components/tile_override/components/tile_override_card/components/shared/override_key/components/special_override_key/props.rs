@@ -1,3 +1,4 @@
+use super::view::SpecialOverrideKeyView;
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
 
@@ -11,4 +12,25 @@ pub struct SpecialOverrideKeyProps {
     #[props(into)]
     pub title: String,
     pub on_activate: EventHandler<()>,
+}
+
+impl From<&SpecialOverrideKeyView> for SpecialOverrideKeyProps {
+    fn from(view: &SpecialOverrideKeyView) -> Self {
+        let SpecialOverrideKeyView {
+            label,
+            state,
+            title,
+            on_activate,
+        } = view.clone();
+        Self {
+            label,
+            state,
+            title,
+            on_activate,
+        }
+    }
+}
+
+impl ddd::Props for SpecialOverrideKeyProps {
+    type View = SpecialOverrideKeyView;
 }

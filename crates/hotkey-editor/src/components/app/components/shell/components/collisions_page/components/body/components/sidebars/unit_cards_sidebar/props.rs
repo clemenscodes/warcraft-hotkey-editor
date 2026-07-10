@@ -1,3 +1,4 @@
+use super::view::UnitCardsSidebarView;
 use crate::components::app::components::shell::components::collisions_page::logic::CollisionUnitView;
 use dioxus::prelude::*;
 
@@ -7,4 +8,17 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardsSidebarProps<Conflict: Clone + PartialEq + 'static> {
     pub units: Vec<CollisionUnitView<Conflict>>,
+}
+
+impl<Conflict: Clone + PartialEq + 'static> From<&UnitCardsSidebarView<Conflict>>
+    for UnitCardsSidebarProps<Conflict>
+{
+    fn from(view: &UnitCardsSidebarView<Conflict>) -> Self {
+        let UnitCardsSidebarView { units } = view.clone();
+        Self { units }
+    }
+}
+
+impl<Conflict: Clone + PartialEq + 'static> ddd::Props for UnitCardsSidebarProps<Conflict> {
+    type View = UnitCardsSidebarView<Conflict>;
 }

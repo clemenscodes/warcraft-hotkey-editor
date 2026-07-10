@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::KeyPickerKeyView;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyWidth;
 use components::narrow_key_slot::NarrowKeySlot;

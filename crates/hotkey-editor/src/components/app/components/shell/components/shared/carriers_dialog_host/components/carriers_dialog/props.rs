@@ -1,3 +1,4 @@
+use super::view::CarriersDialogView;
 use crate::services::carriers::{CarrierUnitView, InspectedAbility};
 use dioxus::prelude::*;
 
@@ -10,4 +11,23 @@ pub struct CarriersDialogProps {
     pub title: String,
     pub carriers: Vec<CarrierUnitView>,
     pub open_state: Signal<Option<InspectedAbility>>,
+}
+
+impl From<&CarriersDialogView> for CarriersDialogProps {
+    fn from(view: &CarriersDialogView) -> Self {
+        let CarriersDialogView {
+            title,
+            carriers,
+            open_state,
+        } = view.clone();
+        Self {
+            title,
+            carriers,
+            open_state,
+        }
+    }
+}
+
+impl ddd::Props for CarriersDialogProps {
+    type View = CarriersDialogView;
 }

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::HighlightedSlotView;
 mod style;
 
 use super::shared::slot_contents::SlotContents;

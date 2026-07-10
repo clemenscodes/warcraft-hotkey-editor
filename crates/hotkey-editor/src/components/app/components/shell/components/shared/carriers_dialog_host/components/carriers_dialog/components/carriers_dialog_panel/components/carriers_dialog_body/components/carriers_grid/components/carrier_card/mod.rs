@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::CarrierCardView;
 mod style;
 use components::carrier_card_icon::CarrierCardIcon;
 use components::carrier_card_name::CarrierCardName;

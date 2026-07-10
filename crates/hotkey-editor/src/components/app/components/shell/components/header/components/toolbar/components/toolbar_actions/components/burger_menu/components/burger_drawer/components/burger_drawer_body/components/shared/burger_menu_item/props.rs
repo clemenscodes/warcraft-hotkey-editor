@@ -1,4 +1,5 @@
 use super::state::BurgerItemState;
+use super::view::BurgerMenuItemView;
 use dioxus::prelude::*;
 
 /// A single drawer row. Its label and icon are content; its visual weight is the
@@ -17,4 +18,37 @@ pub struct BurgerMenuItemProps {
     pub aria_pressed: Option<&'static str>,
     pub aria_label: Option<&'static str>,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&BurgerMenuItemView> for BurgerMenuItemProps {
+    fn from(view: &BurgerMenuItemView) -> Self {
+        let BurgerMenuItemView {
+            icon,
+            label,
+            state,
+            disabled,
+            role,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            aria_label,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            label,
+            state,
+            disabled,
+            role,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            aria_label,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for BurgerMenuItemProps {
+    type View = BurgerMenuItemView;
 }

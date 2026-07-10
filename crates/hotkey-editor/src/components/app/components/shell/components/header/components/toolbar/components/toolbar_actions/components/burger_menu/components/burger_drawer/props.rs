@@ -1,3 +1,4 @@
+use super::view::BurgerDrawerView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::logic::BurgerMenuRow;
 use dioxus::prelude::*;
 
@@ -9,4 +10,23 @@ pub struct BurgerDrawerProps {
     pub on_close: EventHandler<MouseEvent>,
     pub layout: BurgerMenuRow,
     pub items: Vec<BurgerMenuRow>,
+}
+
+impl From<&BurgerDrawerView> for BurgerDrawerProps {
+    fn from(view: &BurgerDrawerView) -> Self {
+        let BurgerDrawerView {
+            on_close,
+            layout,
+            items,
+        } = view.clone();
+        Self {
+            on_close,
+            layout,
+            items,
+        }
+    }
+}
+
+impl ddd::Props for BurgerDrawerProps {
+    type View = BurgerDrawerView;
 }

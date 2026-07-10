@@ -1,3 +1,4 @@
+use super::view::HelpCalloutView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpSegment;
 use dioxus::prelude::*;
 
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpCalloutProps {
     pub steps: &'static [&'static [HelpSegment]],
+}
+
+impl From<&HelpCalloutView> for HelpCalloutProps {
+    fn from(view: &HelpCalloutView) -> Self {
+        let HelpCalloutView { steps } = view.clone();
+        Self { steps }
+    }
+}
+
+impl ddd::Props for HelpCalloutProps {
+    type View = HelpCalloutView;
 }

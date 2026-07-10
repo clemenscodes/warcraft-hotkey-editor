@@ -1,6 +1,9 @@
 pub mod components;
 mod data;
 mod props;
+mod view;
+
+pub use view::UnitTileOverrideView;
 
 use components::tile_override::TileOverride;
 use components::tile_override_empty::TileOverrideEmpty;

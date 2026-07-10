@@ -6,7 +6,7 @@ use warcraft_api::SystemHotkeysCategory;
 /// whether a separator follows it, whether the popover is open (selecting the tab's
 /// look), and the mobile-popover open signal it closes on select.
 #[derive(Clone, PartialEq)]
-pub(super) struct SystemHotkeysCategoryTabDescriptor {
+pub(crate) struct SystemHotkeysCategoryTabDescriptor {
     pub(super) category: SystemHotkeysCategory,
     pub(super) is_active: bool,
     pub(super) has_separator: bool,

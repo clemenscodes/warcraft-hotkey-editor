@@ -1,3 +1,4 @@
+use super::view::KeyPickerColumnView;
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyCell;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
@@ -8,4 +9,15 @@ use warcraft_keybinds::KeyCode;
 pub struct KeyPickerColumnProps {
     pub rows: Vec<Vec<KeyCell>>,
     pub on_pick: EventHandler<KeyCode>,
+}
+
+impl From<&KeyPickerColumnView> for KeyPickerColumnProps {
+    fn from(view: &KeyPickerColumnView) -> Self {
+        let KeyPickerColumnView { rows, on_pick } = view.clone();
+        Self { rows, on_pick }
+    }
+}
+
+impl ddd::Props for KeyPickerColumnProps {
+    type View = KeyPickerColumnView;
 }

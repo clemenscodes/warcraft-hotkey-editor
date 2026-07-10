@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictUnitIconView;
 mod style;
 use crate::components::app::components::shell::components::shared::framed_icon::{
     FramedIcon, IconRadius,

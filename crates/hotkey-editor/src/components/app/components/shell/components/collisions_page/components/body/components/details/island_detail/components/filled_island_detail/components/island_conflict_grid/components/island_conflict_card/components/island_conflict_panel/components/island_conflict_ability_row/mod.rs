@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::IslandConflictAbilityRowView;
 mod style;
 
 use super::super::super::super::logic::IslandAbilityData;

@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::EditorPageView;
 mod style;
 
 use components::editor_tabs_bar::EditorTabsBar;

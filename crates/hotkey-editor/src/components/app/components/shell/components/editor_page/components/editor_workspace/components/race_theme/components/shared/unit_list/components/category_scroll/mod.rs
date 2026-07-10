@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CategoryScrollView;
 mod style;
 
 use components::category_track::CategoryTrack;

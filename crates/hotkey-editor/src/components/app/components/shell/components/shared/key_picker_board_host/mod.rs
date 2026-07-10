@@ -1,5 +1,8 @@
 mod hooks;
 mod props;
+mod view;
+
+pub use view::KeyPickerBoardHostView;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyPickerBoard;
 use dioxus::prelude::*;

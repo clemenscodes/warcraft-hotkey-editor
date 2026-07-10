@@ -4,6 +4,9 @@ mod hooks;
 pub mod logic;
 mod model;
 mod props;
+mod view;
+
+pub use view::CollisionsPageView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::breadcrumbs::Breadcrumbs;

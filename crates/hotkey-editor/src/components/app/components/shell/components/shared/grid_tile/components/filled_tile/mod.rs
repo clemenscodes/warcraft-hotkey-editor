@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::FilledTileView;
 mod style;
 
 use super::shared::drag_over_ring::DragOverRing;

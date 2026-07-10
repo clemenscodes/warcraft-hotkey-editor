@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::PrimaryIntelligenceRowView;
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::attributes_column::components::attribute_rows::components::shared::primary_attribute_label::PrimaryAttributeLabel;

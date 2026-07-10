@@ -4,7 +4,7 @@ use tw_macro::tw;
 // private and never re-exported, so no other component can name or reuse these classes.
 // A richer look (the active tab) does not extend this — it renders `RaceTab` and adds an
 // accent on top. The banner surface, image, accent, and label colour are read from the
-// `--race-color`/`--banner-*`/`--race-accent`/`--label-color` custom properties the
+// `--race-color`/`--banner-*`/`--race-color`/`--label-color` custom properties the
 // per-race wrapper and the active variant publish, so this base stays race- and
 // state-agnostic. The accent border and glow appear only on hover (the resting,
 // inactive look); the white label is the `--label-color` default.
@@ -51,8 +51,8 @@ classes! {
         "after:pointer-events-none",
         "after:block",
         "hover:text-white",
-        "hover:border-(--race-accent)",
-        "hover:[--glow-color:var(--race-accent)]",
+        "hover:border-(--race-color)",
+        "hover:[--glow-color:var(--race-color)]",
         "hover:shadow-glow",
         "focus:outline-none",
         "kb-focus:outline-none",

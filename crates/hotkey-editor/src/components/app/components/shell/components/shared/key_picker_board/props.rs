@@ -1,4 +1,5 @@
 use super::cell::KeyColumn;
+use super::view::KeyPickerBoardView;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
 
@@ -15,4 +16,23 @@ pub struct KeyPickerBoardProps {
     /// button) is the wrapping dialog's concern; this only reports the keyboard
     /// dismiss the board itself observes.
     pub on_close: EventHandler<()>,
+}
+
+impl From<&KeyPickerBoardView> for KeyPickerBoardProps {
+    fn from(view: &KeyPickerBoardView) -> Self {
+        let KeyPickerBoardView {
+            columns,
+            on_pick,
+            on_close,
+        } = view.clone();
+        Self {
+            columns,
+            on_pick,
+            on_close,
+        }
+    }
+}
+
+impl ddd::Props for KeyPickerBoardProps {
+    type View = KeyPickerBoardView;
 }

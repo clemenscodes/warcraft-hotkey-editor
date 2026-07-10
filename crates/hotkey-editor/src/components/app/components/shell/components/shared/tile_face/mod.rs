@@ -1,4 +1,5 @@
 pub mod components;
+mod props;
 mod style;
 mod view;
 
@@ -7,6 +8,7 @@ pub use view::TileFaceView;
 use crate::components::app::components::shell::components::shared::grid_tile::GridTile;
 use components::tile_badge::TileBadge;
 use dioxus::prelude::*;
+use props::TileFaceProps;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +19,7 @@ use tw_macro::assert_component;
 /// `GridEditorTile` Host wraps this and adds the interaction; the templates preview and
 /// the gallery render it directly, read-only.
 #[component]
-pub fn TileFace(props: TileFaceView) -> Element {
+pub fn TileFace(props: TileFaceProps) -> Element {
     let coordinate = props.coordinate;
     let icon = props.icon.clone();
     let label = props.label.clone();

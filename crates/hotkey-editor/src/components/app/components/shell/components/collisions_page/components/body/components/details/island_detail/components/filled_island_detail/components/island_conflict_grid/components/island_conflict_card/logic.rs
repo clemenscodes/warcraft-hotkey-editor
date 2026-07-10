@@ -5,7 +5,7 @@ use warcraft_api::WarcraftObjectId;
 
 /// The affected unit heading a conflict card: its id, icon, and display name.
 #[derive(Clone, PartialEq)]
-pub(super) struct IslandUnitData {
+pub(crate) struct IslandUnitData {
     pub(super) unit_id: WarcraftObjectId,
     pub(super) icon_url: Option<String>,
     pub(super) name: String,
@@ -14,7 +14,7 @@ pub(super) struct IslandUnitData {
 /// One clashing ability of a conflict card: its display name, id, icon, the count of
 /// further carriers, and the opaque identity it opens its carriers dialog on.
 #[derive(Clone, PartialEq)]
-pub(super) struct IslandAbilityData {
+pub(crate) struct IslandAbilityData {
     pub(super) ability_name: String,
     pub(super) ability_id: WarcraftObjectId,
     pub(super) icon_url: Option<String>,

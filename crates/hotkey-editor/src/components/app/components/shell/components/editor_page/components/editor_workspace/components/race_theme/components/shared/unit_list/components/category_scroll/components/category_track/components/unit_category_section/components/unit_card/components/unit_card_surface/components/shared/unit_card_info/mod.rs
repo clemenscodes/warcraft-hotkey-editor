@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitCardInfoView;
 mod style;
 
 use components::unit_card_id::UnitCardId;

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::RegenQualifierView;
 mod style;
 
 use dioxus::prelude::*;

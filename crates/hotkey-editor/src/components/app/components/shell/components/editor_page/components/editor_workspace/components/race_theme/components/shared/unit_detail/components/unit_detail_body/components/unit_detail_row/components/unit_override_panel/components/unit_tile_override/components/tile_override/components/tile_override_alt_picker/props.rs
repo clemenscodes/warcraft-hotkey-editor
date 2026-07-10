@@ -1,3 +1,4 @@
+use super::view::TileOverrideAltPickerView;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
@@ -10,4 +11,25 @@ pub struct TileOverrideAltPickerProps {
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
     pub alt_position_picker_open: Signal<bool>,
+}
+
+impl From<&TileOverrideAltPickerView> for TileOverrideAltPickerProps {
+    fn from(view: &TileOverrideAltPickerView) -> Self {
+        let TileOverrideAltPickerView {
+            object_id,
+            display_name,
+            picker_slots,
+            alt_position_picker_open,
+        } = view.clone();
+        Self {
+            object_id,
+            display_name,
+            picker_slots,
+            alt_position_picker_open,
+        }
+    }
+}
+
+impl ddd::Props for TileOverrideAltPickerProps {
+    type View = TileOverrideAltPickerView;
 }

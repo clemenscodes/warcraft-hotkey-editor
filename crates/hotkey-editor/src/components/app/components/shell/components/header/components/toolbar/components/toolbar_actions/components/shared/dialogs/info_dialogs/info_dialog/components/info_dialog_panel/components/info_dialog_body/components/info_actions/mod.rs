@@ -1,5 +1,8 @@
 mod logic;
 mod props;
+mod view;
+
+pub use view::InfoActionsView;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::button::{Button, ButtonVariant};

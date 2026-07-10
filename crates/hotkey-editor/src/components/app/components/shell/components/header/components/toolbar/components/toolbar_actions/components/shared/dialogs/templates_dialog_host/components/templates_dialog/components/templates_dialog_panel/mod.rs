@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::TemplatesDialogPanelView;
 mod style;
 
 use components::templates_dialog_body::TemplatesDialogBody;

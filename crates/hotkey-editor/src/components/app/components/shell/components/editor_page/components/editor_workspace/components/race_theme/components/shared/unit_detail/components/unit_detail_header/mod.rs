@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitDetailHeaderView;
 mod style;
 
 use components::unit_detail_title::UnitDetailTitle;

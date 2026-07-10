@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::SelectedUnitCardIdView;
 mod style;
 
 use dioxus::prelude::*;
@@ -7,7 +10,7 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 /// The selected look of a unit card's database id: it takes the card's race accent at
-/// reduced opacity, read from the theme container's `--race-accent`. Presentational —
+/// reduced opacity, read from the theme container's `--race-color`. Presentational —
 /// the dispatcher builds its props and renders it when the card is selected.
 #[component]
 pub fn SelectedUnitCardId(props: SelectedUnitCardIdProps) -> Element {

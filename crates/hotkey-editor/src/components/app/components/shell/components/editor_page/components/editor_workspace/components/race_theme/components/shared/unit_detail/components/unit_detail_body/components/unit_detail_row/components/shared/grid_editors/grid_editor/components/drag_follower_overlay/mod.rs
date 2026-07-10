@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::DragFollowerOverlayView;
 
 use components::drag_follower_ghost::DragFollowerGhost;
 use dioxus::prelude::*;

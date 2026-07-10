@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FilledIslandDetailView;
 mod style;
 
 use components::island_conflict_grid::IslandConflictGrid;

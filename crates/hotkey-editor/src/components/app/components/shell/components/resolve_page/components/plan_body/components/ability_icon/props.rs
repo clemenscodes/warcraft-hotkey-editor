@@ -1,3 +1,4 @@
+use super::view::AbilityIconView;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 
@@ -13,4 +14,29 @@ pub struct AbilityIconProps {
     pub is_winner: bool,
     pub disabled: bool,
     pub inspected: InspectedAbility,
+}
+
+impl From<&AbilityIconView> for AbilityIconProps {
+    fn from(view: &AbilityIconView) -> Self {
+        let AbilityIconView {
+            name,
+            icon_url,
+            carrier_count,
+            is_winner,
+            disabled,
+            inspected,
+        } = view.clone();
+        Self {
+            name,
+            icon_url,
+            carrier_count,
+            is_winner,
+            disabled,
+            inspected,
+        }
+    }
+}
+
+impl ddd::Props for AbilityIconProps {
+    type View = AbilityIconView;
 }

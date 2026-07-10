@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CarriersGridView;
 mod style;
 
 use components::carrier_card::CarrierCard;

@@ -1,3 +1,4 @@
+use super::view::StatLabelView;
 use dioxus::prelude::*;
 
 /// A stat label leaf's input: the row name it presents. This is the default label look
@@ -8,4 +9,15 @@ use dioxus::prelude::*;
 pub struct StatLabelProps {
     #[props(into)]
     pub text: String,
+}
+
+impl From<&StatLabelView> for StatLabelProps {
+    fn from(view: &StatLabelView) -> Self {
+        let StatLabelView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Props for StatLabelProps {
+    type View = StatLabelView;
 }

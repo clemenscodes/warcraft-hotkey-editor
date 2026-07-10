@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::DefenseRowsView;
 mod style;
 
 use components::armor_row::ArmorRow;

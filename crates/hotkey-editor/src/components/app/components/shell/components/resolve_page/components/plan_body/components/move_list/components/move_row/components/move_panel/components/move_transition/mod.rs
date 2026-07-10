@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MoveTransitionView;
 mod style;
 
 use components::move_arrow::MoveArrow;

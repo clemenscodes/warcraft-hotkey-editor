@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::OpenHeroLevelTriggerView;
 mod style;
 
 use super::hero_level_trigger_number::HeroLevelTriggerNumber;

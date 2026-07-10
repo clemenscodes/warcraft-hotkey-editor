@@ -1,3 +1,4 @@
+use super::view::LayoutEditorView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{GridCoordinate, GridLayout};
 
@@ -12,4 +13,27 @@ pub struct LayoutEditorProps {
     pub dragging_layout_tile: Signal<Option<GridCoordinate>>,
     pub update_hotkeys_on_move: Signal<bool>,
     pub open: Signal<bool>,
+}
+
+impl From<&LayoutEditorView> for LayoutEditorProps {
+    fn from(view: &LayoutEditorView) -> Self {
+        let LayoutEditorView {
+            grid_layout,
+            editing_layout_tile,
+            dragging_layout_tile,
+            update_hotkeys_on_move,
+            open,
+        } = view.clone();
+        Self {
+            grid_layout,
+            editing_layout_tile,
+            dragging_layout_tile,
+            update_hotkeys_on_move,
+            open,
+        }
+    }
+}
+
+impl ddd::Props for LayoutEditorProps {
+    type View = LayoutEditorView;
 }

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::AltPositionPickerBodyView;
 mod style;
 
 use components::alt_position_picker_explainer::AltPositionPickerExplainer;

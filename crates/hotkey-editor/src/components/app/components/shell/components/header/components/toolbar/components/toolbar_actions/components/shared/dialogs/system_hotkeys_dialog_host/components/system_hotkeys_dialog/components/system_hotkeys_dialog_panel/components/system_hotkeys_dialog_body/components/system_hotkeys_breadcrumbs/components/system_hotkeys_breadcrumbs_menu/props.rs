@@ -1,3 +1,4 @@
+use super::view::SystemHotkeysBreadcrumbsMenuView;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
@@ -9,4 +10,23 @@ pub struct SystemHotkeysBreadcrumbsMenuProps {
     pub active_category: Signal<SystemHotkeysCategory>,
     pub picker_open: Signal<bool>,
     pub is_open: bool,
+}
+
+impl From<&SystemHotkeysBreadcrumbsMenuView> for SystemHotkeysBreadcrumbsMenuProps {
+    fn from(view: &SystemHotkeysBreadcrumbsMenuView) -> Self {
+        let SystemHotkeysBreadcrumbsMenuView {
+            active_category,
+            picker_open,
+            is_open,
+        } = view.clone();
+        Self {
+            active_category,
+            picker_open,
+            is_open,
+        }
+    }
+}
+
+impl ddd::Props for SystemHotkeysBreadcrumbsMenuProps {
+    type View = SystemHotkeysBreadcrumbsMenuView;
 }

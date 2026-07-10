@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PreviewHeadedGridView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;

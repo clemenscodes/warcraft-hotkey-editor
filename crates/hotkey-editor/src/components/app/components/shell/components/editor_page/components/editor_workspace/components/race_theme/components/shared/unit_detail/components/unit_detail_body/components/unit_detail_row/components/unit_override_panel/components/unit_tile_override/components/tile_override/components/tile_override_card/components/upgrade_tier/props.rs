@@ -1,3 +1,4 @@
+use super::view::UpgradeTierView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -11,4 +12,25 @@ pub struct UpgradeTierProps {
     pub total_tier_count: usize,
     #[props(into)]
     pub tier_label_text: String,
+}
+
+impl From<&UpgradeTierView> for UpgradeTierProps {
+    fn from(view: &UpgradeTierView) -> Self {
+        let UpgradeTierView {
+            object_id,
+            active_tier_index,
+            total_tier_count,
+            tier_label_text,
+        } = view.clone();
+        Self {
+            object_id,
+            active_tier_index,
+            total_tier_count,
+            tier_label_text,
+        }
+    }
+}
+
+impl ddd::Props for UpgradeTierProps {
+    type View = UpgradeTierView;
 }

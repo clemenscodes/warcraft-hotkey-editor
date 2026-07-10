@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::SystemSlotView;
 mod state;
 
 use components::conflict_slot::ConflictSlot;

@@ -1,3 +1,4 @@
+use super::view::SystemKeyPickerDialogPanelView;
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyColumn;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
@@ -15,4 +16,27 @@ pub struct SystemKeyPickerDialogPanelProps {
     pub columns: Vec<KeyColumn>,
     pub on_pick: EventHandler<KeyCode>,
     pub board_on_close: EventHandler<()>,
+}
+
+impl From<&SystemKeyPickerDialogPanelView> for SystemKeyPickerDialogPanelProps {
+    fn from(view: &SystemKeyPickerDialogPanelView) -> Self {
+        let SystemKeyPickerDialogPanelView {
+            title,
+            on_close,
+            columns,
+            on_pick,
+            board_on_close,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            columns,
+            on_pick,
+            board_on_close,
+        }
+    }
+}
+
+impl ddd::Props for SystemKeyPickerDialogPanelProps {
+    type View = SystemKeyPickerDialogPanelView;
 }

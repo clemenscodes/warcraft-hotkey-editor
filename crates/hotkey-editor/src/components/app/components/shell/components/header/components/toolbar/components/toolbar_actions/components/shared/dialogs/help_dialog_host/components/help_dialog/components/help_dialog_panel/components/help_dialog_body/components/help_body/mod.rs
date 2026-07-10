@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpBodyView;
 mod style;
 
 use components::help_resolver_section::HelpResolverSection;

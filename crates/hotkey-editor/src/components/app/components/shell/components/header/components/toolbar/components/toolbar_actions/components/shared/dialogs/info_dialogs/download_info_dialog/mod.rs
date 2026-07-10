@@ -1,6 +1,9 @@
 mod data;
 mod logic;
 mod props;
+mod view;
+
+pub use view::DownloadInfoDialogView;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::InfoDialog;
 use dioxus::prelude::*;

@@ -1,5 +1,7 @@
 mod logic;
 mod props;
+mod view;
+pub use view::UnitCardsSidebarView;
 
 use super::shared::collision_sidebar::CollisionSidebar;
 use crate::services::collision_selection::context::use_collision_selection;

@@ -1,3 +1,4 @@
+use super::view::ConflictPanelView;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
 use dioxus::prelude::*;
 
@@ -6,5 +7,16 @@ use dioxus::prelude::*;
 /// splits it into the caption and the two layouts.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictPanelProps {
-    pub model: ConflictCardModel,
+    pub(crate) model: ConflictCardModel,
+}
+
+impl From<&ConflictPanelView> for ConflictPanelProps {
+    fn from(view: &ConflictPanelView) -> Self {
+        let ConflictPanelView { model } = view.clone();
+        Self { model }
+    }
+}
+
+impl ddd::Props for ConflictPanelProps {
+    type View = ConflictPanelView;
 }

@@ -1,3 +1,4 @@
+use super::view::FightNameButtonView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -10,4 +11,25 @@ pub struct FightNameButtonProps {
     pub object_id: WarcraftObjectId,
     pub has_unit: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&FightNameButtonView> for FightNameButtonProps {
+    fn from(view: &FightNameButtonView) -> Self {
+        let FightNameButtonView {
+            name,
+            object_id,
+            has_unit,
+            onclick,
+        } = view.clone();
+        Self {
+            name,
+            object_id,
+            has_unit,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for FightNameButtonProps {
+    type View = FightNameButtonView;
 }

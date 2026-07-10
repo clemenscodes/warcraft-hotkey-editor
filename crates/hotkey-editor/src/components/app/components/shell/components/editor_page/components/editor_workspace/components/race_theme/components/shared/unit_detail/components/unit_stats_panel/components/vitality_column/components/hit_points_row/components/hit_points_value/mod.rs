@@ -1,4 +1,6 @@
 mod props;
+mod view;
+
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_figure::StatFigure;

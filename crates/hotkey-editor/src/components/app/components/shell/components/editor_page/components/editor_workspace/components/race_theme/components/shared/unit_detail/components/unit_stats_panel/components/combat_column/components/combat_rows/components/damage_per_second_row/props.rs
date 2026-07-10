@@ -1,3 +1,4 @@
+use super::view::DamagePerSecondRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::DamagePerSecond;
 
@@ -6,4 +7,15 @@ use warcraft_keybinds::DamagePerSecond;
 #[derive(Props, Clone, PartialEq)]
 pub struct DamagePerSecondRowProps {
     pub value: Option<DamagePerSecond>,
+}
+
+impl From<&DamagePerSecondRowView> for DamagePerSecondRowProps {
+    fn from(view: &DamagePerSecondRowView) -> Self {
+        let DamagePerSecondRowView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Props for DamagePerSecondRowProps {
+    type View = DamagePerSecondRowView;
 }

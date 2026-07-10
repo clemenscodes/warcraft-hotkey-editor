@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CarriersDialogPanelView;
 mod style;
 
 use components::carriers_dialog_body::CarriersDialogBody;

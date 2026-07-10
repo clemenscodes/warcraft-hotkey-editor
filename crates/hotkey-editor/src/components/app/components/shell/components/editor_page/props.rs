@@ -1,3 +1,4 @@
+use super::view::EditorPageView;
 use dioxus::prelude::*;
 
 /// The editor page's route parameters: the race, unit mode, selected unit, and search
@@ -11,4 +12,25 @@ pub struct EditorPageProps {
     pub mode: Option<String>,
     pub unit: Option<String>,
     pub search_query: Option<String>,
+}
+
+impl From<&EditorPageView> for EditorPageProps {
+    fn from(view: &EditorPageView) -> Self {
+        let EditorPageView {
+            race,
+            mode,
+            unit,
+            search_query,
+        } = view.clone();
+        Self {
+            race,
+            mode,
+            unit,
+            search_query,
+        }
+    }
+}
+
+impl ddd::Props for EditorPageProps {
+    type View = EditorPageView;
 }

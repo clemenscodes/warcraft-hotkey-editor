@@ -1,3 +1,4 @@
+use super::view::CarriersDialogPanelView;
 use crate::services::carriers::CarrierUnitView;
 use dioxus::prelude::*;
 
@@ -11,4 +12,23 @@ pub struct CarriersDialogPanelProps {
     pub title: String,
     pub on_close: EventHandler<()>,
     pub carriers: Vec<CarrierUnitView>,
+}
+
+impl From<&CarriersDialogPanelView> for CarriersDialogPanelProps {
+    fn from(view: &CarriersDialogPanelView) -> Self {
+        let CarriersDialogPanelView {
+            title,
+            on_close,
+            carriers,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            carriers,
+        }
+    }
+}
+
+impl ddd::Props for CarriersDialogPanelProps {
+    type View = CarriersDialogPanelView;
 }

@@ -1,3 +1,4 @@
+use super::view::ToolbarButtonView;
 use dioxus::prelude::*;
 
 /// Consumers swap only the icon, click handler, and aria/disabled state; the look is
@@ -15,4 +16,31 @@ pub struct ToolbarButtonProps {
     #[props(default)]
     pub aria_pressed: Option<bool>,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&ToolbarButtonView> for ToolbarButtonProps {
+    fn from(view: &ToolbarButtonView) -> Self {
+        let ToolbarButtonView {
+            icon,
+            aria_label,
+            disabled,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            aria_label,
+            disabled,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for ToolbarButtonProps {
+    type View = ToolbarButtonView;
 }

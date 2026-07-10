@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::AltPositionPickerPanelView;
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::shared::alt_position_picker_body::AltPositionPickerBody;

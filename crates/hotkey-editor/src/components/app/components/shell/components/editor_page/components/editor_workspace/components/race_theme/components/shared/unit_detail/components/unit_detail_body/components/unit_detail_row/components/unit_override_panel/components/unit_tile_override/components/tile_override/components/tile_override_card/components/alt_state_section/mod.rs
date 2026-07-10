@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::AltStateSectionView;
 mod style;
 
 use components::alt_state_header::AltStateHeader;

@@ -1,4 +1,5 @@
 use super::state::KeyPickerCell;
+use super::view::KeyPickerView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
@@ -17,4 +18,29 @@ pub struct KeyPickerProps {
     pub allow_conflict_pick: bool,
     pub on_pick: EventHandler<HotkeyToken>,
     pub on_close: EventHandler<()>,
+}
+
+impl From<&KeyPickerView> for KeyPickerProps {
+    fn from(view: &KeyPickerView) -> Self {
+        let KeyPickerView {
+            title,
+            rows,
+            open,
+            allow_conflict_pick,
+            on_pick,
+            on_close,
+        } = view.clone();
+        Self {
+            title,
+            rows,
+            open,
+            allow_conflict_pick,
+            on_pick,
+            on_close,
+        }
+    }
+}
+
+impl ddd::Props for KeyPickerProps {
+    type View = KeyPickerView;
 }

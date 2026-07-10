@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ConflictPositionView;
 
 use components::inline_conflict_position::InlineConflictPosition;
 use components::top_conflict_position::TopConflictPosition;

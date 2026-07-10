@@ -1,4 +1,3 @@
-use super::props::CarrierCardProps;
 use crate::services::carriers::CarrierUnitView;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;

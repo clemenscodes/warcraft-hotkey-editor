@@ -1,7 +1,8 @@
 mod props;
+mod view;
+pub use view::LayoutTileView;
 mod state;
 mod style;
-mod view;
 
 use crate::components::app::components::shell::components::shared::editable_keycap::{
     EditableKeycap, EditableKeycapState,
@@ -11,7 +12,6 @@ use props::LayoutTileProps;
 pub use state::LayoutTileState;
 use style::CLASS;
 use tw_macro::assert_component;
-pub use view::LayoutTileView;
 
 /// A single editable cell in the global hotkey grid. Draggable to swap, clickable
 /// to open the key picker, and pulses while being edited. The focusable, keyboard-

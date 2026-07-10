@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ButtonView;
 mod state;
 
 use components::primary_button::PrimaryButton;

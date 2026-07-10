@@ -15,7 +15,6 @@ classes! {
         "size-full",
         "p-0",
         "border-[1.25cqi]",
-        "border-warcraft-gold-border",
         "rounded-[15cqi]",
         "cursor-pointer",
         "bg-panel-gold-resting",

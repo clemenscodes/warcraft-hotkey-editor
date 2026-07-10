@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::AbilityFollowerGhostView;
 mod style;
 
 use super::super::logic::FollowerPresentation;

@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 /// The ability icon's shaped state: the open-state signal it owns, the icon and badge
 /// props, the tooltip, whether it is disabled, and the click handler that opens this
 /// ability's carriers dialog.
-pub(super) struct AbilityIconView {
+pub(super) struct AbilityIconModel {
     pub(super) open_state: Signal<Option<InspectedAbility>>,
     pub(super) icon_src: Option<String>,
     pub(super) icon_alt: String,
@@ -18,7 +18,7 @@ pub(super) struct AbilityIconView {
 
 /// Owns the icon's local open state and wires the click that opens its carriers dialog,
 /// so the body only names the result and renders.
-pub(super) fn use_ability_icon(props: &AbilityIconProps) -> AbilityIconView {
+pub(super) fn use_ability_icon(props: &AbilityIconProps) -> AbilityIconModel {
     let mut open_state = use_signal(|| None::<InspectedAbility>);
     let inspected = props.inspected.clone();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
@@ -33,7 +33,7 @@ pub(super) fn use_ability_icon(props: &AbilityIconProps) -> AbilityIconView {
     let count = carrier_count;
     let is_winner = props.is_winner;
     let disabled = props.disabled;
-    AbilityIconView {
+    AbilityIconModel {
         open_state,
         icon_src,
         icon_alt,

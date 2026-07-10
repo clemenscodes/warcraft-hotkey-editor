@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::SystemKeyPickerDialogBodyView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::key_picker_board_host::KeyPickerBoardHost;

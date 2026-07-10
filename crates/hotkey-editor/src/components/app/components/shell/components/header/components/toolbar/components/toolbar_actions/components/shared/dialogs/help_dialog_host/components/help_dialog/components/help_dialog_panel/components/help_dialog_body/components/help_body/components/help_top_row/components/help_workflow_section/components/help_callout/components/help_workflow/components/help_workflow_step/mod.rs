@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpWorkflowStepView;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::components::help_dialog_panel::components::help_dialog_body::components::help_body::components::help_top_row::components::help_workflow_section::components::help_callout::components::help_workflow::components::help_workflow_step::components::help_inline_icon::HelpInlineIcon;

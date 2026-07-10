@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::UnitCategorySectionView;
 
 use components::unit_card::UnitCard;
 use components::unit_category_heading::UnitCategoryHeading;

@@ -1,3 +1,4 @@
+use super::view::HitPointsValueView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HitPoints;
 
@@ -5,4 +6,15 @@ use warcraft_keybinds::HitPoints;
 #[derive(Props, Clone, PartialEq)]
 pub struct HitPointsValueProps {
     pub value: HitPoints,
+}
+
+impl From<&HitPointsValueView> for HitPointsValueProps {
+    fn from(view: &HitPointsValueView) -> Self {
+        let HitPointsValueView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Props for HitPointsValueProps {
+    type View = HitPointsValueView;
 }

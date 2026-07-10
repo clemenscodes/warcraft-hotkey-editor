@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MoveReasonRowView;
 mod style;
 use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
 use components::reason_badges::fight_reason_badge::FightReasonBadge;

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ToastListItemView;
 mod style;
 
 use components::toast_card::ToastCard;

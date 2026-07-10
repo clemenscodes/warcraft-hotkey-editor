@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::HeroLevelOptionView;
 
 use components::active_hero_level_option::ActiveHeroLevelOption;
 use components::idle_hero_level_option::IdleHeroLevelOption;

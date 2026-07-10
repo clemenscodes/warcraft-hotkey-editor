@@ -1,6 +1,6 @@
 pub mod components;
 mod hooks;
-mod logic;
+pub mod logic;
 mod props;
 mod state;
 mod style;

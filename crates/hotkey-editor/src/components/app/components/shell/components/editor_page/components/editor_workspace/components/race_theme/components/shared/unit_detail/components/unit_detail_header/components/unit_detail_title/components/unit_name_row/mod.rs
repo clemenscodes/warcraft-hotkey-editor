@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitNameRowView;
 mod style;
 
 use components::hero_level_picker::HeroLevelPicker;

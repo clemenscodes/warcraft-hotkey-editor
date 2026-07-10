@@ -1,3 +1,4 @@
+use super::view::AttributesColumnView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HeroStatistics;
 
@@ -6,4 +7,15 @@ use warcraft_keybinds::HeroStatistics;
 #[derive(Props, Clone, PartialEq)]
 pub struct AttributesColumnProps {
     pub hero: Option<HeroStatistics>,
+}
+
+impl From<&AttributesColumnView> for AttributesColumnProps {
+    fn from(view: &AttributesColumnView) -> Self {
+        let AttributesColumnView { hero } = view.clone();
+        Self { hero }
+    }
+}
+
+impl ddd::Props for AttributesColumnProps {
+    type View = AttributesColumnView;
 }

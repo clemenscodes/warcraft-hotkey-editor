@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnresolvedMoveListView;
 mod style;
 
 use components::unresolved_row::UnresolvedRow;

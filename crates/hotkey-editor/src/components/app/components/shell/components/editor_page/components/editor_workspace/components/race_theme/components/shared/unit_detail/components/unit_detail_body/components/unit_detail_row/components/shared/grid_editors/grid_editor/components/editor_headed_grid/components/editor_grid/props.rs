@@ -1,4 +1,5 @@
 use super::components::grid_editor_tile::EditorTile;
+use super::view::EditorGridView;
 use dioxus::prelude::*;
 use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 
@@ -7,5 +8,16 @@ use warcraft_keybinds::COMMAND_GRID_TILE_COUNT;
 /// interaction; `EditorGrid` only arranges them.
 #[derive(Props, Clone, PartialEq)]
 pub struct EditorGridProps {
-    pub tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
+    pub(crate) tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
+}
+
+impl From<&EditorGridView> for EditorGridProps {
+    fn from(view: &EditorGridView) -> Self {
+        let EditorGridView { tiles } = view.clone();
+        Self { tiles }
+    }
+}
+
+impl ddd::Props for EditorGridProps {
+    type View = EditorGridView;
 }

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MobileCategoryTabsView;
 mod style;
 
 use components::mobile_category_tab::MobileCategoryTab;

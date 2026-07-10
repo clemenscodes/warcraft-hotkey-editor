@@ -1,3 +1,4 @@
+use super::view::ConflictPositionView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -8,4 +9,15 @@ pub struct ConflictPositionProps {
     pub coordinate: GridCoordinate,
     #[props(default)]
     pub is_top: bool,
+}
+
+impl From<&ConflictPositionView> for ConflictPositionProps {
+    fn from(view: &ConflictPositionView) -> Self {
+        let ConflictPositionView { coordinate, is_top } = view.clone();
+        Self { coordinate, is_top }
+    }
+}
+
+impl ddd::Props for ConflictPositionProps {
+    type View = ConflictPositionView;
 }

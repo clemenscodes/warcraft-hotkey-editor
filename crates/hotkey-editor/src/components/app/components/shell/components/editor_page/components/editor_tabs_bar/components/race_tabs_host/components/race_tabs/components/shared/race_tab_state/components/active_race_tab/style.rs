@@ -7,6 +7,6 @@ classes! {
     base: tw![
         "relative",
         "size-full",
-        "[--label-color:var(--race-accent)]",
+        "[--label-color:var(--race-color)]",
     ],
 }

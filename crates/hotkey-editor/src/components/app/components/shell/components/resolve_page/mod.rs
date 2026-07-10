@@ -2,6 +2,10 @@ pub mod components;
 mod hooks;
 pub mod logic;
 mod props;
+mod view;
+
+pub use view::ResolvePageView;
+
 mod style;
 
 use crate::components::app::components::shell::components::shared::breadcrumbs::Breadcrumbs;
@@ -10,7 +14,7 @@ use components::empty_state::EmptyState;
 use components::plan_body::PlanBody;
 use components::plan_header::PlanHeader;
 use dioxus::prelude::*;
-use hooks::{ResolvePageView, ResolvePlanPresentation, use_resolve_page};
+use hooks::{ResolvePageModel, ResolvePlanPresentation, use_resolve_page};
 use props::ResolvePageProps;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -23,17 +27,17 @@ use tw_macro::assert_component;
 #[component]
 pub fn ResolvePage(props: ResolvePageProps) -> Element {
     let plan = match use_resolve_page(&props) {
-        ResolvePageView::NoFile => {
+        ResolvePageModel::NoFile => {
             return rsx! {
                 EmptyState {}
             };
         }
-        ResolvePageView::Clear => {
+        ResolvePageModel::Clear => {
             return rsx! {
                 ClearState {}
             };
         }
-        ResolvePageView::Plan(plan) => *plan,
+        ResolvePageModel::Plan(plan) => *plan,
     };
     let ResolvePlanPresentation {
         moves_text,

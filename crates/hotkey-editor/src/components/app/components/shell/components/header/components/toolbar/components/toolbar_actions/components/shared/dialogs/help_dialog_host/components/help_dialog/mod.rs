@@ -2,6 +2,9 @@ pub mod components;
 pub mod data;
 mod logic;
 mod props;
+mod view;
+
+pub use view::HelpDialogView;
 mod style;
 
 use components::help_dialog_panel::HelpDialogPanel;

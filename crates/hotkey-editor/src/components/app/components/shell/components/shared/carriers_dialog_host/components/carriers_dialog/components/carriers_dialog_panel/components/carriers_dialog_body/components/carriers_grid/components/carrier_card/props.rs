@@ -1,3 +1,4 @@
+use super::view::CarrierCardView;
 use crate::services::carriers::CarrierUnitView;
 use dioxus::prelude::*;
 
@@ -7,4 +8,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct CarrierCardProps {
     pub carrier: CarrierUnitView,
+}
+
+impl From<&CarrierCardView> for CarrierCardProps {
+    fn from(view: &CarrierCardView) -> Self {
+        let CarrierCardView { carrier } = view.clone();
+        Self { carrier }
+    }
+}
+
+impl ddd::Props for CarrierCardProps {
+    type View = CarrierCardView;
 }

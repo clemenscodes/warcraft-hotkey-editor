@@ -1,3 +1,4 @@
+use super::view::AltPositionPickerView;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
@@ -12,4 +13,25 @@ pub struct AltPositionPickerProps {
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
     pub alt_position_picker_open: Signal<bool>,
+}
+
+impl From<&AltPositionPickerView> for AltPositionPickerProps {
+    fn from(view: &AltPositionPickerView) -> Self {
+        let AltPositionPickerView {
+            object_id,
+            display_name,
+            picker_slots,
+            alt_position_picker_open,
+        } = view.clone();
+        Self {
+            object_id,
+            display_name,
+            picker_slots,
+            alt_position_picker_open,
+        }
+    }
+}
+
+impl ddd::Props for AltPositionPickerProps {
+    type View = AltPositionPickerView;
 }

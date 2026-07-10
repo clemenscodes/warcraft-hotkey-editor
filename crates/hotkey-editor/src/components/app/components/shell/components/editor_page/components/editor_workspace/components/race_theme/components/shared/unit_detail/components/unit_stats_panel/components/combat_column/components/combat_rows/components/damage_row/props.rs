@@ -1,3 +1,4 @@
+use super::view::DamageRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::DamageRange;
 
@@ -5,4 +6,15 @@ use warcraft_keybinds::DamageRange;
 #[derive(Props, Clone, PartialEq)]
 pub struct DamageRowProps {
     pub value: DamageRange,
+}
+
+impl From<&DamageRowView> for DamageRowProps {
+    fn from(view: &DamageRowView) -> Self {
+        let DamageRowView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Props for DamageRowProps {
+    type View = DamageRowView;
 }

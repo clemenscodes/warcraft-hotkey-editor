@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HeroLevelTriggerView;
 
 use components::closed_hero_level_trigger::ClosedHeroLevelTrigger;
 use components::open_hero_level_trigger::OpenHeroLevelTrigger;

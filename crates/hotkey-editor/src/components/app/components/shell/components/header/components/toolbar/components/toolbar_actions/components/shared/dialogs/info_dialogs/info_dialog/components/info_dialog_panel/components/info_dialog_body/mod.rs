@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::InfoDialogBodyView;
 mod style;
 
 use components::info_actions::InfoActions;

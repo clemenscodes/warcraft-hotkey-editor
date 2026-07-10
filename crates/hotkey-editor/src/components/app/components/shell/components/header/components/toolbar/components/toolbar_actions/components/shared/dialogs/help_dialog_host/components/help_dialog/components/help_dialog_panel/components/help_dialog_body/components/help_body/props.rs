@@ -1,3 +1,4 @@
+use super::view::HelpBodyView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpContent;
 use dioxus::prelude::*;
 
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpBodyProps {
     pub content: HelpContent,
+}
+
+impl From<&HelpBodyView> for HelpBodyProps {
+    fn from(view: &HelpBodyView) -> Self {
+        let HelpBodyView { content } = view.clone();
+        Self { content }
+    }
+}
+
+impl ddd::Props for HelpBodyProps {
+    type View = HelpBodyView;
 }

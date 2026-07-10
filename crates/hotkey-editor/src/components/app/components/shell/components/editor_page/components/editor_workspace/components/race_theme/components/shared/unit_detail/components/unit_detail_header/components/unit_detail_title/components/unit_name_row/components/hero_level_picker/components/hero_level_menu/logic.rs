@@ -15,11 +15,10 @@ pub(super) fn hero_level_options(props: &HeroLevelMenuProps) -> Vec<HeroLevelMen
     (1..=MAX_HERO_LEVEL_DISPLAY)
         .map(|level_index| {
             let level_picker_open = props.level_picker_open;
-            let option = HeroLevelMenuOption {
+            HeroLevelMenuOption {
                 level_index,
                 level_picker_open,
-            };
-            option
+            }
         })
         .collect()
 }

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ColorKeyView;
 mod state;
 
 use components::available_key::AvailableKey;

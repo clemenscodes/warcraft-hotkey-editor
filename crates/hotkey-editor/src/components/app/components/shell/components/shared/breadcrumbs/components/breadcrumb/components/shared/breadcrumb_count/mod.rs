@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::BreadcrumbCountView;
 mod style;
 use dioxus::prelude::*;
 use props::BreadcrumbCountProps;

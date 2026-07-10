@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::BurgerDrawerHeaderView;
 mod style;
 
 use components::burger_close::BurgerClose;

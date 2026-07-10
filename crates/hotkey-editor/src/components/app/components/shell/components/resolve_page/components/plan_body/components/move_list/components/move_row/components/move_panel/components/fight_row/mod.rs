@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FightRowView;
 mod style;
 
 use components::anchor_column::AnchorColumn;

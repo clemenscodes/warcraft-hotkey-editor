@@ -1,3 +1,4 @@
+use super::view::IslandConflictCardView;
 use crate::components::app::components::shell::components::collisions_page::logic::ConflictView;
 use dioxus::prelude::*;
 
@@ -7,4 +8,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictCardProps {
     pub conflict: ConflictView,
+}
+
+impl From<&IslandConflictCardView> for IslandConflictCardProps {
+    fn from(view: &IslandConflictCardView) -> Self {
+        let IslandConflictCardView { conflict } = view.clone();
+        Self { conflict }
+    }
+}
+
+impl ddd::Props for IslandConflictCardProps {
+    type View = IslandConflictCardView;
 }

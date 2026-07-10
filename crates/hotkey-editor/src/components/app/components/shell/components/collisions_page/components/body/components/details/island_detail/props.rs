@@ -1,3 +1,4 @@
+use super::view::IslandDetailView;
 use crate::components::app::components::shell::components::collisions_page::logic::IslandView;
 use dioxus::prelude::*;
 
@@ -7,4 +8,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandDetailProps {
     pub islands: Vec<IslandView>,
+}
+
+impl From<&IslandDetailView> for IslandDetailProps {
+    fn from(view: &IslandDetailView) -> Self {
+        let IslandDetailView { islands } = view.clone();
+        Self { islands }
+    }
+}
+
+impl ddd::Props for IslandDetailProps {
+    type View = IslandDetailView;
 }

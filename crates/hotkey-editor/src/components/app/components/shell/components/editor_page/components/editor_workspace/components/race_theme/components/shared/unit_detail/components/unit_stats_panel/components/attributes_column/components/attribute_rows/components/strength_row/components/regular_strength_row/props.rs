@@ -1,3 +1,4 @@
+use super::view::RegularStrengthRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{AttributeStatistic, Gain};
 
@@ -8,4 +9,23 @@ pub struct RegularStrengthRowProps {
     pub statistic: AttributeStatistic,
     pub growth: Gain,
     pub label: String,
+}
+
+impl From<&RegularStrengthRowView> for RegularStrengthRowProps {
+    fn from(view: &RegularStrengthRowView) -> Self {
+        let RegularStrengthRowView {
+            statistic,
+            growth,
+            label,
+        } = view.clone();
+        Self {
+            statistic,
+            growth,
+            label,
+        }
+    }
+}
+
+impl ddd::Props for RegularStrengthRowProps {
+    type View = RegularStrengthRowView;
 }

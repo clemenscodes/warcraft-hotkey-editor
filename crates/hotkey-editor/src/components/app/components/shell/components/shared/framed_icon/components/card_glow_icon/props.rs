@@ -1,3 +1,4 @@
+use super::view::CardGlowIconView;
 use dioxus::prelude::*;
 
 /// The card-glow look's props: the optional image source and its alt text. Built by
@@ -8,4 +9,15 @@ pub struct CardGlowIconProps {
     pub source: Option<String>,
     #[props(into)]
     pub alt: String,
+}
+
+impl From<&CardGlowIconView> for CardGlowIconProps {
+    fn from(view: &CardGlowIconView) -> Self {
+        let CardGlowIconView { source, alt } = view.clone();
+        Self { source, alt }
+    }
+}
+
+impl ddd::Props for CardGlowIconProps {
+    type View = CardGlowIconView;
 }

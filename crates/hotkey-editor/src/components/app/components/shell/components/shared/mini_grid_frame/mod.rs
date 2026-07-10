@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MiniGridFrameView;
 mod style;
 
 use components::mini_grid::MiniGrid;

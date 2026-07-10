@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::SystemHotkeysDialogPanelView;
 mod style;
 
 use components::system_hotkeys_dialog_body::SystemHotkeysDialogBody;

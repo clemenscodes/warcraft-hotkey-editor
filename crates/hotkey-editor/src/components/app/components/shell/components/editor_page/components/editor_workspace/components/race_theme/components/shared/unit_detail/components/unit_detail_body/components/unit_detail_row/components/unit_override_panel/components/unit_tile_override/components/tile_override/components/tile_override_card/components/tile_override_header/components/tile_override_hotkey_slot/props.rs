@@ -1,3 +1,4 @@
+use super::view::TileOverrideHotkeySlotView;
 use dioxus::prelude::*;
 
 /// The right side of the override header: exactly one of the hotkey cell, the
@@ -15,4 +16,39 @@ pub struct TileOverrideHotkeySlotProps {
     pub research_is_special: bool,
     pub on_research_activate: EventHandler<()>,
     pub is_info_only: bool,
+}
+
+impl From<&TileOverrideHotkeySlotView> for TileOverrideHotkeySlotProps {
+    fn from(view: &TileOverrideHotkeySlotView) -> Self {
+        let TileOverrideHotkeySlotView {
+            show_hotkey_field,
+            hotkey_label,
+            hotkey_is_editing,
+            hotkey_is_special,
+            on_hotkey_activate,
+            show_research_field,
+            research_label,
+            research_is_editing,
+            research_is_special,
+            on_research_activate,
+            is_info_only,
+        } = view.clone();
+        Self {
+            show_hotkey_field,
+            hotkey_label,
+            hotkey_is_editing,
+            hotkey_is_special,
+            on_hotkey_activate,
+            show_research_field,
+            research_label,
+            research_is_editing,
+            research_is_special,
+            on_research_activate,
+            is_info_only,
+        }
+    }
+}
+
+impl ddd::Props for TileOverrideHotkeySlotProps {
+    type View = TileOverrideHotkeySlotView;
 }

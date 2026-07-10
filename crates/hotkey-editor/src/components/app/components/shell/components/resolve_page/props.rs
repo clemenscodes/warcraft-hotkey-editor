@@ -1,3 +1,4 @@
+use super::view::ResolvePageView;
 use dioxus::prelude::*;
 
 /// The resolve page's route parameter: the selected move-category `?entry=`
@@ -12,4 +13,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolvePageProps {
     pub entry: Option<String>,
+}
+
+impl From<&ResolvePageView> for ResolvePageProps {
+    fn from(view: &ResolvePageView) -> Self {
+        let ResolvePageView { entry } = view.clone();
+        Self { entry }
+    }
+}
+
+impl ddd::Props for ResolvePageProps {
+    type View = ResolvePageView;
 }

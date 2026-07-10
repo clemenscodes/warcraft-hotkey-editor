@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::KeyChipView;
 
 use components::conflict_key_chip::ConflictKeyChip;
 use components::normal_key_chip::NormalKeyChip;

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::TemplateCardTextView;
 mod style;
 
 use components::template_card_description::TemplateCardDescription;

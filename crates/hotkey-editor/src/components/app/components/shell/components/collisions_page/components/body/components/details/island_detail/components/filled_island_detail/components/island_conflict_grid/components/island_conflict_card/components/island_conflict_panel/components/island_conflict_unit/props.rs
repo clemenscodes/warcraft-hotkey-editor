@@ -1,3 +1,4 @@
+use super::view::IslandConflictUnitView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -10,4 +11,23 @@ pub struct IslandConflictUnitProps {
     pub icon_url: Option<String>,
     #[props(into)]
     pub name: String,
+}
+
+impl From<&IslandConflictUnitView> for IslandConflictUnitProps {
+    fn from(view: &IslandConflictUnitView) -> Self {
+        let IslandConflictUnitView {
+            unit_id,
+            icon_url,
+            name,
+        } = view.clone();
+        Self {
+            unit_id,
+            icon_url,
+            name,
+        }
+    }
+}
+
+impl ddd::Props for IslandConflictUnitProps {
+    type View = IslandConflictUnitView;
 }

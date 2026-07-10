@@ -1,6 +1,9 @@
 pub mod components;
 mod model;
 mod props;
+mod view;
+
+pub use view::BodyView;
 
 use components::clear_state::ClearState;
 use components::empty_state::EmptyState;

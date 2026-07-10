@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::ToggleButtonView;
 
 use components::active_toggle_button::ActiveToggleButton;
 use components::idle_toggle_button::IdleToggleButton;

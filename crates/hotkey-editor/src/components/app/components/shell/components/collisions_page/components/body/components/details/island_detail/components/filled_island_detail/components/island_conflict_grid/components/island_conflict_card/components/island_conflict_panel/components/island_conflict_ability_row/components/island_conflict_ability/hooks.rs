@@ -6,7 +6,7 @@ use warcraft_api::WarcraftObjectId;
 /// The conflict ability's shaped state: the open-state signal the column owns, the icon
 /// source and alt text, the click handler that opens this ability's carriers dialog, and
 /// the display text the column places directly.
-pub(super) struct IslandConflictAbilityView {
+pub(super) struct IslandConflictAbilityModel {
     pub(super) open_state: Signal<Option<InspectedAbility>>,
     pub(super) icon_src: Option<String>,
     pub(super) icon_alt: String,
@@ -20,7 +20,7 @@ pub(super) struct IslandConflictAbilityView {
 /// dialog, so the body only names the result and renders.
 pub(super) fn use_island_conflict_ability(
     props: &IslandConflictAbilityProps,
-) -> IslandConflictAbilityView {
+) -> IslandConflictAbilityModel {
     let mut open_state = use_signal(|| None::<InspectedAbility>);
     let inspected = props.inspected.clone();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
@@ -32,7 +32,7 @@ pub(super) fn use_island_conflict_ability(
     let icon_alt = ability_name.clone();
     let ability_id = props.ability_id;
     let extra_count = props.extra_count;
-    IslandConflictAbilityView {
+    IslandConflictAbilityModel {
         open_state,
         icon_src,
         icon_alt,

@@ -1,3 +1,4 @@
+use super::view::SlotButtonView;
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
@@ -10,4 +11,21 @@ use warcraft_keybinds::WarcraftObjectId;
 pub struct SlotButtonProps {
     pub slot_label: String,
     pub section_id: WarcraftObjectId,
+}
+
+impl From<&SlotButtonView> for SlotButtonProps {
+    fn from(view: &SlotButtonView) -> Self {
+        let SlotButtonView {
+            slot_label,
+            section_id,
+        } = view.clone();
+        Self {
+            slot_label,
+            section_id,
+        }
+    }
+}
+
+impl ddd::Props for SlotButtonProps {
+    type View = SlotButtonView;
 }

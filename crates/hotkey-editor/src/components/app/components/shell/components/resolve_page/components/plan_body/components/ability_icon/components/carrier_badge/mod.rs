@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CarrierBadgeView;
 
 use components::regular_carrier_badge::RegularCarrierBadge;
 use components::winner_carrier_badge::WinnerCarrierBadge;

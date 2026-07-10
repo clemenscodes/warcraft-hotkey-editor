@@ -1,5 +1,8 @@
 mod data;
 mod props;
+mod view;
+
+pub use view::ConflictMoreView;
 mod style;
 use dioxus::prelude::*;
 use props::ConflictMoreProps;

@@ -1,3 +1,4 @@
+use super::view::PrimaryStrengthRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{AttributeStatistic, Gain};
 
@@ -8,4 +9,23 @@ pub struct PrimaryStrengthRowProps {
     pub statistic: AttributeStatistic,
     pub growth: Gain,
     pub label: String,
+}
+
+impl From<&PrimaryStrengthRowView> for PrimaryStrengthRowProps {
+    fn from(view: &PrimaryStrengthRowView) -> Self {
+        let PrimaryStrengthRowView {
+            statistic,
+            growth,
+            label,
+        } = view.clone();
+        Self {
+            statistic,
+            growth,
+            label,
+        }
+    }
+}
+
+impl ddd::Props for PrimaryStrengthRowProps {
+    type View = PrimaryStrengthRowView;
 }

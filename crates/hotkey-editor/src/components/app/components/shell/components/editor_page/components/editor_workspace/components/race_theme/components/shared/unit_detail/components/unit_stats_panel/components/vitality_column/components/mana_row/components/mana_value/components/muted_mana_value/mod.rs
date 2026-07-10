@@ -1,4 +1,6 @@
 mod props;
+mod view;
+
 mod style;
 
 use dioxus::prelude::*;

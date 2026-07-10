@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::RaceTabsView;
 mod style;
 
 use components::human_race_tab::HumanRaceTab;

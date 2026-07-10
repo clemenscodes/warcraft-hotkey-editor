@@ -1,4 +1,5 @@
 use super::state::SystemSlotState;
+use super::view::SystemSlotView;
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
 
@@ -21,4 +22,31 @@ pub struct SystemSlotProps {
     pub tooltip_placement: TooltipPlacement,
     #[props(default = false)]
     pub dragging: bool,
+}
+
+impl From<&SystemSlotView> for SystemSlotProps {
+    fn from(view: &SystemSlotView) -> Self {
+        let SystemSlotView {
+            state,
+            slot_label,
+            key_label,
+            conflict,
+            tooltip_text,
+            tooltip_placement,
+            dragging,
+        } = view.clone();
+        Self {
+            state,
+            slot_label,
+            key_label,
+            conflict,
+            tooltip_text,
+            tooltip_placement,
+            dragging,
+        }
+    }
+}
+
+impl ddd::Props for SystemSlotProps {
+    type View = SystemSlotView;
 }

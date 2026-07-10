@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::UnitPositionsContentView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::unit_position_detail::UnitPositionDetail;

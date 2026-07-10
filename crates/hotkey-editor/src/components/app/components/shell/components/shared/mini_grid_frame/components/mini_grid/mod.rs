@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::MiniGridView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_tile::GridTile;
@@ -17,7 +20,14 @@ pub fn MiniGrid(props: MiniGridProps) -> Element {
     rsx! {
         div { class: CLASS,
             for tile in tiles {
-                GridTile { ..tile }
+                GridTile {
+                    coordinate: tile.coordinate,
+                    icon: tile.icon,
+                    label: tile.label,
+                    state: tile.state,
+                    is_dragging_source: tile.is_dragging_source,
+                    is_drag_over: tile.is_drag_over,
+                }
             }
         }
     }

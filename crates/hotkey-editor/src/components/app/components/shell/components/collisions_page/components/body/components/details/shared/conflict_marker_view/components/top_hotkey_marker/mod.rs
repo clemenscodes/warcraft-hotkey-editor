@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::TopHotkeyMarkerView;
 mod style;
 
 use super::shared::conflict_hotkey_key::ConflictHotkeyKey;

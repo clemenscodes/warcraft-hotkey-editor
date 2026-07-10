@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictPairRowView;
 mod state;
 mod style;
 

@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::SystemHotkeysBreadcrumbsView;
 mod style;
 
 use components::system_hotkeys_breadcrumbs_menu::SystemHotkeysBreadcrumbsMenu;

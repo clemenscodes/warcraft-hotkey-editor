@@ -1,3 +1,4 @@
+use super::view::DamageMatchupRowView;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
 
@@ -5,4 +6,15 @@ use warcraft_api::AttackType;
 #[derive(Props, Clone, PartialEq)]
 pub struct DamageMatchupRowProps {
     pub attack_type: AttackType,
+}
+
+impl From<&DamageMatchupRowView> for DamageMatchupRowProps {
+    fn from(view: &DamageMatchupRowView) -> Self {
+        let DamageMatchupRowView { attack_type } = view.clone();
+        Self { attack_type }
+    }
+}
+
+impl ddd::Props for DamageMatchupRowProps {
+    type View = DamageMatchupRowView;
 }

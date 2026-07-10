@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::AgilityRowView;
 
 use components::primary_agility_row::PrimaryAgilityRow;
 use components::regular_agility_row::RegularAgilityRow;

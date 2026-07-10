@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitCardSurfaceView;
 
 use components::idle_unit_card_surface::IdleUnitCardSurface;
 use components::selected_unit_card_surface::SelectedUnitCardSurface;

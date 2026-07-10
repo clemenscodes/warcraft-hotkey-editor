@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::BurgerMenuGroupView;
 mod style;
 
 use super::shared::burger_menu_item::BurgerMenuItem;

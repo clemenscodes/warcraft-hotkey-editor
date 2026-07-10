@@ -1,3 +1,4 @@
+use super::view::SystemKeyPickerDialogView;
 use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
@@ -14,4 +15,29 @@ pub struct SystemKeyPickerDialogProps {
     pub open: bool,
     pub on_pick: EventHandler<KeyCode>,
     pub on_close: EventHandler<()>,
+}
+
+impl From<&SystemKeyPickerDialogView> for SystemKeyPickerDialogProps {
+    fn from(view: &SystemKeyPickerDialogView) -> Self {
+        let SystemKeyPickerDialogView {
+            title,
+            current_code,
+            conflicts,
+            open,
+            on_pick,
+            on_close,
+        } = view.clone();
+        Self {
+            title,
+            current_code,
+            conflicts,
+            open,
+            on_pick,
+            on_close,
+        }
+    }
+}
+
+impl ddd::Props for SystemKeyPickerDialogProps {
+    type View = SystemKeyPickerDialogView;
 }

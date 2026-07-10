@@ -1,3 +1,4 @@
+use super::view::PrimaryMenuItemView;
 use dioxus::prelude::*;
 
 /// The primary-look drawer row's props: the icon markup and label text it composes,
@@ -14,4 +15,35 @@ pub struct PrimaryMenuItemProps {
     pub aria_pressed: Option<&'static str>,
     pub aria_label: Option<&'static str>,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&PrimaryMenuItemView> for PrimaryMenuItemProps {
+    fn from(view: &PrimaryMenuItemView) -> Self {
+        let PrimaryMenuItemView {
+            icon,
+            label,
+            disabled,
+            role,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            aria_label,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            label,
+            disabled,
+            role,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            aria_label,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for PrimaryMenuItemProps {
+    type View = PrimaryMenuItemView;
 }

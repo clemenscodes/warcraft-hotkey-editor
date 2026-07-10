@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::InteractiveSurfaceView;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::components::shared::toolbar_button_icon::ToolbarButtonIcon;

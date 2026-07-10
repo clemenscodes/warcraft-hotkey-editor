@@ -1,5 +1,8 @@
 mod components;
 mod props;
+mod view;
+
+pub use view::IslandDetailHeaderView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;

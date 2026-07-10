@@ -1,3 +1,4 @@
+use super::view::RegularAgilityRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{AttributeStatistic, Gain};
 
@@ -8,4 +9,23 @@ pub struct RegularAgilityRowProps {
     pub statistic: AttributeStatistic,
     pub growth: Gain,
     pub label: String,
+}
+
+impl From<&RegularAgilityRowView> for RegularAgilityRowProps {
+    fn from(view: &RegularAgilityRowView) -> Self {
+        let RegularAgilityRowView {
+            statistic,
+            growth,
+            label,
+        } = view.clone();
+        Self {
+            statistic,
+            growth,
+            label,
+        }
+    }
+}
+
+impl ddd::Props for RegularAgilityRowProps {
+    type View = RegularAgilityRowView;
 }

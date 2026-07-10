@@ -1,3 +1,4 @@
+use super::view::RaceTabsView;
 use dioxus::prelude::*;
 use warcraft_api::Race;
 
@@ -22,4 +23,21 @@ pub struct RaceTabBinding {
     pub label: String,
     pub onclick: EventHandler<MouseEvent>,
     pub onkeydown: EventHandler<KeyboardEvent>,
+}
+
+impl From<&RaceTabsView> for RaceTabsProps {
+    fn from(view: &RaceTabsView) -> Self {
+        let RaceTabsView {
+            active_race,
+            on_select,
+        } = view.clone();
+        Self {
+            active_race,
+            on_select,
+        }
+    }
+}
+
+impl ddd::Props for RaceTabsProps {
+    type View = RaceTabsView;
 }

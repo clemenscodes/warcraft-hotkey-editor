@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictMultiStackView;
 mod style;
 
 use super::conflict_ability::ConflictAbility;

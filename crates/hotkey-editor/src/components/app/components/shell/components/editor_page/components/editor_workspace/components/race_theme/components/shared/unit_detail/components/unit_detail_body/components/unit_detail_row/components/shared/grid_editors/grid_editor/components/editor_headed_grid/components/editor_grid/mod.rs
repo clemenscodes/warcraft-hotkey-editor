@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::EditorGridView;
 mod style;
 
 use components::grid_editor_tile::{EditorTile, GridEditorTile};

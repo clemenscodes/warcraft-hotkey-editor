@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::BurgerDrawerBodyView;
 mod style;
 
 use components::burger_menu_group::BurgerMenuGroup;

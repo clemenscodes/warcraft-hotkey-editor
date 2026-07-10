@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::IdleUnitCardSurfaceView;
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::components::category_scroll::components::category_track::components::unit_category_section::components::unit_card::components::unit_card_surface::components::shared::unit_card_icon::UnitCardIcon;

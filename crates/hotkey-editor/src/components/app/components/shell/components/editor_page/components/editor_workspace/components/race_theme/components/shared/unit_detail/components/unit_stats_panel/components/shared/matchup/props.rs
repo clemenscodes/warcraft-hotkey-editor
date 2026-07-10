@@ -1,5 +1,6 @@
 use super::state::MatchupStrength;
 use super::subject::MatchupSubject;
+use super::view::MatchupView;
 use dioxus::prelude::*;
 
 /// One matchup cell: the defense/attack subject it names, its damage multiplier, the
@@ -13,4 +14,25 @@ pub struct MatchupProps {
     pub title: String,
     #[props(default)]
     pub strength: MatchupStrength,
+}
+
+impl From<&MatchupView> for MatchupProps {
+    fn from(view: &MatchupView) -> Self {
+        let MatchupView {
+            subject,
+            multiplier,
+            title,
+            strength,
+        } = view.clone();
+        Self {
+            subject,
+            multiplier,
+            title,
+            strength,
+        }
+    }
+}
+
+impl ddd::Props for MatchupProps {
+    type View = MatchupView;
 }

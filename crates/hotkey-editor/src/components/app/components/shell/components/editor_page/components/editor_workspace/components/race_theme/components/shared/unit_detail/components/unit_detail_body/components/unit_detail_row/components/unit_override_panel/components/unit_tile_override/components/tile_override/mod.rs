@@ -2,6 +2,9 @@ pub mod components;
 mod hooks;
 mod logic;
 mod props;
+mod view;
+
+pub use view::TileOverrideView;
 mod state;
 
 use dioxus::prelude::*;

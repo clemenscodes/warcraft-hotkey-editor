@@ -1,6 +1,9 @@
 pub mod components;
 mod icon_radius;
 mod props;
+mod view;
+
+pub use view::FramedIconView;
 mod state;
 
 pub use icon_radius::IconRadius;

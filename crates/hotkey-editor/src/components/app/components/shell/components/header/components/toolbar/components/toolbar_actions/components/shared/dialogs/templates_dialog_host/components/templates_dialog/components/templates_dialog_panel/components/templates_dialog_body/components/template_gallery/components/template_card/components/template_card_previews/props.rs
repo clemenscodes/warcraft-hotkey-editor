@@ -1,3 +1,4 @@
+use super::view::TemplateCardPreviewsView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile, ResolvedTemplate};
 
@@ -43,4 +44,15 @@ fn preview_tiles(source: &[RenderedTile]) -> [RenderedTile; COMMAND_GRID_TILE_CO
                 list.len(),
             )
         })
+}
+
+impl From<&TemplateCardPreviewsView> for TemplateCardPreviewsProps {
+    fn from(view: &TemplateCardPreviewsView) -> Self {
+        let TemplateCardPreviewsView { resolved } = view.clone();
+        Self { resolved }
+    }
+}
+
+impl ddd::Props for TemplateCardPreviewsProps {
+    type View = TemplateCardPreviewsView;
 }

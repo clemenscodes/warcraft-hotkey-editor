@@ -1,3 +1,4 @@
+use super::view::KeyCaptureView;
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
@@ -8,4 +9,15 @@ use warcraft_keybinds::WarcraftObjectId;
 #[derive(Props, Clone, PartialEq)]
 pub struct KeyCaptureProps {
     pub section_id: WarcraftObjectId,
+}
+
+impl From<&KeyCaptureView> for KeyCaptureProps {
+    fn from(view: &KeyCaptureView) -> Self {
+        let KeyCaptureView { section_id } = view.clone();
+        Self { section_id }
+    }
+}
+
+impl ddd::Props for KeyCaptureProps {
+    type View = KeyCaptureView;
 }

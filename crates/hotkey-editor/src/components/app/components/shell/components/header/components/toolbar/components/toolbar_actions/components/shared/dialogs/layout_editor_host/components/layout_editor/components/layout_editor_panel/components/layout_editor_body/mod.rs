@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::LayoutEditorBodyView;
 mod style;
 
 use components::layout_editor_content::LayoutEditorContent;

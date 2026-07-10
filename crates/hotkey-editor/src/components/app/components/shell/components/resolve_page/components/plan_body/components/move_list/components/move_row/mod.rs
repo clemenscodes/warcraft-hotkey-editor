@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::MoveRowView;
 mod style;
 
 use components::move_panel::MovePanel;

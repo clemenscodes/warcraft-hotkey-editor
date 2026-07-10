@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PreviewDialogBodyView;
 mod style;
 
 use components::preview_textarea::PreviewTextarea;

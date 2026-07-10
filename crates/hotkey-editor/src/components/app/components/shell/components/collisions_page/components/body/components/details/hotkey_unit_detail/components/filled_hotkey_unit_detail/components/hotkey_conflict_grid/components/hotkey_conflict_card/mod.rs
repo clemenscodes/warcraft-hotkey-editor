@@ -1,5 +1,8 @@
 mod logic;
 mod props;
+mod view;
+
+pub use view::HotkeyConflictCardView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;

@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::UnitStatsPanelView;
 pub mod stat_icon;
 mod style;
 

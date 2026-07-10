@@ -1,3 +1,4 @@
+use super::view::AttentionSurfaceView;
 use dioxus::prelude::*;
 
 /// The attention resting look of a toolbar surface: a persistently gold surface used
@@ -13,4 +14,31 @@ pub struct AttentionSurfaceProps {
     pub aria_pressed: Option<bool>,
     pub disabled: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&AttentionSurfaceView> for AttentionSurfaceProps {
+    fn from(view: &AttentionSurfaceView) -> Self {
+        let AttentionSurfaceView {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for AttentionSurfaceProps {
+    type View = AttentionSurfaceView;
 }

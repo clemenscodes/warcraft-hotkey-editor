@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PlanCountsView;
 mod style;
 use components::plan_unresolved::PlanUnresolved;
 use dioxus::prelude::*;

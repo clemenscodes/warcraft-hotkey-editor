@@ -1,3 +1,4 @@
+use super::view::RegularIntelligenceRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{AttributeStatistic, Gain};
 
@@ -8,4 +9,23 @@ pub struct RegularIntelligenceRowProps {
     pub statistic: AttributeStatistic,
     pub growth: Gain,
     pub label: String,
+}
+
+impl From<&RegularIntelligenceRowView> for RegularIntelligenceRowProps {
+    fn from(view: &RegularIntelligenceRowView) -> Self {
+        let RegularIntelligenceRowView {
+            statistic,
+            growth,
+            label,
+        } = view.clone();
+        Self {
+            statistic,
+            growth,
+            label,
+        }
+    }
+}
+
+impl ddd::Props for RegularIntelligenceRowProps {
+    type View = RegularIntelligenceRowView;
 }

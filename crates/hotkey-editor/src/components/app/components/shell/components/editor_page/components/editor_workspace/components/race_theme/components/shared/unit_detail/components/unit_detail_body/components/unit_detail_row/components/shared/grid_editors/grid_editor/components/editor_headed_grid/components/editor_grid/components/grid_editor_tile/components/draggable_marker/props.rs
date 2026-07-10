@@ -1,3 +1,4 @@
+use super::view::DraggableMarkerView;
 use dioxus::prelude::*;
 
 /// Mounts only on tiles the domain marks draggable; a display-only tile early-returns,
@@ -6,4 +7,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct DraggableMarkerProps {
     pub active: bool,
+}
+
+impl From<&DraggableMarkerView> for DraggableMarkerProps {
+    fn from(view: &DraggableMarkerView) -> Self {
+        let DraggableMarkerView { active } = view.clone();
+        Self { active }
+    }
+}
+
+impl ddd::Props for DraggableMarkerProps {
+    type View = DraggableMarkerView;
 }

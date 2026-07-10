@@ -1,3 +1,4 @@
+use super::view::StrengthRowView;
 use dioxus::prelude::*;
 use warcraft_keybinds::AttributeStatistic;
 
@@ -7,4 +8,21 @@ use warcraft_keybinds::AttributeStatistic;
 pub struct StrengthRowProps {
     pub statistic: AttributeStatistic,
     pub is_primary: bool,
+}
+
+impl From<&StrengthRowView> for StrengthRowProps {
+    fn from(view: &StrengthRowView) -> Self {
+        let StrengthRowView {
+            statistic,
+            is_primary,
+        } = view.clone();
+        Self {
+            statistic,
+            is_primary,
+        }
+    }
+}
+
+impl ddd::Props for StrengthRowProps {
+    type View = StrengthRowView;
 }

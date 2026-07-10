@@ -1,3 +1,4 @@
+use super::view::InteractiveSurfaceView;
 use dioxus::prelude::*;
 
 /// The interactive resting look of a toolbar surface: muted text at rest that
@@ -13,4 +14,31 @@ pub struct InteractiveSurfaceProps {
     pub aria_pressed: Option<bool>,
     pub disabled: bool,
     pub onclick: EventHandler<MouseEvent>,
+}
+
+impl From<&InteractiveSurfaceView> for InteractiveSurfaceProps {
+    fn from(view: &InteractiveSurfaceView) -> Self {
+        let InteractiveSurfaceView {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        } = view.clone();
+        Self {
+            icon,
+            aria_label,
+            aria_haspopup,
+            aria_expanded,
+            aria_pressed,
+            disabled,
+            onclick,
+        }
+    }
+}
+
+impl ddd::Props for InteractiveSurfaceProps {
+    type View = InteractiveSurfaceView;
 }

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::StuckReasonBadgeView;
 mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::components::reason_badges::shared::reason_badge::ReasonBadge;

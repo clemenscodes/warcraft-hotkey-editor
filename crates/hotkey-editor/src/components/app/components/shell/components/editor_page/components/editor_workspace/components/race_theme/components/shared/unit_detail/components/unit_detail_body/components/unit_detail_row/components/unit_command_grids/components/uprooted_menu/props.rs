@@ -1,3 +1,4 @@
+use super::view::UprootedMenuView;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::grid_editor::GridEditorView;
 use dioxus::prelude::*;
 
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct UprootedMenuProps {
     pub config: Option<GridEditorView>,
+}
+
+impl From<&UprootedMenuView> for UprootedMenuProps {
+    fn from(view: &UprootedMenuView) -> Self {
+        let UprootedMenuView { config } = view.clone();
+        Self { config }
+    }
+}
+
+impl ddd::Props for UprootedMenuProps {
+    type View = UprootedMenuView;
 }

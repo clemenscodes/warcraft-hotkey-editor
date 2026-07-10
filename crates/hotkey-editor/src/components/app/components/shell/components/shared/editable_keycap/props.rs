@@ -1,4 +1,5 @@
 use super::state::EditableKeycapState;
+use super::view::EditableKeycapView;
 use dioxus::prelude::*;
 
 /// The shared editable gold keycap: the glyph it shows and its capture pulse. Purely
@@ -13,4 +14,15 @@ pub struct EditableKeycapProps {
     /// Whether the cap is resting or pulsing gold while its key picker is open.
     #[props(default)]
     pub state: EditableKeycapState,
+}
+
+impl From<&EditableKeycapView> for EditableKeycapProps {
+    fn from(view: &EditableKeycapView) -> Self {
+        let EditableKeycapView { label, state } = view.clone();
+        Self { label, state }
+    }
+}
+
+impl ddd::Props for EditableKeycapProps {
+    type View = EditableKeycapView;
 }

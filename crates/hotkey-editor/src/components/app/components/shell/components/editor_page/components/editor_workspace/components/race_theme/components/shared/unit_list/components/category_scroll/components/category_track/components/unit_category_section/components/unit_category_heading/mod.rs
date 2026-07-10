@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::UnitCategoryHeadingView;
 mod style;
 
 use components::category_chevron::CategoryChevron;

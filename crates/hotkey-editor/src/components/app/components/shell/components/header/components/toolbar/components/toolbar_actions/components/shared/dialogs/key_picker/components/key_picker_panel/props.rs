@@ -1,3 +1,4 @@
+use super::view::KeyPickerPanelView;
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyColumn;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
@@ -14,4 +15,27 @@ pub struct KeyPickerPanelProps {
     pub columns: Vec<KeyColumn>,
     pub on_pick: EventHandler<KeyCode>,
     pub on_board_close: EventHandler<()>,
+}
+
+impl From<&KeyPickerPanelView> for KeyPickerPanelProps {
+    fn from(view: &KeyPickerPanelView) -> Self {
+        let KeyPickerPanelView {
+            title,
+            on_close,
+            columns,
+            on_pick,
+            on_board_close,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            columns,
+            on_pick,
+            on_board_close,
+        }
+    }
+}
+
+impl ddd::Props for KeyPickerPanelProps {
+    type View = KeyPickerPanelView;
 }

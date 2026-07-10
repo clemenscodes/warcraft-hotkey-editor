@@ -1,3 +1,4 @@
+use super::view::PreviewHeadedGridView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile};
 
@@ -8,4 +9,15 @@ use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile};
 pub struct PreviewHeadedGridProps {
     pub heading: &'static str,
     pub tiles: [RenderedTile; COMMAND_GRID_TILE_COUNT],
+}
+
+impl From<&PreviewHeadedGridView> for PreviewHeadedGridProps {
+    fn from(view: &PreviewHeadedGridView) -> Self {
+        let PreviewHeadedGridView { heading, tiles } = view.clone();
+        Self { heading, tiles }
+    }
+}
+
+impl ddd::Props for PreviewHeadedGridProps {
+    type View = PreviewHeadedGridView;
 }

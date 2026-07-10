@@ -2,10 +2,7 @@ use super::state::LayoutTileState;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
-/// One editable grid cell as plain data: its visual state, the letter it shows, its
-/// grid address, and the drag/click handlers the editor wired for it. The layout
-/// editor builds these and threads them down to the grid, which renders one
-/// [`LayoutTile`](super::LayoutTile) per view.
+/// The published `View` contract mirroring [`LayoutTileProps`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct LayoutTileView {
     pub state: LayoutTileState,
@@ -17,3 +14,5 @@ pub struct LayoutTileView {
     pub ondrop: EventHandler<Event<DragData>>,
     pub onclick: EventHandler<MouseEvent>,
 }
+
+impl ddd::View for LayoutTileView {}

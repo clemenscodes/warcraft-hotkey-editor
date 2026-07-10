@@ -9,7 +9,7 @@ use warcraft_keybinds::{CustomKeys, Evasion, GridSlotId, InspectorDetail, UnitSl
 /// optional build, uprooted, and research menus, keyed to the host unit. Threaded down
 /// the card body to the grids, which read the shared editor signals from context.
 #[derive(Clone, PartialEq)]
-pub(super) struct UnitCommandGridSlots {
+pub(crate) struct UnitCommandGridSlots {
     pub(super) unit_id: WarcraftObjectId,
     pub(super) command_card_slots: Rc<[GridSlotId]>,
     pub(super) build_menu_slots: Option<Rc<[GridSlotId]>>,
@@ -20,7 +20,7 @@ pub(super) struct UnitCommandGridSlots {
 /// The hotkey-override target: the inspected slot's detail (absent when nothing is
 /// selected) and the container slots the override card edits against.
 #[derive(Clone, PartialEq)]
-pub(super) struct UnitOverrideTarget {
+pub(crate) struct UnitOverrideTarget {
     pub(super) detail: Option<InspectorDetail>,
     pub(super) active_container_slots: Rc<[GridSlotId]>,
 }

@@ -1,0 +1,11 @@
+use warcraft_keybinds::{AttributeStatistic, Gain};
+
+/// The published `View` contract mirroring [`PrimaryStrengthRowProps`], threaded to this component as data.
+#[derive(Clone, PartialEq)]
+pub struct PrimaryStrengthRowView {
+    pub statistic: AttributeStatistic,
+    pub growth: Gain,
+    pub label: String,
+}
+
+impl ddd::View for PrimaryStrengthRowView {}

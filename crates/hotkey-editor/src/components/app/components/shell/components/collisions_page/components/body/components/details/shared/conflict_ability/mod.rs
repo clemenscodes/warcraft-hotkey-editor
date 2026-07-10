@@ -1,5 +1,8 @@
 mod hooks;
 mod props;
+mod view;
+
+pub use view::ConflictAbilityView;
 mod style;
 
 use super::conflict_ability_name::ConflictAbilityName;

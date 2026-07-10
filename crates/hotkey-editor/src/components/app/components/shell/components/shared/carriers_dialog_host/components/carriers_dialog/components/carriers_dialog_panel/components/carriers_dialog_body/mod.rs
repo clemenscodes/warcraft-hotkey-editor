@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CarriersDialogBodyView;
 mod style;
 
 use components::carriers_grid::CarriersGrid;

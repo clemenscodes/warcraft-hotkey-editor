@@ -1,3 +1,4 @@
+use super::view::HelpGlossaryColumnsView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpGlossaryItem;
 use dioxus::prelude::*;
 
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpGlossaryColumnsProps {
     pub columns: &'static [&'static [HelpGlossaryItem]],
+}
+
+impl From<&HelpGlossaryColumnsView> for HelpGlossaryColumnsProps {
+    fn from(view: &HelpGlossaryColumnsView) -> Self {
+        let HelpGlossaryColumnsView { columns } = view.clone();
+        Self { columns }
+    }
+}
+
+impl ddd::Props for HelpGlossaryColumnsProps {
+    type View = HelpGlossaryColumnsView;
 }

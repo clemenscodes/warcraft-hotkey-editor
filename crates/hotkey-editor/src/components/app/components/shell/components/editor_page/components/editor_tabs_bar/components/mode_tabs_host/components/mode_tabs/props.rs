@@ -1,3 +1,4 @@
+use super::view::ModeTabsView;
 use dioxus::prelude::*;
 use warcraft_api::UnitMode;
 
@@ -8,4 +9,21 @@ use warcraft_api::UnitMode;
 pub struct ModeTabsProps {
     pub unit_mode: Signal<UnitMode>,
     pub on_select: EventHandler<UnitMode>,
+}
+
+impl From<&ModeTabsView> for ModeTabsProps {
+    fn from(view: &ModeTabsView) -> Self {
+        let ModeTabsView {
+            unit_mode,
+            on_select,
+        } = view.clone();
+        Self {
+            unit_mode,
+            on_select,
+        }
+    }
+}
+
+impl ddd::Props for ModeTabsProps {
+    type View = ModeTabsView;
 }

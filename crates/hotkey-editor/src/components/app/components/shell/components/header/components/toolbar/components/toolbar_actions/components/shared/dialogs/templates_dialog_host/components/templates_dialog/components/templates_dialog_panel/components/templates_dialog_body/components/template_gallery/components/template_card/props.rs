@@ -1,3 +1,4 @@
+use super::view::TemplateCardView;
 use dioxus::prelude::*;
 use warcraft_keybinds::ResolvedTemplate;
 
@@ -22,4 +23,25 @@ impl From<&TemplateCardProps> for TemplateCardPresentation {
         let onclick = EventHandler::new(move |_event: MouseEvent| on_apply.call(()));
         Self { onclick }
     }
+}
+
+impl From<&TemplateCardView> for TemplateCardProps {
+    fn from(view: &TemplateCardView) -> Self {
+        let TemplateCardView {
+            name,
+            description,
+            resolved,
+            on_apply,
+        } = view.clone();
+        Self {
+            name,
+            description,
+            resolved,
+            on_apply,
+        }
+    }
+}
+
+impl ddd::Props for TemplateCardProps {
+    type View = TemplateCardView;
 }

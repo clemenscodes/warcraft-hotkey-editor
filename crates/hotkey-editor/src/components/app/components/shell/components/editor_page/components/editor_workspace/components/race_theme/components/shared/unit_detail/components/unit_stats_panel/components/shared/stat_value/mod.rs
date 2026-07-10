@@ -1,5 +1,7 @@
 pub mod components;
 mod props;
+mod view;
+pub use view::StatValueView;
 
 use super::stat_figure::StatFigure;
 use components::active_stat_value::ActiveStatValue;

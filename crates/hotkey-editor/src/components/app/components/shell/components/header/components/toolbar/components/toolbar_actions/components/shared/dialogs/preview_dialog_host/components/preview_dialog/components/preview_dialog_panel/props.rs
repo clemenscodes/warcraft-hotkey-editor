@@ -1,3 +1,4 @@
+use super::view::PreviewDialogPanelView;
 use dioxus::prelude::*;
 
 /// The preview dialog's bordered box: the header title and its close handler above the
@@ -9,4 +10,23 @@ pub struct PreviewDialogPanelProps {
     pub title: String,
     pub on_close: EventHandler<()>,
     pub text: ReadSignal<String>,
+}
+
+impl From<&PreviewDialogPanelView> for PreviewDialogPanelProps {
+    fn from(view: &PreviewDialogPanelView) -> Self {
+        let PreviewDialogPanelView {
+            title,
+            on_close,
+            text,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            text,
+        }
+    }
+}
+
+impl ddd::Props for PreviewDialogPanelProps {
+    type View = PreviewDialogPanelView;
 }

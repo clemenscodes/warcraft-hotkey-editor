@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::LayoutGridView;
 mod style;
 
 use components::layout_tile::LayoutTile;

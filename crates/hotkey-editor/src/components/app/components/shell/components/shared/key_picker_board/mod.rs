@@ -3,6 +3,9 @@ pub mod components;
 mod key_event;
 mod logic;
 mod props;
+mod view;
+
+pub use view::KeyPickerBoardView;
 mod style;
 
 use components::key_picker_column::KeyPickerColumn;

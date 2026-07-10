@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::SuccessToastTitleView;
 mod style;
 
 use dioxus::prelude::*;

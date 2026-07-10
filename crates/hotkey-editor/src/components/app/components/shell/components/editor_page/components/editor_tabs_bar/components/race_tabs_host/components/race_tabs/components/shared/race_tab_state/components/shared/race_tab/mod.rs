@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::RaceTabView;
 mod style;
 
 use components::race_tab_label::RaceTabLabel;

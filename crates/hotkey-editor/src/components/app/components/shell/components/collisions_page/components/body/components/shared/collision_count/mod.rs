@@ -1,5 +1,8 @@
 mod data;
 mod props;
+mod view;
+
+pub use view::CollisionCountView;
 mod style;
 
 use dioxus::prelude::*;

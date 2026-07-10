@@ -1,6 +1,9 @@
 pub mod components;
 mod logic;
 mod props;
+mod view;
+
+pub use view::HeroLevelMenuView;
 mod style;
 
 use components::hero_level_option::HeroLevelOption;

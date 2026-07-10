@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::FightNamePlateView;
 mod style;
 use super::shared::move_name::MoveName;
 use super::shared::object_id::ObjectId;

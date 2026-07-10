@@ -1,6 +1,9 @@
 pub mod components;
 mod data;
 mod props;
+mod view;
+
+pub use view::UnitOverridePanelView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;

@@ -1,3 +1,4 @@
+use super::view::TileOverrideKeyPickerView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
@@ -12,4 +13,27 @@ pub struct TileOverrideKeyPickerProps {
     pub rows: Vec<Vec<KeyPickerCell>>,
     pub on_pick: EventHandler<HotkeyToken>,
     pub on_close: EventHandler<()>,
+}
+
+impl From<&TileOverrideKeyPickerView> for TileOverrideKeyPickerProps {
+    fn from(view: &TileOverrideKeyPickerView) -> Self {
+        let TileOverrideKeyPickerView {
+            visible,
+            title,
+            rows,
+            on_pick,
+            on_close,
+        } = view.clone();
+        Self {
+            visible,
+            title,
+            rows,
+            on_pick,
+            on_close,
+        }
+    }
+}
+
+impl ddd::Props for TileOverrideKeyPickerProps {
+    type View = TileOverrideKeyPickerView;
 }

@@ -1,3 +1,4 @@
+use super::view::CategoryTrackView;
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
 
@@ -5,4 +6,15 @@ use warcraft_api::UnitKind;
 #[derive(Props, Clone, PartialEq)]
 pub struct CategoryTrackProps {
     pub sections: Vec<UnitKind>,
+}
+
+impl From<&CategoryTrackView> for CategoryTrackProps {
+    fn from(view: &CategoryTrackView) -> Self {
+        let CategoryTrackView { sections } = view.clone();
+        Self { sections }
+    }
+}
+
+impl ddd::Props for CategoryTrackProps {
+    type View = CategoryTrackView;
 }

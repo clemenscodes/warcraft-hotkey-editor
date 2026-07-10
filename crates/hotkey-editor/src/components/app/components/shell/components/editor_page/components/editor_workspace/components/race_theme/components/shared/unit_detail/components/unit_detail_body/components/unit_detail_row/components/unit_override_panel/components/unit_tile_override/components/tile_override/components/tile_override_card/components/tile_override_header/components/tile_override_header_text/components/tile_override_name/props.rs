@@ -1,3 +1,4 @@
+use super::view::TileOverrideNameView;
 use dioxus::prelude::*;
 
 /// The active ability / unit name shown in the override panel header.
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 pub struct TileOverrideNameProps {
     #[props(into)]
     pub text: String,
+}
+
+impl From<&TileOverrideNameView> for TileOverrideNameProps {
+    fn from(view: &TileOverrideNameView) -> Self {
+        let TileOverrideNameView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Props for TileOverrideNameProps {
+    type View = TileOverrideNameView;
 }

@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::IdleMobileCategoryTabView;
 mod style;
 
 use dioxus::prelude::*;
@@ -7,7 +10,7 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 /// The idle mobile category tab: a muted tab that takes the race accent border on hover
-/// (read from the theme's `--race-accent`). Presentational.
+/// (read from the theme's `--race-color`). Presentational.
 #[component]
 pub fn IdleMobileCategoryTab(props: IdleMobileCategoryTabProps) -> Element {
     let label = props.label;

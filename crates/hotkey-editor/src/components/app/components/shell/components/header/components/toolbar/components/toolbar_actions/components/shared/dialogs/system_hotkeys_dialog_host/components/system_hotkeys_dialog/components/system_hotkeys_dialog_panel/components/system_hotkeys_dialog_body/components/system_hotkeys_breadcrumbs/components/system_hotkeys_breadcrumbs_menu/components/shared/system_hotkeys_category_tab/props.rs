@@ -1,3 +1,4 @@
+use super::view::SystemHotkeysCategoryTabView;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
@@ -13,4 +14,27 @@ pub struct SystemHotkeysCategoryTabProps {
     #[props(default = false)]
     pub menu_open: bool,
     pub picker_open: Signal<bool>,
+}
+
+impl From<&SystemHotkeysCategoryTabView> for SystemHotkeysCategoryTabProps {
+    fn from(view: &SystemHotkeysCategoryTabView) -> Self {
+        let SystemHotkeysCategoryTabView {
+            category,
+            is_active,
+            has_separator,
+            menu_open,
+            picker_open,
+        } = view.clone();
+        Self {
+            category,
+            is_active,
+            has_separator,
+            menu_open,
+            picker_open,
+        }
+    }
+}
+
+impl ddd::Props for SystemHotkeysCategoryTabProps {
+    type View = SystemHotkeysCategoryTabView;
 }

@@ -2,6 +2,9 @@ pub mod components;
 mod data;
 mod logic;
 mod props;
+mod view;
+
+pub use view::HotkeyUnitDetailView;
 
 use crate::services::collision_selection::context::use_collision_selection;
 use components::empty_hotkey_unit_detail::EmptyHotkeyUnitDetail;

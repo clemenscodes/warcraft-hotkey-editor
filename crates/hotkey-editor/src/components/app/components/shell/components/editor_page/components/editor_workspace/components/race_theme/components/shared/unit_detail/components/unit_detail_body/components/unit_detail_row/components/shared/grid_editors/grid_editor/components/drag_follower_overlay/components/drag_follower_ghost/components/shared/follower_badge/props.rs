@@ -1,3 +1,4 @@
+use super::view::FollowerBadgeView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
@@ -7,4 +8,15 @@ use crate::components::app::components::shell::components::editor_page::componen
 pub struct FollowerBadgeProps {
     pub letter: HotkeyToken,
     pub state: HotkeyBadgeState,
+}
+
+impl From<&FollowerBadgeView> for FollowerBadgeProps {
+    fn from(view: &FollowerBadgeView) -> Self {
+        let FollowerBadgeView { letter, state } = view.clone();
+        Self { letter, state }
+    }
+}
+
+impl ddd::Props for FollowerBadgeProps {
+    type View = FollowerBadgeView;
 }

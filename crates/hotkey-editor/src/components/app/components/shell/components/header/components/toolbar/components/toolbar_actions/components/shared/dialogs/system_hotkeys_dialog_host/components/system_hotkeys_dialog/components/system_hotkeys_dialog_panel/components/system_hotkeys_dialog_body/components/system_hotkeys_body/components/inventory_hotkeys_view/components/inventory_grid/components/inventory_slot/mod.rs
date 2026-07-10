@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::InventorySlotView;
 
 use components::inventory_empty_slot::InventoryEmptySlot;
 use components::inventory_filled_slot::InventoryFilledSlot;

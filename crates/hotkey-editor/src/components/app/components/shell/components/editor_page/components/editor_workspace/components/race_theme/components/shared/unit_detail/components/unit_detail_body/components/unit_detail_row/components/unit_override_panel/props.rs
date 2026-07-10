@@ -1,3 +1,4 @@
+use super::view::UnitOverridePanelView;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::logic::UnitOverrideTarget;
 use dioxus::prelude::*;
 
@@ -6,5 +7,16 @@ use dioxus::prelude::*;
 /// the card's padding.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitOverridePanelProps {
-    pub override_target: UnitOverrideTarget,
+    pub(crate) override_target: UnitOverrideTarget,
+}
+
+impl From<&UnitOverridePanelView> for UnitOverridePanelProps {
+    fn from(view: &UnitOverridePanelView) -> Self {
+        let UnitOverridePanelView { override_target } = view.clone();
+        Self { override_target }
+    }
+}
+
+impl ddd::Props for UnitOverridePanelProps {
+    type View = UnitOverridePanelView;
 }

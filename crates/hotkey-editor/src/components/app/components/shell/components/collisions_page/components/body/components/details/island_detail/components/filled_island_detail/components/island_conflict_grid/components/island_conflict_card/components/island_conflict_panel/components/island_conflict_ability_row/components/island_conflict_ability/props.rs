@@ -1,3 +1,4 @@
+use super::view::IslandConflictAbilityView;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
@@ -14,4 +15,27 @@ pub struct IslandConflictAbilityProps {
     pub icon_url: Option<String>,
     pub extra_count: usize,
     pub inspected: InspectedAbility,
+}
+
+impl From<&IslandConflictAbilityView> for IslandConflictAbilityProps {
+    fn from(view: &IslandConflictAbilityView) -> Self {
+        let IslandConflictAbilityView {
+            ability_name,
+            ability_id,
+            icon_url,
+            extra_count,
+            inspected,
+        } = view.clone();
+        Self {
+            ability_name,
+            ability_id,
+            icon_url,
+            extra_count,
+            inspected,
+        }
+    }
+}
+
+impl ddd::Props for IslandConflictAbilityProps {
+    type View = IslandConflictAbilityView;
 }

@@ -1,3 +1,4 @@
+use super::view::DragOverRingView;
 use dioxus::prelude::*;
 
 /// Mounts only on the tile the cursor hovers during a drag; every other tile leaves
@@ -7,4 +8,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct DragOverRingProps {
     pub active: bool,
+}
+
+impl From<&DragOverRingView> for DragOverRingProps {
+    fn from(view: &DragOverRingView) -> Self {
+        let DragOverRingView { active } = view.clone();
+        Self { active }
+    }
+}
+
+impl ddd::Props for DragOverRingProps {
+    type View = DragOverRingView;
 }

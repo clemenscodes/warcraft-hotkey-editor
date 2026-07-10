@@ -1,6 +1,9 @@
 mod breadcrumb_view;
 pub mod components;
 mod props;
+mod view;
+
+pub use view::BreadcrumbsView;
 mod style;
 
 pub use breadcrumb_view::BreadcrumbView;

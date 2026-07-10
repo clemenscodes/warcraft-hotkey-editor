@@ -1,3 +1,4 @@
+use super::view::IslandDetailHeaderView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
@@ -7,4 +8,15 @@ use warcraft_keybinds::GridCoordinate;
 pub struct IslandDetailHeaderProps {
     pub coordinate: GridCoordinate,
     pub count: usize,
+}
+
+impl From<&IslandDetailHeaderView> for IslandDetailHeaderProps {
+    fn from(view: &IslandDetailHeaderView) -> Self {
+        let IslandDetailHeaderView { coordinate, count } = view.clone();
+        Self { coordinate, count }
+    }
+}
+
+impl ddd::Props for IslandDetailHeaderProps {
+    type View = IslandDetailHeaderView;
 }

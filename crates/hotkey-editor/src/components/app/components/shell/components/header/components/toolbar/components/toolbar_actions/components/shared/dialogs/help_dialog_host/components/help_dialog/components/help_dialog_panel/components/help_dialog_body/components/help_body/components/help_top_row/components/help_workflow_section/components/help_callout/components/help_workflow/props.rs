@@ -1,3 +1,4 @@
+use super::view::HelpWorkflowView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_dialog::data::HelpSegment;
 use dioxus::prelude::*;
 
@@ -5,4 +6,15 @@ use dioxus::prelude::*;
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpWorkflowProps {
     pub steps: &'static [&'static [HelpSegment]],
+}
+
+impl From<&HelpWorkflowView> for HelpWorkflowProps {
+    fn from(view: &HelpWorkflowView) -> Self {
+        let HelpWorkflowView { steps } = view.clone();
+        Self { steps }
+    }
+}
+
+impl ddd::Props for HelpWorkflowProps {
+    type View = HelpWorkflowView;
 }

@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HelpTopRowView;
 mod style;
 
 use components::help_legend_section::HelpLegendSection;

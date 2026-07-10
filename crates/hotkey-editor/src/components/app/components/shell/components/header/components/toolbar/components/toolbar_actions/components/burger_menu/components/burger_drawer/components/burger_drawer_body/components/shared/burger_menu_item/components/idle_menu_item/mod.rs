@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::IdleMenuItemView;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_icon::BurgerMenuItemIcon;

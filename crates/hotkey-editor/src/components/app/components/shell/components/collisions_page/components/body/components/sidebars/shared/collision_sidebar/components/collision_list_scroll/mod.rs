@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CollisionListScrollView;
 mod style;
 
 use components::collision_list_track::CollisionListTrack;

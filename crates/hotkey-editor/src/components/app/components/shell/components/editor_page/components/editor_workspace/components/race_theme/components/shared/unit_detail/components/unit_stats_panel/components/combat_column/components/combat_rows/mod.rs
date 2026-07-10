@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::CombatRowsView;
 mod style;
 
 use components::attack_speed_row::AttackSpeedRow;

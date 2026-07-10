@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::FooterLinkView;
 mod style;
 
 use components::footer_link_icon::FooterLinkIcon;

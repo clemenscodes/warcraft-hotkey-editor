@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::HotkeyBadgeView;
 mod state;
 
 use components::conflict_hotkey_badge::ConflictHotkeyBadge;

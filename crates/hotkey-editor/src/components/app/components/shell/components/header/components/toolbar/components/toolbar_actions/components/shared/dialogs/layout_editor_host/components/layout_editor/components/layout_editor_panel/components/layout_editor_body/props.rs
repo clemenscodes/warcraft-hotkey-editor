@@ -1,4 +1,5 @@
 use super::components::layout_editor_content::components::layout_grid::components::layout_tile::LayoutTileView;
+use super::view::LayoutEditorBodyView;
 use dioxus::prelude::*;
 
 /// The layout editor's scroll region data: the grid cells, the move-hotkey toggle
@@ -9,4 +10,25 @@ pub struct LayoutEditorBodyProps {
     pub toggle_checked: bool,
     pub on_toggle: EventHandler<FormEvent>,
     pub on_apply: EventHandler<MouseEvent>,
+}
+
+impl From<&LayoutEditorBodyView> for LayoutEditorBodyProps {
+    fn from(view: &LayoutEditorBodyView) -> Self {
+        let LayoutEditorBodyView {
+            cells,
+            toggle_checked,
+            on_toggle,
+            on_apply,
+        } = view.clone();
+        Self {
+            cells,
+            toggle_checked,
+            on_toggle,
+            on_apply,
+        }
+    }
+}
+
+impl ddd::Props for LayoutEditorBodyProps {
+    type View = LayoutEditorBodyView;
 }

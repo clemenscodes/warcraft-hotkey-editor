@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::PreviewDialogPanelView;
 mod style;
 
 use components::preview_dialog_body::PreviewDialogBody;

@@ -1,3 +1,4 @@
+use super::view::TileOverrideView;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
@@ -180,4 +181,21 @@ impl From<TileOverrideInputs> for TileOverrideModel {
             upgrade_open: pickers.upgrade_open,
         }
     }
+}
+
+impl From<&TileOverrideView> for TileOverrideProps {
+    fn from(view: &TileOverrideView) -> Self {
+        let TileOverrideView {
+            detail,
+            active_container_slots,
+        } = view.clone();
+        Self {
+            detail,
+            active_container_slots,
+        }
+    }
+}
+
+impl ddd::Props for TileOverrideProps {
+    type View = TileOverrideView;
 }

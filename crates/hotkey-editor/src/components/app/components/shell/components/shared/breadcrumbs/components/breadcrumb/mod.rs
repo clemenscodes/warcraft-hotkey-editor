@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::BreadcrumbView;
 
 use components::active_breadcrumb::ActiveBreadcrumb;
 use components::idle_breadcrumb::IdleBreadcrumb;

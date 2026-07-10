@@ -1,6 +1,9 @@
 pub mod components;
 mod hooks;
 mod props;
+mod view;
+
+pub use view::ToastCardView;
 
 use crate::components::app::components::shell::components::toasts::ToastType;
 use components::error_toast_card::ErrorToastCard;

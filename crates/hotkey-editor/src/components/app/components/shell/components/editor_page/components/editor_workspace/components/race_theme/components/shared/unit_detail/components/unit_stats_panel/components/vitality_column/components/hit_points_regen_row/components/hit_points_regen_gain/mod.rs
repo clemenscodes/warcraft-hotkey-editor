@@ -1,5 +1,6 @@
 pub mod components;
 mod props;
+mod view;
 
 use components::active_hit_points_regen_gain::ActiveHitPointsRegenGain;
 use components::muted_hit_points_regen_gain::MutedHitPointsRegenGain;

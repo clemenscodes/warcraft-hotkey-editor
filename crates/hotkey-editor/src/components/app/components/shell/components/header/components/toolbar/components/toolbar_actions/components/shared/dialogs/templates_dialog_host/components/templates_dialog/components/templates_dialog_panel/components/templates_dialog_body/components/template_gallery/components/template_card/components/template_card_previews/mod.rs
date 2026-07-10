@@ -1,5 +1,8 @@
 pub mod components;
 mod props;
+mod view;
+
+pub use view::TemplateCardPreviewsView;
 mod style;
 
 use components::preview_headed_grid::PreviewHeadedGrid;

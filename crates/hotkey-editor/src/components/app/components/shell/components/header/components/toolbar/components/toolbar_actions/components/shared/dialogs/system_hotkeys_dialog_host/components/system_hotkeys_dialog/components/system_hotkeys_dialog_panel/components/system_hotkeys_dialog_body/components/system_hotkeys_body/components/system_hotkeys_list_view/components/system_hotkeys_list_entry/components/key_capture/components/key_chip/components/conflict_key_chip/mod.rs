@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::ConflictKeyChipView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;

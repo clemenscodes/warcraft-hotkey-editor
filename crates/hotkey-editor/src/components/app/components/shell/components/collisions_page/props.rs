@@ -1,3 +1,4 @@
+use super::view::CollisionsPageView;
 use dioxus::prelude::*;
 
 /// The collisions page's route parameters: the active collision `?kind=` and the
@@ -13,4 +14,15 @@ use dioxus::prelude::*;
 pub struct CollisionsPageProps {
     pub kind: Option<String>,
     pub entry: Option<String>,
+}
+
+impl From<&CollisionsPageView> for CollisionsPageProps {
+    fn from(view: &CollisionsPageView) -> Self {
+        let CollisionsPageView { kind, entry } = view.clone();
+        Self { kind, entry }
+    }
+}
+
+impl ddd::Props for CollisionsPageProps {
+    type View = CollisionsPageView;
 }

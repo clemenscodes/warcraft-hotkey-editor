@@ -1,4 +1,7 @@
 mod props;
+mod view;
+
+pub use view::BelowCenterTooltipView;
 mod style;
 
 use dioxus::prelude::*;
