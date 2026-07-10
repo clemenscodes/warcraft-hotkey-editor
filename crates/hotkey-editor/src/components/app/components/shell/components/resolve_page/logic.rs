@@ -1,5 +1,4 @@
-use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
-use crate::components::app::components::shell::components::shared::breadcrumbs::components::breadcrumb::BreadcrumbProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
@@ -396,7 +395,7 @@ impl From<Option<&PlanView>> for PlanCounts {
 /// moves plus every unresolved ability). Shaping the breadcrumbs needs the Copy
 /// selection signal, which arrives as an input.
 pub(super) struct ActivePlanView {
-    pub(super) breadcrumbs: BreadcrumbsProps,
+    pub(super) breadcrumbs: Vec<BreadcrumbView>,
     pub(super) section: Option<MoveSection>,
     pub(super) unresolved: Vec<UnresolvedView>,
 }
@@ -419,7 +418,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
         } = inputs;
         let active = plan.active_section(selected_slug);
         let active_category = active.map(|section| section.category);
-        let mut breadcrumb_list: Vec<BreadcrumbProps> = Vec::with_capacity(plan.sections.len());
+        let mut breadcrumb_list: Vec<BreadcrumbView> = Vec::with_capacity(plan.sections.len());
         for section in &plan.sections {
             let category = section.category;
             let is_active = active_category == Some(category);
@@ -430,7 +429,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
                 let slug = category.entry_slug().to_owned();
                 selection.set(Some(slug));
             });
-            let breadcrumb = BreadcrumbProps {
+            let breadcrumb = BreadcrumbView {
                 label,
                 count,
                 active: is_active,
@@ -438,10 +437,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             };
             breadcrumb_list.push(breadcrumb);
         }
-        let breadcrumbs = BreadcrumbsProps {
-            breadcrumbs: breadcrumb_list,
-            aria_label: "Move categories",
-        };
+        let breadcrumbs = breadcrumb_list;
         let section = active.cloned();
         let unresolved = plan.unresolved.clone();
         Self {

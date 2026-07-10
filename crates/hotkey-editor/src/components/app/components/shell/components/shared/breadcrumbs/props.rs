@@ -1,4 +1,4 @@
-use super::components::breadcrumb::BreadcrumbProps;
+use super::breadcrumb_view::BreadcrumbView;
 use dioxus::prelude::*;
 
 /// A breadcrumb bar: one prepared tab per entry, separated by "|". The tabs are
@@ -7,6 +7,6 @@ use dioxus::prelude::*;
 /// assistive tech ("Collision categories", "Move categories", …).
 #[derive(Props, Clone, PartialEq)]
 pub struct BreadcrumbsProps {
-    pub breadcrumbs: Vec<BreadcrumbProps>,
+    pub breadcrumbs: Vec<BreadcrumbView>,
     pub aria_label: &'static str,
 }

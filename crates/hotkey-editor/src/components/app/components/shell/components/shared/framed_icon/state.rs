@@ -1,4 +1,5 @@
-use super::props::{FramedIconProps, IconRadius};
+use super::icon_radius::IconRadius;
+use super::props::FramedIconProps;
 
 /// The resolved look of a framed icon: the radius token folded together with
 /// whether it lifts to a hover glow or draws the empty-placeholder fill. Derived

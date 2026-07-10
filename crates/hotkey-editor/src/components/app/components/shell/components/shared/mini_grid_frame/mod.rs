@@ -1,6 +1,9 @@
 pub mod components;
+mod mini_tile_view;
 mod props;
 mod style;
+
+pub use mini_tile_view::MiniTileView;
 
 use components::mini_grid::MiniGrid;
 use dioxus::prelude::*;

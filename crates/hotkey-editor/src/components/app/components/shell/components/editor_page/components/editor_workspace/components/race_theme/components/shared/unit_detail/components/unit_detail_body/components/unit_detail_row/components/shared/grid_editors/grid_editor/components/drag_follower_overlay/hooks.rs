@@ -1,5 +1,6 @@
 use super::components::drag_follower_ghost::FollowerPresentation;
 use super::props::DragFollowerOverlayProps;
+use dioxus::prelude::*;
 
 /// Shapes the follower ghost's presentation: the dragged tile's captured visual when this
 /// grid owns the in-progress drag, or nothing when it does not. The drag state is a UI

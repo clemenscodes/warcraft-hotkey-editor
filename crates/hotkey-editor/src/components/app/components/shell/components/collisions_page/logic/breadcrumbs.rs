@@ -1,5 +1,4 @@
-use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
-use crate::components::app::components::shell::components::shared::breadcrumbs::components::breadcrumb::BreadcrumbProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
@@ -20,15 +19,16 @@ pub(crate) struct CollisionBreadcrumbsInputs {
     pub(crate) view_navigation: ViewNavigationContext,
 }
 
-impl From<CollisionBreadcrumbsInputs> for BreadcrumbsProps {
-    fn from(inputs: CollisionBreadcrumbsInputs) -> Self {
+impl CollisionBreadcrumbsInputs {
+    /// The three collision-kind breadcrumb tabs as shared domain views, in bar order.
+    pub(crate) fn into_views(self) -> Vec<BreadcrumbView> {
         let CollisionBreadcrumbsInputs {
             active_kind,
             position_count,
             unit_position_count,
             hotkey_count,
             view_navigation,
-        } = inputs;
+        } = self;
 
         let positions_input = CollisionBreadcrumb {
             kind: CollisionKind::Positions,
@@ -37,7 +37,7 @@ impl From<CollisionBreadcrumbsInputs> for BreadcrumbsProps {
             active_kind,
             view_navigation,
         };
-        let positions = BreadcrumbProps::from(positions_input);
+        let positions = BreadcrumbView::from(positions_input);
 
         let unit_positions_input = CollisionBreadcrumb {
             kind: CollisionKind::UnitPositions,
@@ -46,7 +46,7 @@ impl From<CollisionBreadcrumbsInputs> for BreadcrumbsProps {
             active_kind,
             view_navigation,
         };
-        let unit_positions = BreadcrumbProps::from(unit_positions_input);
+        let unit_positions = BreadcrumbView::from(unit_positions_input);
 
         let hotkeys_input = CollisionBreadcrumb {
             kind: CollisionKind::Hotkeys,
@@ -55,13 +55,9 @@ impl From<CollisionBreadcrumbsInputs> for BreadcrumbsProps {
             active_kind,
             view_navigation,
         };
-        let hotkeys = BreadcrumbProps::from(hotkeys_input);
+        let hotkeys = BreadcrumbView::from(hotkeys_input);
 
-        let breadcrumbs = vec![positions, unit_positions, hotkeys];
-        Self {
-            breadcrumbs,
-            aria_label: "Collision categories",
-        }
+        vec![positions, unit_positions, hotkeys]
     }
 }
 
@@ -76,7 +72,7 @@ struct CollisionBreadcrumb {
     view_navigation: ViewNavigationContext,
 }
 
-impl From<CollisionBreadcrumb> for BreadcrumbProps {
+impl From<CollisionBreadcrumb> for BreadcrumbView {
     fn from(input: CollisionBreadcrumb) -> Self {
         let CollisionBreadcrumb {
             kind,

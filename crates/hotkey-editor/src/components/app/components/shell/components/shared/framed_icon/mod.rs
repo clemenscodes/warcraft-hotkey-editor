@@ -1,6 +1,9 @@
 pub mod components;
+mod icon_radius;
 mod props;
 mod state;
+
+pub use icon_radius::IconRadius;
 
 use components::card_glow_icon::CardGlowIcon;
 use components::control_plain_icon::ControlPlainIcon;
@@ -8,7 +11,7 @@ use components::placeholder_icon::PlaceholderIcon;
 use components::tile_glow_icon::TileGlowIcon;
 use components::tile_plain_icon::TilePlainIcon;
 use dioxus::prelude::*;
-use props::{FramedIconProps, IconRadius};
+use props::FramedIconProps;
 use state::FramedIconStyle;
 use tw_macro::assert_component;
 

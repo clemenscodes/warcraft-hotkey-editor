@@ -1,15 +1,5 @@
+use super::icon_radius::IconRadius;
 use dioxus::prelude::*;
-
-/// The corner-radius token a framed icon draws, one step of the shared radius
-/// scale.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Default)]
-pub enum IconRadius {
-    #[default]
-    Tile,
-    Control,
-    Card,
-    Hairline,
-}
 
 /// A square, blue-bordered, `object-cover` icon image that fills the box its parent
 /// gives it. The radius, whether it lifts to a gold glow on hover, and whether it

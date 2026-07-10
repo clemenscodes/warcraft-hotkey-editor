@@ -1,6 +1,10 @@
+mod breadcrumb_view;
 pub mod components;
 mod props;
 mod style;
+
+pub use breadcrumb_view::BreadcrumbView;
+
 use components::breadcrumb::Breadcrumb;
 use components::breadcrumb_separator::BreadcrumbSeparator;
 use dioxus::prelude::*;
@@ -24,7 +28,12 @@ pub fn Breadcrumbs(props: BreadcrumbsProps) -> Element {
                 if index > 0 {
                     BreadcrumbSeparator {}
                 }
-                Breadcrumb { ..breadcrumb }
+                Breadcrumb {
+                    label: breadcrumb.label,
+                    count: breadcrumb.count,
+                    active: breadcrumb.active,
+                    onclick: breadcrumb.onclick,
+                }
             }
         }
     }

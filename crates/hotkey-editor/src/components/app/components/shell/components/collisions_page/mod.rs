@@ -25,7 +25,10 @@ pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
     rsx! {
         div {
             class: CLASS,
-            Breadcrumbs { ..model.breadcrumbs }
+            Breadcrumbs {
+                breadcrumbs: model.breadcrumbs,
+                aria_label: "Collision categories",
+            }
             Body { content: model.content }
         }
     }

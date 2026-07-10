@@ -8,7 +8,7 @@ use crate::components::app::route::Route;
 use components::footer::Footer;
 use components::head::Head;
 use components::header::Header;
-use components::toasts::{ToastContainer, ToastContainerProps, use_toast_provider};
+use components::toasts::{ToastContainer, use_toast_provider};
 use dioxus::prelude::*;
 use hooks::{ShellModel, use_shell};
 use style::CLASS;
@@ -28,7 +28,8 @@ use tw_macro::assert_component;
 pub fn Shell() -> Element {
     let ShellModel { handle_keydown } = use_shell();
     let toast_model = use_toast_provider();
-    let toast_container = ToastContainerProps::from(&toast_model);
+    let toasts = toast_model.records();
+    let on_remove = toast_model.on_remove();
     rsx! {
         Head {}
         div {
@@ -38,7 +39,7 @@ pub fn Shell() -> Element {
             Outlet::<Route> {}
             Footer {}
         }
-        ToastContainer { ..toast_container }
+        ToastContainer { toasts, on_remove }
     }
 }
 

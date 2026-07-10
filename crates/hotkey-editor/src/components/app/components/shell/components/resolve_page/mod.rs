@@ -53,7 +53,10 @@ pub fn ResolvePage(props: ResolvePageProps) -> Element {
                 running,
                 on_apply,
             }
-            Breadcrumbs { ..breadcrumbs }
+            Breadcrumbs {
+                breadcrumbs,
+                aria_label: "Move categories",
+            }
             PlanBody {
                 section,
                 unresolved,

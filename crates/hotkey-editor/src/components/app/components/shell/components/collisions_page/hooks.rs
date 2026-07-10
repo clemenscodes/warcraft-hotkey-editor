@@ -9,7 +9,7 @@ use super::model::{
     CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
 };
 use super::props::CollisionsPageProps;
-use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::collision_selection::context::use_collision_selection;
 use crate::services::customkeys::context::use_custom_keys_service;
@@ -23,7 +23,7 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
 /// for the active kind (empty prompt, all-clear, or the two-pane view), as data.
 pub(super) struct CollisionsPageModel {
-    pub(super) breadcrumbs: BreadcrumbsProps,
+    pub(super) breadcrumbs: Vec<BreadcrumbView>,
     pub(super) content: ContentModel,
 }
 
@@ -129,7 +129,7 @@ pub(super) fn use_collisions_page(props: &CollisionsPageProps) -> CollisionsPage
         hotkey_count: hotkey_units.collision_count,
         view_navigation,
     };
-    let breadcrumbs = BreadcrumbsProps::from(breadcrumb_inputs);
+    let breadcrumbs = breadcrumb_inputs.into_views();
     let content = match kind {
         CollisionKind::Hotkeys => {
             let inputs = HotkeysContent {

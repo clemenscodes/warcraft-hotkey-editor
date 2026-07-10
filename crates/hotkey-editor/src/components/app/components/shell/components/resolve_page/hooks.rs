@@ -2,7 +2,7 @@ use super::logic::{
     ActivePlanInputs, ActivePlanView, MoveSection, PlanCounts, PlanView, UnresolvedView,
 };
 use super::props::ResolvePageProps;
-use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbsProps;
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_loaded_keys};
 use crate::services::navigation::app_view::AppView;
@@ -35,7 +35,7 @@ pub(super) struct ResolvePlanPresentation {
     pub unresolved_count: usize,
     pub running: bool,
     pub on_apply: EventHandler<MouseEvent>,
-    pub breadcrumbs: BreadcrumbsProps,
+    pub breadcrumbs: Vec<BreadcrumbView>,
     pub section: Option<MoveSection>,
     pub unresolved: Vec<UnresolvedView>,
 }
