@@ -1,5 +1,5 @@
 use warcraft_api::DefenseType;
-use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
+use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
 /// The published `View` contract mirroring [`DefenseColumnModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

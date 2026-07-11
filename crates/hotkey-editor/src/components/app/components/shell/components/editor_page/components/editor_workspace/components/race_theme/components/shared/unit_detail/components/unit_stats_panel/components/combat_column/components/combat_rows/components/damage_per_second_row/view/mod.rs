@@ -1,4 +1,4 @@
-use warcraft_keybinds::DamagePerSecond;
+use warcraft_api::DamagePerSecond;
 
 /// The published `View` contract mirroring [`DamagePerSecondRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

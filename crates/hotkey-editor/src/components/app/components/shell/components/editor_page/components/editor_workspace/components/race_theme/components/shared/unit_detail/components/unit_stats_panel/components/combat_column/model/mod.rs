@@ -1,6 +1,6 @@
 use super::view::CombatColumnView;
 use dioxus::prelude::*;
-use warcraft_keybinds::AttackStatistics;
+use warcraft_api::AttackStatistics;
 
 /// The combat column's input: the unit's attack profile, or `None` when it cannot
 /// attack (the column then renders nothing).

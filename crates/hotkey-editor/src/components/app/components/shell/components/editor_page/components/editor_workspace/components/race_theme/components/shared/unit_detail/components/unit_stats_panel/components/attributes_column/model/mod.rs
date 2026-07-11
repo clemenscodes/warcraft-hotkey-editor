@@ -1,6 +1,6 @@
 use super::view::AttributesColumnView;
 use dioxus::prelude::*;
-use warcraft_keybinds::HeroStatistics;
+use warcraft_api::HeroStatistics;
 
 /// The hero attributes column's input: the hero's three attributes at the selected
 /// level, or `None` for a non-hero unit (the column then renders nothing).

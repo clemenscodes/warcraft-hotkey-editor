@@ -1,6 +1,6 @@
 use super::view::AttackSpeedRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::AttackSpeed;
+use warcraft_api::AttackSpeed;
 
 /// The attack speed row's input: the unit's attack cooldown.
 #[derive(Props, Clone, PartialEq)]

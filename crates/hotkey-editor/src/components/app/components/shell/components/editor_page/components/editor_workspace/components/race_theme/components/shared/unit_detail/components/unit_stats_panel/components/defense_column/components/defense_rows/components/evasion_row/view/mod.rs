@@ -1,4 +1,4 @@
-use warcraft_keybinds::Evasion;
+use warcraft_api::Evasion;
 
 /// The published `View` contract mirroring [`EvasionRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

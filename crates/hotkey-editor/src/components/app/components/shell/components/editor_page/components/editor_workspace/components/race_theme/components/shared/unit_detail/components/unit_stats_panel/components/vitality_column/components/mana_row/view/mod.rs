@@ -1,4 +1,4 @@
-use warcraft_keybinds::Mana;
+use warcraft_api::Mana;
 
 /// The published `View` contract mirroring [`ManaRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

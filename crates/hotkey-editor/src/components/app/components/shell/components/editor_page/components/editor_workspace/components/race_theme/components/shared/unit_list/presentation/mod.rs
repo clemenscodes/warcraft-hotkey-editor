@@ -1,9 +1,9 @@
 use warcraft_api::CatalogVisibility;
 use warcraft_api::Race;
 use warcraft_api::SearchField;
+use warcraft_api::UnitListing;
+use warcraft_api::UnitListingRequest;
 use warcraft_api::UnitMode;
-use warcraft_keybinds::UnitListing;
-use warcraft_keybinds::UnitListingRequest;
 
 /// The inputs the memoized catalog walk reads — race, mode, committed query,
 /// search field, and catalog visibility. It orchestrates the domain call

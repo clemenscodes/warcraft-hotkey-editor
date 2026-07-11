@@ -1,4 +1,4 @@
-use warcraft_keybinds::DamageRange;
+use warcraft_api::DamageRange;
 
 /// The published `View` contract mirroring [`DamageRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

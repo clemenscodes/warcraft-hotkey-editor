@@ -1,7 +1,7 @@
 use super::view::UnitStatsPanelView;
 use dioxus::prelude::*;
+use warcraft_api::Evasion;
 use warcraft_api::{HeroAttributes, UnitCombat};
-use warcraft_keybinds::Evasion;
 
 /// The stats panel's inputs: the unit's combat block, optional hero attributes, and the
 /// resolved evasion chance (a domain figure). The selected hero level the hero columns

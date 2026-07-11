@@ -1,6 +1,6 @@
 use super::view::VitalityColumnView;
 use dioxus::prelude::*;
-use warcraft_keybinds::{HitPoints, HitPointsRegen, Mana, ManaRegen};
+use warcraft_api::{HitPoints, HitPointsRegen, Mana, ManaRegen};
 
 /// The vitality column's input: the unit's resolved hit points, mana, and their
 /// regeneration figures.

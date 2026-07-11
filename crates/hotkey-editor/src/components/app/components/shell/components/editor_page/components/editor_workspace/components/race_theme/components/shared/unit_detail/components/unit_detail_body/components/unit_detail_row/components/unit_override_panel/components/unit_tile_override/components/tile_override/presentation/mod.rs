@@ -12,8 +12,8 @@ use crate::services::grid_layout::context::use_grid_layout;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::text::description::Description;
-use warcraft_keybinds::text::tip::Tip;
+use warcraft_api::Description;
+use warcraft_api::Tip;
 use warcraft_keybinds::{
     CustomKeys, GridLayout, GridSlotId, HotkeyTarget, HotkeyToken, InspectorDetail, Letter,
 };

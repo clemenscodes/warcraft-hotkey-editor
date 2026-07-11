@@ -1,6 +1,6 @@
 use super::view::StrengthRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::AttributeStatistic;
+use warcraft_api::AttributeStatistic;
 
 /// The strength row's input: the hero's strength at the selected level and whether it
 /// is the hero's primary attribute (which glows gold).

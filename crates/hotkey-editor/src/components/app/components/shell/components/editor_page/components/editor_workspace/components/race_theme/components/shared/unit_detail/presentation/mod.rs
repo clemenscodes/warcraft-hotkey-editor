@@ -8,8 +8,8 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftApi;
-use warcraft_api::{HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_keybinds::{CustomKeys, Evasion, GridSlotId, InspectorDetail, UnitSlotContainers};
+use warcraft_api::{Evasion, HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitSlotContainers};
 
 /// The unit's command-grid slot containers: the always-present command card plus the
 /// optional build, uprooted, and research menus, keyed to the host unit. Threaded down
@@ -65,7 +65,7 @@ impl TryFrom<WarcraftObjectId> for ResolvedUnit {
         let description_text = unit_object.ubertip().unwrap_or_default().to_string();
         let combat = *unit_meta.combat();
         let hero_attributes = unit_meta.hero_attributes().copied();
-        let evasion = Evasion::resolve(unit_meta);
+        let evasion = api.unit().evasion(unit_id);
         Ok(Self {
             unit_name,
             portrait_url,

@@ -1,6 +1,6 @@
 use super::view::EffectiveHitPointsRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::EffectiveHitPoints;
+use warcraft_api::EffectiveHitPoints;
 
 /// The effective hit points row's input: raw health scaled by armor.
 #[derive(Props, Clone, PartialEq)]

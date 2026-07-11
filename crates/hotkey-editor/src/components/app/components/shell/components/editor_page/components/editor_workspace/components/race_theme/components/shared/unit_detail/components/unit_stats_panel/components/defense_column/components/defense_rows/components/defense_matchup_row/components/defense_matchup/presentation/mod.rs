@@ -1,6 +1,6 @@
 use super::model::DefenseMatchupModel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::matchup::{MatchupStrength, MatchupSubject};
-use warcraft_keybinds::Matchup;
+use warcraft_api::Matchup;
 
 /// The shaped matchup figures for one defender cell.
 pub(super) struct DefenseMatchupPresentation {

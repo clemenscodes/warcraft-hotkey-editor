@@ -1,5 +1,5 @@
+use warcraft_api::UnitListing;
 use warcraft_api::{UnitKind, WarcraftObjectId};
-use warcraft_keybinds::UnitListing;
 
 /// The first search result the Enter key selects: the unit's id and its kind (so the
 /// list can both select it and switch to its category in one step).

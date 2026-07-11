@@ -1,6 +1,6 @@
 use super::view::EvasionRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::Evasion;
+use warcraft_api::Evasion;
 
 /// The evasion row's input: the unit's resolved dodge chance.
 #[derive(Props, Clone, PartialEq)]

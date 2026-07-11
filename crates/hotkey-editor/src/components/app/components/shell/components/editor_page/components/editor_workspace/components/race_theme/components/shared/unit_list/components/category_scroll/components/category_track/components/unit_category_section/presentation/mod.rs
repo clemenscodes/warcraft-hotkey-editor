@@ -45,9 +45,9 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use warcraft_api::CatalogVisibility;
+use warcraft_api::UnitCategoryListing;
+use warcraft_api::UnitCategoryRequest;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::UnitCategoryListing;
-use warcraft_keybinds::UnitCategoryRequest;
 
 /// One unit's shaped catalog data for a card: its id, display name, portrait, and kind.
 pub(super) struct UnitCardEntry {

@@ -8,11 +8,11 @@
 //! the sanctioned home for the formatting. The domain keeps only the value and answers
 //! `is_zero` where a figure can be muted.
 
-use warcraft_api::{AttackType, DefenseType};
-use warcraft_keybinds::{
-    Armor, AttackRange, AttackSpeed, AttributeStatistic, DamagePerSecond, DamageRange,
-    EffectiveHitPoints, Evasion, Gain, HitPoints, HitPointsRegen, Mana, ManaRegen,
+use warcraft_api::{
+    ArmorFigure as Armor, AttackRange, AttackSpeed, AttributeStatistic, DamagePerSecond,
+    DamageRange, EffectiveHitPoints, Evasion, Gain, HitPoints, HitPointsRegen, Mana, ManaRegen,
 };
+use warcraft_api::{AttackType, DefenseType};
 
 /// A domain figure a stat's value leaf renders. It presents itself as text — the UI's
 /// job, since presentation never lives on the domain type — and says whether the leaf

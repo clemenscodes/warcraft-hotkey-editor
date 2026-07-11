@@ -1,8 +1,8 @@
 use super::model::UnitStatsPanelModel;
 use crate::services::editor_state::context::use_editor_state;
 use warcraft_api::DefenseType;
-use warcraft_keybinds::{
-    Armor, AttackStatistics, EffectiveHitPoints, Evasion, HeroStatistics, HitPoints,
+use warcraft_api::{
+    ArmorFigure as Armor, AttackStatistics, EffectiveHitPoints, Evasion, HeroStatistics, HitPoints,
     HitPointsRegen, Mana, ManaRegen, UnitStatistics,
 };
 

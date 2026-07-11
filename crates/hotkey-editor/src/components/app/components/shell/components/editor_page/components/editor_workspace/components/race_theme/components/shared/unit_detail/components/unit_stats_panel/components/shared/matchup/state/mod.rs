@@ -9,12 +9,12 @@ pub enum MatchupStrength {
 
 /// The domain decides the strength band (the balance call); this is only the
 /// renderer's presentation view of it, dispatching the tinted cell variant.
-impl From<warcraft_keybinds::MatchupStrength> for MatchupStrength {
-    fn from(strength: warcraft_keybinds::MatchupStrength) -> Self {
+impl From<warcraft_api::MatchupStrength> for MatchupStrength {
+    fn from(strength: warcraft_api::MatchupStrength) -> Self {
         match strength {
-            warcraft_keybinds::MatchupStrength::Strong => Self::Strong,
-            warcraft_keybinds::MatchupStrength::Neutral => Self::Neutral,
-            warcraft_keybinds::MatchupStrength::Weak => Self::Weak,
+            warcraft_api::MatchupStrength::Strong => Self::Strong,
+            warcraft_api::MatchupStrength::Neutral => Self::Neutral,
+            warcraft_api::MatchupStrength::Weak => Self::Weak,
         }
     }
 }

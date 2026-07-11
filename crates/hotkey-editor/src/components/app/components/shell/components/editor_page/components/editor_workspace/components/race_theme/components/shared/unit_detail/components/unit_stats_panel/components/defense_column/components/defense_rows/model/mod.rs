@@ -1,7 +1,7 @@
 use super::view::DefenseRowsView;
 use dioxus::prelude::*;
 use warcraft_api::DefenseType;
-use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
+use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
 /// The defense rows' input: the four defense figures the rows present (the icon stays
 /// with the column). `defense_type` feeds both the defense-type row and the matchup

@@ -2,7 +2,7 @@ use super::model::DefenseColumnModel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use dioxus::prelude::*;
 use warcraft_api::DefenseType;
-use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
+use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
 /// The defense column's figures, shaped out of the body: the defense icon, the three
 /// always-shown values, the guarded evasion, and the defense type that drives the

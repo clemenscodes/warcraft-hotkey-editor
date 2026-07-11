@@ -1,4 +1,4 @@
-use warcraft_keybinds::AttributeStatistic;
+use warcraft_api::AttributeStatistic;
 
 /// The published `View` contract mirroring [`StrengthRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

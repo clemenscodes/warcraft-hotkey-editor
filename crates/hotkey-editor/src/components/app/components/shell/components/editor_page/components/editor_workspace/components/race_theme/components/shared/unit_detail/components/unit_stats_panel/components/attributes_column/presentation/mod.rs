@@ -1,7 +1,7 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use dioxus::prelude::*;
 use warcraft_api::PrimaryAttribute;
-use warcraft_keybinds::{AttributeStatistic, HeroStatistics};
+use warcraft_api::{AttributeStatistic, HeroStatistics};
 
 /// The attributes column's figures, shaped from the hero: the primary-attribute icon and
 /// each of the three attributes with whether it is the hero's primary.

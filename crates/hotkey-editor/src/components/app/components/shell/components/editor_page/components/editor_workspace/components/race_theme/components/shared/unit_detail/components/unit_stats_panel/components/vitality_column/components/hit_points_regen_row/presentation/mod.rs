@@ -1,5 +1,5 @@
+use warcraft_api::HitPointsRegen;
 use warcraft_api::RegenType;
-use warcraft_keybinds::HitPointsRegen;
 
 const AT_NIGHT: &str = "at night";
 const ON_BLIGHT: &str = "on blight";

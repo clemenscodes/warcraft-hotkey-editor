@@ -1,4 +1,4 @@
-use warcraft_keybinds::AttackRange;
+use warcraft_api::AttackRange;
 
 /// The published `View` contract mirroring [`RangeRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

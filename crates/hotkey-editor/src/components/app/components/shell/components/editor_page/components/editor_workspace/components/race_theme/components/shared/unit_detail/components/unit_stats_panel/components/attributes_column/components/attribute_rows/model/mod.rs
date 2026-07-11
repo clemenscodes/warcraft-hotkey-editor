@@ -1,6 +1,6 @@
 use super::view::AttributeRowsView;
 use dioxus::prelude::*;
-use warcraft_keybinds::AttributeStatistic;
+use warcraft_api::AttributeStatistic;
 
 /// The attribute rows' input: each of the hero's three attributes at the selected level
 /// and whether it is the hero's primary attribute (which drives the row's gold glow).

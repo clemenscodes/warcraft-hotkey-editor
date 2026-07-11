@@ -1,7 +1,7 @@
 use super::view::DefenseColumnView;
 use dioxus::prelude::*;
 use warcraft_api::DefenseType;
-use warcraft_keybinds::{Armor, EffectiveHitPoints, Evasion};
+use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
 /// The defense column's input: the unit's resolved armor, defense type, effective hit
 /// points, and dodge chance.

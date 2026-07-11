@@ -1,4 +1,4 @@
-use warcraft_keybinds::{HitPoints, HitPointsRegen, Mana, ManaRegen};
+use warcraft_api::{HitPoints, HitPointsRegen, Mana, ManaRegen};
 
 /// The published `View` contract mirroring [`VitalityColumnModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

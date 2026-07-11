@@ -1,6 +1,6 @@
 use super::view::ManaRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::Mana;
+use warcraft_api::Mana;
 
 /// The mana row's input: the unit's resolved mana pool at the selected level.
 #[derive(Props, Clone, PartialEq)]

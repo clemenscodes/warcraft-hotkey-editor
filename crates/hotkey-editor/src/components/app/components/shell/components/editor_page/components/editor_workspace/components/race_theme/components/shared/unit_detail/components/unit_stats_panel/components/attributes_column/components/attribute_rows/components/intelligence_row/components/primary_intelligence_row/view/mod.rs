@@ -1,4 +1,4 @@
-use warcraft_keybinds::{AttributeStatistic, Gain};
+use warcraft_api::{AttributeStatistic, Gain};
 
 /// The published `View` contract mirroring [`PrimaryIntelligenceRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

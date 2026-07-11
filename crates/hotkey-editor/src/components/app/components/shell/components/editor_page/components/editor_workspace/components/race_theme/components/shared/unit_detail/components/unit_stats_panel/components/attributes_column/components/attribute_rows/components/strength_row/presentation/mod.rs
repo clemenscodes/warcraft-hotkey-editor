@@ -1,6 +1,6 @@
 use super::model::StrengthRowModel;
 use warcraft_api::PrimaryAttribute;
-use warcraft_keybinds::{AttributeStatistic, Gain};
+use warcraft_api::{AttributeStatistic, Gain};
 
 /// The shaped strength row figures: the attribute, its per-level growth, and its label.
 pub(super) struct StrengthRowPresentation {

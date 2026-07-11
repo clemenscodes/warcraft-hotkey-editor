@@ -1,7 +1,7 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::stat_icon::StatIcon;
 use dioxus::prelude::*;
 use warcraft_api::AttackType;
-use warcraft_keybinds::{AttackRange, AttackSpeed, AttackStatistics, DamagePerSecond, DamageRange};
+use warcraft_api::{AttackRange, AttackSpeed, AttackStatistics, DamagePerSecond, DamageRange};
 
 /// The combat column's figures, shaped out of the body from the unit's attack: the
 /// icon source and alt text, the five stat values (three always shown, the guarded

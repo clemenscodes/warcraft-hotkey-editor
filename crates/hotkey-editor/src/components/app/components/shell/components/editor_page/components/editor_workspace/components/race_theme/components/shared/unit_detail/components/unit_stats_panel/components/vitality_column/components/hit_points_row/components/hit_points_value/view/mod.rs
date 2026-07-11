@@ -1,4 +1,4 @@
-use warcraft_keybinds::HitPoints;
+use warcraft_api::HitPoints;
 
 /// The published `View` contract mirroring [`HitPointsValueModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

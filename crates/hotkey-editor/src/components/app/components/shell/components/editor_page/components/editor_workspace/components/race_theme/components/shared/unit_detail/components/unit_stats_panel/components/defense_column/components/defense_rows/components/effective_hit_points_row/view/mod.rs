@@ -1,4 +1,4 @@
-use warcraft_keybinds::EffectiveHitPoints;
+use warcraft_api::EffectiveHitPoints;
 
 /// The published `View` contract mirroring [`EffectiveHitPointsRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]

@@ -1,6 +1,6 @@
 use super::presentation::{UnitCommandGridSlots, UnitOverrideTarget};
+use warcraft_api::Evasion;
 use warcraft_api::{HeroAttributes, UnitCombat, WarcraftObjectId};
-use warcraft_keybinds::Evasion;
 
 /// The panel's shaped view: either an empty-state message, or the fully-resolved domain
 /// data for the loaded unit.

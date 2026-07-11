@@ -1,6 +1,6 @@
 use super::view::IntelligenceRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::AttributeStatistic;
+use warcraft_api::AttributeStatistic;
 
 /// The intelligence row's input: the hero's intelligence at the selected level and whether it
 /// is the hero's primary attribute (which glows gold).

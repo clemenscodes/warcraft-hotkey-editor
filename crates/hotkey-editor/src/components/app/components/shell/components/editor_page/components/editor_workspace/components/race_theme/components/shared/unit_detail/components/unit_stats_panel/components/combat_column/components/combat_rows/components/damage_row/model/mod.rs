@@ -1,6 +1,6 @@
 use super::view::DamageRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::DamageRange;
+use warcraft_api::DamageRange;
 
 /// The damage row's input: the unit's attack damage range.
 #[derive(Props, Clone, PartialEq)]

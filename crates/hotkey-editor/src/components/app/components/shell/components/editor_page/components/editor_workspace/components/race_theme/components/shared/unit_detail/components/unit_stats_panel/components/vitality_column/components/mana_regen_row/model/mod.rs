@@ -1,6 +1,6 @@
 use super::view::ManaRegenRowView;
 use dioxus::prelude::*;
-use warcraft_keybinds::ManaRegen;
+use warcraft_api::ManaRegen;
 
 /// The mana regeneration row's input: the unit's resolved mana regeneration rate.
 #[derive(Props, Clone, PartialEq)]

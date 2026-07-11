@@ -1,4 +1,4 @@
-use warcraft_keybinds::Armor;
+use warcraft_api::ArmorFigure as Armor;
 
 /// The published `View` contract mirroring [`ArmorRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
