@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::MiniGridView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::grid_tile::GridTile;
 use dioxus::prelude::*;
-use props::MiniGridProps;
+use model::MiniGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// editor and preview grids via the same utility values) and draws whatever twelve
 /// tiles its frame hands it.
 #[component]
-pub fn MiniGrid(props: MiniGridProps) -> Element {
+pub fn MiniGrid(props: MiniGridModel) -> Element {
     let tiles = props.tiles;
     rsx! {
         div { class: CLASS,

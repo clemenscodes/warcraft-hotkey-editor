@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SystemHotkeysBreadcrumbsTriggerLabelView;
 mod style;
 
 use dioxus::prelude::*;
-use props::SystemHotkeysBreadcrumbsTriggerLabelProps;
+use model::SystemHotkeysBreadcrumbsTriggerLabelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The active-category caption shown inside the dropdown trigger.
 #[component]
 pub fn SystemHotkeysBreadcrumbsTriggerLabel(
-    props: SystemHotkeysBreadcrumbsTriggerLabelProps,
+    props: SystemHotkeysBreadcrumbsTriggerLabelModel,
 ) -> Element {
     let text = props.text;
     rsx! {

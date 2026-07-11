@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::DialogCloseView;
 mod style;
 
 use dioxus::prelude::*;
-use props::DialogCloseProps;
+use model::DialogCloseModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The close glyph in a dialog header; forwards one click.
 #[component]
-pub fn DialogClose(props: DialogCloseProps) -> Element {
+pub fn DialogClose(props: DialogCloseModel) -> Element {
     let onclick = props.onclick;
     rsx! {
         button {

@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::TileOverrideView;
@@ -13,15 +12,15 @@ use components::tile_override_alt_picker::TileOverrideAltPicker;
 use components::tile_override_card::TileOverrideCard;
 use components::tile_override_key_picker::TileOverrideKeyPicker;
 use components::tile_override_upgrade_picker::TileOverrideUpgradePicker;
-use hooks::use_tile_override;
-use props::{TileOverrideModel, TileOverrideProps};
+use model::{TileOverrideModel, TileOverridePresentation};
+use presentation::use_tile_override;
 use tw_macro::assert_component;
 
 /// The per-tile override editor. A pure renderer: the composed hook shapes the card's
 /// fields and the pickers as domain values, and the body names each child directly.
 #[component]
-pub fn TileOverride(props: TileOverrideProps) -> Element {
-    let TileOverrideModel {
+pub fn TileOverride(props: TileOverrideModel) -> Element {
+    let TileOverridePresentation {
         name_text,
         object_id,
         show_hotkey_field,

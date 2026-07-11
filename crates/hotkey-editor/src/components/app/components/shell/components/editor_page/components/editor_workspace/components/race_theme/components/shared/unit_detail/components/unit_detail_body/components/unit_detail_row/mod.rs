@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitDetailRowView;
@@ -8,7 +8,7 @@ mod style;
 use components::unit_command_grids::UnitCommandGrids;
 use components::unit_override_panel::UnitOverridePanel;
 use dioxus::prelude::*;
-use props::UnitDetailRowProps;
+use model::UnitDetailRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// the override panel column directly, splitting its threaded domain data between the
 /// grids and the override panel.
 #[component]
-pub fn UnitDetailRow(props: UnitDetailRowProps) -> Element {
+pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
     let grid_slots = props.grid_slots;
     let unit_id = grid_slots.unit_id;
     let command_card_slots = grid_slots.command_card_slots;

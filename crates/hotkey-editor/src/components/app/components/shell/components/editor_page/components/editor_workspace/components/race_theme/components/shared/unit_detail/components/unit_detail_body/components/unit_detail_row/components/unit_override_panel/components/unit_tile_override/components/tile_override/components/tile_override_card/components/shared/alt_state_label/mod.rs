@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStateLabelView;
@@ -9,12 +9,12 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::AltStateLabelProps;
+use model::AltStateLabelModel;
 
 /// The caption naming an off-state or upgraded form; renders nothing when the form
 /// has no distinct name.
 #[component]
-pub fn AltStateLabel(props: AltStateLabelProps) -> Element {
+pub fn AltStateLabel(props: AltStateLabelModel) -> Element {
     let Some(text) = props.text else {
         return rsx! {};
     };

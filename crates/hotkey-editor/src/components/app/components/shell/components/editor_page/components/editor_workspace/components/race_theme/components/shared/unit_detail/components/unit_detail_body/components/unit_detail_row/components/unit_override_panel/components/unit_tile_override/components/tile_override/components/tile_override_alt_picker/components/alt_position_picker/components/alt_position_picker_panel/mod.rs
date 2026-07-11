@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltPositionPickerPanelView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-use props::AltPositionPickerPanelProps;
+use model::AltPositionPickerPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,8 +16,8 @@ use tw_macro::assert_component;
 /// and styles a real `div` of its own with the box `CLASS`, so no project class ever
 /// lands on the library element. Holds the header row above the scrolling grid body.
 #[component]
-pub fn AltPositionPickerPanel(props: AltPositionPickerPanelProps) -> Element {
-    let AltPositionPickerPanelProps {
+pub fn AltPositionPickerPanel(props: AltPositionPickerPanelModel) -> Element {
+    let AltPositionPickerPanelModel {
         title,
         on_close,
         explainer_text,

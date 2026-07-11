@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AboveRightTooltipView;
 mod style;
 
 use dioxus::prelude::*;
-use props::AboveRightTooltipProps;
+use model::AboveRightTooltipModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// its own bubble and the positioning utilities for this placement and anchor across
 /// both `@supports` bands; it shows only the message it is handed.
 #[component]
-pub fn AboveRightTooltip(props: AboveRightTooltipProps) -> Element {
+pub fn AboveRightTooltip(props: AboveRightTooltipModel) -> Element {
     let text = props.text;
     rsx! {
         span {

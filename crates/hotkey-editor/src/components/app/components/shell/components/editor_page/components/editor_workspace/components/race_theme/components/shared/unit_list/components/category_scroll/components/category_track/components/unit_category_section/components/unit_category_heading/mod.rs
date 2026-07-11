@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitCategoryHeadingView;
@@ -7,13 +7,13 @@ mod style;
 
 use components::category_chevron::CategoryChevron;
 use dioxus::prelude::*;
-use props::UnitCategoryHeadingProps;
+use model::UnitCategoryHeadingModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The clickable heading for a unit category in the sidebar list.
 #[component]
-pub fn UnitCategoryHeading(props: UnitCategoryHeadingProps) -> Element {
+pub fn UnitCategoryHeading(props: UnitCategoryHeadingModel) -> Element {
     let is_collapsed = props.is_collapsed;
     let label = props.label;
     let on_toggle = props.on_toggle;

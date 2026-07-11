@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CollisionCardView;
@@ -8,7 +8,7 @@ mod style;
 
 use components::collision_card_surface::CollisionCardSurface;
 use dioxus::prelude::*;
-use props::CollisionCardProps;
+use model::CollisionCardModel;
 pub use state::{CollisionCardContent, CollisionCardData};
 use style::CLASS;
 use tw_macro::assert_component;
@@ -20,7 +20,7 @@ use tw_macro::assert_component;
 /// identity wrapper (its `collision-card` root class) that nests its own
 /// `CollisionCardSurface` button for the look and the fixed gold accent.
 #[component]
-pub fn CollisionCard(props: CollisionCardProps) -> Element {
+pub fn CollisionCard(props: CollisionCardModel) -> Element {
     let is_selected = props.is_selected;
     let onclick = props.onclick;
     let count = props.count;

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::FooterLinkView;
@@ -7,12 +7,12 @@ mod style;
 
 use components::footer_link_icon::FooterLinkIcon;
 use dioxus::prelude::*;
-use props::FooterLinkProps;
+use model::FooterLinkModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn FooterLink(props: FooterLinkProps) -> Element {
+pub fn FooterLink(props: FooterLinkModel) -> Element {
     let label = props.label;
     let href = props.href;
     let icon = props.icon;

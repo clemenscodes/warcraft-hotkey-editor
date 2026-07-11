@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UpgradeSectionView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::upgrade_section_header::UpgradeSectionHeader;
 use dioxus::prelude::*;
-use props::UpgradeSectionProps;
+use model::UpgradeSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,11 +15,11 @@ use tw_macro::assert_component;
 /// delegates the header row (label, position button, hotkey cell) to its child.
 /// Renders nothing when there is no upgrade to show.
 #[component]
-pub fn UpgradeSection(props: UpgradeSectionProps) -> Element {
+pub fn UpgradeSection(props: UpgradeSectionModel) -> Element {
     if !props.show {
         return rsx! {};
     }
-    let UpgradeSectionProps {
+    let UpgradeSectionModel {
         show: _,
         upgrade_hotkey_label,
         upgrade_is_editing,

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitCardIconView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::shared::framed_icon::
     FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-use props::UnitCardIconProps;
+use model::UnitCardIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// shared `FramedIcon` draws the bordered, rounded image — or the empty framed square
 /// when the unit has no icon.
 #[component]
-pub fn UnitCardIcon(props: UnitCardIconProps) -> Element {
+pub fn UnitCardIcon(props: UnitCardIconModel) -> Element {
     let icon_path = props.icon_path;
     let display_name = props.display_name;
     let src = icon_path.map(|url| url.to_string());

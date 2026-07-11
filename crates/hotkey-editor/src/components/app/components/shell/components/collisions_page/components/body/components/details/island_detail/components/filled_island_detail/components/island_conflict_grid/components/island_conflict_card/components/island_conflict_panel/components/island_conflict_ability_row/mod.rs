@@ -1,23 +1,23 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::IslandConflictAbilityRowView;
 mod style;
 
-use super::super::super::super::logic::IslandAbilityData;
+use super::super::super::super::presentation::IslandAbilityData;
 use components::conflict_separator::ConflictSeparator;
 use components::island_conflict_ability::IslandConflictAbility;
 use dioxus::prelude::*;
-use props::IslandConflictAbilityRowProps;
+use model::IslandConflictAbilityRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The two clashing abilities flanking the centered separator. It owns its own abilities
 /// row element directly.
 #[component]
-pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowProps) -> Element {
-    let IslandConflictAbilityRowProps {
+pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowModel) -> Element {
+    let IslandConflictAbilityRowModel {
         own_ability,
         shared_ability,
     } = props;

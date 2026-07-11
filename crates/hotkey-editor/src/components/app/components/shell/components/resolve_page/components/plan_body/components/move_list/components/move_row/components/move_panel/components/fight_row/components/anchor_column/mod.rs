@@ -1,5 +1,5 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::AnchorColumnView;
@@ -8,20 +8,20 @@ mod style;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon::AbilityIcon;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::fight_name_plate::FightNamePlate;
 use dioxus::prelude::*;
-use logic::AnchorColumnModel;
-use props::AnchorColumnProps;
+use presentation::AnchorColumnPresentation;
+use model::AnchorColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The rival column of a move card, shown only when the move has an anchor
 /// (Fight/Swap): the rival's name plate over its icon. Renders nothing otherwise.
 #[component]
-pub fn AnchorColumn(props: AnchorColumnProps) -> Element {
+pub fn AnchorColumn(props: AnchorColumnModel) -> Element {
     let move_view = props.move_view;
-    let Some(model) = AnchorColumnModel::for_move(&move_view) else {
+    let Some(model) = AnchorColumnPresentation::for_move(&move_view) else {
         return rsx! {};
     };
-    let AnchorColumnModel {
+    let AnchorColumnPresentation {
         name,
         object_id,
         icon_url,

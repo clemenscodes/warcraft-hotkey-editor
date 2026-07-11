@@ -1,12 +1,12 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::inventory_drag_overlay::InventoryDragOverlay;
 use components::system_hotkeys_body::SystemHotkeysBody;
 use components::system_hotkeys_breadcrumbs::SystemHotkeysBreadcrumbs;
 use dioxus::prelude::*;
-use hooks::{SystemHotkeysDialogBodyModel, use_system_hotkeys_dialog_body};
+use presentation::{SystemHotkeysDialogBodyModel, use_system_hotkeys_dialog_body};
 use style::CLASS;
 use tw_macro::assert_component;
 

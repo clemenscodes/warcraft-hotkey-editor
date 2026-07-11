@@ -1,14 +1,14 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BreadcrumbCountView;
 mod style;
 use dioxus::prelude::*;
-use props::BreadcrumbCountProps;
+use model::BreadcrumbCountModel;
 use style::CLASS;
 use tw_macro::assert_component;
 #[component]
-pub fn BreadcrumbCount(props: BreadcrumbCountProps) -> Element {
+pub fn BreadcrumbCount(props: BreadcrumbCountModel) -> Element {
     let count = props.count;
     rsx! { span { class: CLASS, "{count}" } }
 }

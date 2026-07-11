@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::layout_editor::LayoutEditor;
 use dioxus::prelude::*;
-use hooks::use_layout_editor_host;
+use presentation::use_layout_editor_host;
 use style::CLASS;
 use tw_macro::assert_component;
 

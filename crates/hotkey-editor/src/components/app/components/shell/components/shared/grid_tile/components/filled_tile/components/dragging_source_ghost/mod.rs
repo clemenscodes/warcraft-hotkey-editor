@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::DraggingSourceGhostView;
 mod style;
 
 use dioxus::prelude::*;
-use props::DraggingSourceGhostProps;
+use model::DraggingSourceGhostModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// hides the lifted icon, and stays pointer-transparent so the source remains
 /// hit-testable as its own drop target.
 #[component]
-pub fn DraggingSourceGhost(props: DraggingSourceGhostProps) -> Element {
+pub fn DraggingSourceGhost(props: DraggingSourceGhostModel) -> Element {
     if !props.active {
         return rsx! {};
     }

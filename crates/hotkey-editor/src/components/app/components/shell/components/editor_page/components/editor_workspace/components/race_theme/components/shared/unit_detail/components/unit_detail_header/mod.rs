@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitDetailHeaderView;
@@ -8,14 +8,14 @@ mod style;
 use components::unit_detail_title::UnitDetailTitle;
 use components::unit_portrait::UnitPortrait;
 use dioxus::prelude::*;
-use props::UnitDetailHeaderProps;
+use model::UnitDetailHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unit detail header: the portrait beside the title column (name, id, and the
 /// optional hero level picker).
 #[component]
-pub fn UnitDetailHeader(props: UnitDetailHeaderProps) -> Element {
+pub fn UnitDetailHeader(props: UnitDetailHeaderModel) -> Element {
     let portrait_source = props.portrait_url;
     let unit_name = props.unit_name;
     let unit_id = props.unit_id;

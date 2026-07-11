@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::InfoToastCardView;
@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::toasts::components::t
 use components::info_toast_content::InfoToastContent;
 use components::info_toast_icon::InfoToastIcon;
 use dioxus::prelude::*;
-use props::InfoToastCardProps;
+use model::InfoToastCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// info icon and title, the description, and the close control. Presentational
 /// only; the dispatcher builds its props from the toast record.
 #[component]
-pub fn InfoToastCard(props: InfoToastCardProps) -> Element {
+pub fn InfoToastCard(props: InfoToastCardModel) -> Element {
     let title = props.record.title().to_string();
     let description = props.record.description();
     let id = props.record.id();

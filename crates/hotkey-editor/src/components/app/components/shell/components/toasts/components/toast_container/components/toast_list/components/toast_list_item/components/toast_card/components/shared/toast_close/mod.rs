@@ -1,19 +1,19 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
+mod style;
 mod view;
 
 pub use view::ToastCloseView;
-mod style;
 
 use dioxus::prelude::*;
-use logic::ToastClosePresentation;
-use props::ToastCloseProps;
+use model::ToastCloseModel;
+use presentation::ToastClosePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The dismiss control on a toast.
 #[component]
-pub fn ToastClose(props: ToastCloseProps) -> Element {
+pub fn ToastClose(props: ToastCloseModel) -> Element {
     let ToastClosePresentation { onclick } = ToastClosePresentation::from(&props);
     rsx! {
         button {

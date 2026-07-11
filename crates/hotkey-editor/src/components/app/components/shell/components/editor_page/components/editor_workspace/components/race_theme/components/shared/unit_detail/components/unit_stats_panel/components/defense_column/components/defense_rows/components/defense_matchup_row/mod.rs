@@ -1,6 +1,6 @@
 pub mod components;
 mod data;
-mod props;
+mod model;
 mod view;
 
 pub use view::DefenseMatchupRowView;
@@ -9,13 +9,13 @@ mod style;
 use components::defense_matchup::DefenseMatchup;
 use data::ALL_ATTACK_TYPES;
 use dioxus::prelude::*;
-use props::DefenseMatchupRowProps;
+use model::DefenseMatchupRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The defender's matchup grid.
 #[component]
-pub fn DefenseMatchupRow(props: DefenseMatchupRowProps) -> Element {
+pub fn DefenseMatchupRow(props: DefenseMatchupRowModel) -> Element {
     let defense_type = props.defense_type;
     rsx! {
         div {

@@ -1,26 +1,26 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
+mod style;
 mod view;
 
 pub use view::InfoActionsView;
-mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::button::{Button, ButtonVariant};
 use dioxus::prelude::*;
-use logic::InfoActionsButtons;
-use props::InfoActionsProps;
+use model::InfoActionsModel;
+use presentation::InfoActionsPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// Every info dialog's right-aligned action row: the cancel and primary buttons.
 #[component]
-pub fn InfoActions(props: InfoActionsProps) -> Element {
-    let InfoActionsButtons {
+pub fn InfoActions(props: InfoActionsModel) -> Element {
+    let InfoActionsPresentation {
         cancel_label,
         on_cancel,
         primary_label,
         on_primary,
-    } = InfoActionsButtons::from(&props);
+    } = InfoActionsPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,

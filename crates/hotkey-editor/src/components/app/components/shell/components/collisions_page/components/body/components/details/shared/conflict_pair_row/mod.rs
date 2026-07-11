@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictPairRowView;
@@ -9,7 +9,7 @@ use super::conflict_ability::ConflictAbility;
 use super::conflict_card_model::ConflictAbilityData;
 use super::conflict_marker_view::ConflictMarkerView;
 use dioxus::prelude::*;
-use props::ConflictPairRowProps;
+use model::ConflictPairRowModel;
 pub use state::AbilityPair;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// The two-ability layout for a shared-key clash: the two abilities flanking the key
 /// badge. It owns its own abilities row. Renders nothing when there is no pair.
 #[component]
-pub fn ConflictPairRow(props: ConflictPairRowProps) -> Element {
+pub fn ConflictPairRow(props: ConflictPairRowModel) -> Element {
     let Some(pair) = props.pair else {
         return rsx! {};
     };

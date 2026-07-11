@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TemplateGalleryView;
@@ -7,13 +7,13 @@ mod style;
 
 use components::template_card::TemplateCard;
 use dioxus::prelude::*;
-use props::TemplateGalleryProps;
+use model::TemplateGalleryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The two-column grid of template cards. Owns `.template-gallery`.
 #[component]
-pub fn TemplateGallery(props: TemplateGalleryProps) -> Element {
+pub fn TemplateGallery(props: TemplateGalleryModel) -> Element {
     let cards = props.cards;
     rsx! {
         div { class: CLASS,

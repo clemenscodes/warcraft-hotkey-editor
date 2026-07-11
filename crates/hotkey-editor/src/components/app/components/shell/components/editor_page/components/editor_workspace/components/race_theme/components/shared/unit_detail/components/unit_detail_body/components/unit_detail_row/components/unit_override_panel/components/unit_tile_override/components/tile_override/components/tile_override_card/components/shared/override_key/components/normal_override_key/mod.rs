@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::NormalOverrideKeyView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycap;
 use dioxus::prelude::*;
-use props::NormalOverrideKeyProps;
+use model::NormalOverrideKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,8 +15,8 @@ use tw_macro::assert_component;
 /// own square box and calls `on_activate` on click to start editing. Class
 /// `.normal-override-key` is load-bearing for the end-to-end selectors.
 #[component]
-pub fn NormalOverrideKey(props: NormalOverrideKeyProps) -> Element {
-    let NormalOverrideKeyProps {
+pub fn NormalOverrideKey(props: NormalOverrideKeyModel) -> Element {
+    let NormalOverrideKeyModel {
         label,
         state,
         title,

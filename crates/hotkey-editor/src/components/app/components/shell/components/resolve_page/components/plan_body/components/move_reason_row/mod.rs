@@ -1,24 +1,24 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::MoveReasonRowView;
 mod style;
-use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
+use crate::components::app::components::shell::components::resolve_page::presentation::ReasonKind;
 use components::reason_badges::fight_reason_badge::FightReasonBadge;
 use components::reason_badges::gap_pull_reason_badge::GapPullReasonBadge;
 use components::reason_badges::spill_reason_badge::SpillReasonBadge;
 use components::reason_badges::stuck_reason_badge::StuckReasonBadge;
 use components::reason_badges::swap_reason_badge::SwapReasonBadge;
 use dioxus::prelude::*;
-use props::MoveReasonRowProps;
+use model::MoveReasonRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The reason-badge row atop a move card. It routes the move's kind to the
 /// matching per-kind badge wrapper, forwarding the domain label text.
 #[component]
-pub fn MoveReasonRow(props: MoveReasonRowProps) -> Element {
+pub fn MoveReasonRow(props: MoveReasonRowModel) -> Element {
     let kind = props.kind;
     let label = props.label;
     rsx! {

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStateLineView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::AltStateLineProps;
+use model::AltStateLineModel;
 
 /// One description line under the alt-state header.
 #[component]
-pub fn AltStateLine(props: AltStateLineProps) -> Element {
+pub fn AltStateLine(props: AltStateLineModel) -> Element {
     let text = props.text;
     rsx! {
         p { class: CLASS, {text} }

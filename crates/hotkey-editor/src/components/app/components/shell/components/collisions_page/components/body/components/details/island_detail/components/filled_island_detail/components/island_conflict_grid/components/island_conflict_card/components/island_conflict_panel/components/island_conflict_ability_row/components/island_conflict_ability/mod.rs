@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::IslandConflictAbilityView;
@@ -13,8 +13,8 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;
-use hooks::{IslandConflictAbilityModel, use_island_conflict_ability};
-use props::IslandConflictAbilityProps;
+use presentation::{IslandConflictAbilityPresentation, use_island_conflict_ability};
+use model::IslandConflictAbilityModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,8 +23,8 @@ use tw_macro::assert_component;
 /// carriers dialog. The column owns the open state and mounts the dialog's host beneath
 /// itself, so no ancestor knows the dialog exists.
 #[component]
-pub fn IslandConflictAbility(props: IslandConflictAbilityProps) -> Element {
-    let IslandConflictAbilityModel {
+pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
+    let IslandConflictAbilityPresentation {
         open_state,
         icon_src,
         icon_alt,

@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::PreviewTextareaView;
 mod style;
 
 use dioxus::prelude::*;
-use props::PreviewTextareaProps;
+use model::PreviewTextareaModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The read-only serialized CustomKeys.txt view: monospaced and horizontally
 /// scrollable so long lines never wrap.
 #[component]
-pub fn PreviewTextarea(props: PreviewTextareaProps) -> Element {
+pub fn PreviewTextarea(props: PreviewTextareaModel) -> Element {
     let text = props.text;
     rsx! {
         textarea {

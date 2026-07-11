@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ActiveMenuItemView;
@@ -7,7 +7,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_icon::BurgerMenuItemIcon;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_label::BurgerMenuItemLabel;
 use dioxus::prelude::*;
-use props::ActiveMenuItemProps;
+use model::ActiveMenuItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// its dialog/preview is open, composing the icon and label. Presentational — the
 /// dispatcher names its fields and renders it when the row's visual weight is active.
 #[component]
-pub fn ActiveMenuItem(props: ActiveMenuItemProps) -> Element {
+pub fn ActiveMenuItem(props: ActiveMenuItemModel) -> Element {
     let icon = props.icon;
     let label = props.label;
     let disabled = props.disabled;

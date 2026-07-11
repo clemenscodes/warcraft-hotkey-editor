@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ClosedBreadcrumbsMenuView;
@@ -6,7 +6,7 @@ mod style;
 
 use super::shared::system_hotkeys_category_tab::SystemHotkeysCategoryTab;
 use dioxus::prelude::*;
-use props::ClosedBreadcrumbsMenuProps;
+use model::ClosedBreadcrumbsMenuModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// viewports, where the trigger stands in). Rendered by the dispatcher while the
 /// dropdown is closed; owns its listbox root and lays the tabs out in a row.
 #[component]
-pub fn ClosedBreadcrumbsMenu(props: ClosedBreadcrumbsMenuProps) -> Element {
+pub fn ClosedBreadcrumbsMenu(props: ClosedBreadcrumbsMenuModel) -> Element {
     let tabs = props.tabs;
     rsx! {
         div { class: CLASS, role: "listbox",

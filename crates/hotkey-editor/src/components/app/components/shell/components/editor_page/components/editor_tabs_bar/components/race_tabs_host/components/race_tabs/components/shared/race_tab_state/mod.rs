@@ -1,11 +1,11 @@
 pub mod components;
-mod logic;
+mod presentation;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::RaceTabBinding;
 use components::active_race_tab::ActiveRaceTab;
 use components::inactive_race_tab::InactiveRaceTab;
 use dioxus::prelude::*;
-use logic::RaceTabBehavior;
+use presentation::RaceTabBehavior;
 use tw_macro::assert_component;
 
 /// The active-vs-inactive dispatcher for one race tab, shared by all five per-race

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::HotkeyUnitRowIconView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::shared::framed_icon::
     FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-use props::HotkeyUnitRowIconProps;
+use model::HotkeyUnitRowIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// `FramedIcon` draws the bordered, rounded image and renders nothing when the unit
 /// has no icon.
 #[component]
-pub fn HotkeyUnitRowIcon(props: HotkeyUnitRowIconProps) -> Element {
+pub fn HotkeyUnitRowIcon(props: HotkeyUnitRowIconModel) -> Element {
     let Some(source) = props.icon_url else {
         return rsx! {};
     };

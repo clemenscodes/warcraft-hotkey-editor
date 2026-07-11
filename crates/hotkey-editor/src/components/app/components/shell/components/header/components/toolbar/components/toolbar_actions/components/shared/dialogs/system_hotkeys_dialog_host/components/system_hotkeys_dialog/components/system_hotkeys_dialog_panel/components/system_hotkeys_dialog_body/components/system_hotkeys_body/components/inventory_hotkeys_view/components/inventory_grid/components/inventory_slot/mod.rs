@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::InventorySlotView;
@@ -7,13 +7,13 @@ pub use view::InventorySlotView;
 use components::inventory_empty_slot::InventoryEmptySlot;
 use components::inventory_filled_slot::InventoryFilledSlot;
 use dioxus::prelude::*;
-use props::InventorySlotProps;
+use model::InventorySlotModel;
 use tw_macro::assert_component;
 
 /// One inventory grid position: a filled, editable cell, or the empty placeholder.
 /// A pure dispatcher, so it carries no class of its own.
 #[component]
-pub fn InventorySlot(props: InventorySlotProps) -> Element {
+pub fn InventorySlot(props: InventorySlotModel) -> Element {
     let Some(filled) = props.filled else {
         return rsx! {
             InventoryEmptySlot {}

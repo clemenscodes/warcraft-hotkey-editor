@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TileGlowIconView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::framed_icon::components::shared::framed_icon_image::FramedIconImage;
 use dioxus::prelude::*;
-use props::TileGlowIconProps;
+use model::TileGlowIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// gold hover glow. Presentational — the dispatcher builds its props and renders it
 /// when the resolved look is `TileGlow`. Absent `source` draws the empty framed square.
 #[component]
-pub fn TileGlowIcon(props: TileGlowIconProps) -> Element {
+pub fn TileGlowIcon(props: TileGlowIconModel) -> Element {
     let Some(source) = props.source else {
         return rsx! {
             div { class: CLASS }

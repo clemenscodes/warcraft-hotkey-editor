@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::HeroLevelMenuView;
@@ -8,14 +8,14 @@ mod style;
 
 use components::hero_level_option::HeroLevelOption;
 use dioxus::prelude::*;
-use logic::hero_level_options;
-use props::HeroLevelMenuProps;
+use model::HeroLevelMenuModel;
+use presentation::hero_level_options;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The dropdown list of selectable hero levels.
 #[component]
-pub fn HeroLevelMenu(props: HeroLevelMenuProps) -> Element {
+pub fn HeroLevelMenu(props: HeroLevelMenuModel) -> Element {
     let options = hero_level_options(&props);
     rsx! {
         div {

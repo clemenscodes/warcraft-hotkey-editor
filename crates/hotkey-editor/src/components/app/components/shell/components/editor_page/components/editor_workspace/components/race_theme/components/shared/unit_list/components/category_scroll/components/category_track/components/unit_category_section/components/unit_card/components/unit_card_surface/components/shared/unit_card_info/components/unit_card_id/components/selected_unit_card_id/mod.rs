@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SelectedUnitCardIdView;
 mod style;
 
 use dioxus::prelude::*;
-use props::SelectedUnitCardIdProps;
+use model::SelectedUnitCardIdModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// reduced opacity, read from the theme container's `--race-color`. Presentational —
 /// the dispatcher builds its props and renders it when the card is selected.
 #[component]
-pub fn SelectedUnitCardId(props: SelectedUnitCardIdProps) -> Element {
+pub fn SelectedUnitCardId(props: SelectedUnitCardIdModel) -> Element {
     rsx! {
         code {
             class: CLASS,

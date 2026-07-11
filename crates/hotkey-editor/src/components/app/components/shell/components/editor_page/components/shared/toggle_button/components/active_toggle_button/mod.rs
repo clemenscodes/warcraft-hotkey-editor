@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ActiveToggleButtonView;
 mod style;
 
 use dioxus::prelude::*;
-use props::ActiveToggleButtonProps;
+use model::ActiveToggleButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The active toggle button: the shared gold pill lit to show it is the current choice
 /// in its group. Presentational — the dispatcher renders it for the one active button.
 #[component]
-pub fn ActiveToggleButton(props: ActiveToggleButtonProps) -> Element {
+pub fn ActiveToggleButton(props: ActiveToggleButtonModel) -> Element {
     let label = props.label;
     let title = props.title;
     let onclick = props.onclick;

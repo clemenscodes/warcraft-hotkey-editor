@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStatePositionButtonView;
@@ -9,12 +9,12 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::AltStatePositionButtonProps;
+use model::AltStatePositionButtonModel;
 
 /// The crosshair button that opens the command-card position picker for an off-state
 /// or upgraded-form button.
 #[component]
-pub fn AltStatePositionButton(props: AltStatePositionButtonProps) -> Element {
+pub fn AltStatePositionButton(props: AltStatePositionButtonModel) -> Element {
     let title = props.title;
     let aria_label = props.aria_label;
     let on_click = props.on_click;

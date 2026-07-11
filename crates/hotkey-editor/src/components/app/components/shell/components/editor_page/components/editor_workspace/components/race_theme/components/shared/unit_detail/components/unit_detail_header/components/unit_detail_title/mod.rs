@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitDetailTitleView;
@@ -8,13 +8,13 @@ mod style;
 use components::unit_id::UnitId;
 use components::unit_name_row::UnitNameRow;
 use dioxus::prelude::*;
-use props::UnitDetailTitleProps;
+use model::UnitDetailTitleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The title column of the header: the name row and the unit id.
 #[component]
-pub fn UnitDetailTitle(props: UnitDetailTitleProps) -> Element {
+pub fn UnitDetailTitle(props: UnitDetailTitleModel) -> Element {
     let unit_name = props.unit_name;
     let unit_id = props.unit_id;
     let has_hero_attributes = props.has_hero_attributes;

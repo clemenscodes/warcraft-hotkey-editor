@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideEmptyView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideEmptyProps;
+use model::TileOverrideEmptyModel;
 
 /// The placeholder shown in the override panel before a grid tile is selected.
 #[component]
-pub fn TileOverrideEmpty(props: TileOverrideEmptyProps) -> Element {
+pub fn TileOverrideEmpty(props: TileOverrideEmptyModel) -> Element {
     let message = props.message;
     rsx! {
         div { class: CLASS,

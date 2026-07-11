@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CombatRowsView;
@@ -12,7 +12,7 @@ use components::damage_per_second_row::DamagePerSecondRow;
 use components::damage_row::DamageRow;
 use components::range_row::RangeRow;
 use dioxus::prelude::*;
-use props::CombatRowsProps;
+use model::CombatRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,7 +20,7 @@ use tw_macro::assert_component;
 /// damage-per-second rows, the attack-type row, and the damage matchup grid. It names
 /// its rows directly — each row owns its own look.
 #[component]
-pub fn CombatRows(props: CombatRowsProps) -> Element {
+pub fn CombatRows(props: CombatRowsModel) -> Element {
     let damage = props.damage;
     let range = props.range;
     let speed = props.speed;

@@ -1,16 +1,16 @@
 mod data;
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictMoreView;
 mod style;
 use dioxus::prelude::*;
-use props::ConflictMoreProps;
+use model::ConflictMoreModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn ConflictMore(props: ConflictMoreProps) -> Element {
+pub fn ConflictMore(props: ConflictMoreModel) -> Element {
     let count = props.count;
     let onclick = props.onclick;
     let more_label = data::MORE_LABEL;

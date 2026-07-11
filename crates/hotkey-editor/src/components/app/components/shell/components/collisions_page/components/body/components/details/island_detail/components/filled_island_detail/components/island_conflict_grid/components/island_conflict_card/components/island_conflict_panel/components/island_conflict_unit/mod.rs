@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::IslandConflictUnitView;
@@ -10,8 +10,8 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use components::conflict_unit_icon::ConflictUnitIcon;
 use components::island_conflict_unit_name::IslandConflictUnitName;
 use dioxus::prelude::*;
-use hooks::use_island_conflict_unit;
-use props::IslandConflictUnitProps;
+use presentation::use_island_conflict_unit;
+use model::IslandConflictUnitModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// object id, all deep-linking into the editor focused on that unit through the
 /// navigation read from context.
 #[component]
-pub fn IslandConflictUnit(props: IslandConflictUnitProps) -> Element {
+pub fn IslandConflictUnit(props: IslandConflictUnitModel) -> Element {
     let model = use_island_conflict_unit(&props);
     rsx! {
         button {

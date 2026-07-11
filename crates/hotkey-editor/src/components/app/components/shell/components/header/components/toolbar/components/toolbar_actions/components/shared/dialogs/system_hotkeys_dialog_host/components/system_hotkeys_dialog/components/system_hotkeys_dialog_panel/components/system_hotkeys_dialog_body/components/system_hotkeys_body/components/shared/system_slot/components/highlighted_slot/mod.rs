@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::HighlightedSlotView;
@@ -6,7 +6,7 @@ mod style;
 
 use super::shared::slot_contents::SlotContents;
 use dioxus::prelude::*;
-use props::HighlightedSlotProps;
+use model::HighlightedSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// glow overlay, composing the shared slot content. Presentational — the dispatcher
 /// renders it when the slot's glow state is highlighted.
 #[component]
-pub fn HighlightedSlot(props: HighlightedSlotProps) -> Element {
+pub fn HighlightedSlot(props: HighlightedSlotModel) -> Element {
     let slot_label = props.slot_label;
     let key_label = props.key_label;
     let conflict = props.conflict;

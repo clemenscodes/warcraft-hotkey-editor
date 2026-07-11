@@ -1,0 +1,12 @@
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
+use dioxus::prelude::*;
+
+/// The published `View` contract mirroring [`IdleCollisionCardSurfaceModel`], threaded to this component as data.
+#[derive(Clone, PartialEq)]
+pub struct IdleCollisionCardSurfaceView {
+    pub onclick: EventHandler<MouseEvent>,
+    pub count: usize,
+    pub content: CollisionCardContent,
+}
+
+impl ddd::View for IdleCollisionCardSurfaceView {}

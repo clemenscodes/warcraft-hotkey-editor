@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitIdView;
 mod style;
 
 use dioxus::prelude::*;
-use props::UnitIdProps;
+use model::UnitIdModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unit's database id.
 #[component]
-pub fn UnitId(props: UnitIdProps) -> Element {
+pub fn UnitId(props: UnitIdModel) -> Element {
     rsx! {
         code {
             class: CLASS,

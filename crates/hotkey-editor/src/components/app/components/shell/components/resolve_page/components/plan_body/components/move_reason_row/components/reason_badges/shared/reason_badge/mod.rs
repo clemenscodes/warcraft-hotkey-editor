@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ReasonBadgeView;
 mod style;
 
 use dioxus::prelude::*;
-use props::ReasonBadgeProps;
+use model::ReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// no other component can name or reuse these classes. Each reason reuses it by
 /// composition: a per-reason wrapper publishes `--reason-color` and renders `ReasonBadge`.
 #[component]
-pub fn ReasonBadge(props: ReasonBadgeProps) -> Element {
+pub fn ReasonBadge(props: ReasonBadgeModel) -> Element {
     let label = props.label;
     rsx! {
         span {

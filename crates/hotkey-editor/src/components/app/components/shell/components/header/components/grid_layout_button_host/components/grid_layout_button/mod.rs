@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::GridLayoutButtonView;
@@ -8,7 +8,7 @@ mod style;
 use components::grid_layout_button_icon::GridLayoutButtonIcon;
 use components::grid_layout_button_label::GridLayoutButtonLabel;
 use dioxus::prelude::*;
-use props::GridLayoutButtonProps;
+use model::GridLayoutButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// styled apart from the icon-only toolbar buttons. Presentational: its open state
 /// and toggle handler arrive as props.
 #[component]
-pub fn GridLayoutButton(props: GridLayoutButtonProps) -> Element {
+pub fn GridLayoutButton(props: GridLayoutButtonModel) -> Element {
     let is_open = props.is_open;
     let onclick = props.onclick;
     rsx! {

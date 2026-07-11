@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::AttributesColumnView;
@@ -9,8 +9,8 @@ mod style;
 use super::shared::stat_icon_frame::StatIconFrame;
 use components::attribute_rows::AttributeRows;
 use dioxus::prelude::*;
-use logic::AttributeFigures;
-use props::AttributesColumnProps;
+use model::AttributesColumnModel;
+use presentation::AttributeFigures;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// rows, laid into the `attributes` grid area. Present only for a hero unit; an
 /// ordinary unit renders nothing here.
 #[component]
-pub fn AttributesColumn(props: AttributesColumnProps) -> Element {
+pub fn AttributesColumn(props: AttributesColumnModel) -> Element {
     let Some(hero) = props.hero else {
         return rsx! {};
     };

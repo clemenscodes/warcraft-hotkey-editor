@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SuccessToastTitleView;
 mod style;
 
 use dioxus::prelude::*;
-use props::SuccessToastTitleProps;
+use model::SuccessToastTitleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The success toast headline: the uppercase gold heading look tinted for success.
 #[component]
-pub fn SuccessToastTitle(props: SuccessToastTitleProps) -> Element {
+pub fn SuccessToastTitle(props: SuccessToastTitleModel) -> Element {
     let title = props.title;
     rsx! {
         div {

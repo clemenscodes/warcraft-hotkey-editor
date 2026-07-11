@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::DefenseTypeRowView;
@@ -7,7 +7,7 @@ mod style;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_label::StatLabel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
 use dioxus::prelude::*;
-use props::DefenseTypeRowProps;
+use model::DefenseTypeRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ const LABEL_TEXT: &str = "Defense Type";
 
 /// The unit's defense type — what governs how incoming damage is scaled.
 #[component]
-pub fn DefenseTypeRow(props: DefenseTypeRowProps) -> Element {
+pub fn DefenseTypeRow(props: DefenseTypeRowModel) -> Element {
     let value = props.value;
     rsx! {
         div {

@@ -1,10 +1,10 @@
-mod hooks;
+mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::SystemHotkeysDialogHost;
 use dioxus::prelude::*;
-use hooks::{use_system_hotkeys_button, SystemHotkeysButtonModel};
+use presentation::{use_system_hotkeys_button, SystemHotkeysButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 

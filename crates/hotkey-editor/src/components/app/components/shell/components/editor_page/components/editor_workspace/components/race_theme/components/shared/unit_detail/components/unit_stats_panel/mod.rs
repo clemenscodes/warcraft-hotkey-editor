@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitStatsPanelView;
@@ -12,8 +12,8 @@ use components::combat_column::CombatColumn;
 use components::defense_column::DefenseColumn;
 use components::vitality_column::VitalityColumn;
 use dioxus::prelude::*;
-use hooks::{UnitStatsPanelModel, use_unit_stats_panel};
-use props::UnitStatsPanelProps;
+use model::UnitStatsPanelModel;
+use presentation::{UnitStatsPanelPresentation, use_unit_stats_panel};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,8 +23,8 @@ use tw_macro::assert_component;
 /// are guarded columns that render nothing when the unit has no attack or is not a
 /// hero.
 #[component]
-pub fn UnitStatsPanel(props: UnitStatsPanelProps) -> Element {
-    let UnitStatsPanelModel {
+pub fn UnitStatsPanel(props: UnitStatsPanelModel) -> Element {
+    let UnitStatsPanelPresentation {
         hit_points,
         hit_points_regen,
         mana,

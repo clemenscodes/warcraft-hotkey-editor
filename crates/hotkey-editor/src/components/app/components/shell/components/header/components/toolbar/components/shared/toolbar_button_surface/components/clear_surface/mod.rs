@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ClearSurfaceView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::components::shared::toolbar_button_icon::ToolbarButtonIcon;
 use dioxus::prelude::*;
-use props::ClearSurfaceProps;
+use model::ClearSurfaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// resting glow, the affirmative "all clear" look. Presentational — the dispatcher
 /// builds its props and renders it when the surface state is `Clear`.
 #[component]
-pub fn ClearSurface(props: ClearSurfaceProps) -> Element {
+pub fn ClearSurface(props: ClearSurfaceModel) -> Element {
     let icon = props.icon;
     rsx! {
         button {

@@ -1,6 +1,6 @@
 pub mod components;
 mod data;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitOverridePanelView;
@@ -10,14 +10,14 @@ use crate::components::app::components::shell::components::shared::grid_heading:
 use components::unit_tile_override::UnitTileOverride;
 use data::HEADING;
 use dioxus::prelude::*;
-use props::UnitOverridePanelProps;
+use model::UnitOverridePanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The override panel column: the "Hotkey override" heading above the override card.
 /// Its own classed `aside`, sticky at the bottom on phones.
 #[component]
-pub fn UnitOverridePanel(props: UnitOverridePanelProps) -> Element {
+pub fn UnitOverridePanel(props: UnitOverridePanelModel) -> Element {
     let override_target = props.override_target;
     let detail = override_target.detail;
     let active_container_slots = override_target.active_container_slots;

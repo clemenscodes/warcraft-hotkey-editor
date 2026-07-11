@@ -1,10 +1,10 @@
-mod props;
+mod model;
 mod view;
 
 mod style;
 
 use dioxus::prelude::*;
-use props::ActiveHitPointsRegenGainProps;
+use model::ActiveHitPointsRegenGainModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,7 +12,7 @@ use tw_macro::assert_component;
 /// [`HitPointsRegenGain`](super::super::HitPointsRegenGain) dispatcher when the unit
 /// regenerates health.
 #[component]
-pub fn ActiveHitPointsRegenGain(props: ActiveHitPointsRegenGainProps) -> Element {
+pub fn ActiveHitPointsRegenGain(props: ActiveHitPointsRegenGainModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

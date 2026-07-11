@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-pub mod logic;
-mod props;
+mod model;
+pub mod presentation;
 mod view;
 
 pub use view::ResolvePageView;
@@ -14,8 +13,8 @@ use components::empty_state::EmptyState;
 use components::plan_body::PlanBody;
 use components::plan_header::PlanHeader;
 use dioxus::prelude::*;
-use hooks::{ResolvePageModel, ResolvePlanPresentation, use_resolve_page};
-use props::ResolvePageProps;
+use model::ResolvePageModel;
+use presentation::{ResolvePagePresentation, ResolvePlanPresentation, use_resolve_page};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -25,19 +24,19 @@ use tw_macro::assert_component;
 /// when there is nothing to resolve. The hook shapes the state's data; the body
 /// only places it.
 #[component]
-pub fn ResolvePage(props: ResolvePageProps) -> Element {
+pub fn ResolvePage(props: ResolvePageModel) -> Element {
     let plan = match use_resolve_page(&props) {
-        ResolvePageModel::NoFile => {
+        ResolvePagePresentation::NoFile => {
             return rsx! {
                 EmptyState {}
             };
         }
-        ResolvePageModel::Clear => {
+        ResolvePagePresentation::Clear => {
             return rsx! {
                 ClearState {}
             };
         }
-        ResolvePageModel::Plan(plan) => *plan,
+        ResolvePagePresentation::Plan(plan) => *plan,
     };
     let ResolvePlanPresentation {
         moves_text,

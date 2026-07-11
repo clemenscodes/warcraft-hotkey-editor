@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TileIconView;
 mod style;
 
 use dioxus::prelude::*;
-use props::TileIconProps;
+use model::TileIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The ability icon, filling the tile. Rendered only when the occupant has an
 /// icon; an iconless occupant falls back to the sibling `TileLabel`.
 #[component]
-pub fn TileIcon(props: TileIconProps) -> Element {
+pub fn TileIcon(props: TileIconModel) -> Element {
     let Some(src) = props.src else {
         return rsx! {};
     };

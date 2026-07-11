@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::OverrideKeyView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::shared::editable_keyc
 use components::normal_override_key::NormalOverrideKey;
 use components::special_override_key::SpecialOverrideKey;
 use dioxus::prelude::*;
-use props::OverrideKeyProps;
+use model::OverrideKeyModel;
 use tw_macro::assert_component;
 
 /// The hotkey-capture button shown in the override panel header (and the alt/upgrade
@@ -17,8 +17,8 @@ use tw_macro::assert_component;
 /// `NormalOverrideKey`. Each variant owns its own classed button root and calls
 /// `on_activate` on click.
 #[component]
-pub fn OverrideKey(props: OverrideKeyProps) -> Element {
-    let OverrideKeyProps {
+pub fn OverrideKey(props: OverrideKeyModel) -> Element {
+    let OverrideKeyModel {
         label,
         is_editing,
         is_special,

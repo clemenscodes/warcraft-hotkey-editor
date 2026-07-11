@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ToggleButtonView;
@@ -7,7 +7,7 @@ pub use view::ToggleButtonView;
 use components::active_toggle_button::ActiveToggleButton;
 use components::idle_toggle_button::IdleToggleButton;
 use dioxus::prelude::*;
-use props::ToggleButtonProps;
+use model::ToggleButtonModel;
 use tw_macro::assert_component;
 
 /// The shared labeled pill button (mode, search-field, catalog-visibility). A pure
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// dispatcher owns no class and there is no `data-active`, so the look follows the
 /// component, not an attribute.
 #[component]
-pub fn ToggleButton(props: ToggleButtonProps) -> Element {
+pub fn ToggleButton(props: ToggleButtonModel) -> Element {
     let label = props.label;
     let title = props.title;
     let onclick = props.onclick;

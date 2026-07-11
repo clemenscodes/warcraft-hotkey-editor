@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideInfoOnlyView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideInfoOnlyProps;
+use model::TileOverrideInfoOnlyModel;
 
 /// The muted note shown for a passive ability in place of a hotkey field.
 #[component]
-pub fn TileOverrideInfoOnly(props: TileOverrideInfoOnlyProps) -> Element {
+pub fn TileOverrideInfoOnly(props: TileOverrideInfoOnlyModel) -> Element {
     let text = props.text;
     rsx! {
         p { class: CLASS, {text} }

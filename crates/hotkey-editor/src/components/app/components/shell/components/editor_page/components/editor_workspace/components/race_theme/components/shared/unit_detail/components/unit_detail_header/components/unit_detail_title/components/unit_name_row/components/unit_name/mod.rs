@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitNameView;
 mod style;
 
 use dioxus::prelude::*;
-use props::UnitNameProps;
+use model::UnitNameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unit's name, in gold Friz Quadrata.
 #[component]
-pub fn UnitName(props: UnitNameProps) -> Element {
+pub fn UnitName(props: UnitNameModel) -> Element {
     let text = props.text;
     rsx! {
         h2 {

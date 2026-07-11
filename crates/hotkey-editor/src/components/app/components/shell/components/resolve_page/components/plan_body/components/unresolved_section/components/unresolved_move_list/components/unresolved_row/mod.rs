@@ -1,18 +1,18 @@
 pub mod components;
 mod data;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnresolvedRowView;
 mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRow;
-use crate::components::app::components::shell::components::resolve_page::logic::ReasonKind;
+use crate::components::app::components::shell::components::resolve_page::presentation::ReasonKind;
 use components::fight_row::FightRow;
 use components::move_transition::MoveTransition;
 use dioxus::prelude::*;
-use props::UnresolvedRowProps;
+use model::UnresolvedRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,9 +20,9 @@ use tw_macro::assert_component;
 /// is stuck on. It owns the orc-accented card surface directly and hands each region to
 /// its own child component.
 #[component]
-pub fn UnresolvedRow(props: UnresolvedRowProps) -> Element {
+pub fn UnresolvedRow(props: UnresolvedRowModel) -> Element {
     let unresolved_view = props.unresolved_view;
-    let placements = logic::placements(&unresolved_view);
+    let placements = presentation::placements(&unresolved_view);
     rsx! {
         div {
             class: CLASS,

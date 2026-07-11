@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod state;
 mod style;
 
@@ -11,8 +10,8 @@ use components::mobile_category_tabs::MobileCategoryTabs;
 use components::search_field_toggle::SearchFieldToggle;
 use components::unit_list_search::UnitListSearch;
 use dioxus::prelude::*;
-use hooks::use_unit_list;
-use props::UnitListModel;
+use model::UnitListModel;
+use presentation::use_unit_list;
 use style::CLASS;
 use tw_macro::assert_component;
 use warcraft_api::UnitKind;

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::MoveListView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::move_row::MoveRow;
 use dioxus::prelude::*;
-use props::MoveListProps;
+use model::MoveListModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// owns the auto-fill grid directly. Renders nothing when the plan has no moves (only
 /// unresolved abilities), so the plan body never has to branch on it.
 #[component]
-pub fn MoveList(props: MoveListProps) -> Element {
+pub fn MoveList(props: MoveListModel) -> Element {
     let Some(section) = props.section else {
         return rsx! {};
     };

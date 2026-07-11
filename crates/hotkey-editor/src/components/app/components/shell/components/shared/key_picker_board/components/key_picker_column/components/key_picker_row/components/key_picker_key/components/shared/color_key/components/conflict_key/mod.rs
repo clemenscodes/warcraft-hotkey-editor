@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictKeyView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-use props::ConflictKeyProps;
+use model::ConflictKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,8 +14,8 @@ use tw_macro::assert_component;
 /// hover. It owns its own button and shares only the shaped attributes and the conflict
 /// tooltip leaf, which carries the "already used by" message.
 #[component]
-pub fn ConflictKey(props: ConflictKeyProps) -> Element {
-    let ConflictKeyProps {
+pub fn ConflictKey(props: ConflictKeyModel) -> Element {
+    let ConflictKeyModel {
         label,
         disabled,
         onclick,

@@ -1,8 +1,7 @@
 pub mod components;
 mod data;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::LayoutEditorView;
@@ -13,8 +12,8 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_layout_editor;
-use props::LayoutEditorProps;
+use presentation::use_layout_editor;
+use model::LayoutEditorModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -24,7 +23,7 @@ use tw_macro::assert_component;
 /// nested key picker (a second modal) is shown while a cell is being edited. The
 /// `on_open_change` guard makes opening the nested picker not dismiss the editor.
 #[component]
-pub fn LayoutEditor(props: LayoutEditorProps) -> Element {
+pub fn LayoutEditor(props: LayoutEditorModel) -> Element {
     let model = use_layout_editor(&props);
     let open_signal = model.open;
     use_body_scroll_lock(open_signal);

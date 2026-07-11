@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::SystemHotkeysCategoryTabView;
@@ -11,8 +11,8 @@ use components::popover_active_category_tab::PopoverActiveCategoryTab;
 use components::popover_inactive_category_tab::PopoverInactiveCategoryTab;
 use components::system_hotkeys_category_separator::SystemHotkeysCategorySeparator;
 use dioxus::prelude::*;
-use hooks::use_system_hotkeys_category_tab;
-use props::SystemHotkeysCategoryTabProps;
+use model::SystemHotkeysCategoryTabModel;
+use presentation::use_system_hotkeys_category_tab;
 use tw_macro::assert_component;
 
 /// One selectable category in the breadcrumbs. A pure dispatcher: from the tab's
@@ -21,7 +21,7 @@ use tw_macro::assert_component;
 /// `PopoverActiveCategoryTab` xor `PopoverInactiveCategoryTab` — followed by a
 /// trailing separator on all but the last (only in the tab bar; the popover has none).
 #[component]
-pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabProps) -> Element {
+pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabModel) -> Element {
     let model = use_system_hotkeys_category_tab(&props);
     let menu_open = model.menu_open;
     let is_active = model.is_active;

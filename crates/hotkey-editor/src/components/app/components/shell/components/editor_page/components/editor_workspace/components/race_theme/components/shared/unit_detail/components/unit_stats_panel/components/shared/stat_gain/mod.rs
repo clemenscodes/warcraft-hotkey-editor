@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 pub use view::StatGainView;
 
@@ -7,7 +7,7 @@ use super::stat_figure::StatFigure;
 use components::active_stat_gain::ActiveStatGain;
 use components::muted_stat_gain::MutedStatGain;
 use dioxus::prelude::*;
-use props::StatGainProps;
+use model::StatGainModel;
 use tw_macro::assert_component;
 
 /// A stat row's per-level growth in the default treatment: green, tabular text sitting
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// and this leaf renders the active look (`ActiveStatGain`) xor the muted look
 /// (`MutedStatGain`), each built by `From`.
 #[component]
-pub fn StatGain<Figure: StatFigure>(props: StatGainProps<Figure>) -> Element {
+pub fn StatGain<Figure: StatFigure>(props: StatGainModel<Figure>) -> Element {
     let value = props.value;
     let is_muted = value.is_muted();
     let text = value.display();

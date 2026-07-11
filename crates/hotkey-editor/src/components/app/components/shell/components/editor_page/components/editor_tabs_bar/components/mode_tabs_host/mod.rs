@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::mode_tabs::ModeTabs;
 use dioxus::prelude::*;
-use hooks::{ModeTabsInputs, use_mode_tabs_host};
+use presentation::{ModeTabsInputs, use_mode_tabs_host};
 use style::CLASS;
 use tw_macro::assert_component;
 

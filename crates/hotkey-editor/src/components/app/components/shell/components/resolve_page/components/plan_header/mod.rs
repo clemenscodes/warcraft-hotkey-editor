@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::PlanHeaderView;
@@ -7,13 +7,13 @@ mod style;
 use components::apply_button::ApplyButton;
 use components::plan_summary::PlanSummary;
 use dioxus::prelude::*;
-use props::PlanHeaderProps;
+use model::PlanHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The plan header row: cascade summary on the left, Apply button on the right.
 #[component]
-pub fn PlanHeader(props: PlanHeaderProps) -> Element {
+pub fn PlanHeader(props: PlanHeaderModel) -> Element {
     let moves_text = props.moves_text;
     let unresolved_count = props.unresolved_count;
     let running = props.running;

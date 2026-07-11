@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::PositionsContentView;
@@ -7,14 +7,14 @@ mod style;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::island_detail::IslandDetail;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::island_sidebar::IslandSidebar;
 use dioxus::prelude::*;
-use props::PositionsContentProps;
+use model::PositionsContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The position-collision two-pane content: the island sidebar column beside the
 /// fluid island detail pane.
 #[component]
-pub fn PositionsContent(props: PositionsContentProps) -> Element {
+pub fn PositionsContent(props: PositionsContentModel) -> Element {
     let sidebar_islands = props.islands.clone();
     let detail_islands = props.islands;
     rsx! {

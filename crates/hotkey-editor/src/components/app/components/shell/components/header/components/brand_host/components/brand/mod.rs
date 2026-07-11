@@ -1,13 +1,13 @@
 pub mod components;
 mod data;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::brand_decoration_leading::BrandDecorationLeading;
 use components::brand_decoration_trailing::BrandDecorationTrailing;
 use components::brand_title::BrandTitle;
 use dioxus::prelude::*;
-use hooks::use_brand;
+use presentation::use_brand;
 use style::CLASS;
 use tw_macro::assert_component;
 

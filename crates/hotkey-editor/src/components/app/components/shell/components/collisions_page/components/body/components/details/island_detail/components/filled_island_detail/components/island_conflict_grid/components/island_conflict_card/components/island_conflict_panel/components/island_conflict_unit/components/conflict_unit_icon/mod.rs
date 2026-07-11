@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictUnitIconView;
@@ -7,7 +7,7 @@ use crate::components::app::components::shell::components::shared::framed_icon::
     FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-use props::ConflictUnitIconProps;
+use model::ConflictUnitIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// gold glow on hover; the shared `FramedIcon` draws the bordered, rounded image and
 /// renders nothing when the unit has no icon.
 #[component]
-pub fn ConflictUnitIcon(props: ConflictUnitIconProps) -> Element {
+pub fn ConflictUnitIcon(props: ConflictUnitIconModel) -> Element {
     let Some(source) = props.src else {
         return rsx! {};
     };

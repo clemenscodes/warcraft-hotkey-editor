@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BelowLeftTooltipView;
 mod style;
 
 use dioxus::prelude::*;
-use props::BelowLeftTooltipProps;
+use model::BelowLeftTooltipModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// its own bubble and the positioning utilities for this placement and anchor across
 /// both `@supports` bands; it shows only the message it is handed.
 #[component]
-pub fn BelowLeftTooltip(props: BelowLeftTooltipProps) -> Element {
+pub fn BelowLeftTooltip(props: BelowLeftTooltipModel) -> Element {
     let text = props.text;
     rsx! {
         span {

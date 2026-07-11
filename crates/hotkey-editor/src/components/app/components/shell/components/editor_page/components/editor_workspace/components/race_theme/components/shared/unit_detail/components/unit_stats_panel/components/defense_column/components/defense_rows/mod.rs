@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::DefenseRowsView;
@@ -11,7 +11,7 @@ use components::defense_type_row::DefenseTypeRow;
 use components::effective_hit_points_row::EffectiveHitPointsRow;
 use components::evasion_row::EvasionRow;
 use dioxus::prelude::*;
-use props::DefenseRowsProps;
+use model::DefenseRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// effective-hit-points rows, the guarded evasion row, and the defender's matchup grid.
 /// It names its rows directly — each row owns its own look.
 #[component]
-pub fn DefenseRows(props: DefenseRowsProps) -> Element {
+pub fn DefenseRows(props: DefenseRowsModel) -> Element {
     let armor = props.armor;
     let defense_type = props.defense_type;
     let effective_hit_points = props.effective_hit_points;

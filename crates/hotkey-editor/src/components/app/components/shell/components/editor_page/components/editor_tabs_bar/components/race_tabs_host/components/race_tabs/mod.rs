@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::RaceTabsView;
@@ -12,9 +12,9 @@ use components::nightelf_race_tab::NightelfRaceTab;
 use components::orc_race_tab::OrcRaceTab;
 use components::undead_race_tab::UndeadRaceTab;
 use dioxus::prelude::*;
-use logic::RaceTabBindings;
-use props::RaceTabBinding;
-use props::RaceTabsProps;
+use model::RaceTabBinding;
+use model::RaceTabsModel;
+use presentation::RaceTabBindings;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +23,7 @@ use tw_macro::assert_component;
 /// each tab's handlers — so only a finished `RaceTabBinding` flows to each per-race
 /// wrapper, never the navigation itself. Each wrapper adds only its own colours on top.
 #[component]
-pub fn RaceTabs(props: RaceTabsProps) -> Element {
+pub fn RaceTabs(props: RaceTabsModel) -> Element {
     let RaceTabBindings {
         human,
         orc,

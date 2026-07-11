@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AvailableKeyView;
@@ -6,15 +6,15 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-use props::AvailableKeyProps;
+use model::AvailableKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The look for a free, pickable key: gold-bordered, brightening on hover. It owns its
 /// own button and shares only the shaped attributes and the conflict tooltip leaf.
 #[component]
-pub fn AvailableKey(props: AvailableKeyProps) -> Element {
-    let AvailableKeyProps {
+pub fn AvailableKey(props: AvailableKeyModel) -> Element {
+    let AvailableKeyModel {
         label,
         disabled,
         onclick,

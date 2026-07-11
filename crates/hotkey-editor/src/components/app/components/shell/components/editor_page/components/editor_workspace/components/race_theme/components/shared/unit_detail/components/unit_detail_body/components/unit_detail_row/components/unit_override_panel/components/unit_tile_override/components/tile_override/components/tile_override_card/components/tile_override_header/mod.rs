@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideHeaderView;
@@ -12,12 +12,12 @@ use components::tile_override_hotkey_slot::TileOverrideHotkeySlot;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideHeaderProps;
+use model::TileOverrideHeaderModel;
 
 /// The header row of the override panel: the name/id column and the hotkey slot.
 #[component]
-pub fn TileOverrideHeader(props: TileOverrideHeaderProps) -> Element {
-    let TileOverrideHeaderProps {
+pub fn TileOverrideHeader(props: TileOverrideHeaderModel) -> Element {
+    let TileOverrideHeaderModel {
         name_text,
         object_id,
         show_hotkey_field,

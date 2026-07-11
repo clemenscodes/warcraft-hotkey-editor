@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UpgradeTierView;
@@ -13,20 +13,20 @@ use crate::components::app::components::shell::components::shared::icons::{
 };
 use components::tile_override_tier_button::TileOverrideTierButton;
 use components::tile_override_tier_label::TileOverrideTierLabel;
-use hooks::{UpgradeTierModel, use_upgrade_tier};
+use presentation::{UpgradeTierPresentation, use_upgrade_tier};
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::UpgradeTierProps;
+use model::UpgradeTierModel;
 
 /// Tier-cycling footer for multi-level abilities: a prev/next arrow around a
 /// "Level N of M" caption.
 #[component]
-pub fn UpgradeTier(props: UpgradeTierProps) -> Element {
+pub fn UpgradeTier(props: UpgradeTierModel) -> Element {
     if props.total_tier_count <= 1 {
         return rsx! {};
     }
-    let UpgradeTierModel {
+    let UpgradeTierPresentation {
         on_prev,
         on_next,
         tier_label_text,

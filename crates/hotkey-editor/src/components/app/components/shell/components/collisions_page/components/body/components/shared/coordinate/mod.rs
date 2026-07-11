@@ -1,16 +1,16 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::CoordinateView;
 mod style;
 use dioxus::prelude::*;
-use props::CoordinateProps;
+use model::CoordinateModel;
 use style::CLASS;
 use tw_macro::assert_component;
 /// A command-card coordinate: displays the column and row of the domain
 /// `GridCoordinate` it is handed.
 #[component]
-pub fn Coordinate(props: CoordinateProps) -> Element {
+pub fn Coordinate(props: CoordinateModel) -> Element {
     let coordinate = props.coordinate;
     let column = u8::from(coordinate.column());
     let row = u8::from(coordinate.row());

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UpgradePositionPickerPanelView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-use props::UpgradePositionPickerPanelProps;
+use model::UpgradePositionPickerPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,8 +17,8 @@ use tw_macro::assert_component;
 /// project class ever lands on the library element. Holds the header row above the
 /// scrolling grid body.
 #[component]
-pub fn UpgradePositionPickerPanel(props: UpgradePositionPickerPanelProps) -> Element {
-    let UpgradePositionPickerPanelProps {
+pub fn UpgradePositionPickerPanel(props: UpgradePositionPickerPanelModel) -> Element {
+    let UpgradePositionPickerPanelModel {
         title,
         on_close,
         explainer_text,

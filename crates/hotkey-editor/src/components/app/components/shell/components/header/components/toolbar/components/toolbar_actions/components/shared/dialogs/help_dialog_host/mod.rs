@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::help_dialog::HelpDialog;
 use dioxus::prelude::*;
-use hooks::use_help_dialog_host;
+use presentation::use_help_dialog_host;
 use style::CLASS;
 use tw_macro::assert_component;
 

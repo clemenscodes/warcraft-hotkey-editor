@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::VitalityColumnView;
@@ -10,7 +10,7 @@ use components::hit_points_row::HitPointsRow;
 use components::mana_regen_row::ManaRegenRow;
 use components::mana_row::ManaRow;
 use dioxus::prelude::*;
-use props::VitalityColumnProps;
+use model::VitalityColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// figures. It names its four rows directly — each row owns its own look — rather than
 /// configuring one shared row through variant flags.
 #[component]
-pub fn VitalityColumn(props: VitalityColumnProps) -> Element {
+pub fn VitalityColumn(props: VitalityColumnModel) -> Element {
     let hit_points = props.hit_points;
     let hit_points_regen = props.hit_points_regen;
     let mana = props.mana;

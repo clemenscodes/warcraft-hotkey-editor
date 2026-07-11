@@ -1,6 +1,5 @@
 pub mod components;
 mod model;
-mod props;
 mod view;
 
 pub use view::BodyView;
@@ -11,15 +10,15 @@ use components::hotkeys_content::HotkeysContent;
 use components::positions_content::PositionsContent;
 use components::unit_positions_content::UnitPositionsContent;
 use dioxus::prelude::*;
-pub use model::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
-use props::BodyProps;
+use model::BodyModel;
 use tw_macro::assert_component;
+pub use view::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 
 /// The active collision content: dispatches the shaped `ContentModel` to
 /// the upload prompt, the all-clear state, or the kind's two-pane view. Pure
 /// data-driven render — the hook decides which variant, this only places it.
 #[component]
-pub fn Body(props: BodyProps) -> Element {
+pub fn Body(props: BodyModel) -> Element {
     match props.content {
         ContentModel::Empty(message) => {
             rsx! {

@@ -1,8 +1,7 @@
 pub mod components;
 mod data;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitCommandGridsView;
@@ -13,15 +12,15 @@ use components::build_menu::BuildMenu;
 use components::research_menu::ResearchMenu;
 use components::uprooted_menu::UprootedMenu;
 use dioxus::prelude::*;
-use hooks::use_unit_command_grids;
-use props::UnitCommandGridsProps;
+use model::UnitCommandGridsModel;
+use presentation::use_unit_command_grids;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unit's command grids: the command card plus any build, uprooted, and research
 /// menus the unit has. Each optional menu renders itself away when the unit lacks it.
 #[component]
-pub fn UnitCommandGrids(props: UnitCommandGridsProps) -> Element {
+pub fn UnitCommandGrids(props: UnitCommandGridsModel) -> Element {
     let model = use_unit_command_grids(&props);
     let build_menu = model.build_menu;
     let uprooted = model.uprooted;

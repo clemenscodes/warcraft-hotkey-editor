@@ -1,9 +1,7 @@
 pub mod components;
 mod data;
-mod hooks;
-pub mod logic;
 mod model;
-mod props;
+pub mod presentation;
 mod view;
 
 pub use view::CollisionsPageView;
@@ -12,8 +10,8 @@ mod style;
 use crate::components::app::components::shell::components::shared::breadcrumbs::Breadcrumbs;
 use components::body::Body;
 use dioxus::prelude::*;
-use hooks::use_collisions_page;
-use props::CollisionsPageProps;
+use model::CollisionsPageModel;
+use presentation::use_collisions_page;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +21,7 @@ use tw_macro::assert_component;
 /// under a breadcrumb bar that swaps the active kind. Empty and all-clear states
 /// replace the two-pane content when there is no file or no conflicts.
 #[component]
-pub fn CollisionsPage(props: CollisionsPageProps) -> Element {
+pub fn CollisionsPage(props: CollisionsPageModel) -> Element {
     let model = use_collisions_page(&props);
     rsx! {
         div {

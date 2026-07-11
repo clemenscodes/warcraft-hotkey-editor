@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::KeyCaptureView;
@@ -9,15 +9,15 @@ use components::key_chip::KeyChip;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
-use hooks::use_key_capture;
-use props::KeyCaptureProps;
+use presentation::use_key_capture;
+use model::KeyCaptureModel;
 use tw_macro::assert_component;
 
 /// The connected host for a system-hotkey list row: it sources the row's resolved
 /// binding through `use_key_capture`, renders the presentational `KeyChip`, and
 /// mounts the system key picker beneath itself while editing.
 #[component]
-pub fn KeyCapture(props: KeyCaptureProps) -> Element {
+pub fn KeyCapture(props: KeyCaptureModel) -> Element {
     let model = use_key_capture(&props);
     let conflict = model.is_conflict;
     let label = model.key_label.clone();

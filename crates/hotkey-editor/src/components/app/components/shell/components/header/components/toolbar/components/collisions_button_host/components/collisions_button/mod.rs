@@ -1,16 +1,16 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
+mod style;
 mod view;
 
 pub use view::CollisionsButtonView;
-mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::ToolbarButtonSurface;
 use components::collisions_button_badge::CollisionsButtonBadge;
+use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::ToolbarButtonSurface;
 use dioxus::prelude::*;
-use logic::CollisionsButtonPresentation;
-use props::CollisionsButtonProps;
+use model::CollisionsButtonModel;
+use presentation::CollisionsButtonPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -21,7 +21,7 @@ use tw_macro::assert_component;
 /// badge on top. Presentational: the collision summary and click handler arrive as props
 /// from `CollisionsButtonHost`.
 #[component]
-pub fn CollisionsButton(props: CollisionsButtonProps) -> Element {
+pub fn CollisionsButton(props: CollisionsButtonModel) -> Element {
     let CollisionsButtonPresentation {
         surface_state,
         collision_count,

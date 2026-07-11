@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitListSearchView;
@@ -12,11 +12,11 @@ use components::unit_list_search_input::UnitListSearchInput;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::UnitListSearchProps;
+use model::UnitListSearchModel;
 
 /// The unit list's search box: a magnifier icon (mobile only) over the query input.
 #[component]
-pub fn UnitListSearch(props: UnitListSearchProps) -> Element {
+pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
     let value = props.value;
     let placeholder = props.placeholder;
     let on_input = props.on_input;

@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::EditorPageView;
@@ -9,8 +9,8 @@ mod style;
 use components::editor_tabs_bar::EditorTabsBar;
 use components::editor_workspace::EditorWorkspace;
 use dioxus::prelude::*;
-use hooks::use_editor_page;
-use props::EditorPageProps;
+use model::EditorPageModel;
+use presentation::use_editor_page;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,7 +20,7 @@ use tw_macro::assert_component;
 /// rest of the editor's state from context themselves. It owns the gap between the two
 /// sections, so neither child spaces itself with a margin.
 #[component]
-pub fn EditorPage(props: EditorPageProps) -> Element {
+pub fn EditorPage(props: EditorPageModel) -> Element {
     use_editor_page(&props);
     rsx! {
         div {

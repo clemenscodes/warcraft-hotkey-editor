@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::PopoverActiveCategoryTabView;
 mod style;
 
 use dioxus::prelude::*;
-use props::PopoverActiveCategoryTabProps;
+use model::PopoverActiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The selected category tab in the small-viewport popover: a full-width, ringed gold
 /// row marked as the current page.
 #[component]
-pub fn PopoverActiveCategoryTab(props: PopoverActiveCategoryTabProps) -> Element {
+pub fn PopoverActiveCategoryTab(props: PopoverActiveCategoryTabModel) -> Element {
     let label = props.label;
     let on_click = props.on_click;
     rsx! {

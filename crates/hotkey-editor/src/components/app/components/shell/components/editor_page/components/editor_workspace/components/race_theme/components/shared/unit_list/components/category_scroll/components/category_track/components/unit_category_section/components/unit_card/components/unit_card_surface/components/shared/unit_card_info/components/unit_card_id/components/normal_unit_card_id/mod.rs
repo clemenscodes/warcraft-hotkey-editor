@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::NormalUnitCardIdView;
 mod style;
 
 use dioxus::prelude::*;
-use props::NormalUnitCardIdProps;
+use model::NormalUnitCardIdModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// Presentational — the dispatcher builds its props and renders it when the card is
 /// not selected.
 #[component]
-pub fn NormalUnitCardId(props: NormalUnitCardIdProps) -> Element {
+pub fn NormalUnitCardId(props: NormalUnitCardIdModel) -> Element {
     rsx! {
         code {
             class: CLASS,

@@ -1,14 +1,14 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictAbilityNameView;
 mod style;
 use dioxus::prelude::*;
-use props::ConflictAbilityNameProps;
+use model::ConflictAbilityNameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 #[component]
-pub fn ConflictAbilityName(props: ConflictAbilityNameProps) -> Element {
+pub fn ConflictAbilityName(props: ConflictAbilityNameModel) -> Element {
     let text = props.text;
     rsx! { span { class: CLASS, {text} } }
 }

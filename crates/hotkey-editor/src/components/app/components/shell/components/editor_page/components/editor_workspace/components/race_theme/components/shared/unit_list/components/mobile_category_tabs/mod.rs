@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::MobileCategoryTabsView;
@@ -11,12 +11,12 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::MobileCategoryTabsProps;
+use model::MobileCategoryTabsModel;
 
 /// The mobile/tablet category tab row (hidden on the sidebar): a `tablist` of one
 /// `MobileCategoryTab` per category. The tabs arrive already shaped as props.
 #[component]
-pub fn MobileCategoryTabs(props: MobileCategoryTabsProps) -> Element {
+pub fn MobileCategoryTabs(props: MobileCategoryTabsModel) -> Element {
     rsx! {
         nav {
             class: CLASS,

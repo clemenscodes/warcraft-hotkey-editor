@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictMetaView;
@@ -8,14 +8,14 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_unit_name::ConflictUnitName;
 use dioxus::prelude::*;
-use props::ConflictMetaProps;
+use model::ConflictMetaModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The text meta column of a detail-pane header: the unit name, its object id, and the
 /// collision count. Shared by the hotkey and unit-position detail headers.
 #[component]
-pub fn ConflictMeta(props: ConflictMetaProps) -> Element {
+pub fn ConflictMeta(props: ConflictMetaModel) -> Element {
     let name = props.name;
     let unit_id = props.unit_id;
     let count = props.count;

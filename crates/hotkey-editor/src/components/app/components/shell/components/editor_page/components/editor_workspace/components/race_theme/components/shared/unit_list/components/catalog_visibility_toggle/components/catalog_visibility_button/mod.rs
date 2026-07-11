@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::CatalogVisibilityButtonView;
@@ -7,13 +7,13 @@ use crate::components::app::components::shell::components::editor_page::componen
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-use props::CatalogVisibilityButtonProps;
+use model::CatalogVisibilityButtonModel;
 
 /// One button of the catalog-visibility toggle. It is the shared [`ToggleButton`]
 /// configured for a visibility filter — the only one of the toggles that carries a
 /// tooltip.
 #[component]
-pub fn CatalogVisibilityButton(props: CatalogVisibilityButtonProps) -> Element {
+pub fn CatalogVisibilityButton(props: CatalogVisibilityButtonModel) -> Element {
     let label = props.label;
     let active = props.is_active;
     let title = Some(props.title);

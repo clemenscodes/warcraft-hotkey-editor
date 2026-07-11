@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::WideKeySlotView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::components::key_picker_column::components::key_picker_row::components::key_picker_key::components::shared::color_key::ColorKey;
 use dioxus::prelude::*;
-use props::WideKeySlotProps;
+use model::WideKeySlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// owns its size — so the key's width lives here, and the color leaf inside fills the
 /// box. Oversized caps (`Space`, `Backspace`, the mouse side buttons) get this width.
 #[component]
-pub fn WideKeySlot(props: WideKeySlotProps) -> Element {
+pub fn WideKeySlot(props: WideKeySlotModel) -> Element {
     let state = props.state;
     let label = props.label;
     let disabled = props.disabled;

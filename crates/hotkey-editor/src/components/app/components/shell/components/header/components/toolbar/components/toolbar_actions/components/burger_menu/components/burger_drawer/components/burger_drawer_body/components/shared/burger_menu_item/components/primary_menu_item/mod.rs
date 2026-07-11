@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::PrimaryMenuItemView;
@@ -7,7 +7,7 @@ mod style;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_icon::BurgerMenuItemIcon;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::components::shared::burger_menu_item_label::BurgerMenuItemLabel;
 use dioxus::prelude::*;
-use props::PrimaryMenuItemProps;
+use model::PrimaryMenuItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// — the dispatcher names its fields and renders it when the row's visual weight is
 /// primary.
 #[component]
-pub fn PrimaryMenuItem(props: PrimaryMenuItemProps) -> Element {
+pub fn PrimaryMenuItem(props: PrimaryMenuItemModel) -> Element {
     let icon = props.icon;
     let label = props.label;
     let disabled = props.disabled;

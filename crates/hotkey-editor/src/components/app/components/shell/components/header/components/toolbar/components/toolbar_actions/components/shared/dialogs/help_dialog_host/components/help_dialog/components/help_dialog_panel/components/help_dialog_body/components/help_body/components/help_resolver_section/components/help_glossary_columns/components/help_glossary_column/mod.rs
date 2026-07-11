@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::HelpGlossaryColumnView;
@@ -7,14 +7,14 @@ mod style;
 
 use components::help_glossary_entry::HelpGlossaryEntry;
 use dioxus::prelude::*;
-use props::HelpGlossaryColumnProps;
+use model::HelpGlossaryColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One glossary: a stack of term-and-definition entries, one per item it is
 /// handed.
 #[component]
-pub fn HelpGlossaryColumn(props: HelpGlossaryColumnProps) -> Element {
+pub fn HelpGlossaryColumn(props: HelpGlossaryColumnModel) -> Element {
     let entries = props.entries;
     rsx! {
         div { class: CLASS,

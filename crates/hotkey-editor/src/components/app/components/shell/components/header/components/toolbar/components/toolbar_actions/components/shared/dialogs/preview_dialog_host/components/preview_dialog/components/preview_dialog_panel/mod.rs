@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::PreviewDialogPanelView;
@@ -9,7 +9,7 @@ use components::preview_dialog_body::PreviewDialogBody;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-use props::PreviewDialogPanelProps;
+use model::PreviewDialogPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// project class ever lands on the library element. Holds the header row above the
 /// scrolling textarea body.
 #[component]
-pub fn PreviewDialogPanel(props: PreviewDialogPanelProps) -> Element {
+pub fn PreviewDialogPanel(props: PreviewDialogPanelModel) -> Element {
     let title = props.title;
     let on_close = props.on_close;
     let text = props.text;

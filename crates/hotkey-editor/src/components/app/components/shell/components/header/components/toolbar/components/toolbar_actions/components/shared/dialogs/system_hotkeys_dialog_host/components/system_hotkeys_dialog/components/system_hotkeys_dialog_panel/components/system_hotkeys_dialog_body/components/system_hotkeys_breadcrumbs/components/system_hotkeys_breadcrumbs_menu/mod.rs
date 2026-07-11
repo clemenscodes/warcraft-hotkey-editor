@@ -1,6 +1,6 @@
 pub mod components;
-pub mod hooks;
-mod props;
+mod model;
+pub mod presentation;
 mod view;
 
 pub use view::SystemHotkeysBreadcrumbsMenuView;
@@ -8,8 +8,8 @@ pub use view::SystemHotkeysBreadcrumbsMenuView;
 use components::closed_breadcrumbs_menu::ClosedBreadcrumbsMenu;
 use components::open_breadcrumbs_menu::OpenBreadcrumbsMenu;
 use dioxus::prelude::*;
-use hooks::use_system_hotkeys_breadcrumbs_menu;
-use props::SystemHotkeysBreadcrumbsMenuProps;
+use model::SystemHotkeysBreadcrumbsMenuModel;
+use presentation::use_system_hotkeys_breadcrumbs_menu;
 use tw_macro::assert_component;
 
 /// The category tab list. A pure dispatcher: from the dropdown's open flag it renders
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// `menu_open` so the tabs wear the matching look — and hands them to the chosen
 /// container.
 #[component]
-pub fn SystemHotkeysBreadcrumbsMenu(props: SystemHotkeysBreadcrumbsMenuProps) -> Element {
+pub fn SystemHotkeysBreadcrumbsMenu(props: SystemHotkeysBreadcrumbsMenuModel) -> Element {
     let tabs = use_system_hotkeys_breadcrumbs_menu(&props);
     if props.is_open {
         rsx! {

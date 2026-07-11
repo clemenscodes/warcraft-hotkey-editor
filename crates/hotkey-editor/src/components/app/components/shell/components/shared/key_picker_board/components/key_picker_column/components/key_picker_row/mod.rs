@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::KeyPickerRowView;
@@ -7,13 +7,13 @@ mod style;
 
 use components::key_picker_key::KeyPickerKey;
 use dioxus::prelude::*;
-use props::KeyPickerRowProps;
+use model::KeyPickerRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One horizontal row of picker keys.
 #[component]
-pub fn KeyPickerRow(props: KeyPickerRowProps) -> Element {
+pub fn KeyPickerRow(props: KeyPickerRowModel) -> Element {
     let keys = props.keys;
     let on_pick = props.on_pick;
     rsx! {

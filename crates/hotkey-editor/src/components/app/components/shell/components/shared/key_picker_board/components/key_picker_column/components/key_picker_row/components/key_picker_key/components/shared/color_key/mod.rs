@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ColorKeyView;
@@ -9,7 +9,7 @@ use components::available_key::AvailableKey;
 use components::conflict_key::ConflictKey;
 use components::current_key::CurrentKey;
 use dioxus::prelude::*;
-use props::ColorKeyProps;
+use model::ColorKeyModel;
 use tw_macro::assert_component;
 
 pub use state::ColorKeyState;
@@ -20,7 +20,7 @@ pub use state::ColorKeyState;
 /// button, color styling, and conflict tooltip. Its width is owned by the slot that
 /// renders it; this only chooses the color and fills the box it is given.
 #[component]
-pub fn ColorKey(props: ColorKeyProps) -> Element {
+pub fn ColorKey(props: ColorKeyModel) -> Element {
     let label = props.label;
     let disabled = props.disabled;
     let onclick = props.onclick;

@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::FilledTileView;
@@ -14,8 +14,8 @@ use components::selection_ring::SelectionRing;
 use components::tile_icon::TileIcon;
 use components::tile_label::TileLabel;
 use dioxus::prelude::*;
-use logic::FilledTileModel;
-use props::FilledTileProps;
+use model::FilledTileModel;
+use presentation::FilledTilePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -25,8 +25,8 @@ use tw_macro::assert_component;
 /// the tile's own border gold. It knows nothing of hotkeys, focus, or dragging;
 /// `GridEditorTile` layers all interaction on top of this base tile.
 #[component]
-pub fn FilledTile(props: FilledTileProps) -> Element {
-    let FilledTileModel {
+pub fn FilledTile(props: FilledTileModel) -> Element {
+    let FilledTilePresentation {
         ability_active,
         command_active,
         selected,
@@ -35,7 +35,7 @@ pub fn FilledTile(props: FilledTileProps) -> Element {
         icon_source,
         icon_alt,
         label_text,
-    } = FilledTileModel::from(props);
+    } = FilledTilePresentation::from(props);
     rsx! {
         div {
             class: CLASS,

@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::HeroLevelOptionView;
@@ -9,8 +8,8 @@ pub use view::HeroLevelOptionView;
 use components::active_hero_level_option::ActiveHeroLevelOption;
 use components::idle_hero_level_option::IdleHeroLevelOption;
 use dioxus::prelude::*;
-use hooks::use_hero_level_option;
-use props::HeroLevelOptionProps;
+use model::HeroLevelOptionModel;
+use presentation::use_hero_level_option;
 use tw_macro::assert_component;
 
 /// One selectable hero level in the dropdown. A pure dispatcher: from whether it is the
@@ -18,7 +17,7 @@ use tw_macro::assert_component;
 /// `IdleHeroLevelOption`. Each owns its `<button>` and its own look; there is no
 /// `data-active`.
 #[component]
-pub fn HeroLevelOption(props: HeroLevelOptionProps) -> Element {
+pub fn HeroLevelOption(props: HeroLevelOptionModel) -> Element {
     let presentation = use_hero_level_option(&props);
     let label = presentation.label().to_owned();
     let onclick = presentation.onclick();

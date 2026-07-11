@@ -1,7 +1,7 @@
 pub mod components;
 mod data;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::HotkeyUnitDetailView;
@@ -10,22 +10,22 @@ use crate::services::collision_selection::context::use_collision_selection;
 use components::empty_hotkey_unit_detail::EmptyHotkeyUnitDetail;
 use components::filled_hotkey_unit_detail::FilledHotkeyUnitDetail;
 use dioxus::prelude::*;
-use props::HotkeyUnitDetailProps;
+use model::HotkeyUnitDetailModel;
 use tw_macro::assert_component;
 
 /// The shared-hotkey detail pane. A dispatcher: when a unit is selected it renders the
 /// filled pane (the unit header over its conflict cards), otherwise the empty prompt.
 /// The selection is read from collision-selection context.
 #[component]
-pub fn HotkeyUnitDetail(props: HotkeyUnitDetailProps) -> Element {
+pub fn HotkeyUnitDetail(props: HotkeyUnitDetailModel) -> Element {
     let selected_unit = use_collision_selection().selected_hotkey_unit();
-    if let Some(unit_view) = logic::selected(&props, selected_unit) {
+    if let Some(unit_view) = presentation::selected(&props, selected_unit) {
         rsx! {
             FilledHotkeyUnitDetail { unit_view }
         }
     } else {
         rsx! {
-            EmptyHotkeyUnitDetail {}
+            EmptyHotkeyUnitDetail { prompt: data::EMPTY_PROMPT }
         }
     }
 }

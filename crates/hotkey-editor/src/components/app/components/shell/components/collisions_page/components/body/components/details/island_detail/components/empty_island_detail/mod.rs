@@ -1,18 +1,21 @@
+mod model;
 mod style;
+mod view;
 
-use super::super::data::EMPTY_PROMPT;
+pub use view::EmptyIslandDetailView;
+
 use dioxus::prelude::*;
+use model::EmptyIslandDetailModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The empty island detail pane: the base pane surface, centered and muted, showing the
-/// prompt to select a collision.
+/// The empty detail pane: the base pane surface, centered and muted, showing the prompt.
 #[component]
-pub fn EmptyIslandDetail() -> Element {
+pub fn EmptyIslandDetail(props: EmptyIslandDetailModel) -> Element {
     rsx! {
         section {
             class: CLASS,
-            p { {EMPTY_PROMPT} }
+            p { {props.prompt} }
         }
     }
 }

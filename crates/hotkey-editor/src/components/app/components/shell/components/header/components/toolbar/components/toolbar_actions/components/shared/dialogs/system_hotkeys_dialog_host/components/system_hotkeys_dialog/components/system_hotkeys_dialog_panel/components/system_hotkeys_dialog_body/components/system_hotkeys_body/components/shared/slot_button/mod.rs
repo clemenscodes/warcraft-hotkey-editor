@@ -1,5 +1,5 @@
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::SlotButtonView;
@@ -9,8 +9,8 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
-use hooks::use_slot_button;
-use props::SlotButtonProps;
+use presentation::use_slot_button;
+use model::SlotButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// The host owns the focusable button and the cell's size; the framed `SystemSlot`
 /// draws the cell.
 #[component]
-pub fn SlotButton(props: SlotButtonProps) -> Element {
+pub fn SlotButton(props: SlotButtonModel) -> Element {
     let model = use_slot_button(&props);
     let state = model.state;
     let slot_label = model.slot_label.clone();

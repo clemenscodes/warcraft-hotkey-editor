@@ -1,10 +1,10 @@
-mod props;
+mod model;
 mod view;
 
 mod style;
 
 use dioxus::prelude::*;
-use props::ActiveManaRegenGainProps;
+use model::ActiveManaRegenGainModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,7 +12,7 @@ use tw_macro::assert_component;
 /// [`ManaRegenGain`](super::super::ManaRegenGain) dispatcher when the unit regenerates
 /// mana.
 #[component]
-pub fn ActiveManaRegenGain(props: ActiveManaRegenGainProps) -> Element {
+pub fn ActiveManaRegenGain(props: ActiveManaRegenGainModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

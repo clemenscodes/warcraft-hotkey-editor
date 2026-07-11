@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::InactiveCategoryTabView;
 mod style;
 
 use dioxus::prelude::*;
-use props::InactiveCategoryTabProps;
+use model::InactiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// An unselected category tab: dimmed gold, not the current page.
 #[component]
-pub fn InactiveCategoryTab(props: InactiveCategoryTabProps) -> Element {
+pub fn InactiveCategoryTab(props: InactiveCategoryTabModel) -> Element {
     let label = props.label;
     let on_click = props.on_click;
     rsx! {

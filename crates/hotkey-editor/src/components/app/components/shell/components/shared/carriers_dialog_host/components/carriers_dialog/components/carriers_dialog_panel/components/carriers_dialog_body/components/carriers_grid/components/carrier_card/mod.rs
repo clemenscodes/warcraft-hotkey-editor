@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::CarrierCardView;
@@ -10,17 +9,17 @@ use components::carrier_card_icon::CarrierCardIcon;
 use components::carrier_card_name::CarrierCardName;
 use components::carrier_object_id::CarrierObjectId;
 use dioxus::prelude::*;
-use hooks::use_carrier_card;
-use logic::CarrierCardModel;
-use props::CarrierCardProps;
+use model::CarrierCardModel;
+use presentation::CarrierCardPresentation;
+use presentation::use_carrier_card;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One unit that carries the ability; clicking deep-links into the editor focused on
 /// that unit through the navigation read from context.
 #[component]
-pub fn CarrierCard(props: CarrierCardProps) -> Element {
-    let CarrierCardModel {
+pub fn CarrierCard(props: CarrierCardModel) -> Element {
+    let CarrierCardPresentation {
         icon_src,
         icon_alt,
         onclick,

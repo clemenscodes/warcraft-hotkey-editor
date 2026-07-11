@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStateSectionView;
@@ -8,7 +8,7 @@ mod style;
 use components::alt_state_header::AltStateHeader;
 use components::alt_state_line::AltStateLine;
 use dioxus::prelude::*;
-use props::AltStateSectionProps;
+use model::AltStateSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,8 +16,8 @@ use tw_macro::assert_component;
 /// description lines. It owns its own block directly and delegates the header row to its
 /// child. Renders nothing when the tile has no alternate state.
 #[component]
-pub fn AltStateSection(props: AltStateSectionProps) -> Element {
-    let AltStateSectionProps {
+pub fn AltStateSection(props: AltStateSectionModel) -> Element {
+    let AltStateSectionModel {
         alt_name_text,
         alt_description_lines,
         show_alt_controls,

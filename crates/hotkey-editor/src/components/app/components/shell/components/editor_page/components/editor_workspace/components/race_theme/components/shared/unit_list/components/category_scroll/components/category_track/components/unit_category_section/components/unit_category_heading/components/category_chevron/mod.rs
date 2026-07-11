@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::CategoryChevronView;
 mod style;
 
 use dioxus::prelude::*;
-use props::CategoryChevronProps;
+use model::CategoryChevronModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The disclosure triangle beside a category heading.
 #[component]
-pub fn CategoryChevron(props: CategoryChevronProps) -> Element {
+pub fn CategoryChevron(props: CategoryChevronModel) -> Element {
     let glyph = if props.is_collapsed {
         "\u{25b6}"
     } else {

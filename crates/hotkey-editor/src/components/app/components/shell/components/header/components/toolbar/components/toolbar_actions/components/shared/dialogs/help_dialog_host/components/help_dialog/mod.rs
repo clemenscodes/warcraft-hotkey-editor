@@ -1,7 +1,7 @@
 pub mod components;
 pub mod data;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::HelpDialogView;
@@ -11,8 +11,8 @@ use components::help_dialog_panel::HelpDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use logic::HelpDialogShell;
-use props::HelpDialogProps;
+use presentation::HelpDialogShell;
+use model::HelpDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -21,7 +21,7 @@ use tw_macro::assert_component;
 /// dimmed, centring layer) within the library `DialogRoot`. No project class touches
 /// the library element — the backdrop is this component's own classed `div`.
 #[component]
-pub fn HelpDialog(props: HelpDialogProps) -> Element {
+pub fn HelpDialog(props: HelpDialogModel) -> Element {
     use_body_scroll_lock(props.help_open);
     let HelpDialogShell {
         open,

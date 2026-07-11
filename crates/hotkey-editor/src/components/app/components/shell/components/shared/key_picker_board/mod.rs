@@ -1,8 +1,8 @@
 mod cell;
 pub mod components;
 mod key_event;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::KeyPickerBoardView;
@@ -10,13 +10,13 @@ mod style;
 
 use components::key_picker_column::KeyPickerColumn;
 use dioxus::prelude::*;
-use logic::KeyPickerBoardPresentation;
+use presentation::KeyPickerBoardPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
 pub use cell::{KeyCell, KeyCellState, KeyColumn, KeyWidth};
 pub(crate) use key_event::BrowserKeyEvent;
-use props::KeyPickerBoardProps;
+use model::KeyPickerBoardModel;
 
 /// An on-screen keyboard that assigns a key when one is clicked or typed. It is
 /// dialog-agnostic and side-effect-free: a focusable board of key rows with one
@@ -26,7 +26,7 @@ use props::KeyPickerBoardProps;
 /// of keys with no type parameter; the caller lays out the columns of [`KeyCell`]s and
 /// decides which keys, labels, widths, and states they carry.
 #[component]
-pub fn KeyPickerBoard(props: KeyPickerBoardProps) -> Element {
+pub fn KeyPickerBoard(props: KeyPickerBoardModel) -> Element {
     let presentation = KeyPickerBoardPresentation::from(&props);
     let columns = presentation.columns;
     let on_pick = presentation.on_pick;

@@ -1,10 +1,10 @@
-mod hooks;
+mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::preview_dialog_host::PreviewDialogHost;
 use dioxus::prelude::*;
-use hooks::{use_preview_button, PreviewButtonModel};
+use presentation::{use_preview_button, PreviewButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 

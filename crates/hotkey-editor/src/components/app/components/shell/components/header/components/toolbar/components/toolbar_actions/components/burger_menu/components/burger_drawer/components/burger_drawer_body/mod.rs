@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::BurgerDrawerBodyView;
@@ -8,12 +8,12 @@ mod style;
 use components::burger_menu_group::BurgerMenuGroup;
 use components::shared::burger_menu_item::BurgerMenuItem;
 use dioxus::prelude::*;
-use props::BurgerDrawerBodyProps;
+use model::BurgerDrawerBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn BurgerDrawerBody(props: BurgerDrawerBodyProps) -> Element {
+pub fn BurgerDrawerBody(props: BurgerDrawerBodyModel) -> Element {
     let layout = props.layout;
     let items = props.items;
     let icon = layout.icon;

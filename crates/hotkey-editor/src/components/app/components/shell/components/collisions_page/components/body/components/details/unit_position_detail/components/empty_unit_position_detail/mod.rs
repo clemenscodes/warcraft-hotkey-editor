@@ -1,18 +1,21 @@
+mod model;
 mod style;
+mod view;
 
-use super::super::data::EMPTY_PROMPT;
+pub use view::EmptyUnitPositionDetailView;
+
 use dioxus::prelude::*;
+use model::EmptyUnitPositionDetailModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The empty position-collision detail pane: the base pane surface, centered and muted,
-/// showing the prompt to select a unit.
+/// The empty detail pane: the base pane surface, centered and muted, showing the prompt.
 #[component]
-pub fn EmptyUnitPositionDetail() -> Element {
+pub fn EmptyUnitPositionDetail(props: EmptyUnitPositionDetailModel) -> Element {
     rsx! {
         section {
             class: CLASS,
-            p { {EMPTY_PROMPT} }
+            p { {props.prompt} }
         }
     }
 }

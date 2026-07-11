@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::RaceTabLabelView;
 mod style;
 
 use dioxus::prelude::*;
-use props::RaceTabLabelProps;
+use model::RaceTabLabelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// turns accent-coloured when its tab is active and is white otherwise — one label for
 /// every race and state, coloured by the button, never a per-state branch here.
 #[component]
-pub fn RaceTabLabel(props: RaceTabLabelProps) -> Element {
+pub fn RaceTabLabel(props: RaceTabLabelModel) -> Element {
     let label = props.label;
     rsx! {
         span {

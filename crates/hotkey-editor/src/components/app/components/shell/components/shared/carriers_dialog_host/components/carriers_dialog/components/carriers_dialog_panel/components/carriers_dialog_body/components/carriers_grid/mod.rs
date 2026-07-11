@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CarriersGridView;
@@ -7,12 +7,12 @@ mod style;
 
 use components::carrier_card::CarrierCard;
 use dioxus::prelude::*;
-use props::CarriersGridProps;
+use model::CarriersGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn CarriersGrid(props: CarriersGridProps) -> Element {
+pub fn CarriersGrid(props: CarriersGridModel) -> Element {
     let carriers = props.carriers;
     rsx! {
         div {

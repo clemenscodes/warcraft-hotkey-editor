@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_figure::StatFigure;
 use dioxus::prelude::*;
-use props::HitPointsValueProps;
+use model::HitPointsValueModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// directly rather than selected through a shared variant. Hit points are never muted,
 /// so it renders plainly.
 #[component]
-pub fn HitPointsValue(props: HitPointsValueProps) -> Element {
+pub fn HitPointsValue(props: HitPointsValueModel) -> Element {
     let value = props.value;
     let text = value.display();
     rsx! {

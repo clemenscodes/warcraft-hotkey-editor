@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideCardView;
@@ -15,12 +15,12 @@ use components::upgrade_tier::UpgradeTier;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideCardProps;
+use model::TileOverrideCardModel;
 
 /// The gold-edged card holding the override panel's header and ability sections.
 #[component]
-pub fn TileOverrideCard(props: TileOverrideCardProps) -> Element {
-    let TileOverrideCardProps {
+pub fn TileOverrideCard(props: TileOverrideCardModel) -> Element {
+    let TileOverrideCardModel {
         name_text,
         object_id,
         show_hotkey_field,

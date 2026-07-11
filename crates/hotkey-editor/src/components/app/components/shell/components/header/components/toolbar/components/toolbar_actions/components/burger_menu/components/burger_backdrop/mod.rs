@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BurgerBackdropView;
 mod style;
 
 use dioxus::prelude::*;
-use props::BurgerBackdropProps;
+use model::BurgerBackdropModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The dimmed click-catcher behind the drawer; clicking it closes the menu.
 #[component]
-pub fn BurgerBackdrop(props: BurgerBackdropProps) -> Element {
+pub fn BurgerBackdrop(props: BurgerBackdropModel) -> Element {
     let onclick = props.onclick;
     rsx! {
         div {

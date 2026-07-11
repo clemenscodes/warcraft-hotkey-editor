@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::DefenseColumnView;
@@ -9,8 +9,8 @@ mod style;
 use super::shared::stat_icon_frame::StatIconFrame;
 use components::defense_rows::DefenseRows;
 use dioxus::prelude::*;
-use logic::DefenseFigures;
-use props::DefenseColumnProps;
+use model::DefenseColumnModel;
+use presentation::DefenseFigures;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// matchup grid, laid into the `defense` grid area. Always present; every unit has
 /// defense figures.
 #[component]
-pub fn DefenseColumn(props: DefenseColumnProps) -> Element {
+pub fn DefenseColumn(props: DefenseColumnModel) -> Element {
     let DefenseFigures {
         icon_src,
         icon_alt,

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TransitionColumnView;
@@ -6,13 +6,13 @@ mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::mini_grid::MiniGrid;
 use dioxus::prelude::*;
-use props::TransitionColumnProps;
+use model::TransitionColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One side (from or to) of the transition block: a single mini grid of placements.
 #[component]
-pub fn TransitionColumn(props: TransitionColumnProps) -> Element {
+pub fn TransitionColumn(props: TransitionColumnModel) -> Element {
     let placements = props.placements;
     rsx! {
         div {

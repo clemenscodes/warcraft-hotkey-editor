@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::AbilityIconView;
@@ -10,8 +10,8 @@ use crate::components::app::components::shell::components::shared::carriers_dial
 use components::carrier_badge::CarrierBadge;
 use components::fight_icon::FightIcon;
 use dioxus::prelude::*;
-use hooks::{AbilityIconModel, use_ability_icon};
-use props::AbilityIconProps;
+use model::AbilityIconModel;
+use presentation::{AbilityIconPresentation, use_ability_icon};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,8 +19,8 @@ use tw_macro::assert_component;
 /// dialog. The icon owns the open state and mounts the dialog's host beneath itself, so
 /// no ancestor knows the dialog exists.
 #[component]
-pub fn AbilityIcon(props: AbilityIconProps) -> Element {
-    let AbilityIconModel {
+pub fn AbilityIcon(props: AbilityIconModel) -> Element {
+    let AbilityIconPresentation {
         open_state,
         icon_src,
         icon_alt,

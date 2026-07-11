@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::SuccessToastCardView;
@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::toasts::components::t
 use components::success_toast_content::SuccessToastContent;
 use components::success_toast_icon::SuccessToastIcon;
 use dioxus::prelude::*;
-use props::SuccessToastCardProps;
+use model::SuccessToastCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// success icon and title, the description, and the close control. Presentational
 /// only; the dispatcher builds its props from the toast record.
 #[component]
-pub fn SuccessToastCard(props: SuccessToastCardProps) -> Element {
+pub fn SuccessToastCard(props: SuccessToastCardModel) -> Element {
     let title = props.record.title().to_string();
     let description = props.record.description();
     let id = props.record.id();

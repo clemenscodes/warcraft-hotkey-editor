@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SpillReasonBadgeView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::components::reason_badges::shared::reason_badge::ReasonBadge;
 use dioxus::prelude::*;
-use props::SpillReasonBadgeProps;
+use model::SpillReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
 /// names the pill's classes.
 #[component]
-pub fn SpillReasonBadge(props: SpillReasonBadgeProps) -> Element {
+pub fn SpillReasonBadge(props: SpillReasonBadgeModel) -> Element {
     let label = props.label;
     rsx! {
         span {

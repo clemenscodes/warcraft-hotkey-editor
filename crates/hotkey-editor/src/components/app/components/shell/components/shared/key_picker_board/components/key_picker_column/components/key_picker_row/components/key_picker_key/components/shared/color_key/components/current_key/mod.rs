@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::CurrentKeyView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-use props::CurrentKeyProps;
+use model::CurrentKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,8 +14,8 @@ use tw_macro::assert_component;
 /// owns its own button and shares only the shaped attributes and the conflict tooltip
 /// leaf.
 #[component]
-pub fn CurrentKey(props: CurrentKeyProps) -> Element {
-    let CurrentKeyProps {
+pub fn CurrentKey(props: CurrentKeyModel) -> Element {
+    let CurrentKeyModel {
         label,
         disabled,
         onclick,

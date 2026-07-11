@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::FightNameButtonView;
@@ -6,11 +6,11 @@ mod style;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::move_name::MoveName;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::shared::object_id::ObjectId;
 use dioxus::prelude::*;
-use props::FightNameButtonProps;
+use model::FightNameButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 #[component]
-pub fn FightNameButton(props: FightNameButtonProps) -> Element {
+pub fn FightNameButton(props: FightNameButtonModel) -> Element {
     let name = props.name;
     let object_id = props.object_id;
     let object_id_value = object_id.value();

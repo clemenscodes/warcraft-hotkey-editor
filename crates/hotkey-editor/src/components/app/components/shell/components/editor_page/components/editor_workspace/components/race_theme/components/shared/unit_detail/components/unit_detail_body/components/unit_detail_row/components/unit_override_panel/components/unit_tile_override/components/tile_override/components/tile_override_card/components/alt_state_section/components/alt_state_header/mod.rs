@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStateHeaderView;
@@ -8,14 +8,14 @@ mod style;
 use components::alt_state_controls::AltStateControls;
 use components::alt_state_header_label_column::AltStateHeaderLabelColumn;
 use dioxus::prelude::*;
-use props::AltStateHeaderProps;
+use model::AltStateHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The off-state block's top row: the label column beside the editable controls.
 #[component]
-pub fn AltStateHeader(props: AltStateHeaderProps) -> Element {
-    let AltStateHeaderProps {
+pub fn AltStateHeader(props: AltStateHeaderModel) -> Element {
+    let AltStateHeaderModel {
         alt_name_text,
         show,
         hotkey_label,

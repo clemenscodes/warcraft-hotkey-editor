@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::IdleHeroLevelOptionView;
 mod style;
 
 use dioxus::prelude::*;
-use props::IdleHeroLevelOptionProps;
+use model::IdleHeroLevelOptionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The idle hero-level option button. Presentational — the dispatcher renders it.
 #[component]
-pub fn IdleHeroLevelOption(props: IdleHeroLevelOptionProps) -> Element {
+pub fn IdleHeroLevelOption(props: IdleHeroLevelOptionModel) -> Element {
     let label = props.label;
     let onclick = props.onclick;
     rsx! {

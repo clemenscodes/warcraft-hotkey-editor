@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::MutedStatGainView;
 mod style;
 
 use dioxus::prelude::*;
-use props::MutedStatGainProps;
+use model::MutedStatGainModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// [`StatGain`](super::super::StatGain) dispatcher when the figure reports itself
 /// muted.
 #[component]
-pub fn MutedStatGain(props: MutedStatGainProps) -> Element {
+pub fn MutedStatGain(props: MutedStatGainModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

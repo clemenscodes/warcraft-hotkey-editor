@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BlockedDropTargetOverlayView;
 mod style;
 
 use dioxus::prelude::*;
-use props::BlockedDropTargetOverlayProps;
+use model::BlockedDropTargetOverlayModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// danger border and not-allowed cursor are the tile root's own (via
 /// `:has(.blocked-drop-target-overlay)`), and this layer draws the danger wash.
 #[component]
-pub fn BlockedDropTargetOverlay(props: BlockedDropTargetOverlayProps) -> Element {
+pub fn BlockedDropTargetOverlay(props: BlockedDropTargetOverlayModel) -> Element {
     if !props.active {
         return rsx! {};
     }

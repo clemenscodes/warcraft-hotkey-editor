@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::PreviewDialogView;
@@ -11,9 +10,9 @@ use components::preview_dialog_panel::PreviewDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_preview_dialog;
-use logic::PreviewDialogShell;
-use props::PreviewDialogProps;
+use presentation::use_preview_dialog;
+use presentation::PreviewDialogShell;
+use model::PreviewDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +22,7 @@ use tw_macro::assert_component;
 /// centring layer) within the library `DialogRoot`. No project class touches the
 /// library element.
 #[component]
-pub fn PreviewDialog(props: PreviewDialogProps) -> Element {
+pub fn PreviewDialog(props: PreviewDialogModel) -> Element {
     use_body_scroll_lock(props.preview_open);
     let view = use_preview_dialog(&props);
     let PreviewDialogShell {

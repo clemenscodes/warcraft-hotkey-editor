@@ -1,4 +1,4 @@
-use super::grid_editor::{GridEditor, GridEditorView};
+use super::shared::grid_editor::{GridEditor, GridEditorView};
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_keybinds::CommandBehavior;

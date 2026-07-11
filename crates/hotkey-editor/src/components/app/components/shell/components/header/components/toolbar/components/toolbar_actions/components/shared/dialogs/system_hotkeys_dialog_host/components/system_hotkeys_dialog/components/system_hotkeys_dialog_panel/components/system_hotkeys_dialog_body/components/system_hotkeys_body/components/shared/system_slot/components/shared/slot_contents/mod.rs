@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SlotContentsView;
@@ -7,7 +7,7 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot_label::SystemSlotLabel;
 use crate::components::app::components::shell::components::shared::tooltip::Tooltip;
 use dioxus::prelude::*;
-use props::SlotContentsProps;
+use model::SlotContentsModel;
 use tw_macro::assert_component;
 
 /// The framed slot's inner content — caption, bound key, and conflict tooltip —
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// unmounted rather than hidden, so the frame's DOM node stays mounted and the
 /// pointer-capture drag on the host is never interrupted by a class swap.
 #[component]
-pub fn SlotContents(props: SlotContentsProps) -> Element {
+pub fn SlotContents(props: SlotContentsModel) -> Element {
     if props.dragging {
         return rsx! {};
     }

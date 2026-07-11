@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UpgradeSectionHeaderView;
@@ -9,15 +9,15 @@ use components::upgrade_section_header_label_column::UpgradeSectionHeaderLabelCo
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::alt_state_position_button::AltStatePositionButton;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKey;
 use dioxus::prelude::*;
-use props::UpgradeSectionHeaderProps;
+use model::UpgradeSectionHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The upgraded-form block's top row: the label column beside the position button and
 /// hotkey cell.
 #[component]
-pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderProps) -> Element {
-    let UpgradeSectionHeaderProps {
+pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderModel) -> Element {
+    let UpgradeSectionHeaderModel {
         hotkey_label,
         is_editing,
         is_special,

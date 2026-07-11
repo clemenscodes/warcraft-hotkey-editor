@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictPanelView;
@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_multi_stack::ConflictMultiStack;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_pair_row::ConflictPairRow;
 use dioxus::prelude::*;
-use props::ConflictPanelProps;
+use model::ConflictPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// layouts (the pair row or the multi stack). Each layout renders itself away when it
 /// does not apply. Shared by the hotkey and unit-position conflict cards.
 #[component]
-pub fn ConflictPanel(props: ConflictPanelProps) -> Element {
+pub fn ConflictPanel(props: ConflictPanelModel) -> Element {
     let ConflictCardModel {
         role_label,
         pair,

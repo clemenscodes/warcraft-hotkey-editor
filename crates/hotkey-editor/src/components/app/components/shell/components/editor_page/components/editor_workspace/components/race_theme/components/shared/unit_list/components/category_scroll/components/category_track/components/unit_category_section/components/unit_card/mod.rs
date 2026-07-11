@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitCardView;
@@ -8,8 +8,8 @@ mod style;
 
 use components::unit_card_surface::UnitCardSurface;
 use dioxus::prelude::*;
-use hooks::{UnitCardModel, use_unit_card};
-use props::UnitCardProps;
+use model::UnitCardModel;
+use presentation::{UnitCardPresentation, use_unit_card};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,8 +19,8 @@ use tw_macro::assert_component;
 /// look, the generic `--race-color` accent, and the select handlers. Its selected look
 /// and select handlers are shaped from context by `use_unit_card`.
 #[component]
-pub fn UnitCard(props: UnitCardProps) -> Element {
-    let UnitCardModel {
+pub fn UnitCard(props: UnitCardModel) -> Element {
+    let UnitCardPresentation {
         icon_path,
         display_name,
         unit_id,

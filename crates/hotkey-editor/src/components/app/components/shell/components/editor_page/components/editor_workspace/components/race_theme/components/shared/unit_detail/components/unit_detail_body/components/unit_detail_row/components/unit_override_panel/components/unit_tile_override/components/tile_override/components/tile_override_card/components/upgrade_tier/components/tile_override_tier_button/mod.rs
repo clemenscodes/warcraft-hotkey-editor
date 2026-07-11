@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideTierButtonView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideTierButtonProps;
+use model::TileOverrideTierButtonModel;
 
 /// A prev/next arrow button in the tier-cycling footer.
 #[component]
-pub fn TileOverrideTierButton(props: TileOverrideTierButtonProps) -> Element {
+pub fn TileOverrideTierButton(props: TileOverrideTierButtonModel) -> Element {
     let aria_label = props.aria_label;
     let icon = props.icon;
     let on_click = props.on_click;

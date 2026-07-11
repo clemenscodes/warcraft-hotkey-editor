@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::DragOverRingView;
 mod style;
 
 use dioxus::prelude::*;
-use props::DragOverRingProps;
+use model::DragOverRingModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// this stays an inert, pointer-transparent presence signal. Shared by the filled and
 /// empty tiles, which both nest it.
 #[component]
-pub fn DragOverRing(props: DragOverRingProps) -> Element {
+pub fn DragOverRing(props: DragOverRingModel) -> Element {
     if !props.active {
         return rsx! {};
     }

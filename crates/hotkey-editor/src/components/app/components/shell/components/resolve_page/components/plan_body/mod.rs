@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::PlanBodyView;
@@ -8,7 +8,7 @@ mod style;
 use components::move_list::MoveList;
 use components::unresolved_section::UnresolvedSection;
 use dioxus::prelude::*;
-use props::PlanBodyProps;
+use model::PlanBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// abilities (when any). The active move list renders itself away when the plan has
 /// no moves, so the body only guards the unresolved section on presence.
 #[component]
-pub fn PlanBody(props: PlanBodyProps) -> Element {
+pub fn PlanBody(props: PlanBodyModel) -> Element {
     let section = props.section;
     let unresolved = props.unresolved;
     let has_unresolved = !unresolved.is_empty();

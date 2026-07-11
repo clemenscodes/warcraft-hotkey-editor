@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::system_hotkeys_dialog::SystemHotkeysDialog;
 use dioxus::prelude::*;
-use hooks::use_system_hotkeys_dialog_host;
+use presentation::use_system_hotkeys_dialog_host;
 use style::CLASS;
 use tw_macro::assert_component;
 

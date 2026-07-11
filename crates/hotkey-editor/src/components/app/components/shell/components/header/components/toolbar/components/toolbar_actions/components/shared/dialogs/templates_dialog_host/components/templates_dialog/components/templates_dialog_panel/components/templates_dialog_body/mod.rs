@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TemplatesDialogBodyView;
@@ -7,14 +7,14 @@ mod style;
 
 use components::template_gallery::TemplateGallery;
 use dioxus::prelude::*;
-use props::TemplatesDialogBodyProps;
+use model::TemplatesDialogBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The templates dialog's scrolling content region between the header and the panel
 /// edge, holding the gallery of bundled template cards.
 #[component]
-pub fn TemplatesDialogBody(props: TemplatesDialogBodyProps) -> Element {
+pub fn TemplatesDialogBody(props: TemplatesDialogBodyModel) -> Element {
     let cards = props.cards;
     rsx! {
         div {

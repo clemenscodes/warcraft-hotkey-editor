@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictMarkerViewView;
@@ -9,7 +9,7 @@ use components::conflict_position::ConflictPosition;
 use components::inline_hotkey_marker::InlineHotkeyMarker;
 use components::top_hotkey_marker::TopHotkeyMarker;
 use dioxus::prelude::*;
-use props::ConflictMarkerViewProps;
+use model::ConflictMarkerViewModel;
 pub use state::ConflictMarker;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// switch on the marker (and, for the hotkey badge, whether it caps a stack) so the pair
 /// row and multi stack stay flat lists of children; there is no `data-top` attribute.
 #[component]
-pub fn ConflictMarkerView(props: ConflictMarkerViewProps) -> Element {
+pub fn ConflictMarkerView(props: ConflictMarkerViewModel) -> Element {
     let is_top = props.is_top;
     match props.marker {
         ConflictMarker::Hotkey { label } => match is_top {

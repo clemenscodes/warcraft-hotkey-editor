@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::PlainSlotKeyView;
 mod style;
 
 use dioxus::prelude::*;
-use props::PlainSlotKeyProps;
+use model::PlainSlotKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -13,7 +13,7 @@ use tw_macro::assert_component;
 /// Presentational — the `SystemSlotKey` dispatcher renders it for the non-conflict
 /// look.
 #[component]
-pub fn PlainSlotKey(props: PlainSlotKeyProps) -> Element {
+pub fn PlainSlotKey(props: PlainSlotKeyModel) -> Element {
     let label = props.label;
     rsx! {
         div {

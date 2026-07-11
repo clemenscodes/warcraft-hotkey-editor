@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltStateControlsView;
@@ -10,13 +10,13 @@ use crate::components::app::components::shell::components::editor_page::componen
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_override_panel::components::unit_tile_override::components::tile_override::components::tile_override_card::components::shared::override_key::OverrideKey;
 
-use props::AltStateControlsProps;
+use model::AltStateControlsModel;
 
 /// The position button and off-state hotkey cell of the alt-state block; renders
 /// nothing when the off-state is not editable in this context.
 #[component]
-pub fn AltStateControls(props: AltStateControlsProps) -> Element {
-    let AltStateControlsProps {
+pub fn AltStateControls(props: AltStateControlsModel) -> Element {
+    let AltStateControlsModel {
         show,
         hotkey_label,
         is_editing,

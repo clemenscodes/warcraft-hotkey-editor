@@ -1,6 +1,6 @@
 pub mod components;
 mod icon_radius;
-mod props;
+mod model;
 mod view;
 
 pub use view::FramedIconView;
@@ -14,7 +14,7 @@ use components::placeholder_icon::PlaceholderIcon;
 use components::tile_glow_icon::TileGlowIcon;
 use components::tile_plain_icon::TilePlainIcon;
 use dioxus::prelude::*;
-use props::FramedIconProps;
+use model::FramedIconModel;
 use state::FramedIconStyle;
 use tw_macro::assert_component;
 
@@ -23,10 +23,10 @@ use tw_macro::assert_component;
 /// resolved look it renders the matching per-look child — `TilePlainIcon` xor
 /// `TileGlowIcon` xor `ControlPlainIcon` xor `CardGlowIcon` xor `PlaceholderIcon`. Each
 /// look owns its own framed root and glow; this dispatcher only builds each look's props
-/// from the shared `FramedIconProps` and renders the one the look selects. Guarded —
+/// from the shared `FramedIconModel` and renders the one the look selects. Guarded —
 /// absent `src` renders nothing, unless `placeholder` draws the empty framed square.
 #[component]
-pub fn FramedIcon(props: FramedIconProps) -> Element {
+pub fn FramedIcon(props: FramedIconModel) -> Element {
     let look = FramedIconStyle::from(&props);
     if props.src.is_none() && !props.placeholder {
         return rsx! {};

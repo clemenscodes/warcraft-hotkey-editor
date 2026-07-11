@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::SystemHotkeysBreadcrumbsTriggerView;
@@ -8,13 +8,13 @@ mod style;
 use components::system_hotkeys_breadcrumbs_trigger_caret::SystemHotkeysBreadcrumbsTriggerCaret;
 use components::system_hotkeys_breadcrumbs_trigger_label::SystemHotkeysBreadcrumbsTriggerLabel;
 use dioxus::prelude::*;
-use props::SystemHotkeysBreadcrumbsTriggerProps;
+use model::SystemHotkeysBreadcrumbsTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The small-viewport dropdown trigger showing the active category.
 #[component]
-pub fn SystemHotkeysBreadcrumbsTrigger(props: SystemHotkeysBreadcrumbsTriggerProps) -> Element {
+pub fn SystemHotkeysBreadcrumbsTrigger(props: SystemHotkeysBreadcrumbsTriggerModel) -> Element {
     let label_text = props.label.clone();
     let caret_is_open = props.is_open;
     let is_open = props.is_open;

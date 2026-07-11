@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitCardSurfaceView;
@@ -7,7 +7,7 @@ pub use view::UnitCardSurfaceView;
 use components::idle_unit_card_surface::IdleUnitCardSurface;
 use components::selected_unit_card_surface::SelectedUnitCardSurface;
 use dioxus::prelude::*;
-use props::UnitCardSurfaceProps;
+use model::UnitCardSurfaceModel;
 use tw_macro::assert_component;
 
 /// The unit card's selectable button. A pure dispatcher: from whether the card is the
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// `--race-color` accent and publishes `--name-color`; there is no `data-selected`, the
 /// look follows the component.
 #[component]
-pub fn UnitCardSurface(props: UnitCardSurfaceProps) -> Element {
+pub fn UnitCardSurface(props: UnitCardSurfaceModel) -> Element {
     let icon_path = props.icon_path.clone();
     let display_name = props.display_name.clone();
     let unit_id = props.unit_id;

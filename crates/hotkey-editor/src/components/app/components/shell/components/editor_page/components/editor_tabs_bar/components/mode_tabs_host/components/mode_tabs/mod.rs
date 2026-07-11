@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::ModeTabsView;
@@ -8,8 +8,8 @@ mod style;
 
 use components::mode_tab::ModeTab;
 use dioxus::prelude::*;
-use logic::{ModeTabBinding, ModeTabPair};
-use props::ModeTabsProps;
+use model::ModeTabsModel;
+use presentation::{ModeTabBinding, ModeTabPair};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// phones). Each button's label, active flag, and handlers are built by
 /// conversion in `logic`.
 #[component]
-pub fn ModeTabs(props: ModeTabsProps) -> Element {
+pub fn ModeTabs(props: ModeTabsModel) -> Element {
     let ModeTabPair { melee, campaign } = ModeTabPair::build(&props);
     let ModeTabBinding {
         label: melee_label,

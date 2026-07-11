@@ -1,10 +1,10 @@
 pub mod components;
-mod logic;
+mod presentation;
 mod style;
 
 use components::layout_intro_line::LayoutIntroLine;
 use dioxus::prelude::*;
-use logic::intro_lines;
+use presentation::intro_lines;
 use style::CLASS;
 use tw_macro::assert_component;
 

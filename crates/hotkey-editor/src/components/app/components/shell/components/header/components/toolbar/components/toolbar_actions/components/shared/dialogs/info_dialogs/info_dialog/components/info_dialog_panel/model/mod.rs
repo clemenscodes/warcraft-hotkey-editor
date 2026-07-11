@@ -1,0 +1,44 @@
+use super::view::InfoDialogPanelView;
+use dioxus::prelude::*;
+
+/// The info dialog's bordered box inputs: the header title and close handler above
+/// the scroll-region body's intro, warning, and action data. Wrapped in the library
+/// `DialogContent` (which carries no project class — this panel's own classed `div`
+/// is the box).
+#[derive(Props, Clone, PartialEq)]
+pub struct InfoDialogPanelModel {
+    pub title: &'static str,
+    pub on_close: EventHandler<()>,
+    pub intro: &'static str,
+    pub warning: Option<&'static str>,
+    pub primary_label: &'static str,
+    pub on_primary: EventHandler<MouseEvent>,
+    pub on_cancel: EventHandler<MouseEvent>,
+}
+
+impl From<&InfoDialogPanelView> for InfoDialogPanelModel {
+    fn from(view: &InfoDialogPanelView) -> Self {
+        let InfoDialogPanelView {
+            title,
+            on_close,
+            intro,
+            warning,
+            primary_label,
+            on_primary,
+            on_cancel,
+        } = view.clone();
+        Self {
+            title,
+            on_close,
+            intro,
+            warning,
+            primary_label,
+            on_primary,
+            on_cancel,
+        }
+    }
+}
+
+impl ddd::Model for InfoDialogPanelModel {
+    type View = InfoDialogPanelView;
+}

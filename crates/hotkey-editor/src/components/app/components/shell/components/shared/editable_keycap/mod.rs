@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::EditableKeycapView;
@@ -10,7 +10,7 @@ use components::idle_keycap::IdleKeycap;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-use props::EditableKeycapProps;
+use model::EditableKeycapModel;
 pub use state::EditableKeycapState;
 
 /// The shared gold key-cap surface worn by both editable hotkey cells: the editor's
@@ -20,7 +20,7 @@ pub use state::EditableKeycapState;
 /// the host owns size, focus, drag, and the click handler; the look-children only render
 /// the look, so the gallery can render it with any glyph, radius, and pulse state.
 #[component]
-pub fn EditableKeycap(props: EditableKeycapProps) -> Element {
+pub fn EditableKeycap(props: EditableKeycapModel) -> Element {
     match props.state {
         EditableKeycapState::Editing => {
             let label = props.label.clone();

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::IdleSlotView;
@@ -6,7 +6,7 @@ mod style;
 
 use super::shared::slot_contents::SlotContents;
 use dioxus::prelude::*;
-use props::IdleSlotProps;
+use model::IdleSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// the shared slot content. Presentational — the dispatcher renders it when the slot's
 /// glow state is idle.
 #[component]
-pub fn IdleSlot(props: IdleSlotProps) -> Element {
+pub fn IdleSlot(props: IdleSlotModel) -> Element {
     let slot_label = props.slot_label;
     let key_label = props.key_label;
     let conflict = props.conflict;

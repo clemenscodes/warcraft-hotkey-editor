@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CollisionCardVisualView;
@@ -9,13 +9,13 @@ use components::hotkey_unit_row_icon::HotkeyUnitRowIcon;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::mini_grid::MiniGrid;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
-use props::CollisionCardVisualProps;
+use model::CollisionCardVisualModel;
 
 /// The leading visual of a collision card: the unit's portrait for a unit card, or
 /// the highlighted mini grid for an island card. A dedicated switch on the card
 /// content, so the card body stays a flat list of children.
 #[component]
-pub fn CollisionCardVisual(props: CollisionCardVisualProps) -> Element {
+pub fn CollisionCardVisual(props: CollisionCardVisualModel) -> Element {
     match props.content {
         CollisionCardContent::Unit { icon_url, name, .. } => {
             rsx! {

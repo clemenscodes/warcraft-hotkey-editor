@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ControlPlainIconView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::framed_icon::components::shared::framed_icon_image::FramedIconImage;
 use dioxus::prelude::*;
-use props::ControlPlainIconProps;
+use model::ControlPlainIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// hover glow. Presentational — the dispatcher builds its props and renders it when
 /// the resolved look is `ControlPlain`. Absent `source` draws the empty framed square.
 #[component]
-pub fn ControlPlainIcon(props: ControlPlainIconProps) -> Element {
+pub fn ControlPlainIcon(props: ControlPlainIconModel) -> Element {
     let Some(source) = props.source else {
         return rsx! {
             div { class: CLASS }

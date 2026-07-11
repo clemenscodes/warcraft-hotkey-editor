@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::CarriersDialogView;
@@ -11,9 +10,9 @@ use components::carriers_dialog_panel::CarriersDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_carriers_dialog;
-use logic::CarriersDialogShell;
-use props::CarriersDialogProps;
+use presentation::use_carriers_dialog;
+use presentation::CarriersDialogShell;
+use model::CarriersDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +22,7 @@ use tw_macro::assert_component;
 /// panel inside its own backdrop `div` within the library `DialogRoot`. No project class
 /// touches the library element — the backdrop is this component's own classed `div`.
 #[component]
-pub fn CarriersDialog(props: CarriersDialogProps) -> Element {
+pub fn CarriersDialog(props: CarriersDialogModel) -> Element {
     let view = use_carriers_dialog(&props);
     use_body_scroll_lock(view.open);
     let CarriersDialogShell {

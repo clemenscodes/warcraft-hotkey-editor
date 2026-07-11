@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::KeyPickerKeyView;
@@ -9,8 +9,8 @@ use crate::components::app::components::shell::components::shared::key_picker_bo
 use components::narrow_key_slot::NarrowKeySlot;
 use components::wide_key_slot::WideKeySlot;
 use dioxus::prelude::*;
-use logic::KeyPickerKeyPresentation;
-use props::KeyPickerKeyProps;
+use model::KeyPickerKeyModel;
+use presentation::KeyPickerKeyPresentation;
 use tw_macro::assert_component;
 
 /// A single key on the picker board: an on-screen keyboard button that assigns its key
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// `WideKeySlot`). Each slot owns the key's width and fills it with the color leaf that
 /// owns the look. The body only chooses the width; the color is chosen further down.
 #[component]
-pub fn KeyPickerKey(props: KeyPickerKeyProps) -> Element {
+pub fn KeyPickerKey(props: KeyPickerKeyModel) -> Element {
     let presentation = KeyPickerKeyPresentation::from(&props);
     let state = presentation.state;
     let label = presentation.label;

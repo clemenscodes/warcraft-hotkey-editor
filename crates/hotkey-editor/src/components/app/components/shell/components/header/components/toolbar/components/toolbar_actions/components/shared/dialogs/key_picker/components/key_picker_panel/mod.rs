@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::KeyPickerPanelView;
@@ -9,7 +9,7 @@ use components::key_picker_body::KeyPickerBody;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-use props::KeyPickerPanelProps;
+use model::KeyPickerPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// project class ever lands on the library element. Holds the header row above the
 /// scrolling board body.
 #[component]
-pub fn KeyPickerPanel(props: KeyPickerPanelProps) -> Element {
+pub fn KeyPickerPanel(props: KeyPickerPanelModel) -> Element {
     let title = props.title.clone();
     let on_close = props.on_close;
     let columns = props.columns.clone();

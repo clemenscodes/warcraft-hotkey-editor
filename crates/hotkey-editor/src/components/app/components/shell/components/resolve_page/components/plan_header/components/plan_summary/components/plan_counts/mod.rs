@@ -1,18 +1,18 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::PlanCountsView;
 mod style;
 use components::plan_unresolved::PlanUnresolved;
 use dioxus::prelude::*;
-use props::PlanCountsProps;
+use model::PlanCountsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The move count (and, when present, the unresolved count) under the plan title.
 #[component]
-pub fn PlanCounts(props: PlanCountsProps) -> Element {
+pub fn PlanCounts(props: PlanCountsModel) -> Element {
     let moves_text = props.moves_text;
     let unresolved_count = props.unresolved_count;
     rsx! {

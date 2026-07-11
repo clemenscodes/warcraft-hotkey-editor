@@ -1,16 +1,16 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BurgerMenuItemIconView;
 mod style;
 
 use dioxus::prelude::*;
-use props::BurgerMenuItemIconProps;
+use model::BurgerMenuItemIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn BurgerMenuItemIcon(props: BurgerMenuItemIconProps) -> Element {
+pub fn BurgerMenuItemIcon(props: BurgerMenuItemIconModel) -> Element {
     let svg = props.svg;
     rsx! {
         span { class: CLASS, aria_hidden: "true", dangerous_inner_html: svg }

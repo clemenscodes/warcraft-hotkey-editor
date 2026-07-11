@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ToolbarButtonIconView;
 mod style;
 
 use dioxus::prelude::*;
-use props::ToolbarButtonIconProps;
+use model::ToolbarButtonIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The glyph inside a toolbar button.
 #[component]
-pub fn ToolbarButtonIcon(props: ToolbarButtonIconProps) -> Element {
+pub fn ToolbarButtonIcon(props: ToolbarButtonIconModel) -> Element {
     let icon = props.icon;
     rsx! {
         span {

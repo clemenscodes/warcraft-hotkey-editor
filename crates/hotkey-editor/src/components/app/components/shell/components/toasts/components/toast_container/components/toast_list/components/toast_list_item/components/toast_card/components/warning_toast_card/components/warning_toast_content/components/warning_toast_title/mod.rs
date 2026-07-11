@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::WarningToastTitleView;
 mod style;
 
 use dioxus::prelude::*;
-use props::WarningToastTitleProps;
+use model::WarningToastTitleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The warning toast headline: the uppercase gold heading look tinted for warning.
 #[component]
-pub fn WarningToastTitle(props: WarningToastTitleProps) -> Element {
+pub fn WarningToastTitle(props: WarningToastTitleModel) -> Element {
     let title = props.title;
     rsx! {
         div {

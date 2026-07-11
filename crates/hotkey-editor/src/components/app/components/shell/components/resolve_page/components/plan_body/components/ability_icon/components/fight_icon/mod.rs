@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::FightIconView;
@@ -7,7 +7,7 @@ use crate::components::app::components::shell::components::shared::framed_icon::
     FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-use props::FightIconProps;
+use model::FightIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// to a gold glow when the enabled button `.group` is hovered. The shared
 /// `FramedIcon` draws the bordered, rounded image.
 #[component]
-pub fn FightIcon(props: FightIconProps) -> Element {
+pub fn FightIcon(props: FightIconModel) -> Element {
     let Some(source) = props.src else {
         return rsx! {};
     };

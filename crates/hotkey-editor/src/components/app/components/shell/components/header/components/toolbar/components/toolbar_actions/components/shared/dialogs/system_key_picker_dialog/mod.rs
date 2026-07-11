@@ -1,8 +1,7 @@
 pub mod components;
 mod data;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::SystemKeyPickerDialogView;
@@ -13,9 +12,9 @@ use components::system_key_picker_dialog_panel::SystemKeyPickerDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_system_key_picker;
-use logic::SystemKeyPickerDialogShell;
-use props::SystemKeyPickerDialogProps;
+use presentation::use_system_key_picker;
+use presentation::SystemKeyPickerDialogShell;
+use model::SystemKeyPickerDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -27,7 +26,7 @@ use tw_macro::assert_component;
 /// touches the library element. Focus and the keyboard listener belong to the picker,
 /// not the dialog, so this component wires neither.
 #[component]
-pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogProps) -> Element {
+pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogModel) -> Element {
     let model = use_system_key_picker(&props);
     use_body_scroll_lock(model.open);
     let SystemKeyPickerDialogShell {

@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ActiveCategoryTabView;
 mod style;
 
 use dioxus::prelude::*;
-use props::ActiveCategoryTabProps;
+use model::ActiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The selected category tab: gold, highlighted, and marked as the current page.
 #[component]
-pub fn ActiveCategoryTab(props: ActiveCategoryTabProps) -> Element {
+pub fn ActiveCategoryTab(props: ActiveCategoryTabModel) -> Element {
     let label = props.label;
     let on_click = props.on_click;
     rsx! {

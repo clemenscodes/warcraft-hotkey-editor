@@ -1,6 +1,6 @@
 mod breadcrumb_view;
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::BreadcrumbsView;
@@ -11,7 +11,7 @@ pub use breadcrumb_view::BreadcrumbView;
 use components::breadcrumb::Breadcrumb;
 use components::breadcrumb_separator::BreadcrumbSeparator;
 use dioxus::prelude::*;
-use props::BreadcrumbsProps;
+use model::BreadcrumbsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,7 +20,7 @@ use tw_macro::assert_component;
 /// separator between each. The page builds the tabs (labels, counts, active flags,
 /// navigation handlers) and names the bar via `aria_label`.
 #[component]
-pub fn Breadcrumbs(props: BreadcrumbsProps) -> Element {
+pub fn Breadcrumbs(props: BreadcrumbsModel) -> Element {
     let breadcrumbs = props.breadcrumbs;
     let aria_label = props.aria_label;
     rsx! {

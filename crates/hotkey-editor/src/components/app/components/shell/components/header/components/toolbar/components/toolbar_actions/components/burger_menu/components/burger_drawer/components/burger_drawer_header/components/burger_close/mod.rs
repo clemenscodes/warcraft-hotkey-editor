@@ -1,16 +1,16 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::BurgerCloseView;
 mod style;
 
 use dioxus::prelude::*;
-use props::BurgerCloseProps;
+use model::BurgerCloseModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn BurgerClose(props: BurgerCloseProps) -> Element {
+pub fn BurgerClose(props: BurgerCloseModel) -> Element {
     let onclick = props.onclick;
     rsx! {
         button {

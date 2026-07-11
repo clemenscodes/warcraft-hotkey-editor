@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictAbilityTriggerView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::conflict_ability_icon::ConflictAbilityIcon;
 use dioxus::prelude::*;
-use props::ConflictAbilityTriggerProps;
+use model::ConflictAbilityTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// that deep-links to the carrying unit. Its `.conflict-ability-trigger` identity class
 /// is coupled to the e2e suite.
 #[component]
-pub fn ConflictAbilityTrigger(props: ConflictAbilityTriggerProps) -> Element {
+pub fn ConflictAbilityTrigger(props: ConflictAbilityTriggerModel) -> Element {
     let onclick = props.onclick;
     let icon_src = props.icon_src;
     let icon_alt = props.icon_alt;

@@ -1,6 +1,5 @@
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::PreviewGridView;
@@ -8,8 +7,8 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::tile_face::TileFace;
 use dioxus::prelude::*;
-use hooks::use_preview_grid;
-use props::PreviewGridProps;
+use model::PreviewGridModel;
+use presentation::use_preview_grid;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +18,7 @@ use tw_macro::assert_component;
 /// mini grids via the same utility values) and draws whatever twelve tiles it is
 /// handed.
 #[component]
-pub fn PreviewGrid(props: PreviewGridProps) -> Element {
+pub fn PreviewGrid(props: PreviewGridModel) -> Element {
     let tiles = use_preview_grid(&props);
     rsx! {
         div {

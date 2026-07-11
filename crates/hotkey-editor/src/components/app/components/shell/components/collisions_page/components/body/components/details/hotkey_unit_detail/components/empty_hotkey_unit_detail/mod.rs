@@ -1,18 +1,21 @@
+mod model;
 mod style;
+mod view;
 
-use super::super::data::EMPTY_PROMPT;
+pub use view::EmptyHotkeyUnitDetailView;
+
 use dioxus::prelude::*;
+use model::EmptyHotkeyUnitDetailModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The empty shared-hotkey detail pane: the base pane surface, centered and muted,
-/// showing the prompt to select a unit.
+/// The empty detail pane: the base pane surface, centered and muted, showing the prompt.
 #[component]
-pub fn EmptyHotkeyUnitDetail() -> Element {
+pub fn EmptyHotkeyUnitDetail(props: EmptyHotkeyUnitDetailModel) -> Element {
     rsx! {
         section {
             class: CLASS,
-            p { {EMPTY_PROMPT} }
+            p { {props.prompt} }
         }
     }
 }

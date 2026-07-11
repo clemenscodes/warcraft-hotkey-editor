@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-pub mod logic;
-mod props;
+mod model;
+pub mod presentation;
 mod state;
 mod style;
 
@@ -11,7 +10,7 @@ use components::unit_detail_empty::UnitDetailEmpty;
 use components::unit_detail_header::UnitDetailHeader;
 use components::unit_stats_panel::UnitStatsPanel;
 use dioxus::prelude::*;
-use hooks::use_unit_detail_panel;
+use presentation::use_unit_detail_panel;
 use state::{UnitDetailModel, UnitDetailView};
 use style::CLASS;
 use tw_macro::assert_component;

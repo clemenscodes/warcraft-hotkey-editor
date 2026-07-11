@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ClosedHeroLevelTriggerView;
@@ -9,7 +9,7 @@ use super::hero_level_trigger_number::HeroLevelTriggerNumber;
 use super::shared::hero_level_trigger_label::HeroLevelTriggerLabel;
 use components::closed_hero_level_trigger_chevron::ClosedHeroLevelTriggerChevron;
 use dioxus::prelude::*;
-use props::ClosedHeroLevelTriggerProps;
+use model::ClosedHeroLevelTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// upright caret. Rendered by the dispatcher while the menu is closed; owns its button
 /// root and composes the shared label and number leaves plus its upright caret.
 #[component]
-pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerProps) -> Element {
+pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
     let number = props.number;
     let onclick = props.onclick;
     rsx! {

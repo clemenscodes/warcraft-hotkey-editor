@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AttentionSurfaceView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::shared::toolbar_button_surface::components::shared::toolbar_button_icon::ToolbarButtonIcon;
 use dioxus::prelude::*;
-use props::AttentionSurfaceProps;
+use model::AttentionSurfaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// — the dispatcher builds its props and renders it when the surface state is
 /// `Attention`.
 #[component]
-pub fn AttentionSurface(props: AttentionSurfaceProps) -> Element {
+pub fn AttentionSurface(props: AttentionSurfaceModel) -> Element {
     let icon = props.icon;
     rsx! {
         button {

@@ -1,15 +1,15 @@
 pub mod components;
 mod data;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use components::info_dialog_panel::InfoDialogPanel;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use logic::InfoDialogShell;
-use props::InfoDialogConfig;
+use presentation::InfoDialogShell;
+use model::InfoDialogConfig;
 use style::CLASS;
 use tw_macro::assert_component;
 

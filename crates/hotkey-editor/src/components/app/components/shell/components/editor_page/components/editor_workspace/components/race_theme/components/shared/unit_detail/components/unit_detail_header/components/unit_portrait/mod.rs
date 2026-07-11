@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitPortraitView;
 mod style;
 
 use dioxus::prelude::*;
-use props::UnitPortraitProps;
+use model::UnitPortraitModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unit's portrait image; renders nothing when the unit has no portrait.
 #[component]
-pub fn UnitPortrait(props: UnitPortraitProps) -> Element {
+pub fn UnitPortrait(props: UnitPortraitModel) -> Element {
     let Some(src) = props.src else {
         return rsx! {};
     };

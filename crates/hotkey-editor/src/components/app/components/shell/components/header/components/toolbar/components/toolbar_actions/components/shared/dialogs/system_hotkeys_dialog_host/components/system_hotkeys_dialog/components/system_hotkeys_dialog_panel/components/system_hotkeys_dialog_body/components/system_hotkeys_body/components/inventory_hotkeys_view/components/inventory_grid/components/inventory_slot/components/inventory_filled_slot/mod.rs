@@ -1,6 +1,5 @@
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::InventoryFilledSlotView;
@@ -10,8 +9,8 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
-use hooks::use_inventory_filled_slot;
-use props::InventoryFilledSlotProps;
+use presentation::use_inventory_filled_slot;
+use model::InventoryFilledSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -20,7 +19,7 @@ use tw_macro::assert_component;
 /// owns the focusable, draggable outer cell and its size; the framed `SystemSlot`
 /// draws the cell.
 #[component]
-pub fn InventoryFilledSlot(props: InventoryFilledSlotProps) -> Element {
+pub fn InventoryFilledSlot(props: InventoryFilledSlotModel) -> Element {
     let model = use_inventory_filled_slot(&props);
     let state = model.state;
     let slot_label = model.slot_label.clone();

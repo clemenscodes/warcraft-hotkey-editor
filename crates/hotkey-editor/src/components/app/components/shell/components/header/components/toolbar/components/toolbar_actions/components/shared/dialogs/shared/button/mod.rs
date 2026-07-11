@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ButtonView;
@@ -8,7 +8,7 @@ mod state;
 use components::primary_button::PrimaryButton;
 use components::secondary_button::SecondaryButton;
 use dioxus::prelude::*;
-use props::ButtonProps;
+use model::ButtonModel;
 pub use state::ButtonVariant;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// classed `button` root and forwards one click; callers pick the variant and pass
 /// the label text.
 #[component]
-pub fn Button(props: ButtonProps) -> Element {
+pub fn Button(props: ButtonModel) -> Element {
     match props.variant {
         ButtonVariant::Primary => {
             let onclick = props.onclick;

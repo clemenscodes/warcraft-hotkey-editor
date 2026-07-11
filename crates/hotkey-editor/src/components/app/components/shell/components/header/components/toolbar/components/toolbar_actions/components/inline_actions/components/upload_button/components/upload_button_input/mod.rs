@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UploadButtonInputView;
@@ -6,13 +6,13 @@ mod style;
 
 use crate::services::files::upload::UPLOAD_INPUT_ELEMENT_ID;
 use dioxus::prelude::*;
-use props::UploadButtonInputProps;
+use model::UploadButtonInputModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The visually hidden `<input type="file">` that receives the CustomKeys.txt.
 #[component]
-pub fn UploadButtonInput(props: UploadButtonInputProps) -> Element {
+pub fn UploadButtonInput(props: UploadButtonInputModel) -> Element {
     let on_change = props.on_change;
     rsx! {
         input {

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::SystemKeyPickerDialogPanelView;
@@ -9,7 +9,7 @@ use components::system_key_picker_dialog_body::SystemKeyPickerDialogBody;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogContent;
-use props::SystemKeyPickerDialogPanelProps;
+use model::SystemKeyPickerDialogPanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// so no project class ever lands on the library element. Holds the header row above the
 /// scrolling board body.
 #[component]
-pub fn SystemKeyPickerDialogPanel(props: SystemKeyPickerDialogPanelProps) -> Element {
+pub fn SystemKeyPickerDialogPanel(props: SystemKeyPickerDialogPanelModel) -> Element {
     let title = props.title;
     let on_close = props.on_close;
     let columns = props.columns;

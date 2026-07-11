@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::RaceTabView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::race_tab_label::RaceTabLabel;
 use dioxus::prelude::*;
-use props::RaceTabProps;
+use model::RaceTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// hover accent, and label colour all come from custom properties, so this button is the
 /// same for every race and both states.
 #[component]
-pub fn RaceTab(props: RaceTabProps) -> Element {
+pub fn RaceTab(props: RaceTabModel) -> Element {
     let label = props.label;
     let onclick = props.onclick;
     let onkeydown = props.onkeydown;

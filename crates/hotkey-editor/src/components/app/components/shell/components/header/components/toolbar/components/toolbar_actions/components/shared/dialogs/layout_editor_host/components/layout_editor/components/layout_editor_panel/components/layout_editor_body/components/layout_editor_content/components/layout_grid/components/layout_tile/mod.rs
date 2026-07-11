@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 pub use view::LayoutTileView;
 mod state;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::shared::editable_keyc
     EditableKeycap, EditableKeycapState,
 };
 use dioxus::prelude::*;
-use props::LayoutTileProps;
+use model::LayoutTileModel;
 pub use state::LayoutTileState;
 use style::CLASS;
 use tw_macro::assert_component;
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// navigable host: it owns the drag/click behaviour, the grid address, focus, and the
 /// font size, and wraps the shared `EditableKeycap` that draws the gold cap and pulse.
 #[component]
-pub fn LayoutTile(props: LayoutTileProps) -> Element {
+pub fn LayoutTile(props: LayoutTileModel) -> Element {
     let ondragstart = props.ondragstart;
     let ondragend = props.ondragend;
     let ondragover = props.ondragover;

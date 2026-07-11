@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::SystemSlotView;
@@ -9,7 +9,7 @@ use components::conflict_slot::ConflictSlot;
 use components::highlighted_slot::HighlightedSlot;
 use components::idle_slot::IdleSlot;
 use dioxus::prelude::*;
-use props::SystemSlotProps;
+use model::SystemSlotModel;
 pub use state::SystemSlotState;
 use tw_macro::assert_component;
 
@@ -20,7 +20,7 @@ use tw_macro::assert_component;
 /// the one the state selects. Purely presentational — the host owns the outer
 /// interactive element, size, and behaviour.
 #[component]
-pub fn SystemSlot(props: SystemSlotProps) -> Element {
+pub fn SystemSlot(props: SystemSlotModel) -> Element {
     match props.state {
         SystemSlotState::Idle => {
             let slot_label = props.slot_label.clone();

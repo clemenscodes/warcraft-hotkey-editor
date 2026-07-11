@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ToolbarButtonView;
@@ -8,7 +8,7 @@ use crate::components::app::components::shell::components::header::components::t
     SurfaceState, ToolbarButtonSurface,
 };
 use dioxus::prelude::*;
-use props::ToolbarButtonProps;
+use model::ToolbarButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -19,7 +19,7 @@ use tw_macro::assert_component;
 /// container resizes one button — and the surface inside scales its entire look off
 /// this box in `cqi`, like one drawing.
 #[component]
-pub fn ToolbarButton(props: ToolbarButtonProps) -> Element {
+pub fn ToolbarButton(props: ToolbarButtonModel) -> Element {
     let icon = props.icon;
     let aria_label = props.aria_label;
     let state = SurfaceState::Interactive;

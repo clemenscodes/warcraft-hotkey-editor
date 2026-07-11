@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::preview_dialog::PreviewDialog;
 use dioxus::prelude::*;
-use hooks::{PreviewDialogHostModel, use_preview_dialog_host};
+use presentation::{PreviewDialogHostModel, use_preview_dialog_host};
 use style::CLASS;
 use tw_macro::assert_component;
 

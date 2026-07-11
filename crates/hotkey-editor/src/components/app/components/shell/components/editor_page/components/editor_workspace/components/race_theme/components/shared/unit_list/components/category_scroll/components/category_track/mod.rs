@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CategoryTrackView;
@@ -8,7 +8,7 @@ mod style;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_list::unit_kind_key;
 use components::unit_category_section::UnitCategorySection;
 use dioxus::prelude::*;
-use props::CategoryTrackProps;
+use model::CategoryTrackModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// a horizontal fixed-height carousel on small screens. It receives the category kinds
 /// in display order and renders one section per kind.
 #[component]
-pub fn CategoryTrack(props: CategoryTrackProps) -> Element {
+pub fn CategoryTrack(props: CategoryTrackModel) -> Element {
     rsx! {
         div {
             class: CLASS,

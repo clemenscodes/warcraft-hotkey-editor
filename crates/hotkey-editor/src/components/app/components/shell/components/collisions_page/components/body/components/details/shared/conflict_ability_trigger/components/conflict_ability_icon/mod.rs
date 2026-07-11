@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictAbilityIconView;
@@ -7,7 +7,7 @@ use crate::components::app::components::shell::components::shared::framed_icon::
     FramedIcon, IconRadius,
 };
 use dioxus::prelude::*;
-use props::ConflictAbilityIconProps;
+use model::ConflictAbilityIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// when its trigger `.group` is hovered. The shared `FramedIcon` draws the bordered,
 /// rounded image.
 #[component]
-pub fn ConflictAbilityIcon(props: ConflictAbilityIconProps) -> Element {
+pub fn ConflictAbilityIcon(props: ConflictAbilityIconModel) -> Element {
     let Some(source) = props.src else {
         return rsx! {};
     };

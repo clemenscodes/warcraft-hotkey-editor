@@ -1,11 +1,11 @@
 pub mod components;
-mod logic;
+mod presentation;
 mod style;
 
 use crate::services::editor_state::context::use_editor_state;
 use components::catalog_visibility_button::CatalogVisibilityButton;
 use dioxus::prelude::*;
-use logic::{CatalogVisibilitySignals, CatalogVisibilityToggleModel};
+use presentation::{CatalogVisibilitySignals, CatalogVisibilityToggleModel};
 use style::CLASS;
 use tw_macro::assert_component;
 

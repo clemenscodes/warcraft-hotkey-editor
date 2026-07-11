@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::MoveRowView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::move_panel::MovePanel;
 use dioxus::prelude::*;
-use props::MoveRowProps;
+use model::MoveRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// the from -> to grids drawing where each ability lands. It owns only the grid root
 /// and hands the move down to the panel that lays the card out.
 #[component]
-pub fn MoveRow(props: MoveRowProps) -> Element {
+pub fn MoveRow(props: MoveRowModel) -> Element {
     let move_view = props.move_view;
     rsx! {
         div {

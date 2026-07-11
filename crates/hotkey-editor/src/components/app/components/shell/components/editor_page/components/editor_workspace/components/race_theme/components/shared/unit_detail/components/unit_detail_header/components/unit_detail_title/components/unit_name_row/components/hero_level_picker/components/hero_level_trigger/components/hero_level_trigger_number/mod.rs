@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::HeroLevelTriggerNumberView;
 mod style;
 
 use dioxus::prelude::*;
-use props::HeroLevelTriggerNumberProps;
+use model::HeroLevelTriggerNumberModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The current hero level, centred in the trigger.
 #[component]
-pub fn HeroLevelTriggerNumber(props: HeroLevelTriggerNumberProps) -> Element {
+pub fn HeroLevelTriggerNumber(props: HeroLevelTriggerNumberModel) -> Element {
     let number = props.number;
     rsx! {
         span {

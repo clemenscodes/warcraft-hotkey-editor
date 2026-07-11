@@ -1,5 +1,5 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::MiniGridView;
@@ -7,7 +7,7 @@ mod style;
 
 use crate::components::app::components::shell::components::shared::mini_grid_frame::MiniGridFrame;
 use dioxus::prelude::*;
-use props::MiniGridProps;
+use model::MiniGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,8 +16,8 @@ use tw_macro::assert_component;
 /// each placed ability into a filled tile before handing the built grid to the
 /// shared `MiniGrid` frame.
 #[component]
-pub fn MiniGrid(props: MiniGridProps) -> Element {
-    let tiles = logic::grid(&props);
+pub fn MiniGrid(props: MiniGridModel) -> Element {
+    let tiles = presentation::grid(&props);
     rsx! {
         div {
             class: CLASS,

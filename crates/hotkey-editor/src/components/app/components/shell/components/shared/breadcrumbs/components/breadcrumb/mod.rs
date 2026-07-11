@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::BreadcrumbView;
@@ -7,7 +7,7 @@ pub use view::BreadcrumbView;
 use components::active_breadcrumb::ActiveBreadcrumb;
 use components::idle_breadcrumb::IdleBreadcrumb;
 use dioxus::prelude::*;
-use props::BreadcrumbProps;
+use model::BreadcrumbModel;
 use tw_macro::assert_component;
 
 /// A single breadcrumb tab. A pure dispatcher: from whether it is the active tab it
@@ -15,7 +15,7 @@ use tw_macro::assert_component;
 /// full look, and publishes the `--count-opacity` its count reads — no `data-active`, the
 /// look follows the component.
 #[component]
-pub fn Breadcrumb(props: BreadcrumbProps) -> Element {
+pub fn Breadcrumb(props: BreadcrumbModel) -> Element {
     match props.active {
         true => {
             let label = props.label.clone();

@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::SystemHotkeysDialogView;
@@ -12,9 +11,9 @@ use components::system_hotkeys_dialog_panel::SystemHotkeysDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_system_hotkeys_dialog;
-use logic::SystemHotkeysDialogShell;
-use props::SystemHotkeysDialogProps;
+use presentation::use_system_hotkeys_dialog;
+use presentation::SystemHotkeysDialogShell;
+use model::SystemHotkeysDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +22,7 @@ use tw_macro::assert_component;
 /// panel inside its own backdrop `div` (the dimmed, centring layer) within the library
 /// `DialogRoot`. No project class touches the library element.
 #[component]
-pub fn SystemHotkeysDialog(props: SystemHotkeysDialogProps) -> Element {
+pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
     use_body_scroll_lock(props.system_hotkeys_open);
     let model = use_system_hotkeys_dialog(&props);
     let SystemHotkeysDialogShell {

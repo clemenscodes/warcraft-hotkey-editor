@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::AttributeRowsView;
@@ -9,7 +9,7 @@ use components::agility_row::AgilityRow;
 use components::intelligence_row::IntelligenceRow;
 use components::strength_row::StrengthRow;
 use dioxus::prelude::*;
-use props::AttributeRowsProps;
+use model::AttributeRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// It names its rows directly — each attribute row owns its own look and its primary
 /// glow.
 #[component]
-pub fn AttributeRows(props: AttributeRowsProps) -> Element {
+pub fn AttributeRows(props: AttributeRowsModel) -> Element {
     let strength = props.strength;
     let strength_is_primary = props.strength_is_primary;
     let agility = props.agility;

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::InlineHotkeyMarkerView;
@@ -6,13 +6,13 @@ mod style;
 
 use super::shared::conflict_hotkey_key::ConflictHotkeyKey;
 use dioxus::prelude::*;
-use props::InlineHotkeyMarkerProps;
+use model::InlineHotkeyMarkerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The shared-hotkey badge shown inline between two abilities.
 #[component]
-pub fn InlineHotkeyMarker(props: InlineHotkeyMarkerProps) -> Element {
+pub fn InlineHotkeyMarker(props: InlineHotkeyMarkerModel) -> Element {
     let label = props.label;
     rsx! {
         span {

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ToolbarButtonSurfaceView;
@@ -9,7 +9,7 @@ use components::attention_surface::AttentionSurface;
 use components::clear_surface::ClearSurface;
 use components::interactive_surface::InteractiveSurface;
 use dioxus::prelude::*;
-use props::ToolbarButtonSurfaceProps;
+use model::ToolbarButtonSurfaceModel;
 pub use state::SurfaceState;
 use tw_macro::assert_component;
 
@@ -18,12 +18,12 @@ use tw_macro::assert_component;
 /// it renders the matching look: `InteractiveSurface` xor `AttentionSurface` xor
 /// `ClearSurface`. Each look owns its own `<button>` root and its full chrome, drawn in
 /// `cqi` off the container so the whole button scales as one drawing; this dispatcher
-/// only builds each look's props from the shared `ToolbarButtonSurfaceProps` and renders
+/// only builds each look's props from the shared `ToolbarButtonSurfaceModel` and renders
 /// the one the state selects. Consumers swap the icon, the click handler, aria/disabled
 /// state, and the resting look (the inline actions use `Interactive`; the collisions
 /// button uses `Attention` / `Clear`).
 #[component]
-pub fn ToolbarButtonSurface(props: ToolbarButtonSurfaceProps) -> Element {
+pub fn ToolbarButtonSurface(props: ToolbarButtonSurfaceModel) -> Element {
     let icon = props.icon;
     let aria_label = props.aria_label;
     let aria_haspopup = props.aria_haspopup;

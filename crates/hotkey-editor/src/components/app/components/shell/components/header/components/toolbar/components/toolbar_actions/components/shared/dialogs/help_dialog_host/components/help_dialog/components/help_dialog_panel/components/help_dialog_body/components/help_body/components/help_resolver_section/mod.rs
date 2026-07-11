@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::HelpResolverSectionView;
@@ -9,14 +9,14 @@ use crate::components::app::components::shell::components::header::components::t
 use components::help_glossary_columns::HelpGlossaryColumns;
 use components::help_resolver_prose::HelpResolverProse;
 use dioxus::prelude::*;
-use props::HelpResolverSectionProps;
+use model::HelpResolverSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The full-width lower region: the heading, the prose walkthrough of what the
 /// resolver does, and the glossary that defines its terms.
 #[component]
-pub fn HelpResolverSection(props: HelpResolverSectionProps) -> Element {
+pub fn HelpResolverSection(props: HelpResolverSectionModel) -> Element {
     let paragraphs = props.prose;
     let columns = props.glossary;
     rsx! {

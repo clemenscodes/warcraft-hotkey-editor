@@ -1,16 +1,16 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::FooterDisclaimerView;
 mod style;
 
 use dioxus::prelude::*;
-use props::FooterDisclaimerProps;
+use model::FooterDisclaimerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn FooterDisclaimer(props: FooterDisclaimerProps) -> Element {
+pub fn FooterDisclaimer(props: FooterDisclaimerModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

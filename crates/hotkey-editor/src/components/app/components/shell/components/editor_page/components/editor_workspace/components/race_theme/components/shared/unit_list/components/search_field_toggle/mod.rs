@@ -1,12 +1,12 @@
 pub mod components;
 mod data;
-mod logic;
+mod presentation;
 mod style;
 
 use crate::services::editor_state::context::use_editor_state;
 use components::search_field_button::SearchFieldButton;
 use dioxus::prelude::*;
-use logic::SearchFieldToggleModel;
+use presentation::SearchFieldToggleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 

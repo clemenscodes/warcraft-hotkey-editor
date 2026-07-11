@@ -1,10 +1,10 @@
-mod props;
+mod model;
 mod view;
 
 mod style;
 
 use dioxus::prelude::*;
-use props::MutedHitPointsRegenGainProps;
+use model::MutedHitPointsRegenGainModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,7 +12,7 @@ use tw_macro::assert_component;
 /// [`HitPointsRegenGain`](super::super::HitPointsRegenGain) dispatcher when the unit
 /// does not regenerate health.
 #[component]
-pub fn MutedHitPointsRegenGain(props: MutedHitPointsRegenGainProps) -> Element {
+pub fn MutedHitPointsRegenGain(props: MutedHitPointsRegenGainModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

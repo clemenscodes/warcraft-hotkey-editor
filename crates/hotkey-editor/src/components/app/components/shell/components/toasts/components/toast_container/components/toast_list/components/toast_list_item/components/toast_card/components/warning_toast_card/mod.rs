@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::WarningToastCardView;
@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::toasts::components::t
 use components::warning_toast_content::WarningToastContent;
 use components::warning_toast_icon::WarningToastIcon;
 use dioxus::prelude::*;
-use props::WarningToastCardProps;
+use model::WarningToastCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// warning icon and title, the description, and the close control. Presentational
 /// only; the dispatcher builds its props from the toast record.
 #[component]
-pub fn WarningToastCard(props: WarningToastCardProps) -> Element {
+pub fn WarningToastCard(props: WarningToastCardModel) -> Element {
     let title = props.record.title().to_string();
     let description = props.record.description();
     let id = props.record.id();

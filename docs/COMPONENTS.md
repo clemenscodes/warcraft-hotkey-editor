@@ -233,20 +233,20 @@ a third, and "it felt like it belonged there" is not one of them.
    You never flat-dump the leaf beside its renderers, and you never nest a
    shared leaf under just one of several renderers. (See "Shared leaves".)
 
-2. **A generic base and its variant wrappers** are flat siblings inside one
-   plural group directory (`grid_editors/grid_editor/` beside
-   `grid_editors/command_grid_editor/`), and the variants reach the base with
-   `super::grid_editor::…`. This applies **only** when the wrapper binds the
-   base's generic **behavior** type parameter (the way `CommandGridEditor` binds
-   `GridEditor`'s `GridBehavior`). There is **no** "fills a slot/body the base
-   exposes" case — a base that receives a body is `children: Element`, forbidden
-   above. It does **not** cover "this wrapper just reuses that leaf" — that is
-   exception 1 if the leaf has several renderers, or plain nesting if it has one.
-   (See "Base and variants are flat".)
+That is the **only** exception. In particular, a **generic base is not a second
+exception** — it is rendered by its variant wrappers (two or more renderers), so it
+*is* a shared leaf and lives in `shared/` like every other shared leaf.
+`GridEditor` lives at `grid_editors/shared/grid_editor/`; each variant
+(`CommandGridEditor`, …) reaches it via its full `super::shared::grid_editor::…`
+path and binds the behavior with a turbofish (`GridEditor::<CommandBehavior> {
+config }`). The generic-behavior mechanism is unchanged; only the placement is the
+ordinary shared-leaf placement. There is **no** "flat siblings in a plural group
+directory" layout, and no "fills a slot/body the base exposes" case (a base that
+receives a body is `children: Element`, forbidden above).
 
-If neither pattern fits exactly, there is no exception — nest it. When unsure
-which case you are in, **count the render sites**; that number, never your
-intuition about which component "owns" or "is really" the leaf, decides.
+If the single exception does not fit exactly, there is no exception — nest it. When
+unsure, **count the render sites**; that number, never your intuition about which
+component "owns" the leaf, decides.
 
 ### Why it is absolute
 
@@ -373,7 +373,14 @@ component's classes, a `ClassList` prop — **any hit means you shared styles in
 of composing a component.** Delete it, and render the component that owns the look
 instead. That is the only way, every time.
 
-## Logic composes through hooks, the way markup composes through components
+## Logic composes through the presentation builder, the way markup composes through components
+
+> **Updated to the `View → Model → Presentation` pipeline.** "The component's one
+> composed hook" is now **the connected `presentation/` builder** (`use_foo_presentation`).
+> The distinction below between *primitive* accessor hooks (reused, in
+> `services/<domain>/context.rs`) and *the component's one composed step* still holds —
+> the composed step just lives in `presentation/` now, and returns a signal-free
+> `Presentation`, not a loose model.
 
 Domain logic, `localStorage`, and web APIs are reached only through hooks, never
 inline in a body. The hook layer mirrors the component layer exactly.
@@ -396,6 +403,14 @@ Reading a component must tell the story immediately and never require following
 a logical calculus. The composed hook is where the calculus lives.
 
 ## Presentational leaves, connected wrappers
+
+> **Updated to the `View → Model → Presentation` pipeline.** The Host/leaf split below
+> still holds verbatim — a connected `<Leaf>Host` sources context and feeds a
+> presentational leaf its named-field props. The only mechanical change: the Host's
+> one composed hook (shown as `hooks.rs::use_collisions_button`) is now its
+> **`presentation/` builder** (`use_collisions_button_presentation`), returning a
+> signal-free `Presentation`. The leaf still takes a `Model` and stays props-in /
+> markup-out.
 
 App-wide state — the `CustomKeys` document, the grid layout, the upload status —
 reaches the leaf that renders it as **props**, and never any other way. This splits
@@ -911,26 +926,52 @@ container that descendants read through generic `var(--race-color)` utilities. E
 
 ## The directory layout
 
-Every component directory follows the same shape. `grid_tile` is the canonical
-example:
+Every component directory follows the same shape. Each concern is a **directory
+module** (`X/mod.rs`), so it can split into sub-files without restructuring the
+component. `key_picker` (connected) and `toast_close` (pure leaf) are the canonical
+examples:
 
 ```
-grid_tile/
-  mod.rs            the component function, flat hooks then pure RSX; private `use props::XProps`, never re-exported
-  props.rs          the Props struct (private); at most a From from a domain type this component renders
-  data.rs           the static content/data this component sources (optional)
-  hooks.rs          the component's composed hook, wiring primitive hooks together (optional)
-  logic.rs          everything the body is not allowed to do (optional)
-  state.rs          component-local enums, e.g. visual state (optional)
-  style.rs          the per-band class arrays, via classes!
-  components/        child components, each its own directory of this same shape
+foo/
+  mod.rs              the component function: `fn Foo(props: FooModel)`, one flat build
+                      call then pure RSX. Takes ONE Model struct — never the View, never
+                      inline fields.
+  view/mod.rs         FooView — the published `ddd::View` contract (its type re-exported)
+  model/mod.rs        FooModel — the private `ddd::Model`, `From<&FooView>`,
+                      `#[derive(Props)]`. The received props struct. Never re-exported.
+  presentation/mod.rs FooPresentation — the `ddd::Presentation` the body places, plus its
+                      builder (optional). Pure leaf: `impl From<&FooModel>`. Connected:
+                      `use_foo_presentation` that owns the signals and reads context.
+  data/mod.rs         static content/data this component sources (optional)
+  state/mod.rs        component-local enums, e.g. discriminant/visual state (optional)
+  style/mod.rs        the per-band class arrays, via classes!
+  components/         child components, each its own directory of this same shape
 ```
 
-A component with children nests them under `components/` — and **every** component
-it renders is such a child, per "The render tree IS the directory tree". A leaf
-component omits `components/`. A component with no logic beyond `From` conversions
-omits `logic.rs`. A component that reaches the domain, `localStorage`, or a web API
-carries a `hooks.rs` with its one composed hook, and omits it otherwise.
+**The pipeline is three roles, each a ddd trait: `View → Model → Presentation`.**
+
+- `ddd::View` (`view/`) — the Published Language, the public read-oriented contract
+  (`pub trait View: Clone + PartialEq {}`).
+- `ddd::Model` (`model/`) — the private internal model, the props the component
+  **receives**: `pub trait Model: for<'view> From<&'view Self::View> + Clone + PartialEq`.
+  A component's `#[component] fn` takes exactly one such struct; it never takes the
+  bare `View` and never inline fields.
+- `ddd::Presentation` (`presentation/`) — the signal-free, render-ready struct the body
+  places: `pub trait Presentation { type Model: Model; }`. Built purely (`From<&Model>`,
+  a shaping leaf) or effectfully (a connected component, whose builder owns the local
+  signals and context reads). **No `Signal<T>` ever lives in a View, Model, or
+  Presentation type** — signals live only in the effectful presentation builder.
+
+A component with children nests them under `components/`. A leaf omits `components/`.
+A component whose Model is already render-ready (no shaping, no effects) omits
+`presentation/` and the body places the Model's fields directly. A parameterless
+connected component (no external input, reads context in its builder) still takes a
+Model — an **empty `FooModel;`** (fieldless) built from an empty `FooView;` — so the
+`View → Model → Presentation` pipeline holds universally.
+
+There is no `props.rs`, `hooks.rs`, or `logic.rs` any more: `props.rs` is now
+`model/mod.rs`; the pure shaping that lived in `logic.rs` and the effectful wiring that
+lived in `hooks.rs` both become the `presentation/` builder.
 
 ## Data and content are props, sourced from `data.rs`
 
@@ -1021,14 +1062,21 @@ child to a parent. Each component is an isolated function of the data it is
 handed. Composition is enforced by **isolation**, not by a visibility annotation —
 which is why the target is `mod props;` (private), not `pub(in …) use props`.
 
-### Where the shaping goes: the component's own hook
+### Where the shaping goes: the component's `presentation/` builder
+
+> **Updated to the `View → Model → Presentation` pipeline.** The prose below is kept
+> for the *principle* (shaping is one composed step, never inline in the body), but the
+> **home has moved**: shaping now lives in **`presentation/`**, not `hooks.rs`/`logic.rs`.
+> A pure-shaping leaf uses `impl From<&FooModel> for FooPresentation`; a connected
+> component uses a `use_foo_presentation(&props)` builder that owns the signals and
+> context. `model/` (ex-`props.rs`) holds only the `#[derive(Props)]` `ddd::Model`.
 
 The work the old `From` impls did — reading context, converting a domain view
 into the concrete values a body places in the tree — now lives in the component's
-**`hooks.rs`**, its one composed hook, returning already-shaped **domain data**
-(never another component's props). This unifies the two plumbing paths that used
-to disagree (`hooks.rs` vs `From`-in-`props.rs`): there is now exactly one, the
-hook. `props.rs` holds only the `#[derive(Props)]` struct and, at most, a `From`
+**`presentation/` builder**, returning already-shaped **domain data** (never another
+component's props). This unifies the two plumbing paths that used to disagree
+(`hooks.rs` vs `From`-in-`props.rs`): there is now exactly one, the presentation
+builder. `model/` holds only the `#[derive(Props)]` struct and, at most, a `From`
 from a *domain* type the component itself renders.
 
 - Use RSX shorthand: name the hook-result field exactly as the child's field so
@@ -1036,39 +1084,57 @@ from a *domain* type the component itself renders.
 - A leaf with no shaping needs no hook: its body places its own props' fields
   directly (`img { src, alt }`).
 
-### The `View` — a component's Published Language (`ddd::View` in `view.rs`)
+### The `View` — a component's Published Language (`ddd::View` in `view/`)
 
-A component is a small **bounded context**. Its `Props` are its *internal model*:
-private, in `props.rs`, named only inside the component's own module — never `pub`,
-never re-exported, never a field of another props type. When a component is consumed
+A component is a small **bounded context**. Its `Model` is its *internal model*:
+private, in `model/`, named only inside the component's own module — never `pub`,
+never re-exported, never a field of another Model. When a component is consumed
 **outside its own subtree**, it publishes a **contract** its consumers integrate
-against: a `pub struct XView` in a dedicated **`view.rs`**, which **is** the
-component's input (`#[component] fn X(view: XView)`) and implements `ddd::View`.
+against: a `pub struct XView` in a dedicated **`view/`**, implementing `ddd::View`.
 
-Consumers build and pass the `View` (it is a public API); they never name another
-component's private `Props`. A `View` that is byte-identical to a `Props` is **not**
-duplication — it is an API surface, free to diverge tomorrow without breaking
-callers. In DDD terms the `View` is an **Open Host Service / Published Language** and
-the private `Props` is the internal model; keeping them separate is what stops one
-component coupling to another's internals.
+The component itself **always takes its `Model`, never the `View`**:
+`#[component] fn X(props: XModel)`, where `XModel: ddd::Model<View = XView>` is
+`From<&XView>`. A consumer that holds an `XView` converts it at the boundary
+(`XModel::from(&view)`); it never names the private `Model`. A `View` that is
+byte-identical to a `Model` is **not** duplication — it is an API surface, free to
+diverge tomorrow without breaking callers. In DDD terms the `View` is an **Open Host
+Service / Published Language** and the private `Model` is the internal model; keeping
+them separate is what stops one component coupling to another's internals.
 
-**Two shapes:**
-
-- **View is the input** (default). The component takes its `View` directly and reads
-  its fields. No separate `Props`. Most shared leaves (`TileFace`, `GridTile`,
-  `Breadcrumb`) are this: `#[component] fn TileFace(view: TileFaceView)`.
-- **View + internal `Props`** (only when the component *translates* the contract into
-  a richer internal model — a deliberate **Anti-Corruption Layer**). Then `XProps`
-  (private) implements **`ddd::Props`** — which *requires* `for<'a> From<&'a XView>` —
-  so a private model **cannot exist without publishing the `View` it is `From`**. The
-  generic grid editor is the worked example: `GridEditorView` (public, `ddd::View`)
-  is the caller contract; `GridEditorProps<B>` (private, `ddd::Props<View =
-  GridEditorView>`) is the behavior-bound internal model, and the variant renders
-  `GridEditor::<CommandBehavior> { config: view }` — turbofish binds `B`, the `View`
-  crosses as a named field, and `GridEditorProps` is never named outside its module.
+This is the deliberate **Anti-Corruption Layer**: `ddd::Model` *requires* `for<'a>
+From<&'a Self::View>`, so a private model **cannot exist without publishing the `View`
+it is `From`**. The generic grid editor is the worked example: `GridEditorView`
+(public, `ddd::View`) is the caller contract; `GridEditorProps<B>` (private,
+`ddd::Model<View = GridEditorView>`) is the behavior-bound internal model, and the
+variant renders `GridEditor::<CommandBehavior> { config: view }` — turbofish binds
+`B`, the `View` crosses as a named field, and `GridEditorProps` is never named outside
+its module.
 
 The invariant, made structural: **a consumer names only `View`s (public) and domain
-values; never a `Props` (private).** `grep` for `pub use props::` must return zero.
+values; never a `Model` (private).** `grep` for `pub use model::` must return zero.
+
+### The `Presentation` — the render-ready struct the body places (`ddd::Presentation` in `presentation/`)
+
+Between the received `Model` and the RSX sits the third role: the **`Presentation`**,
+the signal-free struct of already-shaped values and handlers the body only *places*.
+It implements `ddd::Presentation { type Model: Model }`, wiring the pipeline
+`View → Model → Presentation` at the type level. It is built two ways, and **only
+here do signals and context live**:
+
+- **Pure-shaping leaf** — `impl From<&FooModel> for FooPresentation` in
+  `presentation/mod.rs`. No hook, no context. The body does
+  `let FooPresentation { … } = FooPresentation::from(&props);`. (`toast_close` is the
+  worked example: its presentation is just the dismiss handler shaped from the model.)
+- **Connected** — a `use_foo_presentation(&props) -> FooPresentation` builder in
+  `presentation/mod.rs` that owns the local `use_signal`/`use_effect`/`use_memo` and
+  reads context, then returns a signal-free `FooPresentation`. (`key_picker` is the
+  worked example: the builder mirrors the caller's open flag into a local signal, locks
+  body scroll, builds the board columns, and adapts the pick handler — the body just
+  places the result.)
+
+`Presentation` carries only values and `EventHandler`s, never a `Signal<T>`. When the
+Model is already render-ready (a passthrough leaf), there is no `Presentation` at all —
+the body places the Model's fields directly.
 
 ## Markup has no branches that build values
 

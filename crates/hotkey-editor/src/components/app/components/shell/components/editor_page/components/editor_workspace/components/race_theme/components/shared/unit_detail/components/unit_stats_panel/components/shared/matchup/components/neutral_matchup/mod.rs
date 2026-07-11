@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::NeutralMatchupView;
@@ -7,13 +7,13 @@ mod style;
 use super::shared::matchup_label::MatchupLabel;
 use super::shared::matchup_value::MatchupValue;
 use dioxus::prelude::*;
-use props::NeutralMatchupProps;
+use model::NeutralMatchupModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The neutral matchup cell: no tint. The value reads its colour from the `--matchup-color` this cell publishes.
 #[component]
-pub fn NeutralMatchup(props: NeutralMatchupProps) -> Element {
+pub fn NeutralMatchup(props: NeutralMatchupModel) -> Element {
     let subject = props.subject;
     let multiplier = props.multiplier;
     let title = props.title;

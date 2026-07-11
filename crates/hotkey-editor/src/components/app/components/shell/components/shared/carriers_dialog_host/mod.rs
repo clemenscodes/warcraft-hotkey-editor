@@ -1,12 +1,12 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use crate::services::carriers::InspectedAbility;
 use components::carriers_dialog::CarriersDialog;
 use dioxus::prelude::*;
-use hooks::OpenCarriersDialog;
-use hooks::use_carriers_dialog_host;
+use presentation::OpenCarriersDialog;
+use presentation::use_carriers_dialog_host;
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::PlanSummaryView;
@@ -7,13 +7,13 @@ mod style;
 use components::plan_counts::PlanCounts;
 use components::plan_title::PlanTitle;
 use dioxus::prelude::*;
-use props::PlanSummaryProps;
+use model::PlanSummaryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The plan title over its move/unresolved counts.
 #[component]
-pub fn PlanSummary(props: PlanSummaryProps) -> Element {
+pub fn PlanSummary(props: PlanSummaryModel) -> Element {
     let moves_text = props.moves_text;
     let unresolved_count = props.unresolved_count;
     rsx! {

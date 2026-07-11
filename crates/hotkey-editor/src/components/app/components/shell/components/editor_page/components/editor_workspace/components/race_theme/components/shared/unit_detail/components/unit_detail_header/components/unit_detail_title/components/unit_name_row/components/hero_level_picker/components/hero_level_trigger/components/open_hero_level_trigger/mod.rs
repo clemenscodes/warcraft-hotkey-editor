@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::OpenHeroLevelTriggerView;
@@ -9,7 +9,7 @@ use super::hero_level_trigger_number::HeroLevelTriggerNumber;
 use super::shared::hero_level_trigger_label::HeroLevelTriggerLabel;
 use components::open_hero_level_trigger_chevron::OpenHeroLevelTriggerChevron;
 use dioxus::prelude::*;
-use props::OpenHeroLevelTriggerProps;
+use model::OpenHeroLevelTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// flipped caret. Rendered by the dispatcher while the menu is open; owns its button
 /// root and composes the shared label and number leaves plus its flipped caret.
 #[component]
-pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerProps) -> Element {
+pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerModel) -> Element {
     let number = props.number;
     let onclick = props.onclick;
     rsx! {

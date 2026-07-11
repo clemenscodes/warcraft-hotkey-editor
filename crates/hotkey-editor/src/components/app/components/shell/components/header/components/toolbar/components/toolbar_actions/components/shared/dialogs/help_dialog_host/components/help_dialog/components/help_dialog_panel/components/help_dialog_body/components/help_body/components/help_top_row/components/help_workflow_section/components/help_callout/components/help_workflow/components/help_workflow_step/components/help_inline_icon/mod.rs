@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::HelpInlineIconView;
 mod style;
 
 use dioxus::prelude::*;
-use props::HelpInlineIconProps;
+use model::HelpInlineIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// A toolbar glyph dropped inline into a workflow sentence. A leaf: the step
 /// passes which icon to draw.
 #[component]
-pub fn HelpInlineIcon(props: HelpInlineIconProps) -> Element {
+pub fn HelpInlineIcon(props: HelpInlineIconModel) -> Element {
     rsx! {
         span {
             class: CLASS,

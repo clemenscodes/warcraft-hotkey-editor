@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::TemplatesDialogView;
@@ -11,9 +10,9 @@ use components::templates_dialog_panel::TemplatesDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_templates_dialog;
-use logic::TemplatesDialogShell;
-use props::TemplatesDialogProps;
+use presentation::use_templates_dialog;
+use presentation::TemplatesDialogShell;
+use model::TemplatesDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +22,7 @@ use tw_macro::assert_component;
 /// centring layer) within the library `DialogRoot`. No project class touches the
 /// library element.
 #[component]
-pub fn TemplatesDialog(props: TemplatesDialogProps) -> Element {
+pub fn TemplatesDialog(props: TemplatesDialogModel) -> Element {
     use_body_scroll_lock(props.open);
     let view = use_templates_dialog(&props);
     let TemplatesDialogShell {

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TemplateCardPreviewsView;
@@ -7,8 +7,8 @@ mod style;
 
 use components::preview_headed_grid::PreviewHeadedGrid;
 use dioxus::prelude::*;
-use props::TemplateCardPreviewsProps;
-use props::{TemplatePreview, command_preview, research_preview};
+use model::TemplateCardPreviewsModel;
+use model::{TemplatePreview, command_preview, research_preview};
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// research menu, each a read-only `PreviewHeadedGrid` drawing the template.
 /// Owns `.template-card-previews`.
 #[component]
-pub fn TemplateCardPreviews(props: TemplateCardPreviewsProps) -> Element {
+pub fn TemplateCardPreviews(props: TemplateCardPreviewsModel) -> Element {
     let resolved = props.resolved;
     let TemplatePreview {
         heading: command_heading,

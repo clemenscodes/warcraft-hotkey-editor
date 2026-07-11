@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::MiniGridFrameView;
@@ -7,7 +7,7 @@ mod style;
 
 use components::mini_grid::MiniGrid;
 use dioxus::prelude::*;
-use props::MiniGridFrameProps;
+use model::MiniGridFrameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// border/radius overrides, and lays out whatever twelve tiles its page wrapper
 /// hands it. The wrapper owns the outer width and corner radius.
 #[component]
-pub fn MiniGridFrame(props: MiniGridFrameProps) -> Element {
+pub fn MiniGridFrame(props: MiniGridFrameModel) -> Element {
     let tiles = props.tiles;
     rsx! {
         div {

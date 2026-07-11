@@ -1,7 +1,6 @@
 pub mod components;
 mod data;
-mod hooks;
-mod logic;
+mod presentation;
 mod state;
 mod style;
 
@@ -11,7 +10,7 @@ use components::burger_backdrop::BurgerBackdrop;
 use components::burger_drawer::BurgerDrawer;
 use components::burger_toggle_icon::BurgerToggleIcon;
 use dioxus::prelude::*;
-use hooks::{BurgerMenuView, use_burger_menu};
+use presentation::{BurgerMenuView, use_burger_menu};
 use style::CLASS;
 use tw_macro::assert_component;
 

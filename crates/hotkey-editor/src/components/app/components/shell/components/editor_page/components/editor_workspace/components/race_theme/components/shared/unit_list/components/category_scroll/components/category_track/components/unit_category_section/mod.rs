@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitCategorySectionView;
@@ -9,8 +8,8 @@ pub use view::UnitCategorySectionView;
 use components::unit_card::UnitCard;
 use components::unit_category_heading::UnitCategoryHeading;
 use dioxus::prelude::*;
-use hooks::use_unit_category_section;
-use props::UnitCategorySectionProps;
+use model::UnitCategorySectionModel;
+use presentation::use_unit_category_section;
 use tw_macro::assert_component;
 
 /// One category of the unit list: a collapsible heading followed by the matching
@@ -18,7 +17,7 @@ use tw_macro::assert_component;
 /// composed hook (memoized on the catalog inputs); this component is a thin
 /// renderer with no own class.
 #[component]
-pub fn UnitCategorySection(props: UnitCategorySectionProps) -> Element {
+pub fn UnitCategorySection(props: UnitCategorySectionModel) -> Element {
     let model = use_unit_category_section(&props);
     let heading = model.heading;
     let is_collapsed = model.is_collapsed;

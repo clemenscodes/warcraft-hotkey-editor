@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::collisions_button::CollisionsButton;
 use dioxus::prelude::*;
-use hooks::use_collisions_button;
+use presentation::use_collisions_button;
 use style::CLASS;
 use tw_macro::assert_component;
 

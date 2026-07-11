@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::ConflictMultiStackView;
@@ -8,7 +8,7 @@ use super::conflict_ability::ConflictAbility;
 use super::conflict_card_model::ConflictAbilityData;
 use super::conflict_marker_view::ConflictMarkerView;
 use dioxus::prelude::*;
-use props::ConflictMultiStackProps;
+use model::ConflictMultiStackModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// key badge over a wrapping row of ability icons. It owns its own abilities row.
 /// Renders nothing when there are no abilities to stack.
 #[component]
-pub fn ConflictMultiStack(props: ConflictMultiStackProps) -> Element {
+pub fn ConflictMultiStack(props: ConflictMultiStackModel) -> Element {
     let abilities = props.abilities;
     if abilities.is_empty() {
         return rsx! {};

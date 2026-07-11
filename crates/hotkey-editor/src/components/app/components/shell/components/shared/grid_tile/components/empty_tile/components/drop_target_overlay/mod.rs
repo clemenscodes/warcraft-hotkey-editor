@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::DropTargetOverlayView;
 mod style;
 
 use dioxus::prelude::*;
-use props::DropTargetOverlayProps;
+use model::DropTargetOverlayModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// `:has(.drop-target-overlay)`), so this stays an inert presence signal that may also
 /// carry a parent-supplied under-cursor fill.
 #[component]
-pub fn DropTargetOverlay(props: DropTargetOverlayProps) -> Element {
+pub fn DropTargetOverlay(props: DropTargetOverlayModel) -> Element {
     if !props.active {
         return rsx! {};
     }

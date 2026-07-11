@@ -1,10 +1,10 @@
-mod props;
+mod model;
 mod view;
 
 mod style;
 
 use dioxus::prelude::*;
-use props::MutedManaRegenGainProps;
+use model::MutedManaRegenGainModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -12,7 +12,7 @@ use tw_macro::assert_component;
 /// [`ManaRegenGain`](super::super::ManaRegenGain) dispatcher when the unit does not
 /// regenerate mana.
 #[component]
-pub fn MutedManaRegenGain(props: MutedManaRegenGainProps) -> Element {
+pub fn MutedManaRegenGain(props: MutedManaRegenGainModel) -> Element {
     let text = props.text;
     rsx! {
         span { class: CLASS, {text} }

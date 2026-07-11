@@ -1,13 +1,13 @@
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::KeyPickerBoardHostView;
 
 use crate::components::app::components::shell::components::shared::key_picker_board::KeyPickerBoard;
 use dioxus::prelude::*;
-use hooks::use_board_keyboard;
-use props::KeyPickerBoardHostProps;
+use model::KeyPickerBoardHostModel;
+use presentation::use_board_keyboard;
 use tw_macro::assert_component;
 
 /// The interactive key picker: a [`KeyPickerBoard`] plus the keyboard listener and
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// board's columns and handlers down by name; the board it renders stays purely
 /// presentational, and this host owns the side effects around it.
 #[component]
-pub fn KeyPickerBoardHost(props: KeyPickerBoardHostProps) -> Element {
+pub fn KeyPickerBoardHost(props: KeyPickerBoardHostModel) -> Element {
     use_board_keyboard(&props);
     let columns = props.columns;
     let on_pick = props.on_pick;

@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitListSearchInputView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::UnitListSearchInputProps;
+use model::UnitListSearchInputModel;
 
 /// The search text field in the unit list.
 #[component]
-pub fn UnitListSearchInput(props: UnitListSearchInputProps) -> Element {
+pub fn UnitListSearchInput(props: UnitListSearchInputModel) -> Element {
     let value = props.value;
     let placeholder = props.placeholder;
     let on_input = props.on_input;

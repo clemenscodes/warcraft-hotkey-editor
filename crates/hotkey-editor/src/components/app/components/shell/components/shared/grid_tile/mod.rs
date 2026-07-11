@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod state;
 mod view;
 
@@ -10,8 +10,8 @@ pub use view::GridTileView;
 use components::empty_tile::EmptyTile;
 use components::filled_tile::FilledTile;
 use dioxus::prelude::*;
-use logic::TileOccupancy;
-use props::GridTileProps;
+use model::GridTileModel;
+use presentation::TileOccupancy;
 use tw_macro::assert_component;
 
 /// A command-grid slot. A pure dispatcher: from the slot's state it renders the
@@ -19,8 +19,8 @@ use tw_macro::assert_component;
 /// lives in `TileOccupancy`, so the body only decides and renders — it hands each child
 /// its data as named fields and never builds a child's props.
 #[component]
-pub fn GridTile(props: GridTileProps) -> Element {
-    let GridTileProps {
+pub fn GridTile(props: GridTileModel) -> Element {
+    let GridTileModel {
         coordinate: _,
         icon,
         label,

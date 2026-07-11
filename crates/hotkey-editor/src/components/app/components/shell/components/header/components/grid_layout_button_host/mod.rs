@@ -1,11 +1,11 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor_host::LayoutEditorHost;
 use components::grid_layout_button::GridLayoutButton;
 use dioxus::prelude::*;
-use hooks::use_grid_layout_button;
+use presentation::use_grid_layout_button;
 use style::CLASS;
 use tw_macro::assert_component;
 

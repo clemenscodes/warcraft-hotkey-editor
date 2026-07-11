@@ -1,6 +1,5 @@
 pub mod components;
-mod hooks;
-mod logic;
+mod presentation;
 mod route_sync;
 mod style;
 
@@ -10,7 +9,7 @@ use components::head::Head;
 use components::header::Header;
 use components::toasts::{ToastContainer, use_toast_provider};
 use dioxus::prelude::*;
-use hooks::{ShellModel, use_shell};
+use presentation::{ShellModel, use_shell};
 use style::CLASS;
 use tw_macro::assert_component;
 

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::ErrorToastCardView;
@@ -9,7 +9,7 @@ use crate::components::app::components::shell::components::toasts::components::t
 use components::error_toast_content::ErrorToastContent;
 use components::error_toast_icon::ErrorToastIcon;
 use dioxus::prelude::*;
-use props::ErrorToastCardProps;
+use model::ErrorToastCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,7 +17,7 @@ use tw_macro::assert_component;
 /// error icon and title, the description, and the close control. Presentational
 /// only; the dispatcher builds its props from the toast record.
 #[component]
-pub fn ErrorToastCard(props: ErrorToastCardProps) -> Element {
+pub fn ErrorToastCard(props: ErrorToastCardModel) -> Element {
     let title = props.record.title().to_string();
     let description = props.record.description();
     let id = props.record.id();

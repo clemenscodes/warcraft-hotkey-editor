@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::AltPositionPickerExplainerView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::AltPositionPickerExplainerProps;
+use model::AltPositionPickerExplainerModel;
 
 /// The instruction line at the top of a position-picker dialog.
 #[component]
-pub fn AltPositionPickerExplainer(props: AltPositionPickerExplainerProps) -> Element {
+pub fn AltPositionPickerExplainer(props: AltPositionPickerExplainerModel) -> Element {
     let text = props.text;
     rsx! {
         p { class: CLASS, {text} }

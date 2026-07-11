@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::UnresolvedMoveListView;
@@ -7,13 +7,13 @@ mod style;
 
 use components::unresolved_row::UnresolvedRow;
 use dioxus::prelude::*;
-use props::UnresolvedMoveListProps;
+use model::UnresolvedMoveListModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The unresolved section's auto-fill grid: one stuck-ability card per unresolved row.
 #[component]
-pub fn UnresolvedMoveList(props: UnresolvedMoveListProps) -> Element {
+pub fn UnresolvedMoveList(props: UnresolvedMoveListModel) -> Element {
     let unresolved = props.unresolved;
     rsx! {
         div {

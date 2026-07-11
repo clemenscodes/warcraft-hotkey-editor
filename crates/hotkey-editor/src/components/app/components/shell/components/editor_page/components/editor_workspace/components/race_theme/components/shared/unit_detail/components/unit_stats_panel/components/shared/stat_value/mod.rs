@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 pub use view::StatValueView;
 
@@ -7,7 +7,7 @@ use super::stat_figure::StatFigure;
 use components::active_stat_value::ActiveStatValue;
 use components::muted_stat_value::MutedStatValue;
 use dioxus::prelude::*;
-use props::StatValueProps;
+use model::StatValueModel;
 use tw_macro::assert_component;
 
 /// A stat row's value in the default treatment: the domain figure presented as
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// (`MutedStatValue`), each built by `From`. Rows with a distinctive value (hit
 /// points' green, mana's blue) render their own span instead.
 #[component]
-pub fn StatValue<Figure: StatFigure>(props: StatValueProps<Figure>) -> Element {
+pub fn StatValue<Figure: StatFigure>(props: StatValueModel<Figure>) -> Element {
     let value = props.value;
     let is_muted = value.is_muted();
     let text = value.display();

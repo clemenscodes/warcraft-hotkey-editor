@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::GapPullReasonBadgeView;
@@ -6,7 +6,7 @@ mod style;
 
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::components::reason_badges::shared::reason_badge::ReasonBadge;
 use dioxus::prelude::*;
-use props::GapPullReasonBadgeProps;
+use model::GapPullReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
 /// names the pill's classes.
 #[component]
-pub fn GapPullReasonBadge(props: GapPullReasonBadgeProps) -> Element {
+pub fn GapPullReasonBadge(props: GapPullReasonBadgeModel) -> Element {
     let label = props.label;
     rsx! {
         span {

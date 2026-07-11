@@ -1,7 +1,6 @@
 pub mod components;
-mod hooks;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UpgradePositionPickerView;
@@ -11,9 +10,9 @@ use components::upgrade_position_picker_panel::UpgradePositionPickerPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 use dioxus_primitives::dialog::DialogRoot;
-use hooks::use_upgrade_position_picker;
-use logic::UpgradePositionPickerShell;
-use props::UpgradePositionPickerProps;
+use presentation::use_upgrade_position_picker;
+use presentation::UpgradePositionPickerShell;
+use model::UpgradePositionPickerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -23,7 +22,7 @@ use tw_macro::assert_component;
 /// class touches the library element — the backdrop is this component's own classed
 /// `div`.
 #[component]
-pub fn UpgradePositionPicker(props: UpgradePositionPickerProps) -> Element {
+pub fn UpgradePositionPicker(props: UpgradePositionPickerModel) -> Element {
     let model = use_upgrade_position_picker(&props);
     use_body_scroll_lock(model.open);
     let UpgradePositionPickerShell {

@@ -1,5 +1,5 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitPositionConflictCardView;
@@ -8,7 +8,7 @@ mod style;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_panel::ConflictPanel;
 use dioxus::prelude::*;
-use props::UnitPositionConflictCardProps;
+use model::UnitPositionConflictCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// flanking (or stacked under) a mini grid flagging that cell. It owns its own card
 /// shell directly and wraps the collision panel.
 #[component]
-pub fn UnitPositionConflictCard(props: UnitPositionConflictCardProps) -> Element {
+pub fn UnitPositionConflictCard(props: UnitPositionConflictCardModel) -> Element {
     let model = ConflictCardModel::from(&props);
     rsx! {
         div {

@@ -1,6 +1,6 @@
 pub mod components;
-mod hooks;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::ToastCardView;
@@ -11,8 +11,8 @@ use components::info_toast_card::InfoToastCard;
 use components::success_toast_card::SuccessToastCard;
 use components::warning_toast_card::WarningToastCard;
 use dioxus::prelude::*;
-use hooks::use_toast_auto_dismiss;
-use props::ToastCardProps;
+use model::ToastCardModel;
+use presentation::use_toast_auto_dismiss;
 use tw_macro::assert_component;
 
 /// A single toast, dispatched by its type. The surface tint, icon, and title all
@@ -21,7 +21,7 @@ use tw_macro::assert_component;
 /// its type selects. Each per-kind card owns its `role="alertdialog"` root and the
 /// shared icon/content/close leaves.
 #[component]
-pub fn ToastCard(props: ToastCardProps) -> Element {
+pub fn ToastCard(props: ToastCardModel) -> Element {
     use_toast_auto_dismiss(&props);
     let toast_type = props.record.toast_type();
     let record = props.record;

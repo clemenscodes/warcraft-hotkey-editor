@@ -1,10 +1,10 @@
 pub mod components;
-mod hooks;
+mod presentation;
 mod style;
 
 use components::race_tabs::RaceTabs;
 use dioxus::prelude::*;
-use hooks::{RaceTabsInputs, use_race_tabs_host};
+use presentation::{RaceTabsInputs, use_race_tabs_host};
 use style::CLASS;
 use tw_macro::assert_component;
 

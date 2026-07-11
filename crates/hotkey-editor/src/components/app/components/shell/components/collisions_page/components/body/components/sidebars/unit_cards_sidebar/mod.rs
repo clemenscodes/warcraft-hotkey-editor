@@ -1,13 +1,13 @@
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 pub use view::UnitCardsSidebarView;
 
 use super::shared::collision_sidebar::CollisionSidebar;
 use crate::services::collision_selection::context::use_collision_selection;
 use dioxus::prelude::*;
-use logic::{SelectedCollisionUnit, cards};
-use props::UnitCardsSidebarProps;
+use model::UnitCardsSidebarModel;
+use presentation::{SelectedCollisionUnit, cards};
 use tw_macro::assert_component;
 
 /// The unit-collision sidebar: one card per clashing unit, handed to the collision
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// (the conflict kind names which field), mirroring `IslandSidebar`.
 #[component]
 pub fn UnitCardsSidebar<Conflict: Clone + PartialEq + SelectedCollisionUnit + 'static>(
-    props: UnitCardsSidebarProps<Conflict>,
+    props: UnitCardsSidebarModel<Conflict>,
 ) -> Element {
     let collision_selection = use_collision_selection();
     let selected_unit = Conflict::selected_unit(collision_selection);

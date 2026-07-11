@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::WarningToastContentView;
@@ -8,13 +8,13 @@ mod style;
 use crate::components::app::components::shell::components::toasts::components::toast_container::components::toast_list::components::toast_list_item::components::toast_card::components::shared::toast_description::ToastDescription;
 use components::warning_toast_title::WarningToastTitle;
 use dioxus::prelude::*;
-use props::WarningToastContentProps;
+use model::WarningToastContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The text column of a warning toast: its warning title above the optional description.
 #[component]
-pub fn WarningToastContent(props: WarningToastContentProps) -> Element {
+pub fn WarningToastContent(props: WarningToastContentModel) -> Element {
     let title = props.title;
     let description = props.description;
     rsx! {

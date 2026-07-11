@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::UnitDescriptionView;
@@ -9,11 +9,11 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::UnitDescriptionProps;
+use model::UnitDescriptionModel;
 
 /// The unit's flavor text under the detail header.
 #[component]
-pub fn UnitDescription(props: UnitDescriptionProps) -> Element {
+pub fn UnitDescription(props: UnitDescriptionModel) -> Element {
     let text = props.text;
     rsx! {
         p { class: CLASS, {text} }

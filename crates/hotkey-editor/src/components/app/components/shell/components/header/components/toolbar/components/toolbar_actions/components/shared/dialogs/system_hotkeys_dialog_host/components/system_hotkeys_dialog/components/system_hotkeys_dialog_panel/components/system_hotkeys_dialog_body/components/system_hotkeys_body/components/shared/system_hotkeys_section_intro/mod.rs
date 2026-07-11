@@ -1,17 +1,17 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SystemHotkeysSectionIntroView;
 mod style;
 
 use dioxus::prelude::*;
-use props::SystemHotkeysSectionIntroProps;
+use model::SystemHotkeysSectionIntroModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The caption introducing a system-hotkeys category editor.
 #[component]
-pub fn SystemHotkeysSectionIntro(props: SystemHotkeysSectionIntroProps) -> Element {
+pub fn SystemHotkeysSectionIntro(props: SystemHotkeysSectionIntroModel) -> Element {
     let text = props.text;
     rsx! {
         p { class: CLASS, {text} }

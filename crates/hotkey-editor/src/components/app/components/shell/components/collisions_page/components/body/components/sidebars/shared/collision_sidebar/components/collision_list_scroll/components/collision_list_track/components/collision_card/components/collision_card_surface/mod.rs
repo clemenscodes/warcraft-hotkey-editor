@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::CollisionCardSurfaceView;
@@ -7,7 +7,7 @@ pub use view::CollisionCardSurfaceView;
 use components::idle_collision_card_surface::IdleCollisionCardSurface;
 use components::selected_collision_card_surface::SelectedCollisionCardSurface;
 use dioxus::prelude::*;
-use props::CollisionCardSurfaceProps;
+use model::CollisionCardSurfaceModel;
 use tw_macro::assert_component;
 
 /// The collision card's selectable button. A pure dispatcher: from whether the card is
@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 /// accent and publishes `--coordinate-color`; there is no `data-selected`, the look
 /// follows the component.
 #[component]
-pub fn CollisionCardSurface(props: CollisionCardSurfaceProps) -> Element {
+pub fn CollisionCardSurface(props: CollisionCardSurfaceModel) -> Element {
     match props.is_selected {
         true => {
             let onclick = props.onclick;

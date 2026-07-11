@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TileOverrideHeaderTextView;
@@ -12,12 +12,12 @@ use components::tile_override_name::TileOverrideName;
 use style::CLASS;
 use tw_macro::assert_component;
 
-use props::TileOverrideHeaderTextProps;
+use model::TileOverrideHeaderTextModel;
 
 /// The name-and-id column of the override panel header.
 #[component]
-pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextProps) -> Element {
-    let TileOverrideHeaderTextProps {
+pub fn TileOverrideHeaderText(props: TileOverrideHeaderTextModel) -> Element {
+    let TileOverrideHeaderTextModel {
         name_text,
         object_id,
     } = props;

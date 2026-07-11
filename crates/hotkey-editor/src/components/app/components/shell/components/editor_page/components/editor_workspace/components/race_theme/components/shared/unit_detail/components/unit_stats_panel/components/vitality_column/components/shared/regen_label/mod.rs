@@ -1,18 +1,18 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::RegenLabelView;
 mod style;
 
 use dioxus::prelude::*;
-use props::RegenLabelProps;
+use model::RegenLabelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// A regeneration row's label: a dimmer, smaller gold than the headline rows, marking
 /// the indented companion beneath a vitality figure.
 #[component]
-pub fn RegenLabel(props: RegenLabelProps) -> Element {
+pub fn RegenLabel(props: RegenLabelModel) -> Element {
     let text = props.text;
     rsx! {
         span {

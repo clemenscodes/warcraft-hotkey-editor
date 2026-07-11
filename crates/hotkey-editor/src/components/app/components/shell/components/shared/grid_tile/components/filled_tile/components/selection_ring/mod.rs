@@ -1,11 +1,11 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::SelectionRingView;
 mod style;
 
 use dioxus::prelude::*;
-use props::SelectionRingProps;
+use model::SelectionRingModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -14,7 +14,7 @@ use tw_macro::assert_component;
 /// so this stays an inert presence signal that both the root look and the shell's
 /// scroll/focus coordinator key off.
 #[component]
-pub fn SelectionRing(props: SelectionRingProps) -> Element {
+pub fn SelectionRing(props: SelectionRingModel) -> Element {
     if !props.selected {
         return rsx! {};
     }

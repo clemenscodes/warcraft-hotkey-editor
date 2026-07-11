@@ -1,6 +1,6 @@
 pub mod components;
-mod logic;
-mod props;
+mod model;
+mod presentation;
 mod view;
 
 pub use view::EmptyTileView;
@@ -11,8 +11,8 @@ use components::blocked_drop_target_overlay::BlockedDropTargetOverlay;
 use components::drop_target_overlay::DropTargetOverlay;
 use components::highlight_overlay::HighlightOverlay;
 use dioxus::prelude::*;
-use logic::EmptyTileModel;
-use props::EmptyTileProps;
+use model::EmptyTileModel;
+use presentation::EmptyTilePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -22,13 +22,13 @@ use tw_macro::assert_component;
 /// whose presence turns the tile's own border into that look. It knows nothing of
 /// hotkeys, focus, or dragging; `GridEditorTile` layers all interaction on top.
 #[component]
-pub fn EmptyTile(props: EmptyTileProps) -> Element {
-    let EmptyTileModel {
+pub fn EmptyTile(props: EmptyTileModel) -> Element {
+    let EmptyTilePresentation {
         drop_target_active,
         blocked_drop_target_active,
         highlight_active,
         is_drag_over,
-    } = EmptyTileModel::from(props);
+    } = EmptyTilePresentation::from(props);
     rsx! {
         div {
             class: CLASS,

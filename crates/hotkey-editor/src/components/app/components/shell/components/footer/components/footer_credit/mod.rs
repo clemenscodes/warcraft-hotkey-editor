@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::FooterCreditView;
@@ -7,12 +7,12 @@ mod style;
 
 use components::footer_heart::FooterHeart;
 use dioxus::prelude::*;
-use props::FooterCreditProps;
+use model::FooterCreditModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn FooterCredit(props: FooterCreditProps) -> Element {
+pub fn FooterCredit(props: FooterCreditModel) -> Element {
     let lead = props.lead;
     let tail = props.tail;
     let heart = props.heart;

@@ -1,5 +1,5 @@
 pub mod components;
-mod props;
+mod model;
 mod view;
 
 pub use view::TooltipView;
@@ -12,7 +12,7 @@ use components::below_center_tooltip::BelowCenterTooltip;
 use components::below_left_tooltip::BelowLeftTooltip;
 use components::below_right_tooltip::BelowRightTooltip;
 use dioxus::prelude::*;
-use props::TooltipProps;
+use model::TooltipModel;
 pub use state::{TooltipAnchor, TooltipPlacement};
 use tw_macro::assert_component;
 
@@ -27,7 +27,7 @@ use tw_macro::assert_component;
 /// six looks (above/below × left/center/right) owns its own bubble and positioning
 /// across both `@supports` bands; the body only chooses which to render.
 #[component]
-pub fn Tooltip(props: TooltipProps) -> Element {
+pub fn Tooltip(props: TooltipModel) -> Element {
     if props.text.is_empty() {
         return rsx! {};
     }

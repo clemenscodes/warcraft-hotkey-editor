@@ -1,4 +1,4 @@
-mod props;
+mod model;
 mod view;
 
 pub use view::RangeRowView;
@@ -7,7 +7,7 @@ mod style;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_label::StatLabel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_stats_panel::components::shared::stat_value::StatValue;
 use dioxus::prelude::*;
-use props::RangeRowProps;
+use model::RangeRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,7 +16,7 @@ const LABEL_TEXT: &str = "Range";
 /// The range row, shown only for a ranged attack. A melee attack has a reach of zero
 /// and no row at all. A guarded leaf that early-returns.
 #[component]
-pub fn RangeRow(props: RangeRowProps) -> Element {
+pub fn RangeRow(props: RangeRowModel) -> Element {
     let value = props.value;
     if value.is_zero() {
         return rsx! {};
