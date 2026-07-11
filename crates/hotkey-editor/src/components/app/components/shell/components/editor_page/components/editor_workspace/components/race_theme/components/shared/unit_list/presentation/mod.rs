@@ -156,8 +156,10 @@ pub(super) fn use_unit_list() -> UnitListModel {
         let listing_search_field = *search_field.read();
         let listing_show_abilityless = *show_abilityless_units.read();
         let listing_expand_variants = *expand_variants.read();
-        let listing_visibility =
-            CatalogVisibility::new(listing_show_abilityless, listing_expand_variants);
+        let listing_visibility = CatalogVisibility {
+            include_abilityless: listing_show_abilityless,
+            expand_variants: listing_expand_variants,
+        };
         let inputs = CatalogListingInputs {
             race: listing_race,
             mode: listing_mode,

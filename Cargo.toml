@@ -1,8 +1,6 @@
 [workspace]
 resolver = "2"
-members = [
-  "crates/hotkey-editor",
-]
+members = ["crates/hotkey-editor"]
 
 [workspace.package]
 authors = ["clemenscodes"]
@@ -19,12 +17,12 @@ name = "warcraft-hotkey-editor"
 [workspace.dependencies]
 dioxus = { version = "=0.7.9" }
 browser-kit = { git = "https://github.com/clemenscodes/browser-kit", tag = "v0.1.0" }
-ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.1.0" }
+ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.2.0" }
 dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.1.0" }
 tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.2.0" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
-warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.5.0" }
-warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.5.0" }
+warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.6.0" }
+warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.6.0" }
 
 # Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
 # DOM-bound (per-frame Rust work is light), so trading compile time and raw
@@ -38,8 +36,3 @@ opt-level = "z"
 lto = "fat"
 panic = "abort"
 strip = "symbols"
-
-# Local override so the in-progress `ddd::View` trait (Published Language marker) is
-# available before the ddd repo is retagged. Points at the sibling checkout.
-[patch."https://github.com/clemenscodes/ddd"]
-ddd = { path = "/home/clemens/.local/src/ddd/crates/ddd" }

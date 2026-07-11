@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
-use warcraft_api::UnitKindHelpers;
 
 /// The tab's kind together with the active-category signal it flips on tap, read from
 /// editor context by the component and handed to the model builder.
@@ -19,7 +18,7 @@ pub(super) struct MobileCategoryTabPresentation {
 impl From<MobileCategoryTabInputs> for MobileCategoryTabPresentation {
     fn from(inputs: MobileCategoryTabInputs) -> Self {
         let kind = inputs.kind;
-        let label = UnitKindHelpers::category_label(kind);
+        let label = kind.category_label();
         let mut active_category = inputs.active_category;
         let onclick = EventHandler::new(move |_event: MouseEvent| {
             active_category.set(kind);

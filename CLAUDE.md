@@ -3,6 +3,73 @@
 This project edits **`CustomKeys.txt`** for Warcraft III: Reforged. It is a
 pure-frontend web app — no server, no database, no cloud.
 
+## What this actually is — understand the game first
+
+You cannot reason about hotkeys until you understand the game they belong to.
+The domain is not "5 races and some keys"; it is Warcraft III. Grasp this before
+touching any `Race`, unit, or hotkey code — none of it is stated in the code.
+
+**The game.** Warcraft III (Reign of Chaos + its expansion The Frozen Throne,
+re-released as *Reforged*) is a **real-time strategy** game. You pick a race,
+build a base, harvest three resources (**gold, lumber, food/upkeep**), train
+units and RPG-like **Heroes** (they level up and learn abilities), research
+upgrades, and fight. The map is also full of **creeps** — neutral hostile units
+guarding gold mines and neutral buildings.
+
+**Four races are selectable at the start of a match: Human, Orc, Night Elf,
+Undead** — a fact about the game, not the data (you will not find it in
+`warcraft-data`). The fifth `Race` variant, **Neutral**, is the one you cannot
+pick at the start — yet everyone plays it anyway: **tavern Heroes** (bought
+in-game by any race), hireable **mercenaries** that fight for you, plus creeps
+and neutral buildings. Those neutral units and heroes need custom hotkeys just
+like the rest, so **in this editor Neutral is a full, equal race alongside the
+four** — five first-class race tabs, none second-class. Either way the race set
+is *closed, compile-time, and game-defined*: exactly these five, each once —
+never runtime data you "fetch" through a service or an aggregate, and never a
+`[Race; N]` that could hold duplicates or the wrong count.
+
+**The command card.** Select any unit or building and the UI shows its **command
+card**: a fixed **4×3 grid of 12 buttons** for everything it can do — Move /
+Stop / Hold / Attack, its spells and abilities, a worker's build menu, a
+building's train/research menu. Different races have different units and
+buildings, hence different command cards — that is why the editor is organised
+by race.
+
+**Hotkeys.** Each button can be fired by a keyboard key. WC3 is brutally
+APM-intensive (200+ actions/minute) and the *default* keys are scattered across
+the keyboard and differ per unit — ergonomically awful. Players remap them, most
+commonly to a **Grid layout**: the 12 command-card positions map onto a fixed
+keyboard block (e.g. `QWER / ASDF / ZXCV`), so the key you press is the button's
+**position**, not a per-ability letter to memorise.
+
+**`CustomKeys.txt`** is the file the game reads to apply those overrides. Each
+entry is a section keyed by an object's four-character rawcode, with hotkey
+fields **`Hotkey`**, **`Unhotkey`** (cancel/unlearn) and **`Researchhotkey`** (a
+hero learning an ability), plus grid-position fields **`Buttonpos`**,
+**`Unbuttonpos`**, **`Researchbuttonpos`** given as `x,y` in that 4×3 grid
+(`x` 0–3 left→right, `y` 0–2 top→bottom). **This app edits exactly that file.**
+The whole domain is: races → their units/buildings → command-card buttons →
+those buttons' hotkeys and grid positions.
+
+## Improvising is strictly forbidden
+
+This repo is a deliberate system of conventions and specs. **Never invent,
+guess, or "try" a new pattern.** Every recurring shape already has exactly one
+canonical form — find it and mirror it exactly:
+
+- Read-side domain data → a `ddd::Query` in `services/customkeys/queries/` +
+  `impl QueryHandler` on the service + a service method + a `use_*_service()`
+  accessor. **Never** an ad-hoc struct reaching for domain data (that is a wall
+  violation).
+- Before writing anything, grep a sibling (an existing query, component, or
+  command) and copy its structure line-for-line.
+- **A local `[patch]` is never an option** — it can never ship (CI breaks on
+  it). A change that "needs" patching an external pinned dep
+  (`warcraft-data`, `ddd`, …) is a follow-up in *that* repo (edit → publish →
+  retag), not a local workaround here.
+- If the spec is genuinely silent, or a rule would have to break, **stop and
+  surface it** with a recommendation. Do not decide unilaterally.
+
 ## Only two commands exist — nothing else is allowed
 
 There are exactly **two** commands you may ever run for this project. Do not

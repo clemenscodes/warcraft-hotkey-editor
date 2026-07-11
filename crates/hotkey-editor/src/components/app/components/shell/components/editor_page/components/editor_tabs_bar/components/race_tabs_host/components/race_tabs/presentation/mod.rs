@@ -1,6 +1,6 @@
 use super::model::{RaceTabBinding, RaceTabsModel};
 use dioxus::prelude::*;
-use warcraft_api::{Race, RaceLabels};
+use warcraft_api::Race;
 
 /// The five race tabs' finished bindings, in supported-race order. `RaceTabs` is the one
 /// consumer of the active race: it reads it once, marks each tab active from it, and
@@ -39,8 +39,7 @@ fn race_tab(props: &RaceTabsModel, race: Race) -> RaceTabBinding {
     let on_select = props.on_select;
     let current_race = *active_race.read();
     let is_active = current_race == race;
-    let display_name = RaceLabels::display_name(race);
-    let label = display_name.to_string();
+    let label = race.to_string();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         on_select.call(race);
     });

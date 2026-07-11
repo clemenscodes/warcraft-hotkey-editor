@@ -1,8 +1,8 @@
 use super::IconUrl;
-use warcraft_api::{ObjectLookup, WarcraftObjectId};
+use warcraft_api::{WarcraftApi, WarcraftObjectId};
 
 /// A database object resolved for display: its first icon URL and first name, if
-/// any. The single home for the `ObjectLookup → icon → name` resolution that the
+/// any. The single home for the `WarcraftApi → icon → name` resolution that the
 /// unit and ability card views all repeat; each caller supplies its own name
 /// fallback (a unit falls back to its id, an ability to its slot's display name).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -14,7 +14,8 @@ pub struct ResolvedIcon {
 impl ResolvedIcon {
     /// Resolve a database object id to its first icon URL and first display name.
     pub fn lookup(object_id: WarcraftObjectId) -> Self {
-        let object_option = ObjectLookup::object(object_id);
+        let api = WarcraftApi::default();
+        let object_option = api.object(object_id);
         let icon_url = object_option
             .and_then(|object| object.icons().first().copied())
             .map(IconUrl::from_database_path)

@@ -209,9 +209,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.66"
+version = "1.2.67"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5d6cac793997bd970000024b2934968efe83b382de4fdcf4fcb46b6ee4ad996"
+checksum = "e17dd265a7d0f31ef544e1b20e03add05d3b45b491b633b10d67145d2acc1a38"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -524,7 +524,8 @@ checksum = "a4ae5f15dda3c708c0ade84bfee31ccab44a3da4f88015ed22f63732abe300c8"
 
 [[package]]
 name = "ddd"
-version = "0.1.0"
+version = "0.2.0"
+source = "git+https://github.com/clemenscodes/ddd?tag=v0.2.0#30aa81c432476c169405048a84c51e4be0ba5974"
 
 [[package]]
 name = "deranged"
@@ -2197,7 +2198,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c80231409c20246a13fddb31776fb942c38553c51e871f8cbd687a4cfb5843d"
 dependencies = [
  "phf_shared",
- "rand 0.8.6",
+ "rand 0.8.7",
 ]
 
 [[package]]
@@ -2397,18 +2398,18 @@ checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
 name = "rand"
-version = "0.8.6"
+version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ca0ecfa931c29007047d1bc58e623ab12e5590e8c7cc53200d5202b69266d8a"
+checksum = "22f6172bdec972074665ed81ed53b71da00bfc44b65a753cfde883ec4c702a1a"
 dependencies = [
  "rand_core 0.6.4",
 ]
 
 [[package]]
 name = "rand"
-version = "0.9.4"
+version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44c5af06bb1b7d3216d91932aed5265164bf384dc89cd6ba05cf59a35f5f76ea"
+checksum = "b9ef1d0d795eb7d84685bca4f72f3649f064e6641543d3a8c415898726a57b41"
 dependencies = [
  "rand_chacha",
  "rand_core 0.9.5",
@@ -2983,9 +2984,9 @@ dependencies = [
 
 [[package]]
 name = "thread_local"
-version = "1.1.9"
+version = "1.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f60246a4944f24f6e018aa17cdeffb7818b76356965d03b07d6a9886e8962185"
+checksum = "1ad99c4c6d32803332c548b1af0540b357b3f5fc0be8f6c6bfe8b2e6ae784070"
 dependencies = [
  "cfg-if",
 ]
@@ -3034,9 +3035,9 @@ dependencies = [
 
 [[package]]
 name = "tinyvec"
-version = "1.11.0"
+version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e61e67053d25a4e82c844e8424039d9745781b3fc4f32b8d55ed50f5f667ef3"
+checksum = "bb4ebadaa0af04fab11ae01eb5f9fdb5f9c5b875506e210e71c07873528baa7f"
 dependencies = [
  "tinyvec_macros",
 ]
@@ -3235,7 +3236,7 @@ dependencies = [
  "http",
  "httparse",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "sha1",
  "thiserror 2.0.18",
  "utf-8",
@@ -3252,7 +3253,7 @@ dependencies = [
  "http",
  "httparse",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "sha1",
  "thiserror 2.0.18",
  "utf-8",
@@ -3364,19 +3365,30 @@ dependencies = [
 [[package]]
 name = "warcraft-api"
 version = "0.1.0"
-source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.5.0#9c7a94ce9d4336c88dc0b97289df5c194ea7f63d"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.6.0#4ebc87a07e0f450bcacc2dac6e62c61d88672512"
 dependencies = [
+ "ddd",
  "serde",
  "serde_json",
+ "warcraft-primitives",
 ]
 
 [[package]]
 name = "warcraft-keybinds"
 version = "0.1.0"
-source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.5.0#9c7a94ce9d4336c88dc0b97289df5c194ea7f63d"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.6.0#4ebc87a07e0f450bcacc2dac6e62c61d88672512"
 dependencies = [
  "ddd",
  "warcraft-api",
+]
+
+[[package]]
+name = "warcraft-primitives"
+version = "0.1.0"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.6.0#4ebc87a07e0f450bcacc2dac6e62c61d88672512"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

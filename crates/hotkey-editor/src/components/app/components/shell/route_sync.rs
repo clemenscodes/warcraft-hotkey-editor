@@ -1,8 +1,8 @@
+use super::race_slug::RaceSlug;
 use crate::components::app::route::Route;
 use crate::services::navigation::app_view::CollisionKind;
 use crate::services::navigation::editor_nav::DecodedEditorNav;
 use crate::services::navigation::nav_snapshot::NavSnapshot;
-use warcraft_api::RaceLabels;
 
 impl From<&Route> for NavSnapshot {
     fn from(route: &Route) -> Self {
@@ -43,7 +43,8 @@ impl From<&NavSnapshot> for Route {
     fn from(snapshot: &NavSnapshot) -> Self {
         match snapshot {
             NavSnapshot::Editor(nav) => {
-                let race_label = RaceLabels::data_attribute(nav.race()).to_string();
+                let race = nav.race();
+                let race_label = race.slug().to_string();
                 let race = Some(race_label);
                 let mode = Some(nav.unit_mode().to_string());
                 let unit = nav

@@ -2,8 +2,8 @@ use super::default_unit::DefaultUnit;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::editor_nav::DecodedEditorNav;
 use dioxus::prelude::*;
-use warcraft_api::{ObjectLookup, UnitMode};
 use warcraft_api::{Race, WarcraftObjectId, WarcraftObjectMeta};
+use warcraft_api::{UnitMode, WarcraftApi};
 use warcraft_keybinds::GridSlotId;
 
 /// Bundles every signal the header needs to write when the user
@@ -141,7 +141,8 @@ impl ViewNavigationContext {
     /// and switches to the editor view. Takes the typed id — callers hold a
     /// `WarcraftObjectId`, never a string.
     pub fn open_unit(self, unit_id: WarcraftObjectId) {
-        let object_option = ObjectLookup::object(unit_id);
+        let api = WarcraftApi::default();
+        let object_option = api.object(unit_id);
         if let Some(object) = object_option {
             if let Some(race) = object.race() {
                 let mut active_race = self.active_race;

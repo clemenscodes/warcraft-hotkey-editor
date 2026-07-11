@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::UnitKind;
-use warcraft_api::UnitKindHelpers;
 
 /// The heading's inputs: which category it heads, whether it is collapsed, and the
 /// collapsed-set signal its toggle flips. The section reads the collapsed set from
@@ -23,7 +22,7 @@ pub(super) struct CategoryHeadingData {
 impl From<UnitCategoryHeadingInputs> for CategoryHeadingData {
     fn from(inputs: UnitCategoryHeadingInputs) -> Self {
         let category_kind = inputs.category_kind;
-        let label = UnitKindHelpers::category_label(category_kind).to_owned();
+        let label = category_kind.category_label().to_owned();
         let is_collapsed = inputs.is_collapsed;
         let mut collapsed_categories = inputs.collapsed_categories;
         let on_toggle = EventHandler::new(move |_event: MouseEvent| {
@@ -91,7 +90,10 @@ pub(super) fn use_unit_category_section(
     let search_field = *editor.search_field().read();
     let show_abilityless_units = *editor.show_abilityless_units().read();
     let expand_variants = *editor.expand_variants().read();
-    let visibility = CatalogVisibility::new(show_abilityless_units, expand_variants);
+    let visibility = CatalogVisibility {
+        include_abilityless: show_abilityless_units,
+        expand_variants,
+    };
     let category_listing_memo = use_memo(use_reactive!(|(
         race,
         mode,

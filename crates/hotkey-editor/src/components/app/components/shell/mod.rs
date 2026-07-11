@@ -1,5 +1,6 @@
 pub mod components;
 mod presentation;
+mod race_slug;
 mod route_sync;
 mod style;
 

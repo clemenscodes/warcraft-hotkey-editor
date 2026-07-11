@@ -7,7 +7,7 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
-use warcraft_api::ObjectLookup;
+use warcraft_api::WarcraftApi;
 use warcraft_api::{HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_keybinds::{CustomKeys, Evasion, GridSlotId, InspectorDetail, UnitSlotContainers};
 
@@ -48,7 +48,8 @@ impl TryFrom<WarcraftObjectId> for ResolvedUnit {
     type Error = &'static str;
 
     fn try_from(unit_id: WarcraftObjectId) -> Result<Self, Self::Error> {
-        let Some(unit_object) = ObjectLookup::object(unit_id) else {
+        let api = WarcraftApi::default();
+        let Some(unit_object) = api.object(unit_id) else {
             return Err("Unit not found in database.");
         };
         let WarcraftObjectMeta::Unit(unit_meta) = unit_object.meta() else {
