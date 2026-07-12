@@ -7,20 +7,21 @@ pub use view::SystemHotkeysDialogView;
 pub mod state;
 mod style;
 
-use components::system_hotkeys_dialog_panel::SystemHotkeysDialogPanel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
+use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
+use components::system_hotkeys_dialog_body::SystemHotkeysDialogBodyView;
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::DialogRoot;
-use presentation::use_system_hotkeys_dialog;
-use presentation::SystemHotkeysDialogShell;
+use dioxus_kit::frame::Empty;
 use model::SystemHotkeysDialogModel;
+use presentation::SystemHotkeysDialogShell;
+use presentation::use_system_hotkeys_dialog;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Edits Warcraft III's system and menu hotkeys. It owns its own dialog shell: the
-/// hook holds the UI signals, the shell struct shapes the panel, and this places the
-/// panel inside its own backdrop `div` (the dimmed, centring layer) within the library
-/// `DialogRoot`. No project class touches the library element.
+/// Edits Warcraft III's system and menu hotkeys. It renders the reusable `WarcraftDialog`
+/// directly, handing it the isolated body region; the headless dialog gates itself on the
+/// shell's open value and derives its own close from `on_open_change`. The hook holds the
+/// UI signals and provides them to the subtree via context.
 #[component]
 pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
     use_body_scroll_lock(props.system_hotkeys_open);
@@ -29,18 +30,16 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
         open,
         on_open_change,
         title,
-        on_close,
     } = SystemHotkeysDialogShell::from(&model);
-    if !open {
-        return rsx! {};
-    }
+    let body = SystemHotkeysDialogBodyView;
     rsx! {
-        DialogRoot {
-            open,
-            on_open_change,
-            div {
-                class: CLASS,
-                SystemHotkeysDialogPanel { title, on_close }
+        div {
+            class: CLASS,
+            WarcraftDialog::<SystemHotkeysDialogBodyView, Empty> {
+                title,
+                body,
+                open,
+                on_open_change,
             }
         }
     }

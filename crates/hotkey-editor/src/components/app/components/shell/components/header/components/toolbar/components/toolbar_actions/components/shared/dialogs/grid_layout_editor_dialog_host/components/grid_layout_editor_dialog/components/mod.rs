@@ -1,1 +1,1 @@
-pub mod grid_layout_editor_dialog_panel;
+pub mod grid_layout_editor_dialog_body;

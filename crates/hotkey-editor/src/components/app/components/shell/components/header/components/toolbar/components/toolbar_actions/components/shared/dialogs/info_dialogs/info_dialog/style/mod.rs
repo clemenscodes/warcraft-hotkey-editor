@@ -1,17 +1,10 @@
 use tw_macro::tw;
+// A dialog base is a data seam, not a box: it owns no layout of its own. The
+// `WarcraftDialog` overlay it renders positions itself fixed, so this root is
+// `contents` — a layout-neutral grouping wrapper carrying only the identity class.
 
 classes! {
     base: tw![
-        "fixed",
-        "inset-0",
-        "z-1000",
-        "flex",
-        "items-center",
-        "justify-center",
-        "p-8",
-        "bg-black/70",
-    ],
-    mobile: tw![
-        "mobile:p-0",
+        "contents",
     ],
 }

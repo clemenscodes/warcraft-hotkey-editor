@@ -1,1 +1,1 @@
-pub mod hotkey_alt_position_picker_dialog;
+pub mod hotkey_alt_position_picker_dialog_body;

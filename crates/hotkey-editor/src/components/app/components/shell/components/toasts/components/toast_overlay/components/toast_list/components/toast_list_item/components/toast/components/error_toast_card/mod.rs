@@ -1,36 +1,34 @@
-pub mod components;
+mod data;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::ErrorToastCardView;
 mod style;
 
-use crate::components::app::components::shell::components::toasts::components::toast_overlay::components::toast_list::components::toast_list_item::components::toast::components::shared::toast_close::ToastClose;
-use components::error_toast_content::ErrorToastContent;
-use components::error_toast_icon::ErrorToastIcon;
+use crate::components::app::components::shell::components::toasts::components::toast_overlay::components::toast_list::components::toast_list_item::components::toast::components::shared::toast_card::ToastCard;
+use data::ICON;
 use dioxus::prelude::*;
 use model::ErrorToastCardModel;
+use presentation::ErrorToastCardPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The error toast card: its tinted surface owning the alertdialog root, the
-/// error icon and title, the description, and the close control. Presentational
-/// only; the dispatcher builds its props from the toast record.
+/// The error toast: a thin wrapper that publishes the error tint as CSS custom
+/// properties and renders the shared [`ToastCard`]. Its own root is `contents`, so it
+/// adds no box — only the colour vars the card's descendants read.
 #[component]
 pub fn ErrorToastCard(props: ErrorToastCardModel) -> Element {
-    let title = props.record.title().to_string();
-    let description = props.record.description();
-    let id = props.record.id();
+    let ErrorToastCardPresentation {
+        title,
+        description,
+        id,
+    } = ErrorToastCardPresentation::from(&props);
     let on_remove = props.on_remove;
     rsx! {
         div {
             class: CLASS,
-            role: "alertdialog",
-            "aria-modal": "false",
-            tabindex: "0",
-            ErrorToastIcon {}
-            ErrorToastContent { title, description }
-            ToastClose { id, on_remove }
+            ToastCard { icon: ICON, title, description, id, on_remove }
         }
     }
 }

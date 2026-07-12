@@ -1,1 +1,1 @@
-pub mod templates_dialog;
+pub mod templates_dialog_body;

@@ -2,14 +2,14 @@ use super::model::InfoDialogConfig;
 use dioxus::prelude::*;
 
 /// The info dialog's own shell, shaped from its config: the open value driving the
-/// backdrop, the change handler that writes the open signal, the close handler for
-/// the header, and the flat copy and action data the panel forwards to its header
-/// and scroll-region body. Every dialog owns its shell now — there is no base.
+/// dialog, the change handler that writes the open signal (mirroring the headless
+/// dialog's own close), the header title, and the flat copy and action data the body
+/// region forwards to its instruction block and action row. The title/close header is
+/// `WarcraftDialog`'s own chrome, so no close handler is shaped here.
 pub(super) struct InfoDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
     pub(super) title: &'static str,
-    pub(super) on_close: EventHandler<()>,
     pub(super) intro: &'static str,
     pub(super) warning: Option<&'static str>,
     pub(super) primary_label: &'static str,
@@ -22,8 +22,6 @@ impl From<&InfoDialogConfig> for InfoDialogShell {
         let mut open_signal = props.open;
         let open = open_signal();
         let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
-        let mut close_signal = props.open;
-        let on_close = EventHandler::new(move |()| close_signal.set(false));
         let title = props.title;
         let intro = props.intro;
         let warning = props.warning;
@@ -34,7 +32,6 @@ impl From<&InfoDialogConfig> for InfoDialogShell {
             open,
             on_open_change,
             title,
-            on_close,
             intro,
             warning,
             primary_label,

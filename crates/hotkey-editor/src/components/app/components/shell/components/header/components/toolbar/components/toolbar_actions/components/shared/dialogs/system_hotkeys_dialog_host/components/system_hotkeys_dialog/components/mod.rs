@@ -1,1 +1,1 @@
-pub mod system_hotkeys_dialog_panel;
+pub mod system_hotkeys_dialog_body;

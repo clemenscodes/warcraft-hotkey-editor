@@ -89,15 +89,15 @@ impl From<&ColumnInputs<'_>> for KeyColumn {
 }
 
 /// The system key picker's own shell, shaped from its model: the open value driving
-/// the backdrop, the change handler that writes the open signal, the header's title
-/// and close handler, and the raw board values (both laid-out columns plus the pick
-/// and Escape handlers) the bordered panel threads to its header and board body.
-/// Every dialog owns its shell now — there is no base.
+/// the dialog, the change handler that writes the open signal, the header's title, and
+/// the raw board values (both laid-out columns plus the pick and Escape handlers) the
+/// `WarcraftDialog` threads to its body region. Every dialog owns its shell now — there
+/// is no base. The title/close header chrome is owned by `WarcraftDialog`, which derives
+/// its close from `on_open_change`, so the shell carries no separate close handler.
 pub(super) struct SystemKeyPickerDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
     pub(super) title: String,
-    pub(super) on_close: EventHandler<()>,
     pub(super) columns: Vec<KeyColumn>,
     pub(super) on_pick: EventHandler<KeyCode>,
     pub(super) board_on_close: EventHandler<()>,
@@ -108,9 +108,7 @@ impl From<&SystemKeyPickerDialogPresentation> for SystemKeyPickerDialogShell {
         let mut open_signal = model.open;
         let open = open_signal();
         let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
-        let mut close_signal = model.open;
         let title = model.title.clone();
-        let on_close = EventHandler::new(move |()| close_signal.set(false));
         let columns = model.columns.clone();
         let on_pick = model.on_pick;
         let board_on_close = model.board_on_close;
@@ -118,7 +116,6 @@ impl From<&SystemKeyPickerDialogPresentation> for SystemKeyPickerDialogShell {
             open,
             on_open_change,
             title,
-            on_close,
             columns,
             on_pick,
             board_on_close,

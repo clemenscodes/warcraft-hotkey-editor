@@ -1,1 +1,1 @@
-pub mod hotkey_upgrade_position_picker_dialog;
+pub mod hotkey_upgrade_position_picker_body;

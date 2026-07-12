@@ -1,39 +1,25 @@
+pub mod components;
 mod model;
 mod view;
 
 pub use view::ConflictPanelView;
-mod style;
 
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_caption::ConflictCardCaption;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_multi_stack::ConflictMultiStack;
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_pair_row::ConflictPairRow;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::panel_card::PanelCard;
+use components::conflict_panel_body::ConflictPanelBodyView;
 use dioxus::prelude::*;
 use model::ConflictPanelModel;
-use style::CLASS;
 use tw_macro::assert_component;
 
-/// The conflict card surface: the role caption over exactly one of the two clash
-/// layouts (the pair row or the multi stack). Each layout renders itself away when it
-/// does not apply. Shared by the hotkey and unit-position conflict cards.
+/// The conflict card: the role caption over exactly one of the two clash layouts (the pair
+/// row or the multi stack). Composes the shared `PanelCard` surface, supplying its body
+/// region. Shared by the hotkey and unit-position conflict cards.
 #[component]
 pub fn ConflictPanel(props: ConflictPanelModel) -> Element {
-    let ConflictCardModel {
-        role_label,
-        pair,
-        multi,
-        marker,
-    } = props.model;
+    let model = props.model;
+    let models = vec![model];
+    let body = ConflictPanelBodyView { models };
     rsx! {
-        div {
-            class: CLASS,
-            ConflictCardCaption { text: role_label }
-            ConflictPairRow { pair }
-            ConflictMultiStack {
-                abilities: multi,
-                marker,
-            }
-        }
+        PanelCard::<ConflictPanelBodyView> { body }
     }
 }
 

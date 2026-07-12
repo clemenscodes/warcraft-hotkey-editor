@@ -9,3 +9,5 @@ pub mod conflict_meta;
 pub mod conflict_multi_stack;
 pub mod conflict_pair_row;
 pub mod conflict_panel;
+pub mod detail_card;
+pub mod panel_card;

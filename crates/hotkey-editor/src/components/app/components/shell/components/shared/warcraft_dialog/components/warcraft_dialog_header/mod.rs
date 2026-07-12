@@ -1,9 +1,10 @@
+pub mod components;
 mod model;
 mod view;
 
 pub use view::WarcraftDialogHeaderView;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::dialog_header::DialogHeader;
+use components::dialog_header::DialogHeader;
 use dioxus::prelude::*;
 use model::WarcraftDialogHeaderModel;
 use tw_macro::assert_component;

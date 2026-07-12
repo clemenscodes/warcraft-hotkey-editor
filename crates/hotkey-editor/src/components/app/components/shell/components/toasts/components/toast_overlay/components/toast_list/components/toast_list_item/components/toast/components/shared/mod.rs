@@ -1,2 +1,1 @@
-pub mod toast_close;
-pub mod toast_description;
+pub mod toast_card;

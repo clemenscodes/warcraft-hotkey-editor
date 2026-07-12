@@ -73,10 +73,10 @@ impl From<LetterColumnInputs> for KeyColumn {
 }
 
 /// The key picker's shaped, signal-free presentation: the built board columns, the
-/// current open value, the title, and the pick/close/open-change handlers. The body only
-/// places these. `on_close` closes the dialog — the header close-button and the board's
-/// keyboard-dismiss both set the local open signal false (identical behaviour), so the
-/// same `Copy` handler feeds the panel's `on_close` and `on_board_close`.
+/// current open value, the title, and the pick/close/open-change handlers. The dialog only
+/// places these. `on_open_change` drives the `WarcraftDialog` (its title/close header and
+/// escape/outside-click all flow through it); `on_close` is the board's keyboard-dismiss —
+/// both set the local open signal false (identical behaviour).
 pub(super) struct KeyPickerDialogPresentation {
     pub(super) open: bool,
     pub(super) title: String,

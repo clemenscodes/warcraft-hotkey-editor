@@ -1,5 +1,5 @@
-use super::components::grid_layout_editor_dialog_panel::components::grid_layout_editor_dialog_body::components::grid_layout_editor_dialog_content::components::layout_grid::components::layout_tile::LayoutTileState;
-use super::components::grid_layout_editor_dialog_panel::components::grid_layout_editor_dialog_body::components::grid_layout_editor_dialog_content::components::layout_grid::components::layout_tile::LayoutTileView;
+use super::components::grid_layout_editor_dialog_body::components::grid_layout_editor_dialog_content::components::layout_grid::components::layout_tile::LayoutTileState;
+use super::components::grid_layout_editor_dialog_body::components::grid_layout_editor_dialog_content::components::layout_grid::components::layout_tile::LayoutTileView;
 use super::data::QWERTY_ROWS;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerCell;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerCellState;
@@ -198,7 +198,6 @@ pub(super) struct GridLayoutEditorDialogPresentation {
     pub(super) is_open: bool,
     pub(super) on_open_change: Callback<bool>,
     pub(super) title: String,
-    pub(super) on_close: EventHandler<()>,
     pub(super) cells: Vec<LayoutTileView>,
     pub(super) toggle_checked: bool,
     pub(super) on_toggle: EventHandler<FormEvent>,
@@ -347,10 +346,8 @@ pub(super) fn use_grid_layout_editor_dialog() -> GridLayoutEditorDialogPresentat
         open,
     );
 
-    let mut open_signal = open;
-    let is_open = *open_signal.read();
+    let is_open = *open.read();
     let title = String::from("Global Hotkey Layout");
-    let on_close = EventHandler::new(move |_event: ()| open_signal.set(false));
     let picker_title = String::from("Pick a grid key");
     let picker_allow_conflict_pick = true;
 
@@ -358,7 +355,6 @@ pub(super) fn use_grid_layout_editor_dialog() -> GridLayoutEditorDialogPresentat
         is_open,
         on_open_change: actions.on_dialog_open_change,
         title,
-        on_close,
         cells,
         toggle_checked: actions.toggle_checked,
         on_toggle: actions.on_toggle,

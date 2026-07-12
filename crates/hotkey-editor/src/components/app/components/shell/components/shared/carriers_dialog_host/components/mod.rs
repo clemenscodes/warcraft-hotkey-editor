@@ -1,1 +1,1 @@
-pub mod carriers_dialog;
+pub mod carriers_dialog_body;

@@ -1,4 +1,4 @@
-use super::components::system_hotkeys_dialog_panel::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::InventoryDragFollower;
+use super::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::InventoryDragFollower;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::WarcraftObjectId;

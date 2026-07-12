@@ -2,25 +2,24 @@ pub mod components;
 mod model;
 mod presentation;
 mod state;
-mod style;
 mod view;
 
 pub use state::{KeyPickerCell, KeyPickerCellState};
 pub use view::KeyPickerDialogView;
 
-use components::key_picker_panel::KeyPickerPanel;
+use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
+use components::key_picker_body::KeyPickerBodyView;
 use dioxus::prelude::*;
-use dioxus_primitives::dialog::DialogRoot;
+use dioxus_kit::frame::Empty;
 use model::KeyPickerDialogModel;
 use presentation::{KeyPickerDialogPresentation, use_key_picker_dialog_presentation};
-use style::CLASS;
 use tw_macro::assert_component;
 
-/// Assigns an ability hotkey from an on-screen letter keyboard. It owns its own dialog
-/// shell: it takes the `KeyPickerDialogModel` props, the presentation builder mirrors the open
-/// flag into a local signal and shapes the board, and this places the panel inside its
-/// own backdrop `div` (the dimmed, centring layer) within the library `DialogRoot`. No
-/// project class touches the library element.
+/// Assigns an ability hotkey from an on-screen letter keyboard. It takes the
+/// `KeyPickerDialogModel` props, the presentation builder mirrors the open flag into a local
+/// signal and shapes the board, and this renders the reusable `WarcraftDialog` directly,
+/// handing it the isolated key board body region. The headless dialog owns the styled content
+/// box and the title/close header; the board keyboard-dismiss rides in the body region.
 #[component]
 pub fn KeyPickerDialog(props: KeyPickerDialogModel) -> Element {
     let KeyPickerDialogPresentation {
@@ -31,20 +30,17 @@ pub fn KeyPickerDialog(props: KeyPickerDialogModel) -> Element {
         on_close,
         on_open_change,
     } = use_key_picker_dialog_presentation(&props);
+    let body = KeyPickerBodyView {
+        columns,
+        on_pick,
+        on_close,
+    };
     rsx! {
-        DialogRoot {
+        WarcraftDialog::<KeyPickerBodyView, Empty> {
+            title,
+            body,
             open,
             on_open_change,
-            div {
-                class: CLASS,
-                KeyPickerPanel {
-                    title,
-                    on_close,
-                    columns,
-                    on_pick,
-                    on_board_close: on_close,
-                }
-            }
         }
     }
 }

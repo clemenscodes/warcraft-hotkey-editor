@@ -1,40 +1,53 @@
 pub mod components;
 mod model;
+mod presentation;
+mod style;
 mod view;
 
 pub use view::HotkeyUpgradePositionPickerDialogHostView;
 
+use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
+use components::hotkey_upgrade_position_picker_body::HotkeyUpgradePositionPickerBodyView;
 use dioxus::prelude::*;
-
-use components::hotkey_upgrade_position_picker_dialog::HotkeyUpgradePositionPickerDialog;
+use dioxus_kit::frame::Empty;
+use model::HotkeyUpgradePositionPickerDialogHostModel;
+use presentation::OpenHotkeyUpgradePositionPickerDialog;
+use presentation::use_hotkey_upgrade_position_picker_dialog_host;
+use style::CLASS;
 use tw_macro::assert_component;
 
-use model::HotkeyUpgradePositionPickerDialogHostModel;
-
-/// Renders the upgraded-form position picker only when the ability has an upgraded
-/// form; the picker's own dialog handles open/closed.
+/// Connected wrapper for the upgraded-form position picker: mounts it only while the
+/// picker is open and the ability has an upgraded form, resolving the dialog through the
+/// host builder. It renders the reusable `WarcraftDialog`, handing it the isolated
+/// upgraded-form picker body as its body region; keeping the mount conditional here
+/// re-initialises the headless dialog each time it opens.
 #[component]
 pub fn HotkeyUpgradePositionPickerDialogHost(
     props: HotkeyUpgradePositionPickerDialogHostModel,
 ) -> Element {
-    if !*props.hotkey_upgrade_position_picker_open.read() || props.upgrade_unit_id.is_none() {
+    let dialog = use_hotkey_upgrade_position_picker_dialog_host(&props);
+    let Some(dialog) = dialog else {
         return rsx! {};
-    }
-    let upgrade_unit_id = props
-        .upgrade_unit_id
-        .expect("guarded to Some before render");
-    let HotkeyUpgradePositionPickerDialogHostModel {
-        display_name,
+    };
+    let OpenHotkeyUpgradePositionPickerDialog {
+        title,
+        upgrade_unit_id,
         picker_slots,
-        hotkey_upgrade_position_picker_open,
-        ..
-    } = props;
+        on_open_change,
+    } = dialog;
+    let body = HotkeyUpgradePositionPickerBodyView {
+        upgrade_unit_id,
+        picker_slots,
+    };
     rsx! {
-        HotkeyUpgradePositionPickerDialog {
-            upgrade_unit_id,
-            display_name,
-            picker_slots,
-            hotkey_upgrade_position_picker_open,
+        div {
+            class: CLASS,
+            WarcraftDialog::<HotkeyUpgradePositionPickerBodyView, Empty> {
+                title,
+                body,
+                open: true,
+                on_open_change,
+            }
         }
     }
 }

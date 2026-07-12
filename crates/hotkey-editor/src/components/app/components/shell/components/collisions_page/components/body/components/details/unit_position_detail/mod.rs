@@ -1,32 +1,24 @@
 pub mod components;
-mod data;
 mod model;
-mod presentation;
 mod view;
 
 pub use view::UnitPositionDetailView;
 
-use crate::services::collision_selection::context::use_collision_selection;
-use components::empty_unit_position_detail::EmptyUnitPositionDetail;
-use components::filled_unit_position_detail::FilledUnitPositionDetail;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::detail_card::DetailCard;
+use components::unit_position_detail_body::UnitPositionDetailBodyView;
 use dioxus::prelude::*;
 use model::UnitPositionDetailModel;
 use tw_macro::assert_component;
 
-/// The position-collision detail pane. A dispatcher: when a unit is selected it renders
-/// the filled pane (the unit header over its position-conflict cards), otherwise the
-/// empty prompt. The selection is read from collision-selection context.
+/// The position-collision detail pane. Composes the shared `DetailCard` surface, supplying
+/// its body region — the dispatcher that shows the filled pane (the unit header over its
+/// position-conflict cards) or the empty prompt.
 #[component]
 pub fn UnitPositionDetail(props: UnitPositionDetailModel) -> Element {
-    let selected_unit = use_collision_selection().selected_unit_position();
-    if let Some(unit_view) = presentation::selected(&props, selected_unit) {
-        rsx! {
-            FilledUnitPositionDetail { unit_view }
-        }
-    } else {
-        rsx! {
-            EmptyUnitPositionDetail { prompt: data::EMPTY_PROMPT }
-        }
+    let units = props.units;
+    let body = UnitPositionDetailBodyView { units };
+    rsx! {
+        DetailCard::<UnitPositionDetailBodyView> { body }
     }
 }
 
