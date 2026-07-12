@@ -9,7 +9,8 @@ pub struct HotkeyUpgradePositionPickerDialogHostView {
     pub upgrade_unit_id: Option<WarcraftObjectId>,
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
-    pub hotkey_upgrade_position_picker_open: Signal<bool>,
+    pub open: bool,
+    pub on_open_change: Callback<bool>,
 }
 
 impl ddd::View for HotkeyUpgradePositionPickerDialogHostView {}

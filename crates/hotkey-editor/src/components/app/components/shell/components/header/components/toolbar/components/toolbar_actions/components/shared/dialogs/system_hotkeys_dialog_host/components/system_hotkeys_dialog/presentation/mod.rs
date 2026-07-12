@@ -13,9 +13,8 @@ pub(super) struct SystemHotkeysDialogShell {
 
 impl From<&SystemHotkeysDialogPresentation> for SystemHotkeysDialogShell {
     fn from(model: &SystemHotkeysDialogPresentation) -> Self {
-        let mut open_signal = model.open;
-        let open = open_signal();
-        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let open = model.open;
+        let on_open_change = model.on_open_change;
         let title = String::from("System Hotkeys");
         Self {
             open,
@@ -30,12 +29,13 @@ use crate::components::app::components::shell::components::header::components::t
 use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// The dialog's model: only the open flag that drives the shell. The active category,
-/// editing section, and inventory drag follower live in [`SystemHotkeysDialogState`],
-/// which this hook provides to the subtree via context so the dialog threads no UI
-/// signals as props.
+/// The dialog's model: the open flag that drives the shell and the change handler
+/// mirroring the headless dialog's own close. The active category, editing section, and
+/// inventory drag follower live in [`SystemHotkeysDialogState`], which this hook provides
+/// to the subtree via context so the dialog threads no UI signals as props.
 pub(super) struct SystemHotkeysDialogPresentation {
-    pub(super) open: Signal<bool>,
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
 }
 
 /// Sets up the dialog's UI signals and provides them as [`SystemHotkeysDialogState`].
@@ -44,11 +44,15 @@ pub(super) struct SystemHotkeysDialogPresentation {
 pub(super) fn use_system_hotkeys_dialog(
     props: &SystemHotkeysDialogModel,
 ) -> SystemHotkeysDialogPresentation {
-    let open = props.system_hotkeys_open;
+    let open = props.open;
+    let on_open_change = props.on_open_change;
     let active_category = use_signal(|| SystemHotkeysCategory::Inventory);
     let editing_section = use_signal::<Option<WarcraftObjectId>>(|| None);
     let drag_follower = use_signal::<Option<InventoryDragFollower>>(|| None);
     let state = SystemHotkeysDialogState::new(active_category, editing_section, drag_follower);
     use_context_provider(|| state);
-    SystemHotkeysDialogPresentation { open }
+    SystemHotkeysDialogPresentation {
+        open,
+        on_open_change,
+    }
 }

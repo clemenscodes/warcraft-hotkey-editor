@@ -1,12 +1,10 @@
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::shared::icons::ICON_PREVIEW;
 use crate::services::overlay_state::context::use_overlay_state;
 use dioxus::prelude::*;
 
 /// The preview toggle's shaped view: the toolbar button's icon, label, pressed aria state,
-/// and click handler, plus the dialog's open state and change handler. It also locks body
-/// scroll while the preview is open — the dialog is mounted here (the burger only flips
-/// the shared signal), so the lock lives with this always-mounted trigger.
+/// and click handler, plus the dialog's open state and change handler. Body-scroll lock is
+/// owned once by `WarcraftDialog`, so this trigger only flips the shared signal.
 pub(super) struct PreviewButtonModel {
     pub(super) icon: &'static str,
     pub(super) aria_label: &'static str,
@@ -23,7 +21,6 @@ pub(super) struct PreviewButtonModel {
 pub(super) fn use_preview_button() -> PreviewButtonModel {
     let overlay = use_overlay_state();
     let preview_open = overlay.preview_open();
-    use_body_scroll_lock(preview_open);
     let open = *preview_open.read();
     let aria_label = if open { "Hide preview" } else { "Preview" };
     let mut toggle_open = preview_open;

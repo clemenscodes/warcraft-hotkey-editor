@@ -59,11 +59,11 @@ pub fn HotkeyOverride(props: HotkeyOverrideModel) -> Element {
         on_close,
         alt_display_name,
         alt_picker_slots,
-        alt_open,
+        mut alt_open,
         upgrade_unit_id,
         upgrade_display_name,
         upgrade_picker_slots,
-        upgrade_open,
+        mut upgrade_open,
     } = use_hotkey_override(&props);
     rsx! {
         HotkeyOverrideCard {
@@ -110,13 +110,15 @@ pub fn HotkeyOverride(props: HotkeyOverrideModel) -> Element {
             object_id,
             display_name: alt_display_name,
             picker_slots: alt_picker_slots,
-            hotkey_alt_position_picker_open: alt_open,
+            open: *alt_open.read(),
+            on_open_change: Callback::new(move |value: bool| alt_open.set(value)),
         }
         HotkeyUpgradePositionPickerDialogHost {
             upgrade_unit_id,
             display_name: upgrade_display_name,
             picker_slots: upgrade_picker_slots,
-            hotkey_upgrade_position_picker_open: upgrade_open,
+            open: *upgrade_open.read(),
+            on_open_change: Callback::new(move |value: bool| upgrade_open.set(value)),
         }
     }
 }

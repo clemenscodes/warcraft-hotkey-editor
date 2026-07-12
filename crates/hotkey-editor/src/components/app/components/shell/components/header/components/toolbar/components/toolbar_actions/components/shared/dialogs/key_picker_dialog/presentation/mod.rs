@@ -1,6 +1,5 @@
 use super::model::KeyPickerDialogModel;
 use super::state::{KeyPickerCell, KeyPickerCellState};
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::shared::key_picker_board::{
     KeyCell, KeyCellState, KeyColumn, KeyWidth,
 };
@@ -105,7 +104,6 @@ pub(super) fn use_key_picker_dialog_presentation(
             parent_on_close.call(());
         }
     });
-    use_body_scroll_lock(open_signal);
     let on_open_change = Callback::new(move |is_open: bool| open_signal.set(is_open));
     let on_close = EventHandler::new(move |()| open_signal.set(false));
     let column_inputs = LetterColumnInputs {

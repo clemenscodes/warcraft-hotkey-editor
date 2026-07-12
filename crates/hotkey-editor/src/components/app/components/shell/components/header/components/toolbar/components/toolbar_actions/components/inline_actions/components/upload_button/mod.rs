@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn UploadButton() -> Element {
     let UploadButtonModel {
-        info_open: open,
+        info_open: mut open,
         on_file_change: on_change,
         on_open_info: onclick,
         icon,
@@ -31,7 +31,10 @@ pub fn UploadButton() -> Element {
                 aria_label,
                 onclick,
             }
-            UploadInfoDialog { open }
+            UploadInfoDialog {
+                open: *open.read(),
+                on_open_change: Callback::new(move |value: bool| open.set(value)),
+            }
         }
     }
 }

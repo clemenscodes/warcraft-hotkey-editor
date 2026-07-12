@@ -1,5 +1,9 @@
 pub mod components;
+mod model;
 mod style;
+mod view;
+
+pub use view::EditorWorkspaceView;
 
 use components::race_theme::RaceTheme;
 use dioxus::prelude::*;

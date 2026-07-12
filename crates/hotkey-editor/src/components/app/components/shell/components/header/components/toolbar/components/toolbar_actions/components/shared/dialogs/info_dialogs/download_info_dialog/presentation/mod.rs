@@ -2,11 +2,13 @@ use super::data::{INTRO, PRIMARY_LABEL, TITLE, WARNING};
 use super::model::DownloadInfoDialogModel;
 use dioxus::prelude::*;
 
-/// The download dialog's shaped data: the open signal it drives, the shared copy
-/// and warning, and the cancel and confirm handlers. The shared `InfoDialog` is
-/// placed with these as named fields.
+/// The download dialog's shaped data: the open value it drives, the change handler
+/// mirroring the headless dialog's own close, the shared copy and warning, and the
+/// cancel and confirm handlers. The shared `InfoDialog` is placed with these as
+/// named fields.
 pub(super) struct DownloadInfoDialogPresentation {
-    pub(super) open: Signal<bool>,
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
     pub(super) title: &'static str,
     pub(super) intro: &'static str,
     pub(super) warning: Option<&'static str>,
@@ -17,11 +19,14 @@ pub(super) struct DownloadInfoDialogPresentation {
 
 impl From<&DownloadInfoDialogModel> for DownloadInfoDialogPresentation {
     fn from(props: &DownloadInfoDialogModel) -> Self {
-        let mut open = props.open;
+        let open = props.open;
+        let on_open_change = props.on_open_change;
         let on_confirm = props.on_confirm;
-        let on_cancel = EventHandler::new(move |_event: MouseEvent| open.set(false));
+        let cancel_change = on_open_change;
+        let on_cancel = EventHandler::new(move |_event: MouseEvent| cancel_change.call(false));
+        let primary_change = on_open_change;
         let on_primary = EventHandler::new(move |_event: MouseEvent| {
-            open.set(false);
+            primary_change.call(false);
             on_confirm.call(());
         });
         let title = TITLE;
@@ -30,6 +35,7 @@ impl From<&DownloadInfoDialogModel> for DownloadInfoDialogPresentation {
         let primary_label = PRIMARY_LABEL;
         Self {
             open,
+            on_open_change,
             title,
             intro,
             warning,

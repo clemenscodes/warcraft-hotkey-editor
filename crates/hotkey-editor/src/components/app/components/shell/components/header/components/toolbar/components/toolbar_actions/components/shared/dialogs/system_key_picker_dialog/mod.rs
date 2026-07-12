@@ -7,14 +7,13 @@ mod view;
 pub use view::SystemKeyPickerDialogView;
 mod state;
 
-use components::system_key_picker_dialog_body::SystemKeyPickerDialogBodyView;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
+use components::system_key_picker_dialog_body::SystemKeyPickerDialogBodyView;
 use dioxus::prelude::*;
 use dioxus_kit::frame::Empty;
-use presentation::use_system_key_picker;
-use presentation::SystemKeyPickerDialogShell;
 use model::SystemKeyPickerDialogModel;
+use presentation::SystemKeyPickerDialogShell;
+use presentation::use_system_key_picker;
 use tw_macro::assert_component;
 
 /// Assigns a system or menu hotkey from a full on-screen keyboard (including keys the
@@ -27,7 +26,6 @@ use tw_macro::assert_component;
 #[component]
 pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogModel) -> Element {
     let model = use_system_key_picker(&props);
-    use_body_scroll_lock(model.open);
     let SystemKeyPickerDialogShell {
         open,
         on_open_change,

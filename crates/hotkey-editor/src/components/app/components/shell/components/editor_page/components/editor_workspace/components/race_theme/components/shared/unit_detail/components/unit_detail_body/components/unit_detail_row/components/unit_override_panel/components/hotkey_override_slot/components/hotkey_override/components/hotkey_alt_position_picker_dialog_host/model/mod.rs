@@ -10,7 +10,8 @@ pub struct HotkeyAltPositionPickerDialogHostModel {
     pub object_id: WarcraftObjectId,
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
-    pub hotkey_alt_position_picker_open: Signal<bool>,
+    pub open: bool,
+    pub on_open_change: Callback<bool>,
 }
 
 impl From<&HotkeyAltPositionPickerDialogHostView> for HotkeyAltPositionPickerDialogHostModel {
@@ -19,13 +20,15 @@ impl From<&HotkeyAltPositionPickerDialogHostView> for HotkeyAltPositionPickerDia
             object_id,
             display_name,
             picker_slots,
-            hotkey_alt_position_picker_open,
+            open,
+            on_open_change,
         } = view.clone();
         Self {
             object_id,
             display_name,
             picker_slots,
-            hotkey_alt_position_picker_open,
+            open,
+            on_open_change,
         }
     }
 }

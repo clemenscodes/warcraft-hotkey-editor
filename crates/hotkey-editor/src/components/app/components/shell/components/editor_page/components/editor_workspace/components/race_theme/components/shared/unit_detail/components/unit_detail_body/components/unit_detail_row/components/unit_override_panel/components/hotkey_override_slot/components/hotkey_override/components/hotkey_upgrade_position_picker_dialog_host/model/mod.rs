@@ -11,7 +11,8 @@ pub struct HotkeyUpgradePositionPickerDialogHostModel {
     pub upgrade_unit_id: Option<WarcraftObjectId>,
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
-    pub hotkey_upgrade_position_picker_open: Signal<bool>,
+    pub open: bool,
+    pub on_open_change: Callback<bool>,
 }
 
 impl From<&HotkeyUpgradePositionPickerDialogHostView>
@@ -22,13 +23,15 @@ impl From<&HotkeyUpgradePositionPickerDialogHostView>
             upgrade_unit_id,
             display_name,
             picker_slots,
-            hotkey_upgrade_position_picker_open,
+            open,
+            on_open_change,
         } = view.clone();
         Self {
             upgrade_unit_id,
             display_name,
             picker_slots,
-            hotkey_upgrade_position_picker_open,
+            open,
+            on_open_change,
         }
     }
 }

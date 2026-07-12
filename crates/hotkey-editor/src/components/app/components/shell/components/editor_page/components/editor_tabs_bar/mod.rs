@@ -1,5 +1,9 @@
 pub mod components;
+mod model;
 mod style;
+mod view;
+
+pub use view::EditorTabsBarView;
 
 use components::mode_tabs_host::ModeTabsHost;
 use components::race_tabs_host::RaceTabsHost;

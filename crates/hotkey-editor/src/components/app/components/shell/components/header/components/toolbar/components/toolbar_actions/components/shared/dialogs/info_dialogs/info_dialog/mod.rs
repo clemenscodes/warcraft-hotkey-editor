@@ -4,7 +4,6 @@ mod model;
 mod presentation;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::info_dialog_body::InfoDialogBodyView;
 use dioxus::prelude::*;
@@ -21,7 +20,6 @@ use tw_macro::assert_component;
 /// the title/close header.
 #[component]
 pub fn InfoDialog(props: InfoDialogConfig) -> Element {
-    use_body_scroll_lock(props.open);
     let InfoDialogShell {
         open,
         on_open_change,

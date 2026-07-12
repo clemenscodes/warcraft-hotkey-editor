@@ -16,7 +16,7 @@ use tw_macro::assert_component;
 pub fn ExportButton() -> Element {
     let ExportButtonPresentation {
         visible,
-        info_open: open,
+        info_open: mut open,
         icon,
         aria_label,
         onclick,
@@ -32,7 +32,10 @@ pub fn ExportButton() -> Element {
                 aria_label,
                 onclick,
             }
-            DownloadInfoDialogHost { open }
+            DownloadInfoDialogHost {
+                open: *open.read(),
+                on_open_change: Callback::new(move |value: bool| open.set(value)),
+            }
         }
     }
 }

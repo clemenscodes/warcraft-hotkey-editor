@@ -7,7 +7,6 @@ pub use view::SystemHotkeysDialogView;
 pub mod state;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::system_hotkeys_dialog_body::SystemHotkeysDialogBodyView;
 use dioxus::prelude::*;
@@ -24,7 +23,6 @@ use tw_macro::assert_component;
 /// UI signals and provides them to the subtree via context.
 #[component]
 pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
-    use_body_scroll_lock(props.system_hotkeys_open);
     let model = use_system_hotkeys_dialog(&props);
     let SystemHotkeysDialogShell {
         open,

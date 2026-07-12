@@ -25,7 +25,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
     let IslandConflictAbilityPresentation {
-        open_state,
+        mut open_state,
         icon_src,
         icon_alt,
         onclick,
@@ -43,7 +43,10 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
                 ConflictMore { count: extra_count, onclick }
             }
         }
-        CarriersDialogHost { open_state }
+        CarriersDialogHost {
+            ability: open_state.read().clone(),
+            on_close: Callback::new(move |()| open_state.set(None)),
+        }
     }
 }
 

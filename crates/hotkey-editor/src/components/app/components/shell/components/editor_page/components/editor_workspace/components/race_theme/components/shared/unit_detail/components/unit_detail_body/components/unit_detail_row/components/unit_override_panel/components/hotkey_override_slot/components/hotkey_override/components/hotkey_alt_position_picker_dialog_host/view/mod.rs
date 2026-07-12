@@ -9,7 +9,8 @@ pub struct HotkeyAltPositionPickerDialogHostView {
     pub object_id: WarcraftObjectId,
     pub display_name: String,
     pub picker_slots: Rc<[GridSlotId]>,
-    pub hotkey_alt_position_picker_open: Signal<bool>,
+    pub open: bool,
+    pub on_open_change: Callback<bool>,
 }
 
 impl ddd::View for HotkeyAltPositionPickerDialogHostView {}

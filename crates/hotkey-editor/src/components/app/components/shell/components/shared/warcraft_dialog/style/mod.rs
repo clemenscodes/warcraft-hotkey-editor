@@ -18,6 +18,7 @@ classes! {
         "rounded-container",
         "border",
         "border-warcraft-gold",
+        "bg-warcraft-bg-base",
         "bg-panel-toast",
         "shadow-overlay",
     ],

@@ -1,14 +1,32 @@
+use super::Body;
+use super::model::BodyModel;
 use crate::components::app::components::shell::components::collisions_page::presentation::{
     HotkeyUnitView, IslandView, UnitPositionUnitView,
 };
+use browser_kit::frame::Render;
+use dioxus::prelude::*;
 
 /// The published `View` contract mirroring [`BodyModel`], threaded to this component as data.
-#[derive(Clone, PartialEq)]
+/// It is also the collisions page frame's body region: it `impl Render` and renders the `Body`
+/// dispatcher once, so the page places the published `View` directly, with no ad-hoc region
+/// type.
+#[derive(Clone, PartialEq, Default)]
 pub struct BodyView {
     pub content: ContentModel,
 }
 
 impl ddd::View for BodyView {}
+
+impl Render for BodyView {
+    type Model = BodyModel;
+    type Output = Element;
+    fn render(&self) -> Self::Output {
+        let content = self.content.clone();
+        rsx! {
+            Body { content }
+        }
+    }
+}
 
 /// The position-collision two-pane content: the island list shared by the sidebar and
 /// the detail pane.
@@ -64,9 +82,10 @@ impl UnitPositionsPane {
 /// The active collision content as data: an upload prompt (its message), an all-clear
 /// state, or one of the three kinds' two-pane views. `Body` renders each variant; the
 /// hook only shapes it.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Default)]
 pub enum ContentModel {
     Empty(String),
+    #[default]
     Clear,
     Positions(Box<PositionsPane>),
     Hotkeys(Box<HotkeysPane>),

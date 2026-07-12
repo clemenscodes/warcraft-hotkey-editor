@@ -18,6 +18,7 @@ use tw_macro::assert_component;
 pub fn DownloadInfoDialog(props: DownloadInfoDialogModel) -> Element {
     let DownloadInfoDialogPresentation {
         open,
+        on_open_change,
         title,
         intro,
         warning,
@@ -28,6 +29,7 @@ pub fn DownloadInfoDialog(props: DownloadInfoDialogModel) -> Element {
     rsx! {
         InfoDialog {
             open,
+            on_open_change,
             title,
             intro,
             warning,

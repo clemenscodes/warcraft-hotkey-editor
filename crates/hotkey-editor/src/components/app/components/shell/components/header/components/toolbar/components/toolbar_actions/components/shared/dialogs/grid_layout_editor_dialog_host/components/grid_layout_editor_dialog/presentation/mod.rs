@@ -181,7 +181,6 @@ impl LayoutPickerBoard {
         self.rows
     }
 }
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::toasts::ToastOptions;
 use crate::components::app::components::shell::components::toasts::use_toast;
 use crate::services::customkeys::context::use_custom_keys_service;
@@ -311,7 +310,6 @@ pub(super) fn use_grid_layout_editor_dialog() -> GridLayoutEditorDialogPresentat
     let open = overlay_state.layout_dialog_open();
     let editing_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     let dragging_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
-    use_body_scroll_lock(open);
     let grid_layout_service = use_grid_layout_service();
     let layout_snapshot = *grid_layout.read();
     let editing_snapshot = *editing_layout_tile.read();

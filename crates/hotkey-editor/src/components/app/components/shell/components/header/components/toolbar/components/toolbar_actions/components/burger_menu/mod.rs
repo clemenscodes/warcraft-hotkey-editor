@@ -24,8 +24,8 @@ pub fn BurgerMenu() -> Element {
     let view = use_burger_menu();
     let BurgerMenuView {
         burger_open,
-        upload_info_open,
-        download_info_open,
+        mut upload_info_open,
+        mut download_info_open,
         toggle,
         on_close,
         layout,
@@ -49,8 +49,14 @@ pub fn BurgerMenu() -> Element {
                 items,
             }
         }
-        UploadInfoDialog { open: upload_info_open }
-        DownloadInfoDialogHost { open: download_info_open }
+        UploadInfoDialog {
+            open: *upload_info_open.read(),
+            on_open_change: Callback::new(move |value: bool| upload_info_open.set(value)),
+        }
+        DownloadInfoDialogHost {
+            open: *download_info_open.read(),
+            on_open_change: Callback::new(move |value: bool| download_info_open.set(value)),
+        }
     }
 }
 

@@ -21,7 +21,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn AbilityIcon(props: AbilityIconModel) -> Element {
     let AbilityIconPresentation {
-        open_state,
+        mut open_state,
         icon_src,
         icon_alt,
         count,
@@ -40,7 +40,10 @@ pub fn AbilityIcon(props: AbilityIconModel) -> Element {
             FightIcon { src: icon_src, alt: icon_alt }
             CarrierBadge { count, is_winner }
         }
-        CarriersDialogHost { open_state }
+        CarriersDialogHost {
+            ability: open_state.read().clone(),
+            on_close: Callback::new(move |()| open_state.set(None)),
+        }
     }
 }
 

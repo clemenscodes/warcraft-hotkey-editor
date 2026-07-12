@@ -19,9 +19,8 @@ pub(super) struct InfoDialogShell {
 
 impl From<&InfoDialogConfig> for InfoDialogShell {
     fn from(props: &InfoDialogConfig) -> Self {
-        let mut open_signal = props.open;
-        let open = open_signal();
-        let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
+        let open = props.open;
+        let on_open_change = props.on_open_change;
         let title = props.title;
         let intro = props.intro;
         let warning = props.warning;

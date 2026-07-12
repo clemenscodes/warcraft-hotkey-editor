@@ -1,5 +1,4 @@
 use super::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardView;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use crate::components::app::components::shell::components::toasts::ToastOptions;
 use crate::components::app::components::shell::components::toasts::use_toast;
 use crate::services::customkeys::context::{use_loaded_keys, use_upload_status};
@@ -12,9 +11,8 @@ use warcraft_keybinds::ResolvedTemplate;
 /// The templates dialog host's shaped wiring: whether the templates browser is open, the
 /// change handler mirroring the headless dialog's own close (escape, outside click) back
 /// to the shared signal, and the resolved template card views the body lays out — each with
-/// its apply handler that overwrites the loaded document. It also locks body scroll while
-/// the browser is open — the dialog is mounted here (the burger only flips the shared
-/// signal), so the lock lives with this always-mounted host.
+/// its apply handler that overwrites the loaded document. Body-scroll lock is owned once by
+/// `WarcraftDialog`, so this host only flips the shared signal.
 pub(super) struct TemplatesDialogHostModel {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
@@ -32,7 +30,6 @@ pub(super) fn use_templates_dialog_host() -> TemplatesDialogHostModel {
     let mut upload_status = use_upload_status();
     let overlay = use_overlay_state();
     let dialog_open = overlay.templates_dialog_open();
-    use_body_scroll_lock(dialog_open);
     let open = *dialog_open.read();
     let mut change_open = dialog_open;
     let on_open_change = Callback::new(move |is_open| change_open.set(is_open));

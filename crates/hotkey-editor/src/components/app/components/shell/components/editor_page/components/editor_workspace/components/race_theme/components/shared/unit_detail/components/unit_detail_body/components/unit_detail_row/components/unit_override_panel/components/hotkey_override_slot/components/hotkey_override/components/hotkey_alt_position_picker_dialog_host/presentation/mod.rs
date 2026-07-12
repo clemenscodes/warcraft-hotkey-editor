@@ -1,5 +1,4 @@
 use super::model::HotkeyAltPositionPickerDialogHostModel;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::shared::body_scroll_lock::use_body_scroll_lock;
 use dioxus::prelude::*;
 
 /// The open off-state position picker's shaped data: the dialog title and the change
@@ -11,25 +10,17 @@ pub(super) struct OpenHotkeyAltPositionPickerDialog {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// The host's seam: lock body scroll while the picker is open, then — when the open signal
-/// is set — shape the open dialog (its title and close handler), or `None` when it is
-/// closed so the host early-returns an empty mount.
+/// The host's seam: when the open value is set, shape the open dialog (its title and close
+/// handler), or `None` when it is closed so the host early-returns an empty mount. Body
+/// scroll is locked once by `WarcraftDialog`.
 pub(super) fn use_hotkey_alt_position_picker_dialog_host(
     props: &HotkeyAltPositionPickerDialogHostModel,
 ) -> Option<OpenHotkeyAltPositionPickerDialog> {
-    let open_signal = props.hotkey_alt_position_picker_open;
-    use_body_scroll_lock(open_signal);
-    let is_open = *open_signal.read();
-    if !is_open {
+    if !props.open {
         return None;
     }
     let title = format!("Position: {}", props.display_name);
-    let mut close_signal = open_signal;
-    let on_open_change = Callback::new(move |is_open: bool| {
-        if !is_open {
-            close_signal.set(false);
-        }
-    });
+    let on_open_change = props.on_open_change;
     let dialog = OpenHotkeyAltPositionPickerDialog {
         title,
         on_open_change,

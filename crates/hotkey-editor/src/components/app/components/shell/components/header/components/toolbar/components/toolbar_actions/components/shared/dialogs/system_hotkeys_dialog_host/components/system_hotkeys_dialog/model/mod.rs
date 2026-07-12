@@ -1,21 +1,24 @@
 use super::view::SystemHotkeysDialogView;
 use dioxus::prelude::*;
 
-/// What the system hotkeys dialog needs: the open signal that drives the shell. Its
-/// editors read and write the document through the CustomKeys service, not a
-/// threaded signal.
+/// What the system hotkeys dialog needs: the open value that drives the shell and the
+/// change handler mirroring the headless dialog's own close. Its editors read and write
+/// the document through the CustomKeys service, not a threaded signal.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysDialogModel {
-    pub system_hotkeys_open: Signal<bool>,
+    pub open: bool,
+    pub on_open_change: Callback<bool>,
 }
 
 impl From<&SystemHotkeysDialogView> for SystemHotkeysDialogModel {
     fn from(view: &SystemHotkeysDialogView) -> Self {
         let SystemHotkeysDialogView {
-            system_hotkeys_open,
+            open,
+            on_open_change,
         } = view.clone();
         Self {
-            system_hotkeys_open,
+            open,
+            on_open_change,
         }
     }
 }

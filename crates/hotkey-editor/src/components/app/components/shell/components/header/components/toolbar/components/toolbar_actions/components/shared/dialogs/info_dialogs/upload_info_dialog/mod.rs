@@ -18,6 +18,7 @@ use tw_macro::assert_component;
 pub fn UploadInfoDialog(props: UploadInfoDialogModel) -> Element {
     let UploadInfoDialogPresentation {
         open,
+        on_open_change,
         title,
         intro,
         warning,
@@ -28,6 +29,7 @@ pub fn UploadInfoDialog(props: UploadInfoDialogModel) -> Element {
     rsx! {
         InfoDialog {
             open,
+            on_open_change,
             title,
             intro,
             warning,
