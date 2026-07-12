@@ -1,21 +1,13 @@
-use crate::components::app::{FAVICON, KEYBOARD_NAVIGATION_SCRIPT, TAILWIND_STYLES};
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-const OG_DESCRIPTION: &str = "Visual command-card editor for Warcraft III: Reforged. \
-                              Drag keys, export CustomKeys.txt — runs entirely in your browser.";
+const OG_DESCRIPTION: &str = "Visual command-card editor for Warcraft III: Reforged. Drag keys, export CustomKeys.txt — runs entirely in your browser.";
 const OG_IMAGE: &str = "https://clemenscodes.github.io/warcraft-hotkey-editor/og-image.png";
 const OG_URL: &str = "https://clemenscodes.github.io/warcraft-hotkey-editor/";
+const TAILWIND_STYLES: Asset = asset!("/assets/tailwind.css");
+const KEYBOARD_NAVIGATION_SCRIPT: Asset = asset!("/assets/keyboard-navigation.js");
+const FAVICON: Asset = asset!("/assets/favicon.svg");
 
-/// The page's `<head>`: the stylesheet, the keyboard-navigation module, the icons,
-/// the viewport, and the social / OpenGraph tags — all hoisted into the document head
-/// by Dioxus. Split out of `Workbench` so that component stays the editor's layout,
-/// not a metadata manifest.
-///
-/// The viewport is intentionally *not* `viewport-fit=cover`: the browser keeps the whole
-/// app inside the safe area, so no shell component has to re-inset itself with
-/// `env(safe-area-inset-*)`. `theme-color` paints the browser chrome (and, with the `html`
-/// background, the safe-area strips on a notched phone) the app's own dark blue.
 #[component]
 pub fn Head() -> Element {
     rsx! {
