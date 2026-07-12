@@ -175,6 +175,10 @@ DONE (2nd green, `moon run :ci` exit 0, 290 e2e):
   ddd published contract AND the frame region — no ad-hoc `*Region` name that matches no dir/component.
 - **Useless generic footer stub DELETED** (`warcraft_dialog/components/warcraft_dialog_footer/`). It was
   the agent's contentless generic — wrong. The footer is real, PER-DIALOG content, not generic chrome.
+- **Footer-region SUPPORT added to `WarcraftDialog` (GREEN, 290 e2e).** `WarcraftDialog<Body, Footer>`
+  (both `Render<Output=Element>`); `WarcraftDialogFrame<Body,Footer>` places header+body+footer;
+  `footer` is `#[props(default)]` (default `Empty`). dioxis-kit `Dialog` already renders `{footer}`.
+  Preview passes `WarcraftDialog::<PreviewTextareaHostView, Empty>` (footerless). Generic risk retired.
 
 FOOTER — PURPOSE (from user): a **content region like the body**, pinned (`flex-none`, does NOT
 scroll), with a **golden separator line above it** (`border-t border-warcraft-gold/40`). NOT owned

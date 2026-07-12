@@ -7,6 +7,7 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::preview_textarea_host::PreviewTextareaHostView;
 use dioxus::prelude::*;
+use dioxus_kit::frame::Empty;
 use presentation::{use_preview_button, PreviewButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
@@ -37,7 +38,7 @@ pub fn PreviewButton() -> Element {
                 onclick,
             }
         }
-        WarcraftDialog::<PreviewTextareaHostView> {
+        WarcraftDialog::<PreviewTextareaHostView, Empty> {
             title: data::TITLE,
             body,
             open,

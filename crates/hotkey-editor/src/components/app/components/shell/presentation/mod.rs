@@ -1,8 +1,33 @@
+use crate::components::app::components::shell::route_sync::NavDecision;
 use crate::components::app::route::Route;
+use crate::persistence::custom_keys_persistence;
+use crate::persistence::editor_preferences_persistence;
+use crate::persistence::grid_layout_persistence;
+use crate::persistence::onboarding_persistence;
+use crate::services::collision_selection::CollisionSelection;
+use crate::services::customkeys::service::CustomKeysService;
+use crate::services::customkeys::upload_status::UploadStatus;
+use crate::services::editor_state::DragFollower;
+use crate::services::editor_state::DraggingSlot;
+use crate::services::editor_state::DropTargetTile;
+use crate::services::editor_state::EditorState;
+use crate::services::grid_layout::service::GridLayoutService;
 use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::app_view::CollisionKind;
 use crate::services::navigation::editor_nav::DecodedEditorNav;
 use crate::services::navigation::nav_snapshot::NavSnapshot;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::overlay_state::OverlayState;
+use crate::services::resolve_selection::ResolveSelection;
+use crate::services::undo::UndoHistory;
+use dioxus::prelude::*;
+use std::collections::HashMap;
+use std::collections::HashSet;
+use warcraft_api::WarcraftObjectId;
+use warcraft_keybinds::CustomKeys;
+use warcraft_keybinds::EditorSnapshot;
+use warcraft_keybinds::GridLayout;
+use warcraft_keybinds::GridSlotId;
 
 /// The app's opening state, decoded once from the entry URL: the canonical route the
 /// address bar should show, whether the entry URL needs canonicalizing, and every
@@ -77,31 +102,6 @@ impl From<&Route> for RouteBootstrap {
         }
     }
 }
-use crate::components::app::components::shell::route_sync::NavDecision;
-use crate::persistence::custom_keys_persistence;
-use crate::persistence::editor_preferences_persistence;
-use crate::persistence::grid_layout_persistence;
-use crate::persistence::onboarding_persistence;
-use crate::services::collision_selection::CollisionSelection;
-use crate::services::customkeys::service::CustomKeysService;
-use crate::services::customkeys::upload_status::UploadStatus;
-use crate::services::editor_state::DragFollower;
-use crate::services::editor_state::DraggingSlot;
-use crate::services::editor_state::DropTargetTile;
-use crate::services::editor_state::EditorState;
-use crate::services::grid_layout::service::GridLayoutService;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
-use crate::services::overlay_state::OverlayState;
-use crate::services::resolve_selection::ResolveSelection;
-use crate::services::undo::UndoHistory;
-use dioxus::prelude::*;
-use std::collections::HashMap;
-use std::collections::HashSet;
-use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::CustomKeys;
-use warcraft_keybinds::EditorSnapshot;
-use warcraft_keybinds::GridLayout;
-use warcraft_keybinds::GridSlotId;
 
 /// The one thing the [`Shell`](super::Shell) body needs beyond its own class: the
 /// app-level key handler. Every piece of app-wide state the shell owns is handed to

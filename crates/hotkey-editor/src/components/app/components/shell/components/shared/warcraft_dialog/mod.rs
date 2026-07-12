@@ -22,14 +22,21 @@ use tw_macro::assert_component;
 /// applies to its content container via `class:`. It never sees the document. Every app
 /// dialog reuses it by composition.
 #[component]
-pub fn WarcraftDialog<Body: Render<Output = Element>>(props: WarcraftDialogModel<Body>) -> Element {
+pub fn WarcraftDialog<Body: Render<Output = Element>, Footer: Render<Output = Element>>(
+    props: WarcraftDialogModel<Body, Footer>,
+) -> Element {
     let title = props.title;
     let body = props.body;
+    let footer = props.footer;
     let open = props.open;
     let on_open_change = props.on_open_change;
     let on_close: Callback<()> = Callback::new(move |()| on_open_change.call(false));
     let header = WarcraftDialogHeaderView { title, on_close };
-    let frame = WarcraftDialogFrame { header, body };
+    let frame = WarcraftDialogFrame {
+        header,
+        body,
+        footer,
+    };
     rsx! {
         Dialog {
             frame,

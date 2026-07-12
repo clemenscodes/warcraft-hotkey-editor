@@ -1,0 +1,20 @@
+use super::view::HelpWorkflowView;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog_host::components::help_guide_host::data::HelpSegment;
+use dioxus::prelude::*;
+
+/// The workflow list's input: the steps to render, each its own segment list.
+#[derive(Props, Clone, PartialEq)]
+pub struct HelpWorkflowModel {
+    pub steps: &'static [&'static [HelpSegment]],
+}
+
+impl From<&HelpWorkflowView> for HelpWorkflowModel {
+    fn from(view: &HelpWorkflowView) -> Self {
+        let HelpWorkflowView { steps } = view.clone();
+        Self { steps }
+    }
+}
+
+impl ddd::Model for HelpWorkflowModel {
+    type View = HelpWorkflowView;
+}

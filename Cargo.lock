@@ -921,7 +921,7 @@ dependencies = [
 [[package]]
 name = "dioxus-kit"
 version = "0.2.0"
-source = "git+https://github.com/clemenscodes/dioxus-kit?tag=v0.4.1#82ca6445492313b4fa077819927142637595dec9"
+source = "git+https://github.com/clemenscodes/dioxus-kit?tag=v0.4.2#87e70ad56ff40402c020112c2bae9b4e0e114412"
 dependencies = [
  "browser-kit",
  "ddd",
