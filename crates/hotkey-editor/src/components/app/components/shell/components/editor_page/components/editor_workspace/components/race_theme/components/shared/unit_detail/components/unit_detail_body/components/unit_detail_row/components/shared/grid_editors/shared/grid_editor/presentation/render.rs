@@ -9,7 +9,7 @@ use warcraft_keybinds::{
 };
 
 use crate::components::app::components::shell::components::shared::grid_tile::GridTileState;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::components::captioned_editor_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 
 use super::super::model::GridEditorModel;
@@ -26,7 +26,7 @@ use super::mechanics;
 /// one grid's edit avoid re-rendering its siblings, so this builder must not itself read
 /// `loaded_keys` or any other grid-state signal. It only adapts each rendered tile into
 /// an `EditorTile` and overlays the drag state plus every pointer handler on top. This
-/// is all the grid's behavior, kept in the editor; the `EditorHeadedGrid` and the
+/// is all the grid's behavior, kept in the editor; the `CaptionedEditorGrid` and the
 /// `EditorGrid` only draw what comes out. Always exactly `COMMAND_GRID_TILE_COUNT` tiles,
 /// so the result is a fixed-size array.
 impl EditorTile {

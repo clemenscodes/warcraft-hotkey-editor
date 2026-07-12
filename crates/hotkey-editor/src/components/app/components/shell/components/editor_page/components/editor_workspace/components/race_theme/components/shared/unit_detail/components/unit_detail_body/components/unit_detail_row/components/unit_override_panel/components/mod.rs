@@ -1,1 +1,1 @@
-pub mod unit_tile_override;
+pub mod hotkey_override_slot;

@@ -93,7 +93,7 @@ test.describe("Global grid layout picker keyboard input", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
 
     // First grid cell, keyboard pick. 'H' doubles as a spatial-navigation key,
     // so this also guards that the picker — not the navigation handler — gets it.

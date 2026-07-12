@@ -7,7 +7,7 @@ mod view;
 pub use view::UnresolvedRowView;
 mod style;
 
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_row::MoveReasonRow;
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::move_reason_badge::MoveReasonBadge;
 use crate::components::app::components::shell::components::resolve_page::presentation::ReasonKind;
 use components::fight_row::FightRow;
 use components::move_transition::MoveTransition;
@@ -26,7 +26,7 @@ pub fn UnresolvedRow(props: UnresolvedRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MoveReasonRow {
+            MoveReasonBadge {
                 kind: ReasonKind::Stuck,
                 label: data::STUCK_LABEL,
             }

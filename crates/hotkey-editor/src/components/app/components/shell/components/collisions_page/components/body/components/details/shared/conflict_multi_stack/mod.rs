@@ -6,7 +6,7 @@ mod style;
 
 use super::conflict_ability::ConflictAbility;
 use super::conflict_card_model::ConflictAbilityData;
-use super::conflict_marker_view::ConflictMarkerView;
+use super::conflict_marker::ConflictMarker;
 use dioxus::prelude::*;
 use model::ConflictMultiStackModel;
 use style::CLASS;
@@ -23,7 +23,7 @@ pub fn ConflictMultiStack(props: ConflictMultiStackModel) -> Element {
     }
     let marker = props.marker;
     rsx! {
-        ConflictMarkerView {
+        ConflictMarker {
             marker,
             is_top: true,
         }

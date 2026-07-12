@@ -7,7 +7,7 @@ mod style;
 
 use super::conflict_ability::ConflictAbility;
 use super::conflict_card_model::ConflictAbilityData;
-use super::conflict_marker_view::ConflictMarkerView;
+use super::conflict_marker::ConflictMarker;
 use dioxus::prelude::*;
 use model::ConflictPairRowModel;
 pub use state::AbilityPair;
@@ -47,7 +47,7 @@ pub fn ConflictPairRow(props: ConflictPairRowModel) -> Element {
                 icon_url: left_icon_url,
                 unit_id: left_unit_id,
             }
-            ConflictMarkerView {
+            ConflictMarker {
                 marker,
                 is_top: false,
             }

@@ -1176,7 +1176,7 @@ Drop redundant subsystem prefixes, keep real variant words.
 - The engine grid is `Grid`, not `CommandGrid`. The subsystem being named
   `grid_editor` does not justify stamping `GridEditor` onto every part inside it.
 - Variant discriminators stay, because they carry meaning. `CommandGridEditor`,
-  `ResearchGridEditor`, and `UprootedGridEditor` keep Command, Research, and
+  `ResearchGridEditor`, and `AlternateFormGridEditor` keep Command, Research, and
   Uprooted because those name genuine variants, not noise.
 - Name a thing for what it is. A struct of fields that configure an editable grid
   is not a "section". The component that is the editor implementation is the
@@ -1232,7 +1232,7 @@ grid_editors/
   grid_editor/            the base GridEditor<B>, with its own components/
   command_grid_editor/    CommandGridEditor
   research_grid_editor/   ResearchGridEditor
-  uprooted_grid_editor/   UprootedGridEditor
+  alternate_form_grid_editor/   AlternateFormGridEditor
 ```
 
 Variants reach the base with `super::grid_editor::...`. The group `mod.rs`

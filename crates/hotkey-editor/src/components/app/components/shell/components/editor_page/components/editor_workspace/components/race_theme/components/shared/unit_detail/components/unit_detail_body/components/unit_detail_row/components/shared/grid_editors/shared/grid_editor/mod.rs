@@ -8,9 +8,9 @@ pub use view::GridEditorView;
 
 use model::GridEditorModel;
 
+use components::captioned_editor_grid::CaptionedEditorGrid;
+use components::captioned_editor_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use components::drag_follower_overlay::DragFollowerOverlay;
-use components::editor_headed_grid::EditorHeadedGrid;
-use components::editor_headed_grid::components::editor_grid::components::grid_editor_tile::EditorTile;
 use dioxus::prelude::*;
 use std::rc::Rc;
 use style::CLASS;
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 use warcraft_keybinds::{CommandGridRenderInput, GridBehavior, GridSlotId, RenderedTile};
 
 /// The grid editor: a labeled, editable grid of a unit's command slots. It wraps
-/// the presentational [`EditorHeadedGrid`] verbatim and adds only behavior: it builds
+/// the presentational [`CaptionedEditorGrid`] verbatim and adds only behavior: it builds
 /// the finished tiles with their drag handlers and renders the drag follower.
 /// Generic over the [`GridBehavior`] that decides how moves cascade; the three
 /// variant wrappers bind it. Pure RSX: it hands each child its data by named fields.
@@ -68,7 +68,7 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorModel<B>) -> Element 
     let tiles = EditorTile::grid(&props, rendered_tiles.read().clone());
     rsx! {
         div { class: CLASS,
-            EditorHeadedGrid { heading, tiles }
+            CaptionedEditorGrid { heading, tiles }
             DragFollowerOverlay { drag_follower, visible }
         }
     }

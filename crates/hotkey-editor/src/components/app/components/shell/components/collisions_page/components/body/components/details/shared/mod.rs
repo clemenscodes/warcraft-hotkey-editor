@@ -4,7 +4,7 @@ pub mod conflict_ability_trigger;
 pub mod conflict_card_caption;
 pub mod conflict_card_model;
 pub mod conflict_detail_unit;
-pub mod conflict_marker_view;
+pub mod conflict_marker;
 pub mod conflict_meta;
 pub mod conflict_multi_stack;
 pub mod conflict_pair_row;

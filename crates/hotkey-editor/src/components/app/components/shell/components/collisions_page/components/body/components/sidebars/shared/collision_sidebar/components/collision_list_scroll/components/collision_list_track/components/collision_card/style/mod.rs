@@ -1,6 +1,6 @@
 use tw_macro::tw;
 
-// The collision card is a thin identity wrapper around its own `CollisionCardSurface`
+// The collision card is a thin identity wrapper around its own `CollisionCardButton`
 // button: it owns only the card's placement box (full width in the vertical sidebar; a
 // fixed carousel item on mobile/tablet) and carries the `collision-card` identity class
 // the deep-link e2e suite selects on. All of the card's look — border, fill, hover,

@@ -2,7 +2,7 @@ use super::model::UnitPositionConflictCardModel;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::{
     ConflictAbilityData, ConflictCardModel,
 };
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_marker_view::ConflictMarker;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_marker::ConflictMarker;
 
 impl From<&UnitPositionConflictCardModel> for ConflictCardModel {
     fn from(props: &UnitPositionConflictCardModel) -> Self {

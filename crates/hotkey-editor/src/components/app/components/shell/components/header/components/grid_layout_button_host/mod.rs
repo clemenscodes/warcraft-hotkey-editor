@@ -2,7 +2,7 @@ pub mod components;
 mod presentation;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::layout_editor_host::LayoutEditorHost;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::grid_layout_editor_dialog_host::GridLayoutEditorDialogHost;
 use components::grid_layout_button::GridLayoutButton;
 use dioxus::prelude::*;
 use presentation::use_grid_layout_button;
@@ -23,7 +23,7 @@ pub fn GridLayoutButtonHost() -> Element {
             class: CLASS,
             GridLayoutButton { is_open, onclick }
         }
-        LayoutEditorHost {}
+        GridLayoutEditorDialogHost {}
     }
 }
 

@@ -1,5 +1,5 @@
 use super::super::conflict_card_model::ConflictAbilityData;
-use super::super::conflict_marker_view::ConflictMarker;
+use super::super::conflict_marker::ConflictMarker;
 use super::view::ConflictMultiStackView;
 use dioxus::prelude::*;
 

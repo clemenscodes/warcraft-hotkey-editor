@@ -5,7 +5,7 @@ mod view;
 pub use view::MoveListView;
 mod style;
 
-use components::move_row::MoveRow;
+use components::move_card::MoveCard;
 use dioxus::prelude::*;
 use model::MoveListModel;
 use style::CLASS;
@@ -24,7 +24,7 @@ pub fn MoveList(props: MoveListModel) -> Element {
         div {
             class: CLASS,
             for move_view in moves {
-                MoveRow { move_view }
+                MoveCard { move_view }
             }
         }
     }

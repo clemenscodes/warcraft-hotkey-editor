@@ -7,10 +7,10 @@ pub use view::UnitStatsPanelView;
 pub mod stat_icon;
 mod style;
 
-use components::attributes_column::AttributesColumn;
-use components::combat_column::CombatColumn;
-use components::defense_column::DefenseColumn;
-use components::vitality_column::VitalityColumn;
+use components::attributes_stats::AttributesStats;
+use components::combat_stats::CombatStats;
+use components::defense_stats::DefenseStats;
+use components::vitality_stats::VitalityStats;
 use dioxus::prelude::*;
 use model::UnitStatsPanelModel;
 use presentation::{UnitStatsPanelPresentation, use_unit_stats_panel};
@@ -39,10 +39,10 @@ pub fn UnitStatsPanel(props: UnitStatsPanelModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            VitalityColumn { hit_points, hit_points_regen, mana, mana_regen }
-            CombatColumn { attack }
-            DefenseColumn { armor, defense_type, effective_hit_points, evasion }
-            AttributesColumn { hero }
+            VitalityStats { hit_points, hit_points_regen, mana, mana_regen }
+            CombatStats { attack }
+            DefenseStats { armor, defense_type, effective_hit_points, evasion }
+            AttributesStats { hero }
         }
     }
 }

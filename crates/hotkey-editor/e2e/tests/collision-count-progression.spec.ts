@@ -96,9 +96,9 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // with the (now deconflicted) positions.  Final state must be zero
     // collisions, the clear/affirmative button styling, and no badge.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
     await page.locator(".apply-button", { hasText: /apply/i }).click();
-    await expect(page.locator(".layout-editor-content")).toHaveCount(0);
+    await expect(page.locator(".grid-layout-editor-dialog-content")).toHaveCount(0);
 
     const finalCount = await collisionCount(page);
     expect(finalCount).toBe(0);

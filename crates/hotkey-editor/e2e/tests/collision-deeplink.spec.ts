@@ -63,7 +63,7 @@ test.describe("Collision page entry deep-linking", () => {
     await targetCard.click();
     await expect(page).toHaveURL(/entry=/);
     const target = await selectedEntry(page);
-    await expect(targetCard.locator(".selected-collision-card-surface")).toBeVisible();
+    await expect(targetCard.locator(".selected-collision-card-button")).toBeVisible();
 
     // Open the affected unit in the editor.
     await page.locator(".conflict-detail-unit").click();
@@ -76,7 +76,7 @@ test.describe("Collision page entry deep-linking", () => {
     expect(restored.searchParams.get("kind")).toBe("unit-positions");
     expect(restored.searchParams.get("entry")).toBe(target);
     await expect(
-      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
+      collisionCards(page).nth(3).locator(".selected-collision-card-button"),
     ).toBeVisible();
   });
 
@@ -93,7 +93,7 @@ test.describe("Collision page entry deep-linking", () => {
     await expect(page).toHaveURL(/entry=/);
     const unitPositionTarget = await selectedEntry(page);
     await expect(
-      unitPositionCard.locator(".selected-collision-card-surface"),
+      unitPositionCard.locator(".selected-collision-card-button"),
     ).toBeVisible();
 
     // Switch to hotkeys and pick a different entry there.
@@ -105,13 +105,13 @@ test.describe("Collision page entry deep-linking", () => {
     await hotkeyCard.click();
     await expect(page).toHaveURL(/entry=/);
     await expect(
-      hotkeyCard.locator(".selected-collision-card-surface"),
+      hotkeyCard.locator(".selected-collision-card-button"),
     ).toBeVisible();
 
     // Back to unit-positions: the earlier selection is still there.
     await collisionBreadcrumb(page, "Intra Collisions").click();
     await expect(
-      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
+      collisionCards(page).nth(3).locator(".selected-collision-card-button"),
     ).toBeVisible();
     const backUrl = new URL(page.url());
     expect(backUrl.searchParams.get("kind")).toBe("unit-positions");
@@ -120,7 +120,7 @@ test.describe("Collision page entry deep-linking", () => {
     // And hotkeys still remembers its own.
     await collisionBreadcrumb(page, "Hotkey Collisions").click();
     await expect(
-      collisionCards(page).nth(3).locator(".selected-collision-card-surface"),
+      collisionCards(page).nth(3).locator(".selected-collision-card-button"),
     ).toBeVisible();
   });
 
@@ -150,7 +150,7 @@ test.describe("Collision page entry deep-linking", () => {
       `${APP}collisions?kind=unit-positions&entry=${encodeURIComponent(target)}`,
     );
     await expect(
-      collisionCards(page).nth(count - 1).locator(".selected-collision-card-surface"),
+      collisionCards(page).nth(count - 1).locator(".selected-collision-card-button"),
     ).toBeVisible();
   });
 
@@ -167,7 +167,7 @@ test.describe("Collision page entry deep-linking", () => {
     const targetCard = cards.nth(2);
 
     await targetCard.click();
-    await expect(targetCard.locator(".selected-collision-card-surface")).toBeVisible();
+    await expect(targetCard.locator(".selected-collision-card-button")).toBeVisible();
     await expect(page).toHaveURL(/entry=/);
 
     // Open one of the affected units from the island detail, then back.
@@ -176,7 +176,7 @@ test.describe("Collision page entry deep-linking", () => {
 
     await page.goBack();
     await expect(
-      collisionCards(page).nth(2).locator(".selected-collision-card-surface"),
+      collisionCards(page).nth(2).locator(".selected-collision-card-button"),
     ).toBeVisible();
   });
 });

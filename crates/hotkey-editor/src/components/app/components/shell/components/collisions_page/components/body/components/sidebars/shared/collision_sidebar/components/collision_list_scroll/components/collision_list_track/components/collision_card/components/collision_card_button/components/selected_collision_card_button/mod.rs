@@ -1,0 +1,33 @@
+mod model;
+mod view;
+
+pub use view::SelectedCollisionCardButtonView;
+mod style;
+
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::components::collision_card_button::components::shared::collision_card_meta::CollisionCardMeta;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::components::collision_card_button::components::shared::collision_card_leading::CollisionCardLeading;
+use dioxus::prelude::*;
+use model::SelectedCollisionCardButtonModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+/// The selected collision card surface: the card button in its selected look, composing the
+/// shared visual and meta line. Presentational — the dispatcher renders it.
+#[component]
+pub fn SelectedCollisionCardButton(props: SelectedCollisionCardButtonModel) -> Element {
+    let onclick = props.onclick;
+    let count = props.count;
+    let content = props.content;
+    let visual_content = content.clone();
+    rsx! {
+        button {
+            class: CLASS,
+            r#type: "button",
+            onclick,
+            CollisionCardLeading { content: visual_content }
+            CollisionCardMeta { content, count }
+        }
+    }
+}
+
+assert_component!(SelectedCollisionCardButton);

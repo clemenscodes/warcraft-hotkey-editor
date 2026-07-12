@@ -1,4 +1,4 @@
-use super::conflict_marker_view::ConflictMarker;
+use super::conflict_marker::ConflictMarker;
 use super::conflict_pair_row::AbilityPair;
 use warcraft_api::WarcraftObjectId;
 

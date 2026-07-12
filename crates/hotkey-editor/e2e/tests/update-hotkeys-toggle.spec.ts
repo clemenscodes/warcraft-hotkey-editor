@@ -9,7 +9,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".unit-card").first().waitFor();
 
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
 
     const toggle = page.locator('input[aria-label="Update hotkeys when moving abilities"]');
     await expect(toggle).toBeChecked();
@@ -21,7 +21,7 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
     await expect(
       page.locator('input[aria-label="Update hotkeys when moving abilities"]'),
     ).not.toBeChecked();
@@ -43,11 +43,11 @@ test.describe("Update-hotkeys-on-move toggle", () => {
 
     // Turn the toggle off.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
     await page.locator('input[aria-label="Update hotkeys when moving abilities"]').uncheck();
-    await page.locator(".layout-editor [aria-label='Close']").click().catch(() => {});
+    await page.locator(".grid-layout-editor-dialog [aria-label='Close']").click().catch(() => {});
     await page.keyboard.press("Escape");
-    await expect(page.locator(".layout-editor-content")).toHaveCount(0);
+    await expect(page.locator(".grid-layout-editor-dialog-content")).toHaveCount(0);
 
     // Move the ability to a different cell.
     const tiles = page.locator(".filled-tile");

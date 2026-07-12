@@ -1,0 +1,12 @@
+use warcraft_api::{HitPoints, HitPointsRegen, Mana, ManaRegen};
+
+/// The published `View` contract mirroring [`VitalityStatsModel`], threaded to this component as data.
+#[derive(Clone, PartialEq)]
+pub struct VitalityStatsView {
+    pub hit_points: HitPoints,
+    pub hit_points_regen: HitPointsRegen,
+    pub mana: Mana,
+    pub mana_regen: ManaRegen,
+}
+
+impl ddd::View for VitalityStatsView {}

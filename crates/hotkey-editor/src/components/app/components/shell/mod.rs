@@ -8,7 +8,7 @@ use crate::components::app::route::Route;
 use components::footer::Footer;
 use components::head::Head;
 use components::header::Header;
-use components::toasts::{ToastContainer, use_toast_provider};
+use components::toasts::{ToastOverlay, use_toast_provider};
 use dioxus::prelude::*;
 use presentation::{ShellModel, use_shell};
 use style::CLASS;
@@ -39,7 +39,7 @@ pub fn Shell() -> Element {
             Outlet::<Route> {}
             Footer {}
         }
-        ToastContainer { toasts, on_remove }
+        ToastOverlay { toasts, on_remove }
     }
 }
 

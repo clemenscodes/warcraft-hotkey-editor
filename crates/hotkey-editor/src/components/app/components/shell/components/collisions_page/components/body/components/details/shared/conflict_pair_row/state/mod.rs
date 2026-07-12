@@ -1,5 +1,5 @@
 use super::super::conflict_card_model::ConflictAbilityData;
-use super::super::conflict_marker_view::ConflictMarker;
+use super::super::conflict_marker::ConflictMarker;
 
 /// The two abilities flanking the conflict marker in a pair clash, with the marker.
 #[derive(Clone, PartialEq)]

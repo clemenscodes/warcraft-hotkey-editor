@@ -6,7 +6,7 @@ mod style;
 
 use super::super::presentation::FollowerPresentation;
 use super::shared::follower_badge::FollowerBadge;
-use super::shared::follower_figure::FollowerFigure;
+use super::shared::follower_icon::FollowerIcon;
 use dioxus::prelude::*;
 use model::CommandFollowerGhostModel;
 use style::CLASS;
@@ -28,7 +28,7 @@ pub fn CommandFollowerGhost(props: CommandFollowerGhostModel) -> Element {
         div {
             class: CLASS,
             style,
-            FollowerFigure { src, alt }
+            FollowerIcon { src, alt }
             FollowerBadge {
                 letter,
                 state: badge_state,

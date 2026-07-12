@@ -103,8 +103,8 @@ pub(super) struct SystemKeyPickerDialogShell {
     pub(super) board_on_close: EventHandler<()>,
 }
 
-impl From<&SystemKeyPickerModel> for SystemKeyPickerDialogShell {
-    fn from(model: &SystemKeyPickerModel) -> Self {
+impl From<&SystemKeyPickerDialogPresentation> for SystemKeyPickerDialogShell {
+    fn from(model: &SystemKeyPickerDialogPresentation) -> Self {
         let mut open_signal = model.open;
         let open = open_signal();
         let on_open_change = Callback::new(move |is_open| open_signal.set(is_open));
@@ -132,7 +132,7 @@ use super::model::SystemKeyPickerDialogModel;
 /// The system key picker's shaped view: the open signal that drives the dialog shell,
 /// its title, and the raw board values (both laid-out columns plus the pick and Escape
 /// handlers) the body hands to the shared board host.
-pub(super) struct SystemKeyPickerModel {
+pub(super) struct SystemKeyPickerDialogPresentation {
     pub(super) open: Signal<bool>,
     pub(super) title: String,
     pub(super) columns: Vec<KeyColumn>,
@@ -144,7 +144,9 @@ pub(super) struct SystemKeyPickerModel {
 /// can close (firing the caller's `on_close` when it does), lays out the keyboard and
 /// numpad columns through one [`SystemKeyColumn`] builder, and wires the board's pick
 /// and Escape handlers. The board itself owns no dialog state.
-pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogModel) -> SystemKeyPickerModel {
+pub(super) fn use_system_key_picker(
+    props: &SystemKeyPickerDialogModel,
+) -> SystemKeyPickerDialogPresentation {
     let title = props.title.clone();
     let parent_on_close = props.on_close;
     let on_pick = props.on_pick;
@@ -170,7 +172,7 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogModel) -> Syste
     let keyboard = KeyColumn::from(&keyboard_inputs);
     let numpad = KeyColumn::from(&numpad_inputs);
     let columns: Vec<KeyColumn> = vec![keyboard, numpad];
-    SystemKeyPickerModel {
+    SystemKeyPickerDialogPresentation {
         open,
         title,
         columns,
@@ -179,6 +181,6 @@ pub(super) fn use_system_key_picker(props: &SystemKeyPickerDialogModel) -> Syste
     }
 }
 
-impl ddd::Presentation for SystemKeyPickerModel {
+impl ddd::Presentation for SystemKeyPickerDialogPresentation {
     type Model = SystemKeyPickerDialogModel;
 }

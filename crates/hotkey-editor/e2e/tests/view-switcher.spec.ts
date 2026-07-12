@@ -108,9 +108,9 @@ test.describe("View routing — brand-as-home + collisions notification (#39)", 
 
     // Step 2: rewrite every hotkey to match the now-deconflicted grid.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
-    await page.locator(".layout-editor-content").waitFor();
+    await page.locator(".grid-layout-editor-dialog-content").waitFor();
     await page.locator(".apply-button", { hasText: /apply/i }).click();
-    await expect(page.locator(".layout-editor-content")).toHaveCount(0);
+    await expect(page.locator(".grid-layout-editor-dialog-content")).toHaveCount(0);
 
     const collisionsButton = page.locator(".collisions-button");
     // The clean state drops the count badge and switches the button's aria-label

@@ -2,7 +2,7 @@ use super::model::HotkeyConflictCardModel;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::{
     ConflictAbilityData, ConflictCardModel,
 };
-use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_marker_view::ConflictMarker;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_marker::ConflictMarker;
 
 impl From<&HotkeyConflictCardModel> for ConflictCardModel {
     fn from(props: &HotkeyConflictCardModel) -> Self {

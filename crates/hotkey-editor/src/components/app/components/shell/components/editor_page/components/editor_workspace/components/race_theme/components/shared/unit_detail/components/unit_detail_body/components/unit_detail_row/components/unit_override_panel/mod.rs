@@ -7,7 +7,7 @@ pub use view::UnitOverridePanelView;
 mod style;
 
 use crate::components::app::components::shell::components::shared::grid_heading::GridHeading;
-use components::unit_tile_override::UnitTileOverride;
+use components::hotkey_override_slot::HotkeyOverrideSlot;
 use data::HEADING;
 use dioxus::prelude::*;
 use model::UnitOverridePanelModel;
@@ -25,7 +25,7 @@ pub fn UnitOverridePanel(props: UnitOverridePanelModel) -> Element {
         aside {
             class: CLASS,
             GridHeading { heading: HEADING }
-            UnitTileOverride { detail, active_container_slots }
+            HotkeyOverrideSlot { detail, active_container_slots }
         }
     }
 }

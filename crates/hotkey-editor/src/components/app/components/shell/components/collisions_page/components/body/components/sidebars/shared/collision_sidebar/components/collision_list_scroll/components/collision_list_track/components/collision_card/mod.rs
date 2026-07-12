@@ -6,7 +6,7 @@ pub use view::CollisionCardView;
 pub mod state;
 mod style;
 
-use components::collision_card_surface::CollisionCardSurface;
+use components::collision_card_button::CollisionCardButton;
 use dioxus::prelude::*;
 use model::CollisionCardModel;
 pub use state::{CollisionCardContent, CollisionCardData};
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// or the coordinate) with the collision count. The unit/island shape is chosen by its
 /// [`CollisionCardContent`], so the three sidebars all render this one card. A thin
 /// identity wrapper (its `collision-card` root class) that nests its own
-/// `CollisionCardSurface` button for the look and the fixed gold accent.
+/// `CollisionCardButton` button for the look and the fixed gold accent.
 #[component]
 pub fn CollisionCard(props: CollisionCardModel) -> Element {
     let is_selected = props.is_selected;
@@ -28,7 +28,7 @@ pub fn CollisionCard(props: CollisionCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CollisionCardSurface { is_selected, onclick, count, content }
+            CollisionCardButton { is_selected, onclick, count, content }
         }
     }
 }
