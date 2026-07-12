@@ -182,7 +182,7 @@ test.describe("Grid editor drag styling matches production", () => {
 });
 
 test.describe("Off-state position picker styling matches production", () => {
-  const ANCHOR = ".alt-position-picker-grid-anchor";
+  const ANCHOR = ".hotkey-alt-position-picker-grid-anchor";
 
   // Open the off-state picker on the Footman (Defend is a toggle with an
   // off-state), returning once its embedded command grid is on screen.

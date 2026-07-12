@@ -93,9 +93,9 @@ async function objectIdAt(page: Page, coordinate: GridCoordinate): Promise<strin
   const target = cell(page, coordinate);
   const label = await labelAt(page, coordinate);
   await target.click();
-  const namePanel = page.locator(".tile-override-name");
+  const namePanel = page.locator(".ability-name");
   if (label) await expect(namePanel).toContainText(label);
-  const idPanel = page.locator(".tile-override-id");
+  const idPanel = page.locator(".ability-id");
   await expect(idPanel).toBeVisible();
   return (await idPanel.textContent())?.trim() ?? "";
 }

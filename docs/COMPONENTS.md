@@ -59,7 +59,8 @@ markup.
 
 This is absolute. There is no "structural wrapper" exception, no "framework
 children slot" exception, no "it's just glue" exception. The following are all
-**forbidden, everywhere, with no exceptions**:
+**forbidden, everywhere**, with exactly one bounded exception — the **Frame
+contract**, defined at the end of this section:
 
 - **`children: Element`** as a prop — and equally `Option<Element>`,
   `Vec<Element>`, or any other prop field, struct field, or enum variant whose
@@ -114,7 +115,9 @@ body renders a **fixed** typed component from props built by `From`. A
 producing `Element`, forbidden above. Where variants must render *genuinely
 different* components, there is no generic base at all: they are separate
 components (per "The render tree IS the directory tree"), each composing shared
-typed leaves by nesting.
+typed leaves by nesting. The **sole exception** is a genuine **Frame contract** (a
+`Dialog`/`Card`/`Page` base) whose regions arrive through the `Render`/`Frame`
+traits — see "The one exception: a Frame contract's Render regions" below.
 
 **The test, and it is mechanical:** grep the crate for `-> Element` — every hit
 must be on a `#[component]`. Grep for `: Element` in a props/struct/param
@@ -123,6 +126,49 @@ there must be none. Only `#[component] fn`s make `Element`; everything else make
 data and nests typed components. (The `spec-lint.sh` pre-commit hook enforces the
 `children: Element` half of this; the rest is enforced by review the same way the
 `super::` test is.)
+
+### The one exception: a Frame contract's Render regions
+
+Everything above bans `Element` as data. There is exactly one bounded exception,
+for **frame components** — a `Dialog`, a `Card`, a `Page`: a component whose entire
+purpose is to wrap arbitrary caller-supplied content in fixed shared chrome. A
+frame is the inverse of a data component — a list/sidebar/panel threads typed
+domain data and renders its own typed leaves, and for those the ban above stays
+absolute. Denying a frame a slot only forces callers to duplicate the chrome, the
+same coupling from the other side.
+
+The exception is two traits, `Render` and `Frame`, and it is closed and minimal:
+
+- **`Render`** is the atomic region contract: `Clone + PartialEq + Default +
+  'static` with `type Model: ddd::Model`, `type Output`, and one
+  `fn render(&self) -> Self::Output`. `Render::render` is the *only* sanctioned
+  `-> Element`-producing method outside a `#[component]` (in the app,
+  `Output = Element`). The `type Model: ddd::Model` bound makes every region a
+  compiler-checked ddd component (a published `View → Model`), never loose markup;
+  `render` returns **exactly one `#[component]` invocation** — never inline markup,
+  a `Vec`, or conditional markup. **`children: Element` stays fully banned** (its
+  grep still returns zero); the slot is a named trait method, not a children slot.
+- **`Frame`** arranges three `Render` regions — `type Body`, `type Header`,
+  `type Footer` (all `Render<Output = Self::Output>`) — where **only `body` is
+  required** (`fn body(&self) -> Self::Body`); `header`/`footer` default to `None`
+  (`fn header(&self) -> Option<Self::Header> { None }`). A region a frame omits is
+  the `Empty` unit.
+- Both traits are **framework-agnostic** and live in `browser-kit`; the headless
+  frame *components* (`Dialog`/`Card`/`Page`) and `Empty` live in `dioxus-kit` with
+  `Output = Element`. The app writes thin styled wrappers over the headless
+  primitives (see "Styling a headless frame primitive") and supplies per-instance
+  `Frame`s.
+- **Everything around the regions stays typed data — no stray `Element`.**
+  Frame-specific chrome (a dialog's `open: bool` + `on_close`) rides as typed
+  values in that frame's own config; a `Signal<T>` never enters a
+  `View`/`Model`/`Presentation`.
+
+Mechanical test, updated: a `-> Element` outside a `#[component]` is a violation
+**unless** it is a `Render::render` impl (a `Frame` region); `: Element` in any
+prop/struct field stays zero, always; a `Signal<T>` in a `View`/`Model`/
+`Presentation` stays zero, always. This supersedes "a base is never a shell that
+receives a body" **for frame components only** — `shell/header`/`shell/footer` stay
+bodyless; `Dialog`/`Card`/`Page` are the one family that carries regions.
 
 ---
 
@@ -242,7 +288,9 @@ path and binds the behavior with a turbofish (`GridEditor::<CommandBehavior> {
 config }`). The generic-behavior mechanism is unchanged; only the placement is the
 ordinary shared-leaf placement. There is **no** "flat siblings in a plural group
 directory" layout, and no "fills a slot/body the base exposes" case (a base that
-receives a body is `children: Element`, forbidden above).
+receives a body is `children: Element`, forbidden above — the lone exception is a
+`Frame` region's `Render::render`, not `children`; see "The one exception: a Frame
+contract's Render regions").
 
 If the single exception does not fit exactly, there is no exception — nest it. When
 unsure, **count the render sites**; that number, never your intuition about which
@@ -298,7 +346,10 @@ each is an instant, non-negotiable reject:**
 - **`classes! { extends: <another component's style> }`** — inheriting another
   component's class list *is* sharing a look. Composition, below, is the only
   sanctioned reuse; `extends` across components is banned.
-- **a `ClassList` or a class string as a prop, a struct field, or a return value.**
+- **a `ClassList` or a class string as a prop, a struct field, or a return value**
+  — between app components. (The lone exception: a component passing its **own**
+  `CLASS` to a **headless frame primitive** it renders; see "Styling a headless
+  frame primitive".)
 
 **The ONE sanctioned way to reuse a look: render the component that owns it.** A
 shared look is a shared **component**, reused by **composition** — you nest it in
@@ -591,6 +642,24 @@ A dialog therefore splits into an outer component (its `CLASS` is the backdrop `
 inside `DialogRoot`) and an inner panel component (its `CLASS` is the box `div` inside
 `DialogContent`), each a proper `directory == component == class` with one classed
 element.
+
+### Styling a headless frame primitive
+
+The `Render`/`Frame` frame *components* — `dioxus-kit`'s `Dialog`/`Card`/`Page` —
+are **headless primitives** (Radix-for-dioxus): they own structure and behavior
+(the `DialogRoot` wiring, open/close, scroll-lock, region placement) and carry
+**no look**. They are styled by their consumer, not wrapped: the app writes one thin
+`Warcraft<Frame>` component that owns its `classes!` `CLASS` and passes it to the
+primitive's parts through the standard attributes extension (`WarcraftDialog` →
+`Dialog { class: CLASS, .. }`), each part — backdrop, panel — addressable
+separately. `CLASS` is a `ClassList` (`IntoAttributeValue`), so it flows as an
+ordinary attribute; the primitive never sees `tw-macro`. This is a component
+applying **its own** look to an unstyled primitive it renders — exactly like
+`div { class: CLASS }` — so the `CLASS` still lives in one app component and leaks
+to no sibling. It is the **one** sanctioned place a `CLASS` crosses into another
+element by prop, and it applies **only** to headless frame primitives: third-party
+`dioxus_primitives` building blocks stay wrapped (above), and class-as-prop between
+app components stays banned.
 
 ## One class per component
 
@@ -1220,8 +1289,10 @@ its base's behavior parameter. Even here it stays within "Base and variants are 
 This is **exception 2** to "The render tree IS the directory tree", and it applies
 *only* when a variant wrapper binds the base's generic **behavior** type
 parameter. Outside that, a component you render is your child — nest it. There is
-no "fills a slot/body the base exposes" variant: a base that receives a body is
-`children: Element`, forbidden.
+no "fills a slot/body the base exposes" variant — a base that receives a body via
+`children: Element` is forbidden — **except** the Frame contract (`Dialog`/`Card`/
+`Page`), whose regions arrive via `Render`, not `children` (see "The one exception:
+a Frame contract's Render regions").
 
 A generic base and its variant wrappers are siblings under one plural group
 directory. Variants are never subcomponents of the base, since they depend on
@@ -1246,15 +1317,17 @@ The variant pattern above is for a base that is generic over a **behavior**, whe
 variants bind the type parameter (`CommandGridEditor` binds `GridEditor`'s
 `GridBehavior`). Binding a behavior type is the *only* thing a base is for.
 
-**A base is never a shell that receives a body.** There is no "the base owns the
-chrome and each variant fills the body" pattern — that is `children: Element` with
-extra steps, the exact anti-pattern this document forbids. A reused *frame* — a
-dialog shell, a card surface, a scrolling panel — is **not** a base. Each concrete
-instance owns its own shell markup, sharing the shell's utility-class **values**
-(never a wrapper that swallows a body) and nesting shared **leaves** by name. That
-is how `shell/header` and `shell/footer` — the only sanctioned role models — are
-built: they receive no markup, they *name* their typed children. When a dialog,
-card, or panel tempts you toward a body-slot base, do what the header does instead.
+**A base is never a shell that receives a body — with one bounded exception, the
+Frame contract** (`Dialog`/`Card`/`Page`; see "The one exception: a Frame
+contract's Render regions"). Outside that exception there is no "the base owns
+the chrome and each variant fills the body" pattern — that is `children: Element`
+with extra steps, the exact anti-pattern this document forbids. A pseudo-frame that
+is not a genuine content container — a mere card surface, a scrolling panel — is
+**not** a base and takes no body: each concrete instance owns its own shell markup,
+sharing the shell's utility-class **values** (never a wrapper that swallows a body)
+and nesting shared **leaves** by name. That is how `shell/header` and
+`shell/footer` — the only sanctioned bodyless role models — are built: they receive
+no markup, they *name* their typed children.
 
 A small shared piece that is not generic over a behavior is not a variant. A
 close button, a primary button, an edit panel are plain leaf components. They

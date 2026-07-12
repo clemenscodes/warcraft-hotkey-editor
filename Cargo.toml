@@ -16,9 +16,9 @@ name = "warcraft-hotkey-editor"
 
 [workspace.dependencies]
 dioxus = { version = "=0.7.9" }
-browser-kit = { git = "https://github.com/clemenscodes/browser-kit", tag = "v0.1.0" }
+browser-kit = { git = "https://github.com/clemenscodes/browser-kit", tag = "v0.2.0" }
 ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.2.0" }
-dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.1.0" }
+dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.4.1" }
 tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.2.0" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
 warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.7.0" }

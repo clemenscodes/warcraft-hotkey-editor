@@ -13,3 +13,4 @@ pub mod key_picker_board_host;
 pub mod mini_grid_frame;
 pub mod tile_face;
 pub mod tooltip;
+pub mod warcraft_dialog;

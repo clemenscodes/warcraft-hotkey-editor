@@ -170,10 +170,11 @@ dependencies = [
 
 [[package]]
 name = "browser-kit"
-version = "0.1.0"
-source = "git+https://github.com/clemenscodes/browser-kit?tag=v0.1.0#b7fda3918729bbae1f8212bf8361d996edce489f"
+version = "0.2.0"
+source = "git+https://github.com/clemenscodes/browser-kit?tag=v0.2.0#e88d8a36e1b15169115f87f32483c4e77bd5cd86"
 dependencies = [
  "base64",
+ "ddd",
  "flate2",
  "js-sys",
  "wasm-bindgen",
@@ -919,10 +920,13 @@ dependencies = [
 
 [[package]]
 name = "dioxus-kit"
-version = "0.1.0"
-source = "git+https://github.com/clemenscodes/dioxus-kit?tag=v0.1.0#cebc0b6928839ab80aedca46eaaa58e6bee03f87"
+version = "0.2.0"
+source = "git+https://github.com/clemenscodes/dioxus-kit?tag=v0.4.1#82ca6445492313b4fa077819927142637595dec9"
 dependencies = [
+ "browser-kit",
+ "ddd",
  "dioxus",
+ "dioxus-primitives",
 ]
 
 [[package]]
