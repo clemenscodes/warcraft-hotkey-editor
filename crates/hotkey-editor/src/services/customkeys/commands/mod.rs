@@ -7,6 +7,7 @@
 
 pub mod apply_grid_layout_command;
 pub mod move_slot_command;
+pub mod resolve_conflicts_command;
 pub mod set_hotkey_command;
 pub mod set_system_hotkey_command;
 pub mod swap_system_bindings_command;

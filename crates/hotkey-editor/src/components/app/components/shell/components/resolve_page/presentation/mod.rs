@@ -9,7 +9,6 @@ use crate::services::navigation::nav_snapshot::NavSnapshot;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::resolve_selection::ResolveSelection;
 use crate::services::resolve_selection::context::use_resolve_selection;
-use ddd::Service;
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
 use std::collections::{HashMap, HashSet};
@@ -628,7 +627,7 @@ fn use_apply_plan() -> ApplyPlan {
         is_running.set(true);
         spawn(async move {
             TimeoutFuture::new(0).await;
-            let plan = custom_keys_service.commit(|keys| keys.resolve_conflicts());
+            let plan = custom_keys_service.resolve_conflicts();
             let move_count = plan.move_count();
             let unresolved_count = plan.unresolved_count();
             is_running.set(false);

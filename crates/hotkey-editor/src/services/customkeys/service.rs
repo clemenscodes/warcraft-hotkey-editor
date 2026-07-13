@@ -18,6 +18,7 @@ use crate::persistence::custom_keys_persistence;
 use crate::repository::custom_keys_repository::CustomKeysRepository;
 use crate::services::customkeys::commands::apply_grid_layout_command::ApplyGridLayoutCommand;
 use crate::services::customkeys::commands::move_slot_command::MoveSlotCommand;
+use crate::services::customkeys::commands::resolve_conflicts_command::ResolveConflictsCommand;
 use crate::services::customkeys::commands::set_hotkey_command::SetHotkeyCommand;
 use crate::services::customkeys::commands::set_system_hotkey_command::SetSystemHotkeyCommand;
 use crate::services::customkeys::commands::swap_system_bindings_command::SwapSystemBindingsCommand;
@@ -81,6 +82,15 @@ impl CustomKeysService {
     pub fn swap_system_bindings(&self, source_id: WarcraftObjectId, target_id: WarcraftObjectId) {
         let command = SwapSystemBindingsCommand::new(source_id, target_id);
         self.dispatch(command);
+    }
+
+    /// Run the position cascade that resolves every outstanding collision, re-normalizing
+    /// and persisting through the commit boundary. Returns the resulting [`CascadePlan`] so
+    /// the resolve page can report how many slots moved and how many could not be placed.
+    /// The renderer never runs the cascade against the aggregate itself.
+    pub fn resolve_conflicts(&self) -> CascadePlan {
+        let command = ResolveConflictsCommand;
+        self.dispatch(command)
     }
 
     /// The resolved binding + conflict picture for one system keybind section (the
