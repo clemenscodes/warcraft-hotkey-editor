@@ -3,7 +3,7 @@ mod view;
 
 pub use view::InactiveRaceTabView;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::components::shared::race_tab_state::components::shared::race_tab::RaceTab;
+use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::components::race_tab_banner::components::shared::race_tab_state::components::shared::race_tab::RaceTab;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::InactiveRaceTabModel;
