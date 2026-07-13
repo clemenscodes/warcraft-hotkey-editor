@@ -40,7 +40,7 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorModel<B>) -> Element 
     let slot_ids = config.slot_ids.clone();
     let restrict_draggable_to: Rc<[GridSlotId]> = Rc::from(config.restrict_draggable_to.as_slice());
     let behavior = props.behavior.clone();
-    let rendered_tiles = use_memo(move || {
+    let rendered_tiles = use_memo(use_reactive!(|slot_ids| {
         let read_guard = loaded_keys.read();
         let Some(file) = read_guard.as_ref() else {
             return Vec::<RenderedTile>::new();
@@ -58,7 +58,7 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorModel<B>) -> Element 
             &restrict_draggable_to,
         );
         file.rendered_command_grid(&behavior, &input)
-    });
+    }));
     let heading = config.heading;
     let drag_follower = config.drag_follower;
     let dragging_value = *config.dragging_slot.read();
