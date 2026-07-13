@@ -7,6 +7,7 @@ classes! {
         "gap-y-5",
         "items-start",
         "flex-none",
+        "isolate",
     ],
     mobile: tw![
         "mobile:flex",

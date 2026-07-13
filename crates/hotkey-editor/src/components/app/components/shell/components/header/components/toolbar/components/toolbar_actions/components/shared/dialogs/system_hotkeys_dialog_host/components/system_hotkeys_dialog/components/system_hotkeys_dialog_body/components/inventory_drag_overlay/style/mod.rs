@@ -3,7 +3,7 @@ classes! {
     base: tw![
         "fixed",
         "pointer-events-none",
-        "z-1100",
+        "z-20",
         "flex",
         "items-center",
         "justify-center",

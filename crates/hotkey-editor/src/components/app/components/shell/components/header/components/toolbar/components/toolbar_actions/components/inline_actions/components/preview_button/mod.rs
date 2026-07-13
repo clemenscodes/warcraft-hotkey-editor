@@ -38,11 +38,13 @@ pub fn PreviewButton() -> Element {
                 onclick,
             }
         }
-        WarcraftDialog::<PreviewTextareaHostView, Empty> {
-            title: data::TITLE,
-            body,
-            open,
-            on_open_change,
+        if open {
+            WarcraftDialog::<PreviewTextareaHostView, Empty> {
+                title: data::TITLE,
+                body,
+                open: true,
+                on_open_change,
+            }
         }
     }
 }

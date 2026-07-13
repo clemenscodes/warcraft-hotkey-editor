@@ -9,7 +9,7 @@ classes! {
         "fixed",
         "pointer-events-none",
         "@container",
-        "z-1000",
+        "z-10",
         "overflow-hidden",
         "select-none",
         "border-2",

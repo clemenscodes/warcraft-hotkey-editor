@@ -5,7 +5,6 @@ mod view;
 
 pub use view::SystemHotkeysDialogView;
 pub mod state;
-mod style;
 
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::system_hotkeys_dialog_body::SystemHotkeysDialogBodyView;
@@ -14,7 +13,6 @@ use dioxus_kit::frame::Empty;
 use model::SystemHotkeysDialogModel;
 use presentation::SystemHotkeysDialogShell;
 use presentation::use_system_hotkeys_dialog;
-use style::CLASS;
 use tw_macro::assert_component;
 
 /// Edits Warcraft III's system and menu hotkeys. It renders the reusable `WarcraftDialog`
@@ -31,12 +29,11 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
     } = SystemHotkeysDialogShell::from(&model);
     let body = SystemHotkeysDialogBodyView;
     rsx! {
-        div {
-            class: CLASS,
+        if open {
             WarcraftDialog::<SystemHotkeysDialogBodyView, Empty> {
                 title,
                 body,
-                open,
+                open: true,
                 on_open_change,
             }
         }

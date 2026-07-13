@@ -2,7 +2,6 @@ pub mod components;
 mod data;
 mod model;
 mod presentation;
-mod style;
 
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::info_dialog_body::InfoDialogBodyView;
@@ -10,7 +9,6 @@ use dioxus::prelude::*;
 use dioxus_kit::frame::Empty;
 use model::InfoDialogConfig;
 use presentation::InfoDialogShell;
-use style::CLASS;
 use tw_macro::assert_component;
 
 /// The shared shell for the download and import info dialogs: a centered instruction block
@@ -38,12 +36,11 @@ pub fn InfoDialog(props: InfoDialogConfig) -> Element {
         on_cancel,
     };
     rsx! {
-        div {
-            class: CLASS,
+        if open {
             WarcraftDialog::<InfoDialogBodyView, Empty> {
                 title,
                 body,
-                open,
+                open: true,
                 on_open_change,
             }
         }

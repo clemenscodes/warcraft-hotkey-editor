@@ -31,10 +31,7 @@ pub fn WarcraftDialog<Body: Render<Output = Element>, Footer: Render<Output = El
     let footer = props.footer;
     let open = props.open;
     let on_open_change = props.on_open_change;
-    let open_value = open;
-    let mut open_flag = use_signal(|| false);
-    use_effect(move || open_flag.set(open_value));
-    use_body_scroll_lock(open_flag);
+    use_body_scroll_lock();
     let on_close: Callback<()> = Callback::new(move |()| on_open_change.call(false));
     let header = WarcraftDialogHeaderView { title, on_close };
     let frame = WarcraftDialogFrame {

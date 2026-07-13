@@ -40,11 +40,13 @@ pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogModel) -> Element {
         on_close: board_on_close,
     };
     rsx! {
-        WarcraftDialog::<SystemKeyPickerDialogBodyView, Empty> {
-            title,
-            body,
-            open,
-            on_open_change,
+        if open {
+            WarcraftDialog::<SystemKeyPickerDialogBodyView, Empty> {
+                title,
+                body,
+                open: true,
+                on_open_change,
+            }
         }
     }
 }

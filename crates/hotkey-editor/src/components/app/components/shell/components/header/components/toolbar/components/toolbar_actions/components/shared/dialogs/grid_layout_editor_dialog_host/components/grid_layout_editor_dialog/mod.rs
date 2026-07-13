@@ -1,7 +1,6 @@
 pub mod components;
 mod data;
 mod presentation;
-mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerDialog;
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
@@ -10,7 +9,6 @@ use dioxus::prelude::*;
 use dioxus_kit::frame::Empty;
 use presentation::GridLayoutEditorDialogPresentation;
 use presentation::use_grid_layout_editor_dialog;
-use style::CLASS;
 use tw_macro::assert_component;
 
 /// The global hotkey layout editor. The presentation resolves the grid cells, picker state,
@@ -42,12 +40,11 @@ pub fn GridLayoutEditorDialog() -> Element {
         on_apply,
     };
     rsx! {
-        div {
-            class: CLASS,
+        if is_open {
             WarcraftDialog::<GridLayoutEditorDialogBodyView, Empty> {
                 title,
                 body,
-                open: is_open,
+                open: true,
                 on_open_change,
             }
             if picker_open {
