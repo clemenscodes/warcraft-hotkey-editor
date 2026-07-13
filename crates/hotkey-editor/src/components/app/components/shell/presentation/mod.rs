@@ -1,3 +1,5 @@
+mod route_snapshot_codec;
+
 use crate::components::app::route::Route;
 use crate::persistence::custom_keys_persistence;
 use crate::persistence::editor_preferences_persistence;

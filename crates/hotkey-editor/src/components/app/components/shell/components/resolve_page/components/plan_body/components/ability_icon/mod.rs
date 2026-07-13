@@ -6,7 +6,7 @@ mod view;
 pub use view::AbilityIconView;
 
 mod style;
-use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
+use crate::components::app::components::shell::components::shared::carriers_dialog::CarriersDialog;
 use components::carrier_badge::CarrierBadge;
 use components::fight_icon::FightIcon;
 use dioxus::prelude::*;
@@ -40,7 +40,7 @@ pub fn AbilityIcon(props: AbilityIconModel) -> Element {
             FightIcon { src: icon_src, alt: icon_alt }
             CarrierBadge { count, is_winner }
         }
-        CarriersDialogHost {
+        CarriersDialog {
             ability: open_state.read().clone(),
             on_close: Callback::new(move |()| open_state.set(None)),
         }

@@ -1,14 +1,13 @@
 use super::view::DownloadInfoDialogView;
 use dioxus::prelude::*;
 
-/// What the download dialog needs: the open value it drives, the change handler
-/// mirroring the headless dialog's own close, and the confirm handler the parent
-/// uses to actually trigger the download.
+/// What the download dialog needs: the open value it drives and the change handler
+/// mirroring the headless dialog's own close. The dialog reads the live document from
+/// the CustomKeys service itself, so no confirm handler is threaded in.
 #[derive(Props, Clone, PartialEq)]
 pub struct DownloadInfoDialogModel {
     pub open: bool,
     pub on_open_change: Callback<bool>,
-    pub on_confirm: EventHandler<()>,
 }
 
 impl From<&DownloadInfoDialogView> for DownloadInfoDialogModel {
@@ -16,12 +15,10 @@ impl From<&DownloadInfoDialogView> for DownloadInfoDialogModel {
         let DownloadInfoDialogView {
             open,
             on_open_change,
-            on_confirm,
         } = view.clone();
         Self {
             open,
             on_open_change,
-            on_confirm,
         }
     }
 }

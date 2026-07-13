@@ -8,10 +8,10 @@ mod state;
 
 use dioxus::prelude::*;
 
-use components::hotkey_alt_position_picker_dialog_host::HotkeyAltPositionPickerDialogHost;
+use components::hotkey_alt_position_picker_dialog::HotkeyAltPositionPickerDialog;
 use components::hotkey_override_card::HotkeyOverrideCard;
-use components::hotkey_picker_dialog_host::HotkeyPickerDialogHost;
-use components::hotkey_upgrade_position_picker_dialog_host::HotkeyUpgradePositionPickerDialogHost;
+use components::hotkey_picker_dialog::HotkeyPickerDialog;
+use components::hotkey_upgrade_position_picker_dialog::HotkeyUpgradePositionPickerDialog;
 use model::{HotkeyOverrideModel, HotkeyOverridePresentation};
 use presentation::use_hotkey_override;
 use tw_macro::assert_component;
@@ -99,21 +99,21 @@ pub fn HotkeyOverride(props: HotkeyOverrideModel) -> Element {
             total_tier_count,
             tier_label_text,
         }
-        HotkeyPickerDialogHost {
+        HotkeyPickerDialog {
             visible: key_picker_visible,
             title: picker_title,
             rows: picker_rows,
             on_pick,
             on_close,
         }
-        HotkeyAltPositionPickerDialogHost {
+        HotkeyAltPositionPickerDialog {
             object_id,
             display_name: alt_display_name,
             picker_slots: alt_picker_slots,
             open: *alt_open.read(),
             on_open_change: Callback::new(move |value: bool| alt_open.set(value)),
         }
-        HotkeyUpgradePositionPickerDialogHost {
+        HotkeyUpgradePositionPickerDialog {
             upgrade_unit_id,
             display_name: upgrade_display_name,
             picker_slots: upgrade_picker_slots,

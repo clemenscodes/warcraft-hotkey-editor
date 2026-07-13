@@ -1,0 +1,39 @@
+use super::model::SystemHotkeysCategoryTabModel;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
+use dioxus::prelude::*;
+
+/// The tab's shaped view: its caption, active flag and popover flag (together they
+/// dispatch the look; the active flag also drives aria), whether a separator follows,
+/// and the select handler.
+pub(super) struct SystemHotkeysCategoryTabPresentation {
+    pub(super) label: String,
+    pub(super) is_active: bool,
+    pub(super) menu_open: bool,
+    pub(super) has_separator: bool,
+    pub(super) on_click: EventHandler<MouseEvent>,
+}
+
+/// Selecting a tab sets it active and closes the mobile popover.
+pub(super) fn use_system_hotkeys_category_tab(
+    props: &SystemHotkeysCategoryTabModel,
+) -> SystemHotkeysCategoryTabPresentation {
+    let dialog_state = use_system_hotkeys_dialog_state();
+    let category = props.category;
+    let is_active = props.is_active;
+    let menu_open = props.menu_open;
+    let has_separator = props.has_separator;
+    let mut active_category = dialog_state.active_category();
+    let mut picker_open = props.picker_open;
+    let label = category.to_string();
+    let on_click = EventHandler::new(move |_event: MouseEvent| {
+        active_category.set(category);
+        picker_open.set(false);
+    });
+    SystemHotkeysCategoryTabPresentation {
+        label,
+        is_active,
+        menu_open,
+        has_separator,
+        on_click,
+    }
+}

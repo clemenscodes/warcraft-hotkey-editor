@@ -2,7 +2,7 @@ pub mod components;
 mod style;
 
 use components::brand_host::BrandHost;
-use components::grid_layout_button_host::GridLayoutButtonHost;
+use components::grid_layout_editor_button_host::GridLayoutEditorButtonHost;
 use components::toolbar::Toolbar;
 use dioxus::prelude::*;
 use style::CLASS;
@@ -18,7 +18,7 @@ pub fn Header() -> Element {
         header {
             class: CLASS,
             BrandHost {}
-            GridLayoutButtonHost {}
+            GridLayoutEditorButtonHost {}
             Toolbar {}
         }
     }

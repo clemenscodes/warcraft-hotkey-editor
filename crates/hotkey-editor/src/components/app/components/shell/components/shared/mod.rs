@@ -1,5 +1,5 @@
 pub mod breadcrumbs;
-pub mod carriers_dialog_host;
+pub mod carriers_dialog;
 pub mod clear_icon;
 pub mod clear_label;
 pub mod editable_keycap;

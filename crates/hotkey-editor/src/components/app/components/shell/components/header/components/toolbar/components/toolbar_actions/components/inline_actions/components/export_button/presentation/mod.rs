@@ -15,7 +15,7 @@ pub(super) struct ExportButtonPresentation {
 /// The seam: reads the live document from the [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) to decide whether
 /// there is anything to export, owns the info dialog's open signal, and shapes the
 /// toolbar button. Clicking opens the dialog; the download itself is owned by
-/// `DownloadInfoDialogHost`.
+/// `DownloadInfoDialog`.
 pub(super) fn use_export_button() -> ExportButtonPresentation {
     let custom_keys_service = use_custom_keys_service();
     let keys = custom_keys_service.keys();

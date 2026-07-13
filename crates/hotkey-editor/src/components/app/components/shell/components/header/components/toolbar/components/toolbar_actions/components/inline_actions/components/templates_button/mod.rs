@@ -2,7 +2,7 @@ mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog_host::TemplatesDialogHost;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
 use dioxus::prelude::*;
 use presentation::{use_templates_button, TemplatesButtonModel};
 use style::CLASS;
@@ -32,7 +32,7 @@ pub fn TemplatesButton() -> Element {
                 onclick,
             }
         }
-        TemplatesDialogHost {}
+        TemplatesDialog {}
     }
 }
 

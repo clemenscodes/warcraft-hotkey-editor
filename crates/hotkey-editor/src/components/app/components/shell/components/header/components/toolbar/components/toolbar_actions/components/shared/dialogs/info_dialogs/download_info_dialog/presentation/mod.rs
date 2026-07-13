@@ -1,5 +1,7 @@
 use super::data::{INTRO, PRIMARY_LABEL, TITLE, WARNING};
 use super::model::DownloadInfoDialogModel;
+use crate::services::customkeys::context::use_custom_keys_service;
+use crate::services::files::download;
 use dioxus::prelude::*;
 
 /// The download dialog's shaped data: the open value it drives, the change handler
@@ -17,32 +19,37 @@ pub(super) struct DownloadInfoDialogPresentation {
     pub(super) on_cancel: EventHandler<MouseEvent>,
 }
 
-impl From<&DownloadInfoDialogModel> for DownloadInfoDialogPresentation {
-    fn from(props: &DownloadInfoDialogModel) -> Self {
-        let open = props.open;
-        let on_open_change = props.on_open_change;
-        let on_confirm = props.on_confirm;
-        let cancel_change = on_open_change;
-        let on_cancel = EventHandler::new(move |_event: MouseEvent| cancel_change.call(false));
-        let primary_change = on_open_change;
-        let on_primary = EventHandler::new(move |_event: MouseEvent| {
-            primary_change.call(false);
-            on_confirm.call(());
-        });
-        let title = TITLE;
-        let intro = INTRO;
-        let warning = Some(WARNING);
-        let primary_label = PRIMARY_LABEL;
-        Self {
-            open,
-            on_open_change,
-            title,
-            intro,
-            warning,
-            primary_label,
-            on_primary,
-            on_cancel,
-        }
+/// Reads the live document from the [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService)
+/// and shapes the download dialog: confirming serializes the stored CustomKeys.txt (R5:
+/// the download IS the stored text, never re-serialized from the in-memory aggregate),
+/// triggers the browser download, and closes.
+pub(super) fn use_download_info_dialog(
+    props: &DownloadInfoDialogModel,
+) -> DownloadInfoDialogPresentation {
+    let custom_keys_service = use_custom_keys_service();
+    let open = props.open;
+    let on_open_change = props.on_open_change;
+    let cancel_change = on_open_change;
+    let on_cancel = EventHandler::new(move |_event: MouseEvent| cancel_change.call(false));
+    let primary_change = on_open_change;
+    let on_primary = EventHandler::new(move |_event: MouseEvent| {
+        primary_change.call(false);
+        let serialized = custom_keys_service.exported_text();
+        download::trigger("CustomKeys.txt", &serialized);
+    });
+    let title = TITLE;
+    let intro = INTRO;
+    let warning = Some(WARNING);
+    let primary_label = PRIMARY_LABEL;
+    DownloadInfoDialogPresentation {
+        open,
+        on_open_change,
+        title,
+        intro,
+        warning,
+        primary_label,
+        on_primary,
+        on_cancel,
     }
 }
 

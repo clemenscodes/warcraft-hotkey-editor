@@ -10,7 +10,7 @@ mod style;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_name::ConflictAbilityName;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_ability_trigger::ConflictAbilityTrigger;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use crate::components::app::components::shell::components::shared::carriers_dialog_host::CarriersDialogHost;
+use crate::components::app::components::shell::components::shared::carriers_dialog::CarriersDialog;
 use components::conflict_more::ConflictMore;
 use dioxus::prelude::*;
 use presentation::{IslandConflictAbilityPresentation, use_island_conflict_ability};
@@ -43,7 +43,7 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
                 ConflictMore { count: extra_count, onclick }
             }
         }
-        CarriersDialogHost {
+        CarriersDialog {
             ability: open_state.read().clone(),
             on_close: Callback::new(move |()| open_state.set(None)),
         }

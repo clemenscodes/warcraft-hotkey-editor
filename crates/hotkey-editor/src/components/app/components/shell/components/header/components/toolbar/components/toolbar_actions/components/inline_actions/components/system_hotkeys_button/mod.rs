@@ -2,7 +2,7 @@ mod presentation;
 mod style;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::SystemHotkeysDialogHost;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::SystemHotkeysDialog;
 use dioxus::prelude::*;
 use presentation::{use_system_hotkeys_button, SystemHotkeysButtonModel};
 use style::CLASS;
@@ -32,7 +32,7 @@ pub fn SystemHotkeysButton() -> Element {
                 onclick,
             }
         }
-        SystemHotkeysDialogHost {}
+        SystemHotkeysDialog {}
     }
 }
 

@@ -7,13 +7,13 @@ pub use view::DownloadInfoDialogView;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::info_dialog::InfoDialog;
 use dioxus::prelude::*;
-use presentation::DownloadInfoDialogPresentation;
 use model::DownloadInfoDialogModel;
+use presentation::{use_download_info_dialog, DownloadInfoDialogPresentation};
 use tw_macro::assert_component;
 
-/// Tells the player where CustomKeys.txt must go and confirms the download. A
-/// thin variant that fills the shared `InfoDialog` shell with the download
-/// title, copy, warning, and confirm handler.
+/// Tells the player where CustomKeys.txt must go and confirms the download. A thin
+/// variant that reads the live document from the CustomKeys service and fills the shared
+/// `InfoDialog` shell with the download title, copy, warning, and confirm handler.
 #[component]
 pub fn DownloadInfoDialog(props: DownloadInfoDialogModel) -> Element {
     let DownloadInfoDialogPresentation {
@@ -25,7 +25,7 @@ pub fn DownloadInfoDialog(props: DownloadInfoDialogModel) -> Element {
         primary_label,
         on_primary,
         on_cancel,
-    } = DownloadInfoDialogPresentation::from(&props);
+    } = use_download_info_dialog(&props);
     rsx! {
         InfoDialog {
             open,

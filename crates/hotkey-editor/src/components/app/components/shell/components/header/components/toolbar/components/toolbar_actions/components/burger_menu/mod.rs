@@ -4,7 +4,7 @@ mod presentation;
 mod state;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog_host::DownloadInfoDialogHost;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
 use components::burger_backdrop::BurgerBackdrop;
 use components::burger_drawer::BurgerDrawer;
@@ -18,7 +18,7 @@ use tw_macro::assert_component;
 /// every file action. Shown only in the compact header (the full header shows the
 /// inline toolbar instead). It only shows and toggles the drawer of action rows —
 /// each action sources its own state, and the download is owned by
-/// `DownloadInfoDialogHost`, so the burger threads no document itself.
+/// `DownloadInfoDialog`, so the burger threads no document itself.
 #[component]
 pub fn BurgerMenu() -> Element {
     let view = use_burger_menu();
@@ -53,7 +53,7 @@ pub fn BurgerMenu() -> Element {
             open: *upload_info_open.read(),
             on_open_change: Callback::new(move |value: bool| upload_info_open.set(value)),
         }
-        DownloadInfoDialogHost {
+        DownloadInfoDialog {
             open: *download_info_open.read(),
             on_open_change: Callback::new(move |value: bool| download_info_open.set(value)),
         }

@@ -518,11 +518,7 @@ not itself use the document must neither receive it nor forward it. `HeaderActio
 pure layout — it renders `CollisionsButtonHost`, `HeaderToolbar`, and the burger; it
 takes no `loaded_keys` prop and calls no document hook, because it has no stake in the
 document. Pushing the fetch onto a parent that has no stake is the leak this pattern
-exists to forbid: it is the same leak as a threaded god-signal, one layer smaller. The
-same holds for the header's overlay dialogs — each dialog is a presentational leaf, and
-a `PreviewDialogHost` / `TemplatesDialogHost` supplies its document; the header only
-places the hosts.
-
+exists to forbid: it is the same leak as a threaded god-signal, one layer smaller. 
 Three roles, never merged:
 
 - **presentational leaf** — props in, markup out; no context (a hook may shape its

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 pub struct DownloadInfoDialogView {
     pub open: bool,
     pub on_open_change: Callback<bool>,
-    pub on_confirm: EventHandler<()>,
 }
 
 impl ddd::View for DownloadInfoDialogView {}
