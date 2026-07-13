@@ -4,8 +4,7 @@ use crate::components::app::components::shell::components::shared::icons::Resolv
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_loaded_keys};
 use crate::services::navigation::app_view::AppView;
-use crate::services::navigation::context::{use_synced_route, use_view_navigation};
-use crate::services::navigation::nav_snapshot::NavSnapshot;
+use crate::services::navigation::context::use_view_navigation;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use crate::services::resolve_selection::ResolveSelection;
 use crate::services::resolve_selection::context::use_resolve_selection;
@@ -410,12 +409,11 @@ pub(super) struct ActivePlanView {
 }
 
 /// The inputs that shape an [`ActivePlanView`]: the plan to render, the selected
-/// section slug, and the Copy selection + navigation signals its breadcrumbs and
-/// rows close over.
+/// section slug, and the navigation surface its breadcrumbs write to when clicked.
 pub(super) struct ActivePlanInputs<'a> {
     pub(super) plan: &'a PlanView,
     pub(super) selected_slug: Option<&'a str>,
-    pub(super) selection: Signal<Option<String>>,
+    pub(super) view_navigation: ViewNavigationContext,
 }
 
 impl From<ActivePlanInputs<'_>> for ActivePlanView {
@@ -423,7 +421,7 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
         let ActivePlanInputs {
             plan,
             selected_slug,
-            selection,
+            view_navigation,
         } = inputs;
         let active = plan.active_section(selected_slug);
         let active_category = active.map(|section| section.category);
@@ -433,10 +431,9 @@ impl From<ActivePlanInputs<'_>> for ActivePlanView {
             let is_active = active_category == Some(category);
             let label = section.title.to_owned();
             let count = section.moves.len();
-            let mut selection = selection;
             let onclick = EventHandler::new(move |_event: MouseEvent| {
                 let slug = category.entry_slug().to_owned();
-                selection.set(Some(slug));
+                view_navigation.select_move_category(slug);
             });
             let breadcrumb = BreadcrumbView {
                 label,
@@ -584,14 +581,14 @@ pub(super) struct ApplyPlan {
     pub(super) on_apply: EventHandler<MouseEvent>,
 }
 
-/// Reconcile the live route into the shell's signals (the read side of the URL
-/// contract): announce the Resolve view, sync the selected move-category from the
-/// `?entry=` parameter, and push the matching nav snapshot. Reactive on `entry`.
+/// Reconcile the live route into the shell's signals — the read side of the URL
+/// contract: announce the Resolve view and sync the selected move-category from the
+/// `?entry=` parameter. Reactive on `entry`; the move-category pick that writes the route
+/// lives at the breadcrumb mutation site.
 fn use_route_reconcile(
     entry: Option<String>,
     view_navigation: ViewNavigationContext,
     resolve_selection: ResolveSelection,
-    mut synced_route: Signal<NavSnapshot>,
 ) {
     use_effect(use_reactive!(|entry| {
         view_navigation.restore_view(AppView::Resolve);
@@ -599,10 +596,6 @@ fn use_route_reconcile(
         if *selected.peek() != entry {
             selected.set(entry.clone());
         }
-        let snapshot = NavSnapshot::Resolve {
-            entry: entry.clone(),
-        };
-        synced_route.set(snapshot);
     }));
 }
 
@@ -655,9 +648,8 @@ pub(super) fn use_resolve_page(props: &ResolvePageModel) -> ResolvePagePresentat
     let custom_keys_service = use_custom_keys_service();
     let loaded_keys = use_loaded_keys();
     let selected_move_category = resolve_selection.selected_move_category();
-    let synced_route = use_synced_route();
     let entry = props.entry.clone().filter(|value| !value.is_empty());
-    use_route_reconcile(entry, view_navigation, resolve_selection, synced_route);
+    use_route_reconcile(entry, view_navigation, resolve_selection);
     let plan_memo = use_memo(move || {
         if loaded_keys.read().is_none() {
             return None;
@@ -681,7 +673,7 @@ pub(super) fn use_resolve_page(props: &ResolvePageModel) -> ResolvePagePresentat
     let active_inputs = ActivePlanInputs {
         plan: &plan,
         selected_slug: selected_slug.as_deref(),
-        selection: selected_move_category,
+        view_navigation,
     };
     let active = ActivePlanView::from(active_inputs);
     let move_count = counts.move_count;

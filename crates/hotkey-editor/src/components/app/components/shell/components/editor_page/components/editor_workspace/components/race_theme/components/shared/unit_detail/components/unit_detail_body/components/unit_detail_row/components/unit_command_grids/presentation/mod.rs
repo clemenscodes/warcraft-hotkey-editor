@@ -2,6 +2,8 @@ use super::data;
 use super::model::UnitCommandGridsModel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::GridEditorView;
 use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::drag_state::DragState;
+use crate::services::drag_state::context::use_drag_state;
 use crate::services::editor_state::EditorState;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
@@ -20,12 +22,13 @@ pub(super) struct UnitCommandGridsPresentation {
 
 impl UnitCommandGridsPresentation {
     /// Shapes the four configs from the unit's per-menu identity (props) plus the
-    /// shared editor signals, which the component's hook sources from context.
+    /// shared editor and drag signals, which the component's hook sources from context.
     pub(super) fn build(
         props: &UnitCommandGridsModel,
         loaded_keys: Signal<Option<CustomKeys>>,
         grid_layout: Signal<GridLayout>,
         editor: EditorState,
+        drag_state: DragState,
     ) -> Self {
         let command_slots = props.command_card_slots.clone();
         let command_card = Self::config(
@@ -33,6 +36,7 @@ impl UnitCommandGridsPresentation {
             loaded_keys,
             grid_layout,
             editor,
+            drag_state,
             data::COMMAND_CARD,
             command_slots,
         );
@@ -42,20 +46,29 @@ impl UnitCommandGridsPresentation {
                 loaded_keys,
                 grid_layout,
                 editor,
+                drag_state,
                 data::BUILD_MENU,
                 ids,
             )
         });
-        let uprooted = props
-            .uprooted_menu_slots
-            .clone()
-            .map(|ids| Self::config(props, loaded_keys, grid_layout, editor, data::UPROOTED, ids));
+        let uprooted = props.uprooted_menu_slots.clone().map(|ids| {
+            Self::config(
+                props,
+                loaded_keys,
+                grid_layout,
+                editor,
+                drag_state,
+                data::UPROOTED,
+                ids,
+            )
+        });
         let research = props.research_menu_slots.clone().map(|ids| {
             Self::config(
                 props,
                 loaded_keys,
                 grid_layout,
                 editor,
+                drag_state,
                 data::RESEARCH_MENU,
                 ids,
             )
@@ -69,12 +82,13 @@ impl UnitCommandGridsPresentation {
     }
 
     /// Builds one grid-editor config for the given menu, sharing the unit's editor
-    /// signals and behavior flags.
+    /// signals, the drag signals, and behavior flags.
     fn config(
         props: &UnitCommandGridsModel,
         loaded_keys: Signal<Option<CustomKeys>>,
         grid_layout: Signal<GridLayout>,
         editor: EditorState,
+        drag_state: DragState,
         heading: &'static str,
         slot_ids: Rc<[GridSlotId]>,
     ) -> GridEditorView {
@@ -87,9 +101,9 @@ impl UnitCommandGridsPresentation {
             selected_from_research: editor.selected_from_research(),
             selected_from_uprooted: editor.selected_from_uprooted(),
             tier_overrides: editor.tier_overrides(),
-            dragging_slot: editor.dragging_slot(),
-            drop_target_tile: editor.drop_target_tile(),
-            drag_follower: editor.drag_follower(),
+            dragging_slot: drag_state.dragging_slot(),
+            drop_target_tile: drag_state.drop_target_tile(),
+            drag_follower: drag_state.drag_follower(),
             grid_layout,
             update_hotkeys_on_move: editor.update_hotkeys_on_move(),
             hotkey_assign_request: editor.hotkey_assign_request(),
@@ -100,13 +114,15 @@ impl UnitCommandGridsPresentation {
     }
 }
 
-/// Sources the shared editor signals from context (rather than having them threaded
-/// down as props) and shapes the four grid configs, so the body only names the result.
+/// Sources the shared editor and drag signals from context (rather than having them
+/// threaded down as props) and shapes the four grid configs, so the body only names the
+/// result.
 pub(super) fn use_unit_command_grids(
     props: &UnitCommandGridsModel,
 ) -> UnitCommandGridsPresentation {
     let loaded_keys = use_loaded_keys();
     let grid_layout = use_grid_layout();
     let editor = use_editor_state();
-    UnitCommandGridsPresentation::build(props, loaded_keys, grid_layout, editor)
+    let drag_state = use_drag_state();
+    UnitCommandGridsPresentation::build(props, loaded_keys, grid_layout, editor, drag_state)
 }

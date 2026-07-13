@@ -1,5 +1,5 @@
 use super::view::DragFollowerOverlayView;
-use crate::services::editor_state::DragFollower;
+use crate::services::drag_state::DragFollower;
 use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]

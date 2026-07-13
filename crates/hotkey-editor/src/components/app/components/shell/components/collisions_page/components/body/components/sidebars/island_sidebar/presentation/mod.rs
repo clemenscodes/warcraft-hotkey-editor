@@ -1,16 +1,30 @@
 use super::model::IslandSidebarModel;
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::{CollisionCardContent, CollisionCardData};
+use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
-/// One card's data per collision island: its selected state, key, click handler,
-/// highlighted coordinate, and collision-count line. The selection is read from context
-/// by the caller and passed in.
-pub(super) fn cards(
+/// The island sidebar's render-ready cards: one card per collision island. The body only
+/// places these; all shaping happens in the builder below.
+pub(super) struct IslandSidebarPresentation {
+    pub(super) cards: Vec<CollisionCardData>,
+}
+
+impl ddd::Presentation for IslandSidebarPresentation {
+    type Model = IslandSidebarModel;
+}
+
+/// Reads the selected island and the navigation context, then shapes one card per
+/// collision island: its selected state, key, click handler, highlighted coordinate, and
+/// collision-count line. The click routes through navigation, which replaces the
+/// collisions route's `?entry=` with the picked island.
+pub(super) fn use_island_sidebar_presentation(
     props: &IslandSidebarModel,
-    mut selected_island: Signal<Option<String>>,
-) -> Vec<CollisionCardData> {
+) -> IslandSidebarPresentation {
+    let selected_island = use_collision_selection().selected_island();
+    let view_navigation = use_view_navigation();
     let selected_key = selected_island.read().clone();
-    props
+    let cards = props
         .islands
         .iter()
         .map(|island| {
@@ -19,7 +33,7 @@ pub(super) fn cards(
             let collision_count = island.collision_count();
             let key_for_click = island.key().to_owned();
             let onclick = EventHandler::new(move |_event: MouseEvent| {
-                selected_island.set(Some(key_for_click.clone()))
+                view_navigation.select_collision_entry(key_for_click.clone())
             });
             let content = CollisionCardContent::Island { coordinate };
             CollisionCardData {
@@ -29,5 +43,6 @@ pub(super) fn cards(
                 content,
             }
         })
-        .collect()
+        .collect();
+    IslandSidebarPresentation { cards }
 }

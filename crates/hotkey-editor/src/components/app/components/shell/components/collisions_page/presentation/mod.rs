@@ -2,7 +2,22 @@ mod breadcrumbs;
 
 pub(crate) use breadcrumbs::CollisionBreadcrumbsInputs;
 
+use super::components::body::ContentModel;
+use super::model::CollisionsPageModel;
+use super::model::{
+    CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
+};
+use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
+use crate::services::collision_selection::CollisionSelection;
+use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::customkeys::context::use_custom_keys_service;
+use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::grid_layout::context::use_grid_layout;
+use crate::services::navigation::app_view::{AppView, CollisionKind};
+use crate::services::navigation::context::use_view_navigation;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
+use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{
@@ -149,8 +164,8 @@ pub struct IslandView {
     collision_count: usize,
 }
 
-impl IslandView {
-    fn build(group: &CrossUnitPositionGroup) -> Self {
+impl From<&CrossUnitPositionGroup> for IslandView {
+    fn from(group: &CrossUnitPositionGroup) -> Self {
         let coordinate = group.position();
         let key_column = u8::from(coordinate.column());
         let key_row = u8::from(coordinate.row());
@@ -263,7 +278,9 @@ impl IslandView {
             collision_count,
         }
     }
+}
 
+impl IslandView {
     pub fn key(&self) -> &str {
         &self.key
     }
@@ -299,17 +316,19 @@ impl From<GridSlotId> for AbilityResolution {
     }
 }
 
-/// Turns the domain's `CrossUnitCollisionReport` into a flat island list,
-/// in the report's stable row/column/role order.
-pub(crate) fn compute_island_views(report: &CrossUnitCollisionReport) -> Vec<IslandView> {
-    let groups = report.position_groups();
-    let mut islands: Vec<IslandView> = Vec::with_capacity(groups.len());
-    for group in groups {
-        let island = IslandView::build(group);
-        islands.push(island);
+/// Turns the domain's `CrossUnitCollisionReport` into the flat island list with its
+/// summary counts, sorted by collision count descending.
+impl From<&CrossUnitCollisionReport> for CollisionList<IslandView> {
+    fn from(report: &CrossUnitCollisionReport) -> Self {
+        let groups = report.position_groups();
+        let mut islands: Vec<IslandView> = Vec::with_capacity(groups.len());
+        for group in groups {
+            let island = IslandView::from(group);
+            islands.push(island);
+        }
+        islands.sort_by_key(|island| std::cmp::Reverse(island.collision_count));
+        Self::from(islands)
     }
-    islands.sort_by_key(|island| std::cmp::Reverse(island.collision_count));
-    islands
 }
 
 /// One hotkey conflict on a unit's command card: a hotkey letter shared by two
@@ -363,38 +382,6 @@ impl<Conflict> CollisionUnitView<Conflict> {
     pub fn conflicts(&self) -> &[Conflict] {
         &self.conflicts
     }
-
-    /// Builds the sorted per-unit collision list from a report: every entry whose
-    /// `shape` yields conflicts becomes a view keyed by that unit, and the list is
-    /// sorted by collision count descending. This is the shared derivation both
-    /// collision kinds run; each kind supplies only how a unit's conflicts are shaped.
-    fn from_report(
-        report: &UnitCollisionReport,
-        shape: impl Fn(&UnitCollisionEntry) -> Vec<Conflict>,
-    ) -> Vec<Self> {
-        let entries = report.entries();
-        let mut units: Vec<Self> = Vec::with_capacity(entries.len());
-        for entry in entries {
-            let conflicts = shape(entry);
-            if conflicts.is_empty() {
-                continue;
-            }
-            let collision_count = conflicts.len();
-            let unit_object_id = entry.unit_id();
-            let unit_id_value = unit_object_id.value();
-            let unit = UnitIconView::from(unit_object_id);
-            let key = unit_id_value.to_owned();
-            let unit_view = Self {
-                key,
-                unit,
-                collision_count,
-                conflicts,
-            };
-            units.push(unit_view);
-        }
-        units.sort_by_key(|unit_view| std::cmp::Reverse(unit_view.collision_count));
-        units
-    }
 }
 
 /// A unit's shared-hotkey-letter collisions across its command cards.
@@ -403,43 +390,76 @@ pub type HotkeyUnitView = CollisionUnitView<HotkeyConflictView>;
 /// A unit's per-cell position collisions (its own abilities clashing on a slot).
 pub type UnitPositionUnitView = CollisionUnitView<UnitPositionConflictView>;
 
-/// Turns the domain's `UnitCollisionReport` into a flat list of units with
-/// hotkey collisions, each carrying its shared-letter conflicts. Sorted by
-/// collision count descending to mirror the position-collision sidebar.
-pub(crate) fn compute_hotkey_unit_views(report: &UnitCollisionReport) -> Vec<HotkeyUnitView> {
-    HotkeyUnitView::from_report(report, shape_hotkey_conflicts)
+/// One unit's shared-hotkey-letter conflicts across its command cards, ordered by
+/// how many abilities clash on each letter (the widest clash first). A single entry
+/// yields many conflicts, so the conversion target is this named list, not a bare
+/// `Vec` (which no `From` may target across the orphan rule).
+#[derive(Clone, PartialEq)]
+struct HotkeyConflicts {
+    conflicts: Vec<HotkeyConflictView>,
 }
 
-/// One unit's shared-hotkey-letter conflicts across its command cards, ordered
-/// by how many abilities clash on each letter (the widest clash first).
-fn shape_hotkey_conflicts(entry: &UnitCollisionEntry) -> Vec<HotkeyConflictView> {
-    let hotkey_cards = entry.hotkey_cards();
-    let mut conflicts: Vec<HotkeyConflictView> = Vec::new();
-    for card in hotkey_cards {
-        if card.is_empty() {
-            continue;
-        }
-        let role = card.role();
-        let role_label = role.label().to_owned();
-        for (_grid_coordinate, collision_cell) in card {
-            let token = collision_cell.token();
-            let hotkey_label = token.display_label();
-            let collision_slots = collision_cell.slots();
-            let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
-            for slot_id in collision_slots.iter() {
-                let ability = AbilityIconView::from(slot_id);
-                abilities.push(ability);
+impl From<&UnitCollisionEntry> for HotkeyConflicts {
+    fn from(entry: &UnitCollisionEntry) -> Self {
+        let hotkey_cards = entry.hotkey_cards();
+        let mut conflicts: Vec<HotkeyConflictView> = Vec::new();
+        for card in hotkey_cards {
+            if card.is_empty() {
+                continue;
             }
-            let conflict = HotkeyConflictView {
-                hotkey_label,
-                role_label: role_label.clone(),
-                abilities,
-            };
-            conflicts.push(conflict);
+            let role = card.role();
+            let role_label = role.label().to_owned();
+            for (_grid_coordinate, collision_cell) in card {
+                let token = collision_cell.token();
+                let hotkey_label = token.display_label();
+                let collision_slots = collision_cell.slots();
+                let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
+                for slot_id in collision_slots.iter() {
+                    let ability = AbilityIconView::from(slot_id);
+                    abilities.push(ability);
+                }
+                let conflict = HotkeyConflictView {
+                    hotkey_label,
+                    role_label: role_label.clone(),
+                    abilities,
+                };
+                conflicts.push(conflict);
+            }
         }
+        conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
+        Self { conflicts }
     }
-    conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
-    conflicts
+}
+
+/// Turns the domain's `UnitCollisionReport` into the flat list of units with hotkey
+/// collisions and its summary counts, sorted by collision count descending to mirror
+/// the position-collision sidebar.
+impl From<&UnitCollisionReport> for CollisionList<HotkeyUnitView> {
+    fn from(report: &UnitCollisionReport) -> Self {
+        let entries = report.entries();
+        let mut units: Vec<HotkeyUnitView> = Vec::with_capacity(entries.len());
+        for entry in entries {
+            let hotkey_conflicts = HotkeyConflicts::from(entry);
+            let conflicts = hotkey_conflicts.conflicts;
+            if conflicts.is_empty() {
+                continue;
+            }
+            let collision_count = conflicts.len();
+            let unit_object_id = entry.unit_id();
+            let unit_id_value = unit_object_id.value();
+            let unit = UnitIconView::from(unit_object_id);
+            let key = unit_id_value.to_owned();
+            let unit_view = HotkeyUnitView {
+                key,
+                unit,
+                collision_count,
+                conflicts,
+            };
+            units.push(unit_view);
+        }
+        units.sort_by_key(|unit_view| std::cmp::Reverse(unit_view.collision_count));
+        Self::from(units)
+    }
 }
 
 /// One per-unit position conflict: a command-card cell where two or more of a
@@ -465,61 +485,74 @@ impl UnitPositionConflictView {
     }
 }
 
-/// Turns the domain's `UnitCollisionReport` into a flat list of units whose own
-/// abilities collide on a command-card cell, each carrying its per-cell
-/// conflicts. Sorted by collision count descending.
-pub(crate) fn compute_unit_position_views(
-    report: &UnitCollisionReport,
-) -> Vec<UnitPositionUnitView> {
-    UnitPositionUnitView::from_report(report, shape_position_conflicts)
+/// One unit's per-cell position conflicts across its command cards, ordered by how
+/// many of the unit's own abilities clash on each cell (widest clash first). Like
+/// [`HotkeyConflicts`], a single entry yields many conflicts, so the conversion
+/// target is this named list.
+#[derive(Clone, PartialEq)]
+struct UnitPositionConflicts {
+    conflicts: Vec<UnitPositionConflictView>,
 }
 
-/// One unit's per-cell position conflicts across its command cards, ordered by
-/// how many of the unit's own abilities clash on each cell (widest clash first).
-fn shape_position_conflicts(entry: &UnitCollisionEntry) -> Vec<UnitPositionConflictView> {
-    let position_cards = entry.position_cards();
-    let mut conflicts: Vec<UnitPositionConflictView> = Vec::new();
-    for card in position_cards {
-        if card.is_empty() {
-            continue;
-        }
-        let role = card.role();
-        let role_label = role.label().to_owned();
-        for (coordinate, collision_slots) in card {
-            let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
-            for slot_id in collision_slots.iter() {
-                let ability = AbilityIconView::from(slot_id);
-                abilities.push(ability);
+impl From<&UnitCollisionEntry> for UnitPositionConflicts {
+    fn from(entry: &UnitCollisionEntry) -> Self {
+        let position_cards = entry.position_cards();
+        let mut conflicts: Vec<UnitPositionConflictView> = Vec::new();
+        for card in position_cards {
+            if card.is_empty() {
+                continue;
             }
-            let conflict = UnitPositionConflictView {
-                coordinate,
-                role_label: role_label.clone(),
-                abilities,
-            };
-            conflicts.push(conflict);
+            let role = card.role();
+            let role_label = role.label().to_owned();
+            for (coordinate, collision_slots) in card {
+                let mut abilities: Vec<AbilityIconView> = Vec::with_capacity(collision_slots.len());
+                for slot_id in collision_slots.iter() {
+                    let ability = AbilityIconView::from(slot_id);
+                    abilities.push(ability);
+                }
+                let conflict = UnitPositionConflictView {
+                    coordinate,
+                    role_label: role_label.clone(),
+                    abilities,
+                };
+                conflicts.push(conflict);
+            }
         }
+        conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
+        Self { conflicts }
     }
-    conflicts.sort_by_key(|conflict| std::cmp::Reverse(conflict.abilities.len()));
-    conflicts
 }
 
-use dioxus::prelude::*;
-
-use super::components::body::ContentModel;
-use super::model::CollisionsPageModel;
-use super::model::{
-    CollisionEntry, CollisionList, HotkeysContent, PositionsContent, UnitPositionsContent,
-};
-use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
-use crate::services::collision_selection::CollisionSelection;
-use crate::services::collision_selection::context::use_collision_selection;
-use crate::services::customkeys::context::use_custom_keys_service;
-use crate::services::customkeys::context::use_loaded_keys;
-use crate::services::grid_layout::context::use_grid_layout;
-use crate::services::navigation::app_view::{AppView, CollisionKind};
-use crate::services::navigation::context::{use_synced_route, use_view_navigation};
-use crate::services::navigation::nav_snapshot::NavSnapshot;
-use crate::services::navigation::view_navigation::ViewNavigationContext;
+/// Turns the domain's `UnitCollisionReport` into the flat list of units whose own
+/// abilities collide on a command-card cell and its summary counts, sorted by
+/// collision count descending.
+impl From<&UnitCollisionReport> for CollisionList<UnitPositionUnitView> {
+    fn from(report: &UnitCollisionReport) -> Self {
+        let entries = report.entries();
+        let mut units: Vec<UnitPositionUnitView> = Vec::with_capacity(entries.len());
+        for entry in entries {
+            let position_conflicts = UnitPositionConflicts::from(entry);
+            let conflicts = position_conflicts.conflicts;
+            if conflicts.is_empty() {
+                continue;
+            }
+            let collision_count = conflicts.len();
+            let unit_object_id = entry.unit_id();
+            let unit_id_value = unit_object_id.value();
+            let unit = UnitIconView::from(unit_object_id);
+            let key = unit_id_value.to_owned();
+            let unit_view = UnitPositionUnitView {
+                key,
+                unit,
+                collision_count,
+                conflicts,
+            };
+            units.push(unit_view);
+        }
+        units.sort_by_key(|unit_view| std::cmp::Reverse(unit_view.collision_count));
+        Self::from(units)
+    }
+}
 
 /// The shaped Collisions page: the breadcrumb bar props and the resolved content
 /// for the active kind (empty prompt, all-clear, or the two-pane view), as data.
@@ -528,16 +561,16 @@ pub(super) struct CollisionsPagePresentation {
     pub(super) content: ContentModel,
 }
 
-/// Restores the active view, mirrors the incoming `?entry=` into the active kind's
-/// selection signal, and publishes the route snapshot the shell's URL sync reads.
-/// Reactive on the route's `kind` and `entry` so it re-runs only when they change.
-fn use_route_sync(
+/// Restores the active view and mirrors the incoming `?entry=` into the active kind's
+/// selection signal — the read side of the URL contract. Reactive on the route's `kind`
+/// and `entry` so it re-runs only when they change; the entry picks that write the route
+/// live at the sidebar mutation sites.
+fn use_route_reconcile(
     kind: CollisionKind,
     entry: Option<String>,
     view_navigation: ViewNavigationContext,
     selection: CollisionSelection,
 ) {
-    let mut synced_route = use_synced_route();
     use_effect(use_reactive!(|(kind, entry)| {
         let view = AppView::Collisions { kind };
         view_navigation.restore_view(view);
@@ -549,21 +582,20 @@ fn use_route_sync(
         if *selected.peek() != entry {
             selected.set(entry.clone());
         }
-        let snapshot = NavSnapshot::Collisions { kind, entry };
-        synced_route.set(snapshot);
     }));
 }
 
 /// Keeps one kind's selection pointing at a live entry: when the list is non-empty
 /// and the current selection is missing or stale, it falls back to the first entry.
 /// Applied once per kind, replacing three hand-copied effects.
-fn use_valid_selection<View>(memo: Memo<Vec<View>>, selected: Signal<Option<String>>)
+fn use_valid_selection<View>(memo: Memo<CollisionList<View>>, selected: Signal<Option<String>>)
 where
     View: CollisionEntry + PartialEq + 'static,
 {
     let mut selected = selected;
     use_effect(move || {
-        let views = memo.read();
+        let list = memo.read();
+        let views = &list.views;
         if views.is_empty() {
             return;
         }
@@ -581,7 +613,7 @@ where
     });
 }
 
-/// Computes the three collision models (memoised on the loaded keys and layout),
+/// Computes the three collision lists (memoised on the loaded keys and layout),
 /// keeps each kind's selection valid, and shapes the breadcrumbs and active content.
 pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPagePresentation {
     let view_navigation = use_view_navigation();
@@ -591,21 +623,21 @@ pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPage
     let grid_layout = use_grid_layout();
     let kind = CollisionKind::from_query_param(props.kind.as_deref());
     let entry = props.entry.clone().filter(|value| !value.is_empty());
-    use_route_sync(kind, entry, view_navigation, selection);
+    use_route_reconcile(kind, entry, view_navigation, selection);
 
     let islands_memo = use_memo(move || {
         let report = custom_keys_service.cross_unit_collisions();
-        compute_island_views(&report)
+        CollisionList::<IslandView>::from(&report)
     });
     let hotkey_units_memo = use_memo(move || {
         let layout = *grid_layout.read();
         let report = custom_keys_service.unit_collisions(layout);
-        compute_hotkey_unit_views(&report)
+        CollisionList::<HotkeyUnitView>::from(&report)
     });
     let unit_positions_memo = use_memo(move || {
         let layout = *grid_layout.read();
         let report = custom_keys_service.unit_collisions(layout);
-        compute_unit_position_views(&report)
+        CollisionList::<UnitPositionUnitView>::from(&report)
     });
 
     let selected_island = selection.selected_island();
@@ -615,12 +647,9 @@ pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPage
     use_valid_selection(hotkey_units_memo, selected_hotkey_unit);
     use_valid_selection(unit_positions_memo, selected_unit_position);
 
-    let island_views = islands_memo();
-    let hotkey_unit_views = hotkey_units_memo();
-    let unit_position_views = unit_positions_memo();
-    let islands = CollisionList::from(island_views);
-    let hotkey_units = CollisionList::from(hotkey_unit_views);
-    let unit_positions = CollisionList::from(unit_position_views);
+    let islands = islands_memo();
+    let hotkey_units = hotkey_units_memo();
+    let unit_positions = unit_positions_memo();
     let has_file = loaded_keys.read().is_some();
 
     let breadcrumb_inputs = CollisionBreadcrumbsInputs {
@@ -630,7 +659,7 @@ pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPage
         hotkey_count: hotkey_units.collision_count,
         view_navigation,
     };
-    let breadcrumbs = breadcrumb_inputs.into_views();
+    let breadcrumbs: Vec<BreadcrumbView> = breadcrumb_inputs.into();
     let content = match kind {
         CollisionKind::Hotkeys => {
             let inputs = HotkeysContent {

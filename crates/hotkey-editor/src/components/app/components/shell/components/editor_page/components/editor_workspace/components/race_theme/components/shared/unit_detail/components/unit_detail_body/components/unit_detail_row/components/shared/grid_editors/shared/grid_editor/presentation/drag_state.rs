@@ -19,7 +19,7 @@ pub(crate) struct DragMovePoint {
     pub(crate) client_vertical: f64,
 }
 
-use crate::services::editor_state::DragFollowerVisual;
+use crate::services::drag_state::DragFollowerVisual;
 use warcraft_keybinds::GridCoordinate;
 
 pub(crate) struct PendingDragData {

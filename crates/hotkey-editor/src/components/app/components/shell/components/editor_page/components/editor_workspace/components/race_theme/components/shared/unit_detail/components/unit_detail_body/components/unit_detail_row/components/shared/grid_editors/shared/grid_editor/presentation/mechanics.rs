@@ -7,9 +7,8 @@ use super::drag_state::{
     reset,
 };
 
-use crate::services::editor_state::{CursorPoint, HitTestPoint};
-use crate::services::editor_state::{
-    DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile,
+use crate::services::drag_state::{
+    CursorPoint, DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile, HitTestPoint,
 };
 use dioxus::html::input_data::MouseButton;
 use dioxus::html::point_interaction::PointerInteraction;

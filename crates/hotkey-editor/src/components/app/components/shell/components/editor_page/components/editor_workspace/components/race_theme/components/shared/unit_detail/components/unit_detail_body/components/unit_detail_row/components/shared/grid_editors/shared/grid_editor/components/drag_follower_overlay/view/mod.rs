@@ -1,4 +1,4 @@
-use crate::services::editor_state::DragFollower;
+use crate::services::drag_state::DragFollower;
 use dioxus::prelude::*;
 
 /// The published `View` contract mirroring [`DragFollowerOverlayModel`], threaded to this component as data.

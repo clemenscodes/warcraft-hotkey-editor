@@ -13,7 +13,7 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
 
 use super::super::model::GridEditorModel;
-use crate::services::editor_state::DragFollowerVisual;
+use crate::services::drag_state::DragFollowerVisual;
 
 use super::handlers::{
     MoveHandlerArgs, activate_handler, drop_blocked_callback, move_handler, select_handler,

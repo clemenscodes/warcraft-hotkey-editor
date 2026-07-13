@@ -19,16 +19,16 @@ pub(crate) struct CollisionBreadcrumbsInputs {
     pub(crate) view_navigation: ViewNavigationContext,
 }
 
-impl CollisionBreadcrumbsInputs {
-    /// The three collision-kind breadcrumb tabs as shared domain views, in bar order.
-    pub(crate) fn into_views(self) -> Vec<BreadcrumbView> {
+/// The three collision-kind breadcrumb tabs as shared domain views, in bar order.
+impl From<CollisionBreadcrumbsInputs> for Vec<BreadcrumbView> {
+    fn from(inputs: CollisionBreadcrumbsInputs) -> Self {
         let CollisionBreadcrumbsInputs {
             active_kind,
             position_count,
             unit_position_count,
             hotkey_count,
             view_navigation,
-        } = self;
+        } = inputs;
 
         let positions_input = CollisionBreadcrumb {
             kind: CollisionKind::Positions,

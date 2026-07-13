@@ -39,6 +39,7 @@ use super::model::UnitListModel;
 use super::state::UnitListState;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::time::Duration;
 
@@ -54,8 +55,8 @@ pub(super) struct DebouncedSearch {
     pub(super) on_clear: EventHandler<()>,
 }
 
-fn use_debounced_search(search_query: Signal<String>) -> DebouncedSearch {
-    let mut search_query = search_query;
+fn use_debounced_search(navigation: ViewNavigationContext) -> DebouncedSearch {
+    let search_query = navigation.search_query();
     let mut raw_query = use_signal(|| search_query.read().clone());
     let mut debounce_gen: Signal<u32> = use_signal(|| 0);
     use_effect(move || {
@@ -75,13 +76,14 @@ fn use_debounced_search(search_query: Signal<String>) -> DebouncedSearch {
             gloo_timers::future::sleep(delay).await;
             let gen_now: u32 = *debounce_gen.read();
             if gen_now == next_gen {
-                search_query.set(value);
+                navigation.set_search_query(value);
             }
         });
     });
     let on_clear = EventHandler::new(move |_: ()| {
         raw_query.set(String::new());
-        search_query.set(String::new());
+        let cleared_query = String::new();
+        navigation.set_search_query(cleared_query);
         let current_gen: u32 = *debounce_gen.read();
         let next_gen = current_gen.wrapping_add(1);
         debounce_gen.set(next_gen);
@@ -100,7 +102,7 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
         raw_query,
         on_clear,
         first_result,
-        mut selected_unit_id,
+        navigation,
         mut selected_slot,
         mut active_category,
     } = inputs;
@@ -115,7 +117,7 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
             }
             "Enter" => {
                 if let Some(first_result) = first_result {
-                    selected_unit_id.set(Some(first_result.id()));
+                    navigation.select_unit(first_result.id());
                     selected_slot.set(None);
                     active_category.set(first_result.kind());
                 }
@@ -136,7 +138,6 @@ pub(super) fn use_unit_list() -> UnitListModel {
     let editor = use_editor_state();
     let active_race = navigation.active_race();
     let unit_mode = navigation.unit_mode();
-    let selected_unit_id = navigation.selected_unit_id();
     let search_query = navigation.search_query();
     let selected_slot = editor.selected_slot();
     let search_field = editor.search_field();
@@ -148,7 +149,7 @@ pub(super) fn use_unit_list() -> UnitListModel {
         SearchField::UnitName => "Search units…",
         SearchField::Ability => "Search by ability…",
     };
-    let search = use_debounced_search(search_query);
+    let search = use_debounced_search(navigation);
     let listing_memo = use_memo(move || {
         let listing_race = *active_race.read();
         let listing_mode = *unit_mode.read();
@@ -179,7 +180,7 @@ pub(super) fn use_unit_list() -> UnitListModel {
         raw_query,
         on_clear,
         first_result,
-        selected_unit_id,
+        navigation,
         selected_slot,
         active_category,
     };

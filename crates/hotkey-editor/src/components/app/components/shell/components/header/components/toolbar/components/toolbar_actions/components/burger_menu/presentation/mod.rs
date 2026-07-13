@@ -6,6 +6,7 @@ use crate::services::navigation::context::use_view_navigation;
 use crate::services::overlay_state::context::use_overlay_state;
 use crate::services::undo::context::use_undo_history;
 use dioxus::prelude::*;
+use std::ops::Index;
 
 /// A fully-resolved drawer row as plain data: the static content merged with the
 /// live signal state and the wired click handler. It carries no component props —
@@ -55,19 +56,21 @@ pub(super) struct BurgerActionHandlers {
     pub(super) open_help: EventHandler<MouseEvent>,
 }
 
-impl BurgerActionHandlers {
-    pub(super) fn onclick_for(&self, action: BurgerAction) -> EventHandler<MouseEvent> {
+impl Index<BurgerAction> for BurgerActionHandlers {
+    type Output = EventHandler<MouseEvent>;
+
+    fn index(&self, action: BurgerAction) -> &Self::Output {
         match action {
-            BurgerAction::Layout => self.toggle_layout,
-            BurgerAction::Undo => self.trigger_undo,
-            BurgerAction::Redo => self.trigger_redo,
-            BurgerAction::Upload => self.open_upload,
-            BurgerAction::Templates => self.toggle_templates,
-            BurgerAction::SystemHotkeys => self.toggle_system_hotkeys,
-            BurgerAction::Preview => self.toggle_preview,
-            BurgerAction::Resolve => self.open_resolve,
-            BurgerAction::Download => self.open_download,
-            BurgerAction::Help => self.open_help,
+            BurgerAction::Layout => &self.toggle_layout,
+            BurgerAction::Undo => &self.trigger_undo,
+            BurgerAction::Redo => &self.trigger_redo,
+            BurgerAction::Upload => &self.open_upload,
+            BurgerAction::Templates => &self.toggle_templates,
+            BurgerAction::SystemHotkeys => &self.toggle_system_hotkeys,
+            BurgerAction::Preview => &self.toggle_preview,
+            BurgerAction::Resolve => &self.open_resolve,
+            BurgerAction::Download => &self.open_download,
+            BurgerAction::Help => &self.open_help,
         }
     }
 }
@@ -106,7 +109,7 @@ impl MenuRowBuilder {
         let disabled = self.disabled(action);
         let aria_expanded = self.aria_expanded(action);
         let aria_pressed = self.aria_pressed(action);
-        let onclick = self.handlers.onclick_for(action);
+        let onclick = self.handlers[action];
         BurgerMenuRow {
             icon,
             label,

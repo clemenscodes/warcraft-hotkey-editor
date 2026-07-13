@@ -14,14 +14,14 @@ use warcraft_api::{UnitMode, WarcraftApi};
 /// resolved against the catalog here, at the URL boundary, so the rest of the app never
 /// carries a stringly unit id.
 #[derive(Clone, PartialEq, Eq, Debug)]
-pub struct DecodedEditorNav {
+pub struct DecodedEditorNavigation {
     race: Race,
     unit_mode: UnitMode,
     selected_unit_id: Option<WarcraftObjectId>,
     search_query: String,
 }
 
-impl DecodedEditorNav {
+impl DecodedEditorNavigation {
     pub fn race(&self) -> Race {
         self.race
     }

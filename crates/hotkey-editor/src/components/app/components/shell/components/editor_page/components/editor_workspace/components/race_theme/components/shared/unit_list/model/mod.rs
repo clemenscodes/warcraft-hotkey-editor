@@ -1,9 +1,9 @@
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
-use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
 use super::state::{FirstResult, UnitListState};
+use crate::services::navigation::view_navigation::ViewNavigationContext;
 
 /// The categories the mobile tab bar shows, in display order.
 pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
@@ -14,13 +14,13 @@ pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
 ];
 
 /// The values the search box's keydown handler captures: the immediate query it
-/// reads, the clear handler, the first result to select on Enter, and the selection
-/// signals it writes.
+/// reads, the clear handler, the first result to select on Enter, the navigation it
+/// routes that pick through, and the pure-UI signals (slot, category) it resets.
 pub(super) struct SearchKeydownInputs {
     pub(super) raw_query: Signal<String>,
     pub(super) on_clear: EventHandler<()>,
     pub(super) first_result: Option<FirstResult>,
-    pub(super) selected_unit_id: Signal<Option<WarcraftObjectId>>,
+    pub(super) navigation: ViewNavigationContext,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
     pub(super) active_category: Signal<UnitKind>,
 }

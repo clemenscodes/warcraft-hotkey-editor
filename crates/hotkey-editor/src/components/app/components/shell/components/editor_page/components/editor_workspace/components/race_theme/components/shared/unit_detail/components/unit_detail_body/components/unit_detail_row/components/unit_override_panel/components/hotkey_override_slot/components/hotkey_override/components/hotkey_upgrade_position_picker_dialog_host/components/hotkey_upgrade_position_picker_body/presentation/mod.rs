@@ -1,7 +1,7 @@
 use super::model::HotkeyUpgradePositionPickerBodyModel;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::GridEditorView;
 use crate::services::customkeys::context::use_loaded_keys;
-use crate::services::editor_state::context::use_editor_state;
+use crate::services::drag_state::context::use_drag_state;
 use crate::services::grid_layout::context::use_grid_layout;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -20,7 +20,7 @@ pub(super) fn use_hotkey_upgrade_position_picker_body(
 ) -> HotkeyUpgradePositionPickerBodyPresentation {
     let loaded_keys = use_loaded_keys();
     let grid_layout = use_grid_layout();
-    let editor = use_editor_state();
+    let drag_state = use_drag_state();
     let explainer_text = String::from(
         "Drag the upgraded-form button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact.",
     );
@@ -41,9 +41,9 @@ pub(super) fn use_hotkey_upgrade_position_picker_body(
         selected_from_research: picker_selected_research,
         selected_from_uprooted: picker_selected_uprooted,
         tier_overrides: picker_tier_overrides,
-        dragging_slot: editor.dragging_slot(),
-        drop_target_tile: editor.drop_target_tile(),
-        drag_follower: editor.drag_follower(),
+        dragging_slot: drag_state.dragging_slot(),
+        drop_target_tile: drag_state.drop_target_tile(),
+        drag_follower: drag_state.drag_follower(),
         grid_layout,
         update_hotkeys_on_move,
         hotkey_assign_request,

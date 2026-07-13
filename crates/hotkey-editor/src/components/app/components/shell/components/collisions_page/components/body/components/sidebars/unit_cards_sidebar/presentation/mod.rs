@@ -4,7 +4,10 @@ use crate::components::app::components::shell::components::collisions_page::pres
     HotkeyConflictView, UnitPositionConflictView,
 };
 use crate::services::collision_selection::CollisionSelection;
+use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
+use std::marker::PhantomData;
 
 /// Maps a collision conflict kind to the collision-selection field that names the
 /// selected unit for that kind, so the shared generic sidebar reads its own selection
@@ -26,14 +29,34 @@ impl SelectedCollisionUnit for UnitPositionConflictView {
     }
 }
 
-/// One card's data per clashing unit: its portrait, name, id, and clash count. The
-/// selected unit arrives already read from context by the component.
-pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
+/// The unit sidebar's render-ready cards: one card per clashing unit. Generic over the
+/// conflict shape so the hotkey and unit-position kinds share one builder. The body only
+/// places these; all shaping happens in the builder below.
+pub(super) struct UnitCardsSidebarPresentation<Conflict: Clone + PartialEq + 'static> {
+    pub(super) cards: Vec<CollisionCardData>,
+    conflict: PhantomData<Conflict>,
+}
+
+impl<Conflict: Clone + PartialEq + 'static> ddd::Presentation
+    for UnitCardsSidebarPresentation<Conflict>
+{
+    type Model = UnitCardsSidebarModel<Conflict>;
+}
+
+/// Reads the selected unit (the conflict kind names which field) and the navigation
+/// context, then shapes one card per clashing unit: its portrait, name, id, and clash
+/// count. The click routes through navigation, which replaces the collisions route's
+/// `?entry=` with the picked unit for the active kind.
+pub(super) fn use_unit_cards_sidebar_presentation<
+    Conflict: Clone + PartialEq + SelectedCollisionUnit + 'static,
+>(
     props: &UnitCardsSidebarModel<Conflict>,
-    mut selected_unit: Signal<Option<String>>,
-) -> Vec<CollisionCardData> {
+) -> UnitCardsSidebarPresentation<Conflict> {
+    let collision_selection = use_collision_selection();
+    let selected_unit = Conflict::selected_unit(collision_selection);
+    let view_navigation = use_view_navigation();
     let selected_key = selected_unit.read().clone();
-    props
+    let cards = props
         .units
         .iter()
         .map(|unit_view| {
@@ -45,7 +68,7 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
             let collision_count = unit_view.collision_count();
             let key_for_click = unit_view.key().to_owned();
             let onclick = EventHandler::new(move |_event: MouseEvent| {
-                selected_unit.set(Some(key_for_click.clone()))
+                view_navigation.select_collision_entry(key_for_click.clone())
             });
             let content = CollisionCardContent::Unit {
                 icon_url,
@@ -59,5 +82,7 @@ pub(super) fn cards<Conflict: Clone + PartialEq + 'static>(
                 content,
             }
         })
-        .collect()
+        .collect();
+    let conflict = PhantomData;
+    UnitCardsSidebarPresentation { cards, conflict }
 }

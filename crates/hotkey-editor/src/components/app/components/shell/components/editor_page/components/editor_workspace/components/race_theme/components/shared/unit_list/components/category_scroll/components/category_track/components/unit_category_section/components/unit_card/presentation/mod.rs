@@ -24,12 +24,12 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
     let unit_kind = props.unit_kind;
     let navigation = use_view_navigation();
     let editor = use_editor_state();
-    let mut selected_unit_id = navigation.selected_unit_id();
+    let selected_unit_id = navigation.selected_unit_id();
     let mut selected_slot = editor.selected_slot();
     let mut active_category = editor.active_category();
     let is_selected = *selected_unit_id.read() == Some(unit_id);
     let on_click = EventHandler::new(move |_event: MouseEvent| {
-        selected_unit_id.set(Some(unit_id));
+        navigation.select_unit(unit_id);
         selected_slot.set(None);
         active_category.set(unit_kind);
     });
@@ -37,7 +37,7 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
         let key_value = event.data().key().to_string();
         if key_value == " " || key_value == "Enter" {
             event.prevent_default();
-            selected_unit_id.set(Some(unit_id));
+            navigation.select_unit(unit_id);
             selected_slot.set(None);
             active_category.set(unit_kind);
         }

@@ -1,5 +1,5 @@
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog_host::components::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
-use crate::services::editor_state::{CursorPoint, HitTestPoint};
+use crate::services::drag_state::{CursorPoint, HitTestPoint};
 use dioxus::prelude::*;
 use std::cell::{Cell, RefCell};
 use warcraft_api::SystemHotkeysCategory;
