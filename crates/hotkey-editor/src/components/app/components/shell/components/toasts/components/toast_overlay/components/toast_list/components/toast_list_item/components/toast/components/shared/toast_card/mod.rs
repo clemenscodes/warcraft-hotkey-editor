@@ -5,7 +5,7 @@ mod view;
 pub use view::ToastCardView;
 mod style;
 
-use components::toast_close::ToastClose;
+use components::toast_close_host::ToastCloseHost;
 use components::toast_content::ToastContent;
 use components::toast_icon::ToastIcon;
 use dioxus::prelude::*;
@@ -33,7 +33,7 @@ pub fn ToastCard(props: ToastCardModel) -> Element {
                 title,
                 description,
             }
-            ToastClose {
+            ToastCloseHost {
                 id,
                 on_remove,
             }

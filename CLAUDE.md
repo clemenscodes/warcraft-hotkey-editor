@@ -70,9 +70,9 @@ canonical form — find it and mirror it exactly:
 - If the spec is genuinely silent, or a rule would have to break, **stop and
   surface it** with a recommendation. Do not decide unilaterally.
 
-## Only two commands exist — nothing else is allowed
+## Only three commands exist — nothing else is allowed
 
-There are exactly **two** commands you may ever run for this project. Do not
+There are exactly **three** commands you may ever run for this project. Do not
 invent, guess, or "try" any other target, and do not fall back to bare
 `cargo`/`dx`/`playwright`/`moon <anything-else>`:
 
@@ -82,6 +82,14 @@ invent, guess, or "try" any other target, and do not fall back to bare
   :ci`. Full stop. Never `moon run <crate>:rust/test`, never `moon run
   e2e:playwright/test`, never `cargo test`, never `cargo clippy`, never
   `cargo check` — those are not the gate and are forbidden.
+- **Compile check:** `moon run :check` — a fast "does it compile" check
+  (`cargo check` against the wasm target, nothing else). Use it to iterate
+  quickly while writing code; it runs no fmt, clippy, tests, wasm build, or
+  e2e. It is **NOT** the gate and it does **NOT** verify the work — passing
+  `:check` says only that the code type-checks, never that it is green. When
+  the work is done you still run `moon run :ci`. This is the one and only
+  allowed compile-check shape: never bare `cargo check`, never a narrower
+  `moon` target.
 - **Dev server:** `moon run :dev` — the one and only way to run the app.
   Never `dx serve`, never `moon run hotkey-editor:dx/serve`, never anything
   else.

@@ -7,7 +7,7 @@ pub use view::IslandConflictUnitView;
 mod style;
 
 use crate::components::app::components::shell::components::collisions_page::components::body::components::shared::conflict_object_id::ConflictObjectId;
-use components::conflict_unit_icon::ConflictUnitIcon;
+use components::conflict_unit_icon_host::ConflictUnitIconHost;
 use components::island_conflict_unit_name::IslandConflictUnitName;
 use dioxus::prelude::*;
 use presentation::use_island_conflict_unit;
@@ -23,7 +23,7 @@ pub fn IslandConflictUnit(props: IslandConflictUnitModel) -> Element {
             class: CLASS,
             r#type: "button",
             onclick: model.onclick,
-            ConflictUnitIcon {
+            ConflictUnitIconHost {
                 src: model.icon_src,
                 alt: model.icon_alt,
             }

@@ -5,7 +5,7 @@ mod view;
 pub use view::DialogHeaderView;
 mod style;
 
-use components::dialog_close::DialogClose;
+use components::dialog_close_host::DialogCloseHost;
 use components::dialog_header_decoration_leading::DialogHeaderDecorationLeading;
 use components::dialog_header_decoration_trailing::DialogHeaderDecorationTrailing;
 use components::dialog_title::DialogTitle;
@@ -27,7 +27,7 @@ pub fn DialogHeader(props: DialogHeaderModel) -> Element {
                 title,
             }
             DialogHeaderDecorationTrailing {}
-            DialogClose {
+            DialogCloseHost {
                 onclick,
             }
         }

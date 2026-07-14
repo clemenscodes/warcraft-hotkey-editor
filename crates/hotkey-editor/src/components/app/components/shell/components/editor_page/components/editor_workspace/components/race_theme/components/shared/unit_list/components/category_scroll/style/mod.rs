@@ -23,9 +23,7 @@ classes! {
         "mobile:overscroll-x-contain",
         "mobile:snap-x",
         "mobile:snap-mandatory",
-        "mobile:scrollbar-none",
         "mobile:scroll-ps-[0.4rem]",
-        "mobile:[&::-webkit-scrollbar]:hidden",
     ],
     tablet: tw![
         "tablet:overflow-x-auto",
@@ -40,8 +38,6 @@ classes! {
         "tablet:overscroll-x-contain",
         "tablet:snap-x",
         "tablet:snap-mandatory",
-        "tablet:scrollbar-none",
         "tablet:scroll-ps-[0.4rem]",
-        "tablet:[&::-webkit-scrollbar]:hidden",
     ],
 }

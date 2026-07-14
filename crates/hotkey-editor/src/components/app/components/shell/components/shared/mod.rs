@@ -2,6 +2,7 @@ pub mod breadcrumbs;
 pub mod carriers_dialog;
 pub mod clear_icon;
 pub mod clear_label;
+pub mod drag_scroll;
 pub mod editable_keycap;
 pub mod empty_message;
 pub mod framed_icon;

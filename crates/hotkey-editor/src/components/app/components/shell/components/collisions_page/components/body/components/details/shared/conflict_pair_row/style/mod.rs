@@ -6,7 +6,7 @@ classes! {
         "grid-cols-[1fr_auto_1fr]",
         "items-start",
         "justify-items-center",
-        "gap-3",
+        "gap-[2.88cqi]",
         "w-full",
     ],
 }

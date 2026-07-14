@@ -6,7 +6,7 @@ classes! {
         "flex-wrap",
         "items-start",
         "justify-center",
-        "gap-3",
+        "gap-[2.88cqi]",
         "w-full",
     ],
 }

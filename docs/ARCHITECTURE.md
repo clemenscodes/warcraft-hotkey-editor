@@ -283,6 +283,7 @@ working in the browser.
 moon run :dev                           # tailwind/build → dx serve (localhost:8123)
 moon run :bundle                        # tailwind/build → dx build --release
 moon run hotkey-editor:playwright/test  # tailwind/build → e2e (starts own server)
+moon run :check                         # fast cargo check (wasm) — compile only, NOT the gate
 moon run :ci                            # fmt + clippy + tests + wasm build + e2e
 
 # Docker

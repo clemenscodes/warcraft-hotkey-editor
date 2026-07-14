@@ -5,7 +5,7 @@ classes! {
         "flex",
         "flex-col",
         "items-center",
-        "gap-2",
+        "gap-[1.92cqi]",
         "flex-none",
         "min-w-28",
     ],

@@ -28,6 +28,16 @@ tasks:
       - "@group(sources)"
       - "@group(configs)"
 
+  rust/check:
+    toolchain: rust
+    command: cargo check --all-targets --target wasm32-unknown-unknown
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
   tailwind/build:
     toolchain: system
     command: tailwindcss -i tailwind.css -o assets/tailwind.css --minify

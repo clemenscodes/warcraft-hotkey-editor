@@ -58,6 +58,15 @@ tasks:
       - "@group(sources)"
       - "@group(configs)"
 
+  rust/check:
+    toolchain: rust
+    command: cargo check --all-targets
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
   rust/test:
     toolchain: rust
     command: cargo test
@@ -68,6 +77,15 @@ tasks:
     inputs:
       - "@group(sources)"
       - "@group(configs)"
+
+  # Fast "does it compile" gate for agents — `cargo check` only, no fmt,
+  # lint, test, or wasm build. NOT a substitute for `moon run :ci`.
+  check:
+    options:
+      outputStyle: stream
+    deps:
+      - ^:check
+      - rust/check
 
   ci:
     options:

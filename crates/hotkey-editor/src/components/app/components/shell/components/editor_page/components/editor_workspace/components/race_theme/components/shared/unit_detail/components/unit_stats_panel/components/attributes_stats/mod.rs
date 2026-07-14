@@ -6,7 +6,7 @@ mod view;
 pub use view::AttributesStatsView;
 mod style;
 
-use super::shared::stat_icon_frame::StatIconFrame;
+use super::shared::stat_icon_frame_host::StatIconFrameHost;
 use components::attribute_rows::AttributeRows;
 use dioxus::prelude::*;
 use model::AttributesStatsModel;
@@ -32,7 +32,7 @@ pub fn AttributesStats(props: AttributesStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame {
+            StatIconFrameHost {
                 src: icon_src,
                 alt: icon_alt,
             }

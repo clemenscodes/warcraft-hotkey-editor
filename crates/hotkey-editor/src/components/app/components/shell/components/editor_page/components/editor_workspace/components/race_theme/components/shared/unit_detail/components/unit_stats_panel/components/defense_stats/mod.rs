@@ -6,7 +6,7 @@ mod view;
 pub use view::DefenseStatsView;
 mod style;
 
-use super::shared::stat_icon_frame::StatIconFrame;
+use super::shared::stat_icon_frame_host::StatIconFrameHost;
 use components::defense_rows::DefenseRows;
 use dioxus::prelude::*;
 use model::DefenseStatsModel;
@@ -27,7 +27,7 @@ pub fn DefenseStats(props: DefenseStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame {
+            StatIconFrameHost {
                 src: icon_src,
                 alt: icon_alt,
             }

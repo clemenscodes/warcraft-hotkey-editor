@@ -6,7 +6,7 @@ pub use view::UnitDetailHeaderView;
 mod style;
 
 use components::unit_detail_title::UnitDetailTitle;
-use components::unit_portrait::UnitPortrait;
+use components::unit_portrait_host::UnitPortraitHost;
 use dioxus::prelude::*;
 use model::UnitDetailHeaderModel;
 use style::CLASS;
@@ -21,7 +21,7 @@ pub fn UnitDetailHeader(props: UnitDetailHeaderModel) -> Element {
     rsx! {
         header {
             class: CLASS,
-            UnitPortrait {
+            UnitPortraitHost {
                 src: portrait_source,
                 alt: unit_name,
             }

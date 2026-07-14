@@ -34,7 +34,7 @@ classes! {
         "[@media(hover:none)]:[&_a:hover]:text-shadow-none",
         "[@media(hover:none)]:[&_a:hover]:transform-none",
         "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
-        "[&_*]:scrollbar-thin",
+        "**:scrollbar-thin",
         "[&_*::-webkit-scrollbar-track]:rounded-control",
         "[&_*::-webkit-scrollbar-track]:[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_45%,transparent)]",
         "[&_*::-webkit-scrollbar-thumb]:rounded-control",
@@ -57,6 +57,8 @@ classes! {
         "mobile:**:[[role=button]]:[-webkit-tap-highlight-color:transparent]",
         "mobile:**:[[role=button]]:touch-manipulation",
         "mobile:[&_input]:touch-manipulation",
+        "mobile:**:scrollbar-none",
+        "mobile:[&_*::-webkit-scrollbar]:hidden",
     ],
     tablet: tw![
         "tablet:h-auto",
@@ -73,5 +75,7 @@ classes! {
         "tablet:**:[[role=button]]:[-webkit-tap-highlight-color:transparent]",
         "tablet:**:[[role=button]]:touch-manipulation",
         "tablet:[&_input]:touch-manipulation",
+        "tablet:**:scrollbar-none",
+        "tablet:[&_*::-webkit-scrollbar]:hidden",
     ],
 }

@@ -6,7 +6,7 @@ mod view;
 pub use view::CombatStatsView;
 mod style;
 
-use super::shared::stat_icon_frame::StatIconFrame;
+use super::shared::stat_icon_frame_host::StatIconFrameHost;
 use components::combat_rows::CombatRows;
 use dioxus::prelude::*;
 use model::CombatStatsModel;
@@ -31,7 +31,7 @@ pub fn CombatStats(props: CombatStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame {
+            StatIconFrameHost {
                 src: icon_src,
                 alt: icon_alt,
             }
