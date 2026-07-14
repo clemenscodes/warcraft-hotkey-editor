@@ -161,10 +161,9 @@ impl LayoutPickerBoard {
                         } else if let Some(other_position) =
                             layout.position_for_letter(upper_letter)
                         {
-                            let display_row = u8::from(other_position.row()) + 1;
-                            let display_column = u8::from(other_position.column()) + 1;
-                            let display_name =
-                                format!("row {display_row}, column {display_column}",);
+                            let row = u8::from(other_position.row());
+                            let column = u8::from(other_position.column());
+                            let display_name = format!("Column {column} Row {row}");
                             KeyPickerCellState::Conflict { display_name }
                         } else {
                             KeyPickerCellState::Available

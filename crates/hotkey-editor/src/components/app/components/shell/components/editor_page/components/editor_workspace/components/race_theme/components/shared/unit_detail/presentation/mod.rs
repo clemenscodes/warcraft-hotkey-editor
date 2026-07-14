@@ -126,7 +126,7 @@ impl From<InspectorPanelInputs<'_>> for InspectorPanel {
     }
 }
 
-/// Which of the unit's containers the override panel edits against, selected from the
+/// Which of the unit's containers the hotkey-override section edits against, selected from the
 /// research / uprooted flags and, in the default case, whether the inspected slot is
 /// a build-menu entry rather than a command-card one.
 #[derive(Clone, Debug, PartialEq, Eq)]

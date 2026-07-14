@@ -6,17 +6,17 @@ mod view;
 pub use view::UnitDetailRowView;
 mod style;
 
+use components::hotkey_override_section::HotkeyOverrideSection;
 use components::unit_command_grids::UnitCommandGrids;
-use components::unit_override_panel::UnitOverridePanel;
 use dioxus::prelude::*;
 use model::UnitDetailRowModel;
 use presentation::UnitDetailRowPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The command grids beside the override panel (headed by "Hotkey override"). It owns
-/// the override panel column directly, splitting its threaded domain data between the
-/// grids and the override panel.
+/// The command grids above the hotkey-override section (headed by "Hotkey override"). It
+/// owns that section directly, splitting its threaded domain data between the grids and
+/// the hotkey-override section.
 #[component]
 pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
     let UnitDetailRowPresentation {
@@ -37,7 +37,7 @@ pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
                 uprooted_menu_slots,
                 research_menu_slots,
             }
-            UnitOverridePanel { override_target }
+            HotkeyOverrideSection { override_target }
         }
     }
 }

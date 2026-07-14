@@ -5,7 +5,7 @@ use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
 /// The grids-and-override row's presentation: the per-menu grid slots that feed the
-/// command grids, beside the override target that feeds the override panel. Built purely
+/// command grids, beside the override target that feeds the hotkey-override section. Built purely
 /// from the model — a shaping leaf, no effects.
 pub struct UnitDetailRowPresentation {
     pub(super) unit_id: WarcraftObjectId,

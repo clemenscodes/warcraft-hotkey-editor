@@ -15,8 +15,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn Header() -> Element {
     rsx! {
-        header {
-            class: CLASS,
+        header { class: CLASS,
             BrandHost {}
             GridLayoutEditorButtonHost {}
             Toolbar {}

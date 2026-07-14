@@ -98,7 +98,7 @@ pub(super) fn move_handler<B: GridBehavior>(
         if let Some(blocker_name) = blocker_name {
             let message = format!("Slot reserved for {blocker_name}'s off-state");
             let options =
-                ToastOptions::new().description("Reassign it via the override panel first.");
+                ToastOptions::new().description("Reassign it via the hotkey override first.");
             toast.warning(message, options);
             selected_slot.set(Some(moving_slot));
             return;
