@@ -2,6 +2,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "grid",
         "grid-cols-[repeat(10,11rem)]",
         "gap-3",

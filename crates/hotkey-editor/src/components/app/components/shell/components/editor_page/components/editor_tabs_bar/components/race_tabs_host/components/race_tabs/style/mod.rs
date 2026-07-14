@@ -2,6 +2,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "flex",
         "gap-4",
         "flex-nowrap",

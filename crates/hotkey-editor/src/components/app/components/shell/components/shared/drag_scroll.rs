@@ -40,6 +40,7 @@ struct DragScrollState {
     momentum_last_time: f64,
     momentum_frame: Option<i32>,
     momentum_loop: Option<MomentumFrameLoop>,
+    snap_suspended: bool,
 }
 
 impl DragScrollState {
@@ -104,7 +105,7 @@ impl DragScrollState {
         true
     }
 
-    fn cancel_momentum(&mut self) {
+    fn stop_momentum(&mut self) {
         if let Some(handle) = self.momentum_frame.take()
             && let Some(window) = web_sys::window()
         {
@@ -113,6 +114,21 @@ impl DragScrollState {
         if let Some(holder) = self.momentum_loop.take() {
             let _ = holder.borrow_mut().take();
         }
+    }
+
+    fn suspend_snap(&mut self) {
+        if self.snap_suspended {
+            return;
+        }
+        let Some(viewport) = self.viewport.as_ref() else {
+            return;
+        };
+        let Some(html_element) = viewport.dyn_ref::<web_sys::HtmlElement>() else {
+            return;
+        };
+        self.snap_suspended = true;
+        let style = html_element.style();
+        let _ = style.set_property("scroll-snap-type", "none");
     }
 }
 
@@ -147,7 +163,7 @@ pub(crate) fn use_drag_scroll() -> DragScrollBindings {
     let drop_state = state.clone();
     use_drop(move || {
         let mut borrowed = drop_state.borrow_mut();
-        borrowed.cancel_momentum();
+        borrowed.stop_momentum();
         let viewport = borrowed.viewport.clone();
         let listener = borrowed.click_listener.take();
         if let Some(viewport) = viewport
@@ -204,7 +220,7 @@ pub(crate) fn use_drag_scroll() -> DragScrollBindings {
             return;
         }
         let mut borrowed = down_state.borrow_mut();
-        borrowed.cancel_momentum();
+        borrowed.stop_momentum();
         let Some(viewport) = borrowed.viewport.clone() else {
             return;
         };
@@ -262,6 +278,7 @@ pub(crate) fn use_drag_scroll() -> DragScrollBindings {
             let start_scroll_left = pending.start_scroll_left;
             let start_scroll_top = pending.start_scroll_top;
             borrowed.begin_velocity_tracking(event_timestamp, start_scroll_left, start_scroll_top);
+            borrowed.suspend_snap();
         }
         let target_scroll_left = pending.start_scroll_left - horizontal_delta;
         let target_scroll_top = pending.start_scroll_top - vertical_delta;
@@ -304,7 +321,7 @@ pub(crate) fn use_drag_scroll() -> DragScrollBindings {
         let frame_closure = Closure::<dyn FnMut(f64)>::new(move |timestamp: f64| {
             let should_continue = closure_state.borrow_mut().step_momentum(timestamp);
             if !should_continue {
-                closure_state.borrow_mut().cancel_momentum();
+                closure_state.borrow_mut().stop_momentum();
                 return;
             }
             request_momentum_frame(&closure_state, &closure_loop);
@@ -320,6 +337,7 @@ pub(crate) fn use_drag_scroll() -> DragScrollBindings {
         borrowed.pending = None;
         borrowed.dragging = false;
         borrowed.suppress_next_click = false;
+        borrowed.stop_momentum();
     });
 
     let lost_state = state.clone();

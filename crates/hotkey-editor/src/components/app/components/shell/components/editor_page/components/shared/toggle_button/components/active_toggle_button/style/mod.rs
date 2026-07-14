@@ -2,7 +2,9 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "flex-1",
+        "min-w-0",
         "px-6",
         "border",
         "rounded-panel",

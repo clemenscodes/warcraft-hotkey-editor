@@ -2,6 +2,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "min-h-36",
         "text-xl",
         "leading-body",

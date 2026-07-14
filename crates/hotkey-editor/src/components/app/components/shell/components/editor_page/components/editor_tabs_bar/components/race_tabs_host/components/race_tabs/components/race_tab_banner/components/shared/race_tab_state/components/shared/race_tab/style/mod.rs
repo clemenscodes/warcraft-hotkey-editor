@@ -2,9 +2,11 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "group",
         "relative",
         "size-full",
+        "min-w-0",
         "p-0",
         "border",
         "border-warcraft-blue-deep",

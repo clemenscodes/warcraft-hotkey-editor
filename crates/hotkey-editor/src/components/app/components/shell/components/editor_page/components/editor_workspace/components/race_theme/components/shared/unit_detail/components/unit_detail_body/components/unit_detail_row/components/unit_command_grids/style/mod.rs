@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "grid",
         "grid-cols-2",
         "gap-x-7",

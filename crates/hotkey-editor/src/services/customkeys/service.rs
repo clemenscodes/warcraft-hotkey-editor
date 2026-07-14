@@ -186,10 +186,9 @@ impl Service<CustomKeys> for CustomKeysService {
     fn commit<Outcome>(&self, change: impl FnOnce(&mut CustomKeys) -> Outcome) -> Outcome {
         let mut aggregate = self.snapshot();
         let outcome = change(&mut aggregate);
-        let normalized = aggregate.normalize();
         let repository = self.repository();
-        repository.save(&normalized);
-        self.replace(normalized);
+        repository.save(&aggregate);
+        self.replace(aggregate);
         outcome
     }
 }

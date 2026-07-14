@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "flex",
         "flex-col",
         "items-stretch",

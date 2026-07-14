@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "grid",
         "grid-cols-[6.5rem_1fr]",
         "items-start",

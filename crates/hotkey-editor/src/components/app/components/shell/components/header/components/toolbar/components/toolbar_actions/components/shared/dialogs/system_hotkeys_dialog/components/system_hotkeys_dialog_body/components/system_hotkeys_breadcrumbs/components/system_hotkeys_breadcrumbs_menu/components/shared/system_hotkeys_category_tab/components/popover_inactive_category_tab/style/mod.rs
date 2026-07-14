@@ -2,6 +2,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "uppercase",
         "leading-none",
         "border-0",

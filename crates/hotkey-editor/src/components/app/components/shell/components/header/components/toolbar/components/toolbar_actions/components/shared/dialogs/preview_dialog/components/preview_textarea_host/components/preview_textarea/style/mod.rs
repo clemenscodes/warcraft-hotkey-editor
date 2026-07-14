@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "w-full",
         "flex-1",
         "min-h-80",

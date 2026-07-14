@@ -32,9 +32,6 @@ classes! {
         "mobile:gap-2.5",
         "mobile:box-border",
         "mobile:overflow-hidden",
-        "mobile:bg-panel-dark",
-        "mobile:border-warcraft-blue/60",
-        "mobile:[--name-color:var(--color-white)]",
     ],
     tablet: tw![
         "tablet:h-full",
@@ -43,8 +40,5 @@ classes! {
         "tablet:gap-2.5",
         "tablet:box-border",
         "tablet:overflow-hidden",
-        "tablet:bg-panel-dark",
-        "tablet:border-warcraft-blue/60",
-        "tablet:[--name-color:var(--color-white)]",
     ],
 }

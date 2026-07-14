@@ -6,7 +6,7 @@ pub use view::UpgradeSectionHeaderView;
 mod style;
 
 use components::upgrade_section_header_label_column::UpgradeSectionHeaderLabelColumn;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::alt_state_position_button::AltStatePositionButton;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::alt_state_position_button_host::AltStatePositionButtonHost;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::override_key::OverrideKey;
 use dioxus::prelude::*;
 use model::UpgradeSectionHeaderModel;
@@ -32,7 +32,7 @@ pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderModel) -> Element {
             UpgradeSectionHeaderLabelColumn {
                 text: label_text,
             }
-            AltStatePositionButton {
+            AltStatePositionButtonHost {
                 title: position_title,
                 aria_label: "Edit upgraded-form button position",
                 on_click: on_position_click,

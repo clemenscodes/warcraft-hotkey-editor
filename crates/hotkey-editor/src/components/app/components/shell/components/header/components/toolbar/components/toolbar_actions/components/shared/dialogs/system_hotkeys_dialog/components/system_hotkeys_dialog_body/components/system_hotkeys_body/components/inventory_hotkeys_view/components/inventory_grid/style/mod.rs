@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "grid",
         "grid-cols-[repeat(2,28rem)]",
         "auto-rows-[20rem]",

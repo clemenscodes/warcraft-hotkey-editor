@@ -1,7 +1,6 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "@container",
         "size-full",
         "flex",
         "items-center",

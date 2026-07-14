@@ -1,10 +1,12 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "flex",
         "flex-col",
         "gap-2",
         "self-stretch",
+        "min-w-0",
         "flex-[0_0_34rem]",
         "w-136",
     ],

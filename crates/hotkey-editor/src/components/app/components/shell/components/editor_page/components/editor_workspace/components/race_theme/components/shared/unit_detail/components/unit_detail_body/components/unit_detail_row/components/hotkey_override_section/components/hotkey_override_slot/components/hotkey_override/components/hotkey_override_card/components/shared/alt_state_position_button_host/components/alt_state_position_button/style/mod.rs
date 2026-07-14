@@ -2,18 +2,14 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "@container",
         "appearance-none",
-        "h-full",
-        "w-auto",
-        "aspect-square",
-        "shrink-0",
-        "p-[5cqi]",
-        "inline-flex",
+        "size-full",
+        "p-1",
+        "flex",
         "items-center",
         "justify-center",
         "bg-race-human/8",
-        "border-[2.5cqi]",
+        "border-2",
         "border-race-human",
         "text-warcraft-text-secondary",
         "rounded-control",

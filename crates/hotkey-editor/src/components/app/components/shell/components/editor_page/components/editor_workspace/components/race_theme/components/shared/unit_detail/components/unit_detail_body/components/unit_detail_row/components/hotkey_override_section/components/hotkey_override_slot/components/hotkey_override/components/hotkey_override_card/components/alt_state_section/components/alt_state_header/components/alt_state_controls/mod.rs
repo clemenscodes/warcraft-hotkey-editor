@@ -6,7 +6,7 @@ pub use view::AltStateControlsView;
 use dioxus::prelude::*;
 use tw_macro::assert_component;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::alt_state_position_button::AltStatePositionButton;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::alt_state_position_button_host::AltStatePositionButtonHost;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::override_key::OverrideKey;
 
@@ -29,7 +29,7 @@ pub fn AltStateControls(props: AltStateControlsModel) -> Element {
         String::from("Pick where the off-state button appears on the command card");
     let hotkey_title = String::from("Hotkey for the off state (writes Unhotkey)");
     rsx! {
-        AltStatePositionButton {
+        AltStatePositionButtonHost {
             title: position_title,
             aria_label: "Edit off-state button position",
             on_click: on_position_click,

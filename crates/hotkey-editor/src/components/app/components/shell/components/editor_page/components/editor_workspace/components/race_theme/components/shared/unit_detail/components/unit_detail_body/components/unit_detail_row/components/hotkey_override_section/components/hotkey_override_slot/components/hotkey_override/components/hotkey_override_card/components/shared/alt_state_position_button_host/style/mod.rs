@@ -1,17 +1,17 @@
 use tw_macro::tw;
+
 classes! {
     base: tw![
-        "@container",
+        "size-20",
+        "shrink-0",
         "flex",
-        "flex-col",
         "items-center",
-        "gap-8",
-        "w-full",
+        "justify-center",
     ],
     mobile: tw![
-        "mobile:gap-3.5",
+        "mobile:size-[4.6rem]",
     ],
     tablet: tw![
-        "tablet:gap-3.5",
+        "tablet:size-[4.6rem]",
     ],
 }

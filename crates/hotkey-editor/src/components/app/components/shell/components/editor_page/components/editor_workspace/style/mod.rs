@@ -2,6 +2,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "relative",
         "grid",
         "grid-cols-[minmax(0,1fr)]",
