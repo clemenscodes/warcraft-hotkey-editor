@@ -22,8 +22,8 @@ pub fn GridLayoutEditorButtonHost() -> Element {
         div {
             class: CLASS,
             GridLayoutEditorButton { is_open, onclick }
+            GridLayoutEditorDialog {}
         }
-        GridLayoutEditorDialog {}
     }
 }
 
