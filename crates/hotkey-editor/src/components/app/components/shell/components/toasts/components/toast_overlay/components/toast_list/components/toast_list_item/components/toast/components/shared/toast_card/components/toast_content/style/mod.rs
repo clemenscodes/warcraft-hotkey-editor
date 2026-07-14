@@ -5,7 +5,7 @@ classes! {
         "flex-1",
         "flex",
         "flex-col",
-        "gap-2",
+        "gap-[0.5em]",
         "min-w-0",
     ],
 }
