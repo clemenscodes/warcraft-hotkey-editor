@@ -1,6 +1,6 @@
 use tw_macro::tw;
-// The scroll region around the section track: vertical on the sidebar (gold scrollbar
-// revealed by the list group's hover), horizontal snap carousel on small screens.
+// The scroll region around the section track: vertical on the sidebar (the shell's
+// global gold scrollbar applies), horizontal snap carousel on small screens.
 
 classes! {
     base: tw![
@@ -11,17 +11,6 @@ classes! {
         "overflow-y-auto",
         "overflow-x-hidden",
         "pr-1",
-        "scrollbar-thin",
-        "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_0%,transparent)_transparent]",
-        "transition-[scrollbar-color]",
-        "duration-slow",
-        "group-hover:[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
-        "[&::-webkit-scrollbar]:w-1.5",
-        "[&::-webkit-scrollbar-track]:bg-transparent",
-        "[&::-webkit-scrollbar-thumb]:bg-transparent",
-        "[&::-webkit-scrollbar-thumb]:rounded-hairline",
-        "group-hover:[&::-webkit-scrollbar-thumb]:bg-warcraft-gold/45",
-        "[&::-webkit-scrollbar-thumb:hover]:bg-warcraft-gold",
     ],
     mobile: tw![
         "mobile:overflow-x-auto",

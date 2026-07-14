@@ -21,13 +21,6 @@ classes! {
         "overflow-y-auto",
         "overflow-x-clip",
         "overscroll-contain",
-        "scrollbar-thin",
-        "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)_transparent]",
-        "[&::-webkit-scrollbar]:w-1.25",
-        "[&::-webkit-scrollbar-track]:bg-transparent",
-        "[&::-webkit-scrollbar-thumb]:bg-warcraft-gold/35",
-        "[&::-webkit-scrollbar-thumb]:rounded-hairline",
-        "[&::-webkit-scrollbar-thumb:hover]:bg-warcraft-gold/55",
     ],
     mobile: tw![
         "mobile:col-auto",

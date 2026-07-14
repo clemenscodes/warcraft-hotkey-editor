@@ -11,8 +11,6 @@ classes! {
         "pr-3",
         "pb-3",
         "pl-0",
-        "scrollbar-thin",
-        "[scrollbar-color:color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)_transparent]",
     ],
     mobile: tw![
         "mobile:flex-none",
