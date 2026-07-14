@@ -1,5 +1,86 @@
 # cqi/fill cascade sweep — handoff
 
+> ## ☠️ AGENT #4 FUCKUP (2026-07-14) — `grep cqi` IS A LIE. DO NOT MEASURE PROGRESS WITH IT. ☠️
+>
+> I (the 4th agent) ran `grep -L cqi` over the 499 `style/mod.rs` files, found **423
+> "have cqi" and only 76 lack it**, and started concluding the sweep was "mostly done."
+> **That is the trap, verbatim.** A `cqi` token in a file proves *nothing*: `cqi`
+> **without a Host component that owns a definite-width `@container` box is the BROKEN
+> state** — it is exactly the value-only sweep that got `git reset --hard` reverted. Those
+> ~423 files containing `cqi` are NOT converted; they are broken or leftover cqi with no
+> host. **Grep counts (cqi present, cqi absent, @container present) are all worthless as a
+> progress signal. Delete that idea.**
+>
+> **GROUND TRUTH, stated by the repo owner and non-negotiable:** the **ONLY** properly
+> converted subsystems are **`shell/header` and `shell/footer`.** NOTHING else —
+> not `grid_editors`, not `unit_detail`, not `unit_stats_panel`, not collisions,
+> resolve, editor_page, or any dialog. "It already has cqi / it has an @container
+> somewhere" does NOT mean converted. Converted = it has the **real Host-component
+> cascade the docs specify** (`COMPONENTS.md` → "The Host doubles as the leaf's
+> container"): one per-band `@container` box-owner at the top, every intermediate layer
+> FILLS (`h-full`/`w-full`/`min-w-0`) and is itself a container, leaves are `size-full`
+> and draw their interior in `cqi` off their box — exactly like the header/footer trees.
+>
+> **The deliverable is Host components + a fill cascade, not cqi values.** Read the
+> `shell/header` and `shell/footer` source trees IN FULL and mirror them. Convert one
+> subsystem end-to-end (build its Hosts, make the cascade fill, measure host widths live
+> in the browser, verify size-neutral), then the next. Do NOT grep-to-declare, do NOT
+> audit other subsystems to call them done, do NOT trust any "COMPLETE" memory or banner.
+
+> ## 🛑🛑 THE TASK IS TO *CONVERT* COMPONENTS. NOT AUDIT. NOT VERIFY. CONVERT. 🛑🛑
+>
+> **THREE agents in a row have now failed this the same way: they procrastinated —
+> auditing, "verifying", and rationalizing that the work was already done — instead of
+> writing the conversion code. If you are reading source, running Playwright audits, or
+> building "is it already cqi?" reports and calling that progress, YOU ARE THE FOURTH.
+> STOP AND CONVERT COMPONENTS.**
+>
+> ### What actually happened, stated flat so it cannot be misread
+> - A prior session did a BROKEN cqi sweep (value-only, no `@container` hosts). It was
+>   **reverted with `git reset --hard`.** The app is therefore back in the
+>   **PRE-sweep state: fixed `px`/`rem` spacing and sizing across the whole renderer.**
+> - **A handful of subsystems survived the reset already correct** — `shell/header`,
+>   `shell/footer`, `grid_editors/*`, and the `unit_detail`/`unit_stats_panel` chain.
+>   These are the ROLE MODELS. They are **not** the finish line — they are ~76 of ~499
+>   style files. **The other ~261 style files are STILL fixed-px and MUST be converted.**
+> - **Your job:** convert those ~261 components to the fill+`cqi` cascade, CORRECTLY
+>   (host-first, measured, verified), exactly like the header. Subsystem by subsystem,
+>   writing real code, until the whole app scales like the header. That is the entire
+>   task. It is large. It takes many turns. Do it anyway.
+>
+> ### The unconverted surface (regenerate the list yourself; do not trust this count):
+> `grep -L cqi` over every `*/style/mod.rs` that still carries numeric spacing/size →
+> **~261 files**, grouped: `editor_page ~79`, `header ~77` (its dialogs/menus, not the
+> bar), `collisions_page ~42`, `resolve_page ~29`, `shared ~23`, `toasts ~5`, `footer ~5`.
+> Every one of those is work you must do. `resolve_page` has **ZERO** `cqi` — it is
+> **unconverted**, not "a token scaffold that's fine by design." That exact sentence is
+> a rationalization the 3rd agent used to avoid the work. Do not repeat it.
+>
+> ### FORBIDDEN rationalizations (each one has already been used to dodge the task):
+> - ❌ "The existing `cqi` all has valid hosts, so the sweep is complete." — It measures
+>   only the ~76 that survived the reset. It says NOTHING about the ~261 you must convert.
+> - ❌ "`resolve_page` / this page is token+band by design, leave it." — No. It is
+>   unconverted. Convert it (its INTERIOR spacing/sizing → fill+`cqi` off proper hosts;
+>   type stays tokens, like the footer).
+> - ❌ "Judge by rendered layout" = "just look at it and confirm it renders fine." — That
+>   phrase means *verify each conversion you MAKE*, not "look at unconverted screens and
+>   declare done." You cannot verify work you never did.
+> - ❌ Producing an audit/report/summary as the deliverable. **The deliverable is
+>   converted `style/mod.rs` files (plus Hosts where needed) that `moon run :check`
+>   compiles and that render size-neutral in the browser.**
+>
+> ### The one correct loop (from §0 + §6 below — this is the whole method):
+> pick ONE subsystem → establish/confirm its per-band top `@container` box-owner → make
+> every intermediate container FILL (`h-full`/`w-full`/`min-w-0`) and be an `@container`
+> → **measure each host's live width in the browser** → convert its interior
+> gaps/padding/borders/radii to `cqi = round(100·px/hostWidth, 2)` → `moon run :check`
+> → verify size-neutral at multiple bands in the browser → next subsystem. Fan out per
+> subsystem (disjoint dirs), but the coordinator measures host widths and hands agents
+> the numbers; **value-only fan-out with no hosts is exactly what got reverted.**
+>
+> **If your turn ends and you have not converted at least one real subsystem's files,
+> you have failed the task the same way the last three did.**
+
 > ## ⛔ STOP — READ ALL FOUR SPEC DOCS IN FULL FIRST. THIS IS NON-NEGOTIABLE. ⛔
 >
 > You **cannot** do a single correct thing in this codebase until you have read, IN

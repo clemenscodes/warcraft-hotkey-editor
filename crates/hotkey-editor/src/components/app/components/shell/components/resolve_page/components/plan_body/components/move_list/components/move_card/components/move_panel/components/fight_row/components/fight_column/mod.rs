@@ -6,7 +6,7 @@ mod view;
 pub use view::FightColumnView;
 mod style;
 
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon::AbilityIcon;
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon_host::AbilityIconHost;
 use components::fight_name_button::FightNameButton;
 use dioxus::prelude::*;
 use presentation::{FightColumnPresentation, use_fight_column};
@@ -36,7 +36,7 @@ pub fn FightColumn(props: FightColumnModel) -> Element {
                 has_unit,
                 onclick,
             }
-            AbilityIcon {
+            AbilityIconHost {
                 name,
                 icon_url,
                 carrier_count,

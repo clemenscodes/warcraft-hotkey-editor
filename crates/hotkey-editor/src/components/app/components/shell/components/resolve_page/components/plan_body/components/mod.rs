@@ -1,4 +1,4 @@
-pub mod ability_icon;
+pub mod ability_icon_host;
 pub mod fight_name_plate;
 pub mod mini_grid;
 pub mod move_list;

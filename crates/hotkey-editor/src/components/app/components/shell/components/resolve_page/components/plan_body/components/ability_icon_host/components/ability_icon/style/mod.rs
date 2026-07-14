@@ -4,8 +4,7 @@ classes! {
         "group",
         "relative",
         "inline-flex",
-        "flex-none",
-        "size-18",
+        "size-full",
         "p-0",
         "bg-transparent",
         "border-none",
@@ -14,8 +13,5 @@ classes! {
         "kb-focus:outline-none",
         "kb-focus:shadow-focus",
         "disabled:cursor-default",
-    ],
-    mobile: tw![
-        "mobile:size-14",
     ],
 }

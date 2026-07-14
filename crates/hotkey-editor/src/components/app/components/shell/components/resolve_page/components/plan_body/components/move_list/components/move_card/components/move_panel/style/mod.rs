@@ -1,14 +1,15 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "flex",
         "flex-col",
-        "py-6",
+        "py-[2.55cqi]",
         "bg-warcraft-bg-mid/45",
         "border",
         "rounded-panel",
-        "gap-5",
-        "px-6",
+        "gap-[2.13cqi]",
+        "px-[2.55cqi]",
         "box-border",
         "border-warcraft-blue-deep",
     ],

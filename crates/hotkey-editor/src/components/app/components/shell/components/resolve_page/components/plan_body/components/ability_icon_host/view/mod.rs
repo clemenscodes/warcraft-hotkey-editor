@@ -1,0 +1,13 @@
+use crate::services::carriers::InspectedAbility;
+
+#[derive(Clone, PartialEq)]
+pub struct AbilityIconHostView {
+    pub name: String,
+    pub icon_url: Option<String>,
+    pub carrier_count: usize,
+    pub is_winner: bool,
+    pub disabled: bool,
+    pub inspected: InspectedAbility,
+}
+
+impl ddd::View for AbilityIconHostView {}

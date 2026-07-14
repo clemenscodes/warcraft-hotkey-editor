@@ -2,11 +2,11 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "absolute",
-        "-top-1.5",
-        "-right-1.5",
-        "min-w-4.75",
-        "h-4.75",
-        "px-1",
+        "-top-[8.33cqi]",
+        "-right-[8.33cqi]",
+        "min-w-[26.39cqi]",
+        "h-[26.39cqi]",
+        "px-[5.56cqi]",
         "box-border",
         "inline-flex",
         "items-center",
@@ -17,12 +17,10 @@ classes! {
         "text-base",
         "leading-none",
         "text-shadow-drop",
-        "border-warcraft-gold",
-        "text-warcraft-gold",
+        "border-warcraft-blue",
+        "text-warcraft-text-secondary",
     ],
     mobile: tw![
-        "mobile:min-w-3.75",
-        "mobile:h-3.75",
         "mobile:text-sm",
     ],
 }

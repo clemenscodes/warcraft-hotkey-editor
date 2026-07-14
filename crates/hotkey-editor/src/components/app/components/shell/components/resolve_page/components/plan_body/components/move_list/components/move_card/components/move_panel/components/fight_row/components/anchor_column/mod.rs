@@ -5,7 +5,7 @@ mod view;
 pub use view::AnchorColumnView;
 mod style;
 
-use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon::AbilityIcon;
+use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::ability_icon_host::AbilityIconHost;
 use crate::components::app::components::shell::components::resolve_page::components::plan_body::components::fight_name_plate::FightNamePlate;
 use dioxus::prelude::*;
 use presentation::AnchorColumnPresentation;
@@ -36,7 +36,7 @@ pub fn AnchorColumn(props: AnchorColumnModel) -> Element {
                 name: plate_name,
                 object_id,
             }
-            AbilityIcon {
+            AbilityIconHost {
                 name,
                 icon_url,
                 carrier_count,
