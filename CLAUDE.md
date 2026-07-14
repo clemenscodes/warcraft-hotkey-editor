@@ -1,5 +1,30 @@
 # Project rules
 
+> ## ⛔ RULE ZERO — READ ALL DOCS IN THE DEEPEST DETAIL, BY DEFAULT, FOR ANY TASK ⛔
+>
+> **No change will EVER be approved unless you have first studied ALL of the project
+> docs in the deepest possible detail.** This is not scoped to "non-trivial" changes,
+> not to changes that "touch state", not to anything — it is **every task, always, by
+> default, no exceptions.** A one-line edit and a full subsystem rewrite carry the
+> exact same prerequisite.
+>
+> Before your FIRST action on any task, Read — in full, no offset, no limit, top to
+> bottom, every single line, in the deepest grit and detail, not skimmed and not from
+> memory:
+>
+> - `docs/ARCHITECTURE.md`, `docs/COMPONENTS.md`, `docs/RUST_STYLE.md`, `docs/AGENTS.md`
+> - and any task-specific handoff in `docs/` (e.g. `docs/CQI_CASCADE_HANDOFF.md`), plus
+>   the reference component trees they name (`shell/header`, `shell/footer`,
+>   `grid_editors/*`) **in full**.
+>
+> **Why this is Rule Zero:** every hard-won rule that keeps this codebase coherent lives
+> in those docs. An agent that skimmed them mass-converted ~150 files, shipped
+> completely broken layout (the whole `cqi` model depends on a rule stated plainly in
+> `COMPONENTS.md`), had everything reverted, and was fired. **Skimming the docs is the
+> single most expensive mistake you can make here.** The `spec-gate.sh` hook enforces a
+> floor by blocking edits until it sees full-file Reads — treat that as the minimum, not
+> the goal. Reading everything deeply first is mandatory and always worth it.
+
 This project edits **`CustomKeys.txt`** for Warcraft III: Reforged. It is a
 pure-frontend web app — no server, no database, no cloud.
 
@@ -117,8 +142,9 @@ Any other command shape is wrong by definition. If `moon run :ci` fails, fix
 the code and run `moon run :ci` again — never route around it with a
 narrower command.
 
-Four documents define the rules of this project. All are mandatory reading
-before any non-trivial change:
+Four documents define the rules of this project. Per **Rule Zero** above, all
+are mandatory reading — in full, in the deepest detail — before **any** task, not
+merely "non-trivial" ones:
 
 - `docs/ARCHITECTURE.md` — _where_ code lives (the wall between renderer
   and domain crate, the localStorage source-of-truth model).
