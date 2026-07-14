@@ -1,27 +1,29 @@
-use crate::services::overlay_state::context::use_overlay_state;
 use dioxus::prelude::*;
 
-/// Shaped grid-layout button data: whether the layout dialog is open (for aria) and
-/// the toggle handler that opens it. A pure-domain model — the host passes its fields
-/// to the button as named fields.
-#[derive(Clone, PartialEq)]
+/// Shaped grid-layout button data: whether the layout editor is open (for aria), the toggle
+/// handler that opens it, and the change handler the mounted dialog mirrors its own close
+/// through. The open signal is local and owned here — this button opens the dialog, so it owns
+/// the signal and the dialog travels with it.
 pub(super) struct GridLayoutEditorButtonPresentation {
     pub is_open: bool,
     pub onclick: EventHandler<MouseEvent>,
+    pub on_open_change: Callback<bool>,
 }
 
-/// Reads the overlay context and shapes the grid-layout button's data: whether the
-/// layout dialog is open (for aria) and the toggle handler that opens it.
+/// Owns the grid-layout editor's local open signal and shapes the button's data: the toggle
+/// handler that opens or closes the editor, and the change handler the mounted dialog mirrors
+/// its own close through.
 pub(super) fn use_grid_layout_editor_button() -> GridLayoutEditorButtonPresentation {
-    let overlay = use_overlay_state();
-    let mut layout_dialog_open = overlay.layout_dialog_open();
-    let is_open = layout_dialog_open();
-    let on_toggle = EventHandler::new(move |_event: MouseEvent| {
-        let next = !*layout_dialog_open.read();
-        layout_dialog_open.set(next);
+    let mut open_signal = use_signal::<bool>(|| false);
+    let is_open = open_signal();
+    let onclick = EventHandler::new(move |_event: MouseEvent| {
+        let next = !*open_signal.read();
+        open_signal.set(next);
     });
+    let on_open_change = Callback::new(move |value: bool| open_signal.set(value));
     GridLayoutEditorButtonPresentation {
         is_open,
-        onclick: on_toggle,
+        onclick,
+        on_open_change,
     }
 }

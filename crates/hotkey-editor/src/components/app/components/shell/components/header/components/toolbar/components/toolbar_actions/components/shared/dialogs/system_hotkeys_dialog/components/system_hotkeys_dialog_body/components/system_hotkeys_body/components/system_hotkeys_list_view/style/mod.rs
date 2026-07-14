@@ -11,10 +11,10 @@ classes! {
     ],
     mobile: tw![
         "mobile:max-w-full",
-        "mobile:[touch-action:pan-y]",
+        "mobile:touch-pan-y",
     ],
     tablet: tw![
         "tablet:max-w-full",
-        "tablet:[touch-action:pan-y]",
+        "tablet:touch-pan-y",
     ],
 }

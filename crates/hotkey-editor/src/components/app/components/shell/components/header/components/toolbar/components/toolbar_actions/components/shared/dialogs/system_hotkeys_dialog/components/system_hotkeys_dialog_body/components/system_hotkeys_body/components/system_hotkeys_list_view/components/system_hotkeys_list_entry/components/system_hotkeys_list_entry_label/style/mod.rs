@@ -9,7 +9,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:flex-[1_1_auto]",
+        "mobile:flex-auto",
         "mobile:min-w-0",
         "mobile:text-xs",
         "mobile:tracking-label",
@@ -19,7 +19,7 @@ classes! {
         "mobile:[word-break:break-word]",
     ],
     tablet: tw![
-        "tablet:flex-[1_1_auto]",
+        "tablet:flex-auto",
         "tablet:min-w-0",
         "tablet:text-xs",
         "tablet:tracking-label",

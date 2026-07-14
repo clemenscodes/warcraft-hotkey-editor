@@ -18,7 +18,8 @@ classes! {
         "hover:text-shadow-glow",
         "kb-focus:outline-none",
         "kb-focus:text-white",
-        "kb-focus:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-highlight)_65%,transparent)]",
+        "kb-focus:[--glow-color:var(--color-warcraft-highlight)]",
+        "kb-focus:text-glow",
         "text-warcraft-gold/55",
     ],
 }

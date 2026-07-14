@@ -9,7 +9,7 @@ classes! {
         "flex",
         "flex-col",
         "items-stretch",
-        "flex-[0_0_auto]",
+        "flex-none",
         "gap-5",
         "py-8",
         "px-9",

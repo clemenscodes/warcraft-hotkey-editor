@@ -7,8 +7,8 @@ pub use view::KeyCaptureView;
 
 use components::key_chip::KeyChip;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_key_picker_dialog::SystemKeyPickerDialog;
-use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
+use presentation::KeyCapturePresentation;
 use presentation::use_key_capture;
 use model::KeyCaptureModel;
 use tw_macro::assert_component;
@@ -18,18 +18,20 @@ use tw_macro::assert_component;
 /// mounts the system key picker beneath itself while editing.
 #[component]
 pub fn KeyCapture(props: KeyCaptureModel) -> Element {
-    let model = use_key_capture(&props);
-    let conflict = model.is_conflict;
-    let label = model.key_label.clone();
-    let onclick = model.on_click;
-    let tooltip_text = model.conflict_title.clone();
-    let tooltip_placement = TooltipPlacement::Above;
-    let is_editing = model.is_editing;
-    let title = String::from("Pick a hotkey");
-    let current_code = model.current_code;
-    let conflicts = model.picker_conflicts.clone();
-    let on_pick = model.on_pick;
-    let on_close = model.on_close;
+    let KeyCapturePresentation {
+        conflict,
+        label,
+        onclick,
+        tooltip_text,
+        tooltip_placement,
+        is_editing,
+        title,
+        current_code,
+        conflicts,
+        open,
+        on_pick,
+        on_close,
+    } = use_key_capture(&props);
     rsx! {
         KeyChip {
             conflict,
@@ -43,7 +45,7 @@ pub fn KeyCapture(props: KeyCaptureModel) -> Element {
                 title,
                 current_code,
                 conflicts,
-                open: true,
+                open,
                 on_pick,
                 on_close,
             }

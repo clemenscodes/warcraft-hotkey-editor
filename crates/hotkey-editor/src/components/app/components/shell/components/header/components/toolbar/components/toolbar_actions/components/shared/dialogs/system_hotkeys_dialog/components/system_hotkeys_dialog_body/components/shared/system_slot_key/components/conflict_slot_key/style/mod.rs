@@ -11,7 +11,8 @@ classes! {
         "leading-none",
         "whitespace-nowrap",
         "text-warcraft-danger",
-        "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_14px_color-mix(in_oklab,var(--color-warcraft-danger)_55%,transparent)]",
+        "[--glow-color:var(--color-warcraft-danger)]",
+        "text-glow",
     ],
     mobile: tw![
         "mobile:text-(length:--slot-key-size,var(--text-xs))",

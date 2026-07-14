@@ -17,8 +17,6 @@ use tw_macro::assert_component;
 #[component]
 pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
     let on_close = props.on_close;
-    let layout = props.layout;
-    let items = props.items;
     rsx! {
         aside {
             class: CLASS,
@@ -27,8 +25,7 @@ pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
             aria_label: "Menu",
             BurgerDrawerHeader { onclick: on_close }
             BurgerDrawerBody {
-                layout,
-                items,
+                on_close,
             }
         }
     }

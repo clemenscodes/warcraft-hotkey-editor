@@ -21,9 +21,10 @@ classes! {
         "text-left",
         "transition-[filter,text-shadow]",
         "duration-fast",
-        "hover:filter-[brightness(1.15)]",
+        "hover:brightness-[1.15]",
         "focus:outline-none",
-        "kb-focus:[outline:2px_solid_var(--color-warcraft-highlight)]",
+        "kb-focus:outline-2",
+        "kb-focus:outline-warcraft-highlight",
         "kb-focus:outline-offset-2",
     ],
 }

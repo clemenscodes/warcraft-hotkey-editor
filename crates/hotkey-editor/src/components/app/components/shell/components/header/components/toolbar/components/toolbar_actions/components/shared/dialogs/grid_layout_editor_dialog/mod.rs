@@ -1,25 +1,30 @@
 pub mod components;
 mod data;
+mod model;
 mod presentation;
+mod view;
+
+pub use view::GridLayoutEditorDialogView;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerDialog;
 use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
 use components::grid_layout_editor_dialog_body::GridLayoutEditorDialogBodyView;
 use dioxus::prelude::*;
 use dioxus_kit::frame::Empty;
+use model::GridLayoutEditorDialogModel;
 use presentation::GridLayoutEditorDialogPresentation;
 use presentation::use_grid_layout_editor_dialog;
 use tw_macro::assert_component;
 
-/// The global hotkey layout editor, placed in the always-mounted toolbar so it opens
-/// from either the centered grid-layout button or the burger drawer. The presentation
-/// self-sources the grid, open, and preference state from context and resolves the grid
+/// The global hotkey layout editor, opened by the trigger that owns its open signal (the
+/// centered grid-layout button or the burger drawer, each with its own instance). The
+/// presentation self-sources the grid and preference state from context and resolves the grid
 /// cells, picker state, and handlers; this mounts the reusable `WarcraftDialog` with the
-/// isolated grid-editor body region only while the shared open signal is set, alongside
-/// the nested key picker (a second modal shown while a cell is being edited). The
-/// `on_open_change` guard makes opening the nested picker not dismiss the editor.
+/// isolated grid-editor body region only while `open`, alongside the nested key picker (a
+/// second modal shown while a cell is being edited). The `on_open_change` guard makes opening
+/// the nested picker not dismiss the editor.
 #[component]
-pub fn GridLayoutEditorDialog() -> Element {
+pub fn GridLayoutEditorDialog(props: GridLayoutEditorDialogModel) -> Element {
     let GridLayoutEditorDialogPresentation {
         is_open,
         on_open_change,
@@ -34,7 +39,7 @@ pub fn GridLayoutEditorDialog() -> Element {
         picker_allow_conflict_pick,
         on_pick,
         on_picker_close,
-    } = use_grid_layout_editor_dialog();
+    } = use_grid_layout_editor_dialog(&props);
     let body = GridLayoutEditorDialogBodyView {
         cells,
         toggle_checked,

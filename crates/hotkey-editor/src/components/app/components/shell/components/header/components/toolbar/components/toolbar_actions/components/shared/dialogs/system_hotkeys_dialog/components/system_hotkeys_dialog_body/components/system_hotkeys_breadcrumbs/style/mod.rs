@@ -9,7 +9,8 @@ classes! {
         "flex-none",
         "px-8",
         "py-5",
-        "[border-bottom:1px_solid_color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)]",
+        "border-b",
+        "border-warcraft-gold/25",
     ],
     mobile: tw![
         "mobile:relative",

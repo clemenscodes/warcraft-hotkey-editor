@@ -1,14 +1,14 @@
 mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitCardIconView;
 mod style;
 
-use crate::components::app::components::shell::components::shared::framed_icon::{
-    FramedIcon, IconRadius,
-};
+use crate::components::app::components::shell::components::shared::framed_icon::FramedIcon;
 use dioxus::prelude::*;
 use model::UnitCardIconModel;
+use presentation::UnitCardIconPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,18 +17,19 @@ use tw_macro::assert_component;
 /// when the unit has no icon.
 #[component]
 pub fn UnitCardIcon(props: UnitCardIconModel) -> Element {
-    let icon_path = props.icon_path;
-    let display_name = props.display_name;
-    let src = icon_path.map(|url| url.to_string());
-    let radius = IconRadius::Hairline;
-    let hover_glow = false;
-    let placeholder = true;
+    let UnitCardIconPresentation {
+        src,
+        alt,
+        radius,
+        hover_glow,
+        placeholder,
+    } = UnitCardIconPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,
             FramedIcon {
                 src,
-                alt: display_name,
+                alt,
                 radius,
                 hover_glow,
                 placeholder,

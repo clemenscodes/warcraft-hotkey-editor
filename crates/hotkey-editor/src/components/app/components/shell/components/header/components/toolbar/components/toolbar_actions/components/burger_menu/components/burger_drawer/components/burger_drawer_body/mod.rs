@@ -5,42 +5,25 @@ mod view;
 pub use view::BurgerDrawerBodyView;
 mod style;
 
+use components::burger_layout_item::BurgerLayoutItem;
 use components::burger_menu_group::BurgerMenuGroup;
-use components::shared::burger_menu_item::BurgerMenuItem;
 use dioxus::prelude::*;
 use model::BurgerDrawerBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
+/// The drawer's scrolling content: the primary Grid Layout row on top, then the file-action
+/// menu. The close handler flows through to the menu's non-dialog rows, which dismiss the drawer.
 #[component]
 pub fn BurgerDrawerBody(props: BurgerDrawerBodyModel) -> Element {
-    let layout = props.layout;
-    let items = props.items;
-    let icon = layout.icon;
-    let label = layout.label;
-    let state = layout.state;
-    let disabled = layout.disabled;
-    let role = layout.role;
-    let aria_haspopup = layout.aria_haspopup;
-    let aria_expanded = layout.aria_expanded;
-    let aria_pressed = layout.aria_pressed;
-    let aria_label = layout.aria_label;
-    let onclick = layout.onclick;
+    let on_close = props.on_close;
     rsx! {
-        div { class: CLASS,
-            BurgerMenuItem {
-                icon,
-                label,
-                state,
-                disabled,
-                role,
-                aria_haspopup,
-                aria_expanded,
-                aria_pressed,
-                aria_label,
-                onclick,
+        div {
+            class: CLASS,
+            BurgerLayoutItem {}
+            BurgerMenuGroup {
+                on_close,
             }
-            BurgerMenuGroup { items }
         }
     }
 }

@@ -1,13 +1,13 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "flex-[1_1_auto]",
+        "flex-auto",
         "min-w-0",
         "text-right",
         "text-race-human",
         "font-semibold",
         "text-2xl",
-        "[font-variant-numeric:tabular-nums]",
+        "tabular-nums",
     ],
     mobile: tw![
         "mobile:text-3xl",

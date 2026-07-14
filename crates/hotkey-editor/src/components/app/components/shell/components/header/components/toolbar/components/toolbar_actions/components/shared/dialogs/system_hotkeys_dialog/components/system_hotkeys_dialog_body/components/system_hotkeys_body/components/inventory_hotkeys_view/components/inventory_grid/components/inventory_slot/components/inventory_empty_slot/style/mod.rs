@@ -14,7 +14,7 @@ classes! {
         "border-warcraft-gold/18",
         "text-3xl",
         "text-warcraft-gold/25",
-        "[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_50%,transparent)]",
+        "bg-warcraft-bg-base/50",
     ],
     mobile: tw![
         "mobile:aspect-[1/0.85]",

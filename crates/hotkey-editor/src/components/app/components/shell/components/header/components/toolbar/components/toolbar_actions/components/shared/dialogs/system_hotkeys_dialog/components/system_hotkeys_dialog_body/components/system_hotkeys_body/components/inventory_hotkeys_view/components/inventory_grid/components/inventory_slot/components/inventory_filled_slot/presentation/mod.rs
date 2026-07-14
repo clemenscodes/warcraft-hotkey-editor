@@ -7,6 +7,7 @@ use crate::components::app::components::shell::components::header::components::t
 };
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::shared::system_slot::SystemSlotState;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::customkeys::queries::slot_binding_query::SlotBindingView;
 use dioxus::html::input_data::MouseButton;
@@ -113,11 +114,14 @@ pub(super) struct InventoryFilledSlotPresentation {
     pub(super) dragging: bool,
     pub(super) slot_label: String,
     pub(super) key_label: String,
-    pub(super) conflict_title: String,
-    pub(super) is_conflict: bool,
+    pub(super) tooltip_text: String,
+    pub(super) tooltip_placement: TooltipPlacement,
+    pub(super) conflict: bool,
     pub(super) is_editing: bool,
+    pub(super) title: String,
     pub(super) current_code: KeyCode,
-    pub(super) picker_conflicts: HashMap<KeyCode, Vec<String>>,
+    pub(super) conflicts: HashMap<KeyCode, Vec<String>>,
+    pub(super) open: bool,
     pub(super) on_pointerdown: EventHandler<Event<PointerData>>,
     pub(super) on_pointermove: EventHandler<Event<PointerData>>,
     pub(super) on_pointerup: EventHandler<Event<PointerData>>,
@@ -371,16 +375,22 @@ pub(super) fn use_inventory_filled_slot(
     let label_for_drag = view.key_label.clone();
     let drag = use_inventory_drag(props, label_for_drag);
     let editing = use_inventory_editing(props, editing_section);
+    let tooltip_placement = TooltipPlacement::Above;
+    let title = String::from("Pick a hotkey");
+    let open = true;
     InventoryFilledSlotPresentation {
         state: view.state,
         dragging: view.dragging,
         slot_label: view.slot_label,
         key_label: view.key_label,
-        conflict_title: view.conflict_title,
-        is_conflict: view.is_conflict,
+        tooltip_text: view.conflict_title,
+        tooltip_placement,
+        conflict: view.is_conflict,
         is_editing: view.is_editing,
+        title,
         current_code: view.current_code,
-        picker_conflicts: view.picker_conflicts,
+        conflicts: view.picker_conflicts,
+        open,
         on_pointerdown: drag.on_pointerdown,
         on_pointermove: drag.on_pointermove,
         on_pointerup: drag.on_pointerup,

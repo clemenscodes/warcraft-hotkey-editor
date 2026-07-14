@@ -6,7 +6,7 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "flex-[1_1_auto]",
+        "flex-auto",
         "w-full",
         "min-w-0",
         "rounded-control",

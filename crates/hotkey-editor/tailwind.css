@@ -109,6 +109,12 @@
 @utility shadow-toast { box-shadow: 0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55), 0 0 24px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.3); }
 @utility shadow-toast-focus { box-shadow: 0 0 0 3px var(--color-warcraft-highlight), 0 12px 32px rgb(from var(--color-warcraft-shadow) r g b / 0.55); }
 
+@utility text-glow { text-shadow: var(--text-shadow-drop), 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55); }
+@utility drop-glow {
+  --tw-drop-shadow: drop-shadow(0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55));
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+
 @utility duration-fast { --tw-duration: 0.12s; }
 @utility duration-base { --tw-duration: 0.15s; }
 @utility duration-slow { --tw-duration: 0.2s; }

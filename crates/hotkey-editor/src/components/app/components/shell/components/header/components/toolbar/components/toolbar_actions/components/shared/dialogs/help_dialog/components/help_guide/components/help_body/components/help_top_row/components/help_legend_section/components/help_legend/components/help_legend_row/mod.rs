@@ -1,5 +1,6 @@
 pub mod components;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::HelpLegendRowView;
@@ -10,16 +11,18 @@ use components::help_legend_icon::HelpLegendIcon;
 use components::help_legend_label::HelpLegendLabel;
 use dioxus::prelude::*;
 use model::HelpLegendRowModel;
+use presentation::HelpLegendRowPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// One legend entry: a framed glyph beside its label and description.
 #[component]
 pub fn HelpLegendRow(props: HelpLegendRowModel) -> Element {
-    let entry = props.entry;
-    let icon = entry.icon();
-    let label = entry.label();
-    let description = entry.description();
+    let HelpLegendRowPresentation {
+        icon,
+        label,
+        description,
+    } = HelpLegendRowPresentation::from(&props);
     rsx! {
         li { class: CLASS,
             HelpLegendIcon { icon }

@@ -1,5 +1,6 @@
 pub mod components;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::FilledUnitPositionDetailView;
@@ -9,6 +10,7 @@ use components::unit_position_conflict_grid::UnitPositionConflictGrid;
 use components::unit_position_detail_header::UnitPositionDetailHeader;
 use dioxus::prelude::*;
 use model::FilledUnitPositionDetailModel;
+use presentation::FilledUnitPositionDetailPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,11 +18,12 @@ use tw_macro::assert_component;
 /// position-conflict cards.
 #[component]
 pub fn FilledUnitPositionDetail(props: FilledUnitPositionDetailModel) -> Element {
-    let unit_view = props.unit_view;
-    let unit = unit_view.unit().clone();
-    let count = unit_view.collision_count();
-    let unit_id = unit.unit_id();
-    let conflicts = unit_view.conflicts().to_vec();
+    let FilledUnitPositionDetailPresentation {
+        unit,
+        count,
+        unit_id,
+        conflicts,
+    } = FilledUnitPositionDetailPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,

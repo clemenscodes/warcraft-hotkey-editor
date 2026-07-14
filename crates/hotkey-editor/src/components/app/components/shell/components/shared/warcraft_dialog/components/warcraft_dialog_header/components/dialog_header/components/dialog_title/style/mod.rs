@@ -6,7 +6,7 @@ classes! {
         "uppercase",
         "tracking-heading",
         "text-warcraft-gold",
-        "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_18px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
+        "text-glow",
     ],
     mobile: tw![
         "mobile:min-w-0",

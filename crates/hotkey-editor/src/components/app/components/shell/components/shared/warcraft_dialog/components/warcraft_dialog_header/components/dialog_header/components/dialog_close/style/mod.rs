@@ -22,6 +22,7 @@ classes! {
         "hover:text-shadow-glow",
         "focus:outline-none",
         "kb-focus:text-white",
-        "kb-focus:[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_16px_color-mix(in_oklab,var(--color-warcraft-highlight)_70%,transparent)]",
+        "kb-focus:[--glow-color:var(--color-warcraft-highlight)]",
+        "kb-focus:text-glow",
     ],
 }

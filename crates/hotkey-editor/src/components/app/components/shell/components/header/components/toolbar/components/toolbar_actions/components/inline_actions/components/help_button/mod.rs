@@ -1,28 +1,42 @@
+mod data;
+mod presentation;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialog;
 use dioxus::prelude::*;
+use presentation::{HelpButtonPresentation, use_help_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One inline file-action button. It reads its action from the shared toolbar-action set
-/// and renders the button; the action's icon, label, and behaviour live once in that set.
+/// The inline help action: the toolbar button that opens the onboarding guide, and the guide
+/// dialog it owns, mounted beneath it. It owns the guide's open signal locally (opening it on
+/// a first visit), so the dialog is part of the button and travels with it — move this button
+/// and its dialog comes along.
 #[component]
 pub fn HelpButton() -> Element {
-    let actions = use_toolbar_actions();
-    let action = actions.get(ToolbarActionKind::Help);
+    let HelpButtonPresentation {
+        icon,
+        aria_label,
+        aria_haspopup,
+        aria_expanded,
+        open,
+        onclick,
+        on_open_change,
+    } = use_help_button();
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon: action.icon,
-                aria_label: action.aria_label,
-                disabled: action.disabled,
-                aria_haspopup: action.aria_haspopup,
-                aria_expanded: action.expanded,
-                aria_pressed: action.pressed,
-                onclick: action.onclick,
+                icon,
+                aria_label,
+                aria_haspopup,
+                aria_expanded,
+                onclick,
+            }
+            HelpDialog {
+                open,
+                on_open_change,
             }
         }
     }

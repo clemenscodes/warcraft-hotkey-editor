@@ -18,11 +18,15 @@ pub fn GridLayoutEditorButtonHost() -> Element {
     let button = use_grid_layout_editor_button();
     let is_open = button.is_open;
     let onclick = button.onclick;
+    let on_open_change = button.on_open_change;
     rsx! {
         div {
             class: CLASS,
             GridLayoutEditorButton { is_open, onclick }
-            GridLayoutEditorDialog {}
+            GridLayoutEditorDialog {
+                open: is_open,
+                on_open_change,
+            }
         }
     }
 }

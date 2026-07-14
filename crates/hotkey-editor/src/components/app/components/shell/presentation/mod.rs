@@ -17,8 +17,6 @@ use crate::services::navigation::context::use_view_navigation_provider;
 use crate::services::navigation::editor_navigation::DecodedEditorNavigation;
 use crate::services::navigation::navigation_command::{NavigationCommand, NavigationHistoryMode};
 use crate::services::navigation::navigation_snapshot::NavigationSnapshot;
-use crate::services::overlay_state::OverlayState;
-use crate::services::overlay_state::context::use_overlay_state_provider;
 use crate::services::resolve_selection::context::use_resolve_selection_provider;
 use crate::services::undo::UndoHistory;
 use dioxus::prelude::*;
@@ -219,17 +217,13 @@ fn use_navigation_dispatch() -> Callback<NavigationCommand> {
     })
 }
 
-/// The app-level Escape handler: cancels an in-progress drag, otherwise closes the top
-/// open overlay. All keyboard focus movement is the browser's native Tab order.
-fn use_app_keydown(
-    drag_state: DragState,
-    overlay_state: OverlayState,
-) -> EventHandler<KeyboardEvent> {
+/// The app-level Escape handler: cancels an in-progress drag. Dialogs close themselves on
+/// Escape through the headless dialog primitive (each owns its open signal), so the shell
+/// only handles the drag case. All keyboard focus movement is the browser's native Tab order.
+fn use_app_keydown(drag_state: DragState) -> EventHandler<KeyboardEvent> {
     let mut dragging_slot = drag_state.dragging_slot();
     let mut drop_target_tile = drag_state.drop_target_tile();
     let mut drag_follower = drag_state.drag_follower();
-    let mut preview_open = overlay_state.preview_open();
-    let mut system_hotkeys_open = overlay_state.system_hotkeys_open();
     EventHandler::new(move |event: Event<KeyboardData>| {
         let key_value = event.data().key().to_string();
         if key_value != "Escape" {
@@ -240,18 +234,6 @@ fn use_app_keydown(
             dragging_slot.set(None);
             drop_target_tile.set(None);
             drag_follower.set(None);
-            return;
-        }
-        let preview_was_open = *preview_open.read();
-        let system_was_open = *system_hotkeys_open.read();
-        if system_was_open {
-            event.prevent_default();
-            system_hotkeys_open.set(false);
-            return;
-        }
-        if preview_was_open {
-            event.prevent_default();
-            preview_open.set(false);
         }
     })
 }
@@ -291,11 +273,10 @@ pub(super) fn use_shell() -> ShellModel {
         resolve_selection,
         navigation_dispatch,
     );
-    let overlay_state = use_overlay_state_provider();
     use_editor_state_provider(update_hotkeys_on_move);
     let drag_state = use_drag_state_provider();
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
     use_context_provider(|| upload_status);
-    let handle_keydown = use_app_keydown(drag_state, overlay_state);
+    let handle_keydown = use_app_keydown(drag_state);
     ShellModel { handle_keydown }
 }

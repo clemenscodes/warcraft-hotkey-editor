@@ -30,11 +30,11 @@ classes! {
         "kb-focus:shadow-focus",
         "disabled:cursor-not-allowed",
         "disabled:opacity-85",
-        "[background:color-mix(in_oklab,var(--color-warcraft-gold-dark)_55%,transparent)]",
+        "bg-warcraft-gold-dark/55",
         "border-warcraft-gold-border",
         "text-warcraft-gold",
         "[&:hover:not(:disabled)]:border-warcraft-gold",
-        "[&:hover:not(:disabled)]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_12%,transparent)]",
+        "[&:hover:not(:disabled)]:bg-warcraft-gold/12",
         "[&:hover:not(:disabled)]:shadow-glow-soft",
     ],
     mobile: tw![

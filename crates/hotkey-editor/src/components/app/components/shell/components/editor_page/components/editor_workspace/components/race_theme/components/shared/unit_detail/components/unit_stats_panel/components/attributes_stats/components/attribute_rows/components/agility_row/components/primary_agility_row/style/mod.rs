@@ -7,7 +7,7 @@ classes! {
         "text-xl",
         "leading-title",
         "min-w-0",
-        "[text-shadow:1px_1px_0_var(--color-warcraft-shadow),0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_35%,transparent)]",
+        "text-glow",
         "[--attribute-label-color:var(--color-warcraft-gold)]",
     ],
     mobile: tw![

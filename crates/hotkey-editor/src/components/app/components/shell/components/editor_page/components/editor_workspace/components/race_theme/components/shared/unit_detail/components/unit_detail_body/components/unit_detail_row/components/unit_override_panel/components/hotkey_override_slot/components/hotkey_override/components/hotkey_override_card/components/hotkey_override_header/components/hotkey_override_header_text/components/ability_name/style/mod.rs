@@ -16,10 +16,10 @@ classes! {
     ],
     mobile: tw![
         "mobile:text-sm",
-        "mobile:[word-break:normal]",
+        "mobile:break-normal",
     ],
     tablet: tw![
         "tablet:text-sm",
-        "tablet:[word-break:normal]",
+        "tablet:break-normal",
     ],
 }

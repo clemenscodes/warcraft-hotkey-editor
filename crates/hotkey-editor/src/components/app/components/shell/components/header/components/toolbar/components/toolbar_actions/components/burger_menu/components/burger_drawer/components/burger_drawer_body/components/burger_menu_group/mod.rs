@@ -1,35 +1,45 @@
+pub mod components;
 mod model;
 mod view;
 
 pub use view::BurgerMenuGroupView;
 mod style;
 
-use super::shared::burger_menu_item::BurgerMenuItem;
+use components::burger_download_item::BurgerDownloadItem;
+use components::burger_help_item::BurgerHelpItem;
+use components::burger_preview_item::BurgerPreviewItem;
+use components::burger_redo_item::BurgerRedoItem;
+use components::burger_resolve_item::BurgerResolveItem;
+use components::burger_system_hotkeys_item::BurgerSystemHotkeysItem;
+use components::burger_templates_item::BurgerTemplatesItem;
+use components::burger_undo_item::BurgerUndoItem;
+use components::burger_upload_item::BurgerUploadItem;
 use dioxus::prelude::*;
 use model::BurgerMenuGroupModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The scrolling list of file actions inside the drawer.
+/// The scrolling list of file actions inside the drawer: a `role="menu"` container that names
+/// each bespoke action row in order. The non-dialog rows (undo, redo, resolve) close the drawer
+/// on click, so they receive its close handler; the dialog rows own their own dialogs and leave
+/// the drawer open.
 #[component]
 pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
-    let items = props.items;
+    let on_close = props.on_close;
     rsx! {
-        div { class: CLASS, role: "menu", aria_label: "File actions",
-            for row in items.into_iter() {
-                BurgerMenuItem {
-                    icon: row.icon,
-                    label: row.label,
-                    state: row.state,
-                    disabled: row.disabled,
-                    role: row.role,
-                    aria_haspopup: row.aria_haspopup,
-                    aria_expanded: row.aria_expanded,
-                    aria_pressed: row.aria_pressed,
-                    aria_label: row.aria_label,
-                    onclick: row.onclick,
-                }
-            }
+        div {
+            class: CLASS,
+            role: "menu",
+            aria_label: "File actions",
+            BurgerUndoItem { on_close }
+            BurgerRedoItem { on_close }
+            BurgerUploadItem {}
+            BurgerTemplatesItem {}
+            BurgerSystemHotkeysItem {}
+            BurgerResolveItem { on_close }
+            BurgerPreviewItem {}
+            BurgerDownloadItem {}
+            BurgerHelpItem {}
         }
     }
 }

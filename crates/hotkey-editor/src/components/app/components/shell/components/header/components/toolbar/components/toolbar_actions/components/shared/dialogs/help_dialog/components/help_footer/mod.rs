@@ -1,6 +1,5 @@
 pub mod components;
 mod model;
-mod presentation;
 mod style;
 mod view;
 
@@ -8,17 +7,17 @@ pub use view::HelpFooterView;
 
 use components::help_dismiss::HelpDismiss;
 use dioxus::prelude::*;
-use presentation::{HelpFooterPresentation, use_help_footer};
+use model::HelpFooterModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Connected, isolated footer content: the pinned bar below the scrolling guide, separated
-/// from it by a gold rule, holding the dismiss button that closes the guide and records that
-/// the player has seen it. A dialog places it as its footer region, so it stays put while
-/// the guide scrolls above it.
+/// The pinned bar below the scrolling guide, separated from it by a gold rule, holding the
+/// dismiss button that closes the guide and records that the player has seen it. Presentational:
+/// the dialog that owns the open signal builds the dismiss handler and hands it in. A dialog
+/// places it as its footer region, so it stays put while the guide scrolls above it.
 #[component]
-pub fn HelpFooter() -> Element {
-    let HelpFooterPresentation { on_dismiss } = use_help_footer();
+pub fn HelpFooter(props: HelpFooterModel) -> Element {
+    let on_dismiss = props.on_dismiss;
     rsx! {
         footer {
             class: CLASS,

@@ -1,5 +1,6 @@
 pub mod components;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::FilledHotkeyUnitDetailView;
@@ -9,6 +10,7 @@ use components::hotkey_conflict_grid::HotkeyConflictGrid;
 use components::hotkey_detail_header::HotkeyDetailHeader;
 use dioxus::prelude::*;
 use model::FilledHotkeyUnitDetailModel;
+use presentation::FilledHotkeyUnitDetailPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,11 +18,12 @@ use tw_macro::assert_component;
 /// shared-hotkey conflict cards.
 #[component]
 pub fn FilledHotkeyUnitDetail(props: FilledHotkeyUnitDetailModel) -> Element {
-    let unit_view = props.unit_view;
-    let unit = unit_view.unit().clone();
-    let count = unit_view.collision_count();
-    let unit_id = unit.unit_id();
-    let conflicts = unit_view.conflicts().to_vec();
+    let FilledHotkeyUnitDetailPresentation {
+        unit,
+        count,
+        unit_id,
+        conflicts,
+    } = FilledHotkeyUnitDetailPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,

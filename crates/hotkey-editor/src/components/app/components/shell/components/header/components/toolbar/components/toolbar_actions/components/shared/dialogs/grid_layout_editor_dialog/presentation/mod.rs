@@ -181,13 +181,13 @@ impl LayoutPickerBoard {
         self.rows
     }
 }
+use super::model::GridLayoutEditorDialogModel;
 use crate::components::app::components::shell::components::toasts::ToastOptions;
 use crate::components::app::components::shell::components::toasts::use_toast;
 use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::grid_layout::context::use_grid_layout_service;
-use crate::services::overlay_state::context::use_overlay_state;
 
 /// Everything the layout editor's markup needs, already shaped: the dialog open
 /// state and guard, the panel header, the grid cells, the key-picker state, the
@@ -209,6 +209,10 @@ pub(super) struct GridLayoutEditorDialogPresentation {
     pub(super) on_picker_close: EventHandler<()>,
 }
 
+impl ddd::Presentation for GridLayoutEditorDialogPresentation {
+    type Model = GridLayoutEditorDialogModel;
+}
+
 /// The apply / pick / picker-close / move-toggle handlers plus the toggle's current
 /// checked state. Owns the writes: apply routes the grid through the
 /// [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) and
@@ -227,11 +231,10 @@ fn use_layout_actions(
     grid_layout: Signal<GridLayout>,
     editing_layout_tile: Signal<Option<GridCoordinate>>,
     update_hotkeys_on_move: Signal<bool>,
-    open: Signal<bool>,
+    on_open_change: Callback<bool>,
 ) -> LayoutActions {
     let mut editing_layout_tile = editing_layout_tile;
     let mut update_hotkeys_on_move = update_hotkeys_on_move;
-    let mut layout_dialog_open = open;
     let custom_keys_service = use_custom_keys_service();
     let grid_layout_service = use_grid_layout_service();
     let toast_api = use_toast();
@@ -249,7 +252,7 @@ fn use_layout_actions(
             let title = "GRID APPLIED".to_string();
             toast_api.success(title, options);
         }
-        layout_dialog_open.set(false);
+        on_open_change.call(false);
     });
     let on_pick = EventHandler::new(move |token: HotkeyToken| {
         let Some(active_cell) = *editing_layout_tile.read() else {
@@ -274,7 +277,7 @@ fn use_layout_actions(
     // a real dismiss; then we also clear the editing cell so the next open is clean.
     let on_dialog_open_change = Callback::new(move |is_open: bool| {
         if is_open {
-            layout_dialog_open.set(true);
+            on_open_change.call(true);
             return;
         }
         let picker_is_open = editing_layout_tile.read().is_some();
@@ -282,7 +285,7 @@ fn use_layout_actions(
             return;
         }
         editing_layout_tile.set(None);
-        layout_dialog_open.set(false);
+        on_open_change.call(false);
     });
     let toggle_checked = *update_hotkeys_on_move.read();
     let on_toggle = EventHandler::new(move |_event: FormEvent| {
@@ -302,12 +305,13 @@ fn use_layout_actions(
 /// Composes the layout editor's state and behavior. Resolves the twelve grid cells
 /// with their drag/click handlers, derives the key-picker rows from the current
 /// layout, and wires the apply, pick, and toggle handlers.
-pub(super) fn use_grid_layout_editor_dialog() -> GridLayoutEditorDialogPresentation {
+pub(super) fn use_grid_layout_editor_dialog(
+    props: &GridLayoutEditorDialogModel,
+) -> GridLayoutEditorDialogPresentation {
     let grid_layout = use_grid_layout();
     let editor_state = use_editor_state();
     let update_hotkeys_on_move = editor_state.update_hotkeys_on_move();
-    let overlay_state = use_overlay_state();
-    let open = overlay_state.layout_dialog_open();
+    let on_open_change = props.on_open_change;
     let editing_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     let dragging_layout_tile = use_signal::<Option<GridCoordinate>>(|| None);
     let grid_layout_service = use_grid_layout_service();
@@ -341,10 +345,10 @@ pub(super) fn use_grid_layout_editor_dialog() -> GridLayoutEditorDialogPresentat
         grid_layout,
         editing_layout_tile,
         update_hotkeys_on_move,
-        open,
+        on_open_change,
     );
 
-    let is_open = *open.read();
+    let is_open = props.open;
     let title = String::from("Global Hotkey Layout");
     let picker_title = String::from("Pick a grid key");
     let picker_allow_conflict_pick = true;

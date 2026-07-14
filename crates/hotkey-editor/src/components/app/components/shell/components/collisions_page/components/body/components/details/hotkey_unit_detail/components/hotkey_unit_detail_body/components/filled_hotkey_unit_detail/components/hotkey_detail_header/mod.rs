@@ -1,4 +1,5 @@
 mod model;
+mod presentation;
 mod view;
 
 pub use view::HotkeyDetailHeaderView;
@@ -8,17 +9,20 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_meta::ConflictMeta;
 use dioxus::prelude::*;
 use model::HotkeyDetailHeaderModel;
+use presentation::HotkeyDetailHeaderPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
 /// The detail-pane header: the selected unit button beside its text meta column.
 #[component]
 pub fn HotkeyDetailHeader(props: HotkeyDetailHeaderModel) -> Element {
-    let name = props.unit.name().to_owned();
-    let unit_id = props.unit.unit_id();
-    let icon_url = props.unit.icon_url().map(str::to_owned);
-    let count = props.count;
-    let meta_name = name.clone();
+    let HotkeyDetailHeaderPresentation {
+        name,
+        unit_id,
+        icon_url,
+        count,
+        meta_name,
+    } = HotkeyDetailHeaderPresentation::from(&props);
     rsx! {
         header {
             class: CLASS,

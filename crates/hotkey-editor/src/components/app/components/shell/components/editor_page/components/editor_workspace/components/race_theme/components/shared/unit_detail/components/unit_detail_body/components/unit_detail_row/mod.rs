@@ -1,5 +1,6 @@
 pub mod components;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitDetailRowView;
@@ -9,6 +10,7 @@ use components::unit_command_grids::UnitCommandGrids;
 use components::unit_override_panel::UnitOverridePanel;
 use dioxus::prelude::*;
 use model::UnitDetailRowModel;
+use presentation::UnitDetailRowPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -17,13 +19,14 @@ use tw_macro::assert_component;
 /// grids and the override panel.
 #[component]
 pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
-    let grid_slots = props.grid_slots;
-    let unit_id = grid_slots.unit_id;
-    let command_card_slots = grid_slots.command_card_slots;
-    let build_menu_slots = grid_slots.build_menu_slots;
-    let uprooted_menu_slots = grid_slots.uprooted_menu_slots;
-    let research_menu_slots = grid_slots.research_menu_slots;
-    let override_target = props.override_target;
+    let UnitDetailRowPresentation {
+        unit_id,
+        command_card_slots,
+        build_menu_slots,
+        uprooted_menu_slots,
+        research_menu_slots,
+        override_target,
+    } = UnitDetailRowPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,

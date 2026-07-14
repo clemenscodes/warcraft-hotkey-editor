@@ -1,16 +1,17 @@
 use super::view::BurgerMenuGroupView;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::presentation::BurgerMenuRow;
 use dioxus::prelude::*;
 
+/// The file-action menu's only input: the drawer's close handler, passed to the non-dialog rows
+/// (undo, redo, resolve) that dismiss the drawer on click.
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerMenuGroupModel {
-    pub items: Vec<BurgerMenuRow>,
+    pub on_close: EventHandler<MouseEvent>,
 }
 
 impl From<&BurgerMenuGroupView> for BurgerMenuGroupModel {
     fn from(view: &BurgerMenuGroupView) -> Self {
-        let BurgerMenuGroupView { items } = view.clone();
-        Self { items }
+        let BurgerMenuGroupView { on_close } = view.clone();
+        Self { on_close }
     }
 }
 

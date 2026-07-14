@@ -1,12 +1,12 @@
+use super::data::ARIA_LABEL;
+use crate::components::app::components::shell::components::shared::icons::ICON_UPLOAD;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_upload_status};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 
 /// The file-import handler for the hidden upload input: reads the chosen file, imports it
-/// through the sanctioned service command, and reports the outcome via toast. The visible
-/// button (icon, label, click) comes from the shared toolbar-action set; this owns only the
-/// import.
+/// through the sanctioned service command, and reports the outcome via toast.
 pub(super) fn use_upload_file_import() -> EventHandler<FormEvent> {
     let custom_keys_service = use_custom_keys_service();
     let mut upload_status = use_upload_status();
@@ -45,4 +45,36 @@ pub(super) fn use_upload_file_import() -> EventHandler<FormEvent> {
             }
         });
     })
+}
+
+/// The upload button's shaped data: the fixed icon and label, whether the import-info dialog is
+/// open, the click handler that opens it, the change handler the mounted dialog mirrors its own
+/// close through, and the hidden input's file-import handler. The open signal is local and owned
+/// here — the button that opens the dialog owns it, so the dialog travels with it.
+pub(super) struct UploadButtonPresentation {
+    pub(super) icon: &'static str,
+    pub(super) aria_label: &'static str,
+    pub(super) open: bool,
+    pub(super) onclick: EventHandler<MouseEvent>,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) on_change: EventHandler<FormEvent>,
+}
+
+/// Owns the import-info dialog's local open signal and shapes the button's data: the click
+/// handler that opens the dialog, the change handler the mounted dialog mirrors its own close
+/// through, and the hidden input's file-import handler.
+pub(super) fn use_upload_button() -> UploadButtonPresentation {
+    let on_change = use_upload_file_import();
+    let mut open_signal = use_signal::<bool>(|| false);
+    let open = open_signal();
+    let onclick = EventHandler::new(move |_event: MouseEvent| open_signal.set(true));
+    let on_open_change = Callback::new(move |is_open: bool| open_signal.set(is_open));
+    UploadButtonPresentation {
+        icon: ICON_UPLOAD,
+        aria_label: ARIA_LABEL,
+        open,
+        onclick,
+        on_open_change,
+        on_change,
+    }
 }

@@ -5,6 +5,6 @@ classes! {
         "flex-col",
         "gap-2",
         "min-w-0",
-        "flex-[1_1_auto]",
+        "flex-auto",
     ],
 }

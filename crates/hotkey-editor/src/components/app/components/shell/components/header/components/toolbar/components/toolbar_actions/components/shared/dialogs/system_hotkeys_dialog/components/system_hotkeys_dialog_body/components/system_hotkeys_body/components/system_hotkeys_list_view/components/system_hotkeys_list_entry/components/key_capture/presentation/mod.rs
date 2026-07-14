@@ -1,5 +1,6 @@
 use super::model::KeyCaptureModel;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::system_hotkeys_dialog::state::use_system_hotkeys_dialog_state;
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -9,13 +10,16 @@ use warcraft_keybinds::KeyCode;
 /// tooltip, whether its picker is open (and the picker's inputs), and the edit /
 /// pick / close handlers.
 pub(super) struct KeyCapturePresentation {
-    pub(super) is_conflict: bool,
-    pub(super) key_label: String,
-    pub(super) conflict_title: String,
+    pub(super) conflict: bool,
+    pub(super) label: String,
+    pub(super) tooltip_text: String,
+    pub(super) tooltip_placement: TooltipPlacement,
     pub(super) is_editing: bool,
+    pub(super) title: String,
     pub(super) current_code: KeyCode,
-    pub(super) picker_conflicts: HashMap<KeyCode, Vec<String>>,
-    pub(super) on_click: EventHandler<MouseEvent>,
+    pub(super) conflicts: HashMap<KeyCode, Vec<String>>,
+    pub(super) open: bool,
+    pub(super) onclick: EventHandler<MouseEvent>,
     pub(super) on_pick: EventHandler<KeyCode>,
     pub(super) on_close: EventHandler<()>,
 }
@@ -49,14 +53,20 @@ pub(super) fn use_key_capture(props: &KeyCaptureModel) -> KeyCapturePresentation
         editing_section.set(None);
     });
     let on_close = EventHandler::new(move |_event: ()| editing_section.set(None));
+    let tooltip_placement = TooltipPlacement::Above;
+    let title = String::from("Pick a hotkey");
+    let open = true;
     KeyCapturePresentation {
-        is_conflict,
-        key_label,
-        conflict_title,
+        conflict: is_conflict,
+        label: key_label,
+        tooltip_text: conflict_title,
+        tooltip_placement,
         is_editing,
+        title,
         current_code,
-        picker_conflicts,
-        on_click,
+        conflicts: picker_conflicts,
+        open,
+        onclick: on_click,
         on_pick,
         on_close,
     }

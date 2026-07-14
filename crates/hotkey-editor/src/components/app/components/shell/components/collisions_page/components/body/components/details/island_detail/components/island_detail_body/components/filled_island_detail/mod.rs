@@ -1,5 +1,6 @@
 pub mod components;
 mod model;
+mod presentation;
 mod view;
 
 pub use view::FilledIslandDetailView;
@@ -9,6 +10,7 @@ use components::island_conflict_grid::IslandConflictGrid;
 use components::island_detail_header::IslandDetailHeader;
 use dioxus::prelude::*;
 use model::FilledIslandDetailModel;
+use presentation::FilledIslandDetailPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
@@ -16,9 +18,11 @@ use tw_macro::assert_component;
 /// per-unit conflict cards.
 #[component]
 pub fn FilledIslandDetail(props: FilledIslandDetailModel) -> Element {
-    let coordinate = props.island.coordinate();
-    let count = props.island.collision_count();
-    let conflicts = props.island.conflicts().to_vec();
+    let FilledIslandDetailPresentation {
+        coordinate,
+        count,
+        conflicts,
+    } = FilledIslandDetailPresentation::from(&props);
     rsx! {
         div {
             class: CLASS,

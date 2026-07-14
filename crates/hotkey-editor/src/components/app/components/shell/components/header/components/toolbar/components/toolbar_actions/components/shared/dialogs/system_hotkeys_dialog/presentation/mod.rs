@@ -23,31 +23,34 @@ impl From<&SystemHotkeysDialogPresentation> for SystemHotkeysDialogShell {
     }
 }
 use super::components::system_hotkeys_dialog_body::components::system_hotkeys_body::components::inventory_hotkeys_view::components::inventory_grid::InventoryDragFollower;
+use super::model::SystemHotkeysDialogModel;
 use super::state::SystemHotkeysDialogState;
-use crate::services::overlay_state::context::use_overlay_state;
 use warcraft_api::SystemHotkeysCategory;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// The dialog's shaped state: the shared open flag and the change handler mirroring the
-/// headless dialog's own close. The active category, editing section, and inventory drag
-/// follower live in [`SystemHotkeysDialogState`], which this provides to the subtree via
-/// context so the dialog threads no UI signals as props.
+/// The dialog's shaped state: the open flag and the change handler mirroring the headless
+/// dialog's own close, both sourced from the props the trigger threads in. The active
+/// category, editing section, and inventory drag follower live in [`SystemHotkeysDialogState`],
+/// which this provides to the subtree via context so the dialog threads no UI signals as props.
 pub(super) struct SystemHotkeysDialogPresentation {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// Reads the shared open signal from the overlay context — the one the toolbar cog button
-/// and burger drawer flip — and sets up the dialog's UI signals, providing them as
-/// [`SystemHotkeysDialogState`]. Opens on the Inventory tab, with nothing being edited and
-/// no drag in progress. The editors read and write the document through the CustomKeys
-/// service, not a signal.
-pub(super) fn use_system_hotkeys_dialog() -> SystemHotkeysDialogPresentation {
-    let overlay = use_overlay_state();
-    let dialog_open = overlay.system_hotkeys_open();
-    let open = *dialog_open.read();
-    let mut change_open = dialog_open;
-    let on_open_change = Callback::new(move |is_open| change_open.set(is_open));
+impl ddd::Presentation for SystemHotkeysDialogPresentation {
+    type Model = SystemHotkeysDialogModel;
+}
+
+/// Takes the open value and change handler from the props the trigger owns (the inline cog
+/// button or the burger drawer, each with its own open signal) and sets up the dialog's UI
+/// signals, providing them as [`SystemHotkeysDialogState`]. Opens on the Inventory tab, with
+/// nothing being edited and no drag in progress. The editors read and write the document
+/// through the CustomKeys service, not a signal.
+pub(super) fn use_system_hotkeys_dialog(
+    props: &SystemHotkeysDialogModel,
+) -> SystemHotkeysDialogPresentation {
+    let open = props.open;
+    let on_open_change = props.on_open_change;
     let active_category = use_signal(|| SystemHotkeysCategory::Inventory);
     let editing_section = use_signal::<Option<WarcraftObjectId>>(|| None);
     let drag_follower = use_signal::<Option<InventoryDragFollower>>(|| None);

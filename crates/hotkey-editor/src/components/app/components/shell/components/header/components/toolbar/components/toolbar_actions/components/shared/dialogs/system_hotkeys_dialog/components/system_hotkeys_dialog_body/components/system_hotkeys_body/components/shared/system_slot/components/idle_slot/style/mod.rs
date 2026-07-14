@@ -28,8 +28,11 @@ classes! {
         "[border-image-slice:var(--slot-frame-slice,12_fill)]",
         "[border-image-repeat:stretch]",
         "transition-[filter]",
-        "group-hover/tooltip:filter-[brightness(1.18)_drop-shadow(0_0_8px_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent))]",
-        "group-focus-visible/tooltip:filter-[brightness(1.25)_drop-shadow(0_0_10px_color-mix(in_oklab,var(--color-warcraft-highlight)_55%,transparent))]",
+        "group-hover/tooltip:brightness-[1.18]",
+        "group-hover/tooltip:drop-glow",
+        "group-focus-visible/tooltip:brightness-[1.25]",
+        "group-focus-visible/tooltip:[--glow-color:var(--color-warcraft-highlight)]",
+        "group-focus-visible/tooltip:drop-glow",
     ],
     mobile: tw![
         "mobile:border-(length:--slot-frame-border,8px)",

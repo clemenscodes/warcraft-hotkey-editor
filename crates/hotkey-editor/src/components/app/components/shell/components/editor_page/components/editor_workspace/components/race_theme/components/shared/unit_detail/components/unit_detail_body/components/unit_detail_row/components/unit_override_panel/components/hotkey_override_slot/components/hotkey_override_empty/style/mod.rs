@@ -8,7 +8,7 @@ classes! {
         "flex-col",
         "items-center",
         "justify-center",
-        "flex-[0_0_auto]",
+        "flex-none",
         "overflow-hidden",
         "py-8",
         "px-9",

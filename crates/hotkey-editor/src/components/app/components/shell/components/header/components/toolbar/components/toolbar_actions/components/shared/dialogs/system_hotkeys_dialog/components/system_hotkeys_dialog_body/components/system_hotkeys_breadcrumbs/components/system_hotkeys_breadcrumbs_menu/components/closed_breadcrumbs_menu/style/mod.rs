@@ -6,7 +6,7 @@ classes! {
         "justify-center",
         "flex-wrap",
         "gap-3",
-        "flex-[1_1_auto]",
+        "flex-auto",
     ],
     mobile: tw![
         "mobile:hidden",

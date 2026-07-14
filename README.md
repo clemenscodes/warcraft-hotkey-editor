@@ -25,24 +25,6 @@ account system, telemetry, or file upload to a backend.
 - Export a complete `CustomKeys.txt` file that can be copied into the
   Warcraft III custom-keybindings folder.
 
-## Screenshots
-
-### Editor Overview
-
-![Editor overview with race tabs, unit list, Archmage details, and command-card editing.](docs/screenshots/editor-overview.png)
-
-### Layout Templates
-
-![Layout templates dialog showing Neo QWERTY, Neo QWERTZ, and default Warcraft III templates.](docs/screenshots/layout-templates.png)
-
-### System Hotkeys
-
-![System hotkeys dialog with the full keyboard picker open.](docs/screenshots/system-hotkeys.png)
-
-### Download Flow
-
-![Download dialog explaining where to place CustomKeys.txt.](docs/screenshots/download-customkeys.png)
-
 ## Using The Export
 
 1. Open the live editor.
@@ -181,9 +163,6 @@ E2e tests are part of `moon run :ci` and run on every pull request.
 crates/
 ├── hotkey-editor/        # Dioxus web app (wasm)
 │   └── e2e/              # Playwright end-to-end tests
-├── warcraft-keybinds/    # Pure-Rust CustomKeys.txt domain logic
-├── ddd/                  # Domain-driven-design building blocks
-└── gallery/              # Generic Dioxus component previewer
 docs/
 ├── ARCHITECTURE.md       # Runtime and build architecture
 ├── COMPONENTS.md         # Renderer component conventions
