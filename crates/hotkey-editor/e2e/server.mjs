@@ -1,5 +1,3 @@
-// Zero-dependency static file server used by playwright webServer in CI/Docker.
-// Usage: node server.mjs <dir> [port] [basePath]
 import { createServer } from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
@@ -25,7 +23,6 @@ createServer((req, res) => {
   let file = join(dir, urlPath === "/" ? "index.html" : urlPath);
   if (existsSync(file) && statSync(file).isDirectory()) file = join(file, "index.html");
   if (!existsSync(file)) {
-    // SPA fallback: walk up path segments to find the nearest index.html
     const segments = urlPath.split("/").filter(Boolean);
     while (segments.length > 0 && !existsSync(join(dir, ...segments, "index.html"))) segments.pop();
     file = segments.length > 0 ? join(dir, ...segments, "index.html") : join(dir, "index.html");

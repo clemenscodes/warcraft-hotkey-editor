@@ -23,11 +23,7 @@ pub fn UnitNameRow(props: UnitNameRowModel) -> Element {
                 text: unit_name,
             }
             if has_hero_attributes {
-                HeroLevelPicker {
-
-
-
-                }
+                HeroLevelPicker {}
             }
         }
     }

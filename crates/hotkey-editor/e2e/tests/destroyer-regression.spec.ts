@@ -25,17 +25,6 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
     await applyTemplateAndCascade(page);
   });
 
-  // Regression for the intra-unit cascade tiebreak:
-  // Advm and Aabs both default to (0,2) on the Destroyer (ubsp).  Before the
-  // fix, the alphabetical tiebreak displaced Advm AND Afak (2 moves).  The
-  // correct behaviour is to use the unit's abilList order as the tiebreak so
-  // that Advm (index 0) wins and only Aabs (index 3) is displaced.
-  //
-  // Expected layout on Destroyer (ubsp) after template + cascade:
-  //   (0,2) Advm — Devour Magic        ← wins intra-unit fight (abilList index 0)
-  //   (1,2) Afak — Orb of Annihilation ← stays at default
-  //   (2,2) ACmi — Spell Immunity      ← stays at default
-  //   (3,2) Aabs — Absorb Mana         ← displaced here by cascade
   test("Destroyer command card row 2 follows abilList priority after cascade", async ({
     page,
   }) => {

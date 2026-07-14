@@ -13,11 +13,7 @@ impl Render for SystemHotkeysDialogBodyView {
     type Output = Element;
     fn render(&self) -> Self::Output {
         rsx! {
-            SystemHotkeysDialogBody {
-
-
-
-            }
+            SystemHotkeysDialogBody {}
         }
     }
 }

@@ -1,30 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-// Reproduces the starting state for the "QWER / ASDF / YXCV" rearrange scenario
-// on the Archmage (Hamg), the first unit shown by default.
-//
-// After applying the Default template, the Archmage command card looks like this
-// (cells are addressed as col,row; col 0..3 left to right, row 0..2 top to bottom):
-//
-//   (0,0) Move      (1,0) Stop      (2,0) Hold      (3,0) Attack
-//   (0,1) Patrol    (1,1) empty     (2,1) empty     (3,1) fixed slot
-//   (0,2) Ability1  (1,2) Ability2  (2,2) Ability3  (3,2) Ability4
-//
-// The desired layout puts the four hero abilities on the top row, attack on the
-// home key, and the basic orders on the bottom row:
-//
-//   (0,0) Ability1  (1,0) Ability2  (2,0) Ability3  (3,0) Ability4
-//   (0,1) Attack    (1,1) empty     (2,1) empty     (3,1) fixed slot
-//   (0,2) Stop      (1,2) Hold      (2,2) Patrol    (3,2) Move
-//
-// The (3,1) slot and the two empty cells (1,1) and (2,1) are never touched.
-//
-// This is a single 9-cycle. Dropping a tile onto an occupied cell SWAPS the two
-// tiles, so the whole permutation is realized with 8 swaps. Steps 1..4 swap each
-// top-row order with the ability directly below it; steps 5..8 rotate the rest
-// into place. The sequence is verified below against the rendered grid and
-// against localStorage (the canonical source of truth).
-
 const APP = "/warcraft-hotkey-editor/";
 const LS_KEY = "warcraft-hotkey-editor.custom-keys";
 const SECTION = "Command card";
@@ -34,7 +9,6 @@ interface GridCoordinate {
   row: number;
 }
 
-// The 8 drag operations, source then target, both occupied (so each is a swap).
 const SWAP_SEQUENCE: { from: GridCoordinate; to: GridCoordinate }[] = [
   { from: { col: 0, row: 0 }, to: { col: 0, row: 2 } },
   { from: { col: 1, row: 0 }, to: { col: 1, row: 2 } },
@@ -46,17 +20,16 @@ const SWAP_SEQUENCE: { from: GridCoordinate; to: GridCoordinate }[] = [
   { from: { col: 2, row: 2 }, to: { col: 3, row: 2 } },
 ];
 
-// Where the tile originally at each source cell must end up after the 8 swaps.
 const EXPECTED_MOVES: { from: GridCoordinate; to: GridCoordinate }[] = [
-  { from: { col: 0, row: 0 }, to: { col: 3, row: 2 } }, // Move
-  { from: { col: 1, row: 0 }, to: { col: 0, row: 2 } }, // Stop
-  { from: { col: 2, row: 0 }, to: { col: 1, row: 2 } }, // Hold
-  { from: { col: 3, row: 0 }, to: { col: 0, row: 1 } }, // Attack
-  { from: { col: 0, row: 1 }, to: { col: 2, row: 2 } }, // Patrol
-  { from: { col: 0, row: 2 }, to: { col: 0, row: 0 } }, // Ability 1
-  { from: { col: 1, row: 2 }, to: { col: 1, row: 0 } }, // Ability 2
-  { from: { col: 2, row: 2 }, to: { col: 2, row: 0 } }, // Ability 3
-  { from: { col: 3, row: 2 }, to: { col: 3, row: 0 } }, // Ability 4
+  { from: { col: 0, row: 0 }, to: { col: 3, row: 2 } },
+  { from: { col: 1, row: 0 }, to: { col: 0, row: 2 } },
+  { from: { col: 2, row: 0 }, to: { col: 1, row: 2 } },
+  { from: { col: 3, row: 0 }, to: { col: 0, row: 1 } },
+  { from: { col: 0, row: 1 }, to: { col: 2, row: 2 } },
+  { from: { col: 0, row: 2 }, to: { col: 0, row: 0 } },
+  { from: { col: 1, row: 2 }, to: { col: 1, row: 0 } },
+  { from: { col: 2, row: 2 }, to: { col: 2, row: 0 } },
+  { from: { col: 3, row: 2 }, to: { col: 3, row: 0 } },
 ];
 
 const EMPTY_CELLS: GridCoordinate[] = [
@@ -298,13 +271,6 @@ test("rearranged layout resolves with no stuck build/root commands on the resolv
   ).toEqual([]);
 });
 
-// After applying the cascade, the resolver reports "nothing to resolve". The
-// collision page must agree: every cross-unit and intra-unit POSITION collision
-// is gone. This used to fail for toggle abilities (Burrow, Bear/Crow form,
-// Submerge, Robo-Goblin, Web, Call to Arms) because the cascade collapsed an
-// ability's on-state and off-state into one node and only resolved one of them,
-// leaving the other sitting on a moved command. Hotkey collisions are a separate
-// concern (cleared by applying the grid) and are not asserted here.
 test("applying the cascade clears every position collision, including toggle off-states", async ({
   page,
 }) => {

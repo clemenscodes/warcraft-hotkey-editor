@@ -25,11 +25,7 @@ pub fn ActiveRaceTab(props: ActiveRaceTabModel) -> Element {
                 onclick,
                 onkeydown,
             }
-            ActiveAccent {
-
-
-
-            }
+            ActiveAccent {}
         }
     }
 }

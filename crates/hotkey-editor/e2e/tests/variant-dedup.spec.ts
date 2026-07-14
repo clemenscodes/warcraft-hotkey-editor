@@ -2,8 +2,6 @@ import { expect, test } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// The unit id is rendered in a <code> inside each .unit-card, so the set of
-// visible ids is readable straight from the DOM regardless of styling.
 async function visibleUnitIds(page: any): Promise<string[]> {
   await page.locator(".unit-card").first().waitFor();
   const ids = await page

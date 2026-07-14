@@ -38,16 +38,8 @@ pub fn UnitList() -> Element {
     rsx! {
         aside {
             class: CLASS,
-            SearchFieldToggle {
-
-
-
-            }
-            CatalogVisibilityToggle {
-
-
-
-            }
+            SearchFieldToggle {}
+            CatalogVisibilityToggle {}
             UnitListSearch {
                 value: search_value,
                 placeholder: search_placeholder,

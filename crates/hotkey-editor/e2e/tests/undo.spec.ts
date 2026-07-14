@@ -4,17 +4,10 @@ const APP = "/warcraft-hotkey-editor/";
 const KEYS_STORAGE = "warcraft-hotkey-editor.custom-keys";
 const UNDO_STORAGE = "warcraft-hotkey-editor.undo-history";
 
-// Global undo/redo: one timeline of full-state snapshots. Every committed action
-// (here, applying the cascade) is one entry; undo/redo restore it via the
-// toolbar buttons or Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z. History is compressed and
-// persisted to localStorage, so it survives a reload.
-
 function storedKeys(page: Page): Promise<string | null> {
   return page.evaluate((key) => localStorage.getItem(key), KEYS_STORAGE);
 }
 
-// Applies the cascade (a discrete keys-mutating action) and returns the new
-// stored keys text.
 async function applyCascade(page: Page): Promise<string> {
   await page.locator('.resolve-button').first().click();
   await page.locator(".apply-button", { hasText: /apply/i }).click();
@@ -55,7 +48,6 @@ test.describe("Undo / redo", () => {
     const afterAction = await applyCascade(page);
     await page.locator('.brand').first().click();
     await page.locator(".unit-card").first().waitFor();
-    // Focus a non-editable element so the shortcut is not suppressed.
     await page.locator(".unit-card").first().click();
 
     await page.keyboard.press("Control+z");
@@ -75,21 +67,18 @@ test.describe("Undo / redo", () => {
     await search.click();
     await search.fill("footman");
     await page.keyboard.press("Control+z");
-    // App state must be unchanged — the keypress is the field's native undo.
     await expect.poll(() => storedKeys(page)).toBe(before);
   });
 
   test("undo history is compressed, persisted, and survives a reload", async ({
     page,
   }) => {
-    // Multi-step: action + persistence debounce + full reload.
     test.setTimeout(30_000);
     const initial = await storedKeys(page);
     const afterAction = await applyCascade(page);
     await page.locator('.brand').first().click();
     await page.locator(".unit-card").first().waitFor();
 
-    // Wait out the persistence debounce, then confirm a compressed blob exists.
     await expect
       .poll(() => page.evaluate((key) => localStorage.getItem(key), UNDO_STORAGE), {
         timeout: 4000,
@@ -107,14 +96,8 @@ test.describe("Undo / redo", () => {
   });
 
   test("a fresh boot with no action never persists undo history", async ({ page }) => {
-    // Regression: the boot capture effect fires one no-op record on first render.
-    // If that no-op scheduled a persist, a visit that touched nothing would still
-    // write an empty-stack blob after the ~1s debounce — and a later reload would
-    // restore it as a history with nothing to undo (undo button wrongly disabled
-    // was the symptom; the empty blob is the cause). No action ⇒ no undo blob.
     await expect(page.locator('.undo-button button')).toBeDisabled();
 
-    // Wait well past the 1s persist debounce without interacting.
     await page.waitForTimeout(2000);
 
     const undoBlob = await page.evaluate(

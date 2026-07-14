@@ -1,12 +1,3 @@
-// Spatial (2D) keyboard navigation for desktop-width viewports: HJKL / arrow keys
-// move focus to the nearest focusable neighbour in that direction. This legitimately
-// needs the DOM — "nearest neighbour" is a geometry question over the rendered layout,
-// not something application state can answer — so it measures element rects here.
-//
-// Focus *modality* (keyboard vs pointer focus rings) is now the platform's own
-// :focus-visible, and post-activation focus hand-off is driven by application state
-// through the Rust FocusCoordinator. Neither lives in this file anymore.
-
 const NAV_SELECTORS = [
     ".upload-button .toolbar-button-surface",
     ".toggle-button",
@@ -109,9 +100,6 @@ function installSpatialNavigation() {
         (event) => {
             if (!isNavigationViewport()) return;
             if (event.ctrlKey || event.metaKey || event.altKey) return;
-            // While a hotkey picker is open, H/J/K/L and the arrows are hotkey
-            // candidates the picker must receive — don't hijack them for spatial
-            // navigation. Either picker board being present means one is open.
             if (document.querySelector(".key-picker-board, .system-key-picker-board")) return;
             const target = event.target;
             if (target instanceof HTMLElement) {

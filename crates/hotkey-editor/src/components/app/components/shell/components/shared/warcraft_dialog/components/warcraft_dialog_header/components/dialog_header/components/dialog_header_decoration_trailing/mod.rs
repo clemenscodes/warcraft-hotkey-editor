@@ -10,11 +10,7 @@ pub fn DialogHeaderDecorationTrailing() -> Element {
     rsx! {
         span {
             class: CLASS,
-            DialogHeaderDecoration {
-
-
-
-            }
+            DialogHeaderDecoration {}
         }
     }
 }

@@ -2,13 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Deep-linking on the Resolve (cascade plan) page: the selected move-category
-// breadcrumb (Fights / Gap pulls / Spills / Swaps) rides in the `?entry=` URL
-// param — the same generic selection slot the collision pages use — so the
-// viewed section survives leaving the page (back/forward) and is restorable from
-// a pasted/bookmarked URL. The Default template is applied first so the plan is
-// the canonical collision-heavy baseline with several move categories.
-
 async function applyDefaultTemplate(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();

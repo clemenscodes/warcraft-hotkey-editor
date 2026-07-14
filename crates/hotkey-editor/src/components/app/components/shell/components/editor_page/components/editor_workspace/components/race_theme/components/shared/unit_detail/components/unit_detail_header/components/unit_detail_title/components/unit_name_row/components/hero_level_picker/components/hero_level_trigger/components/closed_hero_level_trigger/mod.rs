@@ -22,19 +22,11 @@ pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
             class: CLASS,
             r#type: "button",
             onclick,
-            HeroLevelTriggerLabel {
-
-
-
-            }
+            HeroLevelTriggerLabel {}
             HeroLevelTriggerNumber {
                 number,
             }
-            ClosedHeroLevelTriggerChevron {
-
-
-
-            }
+            ClosedHeroLevelTriggerChevron {}
         }
     }
 }

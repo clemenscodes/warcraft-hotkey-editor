@@ -13,11 +13,7 @@ impl Render for EditorTabsBarView {
     type Output = Element;
     fn render(&self) -> Self::Output {
         rsx! {
-            EditorTabsBar {
-
-
-
-            }
+            EditorTabsBar {}
         }
     }
 }

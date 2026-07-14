@@ -2,14 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Regression for the cascade-plan move classification. Force of Nature (ACfr)
-// is pushed off the right end of row 2 during phase 1, becomes unresolved, then
-// phase 2 rehomes it into a freed cell in the SAME row (it lands at (0,2),
-// having been stuck at (3,2)). A move that never leaves its row is a gap pull,
-// not a cross-row spill — "Spill" is reserved for the genuine cross-row
-// fallback. ACfr must therefore show up under the "Gap pulls" section and never
-// under "Spills". The Default template gives the canonical collision-heavy plan.
-
 async function applyDefaultTemplate(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();

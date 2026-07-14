@@ -25,13 +25,6 @@ test.describe("Gargoyle regression: Prioritize renders at (1,1) after cascade", 
     await applyTemplateAndCascade(page);
   });
 
-  // Regression: Prioritize (Aatp) has no default Buttonpos in the game data,
-  // so before the fix the renderer skipped it entirely — the Gargoyle command
-  // card never showed the Prioritize toggle.  The fix materializes (0,0) as a
-  // fallback for toggle abilities (has_off_state) missing a default position,
-  // and the cascade wraps rightward overflow into the next row's leftmost free
-  // cell.  Row 0 of the Gargoyle is fully pinned by the standard commands
-  // (Move/Stop/HoldPos/Attack), Patrol pins (0,1), so Prioritize lands at (1,1).
   test("Gargoyle command card shows Prioritize at (1,1) after cascade", async ({
     page,
   }) => {

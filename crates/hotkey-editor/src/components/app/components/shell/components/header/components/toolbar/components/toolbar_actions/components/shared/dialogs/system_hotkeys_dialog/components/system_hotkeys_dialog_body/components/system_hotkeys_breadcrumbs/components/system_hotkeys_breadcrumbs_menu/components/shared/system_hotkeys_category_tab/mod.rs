@@ -47,11 +47,7 @@ pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabModel) -> Element
             }
         }
         if has_separator {
-            SystemHotkeysCategorySeparator {
-
-
-
-            }
+            SystemHotkeysCategorySeparator {}
         }
     }
 }

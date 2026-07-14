@@ -2,20 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Regression: the CASC data for troll high priests contains two variants of
-// Abolish Magic (ACdm in custom_v0/melee_v0, ACd2 in custom_v1/base) and two
-// variants of Frost Armor (ACfu / ACf2) that share the same `.code` field.
-// Both variants in each pair share the same display name: ACdm/ACd2 are both
-// called "Abolish Magic", ACfu/ACf2 are both "Frost Armor".
-// Before the fix, `merge_additive` included all four CASC files, so troll
-// priests showed the same ability button twice.  Rule 4 in
-// `WarcraftDataAggregation::unit_abilities_for_unit` keeps only the LAST
-// occurrence per code (competitive-balance variants ACd2/ACf2 from
-// custom_v1/base win; alternative-mode variants ACdm/ACfu are dropped).
-//
-// Cascade must be applied before checking: on `nfsh`, ACd2 and Anh2 both
-// default to position (1,2), so ACd2 is moved to (0,2) by the cascade.
-
 async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();

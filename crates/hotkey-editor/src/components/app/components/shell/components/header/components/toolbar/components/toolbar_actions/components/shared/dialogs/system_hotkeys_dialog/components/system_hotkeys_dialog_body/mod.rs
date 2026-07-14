@@ -26,11 +26,7 @@ pub fn SystemHotkeysDialogBody() -> Element {
             SystemHotkeysBreadcrumbs {
                 active_category,
             }
-            SystemHotkeysBody {
-
-
-
-            }
+            SystemHotkeysBody {}
             InventoryDragOverlay {
                 drag_follower,
             }

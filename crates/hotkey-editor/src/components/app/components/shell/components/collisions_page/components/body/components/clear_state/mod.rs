@@ -11,11 +11,7 @@ pub fn ClearState() -> Element {
     rsx! {
         section {
             class: CLASS,
-            ClearIcon {
-
-
-
-            }
+            ClearIcon {}
             ClearLabel {
                 text: "All clear.",
             }

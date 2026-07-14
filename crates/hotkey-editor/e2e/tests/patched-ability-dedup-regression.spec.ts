@@ -2,24 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Regression: several Warcraft III units carry both the pre-patch and
-// post-patch version of an ability because CASC additive merging keeps
-// both IDs.  Rule 5 in `WarcraftDataAggregation::suppress_same_slot_duplicates`
-// detects ability pairs that share a default button position AND the same
-// display name and suppresses the older one.
-//
-// Affected units and their patched pairs (both IDs default to the same slot):
-//   Death Knight (Udea/Uear): AUan + AUa2 ("Animate Dead")
-//   Banshee (uban):           Apos + Aps2 ("Possession")
-//   Archer (earc):            Acoa + Aco2 ("Mount Hippogryph")
-//   Hippogryph (ehip):        Acoh + Aco3 ("Pick up Archer")
-//   Fire Lord (nfir):         ANic (passive) + ANia (autocast toggle, "Incinerate")
-//
-// Template + cascade is applied first so that both abilities in each pair
-// are placed on visible, non-colliding cells.  Without the Rule 5 fix the
-// ability would appear twice; with the fix it appears exactly once at its
-// expected grid position.
-
 async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();

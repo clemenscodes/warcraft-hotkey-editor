@@ -11,16 +11,8 @@ pub fn OrcRaceTheme() -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitList {
-
-
-
-            }
-            UnitDetail {
-
-
-
-            }
+            UnitList {}
+            UnitDetail {}
         }
     }
 }

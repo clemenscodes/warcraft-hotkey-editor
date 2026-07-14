@@ -3,14 +3,6 @@ import { expect, test, type Page } from "@playwright/test";
 const APP = "/warcraft-hotkey-editor/";
 const LS_KEY = "warcraft-hotkey-editor.custom-keys";
 
-// Multi-level upgrades bind one hotkey token per research tier
-// (`Hotkey=Q,Q,Q`). A single token binds only tier 1, so the follow-up upgrade
-// levels — graveyard attack/armor, Banshee/Necromancer training — silently
-// lose their hotkey in game. normalize() must replicate the token to the
-// upgrade's tier count, and localStorage is the canonical export, so we assert
-// against it directly.
-
-// Each Undead multi-level upgrade and its tier count.
 const UPGRADES: Array<{ id: string; tiers: number; name: string }> = [
   { id: "Rume", tiers: 3, name: "Creature Attack (graveyard)" },
   { id: "Ruar", tiers: 3, name: "Creature Carapace (graveyard)" },

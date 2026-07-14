@@ -7,12 +7,6 @@ const serverScript = join(__dirname, "server.mjs");
 
 const baseUrl = process.env["BASE_URL"] ?? "http://localhost:8123";
 
-// Suppress the first-visit onboarding Help dialog for the whole suite by
-// seeding its "already seen" flag. The dialog is correct production behavior
-// for fresh visitors, but as a modal overlay it would intercept the clicks
-// every interacting test relies on. Tests that exercise onboarding itself
-// override this with an empty storageState. Seeded against the same origin the
-// suite navigates to, so a BASE_URL override stays consistent.
 const onboardingSuppressedState = {
   cookies: [],
   origins: [
@@ -60,8 +54,6 @@ export default defineConfig({
       },
     },
     {
-      // The --no-sandbox family above is Chromium-only; Firefox runs headless
-      // in CI without any special launch flags, so it gets none.
       name: "firefox",
       use: {
         ...devices["Desktop Firefox"],

@@ -18,11 +18,7 @@ pub fn ControlGroupsHotkeysView() -> Element {
             SystemHotkeysSectionIntro {
                 text: caption,
             }
-            ControlGroupsRow {
-
-
-
-            }
+            ControlGroupsRow {}
         }
     }
 }

@@ -15,39 +15,19 @@ pub fn RaceTheme() -> Element {
     let race = *use_view_navigation().active_race().read();
     match race {
         Race::Human => rsx! {
-            HumanRaceTheme {
-
-
-
-            }
+            HumanRaceTheme {}
         },
         Race::Orc => rsx! {
-            OrcRaceTheme {
-
-
-
-            }
+            OrcRaceTheme {}
         },
         Race::Undead => rsx! {
-            UndeadRaceTheme {
-
-
-
-            }
+            UndeadRaceTheme {}
         },
         Race::Nightelf => rsx! {
-            NightelfRaceTheme {
-
-
-
-            }
+            NightelfRaceTheme {}
         },
         Race::Neutral => rsx! {
-            NeutralRaceTheme {
-
-
-
-            }
+            NeutralRaceTheme {}
         },
     }
 }

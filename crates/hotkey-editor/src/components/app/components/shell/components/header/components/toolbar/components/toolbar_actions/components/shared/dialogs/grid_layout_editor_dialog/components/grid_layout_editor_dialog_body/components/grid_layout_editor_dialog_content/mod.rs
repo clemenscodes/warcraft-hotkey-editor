@@ -23,11 +23,7 @@ pub fn GridLayoutEditorDialogContent(props: GridLayoutEditorDialogContentModel) 
     rsx! {
         div {
             class: CLASS,
-            LayoutIntro {
-
-
-
-            }
+            LayoutIntro {}
             LayoutGrid {
                 cells,
             }

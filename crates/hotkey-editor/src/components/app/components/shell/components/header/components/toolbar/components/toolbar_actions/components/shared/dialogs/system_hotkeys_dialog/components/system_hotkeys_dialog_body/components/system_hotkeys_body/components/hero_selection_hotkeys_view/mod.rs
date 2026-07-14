@@ -18,11 +18,7 @@ pub fn HeroSelectionHotkeysView() -> Element {
             SystemHotkeysSectionIntro {
                 text: caption,
             }
-            HeroSelectionRow {
-
-
-
-            }
+            HeroSelectionRow {}
         }
     }
 }

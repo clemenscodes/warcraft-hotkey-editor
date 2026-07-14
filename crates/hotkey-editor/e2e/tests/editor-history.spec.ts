@@ -2,12 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Editor selections — race, mode, selected unit, and search query — are
-// history-significant: each change pushes a browser history entry, so the mouse
-// back/forward buttons step through previous selections (and they are restored
-// into the UI, not just the URL). Entry-only changes on the collision/cascade
-// pages stay `replace` and are covered elsewhere.
-
 function unitParam(page: Page): Promise<string | null> {
   return page.evaluate(() => new URL(location.href).searchParams.get("unit"));
 }
@@ -32,7 +26,6 @@ test.describe("Editor selection history (back/forward)", () => {
 
     await page.goBack();
     await expect(page).toHaveURL(/race=orc/);
-    // The signal is restored, not just the URL: the Orc list is shown again.
     await page.locator(".unit-card").filter({ hasText: "Grunt" }).first().waitFor();
 
     await page.goBack();
@@ -75,8 +68,6 @@ test.describe("Editor selection history (back/forward)", () => {
     await expect.poll(() => unitParam(page)).toBe(second);
   });
 
-  // Typing a whole word must add exactly one history entry — the search session
-  // is coalesced, not recorded per keystroke.
   test("typing a search adds a single coalesced history entry", async ({ page }) => {
     const search = page.locator('input[type="search"]');
     const before = await page.evaluate(() => history.length);
@@ -92,8 +83,6 @@ test.describe("Editor selection history (back/forward)", () => {
     await expect(search).toHaveValue("");
   });
 
-  // Two searches separated by an idle gap are distinct sessions, so back/forward
-  // steps between them (and restores the input each time).
   test("distinct searches after a pause are separate history entries", async ({
     page,
   }) => {
@@ -101,7 +90,6 @@ test.describe("Editor selection history (back/forward)", () => {
 
     await search.fill("Footman");
     await expect(page).toHaveURL(/search_query=Footman/);
-    // Let the search session end (idle longer than the coalescing window).
     await page.waitForTimeout(700);
 
     await search.fill("Grunt");

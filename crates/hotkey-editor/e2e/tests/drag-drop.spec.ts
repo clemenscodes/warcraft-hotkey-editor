@@ -3,9 +3,6 @@ import { expect, test } from "@playwright/test";
 const APP = "/warcraft-hotkey-editor/";
 const LS_KEY = "warcraft-hotkey-editor.custom-keys";
 
-// Extract the value of a field inside a [section] from a CustomKeys.txt string.
-// Section ids are case-insensitive in CustomKeys.txt, and the serializer emits
-// them in their canonical case (e.g. [ACdm]), so match without regard to case.
 function fieldInSection(content: string, section: string, field: string): string | null {
   const lower = content.toLowerCase();
   const start = lower.indexOf(`[${section.toLowerCase()}]`);

@@ -26,11 +26,7 @@ pub fn BurgerMenu() -> Element {
             aria_expanded: "{is_open}",
             aria_controls: "burger-drawer",
             onclick: toggle,
-            BurgerToggleIcon {
-
-
-
-            }
+            BurgerToggleIcon {}
         }
         if is_open {
             BurgerBackdrop {

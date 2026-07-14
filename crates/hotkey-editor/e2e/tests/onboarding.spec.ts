@@ -3,12 +3,8 @@ import { expect, test } from "@playwright/test";
 const APP = "/warcraft-hotkey-editor/";
 const SEEN_KEY = "warcraft-hotkey-editor.onboarding-seen";
 
-// These tests need the genuine first-visit state, so they start from empty
-// storage instead of the suite-wide seeded "already seen" flag.
 test.use({ storageState: { cookies: [], origins: [] } });
 
-// The onboarding guide is the only dialog open in these flows, so the dialog
-// role identifies it; the dismiss button confirms it is the help dialog.
 test.describe("Onboarding Help dialog", () => {
   test("auto-opens on first visit, and the button dismisses it for good", async ({ page }) => {
     await page.goto(APP);

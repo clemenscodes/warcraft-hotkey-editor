@@ -2,15 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Buildings whose rendered command card carries no ability of their own and
-// whose only command is the rally point. They are dead placeholders for hotkey
-// editing — there is nothing to rebind but the rally point — so the catalog
-// hides them in curated browsing and surfaces them only under "No abilities".
-// All seven are Neutral campaign buildings, so they live in Campaign mode.
 const RALLY_ONLY_BUILDINGS = ["ndmg", "ndke", "ndkw", "ndrb", "ndh3", "ndh4", "nheb"];
 
-// The unit id renders in a <code> inside each .unit-card; match a card by its
-// exact id so two same-named cards (the two Dimensional Gates) stay distinct.
 function unitCardById(page: any, unitId: string) {
   return page.locator(".unit-card").filter({
     has: page.locator("code", { hasText: new RegExp(`^${unitId}$`) }),

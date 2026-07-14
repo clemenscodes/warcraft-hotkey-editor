@@ -3,12 +3,6 @@ import type { Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// The system / menu hotkey picker (`SystemKeyPickerDialog`) accepts keyboard
-// input too. Like the shared `KeyPicker` it must restore focus on every reopen,
-// and it must only honor keys the board actually offers — `KeyCodes::from_event`
-// also maps Tab/Backspace/Enter, which the game does not bind and the grid never
-// shows.
-
 async function openFirstSlotPicker(page: Page) {
   await page.locator('.inventory-filled-slot').first().click();
   await page.locator(".key-picker-board").waitFor();
@@ -37,7 +31,6 @@ test.describe("System hotkey picker keyboard input", () => {
     await page.keyboard.press("g");
     await expect(slotKey).toHaveText("G");
 
-    // Reopen and pick again — regression guard for the lost-focus-on-reopen bug.
     await openFirstSlotPicker(page);
     await page.keyboard.press("h");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
@@ -47,8 +40,6 @@ test.describe("System hotkey picker keyboard input", () => {
   test("pressing a key not on the board (Tab) is ignored", async ({ page }) => {
     await openFirstSlotPicker(page);
     await page.keyboard.press("Tab");
-    // The picker stays open and the slot stays in its editing state, proving Tab
-    // was not accepted as a hotkey.
     await expect(page.locator(".key-picker-board")).toBeVisible();
     await expect(
       page.locator('.inventory-filled-slot').first().locator(".plain-slot-key"),

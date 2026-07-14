@@ -25,20 +25,12 @@ pub fn ResolvePage(props: ResolvePageModel) -> Element {
     let plan = match use_resolve_page(&props) {
         ResolvePagePresentation::NoFile => {
             return rsx! {
-                EmptyState {
-
-
-
-                }
+                EmptyState {}
             };
         }
         ResolvePagePresentation::Clear => {
             return rsx! {
-                ClearState {
-
-
-
-                }
+                ClearState {}
             };
         }
         ResolvePagePresentation::Plan(plan) => *plan,

@@ -4,13 +4,6 @@ import type { Page } from "@playwright/test";
 const APP = "/warcraft-hotkey-editor/";
 const LS_KEY = "warcraft-hotkey-editor.custom-keys";
 
-// The hotkey picker (shared `KeyPicker`, used for both ability hotkeys and the
-// global grid layout) accepts keyboard input. Two things must hold: only keys
-// the board actually offers are honored, and the focus that the keydown handler
-// depends on is restored on every reopen — the picker mounts in a portal whose
-// focus the dialog resets a tick after mount, which previously left the keyboard
-// dead after the first pick.
-
 async function openBlizzardPicker(page: Page) {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
@@ -29,8 +22,6 @@ async function openBlizzardPicker(page: Page) {
   await page.locator(".normal-override-key, .special-override-key").waitFor();
   await page.locator(".normal-override-key, .special-override-key").click();
   await page.locator(".key-picker-board").waitFor();
-  // The keydown handler only fires once focus lands inside the dialog; wait for
-  // it so the test never races the deferred focus.
   await expect(page.locator(".key-picker-board")).toBeFocused();
 }
 
@@ -45,14 +36,11 @@ test.describe("Ability hotkey picker keyboard input", () => {
   });
 
   test("keyboard selection still works after reopening the picker", async ({ page }) => {
-    // First pick via keyboard.
     await openBlizzardPicker(page);
     await page.keyboard.press("e");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("E");
 
-    // Reopen and pick a different key — this is the regression: focus used to be
-    // lost on the second open, so the keypress did nothing.
     await page.locator(".normal-override-key, .special-override-key").click();
     await page.locator(".key-picker-board").waitFor();
     await expect(page.locator(".key-picker-board")).toBeFocused();
@@ -63,8 +51,6 @@ test.describe("Ability hotkey picker keyboard input", () => {
 
   test("pressing a conflicting (disabled) key does nothing", async ({ page }) => {
     await openBlizzardPicker(page);
-    // 'W' is taken by Summon Water Elemental on the Archmage, so it renders as a
-    // disabled conflict cell and must not be selectable from the keyboard.
     await expect(page.locator('.key-picker-board').getByRole('button', { name: /^W/ })).toBeDisabled();
     await page.keyboard.press("w");
     await expect(page.locator(".key-picker-board")).toBeVisible();
@@ -95,15 +81,11 @@ test.describe("Global grid layout picker keyboard input", () => {
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
     await page.locator(".grid-layout-editor-dialog-content").waitFor();
 
-    // First grid cell, keyboard pick. 'H' doubles as a spatial-navigation key,
-    // so this also guards that the picker — not the navigation handler — gets it.
     await openGridCellPicker(page, 0, 0);
     await page.keyboard.press("h");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
     await expect(page.locator(".layout-tile").nth(0)).toHaveText("H");
 
-    // A second cell, another navigation-letter pick — proves focus is restored
-    // on reopen and that J/K/L also reach the picker.
     await openGridCellPicker(page, 1, 0);
     await page.keyboard.press("j");
     await expect(page.locator(".key-picker-board")).not.toBeVisible();

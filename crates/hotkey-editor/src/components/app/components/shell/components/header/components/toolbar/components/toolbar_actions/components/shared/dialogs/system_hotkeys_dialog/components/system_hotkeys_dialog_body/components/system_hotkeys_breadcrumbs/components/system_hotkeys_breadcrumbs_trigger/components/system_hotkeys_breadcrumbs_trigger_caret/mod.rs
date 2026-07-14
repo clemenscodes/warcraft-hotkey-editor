@@ -16,19 +16,11 @@ pub fn SystemHotkeysBreadcrumbsTriggerCaret(
 ) -> Element {
     if props.is_open {
         rsx! {
-            OpenBreadcrumbsTriggerCaret {
-
-
-
-            }
+            OpenBreadcrumbsTriggerCaret {}
         }
     } else {
         rsx! {
-            ClosedBreadcrumbsTriggerCaret {
-
-
-
-            }
+            ClosedBreadcrumbsTriggerCaret {}
         }
     }
 }

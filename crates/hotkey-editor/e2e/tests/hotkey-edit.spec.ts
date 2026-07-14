@@ -39,10 +39,6 @@ test.describe("Hotkey editing", () => {
   });
 
   test("double-clicking a hero research-menu ability opens its research hotkey picker", async ({ page }) => {
-    // Regression: research-menu (hero learn-skill) tiles are selected in research
-    // context, where the bindable field is the research hotkey, not the primary
-    // Hotkey. The double-click effect must open the research hotkey picker for
-    // these — previously it no-op'd because it only handled the primary field.
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('input[type="search"]').fill("Archmage");
@@ -57,20 +53,15 @@ test.describe("Hotkey editing", () => {
     await researchTile.waitFor();
     await researchTile.dblclick();
 
-    // The picker must open (it did not, for research items, before the fix).
     await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-board').getByRole('button', { name: /^Y/ }).click();
     await expect(page.locator(".key-picker-board")).not.toBeVisible();
 
-    // It must write the RESEARCH hotkey field, proving the research picker opened
-    // (not the primary Hotkey field).
     const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
     expect(stored?.toLowerCase()).toContain("researchhotkey=y");
   });
 
   test("double-clicking an ability icon opens the key picker and assigns a key", async ({ page }) => {
-    // Reuses Q (proven pickable on this exact target by the click-based test
-    // above) so the assertion exercises the double-click path, not fixture luck.
     await page.locator(".filled-tile").first().dblclick();
     await page.locator(".key-picker-board").waitFor();
     await page.locator('.key-picker-board').getByRole('button', { name: /^Q/ }).click();

@@ -21,51 +21,15 @@ pub fn InlineActions() -> Element {
             class: CLASS,
             role: "toolbar",
             aria_label: "File actions",
-            UndoButton {
-
-
-
-            }
-            RedoButton {
-
-
-
-            }
-            UploadButton {
-
-
-
-            }
-            TemplatesButton {
-
-
-
-            }
-            SystemHotkeysButton {
-
-
-
-            }
-            ResolveButton {
-
-
-
-            }
-            PreviewButton {
-
-
-
-            }
-            ExportButton {
-
-
-
-            }
-            HelpButton {
-
-
-
-            }
+            UndoButton {}
+            RedoButton {}
+            UploadButton {}
+            TemplatesButton {}
+            SystemHotkeysButton {}
+            ResolveButton {}
+            PreviewButton {}
+            ExportButton {}
+            HelpButton {}
         }
     }
 }

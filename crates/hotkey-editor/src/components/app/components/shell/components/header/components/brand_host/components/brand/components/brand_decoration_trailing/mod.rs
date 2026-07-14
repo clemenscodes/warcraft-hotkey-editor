@@ -10,11 +10,7 @@ pub fn BrandDecorationTrailing() -> Element {
     rsx! {
         span {
             class: CLASS,
-            BrandDecorationHost {
-
-
-
-            }
+            BrandDecorationHost {}
         }
     }
 }

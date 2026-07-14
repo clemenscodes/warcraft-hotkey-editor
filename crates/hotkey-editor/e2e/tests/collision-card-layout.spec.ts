@@ -2,16 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// The position-collision detail card shows ONE affected unit (e.g. Blue Dragon
-// has both Frost Attack and Devour on the same cell) flanked by the two
-// abilities that clash on it. The second "sample carrier" unit that used to
-// head the card was misleading and was removed — these tests pin the new shape:
-//   * exactly one unit per card, two abilities, one separator,
-//   * the ability icon opens the carriers dialog,
-//   * the "+N more" link opens the SAME carriers dialog as its ability icon.
-// As with the other collision suites, the Default template is applied first so
-// the working state is the canonical collision-heavy baseline.
-
 async function openPositionCollisions(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
@@ -44,8 +34,6 @@ test.describe("Collision card layout", () => {
     await openPositionCollisions(page);
   });
 
-  // The core of the redesign: one unit per card (not two), with the two
-  // abilities that clash on the cell and a single ✕ separator between them.
   test("every conflict card has exactly one unit, two abilities and one separator", async ({
     page,
   }) => {
@@ -67,7 +55,6 @@ test.describe("Collision card layout", () => {
     }
   });
 
-  // The ability icon is the primary trigger for the carriers dialog.
   test("clicking an ability icon opens the carriers dialog", async ({ page }) => {
     await page.locator(".conflict-ability-trigger").first().click();
 
@@ -78,8 +65,6 @@ test.describe("Collision card layout", () => {
     await closeCarriersDialog(page);
   });
 
-  // The "+N more" link must open the exact same carriers dialog as the ability
-  // icon next to it: same title, same list of carriers.
   test('"+N more" opens the same carriers dialog as its ability icon', async ({
     page,
   }) => {

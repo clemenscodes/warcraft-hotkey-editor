@@ -2,12 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Deep-linking on the collision pages: the selected list entry rides in the
-// `?entry=` URL param so it survives leaving the page (clicking a unit → editor)
-// and is restorable via browser back, per-tab, and from a pasted/bookmarked URL
-// (scrolled into view). As with the other collision suites the Default template
-// is applied first so the entry set is the canonical collision-heavy baseline.
-
 async function applyDefaultTemplate(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();

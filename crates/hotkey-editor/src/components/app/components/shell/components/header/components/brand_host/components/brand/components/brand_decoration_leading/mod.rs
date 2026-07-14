@@ -10,11 +10,7 @@ pub fn BrandDecorationLeading() -> Element {
     rsx! {
         span {
             class: CLASS,
-            BrandDecorationHost {
-
-
-
-            }
+            BrandDecorationHost {}
         }
     }
 }

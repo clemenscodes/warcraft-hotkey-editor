@@ -13,16 +13,8 @@ pub fn Toolbar() -> Element {
         nav {
             class: CLASS,
             aria_label: "Editor actions",
-            CollisionsButtonHost {
-
-
-
-            }
-            ToolbarActions {
-
-
-
-            }
+            CollisionsButtonHost {}
+            ToolbarActions {}
         }
     }
 }

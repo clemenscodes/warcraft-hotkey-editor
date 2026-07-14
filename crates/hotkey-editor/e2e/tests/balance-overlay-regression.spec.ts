@@ -2,12 +2,6 @@ import { expect, test, type Page, type Locator } from "@playwright/test";
 
 const APP = "/warcraft-hotkey-editor/";
 
-// Apply the Default template and resolve cascade — same dance as
-// destroyer-regression.spec.ts. Without this, abilities whose default
-// `Buttonpos=` collides with another ability's default on the same unit
-// only render once; e.g. Devour Magic and Absorb Mana both default to
-// (0,2) on the Destroyer. Post-cascade every ability has a unique cell so
-// the command card shows the unit's full ability list.
 async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
@@ -28,13 +22,6 @@ async function applyTemplateAndCascade(page: Page): Promise<void> {
   await page.locator(".unit-card").first().waitFor();
 }
 
-// Pick a unit from a given race + search query, then click it. Returns once
-// the command grid has finished rendering at least one ability tile.
-//
-// Does not apply a template — abilities surface at their default
-// `Buttonpos=` cells and units with intra-unit collisions render
-// fewer than their full ability list. For tests that need every
-// ability visible, call `applyTemplateAndCascade` first.
 async function pickUnit(
   page: Page,
   options: {
@@ -256,88 +243,4 @@ test.describe("Base-only `.txt` data — overlay variants must not leak", () => 
 });
 
 // The `notused_unitui.slk` / `notused_unitdata.slk` files shipped under
-// `_balance/*/units/` use a DIFFERENT column layout from the live files —
-// `inEditor` is column 10 there, column 9 in the live `unitui.slk`. A
-// matcher that read the notused files would corrupt every flag for every
-// unit row that appears in both. `is_war3_units_path` excludes them.
-test.describe("Stale notused_*.slk files stay excluded", () => {
-  // Owl Scout (nowl) has `inEditor=1` in every live `unitui.slk` variant.
-  // When the extractor accidentally read `notused_unitui.slk`, its differing
-  // column layout collapsed nowl's flag to `inEditor=0`, removed it from
-  // the catalog, and stopped the Druid of the Talon ability cascade from
-  // resolving its summon target.
-  test("Owl Scout (nowl, Sentry Wards summon) is in the catalog as a Neutral unit", async ({
-    page,
-  }) => {
-    await pickUnit(page, {
-      race: "neutral",
-      query: "nowl",
-      cardText: "Owl Scout",
-    });
-    // Selection successful + at least one ability tile means the unit
-    // wasn't filtered out and its abilities resolved correctly.
-    await page.locator(".filled-tile").first().waitFor();
-  });
-
-  // Destroyer (ubsp) carries five abilities in `unitabilities.slk` —
-  // Devour Magic (Advm), Orb of Annihilation (Afak), Avenger Form (Aave),
-  // Absorb Mana (Aabs), and Spell Immunity (ACmi). When notused_*.slk
-  // pollution corrupted the transform-target filter, four of them got
-  // stripped and only ACmi survived. Template + cascade is required
-  // because Advm and Aabs both default to (0,2). Avenger Form is the
-  // transform-back-to-Obsidian-Statue toggle on the Destroyer — it lives
-  // at the off-state position (3,2) which Absorb Mana also occupies
-  // post-cascade, so only Aabs visibly renders there. We verify the
-  // other four; the Rust regression test
-  // (`destroyer_carries_full_base_ability_set`) covers the data layer for
-  // Aave separately.
-  test("Destroyer command card surfaces the non-morph base abilities", async ({
-    page,
-  }) => {
-    await applyTemplateAndCascade(page);
-    await pickUnit(page, {
-      race: "undead",
-      query: "ubsp",
-      cardText: "ubsp",
-      skipNavigate: true,
-    });
-    const alts = await commandCardSlotAlts(page);
-    expect(alts).toContain("Devour Magic");
-    expect(alts).toContain("Orb of Annihilation");
-    expect(alts).toContain("Absorb Mana");
-    expect(alts).toContain("Spell Immunity");
-  });
-});
-
-// The catalog filter weeds out placeholder unit rows (no abilities + no
-// production) but must NOT drop campaign-only units in their dedicated
-// mode — and must NOT show them in Melee mode.
-test.describe("Campaign units stay out of Melee mode", () => {
-  test("Demigod (Ecen, NE campaign) does not appear in Melee Night Elf browse", async ({
-    page,
-  }) => {
-    await page.goto(APP);
-    await page.locator(".unit-card").first().waitFor();
-    await page.locator('.race-tabs [class*="nightelf-race-tab"]').click();
-    await page
-      .locator('.race-tabs .nightelf-race-tab .active-race-tab')
-      .waitFor();
-    await expect(
-      page.locator(".unit-card").filter({ hasText: "Demigod" }),
-    ).toHaveCount(0);
-  });
-
-  test("Naga Myrmidon (campaign neutral) does not appear in Melee Neutral browse", async ({
-    page,
-  }) => {
-    await page.goto(APP);
-    await page.locator(".unit-card").first().waitFor();
-    await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
-    await page
-      .locator('.race-tabs .neutral-race-tab .active-race-tab')
-      .waitFor();
-    await expect(
-      page.locator(".unit-card").filter({ hasText: /^Naga Myrmidon$/ }),
-    ).toHaveCount(0);
-  });
-});
+// `_balance

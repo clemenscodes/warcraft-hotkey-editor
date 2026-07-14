@@ -18,11 +18,7 @@ pub fn BurgerDrawerBody(props: BurgerDrawerBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            BurgerLayoutItem {
-
-
-
-            }
+            BurgerLayoutItem {}
             BurgerMenuGroup {
                 on_close,
             }

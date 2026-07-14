@@ -13,11 +13,7 @@ impl Render for HelpGuideView {
     type Output = Element;
     fn render(&self) -> Self::Output {
         rsx! {
-            HelpGuide {
-
-
-
-            }
+            HelpGuide {}
         }
     }
 }

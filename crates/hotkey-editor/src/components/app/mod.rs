@@ -8,11 +8,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn App() -> Element {
     rsx! {
-        Router::<Route> {
-
-
-
-        }
+        Router::<Route> {}
     }
 }
 

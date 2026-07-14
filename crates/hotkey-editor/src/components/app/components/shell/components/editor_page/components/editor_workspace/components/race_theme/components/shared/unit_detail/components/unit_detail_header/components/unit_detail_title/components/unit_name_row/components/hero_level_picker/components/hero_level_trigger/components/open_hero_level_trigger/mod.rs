@@ -22,19 +22,11 @@ pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerModel) -> Element {
             class: CLASS,
             r#type: "button",
             onclick,
-            HeroLevelTriggerLabel {
-
-
-
-            }
+            HeroLevelTriggerLabel {}
             HeroLevelTriggerNumber {
                 number,
             }
-            OpenHeroLevelTriggerChevron {
-
-
-
-            }
+            OpenHeroLevelTriggerChevron {}
         }
     }
 }

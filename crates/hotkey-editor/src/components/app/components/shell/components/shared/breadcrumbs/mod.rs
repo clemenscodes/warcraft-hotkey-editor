@@ -25,11 +25,7 @@ pub fn Breadcrumbs(props: BreadcrumbsModel) -> Element {
             aria_label,
             for (index, breadcrumb) in breadcrumbs.into_iter().enumerate() {
                 if index > 0 {
-                    BreadcrumbSeparator {
-
-
-
-                    }
+                    BreadcrumbSeparator {}
                 }
                 Breadcrumb {
                     label: breadcrumb.label,

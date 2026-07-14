@@ -18,11 +18,7 @@ pub fn InventoryHotkeysView() -> Element {
             SystemHotkeysSectionIntro {
                 text: caption,
             }
-            InventoryGrid {
-
-
-
-            }
+            InventoryGrid {}
         }
     }
 }

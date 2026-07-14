@@ -11,9 +11,6 @@ function assertKindOrder(kinds: (string | null)[]) {
   }
 }
 
-// The category heading renders a chevron glyph followed by the category label
-// (Heroes/Buildings/Workers/Units). Derive the unit kind from that visible label
-// rather than a data attribute.
 const LABEL_TO_KIND: Record<string, string> = {
   Heroes: "hero",
   Buildings: "building",

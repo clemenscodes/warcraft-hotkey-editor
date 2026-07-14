@@ -26,11 +26,7 @@ pub fn Body(props: BodyModel) -> Element {
         }
         ContentModel::Clear => {
             rsx! {
-                ClearState {
-
-
-
-                }
+                ClearState {}
             }
         }
         ContentModel::Positions(pane) => {

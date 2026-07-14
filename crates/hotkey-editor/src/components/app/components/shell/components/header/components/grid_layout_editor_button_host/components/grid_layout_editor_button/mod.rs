@@ -24,16 +24,8 @@ pub fn GridLayoutEditorButton(props: GridLayoutEditorButtonModel) -> Element {
             aria_haspopup: "dialog",
             aria_expanded: is_open,
             onclick,
-            GridLayoutEditorButtonIcon {
-
-
-
-            }
-            GridLayoutEditorButtonLabel {
-
-
-
-            }
+            GridLayoutEditorButtonIcon {}
+            GridLayoutEditorButtonLabel {}
         }
     }
 }

@@ -22,11 +22,7 @@ pub fn MoveTransition(props: MoveTransitionModel) -> Element {
             TransitionColumn {
                 placements: from_placements,
             }
-            MoveArrow {
-
-
-
-            }
+            MoveArrow {}
             TransitionColumn {
                 placements: to_placements,
             }

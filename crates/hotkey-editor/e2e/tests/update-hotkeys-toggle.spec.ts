@@ -33,7 +33,6 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator(".unit-card").first().click();
     await page.locator(".filled-tile").first().waitFor();
 
-    // Give the first ability a known manual hotkey (Q).
     await page.locator(".filled-tile").first().click();
     await page.locator(".normal-override-key, .special-override-key").waitFor();
     await page.locator(".normal-override-key, .special-override-key").click();
@@ -41,7 +40,6 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.locator('.key-picker-board').getByRole('button', { name: /^Q/ }).click();
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
 
-    // Turn the toggle off.
     await page.locator('[aria-label="Edit global hotkey layout"]').click();
     await page.locator(".grid-layout-editor-dialog-content").waitFor();
     await page.locator('input[aria-label="Update hotkeys when moving abilities"]').uncheck();
@@ -49,16 +47,12 @@ test.describe("Update-hotkeys-on-move toggle", () => {
     await page.keyboard.press("Escape");
     await expect(page.locator(".grid-layout-editor-dialog-content")).toHaveCount(0);
 
-    // Move the ability to a different cell.
     const tiles = page.locator(".filled-tile");
     if ((await tiles.count()) < 2) {
       test.skip();
       return;
     }
 
-    // Capture the target cell's grid coordinates before the drag so we can
-    // locate it by identity after the swap (both tiles have abilities, so
-    // .first() after the swap is ambiguous).
     const targetSection = await tiles
       .nth(1)
       .evaluate(
@@ -78,7 +72,6 @@ test.describe("Update-hotkeys-on-move toggle", () => {
 
     await tiles.first().dragTo(tiles.nth(1));
 
-    // After the swap the Q-ability is at the TARGET cell's original position.
     const movedAbilityCell = page
       .locator(".grid-editor", {
         has: page.locator(".grid-heading", { hasText: targetSection }),
@@ -87,7 +80,6 @@ test.describe("Update-hotkeys-on-move toggle", () => {
       .nth(targetIndex);
     await movedAbilityCell.click();
     await page.locator(".normal-override-key, .special-override-key").waitFor();
-    // The moved ability still shows Q (hotkey not snapped to the new cell).
     await expect(page.locator(".normal-override-key, .special-override-key")).toContainText("Q");
   });
 });

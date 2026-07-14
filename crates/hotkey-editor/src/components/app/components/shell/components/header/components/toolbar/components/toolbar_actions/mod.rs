@@ -12,16 +12,8 @@ pub fn ToolbarActions() -> Element {
     rsx! {
         div {
             class: CLASS,
-            InlineActions {
-
-
-
-            }
-            BurgerMenu {
-
-
-
-            }
+            InlineActions {}
+            BurgerMenu {}
         }
     }
 }

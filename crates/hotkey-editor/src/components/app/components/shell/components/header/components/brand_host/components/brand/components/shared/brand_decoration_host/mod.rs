@@ -11,11 +11,7 @@ pub fn BrandDecorationHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            BrandDecoration {
-
-
-
-            }
+            BrandDecoration {}
         }
     }
 }

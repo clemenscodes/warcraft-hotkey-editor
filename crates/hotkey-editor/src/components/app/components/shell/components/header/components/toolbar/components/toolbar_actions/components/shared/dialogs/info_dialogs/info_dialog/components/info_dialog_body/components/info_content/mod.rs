@@ -23,11 +23,7 @@ pub fn InfoContent(props: InfoContentModel) -> Element {
             InfoIntro {
                 intro,
             }
-            InfoFilename {
-
-
-
-            }
+            InfoFilename {}
             InfoWarning {
                 warning,
             }

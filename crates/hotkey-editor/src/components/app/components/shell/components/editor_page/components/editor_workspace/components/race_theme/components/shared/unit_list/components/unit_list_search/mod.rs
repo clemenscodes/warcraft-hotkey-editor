@@ -23,11 +23,7 @@ pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitListSearchIcon {
-
-
-
-            }
+            UnitListSearchIcon {}
             UnitListSearchInput {
                 value,
                 placeholder,

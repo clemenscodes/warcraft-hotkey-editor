@@ -26,11 +26,7 @@ pub fn Footer() -> Element {
             }
             for (index, link) in data::LINKS.iter().enumerate() {
                 if index > 0 {
-                    FooterSeparator {
-
-
-
-                    }
+                    FooterSeparator {}
                 }
                 FooterLink {
                     label: link.label,

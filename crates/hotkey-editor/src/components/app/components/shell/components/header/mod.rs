@@ -13,21 +13,9 @@ pub fn Header() -> Element {
     rsx! {
         header {
             class: CLASS,
-            BrandHost {
-
-
-
-            }
-            GridLayoutEditorButtonHost {
-
-
-
-            }
-            Toolbar {
-
-
-
-            }
+            BrandHost {}
+            GridLayoutEditorButtonHost {}
+            Toolbar {}
         }
     }
 }

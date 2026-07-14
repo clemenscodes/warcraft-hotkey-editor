@@ -10,11 +10,7 @@ pub fn DialogHeaderDecorationLeading() -> Element {
     rsx! {
         span {
             class: CLASS,
-            DialogHeaderDecoration {
-
-
-
-            }
+            DialogHeaderDecoration {}
         }
     }
 }

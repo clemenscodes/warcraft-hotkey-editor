@@ -9,7 +9,6 @@ test.describe("Search ignores mode filter (melee/campaign)", () => {
   });
 
   test("searching a campaign-only unit while in Melee mode still returns it", async ({ page }) => {
-    // "Demigod" (Ecen) is a Night Elf campaign unit that never appears in Melee browsing.
     await page.locator('input[type="search"]').fill("Demigod");
     await page.locator(".unit-card").filter({ hasText: "Demigod" }).first().waitFor();
   });

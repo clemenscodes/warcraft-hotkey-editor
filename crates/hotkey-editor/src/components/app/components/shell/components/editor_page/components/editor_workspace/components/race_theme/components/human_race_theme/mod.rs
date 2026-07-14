@@ -11,16 +11,8 @@ pub fn HumanRaceTheme() -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitList {
-
-
-
-            }
-            UnitDetail {
-
-
-
-            }
+            UnitList {}
+            UnitDetail {}
         }
     }
 }
