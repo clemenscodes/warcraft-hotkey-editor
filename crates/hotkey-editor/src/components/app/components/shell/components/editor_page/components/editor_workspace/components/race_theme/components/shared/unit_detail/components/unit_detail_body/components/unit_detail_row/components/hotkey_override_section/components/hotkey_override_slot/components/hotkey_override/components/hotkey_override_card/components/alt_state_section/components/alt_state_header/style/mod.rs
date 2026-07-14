@@ -4,7 +4,7 @@ classes! {
     base: tw![
         "grid",
         "grid-cols-[minmax(0,1fr)_auto_auto]",
-        "items-center",
+        "items-stretch",
         "gap-x-3.5",
         "h-20",
     ],
