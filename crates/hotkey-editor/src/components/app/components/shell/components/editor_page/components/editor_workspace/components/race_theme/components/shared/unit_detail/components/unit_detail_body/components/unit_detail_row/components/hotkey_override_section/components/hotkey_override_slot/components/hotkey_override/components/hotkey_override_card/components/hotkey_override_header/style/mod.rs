@@ -6,6 +6,7 @@ classes! {
         "grid-cols-[minmax(0,1fr)_auto]",
         "items-center",
         "gap-x-6",
+        "min-h-20",
         "pb-3.5",
         "border-b",
         "border-warcraft-blue-deep",
@@ -13,6 +14,7 @@ classes! {
     ],
     mobile: tw![
         "mobile:grid-cols-[1fr_auto]",
+        "mobile:min-h-[4.6rem]",
         "mobile:gap-2",
         "mobile:pt-0",
         "mobile:pr-0",
@@ -24,6 +26,7 @@ classes! {
     ],
     tablet: tw![
         "tablet:grid-cols-[1fr_auto]",
+        "tablet:min-h-[4.6rem]",
         "tablet:gap-2",
         "tablet:pt-0",
         "tablet:pr-0",

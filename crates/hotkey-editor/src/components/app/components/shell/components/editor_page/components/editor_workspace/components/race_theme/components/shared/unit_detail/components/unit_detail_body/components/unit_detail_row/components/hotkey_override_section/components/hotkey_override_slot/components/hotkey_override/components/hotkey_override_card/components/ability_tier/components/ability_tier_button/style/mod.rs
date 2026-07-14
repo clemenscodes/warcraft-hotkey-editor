@@ -2,8 +2,12 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "w-[2.4rem]",
-        "h-[2.4rem]",
+        "@container",
+        "h-full",
+        "w-auto",
+        "max-w-full",
+        "aspect-square",
+        "shrink-0",
         "p-0",
         "flex",
         "items-center",
@@ -20,23 +24,6 @@ classes! {
         "kb-focus:outline-none",
         "kb-focus:shadow-focus",
         "[&>span]:block",
-        "[&_svg]:w-[1.7rem]",
-        "[&_svg]:h-[1.7rem]",
-    ],
-    mobile: tw![
-        "mobile:w-8.5",
-        "mobile:h-8.5",
-        "mobile:min-w-8.5",
-        "mobile:min-h-8.5",
-        "mobile:[&_svg]:w-5.5",
-        "mobile:[&_svg]:h-5.5",
-    ],
-    tablet: tw![
-        "tablet:w-8.5",
-        "tablet:h-8.5",
-        "tablet:min-w-8.5",
-        "tablet:min-h-8.5",
-        "tablet:[&_svg]:w-5.5",
-        "tablet:[&_svg]:h-5.5",
+        "[&_svg]:size-[71cqi]",
     ],
 }

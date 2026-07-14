@@ -8,7 +8,7 @@ classes! {
         "justify-center",
         "w-auto",
         "min-w-20",
-        "h-20",
+        "h-full",
         "p-0",
         "text-xl",
         "whitespace-nowrap",
@@ -18,10 +18,6 @@ classes! {
         "kb-focus:shadow-glow-soft",
     ],
     mobile: tw![
-        "mobile:w-auto",
-        "mobile:h-[4.6rem]",
         "mobile:min-w-[4.6rem]",
-        "mobile:min-h-[4.6rem]",
-        "mobile:text-xl",
     ],
 }

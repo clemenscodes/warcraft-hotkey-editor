@@ -2,15 +2,18 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "@container",
         "appearance-none",
-        "w-20",
-        "h-20",
-        "p-1",
+        "h-full",
+        "w-auto",
+        "aspect-square",
+        "shrink-0",
+        "p-[5cqi]",
         "inline-flex",
         "items-center",
         "justify-center",
         "bg-race-human/8",
-        "border-2",
+        "border-[2.5cqi]",
         "border-race-human",
         "text-warcraft-text-secondary",
         "rounded-control",
@@ -26,9 +29,5 @@ classes! {
         "[&>svg]:block",
         "[&>svg]:w-full",
         "[&>svg]:h-full",
-    ],
-    mobile: tw![
-        "mobile:w-[4.6rem]",
-        "mobile:h-[4.6rem]",
     ],
 }

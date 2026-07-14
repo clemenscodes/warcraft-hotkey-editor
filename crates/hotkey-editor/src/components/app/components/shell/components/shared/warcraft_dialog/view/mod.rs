@@ -12,4 +12,5 @@ pub struct WarcraftDialogView<Body: Render<Output = Element>, Footer: Render<Out
 
 impl<Body: Render<Output = Element>, Footer: Render<Output = Element>> ddd::View
     for WarcraftDialogView<Body, Footer>
-{}
+{
+}

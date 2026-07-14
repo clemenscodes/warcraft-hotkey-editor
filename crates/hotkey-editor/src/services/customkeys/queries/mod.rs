@@ -8,4 +8,5 @@ pub mod unit_collisions_query;
 pub(crate) fn assert_query<TheQuery>()
 where
     TheQuery: ddd::Query,
-{}
+{
+}

@@ -8,7 +8,7 @@ classes! {
         "border-none",
         "cursor-pointer",
         "inline-flex",
-        "size-18",
+        "size-[64.3cqi]",
         "leading-0",
         "group",
         "kb-focus:outline-none",

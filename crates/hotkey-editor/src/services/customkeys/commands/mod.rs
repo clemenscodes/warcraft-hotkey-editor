@@ -9,4 +9,5 @@ pub mod swap_system_bindings_command;
 pub(crate) fn assert_command<TheCommand>()
 where
     TheCommand: ddd::Command<warcraft_keybinds::CustomKeys>,
-{}
+{
+}
