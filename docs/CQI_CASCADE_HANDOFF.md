@@ -1,5 +1,141 @@
 # cqi/fill cascade sweep — handoff
 
+## 🔨 THE IRON RULE — memorize it, it is the entire task
+
+> **A component's `style` contains `cqi`? Then it MUST be WRAPPED by a PARENT
+> component named `<ThatComponent>Host` whose `style` carries `@container` + the
+> definite box. A wrapper is a PARENT: the Host renders the `cqi` component as its
+> child, and — per render-tree == directory-tree — the child nests UNDER it at
+> `<name>_host/components/<name>/`. If a `cqi` component is NOT wrapped by its
+> `Host` parent, IT IS BROKEN.**
+
+Mechanical test (run it on EVERY component): `grep cqi` its `style/mod.rs`. If it
+has `cqi`, its **parent in the render tree must be `<name>_host/`** (the leaf lives
+at `<name>_host/components/<name>/`) and that Host's `style` has `@container`. No
+`Host` parent → **BROKEN, not converted.** No exceptions.
+
+**`@container` and `cqi` CAN sit on the same element** — that is exactly what a
+mid-chain Host is. In the header, `BrandHost`'s style is `@container` **and**
+`w-[26cqi]`: the `@container` hosts its child `Brand`, while its own `w-[26cqi]`
+resolves off the bar (`BrandHost`'s parent `@container`). What matters is the CHAIN:
+**every `cqi` length resolves off its nearest ancestor `@container`**, so that ancestor
+must be a Host sized to the element's intended reference box. Each level is an
+`@container` Host sized (via `cqi` or a per-band absolute at the very top) off its
+parent `@container` — bar → `BrandHost` → `Brand` (leaf, `size-full`, no `@container`
+of its own). The stats-panel bug is a **MISSING Host level**: a section's `cqi`
+resolves off the whole panel (grandparent) instead of a section-sized Host → too big.
+Add the missing Host; do NOT strip `@container` off a component that legitimately
+hosts `cqi` children.
+
+### Why (this is not style — it is how `cqi` physically resolves)
+`cqi` resolves off the **nearest ANCESTOR `@container`'s content box — NEVER off the
+element itself** (container-query gotcha). So if a component carries BOTH `@container`
+and `cqi`, its own `cqi` skips itself and resolves off a **grandparent** container,
+which is wider → **every length renders too big.** Example that is broken RIGHT NOW:
+`unit_stats_panel`'s sections (`attributes_stats`, …) each carry `@container` +
+`gap-[1.34cqi]`; that gap resolves off the whole **panel** (~1236px) instead of the
+**section** (~600px) → **≈2× too big → rows huge, margins bloated.** The ONLY fix is
+to give each `cqi` component its `Host`: `AttributesStatsHost` (`@container`, sized to
+the section's own box) renders `AttributesStats` (`cqi`, no `@container`, fills) — now
+the section's `cqi` resolves off its own box. This is exactly `BrandHost`→`Brand` in
+the header.
+
+### The transformation, mechanically (for a component X that today has `@container`+`cqi`)
+1. Create `x_host/` with `mod.rs` (renders `<X>` inside `div class:CLASS`, forwarding X's
+   named-field props), `style` = `@container` + the fill/definite box, and ddd
+   `view/`+`model/` mirroring X's fields (`git mv` X to `x_host/components/x/`).
+2. In X: keep its `cqi`; add fill (`w-full`/`size-full`) so X fills the Host. Keep X's
+   `@container` **only if X itself hosts `cqi` children** (it is their container); a
+   pure leaf with no `cqi` children carries no `@container` of its own (like `Brand`).
+   Either way, X's own `cqi` now resolves off `XHost` (its parent `@container`) =
+   X's own box.
+3. Rewire every renderer of X to render `XHost`; fix the parent `components/mod.rs`
+   (`pub mod x` → `pub mod x_host`). Grid-placement classes (`[grid-area:…]`) move to
+   the Host; the leaf fills.
+
+### `unit_stats_panel` is BROKEN and needs Hosts for ALL 29 of these `cqi` components:
+`unit_stats_panel` (root) · `vitality_stats` + its 4 rows · `attributes_stats` +
+`attribute_rows` + its 6 rows · `combat_stats` + `combat_rows` + its 6 rows ·
+`defense_stats` + `defense_rows` + its 5 rows. Each needs a `<Name>Host`. (The repo
+owner has SOLE authority on what is broken; `unit_stats_panel` IS broken — do not
+"judge it fine" from a screenshot.)
+
+---
+
+## ✅ PROVEN METHOD (verified in-browser 2026-07-14) — READ THIS FIRST, THEN EXECUTE
+
+The method below is **proven**: `resolve_page`'s `ability_icon_host` and full
+move-card interior were converted with it and verified **size-neutral at desktop +
+scaling at mobile** in the live browser. Mirror it exactly. Do NOT re-derive it.
+
+### Ground truth corrections (the older banners below are STALE)
+- **`resolve_page` is a real unconverted target** (0 `@container`, 0 `cqi`,
+  ~27 fixed-px style files). Its move-card cascade is now DONE + verified. Remaining:
+  the `unresolved_*` variant (mirror of the move variant), `mini_grid` (add
+  `@container`; it renders the already-`cqi` shared `GridTile`), and page chrome.
+- **Do NOT measure progress by grepping `cqi`.** Judge by rendered layout.
+
+### The Host recipe (copy `header/components/brand_host` + `unit_stats_panel/…/stat_icon_frame_host`)
+A scaling **leaf** gets a `<leaf>_host/` wrapper:
+- `<leaf>_host/mod.rs`: `#[component] fn <Leaf>Host(props: <Leaf>HostModel)` → renders
+  `div { class: CLASS, <Leaf> { ..named fields } }`. Parameterless host → empty
+  `view/`+`model/` like `brand_host` (renders `<Leaf> {}`).
+- `<leaf>_host/style/mod.rs`: `"@container"` + the **definite box** — either a
+  per-band size (`size-18` + `mobile:size-14`) OR fill (`w-full`/`size-full`/`h-full`).
+- `<leaf>_host/view|model/mod.rs`: ddd `View`/`Model` carrying the leaf's fields
+  (mirror `stat_icon_frame_host`), `#[props(into)]` on `String` fields.
+- `<leaf>_host/components/mod.rs`: `pub mod <leaf>;` — and **`git mv` the leaf dir
+  under `components/`.** Leaf `style` → `size-full` (drop its own size/`flex-none`;
+  the host owns those). Leaf interior lengths → `cqi`.
+- **Rewire every render site**: import `…::<leaf>_host::<Leaf>Host`, render
+  `<Leaf>Host { ..same named fields }`. (Grep the crate for the leaf name.)
+- Update the parent `components/mod.rs`: `pub mod <leaf>;` → `pub mod <leaf>_host;`.
+
+### Containers (mirror `unit_stats_panel`: EVERY container is its own `@container`)
+Add `"@container"` as the **first** class of every container that has definite
+width (it already fills via `w-full`/`flex-[1_1_0]`/grid-track — safe, no collapse).
+Convert its own gap/padding px → `cqi`. Leave `min-w-0`/`*-full`/`max-w-[50%]` etc.
+
+### ⚠️ THE CONTENT-BOX RULE (this is the subtle part — get it right)
+An element's `cqi` resolves off the **nearest ANCESTOR `@container`'s CONTENT box**
+(border-box minus that ancestor's own padding+border), **never off itself**
+(gotcha #2). So:
+
+> `cqi = round(100 × px / ancestorContentWidth, 2)`, where `ancestorContentWidth`
+> is the nearest `@container` ancestor's **content-box** width.
+
+Example: a card panel is `@container` and 941px border-box with `px-[2.55cqi]`
+(≈24px) padding → its **content box is 891px**. A child's `gap-6` (24px) is
+`24/891 = 2.69cqi`, NOT `24/941`. Elements off a padding-less container (grid track,
+`w-full` row) use its border-box = content-box. **Verify each value in the browser.**
+
+### Card/text subsystems: TYPE/RADIUS/BORDER stay tokens
+Only **gaps, padding, icon-box sizes, and badge/overlay dims** become `cqi`. Keep
+`text-*`, `leading-*`, `rounded-*`, `border` (hairline), and colors as design tokens
+(the footer/`unit_stats_panel` rule). Per-band type overrides (`mobile:text-sm`) stay.
+
+### Page-level band scaffolds stay per-band
+Top-of-page layout (per-band widths, `grid-cols-*`, gaps on `editor_page`-style
+scaffolds, the plan header/body/list gutters) is "absolute size at the top per band"
+— leave it. The cascade applies to the **card/panel interiors and their leaves.**
+
+### 🔧 TOOLING (or you will chase ghosts)
+- The dev server's `tailwindcss --watch` is **inotify-blind to newly-created dirs**
+  in this filesystem. After editing/adding classes, run
+  **`touch crates/hotkey-editor/tailwind.css`** to force a full CSS rebuild — else
+  your new `cqi` classes are silently absent and the browser shows 0/unset values.
+  Then reload the page (a stale first read right after edit is a hot-reload race —
+  reload again).
+- `moon run :check` = compile check (fast, ~6s, has a build lock so concurrent
+  runs serialize). `moon run :dev` is the USER's (a hook blocks agents; it is
+  already running). `moon run :ci` is the final gate (USER-run, ~7min).
+- Reference widths measured live for `resolve_page` (at 1920 desktop, 2-col grid):
+  `move_card` 941, `move_panel` content-box 891, `fight_row` 891, `fight_column` 434,
+  `ability_icon` host 72 (mobile 56).
+
+---
+
+
 > ## ☠️ AGENT #4 FUCKUP (2026-07-14) — `grep cqi` IS A LIE. DO NOT MEASURE PROGRESS WITH IT. ☠️
 >
 > I (the 4th agent) ran `grep -L cqi` over the 499 `style/mod.rs` files, found **423
